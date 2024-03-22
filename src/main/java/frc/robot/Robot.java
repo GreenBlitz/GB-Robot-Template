@@ -7,9 +7,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
@@ -28,8 +25,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-    private Command autonomousCommand;
 
+    private Command autonomousCommand;
     private RobotContainer robotContainer;
 
     @Override
@@ -80,19 +77,19 @@ public class Robot extends LoggedRobot {
     private void initializeLogger() {
         NetworkTableInstance.getDefault()
                 .getStructTopic("RobotPose", Pose2d.struct).publish();
-
         NetworkTableInstance.getDefault()
                 .getStructTopic("MechanismPoses", Pose3d.struct).publish();
+
         switch (getRobotType()) {
             // Running on a real robot, log to a USB stick
             case REAL -> {
                 try {
                     Logger.addDataReceiver(new WPILOGWriter(RobotConstants.USB_LOG_PATH));
-                    System.out.println("initialized Logger, USB");
+                    Logger.recordOutput("Logged In", "USB");
                 } catch (Exception e) {
                     Logger.end();
                     Logger.addDataReceiver(new WPILOGWriter(RobotConstants.SAFE_ROBORIO_LOG_PATH));
-                    System.out.println("initialized Logger, roborio");
+                    Logger.recordOutput("Logged In", "ROBORIO");
                 }
                 Logger.addDataReceiver(new NT4Publisher());
             }

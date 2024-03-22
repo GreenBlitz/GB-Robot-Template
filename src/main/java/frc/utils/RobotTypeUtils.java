@@ -11,7 +11,7 @@ public class RobotTypeUtils {
         REPLAY
     }
 
-    private static RobotType ROBOT_TYPE = determineRobotType();
+    private static final RobotType ROBOT_TYPE = determineRobotType();
 
     private static RobotType determineRobotType() {
         RobotType robotType = RobotConstants.ROBOT_TYPE;

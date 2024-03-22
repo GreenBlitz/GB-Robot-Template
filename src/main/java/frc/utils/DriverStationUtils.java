@@ -18,9 +18,31 @@ public class DriverStationUtils {
         return getAlliance().equals(DriverStation.Alliance.Red);
     }
 
-    public static boolean isConnectedToFMS (){
+    public static boolean isConnectedToFMS() {
         return DriverStation.isFMSAttached();
     }
 
+    public static boolean isAutonomous() {
+        return DriverStation.isAutonomous();
+    }
 
+    public static boolean isAutonomousEnabled() {
+        return DriverStation.isAutonomousEnabled();
+    }
+
+    public static boolean isTeleop() {
+        return DriverStation.isTeleop();
+    }
+
+    public static boolean isTeleopEnabled() {
+        return DriverStation.isTeleopEnabled();
+    }
+
+    public static boolean isTest() {
+        return DriverStation.isTest();
+    }
+
+    public static boolean isTestEnabled() {
+        return DriverStation.isTestEnabled();
+    }
 }

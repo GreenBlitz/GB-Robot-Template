@@ -76,7 +76,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public SwerveModulePosition[] getModulePositions(){
-        SwerveModulePosition[] positions = new SwerveModulePosition[4];
+        SwerveModulePosition[] positions = new SwerveModulePosition[mSwerveMods.length];
         for(SwerveModule mod : mSwerveMods){
             positions[mod.moduleNumber] = mod.getPosition();
         }

@@ -5,7 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class AlliancePose2D {
+
     public static class AlliancePose2d {
+
         private final Pose2d blueAlliancePose;
         private final Pose2d alliancePose;
         private final Pose2d mirroredAlliancePose;

@@ -3,6 +3,7 @@ package frc.utils;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class Conversions {
+
     public static final double
             MAG_TICKS = 4096,
             DEGREES_PER_REVOLUTIONS = 360,
@@ -93,28 +94,6 @@ public class Conversions {
      */
     public static double systemToMotor(double systemData, double gearRatio) {
         return systemData * gearRatio;
-    }
-
-    /**
-     * Addition.
-     *
-     * @param x the first number.
-     * @param y the second number.
-     * @return the added value.
-     */
-    public static double plus(double x, double y) {
-        return x + y;
-    }
-
-    /**
-     * Subtraction.
-     *
-     * @param x the first number.
-     * @param y the second number.
-     * @return the subtracted value value.
-     */
-    public static double subtract(double x, double y) {
-        return x - y;
     }
 
     /**

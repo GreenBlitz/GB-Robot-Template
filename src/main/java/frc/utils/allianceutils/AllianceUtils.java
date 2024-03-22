@@ -9,6 +9,7 @@ import frc.robot.constants.FieldConstants;
 import static frc.utils.DriverStationUtils.isBlueAlliance;
 
 public class AllianceUtils {
+
     /**
      * Converts a pose to the pose relative to the current driver station alliance's right corner.
      *

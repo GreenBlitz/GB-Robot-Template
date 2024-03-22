@@ -5,10 +5,6 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class GBTalonFXPro extends TalonFX {
 
     public enum BusChain{

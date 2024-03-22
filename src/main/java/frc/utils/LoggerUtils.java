@@ -13,7 +13,7 @@ public class LoggerUtils {
     public static void startRealLogger(){
         try {
             LoggerUtils.startLoggerOnUSB();
-        } catch (Exception e) {
+        } catch (Exception exception) {
             Logger.end();
             LoggerUtils.startLoggerOnRoborio();
         }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;
+import frc.utils.LoggerUtils;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -81,31 +82,17 @@ public class Robot extends LoggedRobot {
                 .getStructTopic("MechanismPoses", Pose3d.struct).publish();
 
         switch (getRobotType()) {
-            // Running on a real robot, log to a USB stick
             case REAL -> {
-                try {
-                    Logger.addDataReceiver(new WPILOGWriter(RobotConstants.USB_LOG_PATH));
-                    Logger.recordOutput("Logged In", "USB");
-                } catch (Exception e) {
-                    Logger.end();
-                    Logger.addDataReceiver(new WPILOGWriter(RobotConstants.SAFE_ROBORIO_LOG_PATH));
-                    Logger.recordOutput("Logged In", "ROBORIO");
-                }
-                Logger.addDataReceiver(new NT4Publisher());
+                LoggerUtils.startRealLogger();
             }
-            // Replaying a log, set up replay source
             case REPLAY -> {
                 setUseTiming(false); // Run as fast as possible
-                String logPath = LogFileUtil.findReplayLog();
-                Logger.setReplaySource(new WPILOGReader(logPath));
-                Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_simulation")));
+                LoggerUtils.startReplayLogger();
             }
-            default -> {
-                Logger.addDataReceiver(new NT4Publisher());
-                Logger.addDataReceiver(new WPILOGWriter(SimulationConstants.SIMULATION_LOG_PATH));
+            case SIMULATION -> {
+                LoggerUtils.startSimulationLogger();
             }
         }
-        Logger.start();
     }
 
     public enum RobotType {

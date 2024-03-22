@@ -5,31 +5,34 @@ import frc.utils.humaninterfacedevices.SmartJoystick;
 
 public class JoysticksBindings {
 
-    private final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(Ports.Joystick.MAIN);
-    private final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(Ports.Joystick.SECOND);
-    private final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(Ports.Joystick.THIRD);
-    private final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(Ports.Joystick.FOURTH);
+    private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(Ports.Joystick.MAIN);
+    private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(Ports.Joystick.SECOND);
+    private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(Ports.Joystick.THIRD);
+    private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(Ports.Joystick.FOURTH);
 
     public static void configureBindings(){
-
+        mainJoystickButtons();
+        secondJoystickButtons();
+        thirdJoystickButtons();
+        fourthJoystickButtons();
     }
 
-    public void mainJoystickButtons(){
+    public static void mainJoystickButtons(){
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         //bindings
     }
 
-    public void secondJoystickButtons(){
+    public static void secondJoystickButtons(){
         SmartJoystick usedJoystick = SECOND_JOYSTICK;
         //bindings
     }
 
-    public void thirdJoystickButtons(){
+    public static void thirdJoystickButtons(){
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
         //bindings
     }
 
-    public void fourthJoystickButtons(){
+    public static void fourthJoystickButtons(){
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
         //bindings
     }

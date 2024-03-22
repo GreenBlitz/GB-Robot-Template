@@ -11,7 +11,7 @@ public class GBSubsystem extends SubsystemBase {
         super.periodic();
         if (getCurrentCommand() != null) {
             Logger.recordOutput("subsystems/" + getClass().getName(), getCurrentCommand().getName());
-        }else{
+        } else {
             Logger.recordOutput("subsystems/" + getClass().getName(), "no command is currently running on the subsystem");
         }
     }

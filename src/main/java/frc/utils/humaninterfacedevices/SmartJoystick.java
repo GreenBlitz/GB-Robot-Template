@@ -72,8 +72,8 @@ public class SmartJoystick {
         START = new JoystickButton(joystick, 8);
         L3 = new JoystickButton(joystick, 9);
         R3 = new JoystickButton(joystick, 10);
-        L2 = new AxisButton(joystick,2, 0.3);
-        R2 = new AxisButton(joystick,3, 0.3);
+        L2 = new AxisButton(joystick, 2, 0.3);
+        R2 = new AxisButton(joystick, 3, 0.3);
         POV_UP = new POVButton(joystick, 0);
         POV_RIGHT = new POVButton(joystick, 90);
         POV_DOWN = new POVButton(joystick, 180);

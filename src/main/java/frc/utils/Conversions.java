@@ -113,7 +113,7 @@ public class Conversions {
      * @param y the second number.
      * @return the subtracted value value.
      */
-    public static double plus(double x, double y) {
+    public static double subtract(double x, double y) {
         return x - y;
     }
 

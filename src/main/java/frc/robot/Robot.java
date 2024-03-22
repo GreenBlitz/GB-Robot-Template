@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.utils.LoggerUtils;
+import frc.utils.RobotTypeUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -53,20 +54,7 @@ public class Robot extends LoggedRobot {
         }
     }
 
-    public static RobotType getRobotType() {
-        RobotType robotType = RobotConstants.ROBOT_TYPE;
-        if (isSimulation()) {
-            if (robotType.equals(RobotType.REPLAY)) {
-                return RobotType.REPLAY;
-            }
-            return RobotType.SIMULATION;
-        } else {
-            if (robotType.equals(RobotType.REAL)) {
-                return RobotType.REAL;
-            }
-        }
-        return RobotType.REAL;
-    }
+
 
     private void initializeLogger() {
         NetworkTableInstance.getDefault()
@@ -74,7 +62,7 @@ public class Robot extends LoggedRobot {
         NetworkTableInstance.getDefault()
                 .getStructTopic("MechanismPoses", Pose3d.struct).publish();
 
-        switch (getRobotType()) {
+        switch (RobotTypeUtils.getRobotType()) {
             case REAL -> {
                 LoggerUtils.startRealLogger();
             }
@@ -88,9 +76,5 @@ public class Robot extends LoggedRobot {
         }
     }
 
-    public enum RobotType {
-        REAL,
-        SIMULATION,
-        REPLAY
-    }
+
 }

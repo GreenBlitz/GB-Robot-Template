@@ -1,4 +1,4 @@
-package frc.utils.humaninterfacedevices;
+package frc.utils.humaninterfacedevices.joysticks;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;

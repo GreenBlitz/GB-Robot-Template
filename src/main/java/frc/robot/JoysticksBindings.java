@@ -1,7 +1,7 @@
 package frc.robot;
 
 import frc.robot.constants.Ports;
-import frc.utils.humaninterfacedevices.SmartJoystick;
+import frc.utils.humaninterfacedevices.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
 

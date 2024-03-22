@@ -96,14 +96,14 @@ public class Conversions {
     }
 
     /**
-     * Applies an offset to a target position in order to compensate for a sensor offset.
+     * Addition.
      *
-     * @param position the target position of the motor.
-     * @param offset   the encoder value when the system is on zero position.
-     * @return the offsetted position to give to the motor.
+     * @param x the first number.
+     * @param y the second number.
+     * @return the added value.
      */
-    public static double offsetWrite(double position, double offset) {
-        return position + offset;
+    public static double plus(double x, double y) {
+        return x + y;
     }
 
     /**

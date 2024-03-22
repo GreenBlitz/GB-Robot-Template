@@ -5,6 +5,10 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class GBTalonFXPro extends TalonFX {
 
     public enum BusChain{
@@ -19,7 +23,7 @@ public class GBTalonFXPro extends TalonFX {
     }
 
     public GBTalonFXPro(int deviceId) {
-        super(deviceId);
+        this(deviceId, BusChain.CANBUS);
     }
 
     public GBTalonFXPro(int deviceId, BusChain BusChain) {
@@ -30,24 +34,62 @@ public class GBTalonFXPro extends TalonFX {
         super.getConfigurator().apply(configuration);
     }
 
-    public void optimizeCanBusUtilization(double signalFrequency, StatusSignal... statusSignals){
+
+
+    /**
+     * Speeding up the gotten signals
+     *
+     * @param signalFrequency -> Speed of signals in hertz
+     * @param statusSignals -> Signals to speed up
+     */
+    public void updateFrequency(double signalFrequency, StatusSignal... statusSignals){
         BaseStatusSignal.setUpdateFrequencyForAll(
                 signalFrequency,
                 statusSignals
         );
-        this.optimizeBusUtilization();
     }
 
+    /**
+     * Speeding up the gotten signals and delete the other signals from bus
+     */
+    public void optimizeBusAndSignals(double signalFrequency, StatusSignal... statusSignals){
+        updateFrequency(signalFrequency, statusSignals);
+        optimizeBusUtilization();
+    }
+
+    /**
+     * Performs a non-blocking refresh on all provided signals.
+     * IMPORTANT: Must happen before getting signals
+     */
+    public void refreshSignals(StatusSignal... statusSignals){
+        BaseStatusSignal.refreshAll(
+                statusSignals
+        );
+    }
+
+
+
+    /**
+     * Performs latency compensation on signal using the signalSlope and signal's
+     * latency to determine the magnitude of compensation.
+     */
     public double getLatencyCompensatedValue(StatusSignal<Double> value, StatusSignal<Double> valueSlope){
+        refreshSignals(value, valueSlope);
         return BaseStatusSignal.getLatencyCompensatedValue(value, valueSlope);
     }
 
+    /**
+     * Performs latency compensation on position
+     */
     public double getLatencyCompensatedPosition(){
-        return BaseStatusSignal.getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
+        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
     }
 
+    /**
+     * Performs latency compensation on velocity
+     */
     public double getLatencyCompensatedVelocity(){
-        return BaseStatusSignal.getLatencyCompensatedValue(this.getVelocity(), this.getAcceleration());
+        return getLatencyCompensatedValue(this.getVelocity(), this.getAcceleration());
     }
 
 }

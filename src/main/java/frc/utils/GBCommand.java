@@ -29,11 +29,11 @@ public abstract class GBCommand extends Command {
 	}
 	
 	/**
-	 * @param systems - The subsystems used by this command
+	 * @param subsystems - The subsystems used by this command
 	 */
-	public GBCommand(Subsystem... systems) {
+	public GBCommand(Subsystem... subsystems) {
 		this.subsystems = new HashSet<>();
-		this.subsystems.addAll(Arrays.asList(systems));
+		this.subsystems.addAll(Arrays.asList(subsystems));
 	}
 	
 	/**

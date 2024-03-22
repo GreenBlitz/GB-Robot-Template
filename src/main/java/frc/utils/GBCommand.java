@@ -13,50 +13,58 @@ import java.util.Set;
  * @author Nitzan
  * @author Raz
  * @author Tal -ish
+ * @author Noam Rosenberg
+ * @author Yoav Herman
+ * @author Yoni Kiriaty
  */
 public abstract class GBCommand extends Command {
 	
-	protected Set<Subsystem> systems;
+	protected Set<Subsystem> subsystems;
 	
 	/**
 	 * Constructor for a command that doesn't use a subsystem at all
 	 */
 	public GBCommand() {
-		this.systems = new HashSet<>();
+		this.subsystems = new HashSet<>();
 	}
 	
 	/**
 	 * @param systems - The subsystems used by this command
 	 */
 	public GBCommand(Subsystem... systems) {
-		this.systems = new HashSet<>();
-		this.systems.addAll(Arrays.asList(systems));
+		this.subsystems = new HashSet<>();
+		this.subsystems.addAll(Arrays.asList(systems));
 	}
 	
 	/**
 	 * adds a new subsystem requirement
 	 *
-	 * @param sys - the new subsystem
+	 * @param subsystem - the new subsystem
 	 */
-	public void require(Subsystem sys) {
-		this.systems.add(sys);
+	public void require(Subsystem subsystem) {
+		this.subsystems.add(subsystem);
+	}
+
+	public void require(Subsystem... subsystems) {
+		this.subsystems.addAll(Arrays.asList(subsystems));
 	}
 	
 	/**
 	 * Checks if a subsystem is used by a command
 	 *
-	 * @param sys - the subsystem to check for
+	 * @param subsystem - the subsystem to check for
 	 * @return if the subsystem is used
 	 */
-	public boolean isRequired(Subsystem sys) {
-		return systems.contains(sys);
+	public boolean isRequired(Subsystem subsystem) {
+		return subsystems.contains(subsystem);
 	}
 	
-	@Override
+
 	/**
 	 * @return a set of the required subsystems
 	 */
+	@Override
 	public Set<Subsystem> getRequirements() {
-		return systems;
+		return subsystems;
 	}
 }

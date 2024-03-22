@@ -1,4 +1,4 @@
-package frc.utils;
+package frc.utils.swerveConfigs;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -30,7 +30,7 @@ public final class CTREConfigs {
         swerveAngleFXConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
         /* Current Limiting */
-        swerveAngleFXConfig.CurrentLimits = SwerveConstants.AngleConstants.CURRENT_LIMIT;
+        swerveAngleFXConfig.CurrentLimits = SwerveConstants.AngleConstants.CURRENT_LIMITS_CONFIGS;
 
         /* PID Config */
         swerveAngleFXConfig.Slot0.kP = SwerveConstants.AngleConstants.PID.getP();
@@ -46,7 +46,7 @@ public final class CTREConfigs {
         swerveDriveFXConfig.Feedback.SensorToMechanismRatio = SwerveConstants.DriveConstants.GEAR_RATIO;
 
         /* Current Limiting */
-        swerveDriveFXConfig.CurrentLimits = SwerveConstants.DriveConstants.CURRENT_LIMIT;
+        swerveDriveFXConfig.CurrentLimits = SwerveConstants.DriveConstants.CURRENT_LIMITS_CONFIGS;
 
         /* PID Config */
         swerveDriveFXConfig.Slot0.kP = SwerveConstants.DriveConstants.PID.getP();

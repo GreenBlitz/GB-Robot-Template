@@ -28,10 +28,10 @@ public class Swerve extends GBSubsystem {
         gyro.setYaw(0);
 
         mSwerveMods = new SwerveModule[] {
-                SwerveConstants.SWERVE_MODULE_0,
-                SwerveConstants.SWERVE_MODULE_1,
-                SwerveConstants.SWERVE_MODULE_2,
-                SwerveConstants.SWERVE_MODULE_3
+                SwerveConstants.Modules.SWERVE_MODULE_0,
+                SwerveConstants.Modules.SWERVE_MODULE_1,
+                SwerveConstants.Modules.SWERVE_MODULE_2,
+                SwerveConstants.Modules.SWERVE_MODULE_3
         };
 
         swerveOdometry = new SwerveDriveOdometry(SwerveConstants.SWERVE_DRIVE_KINEMATICS, getGyroYaw(), getModulePositions());

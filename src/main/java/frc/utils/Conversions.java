@@ -107,14 +107,14 @@ public class Conversions {
     }
 
     /**
-     * Applies an offset to the position read from the motor in order to compensate for a sensor offset.
+     * Subtraction.
      *
-     * @param position the target position of the motor.
-     * @param offset   the encoder value when the system is on zero position.
-     * @return the actual position of the motor offset.
+     * @param x the first number.
+     * @param y the second number.
+     * @return the subtracted value value.
      */
-    public static double offsetRead(double position, double offset) {
-        return position - offset;
+    public static double plus(double x, double y) {
+        return x - y;
     }
 
     /**

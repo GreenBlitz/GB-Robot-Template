@@ -1,14 +1,14 @@
 package frc.robot;
 
 import frc.robot.constants.Ports;
-import frc.utils.humaninterfacedevices.joysticks.SmartJoystick;
+import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
 
-    private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(Ports.Joystick.MAIN);
-    private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(Ports.Joystick.SECOND);
-    private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(Ports.Joystick.THIRD);
-    private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(Ports.Joystick.FOURTH);
+    private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.MAIN);
+    private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.SECOND);
+    private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.THIRD);
+    private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.FOURTH);
 
     public static void configureBindings() {
         mainJoystickButtons();

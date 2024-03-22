@@ -1,4 +1,4 @@
-package frc.utils.humaninterfacedevices.joysticks;
+package frc.utils.joysticks;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -9,26 +9,11 @@ public class SmartJoystick {
 
     private static final double DEADZONE = 0.07;
 
-    public final JoystickButton
-            A,
-            B,
-            X,
-            Y,
-            L1,
-            R1,
-            START,
-            BACK,
-            L3,
-            R3;
+    public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
 
-    public final AxisButton
-            L2,
-            R2;
+    public final AxisButton L2, R2;
 
-    public final POVButton POV_UP,
-            POV_RIGHT,
-            POV_DOWN,
-            POV_LEFT;
+    public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 
     private final double deadzone;
 
@@ -72,8 +57,8 @@ public class SmartJoystick {
         START = new JoystickButton(joystick, 8);
         L3 = new JoystickButton(joystick, 9);
         R3 = new JoystickButton(joystick, 10);
-        L2 = new AxisButton(joystick, 2, 0.3);
-        R2 = new AxisButton(joystick, 3, 0.3);
+        L2 = new AxisButton(joystick, 2, 0.1);
+        R2 = new AxisButton(joystick, 3, 0.1);
         POV_UP = new POVButton(joystick, 0);
         POV_RIGHT = new POVButton(joystick, 90);
         POV_DOWN = new POVButton(joystick, 180);

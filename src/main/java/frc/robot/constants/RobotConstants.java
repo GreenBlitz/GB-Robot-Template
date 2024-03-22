@@ -1,6 +1,5 @@
 package frc.robot.constants;
 
-import frc.robot.Robot;
 import frc.utils.RobotTypeUtils;
 
 public class RobotConstants {

@@ -2,7 +2,7 @@ package frc.robot.constants;
 
 public class Ports {
 
-    public static class Joystick {
+    public static class JoystickDriverStationPorts {
 
         public static final int MAIN = 0;
 

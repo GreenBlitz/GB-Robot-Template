@@ -1,29 +1,19 @@
-package frc.utils.motors.TalonFX;
+package frc.utils.devicewrappers;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import frc.robot.constants.Phoenix6Constants;
 
 public class GBTalonFXPro extends TalonFX {
 
-    public enum BusChain{
-        CANIVORE("*"),
-        CANBUS("");
-
-        private final String CHAIN_NAME;
-
-        BusChain(String chainName){
-            this.CHAIN_NAME = chainName;
-        }
-    }
-
     public GBTalonFXPro(int deviceId) {
-        this(deviceId, BusChain.CANBUS);
+        this(deviceId, Phoenix6Constants.CANBUS_NAME);
     }
 
-    public GBTalonFXPro(int deviceId, BusChain BusChain) {
-        super(deviceId, BusChain.CHAIN_NAME);
+    public GBTalonFXPro(int deviceId, String BusChain) {
+        super(deviceId, BusChain);
     }
 
     public void applyConfiguration(TalonFXConfiguration configuration) {

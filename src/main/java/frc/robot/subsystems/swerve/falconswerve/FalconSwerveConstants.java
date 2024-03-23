@@ -1,7 +1,9 @@
 package frc.robot.subsystems.swerve.falconswerve;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -16,7 +18,7 @@ import frc.robot.constants.Phoenix6Constants;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveModuleIO;
 import frc.utils.RobotTypeUtils;
-import frc.utils.devicewrappers.GBPigeon2;
+
 
 import java.util.Optional;
 
@@ -76,7 +78,7 @@ public class FalconSwerveConstants extends SwerveConstants {
             Units.degreesToRadians(0),
             Units.degreesToRadians(0)
     );
-    static final Optional<GBPigeon2> GYRO = ofReplayable(() -> new GBPigeon2(PIGEON_ID, Phoenix6Constants.CANIVORE_NAME));
+    static final Optional<Pigeon2> GYRO = ofReplayable(() -> new Pigeon2(PIGEON_ID, Phoenix6Constants.CANIVORE_NAME));
 
     private static final double DRIVE_RADIUS_METERS = Math.hypot(
             MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER
@@ -103,14 +105,14 @@ public class FalconSwerveConstants extends SwerveConstants {
     }
 
     private static void configureGyro() {
-        final GBPigeon2 gyro = GYRO.get();
+        final Pigeon2 gyro = GYRO.get();
         final Pigeon2Configuration config = new Pigeon2Configuration();
 
         config.MountPose.MountPoseRoll = Units.radiansToDegrees(GYRO_MOUNT_POSITION.getX());
         config.MountPose.MountPosePitch = Units.radiansToDegrees(GYRO_MOUNT_POSITION.getY());
         config.MountPose.MountPoseYaw = Units.radiansToDegrees(GYRO_MOUNT_POSITION.getZ());
 
-        gyro.applyConfiguration(config);
+        gyro.getConfigurator().apply(config);
 
         YAW_SIGNAL = gyro.getYaw();
         PITCH_SIGNAL = gyro.getPitch();
@@ -118,20 +120,17 @@ public class FalconSwerveConstants extends SwerveConstants {
         Y_ACCELERATION_SIGNAL = gyro.getAccelerationY();
         Z_ACCELERATION_SIGNAL = gyro.getAccelerationZ();
 
-        gyro.updateFrequency(
+        BaseStatusSignal.setUpdateFrequencyForAll(
                 50,
                 X_ACCELERATION_SIGNAL,
                 Y_ACCELERATION_SIGNAL,
                 Z_ACCELERATION_SIGNAL
         );
-        gyro.updateFrequency(
-                100,
-                PITCH_SIGNAL
-        );
-        gyro.updateFrequency(
-                PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,//need to be 250
-                YAW_SIGNAL
-        );
+
+        PITCH_SIGNAL.setUpdateFrequency(100);
+
+        YAW_SIGNAL.setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);//need to be 250
+
         gyro.optimizeBusUtilization();
     }
 
@@ -141,7 +140,7 @@ public class FalconSwerveConstants extends SwerveConstants {
     }
 
     @Override
-    public Optional<GBPigeon2> getPigeon() {
+    public Optional<Pigeon2> getPigeon() {
         return GYRO;
     }
 

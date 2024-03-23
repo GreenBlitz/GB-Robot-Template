@@ -1,13 +1,14 @@
 package frc.robot.subsystems.swerve.falconswerve;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.*;
+import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.constants.Phoenix6Constants;
 import frc.utils.Conversions;
 import frc.utils.RobotTypeUtils;
-import frc.utils.devicewrappers.GBCANCoder;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
 public class FalconSwerveModuleConstants {
@@ -69,11 +70,11 @@ public class FalconSwerveModuleConstants {
             FRONT_RIGHT_STEER_MOTOR = new GBTalonFXPro(FRONT_RIGHT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
             BACK_LEFT_STEER_MOTOR = new GBTalonFXPro(BACK_LEFT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
             BACK_RIGHT_STEER_MOTOR = new GBTalonFXPro(BACK_RIGHT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME);
-    private static final GBCANCoder
-            FRONT_LEFT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
-            FRONT_RIGHT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
-            BACK_LEFT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
-            BACK_RIGHT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME);
+    private static final CANcoder
+            FRONT_LEFT_STEER_ENCODER = new CANcoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
+            FRONT_RIGHT_STEER_ENCODER = new CANcoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
+            BACK_LEFT_STEER_ENCODER = new CANcoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
+            BACK_RIGHT_STEER_ENCODER = new CANcoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME);
 
     public static final FalconSwerveModuleConstants
             FRONT_LEFT_SWERVE_MODULE_CONSTANTS = new FalconSwerveModuleConstants(
@@ -98,10 +99,10 @@ public class FalconSwerveModuleConstants {
             );
 
     final GBTalonFXPro driveMotor, steerMotor;
-    final GBCANCoder steerEncoder;
+    final CANcoder steerEncoder;
     StatusSignal<Double> steerPositionSignal, steerVelocitySignal, steerVoltageSignal, driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveVoltageSignal;
 
-    private FalconSwerveModuleConstants(GBTalonFXPro driveMotor, GBTalonFXPro steerMotor, GBCANCoder steerEncoder) {
+    private FalconSwerveModuleConstants(GBTalonFXPro driveMotor, GBTalonFXPro steerMotor, CANcoder steerEncoder) {
         this.driveMotor = driveMotor;
         this.steerMotor = steerMotor;
         this.steerEncoder = steerEncoder;
@@ -119,13 +120,13 @@ public class FalconSwerveModuleConstants {
         config.MagnetSensor.SensorDirection = STEER_ENCODER_DIRECTION;
         config.MagnetSensor.AbsoluteSensorRange = STEER_ENCODER_RANGE;
 
-        steerEncoder.applyConfiguration(config);
+        steerEncoder.getConfigurator().apply(config);
 
         steerPositionSignal = steerMotor.getPosition();
         steerVelocitySignal = steerMotor.getVelocity();
         steerVoltageSignal = steerMotor.getMotorVoltage();
 
-        steerEncoder.updateFrequency(
+        BaseStatusSignal.setUpdateFrequencyForAll(
                 100,
                 steerPositionSignal,
                 steerVelocitySignal,

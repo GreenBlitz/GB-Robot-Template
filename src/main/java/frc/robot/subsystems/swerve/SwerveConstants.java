@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.subsystems.swerve.falconswerve.FalconSwerveConstants;
 import frc.utils.RobotTypeUtils;
@@ -12,9 +13,10 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public abstract class SwerveConstants {
+
+    static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);
     static final double
             TRANSLATION_TOLERANCE_METERS = 0.01,
-            ROTATION_TOLERANCE_DEGREES = 1,
             TRANSLATION_VELOCITY_TOLERANCE = 0.05,
             ROTATION_VELOCITY_TOLERANCE = 0.05;
     static final double

@@ -21,9 +21,18 @@ import frc.utils.RobotTypeUtils;
 import java.util.Optional;
 
 public class FalconSwerveConstants extends SwerveConstants {
-    static final double
+    public static final double
             MAX_SPEED_METERS_PER_SECOND = 4.25,
             MAX_ROTATIONAL_SPEED_RADIANS_PER_SECOND = 12.03;
+
+    private static final double
+            MAX_ROTATION_VELOCITY = 720,
+            MAX_ROTATION_ACCELERATION = 720;
+
+    private static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS = new TrapezoidProfile.Constraints(
+            MAX_ROTATION_VELOCITY,
+            MAX_ROTATION_ACCELERATION
+    );
 
     private static final double
             MODULE_X_DISTANCE_FROM_CENTER = 0.6457 / 2,
@@ -39,8 +48,8 @@ public class FalconSwerveConstants extends SwerveConstants {
     private static final Optional<SwerveModuleIO[]> MODULES_IO = ofReplayable(() -> new SwerveModuleIO[]{
             new FalconSwerveModule(FalconSwerveModuleConstants.FRONT_LEFT_SWERVE_MODULE_CONSTANTS, "FrontLeft"),
             new FalconSwerveModule(FalconSwerveModuleConstants.FRONT_RIGHT_SWERVE_MODULE_CONSTANTS, "FrontRight"),
-            new FalconSwerveModule(FalconSwerveModuleConstants.REAR_LEFT_SWERVE_MODULE_CONSTANTS, "RearLeft"),
-            new FalconSwerveModule(FalconSwerveModuleConstants.REAR_RIGHT_SWERVE_MODULE_CONSTANTS, "RearRight")
+            new FalconSwerveModule(FalconSwerveModuleConstants.BACK_LEFT_SWERVE_MODULE_CONSTANTS, "BackLeft"),
+            new FalconSwerveModule(FalconSwerveModuleConstants.BACK_RIGHT_SWERVE_MODULE_CONSTANTS, "BackRight")
     });
 
     private static final PIDConstants
@@ -48,13 +57,7 @@ public class FalconSwerveConstants extends SwerveConstants {
             PROFILED_ROTATION_PID_CONSTANTS = new PIDConstants(6, 0, 0),
             AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0),
             AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);
-    private static final double
-            MAX_ROTATION_VELOCITY = 720,
-            MAX_ROTATION_ACCELERATION = 720;
-    private static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            MAX_ROTATION_VELOCITY,
-            MAX_ROTATION_ACCELERATION
-    );
+
     private static final ProfiledPIDController PROFILED_ROTATION_PID_CONTROLLER = new ProfiledPIDController(
             PROFILED_ROTATION_PID_CONSTANTS.kP,
             PROFILED_ROTATION_PID_CONSTANTS.kI,

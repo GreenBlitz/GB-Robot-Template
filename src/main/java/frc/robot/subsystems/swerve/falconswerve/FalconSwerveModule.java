@@ -28,26 +28,16 @@ public class FalconSwerveModule extends SwerveModuleIO {
         this.steerMotor = moduleConstants.steerMotor;
         this.driveMotor = moduleConstants.driveMotor;
         this.moduleConstants = moduleConstants;
-        steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConstants.steerPositionSignal);
-        drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConstants.drivePositionSignal);
+        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConstants.steerPositionSignal);
+        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConstants.drivePositionSignal);
     }
 
-    @Override
-    protected void updateInputs(SwerveModuleInputsAutoLogged inputs) {
-        refreshStatusSignals();
+    private double getAngleDegrees() {
+        return Conversions.revolutionsToDegrees(moduleConstants.steerPositionSignal.getValue());
+    }
 
-        inputs.steerAngleDegrees = getAngleDegrees();
-        inputs.odometryUpdatesSteerAngleDegrees = steerPositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray();
-        inputs.steerVoltage = moduleConstants.steerVoltageSignal.getValue();
-
-        inputs.driveDistanceMeters = toDriveDistance(moduleConstants.drivePositionSignal.getValue());
-        inputs.odometryUpdatesDriveDistanceMeters = drivePositionQueue.stream().mapToDouble(this::toDriveDistance).toArray();
-        inputs.driveVelocityMetersPerSecond = toDriveDistance(moduleConstants.driveVelocitySignal.getValue());
-        inputs.driveCurrent = moduleConstants.driveStatorCurrentSignal.getValue();
-        inputs.driveVoltage = moduleConstants.driveVoltageSignal.getValue();
-
-        steerPositionQueue.clear();
-        drivePositionQueue.clear();
+    private double toDriveDistance(double revolutions) {
+        return Conversions.revolutionsToDistance(revolutions, FalconSwerveModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
     @Override
@@ -91,14 +81,6 @@ public class FalconSwerveModule extends SwerveModuleIO {
         steerMotor.setNeutralMode(neutralModeValue);
     }
 
-    private double getAngleDegrees() {
-        return Conversions.revolutionsToDegrees(moduleConstants.steerPositionSignal.getValue());
-    }
-
-    private double toDriveDistance(double revolutions) {
-        return Conversions.revolutionsToDistance(revolutions, FalconSwerveModuleConstants.WHEEL_DIAMETER_METERS);
-    }
-
     private void refreshStatusSignals() {
         BaseStatusSignal.refreshAll(
                 moduleConstants.steerPositionSignal,
@@ -107,5 +89,23 @@ public class FalconSwerveModule extends SwerveModuleIO {
                 moduleConstants.driveVelocitySignal,
                 moduleConstants.driveStatorCurrentSignal
         );
+    }
+
+    @Override
+    protected void updateInputs(SwerveModuleInputsAutoLogged inputs) {
+        refreshStatusSignals();
+
+        inputs.steerAngleDegrees = getAngleDegrees();
+        inputs.odometryUpdatesSteerAngleDegrees = steerPositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray();
+        inputs.steerVoltage = moduleConstants.steerVoltageSignal.getValue();
+
+        inputs.driveDistanceMeters = toDriveDistance(moduleConstants.drivePositionSignal.getValue());
+        inputs.odometryUpdatesDriveDistanceMeters = drivePositionQueue.stream().mapToDouble(this::toDriveDistance).toArray();
+        inputs.driveVelocityMetersPerSecond = toDriveDistance(moduleConstants.driveVelocitySignal.getValue());
+        inputs.driveCurrent = moduleConstants.driveStatorCurrentSignal.getValue();
+        inputs.driveVoltage = moduleConstants.driveVoltageSignal.getValue();
+
+        steerPositionQueue.clear();
+        drivePositionQueue.clear();
     }
 }

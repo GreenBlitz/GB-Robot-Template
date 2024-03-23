@@ -16,6 +16,21 @@ public class FalconSwerve extends SwerveIO {
             timestampQueue = TalonFXOdometryThread6328.getInstance().getTimestampQueue();
 
     @Override
+    protected void setHeading(Rotation2d heading) {
+        gyro.setYaw(heading.getDegrees());
+    }
+
+    private void refreshStatusSignals() {
+        BaseStatusSignal.refreshAll(
+                FalconSwerveConstants.YAW_SIGNAL,
+                FalconSwerveConstants.PITCH_SIGNAL,
+                FalconSwerveConstants.X_ACCELERATION_SIGNAL,
+                FalconSwerveConstants.Y_ACCELERATION_SIGNAL,
+                FalconSwerveConstants.Z_ACCELERATION_SIGNAL
+        );
+    }
+
+    @Override
     protected void updateInputs(SwerveInputsAutoLogged inputs) {
         refreshStatusSignals();
 
@@ -30,21 +45,6 @@ public class FalconSwerve extends SwerveIO {
 
         yawQueue.clear();
         timestampQueue.clear();
-    }
-
-    @Override
-    protected void setHeading(Rotation2d heading) {
-        gyro.setYaw(heading.getDegrees());
-    }
-
-    private void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(
-                FalconSwerveConstants.YAW_SIGNAL,
-                FalconSwerveConstants.PITCH_SIGNAL,
-                FalconSwerveConstants.X_ACCELERATION_SIGNAL,
-                FalconSwerveConstants.Y_ACCELERATION_SIGNAL,
-                FalconSwerveConstants.Z_ACCELERATION_SIGNAL
-        );
     }
 
 }

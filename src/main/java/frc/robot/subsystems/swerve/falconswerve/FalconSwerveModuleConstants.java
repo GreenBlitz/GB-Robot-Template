@@ -12,31 +12,31 @@ import frc.utils.devicewrappers.GBTalonFXPro;
 
 public class FalconSwerveModuleConstants {
 
-    static final double WHEEL_DIAMETER_METERS = 0.1016;
-    static final double MAX_SPEED_REVOLUTIONS_PER_SECOND = Conversions.distanceToRevolutions(FalconSwerveConstants.MAX_SPEED_METERS_PER_SECOND, WHEEL_DIAMETER_METERS);
-    static final double VOLTAGE_COMPENSATION_SATURATION = 12;
-    static final boolean ENABLE_FOC = true;
+    public static final double WHEEL_DIAMETER_METERS = 0.1016;
+    public static final double MAX_SPEED_REVOLUTIONS_PER_SECOND = Conversions.distanceToRevolutions(FalconSwerveConstants.MAX_SPEED_METERS_PER_SECOND, WHEEL_DIAMETER_METERS);
+    public static final double VOLTAGE_COMPENSATION_SATURATION = 12;
+    public static final boolean ENABLE_FOC = true;
 
-    static final double
+    public static final double
             DRIVE_GEAR_RATIO = 6.75,
             STEER_GEAR_RATIO = 12.8,
             COUPLING_RATIO = 0;
 
-    static final int
+    public static final int
             FRONT_LEFT_ID = 0,
             FRONT_RIGHT_ID = 1,
-            REAR_LEFT_ID = 2,
-            REAR_RIGHT_ID = 3;
+            BACK_LEFT_ID = 2,
+            BACK_RIGHT_ID = 3;
     private static final int
             FRONT_LEFT_DRIVE_MOTOR_ID = FRONT_LEFT_ID + 1,
             FRONT_RIGHT_DRIVE_MOTOR_ID = FRONT_RIGHT_ID + 1,
-            REAR_LEFT_DRIVE_MOTOR_ID = REAR_LEFT_ID + 1,
-            REAR_RIGHT_DRIVE_MOTOR_ID = REAR_RIGHT_ID + 1;
+            BACK_LEFT_DRIVE_MOTOR_ID = BACK_LEFT_ID + 1,
+            BACK_RIGHT_DRIVE_MOTOR_ID = BACK_RIGHT_ID + 1;
     private static final int
             FRONT_LEFT_STEER_MOTOR_ID = FRONT_LEFT_ID + 2,
             FRONT_RIGHT_STEER_MOTOR_ID = FRONT_RIGHT_ID + 2,
-            REAR_LEFT_STEER_MOTOR_ID = REAR_LEFT_ID + 2,
-            REAR_RIGHT_STEER_MOTOR_ID = REAR_RIGHT_ID + 2;
+            BACK_LEFT_STEER_MOTOR_ID = BACK_LEFT_ID + 2,
+            BACK_RIGHT_STEER_MOTOR_ID = BACK_RIGHT_ID + 2;
 
     private static final InvertedValue
             DRIVE_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive,
@@ -62,39 +62,39 @@ public class FalconSwerveModuleConstants {
     private static final GBTalonFXPro
             FRONT_LEFT_DRIVE_MOTOR = new GBTalonFXPro(FRONT_LEFT_DRIVE_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
             FRONT_RIGHT_DRIVE_MOTOR = new GBTalonFXPro(FRONT_RIGHT_DRIVE_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
-            REAR_LEFT_DRIVE_MOTOR = new GBTalonFXPro(REAR_LEFT_DRIVE_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
-            REAR_RIGHT_DRIVE_MOTOR = new GBTalonFXPro(REAR_RIGHT_DRIVE_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME);
+            BACK_LEFT_DRIVE_MOTOR = new GBTalonFXPro(BACK_LEFT_DRIVE_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
+            BACK_RIGHT_DRIVE_MOTOR = new GBTalonFXPro(BACK_RIGHT_DRIVE_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME);
     private static final GBTalonFXPro
             FRONT_LEFT_STEER_MOTOR = new GBTalonFXPro(FRONT_LEFT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
             FRONT_RIGHT_STEER_MOTOR = new GBTalonFXPro(FRONT_RIGHT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
-            REAR_LEFT_STEER_MOTOR = new GBTalonFXPro(REAR_LEFT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
-            REAR_RIGHT_STEER_MOTOR = new GBTalonFXPro(REAR_RIGHT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME);
+            BACK_LEFT_STEER_MOTOR = new GBTalonFXPro(BACK_LEFT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME),
+            BACK_RIGHT_STEER_MOTOR = new GBTalonFXPro(BACK_RIGHT_STEER_MOTOR_ID, Phoenix6Constants.CANIVORE_NAME);
     private static final GBCANCoder
             FRONT_LEFT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
             FRONT_RIGHT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
-            REAR_LEFT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
-            REAR_RIGHT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME);
+            BACK_LEFT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME),
+            BACK_RIGHT_STEER_ENCODER = new GBCANCoder(FRONT_LEFT_ID, Phoenix6Constants.CANIVORE_NAME);
 
-    static final FalconSwerveModuleConstants
+    public static final FalconSwerveModuleConstants
             FRONT_LEFT_SWERVE_MODULE_CONSTANTS = new FalconSwerveModuleConstants(
-            FRONT_LEFT_DRIVE_MOTOR,
-            FRONT_LEFT_STEER_MOTOR,
-            FRONT_LEFT_STEER_ENCODER
+                FRONT_LEFT_DRIVE_MOTOR,
+                FRONT_LEFT_STEER_MOTOR,
+                FRONT_LEFT_STEER_ENCODER
             ),
             FRONT_RIGHT_SWERVE_MODULE_CONSTANTS = new FalconSwerveModuleConstants(
                     FRONT_RIGHT_DRIVE_MOTOR,
                     FRONT_RIGHT_STEER_MOTOR,
                     FRONT_RIGHT_STEER_ENCODER
             ),
-            REAR_LEFT_SWERVE_MODULE_CONSTANTS = new FalconSwerveModuleConstants(
-                    REAR_LEFT_DRIVE_MOTOR,
-                    REAR_LEFT_STEER_MOTOR,
-                    REAR_LEFT_STEER_ENCODER
+            BACK_LEFT_SWERVE_MODULE_CONSTANTS = new FalconSwerveModuleConstants(
+                    BACK_LEFT_DRIVE_MOTOR,
+                    BACK_LEFT_STEER_MOTOR,
+                    BACK_LEFT_STEER_ENCODER
             ),
-            REAR_RIGHT_SWERVE_MODULE_CONSTANTS = new FalconSwerveModuleConstants(
-                    REAR_RIGHT_DRIVE_MOTOR,
-                    REAR_RIGHT_STEER_MOTOR,
-                    REAR_RIGHT_STEER_ENCODER
+            BACK_RIGHT_SWERVE_MODULE_CONSTANTS = new FalconSwerveModuleConstants(
+                    BACK_RIGHT_DRIVE_MOTOR,
+                    BACK_RIGHT_STEER_MOTOR,
+                    BACK_RIGHT_STEER_ENCODER
             );
 
     final GBTalonFXPro driveMotor, steerMotor;

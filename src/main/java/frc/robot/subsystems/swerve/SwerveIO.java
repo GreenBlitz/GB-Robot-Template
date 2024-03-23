@@ -7,7 +7,9 @@ import frc.utils.RobotTypeUtils;
 public class SwerveIO {
     static SwerveIO generateIO() {
         return switch (RobotTypeUtils.getRobotType()) {
-            default -> new FalconSwerve();
+            case REAL -> new FalconSwerve();
+            case REPLAY -> new SwerveIO();
+            case SIMULATION -> new SwerveIO();//need to change
         };
     }
 

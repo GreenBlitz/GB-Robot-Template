@@ -30,9 +30,12 @@ public abstract class SwerveConstants {
     }
 
     static SwerveConstants generateConstants() {
-        return switch (RobotTypeUtils.getRobotType()){
-            default -> new FalconSwerveConstants();
-        };
+        if (RobotTypeUtils.isReal()) {
+            return new FalconSwerveConstants();
+        }
+        else {
+            return new FalconSwerveConstants();//need to change
+        }
     }
 
     public abstract SwerveDriveKinematics getKinematics();

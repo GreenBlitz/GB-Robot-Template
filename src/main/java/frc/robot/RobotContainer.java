@@ -20,7 +20,7 @@ import frc.robot.subsystems.swerve.Swerve;
  */
 public class RobotContainer {
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-    private final Swerve SWERVE = new Swerve();
+    public static final Swerve SWERVE = new Swerve();
 
 
     /**

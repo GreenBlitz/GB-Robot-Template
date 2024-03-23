@@ -126,7 +126,7 @@ public class FalconSwerveModuleConstants {
         steerVoltageSignal = steerMotor.getMotorVoltage();
 
         steerEncoder.updateFrequency(
-                Phoenix6Constants.FAST_SIGNAL_FREQUENCY_HERTZ,
+                100,
                 steerPositionSignal,
                 steerVelocitySignal,
                 steerVoltageSignal
@@ -159,12 +159,12 @@ public class FalconSwerveModuleConstants {
         driveVoltageSignal = driveMotor.getMotorVoltage();
 
         driveMotor.updateFrequency(
-                Phoenix6Constants.FAST_SIGNAL_FREQUENCY_HERTZ,
+                250,
                 drivePositionSignal,
                 driveVelocitySignal
         );
         driveMotor.updateFrequency(
-                Phoenix6Constants.NORMAL_SIGNAL_FREQUENCY_HERTZ,
+                100,
                 driveVoltageSignal,
                 driveStatorCurrentSignal
         );
@@ -196,12 +196,12 @@ public class FalconSwerveModuleConstants {
         steerVoltageSignal = steerMotor.getMotorVoltage();
 
         steerMotor.updateFrequency(
-                Phoenix6Constants.FAST_SIGNAL_FREQUENCY_HERTZ,
+                250,
                 steerPositionSignal,
                 steerVelocitySignal
         );
         steerMotor.updateFrequency(
-                Phoenix6Constants.SLOW_SIGNAL_FREQUENCY_HERTZ,
+                20,
                 steerVoltageSignal
         );
 

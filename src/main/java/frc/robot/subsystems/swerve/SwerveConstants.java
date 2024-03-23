@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -8,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.subsystems.swerve.falconswerve.FalconSwerveConstants;
 import frc.utils.RobotTypeUtils;
+import frc.utils.devicewrappers.GBPigeon2;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -37,7 +37,7 @@ public abstract class SwerveConstants {
 
     public abstract SwerveDriveKinematics getKinematics();
 
-    protected abstract Optional<Pigeon2> getPigeon();
+    protected abstract Optional<GBPigeon2> getPigeon();
 
     protected abstract ProfiledPIDController getProfiledRotationController();
 

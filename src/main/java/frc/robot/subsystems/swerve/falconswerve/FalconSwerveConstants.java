@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.constants.Phoenix6Constants;
+import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveModuleIO;
 import frc.utils.RobotTypeUtils;
@@ -72,13 +73,13 @@ public class FalconSwerveConstants extends SwerveConstants {
             TRANSLATION_PID_CONSTANTS.kD
     );
 
-    private static final int PIGEON_ID = 0;
+
     private static final Rotation3d GYRO_MOUNT_POSITION = new Rotation3d(
             Units.degreesToRadians(0),
             Units.degreesToRadians(0),
             Units.degreesToRadians(0)
     );
-    static final Optional<Pigeon2> GYRO = ofReplayable(() -> new Pigeon2(PIGEON_ID, Phoenix6Constants.CANIVORE_NAME));
+    static final Optional<Pigeon2> GYRO = ofReplayable(() -> new Pigeon2(Ports.PIGEON_ID, Phoenix6Constants.CANIVORE_NAME));
 
     private static final double DRIVE_RADIUS_METERS = Math.hypot(
             MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.falconswervemodule;
+package frc.robot.subsystems.swerve.falconswerve;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -6,8 +6,8 @@ import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.modules.SwerveModuleIO;
-import frc.robot.subsystems.swerve.modules.SwerveModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.SwerveModuleIO;
+import frc.robot.subsystems.swerve.SwerveModuleInputsAutoLogged;
 import frc.utils.Conversions;
 import frc.utils.devicewrappers.GBTalonFXPro;
 

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.falconswervemodule;
+package frc.robot.subsystems.swerve.falconswerve;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -13,7 +13,7 @@ import frc.utils.devicewrappers.GBTalonFXPro;
 public class FalconSwerveModuleConstants {
 
     static final double WHEEL_DIAMETER_METERS = 0.1016;
-    static final double MAX_SPEED_REVOLUTIONS_PER_SECOND = Conversions.distanceToRevolutions(TriumphSwerveConstants.MAX_SPEED_METERS_PER_SECOND, WHEEL_DIAMETER_METERS);
+    static final double MAX_SPEED_REVOLUTIONS_PER_SECOND = Conversions.distanceToRevolutions(FalconSwerveConstants.MAX_SPEED_METERS_PER_SECOND, WHEEL_DIAMETER_METERS);
     static final double VOLTAGE_COMPENSATION_SATURATION = 12;
     static final boolean ENABLE_FOC = true;
 

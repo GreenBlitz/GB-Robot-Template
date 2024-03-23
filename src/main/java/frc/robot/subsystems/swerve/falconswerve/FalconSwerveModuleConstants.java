@@ -86,7 +86,7 @@ public class FalconSwerveModuleConstants {
 
     final GBTalonFXPro driveMotor, steerMotor;
     final CANcoder steerEncoder;
-    StatusSignal<Double> steerPositionSignal, steerVelocitySignal, steerVoltageSignal, driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveVoltageSignal;
+    StatusSignal<Double> steerEncoderPositionSignal, steerEncoderVelocitySignal, steerEncoderVoltageSignal, steerPositionSignal, steerVelocitySignal, steerVoltageSignal, driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveVoltageSignal;
 
     private FalconSwerveModuleConstants(GBTalonFXPro driveMotor, GBTalonFXPro steerMotor, CANcoder steerEncoder) {
         this.driveMotor = driveMotor;
@@ -108,9 +108,9 @@ public class FalconSwerveModuleConstants {
 
         steerEncoder.getConfigurator().apply(config);
 
-        steerPositionSignal = steerMotor.getPosition();
-        steerVelocitySignal = steerMotor.getVelocity();
-        steerVoltageSignal = steerMotor.getMotorVoltage();
+        steerEncoderPositionSignal = steerEncoder.getPosition();
+        steerEncoderVelocitySignal = steerEncoder.getVelocity();
+        steerEncoderVoltageSignal = steerEncoder.getSupplyVoltage();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
                 100,

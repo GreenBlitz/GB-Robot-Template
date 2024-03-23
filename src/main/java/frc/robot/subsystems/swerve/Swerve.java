@@ -39,6 +39,18 @@ public class Swerve extends GBSubsystem {
         configurePathPlanner();
     }
 
+    private SwerveModuleIO[] getModulesIO() {
+        if (RobotTypeUtils.isReplay()) {
+            return new SwerveModuleIO[]{
+                    new SwerveModuleIO("FrontLeft"),
+                    new SwerveModuleIO("FrontRight"),
+                    new SwerveModuleIO("RearLeft"),
+                    new SwerveModuleIO("RearRight")
+            };
+        }
+        return constants.getModulesIO().get();
+    }
+
     private void configurePathPlanner() {
         AutoBuilder.configureHolonomic(
                 () -> RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose(),
@@ -283,18 +295,6 @@ public class Swerve extends GBSubsystem {
             states[i] = modulesIO[i].getTargetState();
 
         return states;
-    }
-
-    private SwerveModuleIO[] getModulesIO() {
-        if (RobotTypeUtils.isReplay()) {
-            return new SwerveModuleIO[]{
-                    new SwerveModuleIO("FrontLeft"),
-                    new SwerveModuleIO("FrontRight"),
-                    new SwerveModuleIO("RearLeft"),
-                    new SwerveModuleIO("RearRight")
-            };
-        }
-        return constants.getModulesIO().get();
     }
 
     public boolean isAtPosition(Pose2d pose2d) {

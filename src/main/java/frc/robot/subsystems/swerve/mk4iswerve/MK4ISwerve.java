@@ -2,8 +2,7 @@ package frc.robot.subsystems.swerve.mk4iswerve;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.Gyro.GyroConstants;
-import frc.robot.subsystems.Gyro.Pigeon2GyroConfigObject;
+import frc.robot.subsystems.Gyro.pigeon2.Pigeon2GyroConfigObject;
 import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
 
@@ -16,7 +15,7 @@ public class MK4ISwerve implements ISwerve {
 
 
     public MK4ISwerve(){
-        pigeon2GyroConfigObject = GyroConstants.PIGEON_2_GYRO_CONFIG_OBJECT;
+        pigeon2GyroConfigObject = MK4ISwerveConstants.PIGEON_2_GYRO_CONFIG_OBJECT;
         yawQueue = TalonFXOdometryThread6328.getInstance().registerSignal(pigeon2GyroConfigObject.getGyro(), pigeon2GyroConfigObject.YAW_SIGNAL);
         timestampQueue = TalonFXOdometryThread6328.getInstance().getTimestampQueue();
     }

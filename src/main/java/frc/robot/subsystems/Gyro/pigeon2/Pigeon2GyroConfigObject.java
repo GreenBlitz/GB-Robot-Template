@@ -1,8 +1,10 @@
-package frc.robot.subsystems.Gyro;
+package frc.robot.subsystems.Gyro.pigeon2;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import frc.robot.subsystems.Gyro.GyroConstants;
+import frc.robot.subsystems.swerve.mk4iswerve.MK4ISwerveConstants;
 
 public class Pigeon2GyroConfigObject {
     private final Pigeon2 gyro;
@@ -20,7 +22,7 @@ public class Pigeon2GyroConfigObject {
     }
 
     public void configGyro(){
-        gyro.getConfigurator().apply(GyroConstants.PIGEON_2_CONFIGURATION);
+        gyro.getConfigurator().apply(MK4ISwerveConstants.PIGEON_2_CONFIGURATION);
     }
 
     private void optimizeBusAndSignalOfGyro() {

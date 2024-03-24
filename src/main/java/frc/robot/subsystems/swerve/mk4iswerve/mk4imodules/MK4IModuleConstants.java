@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.mk4iswerve;
+package frc.robot.subsystems.swerve.mk4iswerve.mk4imodules;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -44,6 +44,7 @@ public class MK4IModuleConstants {
     public static final double VOLTAGE_COMPENSATION_SATURATION = 12;
     public static final boolean ENABLE_FOC = true;
 
+
     public static final double DRIVE_GEAR_RATIO = 6.75;
     public static final double STEER_GEAR_RATIO = 12.8;
     public static final double COUPLING_RATIO = 0;
@@ -52,11 +53,14 @@ public class MK4IModuleConstants {
     private static final InvertedValue DRIVE_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive;
     private static final InvertedValue STEER_MOTOR_INVERTED_VALUE = InvertedValue.CounterClockwise_Positive;
 
+
     private static final SensorDirectionValue STEER_ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
     private static final AbsoluteSensorRangeValue STEER_ENCODER_RANGE = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
 
+
     private static final NeutralModeValue DRIVE_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Brake;
     private static final NeutralModeValue STEER_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Brake;
+
 
     private static final double DRIVE_SLIP_CURRENT = 100;
     private static final double STEER_CURRENT_LIMIT = 50;
@@ -72,14 +76,12 @@ public class MK4IModuleConstants {
     private static final double DRIVE_MOTOR_D = 0;
 
     public static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
-
     static {
         ENCODER_CONFIG.MagnetSensor.SensorDirection = STEER_ENCODER_DIRECTION;
         ENCODER_CONFIG.MagnetSensor.AbsoluteSensorRange = STEER_ENCODER_RANGE;
     }
 
     public static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration();
-
     static {
         DRIVE_MOTOR_CONFIG.MotorOutput.Inverted = DRIVE_MOTOR_INVERTED_VALUE;
         DRIVE_MOTOR_CONFIG.MotorOutput.NeutralMode = DRIVE_MOTOR_NEUTRAL_MODE_VALUE;
@@ -96,7 +98,6 @@ public class MK4IModuleConstants {
     }
 
     public static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
-
     static {
         STEER_MOTOR_CONFIG.MotorOutput.Inverted = STEER_MOTOR_INVERTED_VALUE;
         STEER_MOTOR_CONFIG.MotorOutput.NeutralMode = STEER_MOTOR_NEUTRAL_MODE_VALUE;

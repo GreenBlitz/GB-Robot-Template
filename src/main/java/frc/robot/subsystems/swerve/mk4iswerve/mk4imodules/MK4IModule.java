@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.mk4iswerve;
+package frc.robot.subsystems.swerve.mk4iswerve.mk4imodules;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -35,7 +35,7 @@ public class MK4IModule implements IModule {
     }
 
     private double getAngleDegrees() {
-        return Conversions.revolutionsToDegrees(moduleConfigObject.steerPositionSignal.getValue());
+        return Conversions.revolutionsToDegrees(steerMotor.getLatencyCompensatedPosition());
     }
 
     private double toDriveDistance(double revolutions) {
@@ -74,8 +74,10 @@ public class MK4IModule implements IModule {
         BaseStatusSignal.refreshAll(
                 moduleConfigObject.steerPositionSignal,
                 moduleConfigObject.steerVelocitySignal,
+                moduleConfigObject.steerAccelerationSignal,
                 moduleConfigObject.drivePositionSignal,
                 moduleConfigObject.driveVelocitySignal,
+                moduleConfigObject.driveAccelerationSignal,
                 moduleConfigObject.driveStatorCurrentSignal,
                 moduleConfigObject.steerEncoderPositionSignal,
                 moduleConfigObject.steerEncoderVelocitySignal

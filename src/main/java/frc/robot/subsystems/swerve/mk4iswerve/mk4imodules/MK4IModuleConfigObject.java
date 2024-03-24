@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.mk4iswerve;
+package frc.robot.subsystems.swerve.mk4iswerve.mk4imodules;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -11,12 +11,10 @@ public class MK4IModuleConfigObject {
     private final GBTalonFXPro driveMotor, steerMotor;
     private final CANcoder steerEncoder;
     public StatusSignal<Double> steerEncoderPositionSignal, steerEncoderVelocitySignal, steerEncoderVoltageSignal;
-    public StatusSignal<Double> steerPositionSignal, steerVelocitySignal, steerVoltageSignal;
-    public StatusSignal<Double> driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveVoltageSignal;
+    public StatusSignal<Double> steerPositionSignal, steerVelocitySignal, steerAccelerationSignal, steerVoltageSignal;
+    public StatusSignal<Double> driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveAccelerationSignal, driveVoltageSignal;
 
-
-    protected MK4IModuleConfigObject(String busChain, int steerMotorId, int driveMotorId, int steerEncoderId)
-    {
+    protected MK4IModuleConfigObject(String busChain, int steerMotorId, int driveMotorId, int steerEncoderId) {
         this.driveMotor = new GBTalonFXPro(steerMotorId, busChain);
         this.steerMotor = new GBTalonFXPro(driveMotorId, busChain);
         this.steerEncoder = new CANcoder(steerEncoderId, busChain);
@@ -56,12 +54,14 @@ public class MK4IModuleConfigObject {
     private void optimizeBusAndSignalOfSteerMotor(){
         steerPositionSignal = steerMotor.getPosition();
         steerVelocitySignal = steerMotor.getVelocity();
+        steerAccelerationSignal = steerMotor.getVelocity();
         steerVoltageSignal = steerMotor.getMotorVoltage();
 
         steerMotor.updateFrequency(
                 250,
                 steerPositionSignal,
-                steerVelocitySignal
+                steerVelocitySignal,
+                steerAccelerationSignal
         );
         steerMotor.updateFrequency(
                 20,
@@ -80,11 +80,13 @@ public class MK4IModuleConfigObject {
         driveVelocitySignal = driveMotor.getVelocity();
         driveStatorCurrentSignal = driveMotor.getStatorCurrent();
         driveVoltageSignal = driveMotor.getMotorVoltage();
+        driveAccelerationSignal = driveMotor.getAcceleration();
 
         driveMotor.updateFrequency(
                 250,
                 drivePositionSignal,
-                driveVelocitySignal
+                driveVelocitySignal,
+                driveAccelerationSignal
         );
         driveMotor.updateFrequency(
                 100,

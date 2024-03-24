@@ -42,10 +42,10 @@ public class Swerve extends GBSubsystem {
 
     private Module[] getModules() {
         return new Module[]{
-                new Module(ModuleFactory.ModuleName.FRONT_LEFT),
-                new Module(ModuleFactory.ModuleName.FRONT_RIGHT),
-                new Module(ModuleFactory.ModuleName.BACK_LEFT),
-                new Module(ModuleFactory.ModuleName.BACK_RIGHT),
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
         };
     }
 

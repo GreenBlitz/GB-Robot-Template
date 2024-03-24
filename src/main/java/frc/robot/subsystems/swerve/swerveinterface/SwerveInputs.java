@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.swerveinterface;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -13,6 +13,5 @@ public class SwerveInputs {
     public double accelerationZ = 0;
 
     public double[] odometryUpdatesTimestamp = new double[0];
-
 
 }

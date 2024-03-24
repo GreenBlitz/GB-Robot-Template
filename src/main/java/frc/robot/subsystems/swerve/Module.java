@@ -3,53 +3,70 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.subsystems.swerve.mk4iswerve.MK4IModuleConstants;
+import frc.robot.subsystems.swerve.swerveinterface.IModule;
+import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
+import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveModuleIO {
-    private final SwerveModuleInputsAutoLogged swerveModuleInputs;
-    private final String name;
+public class Module {
+
+    private final ModuleInputsAutoLogged moduleInputs;
+    private final ModuleFactory.Module moduleName;
     private boolean driveMotorClosedLoop;
+    private IModule module;
     private SwerveModuleState targetState;
 
-    public SwerveModuleIO(String name) {
-        this.name = name;
-        this.swerveModuleInputs = new SwerveModuleInputsAutoLogged();
+    public Module(ModuleFactory.Module moduleName) {
+        this.moduleName = moduleName;
+        this.module = ModuleFactory.generateModule(moduleName);
+        this.moduleInputs = new ModuleInputsAutoLogged();
         this.targetState = new SwerveModuleState();
         this.driveMotorClosedLoop = true;
     }
 
     protected String getLoggingPath() {
-        return "Swerve/" + name + "/";
+        return "Swerve/" + moduleName + "/";
     }
 
     public void periodic() {
-        updateInputs(swerveModuleInputs);
-        Logger.processInputs(getLoggingPath(), swerveModuleInputs);
+        module.updateInputs(moduleInputs);
+        Logger.processInputs(getLoggingPath(), moduleInputs);
+    }
+
+    public void stop() {
+        module.stop();
+    }
+
+    public void setBrake(boolean isBrake) {
+        module.setBrake(isBrake);
     }
 
 
-    protected void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
+    public void setTargetOpenLoopVelocityAndOptimize(double targetVelocityMetersPerSecond) {
+        final double voltage = velocityToOpenLoopVoltage(
+                targetVelocityMetersPerSecond,
+                MK4IModuleConstants.WHEEL_DIAMETER_METERS,
+                moduleInputs.steerVelocity,
+                MK4IModuleConstants.COUPLING_RATIO,
+                MK4IModuleConstants.MAX_SPEED_REVOLUTIONS_PER_SECOND,
+                MK4IModuleConstants.VOLTAGE_COMPENSATION_SATURATION
+        );
+        module.setTargetOpenLoopVelocity(voltage);
     }
 
-    protected void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
+    public void setTargetClosedLoopVelocityAndOptimize(double targetVelocityMetersPerSecond) {
+        final double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
+                targetVelocityMetersPerSecond,
+                Rotation2d.fromDegrees(moduleInputs.steerVelocity),
+                MK4IModuleConstants.COUPLING_RATIO
+        );
+        module.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
     }
-
-    protected void setTargetAngle(Rotation2d angle) {
-    }
-
-    protected void stop() {
-    }
-
-    protected void setBrake(boolean brake) {
-    }
-
-    protected void updateInputs(SwerveModuleInputsAutoLogged inputs) {
-    }
-
 
     SwerveModuleState getCurrentState() {
-        return new SwerveModuleState(swerveModuleInputs.driveVelocityMetersPerSecond, getCurrentAngle());
+        return new SwerveModuleState(moduleInputs.driveVelocityMetersPerSecond, getCurrentAngle());
     }
 
     SwerveModuleState getTargetState() {
@@ -57,7 +74,7 @@ public class SwerveModuleIO {
     }
 
     private Rotation2d getCurrentAngle() {
-        return Rotation2d.fromDegrees(swerveModuleInputs.steerAngleDegrees);
+        return Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees);
     }
 
     public void setDriveMotorClosedLoop(boolean closedLoop) {
@@ -67,7 +84,7 @@ public class SwerveModuleIO {
 
     public void setTargetState(SwerveModuleState targetState) {
         this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
-        setTargetAngle(this.targetState.angle);
+        module.setTargetAngle(this.targetState.angle);
         setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle);
     }
 
@@ -81,10 +98,12 @@ public class SwerveModuleIO {
     private void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle) {
         targetVelocityMetersPerSecond = reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle);
 
-        if (driveMotorClosedLoop)
-            setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
-        else
-            setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
+        if (driveMotorClosedLoop) {
+            setTargetClosedLoopVelocityAndOptimize(targetVelocityMetersPerSecond);
+        }
+        else {
+            setTargetOpenLoopVelocityAndOptimize(targetVelocityMetersPerSecond);
+        }
     }
 
 
@@ -124,8 +143,8 @@ public class SwerveModuleIO {
      */
     SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
-                swerveModuleInputs.odometryUpdatesDriveDistanceMeters[odometryUpdateIndex],
-                Rotation2d.fromDegrees(swerveModuleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex])
+                moduleInputs.odometryUpdatesDriveDistanceMeters[odometryUpdateIndex],
+                Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex])
         );
     }
 }

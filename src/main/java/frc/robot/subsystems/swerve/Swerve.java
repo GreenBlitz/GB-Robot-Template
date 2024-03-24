@@ -7,9 +7,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
+import frc.robot.constants.SimulationConstants;
+import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
+import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
+import frc.robot.subsystems.swerve.swerveinterface.SwerveFactory;
+import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
-import frc.utils.RobotTypeUtils;
 import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.allianceutils.AllianceUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -21,34 +25,28 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Swerve extends GBSubsystem {
     public final Lock odometryLock;
     private final SwerveInputsAutoLogged swerveInputs;
-    private final SwerveIO swerveIO;
-    private final SwerveConstants constants;
-    private final SwerveModuleIO[] modulesIO;
+    private final ISwerve swerve;
+    private final Module[] modules;
 
     public Swerve() {
         setName("Swerve");
 
-        swerveIO = SwerveIO.generateIO();
-        modulesIO = getModulesIO();
-        constants = SwerveConstants.generateConstants();
+        swerve = SwerveFactory.generateSwerve();
+        modules = getModules();
 
         swerveInputs = new SwerveInputsAutoLogged();
         odometryLock = new ReentrantLock();
 
-        constants.getProfiledRotationController().enableContinuousInput(-180, 180);
         configurePathPlanner();
     }
 
-    private SwerveModuleIO[] getModulesIO() {
-        if (RobotTypeUtils.isReplay()) {
-            return new SwerveModuleIO[]{
-                    new SwerveModuleIO("FrontLeft"),
-                    new SwerveModuleIO("FrontRight"),
-                    new SwerveModuleIO("RearLeft"),
-                    new SwerveModuleIO("RearRight")
-            };
-        }
-        return constants.getModulesIO().get();
+    private Module[] getModules() {
+        return new Module[]{
+                new Module(ModuleFactory.Module.FRONT_LEFT),
+                new Module(ModuleFactory.Module.FRONT_RIGHT),
+                new Module(ModuleFactory.Module.BACK_LEFT),
+                new Module(ModuleFactory.Module.BACK_RIGHT),
+        };
     }
 
     private void configurePathPlanner() {
@@ -57,23 +55,19 @@ public class Swerve extends GBSubsystem {
                 (pose) -> RobotContainer.POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(pose)),
                 this::getSelfRelativeVelocity,
                 this::selfRelativeDrive,
-                constants.getPathFollowerConfig(),
+                SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
                 () -> !DriverStationUtils.isBlueAlliance(),
                 this
         );
     }
 
-    public SwerveConstants getConstants() {
-        return constants;
-    }
-
     @Override
     public void periodic() {
         odometryLock.lock();
-        swerveIO.updateInputs(swerveInputs);
+        swerve.updateInputs(swerveInputs);
         Logger.processInputs(this.getName(), swerveInputs);
 
-        for (SwerveModuleIO currentModule : modulesIO)
+        for (Module currentModule : modules)
             currentModule.periodic();
         odometryLock.unlock();
 
@@ -92,7 +86,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public void setHeading(Rotation2d heading) {
-        swerveIO.setHeading(heading);
+        swerve.setHeading(heading);
     }
 
     public Translation3d getGyroAcceleration() {
@@ -101,18 +95,18 @@ public class Swerve extends GBSubsystem {
 
 
     public void stop() {
-        for (SwerveModuleIO currentModule : modulesIO)
+        for (Module currentModule : modules)
             currentModule.stop();
     }
 
     public void setBrake(boolean brake) {
-        for (SwerveModuleIO currentModule : modulesIO)
+        for (Module currentModule : modules)
             currentModule.setBrake(brake);
     }
 
 
     public ChassisSpeeds getSelfRelativeVelocity() {
-        return constants.getKinematics().toChassisSpeeds(getModuleStates());
+        return SwerveConstants.KINEMATICS.toChassisSpeeds(getModuleStates());
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
@@ -123,8 +117,8 @@ public class Swerve extends GBSubsystem {
     void pidToPose(Pose2d targetPose) {
         final Pose2d currentPose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
         final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
-                constants.getTranslationsController().calculate(currentPose.getX(), targetPose.getX()),
-                constants.getTranslationsController().calculate(currentPose.getY(), targetPose.getY()),
+                SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getX(), targetPose.getX()),
+                SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getY(), targetPose.getY()),
                 calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation())
         );
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
@@ -136,11 +130,11 @@ public class Swerve extends GBSubsystem {
     }
 
     void resetRotationController() {
-        constants.getProfiledRotationController().reset(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees());
+        SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.reset(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees());
     }
 
     void setClosedLoop(boolean closedLoop) {
-        for (SwerveModuleIO currentModule : modulesIO)
+        for (Module currentModule : modules)
             currentModule.setDriveMotorClosedLoop(closedLoop);
     }
 
@@ -204,14 +198,14 @@ public class Swerve extends GBSubsystem {
             return;
         }
 
-        final SwerveModuleState[] swerveModuleStates = constants.getKinematics().toSwerveModuleStates(chassisSpeeds);
+        final SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
         setTargetModuleStates(swerveModuleStates);
     }
 
     private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.getMaxSpeedMetersPerSecond());
-        for (int i = 0; i < modulesIO.length; i++)
-            modulesIO[i].setTargetState(swerveModuleStates[i]);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
+        for (int i = 0; i < modules.length; i++)
+            modules[i].setTargetState(swerveModuleStates[i]);
     }
 
     /**
@@ -222,7 +216,7 @@ public class Swerve extends GBSubsystem {
      * @return the fixed speeds
      */
     private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.PERIODIC_TIME_SECONDS);
+        return ChassisSpeeds.discretize(chassisSpeeds, SimulationConstants.TIME_STEP);
     }
 
     private void updatePoseEstimatorStates() {
@@ -240,9 +234,9 @@ public class Swerve extends GBSubsystem {
     }
 
     private SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
-        final SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modulesIO.length];
-        for (int i = 0; i < modulesIO.length; i++)
-            swerveModulePositions[i] = modulesIO[i].getOdometryPosition(odometryUpdateIndex);
+        final SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
+        for (int i = 0; i < modules.length; i++)
+            swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }
 
@@ -250,7 +244,7 @@ public class Swerve extends GBSubsystem {
 
     private double calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
         final Rotation2d currentAngle = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation();
-        return Units.degreesToRadians(constants.getProfiledRotationController().calculate(currentAngle.getDegrees(), targetAngle.getDegrees()));
+        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(currentAngle.getDegrees(), targetAngle.getDegrees()));
     }
 
     private ChassisSpeeds selfRelativeSpeedsFromFieldRelativePowers(double xPower, double yPower, double thetaPower) {
@@ -265,9 +259,9 @@ public class Swerve extends GBSubsystem {
 
     private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
         return new ChassisSpeeds(
-                xPower * constants.getMaxSpeedMetersPerSecond(),
-                yPower * constants.getMaxSpeedMetersPerSecond(),
-                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * constants.getMaxRotationalSpeedRadiansPerSecond()
+                xPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+                yPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * SwerveConstants.MAX_ROTATIONAL_SPEED_RADIANS_PER_SECOND
         );
     }
 
@@ -279,20 +273,20 @@ public class Swerve extends GBSubsystem {
 
     @AutoLogOutput(key = "Swerve/CurrentStates")
     private SwerveModuleState[] getModuleStates() {
-        final SwerveModuleState[] states = new SwerveModuleState[modulesIO.length];
+        final SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
-        for (int i = 0; i < modulesIO.length; i++)
-            states[i] = modulesIO[i].getCurrentState();
+        for (int i = 0; i < modules.length; i++)
+            states[i] = modules[i].getCurrentState();
 
         return states;
     }
 
     @AutoLogOutput(key = "Swerve/TargetStates")
     private SwerveModuleState[] getTargetStates() {
-        final SwerveModuleState[] states = new SwerveModuleState[modulesIO.length];
+        final SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
-        for (int i = 0; i < modulesIO.length; i++)
-            states[i] = modulesIO[i].getTargetState();
+        for (int i = 0; i < modules.length; i++)
+            states[i] = modules[i].getTargetState();
 
         return states;
     }
@@ -329,3 +323,4 @@ public class Swerve extends GBSubsystem {
     }
 
 }
+

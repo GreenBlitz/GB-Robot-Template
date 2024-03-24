@@ -1,4 +1,4 @@
-package frc.robot.subsystems.newswerve.mk4iswerve;
+package frc.robot.subsystems.swerve.mk4iswerve;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -7,9 +7,8 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.newswerve.swerveinterface.IModule;
-import frc.robot.subsystems.newswerve.swerveinterface.ModuleInputsAutoLogged;
-import frc.robot.subsystems.swerve.falconswerve.FalconSwerveModuleConstants;
+import frc.robot.subsystems.swerve.swerveinterface.IModule;
+import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 import frc.utils.Conversions;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
@@ -23,8 +22,8 @@ public class MK4IModule implements IModule {
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
 
     private final VelocityTorqueCurrentFOC driveVelocityRequest = new VelocityTorqueCurrentFOC(0);
-    private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(FalconSwerveModuleConstants.ENABLE_FOC);
-    private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(FalconSwerveModuleConstants.ENABLE_FOC);
+    private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
+    private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
 
     public MK4IModule(MK4IModuleConfigObject moduleConfigObject) {
         this.steerMotor = moduleConfigObject.getSteerMotor();
@@ -40,7 +39,7 @@ public class MK4IModule implements IModule {
     }
 
     private double toDriveDistance(double revolutions) {
-        return Conversions.revolutionsToDistance(revolutions, FalconSwerveModuleConstants.WHEEL_DIAMETER_METERS);
+        return Conversions.revolutionsToDistance(revolutions, MK4IModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
     @Override

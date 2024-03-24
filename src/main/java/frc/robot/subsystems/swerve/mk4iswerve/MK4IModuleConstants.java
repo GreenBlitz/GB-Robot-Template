@@ -1,12 +1,11 @@
-package frc.robot.subsystems.newswerve.mk4iswerve;
+package frc.robot.subsystems.swerve.mk4iswerve;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.*;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
-import frc.robot.subsystems.newswerve.SwerveUtils;
-import frc.robot.subsystems.swerve.falconswerve.FalconSwerveConstants;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.Conversions;
 
 public class MK4IModuleConstants {
@@ -41,7 +40,7 @@ public class MK4IModuleConstants {
 
 
     public static final double WHEEL_DIAMETER_METERS = 0.1016;
-    public static final double MAX_SPEED_REVOLUTIONS_PER_SECOND = Conversions.distanceToRevolutions(FalconSwerveConstants.MAX_SPEED_METERS_PER_SECOND, WHEEL_DIAMETER_METERS);
+    public static final double MAX_SPEED_REVOLUTIONS_PER_SECOND = Conversions.distanceToRevolutions(SwerveConstants.MAX_SPEED_METERS_PER_SECOND, WHEEL_DIAMETER_METERS);
     public static final double VOLTAGE_COMPENSATION_SATURATION = 12;
     public static final boolean ENABLE_FOC = true;
 

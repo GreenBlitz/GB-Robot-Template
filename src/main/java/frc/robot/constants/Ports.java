@@ -31,4 +31,6 @@ public class Ports {
         public static final int BACK_RIGHT_ENCODER = 3;
     }
 
+    public static final int PIGEON_2_ID = 0;
+
 }

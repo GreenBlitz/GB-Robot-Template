@@ -1,4 +1,4 @@
-package frc.utils;
+package frc.utils.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;

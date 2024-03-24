@@ -10,28 +10,28 @@ import frc.utils.Conversions;
 
 public class MK4IModuleConstants {
 
-    public static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
+    protected static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
             Ports.TalonFXIds.FRONT_LEFT_STEER_MOTOR,
             Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
             Ports.CANCodersIds.FRONT_LEFT_ENCODER
     );
 
-    public static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
+    protected static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
             Ports.TalonFXIds.FRONT_RIGHT_STEER_MOTOR,
             Ports.TalonFXIds.FRONT_RIGHT_DRIVE_MOTOR,
             Ports.CANCodersIds.FRONT_RIGHT_ENCODER
     );
 
-    public static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
+    protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
             Ports.TalonFXIds.BACK_LEFT_STEER_MOTOR,
             Ports.TalonFXIds.BACK_LEFT_DRIVE_MOTOR,
             Ports.CANCodersIds.BACK_LEFT_ENCODER
     );
 
-    public static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
+    protected static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
             Ports.TalonFXIds.BACK_RIGHT_STEER_MOTOR,
             Ports.TalonFXIds.BACK_RIGHT_DRIVE_MOTOR,
@@ -75,13 +75,13 @@ public class MK4IModuleConstants {
     private static final double DRIVE_MOTOR_I = 0;
     private static final double DRIVE_MOTOR_D = 0;
 
-    public static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
+    protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
     static {
         ENCODER_CONFIG.MagnetSensor.SensorDirection = STEER_ENCODER_DIRECTION;
         ENCODER_CONFIG.MagnetSensor.AbsoluteSensorRange = STEER_ENCODER_RANGE;
     }
 
-    public static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration();
+    protected static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration();
     static {
         DRIVE_MOTOR_CONFIG.MotorOutput.Inverted = DRIVE_MOTOR_INVERTED_VALUE;
         DRIVE_MOTOR_CONFIG.MotorOutput.NeutralMode = DRIVE_MOTOR_NEUTRAL_MODE_VALUE;
@@ -97,7 +97,7 @@ public class MK4IModuleConstants {
         DRIVE_MOTOR_CONFIG.Slot0.kD = DRIVE_MOTOR_D;
     }
 
-    public static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
+    protected static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
     static {
         STEER_MOTOR_CONFIG.MotorOutput.Inverted = STEER_MOTOR_INVERTED_VALUE;
         STEER_MOTOR_CONFIG.MotorOutput.NeutralMode = STEER_MOTOR_NEUTRAL_MODE_VALUE;

@@ -31,7 +31,7 @@ public class Swerve extends GBSubsystem {
     public Swerve() {
         setName("Swerve");
 
-        swerve = SwerveFactory.generateSwerve();
+        swerve = SwerveFactory.createSwerve();
         modules = getModules();
 
         swerveInputs = new SwerveInputsAutoLogged();
@@ -42,10 +42,10 @@ public class Swerve extends GBSubsystem {
 
     private Module[] getModules() {
         return new Module[]{
-                new Module(ModuleFactory.Module.FRONT_LEFT),
-                new Module(ModuleFactory.Module.FRONT_RIGHT),
-                new Module(ModuleFactory.Module.BACK_LEFT),
-                new Module(ModuleFactory.Module.BACK_RIGHT),
+                new Module(ModuleFactory.ModuleName.FRONT_LEFT),
+                new Module(ModuleFactory.ModuleName.FRONT_RIGHT),
+                new Module(ModuleFactory.ModuleName.BACK_LEFT),
+                new Module(ModuleFactory.ModuleName.BACK_RIGHT),
         };
     }
 

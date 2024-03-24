@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.swerveinterface.IModule;
+import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 import frc.utils.Conversions;
 import frc.utils.devicewrappers.GBTalonFXPro;
@@ -25,13 +26,22 @@ public class MK4IModule implements IModule {
     private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
 
-    public MK4IModule(MK4IModuleConfigObject moduleConfigObject) {
+    public MK4IModule(ModuleFactory.ModuleName moduleName) {
+        this.moduleConfigObject = getModuleConfigObject(moduleName);
         this.steerMotor = moduleConfigObject.getSteerMotor();
         this.driveMotor = moduleConfigObject.getDriveMotor();
         this.steerEncoder = moduleConfigObject.getSteerEncoder();
-        this.moduleConfigObject = moduleConfigObject;
         this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConfigObject.steerPositionSignal);
         this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
+    }
+
+    public MK4IModuleConfigObject getModuleConfigObject(ModuleFactory.ModuleName moduleName){
+        return switch (moduleName) {
+            case FRONT_LEFT -> MK4IModuleConstants.FRONT_LEFT;
+            case FRONT_RIGHT -> MK4IModuleConstants.FRONT_RIGHT;
+            case BACK_LEFT -> MK4IModuleConstants.BACK_LEFT;
+            case BACK_RIGHT -> MK4IModuleConstants.BACK_RIGHT;
+        };
     }
 
     private double getAngleDegrees() {

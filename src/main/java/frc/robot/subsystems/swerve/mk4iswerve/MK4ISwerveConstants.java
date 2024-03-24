@@ -4,13 +4,12 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import edu.wpi.first.math.util.Units;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
-import frc.robot.subsystems.Gyro.GyroConstants;
-import frc.robot.subsystems.Gyro.pigeon2.Pigeon2GyroConfigObject;
+import frc.robot.subsystems.swerve.gyro.GyroConstants;
+import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2GyroConfigObject;
 
 public class MK4ISwerveConstants {
 
     public static final Pigeon2Configuration PIGEON_2_CONFIGURATION = new Pigeon2Configuration();
-
     static {
         PIGEON_2_CONFIGURATION.MountPose.MountPoseRoll = Units.radiansToDegrees(GyroConstants.GYRO_MOUNT_POSITION.getX());
         PIGEON_2_CONFIGURATION.MountPose.MountPosePitch = Units.radiansToDegrees(GyroConstants.GYRO_MOUNT_POSITION.getY());

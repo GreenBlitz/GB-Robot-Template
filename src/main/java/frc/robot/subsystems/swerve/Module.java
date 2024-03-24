@@ -13,14 +13,14 @@ import org.littletonrobotics.junction.Logger;
 public class Module {
 
     private final ModuleInputsAutoLogged moduleInputs;
-    private final ModuleFactory.Module moduleName;
+    private final ModuleFactory.ModuleName moduleName;
     private boolean driveMotorClosedLoop;
     private IModule module;
     private SwerveModuleState targetState;
 
-    public Module(ModuleFactory.Module moduleName) {
+    public Module(ModuleFactory.ModuleName moduleName) {
         this.moduleName = moduleName;
-        this.module = ModuleFactory.generateModule(moduleName);
+        this.module = ModuleFactory.createModule(moduleName);
         this.moduleInputs = new ModuleInputsAutoLogged();
         this.targetState = new SwerveModuleState();
         this.driveMotorClosedLoop = true;

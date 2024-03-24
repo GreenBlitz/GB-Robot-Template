@@ -1,9 +1,8 @@
-package frc.robot.subsystems.Gyro.pigeon2;
+package frc.robot.subsystems.swerve.gyro.pigeon2;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import frc.robot.subsystems.Gyro.GyroConstants;
 import frc.robot.subsystems.swerve.mk4iswerve.MK4ISwerveConstants;
 
 public class Pigeon2GyroConfigObject {

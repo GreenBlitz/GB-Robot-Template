@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.mk4iswerve;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.Gyro.pigeon2.Pigeon2GyroConfigObject;
+import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2GyroConfigObject;
 import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
 

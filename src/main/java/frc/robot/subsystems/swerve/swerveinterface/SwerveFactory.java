@@ -7,7 +7,7 @@ import frc.utils.RobotTypeUtils;
 
 public class SwerveFactory {
 
-    public static ISwerve generateSwerve() {
+    public static ISwerve createSwerve() {
         return switch (RobotTypeUtils.getRobotType()) {
             case REAL -> new MK4ISwerve();
             case REPLAY -> new ReplaySwerve();

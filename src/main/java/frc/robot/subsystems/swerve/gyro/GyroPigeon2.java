@@ -7,22 +7,22 @@ import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.mk4iswerve.MK4ISwerveConstants;
 
-public class Pigeon2Gyro {
+public class GyroPigeon2 {
 
-    private static Pigeon2Gyro instance;
+    private static GyroPigeon2 instance;
 
     private final Pigeon2 gyro;
     public StatusSignal<Double> YAW_SIGNAL, PITCH_SIGNAL, X_ACCELERATION_SIGNAL, Y_ACCELERATION_SIGNAL, Z_ACCELERATION_SIGNAL;
 
-    public Pigeon2Gyro(){
-        gyro = new Pigeon2(Ports.PIGEON_2_ID, Phoenix6Constants.CANIVORE_NAME);
+    public GyroPigeon2(){
+        this.gyro = new Pigeon2(Ports.PIGEON_2_ID, Phoenix6Constants.CANIVORE_NAME);
         configGyro();
         optimizeBusAndSignalOfGyro();
     }
 
-    public static Pigeon2Gyro getInstance() {
+    public static GyroPigeon2 getInstance() {
         if (instance == null){
-            instance = new Pigeon2Gyro();
+            instance = new GyroPigeon2();
         }
         return instance;
     }

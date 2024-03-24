@@ -1,8 +1,10 @@
 package frc.robot.subsystems.swerve.simulationswerve;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.simulation.SimpleMotorSimulation;
 import frc.robot.subsystems.swerve.ModuleConstants;
 import frc.robot.subsystems.swerve.ModuleUtils;
 import frc.robot.subsystems.swerve.swerveinterface.IModule;
@@ -12,6 +14,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class SimulationModule implements IModule {
 
+    private final SimpleMotorSimulation steerMotor, driveMotor;
+
     private final ModuleUtils.ModuleName moduleName;
 
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0);
@@ -19,6 +23,28 @@ public class SimulationModule implements IModule {
 
     public SimulationModule(ModuleUtils.ModuleName moduleName){
         this.moduleName = moduleName;
+        this.steerMotor = new SimpleMotorSimulation(
+                SimulationModuleConstants.STEER_MOTOR_GEARBOX,
+                ModuleConstants.STEER_GEAR_RATIO,
+                SimulationModuleConstants.STEER_MOMENT_OF_INERTIA
+        );
+        this.driveMotor = new SimpleMotorSimulation(
+                SimulationModuleConstants.DRIVE_MOTOR_GEARBOX,
+                ModuleConstants.DRIVE_GEAR_RATIO,
+                SimulationModuleConstants.DRIVE_MOMENT_OF_INERTIA
+        );
+
+        configureDriveMotor();
+        configureSteerMotor();
+    }
+
+
+    private void configureDriveMotor() {
+        driveMotor.applyConfiguration(new TalonFXConfiguration());
+    }
+
+    private void configureSteerMotor() {
+        steerMotor.applyConfiguration(SimulationModuleConstants.STEER_MOTOR_CONFIG);
     }
 
     @Override

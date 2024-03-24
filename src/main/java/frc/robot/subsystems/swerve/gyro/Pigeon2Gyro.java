@@ -1,19 +1,30 @@
-package frc.robot.subsystems.swerve.gyro.pigeon2;
+package frc.robot.subsystems.swerve.gyro;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import frc.robot.constants.Phoenix6Constants;
+import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.mk4iswerve.MK4ISwerveConstants;
 
-public class Pigeon2GyroConfigObject {
-    private final Pigeon2 gyro;
+public class Pigeon2Gyro {
 
+    private static Pigeon2Gyro instance;
+
+    private final Pigeon2 gyro;
     public StatusSignal<Double> YAW_SIGNAL, PITCH_SIGNAL, X_ACCELERATION_SIGNAL, Y_ACCELERATION_SIGNAL, Z_ACCELERATION_SIGNAL;
 
-    public Pigeon2GyroConfigObject(int id, String busChain){
-        gyro = new Pigeon2(id, busChain);
+    public Pigeon2Gyro(){
+        gyro = new Pigeon2(Ports.PIGEON_2_ID, Phoenix6Constants.CANIVORE_NAME);
         configGyro();
         optimizeBusAndSignalOfGyro();
+    }
+
+    public static Pigeon2Gyro getInstance() {
+        if (instance == null){
+            instance = new Pigeon2Gyro();
+        }
+        return instance;
     }
 
     public Pigeon2 getGyro() {

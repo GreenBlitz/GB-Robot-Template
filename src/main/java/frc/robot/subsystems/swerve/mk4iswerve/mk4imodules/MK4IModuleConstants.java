@@ -6,8 +6,6 @@ import com.ctre.phoenix6.signals.*;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.ModuleConstants;
-import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.utils.Conversions;
 
 public class MK4IModuleConstants {
 

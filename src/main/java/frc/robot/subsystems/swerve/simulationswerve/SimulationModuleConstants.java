@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve.simulationswerve;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.math.system.plant.DCMotor;
-import frc.robot.subsystems.swerve.ModuleConstants;
 
 public class SimulationModuleConstants {
 

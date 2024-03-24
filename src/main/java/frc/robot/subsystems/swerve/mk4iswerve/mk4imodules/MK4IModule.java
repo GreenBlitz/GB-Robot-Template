@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleConstants;
 import frc.robot.subsystems.swerve.ModuleUtils;
 import frc.robot.subsystems.swerve.swerveinterface.IModule;
-import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 import frc.utils.Conversions;
 import frc.utils.devicewrappers.GBTalonFXPro;

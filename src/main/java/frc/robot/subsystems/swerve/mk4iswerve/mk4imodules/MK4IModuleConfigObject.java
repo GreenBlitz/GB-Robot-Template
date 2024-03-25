@@ -18,6 +18,7 @@ public class MK4IModuleConfigObject {
         this.driveMotor = new GBTalonFXPro(steerMotorId, busChain);
         this.steerMotor = new GBTalonFXPro(driveMotorId, busChain);
         this.steerEncoder = new CANcoder(steerEncoderId, busChain);
+
         configEncoder();
         optimizeBusAndSignalOfEncoder();
         configSteerMotor();

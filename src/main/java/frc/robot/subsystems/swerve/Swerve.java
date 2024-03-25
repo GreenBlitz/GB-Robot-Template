@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
 import frc.robot.constants.SimulationConstants;
-import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveFactory;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
@@ -42,10 +41,10 @@ public class Swerve extends GBSubsystem {
 
     private Module[] getModules() {
         return new Module[]{
-                new Module(ModuleFactory.ModuleName.FRONT_LEFT),
-                new Module(ModuleFactory.ModuleName.FRONT_RIGHT),
-                new Module(ModuleFactory.ModuleName.BACK_LEFT),
-                new Module(ModuleFactory.ModuleName.BACK_RIGHT),
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
         };
     }
 

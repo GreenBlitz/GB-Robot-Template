@@ -5,8 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.*;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
-import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.utils.Conversions;
+import frc.robot.subsystems.swerve.ModuleConstants;
 
 public class MK4IModuleConstants {
 
@@ -39,14 +38,8 @@ public class MK4IModuleConstants {
     );
 
 
-    public static final double WHEEL_DIAMETER_METERS = 0.1016;
-    public static final double MAX_SPEED_REVOLUTIONS_PER_SECOND = Conversions.distanceToRevolutions(SwerveConstants.MAX_SPEED_METERS_PER_SECOND, WHEEL_DIAMETER_METERS);
-    public static final double VOLTAGE_COMPENSATION_SATURATION = 12;
     public static final boolean ENABLE_FOC = true;
 
-
-    public static final double DRIVE_GEAR_RATIO = 6.75;
-    public static final double STEER_GEAR_RATIO = 12.8;
     public static final double COUPLING_RATIO = 0;
 
 
@@ -85,7 +78,7 @@ public class MK4IModuleConstants {
     static {
         DRIVE_MOTOR_CONFIG.MotorOutput.Inverted = DRIVE_MOTOR_INVERTED_VALUE;
         DRIVE_MOTOR_CONFIG.MotorOutput.NeutralMode = DRIVE_MOTOR_NEUTRAL_MODE_VALUE;
-        DRIVE_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = DRIVE_GEAR_RATIO;
+        DRIVE_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = ModuleConstants.DRIVE_GEAR_RATIO;
 
         DRIVE_MOTOR_CONFIG.TorqueCurrent.PeakForwardTorqueCurrent = DRIVE_SLIP_CURRENT;
         DRIVE_MOTOR_CONFIG.TorqueCurrent.PeakReverseTorqueCurrent = -DRIVE_SLIP_CURRENT;
@@ -104,7 +97,7 @@ public class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = STEER_CURRENT_LIMIT;
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        STEER_MOTOR_CONFIG.Feedback.RotorToSensorRatio = STEER_GEAR_RATIO;
+        STEER_MOTOR_CONFIG.Feedback.RotorToSensorRatio = ModuleConstants.STEER_GEAR_RATIO;
         STEER_MOTOR_CONFIG.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
         STEER_MOTOR_CONFIG.Slot0.kP = STEER_MOTOR_P;

@@ -7,8 +7,9 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.ModuleConstants;
+import frc.robot.subsystems.swerve.ModuleUtils;
 import frc.robot.subsystems.swerve.swerveinterface.IModule;
-import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 import frc.utils.Conversions;
 import frc.utils.devicewrappers.GBTalonFXPro;
@@ -26,7 +27,7 @@ public class MK4IModule implements IModule {
     private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
 
-    public MK4IModule(ModuleFactory.ModuleName moduleName) {
+    public MK4IModule(ModuleUtils.ModuleName moduleName) {
         this.moduleConfigObject = getModuleConfigObject(moduleName);
         this.steerMotor = moduleConfigObject.getSteerMotor();
         this.driveMotor = moduleConfigObject.getDriveMotor();
@@ -35,7 +36,7 @@ public class MK4IModule implements IModule {
         this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
     }
 
-    public MK4IModuleConfigObject getModuleConfigObject(ModuleFactory.ModuleName moduleName){
+    public MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName){
         return switch (moduleName) {
             case FRONT_LEFT -> MK4IModuleConstants.FRONT_LEFT;
             case FRONT_RIGHT -> MK4IModuleConstants.FRONT_RIGHT;
@@ -49,17 +50,30 @@ public class MK4IModule implements IModule {
     }
 
     private double toDriveDistance(double revolutions) {
-        return Conversions.revolutionsToDistance(revolutions, MK4IModuleConstants.WHEEL_DIAMETER_METERS);
+        return Conversions.revolutionsToDistance(revolutions, ModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
     @Override
-    public void setTargetOpenLoopVelocity(double voltage) {
+    public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
+        final double voltage = ModuleUtils.velocityToOpenLoopVoltage(
+                targetVelocityMetersPerSecond,
+                ModuleConstants.WHEEL_DIAMETER_METERS,
+                steerMotor.getLatencyCompensatedVelocity(),
+                MK4IModuleConstants.COUPLING_RATIO,
+                ModuleConstants.MAX_SPEED_REVOLUTIONS_PER_SECOND,
+                ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
+        );
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
     }
 
     @Override
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
-        driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityMetersPerSecond));
+        final double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
+                targetVelocityMetersPerSecond,
+                Rotation2d.fromDegrees(steerMotor.getLatencyCompensatedVelocity()),
+                MK4IModuleConstants.COUPLING_RATIO
+        );
+        driveMotor.setControl(driveVelocityRequest.withVelocity(optimizedVelocityRevolutionsPerSecond));
     }
 
     @Override

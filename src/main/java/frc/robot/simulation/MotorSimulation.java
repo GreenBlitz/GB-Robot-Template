@@ -29,8 +29,9 @@ public abstract class MotorSimulation {
     }
 
     public static void updateRegisteredSimulations() {
-        for (MotorSimulation motorSimulation : REGISTERED_SIMULATIONS)
+        for (MotorSimulation motorSimulation : REGISTERED_SIMULATIONS) {
             motorSimulation.updateSimulation();
+        }
     }
 
     public void applyConfiguration(TalonFXConfiguration config) {

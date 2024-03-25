@@ -66,8 +66,9 @@ public class Swerve extends GBSubsystem {
         swerve.updateInputs(swerveInputs);
         Logger.processInputs(this.getName(), swerveInputs);
 
-        for (Module currentModule : modules)
+        for (Module currentModule : modules) {
             currentModule.periodic();
+        }
         odometryLock.unlock();
 
         updatePoseEstimatorStates();
@@ -94,13 +95,15 @@ public class Swerve extends GBSubsystem {
 
 
     public void stop() {
-        for (Module currentModule : modules)
+        for (Module currentModule : modules) {
             currentModule.stop();
+        }
     }
 
     public void setBrake(boolean brake) {
-        for (Module currentModule : modules)
+        for (Module currentModule : modules) {
             currentModule.setBrake(brake);
+        }
     }
 
 
@@ -133,8 +136,9 @@ public class Swerve extends GBSubsystem {
     }
 
     void setClosedLoop(boolean closedLoop) {
-        for (Module currentModule : modules)
+        for (Module currentModule : modules) {
             currentModule.setDriveMotorClosedLoop(closedLoop);
+        }
     }
 
     /**
@@ -203,8 +207,9 @@ public class Swerve extends GBSubsystem {
 
     private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
-        for (int i = 0; i < modules.length; i++)
+        for (int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(swerveModuleStates[i]);
+        }
     }
 
     /**
@@ -226,7 +231,6 @@ public class Swerve extends GBSubsystem {
         for (int i = 0; i < odometryUpdates; i++) {
             swerveWheelPositions[i] = getSwerveWheelPositions(i);
             gyroRotations[i] = Rotation2d.fromDegrees(swerveInputs.odometryUpdatesYawDegrees[i]);
-
         }
 
         RobotContainer.POSE_ESTIMATOR.updatePoseEstimatorStates(swerveWheelPositions, gyroRotations, swerveInputs.odometryUpdatesTimestamp);
@@ -274,8 +278,9 @@ public class Swerve extends GBSubsystem {
     private SwerveModuleState[] getModuleStates() {
         final SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
-        for (int i = 0; i < modules.length; i++)
+        for (int i = 0; i < modules.length; i++) {
             states[i] = modules[i].getCurrentState();
+        }
 
         return states;
     }
@@ -284,8 +289,9 @@ public class Swerve extends GBSubsystem {
     private SwerveModuleState[] getTargetStates() {
         final SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
-        for (int i = 0; i < modules.length; i++)
+        for (int i = 0; i < modules.length; i++) {
             states[i] = modules[i].getTargetState();
+        }
 
         return states;
     }

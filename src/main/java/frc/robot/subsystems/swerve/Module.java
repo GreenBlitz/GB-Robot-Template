@@ -90,7 +90,7 @@ public class Module {
      * @param odometryUpdateIndex the index of the odometry update
      * @return the position of the module at the given odometry update index
      */
-    SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
+    public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
                 moduleInputs.odometryUpdatesDriveDistanceMeters[odometryUpdateIndex],
                 Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex])

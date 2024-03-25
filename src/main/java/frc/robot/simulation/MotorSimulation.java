@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
+import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
  * A wrapper class for the WPILib default simulation classes, that'll act similarly to how the TalonFX motor controller works.
  */
 public abstract class MotorSimulation {
+
     private static final List<MotorSimulation> REGISTERED_SIMULATIONS = new ArrayList<>();
     private final TalonFX motor;
     private final TalonFXSimState motorSimState;
@@ -23,7 +25,7 @@ public abstract class MotorSimulation {
         REGISTERED_SIMULATIONS.add(this);
         motor = new TalonFX(REGISTERED_SIMULATIONS.size() - 1);
         motorSimState = motor.getSimState();
-        motorSimState.setSupplyVoltage(12);
+        motorSimState.setSupplyVoltage(RobotConstants.BATTERY_VOLTAGE);
         closedLoopReferenceSignal = motor.getClosedLoopReference();
         closedLoopReferenceSignal.setUpdateFrequency(1.0 / SimulationConstants.TIME_STEP);
     }
@@ -67,7 +69,7 @@ public abstract class MotorSimulation {
 
     public abstract double getVelocityRevolutionsPerSecond();
 
-    abstract void setInputVoltage(double voltage);
+    protected abstract void setInputVoltage(double voltage);
 
-    abstract void updateMotor();
+    protected abstract void updateMotor();
 }

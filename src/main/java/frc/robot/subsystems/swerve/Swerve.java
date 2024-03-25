@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
+import frc.robot.constants.MathConstants;
 import frc.robot.constants.SimulationConstants;
 import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveFactory;
@@ -22,6 +23,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Swerve extends GBSubsystem {
+
     public final Lock odometryLock;
     private final SwerveInputsAutoLogged swerveInputs;
     private final ISwerve swerve;
@@ -81,7 +83,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public Rotation2d getHeading() {
-        final double inputtedHeading = MathUtil.inputModulus(swerveInputs.gyroYawDegrees, -180, 180);
+        final double inputtedHeading = MathUtil.inputModulus(swerveInputs.gyroYawDegrees, -MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
         return Rotation2d.fromDegrees(inputtedHeading);
     }
 

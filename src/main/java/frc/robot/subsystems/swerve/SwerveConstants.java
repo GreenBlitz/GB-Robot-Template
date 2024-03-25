@@ -9,8 +9,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.constants.MathConstants;
 
 public class SwerveConstants {
+
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);
 
     public static final double TRANSLATION_TOLERANCE_METERS = 0.01;
@@ -56,7 +58,7 @@ public class SwerveConstants {
             ROTATION_CONSTRAINTS
     );
     static {
-       PROFILED_ROTATION_PID_CONTROLLER.enableContinuousInput(-180, 180);
+       PROFILED_ROTATION_PID_CONTROLLER.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
     }
 
     public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(

@@ -10,6 +10,8 @@ public interface IModule {
 
 
     void setTargetAngle(Rotation2d angle);
+    
+    void resetByEncoder();
 
     void stop();
 

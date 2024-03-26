@@ -11,13 +11,13 @@ import java.util.Queue;
 public class MK4ISwerve implements ISwerve {
 
     private final GyroPigeon2 pigeon2Gyro;
-    private final Queue<Double> yawQueue, timestampQueue;
+    private Queue<Double> yawQueue, timestampQueue;
 
 
     public MK4ISwerve(){
         pigeon2Gyro = GyroPigeon2.getInstance();
-        yawQueue = TalonFXOdometryThread6328.getInstance().registerSignal(pigeon2Gyro.getGyro(), pigeon2Gyro.YAW_SIGNAL);
-        timestampQueue = TalonFXOdometryThread6328.getInstance().getTimestampQueue();
+//        yawQueue = TalonFXOdometryThread6328.getInstance().registerSignal(pigeon2Gyro.getGyro(), pigeon2Gyro.YAW_SIGNAL);
+//        timestampQueue = TalonFXOdometryThread6328.getInstance().getTimestampQueue();
     }
 
     @Override
@@ -45,12 +45,12 @@ public class MK4ISwerve implements ISwerve {
         inputs.accelerationX = pigeon2Gyro.X_ACCELERATION_SIGNAL.getValue();
         inputs.accelerationY = pigeon2Gyro.Y_ACCELERATION_SIGNAL.getValue();
         inputs.accelerationZ = pigeon2Gyro.Z_ACCELERATION_SIGNAL.getValue();
-        inputs.odometryUpdatesYawDegrees = yawQueue.stream().mapToDouble(Double::doubleValue).toArray();
+//        inputs.odometryUpdatesYawDegrees = yawQueue.stream().mapToDouble(Double::doubleValue).toArray();
 
-        inputs.odometryUpdatesTimestamp = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
+//        inputs.odometryUpdatesTimestamp = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
 
-        yawQueue.clear();
-        timestampQueue.clear();
+//        yawQueue.clear();
+//        timestampQueue.clear();
     }
 
 

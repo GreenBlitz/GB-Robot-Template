@@ -8,35 +8,7 @@ import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.ModuleConstants;
 
 public class MK4IModuleConstants {
-
-    protected static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.FRONT_LEFT_STEER_MOTOR,
-            Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
-            Ports.CANCodersIds.FRONT_LEFT_ENCODER
-    );
-
-    protected static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.FRONT_RIGHT_STEER_MOTOR,
-            Ports.TalonFXIds.FRONT_RIGHT_DRIVE_MOTOR,
-            Ports.CANCodersIds.FRONT_RIGHT_ENCODER
-    );
-
-    protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.BACK_LEFT_STEER_MOTOR,
-            Ports.TalonFXIds.BACK_LEFT_DRIVE_MOTOR,
-            Ports.CANCodersIds.BACK_LEFT_ENCODER
-    );
-
-    protected static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.BACK_RIGHT_STEER_MOTOR,
-            Ports.TalonFXIds.BACK_RIGHT_DRIVE_MOTOR,
-            Ports.CANCodersIds.BACK_RIGHT_ENCODER
-    );
-
+    
 
     public static final boolean ENABLE_FOC = true;
 
@@ -59,12 +31,12 @@ public class MK4IModuleConstants {
     private static final double STEER_CURRENT_LIMIT = 50;
 
 
-    private static final double STEER_MOTOR_P = 75;
+    private static final double STEER_MOTOR_P = 20;
     private static final double STEER_MOTOR_I = 0;
     private static final double STEER_MOTOR_D = 0;
 
 
-    private static final double DRIVE_MOTOR_P = 40;
+    private static final double DRIVE_MOTOR_P = 3;
     private static final double DRIVE_MOTOR_I = 0;
     private static final double DRIVE_MOTOR_D = 0;
 
@@ -85,6 +57,10 @@ public class MK4IModuleConstants {
         DRIVE_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = DRIVE_SLIP_CURRENT;
         DRIVE_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        
+        DRIVE_MOTOR_CONFIG.Slot0.kS = 0.009;
+        DRIVE_MOTOR_CONFIG.Slot0.kA = 0.22448;
+        DRIVE_MOTOR_CONFIG.Slot0.kV = 0.71632;
         DRIVE_MOTOR_CONFIG.Slot0.kP = DRIVE_MOTOR_P;
         DRIVE_MOTOR_CONFIG.Slot0.kI = DRIVE_MOTOR_I;
         DRIVE_MOTOR_CONFIG.Slot0.kD = DRIVE_MOTOR_D;
@@ -97,14 +73,52 @@ public class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = STEER_CURRENT_LIMIT;
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        STEER_MOTOR_CONFIG.Feedback.RotorToSensorRatio = ModuleConstants.STEER_GEAR_RATIO;
+        STEER_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = ModuleConstants.STEER_GEAR_RATIO;
         STEER_MOTOR_CONFIG.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
+        STEER_MOTOR_CONFIG.Slot0.kS = 0.32;
+        STEER_MOTOR_CONFIG.Slot0.kA = 0;
+        STEER_MOTOR_CONFIG.Slot0.kV = 0;
         STEER_MOTOR_CONFIG.Slot0.kP = STEER_MOTOR_P;
         STEER_MOTOR_CONFIG.Slot0.kI = STEER_MOTOR_I;
         STEER_MOTOR_CONFIG.Slot0.kD = STEER_MOTOR_D;
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
-
+    
+    protected static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
+            Phoenix6Constants.CANIVORE_NAME,
+            Ports.TalonFXIds.FRONT_LEFT_STEER_MOTOR,
+            false,
+            Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
+            true,
+            Ports.CANCodersIds.FRONT_LEFT_ENCODER
+    );
+    
+    protected static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
+            Phoenix6Constants.CANIVORE_NAME,
+            Ports.TalonFXIds.FRONT_RIGHT_STEER_MOTOR,
+            false,
+            Ports.TalonFXIds.FRONT_RIGHT_DRIVE_MOTOR,
+            true,
+            Ports.CANCodersIds.FRONT_RIGHT_ENCODER
+    );
+    
+    protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
+            Phoenix6Constants.CANIVORE_NAME,
+            Ports.TalonFXIds.BACK_LEFT_STEER_MOTOR,
+            false,
+            Ports.TalonFXIds.BACK_LEFT_DRIVE_MOTOR,
+            false,
+            Ports.CANCodersIds.BACK_LEFT_ENCODER
+    );
+    
+    protected static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
+            Phoenix6Constants.CANIVORE_NAME,
+            Ports.TalonFXIds.BACK_RIGHT_STEER_MOTOR,
+            false,
+            Ports.TalonFXIds.BACK_RIGHT_DRIVE_MOTOR,
+            true,
+            Ports.CANCodersIds.BACK_RIGHT_ENCODER
+    );
 
 }

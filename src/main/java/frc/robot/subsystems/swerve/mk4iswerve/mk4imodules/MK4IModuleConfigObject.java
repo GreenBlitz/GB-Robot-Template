@@ -14,16 +14,18 @@ public class MK4IModuleConfigObject {
     public StatusSignal<Double> steerPositionSignal, steerVelocitySignal, steerAccelerationSignal, steerVoltageSignal;
     public StatusSignal<Double> driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveAccelerationSignal, driveVoltageSignal;
 
-    protected MK4IModuleConfigObject(String busChain, int steerMotorId, int driveMotorId, int steerEncoderId) {
-        this.driveMotor = new GBTalonFXPro(steerMotorId, busChain);
-        this.steerMotor = new GBTalonFXPro(driveMotorId, busChain);
+    protected MK4IModuleConfigObject(String busChain, int steerMotorId, boolean isSteerInverted, int driveMotorId, boolean isDriveInverted, int steerEncoderId) {
+        this.driveMotor = new GBTalonFXPro(driveMotorId, busChain);
+        this.steerMotor = new GBTalonFXPro(steerMotorId, busChain);
         this.steerEncoder = new CANcoder(steerEncoderId, busChain);
 
         configEncoder();
         optimizeBusAndSignalOfEncoder();
         configSteerMotor();
+        steerMotor.setInverted(isSteerInverted);
         optimizeBusAndSignalOfSteerMotor();
         configDriveMotor();
+        driveMotor.setInverted(isDriveInverted);
         optimizeBusAndSignalOfDriveMotor();
     }
 

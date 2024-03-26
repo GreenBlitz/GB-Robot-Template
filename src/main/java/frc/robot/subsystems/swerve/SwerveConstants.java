@@ -22,19 +22,19 @@ public class SwerveConstants {
     public static final double DRIVE_NEUTRAL_DEADBAND = 0.2;
     public static final double ROTATION_NEUTRAL_DEADBAND = 0.2;
 
-    public static final double MAX_SPEED_METERS_PER_SECOND = 4.25;
-    public static final double MAX_ROTATIONAL_SPEED_RADIANS_PER_SECOND = 12.03;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 5.5;
+    public static final double MAX_ROTATIONAL_SPEED_RADIANS_PER_SECOND = 10;
 
-    public static final double MAX_ROTATION_VELOCITY = 720;
-    public static final double MAX_ROTATION_ACCELERATION = 720;
+    public static final double MAX_ROTATION_VELOCITY = 540;
+    public static final double MAX_ROTATION_ACCELERATION = 360;
 
     public static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS = new TrapezoidProfile.Constraints(
             MAX_ROTATION_VELOCITY,
             MAX_ROTATION_ACCELERATION
     );
 
-    public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.6457 / 2;
-    public static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.5357 / 2;
+    public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
+    public static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
 
     public static final Translation2d[] LOCATIONS = {
             new Translation2d(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER),

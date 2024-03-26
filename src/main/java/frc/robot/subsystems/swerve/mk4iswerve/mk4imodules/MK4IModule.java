@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.mk4iswerve.mk4imodules;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -21,9 +22,9 @@ public class MK4IModule implements IModule {
     private final GBTalonFXPro steerMotor, driveMotor;
     private final CANcoder steerEncoder;
     private final MK4IModuleConfigObject moduleConfigObject;
-    private final Queue<Double> steerPositionQueue, drivePositionQueue;
+    private Queue<Double> steerPositionQueue, drivePositionQueue;
 
-    private final VelocityTorqueCurrentFOC driveVelocityRequest = new VelocityTorqueCurrentFOC(0);
+    private final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0);
     private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
 
@@ -32,8 +33,10 @@ public class MK4IModule implements IModule {
         this.steerMotor = moduleConfigObject.getSteerMotor();
         this.driveMotor = moduleConfigObject.getDriveMotor();
         this.steerEncoder = moduleConfigObject.getSteerEncoder();
-        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConfigObject.steerPositionSignal);
-        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
+//        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConfigObject.steerPositionSignal);
+//        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
+        
+        this.steerMotor.setPosition(steerEncoder.getAbsolutePosition().getValue());
     }
 
     public MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName){
@@ -80,7 +83,13 @@ public class MK4IModule implements IModule {
     public void setTargetAngle(Rotation2d angle) {
         steerMotor.setControl(steerPositionRequest.withPosition(angle.getRotations()));
     }
-
+    
+    @Override
+    public void resetByEncoder() {
+        steerMotor.setPosition(steerEncoder.getAbsolutePosition().getValue());
+        
+    }
+    
     @Override
     public void stop() {
         steerMotor.stopMotor();
@@ -117,18 +126,18 @@ public class MK4IModule implements IModule {
         inputs.steerEncoderVoltage = steerEncoder.getSupplyVoltage().getValue();
 
         inputs.steerAngleDegrees = getAngleDegrees();
-        inputs.odometryUpdatesSteerAngleDegrees = steerPositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray();
+//        inputs.odometryUpdatesSteerAngleDegrees = steerPositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray();
         inputs.steerVoltage = moduleConfigObject.steerVoltageSignal.getValue();
         inputs.steerVelocity = steerMotor.getLatencyCompensatedVelocity();
 
         inputs.driveDistanceMeters = toDriveDistance(driveMotor.getLatencyCompensatedPosition());
-        inputs.odometryUpdatesDriveDistanceMeters = drivePositionQueue.stream().mapToDouble(this::toDriveDistance).toArray();
+//        inputs.odometryUpdatesDriveDistanceMeters = drivePositionQueue.stream().mapToDouble(this::toDriveDistance).toArray();
         inputs.driveVelocityMetersPerSecond = toDriveDistance(driveMotor.getLatencyCompensatedVelocity());
         inputs.driveCurrent = moduleConfigObject.driveStatorCurrentSignal.getValue();
         inputs.driveVoltage = moduleConfigObject.driveVoltageSignal.getValue();
 
-        steerPositionQueue.clear();
-        drivePositionQueue.clear();
+//        steerPositionQueue.clear();
+//        drivePositionQueue.clear();
     }
 
 }

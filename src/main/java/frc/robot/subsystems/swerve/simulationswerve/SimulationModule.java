@@ -70,7 +70,12 @@ public class SimulationModule implements IModule {
     public void setTargetAngle(Rotation2d angle) {
         steerMotor.setControl(steerPositionRequest.withPosition(angle.getRotations()));
     }
-
+    
+    @Override
+    public void resetByEncoder() {
+    
+    }
+    
     @Override
     public void stop() {
         driveMotor.stop();

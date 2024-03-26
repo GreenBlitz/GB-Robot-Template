@@ -19,7 +19,12 @@ public class ReplayModule implements IModule {
     public void setTargetAngle(Rotation2d angle) {
 
     }
-
+    
+    @Override
+    public void resetByEncoder() {
+    
+    }
+    
     @Override
     public void stop() {
 

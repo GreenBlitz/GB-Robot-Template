@@ -23,9 +23,14 @@ public class Module {
         this.module = ModuleFactory.createModule(moduleName);
         this.moduleInputs = new ModuleInputsAutoLogged();
         this.targetState = new SwerveModuleState();
-        this.driveMotorClosedLoop = true;
+        this.driveMotorClosedLoop = false;
     }
 
+    
+    public void resetByEncoder(){
+        module.resetByEncoder();
+    }
+    
     public void periodic() {
         module.updateInputs(moduleInputs);
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);

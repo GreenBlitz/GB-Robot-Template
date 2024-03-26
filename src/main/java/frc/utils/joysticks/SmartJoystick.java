@@ -1,5 +1,8 @@
 package frc.utils.joysticks;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -8,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 public class SmartJoystick {
 
     private static final double DEADZONE = 0.07;
+    private static final double JOYSTICK_AXIS_TO_SQUARE_FACTOR = 1.4;
 
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
 
@@ -74,6 +78,10 @@ public class SmartJoystick {
         return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
     }
 
+    private boolean isStickAxis(Axis axis){
+        return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
+    }
+
     /**
      * This function binds a joystick using a joystick object.
      *
@@ -103,6 +111,40 @@ public class SmartJoystick {
         return joystick.getRawAxis(raw_axis);
     }
 
+
+
+    /**
+     * This function returns the value of the axis, if the stick was square instead of circle
+     *
+     * @param axis The axis we want to use.
+     * @return stick value if stick was square.
+     * <p>
+     *
+     * if @ mark the 1 of each axis
+
+     *            Before:                                    After:
+    //             (1,0)
+    //         *****@*******      @ (1,1)                *************
+    //     *****           *****                    *****    (1,0)    *****
+    //   ***                   ***                ***  -------@-------@  ***
+    //  **                       **              **   |          (1,1)|   **
+    // **                         **            **    |               |    **
+    // **                         *@ (0,1)      **    |          (0,1)@     **
+    // **                         **            **    |               |    **
+    // **                         **            **    |               |    **
+    //  **                       **              **   |_______________|   **
+    //   ***                   ***                ***                   ***
+    //     *****           *****                    *****           *****
+    //         *************                            *************
+
+    */
+    public double getSquaredAxis(Axis axis) {
+        if (joystick == null) return 0;
+        if (!isStickAxis(axis)) return axis.getValue(this);
+        final double squaredAxisValue = axis.getValue(this) * JOYSTICK_AXIS_TO_SQUARE_FACTOR;
+        return MathUtil.clamp(squaredAxisValue, -1, 1);
+    }
+
     /**
      * This function returns a joystick
      *
@@ -113,9 +155,7 @@ public class SmartJoystick {
     }
 
     public double getAxisValue(Axis axis) {
-        if (axis != Axis.LEFT_TRIGGER && axis != Axis.RIGHT_TRIGGER)
-            return deadzone(axis.getValue(this));
-        return axis.getValue(this);
+        return isStickAxis(axis) ? deadzone(axis.getValue(this)) : axis.getValue(this);
     }
 
     /**

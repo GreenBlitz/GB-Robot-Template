@@ -120,7 +120,8 @@ public class SmartJoystick {
      * @return stick value if stick was square.
      * <p>
      *
-     * if @ mark the 1 of each axis
+     * @author Yoav Herman
+     * if @ marks the 1 point of each axis
 
      *            Before:                                    After:
     //             (1,0)

@@ -31,12 +31,11 @@ public class MK4IModule implements IModule {
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         this.moduleConfigObject = getModuleConfigObject(moduleName);
         this.steerMotor = moduleConfigObject.getSteerMotor();
+        this.steerMotor.setPosition(0);
         this.driveMotor = moduleConfigObject.getDriveMotor();
         this.steerEncoder = moduleConfigObject.getSteerEncoder();
 //        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConfigObject.steerPositionSignal);
 //        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
-        
-        this.steerMotor.setPosition(steerEncoder.getAbsolutePosition().getValue());
     }
 
     public MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName){

@@ -16,7 +16,7 @@ public class MK4IModuleConstants {
 
 
     private static final InvertedValue DRIVE_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive;
-    private static final InvertedValue STEER_MOTOR_INVERTED_VALUE = InvertedValue.CounterClockwise_Positive;
+    private static final InvertedValue STEER_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive;
 
 
     private static final SensorDirectionValue STEER_ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
@@ -74,7 +74,7 @@ public class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
         STEER_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = ModuleConstants.STEER_GEAR_RATIO;
-        STEER_MOTOR_CONFIG.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        STEER_MOTOR_CONFIG.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
         STEER_MOTOR_CONFIG.Slot0.kS = 0.32;
         STEER_MOTOR_CONFIG.Slot0.kA = 0;
@@ -85,12 +85,13 @@ public class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
     
+    
     protected static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
             Ports.TalonFXIds.FRONT_LEFT_STEER_MOTOR,
             false,
             Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
-            true,
+            false,
             Ports.CANCodersIds.FRONT_LEFT_ENCODER
     );
     
@@ -106,7 +107,7 @@ public class MK4IModuleConstants {
     protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
             Ports.TalonFXIds.BACK_LEFT_STEER_MOTOR,
-            false,
+            true,
             Ports.TalonFXIds.BACK_LEFT_DRIVE_MOTOR,
             false,
             Ports.CANCodersIds.BACK_LEFT_ENCODER
@@ -117,7 +118,7 @@ public class MK4IModuleConstants {
             Ports.TalonFXIds.BACK_RIGHT_STEER_MOTOR,
             false,
             Ports.TalonFXIds.BACK_RIGHT_DRIVE_MOTOR,
-            true,
+            false,
             Ports.CANCodersIds.BACK_RIGHT_ENCODER
     );
 

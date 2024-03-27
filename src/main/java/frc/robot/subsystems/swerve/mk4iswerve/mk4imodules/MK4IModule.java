@@ -21,7 +21,7 @@ public class MK4IModule implements IModule {
 
     private final GBTalonFXPro steerMotor, driveMotor;
     private final CANcoder steerEncoder;
-    private final MK4IModuleConfigObject moduleConfigObject;
+    private final MK4IData mk4IData;
     private Queue<Double> steerPositionQueue, drivePositionQueue;
 
     private final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0);
@@ -29,11 +29,13 @@ public class MK4IModule implements IModule {
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC);
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
-        this.moduleConfigObject = getModuleConfigObject(moduleName);
+        MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
         this.steerEncoder = moduleConfigObject.getSteerEncoder();
         this.driveMotor = moduleConfigObject.getDriveMotor();
         this.steerMotor = moduleConfigObject.getSteerMotor();
-        this.steerMotor.setPosition(0);
+        this.mk4IData = new MK4IData(moduleConfigObject);
+
+        steerMotor.setPosition(0);
 //        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConfigObject.steerPositionSignal);
 //        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
     }
@@ -47,20 +49,12 @@ public class MK4IModule implements IModule {
         };
     }
 
-    private double getAngleDegrees() {
-        return Conversions.revolutionsToDegrees(steerMotor.getLatencyCompensatedPosition());
-    }
-
-    private double toDriveDistance(double revolutions) {
-        return Conversions.revolutionsToDistance(revolutions, ModuleConstants.WHEEL_DIAMETER_METERS);
-    }
-
     @Override
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         final double voltage = ModuleUtils.velocityToOpenLoopVoltage(
                 targetVelocityMetersPerSecond,
                 ModuleConstants.WHEEL_DIAMETER_METERS,
-                steerMotor.getLatencyCompensatedVelocity(),
+                mk4IData.getSteerMotorVelocity().getRotations(),
                 MK4IModuleConstants.COUPLING_RATIO,
                 ModuleConstants.MAX_SPEED_REVOLUTIONS_PER_SECOND,
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
@@ -72,7 +66,7 @@ public class MK4IModule implements IModule {
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
         final double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
                 targetVelocityMetersPerSecond,
-                Rotation2d.fromDegrees(steerMotor.getLatencyCompensatedVelocity()),
+                mk4IData.getSteerMotorVelocity(),
                 MK4IModuleConstants.COUPLING_RATIO
         );
         driveMotor.setControl(driveVelocityRequest.withVelocity(optimizedVelocityRevolutionsPerSecond));
@@ -85,7 +79,7 @@ public class MK4IModule implements IModule {
     
     @Override
     public void resetByEncoder() {
-        steerMotor.setPosition(steerEncoder.getAbsolutePosition().getValue());
+        steerMotor.setPosition(mk4IData.getEncoderAbsolutePosition().getRotations());
     }
     
     @Override
@@ -101,38 +95,22 @@ public class MK4IModule implements IModule {
         steerMotor.setNeutralMode(neutralModeValue);
     }
 
-    private void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(
-                moduleConfigObject.steerPositionSignal,
-                moduleConfigObject.steerVelocitySignal,
-                moduleConfigObject.steerAccelerationSignal,
-                moduleConfigObject.drivePositionSignal,
-                moduleConfigObject.driveVelocitySignal,
-                moduleConfigObject.driveAccelerationSignal,
-                moduleConfigObject.driveStatorCurrentSignal,
-                moduleConfigObject.steerEncoderPositionSignal,
-                moduleConfigObject.steerEncoderVelocitySignal
-        );
-    }
-
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
-        refreshStatusSignals();
-
-        inputs.steerEncoderAngleDegrees = Conversions.revolutionsToDegrees(steerEncoder.getAbsolutePosition().getValue());
+        inputs.steerEncoderAngleDegrees = mk4IData.getEncoderAbsolutePosition().getDegrees();
         inputs.steerEncoderVelocity = steerEncoder.getVelocity().getValue();
         inputs.steerEncoderVoltage = steerEncoder.getSupplyVoltage().getValue();
 
-        inputs.steerAngleDegrees = getAngleDegrees();
+        inputs.steerAngleDegrees = mk4IData.getSteerMotorPosition().getDegrees();
 //        inputs.odometryUpdatesSteerAngleDegrees = steerPositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray();
-        inputs.steerVoltage = moduleConfigObject.steerVoltageSignal.getValue();
-        inputs.steerVelocity = steerMotor.getLatencyCompensatedVelocity();
+        inputs.steerVoltage = mk4IData.getSteerVoltageSignal().getValue();
+        inputs.steerVelocity = mk4IData.getSteerMotorVelocity().getRotations();
 
-        inputs.driveDistanceMeters = toDriveDistance(driveMotor.getLatencyCompensatedPosition());
+        inputs.driveDistanceMeters = mk4IData.getDriveMotorPositionInMeters();
 //        inputs.odometryUpdatesDriveDistanceMeters = drivePositionQueue.stream().mapToDouble(this::toDriveDistance).toArray();
-        inputs.driveVelocityMetersPerSecond = toDriveDistance(driveMotor.getLatencyCompensatedVelocity());
-        inputs.driveCurrent = moduleConfigObject.driveStatorCurrentSignal.getValue();
-        inputs.driveVoltage = moduleConfigObject.driveVoltageSignal.getValue();
+        inputs.driveVelocityMetersPerSecond = mk4IData.getDriveMotorVelocityInMeters();
+        inputs.driveCurrent = mk4IData.getDriveStatorCurrentSignal().getValue();
+        inputs.driveVoltage = mk4IData.getDriveVoltageSignal().getValue();
 
 //        steerPositionQueue.clear();
 //        drivePositionQueue.clear();

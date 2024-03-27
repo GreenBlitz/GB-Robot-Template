@@ -15,25 +15,27 @@ public class MK4IModuleConfigObject {
     public StatusSignal<Double> driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveAccelerationSignal, driveVoltageSignal;
 
     protected MK4IModuleConfigObject(String busChain, int steerMotorId, boolean isSteerInverted, int driveMotorId, boolean isDriveInverted, int steerEncoderId) {
+        this.steerEncoder = new CANcoder(steerEncoderId, busChain);
         this.driveMotor = new GBTalonFXPro(driveMotorId, busChain);
         this.steerMotor = new GBTalonFXPro(steerMotorId, busChain);
-        this.steerEncoder = new CANcoder(steerEncoderId, busChain);
 
         configEncoder();
         optimizeBusAndSignalOfEncoder();
-        configSteerMotor();
-        steerMotor.setInverted(isSteerInverted);
-        optimizeBusAndSignalOfSteerMotor();
+
         configDriveMotor();
         driveMotor.setInverted(isDriveInverted);
         optimizeBusAndSignalOfDriveMotor();
+
+        configSteerMotor();
+        steerMotor.setInverted(isSteerInverted);
+        optimizeBusAndSignalOfSteerMotor();
     }
 
-    private void configEncoder(){
+    private void configEncoder() {
         steerEncoder.getConfigurator().apply(MK4IModuleConstants.ENCODER_CONFIG);
     }
 
-    private void optimizeBusAndSignalOfEncoder(){
+    private void optimizeBusAndSignalOfEncoder() {
         steerEncoderPositionSignal = steerEncoder.getPosition();
         steerEncoderVelocitySignal = steerEncoder.getVelocity();
         steerEncoderVoltageSignal = steerEncoder.getSupplyVoltage();
@@ -48,37 +50,11 @@ public class MK4IModuleConfigObject {
         steerEncoder.optimizeBusUtilization();
     }
 
-    private void configSteerMotor(){
-        TalonFXConfiguration configuration = MK4IModuleConstants.STEER_MOTOR_CONFIG;
-        configuration.Feedback.FeedbackRemoteSensorID = steerEncoder.getDeviceID();
-        steerMotor.applyConfiguration(configuration);
-    }
-
-    private void optimizeBusAndSignalOfSteerMotor(){
-        steerPositionSignal = steerMotor.getPosition();
-        steerVelocitySignal = steerMotor.getVelocity();
-        steerAccelerationSignal = steerMotor.getVelocity();
-        steerVoltageSignal = steerMotor.getMotorVoltage();
-
-        steerMotor.updateFrequency(
-                250,
-                steerPositionSignal,
-                steerVelocitySignal,
-                steerAccelerationSignal
-        );
-        steerMotor.updateFrequency(
-                20,
-                steerVoltageSignal
-        );
-
-        steerMotor.optimizeBusUtilization();
-    }
-
-    private void configDriveMotor(){
+    private void configDriveMotor() {
         driveMotor.applyConfiguration(MK4IModuleConstants.DRIVE_MOTOR_CONFIG);
     }
 
-    private void optimizeBusAndSignalOfDriveMotor(){
+    private void optimizeBusAndSignalOfDriveMotor() {
         drivePositionSignal = driveMotor.getPosition();
         driveVelocitySignal = driveMotor.getVelocity();
         driveStatorCurrentSignal = driveMotor.getStatorCurrent();
@@ -100,15 +76,44 @@ public class MK4IModuleConfigObject {
         driveMotor.optimizeBusUtilization();
     }
 
+    private void configSteerMotor() {
+        TalonFXConfiguration configuration = MK4IModuleConstants.STEER_MOTOR_CONFIG;
+        configuration.Feedback.FeedbackRemoteSensorID = steerEncoder.getDeviceID();
+        steerMotor.applyConfiguration(configuration);
+    }
+
+    private void optimizeBusAndSignalOfSteerMotor() {
+        steerPositionSignal = steerMotor.getPosition();
+        steerVelocitySignal = steerMotor.getVelocity();
+        steerAccelerationSignal = steerMotor.getVelocity();
+        steerVoltageSignal = steerMotor.getMotorVoltage();
+
+        steerMotor.updateFrequency(
+                250,
+                steerPositionSignal,
+                steerVelocitySignal,
+                steerAccelerationSignal
+        );
+        steerMotor.updateFrequency(
+                20,
+                steerVoltageSignal
+        );
+
+        steerMotor.optimizeBusUtilization();
+    }
+
+
     public CANcoder getSteerEncoder() {
         return steerEncoder;
     }
 
-    public GBTalonFXPro getSteerMotor(){
-        return steerMotor;
-    }
 
     public GBTalonFXPro getDriveMotor() {
         return driveMotor;
     }
+
+    public GBTalonFXPro getSteerMotor() {
+        return steerMotor;
+    }
+
 }

@@ -30,10 +30,10 @@ public class MK4IModule implements IModule {
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         this.moduleConfigObject = getModuleConfigObject(moduleName);
+        this.steerEncoder = moduleConfigObject.getSteerEncoder();
+        this.driveMotor = moduleConfigObject.getDriveMotor();
         this.steerMotor = moduleConfigObject.getSteerMotor();
         this.steerMotor.setPosition(0);
-        this.driveMotor = moduleConfigObject.getDriveMotor();
-        this.steerEncoder = moduleConfigObject.getSteerEncoder();
 //        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConfigObject.steerPositionSignal);
 //        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
     }
@@ -86,7 +86,6 @@ public class MK4IModule implements IModule {
     @Override
     public void resetByEncoder() {
         steerMotor.setPosition(steerEncoder.getAbsolutePosition().getValue());
-        
     }
     
     @Override

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.mk4iswerve.mk4imodules;
+package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -82,7 +82,7 @@ public class MK4IData {
     public StatusSignal<Double> getSteerEncoderVoltageSignal() {
         return steerEncoderVoltageSignal.refresh();
     }
-    private StatusSignal<Double> getSteerEncoderVelocitySignal() {
+    public StatusSignal<Double> getSteerEncoderVelocitySignal() {
         return steerEncoderVelocitySignal.refresh();
     }
     private StatusSignal<Double> getSteerEncoderAbsolutePositionSignal() {

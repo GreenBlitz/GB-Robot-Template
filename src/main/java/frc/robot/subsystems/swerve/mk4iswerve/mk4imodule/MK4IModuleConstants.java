@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.mk4iswerve.mk4imodules;
+package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -8,9 +8,9 @@ import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.ModuleConstants;
 
 public class MK4IModuleConstants {
-    
 
-    public static final boolean ENABLE_FOC = true;
+    public static final boolean ENABLE_FOC_DRIVE = true;
+    public static final boolean ENABLE_FOC_STEER = true;
 
     public static final double COUPLING_RATIO = 0;
 

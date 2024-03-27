@@ -1,9 +1,10 @@
-package frc.robot.subsystems.swerve.mk4iswerve.mk4imodules;
+package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import frc.robot.subsystems.swerve.mk4iswerve.mk4imodule.MK4IModuleConstants;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
 public class MK4IModuleConfigObject {

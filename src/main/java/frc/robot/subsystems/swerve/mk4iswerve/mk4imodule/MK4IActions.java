@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.devicewrappers.GBTalonFXPro;
+import org.littletonrobotics.junction.Logger;
 
 public class MK4IActions {
 

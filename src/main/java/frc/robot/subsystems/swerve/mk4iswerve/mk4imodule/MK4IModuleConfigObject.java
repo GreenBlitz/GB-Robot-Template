@@ -2,8 +2,11 @@ package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import frc.robot.subsystems.swerve.mk4iswerve.MK4ISwerveConstants;
 import frc.robot.subsystems.swerve.mk4iswerve.mk4imodule.MK4IModuleConstants;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
@@ -33,6 +36,10 @@ public class MK4IModuleConfigObject {
     }
 
     private void configEncoder() {
+        MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+        steerEncoder.getConfigurator().refresh(magnetSensorConfigs);
+        MK4IModuleConstants.ENCODER_CONFIG.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
+
         steerEncoder.getConfigurator().apply(MK4IModuleConstants.ENCODER_CONFIG);
     }
 
@@ -42,8 +49,11 @@ public class MK4IModuleConfigObject {
         steerEncoderVoltageSignal = steerEncoder.getSupplyVoltage();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
+                250,
+                steerEncoderAbsolutePositionSignal
+        );
+        BaseStatusSignal.setUpdateFrequencyForAll(
                 100,
-                steerEncoderAbsolutePositionSignal,
                 steerEncoderVelocitySignal,
                 steerEncoderVoltageSignal
         );

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.ModuleConstants;
 import frc.robot.subsystems.swerve.ModuleUtils;
 import frc.robot.subsystems.swerve.swerveinterface.IModule;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
@@ -17,7 +18,10 @@ public class MK4IModule implements IModule {
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
         this.mk4IData = new MK4IData(moduleConfigObject);
-        this.mk4IActions = new MK4IActions(moduleConfigObject.getDriveMotor(), moduleConfigObject.getSteerMotor(), mk4IData);
+        this.mk4IActions = new MK4IActions(
+                moduleConfigObject.getDriveMotor(),
+                moduleConfigObject.getSteerMotor()
+        );
 
 //        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConfigObject.steerPositionSignal);
 //        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
@@ -34,12 +38,25 @@ public class MK4IModule implements IModule {
 
     @Override
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
-        mk4IActions.setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
+        final double voltage = ModuleUtils.velocityToOpenLoopVoltage(
+                targetVelocityMetersPerSecond,
+                ModuleConstants.WHEEL_DIAMETER_METERS,
+                mk4IData.getSteerMotorVelocity().getRotations(),
+                MK4IModuleConstants.COUPLING_RATIO,
+                ModuleConstants.MAX_SPEED_REVOLUTIONS_PER_SECOND,
+                ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
+        );
+        mk4IActions.setTargetOpenLoopVelocity(voltage);
     }
 
     @Override
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
-        mk4IActions.setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
+        final double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
+                targetVelocityMetersPerSecond,
+                mk4IData.getSteerMotorVelocity(),
+                MK4IModuleConstants.COUPLING_RATIO
+        );
+        mk4IActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
     }
 
     @Override
@@ -49,7 +66,7 @@ public class MK4IModule implements IModule {
     
     @Override
     public void resetByEncoder() {
-        mk4IActions.resetByEncoder();
+        mk4IActions.resetSteerAngle(mk4IData.getEncoderAbsolutePosition());
     }
     
     @Override

@@ -8,11 +8,11 @@ import frc.utils.Conversions;
 
 public class MK4IModuleData {
 
-    private StatusSignal<Double>
+    private final StatusSignal<Double>
             steerEncoderAbsolutePositionSignal, steerEncoderVelocitySignal, steerEncoderVoltageSignal;
-    private StatusSignal<Double>
+    private final StatusSignal<Double>
             driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveAccelerationSignal, driveVoltageSignal;
-    private StatusSignal<Double>
+    private final StatusSignal<Double>
             steerPositionSignal, steerVelocitySignal, steerAccelerationSignal, steerVoltageSignal;
 
 
@@ -21,31 +21,21 @@ public class MK4IModuleData {
     }
 
     public MK4IModuleData(MK4IModuleConfigObject mk4IModuleConfigObject){
-        registerEncoderSignals(mk4IModuleConfigObject);
-        registerDriveMotorSignals(mk4IModuleConfigObject);
-        registerSteerMotorSignals(mk4IModuleConfigObject);
-    }
-
-    private void registerEncoderSignals(MK4IModuleConfigObject mk4IModuleConfigObject){
         steerEncoderVoltageSignal = mk4IModuleConfigObject.steerEncoderVoltageSignal;
         steerEncoderVelocitySignal = mk4IModuleConfigObject.steerEncoderVelocitySignal;
         steerEncoderAbsolutePositionSignal = mk4IModuleConfigObject.steerEncoderAbsolutePositionSignal;
-    }
-    private void registerDriveMotorSignals(MK4IModuleConfigObject mk4IModuleConfigObject){
+
         driveVoltageSignal = mk4IModuleConfigObject.driveVoltageSignal;
         driveStatorCurrentSignal = mk4IModuleConfigObject.driveStatorCurrentSignal;
         driveAccelerationSignal = mk4IModuleConfigObject.driveAccelerationSignal;
         driveVelocitySignal = mk4IModuleConfigObject.driveVelocitySignal;
         drivePositionSignal = mk4IModuleConfigObject.drivePositionSignal;
 
-    }
-    private void registerSteerMotorSignals(MK4IModuleConfigObject mk4IModuleConfigObject){
         steerVoltageSignal = mk4IModuleConfigObject.steerVoltageSignal;
         steerAccelerationSignal = mk4IModuleConfigObject.steerAccelerationSignal;
         steerVelocitySignal = mk4IModuleConfigObject.steerVelocitySignal;
         steerPositionSignal = mk4IModuleConfigObject.steerPositionSignal;
     }
-
 
 
     public Rotation2d getEncoderAbsolutePosition(){

@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleConstants;
 import frc.utils.Conversions;
 
-public class MK4IData {
+public class MK4IModuleData {
 
     private StatusSignal<Double>
             steerEncoderAbsolutePositionSignal, steerEncoderVelocitySignal, steerEncoderVoltageSignal;
@@ -20,7 +20,7 @@ public class MK4IData {
         return Conversions.revolutionsToDistance(revolutions, ModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
-    public MK4IData(MK4IModuleConfigObject mk4IModuleConfigObject){
+    public MK4IModuleData(MK4IModuleConfigObject mk4IModuleConfigObject){
         registerEncoderSignals(mk4IModuleConfigObject);
         registerDriveMotorSignals(mk4IModuleConfigObject);
         registerSteerMotorSignals(mk4IModuleConfigObject);

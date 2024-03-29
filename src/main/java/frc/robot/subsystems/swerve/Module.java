@@ -23,7 +23,7 @@ public class Module {
         this.module = ModuleFactory.createModule(moduleName);
         this.moduleInputs = new ModuleInputsAutoLogged();
         this.targetState = new SwerveModuleState();
-        this.driveMotorClosedLoop = false;
+        this.driveMotorClosedLoop = ModuleConstants.IS_DRIVE_MOTOR_CLOSED_LOOP;
     }
 
     
@@ -45,11 +45,11 @@ public class Module {
     }
 
 
-    public void setTargetOpenLoopVelocityAndOptimize(double targetVelocityMetersPerSecond) {
+    public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         module.setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
     }
 
-    public void setTargetClosedLoopVelocityAndOptimize(double targetVelocityMetersPerSecond) {
+    public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
         module.setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
     }
 
@@ -80,10 +80,10 @@ public class Module {
         targetVelocityMetersPerSecond = reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
 
         if (driveMotorClosedLoop) {
-            setTargetClosedLoopVelocityAndOptimize(targetVelocityMetersPerSecond);
+            setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
         }
         else {
-            setTargetOpenLoopVelocityAndOptimize(targetVelocityMetersPerSecond);
+            setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
         }
     }
 

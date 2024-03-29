@@ -10,15 +10,15 @@ import java.util.Queue;
 
 public class MK4IModule implements IModule {
 
-    private final MK4IData mk4IData;
-    private final MK4IActions mk4IActions;
+    private final MK4IModuleData mk4IData;
+    private final MK4IModuleActions mk4IActions;
     private Queue<Double> steerPositionQueue, drivePositionQueue;
 
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
-        this.mk4IData = new MK4IData(moduleConfigObject);
-        this.mk4IActions = new MK4IActions(
+        this.mk4IData = new MK4IModuleData(moduleConfigObject);
+        this.mk4IActions = new MK4IModuleActions(
                 moduleConfigObject.getDriveMotor(),
                 moduleConfigObject.getSteerMotor()
         );

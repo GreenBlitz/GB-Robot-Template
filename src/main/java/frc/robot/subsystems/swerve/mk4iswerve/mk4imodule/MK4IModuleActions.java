@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
-public class MK4IActions {
+public class MK4IModuleActions {
 
     private final GBTalonFXPro steerMotor, driveMotor;
 
@@ -16,7 +16,7 @@ public class MK4IActions {
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_STEER);
 
 
-    public MK4IActions(GBTalonFXPro driveMotor, GBTalonFXPro steerMotor){
+    public MK4IModuleActions(GBTalonFXPro driveMotor, GBTalonFXPro steerMotor){
         this.driveMotor = driveMotor;
         this.steerMotor = steerMotor;
     }

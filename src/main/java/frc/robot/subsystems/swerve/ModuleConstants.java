@@ -12,4 +12,6 @@ public class ModuleConstants {
     public static final double DRIVE_GEAR_RATIO = 6.12;
     public static final double STEER_GEAR_RATIO = (150.0 / 7.0);
 
+    public static final boolean IS_DRIVE_MOTOR_CLOSED_LOOP = false;
+
 }

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.simulationswerve;
+package frc.robot.subsystems.swerve.simulationswerve.simulationmodule;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.math.system.plant.DCMotor;

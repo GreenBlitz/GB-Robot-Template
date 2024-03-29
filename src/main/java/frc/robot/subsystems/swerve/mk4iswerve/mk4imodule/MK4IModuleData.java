@@ -3,8 +3,7 @@ package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.ModuleConstants;
-import frc.utils.Conversions;
+import frc.robot.subsystems.swerve.ModuleUtils;
 
 public class MK4IModuleData {
 
@@ -15,10 +14,6 @@ public class MK4IModuleData {
     private final StatusSignal<Double>
             steerPositionSignal, steerVelocitySignal, steerAccelerationSignal, steerVoltageSignal;
 
-
-    private static double toDriveDistance(double revolutions) {
-        return Conversions.revolutionsToDistance(revolutions, ModuleConstants.WHEEL_DIAMETER_METERS);
-    }
 
     public MK4IModuleData(MK4IModuleConfigObject mk4IModuleConfigObject){
         steerEncoderVoltageSignal = mk4IModuleConfigObject.steerEncoderVoltageSignal;
@@ -42,10 +37,10 @@ public class MK4IModuleData {
         return Rotation2d.fromRotations(getSteerEncoderAbsolutePositionSignal().getValue());
     }
     public double getDriveMotorVelocityInMeters(){
-        return toDriveDistance(getDriveMotorLatencyVelocity());
+        return ModuleUtils.toDriveDistance(getDriveMotorLatencyVelocity());
     }
     public double getDriveMotorPositionInMeters(){
-        return toDriveDistance(getDriveMotorLatencyPosition());
+        return ModuleUtils.toDriveDistance(getDriveMotorLatencyPosition());
     }
     public Rotation2d getSteerMotorVelocity(){
         return Rotation2d.fromRotations(getSteerMotorLatencyVelocity());

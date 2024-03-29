@@ -1,20 +1,16 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.*;
-import edu.wpi.first.math.util.Units;
 import frc.robot.constants.MathConstants;
 import frc.robot.constants.SimulationConstants;
 import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveFactory;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
-import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
-import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.allianceutils.AllianceUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;

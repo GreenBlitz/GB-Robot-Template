@@ -39,7 +39,6 @@ public class MK4IModuleConfigObject {
         MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
         steerEncoder.getConfigurator().refresh(magnetSensorConfigs);
         MK4IModuleConstants.ENCODER_CONFIG.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-
         steerEncoder.getConfigurator().apply(MK4IModuleConstants.ENCODER_CONFIG);
     }
 

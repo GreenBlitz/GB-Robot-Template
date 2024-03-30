@@ -23,14 +23,7 @@ public class RobotTypeUtils {
 
     public static RobotType determineRobotType(RobotType wantedType) {
         if (Robot.isSimulation()) {
-            if (wantedType.equals(RobotType.REPLAY)) {
-                return RobotType.REPLAY;
-            }
-            return RobotType.SIMULATION;
-        } else {
-            if (wantedType.equals(RobotType.REAL)) {
-                return RobotType.REAL;
-            }
+            return wantedType.equals(RobotType.SIMULATION) ? RobotType.SIMULATION : RobotType.REPLAY;
         }
         return RobotType.REAL;
     }

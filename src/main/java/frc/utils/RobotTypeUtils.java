@@ -1,7 +1,6 @@
 package frc.utils;
 
 import frc.robot.Robot;
-import frc.robot.constants.RobotConstants;
 
 public class RobotTypeUtils {
 
@@ -10,14 +9,12 @@ public class RobotTypeUtils {
         SIMULATION,
         REPLAY;
 
-        public boolean isSimulation(){
-            return this.equals(RobotType.SIMULATION);
-        }
-
         public boolean isReal(){
             return this.equals(RobotType.REAL);
         }
-
+        public boolean isSimulation(){
+            return this.equals(RobotType.SIMULATION);
+        }
         public boolean isReplay(){
             return this.equals(RobotType.REPLAY);
         }

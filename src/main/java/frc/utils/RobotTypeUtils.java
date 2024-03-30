@@ -8,40 +8,34 @@ public class RobotTypeUtils {
     public enum RobotType {
         REAL,
         SIMULATION,
-        REPLAY
+        REPLAY;
+
+        public boolean isSimulation(){
+            return this.equals(RobotType.SIMULATION);
+        }
+
+        public boolean isReal(){
+            return this.equals(RobotType.REAL);
+        }
+
+        public boolean isReplay(){
+            return this.equals(RobotType.REPLAY);
+        }
     }
 
-    private static final RobotType ROBOT_TYPE = determineRobotType();
 
-    private static RobotType determineRobotType() {
-        RobotType robotType = RobotConstants.ROBOT_TYPE;
+    public static RobotType determineRobotType(RobotType wantedType) {
         if (Robot.isSimulation()) {
-            if (robotType.equals(RobotType.REPLAY)) {
+            if (wantedType.equals(RobotType.REPLAY)) {
                 return RobotType.REPLAY;
             }
             return RobotType.SIMULATION;
         } else {
-            if (robotType.equals(RobotType.REAL)) {
+            if (wantedType.equals(RobotType.REAL)) {
                 return RobotType.REAL;
             }
         }
         return RobotType.REAL;
-    }
-
-    public static RobotType getRobotType(){
-        return ROBOT_TYPE;
-    }
-
-    public static boolean isSimulation(){
-        return ROBOT_TYPE.equals(RobotType.SIMULATION);
-    }
-
-    public static boolean isReal(){
-        return ROBOT_TYPE.equals(RobotType.REAL);
-    }
-
-    public static boolean isReplay(){
-        return ROBOT_TYPE.equals(RobotType.REPLAY);
     }
 
 }

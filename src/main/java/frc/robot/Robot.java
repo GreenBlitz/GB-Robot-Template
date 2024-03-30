@@ -9,9 +9,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.RobotConstants;
 import frc.utils.LoggerUtils;
-import frc.utils.RobotTypeUtils;
 import org.littletonrobotics.junction.LoggedRobot;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -61,16 +62,16 @@ public class Robot extends LoggedRobot {
         NetworkTableInstance.getDefault()
                 .getStructTopic("MechanismPoses", Pose3d.struct).publish();
 
-        switch (RobotTypeUtils.getRobotType()) {
+        switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> {
                 LoggerUtils.startRealLogger();
+            }
+            case SIMULATION -> {
+                LoggerUtils.startSimulationLogger();
             }
             case REPLAY -> {
                 setUseTiming(false); // Run as fast as possible
                 LoggerUtils.startReplayLogger();
-            }
-            case SIMULATION -> {
-                LoggerUtils.startSimulationLogger();
             }
         }
     }

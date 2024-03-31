@@ -28,6 +28,10 @@ public class Module {
         resetByEncoder();
     }
 
+    //TODO - delete
+    public SwerveModulePosition getCurrentPosition() {
+        return new SwerveModulePosition(moduleInputs.driveDistanceMeters, Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees));
+    }
     
     public void resetByEncoder(){
         module.resetByEncoder();

@@ -24,7 +24,9 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         //bindings
 
-        usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.SWERVE.setHeading(new Rotation2d())));
+        //TODO - return to last pose estimator
+        usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.SWERVE.setHeadingForPoseEstimator(new Rotation2d())));
+
         usedJoystick.A.onTrue(new InstantCommand(RobotContainer.SWERVE::resetByEncoder));
         
         RobotContainer.SWERVE.setDefaultCommand(

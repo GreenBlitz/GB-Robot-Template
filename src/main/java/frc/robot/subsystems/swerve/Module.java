@@ -14,8 +14,9 @@ public class Module {
 
     private final ModuleInputsAutoLogged moduleInputs;
     private final ModuleUtils.ModuleName moduleName;
+    private final IModule module;
+
     private boolean driveMotorClosedLoop;
-    private IModule module;
     private SwerveModuleState targetState;
 
     public Module(ModuleUtils.ModuleName moduleName) {
@@ -26,11 +27,6 @@ public class Module {
         this.driveMotorClosedLoop = ModuleConstants.IS_DRIVE_MOTOR_CLOSED_LOOP;
 
         resetByEncoder();
-    }
-
-    //TODO - delete
-    public SwerveModulePosition getCurrentPosition() {
-        return new SwerveModulePosition(moduleInputs.driveDistanceMeters, Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees));
     }
     
     public void resetByEncoder(){
@@ -61,6 +57,10 @@ public class Module {
 
     public SwerveModuleState getCurrentState() {
         return new SwerveModuleState(moduleInputs.driveVelocityMetersPerSecond, getCurrentAngle());
+    }
+
+    public SwerveModulePosition getCurrentPosition() {
+        return new SwerveModulePosition(moduleInputs.driveDistanceMeters, Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees));
     }
 
     public SwerveModuleState getTargetState() {

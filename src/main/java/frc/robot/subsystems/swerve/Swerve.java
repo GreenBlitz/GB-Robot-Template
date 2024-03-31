@@ -69,9 +69,9 @@ public class Swerve extends GBSubsystem {
         odometryLock.lock();
         swerve.updateInputs(swerveInputs);
         Logger.processInputs(this.getName(), swerveInputs);
-        
-        for (int i = 0; i < modules.length; i++) {
-            modules[i].periodic();
+
+        for (Module module : modules) {
+            module.periodic();
         }
         odometryLock.unlock();
 

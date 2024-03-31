@@ -9,8 +9,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.simulation.MotorSimulation;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.RobotConstants;
+import frc.robot.simulation.MotorSimulation;
+import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.utils.LoggerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
@@ -22,61 +24,60 @@ import org.littletonrobotics.junction.LoggedRobot;
  * project.
  */
 public class Robot extends LoggedRobot {
-
-    private Command autonomousCommand;
-    private RobotContainer robotContainer;
-
-    @Override
-    public void robotInit() {
-        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-        // autonomous chooser on the dashboard.
-        initializeLogger();
-        robotContainer = new RobotContainer();
-    }
-
-    @Override
-    public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
-        MotorSimulation.updateRegisteredSimulations();
-    }
-
-    @Override
-    public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
-
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
-        }
-    }
-
-    @Override
-    public void teleopInit() {
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-    }
-
-
-
-    private void initializeLogger() {
-        NetworkTableInstance.getDefault()
-                .getStructTopic("RobotPose", Pose2d.struct).publish();
-        NetworkTableInstance.getDefault()
-                .getStructTopic("MechanismPoses", Pose3d.struct).publish();
-
-        switch (RobotConstants.ROBOT_TYPE) {
-            case REAL -> {
-                LoggerUtils.startRealLogger();
-            }
-            case SIMULATION -> {
-                LoggerUtils.startSimulationLogger();
-            }
-            case REPLAY -> {
-                setUseTiming(false); // Run as fast as possible
-                LoggerUtils.startReplayLogger();
-            }
-        }
-    }
-
-
+	
+	private Command autonomousCommand;
+	private RobotContainer robotContainer;
+	
+	@Override
+	public void robotInit() {
+		// Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+		// autonomous chooser on the dashboard.
+		initializeLogger();
+		robotContainer = new RobotContainer();
+	}
+	
+	@Override
+	public void robotPeriodic() {
+		CommandScheduler.getInstance().run();
+		MotorSimulation.updateRegisteredSimulations();
+	}
+	
+	@Override
+	public void autonomousInit() {
+		autonomousCommand = robotContainer.getAutonomousCommand();
+		
+		if (autonomousCommand != null) {
+			autonomousCommand.schedule();
+		}
+	}
+	
+	@Override
+	public void teleopInit() {
+		if (autonomousCommand != null) {
+			autonomousCommand.cancel();
+		}
+	}
+	
+	
+	private void initializeLogger() {
+		NetworkTableInstance.getDefault()
+				.getStructTopic("RobotPose", Pose2d.struct).publish();
+		NetworkTableInstance.getDefault()
+				.getStructTopic("MechanismPoses", Pose3d.struct).publish();
+		
+		switch (RobotConstants.ROBOT_TYPE) {
+			case REAL -> {
+				LoggerUtils.startRealLogger();
+			}
+			case SIMULATION -> {
+				LoggerUtils.startSimulationLogger();
+			}
+			case REPLAY -> {
+				setUseTiming(false); // Run as fast as possible
+				LoggerUtils.startReplayLogger();
+			}
+		}
+	}
+	
+	
 }

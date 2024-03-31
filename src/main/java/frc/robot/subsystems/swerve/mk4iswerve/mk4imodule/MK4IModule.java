@@ -23,6 +23,7 @@ public class MK4IModule implements IModule {
                 moduleConfigObject.getSteerMotor()
         );
 
+        resetByEncoder();
 //        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor, moduleConfigObject.steerPositionSignal);
 //        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor, moduleConfigObject.drivePositionSignal);
     }

@@ -21,6 +21,7 @@ public class SmartJoystick {
 
     private Joystick joystick;
 
+
     /**
      * This constructor constructs the joystick based on the joystick port we give it.
      *
@@ -38,6 +39,10 @@ public class SmartJoystick {
      */
     public SmartJoystick(int joystick_port) {
         this(new Joystick(joystick_port));
+    }
+
+    public SmartJoystick(Joystick stick) {
+        this(stick, DEADZONE);
     }
 
     /**
@@ -67,9 +72,6 @@ public class SmartJoystick {
         POV_LEFT = new POVButton(joystick, 270);
     }
 
-    public SmartJoystick(Joystick stick) {
-        this(stick, DEADZONE);
-    }
 
     private double deadzone(double power) {
         if (Math.abs(power) < deadzone) return 0;

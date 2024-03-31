@@ -24,6 +24,8 @@ public class Module {
         this.moduleInputs = new ModuleInputsAutoLogged();
         this.targetState = new SwerveModuleState();
         this.driveMotorClosedLoop = ModuleConstants.IS_DRIVE_MOTOR_CLOSED_LOOP;
+
+        resetByEncoder();
     }
 
     

@@ -23,11 +23,11 @@ public abstract class MotorSimulation {
 
     protected MotorSimulation() {
         REGISTERED_SIMULATIONS.add(this);
-        motor = new TalonFX(REGISTERED_SIMULATIONS.size() - 1);
-        motorSimState = motor.getSimState();
-        motorSimState.setSupplyVoltage(RobotConstants.BATTERY_VOLTAGE);
-        closedLoopReferenceSignal = motor.getClosedLoopReference();
-        closedLoopReferenceSignal.setUpdateFrequency(1.0 / SimulationConstants.TIME_STEP);
+        this.motor = new TalonFX(REGISTERED_SIMULATIONS.size() - 1);
+        this.motorSimState = motor.getSimState();
+        this.motorSimState.setSupplyVoltage(RobotConstants.BATTERY_VOLTAGE);
+        this.closedLoopReferenceSignal = motor.getClosedLoopReference();
+        this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / SimulationConstants.TIME_STEP);
     }
 
     public static void updateRegisteredSimulations() {

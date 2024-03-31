@@ -11,8 +11,8 @@ public class SwerveFactory {
     public static ISwerve createSwerve() {
         return switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> new MK4ISwerve();
-            case REPLAY -> new ReplaySwerve();
             case SIMULATION -> new SimulationSwerve();
+            case REPLAY -> new ReplaySwerve();
         };
     }
 

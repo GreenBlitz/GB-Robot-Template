@@ -16,20 +16,20 @@ public class MK4IModuleData {
 
 
     public MK4IModuleData(MK4IModuleConfigObject mk4IModuleConfigObject){
-        steerEncoderVoltageSignal = mk4IModuleConfigObject.steerEncoderVoltageSignal;
-        steerEncoderVelocitySignal = mk4IModuleConfigObject.steerEncoderVelocitySignal;
-        steerEncoderAbsolutePositionSignal = mk4IModuleConfigObject.steerEncoderAbsolutePositionSignal;
+        this.steerEncoderVoltageSignal = mk4IModuleConfigObject.steerEncoderVoltageSignal;
+        this.steerEncoderVelocitySignal = mk4IModuleConfigObject.steerEncoderVelocitySignal;
+        this.steerEncoderAbsolutePositionSignal = mk4IModuleConfigObject.steerEncoderAbsolutePositionSignal;
 
-        driveVoltageSignal = mk4IModuleConfigObject.driveVoltageSignal;
-        driveStatorCurrentSignal = mk4IModuleConfigObject.driveStatorCurrentSignal;
-        driveAccelerationSignal = mk4IModuleConfigObject.driveAccelerationSignal;
-        driveVelocitySignal = mk4IModuleConfigObject.driveVelocitySignal;
-        drivePositionSignal = mk4IModuleConfigObject.drivePositionSignal;
+        this.driveVoltageSignal = mk4IModuleConfigObject.driveVoltageSignal;
+        this.driveStatorCurrentSignal = mk4IModuleConfigObject.driveStatorCurrentSignal;
+        this.driveAccelerationSignal = mk4IModuleConfigObject.driveAccelerationSignal;
+        this.driveVelocitySignal = mk4IModuleConfigObject.driveVelocitySignal;
+        this.drivePositionSignal = mk4IModuleConfigObject.drivePositionSignal;
 
-        steerVoltageSignal = mk4IModuleConfigObject.steerVoltageSignal;
-        steerAccelerationSignal = mk4IModuleConfigObject.steerAccelerationSignal;
-        steerVelocitySignal = mk4IModuleConfigObject.steerVelocitySignal;
-        steerPositionSignal = mk4IModuleConfigObject.steerPositionSignal;
+        this.steerVoltageSignal = mk4IModuleConfigObject.steerVoltageSignal;
+        this.steerAccelerationSignal = mk4IModuleConfigObject.steerAccelerationSignal;
+        this.steerVelocitySignal = mk4IModuleConfigObject.steerVelocitySignal;
+        this.steerPositionSignal = mk4IModuleConfigObject.steerPositionSignal;
     }
 
 

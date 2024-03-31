@@ -101,9 +101,6 @@ public class Swerve extends GBSubsystem {
         swerve.setHeading(heading);
     }
 
-    //TODO - delete or find better solution
-
-
     public Translation3d getGyroAcceleration() {
         return new Translation3d(swerveInputs.accelerationX, swerveInputs.accelerationY, swerveInputs.accelerationZ);
     }

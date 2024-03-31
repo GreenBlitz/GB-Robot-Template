@@ -240,7 +240,7 @@ public class Swerve extends GBSubsystem {
 
     private void updatePoseEstimatorStates() {
         if (RobotContainer.POSE_ESTIMATOR.getClass().getName().equals(Odometry.class.getName())) {
-            RobotContainer.POSE_ESTIMATOR.update(RobotContainer.SWERVE.getHeading(), RobotContainer.SWERVE.getModulePositionsForWpilibPoseEstimator());
+            RobotContainer.POSE_ESTIMATOR.update(getHeading(), getModulePositionsForWpilibPoseEstimator());
         } else {
             final int odometryUpdates = swerveInputs.odometryUpdatesYawDegrees.length;
             final SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[odometryUpdates];

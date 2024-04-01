@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.poseestimation.PoseEstimatorConstants;
-import frc.robot.poseestimation.wpilibposeestimator.OdometryConstants;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
 public class MK4IModuleConfigObject {

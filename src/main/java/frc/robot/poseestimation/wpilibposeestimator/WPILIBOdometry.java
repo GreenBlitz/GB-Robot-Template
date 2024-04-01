@@ -8,28 +8,29 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.allianceutils.AlliancePose2d;
 import org.littletonrobotics.junction.Logger;
 
-public class Odometry implements IPoseEstimator {
+public class WPILIBOdometry implements IPoseEstimator {
 
     private final SwerveDriveOdometry odometry;
 
-    public Odometry() {
+    public WPILIBOdometry() {
         odometry = new SwerveDriveOdometry(
                 SwerveConstants.KINEMATICS,
                 RobotContainer.SWERVE.getHeading(),
                 RobotContainer.SWERVE.getModulePositionsForWpilibPoseEstimator(),
-                OdometryConstants.DEFAULT_STARTING_POSE.toBlueAlliancePose()
+                WPILIBOdometryConstants.DEFAULT_STARTING_POSE.toBlueAlliancePose()
         );
     }
 
-    @Override
-    public void logPose(){
-        Logger.recordOutput("Robot Odometry Position", getCurrentPose().toBlueAlliancePose());
-    }
 
     @Override
     public void update(){
         odometry.update(RobotContainer.SWERVE.getHeading(), RobotContainer.SWERVE.getModulePositionsForWpilibPoseEstimator());
         logPose();
+    }
+
+    @Override
+    public void logPose(){
+        Logger.recordOutput("Robot Odometry Position", getCurrentPose().toBlueAlliancePose());
     }
 
     @Override

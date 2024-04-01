@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
+import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
@@ -26,13 +27,17 @@ public class JoysticksBindings {
 
         //TODO - return to last pose estimator
         usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.setHeading(new Rotation2d())));
+        usedJoystick.Y.onTrue(new InstantCommand(() ->
+                RobotContainer.POSE_ESTIMATOR.resetPose(
+                        AlliancePose2d.fromBlueAlliancePose(5,5, new Rotation2d())
+                )));
 
         usedJoystick.A.onTrue(new InstantCommand(RobotContainer.SWERVE::resetByEncoder));
         
         RobotContainer.SWERVE.setDefaultCommand(
                 SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
-                        () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                         () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                        () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                         () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
                 )
         );

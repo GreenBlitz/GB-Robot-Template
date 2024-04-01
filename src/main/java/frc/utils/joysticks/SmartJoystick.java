@@ -170,7 +170,7 @@ public class SmartJoystick {
     }
 
     public enum Axis {
-        LEFT_X(0, false),
+        LEFT_X(0, true),
         LEFT_Y(1, true),
         LEFT_TRIGGER(2, false),
         RIGHT_TRIGGER(3, false),

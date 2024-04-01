@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.allianceutils.AlliancePose2d;
+import org.littletonrobotics.junction.Logger;
 
 
 public class Odometry {
@@ -24,6 +25,11 @@ public class Odometry {
 
     public void update(Rotation2d getGyroAngle, SwerveModulePosition[] swerveModulePositions){
         odometry.update(getGyroAngle, swerveModulePositions);
+        logPose();
+    }
+
+    public void logPose(){
+        Logger.recordOutput("Robot Odometry Position", getCurrentPose().toBlueAlliancePose());
     }
 
     public void setHeading(Rotation2d heading) {

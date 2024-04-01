@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
+import frc.robot.poseestimation.wpilibposeestimator.OdometryConstants;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.joysticks.SmartJoystick;
@@ -25,20 +26,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons() {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		//bindings
-
-		//TODO - return to last pose estimator
-		usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.setHeading(new Rotation2d())));
-		usedJoystick.X.onTrue(new InstantCommand(() ->
-				RobotContainer.POSE_ESTIMATOR.resetPose(
-						AlliancePose2d.fromBlueAlliancePose(5, 5, new Rotation2d())
-				)));
-
-		usedJoystick.A.onTrue(new InstantCommand(RobotContainer.SWERVE::resetByEncoder));
-
-		usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getDriveToPoseCommand(
-				() -> AlliancePose2d.fromBlueAlliancePose(4, 4, new Rotation2d()),
-				new PathConstraints(3.3, 3.3, 4, 4)
-		));
 
 		RobotContainer.SWERVE.setDefaultCommand(
 				SwerveCommands.getOpenLoopFieldRelativeDriveCommand(

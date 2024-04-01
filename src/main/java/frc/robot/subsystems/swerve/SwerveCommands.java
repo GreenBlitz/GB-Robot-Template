@@ -21,7 +21,6 @@ import static frc.robot.RobotContainer.SWERVE;
 
 public class SwerveCommands {
 
-    private static final double CLOSE_TO_TARGET_POSITION_TOLERANCE = 0.35;//TODO - FIND BETTER PLACE
 
     /**
      * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed open mode.
@@ -56,16 +55,36 @@ public class SwerveCommands {
     }
 
 
+    /**
+     * Creates a command that rotating the swerve to target angle by trapezoid profiled pid
+     *
+     * @param targetAngle -> the targetAngle in Rotation2d
+     * @return the command
+     */
     public static Command getRotateToAngleCommand(Rotation2d targetAngle) {
         return new InstantCommand(SWERVE::resetRotationController)
                 .andThen(new RunCommand(() -> SWERVE.rotateToAngle(targetAngle)))
                 .until(() -> SWERVE.isAtAngle(targetAngle));
     }
 
+
+    /**
+     * Wrapper to "getCurrentDriveToPoseCommand()" that can handle suppliers
+     *
+     * @param targetPose -> the target positions as AlliancePose2d
+     * @return the command
+     */
     public static Command getDriveToPoseCommand(Supplier<AlliancePose2d> targetPose, PathConstraints constraints) {
         return new DeferredCommand(() -> getCurrentDriveToPoseCommand(targetPose.get(), constraints), Set.of(SWERVE));
     }
 
+    /**
+     * Creates a command that drives the swerve to a target position.
+     * Doing follow path and then pid
+     *
+     * @param targetPose -> the target positions as AlliancePose2d
+     * @return the command
+     */
     private static Command getCurrentDriveToPoseCommand(AlliancePose2d targetPose, PathConstraints constraints) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SWERVE.initializeDrive(true)),
@@ -74,21 +93,31 @@ public class SwerveCommands {
         );
     }
 
+    /**
+     * Creates a command that drives the swerve to a target position using pid.
+     * Mostly used after follow path to correct the ending positions after the path follow.
+     *
+     * @param targetPose -> the target positions as AlliancePose2d
+     * @return the command
+     */
     private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
         return new InstantCommand(SWERVE::resetRotationController)
                 .andThen(new RunCommand(() -> SWERVE.pidToPose(targetPose.toMirroredAlliancePose()))
                         .until(() -> SWERVE.isAtPosition(targetPose.toMirroredAlliancePose())));
     }
 
+    //Todo - add doc
     private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
         final Pose2d targetMirroredAlliancePose = targetPose.toMirroredAlliancePose();
         final Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
-        if (currentBluePose.getTranslation().getDistance(targetMirroredAlliancePose.getTranslation()) < CLOSE_TO_TARGET_POSITION_TOLERANCE)
+        //TODO - understand if statement
+        if (currentBluePose.getTranslation().getDistance(targetMirroredAlliancePose.getTranslation()) < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS)
             //TODO - find difference between the two funcs
             return createOnTheFlyPathCommand(targetMirroredAlliancePose, pathConstraints);
         return AutoBuilder.pathfindToPose(targetMirroredAlliancePose, pathConstraints);
     }
 
+    //Todo - add doc
     private static Command createOnTheFlyPathCommand(Pose2d targetPose, PathConstraints constraints) {
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose(),

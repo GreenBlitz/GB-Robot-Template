@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -71,6 +72,8 @@ public class SwerveConstants {
             MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER
     );
 
+
+    public static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.35;
     public static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
     public static final HolonomicPathFollowerConfig HOLONOMIC_PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
             AUTO_TRANSLATION_PID_CONSTANTS,
@@ -79,5 +82,6 @@ public class SwerveConstants {
             DRIVE_RADIUS_METERS,
             REPLANNING_CONFIG
     );
+    public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
 
 }

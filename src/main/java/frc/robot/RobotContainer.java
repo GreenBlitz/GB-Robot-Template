@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.poseestimation.IPoseEstimator;
+import frc.robot.poseestimation.PoseEstimatorFactory;
 import frc.robot.poseestimation.wpilibposeestimator.Odometry;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +24,7 @@ import frc.robot.subsystems.swerve.Swerve;
 public class RobotContainer {
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
     public static final Swerve SWERVE = new Swerve();
-    public static final Odometry POSE_ESTIMATOR = new Odometry();
+    public static final IPoseEstimator POSE_ESTIMATOR = PoseEstimatorFactory.createPoseEstimator();
 
 
     /**

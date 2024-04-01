@@ -53,12 +53,6 @@ public class Swerve extends GBSubsystem {
         };
     }
 
-    public void resetByEncoder() {
-        for (Module module : getModules()) {
-            module.resetByEncoder();
-        }
-    }
-
     private void configurePathPlanner() {
         AutoBuilder.configureHolonomic(
                 () -> RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose(),
@@ -87,6 +81,10 @@ public class Swerve extends GBSubsystem {
     }
 
 
+    public Translation3d getGyroAcceleration() {
+        return new Translation3d(swerveInputs.accelerationX, swerveInputs.accelerationY, swerveInputs.accelerationZ);
+    }
+
     public Rotation2d getPitch() {
         return Rotation2d.fromDegrees(swerveInputs.gyroPitchDegrees);
     }
@@ -101,10 +99,13 @@ public class Swerve extends GBSubsystem {
         swerve.setHeading(heading);
     }
 
-    public Translation3d getGyroAcceleration() {
-        return new Translation3d(swerveInputs.accelerationX, swerveInputs.accelerationY, swerveInputs.accelerationZ);
+    public int getOdometryUpdatesYawDegreesLength() {
+        return swerveInputs.odometryUpdatesYawDegrees.length;
     }
 
+    public Rotation2d getOdometryUpdatesYawValueAtIndex(int index) {
+        return Rotation2d.fromDegrees(swerveInputs.odometryUpdatesYawDegrees[index]);
+    }
 
     public void stop() {
         for (Module currentModule : modules) {
@@ -115,6 +116,12 @@ public class Swerve extends GBSubsystem {
     public void setBrake(boolean brake) {
         for (Module currentModule : modules) {
             currentModule.setBrake(brake);
+        }
+    }
+
+    public void resetModulesSteerAngleByEncoders() {
+        for (Module module : getModules()) {
+            module.resetByEncoder();
         }
     }
 
@@ -248,23 +255,10 @@ public class Swerve extends GBSubsystem {
     }
 
     private void updatePoseEstimatorStates() {
-        if (RobotContainer.POSE_ESTIMATOR.getClass().getName().equals(Odometry.class.getName())) {
-            RobotContainer.POSE_ESTIMATOR.update(getHeading(), getModulePositionsForWpilibPoseEstimator());
-        } else {
-            final int odometryUpdates = swerveInputs.odometryUpdatesYawDegrees.length;
-            final SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[odometryUpdates];
-            final Rotation2d[] gyroRotations = new Rotation2d[odometryUpdates];
-
-            for (int i = 0; i < odometryUpdates; i++) {
-                swerveWheelPositions[i] = getSwerveWheelPositions(i);
-                gyroRotations[i] = Rotation2d.fromDegrees(swerveInputs.odometryUpdatesYawDegrees[i]);
-            }
-
-//     TODO -> RobotContainer.POSE_ESTIMATOR.updatePoseEstimatorStates(swerveWheelPositions, gyroRotations, swerveInputs.odometryUpdatesTimestamp);
-        }
+        RobotContainer.POSE_ESTIMATOR.update();
     }
 
-    private SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
+    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
         final SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++)
             swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);

@@ -1,12 +1,7 @@
 package frc.robot;
 
-import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
-import frc.robot.poseestimation.wpilibposeestimator.OdometryConstants;
 import frc.robot.subsystems.swerve.SwerveCommands;
-import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {

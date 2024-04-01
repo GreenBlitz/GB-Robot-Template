@@ -9,7 +9,6 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.allianceutils.AlliancePose2d;
 import org.littletonrobotics.junction.Logger;
 
-
 public class Odometry {
 
     private final SwerveDriveOdometry odometry;

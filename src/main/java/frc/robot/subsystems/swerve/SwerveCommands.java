@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.RobotContainer;
 import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.commands.InitExecuteCommand;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.Set;
@@ -21,6 +20,8 @@ import java.util.function.Supplier;
 import static frc.robot.RobotContainer.SWERVE;
 
 public class SwerveCommands {
+
+    private static final double CLOSE_TO_TARGET_POSITION_TOLERANCE = 0.35;//TODO - FIND BETTER PLACE
 
     /**
      * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed open mode.
@@ -38,10 +39,39 @@ public class SwerveCommands {
         );
     }
 
+    /**
+     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed loop mode.
+     *
+     * @param xSupplier     the target forwards power
+     * @param ySupplier     the target leftwards power
+     * @param thetaSupplier the target theta power, CCW+
+     * @return the command
+     */
+    public static Command getClosedLoopFieldRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
+        return new InitExecuteCommand(
+                () -> SWERVE.initializeDrive(true),
+                () -> SWERVE.fieldRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                SWERVE
+        );
+    }
+
+
     public static Command getRotateToAngleCommand(Rotation2d targetAngle) {
         return new InstantCommand(SWERVE::resetRotationController)
                 .andThen(new RunCommand(() -> SWERVE.rotateToAngle(targetAngle)))
-                        .until(() -> SWERVE.isAtAngle(targetAngle));
+                .until(() -> SWERVE.isAtAngle(targetAngle));
+    }
+
+    public static Command getDriveToPoseCommand(Supplier<AlliancePose2d> targetPose, PathConstraints constraints) {
+        return new DeferredCommand(() -> getCurrentDriveToPoseCommand(targetPose.get(), constraints), Set.of(SWERVE));
+    }
+
+    private static Command getCurrentDriveToPoseCommand(AlliancePose2d targetPose, PathConstraints constraints) {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> SWERVE.initializeDrive(true)),
+                getPathfindToPoseCommand(targetPose, constraints),
+                getPIDToPoseCommand(targetPose)
+        );
     }
 
     private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
@@ -53,22 +83,10 @@ public class SwerveCommands {
     private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
         final Pose2d targetMirroredAlliancePose = targetPose.toMirroredAlliancePose();
         final Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
-        if (currentBluePose.getTranslation().getDistance(targetMirroredAlliancePose.getTranslation()) < 0.35)
+        if (currentBluePose.getTranslation().getDistance(targetMirroredAlliancePose.getTranslation()) < CLOSE_TO_TARGET_POSITION_TOLERANCE)
+            //TODO - find difference between the two funcs
             return createOnTheFlyPathCommand(targetMirroredAlliancePose, pathConstraints);
         return AutoBuilder.pathfindToPose(targetMirroredAlliancePose, pathConstraints);
-    }
-
-    public static Command getDriveToPoseCommand(Supplier<AlliancePose2d> targetPose, PathConstraints constraints) {
-        return new DeferredCommand(() -> getCurrentDriveToPoseCommand(targetPose.get(), constraints), Set.of(SWERVE));
-    }
-
-    private static Command getCurrentDriveToPoseCommand(AlliancePose2d targetPose, PathConstraints constraints) {
-        Logger.recordOutput("target roto pose", targetPose.toBlueAlliancePose());
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> SWERVE.initializeDrive(true)),
-                getPathfindToPoseCommand(targetPose, constraints)
-                ,getPIDToPoseCommand(targetPose)
-        );
     }
 
     private static Command createOnTheFlyPathCommand(Pose2d targetPose, PathConstraints constraints) {

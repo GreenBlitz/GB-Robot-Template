@@ -28,7 +28,7 @@ public class JoysticksBindings {
 
 		//TODO - return to last pose estimator
 		usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.setHeading(new Rotation2d())));
-		usedJoystick.Y.onTrue(new InstantCommand(() ->
+		usedJoystick.X.onTrue(new InstantCommand(() ->
 				RobotContainer.POSE_ESTIMATOR.resetPose(
 						AlliancePose2d.fromBlueAlliancePose(5, 5, new Rotation2d())
 				)));

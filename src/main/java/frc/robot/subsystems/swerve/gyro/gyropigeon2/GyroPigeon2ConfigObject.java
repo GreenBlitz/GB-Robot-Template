@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.gyro.gyropigeon2;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import frc.robot.poseestimation.wpilibposeestimator.OdometryConstants;
 
 public class GyroPigeon2ConfigObject {
 
@@ -36,7 +37,7 @@ public class GyroPigeon2ConfigObject {
         );
 
         PITCH_SIGNAL.setUpdateFrequency(100);
-        YAW_SIGNAL.setUpdateFrequency(250);//PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ
+        YAW_SIGNAL.setUpdateFrequency(OdometryConstants.ODOMETRY_FREQUENCY_HERTZ);
 
         gyro.optimizeBusUtilization();
     }

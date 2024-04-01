@@ -18,7 +18,7 @@ public class Odometry {
                 SwerveConstants.KINEMATICS,
                 RobotContainer.SWERVE.getHeading(),
                 RobotContainer.SWERVE.getModulePositionsForWpilibPoseEstimator(),
-                new Pose2d(5, 5, new Rotation2d())
+                OdometryConstants.DEFAULT_STARTING_POSE.toBlueAlliancePose()
         );
     }
 

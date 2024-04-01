@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import frc.robot.poseestimation.wpilibposeestimator.OdometryConstants;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
 public class MK4IModuleConfigObject {
@@ -45,7 +46,7 @@ public class MK4IModuleConfigObject {
         steerEncoderVoltageSignal = steerEncoder.getSupplyVoltage();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
-                250,
+                OdometryConstants.ODOMETRY_FREQUENCY_HERTZ,
                 steerEncoderAbsolutePositionSignal
         );
         BaseStatusSignal.setUpdateFrequencyForAll(
@@ -69,7 +70,7 @@ public class MK4IModuleConfigObject {
         driveAccelerationSignal = driveMotor.getAcceleration();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
-                250,
+                OdometryConstants.ODOMETRY_FREQUENCY_HERTZ,
                 drivePositionSignal,
                 driveVelocitySignal,
                 driveAccelerationSignal
@@ -96,7 +97,7 @@ public class MK4IModuleConfigObject {
         steerVoltageSignal = steerMotor.getMotorVoltage();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
-                250,
+                OdometryConstants.ODOMETRY_FREQUENCY_HERTZ,
                 steerPositionSignal,
                 steerVelocitySignal,
                 steerAccelerationSignal

@@ -33,7 +33,16 @@ public class JoysticksBindings {
                 )));
 
         usedJoystick.A.onTrue(new InstantCommand(RobotContainer.SWERVE::resetByEncoder));
-        
+
+        usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(
+                Rotation2d.fromDegrees(0)));
+        usedJoystick.POV_LEFT.whileTrue(SwerveCommands.getRotateToAngleCommand(
+                Rotation2d.fromDegrees(90)));
+        usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.getRotateToAngleCommand(
+                Rotation2d.fromDegrees(180)));
+        usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(
+                Rotation2d.fromDegrees(270)));
+
         RobotContainer.SWERVE.setDefaultCommand(
                 SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
                         () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),

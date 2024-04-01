@@ -127,12 +127,24 @@ public class Swerve extends GBSubsystem {
         return ChassisSpeeds.fromFieldRelativeSpeeds(getSelfRelativeVelocity(), RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation());
     }
 
+    protected void rotateToAngle(Rotation2d targetAngle) {
+        final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
+                0,
+                0,
+                calculateProfiledAngleSpeedToTargetAngle(targetAngle)
+        );
+        selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
+    }
 
     protected void pidToPose(Pose2d targetPose) {
         final Pose2d currentPose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
         final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
-                SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getX(), targetPose.getX()),
-                SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getY(), targetPose.getY()),
+                SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(
+                        currentPose.getX(), targetPose.getX()
+                ),
+                SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(
+                        currentPose.getY(), targetPose.getY()
+                ),
                 calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation())
         );
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));

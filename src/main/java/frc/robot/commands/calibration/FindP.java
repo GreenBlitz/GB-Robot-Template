@@ -35,6 +35,9 @@ public class FindP extends GBCommand {
     private boolean isExe;
     private boolean isEnd;
 
+    //Todo - add motor sub sys with SYSID and the functions: getVelocity, setVelocity, getPosition, setPosition, getPValue, setPValue
+    //Todo - instead of getting motor and control get motorSubSys
+
     public FindP(GBTalonFXPro motor, PositionVoltage controlRequest, double targetValue1, double targetValue2, double timeout, double tolerance, double factor, double startRange, double endRange) {
         this.motor = motor;
         this.controlRequest = controlRequest;

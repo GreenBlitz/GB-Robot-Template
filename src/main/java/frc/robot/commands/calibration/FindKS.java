@@ -8,14 +8,21 @@ import org.littletonrobotics.junction.Logger;
 
 public class FindKS extends GBCommand {
 
-    private Timer timer;
+    private static final double VOLTAGE_RAMP = 0.01;
+    private static final double STARTED_MOVING_SPEED = 0.001;
+    private static final double TIME_BETWEEN_VOLTAGE_RAMPS_SECONDS = 0.1;
+
+    private final Timer timer;
 
     private double lastTime;
     private double lastVoltage;
-    private double kg;
+    private final double kg;
 
-    private GBTalonFXPro motor;
-    private VoltageOut voltageOutControl;
+    private final GBTalonFXPro motor;
+    private final VoltageOut voltageOutControl;
+
+    //Todo - add motor sub sys with SYSID and the functions: getVelocity, setVoltage
+    //Todo - instead of getting motor and control get motorSubSys
 
     public FindKS(double kg, GBTalonFXPro motor, VoltageOut voltageOutControl) {
         this.timer = new Timer();
@@ -34,8 +41,8 @@ public class FindKS extends GBCommand {
 
     @Override
     public void execute() {
-        if (timer.get() - lastTime >= 0.1) {
-            lastVoltage += 0.01;
+        if (timer.get() - lastTime >= TIME_BETWEEN_VOLTAGE_RAMPS_SECONDS) {
+            lastVoltage += VOLTAGE_RAMP;
             motor.setControl(voltageOutControl.withOutput(lastVoltage + kg));
             lastTime = timer.get();
         }
@@ -43,7 +50,7 @@ public class FindKS extends GBCommand {
 
     @Override
     public boolean isFinished() {
-        return motor.getVelocity().getValue() >= 0.001;
+        return motor.getVelocity().getValue() >= STARTED_MOVING_SPEED;
     }
 
     @Override

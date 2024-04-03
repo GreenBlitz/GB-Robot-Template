@@ -1,104 +1,117 @@
 package frc.robot.commands.calibration;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.IMotorSubsystem;
 import frc.utils.commands.GBCommand;
+
+import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
+import java.util.function.Predicate;
 
 public class FindP extends GBCommand {
 
-    private final IMotorSubsystem motorSubsystem;
-    private final double targetValue1;
-    private final double targetValue2;
-    private double usedTargetValue;
-    private final int pidSlot;
-
-    private final Timer timer;
-    private final double timeoutForAction;
-
-    private final double changePFactor;
-
-    private final double minErrorRange;
-    private final double maxErrorRange;
-
-    private boolean isCheckingMin;
-    private double edgeValue;
-
-    private final double wantedAccuracy;
-    private double accuracy;
-
-    private boolean isInit;
-    private boolean isExe;
-    private boolean isEnd;
 
     //Todo - add motor sub sys with SYSID
+    private boolean isSetControlNeedToRunPeriodic;
+    private double wantedAccuracyPercent, timeoutForActionSeconds, errorToKpValueFactor;
+    private Pair<Double, Double> valuesToRunFor, accuracyRange;
+    private DoubleSupplier currentValueSupplier, currentKpValueSupplier;
+    private Consumer<Double> setControl, setKp;
+    private Predicate<Double> isAtPose;
+    private Runnable stopAtEnd;
 
-    public FindP(IMotorSubsystem motorSubsystem, int pidSlot, double wantedAccuracy, double targetValue1, double targetValue2, double timeoutForAction, double factor, double startRange, double endRange) {
-        this.motorSubsystem = motorSubsystem;
-        this.pidSlot = pidSlot;
 
-        this.targetValue1 = targetValue1;
-        this.targetValue2 = targetValue2;
-        this.usedTargetValue = targetValue2;
+    private final Timer TIMER;
+    private boolean isInit, isExe, isEnd;
+    private boolean isCheckingMin;
+    private double edgeValue;
+    private double accuracyPercent, usedTargetValue;
 
-        this.timer = new Timer();
-        this.timeoutForAction = timeoutForAction;
 
-        this.minErrorRange = startRange;
-        this.maxErrorRange = endRange;
+    public FindP(
+            boolean isSetControlNeedToRunPeriodic,
+            double wantedAccuracyPercent, double timeoutForActionSeconds, double errorToKpValueFactor,
+            Pair<Double, Double> valuesToRunFor, Pair<Double, Double> accuracyRange,
+            DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
+            Consumer<Double> setControl, Consumer<Double> setKp,
+            Predicate<Double> isAtPose,
+            Runnable stopAtEnd
+    ) {
+        this.TIMER = new Timer();
 
-        this.changePFactor = factor;
-
-        this.wantedAccuracy = wantedAccuracy;
-        this.accuracy = 0;
-        
         this.isInit = true;
         this.isExe = false;
         this.isEnd = false;
+
+        this.accuracyPercent = 0;
+
+        this.isSetControlNeedToRunPeriodic = isSetControlNeedToRunPeriodic;
+
+        this.wantedAccuracyPercent = wantedAccuracyPercent;
+        this.timeoutForActionSeconds = timeoutForActionSeconds;
+        this.errorToKpValueFactor = errorToKpValueFactor;
+
+        this.valuesToRunFor = valuesToRunFor;
+        this.usedTargetValue = valuesToRunFor.getSecond();
+
+        this.accuracyRange = accuracyRange;
+
+        this.currentValueSupplier = currentValueSupplier;
+        this.currentKpValueSupplier = currentKpValueSupplier;
+
+        this.setControl = setControl;
+        this.setKp = setKp;
+        this.isAtPose = isAtPose;
+        this.stopAtEnd = stopAtEnd;
     }
 
-    public double getTargetValue(double lastUsedTargetValue) {
-        return lastUsedTargetValue == targetValue2 ? targetValue1 : targetValue2;
+
+    private void setIsInitTrue() {
+        this.isInit = true;
+        isEnd = false;
+        isExe = false;
     }
 
-    private void setIsInit(boolean isInit){
-        this.isInit = isInit;
-        if (isInit){
-            isEnd = false;
-            isExe = false;
-        }
+    private void setIsExecuteTrue() {
+        this.isExe = true;
+        isInit = false;
+        isEnd = false;
+
     }
-    private void setIsExe(boolean isExe){
-        this.isExe = isExe;
-        if (isExe){
-            isInit = false;
-            isEnd = false;
-        }
+
+    private void setIsEndTrue() {
+        this.isEnd = true;
+        isInit = false;
+        isExe = false;
     }
-    private void setIsEnd(boolean isEnd){
-        this.isEnd = isEnd;
-        if (isEnd){
-            isInit = false;
-            isExe = false;
-        }
+
+    public void replaceTargetValue() {
+        usedTargetValue = (usedTargetValue == valuesToRunFor.getFirst()) ? valuesToRunFor.getSecond() : valuesToRunFor.getFirst();
     }
-    
+
+
     @Override
     public void execute() {
         if (isInit) {
-            double currentPosition = motorSubsystem.getPosition();
-            accuracy = 0;
-            timer.restart();
+            TIMER.restart();
+            accuracyPercent = 0;
 
-            usedTargetValue = getTargetValue(usedTargetValue);
+            double currentPosition = currentValueSupplier.getAsDouble();
+
+            replaceTargetValue();
             isCheckingMin = currentPosition > usedTargetValue;
             edgeValue = currentPosition;
-            motorSubsystem.setPositionControl(usedTargetValue);
+            setControl.accept(usedTargetValue);
 
-            setIsExe(true);
+            setIsExecuteTrue();
         }
 
         else if (isExe) {
-            double currentPosition = motorSubsystem.getPosition();
+            if (isSetControlNeedToRunPeriodic){
+                setControl.accept(usedTargetValue);
+            }
+
+            double currentPosition = currentValueSupplier.getAsDouble();
 
             if (isCheckingMin) {
                 if (edgeValue > currentPosition) {
@@ -109,33 +122,33 @@ public class FindP extends GBCommand {
                     edgeValue = currentPosition;
                 }
             }
-            if (motorSubsystem.isAtPosition(usedTargetValue) || timer.hasElapsed(timeoutForAction)){
-                setIsEnd(true);
+            if (isAtPose.test(currentPosition) || TIMER.hasElapsed(timeoutForActionSeconds)) {
+                setIsEndTrue();
             }
         }
 
         else if (isEnd) {
-            timer.stop();
+            TIMER.stop();
 
             double sign = isCheckingMin ? Math.signum(edgeValue - usedTargetValue) : Math.signum(usedTargetValue - edgeValue);
             double error = Math.abs(edgeValue - usedTargetValue);
 
-            accuracy = 100 - (100 / (maxErrorRange - minErrorRange + 1)) * error;
+            accuracyPercent = 100 - (100 / (accuracyRange.getSecond() - accuracyRange.getFirst() + 1)) * error;
 
-            if (accuracy < wantedAccuracy){
-                motorSubsystem.setPValue(motorSubsystem.getPValue(pidSlot) + sign * error / changePFactor, pidSlot);
-                setIsInit(true);
+            if (accuracyPercent < wantedAccuracyPercent) {
+                setKp.accept(currentKpValueSupplier.getAsDouble() + sign * error / errorToKpValueFactor);
+                setIsInitTrue();
             }
         }
     }
-    
+
     @Override
     public boolean isFinished() {
-        return accuracy > wantedAccuracy;
+        return accuracyPercent >= wantedAccuracyPercent;
     }
-    
+
     @Override
     public void end(boolean interrupted) {
-        motorSubsystem.stop();
+        stopAtEnd.run();
     }
 }

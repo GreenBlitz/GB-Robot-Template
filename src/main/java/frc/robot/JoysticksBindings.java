@@ -1,18 +1,7 @@
 package frc.robot;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.calibration.FindKS;
-import frc.robot.commands.calibration.FindP;
-import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
-import frc.utils.devicewrappers.GBTalonFXPro;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {

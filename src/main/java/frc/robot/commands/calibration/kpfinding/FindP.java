@@ -1,4 +1,4 @@
-package frc.robot.commands.calibration;
+package frc.robot.commands.calibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;

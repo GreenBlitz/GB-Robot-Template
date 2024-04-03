@@ -45,22 +45,6 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons() {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		//bindings
-		GBTalonFXPro motor = new GBTalonFXPro(0, Phoenix6Constants.CANIVORE_NAME);
-		motor.getConfigurator().apply(new Slot0Configs().withKP(500));
-		usedJoystick.A.whileTrue(new FindP(
-						motor,
-						new PositionVoltage(0),
-						-0.2,//Rot
-						0.2,//Rot
-						5,//Sec
-						Units.degreesToRotations(0.2),// tolerance
-						Units.degreesToRotations(1),// factor
-						Units.degreesToRotations(0),// minRange
-						Units.degreesToRotations(50)// maxRange
-				)
-		);
-		usedJoystick.B.whileTrue(new FindKS(0, motor, new VoltageOut(0)));
-		
 	}
 	
 	private static void thirdJoystickButtons() {

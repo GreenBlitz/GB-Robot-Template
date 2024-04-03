@@ -116,7 +116,7 @@ public class FindP extends GBCommand {
 
         else if (isExe) {
             double curPosition = motor.getPosition().refresh().getValue();
-            SmartDashboard.putNumber("curPosw", curPosition);
+
             if (isCheckingMin) {
                 if (edgeValue > curPosition) {
                     edgeValue = curPosition;
@@ -137,15 +137,11 @@ public class FindP extends GBCommand {
             double sign = isCheckingMin ? Math.signum(edgeValue - usedTargetValue) : Math.signum(usedTargetValue - edgeValue);
             double error = Math.abs(edgeValue - usedTargetValue);
             
-            SmartDashboard.putNumber("ERROR", error);
-            
+
             accuracy = 100 - (100 / (maxErrorRange - minErrorRange + 1)) * error;
-            SmartDashboard.putNumber("ACCURACY", accuracy);
             if (accuracy < 95){
                 motor.getConfigurator().refresh(slot0Configs);
                 slot0Configs.kP += sign * error / changePFactor;
-                SmartDashboard.putNumber("kp calc",sign * error / changePFactor);
-                SmartDashboard.putNumber("kp", slot0Configs.kP);
                 motor.getConfigurator().apply(slot0Configs);
                 setIsInit(true);
             }

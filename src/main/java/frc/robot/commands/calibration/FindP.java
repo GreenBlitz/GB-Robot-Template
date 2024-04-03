@@ -88,25 +88,27 @@ public class FindP extends GBCommand {
     @Override
     public void execute() {
         if (isInit) {
+            double curPosition = motor.getPosition().refresh().getValue();
             accuracy = 0;
             timer.restart();
 
             usedTargetValue = getTargetValue(usedTargetValue);
-            isCheckingMin = motor.getPosition().refresh().getValue() > usedTargetValue;
-            edgeValue = motor.getPosition().refresh().getValue();
+            isCheckingMin = curPosition > usedTargetValue;
+            edgeValue = curPosition;
             motor.setControl(controlRequest.withPosition(usedTargetValue));
 
             setIsExe(true);
         }
 
         else if (isExe) {
+            double curPosition = motor.getPosition().refresh().getValue();
             if (isCheckingMin) {
-                if (edgeValue > motor.getPosition().refresh().getValue()) {
-                    edgeValue = motor.getPosition().refresh().getValue();
+                if (edgeValue > curPosition) {
+                    edgeValue = curPosition;
                 }
             } else {
-                if (edgeValue < motor.getPosition().refresh().getValue()) {
-                    edgeValue = motor.getPosition().refresh().getValue();
+                if (edgeValue < curPosition) {
+                    edgeValue = curPosition;
                 }
             }
             setIsEnd(Math.abs(usedTargetValue - motor.getPosition().refresh().getValue()) <= tolerance || timer.hasElapsed(timeout));
@@ -117,14 +119,13 @@ public class FindP extends GBCommand {
 
             double sign = isCheckingMin ? Math.signum(edgeValue - usedTargetValue) : Math.signum(usedTargetValue - edgeValue);
             double error = Math.abs(edgeValue - usedTargetValue);
-
-            motor.getConfigurator().refresh(slot0Configs);
-            slot0Configs.kP += sign * error * changePFactor;
-            motor.getConfigurator().apply(slot0Configs);
-
+            
             accuracy = 100 - (100 / (maxErrorRange - minErrorRange + 1)) * error;
-
+            
             if (accuracy < 90){
+                motor.getConfigurator().refresh(slot0Configs);
+                slot0Configs.kP += sign * error * changePFactor;
+                motor.getConfigurator().apply(slot0Configs);
                 setIsInit(true);
             }
         }

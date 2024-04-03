@@ -132,7 +132,7 @@ public class FindP extends GBCommand {
                     edgeValue = curPosition;
                 }
             }
-            if ((Math.abs(usedTargetValue - curPosition) <= tolerance && motor.getVelocity().getValue() <= velocityDeadBand) || timer.hasElapsed(timeout)){
+            if ((Math.abs(usedTargetValue - curPosition) <= tolerance && motor.getVelocity().refresh().getValue() <= velocityDeadBand) || timer.hasElapsed(timeout)){
                 setIsEnd(true);
             }
         }

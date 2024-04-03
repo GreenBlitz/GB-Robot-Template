@@ -47,7 +47,7 @@ public class SimulationModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-
+        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
     }
 
     @Override

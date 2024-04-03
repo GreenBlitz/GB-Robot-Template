@@ -5,12 +5,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class GyroSimulation {
     private double simulationRadians = 0;
 
-    public double getGyroYawDegrees() {
-        return Math.toDegrees(simulationRadians);
+    public Rotation2d getGyroYaw() {
+        return Rotation2d.fromRadians(simulationRadians);
     }
 
-    public void update(double omegaRadiansPerSecond, double timeSeconds) {
-        simulationRadians += omegaRadiansPerSecond * timeSeconds;
+    public void update(double omegaRadiansPerSecond, double movementTimeSeconds) {
+        simulationRadians += omegaRadiansPerSecond * movementTimeSeconds;
     }
 
     public void setHeading(Rotation2d heading) {

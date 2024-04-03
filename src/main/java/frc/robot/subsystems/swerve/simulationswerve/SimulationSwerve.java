@@ -20,7 +20,7 @@ public class SimulationSwerve implements ISwerve {
     public void updateInputs(SwerveInputsAutoLogged inputs) {
         gyro.update(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond, SimulationConstants.TIME_STEP);
 
-        inputs.gyroYawDegrees = gyro.getGyroYawDegrees();
+        inputs.gyroYawDegrees = gyro.getGyroYaw().getDegrees();
         inputs.odometryUpdatesYawDegrees = new double[]{inputs.gyroYawDegrees};
         inputs.odometryUpdatesTimestamp = new double[]{Timer.getFPGATimestamp()};
     }

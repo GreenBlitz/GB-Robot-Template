@@ -30,17 +30,19 @@ public class FindP extends GBCommand {
     private boolean isCheckingMin;
     private double edgeValue;
 
-    
+    private double wantedAccuracy;
     private double accuracy;
 
     private boolean isInit;
     private boolean isExe;
     private boolean isEnd;
 
+    private final double velocityDeadBand;
+
     //Todo - add motor sub sys with SYSID and the functions: getVelocity, setVelocity, getPosition, setPosition, getPValue, setPValue
     //Todo - instead of getting motor and control get motorSubSys
 
-    public FindP(GBTalonFXPro motor, PositionVoltage controlRequest, double targetValue1, double targetValue2, double timeout, double tolerance, double factor, double startRange, double endRange) {
+    public FindP(GBTalonFXPro motor, PositionVoltage controlRequest, double wantedAccuracy, double targetValue1, double targetValue2, double timeout, double tolerance, double factor, double startRange, double endRange, double velocityDeadBand) {
         this.motor = motor;
         this.controlRequest = controlRequest;
         
@@ -66,6 +68,10 @@ public class FindP extends GBCommand {
         this.isInit = true;
         this.isExe = false;
         this.isEnd = false;
+
+        this.wantedAccuracy = wantedAccuracy;
+
+        this.velocityDeadBand = velocityDeadBand;
     }
 
     public double getTargetValue(double lastUsedTargetValue) {
@@ -126,7 +132,7 @@ public class FindP extends GBCommand {
                     edgeValue = curPosition;
                 }
             }
-            if (Math.abs(usedTargetValue - curPosition) <= tolerance || timer.hasElapsed(timeout)){
+            if ((Math.abs(usedTargetValue - curPosition) <= tolerance && motor.getVelocity().getValue() <= velocityDeadBand) || timer.hasElapsed(timeout)){
                 setIsEnd(true);
             }
         }
@@ -139,7 +145,7 @@ public class FindP extends GBCommand {
             
 
             accuracy = 100 - (100 / (maxErrorRange - minErrorRange + 1)) * error;
-            if (accuracy < 95){
+            if (accuracy < wantedAccuracy){
                 motor.getConfigurator().refresh(slot0Configs);
                 slot0Configs.kP += sign * error / changePFactor;
                 motor.getConfigurator().apply(slot0Configs);
@@ -150,7 +156,7 @@ public class FindP extends GBCommand {
     
     @Override
     public boolean isFinished() {
-        return accuracy > 95;
+        return accuracy > wantedAccuracy;
     }
     
     @Override

@@ -1,26 +1,19 @@
 package frc.robot.commands.calibration;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.IMotorSubsystem;
 import frc.utils.commands.GBCommand;
-import frc.utils.devicewrappers.GBTalonFXPro;
 
 public class FindP extends GBCommand {
 
-    private final GBTalonFXPro motor;
-    private final PositionVoltage controlRequest;
+    private final IMotorSubsystem motorSubsystem;
     private final double targetValue1;
     private final double targetValue2;
     private double usedTargetValue;
-    private final Slot0Configs slot0Configs;
-
-    private final double tolerance;
+    private final int pidSlot;
 
     private final Timer timer;
-    private final double timeout;
+    private final double timeoutForAction;
 
     private final double changePFactor;
 
@@ -30,48 +23,37 @@ public class FindP extends GBCommand {
     private boolean isCheckingMin;
     private double edgeValue;
 
-    private double wantedAccuracy;
+    private final double wantedAccuracy;
     private double accuracy;
 
     private boolean isInit;
     private boolean isExe;
     private boolean isEnd;
 
-    private final double velocityDeadBand;
+    //Todo - add motor sub sys with SYSID
 
-    //Todo - add motor sub sys with SYSID and the functions: getVelocity, setVelocity, getPosition, setPosition, getPValue, setPValue
-    //Todo - instead of getting motor and control get motorSubSys
+    public FindP(IMotorSubsystem motorSubsystem, int pidSlot, double wantedAccuracy, double targetValue1, double targetValue2, double timeoutForAction, double factor, double startRange, double endRange) {
+        this.motorSubsystem = motorSubsystem;
+        this.pidSlot = pidSlot;
 
-    public FindP(GBTalonFXPro motor, PositionVoltage controlRequest, double wantedAccuracy, double targetValue1, double targetValue2, double timeout, double tolerance, double factor, double startRange, double endRange, double velocityDeadBand) {
-        this.motor = motor;
-        this.controlRequest = controlRequest;
-        
         this.targetValue1 = targetValue1;
         this.targetValue2 = targetValue2;
-        
-        this.slot0Configs = new Slot0Configs();
-        motor.getConfigurator().refresh(slot0Configs);
+        this.usedTargetValue = targetValue2;
 
         this.timer = new Timer();
-        this.timeout = timeout;
+        this.timeoutForAction = timeoutForAction;
 
         this.minErrorRange = startRange;
         this.maxErrorRange = endRange;
 
         this.changePFactor = factor;
-        this.tolerance = tolerance;
 
-        this.usedTargetValue = targetValue2;
-
+        this.wantedAccuracy = wantedAccuracy;
         this.accuracy = 0;
         
         this.isInit = true;
         this.isExe = false;
         this.isEnd = false;
-
-        this.wantedAccuracy = wantedAccuracy;
-
-        this.velocityDeadBand = velocityDeadBand;
     }
 
     public double getTargetValue(double lastUsedTargetValue) {
@@ -101,38 +83,33 @@ public class FindP extends GBCommand {
     }
     
     @Override
-    public void initialize() {
-        motor.setPosition(0);
-    }
-    
-    @Override
     public void execute() {
         if (isInit) {
-            double curPosition = motor.getPosition().refresh().getValue();
+            double currentPosition = motorSubsystem.getPosition();
             accuracy = 0;
             timer.restart();
 
             usedTargetValue = getTargetValue(usedTargetValue);
-            isCheckingMin = curPosition > usedTargetValue;
-            edgeValue = curPosition;
-            motor.setControl(controlRequest.withPosition(usedTargetValue));
+            isCheckingMin = currentPosition > usedTargetValue;
+            edgeValue = currentPosition;
+            motorSubsystem.setPositionControl(usedTargetValue);
 
             setIsExe(true);
         }
 
         else if (isExe) {
-            double curPosition = motor.getPosition().refresh().getValue();
+            double currentPosition = motorSubsystem.getPosition();
 
             if (isCheckingMin) {
-                if (edgeValue > curPosition) {
-                    edgeValue = curPosition;
+                if (edgeValue > currentPosition) {
+                    edgeValue = currentPosition;
                 }
             } else {
-                if (edgeValue < curPosition) {
-                    edgeValue = curPosition;
+                if (edgeValue < currentPosition) {
+                    edgeValue = currentPosition;
                 }
             }
-            if ((Math.abs(usedTargetValue - curPosition) <= tolerance && motor.getVelocity().refresh().getValue() <= velocityDeadBand) || timer.hasElapsed(timeout)){
+            if (motorSubsystem.isAtPosition(usedTargetValue) || timer.hasElapsed(timeoutForAction)){
                 setIsEnd(true);
             }
         }
@@ -142,13 +119,11 @@ public class FindP extends GBCommand {
 
             double sign = isCheckingMin ? Math.signum(edgeValue - usedTargetValue) : Math.signum(usedTargetValue - edgeValue);
             double error = Math.abs(edgeValue - usedTargetValue);
-            
 
             accuracy = 100 - (100 / (maxErrorRange - minErrorRange + 1)) * error;
+
             if (accuracy < wantedAccuracy){
-                motor.getConfigurator().refresh(slot0Configs);
-                slot0Configs.kP += sign * error / changePFactor;
-                motor.getConfigurator().apply(slot0Configs);
+                motorSubsystem.setPValue(motorSubsystem.getPValue(pidSlot) + sign * error / changePFactor, pidSlot);
                 setIsInit(true);
             }
         }
@@ -161,6 +136,6 @@ public class FindP extends GBCommand {
     
     @Override
     public void end(boolean interrupted) {
-        motor.set(0);
+        motorSubsystem.stop();
     }
 }

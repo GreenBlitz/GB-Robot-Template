@@ -89,7 +89,7 @@ public class MK4IModuleConstants {
     
     protected static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.FRONT_LEFT_STEER_MOTOR,
+            40,//Ports.TalonFXIds.FRONT_LEFT_STEER_MOTOR,
             true,
             Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
             false,

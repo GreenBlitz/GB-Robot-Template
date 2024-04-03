@@ -14,7 +14,7 @@ public class Ports {
     }
 
     public static class TalonFXIds {
-        public static final int FRONT_LEFT_STEER_MOTOR = 0;
+        public static final int FRONT_LEFT_STEER_MOTOR = 12;
         public static final int FRONT_LEFT_DRIVE_MOTOR = 1;
         public static final int FRONT_RIGHT_STEER_MOTOR = 2;
         public static final int FRONT_RIGHT_DRIVE_MOTOR = 3;

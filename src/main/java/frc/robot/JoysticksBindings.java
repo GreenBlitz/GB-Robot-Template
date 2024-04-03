@@ -2,8 +2,14 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.calibration.FindKS;
 import frc.robot.commands.calibration.FindP;
+import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.utils.devicewrappers.GBTalonFXPro;
@@ -39,20 +45,22 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons() {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		//bindings
-		GBTalonFXPro motor = new GBTalonFXPro(0);
-		motor.getConfigurator().apply(new Slot0Configs().withKP(1));
+		GBTalonFXPro motor = new GBTalonFXPro(0, Phoenix6Constants.CANIVORE_NAME);
+		motor.getConfigurator().apply(new Slot0Configs().withKP(500));
 		usedJoystick.A.whileTrue(new FindP(
 						motor,
 						new PositionVoltage(0),
-						0,
-						0.5,
-						3,
-						Units.degreesToRotations(1),
-						Units.degreesToRotations(0.1),
-						Units.degreesToRotations(1),
-						Units.degreesToRotations(50)
+						-0.2,//Rot
+						0.2,//Rot
+						5,//Sec
+						Units.degreesToRotations(0.2),// tolerance
+						Units.degreesToRotations(1),// factor
+						Units.degreesToRotations(0),// minRange
+						Units.degreesToRotations(50)// maxRange
 				)
 		);
+		usedJoystick.B.whileTrue(new FindKS(0, motor, new VoltageOut(0)));
+		
 	}
 	
 	private static void thirdJoystickButtons() {

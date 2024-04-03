@@ -2,7 +2,9 @@ package frc.robot.commands.calibration;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.commands.GBCommand;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
@@ -28,7 +30,7 @@ public class FindP extends GBCommand {
     private boolean isCheckingMin;
     private double edgeValue;
 
-
+    
     private double accuracy;
 
     private boolean isInit;
@@ -41,9 +43,12 @@ public class FindP extends GBCommand {
     public FindP(GBTalonFXPro motor, PositionVoltage controlRequest, double targetValue1, double targetValue2, double timeout, double tolerance, double factor, double startRange, double endRange) {
         this.motor = motor;
         this.controlRequest = controlRequest;
+        
         this.targetValue1 = targetValue1;
         this.targetValue2 = targetValue2;
+        
         this.slot0Configs = new Slot0Configs();
+        motor.getConfigurator().refresh(slot0Configs);
 
         this.timer = new Timer();
         this.timeout = timeout;
@@ -57,6 +62,10 @@ public class FindP extends GBCommand {
         this.usedTargetValue = targetValue2;
 
         this.accuracy = 0;
+        
+        this.isInit = true;
+        this.isExe = false;
+        this.isEnd = false;
     }
 
     public double getTargetValue(double lastUsedTargetValue) {
@@ -84,7 +93,12 @@ public class FindP extends GBCommand {
             isExe = false;
         }
     }
-
+    
+    @Override
+    public void initialize() {
+        motor.setPosition(0);
+    }
+    
     @Override
     public void execute() {
         if (isInit) {
@@ -102,6 +116,7 @@ public class FindP extends GBCommand {
 
         else if (isExe) {
             double curPosition = motor.getPosition().refresh().getValue();
+            SmartDashboard.putNumber("curPosw", curPosition);
             if (isCheckingMin) {
                 if (edgeValue > curPosition) {
                     edgeValue = curPosition;
@@ -111,7 +126,9 @@ public class FindP extends GBCommand {
                     edgeValue = curPosition;
                 }
             }
-            setIsEnd(Math.abs(usedTargetValue - motor.getPosition().refresh().getValue()) <= tolerance || timer.hasElapsed(timeout));
+            if (Math.abs(usedTargetValue - curPosition) <= tolerance || timer.hasElapsed(timeout)){
+                setIsEnd(true);
+            }
         }
 
         else if (isEnd) {
@@ -120,11 +137,15 @@ public class FindP extends GBCommand {
             double sign = isCheckingMin ? Math.signum(edgeValue - usedTargetValue) : Math.signum(usedTargetValue - edgeValue);
             double error = Math.abs(edgeValue - usedTargetValue);
             
-            accuracy = 100 - (100 / (maxErrorRange - minErrorRange + 1)) * error;
+            SmartDashboard.putNumber("ERROR", error);
             
-            if (accuracy < 90){
+            accuracy = 100 - (100 / (maxErrorRange - minErrorRange + 1)) * error;
+            SmartDashboard.putNumber("ACCURACY", accuracy);
+            if (accuracy < 95){
                 motor.getConfigurator().refresh(slot0Configs);
-                slot0Configs.kP += sign * error * changePFactor;
+                slot0Configs.kP += sign * error / changePFactor;
+                SmartDashboard.putNumber("kp calc",sign * error / changePFactor);
+                SmartDashboard.putNumber("kp", slot0Configs.kP);
                 motor.getConfigurator().apply(slot0Configs);
                 setIsInit(true);
             }
@@ -133,7 +154,11 @@ public class FindP extends GBCommand {
     
     @Override
     public boolean isFinished() {
-        return accuracy > 90;
+        return accuracy > 95;
     }
-
+    
+    @Override
+    public void end(boolean interrupted) {
+        motor.set(0);
+    }
 }

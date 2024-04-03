@@ -9,21 +9,19 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 
 public class FindP extends GBCommand {
-
-
-    //Todo - add motor sub sys with SYSID
-    private boolean isSetControlNeedToRunPeriodic;
-    private double wantedAccuracyPercent, timeoutForActionSeconds, errorToKpValueFactor;
-    private Pair<Double, Double> valuesToRunFor, accuracyRange;
-    private DoubleSupplier currentValueSupplier, currentKpValueSupplier;
-    private Consumer<Double> setControl, setKp;
-    private Predicate<Double> isAtPose;
-    private Runnable stopAtEnd;
+    
+    private final boolean isSetControlNeedToRunPeriodic;
+    private final double wantedAccuracyPercent, timeoutForActionSeconds, errorToKpValueFactor;
+    private final Pair<Double, Double> valuesToRunFor, accuracyRangeBestToWorst;
+    private final DoubleSupplier currentValueSupplier, currentKpValueSupplier;
+    private final Consumer<Double> setControl, setKp;
+    private final Predicate<Double> isAtPose;
+    private final Runnable stopAtEnd;
 
 
     private final Timer TIMER;
-    private boolean isInit, isExe, isEnd;
     private boolean isCheckingMin;
+    private boolean isInit, isExe, isEnd;
     private double edgeValue;
     private double accuracyPercent, usedTargetValue;
 
@@ -31,7 +29,7 @@ public class FindP extends GBCommand {
     public FindP(
             boolean isSetControlNeedToRunPeriodic,
             double wantedAccuracyPercent, double timeoutForActionSeconds, double errorToKpValueFactor,
-            Pair<Double, Double> valuesToRunFor, Pair<Double, Double> accuracyRange,
+            Pair<Double, Double> valuesToRunFor, Pair<Double, Double> accuracyRangeBestToWorst,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
@@ -54,7 +52,7 @@ public class FindP extends GBCommand {
         this.valuesToRunFor = valuesToRunFor;
         this.usedTargetValue = valuesToRunFor.getSecond();
 
-        this.accuracyRange = accuracyRange;
+        this.accuracyRangeBestToWorst = accuracyRangeBestToWorst;
 
         this.currentValueSupplier = currentValueSupplier;
         this.currentKpValueSupplier = currentKpValueSupplier;
@@ -117,11 +115,13 @@ public class FindP extends GBCommand {
                 if (edgeValue > currentPosition) {
                     edgeValue = currentPosition;
                 }
-            } else {
+            }
+            else {
                 if (edgeValue < currentPosition) {
                     edgeValue = currentPosition;
                 }
             }
+
             if (isAtPose.test(currentPosition) || TIMER.hasElapsed(timeoutForActionSeconds)) {
                 setIsEndTrue();
             }
@@ -133,7 +133,7 @@ public class FindP extends GBCommand {
             double sign = isCheckingMin ? Math.signum(edgeValue - usedTargetValue) : Math.signum(usedTargetValue - edgeValue);
             double error = Math.abs(edgeValue - usedTargetValue);
 
-            accuracyPercent = 100 - (100 / (accuracyRange.getSecond() - accuracyRange.getFirst() + 1)) * error;
+            accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
 
             if (accuracyPercent < wantedAccuracyPercent) {
                 setKp.accept(currentKpValueSupplier.getAsDouble() + sign * error / errorToKpValueFactor);

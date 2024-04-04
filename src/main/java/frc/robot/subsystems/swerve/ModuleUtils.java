@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.utils.Conversions;
 
 public class ModuleUtils {
@@ -18,6 +19,15 @@ public class ModuleUtils {
 
     public static double toDriveDistance(double revolutions) {
         return Conversions.revolutionsToDistance(revolutions, ModuleConstants.WHEEL_DIAMETER_METERS);
+    }
+
+    public static Translation2d getModulePositionRelativeToMiddleOfRobot(ModuleName moduleName){
+        return switch (moduleName) {
+            case FRONT_LEFT ->  new Translation2d(SwerveConstants.FRONT_LEFT_TRANSLATION2D.getX(), SwerveConstants.FRONT_LEFT_TRANSLATION2D.getY());
+            case FRONT_RIGHT -> new Translation2d(SwerveConstants.FRONT_RIGHT_TRANSLATION2D.getX(), SwerveConstants.FRONT_RIGHT_TRANSLATION2D.getY());
+            case BACK_LEFT -> new Translation2d(SwerveConstants.BACK_LEFT_TRANSLATION2D.getX(), SwerveConstants.BACK_LEFT_TRANSLATION2D.getY());
+            case BACK_RIGHT -> new Translation2d(SwerveConstants.BACK_RIGHT_TRANSLATION2D.getX(), SwerveConstants.BACK_RIGHT_TRANSLATION2D.getY());
+        };
     }
 
     public static  double velocityToOpenLoopVoltage(double velocityMetersPerSecond, double wheelDiameterMeters, double steerVelocityRevolutionsPerSecond, double couplingRatio, double maxSpeedRevolutionsPerSecond, double voltageCompensationSaturation) {

@@ -37,11 +37,16 @@ public class SwerveConstants {
     public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
     public static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
 
-    public static final Translation2d[] LOCATIONS = {
-             new Translation2d(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER),
-             new Translation2d(MODULE_X_DISTANCE_FROM_CENTER, -MODULE_Y_DISTANCE_FROM_CENTER),
-             new Translation2d(-MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER),
-             new Translation2d(-MODULE_X_DISTANCE_FROM_CENTER, -MODULE_Y_DISTANCE_FROM_CENTER)
+    protected static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
+    protected static final Translation2d FRONT_RIGHT_TRANSLATION2D = new Translation2d(MODULE_X_DISTANCE_FROM_CENTER, -MODULE_Y_DISTANCE_FROM_CENTER);
+    protected static final Translation2d BACK_LEFT_TRANSLATION2D = new Translation2d(-MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
+    protected static final Translation2d BACK_RIGHT_TRANSLATION2D = new Translation2d(-MODULE_X_DISTANCE_FROM_CENTER, -MODULE_Y_DISTANCE_FROM_CENTER);
+
+    protected static final Translation2d[] LOCATIONS = {
+            FRONT_LEFT_TRANSLATION2D,
+            FRONT_RIGHT_TRANSLATION2D,
+            BACK_LEFT_TRANSLATION2D,
+            BACK_RIGHT_TRANSLATION2D
     };
 
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
@@ -58,8 +63,9 @@ public class SwerveConstants {
             PROFILED_ROTATION_PID_CONSTANTS.kD,
             ROTATION_CONSTRAINTS
     );
+
     static {
-       PROFILED_ROTATION_PID_CONTROLLER.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
+        PROFILED_ROTATION_PID_CONTROLLER.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
     }
 
     public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(

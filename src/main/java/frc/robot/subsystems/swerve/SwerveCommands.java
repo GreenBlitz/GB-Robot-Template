@@ -54,6 +54,54 @@ public class SwerveCommands {
         );
     }
 
+    /**
+     * Creates a command that drives the swerve with the given powers, and rotating around wheel instead of middle if robot,
+     * relative to the field's frame of reference, in open loop mode.
+     *
+     * @param xSupplier     the target forwards power
+     * @param ySupplier     the target leftwards power
+     * @param thetaSupplier the target theta power, CCW+
+     * @param moduleName the wanted module to rotate around
+     * @return the command
+     */
+    public static Command getopenLoopFieldRelativeDriveWithRotateAroundWheelCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, ModuleUtils.ModuleName moduleName) {
+        return new InitExecuteCommand(
+                () -> SWERVE.initializeDrive(false),
+                () -> SWERVE.fieldRelativeDriveRotateAroundModule(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), moduleName),
+                SWERVE
+        );
+    }
+
+    /**
+     * Creates a command that drives the swerve with the given powers, and rotating around wheel instead of middle if robot,
+     * relative to the field's frame of reference, in closed loop mode.
+     *
+     * @param xSupplier     the target forwards power
+     * @param ySupplier     the target leftwards power
+     * @param thetaSupplier the target theta power, CCW+
+     * @param moduleName the wanted module to rotate around
+     * @return the command
+     */
+    public static Command getClosedLoopFieldRelativeDriveWithRotateAroundWheelCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, ModuleUtils.ModuleName moduleName) {
+        return new InitExecuteCommand(
+                () -> SWERVE.initializeDrive(true),
+                () -> SWERVE.fieldRelativeDriveRotateAroundModule(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), moduleName),
+                SWERVE
+        );
+    }
+
+    /**
+     * Creates a command that rotating the swerve to target angle by trapezoid profiled pid
+     *
+     * @param targetAngle -> the targetAngle in Rotation2d
+     * @param moduleName -> the module to turn around
+     * @return the command
+     */
+    public static Command getRotateToAngleAroundWheelCommand(Rotation2d targetAngle, ModuleUtils.ModuleName moduleName) {
+        return new InstantCommand(SWERVE::resetRotationController)
+                .andThen(new RunCommand(() -> SWERVE.rotateToAngleAroundWheel(targetAngle, moduleName)))
+                .until(() -> SWERVE.isAtAngle(targetAngle));
+    }
 
     /**
      * Creates a command that rotating the swerve to target angle by trapezoid profiled pid

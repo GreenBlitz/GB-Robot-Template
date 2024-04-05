@@ -17,6 +17,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class FalconSysId {
 
     private final SysIdRoutine sysIdRoutine;
+    private final GBSubsystem usedSubSystem;
 
 
     public FalconSysId(GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts, double rampRateVoltsPerSecond) {
@@ -32,6 +33,8 @@ public class FalconSysId {
     }
 
     public FalconSysId(GBSubsystem subsystem, Consumer<Double> voltageControl, double voltageStepVolts, double rampRateVoltsPerSecond, double timeout) {
+        this.usedSubSystem = subsystem;
+
         SysIdRoutine.Config config = new SysIdRoutine.Config(
                 Volts.of(rampRateVoltsPerSecond).per(Seconds.of(1)),
                 Volts.of(voltageStepVolts),
@@ -41,7 +44,7 @@ public class FalconSysId {
         SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
                 (Measure<Voltage> volts) -> voltageControl.accept(volts.in(Volts)),
                 null,
-                subsystem
+                usedSubSystem
         );
         this.sysIdRoutine = new SysIdRoutine(config, mechanism);
     }
@@ -50,7 +53,7 @@ public class FalconSysId {
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         Command command = sysIdRoutine.quasistatic(direction);
-        command.addRequirements();
+        command.addRequirements(usedSubSystem);
         return new SequentialCommandGroup(
                 new InstantCommand(SignalLogger::start),
                 command,
@@ -60,7 +63,7 @@ public class FalconSysId {
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         Command command = sysIdRoutine.dynamic(direction);
-        command.addRequirements();
+        command.addRequirements(usedSubSystem);
         return new SequentialCommandGroup(
                 new InstantCommand(SignalLogger::start),
                 command,

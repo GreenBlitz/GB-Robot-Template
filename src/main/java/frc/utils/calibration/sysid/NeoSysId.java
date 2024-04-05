@@ -15,6 +15,8 @@ import static edu.wpi.first.units.Units.Volts;
 public class NeoSysId {
 
     private final SysIdRoutine sysIdRoutine;
+    private final GBSubsystem usedSubSystem;
+
 
 
     public NeoSysId(GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts, double rampRateVoltsPerSecond) {
@@ -30,6 +32,8 @@ public class NeoSysId {
     }
 
     public NeoSysId(GBSubsystem subsystem, Consumer<Double> voltageControl, double voltageStepVolts, double rampRateVoltsPerSecond, double timeout) {
+        this.usedSubSystem = subsystem;
+
         SysIdRoutine.Config config = new SysIdRoutine.Config(
                 Volts.of(rampRateVoltsPerSecond).per(Seconds.of(1)),
                 Volts.of(voltageStepVolts),
@@ -48,13 +52,13 @@ public class NeoSysId {
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         Command command = sysIdRoutine.quasistatic(direction);
-        command.addRequirements();
+        command.addRequirements(usedSubSystem);
         return command;
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         Command command = sysIdRoutine.dynamic(direction);
-        command.addRequirements();
+        command.addRequirements(usedSubSystem);
         return command;
     }
 

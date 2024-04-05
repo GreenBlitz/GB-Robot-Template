@@ -64,7 +64,7 @@ public class SwerveCommands {
      * @param moduleName the wanted module to rotate around
      * @return the command
      */
-    public static Command getopenLoopFieldRelativeDriveWithRotateAroundWheelCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, ModuleUtils.ModuleName moduleName) {
+    public static Command getOpenLoopFieldRelativeDriveWithRotateAroundWheelCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, ModuleUtils.ModuleName moduleName) {
         return new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(false),
                 () -> SWERVE.fieldRelativeDriveRotateAroundModule(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), moduleName),

@@ -8,8 +8,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.utils.allianceutils.AlliancePose2d;
+import frc.utils.calibration.sysid.SysIdObject;
 import frc.utils.commands.InitExecuteCommand;
 
 import java.util.List;
@@ -17,10 +19,9 @@ import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import static frc.robot.RobotContainer.SWERVE;
-
 public class SwerveCommands {
 
+    private static final Swerve SWERVE = RobotContainer.SWERVE;
 
     /**
      * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed open mode.

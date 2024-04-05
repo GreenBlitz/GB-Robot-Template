@@ -8,10 +8,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.utils.allianceutils.AlliancePose2d;
-import frc.utils.calibration.sysid.SysIdObject;
 import frc.utils.commands.InitExecuteCommand;
 
 import java.util.List;

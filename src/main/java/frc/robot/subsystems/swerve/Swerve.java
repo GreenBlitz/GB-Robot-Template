@@ -210,8 +210,8 @@ public class Swerve extends GBSubsystem {
     /**
      * Drives the swerve with the given speeds, rotating around given Module instead of middle of robot.
      */
-    private void selfRelativeDriveAndRotateAroundWantedPointInRobot(ChassisSpeeds chassisSpeeds, ModuleUtils.ModuleName moduleName) {
-        selfRelativeDriveAndRotateAroundWantedPointInRobot(chassisSpeeds, ModuleUtils.getModulePositionRelativeToMiddleOfRobot(moduleName));
+    private void selfRelativeDriveAndRotateAroundWantedPointInRobot(ChassisSpeeds chassisSpeeds, ModuleUtils.ModuleName moduleToTurnAround) {
+        selfRelativeDriveAndRotateAroundWantedPointInRobot(chassisSpeeds, ModuleUtils.getModulePositionRelativeToMiddleOfRobot(moduleToTurnAround));
     }
 
     /**

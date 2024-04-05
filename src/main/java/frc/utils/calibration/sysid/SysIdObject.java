@@ -17,9 +17,9 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class SysIdObject {
 
-    protected static final double DEFAULT_VOLTAGE_STEP = 7;
-    protected static final double DEFAULT_RAMP_RATE_VOLTS_PER_SECOND = 1;
-    protected static final double DEFAULT_TIMEOUT_SECONDS = 10;
+    private static final double DEFAULT_VOLTAGE_STEP = 7;
+    private static final double DEFAULT_RAMP_RATE_VOLTS_PER_SECOND = 1;
+    private static final double DEFAULT_TIMEOUT_SECONDS = 10;
 
     private final SysIdRoutine sysIdRoutine;
     private final GBSubsystem usedSubSystem;

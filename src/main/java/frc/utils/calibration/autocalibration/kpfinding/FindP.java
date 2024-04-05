@@ -1,4 +1,4 @@
-package frc.robot.commands.calibration.kpfinding;
+package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;
@@ -8,10 +8,10 @@ import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 
-public class FindMaxPBeforeOscillate extends GBCommand {
-
+public class FindP extends GBCommand {
+    
     private final boolean isSetControlNeedToRunPeriodic;
-    private final double wantedAccuracyPercent, timeoutForActionSeconds, multiPFactor;
+    private final double wantedAccuracyPercent, timeoutForActionSeconds, errorToKpValueFactor;
     private final Pair<Double, Double> valuesToRunFor, accuracyRangeBestToWorst;
     private final DoubleSupplier currentValueSupplier, currentKpValueSupplier;
     private final Consumer<Double> setControl, setKp;
@@ -26,9 +26,9 @@ public class FindMaxPBeforeOscillate extends GBCommand {
     private double accuracyPercent, usedTargetValue;
 
 
-    protected FindMaxPBeforeOscillate(
+    public FindP(
             boolean isSetControlNeedToRunPeriodic,
-            double wantedAccuracyPercent, double timeoutForActionSeconds, double multiPFactor,
+            double wantedAccuracyPercent, double timeoutForActionSeconds, double errorToKpValueFactor,
             Pair<Double, Double> valuesToRunFor, Pair<Double, Double> accuracyRangeBestToWorst,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
@@ -47,7 +47,7 @@ public class FindMaxPBeforeOscillate extends GBCommand {
 
         this.wantedAccuracyPercent = wantedAccuracyPercent;
         this.timeoutForActionSeconds = timeoutForActionSeconds;
-        this.multiPFactor = multiPFactor;
+        this.errorToKpValueFactor = errorToKpValueFactor;
 
         this.valuesToRunFor = valuesToRunFor;
         this.usedTargetValue = valuesToRunFor.getSecond();
@@ -130,28 +130,25 @@ public class FindMaxPBeforeOscillate extends GBCommand {
         else if (isEnd) {
             TIMER.stop();
 
+            double sign = isCheckingMin ? Math.signum(edgeValue - usedTargetValue) : Math.signum(usedTargetValue - edgeValue);
             double error = Math.abs(edgeValue - usedTargetValue);
 
             accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
 
-            if (accuracyPercent >= wantedAccuracyPercent) {
-                setKp.accept(currentKpValueSupplier.getAsDouble() * multiPFactor);
+            if (accuracyPercent < wantedAccuracyPercent) {
+                setKp.accept(currentKpValueSupplier.getAsDouble() + sign * error / errorToKpValueFactor);
                 setIsInitTrue();
-            }
-            else {
-                setKp.accept(currentKpValueSupplier.getAsDouble() / multiPFactor);
             }
         }
     }
 
     @Override
     public boolean isFinished() {
-        return accuracyPercent < wantedAccuracyPercent;
+        return accuracyPercent >= wantedAccuracyPercent;
     }
 
     @Override
     public void end(boolean interrupted) {
         stopAtEnd.run();
     }
-
 }

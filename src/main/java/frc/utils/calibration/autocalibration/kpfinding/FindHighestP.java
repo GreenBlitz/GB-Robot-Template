@@ -1,4 +1,4 @@
-package frc.robot.commands.calibration.kpfinding;
+package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,7 +17,7 @@ public class FindHighestP extends SequentialCommandGroup {
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
             Runnable stopAtEnd
-    ){
+    ) {
         super(
                 new FindP(
                         isSetControlNeedToRunPeriodic,

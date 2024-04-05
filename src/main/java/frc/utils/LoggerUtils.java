@@ -1,5 +1,9 @@
 package frc.utils;
 
+import com.ctre.phoenix6.SignalLogger;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -11,6 +15,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class LoggerUtils {
 
     public static void startRealLogger(){
+        SignalLogger.enableAutoLogging(Phoenix6Constants.IS_AUTO_LOGGING);
         try {
             LoggerUtils.startLoggerOnUSB();
         } catch (Exception exception) {
@@ -20,17 +25,24 @@ public class LoggerUtils {
     }
 
     public static void startLoggerOnUSB(){
-        Logger.addDataReceiver(new WPILOGWriter(RobotConstants.USB_LOG_PATH));
+        setLoggingPath(RobotConstants.USB_LOG_PATH);
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", "USB");
     }
 
     public static void startLoggerOnRoborio(){
-        Logger.addDataReceiver(new WPILOGWriter(RobotConstants.SAFE_ROBORIO_LOG_PATH));
+        setLoggingPath(RobotConstants.SAFE_ROBORIO_LOG_PATH);
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", "ROBORIO");
+    }
+
+    public static void startSimulationLogger(){
+        setLoggingPath(SimulationConstants.SIMULATION_LOG_PATH);
+        Logger.addDataReceiver(new NT4Publisher());
+        Logger.start();
+        Logger.recordOutput("Logged In", "COMPUTER");
     }
 
     public static void startReplayLogger(){
@@ -40,11 +52,8 @@ public class LoggerUtils {
         Logger.start();
     }
 
-    public static void startSimulationLogger(){
-        Logger.addDataReceiver(new NT4Publisher());
-        Logger.addDataReceiver(new WPILOGWriter(SimulationConstants.SIMULATION_LOG_PATH));
-        Logger.start();
-        Logger.recordOutput("Logged In", "COMPUTER");
+    private static void setLoggingPath(String path){
+        SignalLogger.setPath(path);
+        Logger.addDataReceiver(new WPILOGWriter(path));
     }
-
 }

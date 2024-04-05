@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -58,6 +59,8 @@ public class Robot extends LoggedRobot {
 
 
     private void initializeLogger() {
+        SignalLogger.enableAutoLogging(false); // Disable CTRE logger for better cpu usage
+
         NetworkTableInstance.getDefault()
                 .getStructTopic("RobotPose", Pose2d.struct).publish();
         NetworkTableInstance.getDefault()

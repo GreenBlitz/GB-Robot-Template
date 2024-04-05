@@ -43,7 +43,7 @@ public class NeoSysId {
         SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
                 (Measure<Voltage> volts) -> voltageControl.accept(volts.in(Volts)),
                 null,
-                subsystem
+                usedSubSystem
         );
         this.sysIdRoutine = new SysIdRoutine(config, mechanism);
     }

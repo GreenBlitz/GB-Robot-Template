@@ -1,8 +1,6 @@
 package frc.utils;
 
 import com.ctre.phoenix6.SignalLogger;
-import frc.robot.Robot;
-import frc.robot.RobotContainer;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;

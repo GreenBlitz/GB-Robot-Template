@@ -73,7 +73,7 @@ public class SysIdObject {
 
     private Command addRequirementsAndReturnCommand(Command sysIdCommand){
         sysIdCommand.addRequirements(usedSubSystem);
-        return isCTRE ? new SequentialCommandGroup(new InstantCommand(SignalLogger::start), sysIdCommand, new InstantCommand(SignalLogger::stop)) : sysIdCommand;
+        return isCTRE ? new SequentialCommandGroup(new InstantCommand(SignalLogger::start), sysIdCommand, new InstantCommand(SignalLogger::stop)).handleInterrupt(SignalLogger::stop) : sysIdCommand;
     }
 
 }

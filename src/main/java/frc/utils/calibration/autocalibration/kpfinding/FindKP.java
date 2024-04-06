@@ -6,18 +6,18 @@ import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 
-public class FindP extends PFinding {
+public class FindKP extends KPFindingUtil {
 
     private final double errorToKpValueFactor;
 
-    protected FindP(
+    protected FindKP(
             boolean isSetControlNeedToRunPeriodic,
             double tolerance, double timeoutForActionSeconds, double errorToKpValueFactor,
             Pair<Double, Double> valuesToRunFor,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
-            Runnable stopAtEnd
+            Runnable doOnEnd
     ) {
         super(isSetControlNeedToRunPeriodic,
                 tolerance, timeoutForActionSeconds,
@@ -25,7 +25,7 @@ public class FindP extends PFinding {
                 currentValueSupplier, currentKpValueSupplier,
                 setControl, setKp,
                 isAtPose,
-                stopAtEnd
+                doOnEnd
         );
 
         this.errorToKpValueFactor = errorToKpValueFactor;
@@ -33,9 +33,9 @@ public class FindP extends PFinding {
 
     @Override
     public void execute() {
-        if (isInit) {initFunction();}
+        if (isInitialize) {initFunction();}
 
-        else if (isExe) {
+        else if (isExecute) {
             setControlPeriodic();
 
             final double currentPosition = currentValueSupplier.getAsDouble();

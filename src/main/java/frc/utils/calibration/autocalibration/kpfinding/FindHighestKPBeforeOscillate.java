@@ -6,20 +6,20 @@ import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 
-public class FindMaxPBeforeOscillate extends PFinding {
+public class FindHighestKPBeforeOscillate extends KPFindingUtil {
 
     private final double multiPFactor;
 
     private boolean isErrorNeedToBeCheck;
 
-    protected FindMaxPBeforeOscillate(
+    protected FindHighestKPBeforeOscillate(
             boolean isSetControlNeedToRunPeriodic,
             double tolerance, double timeoutForActionSeconds, double multiPFactor,
             Pair<Double, Double> valuesToRunFor,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
-            Runnable stopAtEnd
+            Runnable doOnEnd
     ) {
         super(
                 isSetControlNeedToRunPeriodic,
@@ -28,7 +28,7 @@ public class FindMaxPBeforeOscillate extends PFinding {
                 currentValueSupplier, currentKpValueSupplier,
                 setControl, setKp,
                 isAtPose,
-                stopAtEnd
+                doOnEnd
         );
 
         this.multiPFactor = multiPFactor;
@@ -37,12 +37,12 @@ public class FindMaxPBeforeOscillate extends PFinding {
 
     @Override
     public void execute() {
-        if (isInit) {
+        if (isInitialize) {
             initFunction();
             isErrorNeedToBeCheck = false;
         }
 
-        else if (isExe) {
+        else if (isExecute) {
             setControlPeriodic();
 
             final double currentValue = currentValueSupplier.getAsDouble();

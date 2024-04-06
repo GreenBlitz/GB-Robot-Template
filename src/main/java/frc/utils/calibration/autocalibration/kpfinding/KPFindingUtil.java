@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 
-public abstract class PFinding extends GBCommand {
+public abstract class KPFindingUtil extends GBCommand {
 
     protected final boolean isSetControlNeedToRunPeriodic;
     protected final double tolerance, timeoutForActionSeconds;
@@ -19,18 +19,18 @@ public abstract class PFinding extends GBCommand {
     protected final Runnable stopAtEnd;
 
     protected final Timer TIMER;
-    protected boolean isInit, isExe, isEnd;
+    protected boolean isInitialize, isExecute, isEnd;
     protected double usedTargetValue;
     protected double error;
 
-    protected PFinding(
+    protected KPFindingUtil(
             boolean isSetControlNeedToRunPeriodic,
             double tolerance, double timeoutForActionSeconds,
             Pair<Double, Double> valuesToRunFor,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
-            Runnable stopAtEnd
+            Runnable doOnEnd
     ) {
         this.TIMER = new Timer();
 
@@ -48,7 +48,7 @@ public abstract class PFinding extends GBCommand {
         this.setControl = setControl;
         this.setKp = setKp;
         this.isAtPose = isAtPose;
-        this.stopAtEnd = stopAtEnd;
+        this.stopAtEnd = doOnEnd;
     }
 
     @Override
@@ -62,22 +62,22 @@ public abstract class PFinding extends GBCommand {
     }
 
     protected void setIsInitTrue() {
-        this.isInit = true;
+        this.isInitialize = true;
         isEnd = false;
-        isExe = false;
+        isExecute = false;
     }
 
     protected void setIsExecuteTrue() {
-        this.isExe = true;
-        isInit = false;
+        this.isExecute = true;
+        isInitialize = false;
         isEnd = false;
 
     }
 
     protected void setIsEndTrue() {
         this.isEnd = true;
-        isInit = false;
-        isExe = false;
+        isInitialize = false;
+        isExecute = false;
     }
 
     protected void replaceTargetValue() {
@@ -89,7 +89,7 @@ public abstract class PFinding extends GBCommand {
                 || (valuesToRunFor.getFirst() - tolerance <= currentPosition && currentPosition <= valuesToRunFor.getSecond() + tolerance));
     }
 
-    protected void initFunction(){
+    protected void initFunction() {
         TIMER.restart();
         replaceTargetValue();
         error = Math.abs(currentValueSupplier.getAsDouble() - usedTargetValue);
@@ -97,13 +97,13 @@ public abstract class PFinding extends GBCommand {
         setIsExecuteTrue();
     }
 
-    protected void setControlPeriodic(){
+    protected void setControlPeriodic() {
         if (isSetControlNeedToRunPeriodic) {
             setControl.accept(usedTargetValue);
         }
     }
 
-    protected boolean isNeedToBeEnd(double currentPosition){
+    protected boolean isNeedToBeEnd(double currentPosition) {
         return isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds) || hasOscillated(currentPosition);
     }
 }

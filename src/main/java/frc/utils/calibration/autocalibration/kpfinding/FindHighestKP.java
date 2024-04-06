@@ -7,12 +7,12 @@ import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 
-public class FindHighestP extends SequentialCommandGroup {
+public class FindHighestKP extends SequentialCommandGroup {
 
     /**
-     * This function is finding for you what is the best (biggest) kP value to use on your system.
      * @author Yoav Herman
-     * <p>
+     * This function is finding for you what is the best (biggest) kP value to use on your system. <p>
+     *
      * IMPORTANT:
      * @apiNote You can choose what units to use or which control mode you calibrate. BUT Make sure you use the SAME UNITS EVERYWHERE!!!
      * @apiNote This function must get RELATIVE values and NOT ABSOLUTE. For EXAMPLE robot angle should NOT be from (-180,180) but RELATIVE!!!
@@ -29,36 +29,36 @@ public class FindHighestP extends SequentialCommandGroup {
      * @param setControl -> function to control the system
      * @param setKp -> function to set new kP
      * @param isAtPose -> function to check is system at position
-     * @param stopAtEnd -> function to do in end (probably stand in place)
+     * @param doOnEnd -> function to do on end (probably stand in place)
      */
 
-    public FindHighestP(
+    public FindHighestKP(
             boolean isSetControlNeedToRunPeriodic,
             double tolerance, double timeoutForActionSeconds, double errorToKpValueFactor, double multiPFactor,
             Pair<Double, Double> valuesToRunFor,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
-            Runnable stopAtEnd
+            Runnable doOnEnd
     ) {
         super(
-                new FindP(
+                new FindKP(
                         isSetControlNeedToRunPeriodic,
                         tolerance, timeoutForActionSeconds, errorToKpValueFactor,
                         valuesToRunFor,
                         currentValueSupplier, currentKpValueSupplier,
                         setControl, setKp,
                         isAtPose,
-                        stopAtEnd
+                        doOnEnd
                 ),
-                new FindMaxPBeforeOscillate(
+                new FindHighestKPBeforeOscillate(
                         isSetControlNeedToRunPeriodic,
                         tolerance, timeoutForActionSeconds, multiPFactor,
                         valuesToRunFor,
                         currentValueSupplier, currentKpValueSupplier,
                         setControl, setKp,
                         isAtPose,
-                        stopAtEnd
+                        doOnEnd
                 )
         );
     }

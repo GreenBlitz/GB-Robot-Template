@@ -10,10 +10,12 @@ public class FindMaxPBeforeOscillate extends PFinding {
 
     private final double multiPFactor;
 
+    private boolean isErrorNeedToBeCheck;
+
     protected FindMaxPBeforeOscillate(
             boolean isSetControlNeedToRunPeriodic,
-            double wantedAccuracyPercent, double timeoutForActionSeconds, double multiPFactor,
-            Pair<Double, Double> valuesToRunFor, Pair<Double, Double> accuracyRangeBestToWorst,
+            double tolerance, double timeoutForActionSeconds, double multiPFactor,
+            Pair<Double, Double> valuesToRunFor,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
@@ -21,8 +23,8 @@ public class FindMaxPBeforeOscillate extends PFinding {
     ) {
         super(
                 isSetControlNeedToRunPeriodic,
-                wantedAccuracyPercent, timeoutForActionSeconds,
-                valuesToRunFor, accuracyRangeBestToWorst,
+                tolerance, timeoutForActionSeconds,
+                valuesToRunFor,
                 currentValueSupplier, currentKpValueSupplier,
                 setControl, setKp,
                 isAtPose,
@@ -34,72 +36,36 @@ public class FindMaxPBeforeOscillate extends PFinding {
 
 
     @Override
-    public void initialize() {
-        setIsInitTrue();
-        wasSmall = false;
-        wasBig = false;
-        accuracyPercent = wantedAccuracyPercent;
-    }
-
-    @Override
     public void execute() {
         if (isInit) {
-            TIMER.restart();
-
-            wasSmall = false;
-            wasBig = false;
-
-            double currentPosition = currentValueSupplier.getAsDouble();
-
-            replaceTargetValue();
-
-            edgeValue = currentPosition;
-            setControl.accept(usedTargetValue);
-
-            setIsExecuteTrue();
+            initFunction();
+            isErrorNeedToBeCheck = false;
         }
+
         else if (isExe) {
-            if (isSetControlNeedToRunPeriodic) {
-                setControl.accept(usedTargetValue);
-            }
+            setControlPeriodic();
 
-            double currentPosition = currentValueSupplier.getAsDouble();
+            final double currentPosition = currentValueSupplier.getAsDouble();
+            error = Math.max(error, Math.abs(currentPosition - usedTargetValue));
 
-            if (currentPosition <= usedTargetValue) {
-                wasSmall = true;
-            } else {
-                wasBig = true;
-            }
-
-            if (wasSmall ^ wasBig) {
-                edgeValue = Math.abs(edgeValue - usedTargetValue) > Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
-            } else {
-                edgeValue = Math.abs(edgeValue - usedTargetValue) < Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
-            }
-
-            if (isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds)) {
+            if (isNeedToBeEnd(currentPosition)) {
                 setIsEndTrue();
             }
         }
+
         else if (isEnd) {
             TIMER.stop();
 
-            double error = Math.abs(edgeValue - usedTargetValue);
-            accuracyPercent = getAccuracyPercent(error);
-
-            if (accuracyPercent >= wantedAccuracyPercent) {
-                setKp.accept(currentKpValueSupplier.getAsDouble() * multiPFactor);
-                setIsInitTrue();
-            } else {
-                setKp.accept(currentKpValueSupplier.getAsDouble() / multiPFactor);
-            }
+            isErrorNeedToBeCheck = true;
+            setKp.accept(currentKpValueSupplier.getAsDouble() * ((error <= tolerance) ? multiPFactor : 1.0 / multiPFactor));
+            setIsInitTrue();
         }
     }
 
 
     @Override
     public boolean isFinished() {
-        return accuracyPercent < wantedAccuracyPercent;
+        return isErrorNeedToBeCheck && error > tolerance ;
     }
 
 }

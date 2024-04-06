@@ -11,26 +11,22 @@ import java.util.function.Predicate;
 public abstract class PFinding extends GBCommand {
 
     protected final boolean isSetControlNeedToRunPeriodic;
-    protected final double wantedAccuracyPercent, timeoutForActionSeconds;
-    protected final Pair<Double, Double> valuesToRunFor, accuracyRangeBestToWorst;
+    protected final double tolerance, timeoutForActionSeconds;
+    protected final Pair<Double, Double> valuesToRunFor;
     protected final DoubleSupplier currentValueSupplier, currentKpValueSupplier;
     protected final Consumer<Double> setControl, setKp;
     protected final Predicate<Double> isAtPose;
     protected final Runnable stopAtEnd;
 
-
     protected final Timer TIMER;
     protected boolean isInit, isExe, isEnd;
-    protected double edgeValue;
-    protected double accuracyPercent, usedTargetValue;
-
-    protected boolean wasSmall = false;
-    protected boolean wasBig = false;
+    protected double usedTargetValue;
+    protected double error;
 
     protected PFinding(
             boolean isSetControlNeedToRunPeriodic,
-            double wantedAccuracyPercent, double timeoutForActionSeconds,
-            Pair<Double, Double> valuesToRunFor, Pair<Double, Double> accuracyRangeBestToWorst,
+            double tolerance, double timeoutForActionSeconds,
+            Pair<Double, Double> valuesToRunFor,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
@@ -38,19 +34,13 @@ public abstract class PFinding extends GBCommand {
     ) {
         this.TIMER = new Timer();
 
-        this.isInit = true;
-        this.isExe = false;
-        this.isEnd = false;
-
         this.isSetControlNeedToRunPeriodic = isSetControlNeedToRunPeriodic;
 
-        this.wantedAccuracyPercent = wantedAccuracyPercent;
+        this.tolerance = tolerance;
         this.timeoutForActionSeconds = timeoutForActionSeconds;
 
         this.valuesToRunFor = valuesToRunFor;
         this.usedTargetValue = valuesToRunFor.getSecond();
-
-        this.accuracyRangeBestToWorst = accuracyRangeBestToWorst;
 
         this.currentValueSupplier = currentValueSupplier;
         this.currentKpValueSupplier = currentKpValueSupplier;
@@ -59,6 +49,16 @@ public abstract class PFinding extends GBCommand {
         this.setKp = setKp;
         this.isAtPose = isAtPose;
         this.stopAtEnd = stopAtEnd;
+    }
+
+    @Override
+    public void initialize() {
+        setIsInitTrue();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        stopAtEnd.run();
     }
 
     protected void setIsInitTrue() {
@@ -84,12 +84,26 @@ public abstract class PFinding extends GBCommand {
         usedTargetValue = (usedTargetValue == valuesToRunFor.getFirst()) ? valuesToRunFor.getSecond() : valuesToRunFor.getFirst();
     }
 
-    protected double getAccuracyPercent(double error){
-        return (100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error);
+    protected boolean hasOscillated(double currentPosition) {
+        return !((valuesToRunFor.getFirst() >= currentPosition && currentPosition >= valuesToRunFor.getSecond())
+                || (valuesToRunFor.getFirst() <= currentPosition && currentPosition <= valuesToRunFor.getSecond()));
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        stopAtEnd.run();
+    protected void initFunction(){
+        TIMER.restart();
+        replaceTargetValue();
+        error = Math.abs(currentValueSupplier.getAsDouble() - usedTargetValue);
+        setControl.accept(usedTargetValue);
+        setIsExecuteTrue();
+    }
+
+    protected void setControlPeriodic(){
+        if (isSetControlNeedToRunPeriodic) {
+            setControl.accept(usedTargetValue);
+        }
+    }
+
+    protected boolean isNeedToBeEnd(double currentPosition){
+        return isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds) || hasOscillated(currentPosition);
     }
 }

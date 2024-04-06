@@ -32,20 +32,20 @@ public class SwerveCommands {
     public static Command getFindHighestPCommand() {
         return new InstantCommand(SWERVE::resetRotationController)
                 .andThen(new FindHighestP(
-                        RobotConstants.ROBOT_TYPE.isSimulation(),
-                        90,
-                        2.5,
-                        0.35,
-                        1.1,
-                        new Pair<>(90.0, -90.0),
-                        new Pair<>(1.0, 10.0),
-                        () -> SWERVE.getNonAbsoluteHeading().getDegrees(),
-                        SWERVE::getKp,
-                        position -> SWERVE.rotateToAngle(Rotation2d.fromDegrees(position)),
-                        SWERVE::setKP,
-                        targetAngle -> SWERVE.isAtAngle(Rotation2d.fromDegrees(targetAngle)),
-                        SWERVE::stop
-                ));
+                                RobotConstants.ROBOT_TYPE.isSimulation(),
+                                1,
+                                2.5,
+                                0.35,
+                                1.1,
+                                new Pair<>(90.0, -90.0),
+                                () -> SWERVE.getNonAbsoluteHeading().getDegrees(),
+                                SWERVE::getKp,
+                                position -> SWERVE.rotateToAngle(Rotation2d.fromDegrees(position)),
+                                SWERVE::setKP,
+                                targetAngle -> SWERVE.isAtAngle(Rotation2d.fromDegrees(targetAngle)),
+                                SWERVE::stop
+                        )
+                );
     }
 
 

@@ -18,12 +18,11 @@ public class FindHighestP extends SequentialCommandGroup {
      * @apiNote This function must get RELATIVE values and NOT ABSOLUTE
      *
      * @param isSetControlNeedToRunPeriodic -> is the setControl func run on the motor or on the rio
-     * @param wantedAccuracyPercent -> wanted level of accuracy
+     * @param tolerance -> wanted tolerance
      * @param timeoutForActionSeconds -> max time for action
      * @param errorToKpValueFactor -> how many kP to add or minus for one error
      * @param multiPFactor -> by how much increase kP until there is Oscillate
      * @param valuesToRunFor -> two points og the system to jump between
-     * @param accuracyRangeBestToWorst -> TODO
      * @param currentValueSupplier -> supplier to the current position of the system
      * @param currentKpValueSupplier -> supplier to current kP value
      * @param setControl -> function to control the system
@@ -34,8 +33,8 @@ public class FindHighestP extends SequentialCommandGroup {
 
     public FindHighestP(
             boolean isSetControlNeedToRunPeriodic,
-            double wantedAccuracyPercent, double timeoutForActionSeconds, double errorToKpValueFactor, double multiPFactor,
-            Pair<Double, Double> valuesToRunFor, Pair<Double, Double> accuracyRangeBestToWorst,
+            double tolerance, double timeoutForActionSeconds, double errorToKpValueFactor, double multiPFactor,
+            Pair<Double, Double> valuesToRunFor,
             DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
             Consumer<Double> setControl, Consumer<Double> setKp,
             Predicate<Double> isAtPose,
@@ -44,8 +43,8 @@ public class FindHighestP extends SequentialCommandGroup {
         super(
                 new FindP(
                         isSetControlNeedToRunPeriodic,
-                        wantedAccuracyPercent, timeoutForActionSeconds, errorToKpValueFactor,
-                        valuesToRunFor, accuracyRangeBestToWorst,
+                        tolerance, timeoutForActionSeconds, errorToKpValueFactor,
+                        valuesToRunFor,
                         currentValueSupplier, currentKpValueSupplier,
                         setControl, setKp,
                         isAtPose,
@@ -53,8 +52,8 @@ public class FindHighestP extends SequentialCommandGroup {
                 ),
                 new FindMaxPBeforeOscillate(
                         isSetControlNeedToRunPeriodic,
-                        wantedAccuracyPercent, timeoutForActionSeconds, multiPFactor,
-                        valuesToRunFor, accuracyRangeBestToWorst,
+                        tolerance, timeoutForActionSeconds, multiPFactor,
+                        valuesToRunFor,
                         currentValueSupplier, currentKpValueSupplier,
                         setControl, setKp,
                         isAtPose,

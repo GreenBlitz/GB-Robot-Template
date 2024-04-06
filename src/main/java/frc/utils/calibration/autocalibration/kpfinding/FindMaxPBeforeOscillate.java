@@ -20,13 +20,14 @@ public class FindMaxPBeforeOscillate extends GBCommand {
 
 
     private final Timer TIMER;
-    private boolean isCheckingMin;
     private boolean isInit, isExe, isEnd;
     private double edgeValue;
     private double accuracyPercent, usedTargetValue;
 
 
     private boolean hasEnded = false;
+    private boolean wasSmall = false;
+    private boolean wasBig = false;
 
 
     protected FindMaxPBeforeOscillate(
@@ -92,6 +93,8 @@ public class FindMaxPBeforeOscillate extends GBCommand {
     public void initialize() {
         if (!hasEnded) {
             setIsInitTrue();
+            wasSmall = false;
+            wasBig = false;
             accuracyPercent = wantedAccuracyPercent;
         }
     }
@@ -103,42 +106,47 @@ public class FindMaxPBeforeOscillate extends GBCommand {
             if (isInit) {
                 TIMER.restart();
 
+                wasSmall = false;
+                wasBig = false;
+
                 double currentPosition = currentValueSupplier.getAsDouble();
 
                 replaceTargetValue();
-                isCheckingMin = (currentPosition > valuesToRunFor.getFirst() && currentPosition > valuesToRunFor.getSecond())
-                        || (currentPosition > valuesToRunFor.getFirst() && currentPosition > valuesToRunFor.getSecond());
+
                 edgeValue = currentPosition;
                 setControl.accept(usedTargetValue);
 
                 setIsExecuteTrue();
-            } else if (isExe) {
+            }
+            else if (isExe) {
                 if (isSetControlNeedToRunPeriodic) {
                     setControl.accept(usedTargetValue);
                 }
 
                 double currentPosition = currentValueSupplier.getAsDouble();
 
-                if (isCheckingMin) {
-                    if (edgeValue > currentPosition) {
-                        edgeValue = currentPosition;
-                    }
-                } else {
-                    if (edgeValue < currentPosition) {
-                        edgeValue = currentPosition;
-                    }
+                if (currentPosition <= usedTargetValue) {
+                    wasSmall = true;
+                }
+                else {
+                    wasBig = true;
+                }
+
+                if (wasSmall ^ wasBig){
+                    edgeValue = Math.abs(edgeValue - usedTargetValue) > Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
+                }
+                else {
+                    edgeValue = Math.abs(edgeValue - usedTargetValue) < Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
                 }
 
                 if (isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds)) {
                     setIsEndTrue();
                 }
-            } else if (isEnd) {
+            }
+            else if (isEnd) {
                 TIMER.stop();
 
                 double error = Math.abs(edgeValue - usedTargetValue);
-                System.out.println("high/ edge -> " + edgeValue);
-                System.out.println("high/ target -> " + usedTargetValue);
-                System.out.println("high/ error -> " + error);
                 accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
 
                 if (accuracyPercent >= wantedAccuracyPercent) {
@@ -153,9 +161,6 @@ public class FindMaxPBeforeOscillate extends GBCommand {
 
     @Override
     public boolean isFinished() {
-        System.out.println("high/ accuracy -> " + accuracyPercent);
-        System.out.println("high/ accuracy wanted -> " + wantedAccuracyPercent);
-        System.out.println("high/ hasEnded -> " + hasEnded);
         return accuracyPercent < wantedAccuracyPercent || hasEnded;
     }
 

@@ -39,7 +39,7 @@ public class SwerveCommands {
                         1.1,
                         new Pair<>(90.0, -90.0),
                         new Pair<>(1.0, 10.0),
-                        () -> POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees(),
+                        () -> SWERVE.getNonAbsoluteHeading().getDegrees(),
                         SWERVE::getKp,
                         position -> SWERVE.rotateToAngle(Rotation2d.fromDegrees(position)),
                         SWERVE::setKP,

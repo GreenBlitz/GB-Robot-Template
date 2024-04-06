@@ -21,14 +21,12 @@ public class FindP extends GBCommand {
 
 
     private final Timer TIMER;
-    private boolean isCheckingMin;
     private boolean isInit, isExe, isEnd;
     private double edgeValue;
     private double accuracyPercent, usedTargetValue;
 
 
     private boolean hasEnded = false;
-    private boolean hasOverShoote = false;
     private boolean wasSmall = false;
     private boolean wasBig = false;
 
@@ -97,7 +95,6 @@ public class FindP extends GBCommand {
     public void initialize() {
         if (!hasEnded) {
             setIsInitTrue();
-            hasOverShoote = false;
             wasSmall = false;
             wasBig = false;
             accuracyPercent = 0;
@@ -107,43 +104,54 @@ public class FindP extends GBCommand {
     @Override
     public void execute() {
         if (!hasEnded) {
-            System.out.println("current kp -> " + currentKpValueSupplier.getAsDouble());
             if (isInit) {
                 TIMER.restart();
+
+                wasSmall = false;
+                wasBig = false;
 
                 double currentPosition = currentValueSupplier.getAsDouble();
 
                 replaceTargetValue();
-                isCheckingMin = currentPosition > usedTargetValue;
+
                 edgeValue = currentPosition;
                 setControl.accept(usedTargetValue);
 
                 setIsExecuteTrue();
-            } else if (isExe) {
+            }
+
+            else if (isExe) {
                 if (isSetControlNeedToRunPeriodic) {
                     setControl.accept(usedTargetValue);
                 }
 
                 double currentPosition = currentValueSupplier.getAsDouble();
 
-                if (isCheckingMin) {
-                    if (edgeValue > currentPosition) {
-                        edgeValue = currentPosition;
-                    }
-                } else {
-                    if (edgeValue < currentPosition) {
-                        edgeValue = currentPosition;
-                    }
+                if (currentPosition <= usedTargetValue) {
+                    wasSmall = true;
+                }
+                else {
+                    wasBig = true;
+                }
+
+                if (wasSmall ^ wasBig){
+                    edgeValue = Math.abs(edgeValue - usedTargetValue) > Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
+                }
+                else {
+                    edgeValue = Math.abs(edgeValue - usedTargetValue) < Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
                 }
 
                 if (isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds)) {
                     setIsEndTrue();
                 }
-            } else if (isEnd) {
+            }
+
+            else if (isEnd) {
                 TIMER.stop();
 
-                double sign = isCheckingMin ? Math.signum(edgeValue - usedTargetValue) : Math.signum(usedTargetValue - edgeValue);
+                double sign = wasBig && wasSmall ? -1 : 1;
                 double error = Math.abs(edgeValue - usedTargetValue);
+
                 accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
 
                 if (accuracyPercent < wantedAccuracyPercent) {
@@ -156,9 +164,6 @@ public class FindP extends GBCommand {
 
     @Override
     public boolean isFinished() {
-        System.out.println("accuracy -> " + accuracyPercent);
-        System.out.println("accuracy wanted -> " + wantedAccuracyPercent);
-        System.out.println("hasEnded -> " + hasEnded);
         return accuracyPercent >= wantedAccuracyPercent || hasEnded;
     }
 

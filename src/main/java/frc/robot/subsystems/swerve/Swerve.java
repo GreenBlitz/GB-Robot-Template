@@ -44,7 +44,6 @@ public class Swerve extends GBSubsystem {
         configurePathPlanner();
 
         kp = new ProfiledPIDController(1, 0, 0, SwerveConstants.ROTATION_CONSTRAINTS);
-        kp.enableContinuousInput(-180, 180);
     }
 
     public double getKp(){
@@ -103,6 +102,10 @@ public class Swerve extends GBSubsystem {
     public Rotation2d getHeading() {
         final double inputtedHeading = MathUtil.inputModulus(swerveInputs.gyroYawDegrees, -MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
         return Rotation2d.fromDegrees(inputtedHeading);
+    }
+
+    public Rotation2d getNonAbsoluteHeading() {
+        return Rotation2d.fromDegrees(swerveInputs.gyroYawDegrees);
     }
 
     //Don't use when using WPILIB pose estimator

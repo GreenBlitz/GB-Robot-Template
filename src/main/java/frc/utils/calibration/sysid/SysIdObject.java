@@ -17,25 +17,21 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class SysIdObject {
 
-    private static final double DEFAULT_VOLTAGE_STEP = 7;
-    private static final double DEFAULT_RAMP_RATE_VOLTS_PER_SECOND = 1;
-    private static final double DEFAULT_TIMEOUT_SECONDS = 10;
-
     private final SysIdRoutine sysIdRoutine;
     private final GBSubsystem usedSubSystem;
     private final boolean isCTRE;
 
 
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts, double rampRateVoltsPerSecond) {
-        this(isCTRE, subsystem, voltageSetControl, voltageStepVolts, rampRateVoltsPerSecond, DEFAULT_TIMEOUT_SECONDS);
+        this(isCTRE, subsystem, voltageSetControl, voltageStepVolts, rampRateVoltsPerSecond, SysIdConstants.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStep) {
-        this(isCTRE, subsystem, voltageSetControl, voltageStep, DEFAULT_RAMP_RATE_VOLTS_PER_SECOND, DEFAULT_TIMEOUT_SECONDS);
+        this(isCTRE, subsystem, voltageSetControl, voltageStep, SysIdConstants.DEFAULT_RAMP_RATE_VOLTS_PER_SECOND, SysIdConstants.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl) {
-        this(isCTRE, subsystem, voltageSetControl, DEFAULT_VOLTAGE_STEP, DEFAULT_RAMP_RATE_VOLTS_PER_SECOND, DEFAULT_TIMEOUT_SECONDS);
+        this(isCTRE, subsystem, voltageSetControl, SysIdConstants.DEFAULT_VOLTAGE_STEP, SysIdConstants.DEFAULT_RAMP_RATE_VOLTS_PER_SECOND, SysIdConstants.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageControl, double voltageStepVolts, double rampRateVoltsPerSecond, double timeoutSeconds) {
@@ -51,13 +47,15 @@ public class SysIdObject {
         SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
                 (Measure<Voltage> volts) -> voltageControl.accept(volts.in(Volts)),
                 null,
-                usedSubSystem
+                usedSubSystem,
+                usedSubSystem.getName()
         );
+
         this.sysIdRoutine = new SysIdRoutine(config, mechanism);
     }
 
 
-    public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction){
+    public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
         return isQuasistatic ? getSysIdQuasistatic(direction) : getSysIdDynamic(direction);
     }
 
@@ -71,9 +69,12 @@ public class SysIdObject {
         return addRequirementsAndReturnCommand(command);
     }
 
-    private Command addRequirementsAndReturnCommand(Command sysIdCommand){
+    private Command addRequirementsAndReturnCommand(Command sysIdCommand) {
         sysIdCommand.addRequirements(usedSubSystem);
-        return isCTRE ? new SequentialCommandGroup(new InstantCommand(SignalLogger::start), sysIdCommand, new InstantCommand(SignalLogger::stop)).handleInterrupt(SignalLogger::stop) : sysIdCommand;
+        return isCTRE ? getCTRECommand(sysIdCommand) : sysIdCommand;
     }
 
+    private Command getCTRECommand(Command sysIdCommand) {
+        return new SequentialCommandGroup(new InstantCommand(SignalLogger::start), sysIdCommand, new InstantCommand(SignalLogger::stop)).handleInterrupt(SignalLogger::stop);
+    }
 }

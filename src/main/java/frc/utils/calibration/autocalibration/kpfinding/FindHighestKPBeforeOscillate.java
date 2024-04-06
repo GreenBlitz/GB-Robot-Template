@@ -1,6 +1,7 @@
 package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
+import frc.utils.GBSubsystem;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
@@ -13,6 +14,7 @@ public class FindHighestKPBeforeOscillate extends KPFindingUtil {
     private boolean isErrorNeedToBeCheck;
 
     protected FindHighestKPBeforeOscillate(
+            GBSubsystem subsystem,
             boolean isSetControlNeedToRunPeriodic,
             double tolerance, double timeoutForActionSeconds, double multiPFactor,
             Pair<Double, Double> valuesToRunFor,
@@ -22,6 +24,7 @@ public class FindHighestKPBeforeOscillate extends KPFindingUtil {
             Runnable doOnEnd
     ) {
         super(
+                subsystem,
                 isSetControlNeedToRunPeriodic,
                 tolerance, timeoutForActionSeconds,
                 valuesToRunFor,

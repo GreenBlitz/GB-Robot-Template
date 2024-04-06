@@ -2,6 +2,7 @@ package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;
+import frc.utils.GBSubsystem;
 import frc.utils.commands.GBCommand;
 
 import java.util.function.Consumer;
@@ -10,13 +11,13 @@ import java.util.function.Predicate;
 
 public abstract class KPFindingUtil extends GBCommand {
 
-    protected final boolean isSetControlNeedToRunPeriodic;
-    protected final double tolerance, timeoutForActionSeconds;
     protected final Pair<Double, Double> valuesToRunFor;
     protected final DoubleSupplier currentValueSupplier, currentKpValueSupplier;
     protected final Consumer<Double> setControl, setKp;
     protected final Predicate<Double> isAtPose;
     protected final Runnable stopAtEnd;
+    protected final boolean isSetControlNeedToRunPeriodic;
+    protected final double tolerance, timeoutForActionSeconds;
 
     protected final Timer TIMER;
     protected boolean isInitialize, isExecute, isEnd;
@@ -24,6 +25,7 @@ public abstract class KPFindingUtil extends GBCommand {
     protected double error;
 
     protected KPFindingUtil(
+            GBSubsystem subsystem,
             boolean isSetControlNeedToRunPeriodic,
             double tolerance, double timeoutForActionSeconds,
             Pair<Double, Double> valuesToRunFor,
@@ -49,6 +51,8 @@ public abstract class KPFindingUtil extends GBCommand {
         this.setKp = setKp;
         this.isAtPose = isAtPose;
         this.stopAtEnd = doOnEnd;
+
+        require(subsystem);
     }
 
     @Override

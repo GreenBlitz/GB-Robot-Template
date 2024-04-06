@@ -1,6 +1,7 @@
 package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
+import frc.utils.GBSubsystem;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
@@ -11,6 +12,7 @@ public class FindKP extends KPFindingUtil {
     private final double errorToKpValueFactor;
 
     protected FindKP(
+            GBSubsystem subsystem,
             boolean isSetControlNeedToRunPeriodic,
             double tolerance, double timeoutForActionSeconds, double errorToKpValueFactor,
             Pair<Double, Double> valuesToRunFor,
@@ -19,7 +21,9 @@ public class FindKP extends KPFindingUtil {
             Predicate<Double> isAtPose,
             Runnable doOnEnd
     ) {
-        super(isSetControlNeedToRunPeriodic,
+        super(
+                subsystem,
+                isSetControlNeedToRunPeriodic,
                 tolerance, timeoutForActionSeconds,
                 valuesToRunFor,
                 currentValueSupplier, currentKpValueSupplier,

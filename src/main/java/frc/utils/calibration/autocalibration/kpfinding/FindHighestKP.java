@@ -2,6 +2,7 @@ package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.utils.GBSubsystem;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
@@ -33,6 +34,7 @@ public class FindHighestKP extends SequentialCommandGroup {
      */
 
     public FindHighestKP(
+            GBSubsystem subsystem,
             boolean isSetControlNeedToRunPeriodic,
             double tolerance, double timeoutForActionSeconds, double errorToKpValueFactor, double multiPFactor,
             Pair<Double, Double> valuesToRunFor,
@@ -43,6 +45,7 @@ public class FindHighestKP extends SequentialCommandGroup {
     ) {
         super(
                 new FindKP(
+                        subsystem,
                         isSetControlNeedToRunPeriodic,
                         tolerance, timeoutForActionSeconds, errorToKpValueFactor,
                         valuesToRunFor,
@@ -52,6 +55,7 @@ public class FindHighestKP extends SequentialCommandGroup {
                         doOnEnd
                 ),
                 new FindHighestKPBeforeOscillate(
+                        subsystem,
                         isSetControlNeedToRunPeriodic,
                         tolerance, timeoutForActionSeconds, multiPFactor,
                         valuesToRunFor,

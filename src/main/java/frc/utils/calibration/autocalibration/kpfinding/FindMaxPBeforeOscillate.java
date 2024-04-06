@@ -45,10 +45,10 @@ public class FindMaxPBeforeOscillate extends PFinding {
         else if (isExe) {
             setControlPeriodic();
 
-            final double currentPosition = currentValueSupplier.getAsDouble();
-            error = Math.max(error, Math.abs(currentPosition - usedTargetValue));
+            final double currentValue = currentValueSupplier.getAsDouble();
+            error = hasOscillated(currentValue) ? Math.max(error, Math.abs(currentValue - usedTargetValue)) : Math.min(error, Math.abs(currentValue - usedTargetValue));
 
-            if (isNeedToBeEnd(currentPosition)) {
+            if (isNeedToBeEnd(currentValue)) {
                 setIsEndTrue();
             }
         }
@@ -56,9 +56,14 @@ public class FindMaxPBeforeOscillate extends PFinding {
         else if (isEnd) {
             TIMER.stop();
 
-            isErrorNeedToBeCheck = true;
-            setKp.accept(currentKpValueSupplier.getAsDouble() * ((error <= tolerance) ? multiPFactor : 1.0 / multiPFactor));
-            setIsInitTrue();
+            if (error <= tolerance) {
+                setIsInitTrue();
+                setKp.accept(currentKpValueSupplier.getAsDouble() * multiPFactor);
+            }
+            else {
+                isErrorNeedToBeCheck = true;
+                setKp.accept(currentKpValueSupplier.getAsDouble() / multiPFactor);
+            }
         }
     }
 

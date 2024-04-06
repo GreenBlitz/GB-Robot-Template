@@ -33,7 +33,7 @@ public class SwerveCommands {
         return new InstantCommand(SWERVE::resetRotationController)
                 .andThen(new FindHighestP(
                                 RobotConstants.ROBOT_TYPE.isSimulation(),
-                                1,
+                                2,
                                 2.5,
                                 0.35,
                                 1.1,

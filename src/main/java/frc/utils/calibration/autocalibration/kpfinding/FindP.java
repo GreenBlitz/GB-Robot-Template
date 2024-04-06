@@ -57,7 +57,6 @@ public class FindP extends PFinding {
         }
     }
 
-
     @Override
     public boolean isFinished() {
         return error <= tolerance;

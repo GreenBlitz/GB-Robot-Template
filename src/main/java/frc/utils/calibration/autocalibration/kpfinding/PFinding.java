@@ -85,8 +85,8 @@ public abstract class PFinding extends GBCommand {
     }
 
     protected boolean hasOscillated(double currentPosition) {
-        return !((valuesToRunFor.getFirst() >= currentPosition && currentPosition >= valuesToRunFor.getSecond())
-                || (valuesToRunFor.getFirst() <= currentPosition && currentPosition <= valuesToRunFor.getSecond()));
+        return !((valuesToRunFor.getFirst() + tolerance >= currentPosition && currentPosition >= valuesToRunFor.getSecond() - tolerance)
+                || (valuesToRunFor.getFirst() - tolerance <= currentPosition && currentPosition <= valuesToRunFor.getSecond() + tolerance));
     }
 
     protected void initFunction(){

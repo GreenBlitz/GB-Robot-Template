@@ -70,7 +70,7 @@ public class FindMaxPBeforeOscillate extends PFinding {
 
     @Override
     public boolean isFinished() {
-        return isErrorNeedToBeCheck && error > tolerance ;
+        return isErrorNeedToBeCheck && error > tolerance;
     }
 
 }

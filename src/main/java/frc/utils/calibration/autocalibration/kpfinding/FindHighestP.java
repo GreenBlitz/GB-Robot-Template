@@ -15,20 +15,21 @@ public class FindHighestP extends SequentialCommandGroup {
      * <p>
      * IMPORTANT:
      * @apiNote You can choose what units to use or which control mode you calibrate. BUT Make sure you use the SAME UNITS EVERYWHERE!!!
-     * @apiNote This function must get RELATIVE values and NOT ABSOLUTE
+     * @apiNote This function must get RELATIVE values and NOT ABSOLUTE. For EXAMPLE robot angle should NOT be from (-180,180) but RELATIVE!!!
+     * @apiNote The system should NOT be in the position of the FIRST "valuesToRunFor" when you begin the run!!!
      *
-     * @param isSetControlNeedToRunPeriodic -> is the setControl func run on the motor or on the rio
+     * @param isSetControlNeedToRunPeriodic -> is the setControl function run on the motor or on the rio
      * @param tolerance -> wanted tolerance
      * @param timeoutForActionSeconds -> max time for action
      * @param errorToKpValueFactor -> how many kP to add or minus for one error
-     * @param multiPFactor -> by how much increase kP until there is Oscillate
-     * @param valuesToRunFor -> two points og the system to jump between
+     * @param multiPFactor -> by how much increase kP until there is Oscillation
+     * @param valuesToRunFor -> two points of the system to jump between
      * @param currentValueSupplier -> supplier to the current position of the system
      * @param currentKpValueSupplier -> supplier to current kP value
      * @param setControl -> function to control the system
      * @param setKp -> function to set new kP
      * @param isAtPose -> function to check is system at position
-     * @param stopAtEnd -> function to do in and (probably stand in place)
+     * @param stopAtEnd -> function to do in end (probably stand in place)
      */
 
     public FindHighestP(

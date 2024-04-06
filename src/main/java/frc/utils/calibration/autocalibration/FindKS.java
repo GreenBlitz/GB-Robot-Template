@@ -20,7 +20,7 @@ public class FindKS extends GBCommand {
     private double lastTimeSeconds;
     private double lastVoltage;
 
-
+    //TODO - check
     public FindKS(double kG, BooleanSupplier isMoving, Consumer<Double> setVoltageControl) {
         this.TIMER = new Timer();
         this.isMoving = isMoving;

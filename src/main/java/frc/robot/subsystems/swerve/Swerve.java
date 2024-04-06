@@ -27,7 +27,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Swerve extends GBSubsystem {
 
     public final Lock odometryLock;
-    private ProfiledPIDController kp;
     private final SwerveInputsAutoLogged swerveInputs;
     private final ISwerve swerve;
     private final Module[] modules;
@@ -42,16 +41,6 @@ public class Swerve extends GBSubsystem {
         odometryLock = new ReentrantLock();
 
         configurePathPlanner();
-
-        kp = new ProfiledPIDController(1, 0, 0, SwerveConstants.ROTATION_CONSTRAINTS);
-    }
-
-    public double getKp(){
-        return kp.getP();
-    }
-
-    public void setKP(double kp){
-        this.kp.setP(kp);
     }
 
     private Module[] getModules() {
@@ -177,7 +166,6 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void resetRotationController() {
-        kp.reset(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees());//Todo - delete
         SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.reset(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees());
     }
 
@@ -291,8 +279,7 @@ public class Swerve extends GBSubsystem {
 
     private double calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
         final Rotation2d currentAngle = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation();
-//        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(currentAngle.getDegrees(), targetAngle.getDegrees()));
-        return Units.degreesToRadians(kp.calculate(currentAngle.getDegrees(), targetAngle.getDegrees()));
+        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(currentAngle.getDegrees(), targetAngle.getDegrees()));
     }
 
     private ChassisSpeeds selfRelativeSpeedsFromFieldRelativePowers(double xPower, double yPower, double thetaPower) {

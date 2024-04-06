@@ -25,13 +25,11 @@ public class FindP extends GBCommand {
     private double edgeValue;
     private double accuracyPercent, usedTargetValue;
 
-
-    private boolean hasEnded = false;
     private boolean wasSmall = false;
     private boolean wasBig = false;
 
 
-    public FindP(
+    protected FindP(
             boolean isSetControlNeedToRunPeriodic,
             double wantedAccuracyPercent, double timeoutForActionSeconds, double errorToKpValueFactor,
             Pair<Double, Double> valuesToRunFor, Pair<Double, Double> accuracyRangeBestToWorst,
@@ -93,84 +91,73 @@ public class FindP extends GBCommand {
 
     @Override
     public void initialize() {
-        if (!hasEnded) {
-            setIsInitTrue();
-            wasSmall = false;
-            wasBig = false;
-            accuracyPercent = 0;
-        }
+        setIsInitTrue();
+        wasSmall = false;
+        wasBig = false;
+        accuracyPercent = 0;
     }
 
     @Override
     public void execute() {
-        if (!hasEnded) {
-            if (isInit) {
-                TIMER.restart();
+        if (isInit) {
+            TIMER.restart();
 
-                wasSmall = false;
-                wasBig = false;
+            wasSmall = false;
+            wasBig = false;
 
-                double currentPosition = currentValueSupplier.getAsDouble();
+            double currentPosition = currentValueSupplier.getAsDouble();
 
-                replaceTargetValue();
+            replaceTargetValue();
 
-                edgeValue = currentPosition;
+            edgeValue = currentPosition;
+            setControl.accept(usedTargetValue);
+
+            setIsExecuteTrue();
+        } else if (isExe) {
+            if (isSetControlNeedToRunPeriodic) {
                 setControl.accept(usedTargetValue);
-
-                setIsExecuteTrue();
             }
 
-            else if (isExe) {
-                if (isSetControlNeedToRunPeriodic) {
-                    setControl.accept(usedTargetValue);
-                }
+            double currentPosition = currentValueSupplier.getAsDouble();
 
-                double currentPosition = currentValueSupplier.getAsDouble();
-
-                if (currentPosition <= usedTargetValue) {
-                    wasSmall = true;
-                }
-                else {
-                    wasBig = true;
-                }
-
-                if (wasSmall ^ wasBig){
-                    edgeValue = Math.abs(edgeValue - usedTargetValue) > Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
-                }
-                else {
-                    edgeValue = Math.abs(edgeValue - usedTargetValue) < Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
-                }
-
-                if (isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds)) {
-                    setIsEndTrue();
-                }
+            if (currentPosition <= usedTargetValue) {
+                wasSmall = true;
+            } else {
+                wasBig = true;
             }
 
-            else if (isEnd) {
-                TIMER.stop();
+            if (wasSmall ^ wasBig) {
+                edgeValue = Math.abs(edgeValue - usedTargetValue) > Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
+            } else {
+                edgeValue = Math.abs(edgeValue - usedTargetValue) < Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
+            }
 
-                double sign = wasBig && wasSmall ? -1 : 1;
-                double error = Math.abs(edgeValue - usedTargetValue);
+            if (isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds)) {
+                setIsEndTrue();
+            }
+        } else if (isEnd) {
+            TIMER.stop();
 
-                accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
+            double sign = wasBig && wasSmall ? -1 : 1;
+            double error = Math.abs(edgeValue - usedTargetValue);
 
-                if (accuracyPercent < wantedAccuracyPercent) {
-                    setKp.accept(currentKpValueSupplier.getAsDouble() + (sign * error * errorToKpValueFactor));
-                    setIsInitTrue();
-                }
+            accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
+
+            if (accuracyPercent < wantedAccuracyPercent) {
+                setKp.accept(currentKpValueSupplier.getAsDouble() + (sign * error * errorToKpValueFactor));
+                setIsInitTrue();
             }
         }
     }
 
+
     @Override
     public boolean isFinished() {
-        return accuracyPercent >= wantedAccuracyPercent || hasEnded;
+        return accuracyPercent >= wantedAccuracyPercent;
     }
 
     @Override
     public void end(boolean interrupted) {
-        if (!interrupted)
-            hasEnded = true;
         stopAtEnd.run();
     }
 }

@@ -1,34 +1,14 @@
 package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.wpilibj.Timer;
-import frc.utils.commands.GBCommand;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 
-public class FindMaxPBeforeOscillate extends GBCommand {
+public class FindMaxPBeforeOscillate extends PFinding {
 
-    private final boolean isSetControlNeedToRunPeriodic;
-    private final double wantedAccuracyPercent, timeoutForActionSeconds, multiPFactor;
-    private final Pair<Double, Double> valuesToRunFor, accuracyRangeBestToWorst;
-    private final DoubleSupplier currentValueSupplier, currentKpValueSupplier;
-    private final Consumer<Double> setControl, setKp;
-    private final Predicate<Double> isAtPose;
-    private final Runnable stopAtEnd;
-
-
-    private final Timer TIMER;
-    private boolean isInit, isExe, isEnd;
-    private double edgeValue;
-    private double accuracyPercent, usedTargetValue;
-
-
-    private boolean hasEnded = false;
-    private boolean wasSmall = false;
-    private boolean wasBig = false;
-
+    private final double multiPFactor;
 
     protected FindMaxPBeforeOscillate(
             boolean isSetControlNeedToRunPeriodic,
@@ -39,137 +19,87 @@ public class FindMaxPBeforeOscillate extends GBCommand {
             Predicate<Double> isAtPose,
             Runnable stopAtEnd
     ) {
-        this.TIMER = new Timer();
+        super(
+                isSetControlNeedToRunPeriodic,
+                wantedAccuracyPercent, timeoutForActionSeconds,
+                valuesToRunFor, accuracyRangeBestToWorst,
+                currentValueSupplier, currentKpValueSupplier,
+                setControl, setKp,
+                isAtPose,
+                stopAtEnd
+        );
 
-        this.isInit = true;
-        this.isExe = false;
-        this.isEnd = false;
-
-        this.isSetControlNeedToRunPeriodic = isSetControlNeedToRunPeriodic;
-
-        this.wantedAccuracyPercent = wantedAccuracyPercent;
-        this.timeoutForActionSeconds = timeoutForActionSeconds;
         this.multiPFactor = multiPFactor;
-
-        this.valuesToRunFor = valuesToRunFor;
-        this.usedTargetValue = valuesToRunFor.getSecond();
-
-        this.accuracyRangeBestToWorst = accuracyRangeBestToWorst;
-
-        this.currentValueSupplier = currentValueSupplier;
-        this.currentKpValueSupplier = currentKpValueSupplier;
-
-        this.setControl = setControl;
-        this.setKp = setKp;
-        this.isAtPose = isAtPose;
-        this.stopAtEnd = stopAtEnd;
     }
 
-
-    private void setIsInitTrue() {
-        this.isInit = true;
-        isEnd = false;
-        isExe = false;
-    }
-
-    private void setIsExecuteTrue() {
-        this.isExe = true;
-        isInit = false;
-        isEnd = false;
-
-    }
-
-    private void setIsEndTrue() {
-        this.isEnd = true;
-        isInit = false;
-        isExe = false;
-    }
-
-    public void replaceTargetValue() {
-        usedTargetValue = (usedTargetValue == valuesToRunFor.getFirst()) ? valuesToRunFor.getSecond() : valuesToRunFor.getFirst();
-    }
 
     @Override
     public void initialize() {
-        if (!hasEnded) {
-            setIsInitTrue();
-            wasSmall = false;
-            wasBig = false;
-            accuracyPercent = wantedAccuracyPercent;
-        }
+        setIsInitTrue();
+        wasSmall = false;
+        wasBig = false;
+        accuracyPercent = wantedAccuracyPercent;
     }
 
     @Override
     public void execute() {
-        if (!hasEnded) {
-            System.out.println("high/ current kp -> " + currentKpValueSupplier.getAsDouble());
-            if (isInit) {
-                TIMER.restart();
+        if (isInit) {
+            TIMER.restart();
 
-                wasSmall = false;
-                wasBig = false;
+            wasSmall = false;
+            wasBig = false;
 
-                double currentPosition = currentValueSupplier.getAsDouble();
+            double currentPosition = currentValueSupplier.getAsDouble();
 
-                replaceTargetValue();
+            replaceTargetValue();
 
-                edgeValue = currentPosition;
+            edgeValue = currentPosition;
+            setControl.accept(usedTargetValue);
+
+            setIsExecuteTrue();
+        }
+        else if (isExe) {
+            if (isSetControlNeedToRunPeriodic) {
                 setControl.accept(usedTargetValue);
-
-                setIsExecuteTrue();
             }
-            else if (isExe) {
-                if (isSetControlNeedToRunPeriodic) {
-                    setControl.accept(usedTargetValue);
-                }
 
-                double currentPosition = currentValueSupplier.getAsDouble();
+            double currentPosition = currentValueSupplier.getAsDouble();
 
-                if (currentPosition <= usedTargetValue) {
-                    wasSmall = true;
-                }
-                else {
-                    wasBig = true;
-                }
-
-                if (wasSmall ^ wasBig){
-                    edgeValue = Math.abs(edgeValue - usedTargetValue) > Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
-                }
-                else {
-                    edgeValue = Math.abs(edgeValue - usedTargetValue) < Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
-                }
-
-                if (isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds)) {
-                    setIsEndTrue();
-                }
+            if (currentPosition <= usedTargetValue) {
+                wasSmall = true;
+            } else {
+                wasBig = true;
             }
-            else if (isEnd) {
-                TIMER.stop();
 
-                double error = Math.abs(edgeValue - usedTargetValue);
-                accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
+            if (wasSmall ^ wasBig) {
+                edgeValue = Math.abs(edgeValue - usedTargetValue) > Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
+            } else {
+                edgeValue = Math.abs(edgeValue - usedTargetValue) < Math.abs(currentPosition - usedTargetValue) ? currentPosition : edgeValue;
+            }
 
-                if (accuracyPercent >= wantedAccuracyPercent) {
-                    setKp.accept(currentKpValueSupplier.getAsDouble() * multiPFactor);
-                    setIsInitTrue();
-                } else {
-                    setKp.accept(currentKpValueSupplier.getAsDouble() / multiPFactor);
-                }
+            if (isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds)) {
+                setIsEndTrue();
+            }
+        }
+        else if (isEnd) {
+            TIMER.stop();
+
+            double error = Math.abs(edgeValue - usedTargetValue);
+            accuracyPercent = getAccuracyPercent(error);
+
+            if (accuracyPercent >= wantedAccuracyPercent) {
+                setKp.accept(currentKpValueSupplier.getAsDouble() * multiPFactor);
+                setIsInitTrue();
+            } else {
+                setKp.accept(currentKpValueSupplier.getAsDouble() / multiPFactor);
             }
         }
     }
+
 
     @Override
     public boolean isFinished() {
-        return accuracyPercent < wantedAccuracyPercent || hasEnded;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        if (!interrupted) {
-            hasEnded = true;
-        }
-        stopAtEnd.run();
+        return accuracyPercent < wantedAccuracyPercent;
     }
 
 }

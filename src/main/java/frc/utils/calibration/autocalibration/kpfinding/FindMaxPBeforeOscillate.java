@@ -26,6 +26,9 @@ public class FindMaxPBeforeOscillate extends GBCommand {
     private double accuracyPercent, usedTargetValue;
 
 
+    private boolean hasEnded = false;
+
+
     protected FindMaxPBeforeOscillate(
             boolean isSetControlNeedToRunPeriodic,
             double wantedAccuracyPercent, double timeoutForActionSeconds, double multiPFactor,
@@ -40,8 +43,6 @@ public class FindMaxPBeforeOscillate extends GBCommand {
         this.isInit = true;
         this.isExe = false;
         this.isEnd = false;
-
-        this.accuracyPercent = 0;
 
         this.isSetControlNeedToRunPeriodic = isSetControlNeedToRunPeriodic;
 
@@ -87,70 +88,82 @@ public class FindMaxPBeforeOscillate extends GBCommand {
         usedTargetValue = (usedTargetValue == valuesToRunFor.getFirst()) ? valuesToRunFor.getSecond() : valuesToRunFor.getFirst();
     }
 
+    @Override
+    public void initialize() {
+        if (!hasEnded) {
+            setIsInitTrue();
+            accuracyPercent = wantedAccuracyPercent;
+        }
+    }
 
     @Override
     public void execute() {
-        if (isInit) {
-            TIMER.restart();
-            accuracyPercent = 0;
+        if (!hasEnded) {
+            System.out.println("high/ current kp -> " + currentKpValueSupplier.getAsDouble());
+            if (isInit) {
+                TIMER.restart();
 
-            double currentPosition = currentValueSupplier.getAsDouble();
+                double currentPosition = currentValueSupplier.getAsDouble();
 
-            replaceTargetValue();
-            isCheckingMin = currentPosition > usedTargetValue;
-            edgeValue = currentPosition;
-            setControl.accept(usedTargetValue);
-
-            setIsExecuteTrue();
-        }
-
-        else if (isExe) {
-            if (isSetControlNeedToRunPeriodic){
+                replaceTargetValue();
+                isCheckingMin = (currentPosition > valuesToRunFor.getFirst() && currentPosition > valuesToRunFor.getSecond())
+                        || (currentPosition > valuesToRunFor.getFirst() && currentPosition > valuesToRunFor.getSecond());
+                edgeValue = currentPosition;
                 setControl.accept(usedTargetValue);
-            }
 
-            double currentPosition = currentValueSupplier.getAsDouble();
-
-            if (isCheckingMin) {
-                if (edgeValue > currentPosition) {
-                    edgeValue = currentPosition;
+                setIsExecuteTrue();
+            } else if (isExe) {
+                if (isSetControlNeedToRunPeriodic) {
+                    setControl.accept(usedTargetValue);
                 }
-            }
-            else {
-                if (edgeValue < currentPosition) {
-                    edgeValue = currentPosition;
+
+                double currentPosition = currentValueSupplier.getAsDouble();
+
+                if (isCheckingMin) {
+                    if (edgeValue > currentPosition) {
+                        edgeValue = currentPosition;
+                    }
+                } else {
+                    if (edgeValue < currentPosition) {
+                        edgeValue = currentPosition;
+                    }
                 }
-            }
 
-            if (isAtPose.test(currentPosition) || TIMER.hasElapsed(timeoutForActionSeconds)) {
-                setIsEndTrue();
-            }
-        }
+                if (isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds)) {
+                    setIsEndTrue();
+                }
+            } else if (isEnd) {
+                TIMER.stop();
 
-        else if (isEnd) {
-            TIMER.stop();
+                double error = Math.abs(edgeValue - usedTargetValue);
+                System.out.println("high/ edge -> " + edgeValue);
+                System.out.println("high/ target -> " + usedTargetValue);
+                System.out.println("high/ error -> " + error);
+                accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
 
-            double error = Math.abs(edgeValue - usedTargetValue);
-
-            accuracyPercent = 100 - (100 / (accuracyRangeBestToWorst.getSecond() - accuracyRangeBestToWorst.getFirst() + 1)) * error;
-
-            if (accuracyPercent >= wantedAccuracyPercent) {
-                setKp.accept(currentKpValueSupplier.getAsDouble() * multiPFactor);
-                setIsInitTrue();
-            }
-            else {
-                setKp.accept(currentKpValueSupplier.getAsDouble() / multiPFactor);
+                if (accuracyPercent >= wantedAccuracyPercent) {
+                    setKp.accept(currentKpValueSupplier.getAsDouble() * multiPFactor);
+                    setIsInitTrue();
+                } else {
+                    setKp.accept(currentKpValueSupplier.getAsDouble() / multiPFactor);
+                }
             }
         }
     }
 
     @Override
     public boolean isFinished() {
-        return accuracyPercent < wantedAccuracyPercent;
+        System.out.println("high/ accuracy -> " + accuracyPercent);
+        System.out.println("high/ accuracy wanted -> " + wantedAccuracyPercent);
+        System.out.println("high/ hasEnded -> " + hasEnded);
+        return accuracyPercent < wantedAccuracyPercent || hasEnded;
     }
 
     @Override
     public void end(boolean interrupted) {
+        if (!interrupted) {
+            hasEnded = true;
+        }
         stopAtEnd.run();
     }
 

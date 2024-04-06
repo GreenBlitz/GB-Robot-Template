@@ -4,12 +4,18 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.RobotContainer;
+import frc.robot.constants.RobotConstants;
 import frc.utils.allianceutils.AlliancePose2d;
+import frc.utils.calibration.autocalibration.kpfinding.FindHighestP;
+import frc.utils.calibration.autocalibration.kpfinding.FindMaxPBeforeOscillate;
+import frc.utils.calibration.autocalibration.kpfinding.FindP;
 import frc.utils.commands.InitExecuteCommand;
 
 import java.util.List;
@@ -17,9 +23,30 @@ import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import static frc.robot.RobotContainer.POSE_ESTIMATOR;
 import static frc.robot.RobotContainer.SWERVE;
 
 public class SwerveCommands {
+
+
+    public static Command getFindHighestPCommand() {
+        return new InstantCommand(SWERVE::resetRotationController)
+                .andThen(new FindHighestP(
+                        RobotConstants.ROBOT_TYPE.isSimulation(),
+                        90,
+                        2.5,
+                        0.35,
+                        1.1,
+                        new Pair<>(90.0, -90.0),
+                        new Pair<>(1.0, 10.0),
+                        () -> POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees(),
+                        SWERVE::getKp,
+                        position -> SWERVE.rotateToAngle(Rotation2d.fromDegrees(position)),
+                        SWERVE::setKP,
+                        targetAngle -> SWERVE.isAtAngle(Rotation2d.fromDegrees(targetAngle)),
+                        SWERVE::stop
+                ));
+    }
 
 
     /**

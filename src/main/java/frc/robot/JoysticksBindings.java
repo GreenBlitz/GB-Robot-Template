@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.utils.joysticks.SmartJoystick;
@@ -21,7 +22,11 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons() {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		//bindings
-		
+
+		usedJoystick.A.whileTrue(SwerveCommands.getFindHighestPCommand());
+		usedJoystick.X.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(180)));
+		usedJoystick.Y.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(0)));
+
 		RobotContainer.SWERVE.setDefaultCommand(
 				SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
 						() -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),

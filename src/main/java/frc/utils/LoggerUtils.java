@@ -10,48 +10,52 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class LoggerUtils {
-
-    public static void startRealLogger(){
-        SignalLogger.enableAutoLogging(Phoenix6Constants.IS_AUTO_LOGGING);
-        try {
-            LoggerUtils.startLoggerOnUSB();
-        } catch (Exception exception) {
-            Logger.end();
-            LoggerUtils.startLoggerOnRoborio();
-        }
-    }
-
-    public static void startLoggerOnUSB(){
-        setLoggingPath(RobotConstants.USB_LOG_PATH);
-        Logger.addDataReceiver(new NT4Publisher());
-        Logger.start();
-        Logger.recordOutput("Logged In", "USB");
-    }
-
-    public static void startLoggerOnRoborio(){
-        setLoggingPath(RobotConstants.SAFE_ROBORIO_LOG_PATH);
-        Logger.addDataReceiver(new NT4Publisher());
-        Logger.start();
-        Logger.recordOutput("Logged In", "ROBORIO");
-    }
-
-    public static void startSimulationLogger(){
-        setLoggingPath(SimulationConstants.SIMULATION_LOG_PATH);
-        Logger.addDataReceiver(new NT4Publisher());
-        Logger.start();
-        Logger.recordOutput("Logged In", "COMPUTER");
-    }
-
-    public static void startReplayLogger(){
-        String logPath = LogFileUtil.findReplayLog();
-        Logger.setReplaySource(new WPILOGReader(logPath));
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_simulation")));
-        Logger.start();
-    }
-
-    private static void setLoggingPath(String path){
-        SignalLogger.setPath(path);
-        Logger.addDataReceiver(new WPILOGWriter(path));
-    }
+	
+	public static void startRealLogger() {
+		SignalLogger.enableAutoLogging(Phoenix6Constants.IS_AUTO_LOGGING);
+		
+		Path path = Path.of(RobotConstants.USB_LOG_PATH);
+		if (Files.exists(path)) {
+			startLoggerOnUSB();
+		} else {
+			startLoggerOnRoborio();
+		}
+	}
+	
+	public static void startLoggerOnUSB() {
+		setLoggingPath(RobotConstants.USB_LOG_PATH);
+		Logger.addDataReceiver(new NT4Publisher());
+		Logger.start();
+		Logger.recordOutput("Logged In", "USB");
+	}
+	
+	public static void startLoggerOnRoborio() {
+		setLoggingPath(RobotConstants.SAFE_ROBORIO_LOG_PATH);
+		Logger.addDataReceiver(new NT4Publisher());
+		Logger.start();
+		Logger.recordOutput("Logged In", "ROBORIO");
+	}
+	
+	public static void startSimulationLogger() {
+		setLoggingPath(SimulationConstants.SIMULATION_LOG_PATH);
+		Logger.addDataReceiver(new NT4Publisher());
+		Logger.start();
+		Logger.recordOutput("Logged In", "COMPUTER");
+	}
+	
+	public static void startReplayLogger() {
+		String logPath = LogFileUtil.findReplayLog();
+		Logger.setReplaySource(new WPILOGReader(logPath));
+		Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_simulation")));
+		Logger.start();
+	}
+	
+	private static void setLoggingPath(String path) {
+		SignalLogger.setPath(path);
+		Logger.addDataReceiver(new WPILOGWriter(path));
+	}
 }

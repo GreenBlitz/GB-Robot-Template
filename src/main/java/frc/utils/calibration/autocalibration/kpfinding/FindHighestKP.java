@@ -19,13 +19,13 @@ public class FindHighestKP extends SequentialCommandGroup {
      * @apiNote This function must get RELATIVE values and NOT ABSOLUTE. For EXAMPLE robot angle should NOT be from (-180,180) but RELATIVE!!! <P>
      *
      * RECOMMEND:
-     * @apiNote The system should be in one of the positions of "valuesToRunFor" when you begin the run!!!
+     * @apiNote The system SHOULD be at ONE of the POSITIONS of "valuesToRunFor" when you BEGIN the RUN!!!
      *
      * @param isSetControlNeedToRunPeriodic -> is the setControl function run on the motor or on the rio
      * @param tolerance -> wanted tolerance
      * @param timeoutForActionSeconds -> max time for action
      * @param errorToKpValueFactor -> how many kP to add or minus for one error
-     * @param multiPFactor -> by how much increase kP until there is Oscillation
+     * @param multiPFactor -> MUST BE ABOVE ONE!!! by how much increase kP until there is Oscillations
      * @param valuesToRunFor -> two points of the system to jump between
      * @param currentValueSupplier -> supplier to the current position of the system
      * @param currentKpValueSupplier -> supplier to current kP value

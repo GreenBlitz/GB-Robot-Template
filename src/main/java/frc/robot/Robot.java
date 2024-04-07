@@ -9,11 +9,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.buildconstants.BuildConstants;
 import frc.robot.constants.RobotConstants;
 import frc.utils.LoggerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
 
 
 /**
@@ -33,16 +31,6 @@ public class Robot extends LoggedRobot {
         // autonomous chooser on the dashboard.
         initializeLogger();
         robotContainer = new RobotContainer();
-        Logger.recordOutput("ProjectName", BuildConstants.MAVEN_NAME);// todo - metadata
-        Logger.recordOutput("BuildDate", BuildConstants.BUILD_DATE);// todo - metadata
-        Logger.recordOutput("GitSHA", BuildConstants.GIT_SHA);// todo - metadata
-        Logger.recordOutput("GitDate", BuildConstants.GIT_DATE);// todo - metadata
-        Logger.recordOutput("GitBranch", BuildConstants.GIT_BRANCH);// todo - metadata
-        switch (BuildConstants.DIRTY) {
-            case 0 -> Logger.recordOutput("GitDirty", "All changes committed");// todo - metadata
-            case 1 -> Logger.recordOutput("GitDirty", "Uncomitted changes");// todo - metadata
-            default -> Logger.recordOutput("GitDirty", "Unknown");// todo - metadata
-        }
     }
 
     @Override

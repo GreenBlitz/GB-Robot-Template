@@ -16,8 +16,10 @@ public class FindHighestKP extends SequentialCommandGroup {
      *
      * IMPORTANT:
      * @apiNote You can choose what units to use or which control mode you calibrate. BUT Make sure you use the SAME UNITS EVERYWHERE!!!
-     * @apiNote This function must get RELATIVE values and NOT ABSOLUTE. For EXAMPLE robot angle should NOT be from (-180,180) but RELATIVE!!!
-     * @apiNote The system should NOT be in the position of the FIRST "valuesToRunFor" when you begin the run!!!
+     * @apiNote This function must get RELATIVE values and NOT ABSOLUTE. For EXAMPLE robot angle should NOT be from (-180,180) but RELATIVE!!! <P>
+     *
+     * RECOMMEND:
+     * @apiNote The system should be in one of the positions of "valuesToRunFor" when you begin the run!!!
      *
      * @param isSetControlNeedToRunPeriodic -> is the setControl function run on the motor or on the rio
      * @param tolerance -> wanted tolerance

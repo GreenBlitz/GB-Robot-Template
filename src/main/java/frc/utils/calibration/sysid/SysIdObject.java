@@ -38,13 +38,13 @@ public class SysIdObject {
         this.usedSubSystem = subsystem;
         this.isCTRE = isCTRE;
 
-        SysIdRoutine.Config config = new SysIdRoutine.Config(
+        final SysIdRoutine.Config config = new SysIdRoutine.Config(
                 Volts.of(rampRateVoltsPerSecond).per(Seconds.of(1)),
                 Volts.of(voltageStepVolts),
                 Seconds.of(timeoutSeconds),
                 this.isCTRE ? (state) -> SignalLogger.writeString("state", state.toString()) : (state) -> Logger.recordOutput("state", state.toString())
         );
-        SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
+        final SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
                 (Measure<Voltage> volts) -> voltageControl.accept(volts.in(Volts)),
                 null,
                 usedSubSystem,
@@ -60,12 +60,12 @@ public class SysIdObject {
     }
 
     public Command getSysIdQuasistatic(SysIdRoutine.Direction direction) {
-        Command command = sysIdRoutine.quasistatic(direction);
+        final Command command = sysIdRoutine.quasistatic(direction);
         return addRequirementsAndReturnCommand(command);
     }
 
     public Command getSysIdDynamic(SysIdRoutine.Direction direction) {
-        Command command = sysIdRoutine.dynamic(direction);
+        final Command command = sysIdRoutine.dynamic(direction);
         return addRequirementsAndReturnCommand(command);
     }
 

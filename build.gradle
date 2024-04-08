@@ -82,7 +82,7 @@ tasks.register('autoCommit') {
             def fieldPrefix = "field"
             def checkPrefix = "check"
             def branch = 'git branch --show-current'.execute().text.trim()
-            def commitMessage = "autoCommit - updated at '${new Date().toLocalDateTime().toString()}'"
+            def commitMessage = "autoCommit - updated at '${new Date().toString()}'"
 
             if (branch.startsWith(eventPrefix) || branch.startsWith(fieldPrefix) || branch.startsWith(checkPrefix)) {
                 exec {

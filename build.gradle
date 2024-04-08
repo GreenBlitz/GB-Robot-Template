@@ -47,6 +47,37 @@ wpi.java.debugJni = false
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
 
+task(eventDeploy){
+    doLast {
+        if(project.gradle.startParameter.taskNames.any({it.toLowerCase().contains("deploy")})) {
+
+            def branchPrefix1 = "event"
+            def branchPrefix2 = "field"
+            def branchPrefix3 = "check"
+            def branch = 'git branch --show-current'.execute().text.trim()
+            def commitMessage = "Updated at '${new Date().toString()}'"
+
+            if(branch.startsWith(branchPrefix1) || branch.startsWith(branchPrefix2) || branch.startsWith(branchPrefix3)) {
+                exec {
+                    workingDir(projectDir)
+                    executable('git')
+                    args 'commit', '-am', commitMessage
+                    ignoreExitValue = true
+                }
+
+                println("Commited to branch: '$branch'")
+                println("Commited message: '$commitMessage'")
+            }
+            else {
+                println("Skipping")
+            }
+        }
+        else {
+            println("Skipping")
+        }
+    }
+}
+
 
 repositories {
     maven {

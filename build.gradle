@@ -49,7 +49,8 @@ def includeDesktopSupport = true
 
 task(eventDeploy){
     doLast {
-        if(project.gradle.startParameter.taskNames.any({it.toLowerCase().contains("deploy")})) {
+        if(project.gradle.startParameter.taskNames.any({it.toLowerCase().contains("deploy")}) ||
+                project.gradle.startParameter.taskNames.any({it.toLowerCase().contains("simulate")})) {
 
             def branchPrefix1 = "event"
             def branchPrefix2 = "field"

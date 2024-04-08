@@ -29,6 +29,7 @@ public class JoysticksBindings {
 
     private static void thirdJoystickButtons() {
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
+        System.out.println("Aaa");
         //bindings
     }
 

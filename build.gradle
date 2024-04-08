@@ -1,3 +1,7 @@
+import edu.wpi.first.gradlerio.GradleRIOPlugin
+import groovy.json.JsonSlurper
+
+
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
@@ -47,37 +51,6 @@ wpi.java.debugJni = false
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
 
-tasks.register("auto") {
-    doLast {
-        if (project.gradle.startParameter.taskNames.any({ it.toLowerCase().contains("deploy") }) ||
-                project.gradle.startParameter.taskNames.any({ it.toLowerCase().contains("simulate") })) {
-
-            def branchPrefix1 = "event"
-            def branchPrefix2 = "field"
-            def branchPrefix3 = "check"
-            def branch = 'git branch --show-current'.execute().text.trim()
-            def commitMessage = "Updated at '${new Date().toString()}'"
-
-            if (branch.startsWith(branchPrefix1) || branch.startsWith(branchPrefix2) || branch.startsWith(branchPrefix3)) {
-                exec {
-                    workingDir(projectDir)
-                    executable('git')
-                    args 'commit', '-am', commitMessage
-                    ignoreExitValue = true
-                }
-
-                println("Commited to branch: '$branch'")
-                println("Commited message: '$commitMessage'")
-            } else {
-                println("Skipping")
-            }
-        } else {
-            println("Skipping")
-        }
-    }
-}
-
-
 repositories {
     maven {
         url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
@@ -90,15 +63,47 @@ repositories {
 }
 
 
-configurations.all {
+configurations.configureEach {
     exclude group: "edu.wpi.first.wpilibj"
 }
 
-task(checkAkitInstall, dependsOn: "classes", type: JavaExec) {
+tasks.register('checkAkitInstall', JavaExec) {
+    dependsOn "classes"
     mainClass = "org.littletonrobotics.junction.CheckInstall"
     classpath = sourceSets.main.runtimeClasspath
 }
-compileJava.finalizedBy checkAkitInstall, auto
+
+tasks.register('autoCommit') {
+    doLast {
+        def taskNames = project.gradle.startParameter.taskNames
+        if (taskNames.any({ it.toLowerCase().contains("deploy") }) || taskNames.any({ it.toLowerCase().contains("simulate") })) {
+
+            def eventPrefix = "event"
+            def fieldPrefix = "field"
+            def checkPrefix = "check"
+            def branch = 'git branch --show-current'.execute().text.trim()
+            def commitMessage = "autoCommit - updated at '${new Date().toString()}'"
+
+            if (branch.startsWith(eventPrefix) || branch.startsWith(fieldPrefix) || branch.startsWith(checkPrefix)) {
+                exec {
+                    workingDir(projectDir)
+                    executable('git')
+                    args 'commit', '-am', commitMessage
+                    ignoreExitValue = true
+                }
+
+                println("commited to branch -> '$branch'")
+                println("commited message -> '$commitMessage'")
+            } else {
+                println("skipping -> not a branch to auto commit")
+            }
+        } else {
+            println("skipping -> not a deploy or simulate")
+        }
+    }
+}
+
+compileJava.finalizedBy checkAkitInstall, autoCommit
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
@@ -123,7 +128,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
+    def akitJson = new JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
     annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
 }
 
@@ -142,7 +147,7 @@ wpi.sim.addDriverstation()
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     from sourceSets.main.allSource
-    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+    manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
@@ -152,6 +157,6 @@ wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
 
 // Configure string concat to always inline compile
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add '-XDstringConcat=inline'
 }

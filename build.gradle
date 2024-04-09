@@ -150,5 +150,6 @@ spotless {
         toggleOffOn()
         removeUnusedImports()
         trimTrailingWhitespace()
+        palantirJavaFormat()
     }
 }

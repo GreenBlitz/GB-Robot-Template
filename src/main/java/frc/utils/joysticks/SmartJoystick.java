@@ -12,15 +12,12 @@ public class SmartJoystick {
     private static final double JOYSTICK_AXIS_TO_SQUARE_FACTOR = 1.4;
 
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
-
     public final AxisButton L2, R2;
-
     public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 
     private final double deadzone;
 
     private Joystick joystick;
-
 
     /**
      * This constructor constructs the joystick based on the joystick port we give it.
@@ -72,13 +69,12 @@ public class SmartJoystick {
         POV_LEFT = new POVButton(joystick, 270);
     }
 
-
     private double deadzone(double power) {
         if (Math.abs(power) < deadzone) return 0;
         return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
     }
 
-    private boolean isStickAxis(Axis axis){
+    private boolean isStickAxis(Axis axis) {
         return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
     }
 
@@ -111,8 +107,6 @@ public class SmartJoystick {
         return joystick.getRawAxis(raw_axis);
     }
 
-
-
     /**
      * This function returns the value of the axis, if the stick was square instead of circle
      *
@@ -122,23 +116,23 @@ public class SmartJoystick {
      *
      * @author Yoav Herman
      * if @ marks the 1 point of each axis
-
+     *
      *            Before:                                    After:
-    //             (1,0)
-    //         *****@*******      @ (1,1)                *************
-    //     *****           *****                    *****    (1,0)     *****
-    //   ***                   ***                ***  -------@-------@   ***
-    //  **                       **              **   |          (1,1)|    **
-    // **                         **            **    |               |     **
-    // **                         *@ (0,1)      **    |          (0,1)@     **
-    // **                         **            **    |               |     **
-    // **                         **            **    |               |     **
-    //  **                       **              **   |_______________|    **
-    //   ***                   ***                ***                    ***
-    //     *****           *****                    *****            *****
-    //         *************                            *************
-
-    */
+     * //             (1,0)
+     * //         *****@*******      @ (1,1)                *************
+     * //     *****           *****                    *****    (1,0)     *****
+     * //   ***                   ***                ***  -------@-------@   ***
+     * //  **                       **              **   |          (1,1)|    **
+     * // **                         **            **    |               |     **
+     * // **                         *@ (0,1)      **    |          (0,1)@     **
+     * // **                         **            **    |               |     **
+     * // **                         **            **    |               |     **
+     * //  **                       **              **   |_______________|    **
+     * //   ***                   ***                ***                    ***
+     * //     *****           *****                    *****            *****
+     * //         *************                            *************
+     *
+     */
     public double getSquaredAxis(Axis axis) {
         if (joystick == null) return 0;
         if (!isStickAxis(axis)) return axis.getValue(this);

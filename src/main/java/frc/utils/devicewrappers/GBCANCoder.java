@@ -20,7 +20,6 @@ public class GBCANCoder extends CANcoder {
         super.getConfigurator().apply(configuration);
     }
 
-
     /**
      * Speeding up the gotten signals
      *
@@ -28,10 +27,7 @@ public class GBCANCoder extends CANcoder {
      * @param statusSignals   -> Signals to speed up
      */
     public void updateFrequency(double signalFrequency, StatusSignal... statusSignals) {
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                signalFrequency,
-                statusSignals
-        );
+        BaseStatusSignal.setUpdateFrequencyForAll(signalFrequency, statusSignals);
     }
 
     /**
@@ -47,11 +43,8 @@ public class GBCANCoder extends CANcoder {
      * IMPORTANT: Must happen before getting signals
      */
     public void refreshSignals(StatusSignal... statusSignals) {
-        BaseStatusSignal.refreshAll(
-                statusSignals
-        );
+        BaseStatusSignal.refreshAll(statusSignals);
     }
-
 
     /**
      * Performs latency compensation on signal using the signalSlope and signal's
@@ -68,5 +61,4 @@ public class GBCANCoder extends CANcoder {
     public double getLatencyCompensatedPosition() {
         return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
     }
-
 }

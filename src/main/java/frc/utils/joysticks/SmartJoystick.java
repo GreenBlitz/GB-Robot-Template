@@ -115,6 +115,7 @@ public class SmartJoystick {
      * <p>
      *
      * @author Yoav Herman
+     * <<<<<<< HEAD
      * if @ marks the 1 point of each axis:
      *<p>
      *           Before:                                    After:
@@ -132,6 +133,25 @@ public class SmartJoystick {
      *     *****           *****                    *****            *****
      *         *************                            *************
      *</p>
+     * =======
+     * if @ marks the 1 point of each axis
+     *
+     *            Before:                                    After:
+     * //             (1,0)
+     * //         *****@*******      @ (1,1)                *************
+     * //     *****           *****                    *****    (1,0)     *****
+     * //   ***                   ***                ***  -------@-------@   ***
+     * //  **                       **              **   |          (1,1)|    **
+     * // **                         **            **    |               |     **
+     * // **                         *@ (0,1)      **    |          (0,1)@     **
+     * // **                         **            **    |               |     **
+     * // **                         **            **    |               |     **
+     * //  **                       **              **   |_______________|    **
+     * //   ***                   ***                ***                    ***
+     * //     *****           *****                    *****            *****
+     * //         *************                            *************
+     *
+     * >>>>>>> pre-pre-commit
      */
     public double getSquaredAxis(Axis axis) {
         if (joystick == null) return 0;

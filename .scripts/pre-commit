@@ -1,6 +1,13 @@
 #!/bin/bash
 echo "*********************************************************"
-echo "Running git pre-commit hook. Running Spotless Apply... "
+echo "Running git pre-commit hook. Running Git Pull... "
+echo "*********************************************************"
+
+# run git pull
+git pull;
+
+echo "*********************************************************"
+echo "Running git pre-commit hook. Running spotlessApply... "
 echo "*********************************************************"
 
 # Gather the staged files - to make sure changes are saved only for these files.

@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "*********************************************************"
+echo "Running git post-commit hook. Running Git Push... "
+echo "*********************************************************"
+
+# run git pull
+git push;

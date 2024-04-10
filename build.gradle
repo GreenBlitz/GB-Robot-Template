@@ -78,36 +78,37 @@ tasks.register('checkAkitInstall', JavaExec) {
 tasks.register('autoCommit') {
     doLast {
         final String[] tasksToCommit = new String[]{"deploy", "simulate"}
+        final String[] branchPrefixesToCommit = new String[]{"event", "field", "check"}
+
+        final def branch = 'git branch --show-current'.execute().text.trim()
+        final def commitMessage = "autoCommit - updated at '${new Date().toString()}'"
         final def taskNames = project.gradle.startParameter.taskNames
 
+        // checking deploy type
         boolean isDeployOrSimulate = false
         for (String taskName : tasksToCommit) {
             isDeployOrSimulate = taskNames.any({ it.toLowerCase().contains(taskName) })
             if(isDeployOrSimulate)
                 break
         }
-
         if (!isDeployOrSimulate) {
             println("skipping -> not a deploy or simulate")
             return
         }
 
-        final String[] branchPrefixesToCommit = new String[]{"event", "field", "check"}
-        final def branch = 'git branch --show-current'.execute().text.trim()
-        final def commitMessage = "autoCommit - updated at '${new Date().toString()}'"
-
+        // checking branch type
         boolean isBranchToAutoCommit = false;
         for (String branchPrefix : branchPrefixesToCommit) {
             isBranchToAutoCommit = branch.startsWith(branchPrefix)
             if(isBranchToAutoCommit)
                 break
         }
-
         if (!isBranchToAutoCommit) {
             println("skipping -> not a branch to auto commit")
             return
         }
 
+        // committing
         exec {
             workingDir(projectDir)
             executable('git')

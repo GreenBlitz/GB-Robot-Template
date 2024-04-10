@@ -19,23 +19,21 @@ public class JoysticksBindings {
 
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        //bindings
+        // bindings
     }
 
     private static void secondJoystickButtons() {
         SmartJoystick usedJoystick = SECOND_JOYSTICK;
-        //bindings
+        // bindings
     }
 
     private static void thirdJoystickButtons() {
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
-        //bindings
+        // bindings
     }
 
     private static void fourthJoystickButtons() {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-        //bindings
+        // bindings
     }
-
-
 }

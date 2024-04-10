@@ -9,17 +9,18 @@ public class RobotTypeUtils {
         SIMULATION,
         REPLAY;
 
-        public boolean isReal(){
+        public boolean isReal() {
             return this.equals(RobotType.REAL);
         }
-        public boolean isSimulation(){
+
+        public boolean isSimulation() {
             return this.equals(RobotType.SIMULATION);
         }
-        public boolean isReplay(){
+
+        public boolean isReplay() {
             return this.equals(RobotType.REPLAY);
         }
     }
-
 
     public static RobotType determineRobotType(RobotType wantedType) {
         if (Robot.isSimulation()) {
@@ -27,5 +28,4 @@ public class RobotTypeUtils {
         }
         return RobotType.REAL;
     }
-
 }

@@ -4,14 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.poseestimation.IPoseEstimator;
 import frc.robot.poseestimation.PoseEstimatorFactory;
 import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.swerve.Swerve;
 
 /**
@@ -24,7 +24,6 @@ public class RobotContainer {
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
     public static final Swerve SWERVE = new Swerve();
     public static final IPoseEstimator POSE_ESTIMATOR = PoseEstimatorFactory.createPoseEstimator();
-
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -46,9 +45,7 @@ public class RobotContainer {
     private void configureBindings() {
         JoysticksBindings.configureBindings();
 
-        new Trigger(m_exampleSubsystem::exampleCondition)
-                .onTrue(new ExampleCommand(m_exampleSubsystem));
-
+        new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new ExampleCommand(m_exampleSubsystem));
     }
 
     /**

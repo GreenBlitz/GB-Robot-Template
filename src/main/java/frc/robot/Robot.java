@@ -14,7 +14,6 @@ import frc.robot.simulation.MotorSimulation;
 import frc.utils.LoggerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -56,12 +55,13 @@ public class Robot extends LoggedRobot {
         }
     }
 
-
     private void initializeLogger() {
         NetworkTableInstance.getDefault()
-                .getStructTopic("RobotPose", Pose2d.struct).publish();
+                .getStructTopic("RobotPose", Pose2d.struct)
+                .publish();
         NetworkTableInstance.getDefault()
-                .getStructTopic("MechanismPoses", Pose3d.struct).publish();
+                .getStructTopic("MechanismPoses", Pose3d.struct)
+                .publish();
 
         switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> {
@@ -76,6 +76,4 @@ public class Robot extends LoggedRobot {
             }
         }
     }
-
-
 }

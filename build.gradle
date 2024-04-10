@@ -213,7 +213,7 @@ spotless {
     java {
         target fileTree(".") {
             include "src/main/java/frc/**/*.java"
-            exclude "**/build/**", "**/build-*/**", "src/main/java/frc/BuildConstants.java"
+            exclude "**/build/**", "**/build-*/**"
         }
         toggleOffOn()
         removeUnusedImports()

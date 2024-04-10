@@ -12,7 +12,7 @@ public class SimulationModuleActions {
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0);
     private final VoltageOut driveVoltageRequest = new VoltageOut(0);
 
-    public SimulationModuleActions(SimulationModuleConfigObject simulationModuleConfigObject){
+    public SimulationModuleActions(SimulationModuleConfigObject simulationModuleConfigObject) {
         this.driveMotor = simulationModuleConfigObject.getDriveMotor();
         this.steerMotor = simulationModuleConfigObject.getSteerMotor();
     }
@@ -29,5 +29,4 @@ public class SimulationModuleActions {
         driveMotor.stop();
         steerMotor.stop();
     }
-
 }

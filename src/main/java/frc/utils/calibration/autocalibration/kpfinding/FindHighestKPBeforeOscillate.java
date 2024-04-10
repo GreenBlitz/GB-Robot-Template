@@ -2,7 +2,6 @@ package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
 import frc.utils.GBSubsystem;
-
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
@@ -16,64 +15,63 @@ public class FindHighestKPBeforeOscillate extends KPFindingUtil {
     protected FindHighestKPBeforeOscillate(
             GBSubsystem subsystem,
             boolean isSetControlNeedToRunPeriodic,
-            double tolerance, double timeoutForActionSeconds, double multiPFactor,
+            double tolerance,
+            double timeoutForActionSeconds,
+            double multiPFactor,
             Pair<Double, Double> valuesToRunFor,
-            DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
-            Consumer<Double> setControl, Consumer<Double> setKp,
+            DoubleSupplier currentValueSupplier,
+            DoubleSupplier currentKpValueSupplier,
+            Consumer<Double> setControl,
+            Consumer<Double> setKp,
             Predicate<Double> isAtPose,
-            Runnable doOnEnd
-    ) {
+            Runnable doOnEnd) {
         super(
                 subsystem,
                 isSetControlNeedToRunPeriodic,
-                tolerance, timeoutForActionSeconds,
+                tolerance,
+                timeoutForActionSeconds,
                 valuesToRunFor,
-                currentValueSupplier, currentKpValueSupplier,
-                setControl, setKp,
+                currentValueSupplier,
+                currentKpValueSupplier,
+                setControl,
+                setKp,
                 isAtPose,
-                doOnEnd
-        );
+                doOnEnd);
 
         this.multiPFactor = multiPFactor;
     }
-
 
     @Override
     public void execute() {
         if (isInitialize) {
             initFunction();
             isErrorNeedToBeCheck = false;
-        }
-
-        else if (isExecute) {
+        } else if (isExecute) {
             setControlPeriodic();
 
             final double currentValue = currentValueSupplier.getAsDouble();
-            error = hasOscillated(currentValue) ? Math.max(error, Math.abs(currentValue - usedTargetValue)) : Math.min(error, Math.abs(currentValue - usedTargetValue));
+            error = hasOscillated(currentValue)
+                    ? Math.max(error, Math.abs(currentValue - usedTargetValue))
+                    : Math.min(error, Math.abs(currentValue - usedTargetValue));
 
             if (isNeedToBeEnd(currentValue)) {
                 setIsEndTrue();
             }
-        }
-
-        else if (isEnd) {
+        } else if (isEnd) {
             TIMER.stop();
 
             if (error <= tolerance) {
                 setIsInitTrue();
                 setKp.accept(currentKpValueSupplier.getAsDouble() * multiPFactor);
-            }
-            else {
+            } else {
                 isErrorNeedToBeCheck = true;
                 setKp.accept(currentKpValueSupplier.getAsDouble() / multiPFactor);
             }
         }
     }
 
-
     @Override
     public boolean isFinished() {
         return isErrorNeedToBeCheck && error > tolerance;
     }
-
 }

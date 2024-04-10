@@ -3,7 +3,6 @@ package frc.utils.calibration.autocalibration.kpfinding;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.utils.GBSubsystem;
-
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
@@ -34,39 +33,46 @@ public class FindHighestKP extends SequentialCommandGroup {
      * @param isAtPose -> function to check is system at position
      * @param doOnEnd -> function to do on end (probably stand in place)
      */
-
     public FindHighestKP(
             GBSubsystem subsystem,
             boolean isSetControlNeedToRunPeriodic,
-            double tolerance, double timeoutForActionSeconds, double errorToKpValueFactor, double multiPFactor,
+            double tolerance,
+            double timeoutForActionSeconds,
+            double errorToKpValueFactor,
+            double multiPFactor,
             Pair<Double, Double> valuesToRunFor,
-            DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
-            Consumer<Double> setControl, Consumer<Double> setKp,
+            DoubleSupplier currentValueSupplier,
+            DoubleSupplier currentKpValueSupplier,
+            Consumer<Double> setControl,
+            Consumer<Double> setKp,
             Predicate<Double> isAtPose,
-            Runnable doOnEnd
-    ) {
+            Runnable doOnEnd) {
         super(
                 new FindKP(
                         subsystem,
                         isSetControlNeedToRunPeriodic,
-                        tolerance, timeoutForActionSeconds, errorToKpValueFactor,
+                        tolerance,
+                        timeoutForActionSeconds,
+                        errorToKpValueFactor,
                         valuesToRunFor,
-                        currentValueSupplier, currentKpValueSupplier,
-                        setControl, setKp,
+                        currentValueSupplier,
+                        currentKpValueSupplier,
+                        setControl,
+                        setKp,
                         isAtPose,
-                        doOnEnd
-                ),
+                        doOnEnd),
                 new FindHighestKPBeforeOscillate(
                         subsystem,
                         isSetControlNeedToRunPeriodic,
-                        tolerance, timeoutForActionSeconds, multiPFactor,
+                        tolerance,
+                        timeoutForActionSeconds,
+                        multiPFactor,
                         valuesToRunFor,
-                        currentValueSupplier, currentKpValueSupplier,
-                        setControl, setKp,
+                        currentValueSupplier,
+                        currentKpValueSupplier,
+                        setControl,
+                        setKp,
                         isAtPose,
-                        doOnEnd
-                )
-        );
+                        doOnEnd));
     }
-
 }

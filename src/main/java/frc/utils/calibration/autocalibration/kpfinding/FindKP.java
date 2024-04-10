@@ -2,7 +2,6 @@ package frc.utils.calibration.autocalibration.kpfinding;
 
 import edu.wpi.first.math.Pair;
 import frc.utils.GBSubsystem;
-
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
@@ -14,43 +13,48 @@ public class FindKP extends KPFindingUtil {
     protected FindKP(
             GBSubsystem subsystem,
             boolean isSetControlNeedToRunPeriodic,
-            double tolerance, double timeoutForActionSeconds, double errorToKpValueFactor,
+            double tolerance,
+            double timeoutForActionSeconds,
+            double errorToKpValueFactor,
             Pair<Double, Double> valuesToRunFor,
-            DoubleSupplier currentValueSupplier, DoubleSupplier currentKpValueSupplier,
-            Consumer<Double> setControl, Consumer<Double> setKp,
+            DoubleSupplier currentValueSupplier,
+            DoubleSupplier currentKpValueSupplier,
+            Consumer<Double> setControl,
+            Consumer<Double> setKp,
             Predicate<Double> isAtPose,
-            Runnable doOnEnd
-    ) {
+            Runnable doOnEnd) {
         super(
                 subsystem,
                 isSetControlNeedToRunPeriodic,
-                tolerance, timeoutForActionSeconds,
+                tolerance,
+                timeoutForActionSeconds,
                 valuesToRunFor,
-                currentValueSupplier, currentKpValueSupplier,
-                setControl, setKp,
+                currentValueSupplier,
+                currentKpValueSupplier,
+                setControl,
+                setKp,
                 isAtPose,
-                doOnEnd
-        );
+                doOnEnd);
 
         this.errorToKpValueFactor = errorToKpValueFactor;
     }
 
     @Override
     public void execute() {
-        if (isInitialize) {initFunction();}
-
-        else if (isExecute) {
+        if (isInitialize) {
+            initFunction();
+        } else if (isExecute) {
             setControlPeriodic();
 
             final double currentPosition = currentValueSupplier.getAsDouble();
-            error = hasOscillated(currentPosition) ? Math.max(error, Math.abs(currentPosition - usedTargetValue)) : Math.min(error, Math.abs(currentPosition - usedTargetValue));
+            error = hasOscillated(currentPosition)
+                    ? Math.max(error, Math.abs(currentPosition - usedTargetValue))
+                    : Math.min(error, Math.abs(currentPosition - usedTargetValue));
 
             if (isNeedToBeEnd(currentPosition)) {
                 setIsEndTrue();
             }
-        }
-
-        else if (isEnd) {
+        } else if (isEnd) {
             TIMER.stop();
 
             if (error > tolerance) {
@@ -65,5 +69,4 @@ public class FindKP extends KPFindingUtil {
     public boolean isFinished() {
         return error <= tolerance;
     }
-
 }

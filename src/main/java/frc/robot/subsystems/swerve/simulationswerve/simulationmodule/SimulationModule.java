@@ -14,7 +14,7 @@ public class SimulationModule implements IModule {
     private final SimulationModuleActions simulationModuleActions;
     private final SimulationModuleData simulationModuleData;
 
-    public SimulationModule(ModuleUtils.ModuleName moduleName){
+    public SimulationModule(ModuleUtils.ModuleName moduleName) {
         this.moduleName = moduleName;
         SimulationModuleConfigObject simulationModuleConfigObject = new SimulationModuleConfigObject();
         this.simulationModuleActions = new SimulationModuleActions(simulationModuleConfigObject);
@@ -29,9 +29,9 @@ public class SimulationModule implements IModule {
                 simulationModuleData.getSteerVelocity().getRotations(),
                 0,
                 ModuleConstants.MAX_SPEED_REVOLUTIONS_PER_SECOND,
-                ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
-        );
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveVoltage", simulationModuleData.getDriveVoltage());
+                ModuleConstants.VOLTAGE_COMPENSATION_SATURATION);
+        Logger.recordOutput(
+                ModuleUtils.getLoggingPath(moduleName) + "driveVoltage", simulationModuleData.getDriveVoltage());
         simulationModuleActions.setTargetOpenLoopVelocity(voltage);
     }
 
@@ -57,17 +57,18 @@ public class SimulationModule implements IModule {
 
     @Override
     public void setBrake(boolean brake) {
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveVoltage", simulationModuleData.getDriveVoltage());
+        Logger.recordOutput(
+                ModuleUtils.getLoggingPath(moduleName) + "driveVoltage", simulationModuleData.getDriveVoltage());
     }
 
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
         inputs.steerAngleDegrees = simulationModuleData.getSteerPosition().getDegrees();
-        inputs.odometryUpdatesSteerAngleDegrees = new double[]{inputs.steerAngleDegrees};
+        inputs.odometryUpdatesSteerAngleDegrees = new double[] {inputs.steerAngleDegrees};
         inputs.steerVoltage = simulationModuleData.getSteerVoltage();
 
         inputs.driveDistanceMeters = simulationModuleData.getDrivePositionInMeters();
-        inputs.odometryUpdatesDriveDistanceMeters = new double[]{inputs.driveDistanceMeters};
+        inputs.odometryUpdatesDriveDistanceMeters = new double[] {inputs.driveDistanceMeters};
         inputs.driveVelocityMetersPerSecond = simulationModuleData.getDriveVelocityInMeters();
         inputs.driveCurrent = simulationModuleData.getDriveCurrent();
         inputs.driveVoltage = simulationModuleData.getDriveVoltage();

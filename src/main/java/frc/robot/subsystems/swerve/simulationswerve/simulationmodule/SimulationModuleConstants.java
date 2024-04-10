@@ -16,11 +16,11 @@ public class SimulationModuleConstants {
     protected static final double STEER_MOTOR_D = 0;
 
     protected static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
+
     static {
         STEER_MOTOR_CONFIG.Slot0.kP = SimulationModuleConstants.STEER_MOTOR_P;
         STEER_MOTOR_CONFIG.Slot0.kI = SimulationModuleConstants.STEER_MOTOR_I;
         STEER_MOTOR_CONFIG.Slot0.kD = SimulationModuleConstants.STEER_MOTOR_D;
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
-
 }

@@ -21,18 +21,30 @@ public class ModuleUtils {
         return Conversions.revolutionsToDistance(revolutions, ModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
-    public static Translation2d getModulePositionRelativeToMiddleOfRobot(ModuleName moduleName){
+    public static Translation2d getModulePositionRelativeToMiddleOfRobot(ModuleName moduleName) {
         return switch (moduleName) {
-            case FRONT_LEFT ->  new Translation2d(SwerveConstants.FRONT_LEFT_TRANSLATION2D.getX(), SwerveConstants.FRONT_LEFT_TRANSLATION2D.getY());
-            case FRONT_RIGHT -> new Translation2d(SwerveConstants.FRONT_RIGHT_TRANSLATION2D.getX(), SwerveConstants.FRONT_RIGHT_TRANSLATION2D.getY());
-            case BACK_LEFT -> new Translation2d(SwerveConstants.BACK_LEFT_TRANSLATION2D.getX(), SwerveConstants.BACK_LEFT_TRANSLATION2D.getY());
-            case BACK_RIGHT -> new Translation2d(SwerveConstants.BACK_RIGHT_TRANSLATION2D.getX(), SwerveConstants.BACK_RIGHT_TRANSLATION2D.getY());
+            case FRONT_LEFT -> new Translation2d(
+                    SwerveConstants.FRONT_LEFT_TRANSLATION2D.getX(), SwerveConstants.FRONT_LEFT_TRANSLATION2D.getY());
+            case FRONT_RIGHT -> new Translation2d(
+                    SwerveConstants.FRONT_RIGHT_TRANSLATION2D.getX(), SwerveConstants.FRONT_RIGHT_TRANSLATION2D.getY());
+            case BACK_LEFT -> new Translation2d(
+                    SwerveConstants.BACK_LEFT_TRANSLATION2D.getX(), SwerveConstants.BACK_LEFT_TRANSLATION2D.getY());
+            case BACK_RIGHT -> new Translation2d(
+                    SwerveConstants.BACK_RIGHT_TRANSLATION2D.getX(), SwerveConstants.BACK_RIGHT_TRANSLATION2D.getY());
         };
     }
 
-    public static  double velocityToOpenLoopVoltage(double velocityMetersPerSecond, double wheelDiameterMeters, double steerVelocityRevolutionsPerSecond, double couplingRatio, double maxSpeedRevolutionsPerSecond, double voltageCompensationSaturation) {
-        final double velocityRevolutionsPerSecond = Conversions.distanceToRevolutions(velocityMetersPerSecond, wheelDiameterMeters);
-        final double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(velocityRevolutionsPerSecond, Rotation2d.fromDegrees(steerVelocityRevolutionsPerSecond), couplingRatio);
+    public static double velocityToOpenLoopVoltage(
+            double velocityMetersPerSecond,
+            double wheelDiameterMeters,
+            double steerVelocityRevolutionsPerSecond,
+            double couplingRatio,
+            double maxSpeedRevolutionsPerSecond,
+            double voltageCompensationSaturation) {
+        final double velocityRevolutionsPerSecond =
+                Conversions.distanceToRevolutions(velocityMetersPerSecond, wheelDiameterMeters);
+        final double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
+                velocityRevolutionsPerSecond, Rotation2d.fromDegrees(steerVelocityRevolutionsPerSecond), couplingRatio);
         final double power = optimizedVelocityRevolutionsPerSecond / maxSpeedRevolutionsPerSecond;
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
@@ -45,7 +57,8 @@ public class ModuleUtils {
      * @param moduleAngle   the angle of the module
      * @return the distance without the coupling
      */
-    public static double removeCouplingFromRevolutions(double drivePosition, Rotation2d moduleAngle, double couplingRatio) {
+    public static double removeCouplingFromRevolutions(
+            double drivePosition, Rotation2d moduleAngle, double couplingRatio) {
         final double coupledAngle = moduleAngle.getRotations() * couplingRatio;
         return drivePosition - coupledAngle;
     }
@@ -58,10 +71,10 @@ public class ModuleUtils {
      * @param targetSteerAngle              the target steer angle
      * @return the reduced target velocity in revolutions per second
      */
-    public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentAngle) {
+    public static double reduceSkew(
+            double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentAngle) {
         final double closedLoopError = targetSteerAngle.getRadians() - currentAngle.getRadians();
         final double cosineScalar = Math.abs(Math.cos(closedLoopError));
         return targetVelocityMetersPerSecond * cosineScalar;
     }
-
 }

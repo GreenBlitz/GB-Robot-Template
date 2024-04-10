@@ -6,7 +6,6 @@ public class DriverStationUtils {
 
     private static final DriverStation.Alliance DEFAULT_ALLIANCE = DriverStation.Alliance.Blue;
 
-
     public static DriverStation.Alliance getAlliance() {
         return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
     }

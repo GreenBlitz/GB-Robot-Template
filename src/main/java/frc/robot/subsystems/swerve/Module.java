@@ -1,14 +1,14 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.subsystems.swerve.ModuleUtils.reduceSkew;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.swerveinterface.IModule;
+import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
-
-import static frc.robot.subsystems.swerve.ModuleUtils.reduceSkew;
 
 public class Module {
 
@@ -28,11 +28,11 @@ public class Module {
 
         resetByEncoder();
     }
-    
-    public void resetByEncoder(){
+
+    public void resetByEncoder() {
         module.resetByEncoder();
     }
-    
+
     public void periodic() {
         module.updateInputs(moduleInputs);
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
@@ -45,7 +45,6 @@ public class Module {
     public void setBrake(boolean isBrake) {
         module.setBrake(isBrake);
     }
-
 
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         module.setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
@@ -60,7 +59,8 @@ public class Module {
     }
 
     public SwerveModulePosition getCurrentPosition() {
-        return new SwerveModulePosition(moduleInputs.driveDistanceMeters, Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees));
+        return new SwerveModulePosition(
+                moduleInputs.driveDistanceMeters, Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees));
     }
 
     public SwerveModuleState getTargetState() {
@@ -75,7 +75,6 @@ public class Module {
         driveMotorClosedLoop = closedLoop;
     }
 
-
     public void setTargetState(SwerveModuleState targetState) {
         this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
         module.setTargetAngle(this.targetState.angle);
@@ -87,12 +86,10 @@ public class Module {
 
         if (driveMotorClosedLoop) {
             setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
-        }
-        else {
+        } else {
             setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
         }
     }
-
 
     /**
      * The odometry thread can update itself faster than the main code loop (which is 50 hertz).
@@ -104,7 +101,6 @@ public class Module {
     public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
                 moduleInputs.odometryUpdatesDriveDistanceMeters[odometryUpdateIndex],
-                Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex])
-        );
+                Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex]));
     }
 }

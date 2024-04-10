@@ -4,7 +4,6 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.swerve.mk4iswerve.MK4ISwerve;
 import frc.robot.subsystems.swerve.replayswerve.ReplaySwerve;
 import frc.robot.subsystems.swerve.simulationswerve.SimulationSwerve;
-import frc.utils.RobotTypeUtils;
 
 public class SwerveFactory {
 
@@ -15,5 +14,4 @@ public class SwerveFactory {
             case REPLAY -> new ReplaySwerve();
         };
     }
-
 }

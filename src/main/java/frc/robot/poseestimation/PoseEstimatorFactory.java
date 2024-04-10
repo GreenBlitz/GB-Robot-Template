@@ -18,5 +18,4 @@ public class PoseEstimatorFactory {
             case POSE_ESTIMATOR_6328 -> new PoseEstimator6328();
         };
     }
-
 }

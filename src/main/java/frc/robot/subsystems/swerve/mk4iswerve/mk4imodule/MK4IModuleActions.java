@@ -17,9 +17,9 @@ public class MK4IModuleActions {
     private final PositionVoltage steerPositionRequest =
             new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_STEER);
 
-    public MK4IModuleActions(GBTalonFXPro driveMotor, GBTalonFXPro steerMotor) {
-        this.driveMotor = driveMotor;
-        this.steerMotor = steerMotor;
+    public MK4IModuleActions(MK4IModuleRecords.MK4IModuleMotors moduleMotors) {
+        this.driveMotor = moduleMotors.driveMotor();
+        this.steerMotor = moduleMotors.steerMotor();
     }
 
     public void setTargetOpenLoopVelocity(double voltage) {

@@ -7,34 +7,10 @@ import frc.robot.subsystems.swerve.ModuleUtils;
 
 public class MK4IModuleData {
 
-    private final StatusSignal<Double> steerEncoderAbsolutePositionSignal,
-            steerEncoderVelocitySignal,
-            steerEncoderVoltageSignal;
-    private final StatusSignal<Double> driveStatorCurrentSignal,
-            drivePositionSignal,
-            driveVelocitySignal,
-            driveAccelerationSignal,
-            driveVoltageSignal;
-    private final StatusSignal<Double> steerPositionSignal,
-            steerVelocitySignal,
-            steerAccelerationSignal,
-            steerVoltageSignal;
+    private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
-    public MK4IModuleData(MK4IModuleConfigObject mk4IModuleConfigObject) {
-        this.steerEncoderVoltageSignal = mk4IModuleConfigObject.steerEncoderVoltageSignal;
-        this.steerEncoderVelocitySignal = mk4IModuleConfigObject.steerEncoderVelocitySignal;
-        this.steerEncoderAbsolutePositionSignal = mk4IModuleConfigObject.steerEncoderAbsolutePositionSignal;
-
-        this.driveVoltageSignal = mk4IModuleConfigObject.driveVoltageSignal;
-        this.driveStatorCurrentSignal = mk4IModuleConfigObject.driveStatorCurrentSignal;
-        this.driveAccelerationSignal = mk4IModuleConfigObject.driveAccelerationSignal;
-        this.driveVelocitySignal = mk4IModuleConfigObject.driveVelocitySignal;
-        this.drivePositionSignal = mk4IModuleConfigObject.drivePositionSignal;
-
-        this.steerVoltageSignal = mk4IModuleConfigObject.steerVoltageSignal;
-        this.steerAccelerationSignal = mk4IModuleConfigObject.steerAccelerationSignal;
-        this.steerVelocitySignal = mk4IModuleConfigObject.steerVelocitySignal;
-        this.steerPositionSignal = mk4IModuleConfigObject.steerPositionSignal;
+    public MK4IModuleData(MK4IModuleRecords.MK4IModuleSignals moduleSignals) {
+        this.moduleSignals = moduleSignals;
     }
 
     public Rotation2d getEncoderAbsolutePosition() {
@@ -74,50 +50,50 @@ public class MK4IModuleData {
     }
 
     public StatusSignal<Double> getSteerEncoderVoltageSignal() {
-        return steerEncoderVoltageSignal.refresh();
+        return moduleSignals.steerEncoderVoltageSignal().refresh();
     }
 
     public StatusSignal<Double> getSteerEncoderVelocitySignal() {
-        return steerEncoderVelocitySignal.refresh();
+        return moduleSignals.steerEncoderVelocitySignal().refresh();
     }
 
     private StatusSignal<Double> getSteerEncoderAbsolutePositionSignal() {
-        return steerEncoderAbsolutePositionSignal.refresh();
+        return moduleSignals.steerEncoderAbsolutePositionSignal().refresh();
     }
 
     public StatusSignal<Double> getDriveVoltageSignal() {
-        return driveVoltageSignal.refresh();
+        return moduleSignals.driveVoltageSignal().refresh();
     }
 
     public StatusSignal<Double> getDriveStatorCurrentSignal() {
-        return driveStatorCurrentSignal.refresh();
+        return moduleSignals.driveStatorCurrentSignal().refresh();
     }
 
     private StatusSignal<Double> getDriveAccelerationSignal() {
-        return driveAccelerationSignal.refresh();
+        return moduleSignals.driveAccelerationSignal().refresh();
     }
 
     private StatusSignal<Double> getDriveVelocitySignal() {
-        return driveVelocitySignal.refresh();
+        return moduleSignals.driveVelocitySignal().refresh();
     }
 
     private StatusSignal<Double> getDrivePositionSignal() {
-        return drivePositionSignal.refresh();
+        return moduleSignals.drivePositionSignal().refresh();
     }
 
     public StatusSignal<Double> getSteerVoltageSignal() {
-        return steerVoltageSignal.refresh();
+        return moduleSignals.steerVoltageSignal().refresh();
     }
 
     private StatusSignal<Double> getSteerAccelerationSignal() {
-        return steerAccelerationSignal.refresh();
+        return moduleSignals.steerAccelerationSignal().refresh();
     }
 
     private StatusSignal<Double> getSteerVelocitySignal() {
-        return steerVelocitySignal.refresh();
+        return moduleSignals.steerVelocitySignal().refresh();
     }
 
     private StatusSignal<Double> getSteerPositionSignal() {
-        return steerPositionSignal.refresh();
+        return moduleSignals.steerPositionSignal().refresh();
     }
 }

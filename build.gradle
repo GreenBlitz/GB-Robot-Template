@@ -78,44 +78,47 @@ tasks.register('checkAkitInstall', JavaExec) {
 tasks.register('autoCommit') {
     doLast {
         final String[] tasksToCommit = new String[]{"deploy", "simulate"}
+        final String[] branchPrefixesToCommit = new String[]{"event", "field", "check"}
+
+        final def branch = 'git branch --show-current'.execute().text.trim()
+        final def commitMessage = "autoCommit - updated at '${new Date().toString()}'"
         final def taskNames = project.gradle.startParameter.taskNames
 
-        boolean isCommitting = false
+        // checking deploy type
+        boolean isDeployOrSimulate = false
         for (String taskName : tasksToCommit) {
-            isCommitting = taskNames.any({ it.toLowerCase().contains(taskName) })
-            if(isCommitting)
+            isDeployOrSimulate = taskNames.any({ it.toLowerCase().contains(taskName) })
+            if(isDeployOrSimulate) {
                 break
+            }
         }
-
-        if (isCommitting) {
-
-            final String[] branchPrefixesToCommit = new String[]{"event", "field", "check"}
-            final def branch = 'git branch --show-current'.execute().text.trim()
-            final def commitMessage = "autoCommit - updated at '${new Date().toString()}'"
-
-            isCommitting = false;
-            for (String branchPrefix : branchPrefixesToCommit) {
-                isCommitting = branch.startsWith(branchPrefix)
-                if(isCommitting)
-                    break
-            }
-
-            if (isCommitting) {
-                exec {
-                    workingDir(projectDir)
-                    executable('git')
-                    args 'commit', '-am', commitMessage
-                    ignoreExitValue = true
-                }
-
-                println("commited to branch -> '$branch'")
-                println("commited message -> '$commitMessage'")
-            } else {
-                println("skipping -> not a branch to auto commit")
-            }
-        } else {
+        if (!isDeployOrSimulate) {
             println("skipping -> not a deploy or simulate")
+            return
         }
+
+        // checking branch type
+        boolean isBranchToAutoCommit = false;
+        for (String branchPrefix : branchPrefixesToCommit) {
+            isBranchToAutoCommit = branch.startsWith(branchPrefix)
+            if(isBranchToAutoCommit) {
+                break
+            }
+        }
+        if (!isBranchToAutoCommit) {
+            println("skipping -> not a branch to auto commit")
+            return
+        }
+
+        // committing
+        exec {
+            workingDir(projectDir)
+            executable('git')
+            args 'commit', '-am', commitMessage
+            ignoreExitValue = true
+        }
+        println("commited to branch -> '$branch'")
+        println("commited message -> '$commitMessage'")
     }
 }
 

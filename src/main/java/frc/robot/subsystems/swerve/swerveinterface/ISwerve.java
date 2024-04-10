@@ -7,5 +7,4 @@ public interface ISwerve {
     void setHeading(Rotation2d heading);
 
     void updateInputs(SwerveInputsAutoLogged inputs);
-
 }

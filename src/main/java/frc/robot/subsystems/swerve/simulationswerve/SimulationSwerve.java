@@ -18,12 +18,11 @@ public class SimulationSwerve implements ISwerve {
 
     @Override
     public void updateInputs(SwerveInputsAutoLogged inputs) {
-        gyro.update(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond, SimulationConstants.TIME_STEP);
+        gyro.update(
+                RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond, SimulationConstants.TIME_STEP);
 
         inputs.gyroYawDegrees = gyro.getGyroYaw().getDegrees();
-        inputs.odometryUpdatesYawDegrees = new double[]{inputs.gyroYawDegrees};
-        inputs.odometryUpdatesTimestamp = new double[]{Timer.getFPGATimestamp()};
+        inputs.odometryUpdatesYawDegrees = new double[] {inputs.gyroYawDegrees};
+        inputs.odometryUpdatesTimestamp = new double[] {Timer.getFPGATimestamp()};
     }
-
-
 }

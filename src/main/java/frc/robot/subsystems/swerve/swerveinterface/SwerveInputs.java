@@ -13,5 +13,4 @@ public class SwerveInputs {
     public double accelerationZ = 0;
 
     public double[] odometryUpdatesTimestamp = new double[0];
-
 }

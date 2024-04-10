@@ -5,7 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleUtils;
 
-public class MK4IModuleData {
+class MK4IModuleData {
 
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 

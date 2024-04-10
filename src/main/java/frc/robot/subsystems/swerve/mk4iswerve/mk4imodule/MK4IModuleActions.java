@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
-public class MK4IModuleActions {
+class MK4IModuleActions {
 
     private final GBTalonFXPro steerMotor, driveMotor;
 

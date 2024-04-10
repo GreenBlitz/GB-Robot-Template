@@ -8,9 +8,8 @@ public interface IModule {
 
     void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond);
 
-
     void setTargetAngle(Rotation2d angle);
-    
+
     void resetByEncoder();
 
     void stop();
@@ -18,5 +17,4 @@ public interface IModule {
     void setBrake(boolean brake);
 
     void updateInputs(ModuleInputsAutoLogged inputs);
-
 }

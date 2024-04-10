@@ -22,34 +22,29 @@ public class JoysticksBindings {
 
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        //bindings
+        // bindings
 
         usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.SWERVE.setHeading(new Rotation2d())));
         usedJoystick.A.onTrue(new InstantCommand(RobotContainer.SWERVE::resetByEncoder));
-        
-        RobotContainer.SWERVE.setDefaultCommand(
-                SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
-                        () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                        () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                        () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
-                )
-        );
+
+        RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)));
     }
 
     private static void secondJoystickButtons() {
         SmartJoystick usedJoystick = SECOND_JOYSTICK;
-        //bindings
+        // bindings
     }
 
     private static void thirdJoystickButtons() {
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
-        //bindings
+        // bindings
     }
 
     private static void fourthJoystickButtons() {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-        //bindings
+        // bindings
     }
-
-
 }

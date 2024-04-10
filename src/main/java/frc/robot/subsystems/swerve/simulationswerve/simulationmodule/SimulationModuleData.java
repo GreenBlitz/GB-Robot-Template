@@ -8,34 +8,36 @@ public class SimulationModuleData {
 
     private final SimpleMotorSimulation steerMotor, driveMotor;
 
-    public SimulationModuleData(SimulationModuleConfigObject simulationModuleConfigObject){
+    public SimulationModuleData(SimulationModuleConfigObject simulationModuleConfigObject) {
         this.driveMotor = simulationModuleConfigObject.getDriveMotor();
         this.steerMotor = simulationModuleConfigObject.getSteerMotor();
     }
 
-
-    public double getSteerVoltage(){
+    public double getSteerVoltage() {
         return steerMotor.getVoltage();
     }
-    public Rotation2d getSteerVelocity(){
+
+    public Rotation2d getSteerVelocity() {
         return Rotation2d.fromRotations(steerMotor.getVelocityRevolutionsPerSecond());
     }
-    public Rotation2d  getSteerPosition(){
+
+    public Rotation2d getSteerPosition() {
         return Rotation2d.fromRotations(steerMotor.getPositionRevolutions());
     }
 
-
-    public double getDriveVoltage(){
+    public double getDriveVoltage() {
         return driveMotor.getVoltage();
     }
-    public double getDriveCurrent(){
+
+    public double getDriveCurrent() {
         return driveMotor.getCurrent();
     }
-    public double getDriveVelocityInMeters(){
+
+    public double getDriveVelocityInMeters() {
         return ModuleUtils.toDriveDistance(driveMotor.getVelocityRevolutionsPerSecond());
     }
-    public double getDrivePositionInMeters(){
+
+    public double getDrivePositionInMeters() {
         return ModuleUtils.toDriveDistance(driveMotor.getPositionRevolutions());
     }
-
 }

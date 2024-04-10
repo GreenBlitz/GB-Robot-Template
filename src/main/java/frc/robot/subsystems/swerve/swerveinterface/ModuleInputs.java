@@ -19,5 +19,4 @@ public class ModuleInputs {
     public double[] odometryUpdatesDriveDistanceMeters = new double[0];
     public double driveCurrent = 0;
     public double driveVoltage = 0;
-
 }

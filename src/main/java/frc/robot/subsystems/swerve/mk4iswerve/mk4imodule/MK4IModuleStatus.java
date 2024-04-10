@@ -5,11 +5,11 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleUtils;
 
-class MK4IModuleData {
+class MK4IModuleStatus {
 
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
-    public MK4IModuleData(MK4IModuleRecords.MK4IModuleSignals moduleSignals) {
+    public MK4IModuleStatus(MK4IModuleRecords.MK4IModuleSignals moduleSignals) {
         this.moduleSignals = moduleSignals;
     }
 

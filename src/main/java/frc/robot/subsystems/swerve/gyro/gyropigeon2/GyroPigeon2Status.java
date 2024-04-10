@@ -2,11 +2,11 @@ package frc.robot.subsystems.swerve.gyro.gyropigeon2;
 
 import com.ctre.phoenix6.StatusSignal;
 
-class GyroPigeon2Data {
+class GyroPigeon2Status {
 
     private final GyroPigeon2Records.GyroPigeon2Signals gyroPigeon2Signals;
 
-    protected GyroPigeon2Data(GyroPigeon2Records.GyroPigeon2Signals gyroPigeon2Signals) {
+    protected GyroPigeon2Status(GyroPigeon2Records.GyroPigeon2Signals gyroPigeon2Signals) {
         this.gyroPigeon2Signals = gyroPigeon2Signals;
     }
 

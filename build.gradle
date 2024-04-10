@@ -88,8 +88,9 @@ tasks.register('autoCommit') {
         boolean isDeployOrSimulate = false
         for (String taskName : tasksToCommit) {
             isDeployOrSimulate = taskNames.any({ it.toLowerCase().contains(taskName) })
-            if(isDeployOrSimulate)
+            if(isDeployOrSimulate) {
                 break
+            }
         }
         if (!isDeployOrSimulate) {
             println("skipping -> not a deploy or simulate")
@@ -100,8 +101,9 @@ tasks.register('autoCommit') {
         boolean isBranchToAutoCommit = false;
         for (String branchPrefix : branchPrefixesToCommit) {
             isBranchToAutoCommit = branch.startsWith(branchPrefix)
-            if(isBranchToAutoCommit)
+            if(isBranchToAutoCommit) {
                 break
+            }
         }
         if (!isBranchToAutoCommit) {
             println("skipping -> not a branch to auto commit")

@@ -6,6 +6,7 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
     id "com.diffplug.spotless" version "6.25.0"
+    id "com.peterabeles.gversion" version "1.10.2"
 }
 
 java {
@@ -162,13 +163,24 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+// Create version file
+project.compileJava.dependsOn(createVersionFile)
+gversion {
+    srcDir       = "src/main/java"
+    classPackage = "frc.buildconstants"
+    className    = "BuildConstants"
+    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
+    timeZone     = "Israel/Jerusalem"
+    indent       = "    "
+}
+
 // Spotless formatting
 project.compileJava.dependsOn(spotlessApply)
 spotless {
     java {
         target fileTree(".") {
             include "src/main/java/frc/**/*.java"
-            exclude "**/build/**", "**/build-*/**"
+            exclude "**/build/**", "**/build-*/**",  "src/main/java/frc/BuildConstants.java"
         }
         toggleOffOn()
         removeUnusedImports()

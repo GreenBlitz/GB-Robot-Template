@@ -1,6 +1,5 @@
 package frc.utils;
 
-import frc.buildconstants.BuildConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -18,7 +17,6 @@ public class LoggerUtils {
             Logger.end();
             LoggerUtils.startLoggerOnRoborio();
         }
-        logGitInformation();
     }
 
     public static void startLoggerOnUSB() {
@@ -47,19 +45,5 @@ public class LoggerUtils {
         Logger.addDataReceiver(new WPILOGWriter(SimulationConstants.SIMULATION_LOG_PATH));
         Logger.start();
         Logger.recordOutput("Logged In", "COMPUTER");
-        logGitInformation();
-    }
-
-    public static void logGitInformation(){
-        final String gitSituation = switch (BuildConstants.DIRTY) {
-            case 0 -> "All changes committed";
-            case 1 -> "Uncomitted changes";
-            default -> "Unknown";
-        };
-        Logger.recordOutput("Git/ProjectName", BuildConstants.MAVEN_NAME);// todo - metadata
-        Logger.recordOutput("Git/GitBranch", BuildConstants.GIT_BRANCH);// todo - metadata
-        Logger.recordOutput("Git/GitDate", BuildConstants.GIT_DATE);// todo - metadata
-        Logger.recordOutput("Git/BuildDate", BuildConstants.BUILD_DATE);// todo - metadata
-        Logger.recordOutput("Git/GitDirty", gitSituation);// todo - metadata
     }
 }

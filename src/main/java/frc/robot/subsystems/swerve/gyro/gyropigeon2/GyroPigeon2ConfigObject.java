@@ -6,11 +6,11 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 class GyroPigeon2ConfigObject {
 
     private final Pigeon2 gyro;
-    private final GyroPigeon2Signals signals;
+    private final GyroPigeon2Records.GyroPigeon2Signals signals;
 
     protected GyroPigeon2ConfigObject(int id, String busChain) {
         this.gyro = new Pigeon2(id, busChain);
-        this.signals = new GyroPigeon2Signals(
+        this.signals = new GyroPigeon2Records.GyroPigeon2Signals(
                 gyro.getYaw(),
                 gyro.getPitch(),
                 gyro.getAccelerationX(),
@@ -38,7 +38,7 @@ class GyroPigeon2ConfigObject {
         return gyro;
     }
 
-    protected GyroPigeon2Signals getSignals() {
+    protected GyroPigeon2Records.GyroPigeon2Signals getSignals() {
         return signals;
     }
 }

@@ -4,9 +4,9 @@ import com.ctre.phoenix6.StatusSignal;
 
 class GyroPigeon2Data {
 
-    private final GyroPigeon2Signals gyroPigeon2Signals;
+    private final GyroPigeon2Records.GyroPigeon2Signals gyroPigeon2Signals;
 
-    protected GyroPigeon2Data(GyroPigeon2Signals gyroPigeon2Signals) {
+    protected GyroPigeon2Data(GyroPigeon2Records.GyroPigeon2Signals gyroPigeon2Signals) {
         this.gyroPigeon2Signals = gyroPigeon2Signals;
     }
 

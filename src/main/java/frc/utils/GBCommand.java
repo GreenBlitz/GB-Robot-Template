@@ -18,16 +18,16 @@ import java.util.Set;
  * @author Yoni Kiriaty
  */
 public abstract class GBCommand extends Command {
-	
+
 	protected Set<Subsystem> subsystems;
-	
+
 	/**
 	 * Constructor for a command that doesn't use a subsystem at all
 	 */
 	public GBCommand() {
 		this.subsystems = new HashSet<>();
 	}
-	
+
 	/**
 	 * @param subsystems - The subsystems used by this command
 	 */
@@ -35,7 +35,7 @@ public abstract class GBCommand extends Command {
 		this.subsystems = new HashSet<>();
 		this.subsystems.addAll(Arrays.asList(subsystems));
 	}
-	
+
 	/**
 	 * adds a new subsystem requirement
 	 *
@@ -48,7 +48,7 @@ public abstract class GBCommand extends Command {
 	public void require(Subsystem... subsystems) {
 		this.subsystems.addAll(Arrays.asList(subsystems));
 	}
-	
+
 	/**
 	 * Checks if a subsystem is used by a command
 	 *
@@ -58,7 +58,7 @@ public abstract class GBCommand extends Command {
 	public boolean isRequired(Subsystem subsystem) {
 		return subsystems.contains(subsystem);
 	}
-	
+
 
 	/**
 	 * @return a set of the required subsystems

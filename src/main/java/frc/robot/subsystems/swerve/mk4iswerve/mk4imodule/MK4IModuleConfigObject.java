@@ -44,11 +44,11 @@ public class MK4IModuleConfigObject {
         optimizeBusAndSignalOfEncoder();
 
         configDriveMotor();
-        moduleMotors.driveMotor().setInverted(isDriveMotorInverted);
+        driveMotor.setInverted(isDriveMotorInverted);
         optimizeBusAndSignalOfDriveMotor();
 
         configSteerMotor();
-        moduleMotors.steerMotor().setInverted(isSteerMotorInverted);
+        steerMotor.setInverted(isSteerMotorInverted);
         optimizeBusAndSignalOfSteerMotor();
     }
 

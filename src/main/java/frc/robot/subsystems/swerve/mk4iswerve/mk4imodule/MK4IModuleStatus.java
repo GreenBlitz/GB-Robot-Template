@@ -5,7 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleUtils;
 
-public class MK4IModuleData {
+public class MK4IModuleStatus {
 
     private final StatusSignal<Double> steerEncoderAbsolutePositionSignal,
             steerEncoderVelocitySignal,
@@ -20,7 +20,7 @@ public class MK4IModuleData {
             steerAccelerationSignal,
             steerVoltageSignal;
 
-    public MK4IModuleData(MK4IModuleConfigObject mk4IModuleConfigObject) {
+    public MK4IModuleStatus(MK4IModuleConfigObject mk4IModuleConfigObject) {
         this.steerEncoderVoltageSignal = mk4IModuleConfigObject.steerEncoderVoltageSignal;
         this.steerEncoderVelocitySignal = mk4IModuleConfigObject.steerEncoderVelocitySignal;
         this.steerEncoderAbsolutePositionSignal = mk4IModuleConfigObject.steerEncoderAbsolutePositionSignal;

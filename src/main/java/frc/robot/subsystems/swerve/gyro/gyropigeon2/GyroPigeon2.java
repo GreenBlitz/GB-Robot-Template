@@ -7,13 +7,13 @@ import frc.robot.constants.Ports;
 
 public class GyroPigeon2 {
 
-    private final GyroPigeon2Data gyroPigeon2Data;
+    private final GyroPigeon2Status gyroPigeon2Data;
     private final GyroPigeon2Actions gyroPigeon2Actions;
 
     public GyroPigeon2() {
         GyroPigeon2ConfigObject gyroPigeon2ConfigObject =
                 new GyroPigeon2ConfigObject(Ports.PIGEON_2_ID, Phoenix6Constants.CANIVORE_NAME);
-        this.gyroPigeon2Data = new GyroPigeon2Data(gyroPigeon2ConfigObject);
+        this.gyroPigeon2Data = new GyroPigeon2Status(gyroPigeon2ConfigObject);
         this.gyroPigeon2Actions = new GyroPigeon2Actions(gyroPigeon2ConfigObject.getGyro());
     }
 

@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.gyro.gyropigeon2;
 
 import com.ctre.phoenix6.StatusSignal;
 
-public class GyroPigeon2Data {
+public class GyroPigeon2Status {
 
     private final StatusSignal<Double> YAW_SIGNAL,
             PITCH_SIGNAL,
@@ -10,7 +10,7 @@ public class GyroPigeon2Data {
             Y_ACCELERATION_SIGNAL,
             Z_ACCELERATION_SIGNAL;
 
-    protected GyroPigeon2Data(GyroPigeon2ConfigObject gyroPigeon2ConfigObject) {
+    protected GyroPigeon2Status(GyroPigeon2ConfigObject gyroPigeon2ConfigObject) {
         this.YAW_SIGNAL = gyroPigeon2ConfigObject.YAW_SIGNAL;
         this.PITCH_SIGNAL = gyroPigeon2ConfigObject.PITCH_SIGNAL;
         this.X_ACCELERATION_SIGNAL = gyroPigeon2ConfigObject.X_ACCELERATION_SIGNAL;

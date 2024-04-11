@@ -7,7 +7,7 @@ import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.ModuleConstants;
 
-public class MK4IModuleConstants {
+class MK4IModuleConstants {
 
     public static final boolean ENABLE_FOC_DRIVE = true;
     public static final boolean ENABLE_FOC_STEER = true;

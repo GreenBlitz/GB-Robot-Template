@@ -23,8 +23,8 @@ public class JoysticksBindings {
         // bindings
 
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)));
     }
 

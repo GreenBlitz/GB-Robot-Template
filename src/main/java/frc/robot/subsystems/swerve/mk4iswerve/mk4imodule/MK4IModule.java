@@ -15,6 +15,7 @@ public class MK4IModule implements IModule {
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
+
         this.mk4IModuleData = new MK4IModuleStatus(moduleConfigObject.getModuleSignals());
         this.mk4IModuleActions = new MK4IModuleActions(moduleConfigObject.getMotors());
         //        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor,

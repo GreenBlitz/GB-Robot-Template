@@ -35,15 +35,12 @@ public class SwerveConstants {
     );
     public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
     public static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
-    public static final Translation2d[] LOCATIONS = {new Translation2d(MODULE_X_DISTANCE_FROM_CENTER,
-            MODULE_Y_DISTANCE_FROM_CENTER
-    ), new Translation2d(
-            MODULE_X_DISTANCE_FROM_CENTER,
-            -MODULE_Y_DISTANCE_FROM_CENTER
-    ), new Translation2d(-MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER), new Translation2d(
-            -MODULE_X_DISTANCE_FROM_CENTER,
-            -MODULE_Y_DISTANCE_FROM_CENTER
-    )};
+    public static final Translation2d[] LOCATIONS = {
+            new Translation2d(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER),
+            new Translation2d(MODULE_X_DISTANCE_FROM_CENTER, -MODULE_Y_DISTANCE_FROM_CENTER),
+            new Translation2d(-MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER),
+            new Translation2d(-MODULE_X_DISTANCE_FROM_CENTER, -MODULE_Y_DISTANCE_FROM_CENTER)
+    };
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
     public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);
     public static final PIDConstants PROFILED_ROTATION_PID_CONSTANTS = new PIDConstants(6, 0, 0);

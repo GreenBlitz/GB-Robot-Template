@@ -17,6 +17,7 @@ class MK4IModuleConstants {
     public static final boolean ENABLE_FOC_STEER = true;
 
     public static final double COUPLING_RATIO = 0;
+
     private static final InvertedValue DRIVE_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive;
     private static final InvertedValue STEER_MOTOR_INVERTED_VALUE = InvertedValue.CounterClockwise_Positive;
     private static final SensorDirectionValue STEER_ENCODER_DIRECTION = SensorDirectionValue.CounterClockwise_Positive;

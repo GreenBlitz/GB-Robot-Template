@@ -17,7 +17,7 @@ public class SimulationModule implements IModule {
 
     public SimulationModule(ModuleUtils.ModuleName moduleName) {
         this.moduleName = moduleName;
-        SimulationModuleConfigObject simulationModuleConfigObject = new SimulationModuleConfigObject();
+        final SimulationModuleConfigObject simulationModuleConfigObject = new SimulationModuleConfigObject();
         this.simulationModuleActions = new SimulationModuleActions(simulationModuleConfigObject);
         this.simulationModuleStatus = new SimulationModuleStatus(simulationModuleConfigObject);
     }

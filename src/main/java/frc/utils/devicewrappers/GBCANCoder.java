@@ -1,6 +1,7 @@
 package frc.utils.devicewrappers;
 
-import com.ctre.phoenix6.*;
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.constants.Phoenix6Constants;

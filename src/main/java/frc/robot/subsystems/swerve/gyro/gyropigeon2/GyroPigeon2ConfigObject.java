@@ -10,12 +10,12 @@ class GyroPigeon2ConfigObject {
 
     protected GyroPigeon2ConfigObject(int id, String busChain) {
         this.gyro = new Pigeon2(id, busChain);
-        this.signals = new GyroPigeon2Records.GyroPigeon2Signals(
-                gyro.getYaw(),
+        this.signals = new GyroPigeon2Records.GyroPigeon2Signals(gyro.getYaw(),
                 gyro.getPitch(),
                 gyro.getAccelerationX(),
                 gyro.getAccelerationY(),
-                gyro.getAccelerationZ());
+                gyro.getAccelerationZ()
+        );
         configGyro();
         optimizeBusAndSignalOfGyro();
     }
@@ -25,8 +25,11 @@ class GyroPigeon2ConfigObject {
     }
 
     private void optimizeBusAndSignalOfGyro() {
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                50, signals.X_ACCELERATION_SIGNAL(), signals.Y_ACCELERATION_SIGNAL(), signals.Z_ACCELERATION_SIGNAL());
+        BaseStatusSignal.setUpdateFrequencyForAll(50,
+                signals.X_ACCELERATION_SIGNAL(),
+                signals.Y_ACCELERATION_SIGNAL(),
+                signals.Z_ACCELERATION_SIGNAL()
+        );
 
         signals.PITCH_SIGNAL().setUpdateFrequency(100);
         signals.YAW_SIGNAL().setUpdateFrequency(250); // PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ

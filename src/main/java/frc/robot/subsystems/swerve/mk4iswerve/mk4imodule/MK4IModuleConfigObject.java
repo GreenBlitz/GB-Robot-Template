@@ -1,8 +1,7 @@
 package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.configs.MagnetSensorConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.utils.devicewrappers.GBTalonFXPro;
 
@@ -19,15 +18,16 @@ class MK4IModuleConfigObject {
             boolean isSteerMotorInverted,
             int driveMotorId,
             boolean isDriveMotorInverted,
-            int steerEncoderId) {
+            int steerEncoderId
+    ) {
 
         this.steerEncoder = new CANcoder(steerEncoderId, busChain);
-        this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
-                new GBTalonFXPro(driveMotorId, busChain), new GBTalonFXPro(steerMotorId, busChain));
+        this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(new GBTalonFXPro(driveMotorId, busChain),
+                new GBTalonFXPro(steerMotorId, busChain)
+        );
         this.steerMotor = moduleMotors.steerMotor();
         this.driveMotor = moduleMotors.driveMotor();
-        this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(
-                steerEncoder.getAbsolutePosition(),
+        this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(steerEncoder.getAbsolutePosition(),
                 steerEncoder.getVelocity(),
                 steerEncoder.getSupplyVoltage(),
                 driveMotor.getPosition(),
@@ -38,7 +38,8 @@ class MK4IModuleConfigObject {
                 steerMotor.getPosition(),
                 steerMotor.getVelocity(),
                 steerMotor.getAcceleration(),
-                steerMotor.getMotorVoltage());
+                steerMotor.getMotorVoltage()
+        );
 
         configEncoder();
         optimizeBusAndSignalOfEncoder();
@@ -61,8 +62,10 @@ class MK4IModuleConfigObject {
 
     private void optimizeBusAndSignalOfEncoder() {
         BaseStatusSignal.setUpdateFrequencyForAll(250, moduleSignals.steerEncoderAbsolutePositionSignal());
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                100, moduleSignals.steerEncoderVelocitySignal(), moduleSignals.steerEncoderVoltageSignal());
+        BaseStatusSignal.setUpdateFrequencyForAll(100,
+                moduleSignals.steerEncoderVelocitySignal(),
+                moduleSignals.steerEncoderVoltageSignal()
+        );
 
         steerEncoder.optimizeBusUtilization();
     }
@@ -72,13 +75,15 @@ class MK4IModuleConfigObject {
     }
 
     private void optimizeBusAndSignalOfDriveMotor() {
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                250,
+        BaseStatusSignal.setUpdateFrequencyForAll(250,
                 moduleSignals.drivePositionSignal(),
                 moduleSignals.driveVelocitySignal(),
-                moduleSignals.driveAccelerationSignal());
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                100, moduleSignals.driveVoltageSignal(), moduleSignals.driveStatorCurrentSignal());
+                moduleSignals.driveAccelerationSignal()
+        );
+        BaseStatusSignal.setUpdateFrequencyForAll(100,
+                moduleSignals.driveVoltageSignal(),
+                moduleSignals.driveStatorCurrentSignal()
+        );
 
         driveMotor.optimizeBusUtilization();
     }
@@ -90,11 +95,11 @@ class MK4IModuleConfigObject {
     }
 
     private void optimizeBusAndSignalOfSteerMotor() {
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                250,
+        BaseStatusSignal.setUpdateFrequencyForAll(250,
                 moduleSignals.steerPositionSignal(),
                 moduleSignals.steerVelocitySignal(),
-                moduleSignals.steerAccelerationSignal());
+                moduleSignals.steerAccelerationSignal()
+        );
         BaseStatusSignal.setUpdateFrequencyForAll(20, moduleSignals.steerVoltageSignal());
 
         steerMotor.optimizeBusUtilization();

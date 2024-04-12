@@ -27,11 +27,7 @@ class GyroPigeon2ConfigObject {
     }
 
     private void optimizeBusAndSignalOfGyro() {
-        BaseStatusSignal.setUpdateFrequencyForAll(50,
-                signals.X_ACCELERATION_SIGNAL(),
-                signals.Y_ACCELERATION_SIGNAL(),
-                signals.Z_ACCELERATION_SIGNAL()
-        );
+        BaseStatusSignal.setUpdateFrequencyForAll(50, signals.X_ACCELERATION_SIGNAL(), signals.Y_ACCELERATION_SIGNAL(), signals.Z_ACCELERATION_SIGNAL());
         signals.PITCH_SIGNAL().setUpdateFrequency(100);
         signals.YAW_SIGNAL().setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);
 

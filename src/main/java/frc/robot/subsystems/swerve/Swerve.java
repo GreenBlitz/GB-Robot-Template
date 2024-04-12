@@ -191,24 +191,17 @@ public class Swerve extends GBSubsystem {
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
-        return ChassisSpeeds.fromFieldRelativeSpeeds(getSelfRelativeVelocity(),
-                RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation()
-        );
+        return ChassisSpeeds.fromFieldRelativeSpeeds(getSelfRelativeVelocity(), RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation());
     }
 
     protected void rotateToAngle(Rotation2d targetAngle) {
-        final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(0,
-                0,
-                calculateProfiledAngleSpeedToTargetAngle(targetAngle)
-        );
+        final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(0, 0, calculateProfiledAngleSpeedToTargetAngle(targetAngle));
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
 
     private double calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
         final Rotation2d currentAngle = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation();
-        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(currentAngle.getDegrees(),
-                targetAngle.getDegrees()
-        ));
+        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(currentAngle.getDegrees(), targetAngle.getDegrees()));
     }
 
     private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
@@ -218,8 +211,7 @@ public class Swerve extends GBSubsystem {
 
     protected void pidToPose(Pose2d targetPose) {
         final Pose2d currentPose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
-        final ChassisSpeeds targetFieldRelativeSpeeds =
-                new ChassisSpeeds(SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getX(),
+        final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getX(),
                 targetPose.getX()
         ),
                 SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getY(), targetPose.getY()),
@@ -340,18 +332,12 @@ public class Swerve extends GBSubsystem {
 
     public boolean isAtXAxisPosition(double xAxisPosition) {
         final double currentXAxisVelocity = getFieldRelativeVelocity().vxMetersPerSecond;
-        return isAtTranslationPosition(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getX(),
-                xAxisPosition,
-                currentXAxisVelocity
-        );
+        return isAtTranslationPosition(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getX(), xAxisPosition, currentXAxisVelocity);
     }
 
     public boolean isAtYAxisPosition(double yAxisPosition) {
         final double currentYAxisVelocity = getFieldRelativeVelocity().vyMetersPerSecond;
-        return isAtTranslationPosition(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getY(),
-                yAxisPosition,
-                currentYAxisVelocity
-        );
+        return isAtTranslationPosition(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getY(), yAxisPosition, currentYAxisVelocity);
     }
 
     public boolean isAtAngle(Rotation2d angle) {

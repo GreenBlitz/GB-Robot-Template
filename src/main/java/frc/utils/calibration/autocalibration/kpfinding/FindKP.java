@@ -25,7 +25,8 @@ public class FindKP extends KPFindingUtil {
             Predicate<Double> isAtPose,
             Runnable doOnEnd
     ) {
-        super(subsystem,
+        super(
+                subsystem,
                 isSetControlNeedToRunPeriodic,
                 tolerance,
                 timeoutForActionSeconds,
@@ -50,10 +51,9 @@ public class FindKP extends KPFindingUtil {
             setControlPeriodic();
 
             final double currentPosition = currentValueSupplier.getAsDouble();
-            error = hasOscillated(currentPosition) ? Math.max(error, Math.abs(currentPosition - usedTargetValue)) : Math.min(
-                    error,
-                    Math.abs(currentPosition - usedTargetValue)
-            );
+            error = hasOscillated(currentPosition) ?
+                    Math.max(error, Math.abs(currentPosition - usedTargetValue)) :
+                    Math.min(error, Math.abs(currentPosition - usedTargetValue));
 
             if (isNeedToBeEnd(currentPosition)) {
                 setIsEndTrue();

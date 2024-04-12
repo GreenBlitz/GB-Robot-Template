@@ -9,13 +9,11 @@ public class SimulationModuleConfigObject {
     private final SimpleMotorSimulation steerMotor, driveMotor;
 
     public SimulationModuleConfigObject() {
-        this.steerMotor = new SimpleMotorSimulation(
-                SimulationModuleConstants.STEER_MOTOR_GEARBOX,
+        this.steerMotor = new SimpleMotorSimulation(SimulationModuleConstants.STEER_MOTOR_GEARBOX,
                 ModuleConstants.STEER_GEAR_RATIO,
                 SimulationModuleConstants.STEER_MOMENT_OF_INERTIA
         );
-        this.driveMotor = new SimpleMotorSimulation(
-                SimulationModuleConstants.DRIVE_MOTOR_GEARBOX,
+        this.driveMotor = new SimpleMotorSimulation(SimulationModuleConstants.DRIVE_MOTOR_GEARBOX,
                 ModuleConstants.DRIVE_GEAR_RATIO,
                 SimulationModuleConstants.DRIVE_MOMENT_OF_INERTIA
         );

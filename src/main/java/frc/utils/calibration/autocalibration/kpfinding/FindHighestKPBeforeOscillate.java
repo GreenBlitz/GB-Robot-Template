@@ -27,7 +27,8 @@ public class FindHighestKPBeforeOscillate extends KPFindingUtil {
             Predicate<Double> isAtPose,
             Runnable doOnEnd
     ) {
-        super(subsystem,
+        super(
+                subsystem,
                 isSetControlNeedToRunPeriodic,
                 tolerance,
                 timeoutForActionSeconds,
@@ -53,9 +54,9 @@ public class FindHighestKPBeforeOscillate extends KPFindingUtil {
             setControlPeriodic();
 
             final double currentValue = currentValueSupplier.getAsDouble();
-            error = hasOscillated(currentValue) ? Math.max(error, Math.abs(currentValue - usedTargetValue)) : Math.min(error,
-                    Math.abs(currentValue - usedTargetValue)
-            );
+            error = hasOscillated(currentValue) ?
+                    Math.max(error, Math.abs(currentValue - usedTargetValue)) :
+                    Math.min(error, Math.abs(currentValue - usedTargetValue));
 
             if (isNeedToBeEnd(currentValue)) {
                 setIsEndTrue();

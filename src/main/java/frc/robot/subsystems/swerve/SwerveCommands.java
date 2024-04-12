@@ -68,8 +68,8 @@ public class SwerveCommands {
      * @return the command
      */
     public static Command getRotateToAngleCommand(Rotation2d targetAngle) {
-        return new InstantCommand(SWERVE::resetRotationController).andThen(new RunCommand(() -> SWERVE.rotateToAngle(targetAngle))).until(
-                () -> SWERVE.isAtAngle(targetAngle));
+        return new InstantCommand(SWERVE::resetRotationController).andThen(new RunCommand(() -> SWERVE.rotateToAngle(targetAngle))).until(() -> SWERVE.isAtAngle(
+                targetAngle));
     }
 
     /**
@@ -117,16 +117,13 @@ public class SwerveCommands {
      * @return the command
      */
     private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
-        return new InstantCommand(SWERVE::resetRotationController).andThen(new RunCommand(() -> SWERVE.pidToPose(targetPose.toMirroredAlliancePose())).until(
-                () -> SWERVE.isAtPosition(targetPose.toMirroredAlliancePose())));
+        return new InstantCommand(SWERVE::resetRotationController).andThen(new RunCommand(() -> SWERVE.pidToPose(targetPose.toMirroredAlliancePose())).until(() -> SWERVE.isAtPosition(
+                targetPose.toMirroredAlliancePose())));
     }
 
     // Todo - add doc
     private static Command createOnTheFlyPathCommand(Pose2d targetPose, PathConstraints constraints) {
-        List<Translation2d> bezierPoints =
-                PathPlannerPath.bezierFromPoses(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose(),
-                targetPose
-        );
+        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose(), targetPose);
 
         PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
 

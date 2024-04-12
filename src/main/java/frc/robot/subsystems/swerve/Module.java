@@ -52,7 +52,7 @@ public class Module {
     }
 
     public SwerveModulePosition getCurrentPosition() {
-        return new SwerveModulePosition(moduleInputs.driveDistanceMeters, Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees));
+        return new SwerveModulePosition(moduleInputs.driveDistanceMeters, getCurrentAngle());
     }
 
     public SwerveModuleState getTargetState() {

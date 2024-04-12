@@ -65,36 +65,13 @@ public class Swerve extends GBSubsystem {
         }
         odometryLock.unlock();
 
-        updatePoseEstimatorStates();
         updateNetworkTables();
-    }
-
-    private void updatePoseEstimatorStates() {
-        final int odometryUpdates = swerveInputs.odometryUpdatesYawDegrees.length;
-        final SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[odometryUpdates];
-        final Rotation2d[] gyroRotations = new Rotation2d[odometryUpdates];
-
-        for (int i = 0; i < odometryUpdates; i++) {
-            swerveWheelPositions[i] = getSwerveWheelPositions(i);
-            gyroRotations[i] = Rotation2d.fromDegrees(swerveInputs.odometryUpdatesYawDegrees[i]);
-        }
-
-        //        RobotContainer.POSE_ESTIMATOR.updatePoseEstimatorStates(swerveWheelPositions, gyroRotations,
-        // swerveInputs.odometryUpdatesTimestamp);
     }
 
     private void updateNetworkTables() {
         Logger.recordOutput("Swerve/Velocity/Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);
         Logger.recordOutput("Swerve/Velocity/X", getSelfRelativeVelocity().vxMetersPerSecond);
         Logger.recordOutput("Swerve/Velocity/Y", getSelfRelativeVelocity().vyMetersPerSecond);
-    }
-
-    private SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
-        final SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
-        for (int i = 0; i < modules.length; i++) {
-            swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
-        }
-        return new SwerveDriveWheelPositions(swerveModulePositions);
     }
 
     public ChassisSpeeds getSelfRelativeVelocity() {

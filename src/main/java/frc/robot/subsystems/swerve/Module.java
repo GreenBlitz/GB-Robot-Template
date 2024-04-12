@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.swerve.swerveinterface.*;
 import org.littletonrobotics.junction.Logger;
 
@@ -83,18 +83,4 @@ public class Module {
         driveMotorClosedLoop = closedLoop;
     }
 
-    /**
-     * The odometry thread can update itself faster than the main code loop (which is 50 hertz).
-     * Instead of using the latest odometry update, the accumulated odometry positions since the last loop to get a more
-     * accurate position.
-     *
-     * @param odometryUpdateIndex the index of the odometry update
-     * @return the position of the module at the given odometry update index
-     */
-    public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
-        return new SwerveModulePosition(
-                moduleInputs.odometryUpdatesDriveDistanceMeters[odometryUpdateIndex],
-                Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex])
-        );
-    }
 }

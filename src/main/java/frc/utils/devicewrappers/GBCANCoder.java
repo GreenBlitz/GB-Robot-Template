@@ -61,4 +61,5 @@ public class GBCANCoder extends CANcoder {
     public void refreshSignals(StatusSignal... statusSignals) {
         BaseStatusSignal.refreshAll(statusSignals);
     }
+
 }

@@ -18,6 +18,7 @@ import frc.robot.subsystems.ExampleSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     /**
@@ -52,4 +53,5 @@ public class RobotContainer {
         // An example command will be run in autonomous
         return Autos.exampleAuto(m_exampleSubsystem);
     }
+
 }

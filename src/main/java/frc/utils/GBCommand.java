@@ -66,4 +66,5 @@ public abstract class GBCommand extends Command {
     public Set<Subsystem> getRequirements() {
         return subsystems;
     }
+
 }

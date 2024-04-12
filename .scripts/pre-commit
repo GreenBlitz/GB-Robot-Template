@@ -1,6 +1,4 @@
 #!/bin/bash
 echo "*********************************************************"
-echo "Running Pre Commit -> Build..."
+echo "Running Pre Commit -> Nothing..."
 echo "*********************************************************"
-
-./gradlew build

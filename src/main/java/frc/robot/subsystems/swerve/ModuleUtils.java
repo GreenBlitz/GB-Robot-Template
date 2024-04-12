@@ -5,13 +5,6 @@ import frc.utils.Conversions;
 
 public class ModuleUtils {
 
-    public enum ModuleName {
-        FRONT_LEFT,
-        FRONT_RIGHT,
-        BACK_LEFT,
-        BACK_RIGHT;
-    }
-
     public static String getLoggingPath(ModuleName moduleName) {
         return "Swerve/" + moduleName + "/";
     }
@@ -26,11 +19,15 @@ public class ModuleUtils {
             double steerVelocityRevolutionsPerSecond,
             double couplingRatio,
             double maxSpeedRevolutionsPerSecond,
-            double voltageCompensationSaturation) {
-        final double velocityRevolutionsPerSecond =
-                Conversions.distanceToRevolutions(velocityMetersPerSecond, wheelDiameterMeters);
-        final double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
-                velocityRevolutionsPerSecond, Rotation2d.fromDegrees(steerVelocityRevolutionsPerSecond), couplingRatio);
+            double voltageCompensationSaturation
+    ) {
+        final double velocityRevolutionsPerSecond = Conversions.distanceToRevolutions(velocityMetersPerSecond,
+                wheelDiameterMeters
+        );
+        final double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(velocityRevolutionsPerSecond,
+                Rotation2d.fromDegrees(steerVelocityRevolutionsPerSecond),
+                couplingRatio
+        );
         final double power = optimizedVelocityRevolutionsPerSecond / maxSpeedRevolutionsPerSecond;
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
@@ -44,7 +41,8 @@ public class ModuleUtils {
      * @return the distance without the coupling
      */
     public static double removeCouplingFromRevolutions(
-            double drivePosition, Rotation2d moduleAngle, double couplingRatio) {
+            double drivePosition, Rotation2d moduleAngle, double couplingRatio
+    ) {
         final double coupledAngle = moduleAngle.getRotations() * couplingRatio;
         return drivePosition - coupledAngle;
     }
@@ -58,9 +56,17 @@ public class ModuleUtils {
      * @return the reduced target velocity in revolutions per second
      */
     public static double reduceSkew(
-            double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentAngle) {
+            double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentAngle
+    ) {
         final double closedLoopError = targetSteerAngle.getRadians() - currentAngle.getRadians();
         final double cosineScalar = Math.abs(Math.cos(closedLoopError));
         return targetVelocityMetersPerSecond * cosineScalar;
+    }
+
+    public enum ModuleName {
+        FRONT_LEFT,
+        FRONT_RIGHT,
+        BACK_LEFT,
+        BACK_RIGHT
     }
 }

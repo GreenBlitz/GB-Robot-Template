@@ -170,8 +170,7 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void rotateToAngle(Rotation2d targetAngle) {
-        final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
-                0,
+        final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(0,
                 0,
                 calculateProfiledAngleSpeedToTargetAngle(targetAngle)
         );
@@ -180,8 +179,7 @@ public class Swerve extends GBSubsystem {
 
     private double calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
         final Rotation2d currentAngle = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation();
-        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(
-                currentAngle.getDegrees(),
+        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(currentAngle.getDegrees(),
                 targetAngle.getDegrees()
         ));
     }

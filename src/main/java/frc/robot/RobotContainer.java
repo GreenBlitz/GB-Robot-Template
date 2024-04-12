@@ -5,12 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.poseestimation.IPoseEstimator;
-import frc.robot.poseestimation.PoseEstimatorFactory;
+import edu.wpi.first.wpilibj2.command.button.*;
+import frc.robot.commands.*;
+import frc.robot.poseestimation.*;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -21,9 +18,9 @@ import frc.robot.subsystems.swerve.Swerve;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
     public static final Swerve SWERVE = new Swerve();
     public static final IPoseEstimator POSE_ESTIMATOR = PoseEstimatorFactory.createPoseEstimator();
+    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

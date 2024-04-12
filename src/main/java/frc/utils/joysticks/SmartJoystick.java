@@ -1,10 +1,8 @@
 package frc.utils.joysticks;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj2.command.button.*;
 
 public class SmartJoystick {
 
@@ -27,19 +25,6 @@ public class SmartJoystick {
      */
     public SmartJoystick(int joystick_port, double deadzone) {
         this(new Joystick(joystick_port), deadzone);
-    }
-
-    /**
-     * This constructor constructs the joystick based on the joystick port we give it.
-     *
-     * @param joystick_port The port of the joystick.
-     */
-    public SmartJoystick(int joystick_port) {
-        this(new Joystick(joystick_port));
-    }
-
-    public SmartJoystick(Joystick stick) {
-        this(stick, DEADZONE);
     }
 
     /**
@@ -69,22 +54,17 @@ public class SmartJoystick {
         POV_LEFT = new POVButton(joystick, 270);
     }
 
-    private double deadzone(double power) {
-        if (Math.abs(power) < deadzone) return 0;
-        return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
-    }
-
-    private boolean isStickAxis(Axis axis) {
-        return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
-    }
-
     /**
-     * This function binds a joystick using a joystick object.
+     * This constructor constructs the joystick based on the joystick port we give it.
      *
-     * @param stick This stick object which we bind the joystick to.
+     * @param joystick_port The port of the joystick.
      */
-    public void bind(Joystick stick) {
-        joystick = stick;
+    public SmartJoystick(int joystick_port) {
+        this(new Joystick(joystick_port));
+    }
+
+    public SmartJoystick(Joystick stick) {
+        this(stick, DEADZONE);
     }
 
     /**
@@ -97,13 +77,24 @@ public class SmartJoystick {
     }
 
     /**
+     * This function binds a joystick using a joystick object.
+     *
+     * @param stick This stick object which we bind the joystick to.
+     */
+    public void bind(Joystick stick) {
+        joystick = stick;
+    }
+
+    /**
      * This function returns the axis based on an axis number.
      *
      * @param raw_axis The axis number we want to return.
      * @return A joystick axis based off of the joystick axis number.
      */
     public double getRawAxis(int raw_axis) {
-        if (joystick == null) return 0;
+        if (joystick == null) {
+            return 0;
+        }
         return joystick.getRawAxis(raw_axis);
     }
 
@@ -113,31 +104,38 @@ public class SmartJoystick {
      * @param axis The axis we want to use.
      * @return stick value if stick was square.
      * <p>
-     *
      * @author Yoav Herman
      * if @ marks the 1 point of each axis:
-     *<p>
-     *           Before:                                    After:
-     *             (1,0)
-     *         *****@*******      @ (1,1)                *************
-     *     *****           *****                    *****    (1,0)     *****
-     *  ***                   ***                ***  -------@-------@   ***
-     *  **                       **              **   |          (1,1)|    **
+     * <p>
+     * Before:                                    After:
+     * (1,0)
+     * *****@*******      @ (1,1)                *************
+     * *****           *****                    *****    (1,0)     *****
+     * ***                   ***                ***  -------@-------@   ***
+     * **                       **              **   |          (1,1)|    **
      * **                         **            **    |               |     **
      * **                         *@ (0,1)      **    |          (0,1)@     **
      * **                         **            **    |               |     **
      * **                         **            **    |               |     **
-     *  **                       **              **   |_______________|    **
-     *   ***                   ***                ***                    ***
-     *     *****           *****                    *****            *****
-     *         *************                            *************
-     *</p>
+     * **                       **              **   |_______________|    **
+     * ***                   ***                ***                    ***
+     * *****           *****                    *****            *****
+     * *************                            *************
+     * </p>
      */
     public double getSquaredAxis(Axis axis) {
-        if (joystick == null) return 0;
-        if (!isStickAxis(axis)) return axis.getValue(this);
+        if (joystick == null) {
+            return 0;
+        }
+        if (!isStickAxis(axis)) {
+            return axis.getValue(this);
+        }
         final double squaredAxisValue = axis.getValue(this) * JOYSTICK_AXIS_TO_SQUARE_FACTOR;
         return MathUtil.clamp(squaredAxisValue, -1, 1);
+    }
+
+    private boolean isStickAxis(Axis axis) {
+        return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
     }
 
     /**
@@ -151,6 +149,13 @@ public class SmartJoystick {
 
     public double getAxisValue(Axis axis) {
         return isStickAxis(axis) ? deadzone(axis.getValue(this)) : axis.getValue(this);
+    }
+
+    private double deadzone(double power) {
+        if (Math.abs(power) < deadzone) {
+            return 0;
+        }
+        return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
     }
 
     /**

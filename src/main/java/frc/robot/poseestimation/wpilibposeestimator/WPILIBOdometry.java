@@ -17,13 +17,13 @@ public class WPILIBOdometry implements IPoseEstimator {
                 SwerveConstants.KINEMATICS,
                 RobotContainer.SWERVE.getHeading(),
                 RobotContainer.SWERVE.getModulePositionsForWpilibPoseEstimator(),
-                WPILIBOdometryConstants.DEFAULT_STARTING_POSE.toBlueAlliancePose());
+                WPILIBOdometryConstants.DEFAULT_STARTING_POSE.toBlueAlliancePose()
+        );
     }
 
     @Override
     public void update() {
-        odometry.update(
-                RobotContainer.SWERVE.getHeading(), RobotContainer.SWERVE.getModulePositionsForWpilibPoseEstimator());
+        odometry.update(RobotContainer.SWERVE.getHeading(), RobotContainer.SWERVE.getModulePositionsForWpilibPoseEstimator());
         logPose();
     }
 
@@ -42,7 +42,8 @@ public class WPILIBOdometry implements IPoseEstimator {
         odometry.resetPosition(
                 RobotContainer.SWERVE.getHeading(),
                 RobotContainer.SWERVE.getModulePositionsForWpilibPoseEstimator(),
-                alliancePose2d.toBlueAlliancePose());
+                alliancePose2d.toBlueAlliancePose()
+        );
     }
 
     @Override

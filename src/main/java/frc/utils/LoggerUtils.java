@@ -1,19 +1,17 @@
 package frc.utils;
 
-import frc.robot.constants.RobotConstants;
-import frc.robot.constants.SimulationConstants;
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.Logger;
+import frc.robot.constants.*;
+import org.littletonrobotics.junction.*;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.littletonrobotics.junction.wpilog.*;
 
 public class LoggerUtils {
 
     public static void startRealLogger() {
         try {
             LoggerUtils.startLoggerOnUSB();
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             Logger.end();
             LoggerUtils.startLoggerOnRoborio();
         }

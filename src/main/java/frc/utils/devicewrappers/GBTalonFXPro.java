@@ -1,7 +1,6 @@
 package frc.utils.devicewrappers;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.*;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.constants.Phoenix6Constants;
@@ -21,16 +20,6 @@ public class GBTalonFXPro extends TalonFX {
     }
 
     /**
-     * Speeding up the gotten signals
-     *
-     * @param signalFrequency -> Speed of signals in hertz
-     * @param statusSignals -> Signals to speed up
-     */
-    public void updateFrequency(double signalFrequency, StatusSignal... statusSignals) {
-        BaseStatusSignal.setUpdateFrequencyForAll(signalFrequency, statusSignals);
-    }
-
-    /**
      * Speeding up the gotten signals and delete the other signals from bus
      */
     public void optimizeBusAndSignals(double signalFrequency, StatusSignal... statusSignals) {
@@ -39,11 +28,20 @@ public class GBTalonFXPro extends TalonFX {
     }
 
     /**
-     * Performs a non-blocking refresh on all provided signals.
-     * IMPORTANT: Must happen before getting signals
+     * Speeding up the gotten signals
+     *
+     * @param signalFrequency -> Speed of signals in hertz
+     * @param statusSignals   -> Signals to speed up
      */
-    public void refreshSignals(StatusSignal... statusSignals) {
-        BaseStatusSignal.refreshAll(statusSignals);
+    public void updateFrequency(double signalFrequency, StatusSignal... statusSignals) {
+        BaseStatusSignal.setUpdateFrequencyForAll(signalFrequency, statusSignals);
+    }
+
+    /**
+     * Performs latency compensation on position
+     */
+    public double getLatencyCompensatedPosition() {
+        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
     }
 
     /**
@@ -56,10 +54,11 @@ public class GBTalonFXPro extends TalonFX {
     }
 
     /**
-     * Performs latency compensation on position
+     * Performs a non-blocking refresh on all provided signals.
+     * IMPORTANT: Must happen before getting signals
      */
-    public double getLatencyCompensatedPosition() {
-        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
+    public void refreshSignals(StatusSignal... statusSignals) {
+        BaseStatusSignal.refreshAll(statusSignals);
     }
 
     /**

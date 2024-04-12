@@ -1,7 +1,6 @@
 package frc.utils.devicewrappers;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.*;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.constants.Phoenix6Constants;
@@ -21,6 +20,14 @@ public class GBCANCoder extends CANcoder {
     }
 
     /**
+     * Speeding up the gotten signals and delete the other signals from bus
+     */
+    public void optimizeBusAndSignals(double signalFrequency, StatusSignal... statusSignals) {
+        updateFrequency(signalFrequency, statusSignals);
+        optimizeBusUtilization();
+    }
+
+    /**
      * Speeding up the gotten signals
      *
      * @param signalFrequency -> Speed of signals in hertz
@@ -31,19 +38,10 @@ public class GBCANCoder extends CANcoder {
     }
 
     /**
-     * Speeding up the gotten signals and delete the other signals from bus
+     * Performs latency compensation on position
      */
-    public void optimizeBusAndSignals(double signalFrequency, StatusSignal... statusSignals) {
-        updateFrequency(signalFrequency, statusSignals);
-        optimizeBusUtilization();
-    }
-
-    /**
-     * Performs a non-blocking refresh on all provided signals.
-     * IMPORTANT: Must happen before getting signals
-     */
-    public void refreshSignals(StatusSignal... statusSignals) {
-        BaseStatusSignal.refreshAll(statusSignals);
+    public double getLatencyCompensatedPosition() {
+        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
     }
 
     /**
@@ -56,9 +54,10 @@ public class GBCANCoder extends CANcoder {
     }
 
     /**
-     * Performs latency compensation on position
+     * Performs a non-blocking refresh on all provided signals.
+     * IMPORTANT: Must happen before getting signals
      */
-    public double getLatencyCompensatedPosition() {
-        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
+    public void refreshSignals(StatusSignal... statusSignals) {
+        BaseStatusSignal.refreshAll(statusSignals);
     }
 }

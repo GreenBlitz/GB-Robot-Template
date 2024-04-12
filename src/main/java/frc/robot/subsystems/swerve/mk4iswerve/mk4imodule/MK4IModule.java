@@ -8,14 +8,14 @@ import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 
 public class MK4IModule implements IModule {
 
-    private final MK4IModuleStatus mk4IModuleData;
+    private final MK4IModuleStatus mk4IModuleStatus;
 
     private final MK4IModuleActions mk4IModuleActions;
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
 
-        this.mk4IModuleData = new MK4IModuleStatus(moduleConfigObject.getModuleSignals());
+        this.mk4IModuleStatus = new MK4IModuleStatus(moduleConfigObject.getModuleSignals());
         this.mk4IModuleActions = new MK4IModuleActions(moduleConfigObject.getMotors());
     }
 
@@ -32,7 +32,7 @@ public class MK4IModule implements IModule {
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         final double voltage = ModuleUtils.velocityToOpenLoopVoltage(targetVelocityMetersPerSecond,
                 ModuleConstants.WHEEL_DIAMETER_METERS,
-                mk4IModuleData.getSteerMotorVelocity().getRotations(),
+                mk4IModuleStatus.getSteerMotorVelocity().getRotations(),
                 MK4IModuleConstants.COUPLING_RATIO,
                 ModuleConstants.MAX_SPEED_REVOLUTIONS_PER_SECOND,
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
@@ -44,7 +44,7 @@ public class MK4IModule implements IModule {
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
         final double optimizedVelocityRevolutionsPerSecond =
                 ModuleUtils.removeCouplingFromRevolutions(targetVelocityMetersPerSecond,
-                mk4IModuleData.getSteerMotorVelocity(),
+                mk4IModuleStatus.getSteerMotorVelocity(),
                 MK4IModuleConstants.COUPLING_RATIO
         );
         mk4IModuleActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
@@ -57,7 +57,7 @@ public class MK4IModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        mk4IModuleActions.resetSteerAngle(mk4IModuleData.getEncoderAbsolutePosition());
+        mk4IModuleActions.resetSteerAngle(mk4IModuleStatus.getEncoderAbsolutePosition());
     }
 
     @Override
@@ -72,18 +72,18 @@ public class MK4IModule implements IModule {
 
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
-        inputs.steerEncoderAngleDegrees = mk4IModuleData.getEncoderAbsolutePosition().getDegrees();
-        inputs.steerEncoderVelocity = mk4IModuleData.getSteerEncoderVelocitySignal().getValue();
-        inputs.steerEncoderVoltage = mk4IModuleData.getSteerEncoderVoltageSignal().getValue();
+        inputs.steerEncoderAngleDegrees = mk4IModuleStatus.getEncoderAbsolutePosition().getDegrees();
+        inputs.steerEncoderVelocity = mk4IModuleStatus.getSteerEncoderVelocitySignal().getValue();
+        inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal().getValue();
 
-        inputs.steerAngleDegrees = mk4IModuleData.getSteerMotorPosition().getDegrees();
-        inputs.steerVoltage = mk4IModuleData.getSteerVoltageSignal().getValue();
-        inputs.steerVelocity = mk4IModuleData.getSteerMotorVelocity().getRotations();
+        inputs.steerAngleDegrees = mk4IModuleStatus.getSteerMotorPosition().getDegrees();
+        inputs.steerVoltage = mk4IModuleStatus.getSteerVoltageSignal().getValue();
+        inputs.steerVelocity = mk4IModuleStatus.getSteerMotorVelocity().getRotations();
 
-        inputs.driveDistanceMeters = mk4IModuleData.getDriveMotorPositionInMeters();
-        inputs.driveVelocityMetersPerSecond = mk4IModuleData.getDriveMotorVelocityInMeters();
-        inputs.driveCurrent = mk4IModuleData.getDriveStatorCurrentSignal().getValue();
-        inputs.driveVoltage = mk4IModuleData.getDriveVoltageSignal().getValue();
+        inputs.driveDistanceMeters = mk4IModuleStatus.getDriveMotorPositionInMeters();
+        inputs.driveVelocityMetersPerSecond = mk4IModuleStatus.getDriveMotorVelocityInMeters();
+        inputs.driveCurrent = mk4IModuleStatus.getDriveStatorCurrentSignal().getValue();
+        inputs.driveVoltage = mk4IModuleStatus.getDriveVoltageSignal().getValue();
     }
 
 }

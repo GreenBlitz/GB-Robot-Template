@@ -1,4 +1,4 @@
 #!/bin/bash
 echo "*********************************************************"
-echo "Todo -> ADD FORMAT BY INTELLIJ"
+echo "Running Pre Commit -> Nothing..."
 echo "*********************************************************"

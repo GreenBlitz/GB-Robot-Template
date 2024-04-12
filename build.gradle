@@ -87,7 +87,7 @@ tasks.register('autoCommit') {
         boolean isDeployOrSimulate = false
         for (String taskName : tasksToCommit) {
             isDeployOrSimulate = taskNames.any({ it.toLowerCase().contains(taskName) })
-            if(isDeployOrSimulate) {
+            if (isDeployOrSimulate) {
                 break
             }
         }
@@ -100,7 +100,7 @@ tasks.register('autoCommit') {
         boolean isBranchToAutoCommit = false;
         for (String branchPrefix : branchPrefixesToCommit) {
             isBranchToAutoCommit = branch.startsWith(branchPrefix)
-            if(isBranchToAutoCommit) {
+            if (isBranchToAutoCommit) {
                 break
             }
         }
@@ -207,17 +207,3 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-// Spotless formatting
-project.compileJava.dependsOn(spotlessApply)
-spotless {
-    java {
-        target fileTree(".") {
-            include "src/main/java/frc/**/*.java"
-            exclude "**/build/**", "**/build-*/**"
-        }
-        toggleOffOn()
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        palantirJavaFormat()
-    }
-}

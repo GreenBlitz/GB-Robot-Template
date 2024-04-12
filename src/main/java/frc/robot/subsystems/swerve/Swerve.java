@@ -2,17 +2,29 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotContainer;
-import frc.robot.constants.*;
-import frc.robot.subsystems.swerve.swerveinterface.*;
-import frc.utils.*;
-import frc.utils.allianceutils.*;
-import org.littletonrobotics.junction.*;
+import frc.robot.constants.MathConstants;
+import frc.robot.constants.SimulationConstants;
+import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
+import frc.robot.subsystems.swerve.swerveinterface.SwerveFactory;
+import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
+import frc.utils.DriverStationUtils;
+import frc.utils.GBSubsystem;
+import frc.utils.allianceutils.AlliancePose2d;
+import frc.utils.allianceutils.AllianceUtils;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
-import java.util.concurrent.locks.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Swerve extends GBSubsystem {
 

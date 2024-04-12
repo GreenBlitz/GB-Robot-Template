@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
-import com.ctre.phoenix6.*;
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleUtils;
 

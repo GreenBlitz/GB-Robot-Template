@@ -5,9 +5,11 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import frc.robot.constants.*;
+import frc.robot.constants.RobotConstants;
+import frc.robot.constants.SimulationConstants;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A wrapper class for the WPILib default simulation classes, that'll act similarly to how the TalonFX motor controller works.

@@ -1,9 +1,10 @@
 package frc.utils.allianceutils;
 
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.FieldConstants;
 
-import static frc.utils.DriverStationUtils.*;
+import static frc.utils.DriverStationUtils.isBlueAlliance;
 
 public class AllianceUtils {
 

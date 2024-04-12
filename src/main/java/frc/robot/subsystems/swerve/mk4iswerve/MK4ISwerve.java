@@ -2,7 +2,8 @@ package frc.robot.subsystems.swerve.mk4iswerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.gyro.gyropigeon2.GyroPigeon2;
-import frc.robot.subsystems.swerve.swerveinterface.*;
+import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
+import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
 
 public class MK4ISwerve implements ISwerve {
 

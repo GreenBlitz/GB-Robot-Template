@@ -2,7 +2,8 @@ package frc.robot.subsystems.swerve.gyro.gyropigeon2;
 
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.*;
+import frc.robot.constants.Phoenix6Constants;
+import frc.robot.constants.Ports;
 
 public class GyroPigeon2 {
 

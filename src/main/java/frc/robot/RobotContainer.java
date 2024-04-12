@@ -5,9 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.*;
-import frc.robot.commands.*;
-import frc.robot.poseestimation.*;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.poseestimation.IPoseEstimator;
+import frc.robot.poseestimation.PoseEstimatorFactory;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 

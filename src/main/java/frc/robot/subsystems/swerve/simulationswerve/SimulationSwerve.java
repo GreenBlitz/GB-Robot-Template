@@ -4,7 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotContainer;
 import frc.robot.constants.SimulationConstants;
 import frc.robot.subsystems.swerve.gyro.GyroSimulation;
-import frc.robot.subsystems.swerve.swerveinterface.*;
+import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
+import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
 
 public class SimulationSwerve implements ISwerve {
     private final GyroSimulation gyro = new GyroSimulation();

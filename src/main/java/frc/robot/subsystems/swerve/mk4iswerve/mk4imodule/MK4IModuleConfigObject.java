@@ -10,8 +10,11 @@ import frc.utils.devicewrappers.GBTalonFXPro;
 class MK4IModuleConfigObject {
 
     private final MK4IModuleRecords.MK4IModuleMotors moduleMotors;
+
     private final GBTalonFXPro steerMotor, driveMotor;
+
     private final CANcoder steerEncoder;
+
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
     protected MK4IModuleConfigObject(
@@ -119,4 +122,5 @@ class MK4IModuleConfigObject {
     public MK4IModuleRecords.MK4IModuleSignals getModuleSignals() {
         return moduleSignals;
     }
+
 }

@@ -14,4 +14,5 @@ public interface IPoseEstimator {
     void resetPose(AlliancePose2d alliancePose2d);
 
     AlliancePose2d getCurrentPose();
+
 }

@@ -40,4 +40,5 @@ public class SimulationModuleStatus {
     public double getDrivePositionInMeters() {
         return ModuleUtils.toDriveDistance(driveMotor.getPositionRevolutions());
     }
+
 }

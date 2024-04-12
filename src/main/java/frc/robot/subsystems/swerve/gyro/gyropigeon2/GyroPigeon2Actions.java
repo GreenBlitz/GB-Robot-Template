@@ -14,4 +14,5 @@ class GyroPigeon2Actions {
     public void setYaw(Rotation2d angle) {
         pigeon2.setYaw(angle.getDegrees());
     }
+
 }

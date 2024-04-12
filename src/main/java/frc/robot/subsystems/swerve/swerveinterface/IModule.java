@@ -17,4 +17,5 @@ public interface IModule {
     void setBrake(boolean brake);
 
     void updateInputs(ModuleInputsAutoLogged inputs);
+
 }

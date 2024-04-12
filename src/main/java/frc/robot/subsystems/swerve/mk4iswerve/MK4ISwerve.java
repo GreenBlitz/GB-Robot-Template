@@ -26,4 +26,5 @@ public class MK4ISwerve implements ISwerve {
         inputs.accelerationY = pigeon2Gyro.getY_ACCELERATION_SIGNAL().getValue();
         inputs.accelerationZ = pigeon2Gyro.getZ_ACCELERATION_SIGNAL().getValue();
     }
+
 }

@@ -15,4 +15,5 @@ class MK4IModuleRecords {
             StatusSignal<Double> steerPositionSignal, StatusSignal<Double> steerVelocitySignal,
             StatusSignal<Double> steerAccelerationSignal, StatusSignal<Double> steerVoltageSignal
     ) {}
+
 }

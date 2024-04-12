@@ -7,6 +7,7 @@ import frc.robot.poseestimation.PoseEstimatorConstants;
 class GyroPigeon2ConfigObject {
 
     private final Pigeon2 gyro;
+
     private final GyroPigeon2Records.GyroPigeon2Signals signals;
 
     protected GyroPigeon2ConfigObject(int id, String busChain) {
@@ -44,4 +45,5 @@ class GyroPigeon2ConfigObject {
     protected GyroPigeon2Records.GyroPigeon2Signals getSignals() {
         return signals;
     }
+
 }

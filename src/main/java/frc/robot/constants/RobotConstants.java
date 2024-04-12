@@ -4,6 +4,9 @@ import frc.utils.RobotTypeUtils;
 import frc.utils.RobotTypeUtils.RobotType;
 
 public class RobotConstants {
+
     public static final RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotType.REAL);
+
     public static final double BATTERY_VOLTAGE = 12;
+
 }

@@ -56,4 +56,5 @@ public class LoggerUtils {
         SignalLogger.setPath(path);
         Logger.addDataReceiver(new WPILOGWriter(path));
     }
+
 }

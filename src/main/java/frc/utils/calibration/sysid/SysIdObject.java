@@ -18,7 +18,9 @@ import static edu.wpi.first.units.Units.Volts;
 public class SysIdObject {
 
     private final SysIdRoutine sysIdRoutine;
+
     private final GBSubsystem usedSubSystem;
+
     private final boolean isCTRE;
 
     public SysIdObject(
@@ -107,4 +109,5 @@ public class SysIdObject {
                 new InstantCommand(SignalLogger::stop)
         ).handleInterrupt(SignalLogger::stop);
     }
+
 }

@@ -17,8 +17,11 @@ import java.util.List;
 public abstract class MotorSimulation {
 
     private static final List<MotorSimulation> REGISTERED_SIMULATIONS = new ArrayList<>();
+
     private final TalonFX motor;
+
     private final TalonFXSimState motorSimState;
+
     private final StatusSignal<Double> closedLoopReferenceSignal;
 
     protected MotorSimulation() {
@@ -72,4 +75,5 @@ public abstract class MotorSimulation {
     }
 
     public abstract double getCurrent();
+
 }

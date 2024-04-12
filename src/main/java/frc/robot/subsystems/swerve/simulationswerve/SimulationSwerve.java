@@ -8,6 +8,7 @@ import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
 
 public class SimulationSwerve implements ISwerve {
+
     private final GyroSimulation gyro = new GyroSimulation();
 
     @Override
@@ -20,4 +21,5 @@ public class SimulationSwerve implements ISwerve {
         gyro.update(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond, SimulationConstants.TIME_STEP);
         inputs.gyroYawDegrees = gyro.getGyroYaw().getDegrees();
     }
+
 }

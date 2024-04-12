@@ -29,4 +29,5 @@ class GyroPigeon2Status {
     public StatusSignal<Double> getZ_ACCELERATION_SIGNAL() {
         return gyroPigeon2Signals.Z_ACCELERATION_SIGNAL().refresh();
     }
+
 }

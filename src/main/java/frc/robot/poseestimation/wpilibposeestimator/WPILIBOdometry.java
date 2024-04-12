@@ -50,4 +50,5 @@ public class WPILIBOdometry implements IPoseEstimator {
     public AlliancePose2d getCurrentPose() {
         return AlliancePose2d.fromBlueAlliancePose(odometry.getPoseMeters());
     }
+
 }

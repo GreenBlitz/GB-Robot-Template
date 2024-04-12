@@ -45,4 +45,5 @@ class GyroPigeon2ConfigObject {
     protected GyroPigeon2Records.GyroPigeon2Signals getSignals() {
         return signals;
     }
+
 }

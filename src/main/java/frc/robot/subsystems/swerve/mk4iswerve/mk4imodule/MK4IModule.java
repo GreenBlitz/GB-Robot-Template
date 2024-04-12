@@ -9,6 +9,7 @@ import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 public class MK4IModule implements IModule {
 
     private final MK4IModuleStatus mk4IModuleData;
+
     private final MK4IModuleActions mk4IModuleActions;
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
@@ -83,4 +84,5 @@ public class MK4IModule implements IModule {
         inputs.driveCurrent = mk4IModuleData.getDriveStatorCurrentSignal().getValue();
         inputs.driveVoltage = mk4IModuleData.getDriveVoltageSignal().getValue();
     }
+
 }

@@ -20,4 +20,5 @@ public final class Autos {
     public static Command exampleAuto(ExampleSubsystem subsystem) {
         return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
     }
+
 }

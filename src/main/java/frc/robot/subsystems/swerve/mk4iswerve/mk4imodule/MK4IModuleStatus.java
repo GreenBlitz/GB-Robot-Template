@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleUtils;
 
 class MK4IModuleStatus {
+
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
     public MK4IModuleStatus(MK4IModuleRecords.MK4IModuleSignals moduleSignals) {
@@ -95,4 +96,5 @@ class MK4IModuleStatus {
     public StatusSignal<Double> getSteerVoltageSignal() {
         return moduleSignals.steerVoltageSignal().refresh();
     }
+
 }

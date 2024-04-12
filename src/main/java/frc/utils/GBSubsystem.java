@@ -15,4 +15,5 @@ public abstract class GBSubsystem extends SubsystemBase {
             Logger.recordOutput("subsystems/" + getClass().getName(), "no command is currently running on the subsystem");
         }
     }
+
 }

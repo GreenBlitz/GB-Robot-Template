@@ -8,6 +8,7 @@ import frc.robot.constants.Ports;
 public class GyroPigeon2 {
 
     private final GyroPigeon2Status gyroPigeon2Data;
+
     private final GyroPigeon2Actions gyroPigeon2Actions;
 
     public GyroPigeon2() {
@@ -41,4 +42,5 @@ public class GyroPigeon2 {
     public StatusSignal<Double> getZ_ACCELERATION_SIGNAL() {
         return gyroPigeon2Data.getZ_ACCELERATION_SIGNAL();
     }
+
 }

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.Conversions;
 
 public class ModuleUtils {
-    
+
     public static String getLoggingPath(ModuleName moduleName) {
         return "Swerve/" + moduleName + "/";
     }

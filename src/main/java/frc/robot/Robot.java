@@ -23,6 +23,7 @@ import org.littletonrobotics.junction.LoggedRobot;
 public class Robot extends LoggedRobot {
 
     private Command autonomousCommand;
+
     private RobotContainer robotContainer;
 
     @Override

@@ -10,7 +10,9 @@ import java.util.Queue;
 public class MK4IModule implements IModule {
 
     private final MK4IModuleData mk4IModuleData;
+
     private final MK4IModuleActions mk4IModuleActions;
+
     private Queue<Double> steerPositionQueue, drivePositionQueue;
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {

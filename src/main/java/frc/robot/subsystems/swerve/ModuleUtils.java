@@ -10,7 +10,7 @@ public class ModuleUtils {
         FRONT_LEFT,
         FRONT_RIGHT,
         BACK_LEFT,
-        BACK_RIGHT;
+        BACK_RIGHT
     }
 
     public static String getLoggingPath(ModuleName moduleName) {

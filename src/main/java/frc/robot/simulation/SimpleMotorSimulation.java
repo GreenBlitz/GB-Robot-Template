@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.constants.SimulationConstants;
 
 public class SimpleMotorSimulation extends MotorSimulation {
+
     private final DCMotorSim motorSimulation;
 
     public SimpleMotorSimulation(DCMotor gearbox, double gearRatio, double momentOfInertia) {

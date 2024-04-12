@@ -11,7 +11,9 @@ import frc.utils.devicewrappers.GBTalonFXPro;
 public class MK4IModuleConfigObject {
 
     private final GBTalonFXPro driveMotor, steerMotor;
+
     private final CANcoder steerEncoder;
+
     protected StatusSignal<Double> steerEncoderAbsolutePositionSignal,
             steerEncoderVelocitySignal,
             steerEncoderVoltageSignal;

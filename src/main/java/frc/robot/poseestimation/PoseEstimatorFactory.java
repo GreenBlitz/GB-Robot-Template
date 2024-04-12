@@ -8,7 +8,7 @@ public class PoseEstimatorFactory {
     public enum PoseEstimatorType {
         WPILIB_ODOMETRY,
         WPILIB_POSE_ESTIMATOR,
-        POSE_ESTIMATOR_6328;
+        POSE_ESTIMATOR_6328
     }
 
     public static IPoseEstimator createPoseEstimator() {

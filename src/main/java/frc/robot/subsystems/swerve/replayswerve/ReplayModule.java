@@ -5,6 +5,7 @@ import frc.robot.subsystems.swerve.swerveinterface.IModule;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 
 public class ReplayModule implements IModule {
+
     @Override
     public void setTargetOpenLoopVelocity(double voltage) {}
 

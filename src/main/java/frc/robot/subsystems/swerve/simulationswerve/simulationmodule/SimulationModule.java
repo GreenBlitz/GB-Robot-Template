@@ -12,6 +12,7 @@ public class SimulationModule implements IModule {
     private final ModuleUtils.ModuleName moduleName;
 
     private final SimulationModuleActions simulationModuleActions;
+
     private final SimulationModuleData simulationModuleData;
 
     public SimulationModule(ModuleUtils.ModuleName moduleName) {

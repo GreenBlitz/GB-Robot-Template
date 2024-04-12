@@ -5,6 +5,7 @@ import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
 
 public class ReplaySwerve implements ISwerve {
+
     @Override
     public void setHeading(Rotation2d heading) {}
 

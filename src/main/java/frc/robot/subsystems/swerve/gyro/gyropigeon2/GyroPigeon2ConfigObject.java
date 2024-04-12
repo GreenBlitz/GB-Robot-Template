@@ -7,7 +7,7 @@ import frc.robot.poseestimation.PoseEstimatorConstants;
 
 public class GyroPigeon2ConfigObject {
 
-    private Pigeon2 gyro;
+    private final Pigeon2 gyro;
 
     public StatusSignal<Double> YAW_SIGNAL,
             PITCH_SIGNAL,

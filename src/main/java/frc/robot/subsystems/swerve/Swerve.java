@@ -6,7 +6,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotContainer;
 import frc.robot.constants.MathConstants;
@@ -26,8 +30,11 @@ import org.littletonrobotics.junction.Logger;
 public class Swerve extends GBSubsystem {
 
     public final Lock odometryLock;
+
     private final SwerveInputsAutoLogged swerveInputs;
+
     private final ISwerve swerve;
+
     private final Module[] modules;
 
     public Swerve() {
@@ -177,11 +184,12 @@ public class Swerve extends GBSubsystem {
     }
 
     /**
-     * Drives the swerve with the given powers, relative to the field's frame of reference, and rotating around given module instead of middle of robot.
+     * Drives the swerve with the given powers, relative to the field's frame of reference, and rotating around given module
+     * instead of middle of robot.
      *
-     * @param xPower     the x power
-     * @param yPower     the y power
-     * @param thetaPower the theta power
+     * @param xPower             the x power
+     * @param yPower             the y power
+     * @param thetaPower         the theta power
      * @param moduleToTurnAround the module to turn around
      */
     protected void fieldRelativeDriveRotateAroundModule(
@@ -191,11 +199,12 @@ public class Swerve extends GBSubsystem {
     }
 
     /**
-     * Drives the swerve with the given powers, relative to the robot's frame of reference, and rotating around given module instead of middle of robot.
+     * Drives the swerve with the given powers, relative to the robot's frame of reference, and rotating around given module
+     * instead of middle of robot.
      *
-     * @param xPower     the x power
-     * @param yPower     the y power
-     * @param thetaPower the theta power
+     * @param xPower             the x power
+     * @param yPower             the y power
+     * @param thetaPower         the theta power
      * @param moduleToTurnAround the module to turn around
      */
     protected void selfRelativeDriveRotateAroundModule(
@@ -317,8 +326,9 @@ public class Swerve extends GBSubsystem {
 
     public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
         final SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
-        for (int i = 0; i < modules.length; i++)
+        for (int i = 0; i < modules.length; i++) {
             swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
+        }
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }
 

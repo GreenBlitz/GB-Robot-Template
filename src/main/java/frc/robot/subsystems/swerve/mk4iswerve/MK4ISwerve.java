@@ -9,6 +9,7 @@ import java.util.Queue;
 public class MK4ISwerve implements ISwerve {
 
     private final GyroPigeon2 pigeon2Gyro;
+
     private Queue<Double> yawQueue, timestampQueue;
 
     public MK4ISwerve() {

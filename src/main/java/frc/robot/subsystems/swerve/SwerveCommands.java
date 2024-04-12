@@ -9,8 +9,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.commands.InitExecuteCommand;
@@ -22,7 +25,8 @@ import java.util.function.Supplier;
 public class SwerveCommands {
 
     /**
-     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed open mode.
+     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed
+     * open mode.
      *
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
@@ -39,7 +43,8 @@ public class SwerveCommands {
     }
 
     /**
-     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed loop mode.
+     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed
+     * loop mode.
      *
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
@@ -62,7 +67,7 @@ public class SwerveCommands {
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
-     * @param moduleName the wanted module to rotate around
+     * @param moduleName    the wanted module to rotate around
      * @return the command
      */
     public static Command getOpenLoopFieldRelativeDriveWithRotateAroundWheelCommand(
@@ -84,7 +89,7 @@ public class SwerveCommands {
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
-     * @param moduleName the wanted module to rotate around
+     * @param moduleName    the wanted module to rotate around
      * @return the command
      */
     public static Command getClosedLoopFieldRelativeDriveWithRotateAroundWheelCommand(
@@ -103,7 +108,7 @@ public class SwerveCommands {
      * Creates a command that rotating the swerve to target angle by trapezoid profiled pid
      *
      * @param targetAngle -> the targetAngle in Rotation2d
-     * @param moduleName -> the module to turn around
+     * @param moduleName  -> the module to turn around
      * @return the command
      */
     public static Command getRotateToAngleAroundWheelCommand(
@@ -170,8 +175,10 @@ public class SwerveCommands {
         // TODO - understand if statement
         if (currentBluePose.getTranslation().getDistance(targetMirroredAlliancePose.getTranslation())
                 < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS)
-            // TODO - find difference between the two funcs
+        // TODO - find difference between the two funcs
+        {
             return createOnTheFlyPathCommand(targetMirroredAlliancePose, pathConstraints);
+        }
         return AutoBuilder.pathfindToPose(targetMirroredAlliancePose, pathConstraints);
     }
 

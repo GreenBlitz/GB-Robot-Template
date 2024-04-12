@@ -8,6 +8,7 @@ import frc.robot.constants.Ports;
 public class GyroPigeon2 {
 
     private final GyroPigeon2Data gyroPigeon2Data;
+
     private final GyroPigeon2Actions gyroPigeon2Actions;
 
     public GyroPigeon2() {

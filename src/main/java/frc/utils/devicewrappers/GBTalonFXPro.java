@@ -20,6 +20,30 @@ public class GBTalonFXPro extends TalonFX {
     }
 
     /**
+     * <<<<<<< HEAD
+     * =======
+     * <<<<<<< HEAD
+     * =======
+     * Speeding up the gotten signals and delete the other signals from bus
+     */
+    public void optimizeBusAndSignals(double signalFrequency, StatusSignal... statusSignals) {
+        updateFrequency(signalFrequency, statusSignals);
+        optimizeBusUtilization();
+    }
+
+    /**
+     * Speeding up the gotten signals
+     *
+     * @param signalFrequency -> Speed of signals in hertz
+     * @param statusSignals   -> Signals to speed up
+     */
+    public void updateFrequency(double signalFrequency, StatusSignal... statusSignals) {
+        BaseStatusSignal.setUpdateFrequencyForAll(signalFrequency, statusSignals);
+    }
+
+    /**
+     * >>>>>>> master
+     * >>>>>>> working
      * Performs latency compensation on position
      */
     public double getLatencyCompensatedPosition() {

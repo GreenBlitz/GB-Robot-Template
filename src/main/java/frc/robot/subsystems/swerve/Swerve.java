@@ -105,6 +105,12 @@ public class Swerve extends GBSubsystem {
         }
     }
 
+    public void resetByEncoder() {
+        for (Module module : getModules()) {
+            module.resetByEncoder();
+        }
+    }
+
     @Override
     public void periodic() {
         odometryLock.lock();
@@ -116,18 +122,17 @@ public class Swerve extends GBSubsystem {
         }
         odometryLock.unlock();
 
-        updatePoseEstimatorStates();
         updateNetworkTables();
-    }
-
-    private void updatePoseEstimatorStates() {
-        RobotContainer.POSE_ESTIMATOR.update();
     }
 
     private void updateNetworkTables() {
         Logger.recordOutput("Swerve/Velocity/Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);
         Logger.recordOutput("Swerve/Velocity/X", getSelfRelativeVelocity().vxMetersPerSecond);
         Logger.recordOutput("Swerve/Velocity/Y", getSelfRelativeVelocity().vyMetersPerSecond);
+    }
+
+    private void updatePoseEstimatorStates() {
+        RobotContainer.POSE_ESTIMATOR.update();
     }
 
     public Translation3d getGyroAcceleration() {

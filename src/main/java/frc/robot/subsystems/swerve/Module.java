@@ -12,7 +12,6 @@ public class Module {
     private final ModuleInputsAutoLogged moduleInputs;
     private final ModuleUtils.ModuleName moduleName;
     private final IModule module;
-
     private boolean driveMotorClosedLoop;
     private SwerveModuleState targetState;
 
@@ -87,4 +86,5 @@ public class Module {
     public void setDriveMotorClosedLoop(boolean closedLoop) {
         driveMotorClosedLoop = closedLoop;
     }
+
 }

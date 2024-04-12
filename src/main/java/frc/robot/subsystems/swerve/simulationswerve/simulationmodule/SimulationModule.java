@@ -12,6 +12,7 @@ public class SimulationModule implements IModule {
     private final ModuleUtils.ModuleName moduleName;
 
     private final SimulationModuleActions simulationModuleActions;
+
     private final SimulationModuleStatus simulationModuleData;
 
     public SimulationModule(ModuleUtils.ModuleName moduleName) {
@@ -70,4 +71,5 @@ public class SimulationModule implements IModule {
         inputs.driveCurrent = simulationModuleData.getDriveCurrent();
         inputs.driveVoltage = simulationModuleData.getDriveVoltage();
     }
+
 }

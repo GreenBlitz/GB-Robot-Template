@@ -12,9 +12,13 @@ import static frc.robot.subsystems.swerve.ModuleUtils.reduceSkew;
 public class Module {
 
     private final ModuleInputsAutoLogged moduleInputs;
+
     private final ModuleUtils.ModuleName moduleName;
+
     private final IModule module;
+
     private boolean driveMotorClosedLoop;
+
     private SwerveModuleState targetState;
 
     public Module(ModuleUtils.ModuleName moduleName) {

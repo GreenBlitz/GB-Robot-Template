@@ -7,7 +7,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class AlliancePose2d {
 
     private final Pose2d blueAlliancePose;
+
     private final Pose2d alliancePose;
+
     private final Pose2d mirroredAlliancePose;
 
     private AlliancePose2d(Pose2d blueAlliancePose, Pose2d alliancePose, Pose2d mirroredAlliancePose) {
@@ -56,4 +58,5 @@ public class AlliancePose2d {
     public Pose2d toMirroredAlliancePose() {
         return mirroredAlliancePose;
     }
+
 }

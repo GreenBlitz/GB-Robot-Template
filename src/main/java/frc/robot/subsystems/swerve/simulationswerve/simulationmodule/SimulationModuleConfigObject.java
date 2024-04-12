@@ -39,4 +39,5 @@ public class SimulationModuleConfigObject {
     public SimpleMotorSimulation getSteerMotor() {
         return steerMotor;
     }
+
 }

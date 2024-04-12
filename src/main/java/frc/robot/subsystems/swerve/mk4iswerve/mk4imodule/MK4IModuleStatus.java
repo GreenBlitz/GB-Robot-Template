@@ -96,4 +96,5 @@ class MK4IModuleStatus {
     public StatusSignal<Double> getSteerVoltageSignal() {
         return moduleSignals.steerVoltageSignal().refresh();
     }
+
 }

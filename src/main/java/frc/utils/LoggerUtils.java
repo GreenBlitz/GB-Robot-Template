@@ -47,4 +47,5 @@ public class LoggerUtils {
         Logger.start();
         Logger.recordOutput("Logged In", "COMPUTER");
     }
+
 }

@@ -9,10 +9,13 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 public class SmartJoystick {
 
     private static final double DEADZONE = 0.07;
+
     private static final double JOYSTICK_AXIS_TO_SQUARE_FACTOR = 1.4;
 
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
+
     public final AxisButton L2, R2;
+
     public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 
     private final double deadzone;
@@ -195,4 +198,5 @@ public class SmartJoystick {
             return inverted * stick.getRawAxis(axis);
         }
     }
+
 }

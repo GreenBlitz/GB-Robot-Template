@@ -15,4 +15,5 @@ public class ModuleFactory {
             case REPLAY -> new ReplayModule();
         };
     }
+
 }

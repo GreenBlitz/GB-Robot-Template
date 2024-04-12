@@ -16,4 +16,5 @@ public class InitExecuteCommand extends FunctionalCommand {
     public InitExecuteCommand(Runnable onInit, Runnable onExecute, GBSubsystem... requirements) {
         super(onInit, onExecute, (interrupted) -> {}, () -> false, requirements);
     }
+
 }

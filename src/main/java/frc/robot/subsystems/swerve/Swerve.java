@@ -23,8 +23,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Swerve extends GBSubsystem {
 
     public final Lock odometryLock;
+
     private final SwerveInputsAutoLogged swerveInputs;
+
     private final ISwerve swerve;
+
     private final Module[] modules;
 
     public Swerve() {
@@ -40,9 +43,12 @@ public class Swerve extends GBSubsystem {
     }
 
     private Module[] getModules() {
-        return new Module[]{new Module(ModuleUtils.ModuleName.FRONT_LEFT), new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
-                new Module(
-                ModuleUtils.ModuleName.BACK_LEFT), new Module(ModuleUtils.ModuleName.BACK_RIGHT),};
+        return new Module[]{
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
+        };
     }
 
     private void configurePathPlanner() {
@@ -325,4 +331,5 @@ public class Swerve extends GBSubsystem {
         return Math.abs(currentTranslationPosition - targetTranslationPosition) < SwerveConstants.TRANSLATION_TOLERANCE_METERS && Math.abs(
                 currentTranslationVelocity) < SwerveConstants.TRANSLATION_VELOCITY_TOLERANCE;
     }
+
 }

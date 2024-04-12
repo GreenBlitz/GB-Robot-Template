@@ -62,4 +62,5 @@ public class GBTalonFXPro extends TalonFX {
     public double getLatencyCompensatedVelocity() {
         return getLatencyCompensatedValue(this.getVelocity(), this.getAcceleration());
     }
+
 }

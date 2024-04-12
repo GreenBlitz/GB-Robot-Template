@@ -4,6 +4,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;
 import frc.utils.GBSubsystem;
 import frc.utils.commands.GBCommand;
+
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
@@ -11,16 +12,25 @@ import java.util.function.Predicate;
 public abstract class KPFindingUtil extends GBCommand {
 
     protected final Pair<Double, Double> valuesToRunFor;
+
     protected final DoubleSupplier currentValueSupplier, currentKpValueSupplier;
+
     protected final Consumer<Double> setControl, setKp;
+
     protected final Predicate<Double> isAtPose;
+
     protected final Runnable stopAtEnd;
+
     protected final boolean isSetControlNeedToRunPeriodic;
+
     protected final double tolerance, timeoutForActionSeconds;
 
     protected final Timer TIMER;
+
     protected boolean isInitialize, isExecute, isEnd;
+
     protected double usedTargetValue;
+
     protected double error;
 
     protected KPFindingUtil(
@@ -34,7 +44,8 @@ public abstract class KPFindingUtil extends GBCommand {
             Consumer<Double> setControl,
             Consumer<Double> setKp,
             Predicate<Double> isAtPose,
-            Runnable doOnEnd) {
+            Runnable doOnEnd
+    ) {
         this.TIMER = new Timer();
 
         this.isSetControlNeedToRunPeriodic = isSetControlNeedToRunPeriodic;
@@ -70,7 +81,8 @@ public abstract class KPFindingUtil extends GBCommand {
         final double currentValue = currentValueSupplier.getAsDouble();
         if (Math.abs(currentValue - valuesToRunFor.getFirst()) > Math.abs(currentValue - valuesToRunFor.getSecond())) {
             usedTargetValue = valuesToRunFor.getFirst();
-        } else {
+        }
+        else {
             usedTargetValue = valuesToRunFor.getSecond();
         }
     }
@@ -94,15 +106,11 @@ public abstract class KPFindingUtil extends GBCommand {
     }
 
     protected void replaceTargetValue() {
-        usedTargetValue =
-                (usedTargetValue == valuesToRunFor.getFirst()) ? valuesToRunFor.getSecond() : valuesToRunFor.getFirst();
+        usedTargetValue = (usedTargetValue == valuesToRunFor.getFirst()) ? valuesToRunFor.getSecond() : valuesToRunFor.getFirst();
     }
 
     protected boolean hasOscillated(double currentPosition) {
-        return !((valuesToRunFor.getFirst() + tolerance >= currentPosition
-                        && currentPosition >= valuesToRunFor.getSecond() - tolerance)
-                || (valuesToRunFor.getFirst() - tolerance <= currentPosition
-                        && currentPosition <= valuesToRunFor.getSecond() + tolerance));
+        return !((valuesToRunFor.getFirst() + tolerance >= currentPosition && currentPosition >= valuesToRunFor.getSecond() - tolerance) || (valuesToRunFor.getFirst() - tolerance <= currentPosition && currentPosition <= valuesToRunFor.getSecond() + tolerance));
     }
 
     protected void initFunction() {
@@ -120,8 +128,7 @@ public abstract class KPFindingUtil extends GBCommand {
     }
 
     protected boolean isNeedToBeEnd(double currentPosition) {
-        return isAtPose.test(usedTargetValue)
-                || TIMER.hasElapsed(timeoutForActionSeconds)
-                || hasOscillated(currentPosition);
+        return isAtPose.test(usedTargetValue) || TIMER.hasElapsed(timeoutForActionSeconds) || hasOscillated(currentPosition);
     }
+
 }

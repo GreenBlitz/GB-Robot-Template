@@ -3,18 +3,23 @@ package frc.utils.calibration.autocalibration.ksfinding;
 import edu.wpi.first.wpilibj.Timer;
 import frc.utils.GBSubsystem;
 import frc.utils.commands.GBCommand;
+import org.littletonrobotics.junction.Logger;
+
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
-import org.littletonrobotics.junction.Logger;
 
 public class FindKS extends GBCommand {
 
     private final Timer TIMER;
+
     private final BooleanSupplier isMoving;
+
     private final Consumer<Double> setVoltageControl;
+
     private final double kG;
 
     private double lastTimeSeconds;
+
     private double lastVoltage;
 
     public FindKS(GBSubsystem subsystem, double kG, BooleanSupplier isMoving, Consumer<Double> setVoltageControl) {
@@ -54,4 +59,5 @@ public class FindKS extends GBCommand {
         TIMER.stop();
         Logger.recordOutput("KS OF SYSTEM", lastVoltage);
     }
+
 }

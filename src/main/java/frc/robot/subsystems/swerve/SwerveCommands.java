@@ -42,7 +42,7 @@ public class SwerveCommands {
                 SWERVE
         );
     }
-    
+
     /**
      * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed
      * loop mode.

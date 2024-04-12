@@ -21,6 +21,13 @@ public class GBTalonFXPro extends TalonFX {
     }
 
     /**
+     * Performs latency compensation on position
+     */
+    public double getLatencyCompensatedPosition() {
+        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
+    }
+
+    /**
      * Performs latency compensation on signal using the signalSlope and signal's
      * latency to determine the magnitude of compensation.
      */
@@ -29,16 +36,10 @@ public class GBTalonFXPro extends TalonFX {
     }
 
     /**
-     * Performs latency compensation on position
-     */
-    public double getLatencyCompensatedPosition() {
-        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
-    }
-
-    /**
      * Performs latency compensation on velocity
      */
     public double getLatencyCompensatedVelocity() {
         return getLatencyCompensatedValue(this.getVelocity(), this.getAcceleration());
     }
+
 }

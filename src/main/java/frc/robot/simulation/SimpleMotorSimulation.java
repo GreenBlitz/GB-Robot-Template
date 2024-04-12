@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.constants.SimulationConstants;
 
 public class SimpleMotorSimulation extends MotorSimulation {
+
     private final DCMotorSim motorSimulation;
 
     public SimpleMotorSimulation(DCMotor gearbox, double gearRatio, double momentOfInertia) {
@@ -13,8 +14,13 @@ public class SimpleMotorSimulation extends MotorSimulation {
     }
 
     @Override
-    public double getCurrent() {
-        return motorSimulation.getCurrentDrawAmps();
+    protected void setInputVoltage(double voltage) {
+        motorSimulation.setInputVoltage(voltage);
+    }
+
+    @Override
+    protected void updateMotor() {
+        motorSimulation.update(SimulationConstants.TIME_STEP);
     }
 
     @Override
@@ -28,12 +34,8 @@ public class SimpleMotorSimulation extends MotorSimulation {
     }
 
     @Override
-    protected void setInputVoltage(double voltage) {
-        motorSimulation.setInputVoltage(voltage);
+    public double getCurrent() {
+        return motorSimulation.getCurrentDrawAmps();
     }
 
-    @Override
-    protected void updateMotor() {
-        motorSimulation.update(SimulationConstants.TIME_STEP);
-    }
 }

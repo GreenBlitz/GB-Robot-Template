@@ -2,36 +2,49 @@ package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.*;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.ModuleConstants;
 
-public class MK4IModuleConstants {
+class MK4IModuleConstants {
 
     public static final boolean ENABLE_FOC_DRIVE = true;
+
     public static final boolean ENABLE_FOC_STEER = true;
 
     public static final double COUPLING_RATIO = 0;
 
     private static final InvertedValue DRIVE_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive;
+
     private static final InvertedValue STEER_MOTOR_INVERTED_VALUE = InvertedValue.CounterClockwise_Positive;
 
     private static final SensorDirectionValue STEER_ENCODER_DIRECTION = SensorDirectionValue.CounterClockwise_Positive;
+
     private static final AbsoluteSensorRangeValue STEER_ENCODER_RANGE = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
 
     private static final NeutralModeValue DRIVE_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Brake;
+
     private static final NeutralModeValue STEER_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Coast;
 
     private static final double DRIVE_SLIP_CURRENT = 100;
+
     private static final double STEER_CURRENT_LIMIT = 50;
 
     private static final double STEER_MOTOR_P = 20;
+
     private static final double STEER_MOTOR_I = 0;
+
     private static final double STEER_MOTOR_D = 0;
 
     private static final double DRIVE_MOTOR_P = 3;
+
     private static final double DRIVE_MOTOR_I = 0;
+
     private static final double DRIVE_MOTOR_D = 0;
 
     protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
@@ -87,7 +100,8 @@ public class MK4IModuleConstants {
             true,
             Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.FRONT_LEFT_ENCODER);
+            Ports.CANCodersIds.FRONT_LEFT_ENCODER
+    );
 
     protected static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
@@ -95,7 +109,8 @@ public class MK4IModuleConstants {
             true,
             Ports.TalonFXIds.FRONT_RIGHT_DRIVE_MOTOR,
             true,
-            Ports.CANCodersIds.FRONT_RIGHT_ENCODER);
+            Ports.CANCodersIds.FRONT_RIGHT_ENCODER
+    );
 
     protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
@@ -103,7 +118,8 @@ public class MK4IModuleConstants {
             false,
             Ports.TalonFXIds.BACK_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.BACK_LEFT_ENCODER);
+            Ports.CANCodersIds.BACK_LEFT_ENCODER
+    );
 
     protected static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
@@ -111,5 +127,7 @@ public class MK4IModuleConstants {
             true,
             Ports.TalonFXIds.BACK_RIGHT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.BACK_RIGHT_ENCODER);
+            Ports.CANCodersIds.BACK_RIGHT_ENCODER
+    );
+
 }

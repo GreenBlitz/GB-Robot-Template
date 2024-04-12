@@ -1,23 +1,23 @@
 package frc.robot.subsystems.swerve.gyro.gyropigeon2;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 
-public class GyroPigeon2ConfigObject {
+class GyroPigeon2ConfigObject {
 
-    private Pigeon2 gyro;
+    private final Pigeon2 gyro;
 
-    public StatusSignal<Double> YAW_SIGNAL,
-            PITCH_SIGNAL,
-            X_ACCELERATION_SIGNAL,
-            Y_ACCELERATION_SIGNAL,
-            Z_ACCELERATION_SIGNAL;
+    private final GyroPigeon2Records.GyroPigeon2Signals signals;
 
     protected GyroPigeon2ConfigObject(int id, String busChain) {
         this.gyro = new Pigeon2(id, busChain);
-
+        this.signals = new GyroPigeon2Records.GyroPigeon2Signals(gyro.getYaw(),
+                gyro.getPitch(),
+                gyro.getAccelerationX(),
+                gyro.getAccelerationY(),
+                gyro.getAccelerationZ()
+        );
         configGyro();
         optimizeBusAndSignalOfGyro();
     }
@@ -27,22 +27,23 @@ public class GyroPigeon2ConfigObject {
     }
 
     private void optimizeBusAndSignalOfGyro() {
-        YAW_SIGNAL = gyro.getYaw();
-        PITCH_SIGNAL = gyro.getPitch();
-        X_ACCELERATION_SIGNAL = gyro.getAccelerationX();
-        Y_ACCELERATION_SIGNAL = gyro.getAccelerationY();
-        Z_ACCELERATION_SIGNAL = gyro.getAccelerationZ();
-
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                50, X_ACCELERATION_SIGNAL, Y_ACCELERATION_SIGNAL, Z_ACCELERATION_SIGNAL);
-
-        PITCH_SIGNAL.setUpdateFrequency(100);
-        YAW_SIGNAL.setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);
+        BaseStatusSignal.setUpdateFrequencyForAll(50,
+                signals.X_ACCELERATION_SIGNAL(),
+                signals.Y_ACCELERATION_SIGNAL(),
+                signals.Z_ACCELERATION_SIGNAL()
+        );
+        signals.PITCH_SIGNAL().setUpdateFrequency(100);
+        signals.YAW_SIGNAL().setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);
 
         gyro.optimizeBusUtilization();
     }
 
-    public Pigeon2 getGyro() {
+    protected Pigeon2 getGyro() {
         return gyro;
     }
+
+    protected GyroPigeon2Records.GyroPigeon2Signals getSignals() {
+        return signals;
+    }
+
 }

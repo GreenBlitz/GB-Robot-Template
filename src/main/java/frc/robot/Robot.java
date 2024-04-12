@@ -23,6 +23,7 @@ import org.littletonrobotics.junction.LoggedRobot;
 public class Robot extends LoggedRobot {
 
     private Command autonomousCommand;
+
     private RobotContainer robotContainer;
 
     @Override
@@ -31,12 +32,6 @@ public class Robot extends LoggedRobot {
         // autonomous chooser on the dashboard.
         initializeLogger();
         robotContainer = new RobotContainer();
-    }
-
-    @Override
-    public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
-        MotorSimulation.updateRegisteredSimulations();
     }
 
     @Override
@@ -55,13 +50,15 @@ public class Robot extends LoggedRobot {
         }
     }
 
+    @Override
+    public void robotPeriodic() {
+        CommandScheduler.getInstance().run();
+        MotorSimulation.updateRegisteredSimulations();
+    }
+
     private void initializeLogger() {
-        NetworkTableInstance.getDefault()
-                .getStructTopic("RobotPose", Pose2d.struct)
-                .publish();
-        NetworkTableInstance.getDefault()
-                .getStructTopic("MechanismPoses", Pose3d.struct)
-                .publish();
+        NetworkTableInstance.getDefault().getStructTopic("RobotPose", Pose2d.struct).publish();
+        NetworkTableInstance.getDefault().getStructTopic("MechanismPoses", Pose3d.struct).publish();
 
         switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> {
@@ -76,4 +73,5 @@ public class Robot extends LoggedRobot {
             }
         }
     }
+
 }

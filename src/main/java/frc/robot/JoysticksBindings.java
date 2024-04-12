@@ -7,8 +7,11 @@ import frc.utils.joysticks.SmartJoystick;
 public class JoysticksBindings {
 
     private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.MAIN);
+
     private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.SECOND);
+
     private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.THIRD);
+
     private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.FOURTH);
 
     public static void configureBindings() {
@@ -25,7 +28,8 @@ public class JoysticksBindings {
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)));
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
     }
 
     private static void secondJoystickButtons() {
@@ -42,4 +46,5 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
         // bindings
     }
+
 }

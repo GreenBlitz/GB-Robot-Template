@@ -5,7 +5,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotContainer;
 import frc.robot.constants.MathConstants;
@@ -17,16 +20,20 @@ import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.allianceutils.AllianceUtils;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Swerve extends GBSubsystem {
 
     public final Lock odometryLock;
+
     private final SwerveInputsAutoLogged swerveInputs;
+
     private final ISwerve swerve;
+
     private final Module[] modules;
 
     public Swerve() {
@@ -42,23 +49,84 @@ public class Swerve extends GBSubsystem {
     }
 
     private Module[] getModules() {
-        return new Module[] {
-            new Module(ModuleUtils.ModuleName.FRONT_LEFT),
-            new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
-            new Module(ModuleUtils.ModuleName.BACK_LEFT),
-            new Module(ModuleUtils.ModuleName.BACK_RIGHT),
+        return new Module[]{
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
         };
     }
 
     private void configurePathPlanner() {
-        AutoBuilder.configureHolonomic(
-                () -> RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose(),
+        AutoBuilder.configureHolonomic(() -> RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose(),
                 (pose) -> RobotContainer.POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(pose)),
                 this::getSelfRelativeVelocity,
                 this::selfRelativeDrive,
                 SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
                 () -> !DriverStationUtils.isBlueAlliance(),
-                this);
+                this
+        );
+    }
+
+    public ChassisSpeeds getSelfRelativeVelocity() {
+        return SwerveConstants.KINEMATICS.toChassisSpeeds(getModuleStates());
+    }
+
+    private void selfRelativeDrive(ChassisSpeeds chassisSpeeds) {
+        chassisSpeeds = discretize(chassisSpeeds);
+        if (isStill(chassisSpeeds)) {
+            stop();
+            return;
+        }
+
+        final SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+        setTargetModuleStates(swerveModuleStates);
+    }
+
+    @AutoLogOutput(key = "Swerve/CurrentStates")
+    private SwerveModuleState[] getModuleStates() {
+        final SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
+        for (int i = 0; i < modules.length; i++) {
+            states[i] = modules[i].getCurrentState();
+        }
+
+        return states;
+    }
+
+    /**
+     * When the robot drives while rotating it skews a bit to the side.
+     * This should fix the chassis speeds, so they won't make the robot skew while rotating.
+     *
+     * @param chassisSpeeds the chassis speeds to fix skewing for
+     * @return the fixed speeds
+     */
+    private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
+        return ChassisSpeeds.discretize(chassisSpeeds, SimulationConstants.TIME_STEP);
+    }
+
+    public boolean isStill(ChassisSpeeds chassisSpeeds) {
+        return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND && Math.abs(
+                chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND;
+    }
+
+    public void stop() {
+        for (Module currentModule : modules) {
+            currentModule.stop();
+        }
+    }
+
+    private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setTargetState(swerveModuleStates[i]);
+        }
+    }
+
+    public void resetByEncoder() {
+        for (Module module : getModules()) {
+            module.resetByEncoder();
+        }
     }
 
     @Override
@@ -72,8 +140,17 @@ public class Swerve extends GBSubsystem {
         }
         odometryLock.unlock();
 
-        updatePoseEstimatorStates();
         updateNetworkTables();
+    }
+
+    private void updateNetworkTables() {
+        Logger.recordOutput("Swerve/Velocity/Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);
+        Logger.recordOutput("Swerve/Velocity/X", getSelfRelativeVelocity().vxMetersPerSecond);
+        Logger.recordOutput("Swerve/Velocity/Y", getSelfRelativeVelocity().vyMetersPerSecond);
+    }
+
+    private void updatePoseEstimatorStates() {
+        RobotContainer.POSE_ESTIMATOR.update();
     }
 
     public Translation3d getGyroAcceleration() {
@@ -85,10 +162,10 @@ public class Swerve extends GBSubsystem {
     }
 
     public Rotation2d getHeading() {
-        final double inputtedHeading = MathUtil.inputModulus(
-                swerveInputs.gyroYawDegrees,
+        final double inputtedHeading = MathUtil.inputModulus(swerveInputs.gyroYawDegrees,
                 -MathConstants.HALF_CIRCLE.getDegrees(),
-                MathConstants.HALF_CIRCLE.getDegrees());
+                MathConstants.HALF_CIRCLE.getDegrees()
+        );
         return Rotation2d.fromDegrees(inputtedHeading);
     }
 
@@ -99,20 +176,6 @@ public class Swerve extends GBSubsystem {
     // Don't use when using WPILIB pose estimator
     public void setHeading(Rotation2d heading) {
         swerve.setHeading(heading);
-    }
-
-    public int getOdometryUpdatesYawDegreesLength() {
-        return swerveInputs.odometryUpdatesYawDegrees.length;
-    }
-
-    public Rotation2d getOdometryUpdatesYawValueAtIndex(int index) {
-        return Rotation2d.fromDegrees(swerveInputs.odometryUpdatesYawDegrees[index]);
-    }
-
-    public void stop() {
-        for (Module currentModule : modules) {
-            currentModule.stop();
-        }
     }
 
     public void setBrake(boolean brake) {
@@ -127,29 +190,41 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    public ChassisSpeeds getSelfRelativeVelocity() {
-        return SwerveConstants.KINEMATICS.toChassisSpeeds(getModuleStates());
-    }
-
     public ChassisSpeeds getFieldRelativeVelocity() {
-        return ChassisSpeeds.fromFieldRelativeSpeeds(
-                getSelfRelativeVelocity(),
-                RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation());
+        return ChassisSpeeds.fromFieldRelativeSpeeds(getSelfRelativeVelocity(),
+                RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation()
+        );
     }
 
     protected void rotateToAngle(Rotation2d targetAngle) {
-        final ChassisSpeeds targetFieldRelativeSpeeds =
-                new ChassisSpeeds(0, 0, calculateProfiledAngleSpeedToTargetAngle(targetAngle));
+        final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(0,
+                0,
+                calculateProfiledAngleSpeedToTargetAngle(targetAngle)
+        );
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
 
+    private double calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
+        final Rotation2d currentAngle = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation();
+        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(currentAngle.getDegrees(),
+                targetAngle.getDegrees()
+        ));
+    }
+
+    private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
+        final Rotation2d currentAngle = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation();
+        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, currentAngle);
+    }
+
     protected void pidToPose(Pose2d targetPose) {
-        final Pose2d currentPose =
-                RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
-        final ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
-                SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getX(), targetPose.getX()),
+        final Pose2d currentPose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
+        final ChassisSpeeds targetFieldRelativeSpeeds =
+                new ChassisSpeeds(SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getX(),
+                targetPose.getX()
+        ),
                 SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getY(), targetPose.getY()),
-                calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation()));
+                calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation())
+        );
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
 
@@ -158,18 +233,14 @@ public class Swerve extends GBSubsystem {
         resetRotationController();
     }
 
-    protected void resetRotationController() {
-        SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.reset(RobotContainer.POSE_ESTIMATOR
-                .getCurrentPose()
-                .toBlueAlliancePose()
-                .getRotation()
-                .getDegrees());
-    }
-
     protected void setClosedLoop(boolean closedLoop) {
         for (Module currentModule : modules) {
             currentModule.setDriveMotorClosedLoop(closedLoop);
         }
+    }
+
+    protected void resetRotationController() {
+        SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.reset(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees());
     }
 
     /**
@@ -185,6 +256,18 @@ public class Swerve extends GBSubsystem {
         speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle);
 
         selfRelativeDrive(speeds);
+    }
+
+    private ChassisSpeeds selfRelativeSpeedsFromFieldRelativePowers(double xPower, double yPower, double thetaPower) {
+        final ChassisSpeeds fieldRelativeSpeeds = powersToSpeeds(xPower, yPower, thetaPower);
+        return fieldRelativeSpeedsToSelfRelativeSpeeds(fieldRelativeSpeeds);
+    }
+
+    private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
+        return new ChassisSpeeds(xPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+                yPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * SwerveConstants.MAX_ROTATIONAL_SPEED_RADIANS_PER_SECOND
+        );
     }
 
     /**
@@ -225,98 +308,12 @@ public class Swerve extends GBSubsystem {
         selfRelativeDrive(speeds);
     }
 
-    private void selfRelativeDrive(ChassisSpeeds chassisSpeeds) {
-        chassisSpeeds = discretize(chassisSpeeds);
-        if (isStill(chassisSpeeds)) {
-            stop();
-            return;
-        }
-
-        final SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-        setTargetModuleStates(swerveModuleStates);
-    }
-
-    private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
-        for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(swerveModuleStates[i]);
-        }
-    }
-
-    /**
-     * When the robot drives while rotating it skews a bit to the side.
-     * This should fix the chassis speeds, so they won't make the robot skew while rotating.
-     *
-     * @param chassisSpeeds the chassis speeds to fix skewing for
-     * @return the fixed speeds
-     */
-    private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, SimulationConstants.TIME_STEP);
-    }
-
-    private void updatePoseEstimatorStates() {
-        RobotContainer.POSE_ESTIMATOR.update();
-    }
-
-    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
-        final SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
-        for (int i = 0; i < modules.length; i++)
-            swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
-        return new SwerveDriveWheelPositions(swerveModulePositions);
-    }
-
     public SwerveModulePosition[] getModulePositionsForWpilibPoseEstimator() {
         final SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
             positions[i] = modules[i].getCurrentPosition();
         }
         return positions;
-    }
-
-    private double calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
-        final Rotation2d currentAngle = RobotContainer.POSE_ESTIMATOR
-                .getCurrentPose()
-                .toBlueAlliancePose()
-                .getRotation();
-        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(
-                currentAngle.getDegrees(), targetAngle.getDegrees()));
-    }
-
-    private ChassisSpeeds selfRelativeSpeedsFromFieldRelativePowers(double xPower, double yPower, double thetaPower) {
-        final ChassisSpeeds fieldRelativeSpeeds = powersToSpeeds(xPower, yPower, thetaPower);
-        return fieldRelativeSpeedsToSelfRelativeSpeeds(fieldRelativeSpeeds);
-    }
-
-    private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
-        final Rotation2d currentAngle =
-                RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation();
-        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, currentAngle);
-    }
-
-    private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
-        return new ChassisSpeeds(
-                xPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
-                yPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
-                Math.pow(thetaPower, 2)
-                        * Math.signum(thetaPower)
-                        * SwerveConstants.MAX_ROTATIONAL_SPEED_RADIANS_PER_SECOND);
-    }
-
-    private void updateNetworkTables() {
-        Logger.recordOutput("Swerve/Velocity/Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);
-        Logger.recordOutput("Swerve/Velocity/X", getSelfRelativeVelocity().vxMetersPerSecond);
-        Logger.recordOutput("Swerve/Velocity/Y", getSelfRelativeVelocity().vyMetersPerSecond);
-    }
-
-    @AutoLogOutput(key = "Swerve/CurrentStates")
-    private SwerveModuleState[] getModuleStates() {
-        final SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-        for (int i = 0; i < modules.length; i++) {
-            states[i] = modules[i].getCurrentState();
-        }
-
-        return states;
     }
 
     @AutoLogOutput(key = "Swerve/TargetStates")
@@ -335,49 +332,31 @@ public class Swerve extends GBSubsystem {
     }
 
     private boolean isAtTranslationPosition(
-            double currentTranslationPosition, double targetTranslationPosition, double currentTranslationVelocity) {
-        return Math.abs(currentTranslationPosition - targetTranslationPosition)
-                        < SwerveConstants.TRANSLATION_TOLERANCE_METERS
-                && Math.abs(currentTranslationVelocity) < SwerveConstants.TRANSLATION_VELOCITY_TOLERANCE;
+            double currentTranslationPosition, double targetTranslationPosition, double currentTranslationVelocity
+    ) {
+        return Math.abs(currentTranslationPosition - targetTranslationPosition) < SwerveConstants.TRANSLATION_TOLERANCE_METERS && Math.abs(
+                currentTranslationVelocity) < SwerveConstants.TRANSLATION_VELOCITY_TOLERANCE;
     }
-
+    
     public boolean isAtXAxisPosition(double xAxisPosition) {
         final double currentXAxisVelocity = getFieldRelativeVelocity().vxMetersPerSecond;
-        return isAtTranslationPosition(
-                RobotContainer.POSE_ESTIMATOR
-                        .getCurrentPose()
-                        .toBlueAlliancePose()
-                        .getX(),
+        return isAtTranslationPosition(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getX(),
                 xAxisPosition,
-                currentXAxisVelocity);
+                currentXAxisVelocity
+        );
     }
 
     public boolean isAtYAxisPosition(double yAxisPosition) {
         final double currentYAxisVelocity = getFieldRelativeVelocity().vyMetersPerSecond;
-        return isAtTranslationPosition(
-                RobotContainer.POSE_ESTIMATOR
-                        .getCurrentPose()
-                        .toBlueAlliancePose()
-                        .getY(),
+        return isAtTranslationPosition(RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getY(),
                 yAxisPosition,
-                currentYAxisVelocity);
+                currentYAxisVelocity
+        );
     }
 
     public boolean isAtAngle(Rotation2d angle) {
-        return Math.abs(angle.getDegrees()
-                                - RobotContainer.POSE_ESTIMATOR
-                                        .getCurrentPose()
-                                        .toBlueAlliancePose()
-                                        .getRotation()
-                                        .getDegrees())
-                        < SwerveConstants.ROTATION_TOLERANCE.getDegrees()
-                && Math.abs(getSelfRelativeVelocity().omegaRadiansPerSecond)
-                        < SwerveConstants.ROTATION_VELOCITY_TOLERANCE;
+        return Math.abs(angle.getDegrees() - RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees()) < SwerveConstants.ROTATION_TOLERANCE.getDegrees() && Math.abs(
+                getSelfRelativeVelocity().omegaRadiansPerSecond) < SwerveConstants.ROTATION_VELOCITY_TOLERANCE;
     }
 
-    public boolean isStill(ChassisSpeeds chassisSpeeds) {
-        return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-                && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-                && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND;
-    }
 }

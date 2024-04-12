@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
-import com.ctre.phoenix6.controls.*;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.devicewrappers.GBTalonFXPro;

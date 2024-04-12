@@ -1,8 +1,14 @@
 package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
-import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.signals.*;
-import frc.robot.constants.*;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import frc.robot.constants.Phoenix6Constants;
+import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.ModuleConstants;
 
 class MK4IModuleConstants {

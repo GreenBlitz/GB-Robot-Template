@@ -5,7 +5,7 @@ import frc.utils.commands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
 
-import static frc.robot.RobotContainer.*;
+import static frc.robot.RobotContainer.SWERVE;
 
 public class SwerveCommands {
 

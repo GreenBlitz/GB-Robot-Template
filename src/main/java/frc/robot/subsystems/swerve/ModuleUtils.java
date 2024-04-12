@@ -4,14 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.Conversions;
 
 public class ModuleUtils {
-
-    public enum ModuleName {
-        FRONT_LEFT,
-        FRONT_RIGHT,
-        BACK_LEFT,
-        BACK_RIGHT
-    }
-
+    
     public static String getLoggingPath(ModuleName moduleName) {
         return "Swerve/" + moduleName + "/";
     }
@@ -68,5 +61,12 @@ public class ModuleUtils {
         final double closedLoopError = targetSteerAngle.getRadians() - currentAngle.getRadians();
         final double cosineScalar = Math.abs(Math.cos(closedLoopError));
         return targetVelocityMetersPerSecond * cosineScalar;
+    }
+
+    public enum ModuleName {
+        FRONT_LEFT,
+        FRONT_RIGHT,
+        BACK_LEFT,
+        BACK_RIGHT
     }
 }

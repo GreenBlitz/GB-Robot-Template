@@ -96,18 +96,6 @@ public class SwerveCommands {
         );
     }
 
-    /**
-     * Creates a command that drives the swerve to a target position using pid.
-     * Mostly used after follow path to correct the ending positions after the path follow.
-     *
-     * @param targetPose -> the target positions as AlliancePose2d
-     * @return the command
-     */
-    private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
-        return new InstantCommand(SWERVE::resetRotationController).andThen(new RunCommand(() -> SWERVE.pidToPose(targetPose.toMirroredAlliancePose())).until(
-                () -> SWERVE.isAtPosition(targetPose.toMirroredAlliancePose())));
-    }
-
     // Todo - add doc
     private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
         final Pose2d targetMirroredAlliancePose = targetPose.toMirroredAlliancePose();
@@ -119,6 +107,18 @@ public class SwerveCommands {
             return createOnTheFlyPathCommand(targetMirroredAlliancePose, pathConstraints);
         }
         return AutoBuilder.pathfindToPose(targetMirroredAlliancePose, pathConstraints);
+    }
+
+    /**
+     * Creates a command that drives the swerve to a target position using pid.
+     * Mostly used after follow path to correct the ending positions after the path follow.
+     *
+     * @param targetPose -> the target positions as AlliancePose2d
+     * @return the command
+     */
+    private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
+        return new InstantCommand(SWERVE::resetRotationController).andThen(new RunCommand(() -> SWERVE.pidToPose(targetPose.toMirroredAlliancePose())).until(
+                () -> SWERVE.isAtPosition(targetPose.toMirroredAlliancePose())));
     }
 
     // Todo - add doc

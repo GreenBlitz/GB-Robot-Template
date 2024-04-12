@@ -21,6 +21,13 @@ public class AllianceUtils {
         return switchAlliance(pose);
     }
 
+    private static Pose2d switchAlliance(Pose2d pose) {
+        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
+                FieldConstants.FIELD_WIDTH - pose.getY(),
+                pose.getRotation().minus(Rotation2d.fromRotations(0.5))
+        );
+    }
+
     /**
      * Mirrors a pose across the center of the field if the current alliance is red.
      *
@@ -34,6 +41,13 @@ public class AllianceUtils {
         return mirror(pose);
     }
 
+    private static Pose2d mirror(Pose2d pose) {
+        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
+                pose.getY(),
+                new Rotation2d(Math.PI).minus(pose.getRotation())
+        );
+    }
+
     /**
      * Mirrors a rotation across the center of the field if the current alliance is red.
      *
@@ -45,19 +59,5 @@ public class AllianceUtils {
             return rotation;
         }
         return new Rotation2d(Math.PI).minus(rotation);
-    }
-
-    private static Pose2d mirror(Pose2d pose) {
-        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
-                pose.getY(),
-                new Rotation2d(Math.PI).minus(pose.getRotation())
-        );
-    }
-
-    private static Pose2d switchAlliance(Pose2d pose) {
-        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
-                FieldConstants.FIELD_WIDTH - pose.getY(),
-                pose.getRotation().minus(Rotation2d.fromRotations(0.5))
-        );
     }
 }

@@ -6,25 +6,18 @@ import frc.robot.subsystems.swerve.ModuleUtils;
 import frc.robot.subsystems.swerve.swerveinterface.IModule;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 
-import java.util.Queue;
-
 public class MK4IModule implements IModule {
 
-    private final MK4IModuleData mk4IModuleData;
+    private final MK4IModuleStatus mk4IModuleData;
     private final MK4IModuleActions mk4IModuleActions;
-    private Queue<Double> steerPositionQueue, drivePositionQueue;
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
-        this.mk4IModuleData = new MK4IModuleData(moduleConfigObject);
-        this.mk4IModuleActions = new MK4IModuleActions(moduleConfigObject.getDriveMotor(), moduleConfigObject.getSteerMotor());
-        //        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(steerMotor,
-        // moduleConfigObject.steerPositionSignal);
-        //        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(driveMotor,
-        // moduleConfigObject.drivePositionSignal);
+        this.mk4IModuleData = new MK4IModuleStatus(moduleConfigObject.getModuleSignals());
+        this.mk4IModuleActions = new MK4IModuleActions(moduleConfigObject.getMotors());
     }
 
-    public MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName) {
+    private MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName) {
         return switch (moduleName) {
             case FRONT_LEFT -> MK4IModuleConstants.FRONT_LEFT;
             case FRONT_RIGHT -> MK4IModuleConstants.FRONT_RIGHT;
@@ -82,19 +75,12 @@ public class MK4IModule implements IModule {
         inputs.steerEncoderVoltage = mk4IModuleData.getSteerEncoderVoltageSignal().getValue();
 
         inputs.steerAngleDegrees = mk4IModuleData.getSteerMotorPosition().getDegrees();
-        //        inputs.odometryUpdatesSteerAngleDegrees =
-        // steerPositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray();
         inputs.steerVoltage = mk4IModuleData.getSteerVoltageSignal().getValue();
         inputs.steerVelocity = mk4IModuleData.getSteerMotorVelocity().getRotations();
 
         inputs.driveDistanceMeters = mk4IModuleData.getDriveMotorPositionInMeters();
-        //        inputs.odometryUpdatesDriveDistanceMeters =
-        // drivePositionQueue.stream().mapToDouble(this::toDriveDistance).toArray();
         inputs.driveVelocityMetersPerSecond = mk4IModuleData.getDriveMotorVelocityInMeters();
         inputs.driveCurrent = mk4IModuleData.getDriveStatorCurrentSignal().getValue();
         inputs.driveVoltage = mk4IModuleData.getDriveVoltageSignal().getValue();
-
-        //        steerPositionQueue.clear();
-        //        drivePositionQueue.clear();
     }
 }

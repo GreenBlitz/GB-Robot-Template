@@ -21,9 +21,9 @@ import frc.robot.subsystems.swerve.Swerve;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
     public static final Swerve SWERVE = new Swerve();
     public static final IPoseEstimator POSE_ESTIMATOR = PoseEstimatorFactory.createPoseEstimator();
+    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

@@ -34,12 +34,6 @@ public class Robot extends LoggedRobot {
     }
 
     @Override
-    public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
-        MotorSimulation.updateRegisteredSimulations();
-    }
-
-    @Override
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -53,6 +47,12 @@ public class Robot extends LoggedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+    }
+
+    @Override
+    public void robotPeriodic() {
+        CommandScheduler.getInstance().run();
+        MotorSimulation.updateRegisteredSimulations();
     }
 
     private void initializeLogger() {

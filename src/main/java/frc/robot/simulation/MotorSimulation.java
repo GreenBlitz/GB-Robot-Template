@@ -36,6 +36,21 @@ public abstract class MotorSimulation {
         }
     }
 
+    private void updateSimulation() {
+        setInputVoltage(motorSimState.getMotorVoltage());
+        updateMotor();
+        motorSimState.setRawRotorPosition(getPositionRevolutions());
+        motorSimState.setRotorVelocity(getVelocityRevolutionsPerSecond());
+    }
+
+    protected abstract void setInputVoltage(double voltage);
+
+    protected abstract void updateMotor();
+
+    public abstract double getPositionRevolutions();
+
+    public abstract double getVelocityRevolutionsPerSecond();
+
     public void applyConfiguration(TalonFXConfiguration config) {
         motor.getConfigurator().apply(config);
     }
@@ -56,20 +71,5 @@ public abstract class MotorSimulation {
         return closedLoopReferenceSignal.refresh().getValue();
     }
 
-    private void updateSimulation() {
-        setInputVoltage(motorSimState.getMotorVoltage());
-        updateMotor();
-        motorSimState.setRawRotorPosition(getPositionRevolutions());
-        motorSimState.setRotorVelocity(getVelocityRevolutionsPerSecond());
-    }
-
     public abstract double getCurrent();
-
-    public abstract double getPositionRevolutions();
-
-    public abstract double getVelocityRevolutionsPerSecond();
-
-    protected abstract void setInputVoltage(double voltage);
-
-    protected abstract void updateMotor();
 }

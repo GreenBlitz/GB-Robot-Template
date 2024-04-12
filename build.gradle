@@ -87,7 +87,7 @@ tasks.register('autoCommit') {
         boolean isDeployOrSimulate = false
         for (String taskName : tasksToCommit) {
             isDeployOrSimulate = taskNames.any({ it.toLowerCase().contains(taskName) })
-            if(isDeployOrSimulate) {
+            if (isDeployOrSimulate) {
                 break
             }
         }
@@ -100,7 +100,7 @@ tasks.register('autoCommit') {
         boolean isBranchToAutoCommit = false;
         for (String branchPrefix : branchPrefixesToCommit) {
             isBranchToAutoCommit = branch.startsWith(branchPrefix)
-            if(isBranchToAutoCommit) {
+            if (isBranchToAutoCommit) {
                 break
             }
         }
@@ -139,8 +139,17 @@ tasks.register('installLocalGitHookPostCommit', Copy) {
     }
 }
 
+tasks.register('installLocalGitHookPostCheckout', Copy) {
+    from new File(rootProject.rootDir, '.scripts/post-checkout')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0775
+    doLast {
+        println("---Added Post Checkout Git Hook Script---")
+    }
+}
+
 compileJava.finalizedBy checkAkitInstall, autoCommit
-build.dependsOn installLocalGitHookPreCommit, installLocalGitHookPostCommit
+build.dependsOn installLocalGitHookPreCommit, installLocalGitHookPostCommit, installLocalGitHookPostCheckout
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
@@ -198,17 +207,3 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-// Spotless formatting
-project.compileJava.dependsOn(spotlessApply)
-spotless {
-    java {
-        target fileTree(".") {
-            include "src/main/java/frc/**/*.java"
-            exclude "**/build/**", "**/build-*/**", "src/main/java/frc/BuildConstants.java"
-        }
-        toggleOffOn()
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        palantirJavaFormat()
-    }
-}

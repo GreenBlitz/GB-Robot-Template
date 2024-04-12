@@ -4,6 +4,13 @@ import frc.robot.Robot;
 
 public class RobotTypeUtils {
 
+    public static RobotType determineRobotType(RobotType wantedType) {
+        if (Robot.isSimulation()) {
+            return wantedType.equals(RobotType.REPLAY) ? RobotType.REPLAY : RobotType.SIMULATION;
+        }
+        return RobotType.REAL;
+    }
+
     public enum RobotType {
         REAL,
         SIMULATION,
@@ -20,12 +27,5 @@ public class RobotTypeUtils {
         public boolean isReplay() {
             return this.equals(RobotType.REPLAY);
         }
-    }
-
-    public static RobotType determineRobotType(RobotType wantedType) {
-        if (Robot.isSimulation()) {
-            return wantedType.equals(RobotType.REPLAY) ? RobotType.REPLAY : RobotType.SIMULATION;
-        }
-        return RobotType.REAL;
     }
 }

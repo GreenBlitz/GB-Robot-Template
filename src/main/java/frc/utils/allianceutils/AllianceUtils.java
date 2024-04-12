@@ -1,10 +1,10 @@
 package frc.utils.allianceutils;
 
-import static frc.utils.DriverStationUtils.isBlueAlliance;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.FieldConstants;
+
+import static frc.utils.DriverStationUtils.isBlueAlliance;
 
 public class AllianceUtils {
 
@@ -15,7 +15,9 @@ public class AllianceUtils {
      * @return the converted pose
      */
     public static Pose2d toAlliancePose(Pose2d pose) {
-        if (isBlueAlliance()) return pose;
+        if (isBlueAlliance()) {
+            return pose;
+        }
         return switchAlliance(pose);
     }
 
@@ -26,7 +28,9 @@ public class AllianceUtils {
      * @return the pose
      */
     public static Pose2d toMirroredAlliancePose(Pose2d pose) {
-        if (isBlueAlliance()) return pose;
+        if (isBlueAlliance()) {
+            return pose;
+        }
         return mirror(pose);
     }
 
@@ -37,21 +41,23 @@ public class AllianceUtils {
      * @return the rotation
      */
     public static Rotation2d toMirroredAllianceRotation(Rotation2d rotation) {
-        if (isBlueAlliance()) return rotation;
+        if (isBlueAlliance()) {
+            return rotation;
+        }
         return new Rotation2d(Math.PI).minus(rotation);
     }
 
     private static Pose2d mirror(Pose2d pose) {
-        return new Pose2d(
-                FieldConstants.FIELD_LENGTH - pose.getX(),
+        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
                 pose.getY(),
-                new Rotation2d(Math.PI).minus(pose.getRotation()));
+                new Rotation2d(Math.PI).minus(pose.getRotation())
+        );
     }
 
     private static Pose2d switchAlliance(Pose2d pose) {
-        return new Pose2d(
-                FieldConstants.FIELD_LENGTH - pose.getX(),
+        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
                 FieldConstants.FIELD_WIDTH - pose.getY(),
-                pose.getRotation().minus(Rotation2d.fromRotations(0.5)));
+                pose.getRotation().minus(Rotation2d.fromRotations(0.5))
+        );
     }
 }

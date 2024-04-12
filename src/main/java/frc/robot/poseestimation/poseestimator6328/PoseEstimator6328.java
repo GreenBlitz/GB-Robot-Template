@@ -25,13 +25,16 @@ public class PoseEstimator6328 implements IPoseEstimator {
     }
 
     @Override
-    public void logPose() {}
+    public void logPose() {
+    }
 
     @Override
-    public void setHeading(Rotation2d heading) {}
+    public void setHeading(Rotation2d heading) {
+    }
 
     @Override
-    public void resetPose(AlliancePose2d alliancePose2d) {}
+    public void resetPose(AlliancePose2d alliancePose2d) {
+    }
 
     @Override
     public AlliancePose2d getCurrentPose() {

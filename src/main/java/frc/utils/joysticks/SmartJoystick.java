@@ -70,7 +70,9 @@ public class SmartJoystick {
     }
 
     private double deadzone(double power) {
-        if (Math.abs(power) < deadzone) return 0;
+        if (Math.abs(power) < deadzone) {
+            return 0;
+        }
         return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
     }
 
@@ -103,7 +105,9 @@ public class SmartJoystick {
      * @return A joystick axis based off of the joystick axis number.
      */
     public double getRawAxis(int raw_axis) {
-        if (joystick == null) return 0;
+        if (joystick == null) {
+            return 0;
+        }
         return joystick.getRawAxis(raw_axis);
     }
 
@@ -113,29 +117,32 @@ public class SmartJoystick {
      * @param axis The axis we want to use.
      * @return stick value if stick was square.
      * <p>
-     *
      * @author Yoav Herman
      * if @ marks the 1 point of each axis:
-     *<p>
-     *           Before:                                    After:
-     *             (1,0)
-     *         *****@*******      @ (1,1)                *************
-     *     *****           *****                    *****    (1,0)     *****
-     *  ***                   ***                ***  -------@-------@   ***
-     *  **                       **              **   |          (1,1)|    **
+     * <p>
+     * Before:                                    After:
+     * (1,0)
+     * *****@*******      @ (1,1)                *************
+     * *****           *****                    *****    (1,0)     *****
+     * ***                   ***                ***  -------@-------@   ***
+     * **                       **              **   |          (1,1)|    **
      * **                         **            **    |               |     **
      * **                         *@ (0,1)      **    |          (0,1)@     **
      * **                         **            **    |               |     **
      * **                         **            **    |               |     **
-     *  **                       **              **   |_______________|    **
-     *   ***                   ***                ***                    ***
-     *     *****           *****                    *****            *****
-     *         *************                            *************
-     *</p>
+     * **                       **              **   |_______________|    **
+     * ***                   ***                ***                    ***
+     * *****           *****                    *****            *****
+     * *************                            *************
+     * </p>
      */
     public double getSquaredAxis(Axis axis) {
-        if (joystick == null) return 0;
-        if (!isStickAxis(axis)) return axis.getValue(this);
+        if (joystick == null) {
+            return 0;
+        }
+        if (!isStickAxis(axis)) {
+            return axis.getValue(this);
+        }
         final double squaredAxisValue = axis.getValue(this) * JOYSTICK_AXIS_TO_SQUARE_FACTOR;
         return MathUtil.clamp(squaredAxisValue, -1, 1);
     }

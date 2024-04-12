@@ -4,10 +4,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class Conversions {
 
-    public static final double MAG_TICKS = 4096,
-            DEGREES_PER_REVOLUTIONS = 360,
-            HUNDRED_MS_PER_SEC = 10,
-            SEC_PER_MIN = 60;
+    public static final double MAG_TICKS = 4096, DEGREES_PER_REVOLUTIONS = 360, HUNDRED_MS_PER_SEC = 10, SEC_PER_MIN = 60;
 
     /**
      * Converts ticks from a Mag Encoder to revolutions.
@@ -211,8 +208,10 @@ public class Conversions {
      * @return the scaled constraints
      */
     public static TrapezoidProfile.Constraints scaleConstraints(
-            TrapezoidProfile.Constraints constraints, double percentage) {
-        return new TrapezoidProfile.Constraints(
-                constraints.maxVelocity * (percentage / 100), constraints.maxAcceleration * (percentage / 100));
+            TrapezoidProfile.Constraints constraints, double percentage
+    ) {
+        return new TrapezoidProfile.Constraints(constraints.maxVelocity * (percentage / 100),
+                constraints.maxAcceleration * (percentage / 100)
+        );
     }
 }

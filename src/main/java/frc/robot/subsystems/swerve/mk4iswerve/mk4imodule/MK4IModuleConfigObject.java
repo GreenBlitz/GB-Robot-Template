@@ -12,17 +12,9 @@ public class MK4IModuleConfigObject {
 
     private final GBTalonFXPro driveMotor, steerMotor;
     private final CANcoder steerEncoder;
-    protected StatusSignal<Double> steerEncoderAbsolutePositionSignal,
-            steerEncoderVelocitySignal,
-            steerEncoderVoltageSignal;
-    protected StatusSignal<Double> steerPositionSignal,
-            steerVelocitySignal,
-            steerAccelerationSignal,
-            steerVoltageSignal;
-    protected StatusSignal<Double> driveStatorCurrentSignal,
-            drivePositionSignal,
-            driveVelocitySignal,
-            driveAccelerationSignal,
+    protected StatusSignal<Double> steerEncoderAbsolutePositionSignal, steerEncoderVelocitySignal, steerEncoderVoltageSignal;
+    protected StatusSignal<Double> steerPositionSignal, steerVelocitySignal, steerAccelerationSignal, steerVoltageSignal;
+    protected StatusSignal<Double> driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal, driveAccelerationSignal,
             driveVoltageSignal;
 
     protected MK4IModuleConfigObject(
@@ -31,7 +23,8 @@ public class MK4IModuleConfigObject {
             boolean isSteerMotorInverted,
             int driveMotorId,
             boolean isDriveMotorInverted,
-            int steerEncoderId) {
+            int steerEncoderId
+    ) {
         this.steerEncoder = new CANcoder(steerEncoderId, busChain);
         this.driveMotor = new GBTalonFXPro(driveMotorId, busChain);
         this.steerMotor = new GBTalonFXPro(steerMotorId, busChain);
@@ -60,8 +53,9 @@ public class MK4IModuleConfigObject {
         steerEncoderVelocitySignal = steerEncoder.getVelocity();
         steerEncoderVoltageSignal = steerEncoder.getSupplyVoltage();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ, steerEncoderAbsolutePositionSignal);
+        BaseStatusSignal.setUpdateFrequencyForAll(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
+                steerEncoderAbsolutePositionSignal
+        );
         BaseStatusSignal.setUpdateFrequencyForAll(100, steerEncoderVelocitySignal, steerEncoderVoltageSignal);
 
         steerEncoder.optimizeBusUtilization();
@@ -78,11 +72,11 @@ public class MK4IModuleConfigObject {
         driveVoltageSignal = driveMotor.getMotorVoltage();
         driveAccelerationSignal = driveMotor.getAcceleration();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
+        BaseStatusSignal.setUpdateFrequencyForAll(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
                 drivePositionSignal,
                 driveVelocitySignal,
-                driveAccelerationSignal);
+                driveAccelerationSignal
+        );
         BaseStatusSignal.setUpdateFrequencyForAll(100, driveVoltageSignal, driveStatorCurrentSignal);
 
         driveMotor.optimizeBusUtilization();
@@ -100,11 +94,11 @@ public class MK4IModuleConfigObject {
         steerAccelerationSignal = steerMotor.getVelocity();
         steerVoltageSignal = steerMotor.getMotorVoltage();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
+        BaseStatusSignal.setUpdateFrequencyForAll(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
                 steerPositionSignal,
                 steerVelocitySignal,
-                steerAccelerationSignal);
+                steerAccelerationSignal
+        );
         BaseStatusSignal.setUpdateFrequencyForAll(20, steerVoltageSignal);
 
         steerMotor.optimizeBusUtilization();

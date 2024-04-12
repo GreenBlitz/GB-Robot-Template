@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
-import frc.utils.LoggerUtils;
+import frc.utils.loggerutils.LoggerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -56,12 +56,8 @@ public class Robot extends LoggedRobot {
     }
 
     private void initializeLogger() {
-        NetworkTableInstance.getDefault()
-                .getStructTopic("RobotPose", Pose2d.struct)
-                .publish();
-        NetworkTableInstance.getDefault()
-                .getStructTopic("MechanismPoses", Pose3d.struct)
-                .publish();
+        NetworkTableInstance.getDefault().getStructTopic("RobotPose", Pose2d.struct).publish();
+        NetworkTableInstance.getDefault().getStructTopic("MechanismPoses", Pose3d.struct).publish();
 
         switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> {

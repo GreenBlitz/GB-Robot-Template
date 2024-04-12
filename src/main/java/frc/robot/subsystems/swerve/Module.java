@@ -1,7 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import static frc.robot.subsystems.swerve.ModuleUtils.reduceSkew;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -9,6 +7,8 @@ import frc.robot.subsystems.swerve.swerveinterface.IModule;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.subsystems.swerve.ModuleUtils.reduceSkew;
 
 public class Module {
 
@@ -59,8 +59,7 @@ public class Module {
     }
 
     public SwerveModulePosition getCurrentPosition() {
-        return new SwerveModulePosition(
-                moduleInputs.driveDistanceMeters, Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees));
+        return new SwerveModulePosition(moduleInputs.driveDistanceMeters, Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees));
     }
 
     public SwerveModuleState getTargetState() {
@@ -86,14 +85,16 @@ public class Module {
 
         if (driveMotorClosedLoop) {
             setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
-        } else {
+        }
+        else {
             setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
         }
     }
 
     /**
      * The odometry thread can update itself faster than the main code loop (which is 50 hertz).
-     * Instead of using the latest odometry update, the accumulated odometry positions since the last loop to get a more accurate position.
+     * Instead of using the latest odometry update, the accumulated odometry positions since the last loop to get a more
+     * accurate position.
      *
      * @param odometryUpdateIndex the index of the odometry update
      * @return the position of the module at the given odometry update index
@@ -101,6 +102,7 @@ public class Module {
     public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
                 moduleInputs.odometryUpdatesDriveDistanceMeters[odometryUpdateIndex],
-                Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex]));
+                Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex])
+        );
     }
 }

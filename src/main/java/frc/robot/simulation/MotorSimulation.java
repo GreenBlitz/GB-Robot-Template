@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 

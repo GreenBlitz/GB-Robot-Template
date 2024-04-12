@@ -1,46 +1,45 @@
-package frc.utils;
+package frc.utils.loggerutils;
 
 import com.ctre.phoenix6.SignalLogger;
-import frc.robot.constants.Phoenix6Constants;
-import frc.robot.constants.RobotConstants;
-import frc.robot.constants.SimulationConstants;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class LoggerUtils {
 
     public static void startRealLogger() {
-        SignalLogger.enableAutoLogging(Phoenix6Constants.IS_AUTO_LOGGING);
+        SignalLogger.enableAutoLogging(LoggerConstants.IS_CTRE_AUTO_LOGGING);
 
-        Path path = Path.of(RobotConstants.USB_LOG_PATH);
+        Path path = Path.of(LoggerConstants.USB_LOG_PATH);
         if (Files.exists(path)) {
             startLoggerOnUSB();
-        } else {
+        }
+        else {
             startLoggerOnRoborio();
         }
     }
 
     public static void startLoggerOnUSB() {
-        setLoggingPath(RobotConstants.USB_LOG_PATH);
+        setLoggingPath(LoggerConstants.USB_LOG_PATH);
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", "USB");
     }
 
     public static void startLoggerOnRoborio() {
-        setLoggingPath(RobotConstants.SAFE_ROBORIO_LOG_PATH);
+        setLoggingPath(LoggerConstants.SAFE_ROBORIO_LOG_PATH);
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", "ROBORIO");
     }
 
     public static void startSimulationLogger() {
-        setLoggingPath(SimulationConstants.SIMULATION_LOG_PATH);
+        setLoggingPath(LoggerConstants.SIMULATION_LOG_PATH);
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", "COMPUTER");

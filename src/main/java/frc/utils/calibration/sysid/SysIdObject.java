@@ -1,8 +1,5 @@
 package frc.utils.calibration.sysid;
 
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
-
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
@@ -11,8 +8,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.utils.GBSubsystem;
-import java.util.function.Consumer;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.Consumer;
+
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 public class SysIdObject {
 
@@ -25,34 +26,35 @@ public class SysIdObject {
             GBSubsystem subsystem,
             Consumer<Double> voltageSetControl,
             double voltageStepVolts,
-            double rampRateVoltsPerSecond) {
-        this(
-                isCTRE,
+            double rampRateVoltsPerSecond
+    ) {
+        this(isCTRE,
                 subsystem,
                 voltageSetControl,
                 voltageStepVolts,
                 rampRateVoltsPerSecond,
-                SysIdConstants.DEFAULT_TIMEOUT_SECONDS);
+                SysIdConstants.DEFAULT_TIMEOUT_SECONDS
+        );
     }
 
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStep) {
-        this(
-                isCTRE,
+        this(isCTRE,
                 subsystem,
                 voltageSetControl,
                 voltageStep,
                 SysIdConstants.DEFAULT_RAMP_RATE_VOLTS_PER_SECOND,
-                SysIdConstants.DEFAULT_TIMEOUT_SECONDS);
+                SysIdConstants.DEFAULT_TIMEOUT_SECONDS
+        );
     }
 
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl) {
-        this(
-                isCTRE,
+        this(isCTRE,
                 subsystem,
                 voltageSetControl,
                 SysIdConstants.DEFAULT_VOLTAGE_STEP,
                 SysIdConstants.DEFAULT_RAMP_RATE_VOLTS_PER_SECOND,
-                SysIdConstants.DEFAULT_TIMEOUT_SECONDS);
+                SysIdConstants.DEFAULT_TIMEOUT_SECONDS
+        );
     }
 
     public SysIdObject(
@@ -61,22 +63,21 @@ public class SysIdObject {
             Consumer<Double> voltageControl,
             double voltageStepVolts,
             double rampRateVoltsPerSecond,
-            double timeoutSeconds) {
+            double timeoutSeconds
+    ) {
         this.usedSubSystem = subsystem;
         this.isCTRE = isCTRE;
 
-        final SysIdRoutine.Config config = new SysIdRoutine.Config(
-                Volts.of(rampRateVoltsPerSecond).per(Seconds.of(1)),
+        final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(rampRateVoltsPerSecond).per(Seconds.of(1)),
                 Volts.of(voltageStepVolts),
                 Seconds.of(timeoutSeconds),
-                this.isCTRE
-                        ? (state) -> SignalLogger.writeString("state", state.toString())
-                        : (state) -> Logger.recordOutput("state", state.toString()));
-        final SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
-                (Measure<Voltage> volts) -> voltageControl.accept(volts.in(Volts)),
-                null,
-                usedSubSystem,
-                usedSubSystem.getName());
+                this.isCTRE ? (state) -> SignalLogger.writeString("state", state.toString()) : (state) -> Logger.recordOutput(
+                        "state",
+                        state.toString()
+                )
+        );
+        final SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism((Measure<Voltage> volts) -> voltageControl.accept(
+                volts.in(Volts)), null, usedSubSystem, usedSubSystem.getName());
 
         this.sysIdRoutine = new SysIdRoutine(config, mechanism);
     }
@@ -101,8 +102,9 @@ public class SysIdObject {
     }
 
     private Command getCTRECommand(Command sysIdCommand) {
-        return new SequentialCommandGroup(
-                        new InstantCommand(SignalLogger::start), sysIdCommand, new InstantCommand(SignalLogger::stop))
-                .handleInterrupt(SignalLogger::stop);
+        return new SequentialCommandGroup(new InstantCommand(SignalLogger::start),
+                sysIdCommand,
+                new InstantCommand(SignalLogger::stop)
+        ).handleInterrupt(SignalLogger::stop);
     }
 }

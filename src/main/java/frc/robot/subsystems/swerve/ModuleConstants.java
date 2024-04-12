@@ -7,7 +7,9 @@ public class ModuleConstants {
 
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(1.896924) * 2;
     public static final double MAX_SPEED_REVOLUTIONS_PER_SECOND =
-            Conversions.distanceToRevolutions(SwerveConstants.MAX_SPEED_METERS_PER_SECOND, WHEEL_DIAMETER_METERS);
+            Conversions.distanceToRevolutions(SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+            WHEEL_DIAMETER_METERS
+    );
     public static final double VOLTAGE_COMPENSATION_SATURATION = 12;
 
     public static final double DRIVE_GEAR_RATIO = 6.12;

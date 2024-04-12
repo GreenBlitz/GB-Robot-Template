@@ -9,11 +9,10 @@ public abstract class GBSubsystem extends SubsystemBase {
     public void periodic() {
         super.periodic();
         if (getCurrentCommand() != null) {
-            Logger.recordOutput(
-                    "subsystems/" + getClass().getName(), getCurrentCommand().getName());
-        } else {
-            Logger.recordOutput(
-                    "subsystems/" + getClass().getName(), "no command is currently running on the subsystem");
+            Logger.recordOutput("subsystems/" + getClass().getName(), getCurrentCommand().getName());
+        }
+        else {
+            Logger.recordOutput("subsystems/" + getClass().getName(), "no command is currently running on the subsystem");
         }
     }
 }

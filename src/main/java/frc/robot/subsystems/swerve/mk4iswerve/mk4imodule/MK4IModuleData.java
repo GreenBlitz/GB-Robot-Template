@@ -7,18 +7,10 @@ import frc.robot.subsystems.swerve.ModuleUtils;
 
 public class MK4IModuleData {
 
-    private final StatusSignal<Double> steerEncoderAbsolutePositionSignal,
-            steerEncoderVelocitySignal,
-            steerEncoderVoltageSignal;
-    private final StatusSignal<Double> driveStatorCurrentSignal,
-            drivePositionSignal,
-            driveVelocitySignal,
-            driveAccelerationSignal,
-            driveVoltageSignal;
-    private final StatusSignal<Double> steerPositionSignal,
-            steerVelocitySignal,
-            steerAccelerationSignal,
-            steerVoltageSignal;
+    private final StatusSignal<Double> steerEncoderAbsolutePositionSignal, steerEncoderVelocitySignal, steerEncoderVoltageSignal;
+    private final StatusSignal<Double> driveStatorCurrentSignal, drivePositionSignal, driveVelocitySignal,
+            driveAccelerationSignal, driveVoltageSignal;
+    private final StatusSignal<Double> steerPositionSignal, steerVelocitySignal, steerAccelerationSignal, steerVoltageSignal;
 
     public MK4IModuleData(MK4IModuleConfigObject mk4IModuleConfigObject) {
         this.steerEncoderVoltageSignal = mk4IModuleConfigObject.steerEncoderVoltageSignal;

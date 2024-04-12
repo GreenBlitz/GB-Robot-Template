@@ -4,10 +4,7 @@ import com.ctre.phoenix6.StatusSignal;
 
 public class GyroPigeon2Data {
 
-    private final StatusSignal<Double> YAW_SIGNAL,
-            PITCH_SIGNAL,
-            X_ACCELERATION_SIGNAL,
-            Y_ACCELERATION_SIGNAL,
+    private final StatusSignal<Double> YAW_SIGNAL, PITCH_SIGNAL, X_ACCELERATION_SIGNAL, Y_ACCELERATION_SIGNAL,
             Z_ACCELERATION_SIGNAL;
 
     protected GyroPigeon2Data(GyroPigeon2ConfigObject gyroPigeon2ConfigObject) {

@@ -7,13 +7,9 @@ import frc.robot.poseestimation.PoseEstimatorConstants;
 
 public class GyroPigeon2ConfigObject {
 
-    private Pigeon2 gyro;
+    private final Pigeon2 gyro;
 
-    public StatusSignal<Double> YAW_SIGNAL,
-            PITCH_SIGNAL,
-            X_ACCELERATION_SIGNAL,
-            Y_ACCELERATION_SIGNAL,
-            Z_ACCELERATION_SIGNAL;
+    public StatusSignal<Double> YAW_SIGNAL, PITCH_SIGNAL, X_ACCELERATION_SIGNAL, Y_ACCELERATION_SIGNAL, Z_ACCELERATION_SIGNAL;
 
     protected GyroPigeon2ConfigObject(int id, String busChain) {
         this.gyro = new Pigeon2(id, busChain);
@@ -33,8 +29,7 @@ public class GyroPigeon2ConfigObject {
         Y_ACCELERATION_SIGNAL = gyro.getAccelerationY();
         Z_ACCELERATION_SIGNAL = gyro.getAccelerationZ();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                50, X_ACCELERATION_SIGNAL, Y_ACCELERATION_SIGNAL, Z_ACCELERATION_SIGNAL);
+        BaseStatusSignal.setUpdateFrequencyForAll(50, X_ACCELERATION_SIGNAL, Y_ACCELERATION_SIGNAL, Z_ACCELERATION_SIGNAL);
 
         PITCH_SIGNAL.setUpdateFrequency(100);
         YAW_SIGNAL.setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);

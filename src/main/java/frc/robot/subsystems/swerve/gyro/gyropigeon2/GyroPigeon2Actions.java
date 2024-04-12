@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class GyroPigeon2Actions {
 
-    private Pigeon2 pigeon2;
+    private final Pigeon2 pigeon2;
 
     protected GyroPigeon2Actions(Pigeon2 pigeon2) {
         this.pigeon2 = pigeon2;

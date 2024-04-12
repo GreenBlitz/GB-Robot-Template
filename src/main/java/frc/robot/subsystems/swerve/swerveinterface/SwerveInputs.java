@@ -5,8 +5,6 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class SwerveInputs {
 
-    public double[] odometryUpdatesYawDegrees = new double[0];
-
     public double gyroYawDegrees = 0;
 
     public double gyroPitchDegrees = 0;
@@ -17,5 +15,4 @@ public class SwerveInputs {
 
     public double accelerationZ = 0;
 
-    public double[] odometryUpdatesTimestamp = new double[0];
 }

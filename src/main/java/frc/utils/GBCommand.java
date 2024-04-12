@@ -2,6 +2,7 @@ package frc.utils;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,4 +66,5 @@ public abstract class GBCommand extends Command {
     public Set<Subsystem> getRequirements() {
         return subsystems;
     }
+
 }

@@ -4,11 +4,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;
 import frc.robot.subsystems.swerve.ModuleUtils;
 
-public class SimulationModuleData {
+public class SimulationModuleStatus {
 
     private final SimpleMotorSimulation steerMotor, driveMotor;
 
-    public SimulationModuleData(SimulationModuleConfigObject simulationModuleConfigObject) {
+    public SimulationModuleStatus(SimulationModuleConfigObject simulationModuleConfigObject) {
         this.driveMotor = simulationModuleConfigObject.getDriveMotor();
         this.steerMotor = simulationModuleConfigObject.getSteerMotor();
     }
@@ -40,4 +40,5 @@ public class SimulationModuleData {
     public double getDrivePositionInMeters() {
         return ModuleUtils.toDriveDistance(driveMotor.getPositionRevolutions());
     }
+
 }

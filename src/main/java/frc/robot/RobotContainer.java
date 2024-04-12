@@ -22,11 +22,11 @@ import frc.robot.subsystems.swerve.Swerve;
  */
 public class RobotContainer {
 
-    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
     public static final Swerve SWERVE = new Swerve();
 
     public static final IPoseEstimator POSE_ESTIMATOR = PoseEstimatorFactory.createPoseEstimator();
+
+    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -60,4 +60,5 @@ public class RobotContainer {
         // An example command will be run in autonomous
         return Autos.exampleAuto(m_exampleSubsystem);
     }
+
 }

@@ -4,10 +4,27 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class Conversions {
 
-    public static final double MAG_TICKS = 4096,
-            DEGREES_PER_REVOLUTIONS = 360,
-            HUNDRED_MS_PER_SEC = 10,
-            SEC_PER_MIN = 60;
+    public static final double MAG_TICKS = 4096, DEGREES_PER_REVOLUTIONS = 360, HUNDRED_MS_PER_SEC = 10, SEC_PER_MIN = 60;
+
+    /**
+     * Converts ticks from a Mag Encoder to degrees.
+     *
+     * @param magTicks ticks from a Mag Encoder
+     * @return degrees
+     */
+    public static double magTicksToDegrees(double magTicks) {
+        return revolutionsToDegrees(magTicksToRevolutions(magTicks));
+    }
+
+    /**
+     * Converts revolutions to degrees.
+     *
+     * @param revolutions revolutions
+     * @return degrees
+     */
+    public static double revolutionsToDegrees(double revolutions) {
+        return revolutions * DEGREES_PER_REVOLUTIONS;
+    }
 
     /**
      * Converts ticks from a Mag Encoder to revolutions.
@@ -17,6 +34,16 @@ public class Conversions {
      */
     public static double magTicksToRevolutions(double magTicks) {
         return magTicks / MAG_TICKS;
+    }
+
+    /**
+     * Converts degrees to Mag Encoder ticks.
+     *
+     * @param degrees degrees
+     * @return Mag Encoder ticks
+     */
+    public static double degreesToMagTicks(double degrees) {
+        return revolutionsToMagTicks(degreesToRevolutions(degrees));
     }
 
     /**
@@ -37,36 +64,6 @@ public class Conversions {
      */
     public static double degreesToRevolutions(double degrees) {
         return degrees / DEGREES_PER_REVOLUTIONS;
-    }
-
-    /**
-     * Converts revolutions to degrees.
-     *
-     * @param revolutions revolutions
-     * @return degrees
-     */
-    public static double revolutionsToDegrees(double revolutions) {
-        return revolutions * DEGREES_PER_REVOLUTIONS;
-    }
-
-    /**
-     * Converts ticks from a Mag Encoder to degrees.
-     *
-     * @param magTicks ticks from a Mag Encoder
-     * @return degrees
-     */
-    public static double magTicksToDegrees(double magTicks) {
-        return revolutionsToDegrees(magTicksToRevolutions(magTicks));
-    }
-
-    /**
-     * Converts degrees to Mag Encoder ticks.
-     *
-     * @param degrees degrees
-     * @return Mag Encoder ticks
-     */
-    public static double degreesToMagTicks(double degrees) {
-        return revolutionsToMagTicks(degreesToRevolutions(degrees));
     }
 
     /**
@@ -96,36 +93,6 @@ public class Conversions {
     }
 
     /**
-     * Converts a frequency from per 100ms to per second.
-     *
-     * @param frequency the frequency per 100ms
-     * @return the frequency per second
-     */
-    public static double perHundredMsToPerSecond(double frequency) {
-        return frequency * HUNDRED_MS_PER_SEC;
-    }
-
-    /**
-     * Converts a frequency from per second to per 100ms.
-     *
-     * @param frequency the frequency per second
-     * @return the frequency per 100ms
-     */
-    public static double perSecondToPerHundredMs(double frequency) {
-        return frequency / HUNDRED_MS_PER_SEC;
-    }
-
-    /**
-     * Converts a frequency from per second to per minute.
-     *
-     * @param frequency the frequency per second
-     * @return the frequency per minute
-     */
-    public static double perSecondToPerMinute(double frequency) {
-        return frequency * SEC_PER_MIN;
-    }
-
-    /**
      * Converts a frequency from per minute to per second.
      *
      * @param frequency the frequency per minute
@@ -146,6 +113,26 @@ public class Conversions {
     }
 
     /**
+     * Converts a frequency from per second to per minute.
+     *
+     * @param frequency the frequency per second
+     * @return the frequency per minute
+     */
+    public static double perSecondToPerMinute(double frequency) {
+        return frequency * SEC_PER_MIN;
+    }
+
+    /**
+     * Converts a frequency from per 100ms to per second.
+     *
+     * @param frequency the frequency per 100ms
+     * @return the frequency per second
+     */
+    public static double perHundredMsToPerSecond(double frequency) {
+        return frequency * HUNDRED_MS_PER_SEC;
+    }
+
+    /**
      * Converts a frequency from per minute to per 100ms.
      *
      * @param frequency the frequency per minute
@@ -153,6 +140,16 @@ public class Conversions {
      */
     public static double perMinToPerSec(double frequency) {
         return perSecondToPerHundredMs(frequency) / SEC_PER_MIN;
+    }
+
+    /**
+     * Converts a frequency from per second to per 100ms.
+     *
+     * @param frequency the frequency per second
+     * @return the frequency per 100ms
+     */
+    public static double perSecondToPerHundredMs(double frequency) {
+        return frequency / HUNDRED_MS_PER_SEC;
     }
 
     /**
@@ -211,8 +208,11 @@ public class Conversions {
      * @return the scaled constraints
      */
     public static TrapezoidProfile.Constraints scaleConstraints(
-            TrapezoidProfile.Constraints constraints, double percentage) {
-        return new TrapezoidProfile.Constraints(
-                constraints.maxVelocity * (percentage / 100), constraints.maxAcceleration * (percentage / 100));
+            TrapezoidProfile.Constraints constraints, double percentage
+    ) {
+        return new TrapezoidProfile.Constraints(constraints.maxVelocity * (percentage / 100),
+                constraints.maxAcceleration * (percentage / 100)
+        );
     }
+
 }

@@ -3,5 +3,7 @@ echo "*********************************************************"
 echo "Running git post-commit hook. Running Git Push... "
 echo "*********************************************************"
 
+branch=$(git branch --show-current)
+
 # run git pull
-git push;
+git push -u origin "$branch";

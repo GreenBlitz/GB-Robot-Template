@@ -11,7 +11,7 @@ import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.ModuleConstants;
 
-public class MK4IModuleConstants {
+class MK4IModuleConstants {
 
     public static final boolean ENABLE_FOC_DRIVE = true;
 
@@ -100,7 +100,8 @@ public class MK4IModuleConstants {
             true,
             Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.FRONT_LEFT_ENCODER);
+            Ports.CANCodersIds.FRONT_LEFT_ENCODER
+    );
 
     protected static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
@@ -108,7 +109,8 @@ public class MK4IModuleConstants {
             true,
             Ports.TalonFXIds.FRONT_RIGHT_DRIVE_MOTOR,
             true,
-            Ports.CANCodersIds.FRONT_RIGHT_ENCODER);
+            Ports.CANCodersIds.FRONT_RIGHT_ENCODER
+    );
 
     protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
@@ -116,7 +118,8 @@ public class MK4IModuleConstants {
             false,
             Ports.TalonFXIds.BACK_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.BACK_LEFT_ENCODER);
+            Ports.CANCodersIds.BACK_LEFT_ENCODER
+    );
 
     protected static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
             Phoenix6Constants.CANIVORE_NAME,
@@ -124,5 +127,7 @@ public class MK4IModuleConstants {
             true,
             Ports.TalonFXIds.BACK_RIGHT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.BACK_RIGHT_ENCODER);
+            Ports.CANCodersIds.BACK_RIGHT_ENCODER
+    );
+
 }

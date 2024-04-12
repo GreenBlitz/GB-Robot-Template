@@ -6,12 +6,12 @@ public class DriverStationUtils {
 
     private static final DriverStation.Alliance DEFAULT_ALLIANCE = DriverStation.Alliance.Blue;
 
-    public static DriverStation.Alliance getAlliance() {
-        return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
-    }
-
     public static boolean isBlueAlliance() {
         return getAlliance().equals(DriverStation.Alliance.Blue);
+    }
+
+    public static DriverStation.Alliance getAlliance() {
+        return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
     }
 
     public static boolean isRedAlliance() {
@@ -45,4 +45,5 @@ public class DriverStationUtils {
     public static boolean isTestEnabled() {
         return DriverStation.isTestEnabled();
     }
+
 }

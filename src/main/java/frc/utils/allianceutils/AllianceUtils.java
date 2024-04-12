@@ -1,10 +1,10 @@
 package frc.utils.allianceutils;
 
-import static frc.utils.DriverStationUtils.isBlueAlliance;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.FieldConstants;
+
+import static frc.utils.DriverStationUtils.isBlueAlliance;
 
 public class AllianceUtils {
 
@@ -21,6 +21,13 @@ public class AllianceUtils {
         return switchAlliance(pose);
     }
 
+    private static Pose2d switchAlliance(Pose2d pose) {
+        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
+                FieldConstants.FIELD_WIDTH - pose.getY(),
+                pose.getRotation().minus(Rotation2d.fromRotations(0.5))
+        );
+    }
+
     /**
      * Mirrors a pose across the center of the field if the current alliance is red.
      *
@@ -32,6 +39,13 @@ public class AllianceUtils {
             return pose;
         }
         return mirror(pose);
+    }
+
+    private static Pose2d mirror(Pose2d pose) {
+        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
+                pose.getY(),
+                new Rotation2d(Math.PI).minus(pose.getRotation())
+        );
     }
 
     /**
@@ -47,17 +61,4 @@ public class AllianceUtils {
         return new Rotation2d(Math.PI).minus(rotation);
     }
 
-    private static Pose2d mirror(Pose2d pose) {
-        return new Pose2d(
-                FieldConstants.FIELD_LENGTH - pose.getX(),
-                pose.getY(),
-                new Rotation2d(Math.PI).minus(pose.getRotation()));
-    }
-
-    private static Pose2d switchAlliance(Pose2d pose) {
-        return new Pose2d(
-                FieldConstants.FIELD_LENGTH - pose.getX(),
-                FieldConstants.FIELD_WIDTH - pose.getY(),
-                pose.getRotation().minus(Rotation2d.fromRotations(0.5)));
-    }
 }

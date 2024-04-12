@@ -17,4 +17,5 @@ public class GyroSimulation {
     public void setHeading(Rotation2d heading) {
         simulationRadians = heading.getRadians();
     }
+
 }

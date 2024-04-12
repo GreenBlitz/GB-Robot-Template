@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,21 @@ public abstract class MotorSimulation {
         }
     }
 
+    private void updateSimulation() {
+        setInputVoltage(motorSimState.getMotorVoltage());
+        updateMotor();
+        motorSimState.setRawRotorPosition(getPositionRevolutions());
+        motorSimState.setRotorVelocity(getVelocityRevolutionsPerSecond());
+    }
+
+    protected abstract void setInputVoltage(double voltage);
+
+    protected abstract void updateMotor();
+
+    public abstract double getPositionRevolutions();
+
+    public abstract double getVelocityRevolutionsPerSecond();
+
     public void applyConfiguration(TalonFXConfiguration config) {
         motor.getConfigurator().apply(config);
     }
@@ -58,20 +74,6 @@ public abstract class MotorSimulation {
         return closedLoopReferenceSignal.refresh().getValue();
     }
 
-    private void updateSimulation() {
-        setInputVoltage(motorSimState.getMotorVoltage());
-        updateMotor();
-        motorSimState.setRawRotorPosition(getPositionRevolutions());
-        motorSimState.setRotorVelocity(getVelocityRevolutionsPerSecond());
-    }
-
     public abstract double getCurrent();
 
-    public abstract double getPositionRevolutions();
-
-    public abstract double getVelocityRevolutionsPerSecond();
-
-    protected abstract void setInputVoltage(double voltage);
-
-    protected abstract void updateMotor();
 }

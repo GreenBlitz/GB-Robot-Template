@@ -28,7 +28,8 @@ public class JoysticksBindings {
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)));
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
     }
 
     private static void secondJoystickButtons() {
@@ -45,4 +46,5 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
         // bindings
     }
+
 }

@@ -12,7 +12,8 @@ public class ExampleSubsystem extends SubsystemBase {
     /**
      * Creates a new ExampleSubsystem.
      */
-    public ExampleSubsystem() {}
+    public ExampleSubsystem() {
+    }
 
     /**
      * Example command factory method.
@@ -46,4 +47,5 @@ public class ExampleSubsystem extends SubsystemBase {
     public void simulationPeriodic() {
         // This method will be called once per scheduler run during simulation
     }
+
 }

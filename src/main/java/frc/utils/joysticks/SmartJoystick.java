@@ -13,7 +13,9 @@ public class SmartJoystick {
     private static final double JOYSTICK_AXIS_TO_SQUARE_FACTOR = 1.4;
 
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
+
     public final AxisButton L2, R2;
+
     public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 
     private final double deadzone;
@@ -28,19 +30,6 @@ public class SmartJoystick {
      */
     public SmartJoystick(int joystick_port, double deadzone) {
         this(new Joystick(joystick_port), deadzone);
-    }
-
-    /**
-     * This constructor constructs the joystick based on the joystick port we give it.
-     *
-     * @param joystick_port The port of the joystick.
-     */
-    public SmartJoystick(int joystick_port) {
-        this(new Joystick(joystick_port));
-    }
-
-    public SmartJoystick(Joystick stick) {
-        this(stick, DEADZONE);
     }
 
     /**
@@ -70,24 +59,17 @@ public class SmartJoystick {
         POV_LEFT = new POVButton(joystick, 270);
     }
 
-    private double deadzone(double power) {
-        if (Math.abs(power) < deadzone) {
-            return 0;
-        }
-        return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
-    }
-
-    private boolean isStickAxis(Axis axis) {
-        return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
-    }
-
     /**
-     * This function binds a joystick using a joystick object.
+     * This constructor constructs the joystick based on the joystick port we give it.
      *
-     * @param stick This stick object which we bind the joystick to.
+     * @param joystick_port The port of the joystick.
      */
-    public void bind(Joystick stick) {
-        joystick = stick;
+    public SmartJoystick(int joystick_port) {
+        this(new Joystick(joystick_port));
+    }
+
+    public SmartJoystick(Joystick stick) {
+        this(stick, DEADZONE);
     }
 
     /**
@@ -97,6 +79,15 @@ public class SmartJoystick {
      */
     public void bind(int port) {
         bind(new Joystick(port));
+    }
+
+    /**
+     * This function binds a joystick using a joystick object.
+     *
+     * @param stick This stick object which we bind the joystick to.
+     */
+    public void bind(Joystick stick) {
+        joystick = stick;
     }
 
     /**
@@ -148,6 +139,10 @@ public class SmartJoystick {
         return MathUtil.clamp(squaredAxisValue, -1, 1);
     }
 
+    private boolean isStickAxis(Axis axis) {
+        return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
+    }
+
     /**
      * This function returns a joystick
      *
@@ -159,6 +154,13 @@ public class SmartJoystick {
 
     public double getAxisValue(Axis axis) {
         return isStickAxis(axis) ? deadzone(axis.getValue(this)) : axis.getValue(this);
+    }
+
+    private double deadzone(double power) {
+        if (Math.abs(power) < deadzone) {
+            return 0;
+        }
+        return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
     }
 
     /**
@@ -196,4 +198,5 @@ public class SmartJoystick {
             return inverted * stick.getRawAxis(axis);
         }
     }
+
 }

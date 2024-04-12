@@ -1,4 +1,7 @@
 #!/bin/bash
 echo "*********************************************************"
-echo "Running Pre Commit -> Nothing..."
+echo "Running git post-checkout hook. Running Git Pull... "
 echo "*********************************************************"
+
+# run git pull
+git pull;

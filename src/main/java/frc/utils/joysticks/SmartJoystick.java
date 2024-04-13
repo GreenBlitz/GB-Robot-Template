@@ -176,7 +176,12 @@ public class SmartJoystick {
     }
 
     public enum Axis {
-        LEFT_X(0, false), LEFT_Y(1, true), LEFT_TRIGGER(2, false), RIGHT_TRIGGER(3, false), RIGHT_X(4, false), RIGHT_Y(5, true);
+        LEFT_X(0, false),
+        LEFT_Y(1, true),
+        LEFT_TRIGGER(2, false),
+        RIGHT_TRIGGER(3, false),
+        RIGHT_X(4, false),
+        RIGHT_Y(5, true);
 
         private final int axis;
 

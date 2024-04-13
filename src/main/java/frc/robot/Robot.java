@@ -10,7 +10,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
-import frc.utils.LoggerUtils;
+import frc.utils.loggerutils.LoggerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**

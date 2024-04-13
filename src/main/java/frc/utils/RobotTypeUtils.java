@@ -12,9 +12,7 @@ public class RobotTypeUtils {
     }
 
     public enum RobotType {
-        REAL,
-        SIMULATION,
-        REPLAY;
+        REAL, SIMULATION, REPLAY;
 
         public boolean isReal() {
             return this.equals(RobotType.REAL);

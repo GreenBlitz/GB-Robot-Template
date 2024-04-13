@@ -104,7 +104,6 @@ public class SmartJoystick {
     }
 
     /**
-     *
      * This function returns the value of the axis, if the stick was square instead of circle
      *
      * @param axis The axis we want to use.

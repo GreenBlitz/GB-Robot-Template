@@ -23,7 +23,11 @@ public class AlliancePose2d {
     }
 
     public static AlliancePose2d fromBlueAlliancePose(Pose2d blueAlliancePose) {
-        return new AlliancePose2d(blueAlliancePose, AllianceUtils.toAlliancePose(blueAlliancePose), AllianceUtils.toMirroredAlliancePose(blueAlliancePose));
+        return new AlliancePose2d(
+                blueAlliancePose,
+                AllianceUtils.toAlliancePose(blueAlliancePose),
+                AllianceUtils.toMirroredAlliancePose(blueAlliancePose)
+        );
     }
 
     public static AlliancePose2d fromBlueAlliancePose(double x, double y, Rotation2d rotation) {

@@ -22,7 +22,8 @@ public class AllianceUtils {
     }
 
     private static Pose2d switchAlliance(Pose2d pose) {
-        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
+        return new Pose2d(
+                FieldConstants.FIELD_LENGTH - pose.getX(),
                 FieldConstants.FIELD_WIDTH - pose.getY(),
                 pose.getRotation().minus(Rotation2d.fromRotations(0.5))
         );
@@ -42,7 +43,8 @@ public class AllianceUtils {
     }
 
     private static Pose2d mirror(Pose2d pose) {
-        return new Pose2d(FieldConstants.FIELD_LENGTH - pose.getX(),
+        return new Pose2d(
+                FieldConstants.FIELD_LENGTH - pose.getX(),
                 pose.getY(),
                 new Rotation2d(Math.PI).minus(pose.getRotation())
         );

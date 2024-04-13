@@ -15,7 +15,7 @@ public class LoggerUtils {
     public static void startRealLogger() {
         SignalLogger.enableAutoLogging(LoggerConstants.IS_CTRE_AUTO_LOGGING);
 
-        Path path = Path.of(LoggerConstants.USB_LOG_PATH);
+        final Path path = Path.of(LoggerConstants.USB_LOG_PATH);
         if (Files.exists(path)) {
             startLoggerOnUSB();
         }
@@ -46,7 +46,7 @@ public class LoggerUtils {
     }
 
     public static void startReplayLogger() {
-        String logPath = LogFileUtil.findReplayLog();
+        final String logPath = LogFileUtil.findReplayLog();
         Logger.setReplaySource(new WPILOGReader(logPath));
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_simulation")));
         Logger.start();

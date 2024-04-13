@@ -208,7 +208,8 @@ public class Conversions {
      * @return the scaled constraints
      */
     public static TrapezoidProfile.Constraints scaleConstraints(TrapezoidProfile.Constraints constraints, double percentage) {
-        return new TrapezoidProfile.Constraints(constraints.maxVelocity * (percentage / 100),
+        return new TrapezoidProfile.Constraints(
+                constraints.maxVelocity * (percentage / 100),
                 constraints.maxAcceleration * (percentage / 100)
         );
     }

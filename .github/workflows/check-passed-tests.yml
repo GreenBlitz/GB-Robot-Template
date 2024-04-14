@@ -3,6 +3,9 @@ name: Check Passed All Tests
 on:
   pull_request:
     types: [ opened, labeled, unlabeled, auto_merge_enabled, auto_merge_disabled ]
+  merge_group:
+    types: [ checks_requested ]
+
 
 jobs:
   fail-if-needs-testing:

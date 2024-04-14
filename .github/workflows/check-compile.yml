@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Fail if can't compile
         run: |
-          ./gradlew compileJava
+          /bin/bash ./gradlew compileJava

@@ -17,5 +17,8 @@ jobs:
           echo "This PR is currently a draft."
           exit 1
 
+      - name: Set execute permissions for gradlew
+        run: chmod +x ./gradlew
+
       - name: Compile Java code with Gradle
         run: ./gradlew compileJava --console=plain

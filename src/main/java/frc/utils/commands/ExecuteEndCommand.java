@@ -16,6 +16,7 @@ public class ExecuteEndCommand extends FunctionalCommand {
      * @param requirements the subsystems required by this command
      */
     public ExecuteEndCommand(Runnable onExecute, Runnable onEnd, SubsystemBase... requirements) {
+
         super(() -> {}, onExecute, (interrupted) -> onEnd.run(), () -> false, requirements);
     }
 

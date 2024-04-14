@@ -11,7 +11,7 @@ on:
 
 jobs:
   fail-for-draft:
-    if: !contains(github.event.pull_request.labels.*.name, 'passed-all-tests')
+    if: contains(github.event.pull_request.labels.*.name, 'passed-all-tests')
     runs-on: ubuntu-latest
     steps:
       - name: Fail if PR is a draft

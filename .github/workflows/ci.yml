@@ -17,10 +17,5 @@ jobs:
           echo "This PR is currently a draft."
           exit 1
 
-      - name: Setup JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-
       - name: Compile Java code with Gradle
         run: ./gradlew compileJava --console=plain

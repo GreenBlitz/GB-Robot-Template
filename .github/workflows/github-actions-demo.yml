@@ -1,20 +1,18 @@
-name: Check Draft
+name: Check Passed Tests
 
 on:
   pull_request:
-    #    branches:
-    #      - main
     types:
       - opened
       - labeled
       - unlabeled
 
 jobs:
-  fail-for-draft:
-    if: contains(github.event.pull_request.labels.*.name, 'needs-robot-testing')
+  fail-when-needs-testing:
+    if: !contains(github.event.pull_request.labels.*.name, 'passed-all-tests')
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if PR needs testing
+      - name: Fail if PR didn't passed all tests
         run: |
           echo "This PR needs testing."
           exit 1

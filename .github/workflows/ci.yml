@@ -22,7 +22,7 @@ jobs:
           pwd
 
       - name: Set execute permissions for gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x /home/runner/work/Off-Season-2024/Off-Season-2024/gradlew/gradlew
 
       - name: Compile Java code with Gradle
         run: ./gradlew compileJava --console=plain

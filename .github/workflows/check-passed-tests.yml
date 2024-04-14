@@ -2,19 +2,15 @@ name: Check Passed All Tests
 
 on:
   pull_request:
-    types: [ opened, labeled, unlabeled, ]
+    types: [ opened, labeled, unlabeled ]
   page_build:
     types: [ ]
   branch_protection_rule:
-    types: [ deleted, created ]
-  check_run:
-    types:
-      - requested_action
-      - rerequested
-  check_suite:
-    types:
-      - rerequested
-      - requested
+    types: [ deleted, created, edited ]
+#  check_run:
+#    types: [ requested_action, rerequested ]
+#  check_suite:
+#    types: [ requested, rerequested ]
 
 
 jobs:

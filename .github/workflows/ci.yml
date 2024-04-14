@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check label
+        if: "!contains(github.event.pull_request.labels.*.name, 'passed-all-tests')"
+        run: |
+          echo "This PR is currently a draft."
+          exit 1
+
+      - name: Compile Java code with Gradle
+        run: ./gradlew compileJava --console=plain

@@ -8,7 +8,7 @@ on:
       - unlabeled
 
 jobs:
-  fail-when-needs-testing:
+  Fail-When-Needs-Testing:
     if: !contains(github.event.pull_request.labels.*.name, 'passed-all-tests')
     runs-on: ubuntu-latest
     steps:

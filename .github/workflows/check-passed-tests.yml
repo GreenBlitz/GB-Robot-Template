@@ -1,7 +1,6 @@
 name: Check Passed All Tests
 
 on:
-  push:
   pull_request:
     types: [ opened, labeled, unlabeled ]
 

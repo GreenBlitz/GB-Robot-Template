@@ -1,14 +1,17 @@
-name: Check Compile
+name: Build Gradle project
 
 on:
+  push:
   pull_request:
     types: [ opened, labeled, unlabeled ]
 
-
 jobs:
-  fail-compile:
+  build-gradle-project:
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if can't compile
-        run: |
-          /bin/bash ./gradlew compileJava
+      - name: Checkout project sources
+        uses: actions/checkout@v4
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Run build with Gradle Wrapper
+        run: ./gradlew build

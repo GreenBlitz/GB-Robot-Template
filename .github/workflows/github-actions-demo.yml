@@ -2,20 +2,14 @@ name: Check Draft
 
 on:
   pull_request:
-    #    branches:
-    #      - main
-    types:
-      - opened
-      - labeled
-      - unlabeled
+    types: [ opened, labeled, unlabeled ]
 
 jobs:
   fail-for-draft:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-        name: Fail if PR is a draft
-      - if: "!contains(github.event.pull_request.labels.*.name, 'passed-all-tests')"
+      - name: Fail if PR is a draft
+        if: "!contains(github.event.pull_request.labels.*.name, 'passed-all-tests')"
         run: |
           echo "This PR is currently a draft."
           exit 1

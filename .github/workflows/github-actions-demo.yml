@@ -13,7 +13,8 @@ jobs:
   fail-for-draft:
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if PR is a draft
+      - run: |
+        name: Fail if PR is a draft
       - if: contains(github.event.pull_request.labels.*.name, 'passed-all-tests')
         run: |
           echo "This PR is currently a draft."

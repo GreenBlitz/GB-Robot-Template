@@ -5,6 +5,7 @@ import groovy.json.JsonSlurper
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
+    id("com.gradle.enterprise") version("3.16.2")
 }
 
 java {
@@ -13,6 +14,18 @@ java {
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
+
+
+gradleEnterprise {
+    if (System.getenv("CI") != null) {
+        buildScan {
+            publishAlways()
+            termsOfServiceUrl = "https://gradle.com/terms-of-service"
+            termsOfServiceAgree = "yes"
+        }
+    }
+}
+
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.

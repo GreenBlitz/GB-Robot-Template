@@ -11,6 +11,8 @@ on:
     types: [ requested_action, rerequested ]
   check_suite:
     types: [ requested, rerequested ]
+  push:
+
 
 
 jobs:

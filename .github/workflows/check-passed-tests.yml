@@ -2,7 +2,7 @@ name: Check Passed All Tests
 
 on:
   pull_request:
-    types: [ opened, labeled, unlabeled, auto_merge_enabled ]
+    types: [ opened, labeled, unlabeled, auto_merge_enabled, auto_merge_disabled ]
 
 jobs:
   fail-if-needs-testing:

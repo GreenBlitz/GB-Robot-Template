@@ -7,10 +7,10 @@ on:
     types: [ ]
   branch_protection_rule:
     types: [ deleted, created, edited ]
-#  check_run:
-#    types: [ requested_action, rerequested ]
-#  check_suite:
-#    types: [ requested, rerequested ]
+  check_run:
+    types: [ requested_action, rerequested ]
+  check_suite:
+    types: [ requested, rerequested ]
 
 
 jobs:

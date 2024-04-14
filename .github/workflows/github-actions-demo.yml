@@ -1,4 +1,4 @@
-name: Check Passed Tests
+name: Check Draft
 
 on:
   pull_request:

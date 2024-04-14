@@ -2,7 +2,7 @@ name: Check Compile
 
 on:
   pull_request:
-    types: [ opened ]
+    types: [ opened, labeled, unlabeled ]
 
 
 jobs:

@@ -20,6 +20,7 @@ jobs:
       - name: Print current directory
         run: |
           pwd
+          ls -l /home/runner/work/Off-Season-2024/Off-Season-2024/
 
       - name: Set execute permissions for gradlew
         run: chmod +x /home/runner/work/Off-Season-2024/Off-Season-2024/gradlew

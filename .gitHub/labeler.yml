@@ -1,0 +1,7 @@
+name: Labeler
+uses: actions/labeler@v5.0.0
+
+# Add 'AnyChange' label to any changes within the entire repository
+needs-robot-testing:
+  - changed-files:
+      - any-glob-to-any-file: '**'

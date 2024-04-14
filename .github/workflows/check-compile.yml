@@ -2,7 +2,7 @@ name: Check Compile
 
 on:
   pull_request:
-    types: [ auto_merge_enabled ]
+    types: [ opened ]
 
 
 jobs:

@@ -17,6 +17,10 @@ jobs:
           echo "This PR is currently a draft."
           exit 1
 
+      - name: Print current directory
+        run: |
+          pwd
+
       - name: Set execute permissions for gradlew
         run: chmod +x ./gradlew
 

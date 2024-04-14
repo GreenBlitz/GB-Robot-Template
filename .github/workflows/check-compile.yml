@@ -1,0 +1,14 @@
+name: Check Compile
+
+on:
+  pull_request:
+    types: [ auto_merge_enabled ]
+
+
+jobs:
+  fail-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if can't compile
+        run: |
+          ./gradlew compileJava

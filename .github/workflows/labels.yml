@@ -26,11 +26,19 @@ jobs:
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ',')
           
           if [[ -n "${LABELS}" ]]; then
-          echo "Labels for the pull request:"
-          IFS=',' read -r -a labels_array <<< "${LABELS}"
-            for label in "${labels_array[@]}"; do
-              echo "$label"
-            done
-          else
+            echo "Labels for the pull request:"
+            IFS=',' read -r -a labels_array <<< "${LABELS}"
+            # Specify the label you want to check
+            target_label="passed-all-tests"
+            # Check if the target label exists in the array
+              if [[ " ${labels_array[*]} " =~ " ${target_label} " ]]; then
+                echo "Label '${target_label}' exists."
+                exit 0  # Exit with success status code
+              else
+                echo "Label '${target_label}' does not exist."
+                exit 1  # Exit with failure status code
+              fi
+            else
               echo "No labels found for the pull request."
-          fi
+              exit 1  # Exit with failure status code
+            fi

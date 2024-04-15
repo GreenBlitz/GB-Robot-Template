@@ -2,8 +2,8 @@ package frc.utils.calibration.autocalibration.findkp;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Timer;
-import frc.utils.GBCommand;
 import frc.utils.GBSubsystem;
+import frc.utils.commands.GBCommand;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
@@ -33,19 +33,10 @@ public abstract class KpFindingUtil extends GBCommand {
 
     protected double error;
 
-    protected KpFindingUtil(
-            GBSubsystem subsystem,
-            boolean isSetControlNeedToRunPeriodic,
-            double tolerance,
-            double timeoutForActionSeconds,
-            Pair<Double, Double> valuesToRunFor,
-            DoubleSupplier currentValueSupplier,
-            DoubleSupplier currentKpValueSupplier,
-            Consumer<Double> setControl,
-            Consumer<Double> setKp,
-            Predicate<Double> isAtPose,
-            Runnable doOnEnd
-    ) {
+    protected KpFindingUtil(GBSubsystem subsystem, boolean isSetControlNeedToRunPeriodic, double tolerance,
+            double timeoutForActionSeconds, Pair<Double, Double> valuesToRunFor, DoubleSupplier currentValueSupplier,
+            DoubleSupplier currentKpValueSupplier, Consumer<Double> setControl, Consumer<Double> setKp,
+            Predicate<Double> isAtPose, Runnable doOnEnd) {
         this.TIMER = new Timer();
 
         this.isSetControlNeedToRunPeriodic = isSetControlNeedToRunPeriodic;

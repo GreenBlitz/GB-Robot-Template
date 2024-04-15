@@ -8,27 +8,45 @@ on:
 jobs:
   check-label:
     runs-on: ubuntu-latest
-    outputs:
-      passed-tests: ${{ steps.check-label.outputs.passed-tests }}
     steps:
       - name: Check if label exists
         id: check-label
         run: |
-          labels=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
-          if [[ "$labels" == *"passed-all-tests"* ]]; then
-            echo "Label 'passed-all-tests' found on pull request."
-            echo "::set-output name=passed-tests::true"
+          labels=$(jq -r '.pull_request.labels' "$GITHUB_EVENT_PATH")
+          if [[ "$labels" != "null" && $(echo "$labels" | jq -e '. | length > 0') == "true" ]]; then
+          if [[ $(echo "$labels" | jq -r '.[].name' | grep -q 'passed-all-tests' && echo true || echo false) == "true" ]]; then
+           echo "Label 'passed-all-tests' found on pull request."
+           echo "true" > label_result.txt
           else
-            echo "Label 'passed-all-tests' not found on pull request."
-            echo "::set-output name=passed-tests::false"
+           echo "Label 'passed-all-tests' not found on pull request."
+           echo "false" > label_result.txt
           fi
+          else
+          echo "No labels found on pull request."
+          echo "false" > label_result.txt
+          fi
+          # Store label check result as an artifact
+          - name: Store label check result
+            if: github.event_name == 'pull_request'
+            uses: actions/upload-artifact@v2
+            with:
+              name: label-check-result
+              path: label_result.txt
 
   fail-if-needs-testing:
     runs-on: ubuntu-latest
     needs: check-label
     steps:
+      # Download label check result artifact
+      - name: Download label check result
+        if: github.event_name == 'pull_request'
+        uses: actions/download-artifact@v2
+        with:
+          name: label-check-result
+          path: .
+
       - name: Fail if PR needs testing
-        if: ${{ needs.check-label.outputs.passed-tests != 'true' }}
+        if: ${{ steps.check-label.outputs.passed-tests != 'true' && steps.check-label.outputs.passed-tests != 'false' }}
         run: |
           echo "This PR is currently a draft."
           exit 1

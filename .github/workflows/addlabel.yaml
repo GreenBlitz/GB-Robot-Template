@@ -14,7 +14,7 @@ jobs:
           linesAdded=$(jq '.pull_request.additions' $GITHUB_EVENT_PATH)
           linesDeleted=$(jq '.pull_request.deletions' $GITHUB_EVENT_PATH)
           totalLinesChanged=$(( $linesAdded + $linesDeleted ))
-          echo "::set-output name=lines-changed::$totalLinesChanged"
+          echo "lines-changed=${totalLinesChanged}" >> $GITHUB_OUTPUT
 
       - name: Add label to PR
         if: always()

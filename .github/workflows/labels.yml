@@ -25,8 +25,6 @@ jobs:
           PR_NUMBER="${{ steps.pr-number.outputs.pr-number }}"
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ',')
           
-          echo "${LABELS}"
-          
           if [[ -n "${LABELS}" ]]; then
           echo "Labels for the pull request:"
           IFS=',' read -r -a labels_array <<< "${LABELS}"
@@ -35,25 +33,4 @@ jobs:
             done
           else
               echo "No labels found for the pull request."
-          fi
-          
-          echo "labels=${LABELS}" >> $GITHUB_OUTPUT
-
-      - name: Output labels
-        run: |
-          if [[ -f "$GITHUB_OUTPUT" ]]; then
-            ENCODED_LABELS=$(cat "$GITHUB_OUTPUT" | grep '^labels=' | sed 's/labels=//')
-            if [[ -n "$ENCODED_LABELS" ]]; then
-              DECODED_LABELS=$(echo "$ENCODED_LABELS" | base64 -d)
-              if [[ -n "$DECODED_LABELS" ]]; then
-                echo "Labels for the pull request:"
-                echo "$DECODED_LABELS"  # Output decoded labels
-              else
-                echo "Failed to decode labels."
-              fi
-            else
-              echo "No labels found in $GITHUB_OUTPUT."
-            fi
-          else
-            echo "$GITHUB_OUTPUT not found."
           fi

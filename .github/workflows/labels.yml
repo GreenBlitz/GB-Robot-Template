@@ -6,7 +6,9 @@ on:
       - labeled
       - unlabeled
       - opened
-  push:
+      - synchronize
+      - reopened
+
 
 jobs:
   check-labels:
@@ -24,25 +26,52 @@ jobs:
         if: steps.pr-number.outputs.pr-number != 'null'
         run: |
           PR_NUMBER="${{ steps.pr-number.outputs.pr-number }}"
-          LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ',')
-          IFS=',' read -r -a labels_array <<< "${LABELS}"
-          echo "LABELS_ARRAY=${labels_array[*]}" >> $GITHUB_ENV
+          LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ' ')
+          echo "LABELS_ARRAY=${LABELS}" >> $GITHUB_ENV
+
+      - name: print all labels
+        run: echo "there are this labels on this pr -> ${LABELS_ARRAY}"
 
       - name: check passed-all-tests label
         run: |
-          if [[ -n "$LABELS_ARRAY" ]]; then
-            target_label="passed-all-tests"
-            IFS=',' read -r -a labels_array <<< "$LABELS_ARRAY"
+          target_label="passed-all-tests"
           
-            if [[ " ${labels_array[*]} " =~ " ${target_label} " ]]; then
-              echo "Label '${target_label}' exists."
-              exit 0
-            else
-              echo "Label '${target_label}' does not exist."
-              exit 1
-            fi
+          if [[ " ${LABELS_ARRAY[*]} " =~ " ${target_label} " ]]; then
+             echo "Label '${target_label}' exists."
           else
-            echo "No labels found for the pull request."
+            echo "Label '${target_label}' does not exist."
             exit 1
           fi
-      
+
+      - name: check waiting-for-another-pr label
+        run: |
+          target_off_label="waiting-for-another-pr"
+          
+          if [[ ! " ${LABELS_ARRAY[*]} " =~ " ${target_off_label} " ]]; then
+            echo "Label '${target_off_label}' doesn't exists."
+          else
+            echo "Label '${target_off_label}' exists."
+            exit 1
+          fi
+
+      - name: check needs-robot-testing label
+        run: |
+          target_off_label="needs-robot-testing"
+          
+          if [[ ! " ${LABELS_ARRAY[*]} " =~ " ${target_off_label} " ]]; then
+            echo "Label '${target_off_label}' doesn't exists."
+          else
+            echo "Label '${target_off_label}' exists."
+            exit 1
+          fi
+
+      - name: check needs-simulation-testing label
+        run: |
+          target_off_label="needs-simulation-testing"
+
+          if [[ ! " ${LABELS_ARRAY[*]} " =~ " ${target_off_label} " ]]; then
+            echo "Label '${target_off_label}' doesn't exists."
+          else
+            echo "Label '${target_off_label}' exists."
+            exit 1
+          fi

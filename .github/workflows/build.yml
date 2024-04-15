@@ -1,8 +1,12 @@
 name: Build
 
 on:
-  push:
   pull_request:
+    types:
+      - synchronize
+      - opened
+      - reopened
+      - converted_to_draft
 
 jobs:
   build:

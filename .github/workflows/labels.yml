@@ -25,23 +25,24 @@ jobs:
         run: |
           PR_NUMBER="${{ steps.pr-number.outputs.pr-number }}"
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ',')
+          echo "LABELS_ARRAY=${LABELS}" >> $GITHUB_ENV
           #          IFS=',' read -r -a labels_array <<< "${LABELS}"
       #          echo "LABELS_ARRAY=${labels_array[*]}" >> $GITHUB_ENV
 
       - name: check if there are labels
         run: |
-          if [[ ! "-n $LABELS" ]]; then
+          if [[ ! "-n ${LABELS_ARRAY}" ]]; then
             echo "no labels on this pr"
             exit 1
           else
-            echo "there are this labels on this pr -> $LABELS"
+            echo "there are this labels on this pr -> ${LABELS_ARRAY}"
           fi
 
       - name: check passed-all-tests label
         run: |
           target_label="passed-all-tests"
           
-          if [[ " ${LABELS[*]} " =~ " ${target_label} " ]]; then
+          if [[ " ${LABELS_ARRAY[*]} " =~ " ${target_label} " ]]; then
              echo "Label '${target_label}' exists."
           else
             echo "Label '${target_label}' does not exist."
@@ -52,7 +53,7 @@ jobs:
         run: |
           target_off_label="waiting-for-another-pr"
           
-          if [[ ! " ${LABELS[*]} " =~ " ${target_off_label} " ]]; then
+          if [[ ! " ${LABELS_ARRAY[*]} " =~ " ${target_off_label} " ]]; then
             echo "Label '${target_off_label}' doesn't exists."
           else
             echo "Label '${target_off_label}' exists."

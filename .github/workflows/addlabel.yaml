@@ -20,9 +20,9 @@ jobs:
         if: always()
         run: |
           linesChanged=$(echo "${{ steps.calculate-lines-changed.outputs.lines-changed }}")
-          if [ $linesChanged -lt 300 ]; then
+          if [ $linesChanged -lt 30 ]; then
             labelToAdd="A SMALL PR"
-          elif [ $linesChanged -ge 300 ] && [ $linesChanged -le 500 ]; then
+          elif [ $linesChanged -ge 30 ] && [ $linesChanged -le 50 ]; then
             labelToAdd="A MEDIUM PR"
           else
             labelToAdd="A BIG PR"

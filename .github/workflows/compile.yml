@@ -1,4 +1,4 @@
-name: Build
+name: Compile
 
 on:
   pull_request:
@@ -9,8 +9,8 @@ on:
       - converted_to_draft
 
 jobs:
-  build:
-    name: Build
+  compile:
+    name: Compile
     runs-on: ubuntu-latest
     container: wpilib/roborio-cross-ubuntu:2024-22.04
     steps:

@@ -8,45 +8,27 @@ jobs:
   add-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Get pull request details
-        id: pr-details
-        uses: octokit/request-action@v2.x
-        with:
-          route: GET /repos/:owner/:repo/pulls/:pull_number
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          pull_number: ${{ github.event.pull_request.number }}
-          headers:
-            authorization: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Calculate lines changed
         id: calculate-lines-changed
         run: |
-          linesAdded=$(echo "${{ steps.pr-details.outputs.data }}" | jq '.additions')
-          linesDeleted=$(echo "${{ steps.pr-details.outputs.data }}" | jq '.deletions')
+          linesAdded=$(jq '.pull_request.additions' $GITHUB_EVENT_PATH)
+          linesDeleted=$(jq '.pull_request.deletions' $GITHUB_EVENT_PATH)
           totalLinesChanged=$(( $linesAdded + $linesDeleted ))
           echo "::set-output name=lines-changed::$totalLinesChanged"
 
       - name: Add label to PR
         if: always()
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const linesChanged = parseInt('${{ steps.calculate-lines-changed.outputs.lines-changed }}');
-            let labelToAdd;
-            if (linesChanged < 300) {
-              labelToAdd = "A SMALL PR";
-            } else if (linesChanged >= 300 && linesChanged <= 500) {
-              labelToAdd = "A MEDIUM PR";
-            } else {
-              labelToAdd = "A BIG PR";
-            }
-            const token = '${{ secrets.GITHUB_TOKEN }}';
-            const octokit = new Octokit({ auth: token });
-            octokit.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              labels: [labelToAdd]
-            });
+        run: |
+          linesChanged=$(echo "${{ steps.calculate-lines-changed.outputs.lines-changed }}")
+          if [ $linesChanged -lt 300 ]; then
+            labelToAdd="A SMALL PR"
+          elif [ $linesChanged -ge 300 ] && [ $linesChanged -le 500 ]; then
+            labelToAdd="A MEDIUM PR"
+          else
+            labelToAdd="A BIG PR"
+          fi
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
+            -d "{\"labels\":[\"$labelToAdd\"]}"

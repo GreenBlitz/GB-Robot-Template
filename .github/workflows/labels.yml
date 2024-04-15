@@ -25,13 +25,13 @@ jobs:
           PR_NUMBER="${{ steps.pr-number.outputs.pr-number }}"
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ',')
           IFS=',' read -r -a labels_array <<< "${LABELS}"
-          echo "::set-output name=labels_array::${labels_array[*]}"
+          echo "LABELS_ARRAY=${labels_array[*]}" >> $GITHUB_ENV
 
       - name: check passed-all-tests label
         run: |
-          labels_array=("${{ steps.labels.outputs.labels_array }}")
-          if [[ -n "${labels_array[@]}" ]]; then
+          if [[ -n "$LABELS_ARRAY" ]]; then
             echo "Labels for the pull request:"
+            IFS=',' read -r -a labels_array <<< "$LABELS_ARRAY"
             # Specify the label you want to check
             target_label="passed-all-tests"
             # Check if the target label exists in the array
@@ -46,3 +46,4 @@ jobs:
             echo "No labels found for the pull request."
             exit 1  # Exit with failure status code
           fi
+      

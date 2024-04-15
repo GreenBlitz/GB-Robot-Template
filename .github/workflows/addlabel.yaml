@@ -2,7 +2,7 @@ name: Add Label to PR
 
 on:
   pull_request:
-    types: [ opened, synchronize ]
+    types: [ opened ]
 
 jobs:
   add-label:
@@ -17,7 +17,7 @@ jobs:
           repo: ${{ github.event.repository.name }}
           pull_number: ${{ github.event.pull_request.number }}
           headers:
-            authorization: ${{ secrets.GITHUB_TOKEN | toString }}
+            authorization: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Calculate lines changed
         id: calculate-lines-changed
@@ -42,7 +42,9 @@ jobs:
             } else {
               labelToAdd = "A BIG PR";
             }
-            github.issues.addLabels({
+            const token = '${{ secrets.GITHUB_TOKEN }}';
+            const octokit = new Octokit({ auth: token });
+            octokit.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,

@@ -1,4 +1,4 @@
-name: Check Passed All Tests
+name: Passed All Tests
 
 on:
   pull_request:

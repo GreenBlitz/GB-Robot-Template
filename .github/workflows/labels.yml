@@ -29,7 +29,7 @@ jobs:
 
       - name: check if there are labels
         run: |
-          if [[ ! "-n ${LABELS_ARRAY}" ]]; then
+          if [[ ! "-n ${LABELS_ARRAY//}" ]]; then
             echo "no labels on this pr"
             exit 1
           else

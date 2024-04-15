@@ -147,8 +147,8 @@ tasks.register('installLocalGitHookPostCheckout', Copy) {
     }
 }
 
-compileJava.finalizedBy checkAkitInstall, autoCommit
-build.dependsOn installLocalGitHookPreCommit, installLocalGitHookPostCommit, installLocalGitHookPostCheckout
+compileJava.finalizedBy checkAkitInstall
+build.dependsOn autoCommit, installLocalGitHookPreCommit, installLocalGitHookPostCommit, installLocalGitHookPostCheckout
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.

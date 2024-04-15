@@ -49,7 +49,7 @@ jobs:
                 curl -X DELETE \
                   -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                   -H "Accept: application/vnd.github.v3+json" \
-                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/$(echo $otherLabel | sed 's/ /%20/g')"
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
               fi
             done
           else
@@ -57,7 +57,7 @@ jobs:
               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github.v3+json" \
               https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
-              -d "{\"labels\":[\"$(echo $labelToAdd | sed 's/ /%20/g')\"]}"
+              -d "{\"labels\":[\"${labelToAdd}\"]}"
 
             otherLabels="$SMALL_PR_LABEL,$MEDIUM_PR_LABEL,$BIG_PR_LABEL"
             for otherLabel in $otherLabels; do
@@ -65,7 +65,7 @@ jobs:
                 curl -X DELETE \
                   -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                   -H "Accept: application/vnd.github.v3+json" \
-                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/$(echo $otherLabel | sed 's/ /%20/g')"
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
               fi
             done
           fi

@@ -24,10 +24,12 @@ jobs:
         run: |
           PR_NUMBER="${{ steps.pr-number.outputs.pr-number }}"
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name')
+          
           echo "${LABELS}"
+          
           if [[ -n "${LABELS}" ]]; then
           echo "Labels for the pull request:"
-          IFS=',' read -r -a labels_array <<< "${LABELS}"
+          IFS=$'\n' read -r -a labels_array <<< "${LABELS}"
           echo "${labels_array}"
             for label in "${labels_array[@]}"; do
               echo "$label"
@@ -35,7 +37,8 @@ jobs:
           else
               echo "No labels found for the pull request."
           fi
-          echo "labels=${ENCODED_LABELS}" >> $GITHUB_OUTPUT
+          
+          echo "labels=${LABELS}" >> $GITHUB_OUTPUT
 
       - name: Output labels
         run: |

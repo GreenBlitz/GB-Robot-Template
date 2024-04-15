@@ -17,15 +17,15 @@ jobs:
           repo: ${{ github.event.repository.name }}
           pull_number: ${{ github.event.pull_request.number }}
           headers:
-            authorization: ${{ secrets.GITHUB_TOKEN }}
+            authorization: ${{ secrets.GITHUB_TOKEN | toString }}
 
       - name: Calculate lines changed
         id: calculate-lines-changed
         run: |
-          linesAdded=$(echo "${{ steps.pr-details.outputs.data }} | jq '.additions'")
-          linesDeleted=$(echo "${{ steps.pr-details.outputs.data }} | jq '.deletions'")
+          linesAdded=$(echo "${{ steps.pr-details.outputs.data }}" | jq '.additions')
+          linesDeleted=$(echo "${{ steps.pr-details.outputs.data }}" | jq '.deletions')
           totalLinesChanged=$(( $linesAdded + $linesDeleted ))
-          echo "lines-changed=${totalLinesChanged}" >> $GITHUB_OUTPUT
+          echo "::set-output name=lines-changed::$totalLinesChanged"
 
       - name: Add label to PR
         if: always()
@@ -43,7 +43,7 @@ jobs:
               labelToAdd = "A BIG PR";
             }
             github.issues.addLabels({
-              owner: context.repo.owner,  
+              owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
               labels: [labelToAdd]

@@ -30,11 +30,11 @@ jobs:
 
       - name: check if there are labels
         run: |
-          if [[ ! "-n LABELS" ]]; then
+          if [[ ! "-n $LABELS" ]]; then
             echo "no labels on this pr"
             exit 1
           else
-            echo "there are this labels on this pr -> LABELS"
+            echo "there are this labels on this pr -> $LABELS"
           fi
 
       - name: check passed-all-tests label

@@ -31,14 +31,16 @@ jobs:
       - name: check passed-all-tests label
         run: |
           if [[ -n "$LABELS_ARRAY" ]]; then
-            target_label="passed-all-tests"
+            target_on_label="passed-all-tests"
+            target_off_label="waiting-for-another-pr"
             IFS=',' read -r -a labels_array <<< "$LABELS_ARRAY"
           
-            if [[ " ${labels_array[*]} " =~ " ${target_label} " ]]; then
-              echo "Label '${target_label}' exists."
+            if [[ " ${labels_array[*]} " =~ " ${target_on_label} " && ! " ${labels_array[*]} " =~ " ${target_off_label} " ]]; then
+              echo "Label '${target_on_label}' exists."
+              echo "Label '${target_off_label}' doesn't exists."
               exit 0
             else
-              echo "Label '${target_label}' does not exist."
+              echo "Label '${target_label}' does not exist or Label '${target_off_label}' doesn't exists."
               exit 1
             fi
           else

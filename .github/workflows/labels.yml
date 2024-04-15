@@ -2,7 +2,7 @@ name: Passed All Tests
 
 on:
   pull_request:
-    types: [ opened, labeled, unlabeled ]
+
 
 jobs:
   fail-if-needs-testing:

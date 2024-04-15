@@ -35,15 +35,14 @@ jobs:
             labelToAdd=$BIG_PR_LABEL
           fi
           existingLabels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels | jq -r '.[].name')
-          echo "label-to-add=${labelToAdd}"
-          echo "existing-labels=${existingLabels}" 
+          echo "label-to-add=${labelToAdd}" >> $GITHUB_OUTPUT
+          echo "existing-labels=${existingLabels}" >> $GITHUB_ENV
 
       - name: Remove existing labels and add label
         if: always()
         run: |
-          existingLabels="${{ steps.check-label.outputs.existing-labels }}"
           labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
-          if [[ $existingLabels =~ $labelToAdd ]]; then
+          if [[ ${existingLabels} =~ ${labelToAdd} ]]; then
             otherLabels="$SMALL_PR_LABEL,$MEDIUM_PR_LABEL,$BIG_PR_LABEL"
             for otherLabel in $otherLabels; do
               if [ "$otherLabel" != "$labelToAdd" ]; then
@@ -62,7 +61,7 @@ jobs:
 
             otherLabels="$SMALL_PR_LABEL,$MEDIUM_PR_LABEL,$BIG_PR_LABEL"
             for otherLabel in $otherLabels; do
-              if [ "$otherLabel" != "$labelToAdd" ]; then
+              if [ "${otherLabel}" != "${labelToAdd}" ]; then
                 curl -X DELETE \
                   -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                   -H "Accept: application/vnd.github.v3+json" \

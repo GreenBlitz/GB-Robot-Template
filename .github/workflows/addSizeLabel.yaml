@@ -40,7 +40,7 @@ jobs:
           echo "Existing labels: $existingLabels"
 
 
-      - name: Remove existing labels and add label
+      - name: Put only one size label
         if: always()
         run: |
           existingLabels="${{ env.existing-labels }}"

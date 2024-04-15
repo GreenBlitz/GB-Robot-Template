@@ -26,8 +26,6 @@ jobs:
           PR_NUMBER="${{ steps.pr-number.outputs.pr-number }}"
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ' ')
           echo "LABELS_ARRAY=${LABELS}" >> $GITHUB_ENV
-          #          IFS=',' read -r -a labels_array <<< "${LABELS}"
-      #          echo "LABELS_ARRAY=${labels_array[*]}" >> $GITHUB_ENV
 
       - name: check if there are labels
         run: |

@@ -35,8 +35,9 @@ jobs:
             labelToAdd=$BIG_PR_LABEL
           fi
           echo "label-to-add=${labelToAdd}" >>$GITHUB_OUTPUT
-          existingLabels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels | jq -r '.[].name')
+          existingLabels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels | jq -r '.[].name' | tr '\n' ' ')
           echo "existing-labels=${existingLabels}" >>$GITHUB_ENV
+      
 
       - name: Remove existing labels and add label
         if: always()

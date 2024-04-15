@@ -14,7 +14,8 @@ jobs:
       - name: Check if label exists
         id: check-label
         run: |
-          if [[ $(jq -r '.pull_request.labels | map(.name) | contains(["passed-all-tests"])' <<< $GITHUB_EVENT_PATH) == "true" ]]; then
+          labels=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
+          if [[ "$labels" == *"passed-all-tests"* ]]; then
             echo "Label 'passed-all-tests' found on pull request."
             echo "::set-output name=passed-tests::true"
           else

@@ -14,15 +14,23 @@ jobs:
           linesAdded=$(jq '.pull_request.additions' $GITHUB_EVENT_PATH)
           linesDeleted=$(jq '.pull_request.deletions' $GITHUB_EVENT_PATH)
           totalLinesChanged=$(( $linesAdded + $linesDeleted ))
-          echo "lines-changed=${totalLinesChanged}" >> $GITHUB_OUTPUT
+          echo "::set-output name=lines-changed::$totalLinesChanged"
+
+      - name: Remove existing size labels
+        run: |
+          curl -X DELETE \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
+            -d '{"labels":["A SMALL PR","A MEDIUM PR","A BIG PR"]}'
 
       - name: Add label to PR
         if: always()
         run: |
           linesChanged=$(echo "${{ steps.calculate-lines-changed.outputs.lines-changed }}")
-          if [ $linesChanged -lt 30 ]; then
+          if [ $linesChanged -lt 300 ]; then
             labelToAdd="A SMALL PR"
-          elif [ $linesChanged -ge 30 ] && [ $linesChanged -le 50 ]; then
+          elif [ $linesChanged -ge 300 ] && [ $linesChanged -le 500 ]; then
             labelToAdd="A MEDIUM PR"
           else
             labelToAdd="A BIG PR"

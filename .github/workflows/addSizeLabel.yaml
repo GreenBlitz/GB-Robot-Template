@@ -62,6 +62,7 @@ jobs:
             otherLabels="$SMALL_PR_LABEL,$MEDIUM_PR_LABEL,$BIG_PR_LABEL"
             for otherLabel in $otherLabels; do
               if [ "${otherLabel}" != "${labelToAdd}" ]; then
+                echo "label to delete -> ${otherLabel}"
                 curl -X DELETE \
                   -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                   -H "Accept: application/vnd.github.v3+json" \

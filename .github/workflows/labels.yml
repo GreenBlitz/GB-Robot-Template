@@ -52,4 +52,25 @@ jobs:
             echo "Label '${target_off_label}' exists."
             exit 1
           fi
-      
+
+      - name: check needs-robot-testing label
+        run: |
+          target_off_label="needs-robot-testing"
+          
+          if [[ ! " ${LABELS_ARRAY[*]} " =~ " ${target_off_label} " ]]; then
+            echo "Label '${target_off_label}' doesn't exists."
+          else
+            echo "Label '${target_off_label}' exists."
+            exit 1
+          fi
+
+      - name: check needs-simulation-testing label
+        run: |
+          target_off_label="needs-simulation-testing"
+
+          if [[ ! " ${LABELS_ARRAY[*]} " =~ " ${target_off_label} " ]]; then
+            echo "Label '${target_off_label}' doesn't exists."
+          else
+            echo "Label '${target_off_label}' exists."
+            exit 1
+          fi

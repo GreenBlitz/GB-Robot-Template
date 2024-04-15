@@ -27,14 +27,8 @@ jobs:
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ' ')
           echo "LABELS_ARRAY=${LABELS}" >> $GITHUB_ENV
 
-      - name: check if there are labels
-        run: |
-          if [[ ! "-n ${LABELS_ARRAY// }" ]]; then
-            echo "no labels on this pr"
-            exit 1
-          else
-            echo "there are this labels on this pr -> ${LABELS_ARRAY}"
-          fi
+      - name: print all labels
+        run: echo "there are this labels on this pr -> ${LABELS_ARRAY}"
 
       - name: check passed-all-tests label
         run: |

@@ -43,6 +43,7 @@ jobs:
       - name: Remove existing labels and add label
         if: always()
         run: |
+          existingLabels = ${{ env.existingLabels }}
           labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
           echo "Label to add: $labelToAdd"
           existingLabels=$(echo "${existingLabels}" | tr '\n' ' ')

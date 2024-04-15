@@ -11,7 +11,7 @@ jobs:
         id: pr-number
         run: |
           PR_NUMBER=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?head=${GITHUB_REF}" | jq -r '.[0].number')
-          echo "{pr-number}={$PR_NUMBER}" >> $GITHUB_OUTPUT
+          echo "pr-number=${PR_NUMBER}" >> $GITHUB_OUTPUT
 
 
       - name: Get labels for PR
@@ -20,7 +20,7 @@ jobs:
         run: |
           PR_NUMBER="${{ steps.pr-number.outputs.pr-number }}"
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name')
-          echo "{labels}={$LABELS}" >> $GITHUB_OUTPUT
+          echo "labels=${LABELS}" >> $GITHUB_OUTPUT
 
       - name: Output labels
         run: |

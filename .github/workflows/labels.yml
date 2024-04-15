@@ -2,6 +2,10 @@ name: Get Labels for Pull Request
 
 on:
   push:
+  pull_request:
+    types:
+      - labeled
+      - unlabeled
 
 jobs:
   get-labels:

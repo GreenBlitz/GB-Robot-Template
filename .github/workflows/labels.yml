@@ -1,7 +1,7 @@
 name: Get Labels for Pull Request
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   get-labels:

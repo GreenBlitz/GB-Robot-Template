@@ -43,9 +43,13 @@ jobs:
         if: always()
         run: |
           labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
+          echo "Label to add: $labelToAdd"
           otherLabels="$SMALL_PR_LABEL $MEDIUM_PR_LABEL $BIG_PR_LABEL"
+          echo "Other labels: $otherLabels"
           for otherLabel in $otherLabels; do
+            echo "Checking label: $otherLabel"
             if [[ "$existingLabels" == *"$otherLabel"* ]]; then
+              echo "Label $otherLabel found in existing labels. Deleting..."
               curl -X DELETE \
                 -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                 -H "Accept: application/vnd.github.v3+json" \

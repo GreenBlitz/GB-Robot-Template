@@ -1,4 +1,4 @@
-name: Add Size Label to PR
+name: Auto Size Label to PR
 
 on:
   pull_request:

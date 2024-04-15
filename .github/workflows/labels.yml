@@ -23,7 +23,6 @@ jobs:
           echo "${LABELS}"
           echo "labels=${LABELS}" >> $GITHUB_OUTPUT
 
-
       - name: Output labels
         run: |
           if [[ "${{ steps.labels.outputs.labels }}" == "" ]]; then

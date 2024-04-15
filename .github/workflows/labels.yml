@@ -33,14 +33,15 @@ jobs:
           if [[ ! "-n $LABELS_ARRAY" ]]; then
             echo "no labels on this pr"
             exit 1
+          else
+            echo "there are this labels on this pr -> $LABELS_ARRAY"
           fi
 
       - name: check passed-all-tests label
         run: |
           target_label="passed-all-tests"
-          IFS=',' read -r -a labels_array <<< "$LABELS_ARRAY"
           
-          if [[ " ${labels_array[*]} " =~ " ${target_label} " ]]; then
+          if [[ " ${LABELS_ARRAY[*]} " =~ " ${target_label} " ]]; then
              echo "Label '${target_label}' exists."
           else
             echo "Label '${target_label}' does not exist."
@@ -50,9 +51,8 @@ jobs:
       - name: check waiting-for-another-pr label
         run: |
           target_off_label="waiting-for-another-pr"
-          IFS=',' read -r -a labels_array <<< "$LABELS_ARRAY"
           
-          if [[ ! " ${labels_array[*]} " =~ " ${target_off_label} " ]]; then
+          if [[ ! " ${LABELS_ARRAY[*]} " =~ " ${target_off_label} " ]]; then
             echo "Label '${target_off_label}' doesn't exists."
           else
             echo "Label '${target_off_label}' exists."

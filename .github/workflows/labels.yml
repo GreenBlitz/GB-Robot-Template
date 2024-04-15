@@ -6,7 +6,8 @@ on:
       - labeled
       - unlabeled
       - opened
-  push:
+      - synchronize
+
 
 jobs:
   check-labels:

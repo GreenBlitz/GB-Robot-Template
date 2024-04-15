@@ -8,9 +8,9 @@ jobs:
   add-label:
     runs-on: ubuntu-latest
     env:
-      SMALL_PR_LABEL: "A SMALL PR"
-      MEDIUM_PR_LABEL: "A MEDIUM PR"
-      BIG_PR_LABEL: "A BIG PR"
+      SMALL_PR_LABEL: "A-SMALL-PR"
+      MEDIUM_PR_LABEL: "A-MEDIUM-PR"
+      BIG_PR_LABEL: "A-BIG-PR"
       SMALL_THRESHOLD: 300
       MEDIUM_THRESHOLD: 500
     steps:

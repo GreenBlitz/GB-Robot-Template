@@ -28,6 +28,7 @@ jobs:
           if [[ -n "${LABELS}" ]]; then
           echo "Labels for the pull request:"
           IFS=',' read -r -a labels_array <<< "${LABELS}"
+          echo "${labels_array}"
             for label in "${labels_array[@]}"; do
               echo "$label"
             done

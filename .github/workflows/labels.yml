@@ -20,6 +20,7 @@ jobs:
         run: |
           PR_NUMBER="${{ steps.pr-number.outputs.pr-number }}"
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name')
+          echo "${LABELS}"
           echo "labels=${LABELS}" >> $GITHUB_OUTPUT
 
       - name: Output labels

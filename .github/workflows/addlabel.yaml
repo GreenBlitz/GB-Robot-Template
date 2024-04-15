@@ -2,30 +2,48 @@ name: Add Label to PR
 
 on:
   pull_request:
-    types: [ opened ]
+    types: [ opened, synchronize ]
 
 jobs:
   add-label:
     runs-on: ubuntu-latest
     steps:
+      - name: Get pull request details
+        id: pr-details
+        uses: octokit/request-action@v2.x
+        with:
+          route: GET /repos/:owner/:repo/pulls/:pull_number
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          pull_number: ${{ github.event.pull_request.number }}
+          headers:
+            authorization: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Calculate lines changed
+        id: calculate-lines-changed
+        run: |
+          linesAdded=$(echo "${{ steps.pr-details.outputs.data }} | jq '.additions'")
+          linesDeleted=$(echo "${{ steps.pr-details.outputs.data }} | jq '.deletions'")
+          totalLinesChanged=$(( $linesAdded + $linesDeleted ))
+          echo "lines-changed=${totalLinesChanged}" >> $GITHUB_OUTPUT
+
       - name: Add label to PR
+        if: always()
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const prNumber = context.payload.pull_request.number;
+            const linesChanged = parseInt('${{ steps.calculate-lines-changed.outputs.lines-changed }}');
             let labelToAdd;
-            if (prNumber % 3 === 0) {
+            if (linesChanged < 300) {
               labelToAdd = "A SMALL PR";
-            } 
-            else if (prNumber % 3 === 1) {
+            } else if (linesChanged >= 300 && linesChanged <= 500) {
               labelToAdd = "A MEDIUM PR";
-            } 
-            else {
+            } else {
               labelToAdd = "A BIG PR";
             }
             github.issues.addLabels({
-              owner: context.repo.owner,
+              owner: context.repo.owner,  
               repo: context.repo.repo,
               issue_number: context.issue.number,
               labels: [labelToAdd]

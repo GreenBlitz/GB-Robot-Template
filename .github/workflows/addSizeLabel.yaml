@@ -19,13 +19,13 @@ jobs:
         run: |
           linesAdded=$(jq '.pull_request.additions' $GITHUB_EVENT_PATH)
           linesDeleted=$(jq '.pull_request.deletions' $GITHUB_EVENT_PATH)
-          totalLinesChanged=$(( $linesAdded + $linesDeleted ))
-          echo "lines-changed=${totalLinesChanged}" >> $GITHUB_OUTPUT
+          totalLinesChanged=$((linesAdded + linesDeleted))
+          echo "lines-changed=${totalLinesChanged}" >>$GITHUB_OUTPUT
 
       - name: Check if label already exists
         id: check-label
         run: |
-          linesChanged=$(echo "${{ steps.calculate-lines-changed.outputs.lines-changed }}")
+          linesChanged=${{ steps.calculate-lines-changed.outputs.lines-changed }}
           labelToAdd=""
           if [ $linesChanged -lt $SMALL_THRESHOLD ]; then
             labelToAdd=$SMALL_PR_LABEL
@@ -34,39 +34,26 @@ jobs:
           else
             labelToAdd=$BIG_PR_LABEL
           fi
-          existingLabels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels | jq -r '.[].name' | tr '\n' ' ')
-          echo "label-to-add=${labelToAdd}" >> $GITHUB_OUTPUT
-          echo "existing-labels=${existingLabels}" >> $GITHUB_ENV
+          echo "label-to-add=${labelToAdd}" >>$GITHUB_OUTPUT
+          existingLabels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels | jq -r '.[].name')
+          echo "existing-labels=${existingLabels}" >>$GITHUB_ENV
 
       - name: Remove existing labels and add label
         if: always()
         run: |
           labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
-          if [[ ${existingLabels} =~ ${labelToAdd} ]]; then
-            otherLabels="$SMALL_PR_LABEL,$MEDIUM_PR_LABEL,$BIG_PR_LABEL"
-            for otherLabel in $otherLabels; do
-              if [ "$otherLabel" != "$labelToAdd" ]; then
-                curl -X DELETE \
-                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                  -H "Accept: application/vnd.github.v3+json" \
-                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
-              fi
-            done
-          else
-            curl -X POST \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github.v3+json" \
-              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
-              -d "{\"labels\":[\"${labelToAdd}\"]}"
+          otherLabels="$SMALL_PR_LABEL $MEDIUM_PR_LABEL $BIG_PR_LABEL"
+          for otherLabel in $otherLabels; do
+            if [[ "$existingLabels" == *"$otherLabel"* ]]; then
+              curl -X DELETE \
+                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
+            fi
+          done
 
-            otherLabels="$SMALL_PR_LABEL,$MEDIUM_PR_LABEL,$BIG_PR_LABEL"
-            for otherLabel in $otherLabels; do
-              if [ "${otherLabel}" != "${labelToAdd}" ]; then
-                echo "label to delete -> ${otherLabel}"
-                curl -X DELETE \
-                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                  -H "Accept: application/vnd.github.v3+json" \
-                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
-              fi
-            done
-          fi
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
+            -d "{\"labels\":[\"${labelToAdd}\"]}"

@@ -7,6 +7,12 @@ on:
 jobs:
   add-label:
     runs-on: ubuntu-latest
+    env:
+      SMALL_PR_LABEL: "A SMALL PR"
+      MEDIUM_PR_LABEL: "A MEDIUM PR"
+      BIG_PR_LABEL: "A BIG PR"
+      SMALL_THRESHOLD: 300
+      MEDIUM_THRESHOLD: 500
     steps:
       - name: Calculate lines changed
         id: calculate-lines-changed
@@ -19,7 +25,15 @@ jobs:
       - name: Check if label already exists
         id: check-label
         run: |
-          labelToAdd=$(echo "${{ steps.calculate-lines-changed.outputs.lines-changed }}" | awk '{print ($1 < 300) ? "A SMALL PR" : ($1 >= 300 && $1 <= 500) ? "A MEDIUM PR" : "A BIG PR"}')
+          linesChanged=$(echo "${{ steps.calculate-lines-changed.outputs.lines-changed }}")
+          labelToAdd=""
+          if [ $linesChanged -lt $SMALL_THRESHOLD ]; then
+            labelToAdd=$SMALL_PR_LABEL
+          elif [ $linesChanged -ge $SMALL_THRESHOLD ] && [ $linesChanged -le $MEDIUM_THRESHOLD ]; then
+            labelToAdd=$MEDIUM_PR_LABEL
+          else
+            labelToAdd=$BIG_PR_LABEL
+          fi
           existingLabels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels | jq -r '.[].name')
           echo "label-to-add=${labelToAdd}" >> $GITHUB_OUTPUT
           echo "existing-labels=${existingLabels}" >> $GITHUB_OUTPUT
@@ -27,32 +41,32 @@ jobs:
       - name: Remove existing labels and add label
         if: always()
         run: |
-          labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
           existingLabels="${{ steps.check-label.outputs.existing-labels }}"
+          labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
           if [[ $existingLabels =~ $labelToAdd ]]; then
-            # Label already exists, remove other two labels
-            otherLabels=$(echo "A SMALL PR,A MEDIUM PR,A BIG PR" | sed "s/$labelToAdd//g" | tr ',' '\n')
+            otherLabels="$SMALL_PR_LABEL,$MEDIUM_PR_LABEL,$BIG_PR_LABEL"
             for otherLabel in $otherLabels; do
-              curl -X DELETE \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Accept: application/vnd.github.v3+json" \
-                https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}
+              if [ "$otherLabel" != "$labelToAdd" ]; then
+                curl -X DELETE \
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/$(echo $otherLabel | sed 's/ /%20/g')"
+              fi
             done
           else
-            # Label doesn't exist, add label and remove other two labels
             curl -X POST \
               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github.v3+json" \
               https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
-              -d "{\"labels\":[\"$labelToAdd\"]}"
+              -d "{\"labels\":[\"$(echo $labelToAdd | sed 's/ /%20/g')\"]}"
 
-            otherLabels="A SMALL PR,A MEDIUM PR,A BIG PR"
+            otherLabels="$SMALL_PR_LABEL,$MEDIUM_PR_LABEL,$BIG_PR_LABEL"
             for otherLabel in $otherLabels; do
               if [ "$otherLabel" != "$labelToAdd" ]; then
                 curl -X DELETE \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Accept: application/vnd.github.v3+json" \
-                "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/$(echo $otherLabel | sed 's/ /%20/g')"
               fi
             done
           fi

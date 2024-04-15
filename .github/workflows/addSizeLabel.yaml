@@ -46,8 +46,7 @@ jobs:
           existingLabels = ${{ env.existing-labels }}
           labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
           echo "Label to add: $labelToAdd"
-          existingLabels=$(echo "${existingLabels}" | tr '\n' ' ')
-          echo "Existing labels: $existingLabels"
+          echo "Existing labels: ${existingLabels}"
           otherLabels="$SMALL_PR_LABEL $MEDIUM_PR_LABEL $BIG_PR_LABEL"
           echo "Other labels: $otherLabels"
           for otherLabel in $otherLabels; do

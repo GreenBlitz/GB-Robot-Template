@@ -1,8 +1,8 @@
 package frc.utils.calibration.autocalibration.findks;
 
 import edu.wpi.first.wpilibj.Timer;
-import frc.utils.GBCommand;
 import frc.utils.GBSubsystem;
+import frc.utils.commands.GBCommand;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.BooleanSupplier;

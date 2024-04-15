@@ -1,7 +1,7 @@
 name: Get Labels for Pull Request
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   get-labels:
@@ -26,5 +26,9 @@ jobs:
           if [[ "${{ steps.labels.outputs.labels }}" == "" ]]; then
             echo "No labels found for the pull request."
           else
-            echo "Labels for the pull request: ${{ steps.labels.outputs.labels }}"
+            echo "Labels for the pull request:"
+            IFS=', ' read -r -a labels_array <<< "${{ steps.labels.outputs.labels }}"
+            for label in "${labels_array[@]}"; do
+              echo "$label"
+            done
           fi

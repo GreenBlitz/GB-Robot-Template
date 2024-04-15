@@ -26,7 +26,7 @@ jobs:
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name')
           ENCODED_LABELS=$(echo "$LABELS" | base64)  # Encode labels
           echo "${LABELS}"
-          echo "labels=${LABELS}" >> $GITHUB_OUTPUT
+          echo "labels=${ENCODED_LABELS}" >> $GITHUB_OUTPUT
 
       - name: Output labels
         run: |

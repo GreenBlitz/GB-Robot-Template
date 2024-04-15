@@ -30,20 +30,18 @@ jobs:
       - name: check passed-all-tests label
         run: |
           if [[ -n "$LABELS_ARRAY" ]]; then
-            echo "Labels for the pull request:"
-            IFS=',' read -r -a labels_array <<< "$LABELS_ARRAY"
-            # Specify the label you want to check
             target_label="passed-all-tests"
-            # Check if the target label exists in the array
+            IFS=',' read -r -a labels_array <<< "$LABELS_ARRAY"
+          
             if [[ " ${labels_array[*]} " =~ " ${target_label} " ]]; then
               echo "Label '${target_label}' exists."
-              exit 0  # Exit with success status code
+              exit 0
             else
               echo "Label '${target_label}' does not exist."
-              exit 1  # Exit with failure status code
+              exit 1
             fi
           else
             echo "No labels found for the pull request."
-            exit 1  # Exit with failure status code
+            exit 1
           fi
       

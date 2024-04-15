@@ -72,7 +72,7 @@ public class Conversions {
      *
      * @param motorData the motor data
      * @param gearRatio the gear ratio between the motor and the system. 2 means that 2 motor rotations are 1 system
-     *                  rotation.
+     * rotation.
      * @return the system data
      */
     public static double motorToSystem(double motorData, double gearRatio) {
@@ -84,8 +84,8 @@ public class Conversions {
      * This can be velocity, position, acceleration, etc.
      *
      * @param systemData the system data
-     * @param gearRatio  the gear ratio between the motor and the system. 2 means that 2 motor rotations are 1 system
-     *                   rotation.
+     * @param gearRatio the gear ratio between the motor and the system. 2 means that 2 motor rotations are 1 system
+     * rotation.
      * @return the motor data
      */
     public static double systemToMotor(double systemData, double gearRatio) {
@@ -155,7 +155,7 @@ public class Conversions {
     /**
      * Converts revolutions to distance.
      *
-     * @param revolutions   the revolutions
+     * @param revolutions the revolutions
      * @param wheelDiameter the wheel diameter
      * @return the distance
      */
@@ -166,7 +166,7 @@ public class Conversions {
     /**
      * Converts distance to revolutions.
      *
-     * @param distance      the distance
+     * @param distance the distance
      * @param wheelDiameter the wheel diameter
      * @return the revolutions
      */
@@ -179,7 +179,7 @@ public class Conversions {
      * The voltage compensation saturation determines what voltage represents 100% output.
      * The compensated power is the voltage represented by a percentage of the saturation voltage.
      *
-     * @param voltage    the target voltage output
+     * @param voltage the target voltage output
      * @param saturation the configured saturation which represents 100% output
      * @return the percentage output to achieve the target voltage
      */
@@ -192,7 +192,7 @@ public class Conversions {
      * The voltage compensation saturation determines what voltage represents 100% output.
      * The compensated power is the voltage represented by a percentage of the saturation voltage.
      *
-     * @param power      the target percentage output
+     * @param power the target percentage output
      * @param saturation the configured saturation which represents 100% output
      * @return the percentage output to achieve the target voltage
      */
@@ -204,13 +204,12 @@ public class Conversions {
      * Scales a TrapezoidProfile.Constraints object by a given percentage.
      *
      * @param constraints the constraints to scale
-     * @param percentage  the percentage of speed
+     * @param percentage the percentage of speed
      * @return the scaled constraints
      */
-    public static TrapezoidProfile.Constraints scaleConstraints(
-            TrapezoidProfile.Constraints constraints, double percentage
-    ) {
-        return new TrapezoidProfile.Constraints(constraints.maxVelocity * (percentage / 100),
+    public static TrapezoidProfile.Constraints scaleConstraints(TrapezoidProfile.Constraints constraints, double percentage) {
+        return new TrapezoidProfile.Constraints(
+                constraints.maxVelocity * (percentage / 100),
                 constraints.maxAcceleration * (percentage / 100)
         );
     }

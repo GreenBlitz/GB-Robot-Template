@@ -44,10 +44,11 @@ public class FindKp extends KpFindingUtil {
 
     @Override
     public void execute() {
-        if (isInitialize) {
+        if (currentCommandPart.isInitialize()) {
             initFunction();
         }
-        else if (isExecute) {
+
+        else if (currentCommandPart.isExecute()) {
             setControlPeriodic();
 
             final double currentPosition = currentValueSupplier.getAsDouble();
@@ -59,7 +60,8 @@ public class FindKp extends KpFindingUtil {
                 setIsEndTrue();
             }
         }
-        else if (isEnd) {
+
+        else if (currentCommandPart.isEnd()) {
             TIMER.stop();
 
             if (error > tolerance) {

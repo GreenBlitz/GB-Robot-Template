@@ -11,6 +11,24 @@ import java.util.function.Predicate;
 
 public abstract class KpFindingUtil extends GBCommand {
 
+    public enum COMMAND_PART {
+        INITIALIZE,
+        EXECUTE,
+        END;
+
+        public boolean isInitialize() {
+            return this.equals(INITIALIZE);
+        }
+
+        public boolean isExecute() {
+            return this.equals(EXECUTE);
+        }
+
+        public boolean isEnd() {
+            return this.equals(END);
+        }
+    }
+
     protected final Pair<Double, Double> valuesToRunFor;
 
     protected final DoubleSupplier currentValueSupplier, currentKpValueSupplier;
@@ -27,7 +45,7 @@ public abstract class KpFindingUtil extends GBCommand {
 
     protected final Timer TIMER;
 
-    protected boolean isInitialize, isExecute, isEnd;
+    protected COMMAND_PART currentCommandPart;
 
     protected double usedTargetValue;
 
@@ -79,21 +97,15 @@ public abstract class KpFindingUtil extends GBCommand {
     }
 
     protected void setIsInitTrue() {
-        this.isInitialize = true;
-        isEnd = false;
-        isExecute = false;
+        currentCommandPart = COMMAND_PART.INITIALIZE;
     }
 
     protected void setIsExecuteTrue() {
-        this.isExecute = true;
-        isInitialize = false;
-        isEnd = false;
+        currentCommandPart = COMMAND_PART.EXECUTE;
     }
 
     protected void setIsEndTrue() {
-        this.isEnd = true;
-        isInitialize = false;
-        isExecute = false;
+        currentCommandPart = COMMAND_PART.END;
     }
 
     protected void replaceTargetValue() {

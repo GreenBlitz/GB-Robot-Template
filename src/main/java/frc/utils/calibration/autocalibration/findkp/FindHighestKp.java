@@ -46,11 +46,12 @@ public class FindHighestKp extends KpFindingUtil {
 
     @Override
     public void execute() {
-        if (isInitialize) {
+        if (currentCommandPart.isInitialize()) {
             initFunction();
             isErrorNeedToBeCheck = false;
         }
-        else if (isExecute) {
+
+        else if (currentCommandPart.isExecute()) {
             setControlPeriodic();
 
             final double currentValue = currentValueSupplier.getAsDouble();
@@ -62,7 +63,8 @@ public class FindHighestKp extends KpFindingUtil {
                 setIsEndTrue();
             }
         }
-        else if (isEnd) {
+
+        else if (currentCommandPart.isEnd()) {
             TIMER.stop();
 
             if (error <= tolerance) {

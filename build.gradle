@@ -76,7 +76,7 @@ tasks.register('checkAkitInstall', JavaExec) {
 tasks.register('autoCommit') {
     doLast {
         final String[] tasksToCommit = new String[]{"deploy", "simulate"}
-        final String[] branchPrefixesToCommit = new String[]{"event", "field", "check"}
+        final String[] branchPrefixesToCommit = new String[]{"event", "training", "check"}
 
         final def branch = 'git branch --show-current'.execute().text.trim()
         final def commitMessage = "autoCommit - updated at '${new Date().toString()}'"

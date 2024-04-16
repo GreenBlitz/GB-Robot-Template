@@ -40,7 +40,7 @@ jobs:
             -d "{\"labels\":[\"${SIMULATION_TESTING}\"]}"
 
       - name: remove passed all tests
-        if: '!contains(env.existing-labels, env.PASSED_ALL_TESTS)'
+        if: 'contains(env.existing-labels, env.PASSED_ALL_TESTS)'
         run: |
           curl -X DELETE \
                   -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \

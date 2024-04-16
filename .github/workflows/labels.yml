@@ -6,7 +6,7 @@ on:
       - labeled
       - unlabeled
   workflow_run:
-    workflows: [ 'Add Tests Labels' ]
+    workflows: [ "Add Tests Labels" ]
     types: [ completed ]
 
 

@@ -49,22 +49,37 @@ jobs:
           echo "Existing labels: ${existingLabels}"
           otherLabels="$SMALL_PR_LABEL $MEDIUM_PR_LABEL $BIG_PR_LABEL"
           echo "Other labels: $otherLabels"
+
+          # Loop through each label in otherLabels
           for otherLabel in $otherLabels; do
             echo "Checking label: $otherLabel"
-            if [[ "$existingLabels" == *"$otherLabel"* ]]; then
-              echo "Label $otherLabel found in existing labels. Deleting..."
-              curl -X DELETE \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Accept: application/vnd.github.v3+json" \
-                "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
-            else
-              echo "Label $otherLabel not found in existing labels."
+
+            # Check if the current label is not equal to labelToAdd
+            if [[ "$otherLabel" != "$labelToAdd" ]]; then
+              # Check if the current label is in existingLabels
+              if [[ "$existingLabels" == *"$otherLabel"* ]]; then
+                echo "Label $otherLabel found in existing labels. Deleting..."
+                # Send DELETE request to remove the current label
+                curl -X DELETE \
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
+              else
+                echo "Label $otherLabel not found in existing labels."
+              fi
             fi
           done
 
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
-            -d "{\"labels\":[\"${labelToAdd}\"]}"
-      
+          # Check if labelToAdd is already in existingLabels
+          if [[ "$existingLabels" == *"$labelToAdd"* ]]; then
+            echo "Label $labelToAdd already exists in existing labels. Nothing to do."
+          else
+            echo "Label $labelToAdd not found in existing labels. Adding..."
+            # Send POST request to add labelToAdd
+            curl -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
+              -d "{\"labels\":[\"${labelToAdd}\"]}"
+          fi
+        

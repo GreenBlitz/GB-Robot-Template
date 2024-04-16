@@ -57,7 +57,7 @@ public class FindKs extends GBCommand {
     @Override
     public void end(boolean interrupted) {
         TIMER.stop();
-        Logger.recordOutput("KS OF SYSTEM", lastVoltage);
+        Logger.recordOutput("KS OF SYSTEM: " + subsystems.getClass().getSimpleName(), lastVoltage);
     }
 
 }

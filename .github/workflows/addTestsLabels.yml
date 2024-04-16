@@ -13,6 +13,7 @@ jobs:
     env:
       ROBOT_TESTING: "needs-robot-testing"
       SIMULATION_TESTING: "needs-simulation-testing"
+      PASSED_ALL_TESTS: "passed-all-tests"
     steps:
       - name: get existing labels
         run: |
@@ -37,3 +38,11 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
             -d "{\"labels\":[\"${SIMULATION_TESTING}\"]}"
+
+      - name: remove passed all tests
+        if: '!contains(env.existing-labels, env.PASSED_ALL_TESTS)'
+        run: |
+          curl -X DELETE \
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${PASSED_ALL_TESTS}"

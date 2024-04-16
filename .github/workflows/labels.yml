@@ -7,10 +7,7 @@ on:
       - unlabeled
   workflow_run:
     workflows: [ "Add Tests Labels" ]
-    types:
-      - completed
-      - in_progress
-      - requested
+    types: [ completed ]
 
 
 jobs:

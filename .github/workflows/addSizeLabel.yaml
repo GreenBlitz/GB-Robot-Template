@@ -5,7 +5,7 @@ on:
     types: [ opened, synchronize ]
 
 jobs:
-  add-label:
+  add-size-label:
     runs-on: ubuntu-latest
     env:
       SMALL_PR_LABEL: "A-SMALL-PR"

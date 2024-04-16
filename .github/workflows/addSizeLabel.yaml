@@ -1,0 +1,87 @@
+name: Auto Size Label to PR
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  add-size-label:
+    runs-on: ubuntu-latest
+    env:
+      SMALL_PR_LABEL: "A-SMALL-PR"
+      MEDIUM_PR_LABEL: "A-MEDIUM-PR"
+      BIG_PR_LABEL: "A-BIG-PR"
+      SMALL_THRESHOLD: 400
+      MEDIUM_THRESHOLD: 700
+    steps:
+      - name: Calculate lines changed
+        id: calculate-lines-changed
+        run: |
+          linesAdded=$(jq '.pull_request.additions' $GITHUB_EVENT_PATH)
+          linesDeleted=$(jq '.pull_request.deletions' $GITHUB_EVENT_PATH)
+          totalLinesChanged=$((linesAdded + linesDeleted))
+          echo "lines-changed=${totalLinesChanged}" >>$GITHUB_OUTPUT
+
+      - name: Check if label already exists
+        id: check-label
+        run: |
+          linesChanged=${{ steps.calculate-lines-changed.outputs.lines-changed }}
+          labelToAdd=""
+          if [ $linesChanged -lt $SMALL_THRESHOLD ]; then
+            labelToAdd=$SMALL_PR_LABEL
+          elif [ $linesChanged -ge $SMALL_THRESHOLD ] && [ $linesChanged -le $MEDIUM_THRESHOLD ]; then
+            labelToAdd=$MEDIUM_PR_LABEL
+          else
+            labelToAdd=$BIG_PR_LABEL
+          fi
+          echo "label-to-add=${labelToAdd}" >>$GITHUB_OUTPUT
+          existingLabels=$(jq -r '.pull_request.labels[].name' $GITHUB_EVENT_PATH | tr '\n' ' ')
+          echo "existing-labels=${existingLabels}" >>$GITHUB_ENV
+          echo "Existing labels: $existingLabels"
+
+
+      - name: Remove existing labels
+        if: always()
+        run: |
+          existingLabels="${{ env.existing-labels }}"
+          labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
+          echo "Label to add: $labelToAdd"
+          echo "Existing labels: ${existingLabels}"
+          otherLabels="$SMALL_PR_LABEL $MEDIUM_PR_LABEL $BIG_PR_LABEL"
+          echo "Other labels: $otherLabels"
+
+          # Loop through each label in otherLabels
+          for otherLabel in $otherLabels; do
+            echo "Checking label: $otherLabel"
+
+            # Check if the current label is not equal to labelToAdd
+            if [[ "$otherLabel" != "$labelToAdd" ]]; then
+              # Check if the current label is in existingLabels
+              if [[ "$existingLabels" == *"$otherLabel"* ]]; then
+                echo "Label $otherLabel found in existing labels. Deleting..."
+                # Send DELETE request to remove the current label
+                curl -X DELETE \
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${otherLabel}"
+              else
+                echo "Label $otherLabel not found in existing labels."
+              fi
+            fi
+          done
+
+      - name: Add new label if not present
+        if: '!contains(env.existing-labels, steps.check-label.outputs.label-to-add)'
+        run: |
+          labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
+          echo "Label to add: $labelToAdd"
+          existingLabels="${{ env.existing-labels }}"
+          echo "Existing labels: ${existingLabels}"
+
+          echo "Adding label $labelToAdd..."
+          # Send POST request to add labelToAdd
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
+            -d "{\"labels\":[\"${labelToAdd}\"]}"

@@ -1,13 +1,14 @@
 name: Check Labels For PR
 
 on:
-  workflow_run:
-    workflows: [ "Add Tests Labels" ]
-    types: [ completed ]
   pull_request:
     types:
       - labeled
       - unlabeled
+      - opened
+      - synchronize
+      - reopened
+      - converted_to_draft
 
 jobs:
   check-labels:

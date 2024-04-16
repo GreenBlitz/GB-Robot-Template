@@ -1,13 +1,14 @@
 name: Check Labels For PR
 
 on:
-  workflow_run:
-    workflows: [ 'Add Tests Labels' ]
-    types: [ completed ]
   pull_request:
     types:
       - labeled
       - unlabeled
+      - opened
+      - synchronize
+      - reopened
+      - converted_to_draft
 
 jobs:
   check-labels:
@@ -18,7 +19,6 @@ jobs:
         run: |
           PR_NUMBER=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?head=${GITHUB_REF}" | jq -r '.[0].number')
           echo "pr-number=${PR_NUMBER}" >> $GITHUB_OUTPUT
-
 
 
       - name: Get labels for PR

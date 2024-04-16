@@ -71,24 +71,20 @@ jobs:
           done
 
       - name: Add new label if not present
-        if: always()
+        if: '!contains(env.existing-labels, steps.check-label.outputs.label-to-add)'
         run: |
-          existingLabels="${{ env.existing-labels }}"
           labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
           echo "Label to add: $labelToAdd"
+          existingLabels="${{ env.existing-labels }}"
           echo "Existing labels: ${existingLabels}"
 
-          # Check if labelToAdd is already in existingLabels
-          if [[ "$existingLabels" == *"$labelToAdd"* ]]; then
-            echo "Label $labelToAdd already exists in existing labels. Nothing to do."
-          else
-            echo "Label $labelToAdd not found in existing labels. Adding..."
-            # Send POST request to add labelToAdd
-            curl -X POST \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github.v3+json" \
-              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
-              -d "{\"labels\":[\"${labelToAdd}\"]}"
-          fi
+          echo "Adding label $labelToAdd..."
+          # Send POST request to add labelToAdd
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
+            -d "{\"labels\":[\"${labelToAdd}\"]}"
+      
       
         

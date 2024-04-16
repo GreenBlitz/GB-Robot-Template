@@ -5,9 +5,13 @@ on:
     types:
       - labeled
       - unlabeled
-      - opened
-      - synchronize
-      - reopened
+  workflow_run:
+    workflows:
+      - Add Tests Labels
+    types:
+      - completed
+      - in_progress
+      - requested
 
 
 jobs:

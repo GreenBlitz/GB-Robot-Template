@@ -21,7 +21,7 @@ jobs:
           echo "Existing labels: $existingLabels"
 
       - name: add needs robot test
-        if: '!contains(env.existing-labels, ${ROBOT_TESTING})'
+        if: '!contains(env.existing-labels, "${ROBOT_TESTING}")'
         run: |
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -30,7 +30,7 @@ jobs:
             -d "{\"labels\":[\"${ROBOT_TESTING}\"]}"
 
       - name: add needs simulation test
-        if: '!contains(env.existing-labels, ${SIMULATION_TESTING})'
+        if: '!contains(env.existing-labels, "${SIMULATION_TESTING}")'
         run: |
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \

@@ -6,6 +6,7 @@ on:
       - opened
       - reopened
       - synchronize
+      - converted_to_draft
 
 jobs:
   add-tests-labels:

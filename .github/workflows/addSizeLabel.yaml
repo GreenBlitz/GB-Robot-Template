@@ -11,8 +11,8 @@ jobs:
       SMALL_PR_LABEL: "A-SMALL-PR"
       MEDIUM_PR_LABEL: "A-MEDIUM-PR"
       BIG_PR_LABEL: "A-BIG-PR"
-      SMALL_THRESHOLD: 300
-      MEDIUM_THRESHOLD: 500
+      SMALL_THRESHOLD: 400
+      MEDIUM_THRESHOLD: 700
     steps:
       - name: Calculate lines changed
         id: calculate-lines-changed

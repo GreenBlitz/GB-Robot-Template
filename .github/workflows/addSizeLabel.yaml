@@ -40,7 +40,7 @@ jobs:
           echo "Existing labels: $existingLabels"
 
 
-      - name: Put only one size label
+      - name: Remove existing labels
         if: always()
         run: |
           existingLabels="${{ env.existing-labels }}"
@@ -70,6 +70,14 @@ jobs:
             fi
           done
 
+      - name: Add new label if not present
+        if: always()
+        run: |
+          existingLabels="${{ env.existing-labels }}"
+          labelToAdd="${{ steps.check-label.outputs.label-to-add }}"
+          echo "Label to add: $labelToAdd"
+          echo "Existing labels: ${existingLabels}"
+
           # Check if labelToAdd is already in existingLabels
           if [[ "$existingLabels" == *"$labelToAdd"* ]]; then
             echo "Label $labelToAdd already exists in existing labels. Nothing to do."
@@ -82,4 +90,5 @@ jobs:
               https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
               -d "{\"labels\":[\"${labelToAdd}\"]}"
           fi
+      
         

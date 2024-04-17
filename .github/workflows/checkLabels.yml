@@ -16,6 +16,7 @@ jobs:
       NO_NEED_ROBOT: "no-need-of-robot-testing"
       NO_NEED_SIMULATION: "no-need-of-simulation-testing"
     steps:
+
       - name: Get PR Labels
         id: pr-info
         run: |

@@ -26,12 +26,16 @@ jobs:
       - name: Check On Push if no need appear
         if: ${{ github.event.action == 'synchronize' }}
         run: |
-          echo "${NO_NEED_ROBOT}"
-          echo "${NO_NEED_SIMULATION}"
-          if [[ '${EXISTING_LABELS}' =~ '${NO_NEED_ROBOT}' && '${EXISTING_LABELS}' =~ '${NO_NEED_SIMULATION}' ]]; then
+          echo "Checking condition:"
+          echo "EXISTING_LABELS: ${EXISTING_LABELS}"
+          echo "NO_NEED_ROBOT: ${NO_NEED_ROBOT}"
+          echo "NO_NEED_SIMULATION: ${NO_NEED_SIMULATION}"
+          
+          if [[ "${EXISTING_LABELS}" =~ "${NO_NEED_ROBOT}" && "${EXISTING_LABELS}" =~ "${NO_NEED_SIMULATION}" ]]; then
             echo "Label '${NO_NEED_ROBOT}' and label '${NO_NEED_SIMULATION}' found."
             exit 0
           fi
+          
           echo "This is a push event and no no-need-testing was found"
           exit 1
 

@@ -15,10 +15,7 @@ public class AllianceUtils {
      * @return the converted pose
      */
     public static Pose2d toAlliancePose(Pose2d pose) {
-        if (isBlueAlliance()) {
-            return pose;
-        }
-        return switchAlliance(pose);
+        return isBlueAlliance() ? pose : switchAlliance(pose);
     }
 
     private static Pose2d switchAlliance(Pose2d pose) {
@@ -36,10 +33,7 @@ public class AllianceUtils {
      * @return the pose
      */
     public static Pose2d toMirroredAlliancePose(Pose2d pose) {
-        if (isBlueAlliance()) {
-            return pose;
-        }
-        return mirror(pose);
+        return isBlueAlliance() ? pose : mirror(pose);
     }
 
     private static Pose2d mirror(Pose2d pose) {
@@ -57,10 +51,7 @@ public class AllianceUtils {
      * @return the rotation
      */
     public static Rotation2d toMirroredAllianceRotation(Rotation2d rotation) {
-        if (isBlueAlliance()) {
-            return rotation;
-        }
-        return new Rotation2d(Math.PI).minus(rotation);
+        return isBlueAlliance() ? rotation : new Rotation2d(Math.PI).minus(rotation);
     }
 
 }

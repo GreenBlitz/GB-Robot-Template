@@ -22,8 +22,7 @@ jobs:
       - name: Get PR Information
         id: pr-info
         run: |
-          PR_DATA=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?head=${GITHUB_REF}")
-          LABELS=$(echo "$PR_DATA" | jq -r '.[0].labels[].name' | tr '\n' ' ')
+          LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/labels" | jq -r '.[].name' | tr '\n' ' ')
           echo "labels=${LABELS}" >> $GITHUB_ENV
 
       - name: Print Labels

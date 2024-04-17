@@ -14,7 +14,7 @@ jobs:
     env:
       ROBOT_TESTING: "needs-robot-testing"
       NO_ROBOT_TESTING: "no-need-of-robot-testing"
-      SIMULATION_TESTING: "no-need-of-simulation-testing"
+      SIMULATION_TESTING: "needs-simulation-testing"
       NO_SIMULATION_TESTING: "no-need-of-simulation-testing"
       PASSED_ALL_TESTS: "passed-all-tests"
     steps:

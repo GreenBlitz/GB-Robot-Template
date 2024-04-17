@@ -23,7 +23,7 @@ jobs:
         id: pr-info
         run: |
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/labels" | jq -r '.[].name' | tr '\n' ' ')
-          echo "labels=${LABELS}" >> $GITHUB_ENV
+          echo "existing_labels=${LABELS}" >> $GITHUB_ENV
 
       - name: Print Labels
         run: |
@@ -32,10 +32,10 @@ jobs:
 
       - name: Check Absent Labels
         run: |
-          LABELS="${{env.labels}}"
+          EXISTING_LABELS="${{env.existing_labels}}"
           declare -a absent_labels=("waiting-for-another-pr" "needs-robot-testing" "needs-simulation-testing")
           for label in "${absent_labels[@]}"; do
-            if [[ "${LABELS}" =~ "${label}" ]]; then
+            if [[ "${EXISTING_LABELS}" =~ "${label}" ]]; then
               echo "Label '${label}' should not be present."
               exit 1
             fi
@@ -43,9 +43,10 @@ jobs:
 
       - name: Check Present Label
         run: |
+          EXISTING_LABELS="${{env.existing_labels}}"
           declare -a wanted_labels=("passed-all-tests")
           for label in "${wanted_labels[@]}"; do
-            if [[ ! "${LABELS}" =~ "${label}" ]]; then
+            if [[ ! "${EXISTING_LABELS}" =~ "${label}" ]]; then
               echo "Label '${label}' is missing."
               exit 1
             fi

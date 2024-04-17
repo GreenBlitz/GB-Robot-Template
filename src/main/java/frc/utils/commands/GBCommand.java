@@ -13,10 +13,8 @@ import java.util.Set;
  * @author Nitzan
  * @author Raz
  * @author Tal -ish
- * @author Noam Rosenberg
- * @author Yoav Herman
- * @author Yoni Kiriaty
  */
+@Deprecated
 public abstract class GBCommand extends Command {
 
     protected Set<Subsystem> subsystems;
@@ -39,12 +37,17 @@ public abstract class GBCommand extends Command {
     /**
      * adds a new subsystem requirement
      *
-     * @param subsystem - the new subsystem
+     * @param subsystem - the subsystem to require
      */
     public void require(Subsystem subsystem) {
         this.subsystems.add(subsystem);
     }
 
+    /**
+     * adds a new subsystems requirements
+     *
+     * @param subsystems - the subsystems to require
+     */
     public void require(Subsystem... subsystems) {
         this.subsystems.addAll(Arrays.asList(subsystems));
     }

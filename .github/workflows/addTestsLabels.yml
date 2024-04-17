@@ -13,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ROBOT_TESTING: "needs-robot-testing"
+      NO_ROBOT_TESTING: "no-need-of-robot-testing"
       SIMULATION_TESTING: "needs-simulation-testing"
+      NO_SIMULATION_TESTING: "no-need-of-simulation-testing"
       PASSED_ALL_TESTS: "passed-all-tests"
     steps:
       - name: get existing labels
@@ -24,7 +26,7 @@ jobs:
 
 
       - name: add needs robot test
-        if: '!contains(env.existing-labels, env.ROBOT_TESTING)'
+        if: '!contains(env.existing-labels, env.ROBOT_TESTING) && !contains(env.existing-labels, env.NO_ROBOT_TESTING)'
         run: |
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -34,7 +36,7 @@ jobs:
 
 
       - name: add needs simulation test
-        if: '!contains(env.existing-labels, env.SIMULATION_TESTING)'
+        if: '!contains(env.existing-labels, env.SIMULATION_TESTING) && !contains(env.existing-labels, env.NO_SIMULATION_TESTING)'
         run: |
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \

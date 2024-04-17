@@ -23,14 +23,14 @@ jobs:
           echo "Labels for PR: ${LABELS}"
           echo "existing_labels=${LABELS}" >> $GITHUB_ENV
 
-      - name: Check if Push
+      - name: Check On Push if no need appear
         if: ${{ github.event.action == 'synchronize' }}
         run: |
           if [[ "${EXISTING_LABELS}" =~ "${NO_NEED_ROBOT}" && "${EXISTING_LABELS}" =~ "${NO_NEED_SIMULATION}" ]]; then
-            echo "Label "${NO_NEED_ROBOT}" and label "${NO_NEED_SIMULATION}" found."
+            echo "Label '${NO_NEED_ROBOT}' and label '${NO_NEED_SIMULATION}' found."
             exit 0
           fi
-          echo "This is a push event and no "no-need-testing was found"
+          echo "This is a push event and no no-need-testing was found"
           exit 1
 
 

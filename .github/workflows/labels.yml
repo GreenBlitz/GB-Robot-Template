@@ -5,7 +5,7 @@ on:
     types:
       - labeled
       - unlabeled
-  push:
+      - synchronize
 
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check if Push
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event.action == 'synchronize' }}
         run: |
           echo "This is a push event."
           exit 1

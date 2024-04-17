@@ -43,7 +43,7 @@ jobs:
             -d "{\"labels\":[\"${SIMULATION_TESTING}\"]}"
 
 
-      - name: add needs simulation test
+      - name: remove passed all tests
         if: 'contains(env.existing-labels, env.PASSED_ALL_TESTS)'
         run: |
           curl -X DELETE \

@@ -32,7 +32,7 @@ jobs:
 
       - name: Check Absent Labels
         run: |
-          LABELS=${env.labels}
+          LABELS="${{env.labels}}"
           echo "${LABELS}"
           declare -a absent_labels=("waiting-for-another-pr" "needs-robot-testing" "needs-simulation-testing")
           for label in "${absent_labels[@]}"; do

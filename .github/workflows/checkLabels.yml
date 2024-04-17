@@ -23,9 +23,7 @@ jobs:
         id: pr-info
         run: |
           PR_DATA=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?head=${GITHUB_REF}")
-          PR_NUMBER=$(echo "$PR_DATA" | jq -r '.[0].number')
           LABELS=$(echo "$PR_DATA" | jq -r '.[0].labels[].name' | tr '\n' ' ')
-          echo "pr-number=${PR_NUMBER}" >> $GITHUB_ENV
           echo "labels=${LABELS}" >> $GITHUB_ENV
 
       - name: Print Labels

@@ -34,6 +34,7 @@ jobs:
         run: |
           declare -a absent_labels=("waiting-for-another-pr" "needs-robot-testing" "needs-simulation-testing")
           for label in "${absent_labels[@]}"; do
+          echo "${LABELS} and ${label}"
             if [[ "${LABELS}" =~ "${label}" ]]; then
               echo "Label '${label}' should not be present."
               exit 1

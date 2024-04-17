@@ -120,24 +120,6 @@ tasks.register('autoCommit') {
     }
 }
 
-tasks.register('installLocalGitHookPreCommit', Copy) {
-    from new File(rootProject.rootDir, '.scripts/pre-commit')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
-    doLast {
-        println("---Added Pre Commit Git Hook Script---")
-    }
-}
-
-tasks.register('installLocalGitHookPostCommit', Copy) {
-    from new File(rootProject.rootDir, '.scripts/post-commit')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
-    doLast {
-        println("---Added Post Commit Git Hook Script---")
-    }
-}
-
 tasks.register('installLocalGitHookPostCheckout', Copy) {
     from new File(rootProject.rootDir, '.scripts/post-checkout')
     into { new File(rootProject.rootDir, '.git/hooks') }
@@ -148,7 +130,7 @@ tasks.register('installLocalGitHookPostCheckout', Copy) {
 }
 
 compileJava.finalizedBy checkAkitInstall
-build.dependsOn autoCommit, installLocalGitHookPreCommit, installLocalGitHookPostCommit, installLocalGitHookPostCheckout
+build.dependsOn autoCommit, installLocalGitHookPostCheckout
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.

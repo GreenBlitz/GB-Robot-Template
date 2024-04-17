@@ -11,24 +11,30 @@ on:
 jobs:
   check-labels:
     runs-on: ubuntu-latest
+    env:
+      PASSED_ALL_TESTS: "passed-all-tests"
+      NO_NEED_ROBOT: "no-need-of-robot-testing"
+      NO_NEED_SIMULATION: "no-need-of-simulation-testing"
     steps:
-      - name: Check if Push
-        if: ${{ github.event.action == 'synchronize' }}
-        run: |
-          echo "This is a push event."
-          exit 1
-
-
-      - name: Get PR Information
+      - name: Get PR Labels
         id: pr-info
         run: |
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/labels" | jq -r '.[].name' | tr '\n' ' ')
+          echo "Labels for PR: ${LABELS}"
           echo "existing_labels=${LABELS}" >> $GITHUB_ENV
 
-      - name: Print Labels
+      - name: Check On Push if no need appear
+        if: ${{ github.event.action == 'synchronize' }}
         run: |
-          echo "Labels for PR: ${{env.labels}}"
-
+          EXISTING_LABELS="${{env.existing_labels}}"
+          
+          if [[ "${EXISTING_LABELS}" =~ "${NO_NEED_ROBOT}" && "${EXISTING_LABELS}" =~ "${NO_NEED_SIMULATION}" ]]; then
+            echo "Label '${NO_NEED_ROBOT}' and label '${NO_NEED_SIMULATION}' found."
+            exit 0
+          fi
+          
+          echo "This is a push event and no no-need-testing was found"
+          exit 1
 
       - name: Check Absent Labels
         run: |
@@ -44,10 +50,13 @@ jobs:
       - name: Check Present Label
         run: |
           EXISTING_LABELS="${{env.existing_labels}}"
-          declare -a wanted_labels=("passed-all-tests")
-          for label in "${wanted_labels[@]}"; do
-            if [[ ! "${EXISTING_LABELS}" =~ "${label}" ]]; then
-              echo "Label '${label}' is missing."
-              exit 1
-            fi
-          done
+          if [[ "${EXISTING_LABELS}" =~ "${PASSED_ALL_TESTS}" ]]; then
+            echo "Label '${PASSED_ALL_TESTS}' found."
+            exit 0
+          fi
+          if [[ "${EXISTING_LABELS}" =~ "${NO_NEED_ROBOT}" && "${EXISTING_LABELS}" =~ "${NO_NEED_SIMULATION}" ]]; then
+            echo "Label "${NO_NEED_ROBOT}" and label "${NO_NEED_SIMULATION}" found."
+            exit 0
+          fi
+          echo "no passed-all-tests Or no-need-of-robot-testing And no-need-of-simulation-testing was found."
+          exit 1

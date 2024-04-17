@@ -4,6 +4,9 @@ on:
   pull_request:
     types:
       - opened
+      - reopened
+      - converted_to_draft
+      - synchronize
 
 jobs:
   add-tests-labels:
@@ -11,12 +14,14 @@ jobs:
     env:
       ROBOT_TESTING: "needs-robot-testing"
       SIMULATION_TESTING: "needs-simulation-testing"
+      PASSED_ALL_TESTS: "passed-all-tests"
     steps:
       - name: get existing labels
         run: |
           existingLabels=$(jq -r '.pull_request.labels[].name' $GITHUB_EVENT_PATH | tr '\n' ' ')
           echo "existing-labels=${existingLabels}" >>$GITHUB_ENV
           echo "Existing labels: $existingLabels"
+
 
       - name: add needs robot test
         if: '!contains(env.existing-labels, env.ROBOT_TESTING)'
@@ -27,6 +32,7 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
             -d "{\"labels\":[\"${ROBOT_TESTING}\"]}"
 
+
       - name: add needs simulation test
         if: '!contains(env.existing-labels, env.SIMULATION_TESTING)'
         run: |
@@ -35,3 +41,12 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
             -d "{\"labels\":[\"${SIMULATION_TESTING}\"]}"
+
+
+      - name: remove passed all tests
+        if: 'contains(env.existing-labels, env.PASSED_ALL_TESTS)'
+        run: |
+          curl -X DELETE \
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${PASSED_ALL_TESTS}"

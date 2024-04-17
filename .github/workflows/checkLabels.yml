@@ -19,15 +19,12 @@ jobs:
           exit 1
 
 
-      - name: Get PR Information
+      - name: Get PR Labels
         id: pr-info
         run: |
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/labels" | jq -r '.[].name' | tr '\n' ' ')
+          echo "Labels for PR: ${LABELS}"
           echo "existing_labels=${LABELS}" >> $GITHUB_ENV
-
-      - name: Print Labels
-        run: |
-          echo "Labels for PR: ${{env.labels}}"
 
 
       - name: Check Absent Labels

@@ -1,0 +1,54 @@
+name: Check Labels For PR
+
+on:
+  pull_request:
+    types:
+      - labeled
+      - unlabeled
+      - synchronize
+
+
+jobs:
+  check-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if Push
+        if: ${{ github.event.action == 'synchronize' }}
+        run: |
+          echo "This is a push event."
+          exit 1
+
+
+      - name: Get PR Information
+        id: pr-info
+        run: |
+          PR_DATA=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?head=${GITHUB_REF}")
+          PR_NUMBER=$(echo "$PR_DATA" | jq -r '.[0].number')
+          LABELS=$(echo "$PR_DATA" | jq -r '.[0].labels[].name' | tr '\n' ' ')
+          echo "pr-number=${PR_NUMBER}" >> $GITHUB_ENV
+          echo "labels=${LABELS}" >> $GITHUB_ENV
+
+      - name: Print Labels
+        run: |
+          echo "Labels for PR: ${{env.labels}}"
+
+
+      - name: Check Absent Labels
+        run: |
+          declare -a absent_labels=("waiting-for-another-pr" "needs-robot-testing" "needs-simulation-testing")
+          for label in "${absent_labels[@]}"; do
+            if [[ "${LABELS}" =~ "${label}" ]]; then
+              echo "Label '${label}' should not be present."
+              exit 1
+            fi
+          done
+
+      - name: Check Present Label
+        run: |
+          declare -a wanted_labels=("passed-all-tests")
+          for label in "${wanted_labels[@]}"; do
+            if [[ ! "${LABELS}" =~ "${label}" ]]; then
+              echo "Label '${label}' is missing."
+              exit 1
+            fi
+          done

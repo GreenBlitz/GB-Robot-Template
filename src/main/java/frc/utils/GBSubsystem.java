@@ -13,7 +13,7 @@ public abstract class GBSubsystem extends SubsystemBase {
     }
 
     private String getCurrentCommandName() {
-        final Command currentCommand = getCurrentCommand();
+        Command currentCommand = getCurrentCommand();
         return currentCommand != null ? currentCommand.getName() : "no command is currently running on the subsystem";
     }
 

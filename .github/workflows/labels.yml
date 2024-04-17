@@ -5,15 +5,20 @@ on:
     types:
       - labeled
       - unlabeled
-      - opened
-      - synchronize
-      - reopened
-      - converted_to_draft
+  push:
+
 
 jobs:
   check-labels:
     runs-on: ubuntu-latest
     steps:
+      - name: Check if Push
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          echo "This is a push event."
+          exit 1
+
+
       - name: Get PR number
         id: pr-number
         run: |
@@ -29,6 +34,7 @@ jobs:
           LABELS=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" | jq -r '.[].name' | tr '\n' ' ')
           echo "LABELS_ARRAY=${LABELS}" >> $GITHUB_ENV
 
+
       - name: print all labels
         run: echo "there are this labels on this pr -> ${LABELS_ARRAY}"
 
@@ -43,6 +49,7 @@ jobs:
             exit 1
           fi
 
+
       - name: check waiting-for-another-pr label
         run: |
           target_off_label="waiting-for-another-pr"
@@ -54,6 +61,7 @@ jobs:
             exit 1
           fi
 
+
       - name: check needs-robot-testing label
         run: |
           target_off_label="needs-robot-testing"
@@ -64,6 +72,7 @@ jobs:
             echo "Label '${target_off_label}' exists."
             exit 1
           fi
+
 
       - name: check needs-simulation-testing label
         run: |

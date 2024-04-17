@@ -11,6 +11,10 @@ on:
 jobs:
   check-labels:
     runs-on: ubuntu-latest
+    env:
+      PASSED_ALL_TESTS: "passed-all-tests"
+      NO_NEED_ROBOT: "no-need-of-robot-testing"
+      NO_NEED_SIMULATION: "no-need-of-simulation-testing"
     steps:
       - name: Get PR Labels
         id: pr-info
@@ -42,17 +46,13 @@ jobs:
           done
 
       - name: Check Present Label
-        env:
-          PASSED_ALL_TESTS: "passed-all-tests"
-          NO_NEED_ROBOT: "no-need-of-robot-testing"
-          NO_NEED_SIMULATION: "no-need-of-simulation-testing"
         run: |
           EXISTING_LABELS="${{env.existing_labels}}"
           if [[ "${EXISTING_LABELS}" =~ "${PASSED_ALL_TESTS}" ]]; then
             echo "Label '${PASSED_ALL_TESTS}' found."
             exit 0
           fi
-          if [[ "${EXISTING_LABELS}" =~ "${NO_NEED_ROBOT}" && "${EXISTING_LABELS}" =~ "${NO_NEED_SIMULATION}"]]; then
+          if [[ "${EXISTING_LABELS}" =~ "${NO_NEED_ROBOT}" && "${EXISTING_LABELS}" =~ "${NO_NEED_SIMULATION}" ]]; then
             echo "Label "${NO_NEED_ROBOT}" and label "${NO_NEED_SIMULATION}" found."
             exit 0
           fi

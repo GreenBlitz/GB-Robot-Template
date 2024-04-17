@@ -130,7 +130,7 @@ public class SmartJoystick {
         if (!isStickAxis(axis)) {
             return axis.getValue(this);
         }
-        final double squaredAxisValue = axis.getValue(this) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
+        double squaredAxisValue = axis.getValue(this) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
         return MathUtil.clamp(squaredAxisValue, -1, 1);
     }
 

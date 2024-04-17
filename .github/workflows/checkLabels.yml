@@ -36,7 +36,6 @@ jobs:
           echo "This is a push event and no no-need-testing was found"
           exit 1
 
-
       - name: Check Absent Labels
         run: |
           EXISTING_LABELS="${{env.existing_labels}}"

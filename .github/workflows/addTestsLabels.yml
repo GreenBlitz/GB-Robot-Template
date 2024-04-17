@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ROBOT_TESTING: "needs-robot-testing"
-      NO_ROBOT_TESTING: "needs-robot-testing"
+      NO_ROBOT_TESTING: "no-need-of-robot-testing"
       SIMULATION_TESTING: "no-need-of-simulation-testing"
       NO_SIMULATION_TESTING: "no-need-of-simulation-testing"
       PASSED_ALL_TESTS: "passed-all-tests"

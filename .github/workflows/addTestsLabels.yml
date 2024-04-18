@@ -1,0 +1,54 @@
+name: Add Tests Labels
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - converted_to_draft
+      - synchronize
+
+jobs:
+  add-tests-labels:
+    runs-on: ubuntu-latest
+    env:
+      ROBOT_TESTING: "needs-robot-testing"
+      NO_ROBOT_TESTING: "no-need-of-robot-testing"
+      SIMULATION_TESTING: "needs-simulation-testing"
+      NO_SIMULATION_TESTING: "no-need-of-simulation-testing"
+      PASSED_ALL_TESTS: "passed-all-tests"
+    steps:
+      - name: get existing labels
+        run: |
+          existingLabels=$(jq -r '.pull_request.labels[].name' $GITHUB_EVENT_PATH | tr '\n' ' ')
+          echo "existing-labels=${existingLabels}" >>$GITHUB_ENV
+          echo "Existing labels: $existingLabels"
+
+
+      - name: add needs robot test
+        if: '!contains(env.existing-labels, env.ROBOT_TESTING) && !contains(env.existing-labels, env.NO_ROBOT_TESTING)'
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
+            -d "{\"labels\":[\"${ROBOT_TESTING}\"]}"
+
+
+      - name: add needs simulation test
+        if: '!contains(env.existing-labels, env.SIMULATION_TESTING) && !contains(env.existing-labels, env.NO_SIMULATION_TESTING)'
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels \
+            -d "{\"labels\":[\"${SIMULATION_TESTING}\"]}"
+
+
+      - name: remove passed all tests
+        if: 'contains(env.existing-labels, env.PASSED_ALL_TESTS)'
+        run: |
+          curl -X DELETE \
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/${PASSED_ALL_TESTS}"

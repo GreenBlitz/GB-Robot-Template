@@ -73,71 +73,6 @@ tasks.register('checkAkitInstall', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-tasks.register('autoCommit') {
-    doLast {
-        final String[] tasksToCommit = new String[]{"deploy", "simulate"}
-        final String[] branchPrefixesToCommit = new String[]{"event", "field", "check"}
-
-        final def branch = 'git branch --show-current'.execute().text.trim()
-        final def commitMessage = "autoCommit - updated at '${new Date().toString()}'"
-        final def taskNames = project.gradle.startParameter.taskNames
-
-        // checking deploy type
-        boolean isDeployOrSimulate = false
-        for (String taskName : tasksToCommit) {
-            isDeployOrSimulate = taskNames.any({ it.toLowerCase().contains(taskName) })
-            if (isDeployOrSimulate) {
-                break
-            }
-        }
-        if (!isDeployOrSimulate) {
-            println("skipping -> not a deploy or simulate")
-            return
-        }
-
-        // checking branch type
-        boolean isBranchToAutoCommit = false;
-        for (String branchPrefix : branchPrefixesToCommit) {
-            isBranchToAutoCommit = branch.startsWith(branchPrefix)
-            if (isBranchToAutoCommit) {
-                break
-            }
-        }
-        if (!isBranchToAutoCommit) {
-            println("skipping -> not a branch to auto commit")
-            return
-        }
-
-        // committing
-        exec {
-            workingDir(projectDir)
-            executable('git')
-            args 'commit', '-am', commitMessage
-            ignoreExitValue = true
-        }
-        println("commited to branch -> '$branch'")
-        println("commited message -> '$commitMessage'")
-    }
-}
-
-tasks.register('installLocalGitHookPreCommit', Copy) {
-    from new File(rootProject.rootDir, '.scripts/pre-commit')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
-    doLast {
-        println("---Added Pre Commit Git Hook Script---")
-    }
-}
-
-tasks.register('installLocalGitHookPostCommit', Copy) {
-    from new File(rootProject.rootDir, '.scripts/post-commit')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
-    doLast {
-        println("---Added Post Commit Git Hook Script---")
-    }
-}
-
 tasks.register('installLocalGitHookPostCheckout', Copy) {
     from new File(rootProject.rootDir, '.scripts/post-checkout')
     into { new File(rootProject.rootDir, '.git/hooks') }
@@ -147,8 +82,8 @@ tasks.register('installLocalGitHookPostCheckout', Copy) {
     }
 }
 
-compileJava.finalizedBy checkAkitInstall, autoCommit
-build.dependsOn installLocalGitHookPreCommit, installLocalGitHookPostCommit, installLocalGitHookPostCheckout
+compileJava.finalizedBy checkAkitInstall
+build.dependsOn installLocalGitHookPostCheckout
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.

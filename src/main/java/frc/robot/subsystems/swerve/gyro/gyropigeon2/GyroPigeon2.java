@@ -12,7 +12,8 @@ public class GyroPigeon2 {
     private final GyroPigeon2Actions gyroPigeon2Actions;
 
     public GyroPigeon2() {
-        final GyroPigeon2ConfigObject gyroPigeon2ConfigObject = new GyroPigeon2ConfigObject(Ports.PIGEON_2_ID,
+        final GyroPigeon2ConfigObject gyroPigeon2ConfigObject = new GyroPigeon2ConfigObject(
+                Ports.PIGEON_2_ID,
                 Phoenix6Constants.CANIVORE_NAME
         );
 

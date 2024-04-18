@@ -34,9 +34,10 @@ public class SwerveConstants {
     public static final double MAX_ROTATION_ACCELERATION = 360;
 
     public static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS =
-            new TrapezoidProfile.Constraints(MAX_ROTATION_VELOCITY,
-            MAX_ROTATION_ACCELERATION
-    );
+            new TrapezoidProfile.Constraints(
+                    MAX_ROTATION_VELOCITY,
+                    MAX_ROTATION_ACCELERATION
+            );
 
     public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
 
@@ -66,7 +67,8 @@ public class SwerveConstants {
 
     public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);
 
-    public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(TRANSLATION_PID_CONSTANTS.kP,
+    public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(
+            TRANSLATION_PID_CONSTANTS.kP,
             TRANSLATION_PID_CONSTANTS.kI,
             TRANSLATION_PID_CONSTANTS.kD
     );
@@ -84,7 +86,8 @@ public class SwerveConstants {
     );
 
     static {
-        PROFILED_ROTATION_PID_CONTROLLER.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(),
+        PROFILED_ROTATION_PID_CONTROLLER.enableContinuousInput(
+                -MathConstants.HALF_CIRCLE.getDegrees(),
                 MathConstants.HALF_CIRCLE.getDegrees()
         );
     }

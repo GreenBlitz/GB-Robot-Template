@@ -154,8 +154,8 @@ public class Swerve extends GBSubsystem {
     /**
      * Drives the swerve with the given powers and a target angle, relative to the field's frame of reference.
      *
-     * @param xPower      the x power
-     * @param yPower      the y power
+     * @param xPower the x power
+     * @param yPower the y power
      * @param targetAngle the target angle, relative to the blue alliance's forward position
      */
     protected void fieldRelativeDrive(double xPower, double yPower, Rotation2d targetAngle) {
@@ -192,7 +192,8 @@ public class Swerve extends GBSubsystem {
     }
 
     private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
-        return new ChassisSpeeds(xPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+        return new ChassisSpeeds(
+                xPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
                 yPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
                 Math.pow(thetaPower, 2) * Math.signum(thetaPower) * SwerveConstants.MAX_ROTATIONAL_SPEED_RADIANS_PER_SECOND
         );
@@ -235,7 +236,8 @@ public class Swerve extends GBSubsystem {
     }
 
     public Rotation2d getHeading() {
-        final double inputtedHeading = MathUtil.inputModulus(swerveInputs.gyroYawDegrees,
+        final double inputtedHeading = MathUtil.inputModulus(
+                swerveInputs.gyroYawDegrees,
                 -MathConstants.HALF_CIRCLE.getDegrees(),
                 MathConstants.HALF_CIRCLE.getDegrees()
         );
@@ -249,8 +251,8 @@ public class Swerve extends GBSubsystem {
     /**
      * Drives the swerve with the given powers, relative to the field's frame of reference.
      *
-     * @param xPower     the x power
-     * @param yPower     the y power
+     * @param xPower the x power
+     * @param yPower the y power
      * @param thetaPower the theta power
      */
     protected void fieldRelativeDrive(double xPower, double yPower, double thetaPower) {
@@ -261,8 +263,8 @@ public class Swerve extends GBSubsystem {
     /**
      * Drives the swerve with the given powers, relative to the robot's frame of reference.
      *
-     * @param xPower     the x power
-     * @param yPower     the y power
+     * @param xPower the x power
+     * @param yPower the y power
      * @param thetaPower the theta power
      */
     protected void selfRelativeDrive(double xPower, double yPower, double thetaPower) {
@@ -273,8 +275,8 @@ public class Swerve extends GBSubsystem {
     /**
      * Drives the swerve with the given powers and a target angle, relative to the robot's frame of reference.
      *
-     * @param xPower      the x power
-     * @param yPower      the y power
+     * @param xPower the x power
+     * @param yPower the y power
      * @param targetAngle the target angle
      */
     protected void selfRelativeDrive(double xPower, double yPower, Rotation2d targetAngle) {

@@ -21,10 +21,12 @@ public class ModuleUtils {
             double maxSpeedRevolutionsPerSecond,
             double voltageCompensationSaturation
     ) {
-        final double velocityRevolutionsPerSecond = Conversions.distanceToRevolutions(velocityMetersPerSecond,
+        final double velocityRevolutionsPerSecond = Conversions.distanceToRevolutions(
+                velocityMetersPerSecond,
                 wheelDiameterMeters
         );
-        final double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(velocityRevolutionsPerSecond,
+        final double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
+                velocityRevolutionsPerSecond,
                 Rotation2d.fromDegrees(steerVelocityRevolutionsPerSecond),
                 couplingRatio
         );
@@ -37,7 +39,7 @@ public class ModuleUtils {
      * This will affect the current position of the drive motor, so we need to remove the coupling from the position.
      *
      * @param drivePosition the position in revolutions
-     * @param moduleAngle   the angle of the module
+     * @param moduleAngle the angle of the module
      * @return the distance without the coupling
      */
     public static double removeCouplingFromRevolutions(
@@ -52,7 +54,7 @@ public class ModuleUtils {
      * This method will counter that by reducing the target velocity according to the angle motor's error cosine.
      *
      * @param targetVelocityMetersPerSecond the target velocity, in meters per second
-     * @param targetSteerAngle              the target steer angle
+     * @param targetSteerAngle the target steer angle
      * @return the reduced target velocity in revolutions per second
      */
     public static double reduceSkew(

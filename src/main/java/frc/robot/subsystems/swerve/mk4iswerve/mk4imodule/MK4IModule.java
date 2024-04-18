@@ -30,7 +30,8 @@ public class MK4IModule implements IModule {
 
     @Override
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
-        final double voltage = ModuleUtils.velocityToOpenLoopVoltage(targetVelocityMetersPerSecond,
+        final double voltage = ModuleUtils.velocityToOpenLoopVoltage(
+                targetVelocityMetersPerSecond,
                 ModuleConstants.WHEEL_DIAMETER_METERS,
                 mk4IModuleStatus.getSteerMotorVelocity().getRotations(),
                 MK4IModuleConstants.COUPLING_RATIO,
@@ -43,10 +44,11 @@ public class MK4IModule implements IModule {
     @Override
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
         final double optimizedVelocityRevolutionsPerSecond =
-                ModuleUtils.removeCouplingFromRevolutions(targetVelocityMetersPerSecond,
-                mk4IModuleStatus.getSteerMotorVelocity(),
-                MK4IModuleConstants.COUPLING_RATIO
-        );
+                ModuleUtils.removeCouplingFromRevolutions(
+                        targetVelocityMetersPerSecond,
+                        mk4IModuleStatus.getSteerMotorVelocity(),
+                        MK4IModuleConstants.COUPLING_RATIO
+                );
         mk4IModuleActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
     }
 

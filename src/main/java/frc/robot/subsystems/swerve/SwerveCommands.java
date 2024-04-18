@@ -13,8 +13,8 @@ public class SwerveCommands {
      * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed
      * open mode.
      *
-     * @param xSupplier     the target forwards power
-     * @param ySupplier     the target leftwards power
+     * @param xSupplier the target forwards power
+     * @param ySupplier the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
      * @return the command
      */

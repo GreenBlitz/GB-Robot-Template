@@ -26,12 +26,14 @@ class MK4IModuleConfigObject {
     ) {
 
         this.steerEncoder = new CANcoder(steerEncoderId, busChain);
-        this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(new GBTalonFXPro(driveMotorId, busChain),
+        this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
+                new GBTalonFXPro(driveMotorId, busChain),
                 new GBTalonFXPro(steerMotorId, busChain)
         );
         this.steerMotor = moduleMotors.steerMotor();
         this.driveMotor = moduleMotors.driveMotor();
-        this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(steerEncoder.getAbsolutePosition(),
+        this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(
+                steerEncoder.getAbsolutePosition(),
                 steerEncoder.getVelocity(),
                 steerEncoder.getSupplyVoltage(),
                 driveMotor.getPosition(),
@@ -66,7 +68,8 @@ class MK4IModuleConfigObject {
 
     private void optimizeBusAndSignalOfEncoder() {
         BaseStatusSignal.setUpdateFrequencyForAll(250, moduleSignals.steerEncoderAbsolutePositionSignal());
-        BaseStatusSignal.setUpdateFrequencyForAll(100,
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                100,
                 moduleSignals.steerEncoderVelocitySignal(),
                 moduleSignals.steerEncoderVoltageSignal()
         );
@@ -79,12 +82,14 @@ class MK4IModuleConfigObject {
     }
 
     private void optimizeBusAndSignalOfDriveMotor() {
-        BaseStatusSignal.setUpdateFrequencyForAll(250,
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                250,
                 moduleSignals.drivePositionSignal(),
                 moduleSignals.driveVelocitySignal(),
                 moduleSignals.driveAccelerationSignal()
         );
-        BaseStatusSignal.setUpdateFrequencyForAll(100,
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                100,
                 moduleSignals.driveVoltageSignal(),
                 moduleSignals.driveStatorCurrentSignal()
         );
@@ -99,7 +104,8 @@ class MK4IModuleConfigObject {
     }
 
     private void optimizeBusAndSignalOfSteerMotor() {
-        BaseStatusSignal.setUpdateFrequencyForAll(250,
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                250,
                 moduleSignals.steerPositionSignal(),
                 moduleSignals.steerVelocitySignal(),
                 moduleSignals.steerAccelerationSignal()

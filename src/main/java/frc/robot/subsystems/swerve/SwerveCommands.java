@@ -1,13 +1,14 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.utils.commands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
 
-import static frc.robot.RobotContainer.SWERVE;
-
 public class SwerveCommands {
+
+    private static final Swerve SWERVE = RobotContainer.SWERVE;
 
     /**
      * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed

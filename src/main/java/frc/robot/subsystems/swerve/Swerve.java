@@ -95,7 +95,7 @@ public class Swerve extends GBSubsystem {
 
     @AutoLogOutput(key = "Swerve/CurrentStates")
     private SwerveModuleState[] getModuleStates() {
-        final SwerveModuleState[] states = new SwerveModuleState[modules.length];
+        SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
         for (int i = 0; i < modules.length; i++) {
             states[i] = modules[i].getCurrentState();
@@ -160,14 +160,14 @@ public class Swerve extends GBSubsystem {
      */
     protected void fieldRelativeDrive(double xPower, double yPower, Rotation2d targetAngle) {
         targetAngle = AllianceUtils.toMirroredAllianceRotation(targetAngle);
-        final ChassisSpeeds speeds = selfRelativeSpeedsFromFieldRelativePowers(xPower, yPower, 0);
+        ChassisSpeeds speeds = selfRelativeSpeedsFromFieldRelativePowers(xPower, yPower, 0);
         speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle);
 
         selfRelativeDrive(speeds);
     }
 
     private ChassisSpeeds selfRelativeSpeedsFromFieldRelativePowers(double xPower, double yPower, double thetaPower) {
-        final ChassisSpeeds fieldRelativeSpeeds = powersToSpeeds(xPower, yPower, thetaPower);
+        ChassisSpeeds fieldRelativeSpeeds = powersToSpeeds(xPower, yPower, thetaPower);
         return fieldRelativeSpeedsToSelfRelativeSpeeds(fieldRelativeSpeeds);
     }
 
@@ -202,7 +202,7 @@ public class Swerve extends GBSubsystem {
     private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
         //        final Rotation2d currentAngle =
         // RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation();
-        final Rotation2d currentAngle = getHeading();
+        Rotation2d currentAngle = getHeading();
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, currentAngle);
     }
 
@@ -236,7 +236,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public Rotation2d getHeading() {
-        final double inputtedHeading = MathUtil.inputModulus(
+        double inputtedHeading = MathUtil.inputModulus(
                 swerveInputs.gyroYawDegrees,
                 -MathConstants.HALF_CIRCLE.getDegrees(),
                 MathConstants.HALF_CIRCLE.getDegrees()
@@ -256,7 +256,7 @@ public class Swerve extends GBSubsystem {
      * @param thetaPower the theta power
      */
     protected void fieldRelativeDrive(double xPower, double yPower, double thetaPower) {
-        final ChassisSpeeds speeds = selfRelativeSpeedsFromFieldRelativePowers(xPower, yPower, thetaPower);
+        ChassisSpeeds speeds = selfRelativeSpeedsFromFieldRelativePowers(xPower, yPower, thetaPower);
         selfRelativeDrive(speeds);
     }
 
@@ -268,7 +268,7 @@ public class Swerve extends GBSubsystem {
      * @param thetaPower the theta power
      */
     protected void selfRelativeDrive(double xPower, double yPower, double thetaPower) {
-        final ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, thetaPower);
+        ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, thetaPower);
         selfRelativeDrive(speeds);
     }
 
@@ -280,7 +280,7 @@ public class Swerve extends GBSubsystem {
      * @param targetAngle the target angle
      */
     protected void selfRelativeDrive(double xPower, double yPower, Rotation2d targetAngle) {
-        final ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, 0);
+        ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, 0);
         speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle);
 
         selfRelativeDrive(speeds);
@@ -288,7 +288,7 @@ public class Swerve extends GBSubsystem {
 
     @AutoLogOutput(key = "Swerve/TargetStates")
     private SwerveModuleState[] getTargetStates() {
-        final SwerveModuleState[] states = new SwerveModuleState[modules.length];
+        SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
         for (int i = 0; i < modules.length; i++) {
             states[i] = modules[i].getTargetState();

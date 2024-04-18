@@ -13,24 +13,20 @@ public class ModuleUtils {
         return Conversions.revolutionsToDistance(revolutions, ModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
-    public static double velocityToOpenLoopVoltage(
-            double velocityMetersPerSecond,
-            double wheelDiameterMeters,
-            double steerVelocityRevolutionsPerSecond,
-            double couplingRatio,
-            double maxSpeedRevolutionsPerSecond,
+    public static double velocityToOpenLoopVoltage(double velocityMetersPerSecond, double wheelDiameterMeters,
+            double steerVelocityRevolutionsPerSecond, double couplingRatio, double maxSpeedRevolutionsPerSecond,
             double voltageCompensationSaturation
     ) {
-        final double velocityRevolutionsPerSecond = Conversions.distanceToRevolutions(
+        double velocityRevolutionsPerSecond = Conversions.distanceToRevolutions(
                 velocityMetersPerSecond,
                 wheelDiameterMeters
         );
-        final double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
+        double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
                 velocityRevolutionsPerSecond,
                 Rotation2d.fromDegrees(steerVelocityRevolutionsPerSecond),
                 couplingRatio
         );
-        final double power = optimizedVelocityRevolutionsPerSecond / maxSpeedRevolutionsPerSecond;
+        double power = optimizedVelocityRevolutionsPerSecond / maxSpeedRevolutionsPerSecond;
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
 
@@ -42,10 +38,8 @@ public class ModuleUtils {
      * @param moduleAngle the angle of the module
      * @return the distance without the coupling
      */
-    public static double removeCouplingFromRevolutions(
-            double drivePosition, Rotation2d moduleAngle, double couplingRatio
-    ) {
-        final double coupledAngle = moduleAngle.getRotations() * couplingRatio;
+    public static double removeCouplingFromRevolutions(double drivePosition, Rotation2d moduleAngle, double couplingRatio) {
+        double coupledAngle = moduleAngle.getRotations() * couplingRatio;
         return drivePosition - coupledAngle;
     }
 
@@ -57,11 +51,9 @@ public class ModuleUtils {
      * @param targetSteerAngle the target steer angle
      * @return the reduced target velocity in revolutions per second
      */
-    public static double reduceSkew(
-            double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentAngle
-    ) {
-        final double closedLoopError = targetSteerAngle.getRadians() - currentAngle.getRadians();
-        final double cosineScalar = Math.abs(Math.cos(closedLoopError));
+    public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentAngle) {
+        double closedLoopError = targetSteerAngle.getRadians() - currentAngle.getRadians();
+        double cosineScalar = Math.abs(Math.cos(closedLoopError));
         return targetVelocityMetersPerSecond * cosineScalar;
     }
 

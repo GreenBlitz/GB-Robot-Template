@@ -63,8 +63,8 @@ public abstract class MotorSimulation {
         return motor.getMotorVoltage().getValue();
     }
 
-    public double getProfiledSetPointRevolutions() {
-        return closedLoopReferenceSignal.refresh().getValue();
+    public Rotation2d getProfiledSetPoint() {
+        return Rotation2d.fromRotations(closedLoopReferenceSignal.refresh().getValue());
     }
 
     public abstract double getCurrent();

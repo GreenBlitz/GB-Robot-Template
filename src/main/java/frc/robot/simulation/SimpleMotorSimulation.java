@@ -10,7 +10,7 @@ public class SimpleMotorSimulation extends MotorSimulation {
     private final DCMotorSim motorSimulation;
 
     public SimpleMotorSimulation(DCMotor gearbox, double gearRatio, double momentOfInertia) {
-        motorSimulation = new DCMotorSim(gearbox, gearRatio, momentOfInertia);
+        this.motorSimulation = new DCMotorSim(gearbox, gearRatio, momentOfInertia);
     }
 
     @Override

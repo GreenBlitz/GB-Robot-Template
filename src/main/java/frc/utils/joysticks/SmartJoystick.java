@@ -152,7 +152,14 @@ public class SmartJoystick {
     }
 
     private double deadzone(double power) {
-        return Math.abs(power) < deadzone ? 0 : (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
+        if (Math.abs(power) < deadzone) {
+            return 0;
+        }
+        return getPowerProportionalToDeadzone(power);
+    }
+
+    private double getPowerProportionalToDeadzone(double power) {
+        return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
     }
 
     /**

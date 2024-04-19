@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.MorotSubsys;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,6 +21,8 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class RobotContainer {
 
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+
+    public static final MorotSubsys SYS = new MorotSubsys();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

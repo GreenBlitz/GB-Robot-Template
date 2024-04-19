@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;
 
@@ -42,17 +43,9 @@ public abstract class MotorSimulation {
     private void updateSimulation() {
         setInputVoltage(motorSimState.getMotorVoltage());
         updateMotor();
-        motorSimState.setRawRotorPosition(getPositionRevolutions());
-        motorSimState.setRotorVelocity(getVelocityRevolutionsPerSecond());
+        motorSimState.setRawRotorPosition(getPosition().getRotations());
+        motorSimState.setRotorVelocity(getVelocity().getRotations());
     }
-
-    protected abstract void setInputVoltage(double voltage);
-
-    protected abstract void updateMotor();
-
-    public abstract double getPositionRevolutions();
-
-    public abstract double getVelocityRevolutionsPerSecond();
 
     public void applyConfiguration(TalonFXConfiguration config) {
         motor.getConfigurator().apply(config);
@@ -70,10 +63,18 @@ public abstract class MotorSimulation {
         return motor.getMotorVoltage().getValue();
     }
 
-    public double getProfiledSetpointRevolutions() {
+    public double getProfiledSetPointRevolutions() {
         return closedLoopReferenceSignal.refresh().getValue();
     }
 
     public abstract double getCurrent();
+
+    protected abstract void setInputVoltage(double voltage);
+
+    protected abstract void updateMotor();
+
+    public abstract Rotation2d getPosition();
+
+    public abstract Rotation2d getVelocity();
 
 }

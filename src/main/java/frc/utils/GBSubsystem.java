@@ -9,7 +9,7 @@ public abstract class GBSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
-        Logger.recordOutput("subsystems/" + getClass().getSimpleName(), getCurrentCommandName());
+        Logger.recordOutput("subsystems/" + getName(), getCurrentCommandName());
     }
 
     private String getCurrentCommandName() {

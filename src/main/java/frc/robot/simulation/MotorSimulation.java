@@ -51,6 +51,10 @@ public abstract class MotorSimulation {
         motor.getConfigurator().apply(config);
     }
 
+    public void setPower(double power) {
+        motor.set(power);
+    }
+
     public void stop() {
         motor.stopMotor();
     }

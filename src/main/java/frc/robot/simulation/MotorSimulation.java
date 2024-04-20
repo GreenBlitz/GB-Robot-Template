@@ -3,11 +3,11 @@ package frc.robot.simulation;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SimulationConstants;
+import frc.utils.devicewrappers.GBTalonFXPro;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public abstract class MotorSimulation {
 
     private static final List<MotorSimulation> REGISTERED_SIMULATIONS = new ArrayList<>();
 
-    private final TalonFX motor;
+    private final GBTalonFXPro motor;
 
     private final TalonFXSimState motorSimState;
 
@@ -27,7 +27,7 @@ public abstract class MotorSimulation {
 
     protected MotorSimulation() {
         REGISTERED_SIMULATIONS.add(this);
-        this.motor = new TalonFX(REGISTERED_SIMULATIONS.size() - 1);
+        this.motor = new GBTalonFXPro(REGISTERED_SIMULATIONS.size());
         this.motorSimState = motor.getSimState();
         this.motorSimState.setSupplyVoltage(RobotConstants.BATTERY_VOLTAGE);
         this.closedLoopReferenceSignal = motor.getClosedLoopReference();

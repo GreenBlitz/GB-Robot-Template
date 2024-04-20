@@ -39,7 +39,7 @@ public class AlliancePose2d {
     }
 
     public static AlliancePose2d fromAlliancePose(Pose2d alliancePose) {
-        final Pose2d blueAlliancePose = AllianceUtils.toAlliancePose(alliancePose);
+        Pose2d blueAlliancePose = AllianceUtils.toAlliancePose(alliancePose);
         return new AlliancePose2d(blueAlliancePose, alliancePose, AllianceUtils.toMirroredAlliancePose(blueAlliancePose));
     }
 

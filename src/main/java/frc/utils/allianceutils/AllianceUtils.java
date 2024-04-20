@@ -3,6 +3,7 @@ package frc.utils.allianceutils;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.MathConstants;
 
 import static frc.utils.DriverStationUtils.isBlueAlliance;
 
@@ -15,17 +16,14 @@ public class AllianceUtils {
      * @return the converted pose
      */
     public static Pose2d toAlliancePose(Pose2d pose) {
-        if (isBlueAlliance()) {
-            return pose;
-        }
-        return switchAlliance(pose);
+        return isBlueAlliance() ? pose : switchAlliance(pose);
     }
 
     private static Pose2d switchAlliance(Pose2d pose) {
         return new Pose2d(
                 FieldConstants.FIELD_LENGTH - pose.getX(),
                 FieldConstants.FIELD_WIDTH - pose.getY(),
-                pose.getRotation().minus(Rotation2d.fromRotations(0.5))
+                pose.getRotation().minus(MathConstants.HALF_CIRCLE)
         );
     }
 
@@ -36,17 +34,14 @@ public class AllianceUtils {
      * @return the pose
      */
     public static Pose2d toMirroredAlliancePose(Pose2d pose) {
-        if (isBlueAlliance()) {
-            return pose;
-        }
-        return mirror(pose);
+        return isBlueAlliance() ? pose : mirror(pose);
     }
 
     private static Pose2d mirror(Pose2d pose) {
         return new Pose2d(
                 FieldConstants.FIELD_LENGTH - pose.getX(),
                 pose.getY(),
-                new Rotation2d(Math.PI).minus(pose.getRotation())
+                MathConstants.HALF_CIRCLE.minus(pose.getRotation())
         );
     }
 
@@ -57,10 +52,7 @@ public class AllianceUtils {
      * @return the rotation
      */
     public static Rotation2d toMirroredAllianceRotation(Rotation2d rotation) {
-        if (isBlueAlliance()) {
-            return rotation;
-        }
-        return new Rotation2d(Math.PI).minus(rotation);
+        return isBlueAlliance() ? rotation : MathConstants.HALF_CIRCLE.minus(rotation);
     }
 
 }

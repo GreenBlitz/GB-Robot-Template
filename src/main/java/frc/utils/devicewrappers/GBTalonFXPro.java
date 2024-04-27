@@ -4,16 +4,16 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import frc.robot.constants.Phoenix6Constants;
 
 public class GBTalonFXPro extends TalonFX {
 
-    public GBTalonFXPro(int deviceId) {
-        this(deviceId, Phoenix6Constants.CANBUS_NAME);
+    public GBTalonFXPro(int deviceId, String BusChain) {
+        this(deviceId, BusChain, new TalonFXConfiguration());
     }
 
-    public GBTalonFXPro(int deviceId, String BusChain) {
+    public GBTalonFXPro(int deviceId, String BusChain, TalonFXConfiguration configuration) {
         super(deviceId, BusChain);
+        applyConfiguration(configuration);
     }
 
     public void applyConfiguration(TalonFXConfiguration configuration) {

@@ -15,14 +15,17 @@ public class RoborioUtils {
     }
 
     public static double getCurrentRoborioCycle() {
+        //Todo - add Alert Log - maybe in periodic maybe in call
         return currentTime - lastTime;
     }
 
     public static boolean isCANConnectedToRoborio() {
+        //Todo - add Alert Log - maybe in periodic maybe in call
         return getCANUtilizationPercent() > 0;
     }
 
     public static double getCANUtilizationPercent() {
+        //Todo - add Alert Log - maybe in periodic maybe in call
         return RobotController.getCANStatus().percentBusUtilization * 100;
     }
 

@@ -86,20 +86,16 @@ public class SysIdObject {
 
     public Command getSysIdQuasistatic(SysIdRoutine.Direction direction) {
         Command command = sysIdRoutine.quasistatic(direction);
-        return addRequirementsAndReturnAppropriateCommand(command);
+        return getAppropriateCommand(command);
     }
 
     public Command getSysIdDynamic(SysIdRoutine.Direction direction) {
         Command command = sysIdRoutine.dynamic(direction);
-        return addRequirementsAndReturnAppropriateCommand(command);
-    }
-
-    private Command addRequirementsAndReturnAppropriateCommand(Command sysIdCommand) {
-        sysIdCommand.addRequirements(usedSubSystem);
-        return getAppropriateCommand(sysIdCommand);
+        return getAppropriateCommand(command);
     }
 
     private Command getAppropriateCommand(Command sysIdCommand) {
+        sysIdCommand.addRequirements(usedSubSystem);
         return isCTRE ? getCTRECommand(sysIdCommand) : sysIdCommand;
     }
 

@@ -10,14 +10,11 @@ public class ElevatorSimulation extends MotorSimulation {
 
     private final ElevatorSim elevatorSimulation;
 
-    private final double retractedHeightMeters;
-
     private final double diameterMeters;
 
     public ElevatorSimulation(DCMotor gearbox, double gearRatio, double carriageMassKilograms, double drumRadiusMeters,
             double minimumHeightMeters, double maximumHeightMeters, double startingHeightMeters, boolean simulateGravity) {
         this.diameterMeters = 2 * drumRadiusMeters;
-        this.retractedHeightMeters = minimumHeightMeters;
         this.elevatorSimulation = new ElevatorSim(
                 gearbox,
                 gearRatio,
@@ -39,7 +36,7 @@ public class ElevatorSimulation extends MotorSimulation {
     public Rotation2d getPosition() {
         return Rotation2d.fromRotations(
                 Conversions.distanceToRevolutions(
-                        elevatorSimulation.getPositionMeters() - retractedHeightMeters,
+                        elevatorSimulation.getPositionMeters(),
                         diameterMeters
                 )
         );

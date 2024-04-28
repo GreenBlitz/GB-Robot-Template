@@ -32,24 +32,42 @@ public class ElevatorSimulation extends MotorSimulation {
         return elevatorSimulation.getCurrentDrawAmps();
     }
 
+    /**
+     * Returns in Rotation2D the position of the drum
+     *
+     * @return the position
+     */
     @Override
     public Rotation2d getPosition() {
         return Rotation2d.fromRotations(
                 Conversions.distanceToRevolutions(
-                        elevatorSimulation.getPositionMeters(),
+                        getPositionMeters(),
                         diameterMeters
                 )
         );
     }
 
+    public double getPositionMeters() {
+        return elevatorSimulation.getPositionMeters();
+    }
+
+    /**
+     * Returns the velocity in Rotation2D of the drum
+     *
+     * @return the velocity
+     */
     @Override
     public Rotation2d getVelocity() {
         return Rotation2d.fromRotations(
                 Conversions.distanceToRevolutions(
-                        elevatorSimulation.getVelocityMetersPerSecond(),
+                        getVelocityMetersPerSecond(),
                         diameterMeters
                 )
         );
+    }
+
+    public double getVelocityMetersPerSecond() {
+        return elevatorSimulation.getVelocityMetersPerSecond();
     }
 
     @Override

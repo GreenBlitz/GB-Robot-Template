@@ -19,6 +19,7 @@ jobs:
       PASSED_ALL_TESTS: "passed-all-tests"
       stop: false
     steps:
+
       - name: get existing labels
         run: |
           existingLabels=$(jq -r '.pull_request.labels[].name' $GITHUB_EVENT_PATH | tr '\n' ' ')

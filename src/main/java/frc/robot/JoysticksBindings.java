@@ -52,8 +52,8 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         // bindings
         usedJoystick.A.onTrue(staticCharacterizationObject.getFindKsKgCommand());
-        usedJoystick.X.onTrue(new InstantCommand(() -> armSimulation.setControl(new VoltageOut(0.48))));
-        usedJoystick.Y.onTrue(new InstantCommand(() -> armSimulation.setControl(new VoltageOut(1))));
+        usedJoystick.X.onTrue(new InstantCommand(() -> armSimulation.setControl(new VoltageOut(0.5082098100000001))));
+        usedJoystick.Y.onTrue(new InstantCommand(() -> armSimulation.setControl(new VoltageOut(0.51052381))));
     }
 
     private static void secondJoystickButtons() {

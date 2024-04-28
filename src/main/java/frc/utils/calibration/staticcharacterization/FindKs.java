@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
 
 class FindKs extends Command {
 
@@ -14,7 +14,7 @@ class FindKs extends Command {
 
     private final Consumer<Double> updateKs;
 
-    private final BooleanSupplier isMoving;
+    private final DoubleSupplier velocitySupplier;
 
     private final Timer timer = new Timer();
 
@@ -22,10 +22,10 @@ class FindKs extends Command {
 
     private double lastVoltage;
 
-    public FindKs(GBSubsystem subsystem, Consumer<Double> voltageConsumer, BooleanSupplier isMoving,
+    public FindKs(GBSubsystem subsystem, Consumer<Double> voltageConsumer, DoubleSupplier velocitySupplier,
             Consumer<Double> updateKs) {
         this.voltageConsumer = voltageConsumer;
-        this.isMoving = isMoving;
+        this.velocitySupplier = velocitySupplier;
         this.updateKs = updateKs;
         addRequirements(subsystem);
     }
@@ -45,7 +45,7 @@ class FindKs extends Command {
 
     @Override
     public boolean isFinished() {
-        return isMoving.getAsBoolean();
+        return velocitySupplier.getAsDouble() >= StaticCharacterizationConstants.VELOCITY_DEADBAND;
     }
 
     @Override

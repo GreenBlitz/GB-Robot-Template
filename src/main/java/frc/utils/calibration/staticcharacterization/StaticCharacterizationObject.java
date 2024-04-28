@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.utils.GBSubsystem;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 
@@ -20,7 +19,7 @@ public class StaticCharacterizationObject {
 
     private final Consumer<Double> voltageConsumer;
 
-    private final BooleanSupplier isMoving;
+    private final DoubleSupplier velocitySupplier;
 
     private double ks;
 
@@ -28,7 +27,7 @@ public class StaticCharacterizationObject {
             DoubleSupplier velocitySupplier) {
         this.subsystem = subsystem;
         this.voltageConsumer = voltageConsumer;
-        this.isMoving = () -> Math.abs(velocitySupplier.getAsDouble()) > 1E-4;
+        this.velocitySupplier = velocitySupplier;
         this.ks = 0;
     }
 
@@ -44,7 +43,7 @@ public class StaticCharacterizationObject {
      * @return the command
      */
     public Command getFindKsCommand() {
-        return new FindKs(subsystem, voltageConsumer, isMoving, this::setKs);
+        return new FindKs(subsystem, voltageConsumer, velocitySupplier, this::setKs);
     }
 
     /**
@@ -61,7 +60,7 @@ public class StaticCharacterizationObject {
     }
 
     private Command getFindKgCommand(DoubleSupplier stillVoltageSupplier) {
-        return new FindKg(subsystem, stillVoltageSupplier, voltageConsumer, isMoving);
+        return new FindKg(subsystem, stillVoltageSupplier, voltageConsumer, velocitySupplier);
     }
 
     /**
@@ -73,8 +72,6 @@ public class StaticCharacterizationObject {
     public Command getFindKsKgCommand() {
         return new SequentialCommandGroup(
                 getFindKsCommand(),
-                new WaitCommand(StaticCharacterizationConstants.TIME_BETWEEN_COMMANDS),
-                new StandCommand(subsystem, () -> ks, voltageConsumer, isMoving, this::setKs),
                 new WaitCommand(StaticCharacterizationConstants.TIME_BETWEEN_COMMANDS),
                 getFindKgCommand(() -> ks)
         );

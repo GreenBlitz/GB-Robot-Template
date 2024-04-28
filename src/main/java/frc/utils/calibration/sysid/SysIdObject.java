@@ -23,6 +23,12 @@ public class SysIdObject {
 
     private final boolean isCTRE;
 
+    /**
+     * IMPORTANT:
+     *
+     * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
+     * For more on kG look on calibration -> static -> StaticCalibrationObject -> FindKG
+     */
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts,
             double rampRateVoltsPerSecond) {
         this(
@@ -35,6 +41,12 @@ public class SysIdObject {
         );
     }
 
+    /**
+     * IMPORTANT:
+     *
+     * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
+     * For more on kG look on calibration -> static -> StaticCalibrationObject -> FindKG
+     */
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStep) {
         this(
                 isCTRE,
@@ -46,6 +58,12 @@ public class SysIdObject {
         );
     }
 
+    /**
+     * IMPORTANT:
+     *
+     * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
+     * For more on kG look on calibration -> static -> StaticCalibrationObject -> FindKG
+     */
     public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl) {
         this(
                 isCTRE,
@@ -57,7 +75,13 @@ public class SysIdObject {
         );
     }
 
-    public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageControl, double voltageStepVolts,
+    /**
+     * IMPORTANT:
+     *
+     * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
+     * For more on kG look on calibration -> static -> StaticCalibrationObject -> FindKG
+     */
+    public SysIdObject(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts,
             double rampRateVoltsPerSecond, double timeoutSeconds) {
         this.usedSubSystem = subsystem;
         this.isCTRE = isCTRE;
@@ -71,7 +95,7 @@ public class SysIdObject {
                         : (state) -> Logger.recordOutput("state", state.toString())
         );
         final SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
-                (Measure<Voltage> volts) -> voltageControl.accept(volts.in(Volts)),
+                (Measure<Voltage> volts) -> voltageSetControl.accept(volts.in(Volts)),
                 null,
                 usedSubSystem,
                 usedSubSystem.getName()

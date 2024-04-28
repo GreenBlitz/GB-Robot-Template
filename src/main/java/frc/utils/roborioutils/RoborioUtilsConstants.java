@@ -10,6 +10,6 @@ public class RoborioUtilsConstants {
 
     protected static final double MAX_CAN_UTILIZATION_PERCENT = 93;
 
-    protected static final double TIME_STEP_TOLERANCE = 0.001;
+    protected static final double TIME_STEP_TOLERANCE = 0.003;
 
 }

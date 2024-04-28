@@ -22,11 +22,11 @@ public class RoborioUtils {
         }
         else if (getCANUtilizationPercent() > RoborioUtilsConstants.MAX_CAN_UTILIZATION_PERCENT) {
             Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanFloodedAt", currentTime);
-            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanFlooded", getCANUtilizationPercent());
+            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanFloodedPercent", getCANUtilizationPercent());
         }
         if (getCurrentRoborioCycle() > getDefaultTimeStep() + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
             Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleOverrunAt", currentTime);
-            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleOverrun", getCurrentRoborioCycle());
+            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleOverrunTime", getCurrentRoborioCycle());
         }
     }
 

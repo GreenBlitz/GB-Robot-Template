@@ -34,7 +34,7 @@ jobs:
 
 
       - name: add needs robot test
-        if: 'env.stop == false
+        if: '
         && !contains(env.existing-labels, env.ROBOT_TESTING) 
         && !contains(env.existing-labels, env.NO_ROBOT_TESTING)'
         run: |

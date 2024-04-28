@@ -43,7 +43,7 @@ public class FlywheelSimulation extends MotorSimulation {
     @Override
     protected void updateMotor() {
         flywheelSimulation.update(SimulationConstants.TIME_STEP);
-        lastPositionRadians += flywheelSimulation.getAngularVelocityRadPerSec() * SimulationConstants.TIME_STEP;
+        lastPositionRadians += getVelocity().getRadians() * SimulationConstants.TIME_STEP;
     }
 
 }

@@ -1,14 +1,13 @@
 package frc.utils.calibration.autocalibration.findks;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.utils.GBSubsystem;
-import frc.utils.commands.GBCommand;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
-public class FindKs extends GBCommand {
+public class FindKs extends Command {
 
     private final Timer TIMER;
 
@@ -31,7 +30,7 @@ public class FindKs extends GBCommand {
         lastTimeSeconds = 0;
         lastVoltage = 0;
 
-        require(subsystem);
+        addRequirements(subsystem);
     }
 
     @Override

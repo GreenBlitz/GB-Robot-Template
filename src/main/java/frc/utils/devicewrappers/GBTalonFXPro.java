@@ -9,22 +9,24 @@ import frc.robot.constants.Phoenix6Constants;
 public class GBTalonFXPro extends TalonFX {
 
     public GBTalonFXPro(int deviceId) {
-        this(deviceId, Phoenix6Constants.CANBUS_NAME);
+        this(deviceId, Phoenix6Constants.CANBUS_NAME, new TalonFXConfiguration());
+    }
+
+    public GBTalonFXPro(int deviceId, TalonFXConfiguration configuration) {
+        this(deviceId, Phoenix6Constants.CANBUS_NAME, configuration);
     }
 
     public GBTalonFXPro(int deviceId, String BusChain) {
+        this(deviceId, BusChain, new TalonFXConfiguration());
+    }
+
+    public GBTalonFXPro(int deviceId, String BusChain, TalonFXConfiguration configuration) {
         super(deviceId, BusChain);
+        applyConfiguration(configuration);
     }
 
     public void applyConfiguration(TalonFXConfiguration configuration) {
         super.getConfigurator().apply(configuration);
-    }
-
-    /**
-     * Performs latency compensation on position
-     */
-    public double getLatencyCompensatedPosition() {
-        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
     }
 
     /**
@@ -40,6 +42,13 @@ public class GBTalonFXPro extends TalonFX {
      */
     public double getLatencyCompensatedVelocity() {
         return getLatencyCompensatedValue(this.getVelocity(), this.getAcceleration());
+    }
+
+    /**
+     * Performs latency compensation on position
+     */
+    public double getLatencyCompensatedPosition() {
+        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
     }
 
 }

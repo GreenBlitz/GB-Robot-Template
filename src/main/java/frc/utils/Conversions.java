@@ -1,6 +1,7 @@
 package frc.utils;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.constants.MathConstants;
 
 public class Conversions {
 
@@ -160,7 +161,7 @@ public class Conversions {
      * @return the distance
      */
     public static double revolutionsToDistance(double revolutions, double wheelDiameter) {
-        return revolutions * wheelDiameter * Math.PI;
+        return revolutions * wheelDiameter * MathConstants.HALF_CIRCLE.getRadians();
     }
 
     /**
@@ -171,7 +172,7 @@ public class Conversions {
      * @return the revolutions
      */
     public static double distanceToRevolutions(double distance, double wheelDiameter) {
-        return distance / (wheelDiameter * Math.PI);
+        return distance / (wheelDiameter * MathConstants.HALF_CIRCLE.getRadians());
     }
 
     /**

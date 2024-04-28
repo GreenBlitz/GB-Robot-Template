@@ -7,7 +7,6 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.SimulationConstants;
 import frc.utils.devicewrappers.GBTalonFXPro;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +44,6 @@ public abstract class MotorSimulation {
         updateMotor();
         motorSimState.setRawRotorPosition(getPosition().getRotations());
         motorSimState.setRotorVelocity(getVelocity().getRotations());
-        Logger.recordOutput("VEL", getVelocity().getRotations());
-        Logger.recordOutput("VOL", getVoltage());
-        Logger.recordOutput("POS", getPosition().getRotations());
     }
 
     public void applyConfiguration(TalonFXConfiguration config) {

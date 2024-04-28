@@ -5,16 +5,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
-import java.util.function.DoubleSupplier;
 
 class FindKg extends Command {
 
-    private static final double RAMP_VOLTS_PER_SEC = 0.1;
-
     private final Consumer<Double> voltageConsumer;
 
-    private final DoubleSupplier velocitySupplier;
+    private final BooleanSupplier isMoving;
 
     private final Timer timer = new Timer();
 
@@ -24,9 +22,9 @@ class FindKg extends Command {
 
     private double lastVoltage;
 
-    public FindKg(GBSubsystem subsystem, double stillVoltage, Consumer<Double> voltageConsumer, DoubleSupplier velocitySupplier) {
+    public FindKg(GBSubsystem subsystem, double stillVoltage, Consumer<Double> voltageConsumer, BooleanSupplier isMoving) {
         this.voltageConsumer = voltageConsumer;
-        this.velocitySupplier = velocitySupplier;
+        this.isMoving = isMoving;
         this.stillVoltage = stillVoltage;
         addRequirements(subsystem);
     }
@@ -40,13 +38,13 @@ class FindKg extends Command {
     @Override
     public void execute() {
         lastVoltage = currentVoltage;
-        currentVoltage -= timer.get() * RAMP_VOLTS_PER_SEC;
+        currentVoltage -= timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
         voltageConsumer.accept(currentVoltage);
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(velocitySupplier.getAsDouble()) > 1E-4;
+        return isMoving.getAsBoolean();
     }
 
     @Override

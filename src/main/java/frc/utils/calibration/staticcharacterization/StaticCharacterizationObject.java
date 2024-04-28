@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.utils.GBSubsystem;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 
@@ -15,13 +16,11 @@ import java.util.function.DoubleSupplier;
  */
 public class StaticCharacterizationObject {
 
-    private final double TIME_BETWEEN_COMMANDS = 2;
-
     private final GBSubsystem subsystem;
 
     private final Consumer<Double> voltageConsumer;
 
-    private final DoubleSupplier velocitySupplier;
+    private final BooleanSupplier isMoving;
 
     private double ks;
 
@@ -29,7 +28,7 @@ public class StaticCharacterizationObject {
             DoubleSupplier velocitySupplier) {
         this.subsystem = subsystem;
         this.voltageConsumer = voltageConsumer;
-        this.velocitySupplier = velocitySupplier;
+        this.isMoving = () -> Math.abs(velocitySupplier.getAsDouble()) > 1E-4;
         this.ks = 0;
     }
 
@@ -45,7 +44,7 @@ public class StaticCharacterizationObject {
      * @return the command
      */
     public Command getFindKsCommand() {
-        return new FindKs(subsystem, voltageConsumer, velocitySupplier, this::setKs);
+        return new FindKs(subsystem, voltageConsumer, isMoving, this::setKs);
     }
 
     /**
@@ -58,7 +57,7 @@ public class StaticCharacterizationObject {
      * @return the command
      */
     public Command getFindKgCommand(double stillVoltage) {
-        return new FindKg(subsystem, stillVoltage, voltageConsumer, velocitySupplier);
+        return new FindKg(subsystem, stillVoltage, voltageConsumer, isMoving);
     }
 
     /**
@@ -70,7 +69,7 @@ public class StaticCharacterizationObject {
     public Command getFindKsKgCommand() {
         return new SequentialCommandGroup(
                 getFindKsCommand(),
-                new WaitCommand(TIME_BETWEEN_COMMANDS),
+                new WaitCommand(StaticCharacterizationConstants.TIME_BETWEEN_COMMANDS),
                 getFindKgCommand(ks)
         );
     }

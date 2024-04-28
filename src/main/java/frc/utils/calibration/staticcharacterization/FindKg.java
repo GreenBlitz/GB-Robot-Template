@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
 
 class FindKg extends Command {
 
@@ -16,13 +17,14 @@ class FindKg extends Command {
 
     private final Timer timer = new Timer();
 
-    private final double stillVoltage;
+    private final DoubleSupplier stillVoltage;
 
     private double currentVoltage;
 
     private double lastVoltage;
 
-    public FindKg(GBSubsystem subsystem, double stillVoltage, Consumer<Double> voltageConsumer, BooleanSupplier isMoving) {
+    public FindKg(GBSubsystem subsystem, DoubleSupplier stillVoltage, Consumer<Double> voltageConsumer,
+            BooleanSupplier isMoving) {
         this.voltageConsumer = voltageConsumer;
         this.isMoving = isMoving;
         this.stillVoltage = stillVoltage;
@@ -31,7 +33,7 @@ class FindKg extends Command {
 
     @Override
     public void initialize() {
-        currentVoltage = stillVoltage;
+        currentVoltage = stillVoltage.getAsDouble();
         timer.restart();
     }
 
@@ -51,9 +53,9 @@ class FindKg extends Command {
     public void end(boolean interrupted) {
         voltageConsumer.accept(lastVoltage);
         timer.stop();
-        String toLog = interrupted ? "got interrupted" : "finished";
+        String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
         Logger.recordOutput(
-                "Calibration/static/KG OF " + getRequirements().toArray()[0].getClass().getSimpleName(),
+                StaticCharacterizationConstants.logPath + "KG OF " + getRequirements().toArray()[0].getClass().getSimpleName(),
                 toLog + lastVoltage
         );
     }

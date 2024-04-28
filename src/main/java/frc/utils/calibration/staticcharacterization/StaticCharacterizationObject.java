@@ -57,7 +57,11 @@ public class StaticCharacterizationObject {
      * @return the command
      */
     public Command getFindKgCommand(double stillVoltage) {
-        return new FindKg(subsystem, stillVoltage, voltageConsumer, isMoving);
+        return getFindKgCommand(() -> stillVoltage);
+    }
+
+    private Command getFindKgCommand(DoubleSupplier stillVoltageSupplier) {
+        return new FindKg(subsystem, stillVoltageSupplier, voltageConsumer, isMoving);
     }
 
     /**
@@ -70,7 +74,9 @@ public class StaticCharacterizationObject {
         return new SequentialCommandGroup(
                 getFindKsCommand(),
                 new WaitCommand(StaticCharacterizationConstants.TIME_BETWEEN_COMMANDS),
-                getFindKgCommand(ks)
+                new StandCommand(subsystem, () -> ks, voltageConsumer, isMoving, this::setKs),
+                new WaitCommand(StaticCharacterizationConstants.TIME_BETWEEN_COMMANDS),
+                getFindKgCommand(() -> ks)
         );
     }
 

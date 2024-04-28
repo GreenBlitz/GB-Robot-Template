@@ -1,6 +1,12 @@
 package frc.robot;
 
+import com.ctre.phoenix6.controls.VoltageOut;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.Ports;
+import frc.robot.simulation.SingleJointedArmSimulation;
+import frc.utils.GBSubsystem;
+import frc.utils.calibration.staticcharacterization.StaticCharacterizationObject;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
@@ -20,9 +26,31 @@ public class JoysticksBindings {
         fourthJoystickButtons();
     }
 
+    static SingleJointedArmSimulation armSimulation = new SingleJointedArmSimulation(
+            DCMotor.getFalcon500Foc(1),
+            20,
+            1,
+            1,
+            Rotation2d.fromRotations(0),
+            Rotation2d.fromRotations(1000),
+            Rotation2d.fromRotations(0),
+            true
+    );
+
+    static class Sub extends GBSubsystem {
+
+    }
+
+    static StaticCharacterizationObject staticCharacterizationObject = new StaticCharacterizationObject(
+            new Sub(),
+            voltage -> armSimulation.setControl(new VoltageOut(voltage)),
+            () -> armSimulation.getVelocity().getRotations()
+    );
+
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         // bindings
+        usedJoystick.A.onTrue(staticCharacterizationObject.getFindKsKgCommand());
     }
 
     private static void secondJoystickButtons() {

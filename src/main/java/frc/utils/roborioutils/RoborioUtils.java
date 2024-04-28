@@ -1,0 +1,46 @@
+package frc.utils.roborioutils;
+
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.SimulationConstants;
+import org.littletonrobotics.junction.Logger;
+
+public class RoborioUtils {
+
+    private static double lastTime;
+
+    private static double currentTime;
+
+    public static void updateRioUtils() {
+        lastTime = currentTime;
+        currentTime = Timer.getFPGATimestamp();
+        logAlertsChecks();
+    }
+
+    private static void logAlertsChecks() {
+        if (!isCANConnectedToRoborio()) {
+            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanDisconnectAt", currentTime);
+        }
+        else if (getCANUtilizationPercent() > RoborioUtilsConstants.MAX_CAN_UTILIZATION_PERCENT) {
+            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanFloodedAt", currentTime);
+            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanFlooded", getCANUtilizationPercent());
+        }
+        if (getCurrentRoborioCycle() > SimulationConstants.TIME_STEP + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
+            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleOverrunAt", currentTime);
+            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleOverrun", getCurrentRoborioCycle());
+        }
+    }
+
+    public static double getCurrentRoborioCycle() {
+        return currentTime - lastTime;
+    }
+
+    public static boolean isCANConnectedToRoborio() {
+        return getCANUtilizationPercent() > 0;
+    }
+
+    public static double getCANUtilizationPercent() {
+        return RobotController.getCANStatus().percentBusUtilization * 100;
+    }
+
+}

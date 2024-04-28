@@ -52,7 +52,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
      * @param newRoll - the wanted roll of the gyro to have
      */
     public void setRoll(Rotation2d newRoll) {
-        rollOffSetDeg = newRoll.getDegrees() - getRoll().getValue();
+        rollOffSetDeg = calculateOffset(newRoll.getDegrees(), getRoll().getValue());
     }
 
     /**
@@ -64,7 +64,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
      * @param newPitch - the wanted pitch of the gyro to have
      */
     public void setPitch(Rotation2d newPitch) {
-        pitchOffSetDeg = newPitch.getDegrees() - getPitch().getValue();
+        pitchOffSetDeg = calculateOffset(newPitch.getDegrees(), getPitch().getValue());
     }
 
     public Rotation2d getRollOffSet() {
@@ -87,35 +87,55 @@ public class Pigeon2Wrapper extends Pigeon2 {
      * @return - the yaw value ranged between -180 , 180
      */
     public Rotation2d getRangedYaw() {
-        return Rotation2d.fromDegrees((getRotation2dYaw().getDegrees() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+        return rangeAngle(Rotation2d.fromDegrees(getYaw().getValue()));
     }
 
     /**
      * @return - the unadjusted roll value ranged between -180 , 180
      */
     public Rotation2d getRangedRoll() {
-        return Rotation2d.fromDegrees((getRoll().getValue() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+        return rangeAngle(Rotation2d.fromDegrees(getRoll().getValue()));
     }
 
     /**
      * @return - the unadjusted pitch value ranged between -180 , 180
      */
     public Rotation2d getRangedPitch() {
-        return Rotation2d.fromDegrees((getPitch().getValue() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+        return rangeAngle(Rotation2d.fromDegrees(getPitch().getValue()));
     }
 
     /**
      * @return - the adjusted roll value ranged between -180 , 180
      */
     public Rotation2d getAdjustedRangedRoll() {
-        return Rotation2d.fromDegrees((getAdjustedRoll().getDegrees() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+        return rangeAngle(getAdjustedRoll());
     }
 
     /**
      * @return - the adjusted pitch value ranged between -180 , 180
      */
     public Rotation2d getAdjustedRangedPitch() {
-        return Rotation2d.fromDegrees((getAdjustedPitch().getDegrees() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+        return rangeAngle(getAdjustedPitch());
+    }
+
+    /**
+     * @param newAngleDeg - the wanted angle in degrees
+     * @param currentAngleDeg - the current angle in degrees
+     * @return the offset
+     */
+    private double calculateOffset(double newAngleDeg, double currentAngleDeg) {
+        return newAngleDeg - currentAngleDeg;
+    }
+
+    /**
+     * Range angle between -180, 180
+     *
+     * @param angle - the angle to range
+     * @return the ranged angle
+     */
+    private Rotation2d rangeAngle(Rotation2d angle) {
+        double rangedAngleBetween0And360 = angle.getDegrees() % MathConstants.FULL_CIRCLE.getDegrees();
+        return Rotation2d.fromDegrees(rangedAngleBetween0And360 - MathConstants.HALF_CIRCLE.getDegrees());
     }
 
 }

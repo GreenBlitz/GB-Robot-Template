@@ -25,6 +25,12 @@ jobs:
           echo "Existing labels: $existingLabels"
 
 
+      - name: Open Behavior
+        if: ${{ github.event.action == 'opened' && contains(env.existing-labels, env.PASSED_ALL_TESTS)}}
+        run: |
+          exit 0
+
+
       - name: add needs robot test
         if: '!contains(env.existing-labels, env.ROBOT_TESTING) && !contains(env.existing-labels, env.NO_ROBOT_TESTING)'
         run: |

@@ -8,9 +8,9 @@ import java.util.function.Consumer;
 /**
  * This Command run a consumer through dashboard value
  */
-public class SmartDashboardCommand extends InitExecuteCommand {
+public class DashboardCommand extends InitExecuteCommand {
 
-    public SmartDashboardCommand(
+    public DashboardCommand(
             double startingValue,
             String widgetName,
             Consumer<Double> methodToRun,

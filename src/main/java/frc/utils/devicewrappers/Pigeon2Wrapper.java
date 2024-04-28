@@ -3,8 +3,8 @@ package frc.utils.devicewrappers;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.MathConstants;
 import frc.robot.constants.Phoenix6Constants;
 
 public class Pigeon2Wrapper extends Pigeon2 {
@@ -134,8 +134,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
      * @return the ranged angle
      */
     private Rotation2d rangeAngle(Rotation2d angle) {
-        double rangedAngleBetween0And360 = angle.getDegrees() % MathConstants.FULL_CIRCLE.getDegrees();
-        return Rotation2d.fromDegrees(rangedAngleBetween0And360 - MathConstants.HALF_CIRCLE.getDegrees());
+        return Rotation2d.fromDegrees(MathUtil.angleModulus(angle.getRadians()));
     }
 
 }

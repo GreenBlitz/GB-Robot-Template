@@ -12,6 +12,10 @@ public class GBTalonFXPro extends TalonFX {
         this(deviceId, Phoenix6Constants.CANBUS_NAME, new TalonFXConfiguration());
     }
 
+    public GBTalonFXPro(int deviceId, TalonFXConfiguration configuration) {
+        this(deviceId, Phoenix6Constants.CANBUS_NAME, configuration);
+    }
+
     public GBTalonFXPro(int deviceId, String BusChain) {
         this(deviceId, BusChain, new TalonFXConfiguration());
     }

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.constants.MathConstants;
 import frc.robot.constants.Phoenix6Constants;
 
 public class Pigeon2Wrapper extends Pigeon2 {
@@ -37,6 +38,10 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
     public StatusCode setYaw(Rotation2d newYaw) {
         return super.setYaw(newYaw.getDegrees());
+    }
+
+    public Rotation2d getRotation2dYaw() {
+        return Rotation2d.fromDegrees(getYaw().getValue());
     }
 
     /**
@@ -76,6 +81,41 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
     public Rotation2d getAdjustedPitch() {
         return Rotation2d.fromDegrees(getPitch().getValue() + pitchOffSetDeg);
+    }
+
+    /**
+     * @return - the yaw value ranged between -180 , 180
+     */
+    public Rotation2d getRangedYaw() {
+        return Rotation2d.fromDegrees((getRotation2dYaw().getDegrees() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+    }
+
+    /**
+     * @return - the unadjusted roll value ranged between -180 , 180
+     */
+    public Rotation2d getRangedRoll() {
+        return Rotation2d.fromDegrees((getRoll().getValue() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+    }
+
+    /**
+     * @return - the unadjusted pitch value ranged between -180 , 180
+     */
+    public Rotation2d getRangedPitch() {
+        return Rotation2d.fromDegrees((getPitch().getValue() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+    }
+
+    /**
+     * @return - the adjusted roll value ranged between -180 , 180
+     */
+    public Rotation2d getAdjustedRangedRoll() {
+        return Rotation2d.fromDegrees((getAdjustedRoll().getDegrees() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
+    }
+
+    /**
+     * @return - the adjusted pitch value ranged between -180 , 180
+     */
+    public Rotation2d getAdjustedRangedPitch() {
+        return Rotation2d.fromDegrees((getAdjustedPitch().getDegrees() % MathConstants.FULL_CIRCLE.getDegrees()) - MathConstants.HALF_CIRCLE.getDegrees());
     }
 
 }

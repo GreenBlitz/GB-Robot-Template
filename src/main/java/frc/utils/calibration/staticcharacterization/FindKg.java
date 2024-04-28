@@ -40,7 +40,7 @@ class FindKg extends Command {
     @Override
     public void execute() {
         lastVoltage = currentVoltage;
-        currentVoltage -= timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
+        currentVoltage = stillVoltage.getAsDouble() - timer.get() * (StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC / 100);
         voltageConsumer.accept(currentVoltage);
     }
 

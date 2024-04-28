@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
 import frc.robot.simulation.SingleJointedArmSimulation;
 import frc.utils.GBSubsystem;
@@ -51,6 +52,8 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         // bindings
         usedJoystick.A.onTrue(staticCharacterizationObject.getFindKsKgCommand());
+        usedJoystick.X.onTrue(new InstantCommand(() -> armSimulation.setControl(new VoltageOut(0.48))));
+        usedJoystick.Y.onTrue(new InstantCommand(() -> armSimulation.setControl(new VoltageOut(1))));
     }
 
     private static void secondJoystickButtons() {

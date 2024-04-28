@@ -23,7 +23,7 @@ class StandCommand extends Command {
 
     private double currentVoltage;
 
-    private double lastVoltage;
+    private double counter;
 
     public StandCommand(GBSubsystem subsystem, DoubleSupplier stillVoltage, Consumer<Double> voltageConsumer,
             BooleanSupplier isMoving, Consumer<Double> updateKs) {
@@ -37,27 +37,33 @@ class StandCommand extends Command {
     @Override
     public void initialize() {
         currentVoltage = stillVoltage.getAsDouble();
+        counter = 0;
         timer.restart();
     }
 
     @Override
     public void execute() {
-        lastVoltage = currentVoltage;
-        currentVoltage -= timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
+        currentVoltage = stillVoltage.getAsDouble() - timer.get() * (StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC / 100);
         voltageConsumer.accept(currentVoltage);
+        if (!isMoving.getAsBoolean()) {
+            counter++;
+        }
+        else {
+            counter = 0;
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return !isMoving.getAsBoolean();
+        return counter > 8;
     }
 
     @Override
     public void end(boolean interrupted) {
-        voltageConsumer.accept(lastVoltage);
+        voltageConsumer.accept(currentVoltage);
         timer.stop();
-        updateKs.accept(lastVoltage);
-        Logger.recordOutput(StaticCharacterizationConstants.logPath + "KS");
+        updateKs.accept(currentVoltage);
+        Logger.recordOutput(StaticCharacterizationConstants.logPath + "KS", currentVoltage);
     }
 
 }

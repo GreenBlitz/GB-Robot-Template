@@ -47,7 +47,7 @@ public abstract class MotorSimulation {
     }
 
     public void applyConfiguration(TalonFXConfiguration config) {
-        motor.getConfigurator().apply(config);
+        motor.applyConfiguration(config);
     }
 
     public void setPower(double power) {

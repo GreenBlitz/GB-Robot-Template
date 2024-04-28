@@ -39,6 +39,7 @@ class FindKs extends Command {
     @Override
     public void execute() {
         lastVoltage = currentVoltage;
+        //todo - with rio utils
         currentVoltage = timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
         voltageConsumer.accept(currentVoltage);
     }
@@ -52,7 +53,6 @@ class FindKs extends Command {
     public void end(boolean interrupted) {
         voltageConsumer.accept(lastVoltage);
         timer.stop();
-
         updateKs.accept(lastVoltage);
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
         Logger.recordOutput(

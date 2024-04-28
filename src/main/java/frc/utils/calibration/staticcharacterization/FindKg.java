@@ -14,9 +14,9 @@ class FindKg extends Command {
 
     private final DoubleSupplier velocitySupplier;
 
-    private final Timer timer = new Timer();
-
     private final DoubleSupplier stillVoltage;
+
+    private final Timer timer = new Timer();
 
     private double currentVoltage;
 
@@ -39,6 +39,7 @@ class FindKg extends Command {
     @Override
     public void execute() {
         lastVoltage = currentVoltage;
+        //todo - with rio utils
         currentVoltage = stillVoltage.getAsDouble() - timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
         voltageConsumer.accept(currentVoltage);
     }

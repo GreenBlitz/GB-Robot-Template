@@ -2,7 +2,6 @@ package frc.utils.roborioutils;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.constants.SimulationConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class RoborioUtils {
@@ -25,10 +24,14 @@ public class RoborioUtils {
             Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanFloodedAt", currentTime);
             Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanFlooded", getCANUtilizationPercent());
         }
-        if (getCurrentRoborioCycle() > SimulationConstants.TIME_STEP + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
+        if (getCurrentRoborioCycle() > getDefaultTimeStep() + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
             Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleOverrunAt", currentTime);
             Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleOverrun", getCurrentRoborioCycle());
         }
+    }
+
+    public static double getDefaultTimeStep() {
+        return RoborioUtilsConstants.DEFAULT_TIME_STEP;
     }
 
     public static double getCurrentRoborioCycle() {

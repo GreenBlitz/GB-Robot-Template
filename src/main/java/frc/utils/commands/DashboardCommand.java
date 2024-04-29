@@ -23,4 +23,16 @@ public class DashboardCommand extends InitExecuteCommand {
         );
     }
 
+    public DashboardCommand(
+            String widgetName,
+            Consumer<Double> methodToRun,
+            GBSubsystem... subsystems
+    ) {
+        super(
+                () -> SmartDashboard.putNumber(widgetName, 0),
+                () -> methodToRun.accept(SmartDashboard.getNumber(widgetName, 0)),
+                subsystems
+        );
+    }
+
 }

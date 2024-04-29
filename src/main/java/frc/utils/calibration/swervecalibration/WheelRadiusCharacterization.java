@@ -98,10 +98,7 @@ public class WheelRadiusCharacterization extends Command {
             Logger.recordOutput(WheelRadiusConstants.LOG_PATH, "Not enough data for characterization");
         }
         else {
-            Logger.recordOutput(
-                    WheelRadiusConstants.LOG_PATH,
-                    Units.metersToInches(wheelRadiusMeters) + " inches"
-            );
+            Logger.recordOutput(WheelRadiusConstants.LOG_PATH, Units.metersToInches(wheelRadiusMeters) + " inches");
         }
     }
 

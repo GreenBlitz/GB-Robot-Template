@@ -76,7 +76,7 @@ public class WheelRadiusCharacterization extends Command {
 
     @Override
     public void execute() {
-        velocityControl.accept(spinDirection.getDirectionSign() * characterizationSpeed);
+        velocityControl.accept(spinDirection.directionSign * characterizationSpeed);
 
         // Update the angle passed from start
         double currentGyroYawRads = gyroAngleSupplier.get().getRadians();

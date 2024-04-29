@@ -1,7 +1,7 @@
 package frc.robot.simulation;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.constants.SimulationConstants;
 
@@ -14,6 +14,22 @@ public class SimpleMotorSimulation extends MotorSimulation {
     }
 
     @Override
+    public double getCurrent() {
+        return motorSimulation.getCurrentDrawAmps();
+    }
+
+    @Override
+    public Rotation2d getPosition() {
+        return Rotation2d.fromRadians(motorSimulation.getAngularPositionRad());
+    }
+
+    @Override
+    public Rotation2d getVelocity() {
+        return Rotation2d.fromRadians(motorSimulation.getAngularVelocityRadPerSec());
+    }
+
+    @Override
+
     protected void setInputVoltage(double voltage) {
         motorSimulation.setInputVoltage(voltage);
     }
@@ -21,21 +37,6 @@ public class SimpleMotorSimulation extends MotorSimulation {
     @Override
     protected void updateMotor() {
         motorSimulation.update(SimulationConstants.TIME_STEP);
-    }
-
-    @Override
-    public double getPositionRevolutions() {
-        return Units.radiansToRotations(motorSimulation.getAngularPositionRad());
-    }
-
-    @Override
-    public double getVelocityRevolutionsPerSecond() {
-        return Units.radiansToRotations(motorSimulation.getAngularVelocityRadPerSec());
-    }
-
-    @Override
-    public double getCurrent() {
-        return motorSimulation.getCurrentDrawAmps();
     }
 
 }

@@ -8,10 +8,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 public class SmartJoystick {
 
-    private static final double DEADZONE = 0.07;
-
-    private static final double JOYSTICK_AXIS_TO_SQUARE_FACTOR = 1.4;
-
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
 
     public final AxisButton L2, R2;
@@ -69,7 +65,7 @@ public class SmartJoystick {
     }
 
     public SmartJoystick(Joystick stick) {
-        this(stick, DEADZONE);
+        this(stick, SmartJoystickConstants.DEADZONE);
     }
 
     /**
@@ -97,10 +93,7 @@ public class SmartJoystick {
      * @return A joystick axis based off of the joystick axis number.
      */
     public double getRawAxis(int raw_axis) {
-        if (joystick == null) {
-            return 0;
-        }
-        return joystick.getRawAxis(raw_axis);
+        return joystick == null ? 0 : joystick.getRawAxis(raw_axis);
     }
 
     /**
@@ -109,7 +102,6 @@ public class SmartJoystick {
      * @param axis The axis we want to use.
      * @return stick value if stick was square.
      * <p>
-     * @author Yoav Herman
      * if @ marks the 1 point of each axis:
      * <p>
      * @formatter:off
@@ -137,7 +129,8 @@ public class SmartJoystick {
         if (!isStickAxis(axis)) {
             return axis.getValue(this);
         }
-        double squaredAxisValue = axis.getValue(this) * JOYSTICK_AXIS_TO_SQUARE_FACTOR;
+
+        double squaredAxisValue = axis.getValue(this) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
         return MathUtil.clamp(squaredAxisValue, -1, 1);
     }
 
@@ -159,10 +152,7 @@ public class SmartJoystick {
     }
 
     private double deadzone(double power) {
-        if (Math.abs(power) < deadzone) {
-            return 0;
-        }
-        return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
+        return MathUtil.applyDeadband(power, deadzone);
     }
 
     /**

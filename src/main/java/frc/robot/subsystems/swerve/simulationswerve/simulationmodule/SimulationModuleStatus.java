@@ -18,11 +18,11 @@ public class SimulationModuleStatus {
     }
 
     public Rotation2d getSteerVelocity() {
-        return Rotation2d.fromRotations(steerMotor.getVelocityRevolutionsPerSecond());
+        return steerMotor.getVelocity();
     }
 
     public Rotation2d getSteerPosition() {
-        return Rotation2d.fromRotations(steerMotor.getPositionRevolutions());
+        return steerMotor.getPosition();
     }
 
     public double getDriveVoltage() {
@@ -34,11 +34,11 @@ public class SimulationModuleStatus {
     }
 
     public double getDriveVelocityInMeters() {
-        return ModuleUtils.toDriveDistance(driveMotor.getVelocityRevolutionsPerSecond());
+        return ModuleUtils.toDriveDistance(driveMotor.getVelocity().getRotations());
     }
 
     public double getDrivePositionInMeters() {
-        return ModuleUtils.toDriveDistance(driveMotor.getPositionRevolutions());
+        return ModuleUtils.toDriveDistance(driveMotor.getPosition().getRotations());
     }
 
 }

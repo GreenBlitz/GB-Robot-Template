@@ -8,6 +8,6 @@ class StaticCharacterizationConstants {
 
     protected static final double VELOCITY_DEADBAND = 0.00000001;
 
-    protected static final String logPath = "Calibration/static/";
+    protected static final String LOG_PATH = "Calibration/static/";
 
 }

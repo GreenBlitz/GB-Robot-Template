@@ -18,6 +18,8 @@ class FindKg extends Command {
 
     private final Timer timer = new Timer();
 
+    private final String subsystemName;
+
     private double currentVoltage;
 
     private double lastVoltage;
@@ -27,6 +29,7 @@ class FindKg extends Command {
         this.voltageConsumer = voltageConsumer;
         this.velocitySupplier = velocitySupplier;
         this.stillVoltage = stillVoltage;
+        this.subsystemName = subsystem.getName();
         addRequirements(subsystem);
     }
 
@@ -55,7 +58,7 @@ class FindKg extends Command {
         timer.stop();
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
         Logger.recordOutput(
-                StaticCharacterizationConstants.logPath + "KG OF " + getRequirements().toArray()[0].getClass().getSimpleName(),
+                StaticCharacterizationConstants.LOG_PATH + "KG OF " + subsystemName,
                 toLog + lastVoltage
         );
     }

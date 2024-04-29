@@ -18,6 +18,8 @@ class FindKs extends Command {
 
     private final Timer timer = new Timer();
 
+    private final String subsystemName;
+
     private double currentVoltage;
 
     private double lastVoltage;
@@ -27,6 +29,7 @@ class FindKs extends Command {
         this.voltageConsumer = voltageConsumer;
         this.velocitySupplier = velocitySupplier;
         this.updateKs = updateKs;
+        this.subsystemName = subsystem.getName();
         addRequirements(subsystem);
     }
 
@@ -56,7 +59,7 @@ class FindKs extends Command {
         updateKs.accept(lastVoltage);
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
         Logger.recordOutput(
-                StaticCharacterizationConstants.logPath + "KS OF " + getRequirements().toArray()[0].getClass().getSimpleName(),
+                StaticCharacterizationConstants.LOG_PATH + "KS OF " + subsystemName,
                 toLog + lastVoltage
         );
     }

@@ -102,7 +102,6 @@ public class SmartJoystick {
      * @param axis The axis we want to use.
      * @return stick value if stick was square.
      * <p>
-     * @author Yoav Herman
      * if @ marks the 1 point of each axis:
      * <p>
      * @formatter:off
@@ -152,14 +151,7 @@ public class SmartJoystick {
     }
 
     private double deadzone(double power) {
-        if (Math.abs(power) < deadzone) {
-            return 0;
-        }
-        return getPowerProportionalToDeadzone(power);
-    }
-
-    private double getPowerProportionalToDeadzone(double power) {
-        return (Math.abs(power) - deadzone) / (1 - deadzone) * Math.signum(power);
+        return MathUtil.applyDeadband(power, deadzone);
     }
 
     /**

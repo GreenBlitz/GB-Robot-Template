@@ -16,7 +16,7 @@ class FindKs extends Command {
 
     private final DoubleSupplier velocitySupplier;
 
-    private final Timer timer = new Timer();
+    private final Timer timer;
 
     private final String subsystemName;
 
@@ -28,6 +28,7 @@ class FindKs extends Command {
 
     public FindKs(GBSubsystem subsystem, Consumer<Double> voltageConsumer, DoubleSupplier velocitySupplier,
             Consumer<Double> updateKs) {
+        this.timer = new Timer();
         this.voltageConsumer = voltageConsumer;
         this.velocitySupplier = velocitySupplier;
         this.updateKs = updateKs;
@@ -49,6 +50,7 @@ class FindKs extends Command {
         }
         else {
             cycleCounter = 0;
+
             lastVoltage = currentVoltage;
             //todo - with rio utils
             currentVoltage = timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
@@ -58,7 +60,7 @@ class FindKs extends Command {
 
     @Override
     public boolean isFinished() {
-        return cycleCounter > 3;
+        return cycleCounter > StaticCharacterizationConstants.CYCLES_STABLE_NUMBER;
     }
 
     @Override

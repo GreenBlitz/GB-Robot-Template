@@ -28,6 +28,10 @@ public class JoysticksBindings {
         fourthJoystickButtons();
     }
 
+    /**
+     * will be deleted, it's for checking
+     * todo - delete
+     */
     static GBTalonFXPro motor = new GBTalonFXPro(0, Phoenix6Constants.CANIVORE_NAME);
 
     static {

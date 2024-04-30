@@ -5,6 +5,7 @@ import frc.robot.constants.LogPathsConstants;
 public class RoborioUtilsConstants {
 
     protected static final String LOG_PATH = "RoborioUtils/";
+
     protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + "RoborioUtils/";
 
     protected static final double DEFAULT_TIME_STEP = 0.02;

@@ -16,7 +16,7 @@ public class RoborioUtils {
         logInfo();
     }
 
-    private static void logInfo(){
+    private static void logInfo() {
         Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanUtilization", getCANUtilizationPercent());
         Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleTime", getCurrentRoborioCycle());
         logAlertsChecks();

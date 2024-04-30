@@ -9,16 +9,17 @@ import org.littletonrobotics.junction.Logger;
 
 public class AutonomousSelector {
 
-    private final SendableChooser<Command> chooser;
+    private static final SendableChooser<Command> selector = buildSelector();
 
-    public AutonomousSelector() {
-        chooser = AutoBuilder.buildAutoChooser();
+    public static SendableChooser<Command> buildSelector() {
+        SendableChooser<Command> selector = AutoBuilder.buildAutoChooser();
         ShuffleboardTab tab = Shuffleboard.getTab("auto");
-        tab.add("autonomous chooser", chooser);
+        tab.add("autonomous chooser", selector);
+        return selector;
     }
 
-    public Command getChosenValue() {
-        Logger.recordMetadata("autonomous chosen", chooser.getSelected().getName());
-        return chooser.getSelected();
+    public static Command getChosenValue() {
+        Logger.recordMetadata("autonomous chosen", selector.getSelected().getName());
+        return selector.getSelected();
     }
 }

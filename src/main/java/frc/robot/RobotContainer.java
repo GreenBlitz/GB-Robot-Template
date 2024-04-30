@@ -19,8 +19,6 @@ import frc.utils.AutonomousSelector;
  */
 public class RobotContainer {
 
-    public static final AutonomousSelector AUTONOMOUS_SELECTOR = new AutonomousSelector();
-
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     /**
@@ -52,7 +50,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return AUTONOMOUS_SELECTOR.getChosenValue();
+        return AutonomousSelector.getChosenValue();
     }
 
 }

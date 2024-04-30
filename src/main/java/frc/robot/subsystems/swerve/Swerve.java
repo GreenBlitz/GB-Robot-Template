@@ -8,12 +8,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.constants.SimulationConstants;
 import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveFactory;
 import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
 import frc.utils.GBSubsystem;
 import frc.utils.allianceutils.AllianceUtils;
+import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -214,7 +214,7 @@ public class Swerve extends GBSubsystem {
      * @return the fixed speeds
      */
     private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, SimulationConstants.TIME_STEP);
+        return ChassisSpeeds.discretize(chassisSpeeds, RoborioUtils.getCurrentRoborioCycle());
     }
 
     public boolean isStill(ChassisSpeeds chassisSpeeds) {

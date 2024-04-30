@@ -29,13 +29,13 @@ public class RoborioUtils {
         else if (getCANUtilizationPercent() > RoborioUtilsConstants.MAX_CAN_UTILIZATION_PERCENT) {
             Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CanFloodedAt", currentTime);
         }
-        if (getCurrentRoborioCycleTime() > getDefaultTimeStep() + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
+        if (getCurrentRoborioCycleTime() > getDefaultRoborioCycleTime() + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
             Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CycleOverrunAt", currentTime);
         }
     }
 
-    public static double getDefaultTimeStep() {
-        return RoborioUtilsConstants.DEFAULT_TIME_STEP;
+    public static double getDefaultRoborioCycleTime() {
+        return RoborioUtilsConstants.DEFAULT_ROBORIO_CYCLE_TIME;
     }
 
     public static double getCurrentRoborioCycleTime() {

@@ -31,7 +31,7 @@ public abstract class MotorSimulation {
         this.motorSimState = motor.getSimState();
         this.motorSimState.setSupplyVoltage(SimulationConstants.BATTERY_VOLTAGE);
         this.closedLoopReferenceSignal = motor.getClosedLoopReference();
-        this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / RoborioUtils.getDefaultTimeStep());
+        this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / RoborioUtils.getDefaultRoborioCycleTime());
     }
 
     public static void updateRegisteredSimulations() {

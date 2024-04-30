@@ -24,6 +24,8 @@ class FindKs extends Command {
 
     private double lastVoltage;
 
+    private double cycleCounter;
+
     public FindKs(GBSubsystem subsystem, Consumer<Double> voltageConsumer, DoubleSupplier velocitySupplier,
             Consumer<Double> updateKs) {
         this.voltageConsumer = voltageConsumer;
@@ -36,20 +38,27 @@ class FindKs extends Command {
     @Override
     public void initialize() {
         currentVoltage = 0;
+        cycleCounter = 0;
         timer.restart();
     }
 
     @Override
     public void execute() {
-        lastVoltage = currentVoltage;
-        //todo - with rio utils
-        currentVoltage = timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
-        voltageConsumer.accept(currentVoltage);
+        if (velocitySupplier.getAsDouble() >= StaticCharacterizationConstants.VELOCITY_DEADBAND) {
+            cycleCounter++;
+        }
+        else {
+            cycleCounter = 0;
+            lastVoltage = currentVoltage;
+            //todo - with rio utils
+            currentVoltage = timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
+            voltageConsumer.accept(currentVoltage);
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return velocitySupplier.getAsDouble() >= StaticCharacterizationConstants.VELOCITY_DEADBAND;
+        return cycleCounter > 3;
     }
 
     @Override

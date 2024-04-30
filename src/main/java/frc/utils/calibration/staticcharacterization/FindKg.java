@@ -24,6 +24,8 @@ class FindKg extends Command {
 
     private double lastVoltage;
 
+    private double cycleCounter;
+
     public FindKg(GBSubsystem subsystem, DoubleSupplier stillVoltage, Consumer<Double> voltageConsumer,
             DoubleSupplier velocitySupplier) {
         this.voltageConsumer = voltageConsumer;
@@ -36,25 +38,33 @@ class FindKg extends Command {
     @Override
     public void initialize() {
         currentVoltage = stillVoltage.getAsDouble();
+        cycleCounter = 0;
         timer.restart();
     }
 
     @Override
     public void execute() {
-        lastVoltage = currentVoltage;
-        //todo - with rio utils
-        currentVoltage = stillVoltage.getAsDouble() - timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
-        voltageConsumer.accept(currentVoltage);
+        if (velocitySupplier.getAsDouble() < -StaticCharacterizationConstants.VELOCITY_DEADBAND) {
+            cycleCounter++;
+        }
+        else {
+            cycleCounter = 0;
+            lastVoltage = currentVoltage;
+            //todo - with rio utils
+            currentVoltage = stillVoltage.getAsDouble() - timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
+            voltageConsumer.accept(currentVoltage);
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return velocitySupplier.getAsDouble() < -StaticCharacterizationConstants.VELOCITY_DEADBAND;
+        return cycleCounter > 3 || lastVoltage <= 0;
     }
 
     @Override
     public void end(boolean interrupted) {
         voltageConsumer.accept(lastVoltage);
+        lastVoltage = lastVoltage < 0 ? 0 : lastVoltage;
         timer.stop();
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
         Logger.recordOutput(

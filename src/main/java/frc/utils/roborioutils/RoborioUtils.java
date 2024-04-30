@@ -24,13 +24,13 @@ public class RoborioUtils {
 
     private static void logAlertsChecks() {
         if (!isCANConnectedToRoborio()) {
-            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanDisconnectAt", currentTime);
+            Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CanDisconnectAt", currentTime);
         }
         else if (getCANUtilizationPercent() > RoborioUtilsConstants.MAX_CAN_UTILIZATION_PERCENT) {
-            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanFloodedAt", currentTime);
+            Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CanFloodedAt", currentTime);
         }
         if (getCurrentRoborioCycle() > getDefaultTimeStep() + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
-            Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleOverrunAt", currentTime);
+            Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CycleOverrunAt", currentTime);
         }
     }
 

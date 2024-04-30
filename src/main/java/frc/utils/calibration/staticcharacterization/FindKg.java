@@ -3,6 +3,7 @@ package frc.utils.calibration.staticcharacterization;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.utils.GBSubsystem;
+import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
@@ -52,8 +53,7 @@ class FindKg extends Command {
             cycleCounter = 0;
 
             lastVoltage = currentVoltage;
-            //todo - with rio utils
-            currentVoltage = stillVoltage.getAsDouble() - timer.get() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
+            currentVoltage -= RoborioUtils.getCurrentRoborioCycleTime() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
             voltageConsumer.accept(currentVoltage);
         }
     }
@@ -69,10 +69,7 @@ class FindKg extends Command {
         lastVoltage = Math.max(lastVoltage, 0);
         timer.stop();
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
-        Logger.recordOutput(
-                StaticCharacterizationConstants.LOG_PATH + "KG OF " + subsystemName,
-                toLog + lastVoltage
-        );
+        Logger.recordOutput(StaticCharacterizationConstants.LOG_PATH + "KG OF " + subsystemName, toLog + lastVoltage);
     }
 
 }

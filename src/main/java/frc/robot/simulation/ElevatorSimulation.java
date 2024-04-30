@@ -77,7 +77,7 @@ public class ElevatorSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        elevatorSimulation.update(RoborioUtils.getCurrentRoborioCycle());
+        elevatorSimulation.update(RoborioUtils.getCurrentRoborioCycleTime());
     }
 
 }

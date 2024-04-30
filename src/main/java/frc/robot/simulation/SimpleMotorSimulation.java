@@ -29,6 +29,7 @@ public class SimpleMotorSimulation extends MotorSimulation {
     }
 
     @Override
+
     protected void setInputVoltage(double voltage) {
         motorSimulation.setInputVoltage(voltage);
     }

@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.constants.Ports;
+import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
@@ -23,6 +24,12 @@ public class JoysticksBindings {
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         // bindings
+
+        RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
     }
 
     private static void secondJoystickButtons() {

@@ -43,6 +43,7 @@ public abstract class MotorSimulation {
     private void updateSimulation() {
         setInputVoltage(motorSimState.getMotorVoltage());
         updateMotor();
+
         motorSimState.setRawRotorPosition(getPosition().getRotations());
         motorSimState.setRotorVelocity(getVelocity().getRotations());
     }
@@ -82,3 +83,4 @@ public abstract class MotorSimulation {
     public abstract Rotation2d getVelocity();
 
 }
+

@@ -18,7 +18,7 @@ public class RoborioUtils {
 
     private static void logInfo() {
         Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanUtilization", getCANUtilizationPercent());
-        Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleTime", getCurrentRoborioCycle());
+        Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleTime", getCurrentRoborioCycleTime());
         logAlertsChecks();
     }
 
@@ -29,16 +29,16 @@ public class RoborioUtils {
         else if (getCANUtilizationPercent() > RoborioUtilsConstants.MAX_CAN_UTILIZATION_PERCENT) {
             Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CanFloodedAt", currentTime);
         }
-        if (getCurrentRoborioCycle() > getDefaultTimeStep() + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
+        if (getCurrentRoborioCycleTime() > getDefaultRoborioCycleTime() + RoborioUtilsConstants.TIME_STEP_TOLERANCE) {
             Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CycleOverrunAt", currentTime);
         }
     }
 
-    public static double getDefaultTimeStep() {
-        return RoborioUtilsConstants.DEFAULT_TIME_STEP;
+    public static double getDefaultRoborioCycleTime() {
+        return RoborioUtilsConstants.DEFAULT_ROBORIO_CYCLE_TIME;
     }
 
-    public static double getCurrentRoborioCycle() {
+    public static double getCurrentRoborioCycleTime() {
         return currentTime - lastTime;
     }
 

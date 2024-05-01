@@ -6,21 +6,21 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.constants.Phoenix6Constants;
 
-public class GBTalonFXPro extends TalonFX {
+public class TalonFXWrapper extends TalonFX {
 
-    public GBTalonFXPro(int deviceId) {
+    public TalonFXWrapper(int deviceId) {
         this(deviceId, Phoenix6Constants.CANBUS_NAME, new TalonFXConfiguration());
     }
 
-    public GBTalonFXPro(int deviceId, TalonFXConfiguration configuration) {
+    public TalonFXWrapper(int deviceId, TalonFXConfiguration configuration) {
         this(deviceId, Phoenix6Constants.CANBUS_NAME, configuration);
     }
 
-    public GBTalonFXPro(int deviceId, String BusChain) {
+    public TalonFXWrapper(int deviceId, String BusChain) {
         this(deviceId, BusChain, new TalonFXConfiguration());
     }
 
-    public GBTalonFXPro(int deviceId, String BusChain, TalonFXConfiguration configuration) {
+    public TalonFXWrapper(int deviceId, String BusChain, TalonFXConfiguration configuration) {
         super(deviceId, BusChain);
         applyConfiguration(configuration);
     }

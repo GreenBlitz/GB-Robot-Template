@@ -43,8 +43,8 @@ public class GyroPigeon2 implements IGyro {
     public void updateInputs(GyroInputsAutoLogged inputs) {
         gyroPigeon2Status.refreshAllSignals();
 
-        inputs.gyroYawDegrees = gyroPigeon2Status.getYAW_SIGNAL(false).getValue();
-        inputs.gyroPitchDegrees = gyroPigeon2Status.getPITCH_SIGNAL(false).getValue();
+        inputs.gyroYaw = gyroPigeon2Status.getYaw(false);
+        inputs.gyroPitch = gyroPigeon2Status.getPitch(false);
         inputs.accelerationX = gyroPigeon2Status.getX_ACCELERATION_SIGNAL(false).getValue();
         inputs.accelerationY = gyroPigeon2Status.getY_ACCELERATION_SIGNAL(false).getValue();
         inputs.accelerationZ = gyroPigeon2Status.getZ_ACCELERATION_SIGNAL(false).getValue();

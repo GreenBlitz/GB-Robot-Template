@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve.gyro.gyropigeon2;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 class GyroPigeon2Status {
 
@@ -9,6 +10,15 @@ class GyroPigeon2Status {
 
     protected GyroPigeon2Status(GyroPigeon2Records.GyroPigeon2Signals gyroPigeon2Signals) {
         this.gyroPigeon2Signals = gyroPigeon2Signals;
+    }
+
+
+    public Rotation2d getYaw(boolean refresh) {
+        return Rotation2d.fromDegrees(getYAW_SIGNAL(refresh).getValue());
+    }
+
+    public Rotation2d getPitch(boolean refresh) {
+        return Rotation2d.fromDegrees(getPITCH_SIGNAL(refresh).getValue());
     }
 
     public StatusSignal<Double> getYAW_SIGNAL(boolean refresh) {

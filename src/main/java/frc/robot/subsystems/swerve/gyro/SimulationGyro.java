@@ -21,8 +21,8 @@ public class SimulationGyro implements IGyro {
                 Rotation2d.fromRadians(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond),
                 RoborioUtils.getCurrentRoborioCycleTime()
         );
-        inputs.gyroYawDegrees = gyro.getGyroYaw().getDegrees();
-        inputs.odometryUpdatesYawDegrees = new double[]{inputs.gyroYawDegrees};
+        inputs.gyroYaw = gyro.getGyroYaw().getDegrees();
+        inputs.odometryUpdatesYawDegrees = new double[]{inputs.gyroYaw};
         inputs.odometryUpdatesTimestamp = new double[]{Timer.getFPGATimestamp()};
     }
 

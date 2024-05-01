@@ -11,6 +11,8 @@ import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.gyro.IGyro;
+import frc.robot.subsystems.swerve.modules.Module;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.allianceutils.AllianceUtils;
 import frc.utils.roborioutils.RoborioUtils;

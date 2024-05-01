@@ -1,13 +1,11 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.subsystems.swerve.modules.IModule;
-import frc.robot.subsystems.swerve.modules.ModuleFactory;
-import frc.robot.subsystems.swerve.modules.ModuleInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
-import static frc.robot.subsystems.swerve.ModuleUtils.reduceSkew;
+import static frc.robot.subsystems.swerve.modules.ModuleUtils.reduceSkew;
 
 public class Module {
 
@@ -31,10 +29,6 @@ public class Module {
         resetByEncoder();
     }
 
-    public void resetByEncoder() {
-        module.resetByEncoder();
-    }
-
     public void periodic() {
         module.updateInputs(moduleInputs);
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
@@ -48,16 +42,52 @@ public class Module {
         module.setBrake(isBrake);
     }
 
+    public void resetByEncoder() {
+        module.resetByEncoder();
+    }
+
+
     public SwerveModuleState getCurrentState() {
-        return new SwerveModuleState(moduleInputs.driveVelocityMetersPerSecond, getCurrentAngle());
+        return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
+    }
+
+    public Rotation2d getDriveDistanceAngle() {
+        return moduleInputs.driveDistance;
+    }
+
+    private double getDriveDistanceMeters() {
+        return ModuleUtils.toDriveDistance(getDriveDistanceAngle());
+    }
+
+    private double getDriveVelocityMetersPerSecond() {
+        return ModuleUtils.toDriveDistance(moduleInputs.driveVelocityPerSecond);
     }
 
     private Rotation2d getCurrentAngle() {
-        return Rotation2d.fromDegrees(moduleInputs.steerAngleDegrees);
+        return moduleInputs.steerMotorAngle;
     }
 
     public SwerveModuleState getTargetState() {
         return targetState;
+    }
+
+    /**
+     * The odometry thread can update itself faster than the main code loop (which is 50 hertz).
+     * Instead of using the latest odometry update, the accumulated odometry positions since the last loop to get a more
+     * accurate position.
+     *
+     * @param odometryUpdateIndex the index of the odometry update
+     * @return the position of the module at the given odometry update index
+     */
+    public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
+        return new SwerveModulePosition(
+                ModuleUtils.toDriveDistance(Rotation2d.fromDegrees(moduleInputs.odometryUpdatesDriveDistanceDegrees[odometryUpdateIndex])),
+                Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex])
+        );
+    }
+
+    public int getLastOdometryUpdateIndex() {
+        return moduleInputs.odometryUpdatesSteerAngleDegrees.length - 1;
     }
 
     public void setTargetState(SwerveModuleState targetState) {

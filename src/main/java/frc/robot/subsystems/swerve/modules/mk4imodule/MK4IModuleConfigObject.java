@@ -8,11 +8,11 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 class MK4IModuleConfigObject {
 
-    private final MK4IModuleRecords.MK4IModuleMotors moduleMotors;
-
     private final TalonFXWrapper steerMotor, driveMotor;
-
+    
     private final CANcoder steerEncoder;
+
+    private final MK4IModuleRecords.MK4IModuleMotors moduleMotors;
 
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
@@ -32,15 +32,18 @@ class MK4IModuleConfigObject {
         );
         this.steerMotor = moduleMotors.steerMotor();
         this.driveMotor = moduleMotors.driveMotor();
+
         this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(
                 steerEncoder.getAbsolutePosition(),
                 steerEncoder.getVelocity(),
                 steerEncoder.getSupplyVoltage(),
+
                 driveMotor.getPosition(),
                 driveMotor.getVelocity(),
                 driveMotor.getAcceleration(),
                 driveMotor.getMotorVoltage(),
                 driveMotor.getStatorCurrent(),
+
                 steerMotor.getPosition(),
                 steerMotor.getVelocity(),
                 steerMotor.getAcceleration(),
@@ -106,11 +109,11 @@ class MK4IModuleConfigObject {
     private void optimizeBusAndSignalOfSteerMotor() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 250,
-                moduleSignals.steerPositionSignal(),
-                moduleSignals.steerVelocitySignal(),
-                moduleSignals.steerAccelerationSignal()
+                moduleSignals.steerMotorPositionSignal(),
+                moduleSignals.steerMotorVelocitySignal(),
+                moduleSignals.steerMotorAccelerationSignal()
         );
-        BaseStatusSignal.setUpdateFrequencyForAll(20, moduleSignals.steerVoltageSignal());
+        BaseStatusSignal.setUpdateFrequencyForAll(20, moduleSignals.steerMotorVoltageSignal());
 
         steerMotor.optimizeBusUtilization();
     }

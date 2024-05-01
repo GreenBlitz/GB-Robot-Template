@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.modules;
 
 import frc.robot.constants.RobotConstants;
-import frc.robot.subsystems.swerve.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.mk4imodule.MK4IModule;
 import frc.robot.subsystems.swerve.modules.simulationmodule.SimulationModule;
 

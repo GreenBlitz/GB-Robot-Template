@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.modules.simulationmodule;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;
-import frc.robot.subsystems.swerve.ModuleUtils;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 
 public class SimulationModuleStatus {
 

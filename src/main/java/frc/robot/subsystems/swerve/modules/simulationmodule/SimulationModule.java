@@ -1,10 +1,10 @@
 package frc.robot.subsystems.swerve.modules.simulationmodule;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.ModuleConstants;
-import frc.robot.subsystems.swerve.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.IModule;
+import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import org.littletonrobotics.junction.Logger;
 
 public class SimulationModule implements IModule {
@@ -29,7 +29,7 @@ public class SimulationModule implements IModule {
                 ModuleConstants.WHEEL_DIAMETER_METERS,
                 simulationModuleStatus.getSteerVelocity().getRotations(),
                 0,
-                ModuleConstants.MAX_SPEED_REVOLUTIONS_PER_SECOND,
+                ModuleConstants.MAX_SPEED_PER_SECOND,
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveVoltage", simulationModuleStatus.getDriveVoltage());
@@ -63,11 +63,11 @@ public class SimulationModule implements IModule {
 
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
-        inputs.steerAngleDegrees = simulationModuleStatus.getSteerPosition().getDegrees();
-        inputs.steerVoltage = simulationModuleStatus.getSteerVoltage();
+        inputs.steerMotorAngle = simulationModuleStatus.getSteerPosition().getDegrees();
+        inputs.steerMotorVoltage = simulationModuleStatus.getSteerVoltage();
 
-        inputs.driveDistanceMeters = simulationModuleStatus.getDrivePositionInMeters();
-        inputs.driveVelocityMetersPerSecond = simulationModuleStatus.getDriveVelocityInMeters();
+        inputs.driveDistance = simulationModuleStatus.getDrivePositionInMeters();
+        inputs.driveVelocityPerSecond = simulationModuleStatus.getDriveVelocityInMeters();
         inputs.driveCurrent = simulationModuleStatus.getDriveCurrent();
         inputs.driveVoltage = simulationModuleStatus.getDriveVoltage();
     }

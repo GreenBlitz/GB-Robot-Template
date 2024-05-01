@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve.modules.mk4imodule;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.ModuleUtils;
 
 class MK4IModuleStatus {
 
@@ -13,88 +12,114 @@ class MK4IModuleStatus {
         this.moduleSignals = moduleSignals;
     }
 
-    public Rotation2d getEncoderAbsolutePosition() {
-        return Rotation2d.fromRotations(getSteerEncoderAbsolutePositionSignal().getValue());
+
+    private <T> StatusSignal<T> getSignal(boolean refresh, StatusSignal<T> signal) {
+        return refresh ? signal.refresh() : signal;
     }
 
-    private StatusSignal<Double> getSteerEncoderAbsolutePositionSignal() {
-        return moduleSignals.steerEncoderAbsolutePositionSignal().refresh();
+    // Encoder Status
+    public Rotation2d getSteerEncoderAbsolutePosition(boolean refresh) {
+        return Rotation2d.fromRotations(getSteerEncoderAbsolutePositionSignal(refresh).getValue());
     }
 
-    public double getDriveMotorVelocityInMeters() {
-        return ModuleUtils.toDriveDistance(getDriveMotorLatencyVelocity());
+    private StatusSignal<Double> getSteerEncoderAbsolutePositionSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.steerEncoderAbsolutePositionSignal());
     }
 
-    private double getDriveMotorLatencyVelocity() {
-        return BaseStatusSignal.getLatencyCompensatedValue(getDriveVelocitySignal(), getDriveAccelerationSignal());
+    public StatusSignal<Double> getSteerEncoderVelocitySignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
     }
 
-    private StatusSignal<Double> getDriveVelocitySignal() {
-        return moduleSignals.driveVelocitySignal().refresh();
+    public StatusSignal<Double> getSteerEncoderVoltageSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
     }
 
-    private StatusSignal<Double> getDriveAccelerationSignal() {
-        return moduleSignals.driveAccelerationSignal().refresh();
+
+    // Drive Motor Status
+    public Rotation2d getDriveMotorLatencyPosition(boolean refresh) {
+        return Rotation2d.fromRotations(BaseStatusSignal.getLatencyCompensatedValue(
+                getDriveMotorPositionSignal(refresh),
+                getDriveMotorVelocitySignal(refresh)
+        ));
     }
 
-    public double getDriveMotorPositionInMeters() {
-        return ModuleUtils.toDriveDistance(getDriveMotorLatencyPosition());
+    public Rotation2d getDriveMotorLatencyVelocity(boolean refresh) {
+        return Rotation2d.fromRotations(BaseStatusSignal.getLatencyCompensatedValue(
+                getDriveMotorVelocitySignal(refresh),
+                getDriveMotorAccelerationSignal(refresh)
+        ));
     }
 
-    private double getDriveMotorLatencyPosition() {
-        return BaseStatusSignal.getLatencyCompensatedValue(getDrivePositionSignal(), getDriveVelocitySignal());
+    public StatusSignal<Double> getDriveMotorPositionSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.drivePositionSignal());
     }
 
-    private StatusSignal<Double> getDrivePositionSignal() {
-        return moduleSignals.drivePositionSignal().refresh();
+    public StatusSignal<Double> getDriveMotorVelocitySignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.driveVelocitySignal());
     }
 
-    public Rotation2d getSteerMotorVelocity() {
-        return Rotation2d.fromRotations(getSteerMotorLatencyVelocity());
+    public StatusSignal<Double> getDriveMotorAccelerationSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.driveAccelerationSignal());
     }
 
-    private double getSteerMotorLatencyVelocity() {
-        return BaseStatusSignal.getLatencyCompensatedValue(getSteerVelocitySignal(), getSteerAccelerationSignal());
+    public StatusSignal<Double> getDriveMotorVoltageSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.driveVoltageSignal());
     }
 
-    private StatusSignal<Double> getSteerVelocitySignal() {
-        return moduleSignals.steerVelocitySignal().refresh();
+    public StatusSignal<Double> getDriveMotorStatorCurrentSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.driveStatorCurrentSignal());
     }
 
-    private StatusSignal<Double> getSteerAccelerationSignal() {
-        return moduleSignals.steerAccelerationSignal().refresh();
+
+    // Steer Motor Status
+    public Rotation2d getSteerMotorLatencyPosition(boolean refresh) {
+        return Rotation2d.fromRotations(BaseStatusSignal.getLatencyCompensatedValue(
+                getSteerMotorPositionSignal(refresh),
+                getSteerMotorVelocitySignal(refresh)
+        ));
     }
 
-    public Rotation2d getSteerMotorPosition() {
-        return Rotation2d.fromRotations(getSteerMotorLatencyPosition());
+    public Rotation2d getSteerMotorLatencyVelocity(boolean refresh) {
+        return Rotation2d.fromRotations(BaseStatusSignal.getLatencyCompensatedValue(
+                getSteerMotorVelocitySignal(refresh),
+                getSteerMotorAccelerationSignal(refresh)
+        ));
     }
 
-    private double getSteerMotorLatencyPosition() {
-        return BaseStatusSignal.getLatencyCompensatedValue(getSteerPositionSignal(), getSteerVelocitySignal());
+    public StatusSignal<Double> getSteerMotorPositionSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.steerMotorPositionSignal());
     }
 
-    private StatusSignal<Double> getSteerPositionSignal() {
-        return moduleSignals.steerPositionSignal().refresh();
+    public StatusSignal<Double> getSteerMotorVelocitySignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.steerMotorVelocitySignal());
     }
 
-    public StatusSignal<Double> getSteerEncoderVoltageSignal() {
-        return moduleSignals.steerEncoderVoltageSignal().refresh();
+    public StatusSignal<Double> getSteerMotorAccelerationSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.steerMotorAccelerationSignal());
     }
 
-    public StatusSignal<Double> getSteerEncoderVelocitySignal() {
-        return moduleSignals.steerEncoderVelocitySignal().refresh();
+    public StatusSignal<Double> getSteerMotorVoltageSignal(boolean refresh) {
+        return getSignal(refresh, moduleSignals.steerMotorVoltageSignal());
     }
 
-    public StatusSignal<Double> getDriveVoltageSignal() {
-        return moduleSignals.driveVoltageSignal().refresh();
-    }
+    // Refresh All
+    public void refreshAllSignals() {
+        BaseStatusSignal.refreshAll(
+                getSteerEncoderAbsolutePositionSignal(false),
+                getSteerEncoderVelocitySignal(false),
+                getSteerEncoderVoltageSignal(false),
 
-    public StatusSignal<Double> getDriveStatorCurrentSignal() {
-        return moduleSignals.driveStatorCurrentSignal().refresh();
-    }
+                getDriveMotorPositionSignal(false),
+                getDriveMotorVelocitySignal(false),
+                getDriveMotorAccelerationSignal(false),
+                getDriveMotorVoltageSignal(false),
+                getDriveMotorStatorCurrentSignal(false),
 
-    public StatusSignal<Double> getSteerVoltageSignal() {
-        return moduleSignals.steerVoltageSignal().refresh();
+                getSteerMotorPositionSignal(false),
+                getSteerMotorVelocitySignal(false),
+                getSteerMotorAccelerationSignal(false),
+                getSteerMotorVoltageSignal(false)
+        );
     }
 
 }

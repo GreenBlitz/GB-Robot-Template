@@ -1,20 +1,27 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.Conversions;
 
 public class ModuleUtils {
 
+    public enum ModuleName {
+        FRONT_LEFT,
+        FRONT_RIGHT,
+        BACK_LEFT,
+        BACK_RIGHT
+    }
+
     public static String getLoggingPath(ModuleName moduleName) {
         return "Swerve/" + moduleName + "/";
     }
 
-    public static double toDriveDistance(double revolutions) {
-        return Conversions.revolutionsToDistance(revolutions, ModuleConstants.WHEEL_DIAMETER_METERS);
+    public static double toDriveDistance(Rotation2d revolutions) {
+        return Conversions.revolutionsToDistance(revolutions.getRotations(), ModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
     public static double velocityToOpenLoopVoltage(double velocityMetersPerSecond, double wheelDiameterMeters,
-            double steerVelocityRevolutionsPerSecond, double couplingRatio, double maxSpeedRevolutionsPerSecond,
+            Rotation2d steerVelocityPerSecond, double couplingRatio, Rotation2d maxSpeedPerSecond,
             double voltageCompensationSaturation
     ) {
         double velocityRevolutionsPerSecond = Conversions.distanceToRevolutions(
@@ -23,10 +30,10 @@ public class ModuleUtils {
         );
         double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
                 velocityRevolutionsPerSecond,
-                Rotation2d.fromDegrees(steerVelocityRevolutionsPerSecond),
+                steerVelocityPerSecond, //todo - check
                 couplingRatio
         );
-        double power = optimizedVelocityRevolutionsPerSecond / maxSpeedRevolutionsPerSecond;
+        double power = optimizedVelocityRevolutionsPerSecond / maxSpeedPerSecond.getRotations();
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
 
@@ -55,13 +62,6 @@ public class ModuleUtils {
         double closedLoopError = targetSteerAngle.getRadians() - currentAngle.getRadians();
         double cosineScalar = Math.abs(Math.cos(closedLoopError));
         return targetVelocityMetersPerSecond * cosineScalar;
-    }
-
-    public enum ModuleName {
-        FRONT_LEFT,
-        FRONT_RIGHT,
-        BACK_LEFT,
-        BACK_RIGHT
     }
 
 }

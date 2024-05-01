@@ -9,7 +9,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
-import frc.robot.subsystems.swerve.ModuleConstants;
+import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
 class MK4IModuleConstants {
 

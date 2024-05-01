@@ -11,9 +11,11 @@ class MK4IModuleActions {
 
     private final TalonFXWrapper steerMotor, driveMotor;
 
-    private final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0);
+    private final VelocityVoltage driveVelocityRequest =
+            new VelocityVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
 
-    private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
+    private final VoltageOut driveVoltageRequest =
+            new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
 
     private final PositionVoltage steerPositionRequest =
             new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_STEER);
@@ -45,7 +47,7 @@ class MK4IModuleActions {
     }
 
     public void setBrake(boolean brake) {
-        final NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+        NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         driveMotor.setNeutralMode(neutralModeValue);
         steerMotor.setNeutralMode(neutralModeValue);
     }

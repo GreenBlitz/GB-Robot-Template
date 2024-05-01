@@ -12,8 +12,8 @@ class MK4IModuleRecords {
             StatusSignal<Double> steerEncoderVoltageSignal, StatusSignal<Double> drivePositionSignal,
             StatusSignal<Double> driveVelocitySignal, StatusSignal<Double> driveAccelerationSignal,
             StatusSignal<Double> driveVoltageSignal, StatusSignal<Double> driveStatorCurrentSignal,
-            StatusSignal<Double> steerPositionSignal, StatusSignal<Double> steerVelocitySignal,
-            StatusSignal<Double> steerAccelerationSignal, StatusSignal<Double> steerVoltageSignal
+            StatusSignal<Double> steerMotorPositionSignal, StatusSignal<Double> steerMotorVelocitySignal,
+            StatusSignal<Double> steerMotorAccelerationSignal, StatusSignal<Double> steerMotorVoltageSignal
     ) {}
 
 }

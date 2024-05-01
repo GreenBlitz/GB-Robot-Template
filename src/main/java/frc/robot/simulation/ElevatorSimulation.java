@@ -3,8 +3,8 @@ package frc.robot.simulation;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import frc.robot.constants.SimulationConstants;
 import frc.utils.Conversions;
+import frc.utils.roborioutils.RoborioUtils;
 
 public class ElevatorSimulation extends MotorSimulation {
 
@@ -77,7 +77,7 @@ public class ElevatorSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        elevatorSimulation.update(SimulationConstants.TIME_STEP);
+        elevatorSimulation.update(RoborioUtils.getCurrentRoborioCycle());
     }
 
 }

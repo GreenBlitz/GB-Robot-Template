@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
 import frc.utils.loggerutils.LoggerUtils;
+import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -53,6 +54,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        RoborioUtils.updateRioUtils();
         MotorSimulation.updateRegisteredSimulations();
     }
 

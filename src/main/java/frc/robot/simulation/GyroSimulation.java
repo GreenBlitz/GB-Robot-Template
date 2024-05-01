@@ -1,5 +1,6 @@
 package frc.robot.simulation;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class GyroSimulation {
@@ -44,6 +45,28 @@ public class GyroSimulation {
 
     public void setPitch(Rotation2d pitch) {
         pitchRadians = pitch.getRadians();
+    }
+
+    public Rotation2d getRangedYaw() {
+        return rangeAngle(Rotation2d.fromRadians(yawRadians));
+    }
+
+    public Rotation2d getRangedRoll() {
+        return rangeAngle(Rotation2d.fromRadians(rollRadians));
+    }
+
+    public Rotation2d getRangedPitch() {
+        return rangeAngle(Rotation2d.fromRadians(pitchRadians));
+    }
+
+    /**
+     * Range angle between -180, 180
+     *
+     * @param angle - the angle to range
+     * @return the ranged angle
+     */
+    private Rotation2d rangeAngle(Rotation2d angle) {
+        return Rotation2d.fromDegrees(MathUtil.angleModulus(angle.getRadians()));
     }
 
 }

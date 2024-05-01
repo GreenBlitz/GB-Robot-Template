@@ -5,7 +5,6 @@ import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.utils.Conversions;
 
 import java.util.Queue;
 
@@ -108,10 +107,8 @@ public class MK4IModule implements IModule {
         inputs.steerMotorAcceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);
         inputs.steerMotorVoltage = mk4IModuleStatus.getSteerMotorVoltageSignal(false).getValue();
 
-        inputs.odometryUpdatesSteerAngleDegrees =
-                steerPositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray(); //Todo - put in Rot2D
-        inputs.odometryUpdatesDriveDistanceDegrees =
-                drivePositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray(); //Todo - put in Rot2D
+        inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
 
         steerPositionQueue.clear();
         drivePositionQueue.clear();

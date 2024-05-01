@@ -30,7 +30,7 @@ public class ModuleUtils {
         );
         double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
                 velocityRevolutionsPerSecond,
-                steerVelocityPerSecond, //todo - check
+                steerVelocityPerSecond,
                 couplingRatio
         );
         double power = optimizedVelocityRevolutionsPerSecond / maxSpeedPerSecond.getRotations();

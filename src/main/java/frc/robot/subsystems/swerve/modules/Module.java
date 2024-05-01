@@ -81,13 +81,13 @@ public class Module {
      */
     public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
-                ModuleUtils.toDriveDistance(Rotation2d.fromDegrees(moduleInputs.odometryUpdatesDriveDistanceDegrees[odometryUpdateIndex])),
-                Rotation2d.fromDegrees(moduleInputs.odometryUpdatesSteerAngleDegrees[odometryUpdateIndex])
+                ModuleUtils.toDriveDistance(moduleInputs.odometryUpdatesDriveDistance[odometryUpdateIndex]),
+                moduleInputs.odometryUpdatesSteerAngle[odometryUpdateIndex]
         );
     }
 
     public int getLastOdometryUpdateIndex() {
-        return moduleInputs.odometryUpdatesSteerAngleDegrees.length - 1;
+        return moduleInputs.odometryUpdatesSteerAngle.length - 1;
     }
 
     public void setTargetState(SwerveModuleState targetState) {

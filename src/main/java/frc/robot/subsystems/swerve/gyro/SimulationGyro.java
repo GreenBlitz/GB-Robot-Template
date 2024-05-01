@@ -23,7 +23,7 @@ public class SimulationGyro implements IGyro {
         );
         inputs.gyroYawDegrees = gyro.getGyroYaw().getDegrees();
         inputs.odometryUpdatesYawDegrees = new double[]{inputs.gyroYawDegrees};
-        inputs.odometryUpdatesTimestamp = new double[]{Timer.getFPGATimestamp()};//todo - check if need cycle time
+        inputs.odometryUpdatesTimestamp = new double[]{Timer.getFPGATimestamp()};
     }
 
 }

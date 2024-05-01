@@ -52,7 +52,7 @@ public class Module {
     }
 
     public Rotation2d getDriveDistanceAngle() {
-        return moduleInputs.driveDistance;
+        return moduleInputs.driveMotorDistance;
     }
 
     private double getDriveDistanceMeters() {
@@ -60,7 +60,7 @@ public class Module {
     }
 
     private double getDriveVelocityMetersPerSecond() {
-        return ModuleUtils.toDriveDistance(moduleInputs.driveVelocityPerSecond);
+        return ModuleUtils.toDriveDistance(moduleInputs.driveMotorVelocity);
     }
 
     private Rotation2d getCurrentAngle() {

@@ -50,6 +50,10 @@ class MK4IModuleStatus {
         ));
     }
 
+    public Rotation2d getDriveMotorAcceleration(boolean refresh) {
+        return Rotation2d.fromRotations(getDriveMotorAccelerationSignal(refresh).getValue());
+    }
+
     public StatusSignal<Double> getDriveMotorPositionSignal(boolean refresh) {
         return getSignal(refresh, moduleSignals.drivePositionSignal());
     }
@@ -84,6 +88,10 @@ class MK4IModuleStatus {
                 getSteerMotorVelocitySignal(refresh),
                 getSteerMotorAccelerationSignal(refresh)
         ));
+    }
+
+    public Rotation2d getSteerMotorAcceleration(boolean refresh) {
+        return Rotation2d.fromRotations(getSteerMotorAccelerationSignal(refresh).getValue());
     }
 
     public StatusSignal<Double> getSteerMotorPositionSignal(boolean refresh) {

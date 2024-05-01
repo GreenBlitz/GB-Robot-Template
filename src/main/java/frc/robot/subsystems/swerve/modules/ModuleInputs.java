@@ -10,15 +10,17 @@ public class ModuleInputs {
     public double steerEncoderVelocity = 0;
     public double steerEncoderVoltage = 0;
 
-    public Rotation2d steerMotorAngle = 0;
-    public Rotation2d steerMotorVelocity = 0;
+    public Rotation2d steerMotorAngle = new Rotation2d();
+    public Rotation2d steerMotorVelocity = new Rotation2d();
+    public Rotation2d steerMotorAcceleration = new Rotation2d();
     public double steerMotorVoltage = 0;
     public double[] odometryUpdatesSteerAngleDegrees = new double[0];
 
-    public Rotation2d driveDistance = 0;
-    public Rotation2d driveVelocityPerSecond = 0;
-    public double driveCurrent = 0;
-    public double driveVoltage = 0;
+    public Rotation2d driveMotorDistance = new Rotation2d();
+    public Rotation2d driveMotorVelocity = new Rotation2d();
+    public Rotation2d driveMotorAcceleration = new Rotation2d();
+    public double driveMotorCurrent = 0;
+    public double driveMotorVoltage = 0;
     public double[] odometryUpdatesDriveDistanceDegrees = new double[0];
 
 }

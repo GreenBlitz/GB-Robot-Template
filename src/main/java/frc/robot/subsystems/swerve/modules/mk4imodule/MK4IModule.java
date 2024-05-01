@@ -97,14 +97,16 @@ public class MK4IModule implements IModule {
         inputs.steerEncoderVelocity = mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue();
         inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal(false).getValue();
 
+        inputs.driveMotorDistance = mk4IModuleStatus.getDriveMotorLatencyPosition(false);
+        inputs.driveMotorVelocity = mk4IModuleStatus.getDriveMotorLatencyVelocity(false);
+        inputs.driveMotorAcceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
+        inputs.driveMotorCurrent = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
+        inputs.driveMotorVoltage = mk4IModuleStatus.getDriveMotorVoltageSignal(false).getValue();
+
         inputs.steerMotorAngle = mk4IModuleStatus.getSteerMotorLatencyPosition(false);
         inputs.steerMotorVelocity = mk4IModuleStatus.getSteerMotorLatencyVelocity(false);
+        inputs.steerMotorAcceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);
         inputs.steerMotorVoltage = mk4IModuleStatus.getSteerMotorVoltageSignal(false).getValue();
-
-        inputs.driveDistance = mk4IModuleStatus.getDriveMotorLatencyPosition(false);
-        inputs.driveVelocityPerSecond = mk4IModuleStatus.getDriveMotorLatencyVelocity(false);
-        inputs.driveCurrent = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
-        inputs.driveVoltage = mk4IModuleStatus.getDriveMotorVoltageSignal(false).getValue();
 
         inputs.odometryUpdatesSteerAngleDegrees =
                 steerPositionQueue.stream().mapToDouble(Conversions::revolutionsToDegrees).toArray(); //Todo - put in Rot2D

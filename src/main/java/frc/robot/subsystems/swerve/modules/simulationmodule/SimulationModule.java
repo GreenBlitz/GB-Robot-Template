@@ -17,7 +17,8 @@ public class SimulationModule implements IModule {
 
     public SimulationModule(ModuleUtils.ModuleName moduleName) {
         this.moduleName = moduleName;
-        final SimulationModuleConfigObject simulationModuleConfigObject = new SimulationModuleConfigObject();
+
+        SimulationModuleConfigObject simulationModuleConfigObject = new SimulationModuleConfigObject();
         this.simulationModuleActions = new SimulationModuleActions(simulationModuleConfigObject);
         this.simulationModuleStatus = new SimulationModuleStatus(simulationModuleConfigObject);
     }
@@ -27,12 +28,12 @@ public class SimulationModule implements IModule {
         final double voltage = ModuleUtils.velocityToOpenLoopVoltage(
                 targetVelocityMetersPerSecond,
                 ModuleConstants.WHEEL_DIAMETER_METERS,
-                simulationModuleStatus.getSteerVelocity().getRotations(),
+                simulationModuleStatus.getSteerVelocity(),
                 0,
                 ModuleConstants.MAX_SPEED_PER_SECOND,
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveVoltage", simulationModuleStatus.getDriveVoltage());
+        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
         simulationModuleActions.setTargetOpenLoopVelocity(voltage);
     }
 
@@ -46,10 +47,6 @@ public class SimulationModule implements IModule {
         simulationModuleActions.setTargetAngle(angle);
     }
 
-    @Override
-    public void resetByEncoder() {
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
-    }
 
     @Override
     public void stop() {
@@ -58,18 +55,24 @@ public class SimulationModule implements IModule {
 
     @Override
     public void setBrake(boolean brake) {
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveVoltage", simulationModuleStatus.getDriveVoltage());
+        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
     }
 
     @Override
-    public void updateInputs(ModuleInputsAutoLogged inputs) {
-        inputs.steerMotorAngle = simulationModuleStatus.getSteerPosition().getDegrees();
-        inputs.steerMotorVoltage = simulationModuleStatus.getSteerVoltage();
+    public void resetByEncoder() {
+        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
+    }
 
-        inputs.driveDistance = simulationModuleStatus.getDrivePositionInMeters();
-        inputs.driveVelocityPerSecond = simulationModuleStatus.getDriveVelocityInMeters();
-        inputs.driveCurrent = simulationModuleStatus.getDriveCurrent();
-        inputs.driveVoltage = simulationModuleStatus.getDriveVoltage();
+    
+    @Override
+    public void updateInputs(ModuleInputsAutoLogged inputs) {
+        inputs.driveMotorDistance = simulationModuleStatus.getDrivePositionAngle();
+        inputs.driveMotorVelocity = simulationModuleStatus.getDriveVelocityAnglePerSecond();
+        inputs.driveMotorCurrent = simulationModuleStatus.getDriveCurrent();
+        inputs.driveMotorVoltage = simulationModuleStatus.getDriveVoltage();
+
+        inputs.steerMotorAngle = simulationModuleStatus.getSteerPosition();
+        inputs.steerMotorVoltage = simulationModuleStatus.getSteerVoltage();
     }
 
 }

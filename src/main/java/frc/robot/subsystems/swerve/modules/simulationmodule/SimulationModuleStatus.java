@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve.modules.simulationmodule;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
 
 public class SimulationModuleStatus {
 
@@ -13,16 +12,14 @@ public class SimulationModuleStatus {
         this.steerMotor = simulationModuleConfigObject.getSteerMotor();
     }
 
-    public double getSteerVoltage() {
-        return steerMotor.getVoltage();
+
+    // Drive Motor Status
+    public Rotation2d getDrivePositionAngle() {
+        return driveMotor.getPosition();
     }
 
-    public Rotation2d getSteerVelocity() {
-        return steerMotor.getVelocity();
-    }
-
-    public Rotation2d getSteerPosition() {
-        return steerMotor.getPosition();
+    public Rotation2d getDriveVelocityAnglePerSecond() {
+        return driveMotor.getVelocity();
     }
 
     public double getDriveVoltage() {
@@ -33,12 +30,18 @@ public class SimulationModuleStatus {
         return driveMotor.getCurrent();
     }
 
-    public double getDriveVelocityInMeters() {
-        return ModuleUtils.toDriveDistance(driveMotor.getVelocity().getRotations());
+
+    // Steer Motor Status
+    public Rotation2d getSteerPosition() {
+        return steerMotor.getPosition();
     }
 
-    public double getDrivePositionInMeters() {
-        return ModuleUtils.toDriveDistance(driveMotor.getPosition().getRotations());
+    public Rotation2d getSteerVelocity() {
+        return steerMotor.getVelocity();
+    }
+
+    public double getSteerVoltage() {
+        return steerMotor.getVoltage();
     }
 
 }

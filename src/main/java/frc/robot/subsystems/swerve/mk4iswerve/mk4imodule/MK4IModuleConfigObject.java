@@ -4,13 +4,13 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
-import frc.utils.devicewrappers.GBTalonFXPro;
+import frc.utils.devicewrappers.TalonFXWrapper;
 
 class MK4IModuleConfigObject {
 
     private final MK4IModuleRecords.MK4IModuleMotors moduleMotors;
 
-    private final GBTalonFXPro steerMotor, driveMotor;
+    private final TalonFXWrapper steerMotor, driveMotor;
 
     private final CANcoder steerEncoder;
 
@@ -27,8 +27,8 @@ class MK4IModuleConfigObject {
 
         this.steerEncoder = new CANcoder(steerEncoderId, busChain);
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
-                new GBTalonFXPro(driveMotorId, busChain),
-                new GBTalonFXPro(steerMotorId, busChain)
+                new TalonFXWrapper(driveMotorId, busChain),
+                new TalonFXWrapper(steerMotorId, busChain)
         );
         this.steerMotor = moduleMotors.steerMotor();
         this.driveMotor = moduleMotors.driveMotor();

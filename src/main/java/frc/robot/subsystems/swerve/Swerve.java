@@ -214,7 +214,7 @@ public class Swerve extends GBSubsystem {
      * @return the fixed speeds
      */
     private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, RoborioUtils.getCurrentRoborioCycle());
+        return ChassisSpeeds.discretize(chassisSpeeds, RoborioUtils.getCurrentRoborioCycleTime());
     }
 
     public boolean isStill(ChassisSpeeds chassisSpeeds) {

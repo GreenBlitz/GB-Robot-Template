@@ -18,7 +18,10 @@ public class SimulationSwerve implements ISwerve {
 
     @Override
     public void updateInputs(SwerveInputsAutoLogged inputs) {
-        gyro.update(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond, RoborioUtils.getCurrentRoborioCycle());
+        gyro.update(
+                RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond,
+                RoborioUtils.getCurrentRoborioCycleTime()
+        );
         inputs.gyroYawDegrees = gyro.getGyroYaw().getDegrees();
     }
 

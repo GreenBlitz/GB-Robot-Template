@@ -1,11 +1,11 @@
 package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
 
 import com.ctre.phoenix6.StatusSignal;
-import frc.utils.devicewrappers.GBTalonFXPro;
+import frc.utils.devicewrappers.TalonFXWrapper;
 
 class MK4IModuleRecords {
 
-    public record MK4IModuleMotors(GBTalonFXPro driveMotor, GBTalonFXPro steerMotor) {}
+    public record MK4IModuleMotors(TalonFXWrapper driveMotor, TalonFXWrapper steerMotor) {}
 
     public record MK4IModuleSignals(
             StatusSignal<Double> steerEncoderAbsolutePositionSignal, StatusSignal<Double> steerEncoderVelocitySignal,

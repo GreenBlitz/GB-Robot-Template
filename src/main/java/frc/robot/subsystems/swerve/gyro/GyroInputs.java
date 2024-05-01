@@ -15,4 +15,8 @@ public class GyroInputs {
 
     public double accelerationZ = 0;
 
+    public double[] odometryUpdatesYawDegrees = new double[0];
+
+    public double[] odometryUpdatesTimestamp = new double[0];
+
 }

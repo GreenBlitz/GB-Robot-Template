@@ -23,7 +23,6 @@ public class JoysticksBindings {
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         // bindings
-
     }
 
     private static void secondJoystickButtons() {

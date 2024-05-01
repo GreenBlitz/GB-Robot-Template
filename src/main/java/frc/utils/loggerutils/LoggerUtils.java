@@ -1,37 +1,48 @@
-package frc.utils;
+package frc.utils.loggerutils;
 
-import frc.robot.constants.RobotConstants;
-import frc.robot.constants.SimulationConstants;
+import com.ctre.phoenix6.SignalLogger;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class LoggerUtils {
 
     public static void startRealLogger() {
-        try {
-            LoggerUtils.startLoggerOnUSB();
+        SignalLogger.enableAutoLogging(LoggerConstants.IS_CTRE_AUTO_LOGGING);
+
+        Path usbPath = Path.of(LoggerConstants.USB_LOG_PATH);
+        if (Files.exists(usbPath)) {
+            startLoggerOnUSB();
         }
-        catch (Exception exception) {
-            Logger.end();
-            LoggerUtils.startLoggerOnRoborio();
+        else {
+            startLoggerOnRoborio();
         }
     }
 
     public static void startLoggerOnUSB() {
-        Logger.addDataReceiver(new WPILOGWriter(RobotConstants.USB_LOG_PATH));
+        setLoggingPath(LoggerConstants.USB_LOG_PATH);
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", "USB");
     }
 
     public static void startLoggerOnRoborio() {
-        Logger.addDataReceiver(new WPILOGWriter(RobotConstants.SAFE_ROBORIO_LOG_PATH));
+        setLoggingPath(LoggerConstants.SAFE_ROBORIO_LOG_PATH);
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", "ROBORIO");
+    }
+
+    public static void startSimulationLogger() {
+        setLoggingPath(LoggerConstants.SIMULATION_LOG_PATH);
+        Logger.addDataReceiver(new NT4Publisher());
+        Logger.start();
+        Logger.recordOutput("Logged In", "COMPUTER");
     }
 
     public static void startReplayLogger() {
@@ -41,11 +52,9 @@ public class LoggerUtils {
         Logger.start();
     }
 
-    public static void startSimulationLogger() {
-        Logger.addDataReceiver(new NT4Publisher());
-        Logger.addDataReceiver(new WPILOGWriter(SimulationConstants.SIMULATION_LOG_PATH));
-        Logger.start();
-        Logger.recordOutput("Logged In", "COMPUTER");
+    private static void setLoggingPath(String path) {
+        SignalLogger.setPath(path);
+        Logger.addDataReceiver(new WPILOGWriter(path));
     }
 
 }

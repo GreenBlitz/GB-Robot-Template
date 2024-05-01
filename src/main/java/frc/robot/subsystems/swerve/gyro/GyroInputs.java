@@ -1,9 +1,9 @@
-package frc.robot.subsystems.swerve.swerveinterface;
+package frc.robot.subsystems.swerve.gyro;
 
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class SwerveInputs {
+public class GyroInputs {
 
     public double gyroYawDegrees = 0;
 

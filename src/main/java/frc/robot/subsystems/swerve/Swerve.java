@@ -8,9 +8,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.swerveinterface.ISwerve;
-import frc.robot.subsystems.swerve.swerveinterface.SwerveFactory;
-import frc.robot.subsystems.swerve.swerveinterface.SwerveInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.IGyro;
 import frc.utils.GBSubsystem;
 import frc.utils.allianceutils.AllianceUtils;
 import frc.utils.roborioutils.RoborioUtils;
@@ -24,19 +24,19 @@ public class Swerve extends GBSubsystem {
 
     public final Lock odometryLock;
 
-    private final SwerveInputsAutoLogged swerveInputs;
+    private final GyroInputsAutoLogged swerveInputs;
 
-    private final ISwerve swerve;
+    private final IGyro swerve;
 
     private final Module[] modules;
 
     public Swerve() {
         setName("Swerve");
 
-        swerve = SwerveFactory.createSwerve();
+        swerve = GyroFactory.createSwerve();
         modules = getModules();
 
-        swerveInputs = new SwerveInputsAutoLogged();
+        swerveInputs = new GyroInputsAutoLogged();
         odometryLock = new ReentrantLock();
 
         configurePathPlanner();

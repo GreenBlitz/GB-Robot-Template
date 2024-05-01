@@ -1,16 +1,16 @@
 package frc.robot.subsystems.swerve.gyro.gyropigeon2;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.hardware.Pigeon2;
+import frc.utils.devicewrappers.Pigeon2Wrapper;
 
 class GyroPigeon2ConfigObject {
 
-    private final Pigeon2 gyro;
+    private final Pigeon2Wrapper gyro;
 
     private final GyroPigeon2Records.GyroPigeon2Signals signals;
 
     protected GyroPigeon2ConfigObject(int id, String busChain) {
-        this.gyro = new Pigeon2(id, busChain);
+        this.gyro = new Pigeon2Wrapper(id, busChain);
         this.signals = new GyroPigeon2Records.GyroPigeon2Signals(
                 gyro.getYaw(),
                 gyro.getPitch(),
@@ -40,7 +40,7 @@ class GyroPigeon2ConfigObject {
         gyro.optimizeBusUtilization();
     }
 
-    protected Pigeon2 getGyro() {
+    protected Pigeon2Wrapper getGyro() {
         return gyro;
     }
 

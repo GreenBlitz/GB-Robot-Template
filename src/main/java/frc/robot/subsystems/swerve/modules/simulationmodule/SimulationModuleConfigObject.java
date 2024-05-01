@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.simulationswerve.simulationmodule;
+package frc.robot.subsystems.swerve.modules.simulationmodule;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import frc.robot.simulation.SimpleMotorSimulation;

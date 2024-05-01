@@ -1,10 +1,9 @@
-package frc.robot.subsystems.swerve.swerveinterface;
+package frc.robot.subsystems.swerve.modules;
 
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.swerve.ModuleUtils;
-import frc.robot.subsystems.swerve.mk4iswerve.mk4imodule.MK4IModule;
-import frc.robot.subsystems.swerve.replayswerve.ReplayModule;
-import frc.robot.subsystems.swerve.simulationswerve.simulationmodule.SimulationModule;
+import frc.robot.subsystems.swerve.modules.mk4imodule.MK4IModule;
+import frc.robot.subsystems.swerve.modules.simulationmodule.SimulationModule;
 
 public class ModuleFactory {
 

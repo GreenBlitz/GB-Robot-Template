@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.simulationswerve.simulationmodule;
+package frc.robot.subsystems.swerve.modules.simulationmodule;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;

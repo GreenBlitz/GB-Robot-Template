@@ -1,10 +1,10 @@
-package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
+package frc.robot.subsystems.swerve.modules.mk4imodule;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleConstants;
 import frc.robot.subsystems.swerve.ModuleUtils;
-import frc.robot.subsystems.swerve.swerveinterface.IModule;
-import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.IModule;
+import frc.robot.subsystems.swerve.modules.ModuleInputsAutoLogged;
 
 public class MK4IModule implements IModule {
 

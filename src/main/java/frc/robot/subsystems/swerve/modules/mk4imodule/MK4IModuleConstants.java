@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.mk4iswerve.mk4imodule;
+package frc.robot.subsystems.swerve.modules.mk4imodule;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;

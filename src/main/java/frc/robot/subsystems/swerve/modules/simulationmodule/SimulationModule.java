@@ -1,10 +1,10 @@
-package frc.robot.subsystems.swerve.simulationswerve.simulationmodule;
+package frc.robot.subsystems.swerve.modules.simulationmodule;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.ModuleConstants;
 import frc.robot.subsystems.swerve.ModuleUtils;
-import frc.robot.subsystems.swerve.swerveinterface.IModule;
-import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.IModule;
+import frc.robot.subsystems.swerve.modules.ModuleInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class SimulationModule implements IModule {

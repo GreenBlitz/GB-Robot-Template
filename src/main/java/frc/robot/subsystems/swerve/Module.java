@@ -2,9 +2,9 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.subsystems.swerve.swerveinterface.IModule;
-import frc.robot.subsystems.swerve.swerveinterface.ModuleFactory;
-import frc.robot.subsystems.swerve.swerveinterface.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.IModule;
+import frc.robot.subsystems.swerve.modules.ModuleFactory;
+import frc.robot.subsystems.swerve.modules.ModuleInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.subsystems.swerve.ModuleUtils.reduceSkew;

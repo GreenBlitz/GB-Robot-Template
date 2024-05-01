@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.littletonrobotics.junction.Logger;
 
 public class AutonomousSelector {
@@ -18,7 +19,13 @@ public class AutonomousSelector {
     }
 
     public static Command getChosenValue() {
-        Logger.recordMetadata("autonomous chosen", selector.getSelected().getName());
-        return selector.getSelected();
+        if (selector != null) {
+            Logger.recordMetadata("autonomous chosen", selector.getSelected().getName());
+            return selector.getSelected();
+        }
+        else {
+            Logger.recordMetadata("autonomous chosen", "None");
+            return new InstantCommand();
+        }
     }
 }

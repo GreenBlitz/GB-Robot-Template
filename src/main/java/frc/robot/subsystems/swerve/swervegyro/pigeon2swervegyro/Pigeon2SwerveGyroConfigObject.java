@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import frc.robot.poseestimation.poseestimator.PoseEstimatorConstants;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 
 class Pigeon2SwerveGyroConfigObject {
@@ -35,7 +36,7 @@ class Pigeon2SwerveGyroConfigObject {
         );
 
         signals.PITCH_SIGNAL().setUpdateFrequency(100);
-        signals.YAW_SIGNAL().setUpdateFrequency(250); // PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ
+        signals.YAW_SIGNAL().setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);
 
         gyro.optimizeBusUtilization();
     }

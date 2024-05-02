@@ -6,7 +6,7 @@ import frc.robot.RobotContainer;
 import frc.robot.simulation.GyroSimulation;
 import frc.utils.roborioutils.RoborioUtils;
 
-public class SimulationGyro implements IGyro {
+public class SimulationSwerveGyro implements ISwerveGyro {
 
     private final GyroSimulation gyro = new GyroSimulation();
 
@@ -16,13 +16,13 @@ public class SimulationGyro implements IGyro {
     }
 
     @Override
-    public void updateInputs(GyroInputsAutoLogged inputs) {
+    public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
         gyro.updateYaw(
                 Rotation2d.fromRadians(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond),
                 RoborioUtils.getCurrentRoborioCycleTime()
         );
-        inputs.gyroYaw = gyro.getGyroYaw().getDegrees();
-        inputs.odometryUpdatesYawDegrees = new double[]{inputs.gyroYaw};
+        inputs.gyroYaw = gyro.getGyroYaw();
+        inputs.odometryUpdatesYaw = new Rotation2d[]{inputs.gyroYaw};
         inputs.odometryUpdatesTimestamp = new double[]{Timer.getFPGATimestamp()};
     }
 

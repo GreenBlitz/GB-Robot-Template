@@ -11,9 +11,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.gyro.GyroFactory;
-import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
-import frc.robot.subsystems.swerve.gyro.IGyro;
+import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroFactory;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.utils.DriverStationUtils;
@@ -31,9 +31,9 @@ public class Swerve extends GBSubsystem {
 
     public final Lock ODOMETRY_LOCK;
 
-    private final GyroInputsAutoLogged gyroInputs;
+    private final SwerveGyroInputsAutoLogged gyroInputs;
 
-    private final IGyro gyro;
+    private final ISwerveGyro gyro;
 
     private final Module[] modules;
 
@@ -41,10 +41,10 @@ public class Swerve extends GBSubsystem {
     public Swerve() {
         setName("Swerve");
 
-        gyro = GyroFactory.createSwerve();
+        gyro = SwerveGyroFactory.createSwerve();
         modules = getModules();
 
-        gyroInputs = new GyroInputsAutoLogged();
+        gyroInputs = new SwerveGyroInputsAutoLogged();
         ODOMETRY_LOCK = new ReentrantLock();
 
         configurePathPlanner();
@@ -179,7 +179,7 @@ public class Swerve extends GBSubsystem {
         );
     }
 
-    
+
     public void runWheelRadiusCharacterization(double omegaRadsPerSec) {
         selfRelativeDrive(new ChassisSpeeds(0, 0, omegaRadsPerSec));
     }

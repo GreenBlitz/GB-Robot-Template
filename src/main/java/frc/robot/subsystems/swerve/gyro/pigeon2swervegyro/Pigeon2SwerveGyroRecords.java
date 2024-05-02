@@ -1,8 +1,8 @@
-package frc.robot.subsystems.swerve.gyro.gyropigeon2;
+package frc.robot.subsystems.swerve.gyro.pigeon2swervegyro;
 
 import com.ctre.phoenix6.StatusSignal;
 
-class GyroPigeon2Records {
+class Pigeon2SwerveGyroRecords {
 
     protected record GyroPigeon2Signals(
             StatusSignal<Double> YAW_SIGNAL, StatusSignal<Double> PITCH_SIGNAL, StatusSignal<Double> X_ACCELERATION_SIGNAL,

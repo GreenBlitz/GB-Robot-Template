@@ -1,17 +1,17 @@
-package frc.robot.subsystems.swerve.gyro.gyropigeon2;
+package frc.robot.subsystems.swerve.gyro.pigeon2swervegyro;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 
-class GyroPigeon2ConfigObject {
+class Pigeon2SwerveGyroConfigObject {
 
     private final Pigeon2Wrapper gyro;
 
-    private final GyroPigeon2Records.GyroPigeon2Signals signals;
+    private final Pigeon2SwerveGyroRecords.GyroPigeon2Signals signals;
 
-    protected GyroPigeon2ConfigObject(int id, String busChain) {
+    protected Pigeon2SwerveGyroConfigObject(int id, String busChain) {
         this.gyro = new Pigeon2Wrapper(id, busChain);
-        this.signals = new GyroPigeon2Records.GyroPigeon2Signals(
+        this.signals = new Pigeon2SwerveGyroRecords.GyroPigeon2Signals(
                 gyro.getYaw(),
                 gyro.getPitch(),
                 gyro.getAccelerationX(),
@@ -23,7 +23,7 @@ class GyroPigeon2ConfigObject {
     }
 
     private void configGyro() {
-        gyro.getConfigurator().apply(GyroPigeon2Constants.PIGEON_2_CONFIGURATION);
+        gyro.getConfigurator().apply(Pigeon2SwerveGyroConstants.PIGEON_2_CONFIGURATION);
     }
 
     private void optimizeBusAndSignalOfGyro() {
@@ -44,7 +44,7 @@ class GyroPigeon2ConfigObject {
         return gyro;
     }
 
-    protected GyroPigeon2Records.GyroPigeon2Signals getSignals() {
+    protected Pigeon2SwerveGyroRecords.GyroPigeon2Signals getSignals() {
         return signals;
     }
 

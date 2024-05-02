@@ -1,13 +1,13 @@
-package frc.robot.subsystems.swerve.gyro.gyropigeon2;
+package frc.robot.subsystems.swerve.gyro.pigeon2swervegyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 
-class GyroPigeon2Actions {
+class Pigeon2SwerveGyroActions {
 
     private final Pigeon2Wrapper pigeon2;
 
-    protected GyroPigeon2Actions(Pigeon2Wrapper pigeon2) {
+    protected Pigeon2SwerveGyroActions(Pigeon2Wrapper pigeon2) {
         this.pigeon2 = pigeon2;
     }
 

@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.Conversions;
 
 public class ModuleUtils {
@@ -14,6 +16,15 @@ public class ModuleUtils {
 
     public static String getLoggingPath(ModuleName moduleName) {
         return "Swerve/" + moduleName + "/";
+    }
+
+    public static Translation2d getModulePositionRelativeToMiddleOfRobot(ModuleName moduleName) {
+        return switch (moduleName) {
+            case FRONT_LEFT -> SwerveConstants.FRONT_LEFT_TRANSLATION2D;
+            case FRONT_RIGHT -> SwerveConstants.FRONT_RIGHT_TRANSLATION2D;
+            case BACK_LEFT -> SwerveConstants.BACK_LEFT_TRANSLATION2D;
+            case BACK_RIGHT -> SwerveConstants.BACK_RIGHT_TRANSLATION2D;
+        };
     }
 
     public static double toDriveDistance(Rotation2d revolutions) {

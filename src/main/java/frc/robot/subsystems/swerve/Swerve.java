@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -134,7 +135,7 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void resetRotationController() {
-        SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.reset(
+        SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.reset(
                 POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation().getDegrees()
         );
     }
@@ -181,7 +182,7 @@ public class Swerve extends GBSubsystem {
         );
     }
 
-    
+
     /**
      * Runs swerve around itself for WheelRadiusCharacterization
      *
@@ -267,9 +268,27 @@ public class Swerve extends GBSubsystem {
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
 
+    protected void rotateToAngle(Rotation2d targetAngle) {
+        ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
+                0,
+                0,
+                calculateProfiledAngleSpeedToTargetAngle(targetAngle)
+        );
+        selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
+    }
+
+    protected void rotateToAngleAroundWheel(Rotation2d targetAngle, ModuleUtils.ModuleName moduleName) {
+        ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
+                0,
+                0,
+                calculateProfiledAngleSpeedToTargetAngle(targetAngle) // todo - check if needs another pid controller
+        );
+        selfRelativeDriveAndRotateAroundWantedPoint(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds), moduleName);
+    }
+
     private double calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation();
-        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER.calculate(
+        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()
         ));
@@ -307,6 +326,22 @@ public class Swerve extends GBSubsystem {
 
 
     /**
+     * Drives the swerve with the given powers, relative to the field's frame of reference, and rotating around given module
+     * instead of middle of robot.
+     *
+     * @param xPower the x power
+     * @param yPower the y power
+     * @param thetaPower the theta power
+     * @param moduleToTurnAround the module to turn around
+     */
+    protected void fieldRelativeDriveRotateAroundModule(
+            double xPower, double yPower, double thetaPower, ModuleUtils.ModuleName moduleToTurnAround
+    ) {
+        ChassisSpeeds speeds = selfRelativeSpeedsFromFieldRelativePowers(xPower, yPower, thetaPower);
+        selfRelativeDriveAndRotateAroundWantedPoint(speeds, moduleToTurnAround);
+    }
+
+    /**
      * Drives the swerve with the given powers and a target angle, relative to the field's frame of reference.
      *
      * @param xPower the x power
@@ -335,6 +370,22 @@ public class Swerve extends GBSubsystem {
 
 
     /**
+     * Drives the swerve with the given powers, relative to the robot's frame of reference, and rotating around given module
+     * instead of middle of robot.
+     *
+     * @param xPower the x power
+     * @param yPower the y power
+     * @param thetaPower the theta power
+     * @param moduleToTurnAround the module to turn around
+     */
+    protected void selfRelativeDriveRotateAroundModule(
+            double xPower, double yPower, double thetaPower, ModuleUtils.ModuleName moduleToTurnAround
+    ) {
+        ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, thetaPower);
+        selfRelativeDriveAndRotateAroundWantedPoint(speeds, moduleToTurnAround);
+    }
+
+    /**
      * Drives the swerve with the given powers and a target angle, relative to the robot's frame of reference.
      *
      * @param xPower the x power
@@ -358,6 +409,40 @@ public class Swerve extends GBSubsystem {
     protected void selfRelativeDrive(double xPower, double yPower, double thetaPower) {
         ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, thetaPower);
         selfRelativeDrive(speeds);
+    }
+
+    /**
+     * Drives the swerve with the given speeds, rotating around given Module instead of middle of robot.
+     *
+     * @param chassisSpeeds the speeds to drive at
+     * @param moduleToTurnAround the Module to turn around
+     */
+    private void selfRelativeDriveAndRotateAroundWantedPoint(
+            ChassisSpeeds chassisSpeeds, ModuleUtils.ModuleName moduleToTurnAround
+    ) {
+        selfRelativeDriveAndRotateAroundWantedPoint(
+                chassisSpeeds,
+                ModuleUtils.getModulePositionRelativeToMiddleOfRobot(moduleToTurnAround)
+        );
+    }
+
+    /**
+     * Drives the swerve with the given speeds, rotating around given Translation2D instead of middle of robot.
+     *
+     * @param chassisSpeeds the speeds to drive at
+     * @param positionToTurnAround the Translation2D to turn around
+     */
+    private void selfRelativeDriveAndRotateAroundWantedPoint(
+            ChassisSpeeds chassisSpeeds, Translation2d positionToTurnAround
+    ) {
+        chassisSpeeds = discretize(chassisSpeeds);
+        if (isStill(chassisSpeeds)) {
+            stop();
+            return;
+        }
+
+        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds, positionToTurnAround);
+        setTargetModuleStates(swerveModuleStates);
     }
 
     private void selfRelativeDrive(ChassisSpeeds chassisSpeeds) {
@@ -407,7 +492,10 @@ public class Swerve extends GBSubsystem {
         // double angleDifference = MathUtil.angleModulo(Math.abs(targetAngle.minus(currentAngle())));
         Rotation2d angleDifference = Math.abs(targetAngle.minus(POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation()));
         boolean isAtAngle = angleDifference.getDegrees() < SwerveConstants.ROTATION_TOLERANCE.getDegrees();
-        boolean isStopping = Math.abs(getSelfRelativeVelocity().omegaRadiansPerSecond) < SwerveConstants.ROTATION_VELOCITY_TOLERANCE;
+
+        double currentRotationVelocityRadians = getSelfRelativeVelocity().omegaRadiansPerSecond;
+        boolean isStopping = Math.abs(currentRotationVelocityRadians) < SwerveConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+
         return isAtAngle && isStopping;
     }
 

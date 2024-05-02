@@ -181,14 +181,42 @@ public class Swerve extends GBSubsystem {
         );
     }
 
+    
+    /**
+     * Runs swerve around itself for WheelRadiusCharacterization
+     *
+     * @param omegaPerSec - velocity to run the swerve
+     */
+    public void runWheelRadiusCharacterization(Rotation2d omegaPerSec) {
+        selfRelativeDrive(new ChassisSpeeds(0, 0, omegaPerSec.getRadians()));
+    }
 
-    public void runWheelRadiusCharacterization(double omegaRadsPerSec) {
-        selfRelativeDrive(new ChassisSpeeds(0, 0, omegaRadsPerSec));
+    /**
+     * Point all wheels in same angle
+     *
+     * @param targetAngle - angle to point to
+     */
+    public void pointWheels(Rotation2d targetAngle) {
+        for (Module module : modules) {
+            module.setTargetState(new SwerveModuleState(0, targetAngle));
+        }
+    }
+
+    /**
+     * Lock swerve wheels in X position, so it's hard to move it.
+     */
+    public void lockSwerve() {
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+
+        modules[0].setTargetState(frontLeftBackRight);
+        modules[1].setTargetState(frontRightBackLeft);
+        modules[2].setTargetState(frontRightBackLeft);
+        modules[3].setTargetState(frontLeftBackRight);
     }
 
 
     @AutoLogOutput(key = "Swerve/CurrentStates")
-
     private SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 

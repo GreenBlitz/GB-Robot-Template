@@ -44,7 +44,7 @@ public class PhoenixOdometryThread6328 extends Thread {
     private final Lock signalsLock = new ReentrantLock();
     private final List<Queue<Double>> queues = new ArrayList<>();
     private final Queue<Double> timestamps = new ArrayBlockingQueue<>(100);
-    private BaseStatusSignal[] signals = new BaseStatusSignal[0];
+    private StatusSignal[] signals = new StatusSignal[0];
     private boolean[] isLatencySignals = new boolean[0];
     private boolean isCANFD = false; //todo check why it is not per signal
 
@@ -95,7 +95,7 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private void registerSignal(StatusSignal<Double> signal) {
-        BaseStatusSignal[] newSignals = new BaseStatusSignal[signals.length + 1];
+        StatusSignal[] newSignals = new StatusSignal[signals.length + 1];
         System.arraycopy(signals, 0, newSignals, 0, signals.length);
         newSignals[signals.length] = signal;
         signals = newSignals;

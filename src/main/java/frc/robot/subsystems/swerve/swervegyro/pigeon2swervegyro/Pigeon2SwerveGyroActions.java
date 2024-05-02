@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.gyro.pigeon2swervegyro;
+package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.devicewrappers.Pigeon2Wrapper;

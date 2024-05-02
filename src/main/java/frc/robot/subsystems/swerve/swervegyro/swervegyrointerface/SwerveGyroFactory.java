@@ -1,7 +1,9 @@
-package frc.robot.subsystems.swerve.gyro;
+package frc.robot.subsystems.swerve.swervegyro.swervegyrointerface;
 
 import frc.robot.constants.RobotConstants;
-import frc.robot.subsystems.swerve.gyro.pigeon2swervegyro.Pigeon2SwerveGyro;
+import frc.robot.subsystems.swerve.swervegyro.ReplaySwerveGyro;
+import frc.robot.subsystems.swerve.swervegyro.SimulationSwerveGyro;
+import frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro.Pigeon2SwerveGyro;
 
 public class SwerveGyroFactory {
 

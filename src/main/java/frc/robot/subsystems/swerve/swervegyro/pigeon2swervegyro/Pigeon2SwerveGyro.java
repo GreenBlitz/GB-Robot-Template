@@ -1,10 +1,10 @@
-package frc.robot.subsystems.swerve.gyro.pigeon2swervegyro;
+package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
-import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
+import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
 
 import java.util.Queue;
 

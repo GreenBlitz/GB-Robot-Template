@@ -1,10 +1,10 @@
 package frc.robot.subsystems.swerve.modules.simulationmodule;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
-import frc.robot.subsystems.swerve.modules.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
+import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class SimulationModule implements IModule {
@@ -63,7 +63,7 @@ public class SimulationModule implements IModule {
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
     }
 
-    
+
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
         inputs.driveMotorDistance = simulationModuleStatus.getDrivePositionAngle();

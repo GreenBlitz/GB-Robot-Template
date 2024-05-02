@@ -1,8 +1,8 @@
-package frc.robot.subsystems.swerve.gyro.pigeon2swervegyro;
+package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
+import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
 
 class Pigeon2SwerveGyroConstants {
 

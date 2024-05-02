@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
+import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
 
 public class ReplayModule implements IModule {
 

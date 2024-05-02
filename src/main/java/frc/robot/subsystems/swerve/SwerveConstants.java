@@ -63,6 +63,13 @@ public class SwerveConstants {
             ROTATION_CONSTRAINTS
     );
 
+    static {
+        PROFILED_ROTATION_PID_CONTROLLER.enableContinuousInput(
+                -MathConstants.HALF_CIRCLE.getDegrees(),
+                MathConstants.HALF_CIRCLE.getDegrees()
+        );
+    }
+
     public static final PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);
 
     public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);
@@ -85,10 +92,4 @@ public class SwerveConstants {
             REPLANNING_CONFIG
     );
 
-    static {
-        PROFILED_ROTATION_PID_CONTROLLER.enableContinuousInput(
-                -MathConstants.HALF_CIRCLE.getDegrees(),
-                MathConstants.HALF_CIRCLE.getDegrees()
-        );
-    }
 }

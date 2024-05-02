@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
+import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.allianceutils.AllianceUtils;
 import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -60,15 +62,15 @@ public class Swerve extends GBSubsystem {
     }
 
     private void configurePathPlanner() {
-        //        AutoBuilder.configureHolonomic(
-        //                () -> RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose(),
-        //                (pose) -> RobotContainer.POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(pose)),
-        //                this::getSelfRelativeVelocity,
-        //                this::selfRelativeDrive,
-        //                SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
-        //                () -> !DriverStationUtils.isBlueAlliance(),
-        //                this
-        //        );
+        AutoBuilder.configureHolonomic(
+                () -> POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose(),
+                (pose) -> POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(pose)),
+                this::getSelfRelativeVelocity,
+                this::selfRelativeDrive,
+                SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
+                () -> !DriverStationUtils.isBlueAlliance(),
+                this
+        );
     }
 
 

@@ -375,9 +375,10 @@ public class Swerve extends GBSubsystem {
     }
 
     public boolean isAtAngle(Rotation2d targetAngle) {
-        //Todo - check what about when you in 180 and want to be in -180
-        double angleDifference = Math.abs(targetAngle.minus(POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation()));
-        boolean isAtAngle = angleDifference < SwerveConstants.ROTATION_TOLERANCE.getDegrees();
+        //Todo - check what about when you in 180 and want to be in -180, probably add MathUtil.angleModulo()
+        // double angleDifference = MathUtil.angleModulo(Math.abs(targetAngle.minus(currentAngle())));
+        Rotation2d angleDifference = Math.abs(targetAngle.minus(POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation()));
+        boolean isAtAngle = angleDifference.getDegrees() < SwerveConstants.ROTATION_TOLERANCE.getDegrees();
         boolean isStopping = Math.abs(getSelfRelativeVelocity().omegaRadiansPerSecond) < SwerveConstants.ROTATION_VELOCITY_TOLERANCE;
         return isAtAngle && isStopping;
     }

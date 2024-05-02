@@ -13,10 +13,6 @@ class MK4IModuleStatus {
     }
 
 
-    private <T> StatusSignal<T> getSignal(boolean refresh, StatusSignal<T> signal) {
-        return refresh ? signal.refresh() : signal;
-    }
-
     // Encoder Status
     public Rotation2d getSteerEncoderAbsolutePosition(boolean refresh) {
         return Rotation2d.fromRotations(getSteerEncoderAbsolutePositionSignal(refresh).getValue());
@@ -108,6 +104,11 @@ class MK4IModuleStatus {
 
     public StatusSignal<Double> getSteerMotorVoltageSignal(boolean refresh) {
         return getSignal(refresh, moduleSignals.steerMotorVoltageSignal());
+    }
+
+
+    private <T> StatusSignal<T> getSignal(boolean refresh, StatusSignal<T> signal) {
+        return refresh ? signal.refresh() : signal;
     }
 
     // Refresh All

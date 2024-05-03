@@ -1,6 +1,6 @@
 package frc.utils.calibration.swervecalibration;
 
-public class WheelRadiusConstants {
+class WheelRadiusConstants {
 
     protected static final int NUMBER_OF_MODULES = 4;
 

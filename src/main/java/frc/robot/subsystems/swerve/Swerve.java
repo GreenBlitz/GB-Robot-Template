@@ -40,9 +40,12 @@ public class Swerve extends GBSubsystem {
 
     private final Module[] modules;
 
+    private DriveMode driveMode;
+
 
     public Swerve() {
         setName("Swerve");
+        driveMode = DriveMode.NORMAL;
 
         gyro = SwerveGyroFactory.createSwerve();
         modules = getModules();
@@ -123,7 +126,8 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    protected void initializeDrive(boolean closedLoop) {
+    protected void initializeDrive(boolean closedLoop, DriveMode wantedDriveMode) {
+        setDriveMode(wantedDriveMode);
         setClosedLoop(closedLoop);
         resetRotationController();
     }
@@ -132,6 +136,10 @@ public class Swerve extends GBSubsystem {
         for (Module currentModule : modules) {
             currentModule.setDriveMotorClosedLoop(closedLoop);
         }
+    }
+
+    protected void setDriveMode(DriveMode wantedDriveMode) {
+        driveMode = wantedDriveMode;
     }
 
     protected void resetRotationController() {
@@ -307,9 +315,9 @@ public class Swerve extends GBSubsystem {
 
     private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
         return new ChassisSpeeds(
-                xPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
-                yPower * SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
-                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * SwerveConstants.MAX_ROTATIONAL_SPEED_RADIANS_PER_SECOND
+                xPower * driveMode.MAX_TRANSLATION_SPEED_METERS_PER_SECOND,
+                yPower * driveMode.MAX_TRANSLATION_SPEED_METERS_PER_SECOND,
+                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * driveMode.MAX_ROTATION_SPEED_PER_SECOND.getRadians()
         );
     }
 

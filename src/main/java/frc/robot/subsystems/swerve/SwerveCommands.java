@@ -23,7 +23,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(false),
+                () -> SWERVE.initializeDrive(false, DriveMode.NORMAL),
                 () -> SWERVE.fieldRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );

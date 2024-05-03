@@ -41,7 +41,7 @@ import static frc.robot.RobotContainer.SWERVE;
  */
 public class PhoenixOdometryThread6328 extends Thread {
 
-    private final Lock signalsLock = new ReentrantLock();
+    private final Lock SIGNALS_LOCK = new ReentrantLock();
     private final List<Queue<Double>> queues = new ArrayList<>();
     private final Queue<Double> timestamps = new ArrayBlockingQueue<>(100);
     private StatusSignal[] signals = new StatusSignal[0];
@@ -77,7 +77,7 @@ public class PhoenixOdometryThread6328 extends Thread {
 
     private Queue<Double> registerSignals(boolean isLatencySignal, ParentDevice device, StatusSignal<Double>[] signals) {
         Queue<Double> queue = new ArrayBlockingQueue<>(100);
-        signalsLock.lock();
+        SIGNALS_LOCK.lock();
         SWERVE.ODOMETRY_LOCK.lock();
         try {
             isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
@@ -88,7 +88,7 @@ public class PhoenixOdometryThread6328 extends Thread {
             queues.add(queue);
         }
         finally {
-            signalsLock.unlock();
+            SIGNALS_LOCK.unlock();
             SWERVE.ODOMETRY_LOCK.unlock();
         }
         return queue;
@@ -113,7 +113,7 @@ public class PhoenixOdometryThread6328 extends Thread {
         Timer.delay(5);
         while (true) {
             // Wait for updates from all signals
-            signalsLock.lock();
+            SIGNALS_LOCK.lock();
             try {
                 if (isCANFD) {
                     BaseStatusSignal.waitForAll(RoborioUtils.getDefaultRoborioCycleTime(), signals);
@@ -125,11 +125,11 @@ public class PhoenixOdometryThread6328 extends Thread {
                     }
                 }
             }
-            catch (InterruptedException e) {
-                e.printStackTrace();
+            catch (InterruptedException exception) {
+                exception.printStackTrace();
             }
             finally {
-                signalsLock.unlock();
+                SIGNALS_LOCK.unlock();
             }
             double fpgaTimestamp = Logger.getRealTimestamp() / 1.0e6;
 

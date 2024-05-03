@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.odometryThread;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -43,7 +43,7 @@ public class PhoenixOdometryThread6328 extends Thread {
 
     private final Lock SIGNALS_LOCK = new ReentrantLock();
     private final List<Queue<Double>> queues = new ArrayList<>();
-    private final Queue<Double> timestamps = new ArrayBlockingQueue<>(100);
+    private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_QUEUE_SIZE);
     private StatusSignal[] signals = new StatusSignal[0];
     private boolean[] isLatencySignals = new boolean[0];
     private boolean isCANFD = false; //todo check why it is not per signal
@@ -63,9 +63,11 @@ public class PhoenixOdometryThread6328 extends Thread {
         start();
     }
 
+
     public Queue<Double> getTimestampQueue() {
         return timestamps;
     }
+
 
     public Queue<Double> registerLatencySignal(ParentDevice device, StatusSignal<Double> signal, StatusSignal<Double> signalSlope) {
         return registerSignals(true, device, new StatusSignal[]{signal, signalSlope});
@@ -76,7 +78,7 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private Queue<Double> registerSignals(boolean isLatencySignal, ParentDevice device, StatusSignal<Double>[] signals) {
-        Queue<Double> queue = new ArrayBlockingQueue<>(100);
+        Queue<Double> queue = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_QUEUE_SIZE);
         SIGNALS_LOCK.lock();
         SWERVE.ODOMETRY_LOCK.lock();
         try {
@@ -108,51 +110,83 @@ public class PhoenixOdometryThread6328 extends Thread {
         isLatencySignals = newIsLatencySignals;
     }
 
+
     @Override
     public void run() {
         Timer.delay(5);
         while (true) {
-            // Wait for updates from all signals
-            SIGNALS_LOCK.lock();
-            try {
-                if (isCANFD) {
-                    BaseStatusSignal.waitForAll(RoborioUtils.getDefaultRoborioCycleTime(), signals);
-                }
-                else {
-                    Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
-                    if (signals.length > 0) {
-                        BaseStatusSignal.refreshAll(signals);
-                    }
-                }
-            }
-            catch (InterruptedException exception) {
-                exception.printStackTrace();
-            }
-            finally {
-                SIGNALS_LOCK.unlock();
-            }
-            double fpgaTimestamp = Logger.getRealTimestamp() / 1.0e6;
+            waitForUpdatesFromSignals();
+            saveNewData();
+        }
+    }
 
-            // Save new data to queues
-            SWERVE.ODOMETRY_LOCK.lock();
-            try {
-                for (int i = 0; i < isLatencySignals.length; i++) {
-                    if (isLatencySignals[i]) {
-                        queues.get(i).offer(BaseStatusSignal.getLatencyCompensatedValue(
-                                (StatusSignal<Double>) signals[i],
-                                (StatusSignal<Double>) signals[++i]
-                        ));
-                    }
-                    else {
-                        queues.get(i).offer(signals[i].getValueAsDouble());
-                    }
-                }
-                timestamps.offer(fpgaTimestamp);
+    private void waitForUpdatesFromSignals() {
+        SIGNALS_LOCK.lock();
+        try {
+            waitForAllSignals();
+        }
+        catch (InterruptedException exception) {
+            exception.printStackTrace();
+        }
+        finally {
+            SIGNALS_LOCK.unlock();
+        }
+    }
+
+    private void waitForAllSignals() throws InterruptedException {
+        if (isCANFD) {
+            waitForCanFDSignals();
+        }
+        else {
+            waitForNonCanFDSignals();
+        }
+    }
+
+    private void waitForCanFDSignals() {
+        BaseStatusSignal.waitForAll(RoborioUtils.getDefaultRoborioCycleTime(), signals);
+    }
+
+    private void waitForNonCanFDSignals() throws InterruptedException {
+        Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
+        if (signals.length > 0) {
+            BaseStatusSignal.refreshAll(signals);
+        }
+    }
+
+    private void saveNewData() {
+        double fpgaTimestamp = Logger.getRealTimestamp() / 1.0e6;
+
+        SWERVE.ODOMETRY_LOCK.lock();
+        try {
+            saveNewDataToQueues();
+            timestamps.offer(fpgaTimestamp);
+        }
+        finally {
+            SWERVE.ODOMETRY_LOCK.unlock();
+        }
+    }
+
+    private void saveNewDataToQueues() {
+        for (int i = 0; i < isLatencySignals.length; i++) {
+            if (isLatencySignals[i]) {
+                saveLatencyValue(i);
+                i++;
             }
-            finally {
-                SWERVE.ODOMETRY_LOCK.unlock();
+            else {
+                saveRegularValue(i);
             }
         }
+    }
+
+    private void saveLatencyValue(int index) {
+        queues.get(index).offer(BaseStatusSignal.getLatencyCompensatedValue(
+                (StatusSignal<Double>) signals[index],
+                (StatusSignal<Double>) signals[index + 1]
+        ));
+    }
+
+    private void saveRegularValue(int index) {
+        queues.get(index).offer(signals[index].getValueAsDouble());
     }
 
 }

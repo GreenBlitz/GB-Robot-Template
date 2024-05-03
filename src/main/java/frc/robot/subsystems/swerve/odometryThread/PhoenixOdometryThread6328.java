@@ -113,7 +113,7 @@ public class PhoenixOdometryThread6328 extends Thread {
 
     @Override
     public void run() {
-        Timer.delay(5);
+        Timer.delay(OdometryThreadConstants.DELAY_STARTING_TIME_SECONDS);
         while (true) {
             waitForUpdatesFromSignals();
             saveNewData();
@@ -133,26 +133,6 @@ public class PhoenixOdometryThread6328 extends Thread {
         }
     }
 
-    private void waitForAllSignals() throws InterruptedException {
-        if (isCANFD) {
-            waitForCanFDSignals();
-        }
-        else {
-            waitForNonCanFDSignals();
-        }
-    }
-
-    private void waitForCanFDSignals() {
-        BaseStatusSignal.waitForAll(RoborioUtils.getDefaultRoborioCycleTime(), signals);
-    }
-
-    private void waitForNonCanFDSignals() throws InterruptedException {
-        Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
-        if (signals.length > 0) {
-            BaseStatusSignal.refreshAll(signals);
-        }
-    }
-
     private void saveNewData() {
         double fpgaTimestamp = Logger.getRealTimestamp() / 1.0e6;
 
@@ -166,6 +146,15 @@ public class PhoenixOdometryThread6328 extends Thread {
         }
     }
 
+    private void waitForAllSignals() throws InterruptedException {
+        if (isCANFD) {
+            waitForCanFDSignals();
+        }
+        else {
+            waitForNonCanFDSignals();
+        }
+    }
+
     private void saveNewDataToQueues() {
         for (int i = 0; i < isLatencySignals.length; i++) {
             if (isLatencySignals[i]) {
@@ -175,6 +164,17 @@ public class PhoenixOdometryThread6328 extends Thread {
             else {
                 saveRegularValue(i);
             }
+        }
+    }
+
+    private void waitForCanFDSignals() {
+        BaseStatusSignal.waitForAll(RoborioUtils.getDefaultRoborioCycleTime(), signals);
+    }
+
+    private void waitForNonCanFDSignals() throws InterruptedException {
+        Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
+        if (signals.length > 0) {
+            BaseStatusSignal.refreshAll(signals);
         }
     }
 

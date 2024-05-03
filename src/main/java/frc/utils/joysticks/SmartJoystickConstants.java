@@ -1,6 +1,6 @@
 package frc.utils.joysticks;
 
-public class SmartJoystickConstants {
+class SmartJoystickConstants {
 
     protected static final double DEADZONE = 0.07;
 

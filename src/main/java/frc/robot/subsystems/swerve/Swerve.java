@@ -315,9 +315,9 @@ public class Swerve extends GBSubsystem {
 
     private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
         return new ChassisSpeeds(
-                xPower * driveMode.MAX_TRANSLATION_SPEED_METERS_PER_SECOND,
-                yPower * driveMode.MAX_TRANSLATION_SPEED_METERS_PER_SECOND,
-                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * driveMode.MAX_ROTATION_SPEED_PER_SECOND.getRadians()
+                xPower * driveMode.maxTranslationSpeedMetersPerSecond,
+                yPower * driveMode.maxTranslationSpeedMetersPerSecond,
+                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * driveMode.maxRotationSpeedPerSecond.getRadians()
         );
     }
 

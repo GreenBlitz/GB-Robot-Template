@@ -3,7 +3,7 @@ package frc.robot.simulation;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.constants.SimulationConstants;
+import frc.utils.roborioutils.RoborioUtils;
 
 public class SingleJointedArmSimulation extends MotorSimulation {
 
@@ -45,7 +45,7 @@ public class SingleJointedArmSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        armSimulation.update(SimulationConstants.TIME_STEP);
+        armSimulation.update(RoborioUtils.getCurrentRoborioCycleTime());
     }
 
 }

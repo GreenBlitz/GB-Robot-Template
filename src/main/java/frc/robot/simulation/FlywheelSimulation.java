@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.robot.constants.SimulationConstants;
+import frc.utils.roborioutils.RoborioUtils;
 
 public class FlywheelSimulation extends MotorSimulation {
 
@@ -42,8 +42,8 @@ public class FlywheelSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        flywheelSimulation.update(SimulationConstants.TIME_STEP);
-        lastPositionRadians += getVelocity().getRadians() * SimulationConstants.TIME_STEP;
+        flywheelSimulation.update(RoborioUtils.getCurrentRoborioCycleTime());
+        lastPositionRadians += getVelocity().getRadians() * RoborioUtils.getCurrentRoborioCycleTime();
     }
 
 }

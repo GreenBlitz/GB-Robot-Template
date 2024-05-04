@@ -16,7 +16,7 @@ public class LoggerUtils {
         SignalLogger.enableAutoLogging(LoggerConstants.IS_CTRE_AUTO_LOGGING);
 
         Path usbPath = Path.of(LoggerConstants.USB_LOG_PATH);
-        if (Files.exists(usbPath)) {
+        if (Files.exists(usbPath) && Files.isWritable(usbPath)) {
             startLoggerOnUSB();
         }
         else {

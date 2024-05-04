@@ -1,6 +1,6 @@
 package frc.utils.calibration.sysid;
 
-public class SysIdConstants {
+class SysIdConstants {
 
     protected static final double DEFAULT_VOLTAGE_STEP = 7;
 

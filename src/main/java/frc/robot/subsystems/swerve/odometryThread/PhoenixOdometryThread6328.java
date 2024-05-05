@@ -44,9 +44,10 @@ public class PhoenixOdometryThread6328 extends Thread {
     private final Lock SIGNALS_LOCK = new ReentrantLock();
     private final List<Queue<Double>> queues = new ArrayList<>();
     private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_QUEUE_SIZE);
-    private StatusSignal[] signals = new StatusSignal[0];
-    private boolean[] isLatencySignals = new boolean[0];
+    private final ArrayList<StatusSignal<Double>> signals = new ArrayList<>();
+    private final ArrayList<Boolean> isLatencySignals = new ArrayList<>();
     private boolean isCANFD = false; //todo check why it is not per signal
+
 
     private static PhoenixOdometryThread6328 INSTANCE = null;
 
@@ -97,17 +98,11 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private void registerSignal(StatusSignal<Double> signal) {
-        StatusSignal[] newSignals = new StatusSignal[signals.length + 1];
-        System.arraycopy(signals, 0, newSignals, 0, signals.length);
-        newSignals[signals.length] = signal;
-        signals = newSignals;
+        signals.add(signal);
     }
 
     private void updateIsLatencySignals(boolean isLatencySignal) {
-        boolean[] newIsLatencySignals = new boolean[isLatencySignals.length + 1];
-        System.arraycopy(isLatencySignals, 0, newIsLatencySignals, 0, isLatencySignals.length);
-        newIsLatencySignals[isLatencySignals.length] = isLatencySignal;
-        isLatencySignals = newIsLatencySignals;
+        isLatencySignals.add(isLatencySignal);
     }
 
 
@@ -156,8 +151,8 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private void saveNewDataToQueues() {
-        for (int i = 0; i < isLatencySignals.length; i++) {
-            if (isLatencySignals[i]) {
+        for (int i = 0; i < isLatencySignals.size(); i++) {
+            if (isLatencySignals.get(i)) {
                 saveLatencyValue(i);
                 i++;
             }
@@ -168,25 +163,22 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private void waitForCanFDSignals() {
-        BaseStatusSignal.waitForAll(RoborioUtils.getDefaultRoborioCycleTime(), signals);
+        BaseStatusSignal.waitForAll(RoborioUtils.getDefaultRoborioCycleTime(), signals.toArray(StatusSignal[]::new));
     }
 
     private void waitForNonCanFDSignals() throws InterruptedException {
         Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
-        if (signals.length > 0) {
-            BaseStatusSignal.refreshAll(signals);
+        if (!signals.isEmpty()) {
+            BaseStatusSignal.refreshAll(signals.toArray(StatusSignal[]::new));
         }
     }
 
     private void saveLatencyValue(int index) {
-        queues.get(index).offer(BaseStatusSignal.getLatencyCompensatedValue(
-                (StatusSignal<Double>) signals[index],
-                (StatusSignal<Double>) signals[index + 1]
-        ));
+        queues.get(index).offer(BaseStatusSignal.getLatencyCompensatedValue(signals.get(index), signals.get(index + 1)));
     }
 
     private void saveRegularValue(int index) {
-        queues.get(index).offer(signals[index].getValueAsDouble());
+        queues.get(index).offer(signals.get(index).getValueAsDouble());
     }
 
 }

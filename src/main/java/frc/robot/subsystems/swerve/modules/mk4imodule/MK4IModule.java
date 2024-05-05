@@ -5,6 +5,7 @@ import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 
 import java.util.Queue;
 
@@ -23,13 +24,15 @@ public class MK4IModule implements IModule {
         this.mk4IModuleStatus = new MK4IModuleStatus(moduleConfigObject.getModuleSignals());
         this.mk4IModuleActions = new MK4IModuleActions(motors);
 
-        this.steerPositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(
+        this.steerPositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
                 motors.steerMotor(),
-                mk4IModuleStatus.getSteerMotorPositionSignal(false)
+                mk4IModuleStatus.getSteerMotorPositionSignal(false),
+                mk4IModuleStatus.getSteerMotorVelocitySignal(false)
         );
-        this.drivePositionQueue = TalonFXOdometryThread6328.getInstance().registerSignal(
+        this.drivePositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
                 motors.driveMotor(),
-                mk4IModuleStatus.getDriveMotorLatencyPosition(false)
+                mk4IModuleStatus.getDriveMotorPositionSignal(false),
+                mk4IModuleStatus.getDriveMotorVelocitySignal(false)
         );
     }
 

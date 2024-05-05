@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
+import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
 
@@ -27,11 +28,11 @@ public class Pigeon2SwerveGyro implements ISwerveGyro {
         this.gyroPigeon2Status = new Pigeon2SwerveGyroStatus(gyroPigeon2ConfigObject.getSignals());
         this.gyroPigeon2Actions = new Pigeon2SwerveGyroActions(gyroPigeon2ConfigObject.getGyro());
 
-        this.yawQueue = TalonFXOdometryThread6328.getInstance().registerSignal(
+        this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(
                 gyroPigeon2ConfigObject.getGyro(),
                 gyroPigeon2Status.getYAW_SIGNAL(false)
         );
-        this.timestampQueue = TalonFXOdometryThread6328.getInstance().getTimestampQueue();
+        this.timestampQueue = PhoenixOdometryThread6328.getInstance().getTimestampQueue();
     }
 
     @Override

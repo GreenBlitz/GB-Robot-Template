@@ -59,7 +59,7 @@ public class Module {
         return moduleInputs.driveMotorDistance;
     }
 
-    private double getDriveDistanceMeters() {
+    public double getDriveDistanceMeters() {
         return ModuleUtils.toDriveDistance(getDriveDistanceAngle());
     }
 

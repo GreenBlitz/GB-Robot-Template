@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
+import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -29,9 +30,9 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotInit() {
-        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-        // autonomous chooser on the dashboard.
         initializeLogger();
+        Battery.scheduleBatteryLimiterCommand(); //Using RobotConstants.DISABLE_BATTERY_LIMITER
+
         robotContainer = new RobotContainer();
     }
 

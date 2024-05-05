@@ -3,6 +3,7 @@ package frc.utils.batteryutils;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Battery extends GBSubsystem {
 
@@ -28,6 +29,11 @@ public class Battery extends GBSubsystem {
 
     public static void scheduleBatteryLimiterCommand() {
         BatteryConstants.BATTERY_LIMITER.schedule();
+    }
+
+    public static void logBatteryStatus() {
+        Logger.recordOutput(BatteryConstants.LOG_PATH + "Voltage", getCurrentVoltage());
+        Logger.recordOutput(BatteryConstants.LOG_PATH + "Current", getTotalCurrent());
     }
 
 }

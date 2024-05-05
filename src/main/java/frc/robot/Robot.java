@@ -31,7 +31,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit() {
         initializeLogger();
-        Battery.scheduleBatteryLimiterCommand(); //Using RobotConstants.DISABLE_BATTERY_LIMITER
+        Battery.scheduleBatteryLimiterCommand(); //Using RobotConstants.DISABLE_BATTERY_LIMITER, disable with it!
 
         robotContainer = new RobotContainer();
     }
@@ -54,8 +54,8 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotPeriodic() {
+        RoborioUtils.updateRioUtils(); // Better to be first
         CommandScheduler.getInstance().run();
-        RoborioUtils.updateRioUtils();
         MotorSimulation.updateRegisteredSimulations();
     }
 

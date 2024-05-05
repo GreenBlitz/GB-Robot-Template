@@ -27,13 +27,9 @@ import java.util.NoSuchElementException;
 
 public class PoseEstimator6328 {
 
-    public record OdometryObservation(
-            SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, double timestamp
-    ) {
-    }
+    public record OdometryObservation(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, double timestamp) {}
 
-    public record VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {
-    }
+    public record VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {}
 
     private static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.utils.joysticks.SmartJoystick;
@@ -28,13 +29,21 @@ public class JoysticksBindings {
         //todo
         // - lock x
         // - point wheels
-        // - slow mode
+        // - slow mode - CHECKED
         // - follow path
         // - closed loop drive
         // - rotate to angle
         // - drive around wheel
         // - rotate to angle around wheel
         // - self relative drive
+
+        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());
+        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));
+        usedJoystick.L2.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
 
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),

@@ -235,6 +235,13 @@ public class Swerve extends GBSubsystem {
         modules[3].setTargetState(frontLeftBackRight);
     }
 
+    public boolean isModulesAtStates() {
+        boolean isAtStates = true;
+        for (Module module : modules) {
+            isAtStates = isAtStates && module.isAtTargetState();
+        }
+        return isAtStates;
+    }
 
     @AutoLogOutput(key = "Swerve/CurrentStates")
     private SwerveModuleState[] getModuleStates() {

@@ -6,7 +6,9 @@ import frc.robot.constants.LogPathsConstants;
 
 class BatteryConstants {
 
-    protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + "Battery/";
+    protected static final String LOG_PATH = "Battery/";
+
+    protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 
     protected static final double DEFAULT_BATTERY_VOLTAGE = 12;
 

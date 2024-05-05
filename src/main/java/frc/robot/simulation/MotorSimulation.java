@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.SimulationConstants;
+import frc.utils.batteryutils.Battery;
 import frc.utils.devicewrappers.TalonFXWrapper;
 import frc.utils.roborioutils.RoborioUtils;
 
@@ -29,7 +29,7 @@ public abstract class MotorSimulation {
         REGISTERED_SIMULATIONS.add(this);
         this.motor = new TalonFXWrapper(REGISTERED_SIMULATIONS.size());
         this.motorSimState = motor.getSimState();
-        this.motorSimState.setSupplyVoltage(SimulationConstants.BATTERY_VOLTAGE);
+        this.motorSimState.setSupplyVoltage(Battery.getDefaultBatteryVoltage());
         this.closedLoopReferenceSignal = motor.getClosedLoopReference();
         this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / RoborioUtils.getDefaultRoborioCycleTime());
     }
@@ -83,4 +83,3 @@ public abstract class MotorSimulation {
     public abstract Rotation2d getVelocity();
 
 }
-

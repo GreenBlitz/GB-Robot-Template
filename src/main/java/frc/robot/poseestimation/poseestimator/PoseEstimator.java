@@ -38,7 +38,7 @@ public class PoseEstimator implements AutoCloseable {
 
     public void periodic() {
         robotPose = AlliancePose2d.fromBlueAlliancePose(swerveDrivePoseEstimator.getEstimatedPose());
-        Logger.recordOutput("Poses/Robot/RobotPose", robotPose.toBlueAlliancePose());
+        Logger.recordOutput("RobotPose", robotPose.toBlueAlliancePose());
         field.setRobotPose(getCurrentPose().toBlueAlliancePose());
     }
 

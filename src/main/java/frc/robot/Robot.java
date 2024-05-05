@@ -36,7 +36,6 @@ public class Robot extends LoggedRobot {
         // autonomous chooser on the dashboard.
         initializeLogger();
         robotContainer = new RobotContainer();
-        PathfindingCommand.warmupCommand().schedule();
         AutonomousSelector.addSelectorToShuffleboard();
     }
 

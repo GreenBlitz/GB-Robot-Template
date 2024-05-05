@@ -6,6 +6,7 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.utils.batteryutils.Battery;
 
 import java.util.Queue;
 
@@ -70,7 +71,7 @@ public class MK4IModule implements IModule {
                 mk4IModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO,
                 ModuleConstants.MAX_SPEED_PER_SECOND,
-                ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
+                Battery.getCurrentVoltage()
         );
         mk4IModuleActions.setTargetOpenLoopVelocity(voltage);
     }

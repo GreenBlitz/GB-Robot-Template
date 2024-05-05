@@ -17,8 +17,6 @@ public class ModuleConstants {
             WHEEL_DIAMETER_METERS
     ));
 
-    public static final double VOLTAGE_COMPENSATION_SATURATION = 12; // todo add battery class
-
     public static final double DRIVE_GEAR_RATIO = 6.12;
 
     public static final double STEER_GEAR_RATIO = (150.0 / 7.0);

@@ -35,7 +35,7 @@ public class PoseEstimator6328 {
     public record VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {
     }
 
-    private static final double poseBufferSizeSeconds = 2.0;
+    private static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 
     private static PoseEstimator6328 instance;
 
@@ -49,8 +49,7 @@ public class PoseEstimator6328 {
     // Pose Estimation Members
     private Pose2d odometryPose = new Pose2d();
     private Pose2d estimatedPose = new Pose2d();
-    private final TimeInterpolatableBuffer<Pose2d> poseBuffer =
-            TimeInterpolatableBuffer.createBuffer(poseBufferSizeSeconds);
+    private final TimeInterpolatableBuffer<Pose2d> poseBuffer = TimeInterpolatableBuffer.createBuffer(POSE_BUFFER_SIZE_SECONDS);
     private final Matrix<N3, N1> qStdDevs = new Matrix<>(Nat.N3(), Nat.N1());
     // Odometry
     private final SwerveDriveKinematics kinematics;
@@ -96,7 +95,7 @@ public class PoseEstimator6328 {
     public void addVisionObservation(VisionObservation observation) {
         // If measurement is old enough to be outside the pose buffer's timespan, skip.
         try {
-            if (poseBuffer.getInternalBuffer().lastKey() - poseBufferSizeSeconds
+            if (poseBuffer.getInternalBuffer().lastKey() - POSE_BUFFER_SIZE_SECONDS
                     > observation.timestamp()) {
                 return;
             }

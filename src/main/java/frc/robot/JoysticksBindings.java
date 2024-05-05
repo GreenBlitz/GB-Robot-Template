@@ -25,6 +25,17 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         // bindings
 
+        //todo
+        // - lock x
+        // - point wheels
+        // - slow mode
+        // - follow path
+        // - closed loop drive
+        // - rotate to angle
+        // - drive around wheel
+        // - rotate to angle around wheel
+        // - self relative drive
+
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),

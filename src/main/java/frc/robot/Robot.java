@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.Pathfinder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -34,7 +36,7 @@ public class Robot extends LoggedRobot {
         // autonomous chooser on the dashboard.
         initializeLogger();
         robotContainer = new RobotContainer();
-
+        PathfindingCommand.warmupCommand().schedule();
         AutonomousSelector.addSelectorToShuffleboard();
     }
 

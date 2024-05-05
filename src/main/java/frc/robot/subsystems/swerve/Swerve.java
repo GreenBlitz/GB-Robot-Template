@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static frc.robot.RobotContainer.POSE_ESTIMATOR;
+
 public class Swerve extends GBSubsystem {
 
     public final Lock ODOMETRY_LOCK;
@@ -98,8 +100,9 @@ public class Swerve extends GBSubsystem {
     }
 
     private void updatePoseEstimator() {
-        // Todo
+        POSE_ESTIMATOR.updatePoseEstimatorOdometry();
     }
+
 
     private void updateNetworkTables() {
         Logger.recordOutput("Swerve/Velocity/Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);
@@ -149,6 +152,14 @@ public class Swerve extends GBSubsystem {
     }
 
 
+    public double[] getOdometryTimeStepQueue() {
+        return gyroInputs.odometryUpdatesTimestamp;
+    }
+
+    public Rotation2d[] getOdometryYawUpdates() {
+        return gyroInputs.odometryUpdatesYaw;
+    }
+
     public Rotation2d getAbsoluteHeading() {
         double inputtedHeading = MathUtil.inputModulus(
                 gyroInputs.gyroYaw.getDegrees(),
@@ -186,7 +197,7 @@ public class Swerve extends GBSubsystem {
     public ChassisSpeeds getFieldRelativeVelocity() {
         return ChassisSpeeds.fromFieldRelativeSpeeds(
                 getSelfRelativeVelocity(),
-                RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation()
+                POSE_ESTIMATOR.getCurrentPose().toAlliancePose().getRotation()
         );
     }
 
@@ -224,6 +235,13 @@ public class Swerve extends GBSubsystem {
         modules[3].setTargetState(frontLeftBackRight);
     }
 
+    public boolean isModulesAtStates() {
+        boolean isAtStates = true;
+        for (Module module : modules) {
+            isAtStates = isAtStates && module.isAtTargetState();
+        }
+        return isAtStates;
+    }
 
     @AutoLogOutput(key = "Swerve/CurrentStates")
     private SwerveModuleState[] getModuleStates() {
@@ -247,7 +265,7 @@ public class Swerve extends GBSubsystem {
         return states;
     }
 
-    private SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
+    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
         SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
             swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
@@ -497,9 +515,11 @@ public class Swerve extends GBSubsystem {
 
     public boolean isAtAngle(Rotation2d targetAngle) {
         //Todo - check what about when you in 180 and want to be in -180, probably add MathUtil.angleModulo()
-        // double angleDifference = MathUtil.angleModulo(Math.abs(targetAngle.minus(currentAngle())));
-        Rotation2d angleDifference = Math.abs(targetAngle.minus(POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation()));
-        boolean isAtAngle = angleDifference.getDegrees() < SwerveConstants.ROTATION_TOLERANCE.getDegrees();
+        // double angleDifferenceDeg = MathUtil.angleModulo(Math.abs(targetAngle.minus(currentAngle())));
+        double angleDifferenceDeg = Math.abs(
+                targetAngle.minus(POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getRotation()).getDegrees()
+        );
+        boolean isAtAngle = angleDifferenceDeg < SwerveConstants.ROTATION_TOLERANCE.getDegrees();
 
         double currentRotationVelocityRadians = getSelfRelativeVelocity().omegaRadiansPerSecond;
         boolean isStopping = Math.abs(currentRotationVelocityRadians) < SwerveConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();

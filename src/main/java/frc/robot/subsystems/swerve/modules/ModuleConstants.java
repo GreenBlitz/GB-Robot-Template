@@ -7,6 +7,9 @@ import frc.utils.Conversions;
 
 public class ModuleConstants {
 
+    public static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
+    public static final double SPEED_TOLERANCE_METERS_PER_SECOND = 0.1;
+
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(1.896924) * 2;
 
     public static final Rotation2d MAX_SPEED_PER_SECOND = Rotation2d.fromRotations(Conversions.distanceToRevolutions(

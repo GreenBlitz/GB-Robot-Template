@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve.modules;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -58,7 +59,7 @@ public class Module {
         return moduleInputs.driveMotorDistance;
     }
 
-    private double getDriveDistanceMeters() {
+    public double getDriveDistanceMeters() {
         return ModuleUtils.toDriveDistance(getDriveDistanceAngle());
     }
 
@@ -72,6 +73,20 @@ public class Module {
 
     public SwerveModuleState getTargetState() {
         return targetState;
+    }
+
+    public boolean isAtTargetState() {
+        boolean isAtAngle = MathUtil.isNear(
+                getTargetState().angle.getDegrees(),
+                getCurrentAngle().getDegrees(),
+                ModuleConstants.ANGLE_TOLERANCE.getDegrees()
+        );
+        boolean isAtVelocity = MathUtil.isNear(
+                getTargetState().speedMetersPerSecond,
+                getDriveVelocityMetersPerSecond(),
+                ModuleConstants.SPEED_TOLERANCE_METERS_PER_SECOND
+        );
+        return isAtAngle && isAtVelocity;
     }
 
     /**

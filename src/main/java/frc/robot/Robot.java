@@ -56,6 +56,7 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         RoborioUtils.updateRioUtils(); // Better to be first
         CommandScheduler.getInstance().run();
+        RobotContainer.POSE_ESTIMATOR.periodic();
         MotorSimulation.updateRegisteredSimulations(); //todo - move to sim periodic
     }
 

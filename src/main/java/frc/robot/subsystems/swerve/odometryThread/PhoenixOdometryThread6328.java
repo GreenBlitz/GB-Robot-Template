@@ -89,8 +89,7 @@ public class PhoenixOdometryThread6328 extends Thread {
             }
             updateIsLatencySignals(isLatencySignal);
             queues.add(queue);
-        }
-        finally {
+        } finally {
             SIGNALS_LOCK.unlock();
             SWERVE.ODOMETRY_LOCK.unlock();
         }
@@ -119,11 +118,9 @@ public class PhoenixOdometryThread6328 extends Thread {
         SIGNALS_LOCK.lock();
         try {
             waitForAllSignals();
-        }
-        catch (InterruptedException exception) {
+        } catch (InterruptedException exception) {
             exception.printStackTrace();
-        }
-        finally {
+        } finally {
             SIGNALS_LOCK.unlock();
         }
     }
@@ -135,8 +132,7 @@ public class PhoenixOdometryThread6328 extends Thread {
         try {
             saveNewDataToQueues();
             timestamps.offer(fpgaTimestamp);
-        }
-        finally {
+        } finally {
             SWERVE.ODOMETRY_LOCK.unlock();
         }
     }
@@ -144,8 +140,7 @@ public class PhoenixOdometryThread6328 extends Thread {
     private void waitForAllSignals() throws InterruptedException {
         if (isCANFD) {
             waitForCanFDSignals();
-        }
-        else {
+        } else {
             waitForNonCanFDSignals();
         }
     }
@@ -155,8 +150,7 @@ public class PhoenixOdometryThread6328 extends Thread {
             if (isLatencySignals.get(i)) {
                 saveLatencyValue(i);
                 i++;
-            }
-            else {
+            } else {
                 saveRegularValue(i);
             }
         }

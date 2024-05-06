@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -11,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
+import frc.utils.LocalADStarAK;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.roborioutils.RoborioUtils;
@@ -31,9 +35,11 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit() {
         initializeLogger();
+        Pathfinding.setPathfinder(new LocalADStarAK());
         Battery.scheduleBatteryLimiterCommand(); //Using RobotConstants.DISABLE_BATTERY_LIMITER, disable with it!
 
         robotContainer = new RobotContainer();
+        PathfindingCommand.warmupCommand().schedule();
     }
 
     @Override

@@ -16,6 +16,8 @@ public enum DriveMode {
     // todo - "SwerveRotateAxis" which will contain: MID_ROBOT and all modules
 
     // todo - "SwerveAimAssist" which will contain: NON, INTAKE_AIM_ASSIST, SHOOTING_AIM_ASSIST (will contain supplier to wanted angle)
+
+    //todo - add all swerve funcs that depend on this classes into this classes instead of in swerve (if possible)
     NORMAL(
             SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
             SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND

@@ -13,7 +13,6 @@ status=$?
 
 if [ "$status" = 0 ] ; then
     echo "Static analysis found no problems."
-     Add staged file changes to git
     for file in $stagedFiles; do
       if test -f "$file"; then
         git add "$file"

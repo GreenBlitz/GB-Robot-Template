@@ -25,6 +25,10 @@ public class PoseEstimator implements AutoCloseable {
 
     public PoseEstimator() {
         SmartDashboard.putData("Field", field);
+        setLoggingPathToPaths();
+    }
+
+    public void setLoggingPathToPaths() {
         PathPlannerLogging.setLogActivePathCallback((pose) -> {
             field.getObject("path").setPoses(pose);
             Logger.recordOutput("Path", pose.toArray(new Pose2d[0]));
@@ -38,8 +42,13 @@ public class PoseEstimator implements AutoCloseable {
 
     public void periodic() {
         robotPose = AlliancePose2d.fromBlueAlliancePose(swerveDrivePoseEstimator.getEstimatedPose());
-        Logger.recordOutput("RobotPose", robotPose.toBlueAlliancePose());
+
+        logCurrentPose();
         field.setRobotPose(getCurrentPose().toBlueAlliancePose());
+    }
+
+    private void logCurrentPose() {
+        Logger.recordOutput(PoseEstimatorConstants.POSE_LOG_PATH, getCurrentPose().toBlueAlliancePose());
     }
 
     /**

@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.modules.mk4imodule;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.PhoenixProUtils;
 
 class MK4IModuleStatus {
 
@@ -19,15 +20,15 @@ class MK4IModuleStatus {
     }
 
     private StatusSignal<Double> getSteerEncoderAbsolutePositionSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.steerEncoderAbsolutePositionSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerEncoderAbsolutePositionSignal());
     }
 
     public StatusSignal<Double> getSteerEncoderVelocitySignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
     }
 
     public StatusSignal<Double> getSteerEncoderVoltageSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
     }
 
 
@@ -51,23 +52,23 @@ class MK4IModuleStatus {
     }
 
     public StatusSignal<Double> getDriveMotorPositionSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.drivePositionSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.drivePositionSignal());
     }
 
     public StatusSignal<Double> getDriveMotorVelocitySignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.driveVelocitySignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.driveVelocitySignal());
     }
 
     public StatusSignal<Double> getDriveMotorAccelerationSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.driveAccelerationSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.driveAccelerationSignal());
     }
 
     public StatusSignal<Double> getDriveMotorVoltageSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.driveVoltageSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.driveVoltageSignal());
     }
 
     public StatusSignal<Double> getDriveMotorStatorCurrentSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.driveStatorCurrentSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.driveStatorCurrentSignal());
     }
 
 
@@ -91,25 +92,21 @@ class MK4IModuleStatus {
     }
 
     public StatusSignal<Double> getSteerMotorPositionSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.steerMotorPositionSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerMotorPositionSignal());
     }
 
     public StatusSignal<Double> getSteerMotorVelocitySignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.steerMotorVelocitySignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerMotorVelocitySignal());
     }
 
     public StatusSignal<Double> getSteerMotorAccelerationSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.steerMotorAccelerationSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerMotorAccelerationSignal());
     }
 
     public StatusSignal<Double> getSteerMotorVoltageSignal(boolean refresh) {
-        return getSignal(refresh, moduleSignals.steerMotorVoltageSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerMotorVoltageSignal());
     }
 
-    // todo - util class
-    private <T> StatusSignal<T> getSignal(boolean refresh, StatusSignal<T> signal) {
-        return refresh ? signal.refresh() : signal;
-    }
 
     // Refresh All
     public void refreshAllSignals() {

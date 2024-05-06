@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.PhoenixProUtils;
 
 class Pigeon2SwerveGyroStatus {
 
@@ -22,28 +23,23 @@ class Pigeon2SwerveGyroStatus {
     }
 
     public StatusSignal<Double> getYAW_SIGNAL(boolean refresh) {
-        return getSignal(refresh, gyroPigeon2Signals.YAW_SIGNAL());
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.YAW_SIGNAL());
     }
 
     public StatusSignal<Double> getPITCH_SIGNAL(boolean refresh) {
-        return getSignal(refresh, gyroPigeon2Signals.PITCH_SIGNAL());
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.PITCH_SIGNAL());
     }
 
     public StatusSignal<Double> getX_ACCELERATION_SIGNAL(boolean refresh) {
-        return getSignal(refresh, gyroPigeon2Signals.X_ACCELERATION_SIGNAL());
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.X_ACCELERATION_SIGNAL());
     }
 
     public StatusSignal<Double> getY_ACCELERATION_SIGNAL(boolean refresh) {
-        return getSignal(refresh, gyroPigeon2Signals.Y_ACCELERATION_SIGNAL());
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.Y_ACCELERATION_SIGNAL());
     }
 
     public StatusSignal<Double> getZ_ACCELERATION_SIGNAL(boolean refresh) {
-        return getSignal(refresh, gyroPigeon2Signals.Z_ACCELERATION_SIGNAL());
-    }
-
-    //todo - move to util class
-    private <T> StatusSignal<T> getSignal(boolean refresh, StatusSignal<T> signal) {
-        return refresh ? signal.refresh() : signal;
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.Z_ACCELERATION_SIGNAL());
     }
 
     public void refreshAllSignals() {

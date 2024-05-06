@@ -130,24 +130,23 @@ public class SwerveCommands {
     }
 
     private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
-        final Pose2d targetMirroredAlliancePose = targetPose.toMirroredAlliancePose();
-        final Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
-        // todo - understand if
+        Pose2d targetBluePose = targetPose.toBlueAlliancePose();
+        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
         if (currentBluePose.getTranslation()
-                           .getDistance(targetMirroredAlliancePose.getTranslation()) < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
+                           .getDistance(targetBluePose.getTranslation()) < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
             return PathPlannerUtils.createOnTheFlyPathCommand(
-                    RobotContainer.POSE_ESTIMATOR.getCurrentPose().toAlliancePose(),
-                    targetMirroredAlliancePose,
+                    currentBluePose,
+                    targetBluePose,
                     pathConstraints
             );
         }
-        return AutoBuilder.pathfindToPose(targetMirroredAlliancePose, pathConstraints);
+        return AutoBuilder.pathfindToPose(targetBluePose, pathConstraints);
     }
 
     private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
         return new InstantCommand(SWERVE::resetRotationController)
-                .andThen(new RunCommand(() -> SWERVE.pidToPose(targetPose.toMirroredAlliancePose()))
-                        .until(() -> SWERVE.isAtPosition(targetPose.toMirroredAlliancePose())));
+                .andThen(new RunCommand(() -> SWERVE.pidToPose(targetPose.toBlueAlliancePose()))
+                        .until(() -> SWERVE.isAtPosition(targetPose.toBlueAlliancePose())));
     }
 
 }

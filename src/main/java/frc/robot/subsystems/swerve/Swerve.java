@@ -32,6 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static frc.robot.RobotContainer.POSE_ESTIMATOR;
 
+// todo - add aim assist calculations (maybe in the "SwerveAimAssist" class)
 public class Swerve extends GBSubsystem {
 
     public final Lock ODOMETRY_LOCK;
@@ -129,8 +130,13 @@ public class Swerve extends GBSubsystem {
         }
     }
 
+    //todo - make it get "SwerveState"
     protected void initializeDrive(boolean closedLoop, DriveMode wantedDriveMode) {
         setDriveMode(wantedDriveMode);
+        initializeDrive(closedLoop);
+    }
+
+    protected void initializeDrive(boolean closedLoop) {
         setClosedLoop(closedLoop);
         resetRotationController();
     }
@@ -303,6 +309,7 @@ public class Swerve extends GBSubsystem {
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
 
+    //todo - make it use "SwerveRotationAxis"
     protected void rotateToAngleAroundWheel(Rotation2d targetAngle, ModuleUtils.ModuleName moduleName) {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
@@ -360,6 +367,7 @@ public class Swerve extends GBSubsystem {
      * @param thetaPower the theta power
      * @param moduleToTurnAround the module to turn around
      */
+    //todo - make it use "SwerveRotationAxis"
     protected void fieldRelativeDriveRotateAroundModule(
             double xPower, double yPower, double thetaPower, ModuleUtils.ModuleName moduleToTurnAround
     ) {

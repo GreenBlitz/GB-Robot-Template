@@ -68,7 +68,7 @@ public class SwerveCommands {
         return new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(false, DriveMode.NORMAL),
                 () -> SWERVE.rotateToAngleAroundWheel(targetAngle, ModuleUtils.ModuleName.FRONT_LEFT),
-                SWERVE//Todo - add is finished
+                SWERVE//Todo - add is finished (maybe, will be deleted probably)
         );
     }
 
@@ -132,8 +132,10 @@ public class SwerveCommands {
     private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
         Pose2d targetBluePose = targetPose.toBlueAlliancePose();
         Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
-        if (currentBluePose.getTranslation()
-                           .getDistance(targetBluePose.getTranslation()) < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
+        // todo - maybe move all func to "PathPlannerUtils"
+        double distance = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
+        //todo - understand why the if
+        if (distance < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
             return PathPlannerUtils.createOnTheFlyPathCommand(
                     currentBluePose,
                     targetBluePose,
@@ -144,9 +146,11 @@ public class SwerveCommands {
     }
 
     private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
-        return new InstantCommand(SWERVE::resetRotationController)
-                .andThen(new RunCommand(() -> SWERVE.pidToPose(targetPose.toBlueAlliancePose()))
-                        .until(() -> SWERVE.isAtPosition(targetPose.toBlueAlliancePose())));
+        return new InstantCommand(SWERVE::resetRotationController).andThen(
+                new RunCommand(() -> SWERVE.pidToPose(targetPose.toBlueAlliancePose())).until(
+                        () -> SWERVE.isAtPosition(targetPose.toBlueAlliancePose())
+                )
+        );
     }
 
 }

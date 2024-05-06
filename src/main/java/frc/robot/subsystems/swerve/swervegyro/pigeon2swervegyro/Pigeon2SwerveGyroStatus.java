@@ -41,6 +41,7 @@ class Pigeon2SwerveGyroStatus {
         return getSignal(refresh, gyroPigeon2Signals.Z_ACCELERATION_SIGNAL());
     }
 
+    //todo - move to util class
     private <T> StatusSignal<T> getSignal(boolean refresh, StatusSignal<T> signal) {
         return refresh ? signal.refresh() : signal;
     }

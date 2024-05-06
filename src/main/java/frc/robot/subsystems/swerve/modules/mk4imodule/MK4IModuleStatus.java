@@ -106,7 +106,7 @@ class MK4IModuleStatus {
         return getSignal(refresh, moduleSignals.steerMotorVoltageSignal());
     }
 
-
+    // todo - util class
     private <T> StatusSignal<T> getSignal(boolean refresh, StatusSignal<T> signal) {
         return refresh ? signal.refresh() : signal;
     }

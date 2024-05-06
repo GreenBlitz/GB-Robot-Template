@@ -62,6 +62,10 @@ public class PoseEstimator implements AutoCloseable {
         swerveDrivePoseEstimator.resetPose(currentBluePose);
     }
 
+    public void resetHeading(Rotation2d targetAngle) {
+        resetPose(AlliancePose2d.fromBlueAlliancePose(getCurrentPose().toBlueAlliancePose().getTranslation(), targetAngle));
+    }
+
     /**
      * @return the estimated pose of the robot, as an {@link AlliancePose2d}
      */

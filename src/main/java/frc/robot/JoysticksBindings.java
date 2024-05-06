@@ -39,6 +39,7 @@ public class JoysticksBindings {
         // - drive around wheel - CHECKED sim
         // - rotate to angle around wheel
         // - self relative drive - CHECKED sim
+        // - pose estimator resets
 
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(180)));
         usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(-17)));

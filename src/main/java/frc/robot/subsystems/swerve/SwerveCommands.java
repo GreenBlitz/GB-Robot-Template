@@ -132,6 +132,7 @@ public class SwerveCommands {
     private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
         final Pose2d targetMirroredAlliancePose = targetPose.toMirroredAlliancePose();
         final Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
+        // todo - understand if
         if (currentBluePose.getTranslation()
                            .getDistance(targetMirroredAlliancePose.getTranslation()) < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
             return PathPlannerUtils.createOnTheFlyPathCommand(

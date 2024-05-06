@@ -32,7 +32,6 @@ public class PathPlannerUtils {
         NamedCommands.registerCommand(commandName, command);
     }
 
-    // todo - understand
     public static Command createOnTheFlyPathCommand(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 currentPose,

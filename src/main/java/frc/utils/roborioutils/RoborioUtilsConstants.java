@@ -2,7 +2,7 @@ package frc.utils.roborioutils;
 
 import frc.robot.constants.LogPathsConstants;
 
-public class RoborioUtilsConstants {
+class RoborioUtilsConstants {
 
     protected static final String LOG_PATH = "RoborioUtils/";
 

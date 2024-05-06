@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -13,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
-import frc.utils.LocalADStarAK;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
+import frc.utils.pathplannerutils.PathPlannerUtils;
 import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
@@ -34,11 +32,10 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit() {
         initializeLogger();
-        Pathfinding.setPathfinder(new LocalADStarAK()); //todo - pp util
         Battery.scheduleBatteryLimiterCommand(); //Using RobotConstants.DISABLE_BATTERY_LIMITER, disable with it!
+        PathPlannerUtils.startPathPlanner();
 
         robotContainer = new RobotContainer();
-        PathfindingCommand.warmupCommand().schedule(); //todo - pp util
     }
 
     @Override
@@ -62,7 +59,11 @@ public class Robot extends LoggedRobot {
         RoborioUtils.updateRioUtils(); // Better to be first
         CommandScheduler.getInstance().run();
         RobotContainer.POSE_ESTIMATOR.periodic();
-        MotorSimulation.updateRegisteredSimulations(); //todo - move to sim periodic
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        MotorSimulation.updateRegisteredSimulations();
     }
 
     private void initializeLogger() {

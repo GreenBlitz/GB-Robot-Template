@@ -19,6 +19,7 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.jni.CANBusJNI;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.poseestimation.poseestimator.PoseEstimatorConstants;
+import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -29,7 +30,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static frc.robot.RobotContainer.SWERVE;
 
 /**
  * Provides an interface for asynchronously reading high-frequency measurements to a set of queues.
@@ -81,17 +81,17 @@ public class PhoenixOdometryThread6328 extends Thread {
     private Queue<Double> registerSignals(boolean isLatencySignal, ParentDevice device, StatusSignal<Double>[] signals) {
         Queue<Double> queue = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_QUEUE_SIZE);
         SIGNALS_LOCK.lock();
-        SWERVE.ODOMETRY_LOCK.lock();
+        Swerve.ODOMETRY_LOCK.lock();
         try {
             isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
             for (StatusSignal<Double> signal : signals) {
                 registerSignal(signal);
+                updateIsLatencySignals(isLatencySignal);
             }
-            updateIsLatencySignals(isLatencySignal);
             queues.add(queue);
         } finally {
             SIGNALS_LOCK.unlock();
-            SWERVE.ODOMETRY_LOCK.unlock();
+            Swerve.ODOMETRY_LOCK.unlock();
         }
         return queue;
     }
@@ -128,12 +128,12 @@ public class PhoenixOdometryThread6328 extends Thread {
     private void saveNewData() {
         double fpgaTimestamp = Logger.getRealTimestamp() / 1.0e6;
 
-        SWERVE.ODOMETRY_LOCK.lock();
+        Swerve.ODOMETRY_LOCK.lock();
         try {
             saveNewDataToQueues();
             timestamps.offer(fpgaTimestamp);
         } finally {
-            SWERVE.ODOMETRY_LOCK.unlock();
+            Swerve.ODOMETRY_LOCK.unlock();
         }
     }
 
@@ -146,12 +146,12 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private void saveNewDataToQueues() {
-        for (int i = 0; i < isLatencySignals.size(); i++) {
-            if (isLatencySignals.get(i)) {
-                saveLatencyValue(i);
-                i++;
+        for (int signalIndex = 0, queueIndex = 0; queueIndex < queues.size(); signalIndex++, queueIndex++) {
+            if (isLatencySignals.get(signalIndex)) {
+                saveLatencyValue(signalIndex, queueIndex);
+                signalIndex++;
             } else {
-                saveRegularValue(i);
+                saveRegularValue(signalIndex, queueIndex);
             }
         }
     }
@@ -167,12 +167,12 @@ public class PhoenixOdometryThread6328 extends Thread {
         }
     }
 
-    private void saveLatencyValue(int index) {
-        queues.get(index).offer(BaseStatusSignal.getLatencyCompensatedValue(signals.get(index), signals.get(index + 1)));
+    private void saveLatencyValue(int index, int queueIndex) {
+        queues.get(queueIndex).offer(BaseStatusSignal.getLatencyCompensatedValue(signals.get(index), signals.get(index + 1)));
     }
 
-    private void saveRegularValue(int index) {
-        queues.get(index).offer(signals.get(index).getValueAsDouble());
+    private void saveRegularValue(int index, int queueIndex) {
+        queues.get(queueIndex).offer(signals.get(index).getValueAsDouble());
     }
 
 }

@@ -35,7 +35,7 @@ import static frc.robot.RobotContainer.POSE_ESTIMATOR;
 // todo - add aim assist calculations (maybe in the "SwerveAimAssist" class)
 public class Swerve extends GBSubsystem {
 
-    public final Lock ODOMETRY_LOCK;
+    public static final Lock ODOMETRY_LOCK = new ReentrantLock();
 
     private final SwerveGyroInputsAutoLogged gyroInputs;
 
@@ -54,7 +54,6 @@ public class Swerve extends GBSubsystem {
         modules = getModules();
 
         gyroInputs = new SwerveGyroInputsAutoLogged();
-        ODOMETRY_LOCK = new ReentrantLock();
 
         configurePathPlanner();
     }

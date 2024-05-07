@@ -40,8 +40,11 @@ public class JoysticksBindings {
         // - drive around wheel - CHECKED sim
         // - rotate to angle around wheel
         // - self relative drive - CHECKED sim
-        // - pose estimator resets
-        usedJoystick.R2.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetHeading(new Rotation2d())));
+        // - pose estimator resets - CHECKED
+
+        //reset angle pose estim
+        usedJoystick.R1.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetHeading(new Rotation2d())));
+        usedJoystick.L1.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(new Pose2d(5,5,new Rotation2d())))));
 
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(180)));
         usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(-17)));
@@ -73,13 +76,14 @@ public class JoysticksBindings {
         usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));
 
         usedJoystick.POV_LEFT.whileTrue(SwerveCommands.getDriveToPoseCommand(
-                () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(10, 1, Rotation2d.fromDegrees(17))),
+                () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
         usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.getDriveToPoseCommand(
                 () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(5, 8, Rotation2d.fromDegrees(90))),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
+
     }
 
     private static void secondJoystickButtons() {

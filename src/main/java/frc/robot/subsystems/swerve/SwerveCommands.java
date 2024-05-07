@@ -26,19 +26,18 @@ public class SwerveCommands {
 
     public static Command getLockSwerveCommand() {
         return new FunctionalCommand(
-                SWERVE::lockSwerve,
                 () -> {},
-                inter -> {},
-                SWERVE::isModulesAtStates
+                SWERVE::lockSwerve,
+                inter -> {}, () -> false
         );
     }
 
     public static Command getPointWheelsCommand(Rotation2d wheelsAngle) {
         return new FunctionalCommand(
-                () -> SWERVE.pointWheels(wheelsAngle),
                 () -> {},
+                () -> SWERVE.pointWheels(wheelsAngle),
                 inter -> {},
-                SWERVE::isModulesAtStates
+                () -> false
         );
     }
 

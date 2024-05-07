@@ -1,8 +1,9 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.swervestate;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.SwerveConstants;
 
-public enum DriveMode {
+public enum DriveSpeed {
 
     //todo - create new class "SwerveState" which will contain:
     // SwerveMode,
@@ -30,7 +31,7 @@ public enum DriveMode {
     public final double maxTranslationSpeedMetersPerSecond;
     public final Rotation2d maxRotationSpeedPerSecond;
 
-    DriveMode(double maxTranslationSpeed, Rotation2d maxRotationSpeed) {
+    DriveSpeed(double maxTranslationSpeed, Rotation2d maxRotationSpeed) {
         this.maxTranslationSpeedMetersPerSecond = maxTranslationSpeed;
         this.maxRotationSpeedPerSecond = Rotation2d.fromDegrees(maxRotationSpeed.getDegrees());
     }

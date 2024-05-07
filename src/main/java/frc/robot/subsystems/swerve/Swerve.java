@@ -17,8 +17,7 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
-import frc.robot.subsystems.swerve.swervestate.DriveMode;
-import frc.robot.subsystems.swerve.swervestate.SwerveState;
+import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.allianceutils.AlliancePose2d;
@@ -315,7 +314,7 @@ public class Swerve extends GBSubsystem {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, currentAngle);
     }
 
-    private ChassisSpeeds selfRelativeSpeedsFromFieldRelativePowers(double xPower, double yPower, double thetaPower) {
+    private ChassisSpeeds fieldRelativePowersToSelfRelativeSpeeds(double xPower, double yPower, double thetaPower) {
         ChassisSpeeds fieldRelativeSpeeds = powersToSpeeds(xPower, yPower, thetaPower);
         return fieldRelativeSpeedsToSelfRelativeSpeeds(fieldRelativeSpeeds);
     }
@@ -366,7 +365,7 @@ public class Swerve extends GBSubsystem {
      */
     private void fieldRelativeDrive(double xPower, double yPower, Rotation2d targetAngle) {
         targetAngle = AllianceUtils.toMirroredAllianceRotation(targetAngle);
-        ChassisSpeeds speeds = selfRelativeSpeedsFromFieldRelativePowers(xPower, yPower, 0);
+        ChassisSpeeds speeds = fieldRelativePowersToSelfRelativeSpeeds(xPower, yPower, 0);
         speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle);
 
         selfRelativeDrive(speeds);
@@ -380,7 +379,7 @@ public class Swerve extends GBSubsystem {
      * @param thetaPower the theta power
      */
     private void fieldRelativeDrive(double xPower, double yPower, double thetaPower) {
-        ChassisSpeeds speeds = selfRelativeSpeedsFromFieldRelativePowers(xPower, yPower, thetaPower);
+        ChassisSpeeds speeds = fieldRelativePowersToSelfRelativeSpeeds(xPower, yPower, thetaPower);
         selfRelativeDrive(speeds);
     }
 

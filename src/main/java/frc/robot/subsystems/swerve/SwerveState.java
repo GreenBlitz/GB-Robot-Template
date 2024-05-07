@@ -1,5 +1,15 @@
-package frc.robot.subsystems.swerve.swervestate;
+package frc.robot.subsystems.swerve;
 
+// todo - create new class "SwerveMode" which will contain: "DriverDrive", "FollowPath", "Autonomous", "RotateToAngle"
+
+// todo - "SwerveAimAssist" which will contain: NON, INTAKE_AIM_ASSIST, SHOOTING_AIM_ASSIST (will contain supplier to wanted angle)
+
+import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
+import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
+import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
+import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
+
+//todo - add all swerve funcs that depend on this classes into this classes instead of in swerve (if possible)
 public class SwerveState {
 
     public static final DriveMode DEFAULT_DRIVE_MODE = DriveMode.FIELD_RELATIVE;

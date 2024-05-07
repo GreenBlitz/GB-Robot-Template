@@ -43,13 +43,12 @@ public class PoseEstimator6328 {
     }
 
     // Pose Estimation Members
-    private Pose2d odometryPose = new Pose2d();//todo - check how to put default
-    private Pose2d estimatedPose = new Pose2d();//todo - check how to put default;
+    private Pose2d odometryPose = new Pose2d();
+    private Pose2d estimatedPose = new Pose2d();
     private final TimeInterpolatableBuffer<Pose2d> poseBuffer = TimeInterpolatableBuffer.createBuffer(POSE_BUFFER_SIZE_SECONDS);
     private final Matrix<N3, N1> qStdDevs = new Matrix<>(Nat.N3(), Nat.N1());
     // Odometry
     private final SwerveDriveKinematics kinematics;
-    //todo - fix th9ink startingn in 0
     private SwerveDriveWheelPositions lastWheelPositions =
             new SwerveDriveWheelPositions(
                     new SwerveModulePosition[]{

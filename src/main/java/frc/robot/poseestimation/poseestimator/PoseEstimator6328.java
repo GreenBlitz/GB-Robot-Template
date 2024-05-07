@@ -49,6 +49,7 @@ public class PoseEstimator6328 {
     private final Matrix<N3, N1> qStdDevs = new Matrix<>(Nat.N3(), Nat.N1());
     // Odometry
     private final SwerveDriveKinematics kinematics;
+    //todo - fix th9ink startingn in 0
     private SwerveDriveWheelPositions lastWheelPositions =
             new SwerveDriveWheelPositions(
                     new SwerveModulePosition[]{

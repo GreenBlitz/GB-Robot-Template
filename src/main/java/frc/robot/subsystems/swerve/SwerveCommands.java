@@ -54,6 +54,14 @@ public class SwerveCommands {
         );
     }
 
+    public static Command getFR_N_O_MOR(DoubleSupplier xSupplier, DoubleSupplier ySupplier, Rotation2d targetAngle) {
+        return new InitExecuteCommand(
+                () -> SWERVE.initializeDrive(new SwerveState()),
+                () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), targetAngle),
+                SWERVE
+        );
+    }
+
     public static Command getRotateToAngleCommand(
             Rotation2d targetAngle
     ) {

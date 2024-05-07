@@ -51,6 +51,12 @@ public class JoysticksBindings {
                 new Rotation2d()
         )))));
 
+        usedJoystick.R2.whileTrue(SwerveCommands.getFR_N_O_MOR(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                Rotation2d.fromDegrees(90)
+        ));
+
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(180)));
         usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(-17)));
         usedJoystick.START.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(-17)));

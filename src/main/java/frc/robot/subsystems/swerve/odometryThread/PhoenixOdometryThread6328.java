@@ -86,10 +86,11 @@ public class PhoenixOdometryThread6328 extends Thread {
             isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
             for (StatusSignal<Double> signal : signals) {
                 registerSignal(signal);
-                updateIsLatencySignals(isLatencySignal);
             }
+            updateIsLatencySignals(isLatencySignal);
             queues.add(queue);
-        } finally {
+        }
+        finally {
             SIGNALS_LOCK.unlock();
             Swerve.ODOMETRY_LOCK.unlock();
         }
@@ -118,9 +119,11 @@ public class PhoenixOdometryThread6328 extends Thread {
         SIGNALS_LOCK.lock();
         try {
             waitForAllSignals();
-        } catch (InterruptedException exception) {
+        }
+        catch (InterruptedException exception) {
             exception.printStackTrace();
-        } finally {
+        }
+        finally {
             SIGNALS_LOCK.unlock();
         }
     }
@@ -132,7 +135,8 @@ public class PhoenixOdometryThread6328 extends Thread {
         try {
             saveNewDataToQueues();
             timestamps.offer(fpgaTimestamp);
-        } finally {
+        }
+        finally {
             Swerve.ODOMETRY_LOCK.unlock();
         }
     }
@@ -140,17 +144,20 @@ public class PhoenixOdometryThread6328 extends Thread {
     private void waitForAllSignals() throws InterruptedException {
         if (isCANFD) {
             waitForCanFDSignals();
-        } else {
+        }
+        else {
             waitForNonCanFDSignals();
         }
     }
 
     private void saveNewDataToQueues() {
+        // todo - still working
         for (int signalIndex = 0, queueIndex = 0; queueIndex < queues.size(); signalIndex++, queueIndex++) {
-            if (isLatencySignals.get(signalIndex)) {
+            if (isLatencySignals.get(queueIndex)) {
                 saveLatencyValue(signalIndex, queueIndex);
                 signalIndex++;
-            } else {
+            }
+            else {
                 saveRegularValue(signalIndex, queueIndex);
             }
         }

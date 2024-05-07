@@ -61,7 +61,7 @@ public class PoseEstimator6328 {
 
     private PoseEstimator6328() {
         for (int i = 0; i < 3; ++i) {
-            qStdDevs.set(i, 0, Math.pow(PoseEstimatorConstants.STATES_AMBIGUITY.get(i, 0), 2));
+            qStdDevs.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
         }
         kinematics = SwerveConstants.KINEMATICS;
     }
@@ -168,7 +168,7 @@ public class PoseEstimator6328 {
         return odometryPose;
     }
 
-    public void setQStdDevs(double x, double y, double rotation) {
+    public void setOdometryStandardDeviations(double x, double y, double rotation) {
         Vector<N3> newQStdDevs = VecBuilder.fill(x, y, rotation);
         for (int i = 0; i < 3; ++i) {
             qStdDevs.set(i, 0, Math.pow(newQStdDevs.get(i, 0), 2));

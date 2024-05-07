@@ -20,7 +20,7 @@ public class PoseEstimatorConstants {
      * the second one for the y, and the third one is for the theta (rotation).
      * Increase these numbers to trust the estimate less.
      */
-    protected static final Vector<N3> STATES_AMBIGUITY = VecBuilder.fill(0.003, 0.003, 0.0002);
+    protected static final Vector<N3> ODOMETRY_STANDARD_DEVIATIONS = VecBuilder.fill(0.003, 0.003, 0.0002);
 
     protected static final AlliancePose2d DEFAULT_POSE = AlliancePose2d.fromBlueAlliancePose(new Pose2d(5, 5, new Rotation2d()));
 

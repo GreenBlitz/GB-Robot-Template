@@ -49,12 +49,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(
-                        DriveMode.FIELD_RELATIVE,
-                        DriveSpeed.SLOW,
-                        LoopMode.OPEN,
-                        RotateAxis.MIDDLE_OF_ROBOT
-                )),
+                () -> SWERVE.initializeDrive(new SwerveState(DriveSpeed.SLOW)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -64,12 +59,7 @@ public class SwerveCommands {
             Rotation2d targetAngle
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(
-                        DriveMode.FIELD_RELATIVE,
-                        DriveSpeed.NORMAL,
-                        LoopMode.OPEN,
-                        RotateAxis.MIDDLE_OF_ROBOT
-                )),
+                () -> SWERVE.initializeDrive(new SwerveState()),
                 () -> SWERVE.rotateToAngle(targetAngle),
                 SWERVE
         );
@@ -79,7 +69,7 @@ public class SwerveCommands {
             Rotation2d targetAngle, RotateAxis rotateAxis
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(DriveMode.FIELD_RELATIVE, DriveSpeed.NORMAL, LoopMode.OPEN, rotateAxis)),
+                () -> SWERVE.initializeDrive(new SwerveState(rotateAxis)),
                 () -> SWERVE.rotateToAngle(targetAngle),
                 SWERVE
         );
@@ -90,7 +80,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, RotateAxis rotateAxis
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(DriveMode.FIELD_RELATIVE, DriveSpeed.NORMAL, LoopMode.OPEN, rotateAxis)),
+                () -> SWERVE.initializeDrive(new SwerveState(rotateAxis)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -100,12 +90,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(
-                        DriveMode.SELF_RELATIVE,
-                        DriveSpeed.NORMAL,
-                        LoopMode.OPEN,
-                        RotateAxis.MIDDLE_OF_ROBOT
-                )),
+                () -> SWERVE.initializeDrive(new SwerveState(DriveMode.SELF_RELATIVE)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -124,12 +109,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(
-                        DriveMode.FIELD_RELATIVE,
-                        DriveSpeed.NORMAL,
-                        LoopMode.OPEN,
-                        RotateAxis.MIDDLE_OF_ROBOT
-                )),
+                () -> SWERVE.initializeDrive(new SwerveState()),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -142,12 +122,7 @@ public class SwerveCommands {
 
     private static Command getCurrentDriveToPoseCommand(AlliancePose2d targetPose, PathConstraints constraints) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState(
-                        DriveMode.FIELD_RELATIVE,
-                        DriveSpeed.NORMAL,
-                        LoopMode.CLOSED,
-                        RotateAxis.MIDDLE_OF_ROBOT
-                ))),
+                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState(LoopMode.CLOSED))),
                 getPathfindToPoseCommand(targetPose, constraints),
                 getPIDToPoseCommand(targetPose)
         );

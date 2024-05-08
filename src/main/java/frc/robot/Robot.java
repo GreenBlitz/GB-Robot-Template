@@ -13,6 +13,7 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
+import frc.utils.pathplannerutils.PathPlannerUtils;
 import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
@@ -32,6 +33,7 @@ public class Robot extends LoggedRobot {
     public void robotInit() {
         initializeLogger();
         Battery.scheduleBatteryLimiterCommand(); //Using RobotConstants.DISABLE_BATTERY_LIMITER, disable with it!
+        PathPlannerUtils.startPathPlanner();
 
         robotContainer = new RobotContainer();
     }
@@ -56,6 +58,11 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         RoborioUtils.updateRioUtils(); // Better to be first
         CommandScheduler.getInstance().run();
+        RobotContainer.POSE_ESTIMATOR.periodic();
+    }
+
+    @Override
+    public void simulationPeriodic() {
         MotorSimulation.updateRegisteredSimulations();
     }
 

@@ -1,7 +1,12 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
@@ -25,10 +30,58 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         // bindings
 
+        //todo
+        // - lock x - CHECKED
+        // - point wheels - CHECKED
+        // - slow mode - CHECKED
+        // - follow path - CHECKED
+        // - closed loop drive - Doing Noises, Not Fun
+        // - rotate to angle - CHECKED
+        // - drive around wheel - CHECKED
+        // - rotate to angle around wheel - need to check on carpet
+        // - self relative drive - CHECKED
+        // - pose estimator resets - CHECKED
+
+        //reset angle pose estim
+        usedJoystick.R1.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetHeading(new Rotation2d())));
+        usedJoystick.L1.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(new Pose2d(5, 5, new Rotation2d())))));
+
+        usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(180)));
+        usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(-17)));
+        usedJoystick.START.whileTrue(SwerveCommands.getRotateToAngleAroundWheelCommand(Rotation2d.fromDegrees(-17)));
+        usedJoystick.BACK.whileTrue(SwerveCommands.getRotateToAngleAroundWheelCommand(Rotation2d.fromDegrees(180)));
+
+        usedJoystick.B.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
+        usedJoystick.Y.whileTrue(SwerveCommands.getSelfDriveCommand(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
+        usedJoystick.L2.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
+
+        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());//CHECKED
+        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));//CHECKED
+
+        usedJoystick.POV_LEFT.whileTrue(SwerveCommands.getDriveToPoseCommand(
+                () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))),
+                SwerveConstants.REAL_TIME_CONSTRAINTS
+        ));
+        usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.getDriveToPoseCommand(
+                () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(5, 8, Rotation2d.fromDegrees(90))),
+                SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
     }
 

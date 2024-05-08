@@ -25,6 +25,8 @@ import org.littletonrobotics.junction.AutoLogOutput;
 
 import java.util.NoSuchElementException;
 
+import static frc.robot.RobotContainer.SWERVE;
+
 public class PoseEstimator6328 {
 
     public record OdometryObservation(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, double timestamp) {}
@@ -49,7 +51,7 @@ public class PoseEstimator6328 {
     private final Matrix<N3, N1> qStdDevs = new Matrix<>(Nat.N3(), Nat.N1());
     // Odometry
     private final SwerveDriveKinematics kinematics;
-    public SwerveDriveWheelPositions lastWheelPositions =
+    private SwerveDriveWheelPositions lastWheelPositions =
             new SwerveDriveWheelPositions(
                     new SwerveModulePosition[]{
                             new SwerveModulePosition(),
@@ -57,7 +59,8 @@ public class PoseEstimator6328 {
                             new SwerveModulePosition(),
                             new SwerveModulePosition()
                     });
-    public Rotation2d lastGyroAngle = new Rotation2d();
+    private Rotation2d lastGyroAngle = new Rotation2d();
+    private boolean isFirstUpdate = true;
 
     private PoseEstimator6328() {
         for (int i = 0; i < 3; ++i) {
@@ -70,6 +73,12 @@ public class PoseEstimator6328 {
      * Add odometry observation
      */
     public void addOdometryObservation(OdometryObservation observation) {
+        if (isFirstUpdate){
+            lastWheelPositions = SWERVE.getSwerveWheelPositions(0);
+            lastGyroAngle = SWERVE.getOdometryYawUpdates()[0];
+            isFirstUpdate = false;
+        }
+
         Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
         lastWheelPositions = observation.wheelPositions();
         // Check gyro connected

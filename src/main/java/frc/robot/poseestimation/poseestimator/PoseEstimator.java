@@ -21,10 +21,10 @@ public class PoseEstimator implements AutoCloseable {
     private final Field2d field = new Field2d();
     private final PoseEstimator6328 swerveDrivePoseEstimator = PoseEstimator6328.getInstance();
     private AlliancePose2d robotPose;
-    private boolean isFirstUpdate = true;
+
     public PoseEstimator() {
         this.robotPose = PoseEstimatorConstants.DEFAULT_POSE;
-        resetPose(robotPose); //todo - check
+        resetPose(robotPose);
 
         SmartDashboard.putData("Field", field);
         setLoggingPathToPaths();
@@ -81,11 +81,6 @@ public class PoseEstimator implements AutoCloseable {
         SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[odometryUpdates];
         Rotation2d[] gyroRotations = new Rotation2d[odometryUpdates];
 
-        if (isFirstUpdate && 0 < odometryUpdates){
-            swerveDrivePoseEstimator.lastWheelPositions = SWERVE.getSwerveWheelPositions(0);
-            swerveDrivePoseEstimator.lastGyroAngle = SWERVE.getOdometryYawUpdates()[0];
-            isFirstUpdate = false;
-        }
         for (int i = 0; i < odometryUpdates; i++) {
             swerveWheelPositions[i] = SWERVE.getSwerveWheelPositions(i);
             gyroRotations[i] = SWERVE.getOdometryYawUpdates()[i];

@@ -6,7 +6,6 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
-import frc.utils.Conversions;
 import frc.utils.batteryutils.Battery;
 
 import java.util.Queue;

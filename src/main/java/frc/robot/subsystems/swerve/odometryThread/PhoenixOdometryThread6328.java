@@ -151,7 +151,6 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private void saveNewDataToQueues() {
-        // todo - still working
         for (int signalIndex = 0, queueIndex = 0; queueIndex < queues.size(); signalIndex++, queueIndex++) {
             if (isLatencySignals.get(queueIndex)) {
                 saveLatencyValue(signalIndex, queueIndex);

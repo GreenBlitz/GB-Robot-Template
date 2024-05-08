@@ -79,7 +79,7 @@ public class MK4IModule implements IModule {
     @Override
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
         double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
-                targetVelocityMetersPerSecond,
+                targetVelocityMetersPerSecond,//todo - check velocity or position
                 mk4IModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO
         );

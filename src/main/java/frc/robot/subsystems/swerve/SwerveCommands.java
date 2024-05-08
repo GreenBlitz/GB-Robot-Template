@@ -122,7 +122,7 @@ public class SwerveCommands {
 
     private static Command getCurrentDriveToPoseCommand(AlliancePose2d targetPose, PathConstraints constraints) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> SWERVE.initializeDrive(true, DriveMode.NORMAL)),
+                new InstantCommand(() -> SWERVE.initializeDrive(false, DriveMode.NORMAL)),
                 getPathfindToPoseCommand(targetPose, constraints),
                 getPIDToPoseCommand(targetPose)
         );

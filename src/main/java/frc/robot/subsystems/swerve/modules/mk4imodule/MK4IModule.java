@@ -6,6 +6,7 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.utils.Conversions;
 import frc.utils.batteryutils.Battery;
 
 import java.util.Queue;
@@ -67,7 +68,6 @@ public class MK4IModule implements IModule {
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
                 targetVelocityMetersPerSecond,
-                ModuleConstants.WHEEL_DIAMETER_METERS,
                 mk4IModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO,
                 ModuleConstants.MAX_SPEED_PER_SECOND,
@@ -78,8 +78,9 @@ public class MK4IModule implements IModule {
 
     @Override
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
+        Rotation2d targetVelocityPerSecond = ModuleUtils.fromDriveMetersToDriveAngle(targetVelocityMetersPerSecond);
         double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
-                targetVelocityMetersPerSecond,
+                targetVelocityPerSecond,
                 mk4IModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO
         );

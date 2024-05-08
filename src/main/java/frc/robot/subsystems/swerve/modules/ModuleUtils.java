@@ -31,14 +31,17 @@ public class ModuleUtils {
         return Conversions.revolutionsToDistance(revolutions.getRotations(), ModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
-    public static double velocityToOpenLoopVoltage(double velocityMetersPerSecond, double wheelDiameterMeters,
+    public static Rotation2d fromDriveMetersToDriveAngle(double velocityMetersPerSecond) {
+        return Rotation2d.fromRotations(
+                Conversions.distanceToRevolutions(velocityMetersPerSecond, ModuleConstants.WHEEL_DIAMETER_METERS)
+        );
+    }
+
+    public static double velocityToOpenLoopVoltage(double velocityMetersPerSecond,
             Rotation2d steerVelocityPerSecond, double couplingRatio, Rotation2d maxSpeedPerSecond,
             double voltageCompensationSaturation
     ) {
-        double velocityRevolutionsPerSecond = Conversions.distanceToRevolutions(
-                velocityMetersPerSecond,
-                wheelDiameterMeters
-        );
+        Rotation2d velocityRevolutionsPerSecond = fromDriveMetersToDriveAngle(velocityMetersPerSecond);
         double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
                 velocityRevolutionsPerSecond,
                 steerVelocityPerSecond,
@@ -50,16 +53,16 @@ public class ModuleUtils {
 
     /**
      * When the steer motor moves, the drive motor moves as well due to the coupling.
-     * This will affect the current position of the drive motor, so we need to remove the coupling from the position.
+     * This will affect the current position of the drive motor, so we need to remove the coupling from the
+     * velocity or the position.
      *
-     * @param drivePosition the position in revolutions
-     * @param moduleAngle the angle of the module
-     * @return the distance without the coupling
+     * @param drivePosition the position or velocity
+     * @param moduleAngle the angle or velocity in angle of the module
+     * @return the distance or velocity without the coupling
      */
-    //todo - change docs to support velocity to and not just position
-    public static double removeCouplingFromRevolutions(double drivePosition, Rotation2d moduleAngle, double couplingRatio) {
+    public static double removeCouplingFromRevolutions(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
         double coupledAngle = moduleAngle.getRotations() * couplingRatio;
-        return drivePosition - coupledAngle;
+        return drivePosition.getRotations() - coupledAngle;
     }
 
     /**

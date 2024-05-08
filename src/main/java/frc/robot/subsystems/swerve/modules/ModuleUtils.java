@@ -27,7 +27,7 @@ public class ModuleUtils {
         };
     }
 
-    public static double toDriveDistance(Rotation2d revolutions) {
+    public static double toDriveMeters(Rotation2d revolutions) {
         return Conversions.revolutionsToDistance(revolutions.getRotations(), ModuleConstants.WHEEL_DIAMETER_METERS);
     }
 

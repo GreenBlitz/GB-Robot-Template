@@ -96,11 +96,15 @@ public class MK4IModule implements IModule {
     public void updateInputs(ModuleInputsAutoLogged inputs) {
         mk4IModuleStatus.refreshAllSignals();
 
-        inputs.steerEncoderAngleDegrees = mk4IModuleStatus.getSteerEncoderAbsolutePosition(false).getDegrees();
-        inputs.steerEncoderVelocity = mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue();
+        inputs.steerEncoderAngle = Rotation2d.fromDegrees(
+                mk4IModuleStatus.getSteerEncoderAbsolutePosition(false).getDegrees()
+        );
+        inputs.steerEncoderVelocity = Rotation2d.fromRotations(
+                mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue()
+        );
         inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal(false).getValue();
 
-        inputs.driveMotorDistance = mk4IModuleStatus.getDriveMotorLatencyPosition(false);
+        inputs.driveMotorAngle = mk4IModuleStatus.getDriveMotorLatencyPosition(false);
         inputs.driveMotorVelocity = mk4IModuleStatus.getDriveMotorLatencyVelocity(false);
         inputs.driveMotorAcceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
         inputs.driveMotorCurrent = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();

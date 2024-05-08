@@ -10,6 +10,7 @@ import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogge
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.subsystems.swerve.modules.ModuleUtils.reduceSkew;
+import static frc.robot.subsystems.swerve.modules.ModuleUtils.toDriveMeters;
 
 public class Module {
 
@@ -34,7 +35,12 @@ public class Module {
     }
 
     public void periodic() {
+        updateAllInputs();
+    }
+
+    private void updateAllInputs(){
         module.updateInputs(moduleInputs);
+        moduleInputs.driveMotorDistanceMeters = toDriveMeters(moduleInputs.driveMotorAngle);
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
     }
 
@@ -56,15 +62,15 @@ public class Module {
     }
 
     public Rotation2d getDriveDistanceAngle() {
-        return moduleInputs.driveMotorDistance;
+        return moduleInputs.driveMotorAngle;
     }
 
     public double getDriveDistanceMeters() {
-        return ModuleUtils.toDriveDistance(getDriveDistanceAngle());
+        return ModuleUtils.toDriveMeters(getDriveDistanceAngle());
     }
 
     private double getDriveVelocityMetersPerSecond() {
-        return ModuleUtils.toDriveDistance(moduleInputs.driveMotorVelocity);
+        return ModuleUtils.toDriveMeters(moduleInputs.driveMotorVelocity);
     }
 
     private Rotation2d getCurrentAngle() {
@@ -99,7 +105,7 @@ public class Module {
      */
     public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
-                ModuleUtils.toDriveDistance(moduleInputs.odometryUpdatesDriveDistance[odometryUpdateIndex]),
+                ModuleUtils.toDriveMeters(moduleInputs.odometryUpdatesDriveDistance[odometryUpdateIndex]),
                 moduleInputs.odometryUpdatesSteerAngle[odometryUpdateIndex]
         );
     }

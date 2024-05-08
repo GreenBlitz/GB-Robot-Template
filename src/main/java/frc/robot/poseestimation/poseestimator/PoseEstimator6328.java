@@ -60,7 +60,7 @@ public class PoseEstimator6328 {
                             new SwerveModulePosition()
                     });
     private Rotation2d lastGyroAngle = new Rotation2d();
-    private boolean isFirstUpdate = true;
+    private boolean isFirstOdometryUpdate = true;
 
     private PoseEstimator6328() {
         for (int i = 0; i < 3; ++i) {
@@ -73,10 +73,11 @@ public class PoseEstimator6328 {
      * Add odometry observation
      */
     public void addOdometryObservation(OdometryObservation observation) {
-        if (isFirstUpdate){
+        // Set the created values to starting values
+        if (isFirstOdometryUpdate) {
             lastWheelPositions = SWERVE.getSwerveWheelPositions(0);
             lastGyroAngle = SWERVE.getOdometryYawUpdates()[0];
-            isFirstUpdate = false;
+            isFirstOdometryUpdate = false;
         }
 
         Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
@@ -84,9 +85,7 @@ public class PoseEstimator6328 {
         // Check gyro connected
         if (observation.gyroAngle != null) {
             // Update dtheta for twist if gyro connected
-            twist =
-                    new Twist2d(
-                            twist.dx, twist.dy, observation.gyroAngle().minus(lastGyroAngle).getRadians());
+            twist = new Twist2d(twist.dx, twist.dy, observation.gyroAngle().minus(lastGyroAngle).getRadians());
             lastGyroAngle = observation.gyroAngle();
         }
         // Add twist to odometry pose
@@ -141,16 +140,14 @@ public class PoseEstimator6328 {
         // difference between estimate and vision pose
         Transform2d transform = new Transform2d(estimateAtTime, observation.visionPose());
         // scale transform by visionK
-        var kTimesTransform =
-                visionK.times(
-                        VecBuilder.fill(
-                                transform.getX(), transform.getY(), transform.getRotation().getRadians()));
-        Transform2d scaledTransform =
-                new Transform2d(
-                        kTimesTransform.get(0, 0),
-                        kTimesTransform.get(1, 0),
-                        Rotation2d.fromRadians(kTimesTransform.get(2, 0))
-                );
+        var kTimesTransform = visionK.times(
+                VecBuilder.fill(transform.getX(), transform.getY(), transform.getRotation().getRadians())
+        );
+        Transform2d scaledTransform = new Transform2d(
+                kTimesTransform.get(0, 0),
+                kTimesTransform.get(1, 0),
+                Rotation2d.fromRadians(kTimesTransform.get(2, 0))
+        );
 
         // Recalculate current estimate by applying scaled transform to old estimate
         // then replaying odometry data

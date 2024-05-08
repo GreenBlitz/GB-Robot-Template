@@ -313,7 +313,9 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
-                calculateProfiledAngleSpeedToTargetAngle(targetAngle) // todo - check if needs another pid controller
+                calculateProfiledAngleSpeedToTargetAngle(targetAngle)
+                // todo - check if needs another pid controller
+                //  need to be checked on carpet
         );
         selfRelativeDriveAndRotateAroundWantedPoint(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds), moduleName);
     }

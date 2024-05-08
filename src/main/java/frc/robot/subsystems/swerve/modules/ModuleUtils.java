@@ -56,6 +56,7 @@ public class ModuleUtils {
      * @param moduleAngle the angle of the module
      * @return the distance without the coupling
      */
+    //todo - change docs to support velocity to and not just position
     public static double removeCouplingFromRevolutions(double drivePosition, Rotation2d moduleAngle, double couplingRatio) {
         double coupledAngle = moduleAngle.getRotations() * couplingRatio;
         return drivePosition - coupledAngle;

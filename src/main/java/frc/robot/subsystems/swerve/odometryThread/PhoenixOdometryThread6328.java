@@ -46,7 +46,7 @@ public class PhoenixOdometryThread6328 extends Thread {
     private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_QUEUE_SIZE);
     private final ArrayList<StatusSignal<Double>> signals = new ArrayList<>();
     private final ArrayList<Boolean> isLatencySignals = new ArrayList<>();
-    private boolean isCANFD = false; //todo check why it is not per signal
+    private boolean isCANFD = false; //assuming that all the devices using in odometry have same can network
 
 
     private static PhoenixOdometryThread6328 INSTANCE = null;
@@ -151,7 +151,6 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private void saveNewDataToQueues() {
-        // todo - still working
         for (int signalIndex = 0, queueIndex = 0; queueIndex < queues.size(); signalIndex++, queueIndex++) {
             if (isLatencySignals.get(queueIndex)) {
                 saveLatencyValue(signalIndex, queueIndex);

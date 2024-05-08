@@ -32,15 +32,15 @@ public class JoysticksBindings {
         // bindings
 
         //todo
-        // - lock x - CHECKED sim
-        // - point wheels - CHECKED sim
-        // - slow mode - CHECKED sim
-        // - follow path - CHECKED sim
-        // - closed loop drive
-        // - rotate to angle - CHECKED sim
-        // - drive around wheel - CHECKED sim
-        // - rotate to angle around wheel
-        // - self relative drive - CHECKED sim
+        // - lock x - CHECKED
+        // - point wheels - CHECKED
+        // - slow mode - CHECKED
+        // - follow path - CHECKED
+        // - closed loop drive - Doing Noises, Not Fun
+        // - rotate to angle - CHECKED
+        // - drive around wheel - CHECKED
+        // - rotate to angle around wheel - need to check on carpet
+        // - self relative drive - CHECKED
         // - pose estimator resets - CHECKED
 
         //reset angle pose estim
@@ -50,12 +50,6 @@ public class JoysticksBindings {
                 5,
                 new Rotation2d()
         )))));
-
-        usedJoystick.R2.whileTrue(SwerveCommands.getFR_N_O_MOR(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                Rotation2d.fromDegrees(90)
-        ));
 
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(180)));
         usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(-17)));
@@ -84,8 +78,8 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
         ));
 
-        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());
-        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));
+        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());//CHECKED
+        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));//CHECKED
 
         usedJoystick.POV_LEFT.whileTrue(SwerveCommands.getDriveToPoseCommand(
                 () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))),

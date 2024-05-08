@@ -67,7 +67,6 @@ public class MK4IModule implements IModule {
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
                 targetVelocityMetersPerSecond,
-                ModuleConstants.WHEEL_DIAMETER_METERS,
                 mk4IModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO,
                 ModuleConstants.MAX_SPEED_PER_SECOND,
@@ -78,8 +77,9 @@ public class MK4IModule implements IModule {
 
     @Override
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
+        Rotation2d targetVelocityPerSecond = ModuleUtils.fromDriveMetersToDriveAngle(targetVelocityMetersPerSecond);
         double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
-                targetVelocityMetersPerSecond,
+                targetVelocityPerSecond,
                 mk4IModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO
         );
@@ -96,11 +96,15 @@ public class MK4IModule implements IModule {
     public void updateInputs(ModuleInputsAutoLogged inputs) {
         mk4IModuleStatus.refreshAllSignals();
 
-        inputs.steerEncoderAngleDegrees = mk4IModuleStatus.getSteerEncoderAbsolutePosition(false).getDegrees();
-        inputs.steerEncoderVelocity = mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue();
+        inputs.steerEncoderAngle = Rotation2d.fromDegrees(
+                mk4IModuleStatus.getSteerEncoderAbsolutePosition(false).getDegrees()
+        );
+        inputs.steerEncoderVelocity = Rotation2d.fromRotations(
+                mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue()
+        );
         inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal(false).getValue();
 
-        inputs.driveMotorDistance = mk4IModuleStatus.getDriveMotorLatencyPosition(false);
+        inputs.driveMotorAngle = mk4IModuleStatus.getDriveMotorLatencyPosition(false);
         inputs.driveMotorVelocity = mk4IModuleStatus.getDriveMotorLatencyVelocity(false);
         inputs.driveMotorAcceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
         inputs.driveMotorCurrent = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();

@@ -22,16 +22,15 @@ public class PoseEstimator implements AutoCloseable {
     private final PoseEstimator6328 swerveDrivePoseEstimator = PoseEstimator6328.getInstance();
     private AlliancePose2d robotPose;
 
-
     public PoseEstimator() {
         this.robotPose = PoseEstimatorConstants.DEFAULT_POSE;
-        resetPose(robotPose); //todo - check
+        resetPose(robotPose);
 
         SmartDashboard.putData("Field", field);
         setLoggingPathToPaths();
     }
 
-    public void setLoggingPathToPaths() {
+    private void setLoggingPathToPaths() {
         PathPlannerLogging.setLogActivePathCallback((pose) -> {
             field.getObject("path").setPoses(pose);
             Logger.recordOutput("Path", pose.toArray(new Pose2d[0]));

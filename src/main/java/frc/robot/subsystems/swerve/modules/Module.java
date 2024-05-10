@@ -4,11 +4,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
+import static frc.robot.subsystems.swerve.modules.ModuleUtils.getAlertLoggingPath;
 import static frc.robot.subsystems.swerve.modules.ModuleUtils.reduceSkew;
 import static frc.robot.subsystems.swerve.modules.ModuleUtils.toDriveMeters;
 
@@ -38,10 +40,17 @@ public class Module {
         updateAllInputs();
     }
 
-    private void updateAllInputs(){
+    private void updateAllInputs() {
         module.updateInputs(moduleInputs);
         moduleInputs.driveMotorDistanceMeters = toDriveMeters(moduleInputs.driveMotorAngle);
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
+        reportAlertsToLog();
+    }
+
+    private void reportAlertsToLog() {
+        if (!moduleInputs.allComponentsConnected) {
+            Logger.recordOutput(getAlertLoggingPath(moduleName) + "componentDisconnectedAt", Timer.getFPGATimestamp());
+        }
     }
 
     public void stop() {

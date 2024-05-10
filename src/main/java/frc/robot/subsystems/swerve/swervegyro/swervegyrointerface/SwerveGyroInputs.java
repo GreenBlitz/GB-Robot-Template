@@ -6,6 +6,8 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class SwerveGyroInputs {
 
+    public boolean connected = true;
+
     public Rotation2d gyroYaw = new Rotation2d();
 
     public Rotation2d gyroPitch = new Rotation2d();

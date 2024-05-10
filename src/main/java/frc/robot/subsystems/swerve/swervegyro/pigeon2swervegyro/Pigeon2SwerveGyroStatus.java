@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.PhoenixProUtils;
@@ -42,8 +43,8 @@ class Pigeon2SwerveGyroStatus {
         return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.Z_ACCELERATION_SIGNAL());
     }
 
-    public void refreshAllSignals() {
-        BaseStatusSignal.refreshAll(
+    public StatusCode refreshAllSignals() {
+        return BaseStatusSignal.refreshAll(
                 getYAW_SIGNAL(false),
                 getPITCH_SIGNAL(false),
                 getX_ACCELERATION_SIGNAL(false),

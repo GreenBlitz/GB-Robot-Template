@@ -28,7 +28,7 @@ public class AllianceRotation2d {
         Rotation2d blueAllianceAngle = AllianceUtils.toAllianceAngle(allianceAngle);
         return new AllianceRotation2d(
                 blueAllianceAngle,
-                AllianceUtils.toAllianceAngle(blueAllianceAngle),
+                allianceAngle,
                 AllianceUtils.toMirroredAllianceAngle(blueAllianceAngle)
         );
     }

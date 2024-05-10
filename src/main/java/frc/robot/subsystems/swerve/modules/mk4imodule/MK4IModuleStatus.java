@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.modules.mk4imodule;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.PhoenixProUtils;
@@ -109,8 +110,8 @@ class MK4IModuleStatus {
 
 
     // Refresh All
-    public void refreshAllSignals() {
-        BaseStatusSignal.refreshAll(
+    public StatusCode refreshAllSignals() {
+        return BaseStatusSignal.refreshAll(
                 getSteerEncoderAbsolutePositionSignal(false),
                 getSteerEncoderVelocitySignal(false),
                 getSteerEncoderVoltageSignal(false),

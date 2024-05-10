@@ -94,7 +94,7 @@ public class MK4IModule implements IModule {
 
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
-        mk4IModuleStatus.refreshAllSignals();
+        inputs.allComponentsConnected = mk4IModuleStatus.refreshAllSignals().isOK();
 
         inputs.steerEncoderAngle = Rotation2d.fromDegrees(
                 mk4IModuleStatus.getSteerEncoderAbsolutePosition(false).getDegrees()

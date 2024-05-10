@@ -16,8 +16,9 @@ import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.allianceutils.AlliancePose2d;
-import frc.utils.commands.InitExecuteCommand;
+import frc.utils.allianceutils.AllianceRotation2d;
 import frc.utils.pathplannerutils.PathPlannerUtils;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
 import java.util.function.DoubleSupplier;
@@ -54,7 +55,7 @@ public class SwerveCommands {
         );
     }
 
-    public static Command getFR_N_O_MOR(DoubleSupplier xSupplier, DoubleSupplier ySupplier, Rotation2d targetAngle) {
+    public static Command getFR_N_O_MOR(DoubleSupplier xSupplier, DoubleSupplier ySupplier, AllianceRotation2d targetAngle) {
         return new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(new SwerveState()),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), targetAngle),
@@ -63,7 +64,7 @@ public class SwerveCommands {
     }
 
     public static Command getRotateToAngleCommand(
-            Rotation2d targetAngle
+            AllianceRotation2d targetAngle
     ) {
         return new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(new SwerveState()),
@@ -73,7 +74,7 @@ public class SwerveCommands {
     }
 
     public static Command getRotateToAngleCommand(
-            Rotation2d targetAngle, RotateAxis rotateAxis
+            AllianceRotation2d targetAngle, RotateAxis rotateAxis
     ) {
         return new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(new SwerveState(rotateAxis)),
@@ -136,8 +137,8 @@ public class SwerveCommands {
     }
 
     private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
-        Pose2d targetBluePose = targetPose.toBlueAlliancePose();
-        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
+        Pose2d targetBluePose = targetPose.getBlueAlliancePose();
+        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose();
         // todo - maybe move all func to "PathPlannerUtils"
         double distance = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         //todo - understand why the if
@@ -153,8 +154,8 @@ public class SwerveCommands {
 
     private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
         return new InstantCommand(SWERVE::resetRotationController).andThen(
-                new RunCommand(() -> SWERVE.pidToPose(targetPose.toBlueAlliancePose())).until(
-                        () -> SWERVE.isAtPosition(targetPose.toBlueAlliancePose())
+                new RunCommand(() -> SWERVE.pidToPose(targetPose)).until(
+                        () -> SWERVE.isAtPosition(targetPose)
                 )
         );
     }

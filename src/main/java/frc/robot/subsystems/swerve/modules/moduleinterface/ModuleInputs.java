@@ -6,6 +6,8 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class ModuleInputs {
 
+    public boolean allComponentsConnected = true;
+
     public Rotation2d steerEncoderAngle = new Rotation2d();
     public Rotation2d steerEncoderVelocity = new Rotation2d();
     public double steerEncoderVoltage = 0;

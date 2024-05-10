@@ -129,8 +129,8 @@ public class SwerveCommands {
     }
 
     private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
-        Pose2d targetBluePose = targetPose.toBlueAlliancePose();
-        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
+        Pose2d targetBluePose = targetPose.getBlueAlliancePose();
+        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose();
         // todo - maybe move all func to "PathPlannerUtils"
         double distance = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         //todo - understand why the if

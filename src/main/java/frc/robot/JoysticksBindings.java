@@ -7,6 +7,7 @@ import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.allianceutils.AlliancePose2d;
+import frc.utils.allianceutils.AllianceRotation2d;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
@@ -43,8 +44,13 @@ public class JoysticksBindings {
         // - pose estimator resets - CHECKED
 
         //reset angle pose estim
-        usedJoystick.R1.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetHeading(new Rotation2d())));
-        usedJoystick.L1.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(new Pose2d(5, 5, new Rotation2d())))));
+        usedJoystick.R1.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetHeading(AllianceRotation2d.fromBlueAllianceRotation(
+                new Rotation2d()))));
+        usedJoystick.L1.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(new Pose2d(
+                5,
+                5,
+                new Rotation2d()
+        )))));
 
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(180)));
         usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(Rotation2d.fromDegrees(-17)));

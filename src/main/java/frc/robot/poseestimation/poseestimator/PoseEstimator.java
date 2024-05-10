@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.utils.allianceutils.AlliancePose2d;
+import frc.utils.allianceutils.AllianceRotation2d;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.RobotContainer.POSE_ESTIMATOR;
@@ -46,11 +47,11 @@ public class PoseEstimator implements AutoCloseable {
         robotPose = AlliancePose2d.fromBlueAlliancePose(swerveDrivePoseEstimator.getEstimatedPose());
 
         logCurrentPose();
-        field.setRobotPose(getCurrentPose().toBlueAlliancePose());
+        field.setRobotPose(getCurrentPose().getBlueAlliancePose());
     }
 
     private void logCurrentPose() {
-        Logger.recordOutput(PoseEstimatorConstants.POSE_LOG_PATH, getCurrentPose().toBlueAlliancePose());
+        Logger.recordOutput(PoseEstimatorConstants.POSE_LOG_PATH, getCurrentPose().getBlueAlliancePose());
     }
 
     /**
@@ -59,13 +60,16 @@ public class PoseEstimator implements AutoCloseable {
      * @param currentPose the pose to reset to, as an {@link AlliancePose2d}
      */
     public void resetPose(AlliancePose2d currentPose) {
-        Pose2d currentBluePose = currentPose.toBlueAlliancePose();
+        Pose2d currentBluePose = currentPose.getBlueAlliancePose();
         RobotContainer.SWERVE.setHeading(currentBluePose.getRotation());
         swerveDrivePoseEstimator.resetPose(currentBluePose);
     }
 
-    public void resetHeading(Rotation2d targetAngle) {
-        resetPose(AlliancePose2d.fromBlueAlliancePose(getCurrentPose().toBlueAlliancePose().getTranslation(), targetAngle));
+    public void resetHeading(AllianceRotation2d targetAngle) {
+        resetPose(AlliancePose2d.fromBlueAlliancePose(
+                getCurrentPose().getBlueAlliancePose().getTranslation(),
+                targetAngle.getBlueAllianceAngle()
+        ));
     }
 
     /**

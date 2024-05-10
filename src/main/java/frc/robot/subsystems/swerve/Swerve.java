@@ -10,7 +10,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -293,7 +292,7 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
                 ySpeed * direction,
-                calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation())
+                calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation()).getRadians()
         );
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
@@ -302,14 +301,14 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
-                calculateProfiledAngleSpeedToTargetAngle(targetAngle)
+                calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians()
         );
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
 
-    private double calculateProfiledAngleSpeedToTargetAngle(AllianceRotation2d targetAngle) {
+    private Rotation2d calculateProfiledAngleSpeedToTargetAngle(AllianceRotation2d targetAngle) {
         AllianceRotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
-        return Units.degreesToRadians(SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.calculate(
+        return Rotation2d.fromDegrees(SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getBlueAllianceAngle().getDegrees(),
                 targetAngle.getBlueAllianceAngle().getDegrees()
         ));
@@ -373,7 +372,7 @@ public class Swerve extends GBSubsystem {
 
     protected void fieldRelativeDrive(double xPower, double yPower, AllianceRotation2d targetAngle) {
         ChassisSpeeds speeds = fieldRelativePowersToSelfRelativeSpeeds(xPower, yPower, 0);
-        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle);
+        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians();
         selfRelativeDrive(speeds);
     }
 
@@ -398,7 +397,7 @@ public class Swerve extends GBSubsystem {
      */
     private void selfRelativeDrive(double xPower, double yPower, AllianceRotation2d targetAngle) {
         ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, 0);
-        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle);
+        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians();
 
         selfRelativeDrive(speeds);
     }

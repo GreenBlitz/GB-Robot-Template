@@ -280,13 +280,13 @@ public class Swerve extends GBSubsystem {
 
 
     protected void pidToPose(AlliancePose2d targetPose) {
-        Pose2d currentPose = POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose();
+        Pose2d currentBluePose = POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose();
         double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(
-                currentPose.getX(),
+                currentBluePose.getX(),
                 targetPose.getBlueAlliancePose().getX()
         );
         double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(
-                currentPose.getY(),
+                currentBluePose.getY(),
                 targetPose.getBlueAlliancePose().getY()
         );
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;

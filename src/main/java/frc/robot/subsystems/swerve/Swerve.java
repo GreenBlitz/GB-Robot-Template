@@ -430,8 +430,9 @@ public class Swerve extends GBSubsystem {
 
 
     public boolean isStill(ChassisSpeeds chassisSpeeds) {
-        return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND && Math.abs(
-                chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND;
+        return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
+                && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
+                && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND;
     }
 
     private boolean isAtTranslationPosition(
@@ -459,9 +460,11 @@ public class Swerve extends GBSubsystem {
         );
     }
 
-    public boolean isAtAngle(Rotation2d targetAngle) {
+    public boolean isAtAngle(AllianceRotation2d targetAngle) {
         double angleDifferenceDeg = Math.abs(
-                targetAngle.minus(POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose().getRotation()).getDegrees()
+                targetAngle.getBlueAllianceAngle()
+                           .minus(POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose().getRotation())
+                           .getDegrees()
         );
         boolean isAtAngle = angleDifferenceDeg < SwerveConstants.ROTATION_TOLERANCE.getDegrees();
 
@@ -474,7 +477,7 @@ public class Swerve extends GBSubsystem {
     public boolean isAtPosition(AlliancePose2d targetPose) {
         return isAtXAxisPosition(targetPose.getBlueAlliancePose().getX())
                 && isAtYAxisPosition(targetPose.getBlueAlliancePose().getY())
-                && isAtAngle(targetPose.getBlueAlliancePose().getRotation()
+                && isAtAngle(targetPose.getRotation()
         );
     }
 

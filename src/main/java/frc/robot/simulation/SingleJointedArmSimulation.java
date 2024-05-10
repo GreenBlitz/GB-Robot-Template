@@ -11,7 +11,7 @@ public class SingleJointedArmSimulation extends MotorSimulation {
 
     public SingleJointedArmSimulation(DCMotor gearbox, double gearRatio, double armLengthMeters, double armMassKilograms,
             Rotation2d minimumAngle, Rotation2d maximumAngle, Rotation2d startingAngle, boolean simulateGravity) {
-        armSimulation = new SingleJointedArmSim(
+        this.armSimulation = new SingleJointedArmSim(
                 gearbox,
                 gearRatio,
                 SingleJointedArmSim.estimateMOI(armLengthMeters, armMassKilograms),

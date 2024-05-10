@@ -13,16 +13,16 @@ public class RoborioUtils {
     public static void updateRioUtils() {
         lastTime = currentTime;
         currentTime = Timer.getFPGATimestamp();
-        logInfo();
+        logStatus();
     }
 
-    private static void logInfo() {
+    private static void logStatus() {
         Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanUtilization", getCANUtilizationPercent());
         Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CycleTime", getCurrentRoborioCycleTime());
-        logAlertsChecks();
+        reportAlertsToLog();
     }
 
-    private static void logAlertsChecks() {
+    private static void reportAlertsToLog() {
         if (!isCANConnectedToRoborio()) {
             Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CanDisconnectAt", currentTime);
         }

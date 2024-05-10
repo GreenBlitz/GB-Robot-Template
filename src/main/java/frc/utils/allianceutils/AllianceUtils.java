@@ -16,15 +16,15 @@ public class AllianceUtils {
      * @param pose the current blue alliance pose
      * @return the converted pose
      */
-    public static Pose2d toAlliancePose(Pose2d pose) {
+    protected static Pose2d toAlliancePose(Pose2d pose) {
         return isBlueAlliance() ? pose : switchAlliance(pose);
     }
 
-    public static Translation2d toAllianceTranslation(Translation2d translation2d) {
+    protected static Translation2d toAllianceTranslation(Translation2d translation2d) {
         return isBlueAlliance() ? translation2d : switchAlliance(translation2d);
     }
 
-    public static Rotation2d toAllianceAngle(Rotation2d angle) {
+    protected static Rotation2d toAllianceAngle(Rotation2d angle) {
         return isBlueAlliance() ? angle : switchAlliance(angle);
     }
 
@@ -52,15 +52,15 @@ public class AllianceUtils {
      * @param pose the pose to mirror if the current alliance is red
      * @return the pose
      */
-    public static Pose2d toMirroredAlliancePose(Pose2d pose) {
+    protected static Pose2d toMirroredAlliancePose(Pose2d pose) {
         return isBlueAlliance() ? pose : mirror(pose);
     }
 
-    public static Translation2d toMirroredAllianceTranslation(Translation2d translation2d) {
+    protected static Translation2d toMirroredAllianceTranslation(Translation2d translation2d) {
         return isBlueAlliance() ? translation2d : mirror(translation2d);
     }
 
-    public static Rotation2d toMirroredAllianceAngle(Rotation2d angle) {
+    protected static Rotation2d toMirroredAllianceAngle(Rotation2d angle) {
         return isBlueAlliance() ? angle : mirror(angle);
     }
 

@@ -1,4 +1,4 @@
-package frc.utils.commands;
+package frc.utils.utilcommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.GBSubsystem;

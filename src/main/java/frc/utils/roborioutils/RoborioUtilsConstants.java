@@ -6,7 +6,7 @@ class RoborioUtilsConstants {
 
     protected static final String LOG_PATH = "RoborioUtils/";
 
-    protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + "RoborioUtils/";
+    protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 
     protected static final double DEFAULT_ROBORIO_CYCLE_TIME = 0.02;
 

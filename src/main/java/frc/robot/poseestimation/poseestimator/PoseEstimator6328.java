@@ -74,7 +74,7 @@ public class PoseEstimator6328 {
      */
     public void addOdometryObservation(OdometryObservation observation) {
         // Set the created values to starting values
-        if (isFirstOdometryUpdate) {
+        if (isFirstOdometryUpdate) {//todo - check about this
             lastWheelPositions = SWERVE.getSwerveWheelPositions(0);
             lastGyroAngle = SWERVE.getOdometryYawUpdates()[0];
             isFirstOdometryUpdate = false;

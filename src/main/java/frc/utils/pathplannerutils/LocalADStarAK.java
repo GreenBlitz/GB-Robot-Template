@@ -93,8 +93,7 @@ public class LocalADStarAK implements Pathfinder {
      * position of the path to properly avoid obstacles
      */
     @Override
-    public void setDynamicObstacles(
-            List<Pair<Translation2d, Translation2d>> obs, Translation2d currentRobotPos) {
+    public void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obs, Translation2d currentRobotPos) {
         if (!Logger.hasReplaySource()) {
             io.adStar.setDynamicObstacles(obs, currentRobotPos);
         }
@@ -103,7 +102,9 @@ public class LocalADStarAK implements Pathfinder {
     private static class ADStarIO implements LoggableInputs {
 
         public LocalADStar adStar = new LocalADStar();
+
         public boolean isNewPathAvailable = false;
+
         public List<PathPoint> currentPathPoints = Collections.emptyList();
 
         @Override

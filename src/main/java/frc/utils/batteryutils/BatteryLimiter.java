@@ -2,10 +2,8 @@ package frc.utils.batteryutils;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants;
-import org.littletonrobotics.junction.Logger;
 
 class BatteryLimiter extends Command {
 
@@ -29,7 +27,7 @@ class BatteryLimiter extends Command {
 
         double currentAverageVoltage = voltageFilter.calculate(Battery.getCurrentVoltage());
         if (currentAverageVoltage <= Battery.getMinimumVoltage()) {
-            Logger.recordOutput(BatteryConstants.ALERT_LOG_PATH + "LowVoltageAt", Timer.getFPGATimestamp());
+            Battery.reportAlertsToLog();
             if (DriverStation.getMatchType() == DriverStation.MatchType.None && !RobotConstants.DISABLE_BATTERY_LIMITER) {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }

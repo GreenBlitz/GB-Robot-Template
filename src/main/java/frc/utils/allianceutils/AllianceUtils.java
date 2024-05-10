@@ -2,6 +2,7 @@ package frc.utils.allianceutils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.MathConstants;
 
@@ -19,12 +20,30 @@ public class AllianceUtils {
         return isBlueAlliance() ? pose : switchAlliance(pose);
     }
 
+    public static Translation2d toAllianceTranslation(Translation2d translation2d) {
+        return isBlueAlliance() ? translation2d : switchAlliance(translation2d);
+    }
+
+    public static Rotation2d toAllianceAngle(Rotation2d angle) {
+        return isBlueAlliance() ? angle : switchAlliance(angle);
+    }
+
     private static Pose2d switchAlliance(Pose2d pose) {
         return new Pose2d(
-                FieldConstants.FIELD_LENGTH - pose.getX(),
-                FieldConstants.FIELD_WIDTH - pose.getY(),
-                pose.getRotation().minus(MathConstants.HALF_CIRCLE)
+                switchAlliance(pose.getTranslation()),
+                switchAlliance(pose.getRotation())
         );
+    }
+
+    private static Translation2d switchAlliance(Translation2d translation2d) {
+        return new Translation2d(
+                FieldConstants.FIELD_LENGTH - translation2d.getX(),
+                FieldConstants.FIELD_WIDTH - translation2d.getY()
+        );
+    }
+
+    private static Rotation2d switchAlliance(Rotation2d rotation2d) {
+        return rotation2d.minus(MathConstants.HALF_CIRCLE);
     }
 
     /**
@@ -37,22 +56,30 @@ public class AllianceUtils {
         return isBlueAlliance() ? pose : mirror(pose);
     }
 
+    public static Translation2d toMirroredAllianceTranslation(Translation2d translation2d) {
+        return isBlueAlliance() ? translation2d : mirror(translation2d);
+    }
+
+    public static Rotation2d toMirroredAllianceAngle(Rotation2d angle) {
+        return isBlueAlliance() ? angle : mirror(angle);
+    }
+
     private static Pose2d mirror(Pose2d pose) {
         return new Pose2d(
-                FieldConstants.FIELD_LENGTH - pose.getX(),
-                pose.getY(),
-                MathConstants.HALF_CIRCLE.minus(pose.getRotation())
+                mirror(pose.getTranslation()),
+                mirror(pose.getRotation())
         );
     }
 
-    /**
-     * Mirrors a rotation across the center of the field if the current alliance is red.
-     *
-     * @param rotation the rotation to mirror if the current alliance is red
-     * @return the rotation
-     */
-    public static Rotation2d toMirroredAllianceRotation(Rotation2d rotation) {
-        return isBlueAlliance() ? rotation : MathConstants.HALF_CIRCLE.minus(rotation);
+    private static Translation2d mirror(Translation2d translation2d) {
+        return new Translation2d(
+                FieldConstants.FIELD_LENGTH - translation2d.getX(),
+                translation2d.getY()
+        );
+    }
+
+    private static Rotation2d mirror(Rotation2d rotation2d) {
+        return MathConstants.HALF_CIRCLE.minus(rotation2d);
     }
 
 }

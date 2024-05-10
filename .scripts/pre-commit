@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "*********************************************************"
+echo "Running git pre-commit hook. Running spotlessApply... "
+echo "*********************************************************"
+
+# Run spotless apply
+./gradlew spotlessApply
+
+status=$?
+
+if [ "$status" = 0 ] ; then
+    echo "Static analysis found no problems."
+    git add .
+    exit 0
+else
+    echo "---------------------------------------------------------"
+    echo "       --------------------------------------------      "
+    echo 1>&2 "Spotless Apply found violations it could not fix."
+    echo "Run spotless apply in your terminal and fix the issues before trying to commit again."
+    echo "       --------------------------------------------      "
+    echo "---------------------------------------------------------"
+    exit 1
+fi

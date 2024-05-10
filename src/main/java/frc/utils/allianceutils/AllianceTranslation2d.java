@@ -29,7 +29,7 @@ public class AllianceTranslation2d {
         return fromBlueAllianceTranslation(new Translation2d(x, y));
     }
 
-    public static AllianceTranslation2d fromAlliancePose(Translation2d allianceTranslation) {
+    public static AllianceTranslation2d fromAllianceTranslation(Translation2d allianceTranslation) {
         Translation2d blueAlliancePose = AllianceUtils.toAllianceTranslation(allianceTranslation);
         return new AllianceTranslation2d(
                 blueAlliancePose,
@@ -38,8 +38,8 @@ public class AllianceTranslation2d {
         );
     }
 
-    public static AllianceTranslation2d fromAlliancePose(double x, double y) {
-        return fromAlliancePose(new Translation2d(x, y));
+    public static AllianceTranslation2d fromAllianceTranslation(double x, double y) {
+        return fromAllianceTranslation(new Translation2d(x, y));
     }
 
     public Translation2d getBlueAllianceTranslation2d() {

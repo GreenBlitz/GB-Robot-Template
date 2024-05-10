@@ -18,7 +18,7 @@ public class AlliancePose2d {
     public static AlliancePose2d fromBlueAlliancePose(Translation2d translation, Rotation2d rotation) {
         return new AlliancePose2d(
                 AllianceTranslation2d.fromBlueAllianceTranslation(translation),
-                AllianceRotation2d.fromBlueAlliancePose(rotation)
+                AllianceRotation2d.fromBlueAllianceRotation(rotation)
         );
     }
 
@@ -35,8 +35,8 @@ public class AlliancePose2d {
 
     public static AlliancePose2d fromAlliancePose(Translation2d translation, Rotation2d rotation) {
         return new AlliancePose2d(
-                AllianceTranslation2d.fromAlliancePose(translation),
-                AllianceRotation2d.fromAlliancePose(rotation)
+                AllianceTranslation2d.fromAllianceTranslation(translation),
+                AllianceRotation2d.fromAllianceRotation(rotation)
         );
     }
 
@@ -48,15 +48,15 @@ public class AlliancePose2d {
         return fromAlliancePose(new Pose2d(x, y, rotation));
     }
 
-    public Pose2d toBlueAlliancePose() {
+    public Pose2d getBlueAlliancePose() {
         return new Pose2d(allianceTranslation2d.getBlueAllianceTranslation2d(), allianceRotation2d.getBlueAllianceAngle());
     }
 
-    public Pose2d toAlliancePose() {
+    public Pose2d getAlliancePose() {
         return new Pose2d(allianceTranslation2d.getAllianceTranslation2d(), allianceRotation2d.getAllianceAngle());
     }
 
-    public Pose2d toMirroredAlliancePose() {
+    public Pose2d getMirroredAlliancePose() {
         return new Pose2d(
                 allianceTranslation2d.getMirroredAllianceTranslation2d(),
                 allianceRotation2d.getMirroredAllianceAngle()

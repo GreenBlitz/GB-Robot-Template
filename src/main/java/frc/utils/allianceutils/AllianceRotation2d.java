@@ -16,7 +16,7 @@ public class AllianceRotation2d {
         this.mirroredAllianceAngle = mirroredAllianceAngle;
     }
 
-    public static AllianceRotation2d fromBlueAlliancePose(Rotation2d blueAllianceAngle) {
+    public static AllianceRotation2d fromBlueAllianceRotation(Rotation2d blueAllianceAngle) {
         return new AllianceRotation2d(
                 blueAllianceAngle,
                 AllianceUtils.toAllianceAngle(blueAllianceAngle),
@@ -24,7 +24,7 @@ public class AllianceRotation2d {
         );
     }
 
-    public static AllianceRotation2d fromAlliancePose(Rotation2d allianceAngle) {
+    public static AllianceRotation2d fromAllianceRotation(Rotation2d allianceAngle) {
         Rotation2d blueAllianceAngle = AllianceUtils.toAllianceAngle(allianceAngle);
         return new AllianceRotation2d(
                 blueAllianceAngle,

@@ -62,18 +62,21 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
         MotorSimulation.updateRegisteredSimulations();
         AllianceTranslation2d speaker = AllianceTranslation2d.fromBlueAllianceTranslation(0, 5);
-        AllianceTranslation2d currentPose = AllianceTranslation2d.fromBlueAllianceTranslation(2, 7);
+        AllianceTranslation2d currentPose = AllianceTranslation2d.fromBlueAllianceTranslation(15, 3);
         Logger.recordOutput("Blue Speaker", speaker.getBlueAllianceTranslation2d());
         Logger.recordOutput("Red Speaker", speaker.getMirroredAllianceTranslation2d());
         Logger.recordOutput("Current Pose", currentPose.getBlueAllianceTranslation2d());
         Rotation2d wantedAngle = Rotation2d.fromRadians(
                 Math.atan2(
-                        speaker.getMirroredAllianceTranslation2d().getY() - currentPose.getBlueAllianceTranslation2d().getY(),
-                        speaker.getMirroredAllianceTranslation2d().getX() - currentPose.getBlueAllianceTranslation2d().getX()
+                        speaker.getMirroredAllianceTranslation2d().getY() - currentPose.getBlueAllianceTranslation2d
+                                                                                               ().getY(),
+                        speaker.getMirroredAllianceTranslation2d().getX() - currentPose.getBlueAllianceTranslation2d
+                                                                                               ().getX()
                 )
         );
-        AllianceRotation2d allianceWantedAngle = AllianceRotation2d.fromBlueAlliancePose(wantedAngle);
+        AllianceRotation2d allianceWantedAngle = AllianceRotation2d.fromBlueAllianceRotation(wantedAngle);
         Logger.recordOutput("wantedAngleDeg", allianceWantedAngle.getAllianceAngle().getDegrees());
+        Logger.recordOutput("wantedAngleDegAlll", wantedAngle.getDegrees());
     }
 
     private void initializeLogger() {

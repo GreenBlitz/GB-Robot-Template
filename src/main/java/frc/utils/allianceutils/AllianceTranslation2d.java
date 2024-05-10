@@ -34,7 +34,7 @@ public class AllianceTranslation2d {
         return new AllianceTranslation2d(
                 blueAlliancePose,
                 allianceTranslation,
-                AllianceUtils.toMirroredAllianceTranslation(allianceTranslation)
+                AllianceUtils.toMirroredAllianceTranslation(blueAlliancePose)
         );
     }
 

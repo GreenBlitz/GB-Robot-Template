@@ -13,11 +13,11 @@ public class FlywheelSimulation extends MotorSimulation {
     private double lastPositionRadians = 0;
 
     public FlywheelSimulation(DCMotor gearbox, double gearRatio, double momentOfInertia) {
-        flywheelSimulation = new FlywheelSim(gearbox, gearRatio, momentOfInertia);
+        this.flywheelSimulation = new FlywheelSim(gearbox, gearRatio, momentOfInertia);
     }
 
     public FlywheelSimulation(DCMotor gearbox, double gearRatio, double kv, double ka) {
-        flywheelSimulation = new FlywheelSim(LinearSystemId.identifyVelocitySystem(kv, ka), gearbox, gearRatio);
+        this.flywheelSimulation = new FlywheelSim(LinearSystemId.identifyVelocitySystem(kv, ka), gearbox, gearRatio);
     }
 
     @Override

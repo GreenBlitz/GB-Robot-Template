@@ -18,7 +18,7 @@ public class AlliancePose2d {
     public static AlliancePose2d fromBlueAlliancePose(Translation2d translation, Rotation2d rotation) {
         return new AlliancePose2d(
                 AllianceTranslation2d.fromBlueAllianceTranslation(translation),
-                AllianceRotation2d.fromAlliancePose(rotation)
+                AllianceRotation2d.fromBlueAlliancePose(rotation)
         );
     }
 

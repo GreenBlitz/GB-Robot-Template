@@ -1,6 +1,7 @@
 package frc.utils.loggerutils;
 
 import com.ctre.phoenix6.SignalLogger;
+import frc.robot.constants.LogPathsConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -21,7 +22,12 @@ public class LoggerUtils {
         }
         else {
             startLoggerOnRoborio();
+            reportAlertsToLog();
         }
+    }
+
+    private static void reportAlertsToLog() {
+        Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + "/Didn't found USB");
     }
 
     public static void startLoggerOnUSB() {

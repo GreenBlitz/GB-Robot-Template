@@ -1,7 +1,7 @@
 package frc.utils.batteryutils;
 
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.Timer;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -23,17 +23,17 @@ public class Battery extends GBSubsystem {
         return BatteryConstants.MIN_VOLTAGE_BATTERY;
     }
 
-    public static Command getBatteryLimiterCommand() {
-        return BatteryConstants.BATTERY_LIMITER;
-    }
-
     public static void scheduleBatteryLimiterCommand() {
         BatteryConstants.BATTERY_LIMITER.schedule();
     }
 
-    public static void logBatteryStatus() {
+    protected static void logBatteryStatus() {
         Logger.recordOutput(BatteryConstants.LOG_PATH + "Voltage", getCurrentVoltage());
         Logger.recordOutput(BatteryConstants.LOG_PATH + "Current", getTotalCurrent());
+    }
+
+    protected static void reportAlertsToLog() {
+        Logger.recordOutput(BatteryConstants.ALERT_LOG_PATH + "LowVoltageAt", Timer.getFPGATimestamp());
     }
 
 }

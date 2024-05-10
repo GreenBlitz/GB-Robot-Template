@@ -286,15 +286,21 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    protected void pidToPose(Pose2d targetPose) {
+    protected void pidToPose(AlliancePose2d targetPose) {
         Pose2d currentPose = POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose();
-        double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getX(), targetPose.getX());
-        double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentPose.getY(), targetPose.getY());
+        double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(
+                currentPose.getX(),
+                targetPose.toBlueAlliancePose().getX()
+        );
+        double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(
+                currentPose.getY(),
+                targetPose.toBlueAlliancePose().getY()
+        );
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
                 ySpeed * direction,
-                calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation())
+                calculateProfiledAngleSpeedToTargetAngle(targetPose.toBlueAlliancePose().getRotation())
         );
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
@@ -504,20 +510,20 @@ public class Swerve extends GBSubsystem {
                 currentTranslationVelocity) < SwerveConstants.TRANSLATION_VELOCITY_TOLERANCE;
     }
 
-    public boolean isAtXAxisPosition(double targetXAxisPosition) {
+    public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
         double currentXAxisVelocity = getFieldRelativeVelocity().vxMetersPerSecond;
         return isAtTranslationPosition(
                 POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getX(),
-                targetXAxisPosition,
+                targetXBlueAlliancePosition,
                 currentXAxisVelocity
         );
     }
 
-    public boolean isAtYAxisPosition(double targetYAxisPosition) {
+    public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
         double currentYAxisVelocity = getFieldRelativeVelocity().vyMetersPerSecond;
         return isAtTranslationPosition(
                 POSE_ESTIMATOR.getCurrentPose().toBlueAlliancePose().getY(),
-                targetYAxisPosition,
+                targetYBlueAlliancePosition,
                 currentYAxisVelocity
         );
     }
@@ -534,8 +540,11 @@ public class Swerve extends GBSubsystem {
         return isAtAngle && isStopping;
     }
 
-    public boolean isAtPosition(Pose2d targetPose) {
-        return isAtXAxisPosition(targetPose.getX()) && isAtYAxisPosition(targetPose.getY()) && isAtAngle(targetPose.getRotation());
+    public boolean isAtPosition(AlliancePose2d targetPose) {
+        return isAtXAxisPosition(targetPose.toBlueAlliancePose().getX())
+                && isAtYAxisPosition(targetPose.toBlueAlliancePose().getY())
+                && isAtAngle(targetPose.toBlueAlliancePose().getRotation()
+        );
     }
 
 }

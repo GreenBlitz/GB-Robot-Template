@@ -146,8 +146,8 @@ public class SwerveCommands {
 
     private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
         return new InstantCommand(SWERVE::resetRotationController).andThen(
-                new RunCommand(() -> SWERVE.pidToPose(targetPose.toBlueAlliancePose())).until(
-                        () -> SWERVE.isAtPosition(targetPose.toBlueAlliancePose())
+                new RunCommand(() -> SWERVE.pidToPose(targetPose)).until(
+                        () -> SWERVE.isAtPosition(targetPose)
                 )
         );
     }

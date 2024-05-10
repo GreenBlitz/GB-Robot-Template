@@ -6,15 +6,19 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
+import frc.utils.allianceutils.AllianceRotation2d;
+import frc.utils.allianceutils.AllianceTranslation2d;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -57,6 +61,19 @@ public class Robot extends LoggedRobot {
         RoborioUtils.updateRioUtils(); // Better to be first
         CommandScheduler.getInstance().run();
         MotorSimulation.updateRegisteredSimulations();
+        AllianceTranslation2d speaker = AllianceTranslation2d.fromBlueAllianceTranslation(0, 5);
+        AllianceTranslation2d currentPose = AllianceTranslation2d.fromBlueAllianceTranslation(2, 7);
+        Logger.recordOutput("Blue Speaker", speaker.getBlueAllianceTranslation2d());
+        Logger.recordOutput("Red Speaker", speaker.getMirroredAllianceTranslation2d());
+        Logger.recordOutput("Current Pose", currentPose.getBlueAllianceTranslation2d());
+        Rotation2d wantedAngle = Rotation2d.fromRadians(
+                Math.atan2(
+                        speaker.getMirroredAllianceTranslation2d().getY() - currentPose.getBlueAllianceTranslation2d().getY(),
+                        speaker.getMirroredAllianceTranslation2d().getX() - currentPose.getBlueAllianceTranslation2d().getX()
+                )
+        );
+        AllianceRotation2d allianceWantedAngle = AllianceRotation2d.fromBlueAlliancePose(wantedAngle);
+        Logger.recordOutput("wantedAngleDeg", allianceWantedAngle.getAllianceAngle().getDegrees());
     }
 
     private void initializeLogger() {

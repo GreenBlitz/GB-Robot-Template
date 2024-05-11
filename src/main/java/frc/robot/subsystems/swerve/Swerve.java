@@ -292,7 +292,7 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
                 ySpeed * direction,
-                calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation()).getRadians()
+                calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation2d()).getRadians()
         );
         selfRelativeDrive(fieldRelativeSpeedsToSelfRelativeSpeeds(targetFieldRelativeSpeeds));
     }
@@ -307,7 +307,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(AllianceRotation2d targetAngle) {
-        AllianceRotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
+        AllianceRotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation2d();
         return Rotation2d.fromDegrees(SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getBlueAllianceAngle().getDegrees(),
                 targetAngle.getBlueAllianceAngle().getDegrees()
@@ -477,7 +477,7 @@ public class Swerve extends GBSubsystem {
     public boolean isAtPosition(AlliancePose2d targetPose) {
         return isAtXAxisPosition(targetPose.getBlueAlliancePose().getX())
                 && isAtYAxisPosition(targetPose.getBlueAlliancePose().getY())
-                && isAtAngle(targetPose.getRotation()
+                && isAtAngle(targetPose.getRotation2d()
         );
     }
 

@@ -60,7 +60,7 @@ public class PoseEstimator implements AutoCloseable {
      * @param currentPose the pose to reset to, as an {@link AlliancePose2d}
      */
     public void resetPose(AlliancePose2d currentPose) {
-        RobotContainer.SWERVE.setHeading(currentPose.getRotation());
+        RobotContainer.SWERVE.setHeading(currentPose.getRotation2d());
         swerveDrivePoseEstimator.resetPose(currentPose.getBlueAlliancePose());
     }
 

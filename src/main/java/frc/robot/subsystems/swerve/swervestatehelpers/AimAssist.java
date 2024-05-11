@@ -16,13 +16,13 @@ public enum AimAssist {
 
     AimAssist(AllianceRotation2d targetAllianceRotation) {}
 
-    AimAssist(RotationSupplier targetAllianceRotation) {}
+    AimAssist(AllianceRotation2dSupplier targetAllianceRotation) {}
 
-    AimAssist(TranslationSupplier targetAllianceTranslation) {}
+    AimAssist(AllianceTranslation2dSupplier targetAllianceTranslation) {}
 
-    private interface RotationSupplier extends Supplier<AllianceRotation2d> {}
+    private interface AllianceRotation2dSupplier extends Supplier<AllianceRotation2d> {}
 
-    private interface TranslationSupplier extends Supplier<AllianceTranslation2d> {}
+    private interface AllianceTranslation2dSupplier extends Supplier<AllianceTranslation2d> {}
 
     //Todo - pose to angle. Maybe in kinda math util or pose util
 }

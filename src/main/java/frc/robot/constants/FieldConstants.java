@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.DriverStationUtils;
+import frc.utils.allianceutils.AllianceRotation2d;
 import frc.utils.allianceutils.AllianceTranslation2d;
 
 public class FieldConstants {
@@ -17,5 +19,7 @@ public class FieldConstants {
         }
         return AllianceTranslation2d.fromBlueAllianceTranslation(SPEAKER.getMirroredAllianceTranslation2d());
     }
+
+    public static final AllianceRotation2d ANGLE_TO_AMP = AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(90));
 
 }

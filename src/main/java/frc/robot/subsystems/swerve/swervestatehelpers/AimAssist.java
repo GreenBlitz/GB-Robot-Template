@@ -11,12 +11,22 @@ import java.util.function.Supplier;
 
 public enum AimAssist {
 
-    //    NOTE(),
-    SPEAKER(FieldConstants.getAllianceSpeaker());
-    //    AMP(),
-    //    STAGE();
+    NONE(),
+
+    //todo - NOTE(),
+
+    //todo - STAGE();
+
+    SPEAKER(FieldConstants.getAllianceSpeaker()),
+
+    AMP(FieldConstants.ANGLE_TO_AMP);
+
 
     public final Supplier<AllianceRotation2d> targetAngleSupplier;
+
+    AimAssist() {
+        targetAngleSupplier = () -> AllianceRotation2d.fromBlueAllianceRotation(new Rotation2d());
+    }
 
     AimAssist(AllianceRotation2d targetAllianceRotation) {
         this.targetAngleSupplier = () -> targetAllianceRotation;

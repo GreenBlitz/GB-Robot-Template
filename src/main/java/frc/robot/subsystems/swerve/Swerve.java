@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
@@ -90,7 +91,7 @@ public class Swerve extends GBSubsystem {
 
     private void updateAllInputs() {
         gyro.updateInputs(gyroInputs);
-        Logger.processInputs("Gyro", gyroInputs);
+        Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
 
         for (Module currentModule : modules) {
             currentModule.periodic();

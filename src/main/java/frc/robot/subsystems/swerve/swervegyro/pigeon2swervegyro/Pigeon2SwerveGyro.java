@@ -2,10 +2,10 @@ package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
@@ -64,7 +64,7 @@ public class Pigeon2SwerveGyro implements ISwerveGyro {
 
     private void reportAlertsToLog(SwerveGyroInputsAutoLogged inputs) {
         if (!inputs.connected) {
-            Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + "Gyro/gyroDisconnectedAt", Timer.getFPGATimestamp());
+            Logger.recordOutput(SwerveGyroConstants.ALERT_LOG_PATH + "/gyroDisconnectedAt", Timer.getFPGATimestamp());
         }
     }
 

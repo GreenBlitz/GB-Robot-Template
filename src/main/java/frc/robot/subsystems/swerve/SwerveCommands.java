@@ -55,10 +55,11 @@ public class SwerveCommands {
         );
     }
 
-    public static Command getFR_N_O_MOR(DoubleSupplier xSupplier, DoubleSupplier ySupplier, AllianceRotation2d targetAngle) {
+    public static Command getRotateToSpeaker(DoubleSupplier xSupplier, DoubleSupplier ySupplier,
+            Supplier<AllianceRotation2d> targetAngle) {
         return new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(new SwerveState()),
-                () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), targetAngle),
+                () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), targetAngle.get()),
                 SWERVE
         );
     }

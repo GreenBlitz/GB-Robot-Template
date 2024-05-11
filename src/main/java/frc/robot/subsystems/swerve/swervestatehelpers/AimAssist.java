@@ -1,5 +1,9 @@
 package frc.robot.subsystems.swerve.swervestatehelpers;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.RobotContainer;
+import frc.robot.constants.FieldConstants;
 import frc.utils.allianceutils.AllianceRotation2d;
 import frc.utils.allianceutils.AllianceTranslation2d;
 
@@ -7,22 +11,45 @@ import java.util.function.Supplier;
 
 public enum AimAssist {
 
-    NOTE(),
-    SPEAKER(),
-    AMP(),
-    STAGE();
+    //    NOTE(),
+    SPEAKER(FieldConstants.getAllianceSpeaker());
+    //    AMP(),
+    //    STAGE();
 
     public final Supplier<AllianceRotation2d> targetAngleSupplier;
 
-    AimAssist(AllianceRotation2d targetAllianceRotation) {}
+    AimAssist(AllianceRotation2d targetAllianceRotation) {
+        this.targetAngleSupplier = () -> targetAllianceRotation;
+    }
 
-    AimAssist(AllianceRotation2dSupplier targetAllianceRotation) {}
+    AimAssist(AllianceRotation2dSupplier targetAllianceRotation) {
+        this.targetAngleSupplier = targetAllianceRotation;
+    }
 
-    AimAssist(AllianceTranslation2dSupplier targetAllianceTranslation) {}
+    AimAssist(AllianceTranslation2d targetAllianceTranslation) {
+        this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslation);
+    }
 
+    AimAssist(AllianceTranslation2dSupplier targetAllianceTranslationSupplier) {
+        this.targetAngleSupplier = () ->
+                getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
+    }
+
+    //Todo - Maybe in kinda math util or pose util
     private interface AllianceRotation2dSupplier extends Supplier<AllianceRotation2d> {}
 
+    //Todo - Maybe in kinda math util or pose util
     private interface AllianceTranslation2dSupplier extends Supplier<AllianceTranslation2d> {}
 
-    //Todo - pose to angle. Maybe in kinda math util or pose util
+    //Todo - Maybe in kinda math util or pose util
+    private AllianceRotation2d getTargetAngleFromTargetTranslation(AllianceTranslation2d targetTranslation) {
+        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose();
+        Rotation2d wantedAngle = Rotation2d.fromRadians(
+                Math.atan2(
+                        targetTranslation.getBlueAllianceTranslation2d().getY() - currentBluePose.getY(),
+                        targetTranslation.getBlueAllianceTranslation2d().getX() - currentBluePose.getX()
+                )
+        );
+        return AllianceRotation2d.fromBlueAllianceRotation(wantedAngle);
+    }
 }

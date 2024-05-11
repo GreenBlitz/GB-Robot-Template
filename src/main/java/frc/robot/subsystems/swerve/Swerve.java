@@ -32,7 +32,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static frc.robot.RobotContainer.POSE_ESTIMATOR;
 
-// todo - add aim assist calculations (maybe in the "SwerveAimAssist" class)
 public class Swerve extends GBSubsystem {
 
     public static final Lock ODOMETRY_LOCK = new ReentrantLock();
@@ -315,7 +314,7 @@ public class Swerve extends GBSubsystem {
         ));
     }
 
-
+    // todo - maybe move some of work to SwerveMath class
     private Rotation2d getAimAssistThetaVelocity() {
         if (currentState.getAimAssist().equals(AimAssist.NONE)) {
             return new Rotation2d();
@@ -327,12 +326,13 @@ public class Swerve extends GBSubsystem {
         return pidVelocity;
     }
 
-    //todo - move to drive mode
+    //todo - move to drive mode or to SwerveMath class
     public static ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getAlliancePose().getRotation();
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, currentAngle);
     }
 
+    // todo - maybe move some of work to SwerveMath class
     private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
         return new ChassisSpeeds(
                 xPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
@@ -348,9 +348,11 @@ public class Swerve extends GBSubsystem {
      * @param chassisSpeeds the chassis speeds to fix skewing for
      * @return the fixed speeds
      */
+    // todo - maybe move some of work to SwerveMath class
     private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
         return ChassisSpeeds.discretize(chassisSpeeds, RoborioUtils.getCurrentRoborioCycleTime());
     }
+
 
     protected void drive(double xPower, double yPower, double thetaPower) {
         driveByState(powersToSpeeds(xPower, yPower, thetaPower));
@@ -374,20 +376,26 @@ public class Swerve extends GBSubsystem {
         setTargetModuleStates(swerveModuleStates);
     }
 
-
+    // todo - maybe move some of work to SwerveMath class
     public boolean isStill(ChassisSpeeds chassisSpeeds) {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND;
     }
 
-    private boolean isAtTranslationPosition(
-            double currentTranslationPosition, double targetTranslationPosition, double currentTranslationVelocity
-    ) {//todo - clean
-        return Math.abs(currentTranslationPosition - targetTranslationPosition) < SwerveConstants.TRANSLATION_TOLERANCE_METERS && Math.abs(
-                currentTranslationVelocity) < SwerveConstants.TRANSLATION_VELOCITY_TOLERANCE;
+    // todo - maybe move some of work to SwerveMath class
+    private boolean isAtTranslationPosition(double currentTranslationPosition, double targetTranslationPosition,
+            double currentTranslationVelocity) {
+        boolean isNearTargetPosition = MathUtil.isNear(
+                targetTranslationPosition,
+                currentTranslationPosition,
+                SwerveConstants.TRANSLATION_TOLERANCE_METERS
+        );
+        boolean isStopping = Math.abs(currentTranslationVelocity) < SwerveConstants.TRANSLATION_VELOCITY_TOLERANCE;
+        return isNearTargetPosition && isStopping;
     }
 
+    // todo - maybe move some of work to SwerveMath class
     public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
         double currentXAxisVelocity = getFieldRelativeVelocity().vxMetersPerSecond;
         return isAtTranslationPosition(
@@ -397,6 +405,7 @@ public class Swerve extends GBSubsystem {
         );
     }
 
+    // todo - maybe move some of work to SwerveMath class
     public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
         double currentYAxisVelocity = getFieldRelativeVelocity().vyMetersPerSecond;
         return isAtTranslationPosition(
@@ -406,6 +415,7 @@ public class Swerve extends GBSubsystem {
         );
     }
 
+    // todo - maybe move some of work to SwerveMath class
     public boolean isAtAngle(AllianceRotation2d targetAngle) {
         double angleDifferenceDeg = Math.abs(
                 targetAngle.getBlueAllianceAngle()
@@ -420,6 +430,7 @@ public class Swerve extends GBSubsystem {
         return isAtAngle && isStopping;
     }
 
+    // todo - maybe move some of work to SwerveMath class
     public boolean isAtPosition(AlliancePose2d targetPose) {
         return isAtXAxisPosition(targetPose.getBlueAlliancePose().getX())
                 && isAtYAxisPosition(targetPose.getBlueAlliancePose().getY())

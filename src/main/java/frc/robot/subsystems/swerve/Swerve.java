@@ -365,29 +365,6 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    //    protected void drive(double xPower, double yPower, AllianceRotation2d targetAngle) {
-    //        if (currentState.getDriveMode().equals(DriveMode.SELF_RELATIVE)) {
-    //            selfRelativeDrive(xPower, yPower, targetAngle);
-    //        }
-    //        else {
-    //            fieldRelativeDrive(xPower, yPower, targetAngle);
-    //        }
-    //    }
-
-    //    /**
-    //     * Drives the swerve with the given powers and a target angle, relative to the field's frame of reference.
-    //     *
-    //     * @param xPower the x power
-    //     * @param yPower the y power
-    //     * @param targetAngle the target angle, relative to the blue alliance's forward position
-    //     */
-
-    //    protected void fieldRelativeDrive(double xPower, double yPower, AllianceRotation2d targetAngle) {
-    //        ChassisSpeeds speeds = fieldRelativePowersToSelfRelativeSpeeds(xPower, yPower, 0);
-    //        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians();
-    //        selfRelativeDrive(speeds);
-    //    }
-
     /**
      * Drives the swerve with the given powers, relative to the field's frame of reference.
      *
@@ -399,20 +376,6 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds speeds = fieldRelativePowersToSelfRelativeSpeeds(xPower, yPower, thetaPower);
         selfRelativeDrive(speeds);
     }
-
-    //    /**
-    //     * Drives the swerve with the given powers and a target angle, relative to the robot's frame of reference.
-    //     *
-    //     * @param xPower the x power
-    //     * @param yPower the y power
-    //     * @param targetAngle the target angle
-    //     */
-    //    private void selfRelativeDrive(double xPower, double yPower, AllianceRotation2d targetAngle) {
-    //        ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, 0);
-    //        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians();
-    //
-    //        selfRelativeDrive(speeds);
-    //    }
 
     /**
      * Drives the swerve with the given powers, relative to the robot's frame of reference.

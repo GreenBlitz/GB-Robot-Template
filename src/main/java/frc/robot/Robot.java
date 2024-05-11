@@ -56,6 +56,10 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         RoborioUtils.updateRioUtils(); // Better to be first
         CommandScheduler.getInstance().run();
+    }
+
+    @Override
+    public void simulationPeriodic() {
         MotorSimulation.updateRegisteredSimulations();
     }
 

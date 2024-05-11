@@ -56,12 +56,6 @@ public class JoysticksBindings {
                 )))
         ));
 
-        //        usedJoystick.B.whileTrue(SwerveCommands.getFR_N_O_MOR(
-        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-        //                AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(90))
-        //        ));
-
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(
                 AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(180))
         ));
@@ -69,10 +63,10 @@ public class JoysticksBindings {
                 AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(-17))
         ));
         usedJoystick.START.whileTrue(SwerveCommands.getRotateToAngleCommand(
-                AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(-17))
+                AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(-17)), RotateAxis.FRONT_LEFT_MODULE
         ));
         usedJoystick.BACK.whileTrue(SwerveCommands.getRotateToAngleCommand(
-                AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(180))
+                AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(180)), RotateAxis.BACK_RIGHT_MODULE
         ));
 
         usedJoystick.B.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
@@ -91,19 +85,19 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
         ));
-        //        usedJoystick.L2.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
-        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
-        //        ));
+        usedJoystick.R2.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
         ));
 
-        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());//CHECKED
-        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));//CHECKED
+        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());
+        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));
 
         usedJoystick.POV_LEFT.whileTrue(SwerveCommands.getDriveToPoseCommand(
                 () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))),

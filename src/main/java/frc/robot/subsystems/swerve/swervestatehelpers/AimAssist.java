@@ -41,8 +41,7 @@ public enum AimAssist {
     }
 
     AimAssist(AllianceTranslation2dSupplier targetAllianceTranslationSupplier) {
-        this.targetAngleSupplier = () ->
-                getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
+        this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
     }
 
     //Todo - Maybe in kinda math util or pose util

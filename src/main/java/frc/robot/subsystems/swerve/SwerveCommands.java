@@ -14,7 +14,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
-import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.allianceutils.AllianceRotation2d;
@@ -131,7 +130,7 @@ public class SwerveCommands {
 
     private static Command getCurrentDriveToPoseCommand(AlliancePose2d targetPose, PathConstraints constraints) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState(LoopMode.CLOSED))),
+                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState(DriveMode.SELF_RELATIVE))),
                 getPathfindToPoseCommand(targetPose, constraints),
                 getPIDToPoseCommand(targetPose)
         );

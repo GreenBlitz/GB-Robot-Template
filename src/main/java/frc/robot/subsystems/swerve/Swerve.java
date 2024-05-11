@@ -16,6 +16,7 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
@@ -315,6 +316,17 @@ public class Swerve extends GBSubsystem {
     }
 
 
+    private Rotation2d getAimAssistThetaVelocity() {
+        if (currentState.getAimAssist().equals(AimAssist.NONE)) {
+            return new Rotation2d();
+        }
+        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentState.getAimAssist().targetAngleSupplier.get());
+        //todo - make value have same range like joystick
+        //todo - distance factor
+        //todo - current robot velocity factor
+        return pidVelocity;
+    }
+
     private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getAlliancePose().getRotation();
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, currentAngle);
@@ -353,28 +365,28 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    protected void drive(double xPower, double yPower, AllianceRotation2d targetAngle) {
-        if (currentState.getDriveMode().equals(DriveMode.SELF_RELATIVE)) {
-            selfRelativeDrive(xPower, yPower, targetAngle);
-        }
-        else {
-            fieldRelativeDrive(xPower, yPower, targetAngle);
-        }
-    }
+    //    protected void drive(double xPower, double yPower, AllianceRotation2d targetAngle) {
+    //        if (currentState.getDriveMode().equals(DriveMode.SELF_RELATIVE)) {
+    //            selfRelativeDrive(xPower, yPower, targetAngle);
+    //        }
+    //        else {
+    //            fieldRelativeDrive(xPower, yPower, targetAngle);
+    //        }
+    //    }
 
-    /**
-     * Drives the swerve with the given powers and a target angle, relative to the field's frame of reference.
-     *
-     * @param xPower the x power
-     * @param yPower the y power
-     * @param targetAngle the target angle, relative to the blue alliance's forward position
-     */
+    //    /**
+    //     * Drives the swerve with the given powers and a target angle, relative to the field's frame of reference.
+    //     *
+    //     * @param xPower the x power
+    //     * @param yPower the y power
+    //     * @param targetAngle the target angle, relative to the blue alliance's forward position
+    //     */
 
-    protected void fieldRelativeDrive(double xPower, double yPower, AllianceRotation2d targetAngle) {
-        ChassisSpeeds speeds = fieldRelativePowersToSelfRelativeSpeeds(xPower, yPower, 0);
-        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians();
-        selfRelativeDrive(speeds);
-    }
+    //    protected void fieldRelativeDrive(double xPower, double yPower, AllianceRotation2d targetAngle) {
+    //        ChassisSpeeds speeds = fieldRelativePowersToSelfRelativeSpeeds(xPower, yPower, 0);
+    //        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians();
+    //        selfRelativeDrive(speeds);
+    //    }
 
     /**
      * Drives the swerve with the given powers, relative to the field's frame of reference.
@@ -388,19 +400,19 @@ public class Swerve extends GBSubsystem {
         selfRelativeDrive(speeds);
     }
 
-    /**
-     * Drives the swerve with the given powers and a target angle, relative to the robot's frame of reference.
-     *
-     * @param xPower the x power
-     * @param yPower the y power
-     * @param targetAngle the target angle
-     */
-    private void selfRelativeDrive(double xPower, double yPower, AllianceRotation2d targetAngle) {
-        ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, 0);
-        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians();
-
-        selfRelativeDrive(speeds);
-    }
+    //    /**
+    //     * Drives the swerve with the given powers and a target angle, relative to the robot's frame of reference.
+    //     *
+    //     * @param xPower the x power
+    //     * @param yPower the y power
+    //     * @param targetAngle the target angle
+    //     */
+    //    private void selfRelativeDrive(double xPower, double yPower, AllianceRotation2d targetAngle) {
+    //        ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, 0);
+    //        speeds.omegaRadiansPerSecond = calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians();
+    //
+    //        selfRelativeDrive(speeds);
+    //    }
 
     /**
      * Drives the swerve with the given powers, relative to the robot's frame of reference.
@@ -415,7 +427,9 @@ public class Swerve extends GBSubsystem {
     }
 
     private void selfRelativeDrive(ChassisSpeeds chassisSpeeds) {
+        chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity().getRadians();
         chassisSpeeds = discretize(chassisSpeeds);
+
         if (isStill(chassisSpeeds)) {
             stop();
             return;

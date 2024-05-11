@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
@@ -55,11 +56,10 @@ public class SwerveCommands {
         );
     }
 
-    public static Command getRotateToSpeaker(DoubleSupplier xSupplier, DoubleSupplier ySupplier,
-            Supplier<AllianceRotation2d> targetAngle) {
+    public static Command getRotateToSpeaker(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState()),
-                () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), targetAngle.get()),
+                () -> SWERVE.initializeDrive(new SwerveState(AimAssist.SPEAKER)),
+                () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
     }

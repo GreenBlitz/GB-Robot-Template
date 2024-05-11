@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.allianceutils.AllianceRotation2d;
@@ -90,7 +89,7 @@ public class JoysticksBindings {
         usedJoystick.L2.whileTrue(SwerveCommands.getRotateToSpeaker(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                AimAssist.SPEAKER.targetAngleSupplier
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
         ));
         //        usedJoystick.L2.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
         //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),

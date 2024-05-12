@@ -17,7 +17,7 @@ public enum AimAssist {
 
     //todo - STAGE();
 
-    SPEAKER(FieldConstants.getAllianceSpeaker()),
+    SPEAKER(FieldConstants::getAllianceSpeaker),
 
     AMP(FieldConstants.ANGLE_TO_AMP);
 

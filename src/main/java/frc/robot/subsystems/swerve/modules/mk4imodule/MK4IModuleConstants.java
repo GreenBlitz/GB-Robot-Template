@@ -31,9 +31,9 @@ class MK4IModuleConstants {
 
     private static final NeutralModeValue STEER_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Coast;
 
-    private static final double DRIVE_SLIP_CURRENT = 100;
+    private static final double DRIVE_SLIP_CURRENT = 30;
 
-    private static final double STEER_CURRENT_LIMIT = 50;
+    private static final double STEER_CURRENT_LIMIT = 30;
 
     private static final double STEER_MOTOR_P = 20;
 

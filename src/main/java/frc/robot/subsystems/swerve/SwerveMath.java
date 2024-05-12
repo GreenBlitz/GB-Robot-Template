@@ -65,7 +65,7 @@ public class SwerveMath {
         return new ChassisSpeeds(
                 xPower * maxTranslationSpeedMetersPerSecond,
                 yPower * maxTranslationSpeedMetersPerSecond,
-                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * maxRotationSpeedPerSecond.getRadians()
+                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * maxRotationSpeedPerSecond.getRadians()//todo-understand
         );
     }
 

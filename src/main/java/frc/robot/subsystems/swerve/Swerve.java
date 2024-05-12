@@ -315,29 +315,32 @@ public class Swerve extends GBSubsystem {
     }
 
     // todo - maybe move some of work to SwerveMath class
-    private Rotation2d getAimAssistThetaVelocity() {
+    private ChassisSpeeds getAimAssistedSpeeds(ChassisSpeeds speeds) {
         if (currentState.getAimAssist().equals(AimAssist.NONE)) {
-            return new Rotation2d();
+            return speeds;
         }
         Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentState.getAimAssist().targetAngleSupplier.get());
         //todo - make value have same range like joystick
         //todo - distance factor
         //todo - current robot velocity factor
-        return pidVelocity;
+        speeds.omegaRadiansPerSecond += pidVelocity.getRadians();
+        speeds.omegaRadiansPerSecond = MathUtil.clamp(
+                speeds.omegaRadiansPerSecond,
+                -SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians(),
+                SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians()
+        );
+        return speeds;
     }
 
-    //todo - move to drive mode or to SwerveMath class
     public static ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
-        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getAlliancePose().getRotation();
-        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, currentAngle);
+        return SwerveMath.fieldRelativeSpeedsToSelfRelativeSpeeds(fieldRelativeSpeeds, POSE_ESTIMATOR.getCurrentPose());
     }
 
-    // todo - maybe move some of work to SwerveMath class
     private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
-        return new ChassisSpeeds(
-                xPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
-                yPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
-                Math.pow(thetaPower, 2) * Math.signum(thetaPower) * currentState.getDriveSpeed().maxRotationSpeedPerSecond.getRadians()
+        return SwerveMath.powersToSpeeds(
+                xPower, yPower, thetaPower,
+                currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
+                currentState.getDriveSpeed().maxRotationSpeedPerSecond
         );
     }
 
@@ -348,9 +351,8 @@ public class Swerve extends GBSubsystem {
      * @param chassisSpeeds the chassis speeds to fix skewing for
      * @return the fixed speeds
      */
-    // todo - maybe move some of work to SwerveMath class
     private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, RoborioUtils.getCurrentRoborioCycleTime());
+        return SwerveMath.discretize(chassisSpeeds, RoborioUtils.getCurrentRoborioCycleTime());
     }
 
 
@@ -361,7 +363,7 @@ public class Swerve extends GBSubsystem {
     private void driveByState(ChassisSpeeds chassisSpeeds) {
         chassisSpeeds = currentState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
 
-        chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity().getRadians();//todo - clamp
+        chassisSpeeds = getAimAssistedSpeeds(chassisSpeeds);
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {

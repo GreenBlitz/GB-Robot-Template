@@ -29,7 +29,7 @@ public class SwerveConstants {
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
 
-    public static final double MAX_ROTATION_VELOCITY = 540;
+    private static final double MAX_ROTATION_VELOCITY = 540;
     public static final double MAX_ROTATION_ACCELERATION = 360;
     public static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS = new TrapezoidProfile.Constraints(
             MAX_ROTATION_VELOCITY,

@@ -9,7 +9,6 @@ package frc.utils.calibration.swervecalibration;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.MathConstants;
 import frc.utils.GBSubsystem;
@@ -58,7 +57,7 @@ public class WheelRadiusCharacterization extends Command {
         Rotation2d[] wheelPositions = wheelDriveDistanceSupplier.get();
         double averageDriveDistanceRads = 0.0;
         for (int i = 0; i < WheelRadiusConstants.NUMBER_OF_MODULES; i++) {
-            averageDriveDistanceRads += Math.abs(wheelPositions[i].minus(startWheelPositions[i]).getRadians());
+            averageDriveDistanceRads += Math.abs(wheelPositions[i].getRadians() - startWheelPositions[i].getRadians());
         }
         return averageDriveDistanceRads / WheelRadiusConstants.NUMBER_OF_MODULES;
     }
@@ -95,7 +94,7 @@ public class WheelRadiusCharacterization extends Command {
             Logger.recordOutput(WheelRadiusConstants.LOG_PATH, "Not enough data for characterization");
         }
         else {
-            Logger.recordOutput(WheelRadiusConstants.LOG_PATH, Units.metersToInches(wheelRadiusMeters) + " inches");
+            Logger.recordOutput(WheelRadiusConstants.LOG_PATH, wheelRadiusMeters + " meters");
         }
     }
 

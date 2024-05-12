@@ -63,4 +63,12 @@ public class AlliancePose2d {
         );
     }
 
+    public AllianceRotation2d getRotation2d() {
+        return AllianceRotation2d.fromBlueAllianceRotation(allianceRotation2d.getBlueAllianceAngle());
+    }
+
+    public AllianceTranslation2d getTranslation2d() {
+        return AllianceTranslation2d.fromBlueAllianceTranslation(allianceTranslation2d.getBlueAllianceTranslation2d());
+    }
+
 }

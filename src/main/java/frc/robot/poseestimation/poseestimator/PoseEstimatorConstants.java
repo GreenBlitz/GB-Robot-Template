@@ -22,6 +22,6 @@ public class PoseEstimatorConstants {
      */
     protected static final Vector<N3> ODOMETRY_STANDARD_DEVIATIONS = VecBuilder.fill(0.003, 0.003, 0.0002);
 
-    protected static final AlliancePose2d DEFAULT_POSE = AlliancePose2d.fromBlueAlliancePose(new Pose2d(5, 5, new Rotation2d()));
+    protected static final AlliancePose2d DEFAULT_POSE = AlliancePose2d.fromBlueAlliancePose(new Pose2d(2, 5, new Rotation2d()));
 
 }

@@ -288,10 +288,9 @@ public class Swerve extends GBSubsystem {
                 currentBluePose.getY(),
                 targetPose.getBlueAlliancePose().getY()
         );
-        int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
-                xSpeed * direction,
-                ySpeed * direction,
+                xSpeed,
+                ySpeed,
                 calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation2d()).getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);

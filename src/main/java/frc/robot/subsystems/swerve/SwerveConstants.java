@@ -31,15 +31,8 @@ public class SwerveConstants {
 
     public static final double MAX_SPEED_METERS_PER_SECOND = 5.5;
     public static final Rotation2d MAX_ROTATIONAL_SPEED_PER_SECOND = Rotation2d.fromRadians(10);
+    public static final Rotation2d MAX_ROTATION_ACCELERATION_PER_SECOND = Rotation2d.fromDegrees(360);
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
-
-
-    public static final double MAX_ROTATION_VELOCITY = 540;
-    public static final double MAX_ROTATION_ACCELERATION = 360;
-    public static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            MAX_ROTATION_VELOCITY,
-            MAX_ROTATION_ACCELERATION
-    );
 
 
     public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
@@ -71,6 +64,11 @@ public class SwerveConstants {
 
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
+
+    public static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS = new TrapezoidProfile.Constraints(
+            MAX_ROTATIONAL_SPEED_PER_SECOND.getDegrees(),
+            MAX_ROTATION_ACCELERATION_PER_SECOND.getDegrees()
+    );
 
     public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);
     public static final ProfiledPIDController PROFILED_ROTATION_PID_DEGREES_CONTROLLER = new ProfiledPIDController(

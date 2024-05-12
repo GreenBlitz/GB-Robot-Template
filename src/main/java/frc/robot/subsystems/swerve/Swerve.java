@@ -105,17 +105,17 @@ public class Swerve extends GBSubsystem {
 
 
     private void logState() {
-        Logger.recordOutput("Swerve/State/DriveMode", currentState.getDriveMode());//todo - path const
-        Logger.recordOutput("Swerve/State/DriveSpeed", currentState.getDriveSpeed());
-        Logger.recordOutput("Swerve/State/LoopMode", currentState.getLoopMode());
-        Logger.recordOutput("Swerve/State/RotateAxis", currentState.getRotateAxis());
-        Logger.recordOutput("Swerve/State/AimAssist", currentState.getAimAssist());
+        Logger.recordOutput(SwerveConstants.SWERVE_STATE_LOG_PATH + "DriveMode", currentState.getDriveMode());
+        Logger.recordOutput(SwerveConstants.SWERVE_STATE_LOG_PATH + "DriveSpeed", currentState.getDriveSpeed());
+        Logger.recordOutput(SwerveConstants.SWERVE_STATE_LOG_PATH + "LoopMode", currentState.getLoopMode());
+        Logger.recordOutput(SwerveConstants.SWERVE_STATE_LOG_PATH + "RotateAxis", currentState.getRotateAxis());
+        Logger.recordOutput(SwerveConstants.SWERVE_STATE_LOG_PATH + "AimAssist", currentState.getAimAssist());
     }
 
     private void updateNetworkTables() {
-        Logger.recordOutput("Swerve/Velocity/Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);//todo - path const
-        Logger.recordOutput("Swerve/Velocity/X", getSelfRelativeVelocity().vxMetersPerSecond);
-        Logger.recordOutput("Swerve/Velocity/Y", getSelfRelativeVelocity().vyMetersPerSecond);
+        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);
+        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "X", getSelfRelativeVelocity().vxMetersPerSecond);
+        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Y", getSelfRelativeVelocity().vyMetersPerSecond);
     }
 
 
@@ -250,7 +250,7 @@ public class Swerve extends GBSubsystem {
         return isAtStates;
     }
 
-    @AutoLogOutput(key = "Swerve/CurrentStates")
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "CurrentModulesStates")
     private SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
@@ -261,7 +261,7 @@ public class Swerve extends GBSubsystem {
         return states;
     }
 
-    @AutoLogOutput(key = "Swerve/TargetStates")
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "TargetModulesStates")
     private SwerveModuleState[] getTargetStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 

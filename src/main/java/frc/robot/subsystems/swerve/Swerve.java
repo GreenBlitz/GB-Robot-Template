@@ -346,6 +346,7 @@ public class Swerve extends GBSubsystem {
         return new ChassisSpeeds(
                 xPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
                 yPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
+                //Todo - understand why pow
                 Math.pow(thetaPower, 2) * Math.signum(thetaPower) * currentState.getDriveSpeed().maxRotationSpeedPerSecond.getRadians()
         );
     }

@@ -28,126 +28,6 @@ public class SwerveState {
         this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
     }
 
-    public SwerveState(DriveMode driveMode) {
-        this(driveMode, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveSpeed driveSpeed) {
-        this(DEFAULT_DRIVE_MODE, driveSpeed, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(LoopMode loopMode) {
-        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, loopMode, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(RotateAxis rotateAxis) {
-        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, rotateAxis, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(AimAssist aimAssist) {
-        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, aimAssist);
-    }
-
-    public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed) {
-        this(driveMode, driveSpeed, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveMode driveMode, LoopMode loopMode) {
-        this(driveMode, DEFAULT_DRIVE_SPEED, loopMode, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveMode driveMode, RotateAxis rotateAxis) {
-        this(driveMode, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, rotateAxis, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveMode driveMode, AimAssist aimAssist) {
-        this(driveMode, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, aimAssist);
-    }
-
-    public SwerveState(DriveSpeed driveSpeed, LoopMode loopMode) {
-        this(DEFAULT_DRIVE_MODE, driveSpeed, loopMode, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveSpeed driveSpeed, RotateAxis rotateAxis) {
-        this(DEFAULT_DRIVE_MODE, driveSpeed, DEFAULT_LOOP_MODE, rotateAxis, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveSpeed driveSpeed, AimAssist aimAssist) {
-        this(DEFAULT_DRIVE_MODE, driveSpeed, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, aimAssist);
-    }
-
-    public SwerveState(LoopMode loopMode, RotateAxis rotateAxis) {
-        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, loopMode, rotateAxis, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(LoopMode loopMode, AimAssist aimAssist) {
-        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, loopMode, DEFAULT_ROTATE_AXIS, aimAssist);
-    }
-
-    public SwerveState(RotateAxis rotateAxis, AimAssist aimAssist) {
-        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, rotateAxis, aimAssist);
-    }
-
-    public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, LoopMode loopMode) {
-        this(driveMode, driveSpeed, loopMode, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, RotateAxis rotateAxis) {
-        this(driveMode, driveSpeed, DEFAULT_LOOP_MODE, rotateAxis, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, AimAssist aimAssist) {
-        this(driveMode, driveSpeed, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, aimAssist);
-    }
-
-    public SwerveState(DriveMode driveMode, LoopMode loopMode, RotateAxis rotateAxis) {
-        this(driveMode, DEFAULT_DRIVE_SPEED, loopMode, rotateAxis, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveMode driveMode, LoopMode loopMode, AimAssist aimAssist) {
-        this(driveMode, DEFAULT_DRIVE_SPEED, loopMode, DEFAULT_ROTATE_AXIS, aimAssist);
-    }
-
-    public SwerveState(DriveMode driveMode, RotateAxis rotateAxis, AimAssist aimAssist) {
-        this(driveMode, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, rotateAxis, aimAssist);
-    }
-
-    public SwerveState(DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis) {
-        this(DEFAULT_DRIVE_MODE, driveSpeed, loopMode, rotateAxis, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveSpeed driveSpeed, LoopMode loopMode, AimAssist aimAssist) {
-        this(DEFAULT_DRIVE_MODE, driveSpeed, loopMode, DEFAULT_ROTATE_AXIS, aimAssist);
-    }
-
-    public SwerveState(DriveSpeed driveSpeed, RotateAxis rotateAxis, AimAssist aimAssist) {
-        this(DEFAULT_DRIVE_MODE, driveSpeed, DEFAULT_LOOP_MODE, rotateAxis, aimAssist);
-    }
-
-    public SwerveState(LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
-        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, loopMode, rotateAxis, aimAssist);
-    }
-
-    public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis) {
-        this(driveMode, driveSpeed, loopMode, rotateAxis, DEFAULT_AIM_ASSIST);
-    }
-
-    public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, LoopMode loopMode, AimAssist aimAssist) {
-        this(driveMode, driveSpeed, loopMode, DEFAULT_ROTATE_AXIS, aimAssist);
-    }
-
-    public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, RotateAxis rotateAxis, AimAssist aimAssist) {
-        this(driveMode, driveSpeed, DEFAULT_LOOP_MODE, rotateAxis, aimAssist);
-    }
-
-    public SwerveState(DriveMode driveMode, LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
-        this(driveMode, DEFAULT_DRIVE_SPEED, loopMode, rotateAxis, aimAssist);
-    }
-
-    public SwerveState(DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
-        this(DEFAULT_DRIVE_MODE, driveSpeed, loopMode, rotateAxis, aimAssist);
-    }
-
     public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
         this.driveMode = driveMode;
         this.driveSpeed = driveSpeed;
@@ -156,12 +36,37 @@ public class SwerveState {
         this.aimAssist = aimAssist;
     }
 
+    public SwerveState withDriveMode(DriveMode driveMode) {
+        this.driveMode = driveMode;
+        return this;
+    }
+
+    public SwerveState withDriveSpeed(DriveSpeed driveSpeed) {
+        this.driveSpeed = driveSpeed;
+        return this;
+    }
+
+    public SwerveState withLoopMode(LoopMode loopMode) {
+        this.loopMode = loopMode;
+        return this;
+    }
+
+    public SwerveState withRotateAxis(RotateAxis rotateAxis) {
+        this.rotateAxis = rotateAxis;
+        return this;
+    }
+
+    public SwerveState withAimAssist(AimAssist aimAssist) {
+        this.aimAssist = aimAssist;
+        return this;
+    }
+
     public void updateState(SwerveState newState) {
-        driveMode = newState.driveMode;
-        driveSpeed = newState.driveSpeed;
-        loopMode = newState.loopMode;
-        rotateAxis = newState.rotateAxis;
-        aimAssist = newState.aimAssist;
+        withDriveMode(newState.driveMode);
+        withDriveSpeed(newState.driveSpeed);
+        withLoopMode(newState.loopMode);
+        withRotateAxis(newState.rotateAxis);
+        withAimAssist(newState.aimAssist);
     }
 
     public DriveMode getDriveMode() {

@@ -89,6 +89,8 @@ public class Swerve extends GBSubsystem {
     }
 
     private void updateAllInputs() {
+        logState();
+
         gyro.updateInputs(gyroInputs);
         Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
 
@@ -102,8 +104,16 @@ public class Swerve extends GBSubsystem {
     }
 
 
+    private void logState() {
+        Logger.recordOutput("Swerve/State/DriveMode", currentState.getDriveMode());//todo - path const
+        Logger.recordOutput("Swerve/State/DriveSpeed", currentState.getDriveSpeed());
+        Logger.recordOutput("Swerve/State/LoopMode", currentState.getLoopMode());
+        Logger.recordOutput("Swerve/State/RotateAxis", currentState.getRotateAxis());
+        Logger.recordOutput("Swerve/State/AimAssist", currentState.getAimAssist());
+    }
+
     private void updateNetworkTables() {
-        Logger.recordOutput("Swerve/Velocity/Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);
+        Logger.recordOutput("Swerve/Velocity/Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);//todo - path const
         Logger.recordOutput("Swerve/Velocity/X", getSelfRelativeVelocity().vxMetersPerSecond);
         Logger.recordOutput("Swerve/Velocity/Y", getSelfRelativeVelocity().vyMetersPerSecond);
     }
@@ -288,10 +298,9 @@ public class Swerve extends GBSubsystem {
                 currentBluePose.getY(),
                 targetPose.getBlueAlliancePose().getY()
         );
-        int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
-                xSpeed * direction,
-                ySpeed * direction,
+                xSpeed,
+                ySpeed,
                 calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation2d()).getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);

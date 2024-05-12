@@ -49,7 +49,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(DriveSpeed.SLOW)),
+                () -> SWERVE.initializeDrive(new SwerveState().withDriveSpeed(DriveSpeed.SLOW)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -57,7 +57,7 @@ public class SwerveCommands {
 
     public static Command getRotateToSpeaker(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(AimAssist.SPEAKER)),
+                () -> SWERVE.initializeDrive(new SwerveState().withAimAssist(AimAssist.SPEAKER)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -77,7 +77,7 @@ public class SwerveCommands {
             AllianceRotation2d targetAngle, RotateAxis rotateAxis
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(rotateAxis)),
+                () -> SWERVE.initializeDrive(new SwerveState().withRotateAxis(rotateAxis)),
                 () -> SWERVE.rotateToAngle(targetAngle),
                 SWERVE
         );
@@ -88,7 +88,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, RotateAxis rotateAxis
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(rotateAxis)),
+                () -> SWERVE.initializeDrive(new SwerveState().withRotateAxis(rotateAxis)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -98,7 +98,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState(DriveMode.SELF_RELATIVE)),
+                () -> SWERVE.initializeDrive(new SwerveState().withDriveMode(DriveMode.SELF_RELATIVE)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -130,7 +130,7 @@ public class SwerveCommands {
 
     private static Command getCurrentDriveToPoseCommand(AlliancePose2d targetPose, PathConstraints constraints) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState(DriveMode.SELF_RELATIVE))),
+                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState().withDriveMode(DriveMode.SELF_RELATIVE))),
                 getPathfindToPoseCommand(targetPose, constraints),
                 getPIDToPoseCommand(targetPose)
         );

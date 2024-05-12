@@ -44,11 +44,12 @@ public class JoysticksBindings {
         // - self relative drive - CHECKED
         // - pose estimator resets - CHECKED
 
-        //reset angle pose estim
-        usedJoystick.R1.onTrue(new InstantCommand(() ->
+        // Reset Angle to 0
+        usedJoystick.Y.onTrue(new InstantCommand(() ->
                 RobotContainer.POSE_ESTIMATOR.resetHeading(AllianceRotation2d.fromBlueAllianceRotation(new Rotation2d()))
         ));
-        usedJoystick.L1.onTrue(new InstantCommand(() ->
+        // Reset Pose to (5, 5, 0Deg)
+        usedJoystick.B.onTrue(new InstantCommand(() ->
                 RobotContainer.POSE_ESTIMATOR.resetPose(AlliancePose2d.fromBlueAlliancePose(new Pose2d(
                         5,
                         5,
@@ -56,54 +57,79 @@ public class JoysticksBindings {
                 )))
         ));
 
+        // Swerve X Pose
+        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());
+        // Swerve Wheels to 90 Degrees
+        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));
+
+        // Rotate to 180 Deg
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(
                 AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(180))
         ));
+        // Rotate to -17 Deg
         usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(
                 AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(-17))
         ));
-        usedJoystick.START.whileTrue(SwerveCommands.getRotateToAngleCommand(
+
+        // Rotate Around FRONT_LEFT to 180 Deg
+        usedJoystick.POV_LEFT.whileTrue(SwerveCommands.getRotateToAngleCommand(
                 AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(-17)), RotateAxis.FRONT_LEFT_MODULE
         ));
-        usedJoystick.BACK.whileTrue(SwerveCommands.getRotateToAngleCommand(
+        // Rotate Around BACK_RIGHT to -17 Deg
+        usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.getRotateToAngleCommand(
                 AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(180)), RotateAxis.BACK_RIGHT_MODULE
         ));
 
-        usedJoystick.B.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
+        //Self Relative Drive
+        usedJoystick.L3.whileTrue(SwerveCommands.getSelfDriveCommand(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
+        // Drive and Aim Assist to Speaker
+        usedJoystick.L1.whileTrue(SwerveCommands.getRotateToSpeaker(
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        ));
+        // Drive Slow
+        //todo - not working in my joystick
+        //        usedJoystick.R1.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
+        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        //        ));
+
+        //Rotate Around Module:
+        //FRONT RIGHT
+        usedJoystick.R2.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X),
-                RotateAxis.BACK_RIGHT_MODULE
+                RotateAxis.FRONT_RIGHT_MODULE
         ));
-        usedJoystick.Y.whileTrue(SwerveCommands.getSelfDriveCommand(
+        //FRONT LEFT
+        usedJoystick.L2.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X),
+                RotateAxis.FRONT_LEFT_MODULE
         ));
-        usedJoystick.L2.whileTrue(SwerveCommands.getRotateToSpeaker(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
-        ));
-        usedJoystick.R2.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
-        ));
+
+        // Default Drive
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
         ));
 
-        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());
-        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));
-
-        usedJoystick.POV_LEFT.whileTrue(SwerveCommands.getDriveToPoseCommand(
+        // Move To Pose (4, 4, 17Deg)
+        usedJoystick.BACK.whileTrue(SwerveCommands.getDriveToPoseCommand(
                 () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
-        usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.getDriveToPoseCommand(
+        // Move To Pose (5, 8, 90Deg)
+        usedJoystick.START.whileTrue(SwerveCommands.getDriveToPoseCommand(
                 () -> AlliancePose2d.fromBlueAlliancePose(new Pose2d(5, 8, Rotation2d.fromDegrees(90))),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));

@@ -11,7 +11,10 @@ public class FieldConstants {
 
     public static final double FIELD_WIDTH = 8.0137;
 
-    private static final AllianceTranslation2d SPEAKER = AllianceTranslation2d.fromBlueAllianceTranslation(0, 5);
+    private static final AllianceTranslation2d SPEAKER = AllianceTranslation2d.fromBlueAllianceTranslation(
+            0.23,
+            FIELD_WIDTH - 2.55
+    );
 
     public static AllianceTranslation2d getAllianceSpeaker() {
         if (DriverStationUtils.isBlueAlliance()) {

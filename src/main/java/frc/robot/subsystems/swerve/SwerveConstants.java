@@ -14,9 +14,14 @@ import frc.robot.constants.MathConstants;
 
 public class SwerveConstants {
 
+    public static final String SWERVE_LOG_PATH = "Swerve/";
+    public static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
+    public static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
+
+
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);
     public static final Rotation2d ROTATION_VELOCITY_TOLERANCE = Rotation2d.fromRadians(0.05);
-    public static final double TRANSLATION_TOLERANCE_METERS = 0.01;
+    public static final double TRANSLATION_TOLERANCE_METERS = 0.05;
     public static final double TRANSLATION_VELOCITY_TOLERANCE = 0.05;
 
 

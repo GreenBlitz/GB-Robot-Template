@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.utils.allianceutils.AllianceTranslation2d;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +37,6 @@ public class PathPlannerUtils {
         NamedCommands.registerCommand(commandName, command);
     }
 
-    // todo - find how to remove all already set obstacles
     public static void setDynamicObstacles(
             List<Pair<AllianceTranslation2d, AllianceTranslation2d>> obstacles,
             AllianceTranslation2d currentRobotPose
@@ -50,11 +50,16 @@ public class PathPlannerUtils {
         Pathfinding.setDynamicObstacles(blueAllianceTranslationObstacles, currentRobotPose.getBlueAllianceTranslation2d());
     }
 
-    public static void setDynamicObstacle(
+    public static void setDynamicObstacles(
             Pair<AllianceTranslation2d, AllianceTranslation2d> obstacle,
             AllianceTranslation2d currentRobotPose
     ) {
         setDynamicObstacles(Collections.singletonList(obstacle), currentRobotPose);
+    }
+
+    public static void removeAllDynamicObstacles(AllianceTranslation2d currentRobotPose) {
+        List<Pair<AllianceTranslation2d, AllianceTranslation2d>> emptyList = new ArrayList<>();
+        setDynamicObstacles(emptyList, currentRobotPose);
     }
 
     public static Command createOnTheFlyPathCommand(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {

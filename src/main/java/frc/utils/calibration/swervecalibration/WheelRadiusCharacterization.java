@@ -20,19 +20,17 @@ import java.util.function.Supplier;
 
 public class WheelRadiusCharacterization extends Command {
 
-    private final double characterizationSpeed;
-
-    private final double driveRadiusMeters;
-
     private final Supplier<Rotation2d> gyroAngleSupplier;
 
     private final Supplier<Rotation2d[]> wheelDriveDistanceSupplier;
 
-    private final Consumer<Double> velocityControl;
+    private final Consumer<Rotation2d> velocityControl;
+
+    private final Rotation2d characterizationSpeed;
 
     private final Runnable onEnd;
 
-    private final CharacterizationDirection spinDirection;
+    private final double driveRadiusMeters;
 
     private Rotation2d[] startWheelPositions;
 
@@ -43,13 +41,12 @@ public class WheelRadiusCharacterization extends Command {
     private double wheelRadiusMeters = 0.0;
 
     public WheelRadiusCharacterization(
-            GBSubsystem drive, CharacterizationDirection spinDirection, double driveRadiusMeters, double characterizationSpeed,
+            GBSubsystem drive, double driveRadiusMeters, Rotation2d characterizationSpeed,
             Supplier<Rotation2d[]> wheelDriveDistanceSupplier, Supplier<Rotation2d> gyroAngleSupplier,
-            Consumer<Double> velocityControl, Runnable onEnd
+            Consumer<Rotation2d> velocityControl, Runnable onEnd
     ) {
-        this.spinDirection = spinDirection;
-        this.driveRadiusMeters = driveRadiusMeters;
         this.characterizationSpeed = characterizationSpeed;
+        this.driveRadiusMeters = driveRadiusMeters;
         this.wheelDriveDistanceSupplier = wheelDriveDistanceSupplier;
         this.gyroAngleSupplier = gyroAngleSupplier;
         this.velocityControl = velocityControl;
@@ -76,7 +73,7 @@ public class WheelRadiusCharacterization extends Command {
 
     @Override
     public void execute() {
-        velocityControl.accept(spinDirection.directionSign * characterizationSpeed);
+        velocityControl.accept(characterizationSpeed);
 
         // Update the angle passed from start
         double currentGyroYawRads = gyroAngleSupplier.get().getRadians();

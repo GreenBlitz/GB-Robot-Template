@@ -9,9 +9,9 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.utils.allianceutils.AlliancePose2d;
 import frc.utils.allianceutils.AllianceRotation2d;
 import frc.utils.allianceutils.AllianceTranslation2d;
 
@@ -70,16 +70,17 @@ public class PathPlannerUtils {
         PPHolonomicDriveController.setRotationTargetOverride(() -> overrider.get().map(AllianceRotation2d::getBlueAllianceAngle));
     }
 
-    public static Command createOnTheFlyPathCommand(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
+    public static Command createOnTheFlyPathCommand(AlliancePose2d currentPose, AlliancePose2d targetPose,
+            PathConstraints constraints) {
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                currentPose,
-                targetPose
+                currentPose.getBlueAlliancePose(),
+                targetPose.getBlueAlliancePose()
         );
 
         PathPlannerPath path = new PathPlannerPath(
                 bezierPoints,
                 constraints,
-                new GoalEndState(0, targetPose.getRotation())
+                new GoalEndState(0, targetPose.getBlueAlliancePose().getRotation())
         );
 
         path.preventFlipping = true;

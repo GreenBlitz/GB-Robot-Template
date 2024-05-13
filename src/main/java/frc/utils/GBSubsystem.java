@@ -8,7 +8,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Logger.recordOutput(getLogPath(), getCurrentCommandName());
+        Logger.recordOutput(getLogPath() + "Current Command", getCurrentCommandName());
     }
 
     private String getCurrentCommandName() {

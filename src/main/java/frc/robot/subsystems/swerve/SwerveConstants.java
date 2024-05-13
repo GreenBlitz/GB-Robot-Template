@@ -10,11 +10,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.MathConstants;
 
 public class SwerveConstants {
 
-    public static final String SWERVE_LOG_PATH = "Swerve/";
+    public static final String SWERVE_LOG_PATH = LogPathsConstants.SUBSYSTEM_LOG_PATH + "Swerve/";
+    protected static final String SWERVE_ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + SWERVE_LOG_PATH;
     public static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
     public static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 
@@ -71,6 +73,7 @@ public class SwerveConstants {
     );
 
     public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);
+    //todo - think about what better: Profile PID controller VS Regular PID controller
     public static final ProfiledPIDController PROFILED_ROTATION_PID_DEGREES_CONTROLLER = new ProfiledPIDController(
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kP,
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kI,

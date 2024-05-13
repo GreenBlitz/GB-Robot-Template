@@ -5,7 +5,7 @@ import frc.robot.subsystems.swerve.Swerve;
 
 public enum DriveMode {
 
-    FIELD_RELATIVE(Swerve::fieldRelativeSpeedsToSelfRelativeSpeeds),
+    FIELD_RELATIVE(Swerve::fieldRelativeSpeedsToSelfRelativeSpeeds),//todo - math class
     SELF_RELATIVE((speeds) -> speeds);
 
 

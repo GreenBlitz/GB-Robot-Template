@@ -52,7 +52,7 @@ public class JoysticksBindings {
         // Swerve X Pose
         usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());
         // Swerve Wheels to 90 Degrees
-        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90)));
+        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(MirrorableRotation2d.fromDegrees(90, false)));
 
         // Rotate to 180 Deg
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(
@@ -120,7 +120,7 @@ public class JoysticksBindings {
         ));
         // Move To Pose (5, 8, 90Deg)
         usedJoystick.START.whileTrue(SwerveCommands.getDriveToPoseCommand(
-                () -> new MirrorablePose2d(5, 8, Rotation2d.fromDegrees(90), false),
+                () -> new MirrorablePose2d(5, 8, Rotation2d.fromDegrees(90), true),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
     }

@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -36,7 +35,7 @@ public class SwerveCommands {
         );
     }
 
-    public static Command getPointWheelsCommand(Rotation2d wheelsAngle) {
+    public static Command getPointWheelsCommand(MirrorableRotation2d wheelsAngle) {
         return new FunctionalCommand(
                 () -> {},
                 () -> SWERVE.pointWheels(wheelsAngle),
@@ -116,11 +115,13 @@ public class SwerveCommands {
     public static Command getOpenLoopFieldRelativeDriveCommand(
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
-        return new InitExecuteCommand(
+        Command defaultFieldRelative = new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(new SwerveState()),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
+        defaultFieldRelative.setName("Default - Field Relative"); // todo - to all
+        return defaultFieldRelative;
     }
 
 
@@ -132,24 +133,21 @@ public class SwerveCommands {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState().withDriveMode(DriveMode.SELF_RELATIVE))),
                 getPathfindToPoseCommand(targetPose, constraints),
+                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState().withDriveMode(DriveMode.FIELD_RELATIVE))),
                 getPIDToPoseCommand(targetPose)
         );
     }
 
     private static Command getPathfindToPoseCommand(MirrorablePose2d targetPose, PathConstraints pathConstraints) {
-        Pose2d targetBluePose = targetPose.get();
-        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
+        Pose2d currentPose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
+        Pose2d targetMirroredPose = targetPose.get();
+
         // todo - maybe move all func to "PathPlannerUtils"
-        double distance = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
-        //todo - understand why the if
+        double distance = currentPose.getTranslation().getDistance(targetMirroredPose.getTranslation());
         if (distance < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-            return PathPlannerUtils.createOnTheFlyPathCommand(
-                    currentBluePose,
-                    targetBluePose,
-                    pathConstraints
-            );
+            return PathPlannerUtils.createOnTheFlyPathCommand(currentPose, targetMirroredPose, pathConstraints);
         }
-        return AutoBuilder.pathfindToPose(targetBluePose, pathConstraints);
+        return AutoBuilder.pathfindToPose(targetMirroredPose, pathConstraints);
     }
 
     private static Command getPIDToPoseCommand(MirrorablePose2d targetPose) {

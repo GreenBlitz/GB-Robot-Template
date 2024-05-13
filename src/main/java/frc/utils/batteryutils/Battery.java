@@ -2,10 +2,9 @@ package frc.utils.batteryutils;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class Battery extends GBSubsystem {
+public class Battery {//todo - master
 
     public static double getDefaultBatteryVoltage() {
         return BatteryConstants.DEFAULT_BATTERY_VOLTAGE;

@@ -53,13 +53,10 @@ public enum AimAssist {
     private MirrorableRotation2d getTargetAngleFromTargetTranslation(MirrorablePose2d targetPose2d) {
         Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
         Pose2d targetMirroredPose = targetPose2d.get();
-        MirrorableRotation2d wantedAngle = MirrorableRotation2d.fromRadians(
-                Math.atan2(
-                        targetMirroredPose.getY() - currentBluePose.getY(),
-                        targetMirroredPose.getX() - currentBluePose.getX()
-                ),
-                false
+        double wantedAngleRadians = Math.atan2(
+                targetMirroredPose.getY() - currentBluePose.getY(),
+                targetMirroredPose.getX() - currentBluePose.getX()
         );
-        return wantedAngle;
+        return MirrorableRotation2d.fromRadians(wantedAngleRadians, false);
     }
 }

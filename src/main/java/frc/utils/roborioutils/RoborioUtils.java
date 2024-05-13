@@ -2,6 +2,7 @@ package frc.utils.roborioutils;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.RobotConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class RoborioUtils {
@@ -23,7 +24,7 @@ public class RoborioUtils {
     }
 
     private static void reportAlertsToLog() {
-        if (!isCANConnectedToRoborio()) {
+        if (RobotConstants.ROBOT_TYPE.isReal() && !isCANConnectedToRoborio()) {//todo - master
             Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CanDisconnectAt", currentTime);
         }
         else if (getCANUtilizationPercent() > RoborioUtilsConstants.MAX_CAN_UTILIZATION_PERCENT) {

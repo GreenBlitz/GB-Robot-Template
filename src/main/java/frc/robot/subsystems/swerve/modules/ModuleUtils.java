@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.constants.LogPathsConstants;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.Conversions;
 
@@ -16,11 +15,11 @@ public class ModuleUtils {
     }
 
     public static String getLoggingPath(ModuleName moduleName) {
-        return "Swerve/" + moduleName + "/";
+        return ModuleConstants.LOG_PATH + moduleName + "/";
     }
 
     public static String getAlertLoggingPath(ModuleName moduleName) {
-        return LogPathsConstants.ALERT_LOG_PATH + "Swerve/" + moduleName + "/";
+        return ModuleConstants.ALERT_LOG_PATH + moduleName + "/";
     }
 
     public static Translation2d getModulePositionRelativeToMiddleOfRobot(ModuleName moduleName) {

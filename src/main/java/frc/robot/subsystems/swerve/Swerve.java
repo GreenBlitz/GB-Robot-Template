@@ -56,6 +56,11 @@ public class Swerve extends GBSubsystem {
         configurePathPlanner();
     }
 
+    @Override
+    protected String getLogPath() {
+        return SwerveConstants.SWERVE_LOG_PATH;
+    }
+
     private Module[] getModules() {
         return new Module[]{
                 new Module(ModuleUtils.ModuleName.FRONT_LEFT),
@@ -80,6 +85,8 @@ public class Swerve extends GBSubsystem {
 
     @Override
     public void periodic() {
+        super.periodic(); //Todo - make it a must somehow
+
         ODOMETRY_LOCK.lock();
         updateAllInputs();
         ODOMETRY_LOCK.unlock();
@@ -218,9 +225,10 @@ public class Swerve extends GBSubsystem {
      *
      * @param targetAngle - angle to point to
      */
-    public void pointWheels(Rotation2d targetAngle) {
+    public void pointWheels(MirrorableRotation2d targetAngle) {
+        Rotation2d targetMirroredAngle = targetAngle.get();
         for (Module module : modules) {
-            module.setTargetState(new SwerveModuleState(0, targetAngle));
+            module.setTargetState(new SwerveModuleState(0, targetMirroredAngle));
         }
     }
 
@@ -286,13 +294,15 @@ public class Swerve extends GBSubsystem {
     protected void pidToPose(MirrorablePose2d targetPose) {
         Pose2d currentBluePose = POSE_ESTIMATOR.getCurrentPose();
         Pose2d mirroredTargetPose = targetPose.get();
+
         double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getX(), mirroredTargetPose.getX());
         double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getY(), mirroredTargetPose.getY());
+        int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
         Rotation2d thetaSpeed = calculateProfiledAngleSpeedToTargetAngle(targetPose.getRotation());
-        //todo - direction
+
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
-                xSpeed,
-                ySpeed,
+                xSpeed * direction,
+                ySpeed * direction,
                 thetaSpeed.getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);
@@ -307,6 +317,7 @@ public class Swerve extends GBSubsystem {
         driveByState(targetFieldRelativeSpeeds);
     }
 
+    // todo - maybe move some of work to SwerveMath class
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(MirrorableRotation2d targetAngle) {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
         return Rotation2d.fromDegrees(SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.calculate(
@@ -332,6 +343,7 @@ public class Swerve extends GBSubsystem {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getDriveRelativeAngle());
     }
 
+    // todo - maybe move some of work to SwerveMath class
     public static Rotation2d getDriveRelativeAngle() {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;

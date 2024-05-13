@@ -63,4 +63,8 @@ public class AlliancePose2d {
         );
     }
 
+    public double getDistance(AlliancePose2d alliancePose2d) {
+        return allianceTranslation2d.getDistance(alliancePose2d.allianceTranslation2d);
+    }
+
 }

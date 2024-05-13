@@ -30,7 +30,7 @@ public class SwerveCommands {
     public static Command getLockSwerveCommand() {
         return new FunctionalCommand(
                 () -> {},
-                SWERVE::lockSwerve,
+                SWERVE.modules::lockSwerve,
                 inter -> {}, () -> false
         );
     }
@@ -38,7 +38,7 @@ public class SwerveCommands {
     public static Command getPointWheelsCommand(MirrorableRotation2d wheelsAngle) {
         return new FunctionalCommand(
                 () -> {},
-                () -> SWERVE.pointWheels(wheelsAngle),
+                () -> SWERVE.modules.pointWheels(wheelsAngle),
                 inter -> {},
                 () -> false
         );

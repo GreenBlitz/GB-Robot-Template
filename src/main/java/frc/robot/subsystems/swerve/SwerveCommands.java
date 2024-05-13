@@ -85,10 +85,10 @@ public class SwerveCommands {
 
 
     public static Command getDriveAroundWheelCommand(
-            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, RotateAxis rotateAxis
+            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<RotateAxis> rotateAxis
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState().withRotateAxis(rotateAxis)),
+                () -> SWERVE.initializeDrive(new SwerveState().withRotateAxis(rotateAxis.get())),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );

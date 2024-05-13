@@ -106,14 +106,14 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X),
-                RotateAxis.FRONT_RIGHT_MODULE
+                RotateAxis::getRightFarRotateAxis
         ));
         //FRONT LEFT
         usedJoystick.L2.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X),
-                RotateAxis.FRONT_LEFT_MODULE
+                RotateAxis::getLeftFarRotateAxis
         ));
 
         // Default Drive

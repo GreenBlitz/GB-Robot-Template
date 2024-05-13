@@ -3,6 +3,7 @@ package frc.utils.pathplannerutils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -11,11 +12,14 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.utils.allianceutils.AllianceRotation2d;
 import frc.utils.allianceutils.AllianceTranslation2d;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class PathPlannerUtils {
@@ -60,6 +64,10 @@ public class PathPlannerUtils {
     public static void removeAllDynamicObstacles(AllianceTranslation2d currentRobotPose) {
         List<Pair<AllianceTranslation2d, AllianceTranslation2d>> emptyList = new ArrayList<>();
         setDynamicObstacles(emptyList, currentRobotPose);
+    }
+
+    public static void setTargetRotationOverride(Supplier<Optional<AllianceRotation2d>> overrider) {
+        PPHolonomicDriveController.setRotationTargetOverride(() -> overrider.get().map(AllianceRotation2d::getBlueAllianceAngle));
     }
 
     public static Command createOnTheFlyPathCommand(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {

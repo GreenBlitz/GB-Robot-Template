@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public abstract class GBSubsystem extends SubsystemBase {//todo - master
+public abstract class GBSubsystem extends SubsystemBase {
 
     protected abstract String getLogPath();
 

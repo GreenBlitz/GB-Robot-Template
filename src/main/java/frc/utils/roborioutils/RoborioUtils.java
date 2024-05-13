@@ -24,7 +24,7 @@ public class RoborioUtils {
     }
 
     private static void reportAlertsToLog() {
-        if (RobotConstants.ROBOT_TYPE.isReal() && !isCANConnectedToRoborio()) {//todo - master
+        if (RobotConstants.ROBOT_TYPE.isReal() && !isCANConnectedToRoborio()) {
             Logger.recordOutput(RoborioUtilsConstants.ALERT_LOG_PATH + "CanDisconnectAt", currentTime);
         }
         else if (getCANUtilizationPercent() > RoborioUtilsConstants.MAX_CAN_UTILIZATION_PERCENT) {

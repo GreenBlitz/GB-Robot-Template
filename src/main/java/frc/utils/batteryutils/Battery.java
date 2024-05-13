@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import org.littletonrobotics.junction.Logger;
 
-public class Battery {//todo - master
+public class Battery {
 
     public static double getDefaultBatteryVoltage() {
         return BatteryConstants.DEFAULT_BATTERY_VOLTAGE;

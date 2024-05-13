@@ -54,4 +54,8 @@ public class AllianceTranslation2d {
         return mirroredAllianceTranslation2d;
     }
 
+    public double getDistance(AllianceTranslation2d otherAllianceTranslation2d) {
+        return blueAllianceTranslation2d.getDistance(otherAllianceTranslation2d.blueAllianceTranslation2d);
+    }
+
 }

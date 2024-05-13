@@ -1,11 +1,10 @@
 package frc.robot.subsystems.swerve.swervestatehelpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotContainer;
 import frc.robot.constants.FieldConstants;
-import frc.utils.allianceutils.AllianceRotation2d;
-import frc.utils.allianceutils.AllianceTranslation2d;
+import frc.utils.mirrorutils.MirrorablePose2d;
+import frc.utils.mirrorutils.MirrorableRotation2d;
 
 import java.util.function.Supplier;
 
@@ -17,48 +16,50 @@ public enum AimAssist {
 
     //todo - STAGE();
 
-    SPEAKER(FieldConstants::getAllianceSpeaker),
+    SPEAKER(FieldConstants.SPEAKER),
 
     AMP(FieldConstants.ANGLE_TO_AMP);
 
 
-    public final Supplier<AllianceRotation2d> targetAngleSupplier;
+    public final Supplier<MirrorableRotation2d> targetAngleSupplier;
 
     AimAssist() {
-        targetAngleSupplier = () -> AllianceRotation2d.fromBlueAllianceRotation(new Rotation2d());
+        targetAngleSupplier = () -> MirrorableRotation2d.fromDegrees(0, false);
     }
 
-    AimAssist(AllianceRotation2d targetAllianceRotation) {
-        this.targetAngleSupplier = () -> targetAllianceRotation;
+    AimAssist(MirrorableRotation2d targetRotation) {
+        this.targetAngleSupplier = () -> targetRotation;
     }
 
-    AimAssist(AllianceRotation2dSupplier targetAllianceRotation) {
+    AimAssist(MirrorableRotation2dSupplier targetAllianceRotation) {
         this.targetAngleSupplier = targetAllianceRotation;
     }
 
-    AimAssist(AllianceTranslation2d targetAllianceTranslation) {
+    AimAssist(MirrorablePose2d targetAllianceTranslation) {
         this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslation);
     }
 
-    AimAssist(AllianceTranslation2dSupplier targetAllianceTranslationSupplier) {
+    AimAssist(MirrorablePose2dSupplier targetAllianceTranslationSupplier) {
         this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
     }
 
     //Todo - Maybe in kinda math util or pose util
-    private interface AllianceRotation2dSupplier extends Supplier<AllianceRotation2d> {}
+    private interface MirrorableRotation2dSupplier extends Supplier<frc.utils.mirrorutils.MirrorableRotation2d> {}
 
     //Todo - Maybe in kinda math util or pose util
-    private interface AllianceTranslation2dSupplier extends Supplier<AllianceTranslation2d> {}
+    private interface MirrorablePose2dSupplier extends Supplier<MirrorablePose2d> {}
 
     //Todo - Maybe in kinda math util or pose util or swerveMath
-    private AllianceRotation2d getTargetAngleFromTargetTranslation(AllianceTranslation2d targetTranslation) {
-        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose();
-        Rotation2d wantedAngle = Rotation2d.fromRadians(
+    private MirrorableRotation2d getTargetAngleFromTargetTranslation(MirrorablePose2d targetPose2d) {
+        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
+        Pose2d targetMirroredPose = targetPose2d.get();
+        MirrorableRotation2d wantedAngle = MirrorableRotation2d.fromRadians(
                 Math.atan2(
-                        targetTranslation.getBlueAllianceTranslation2d().getY() - currentBluePose.getY(),
-                        targetTranslation.getBlueAllianceTranslation2d().getX() - currentBluePose.getX()
-                )
+                        targetMirroredPose.getY() - currentBluePose.getY(),
+                        targetMirroredPose.getX() - currentBluePose.getX()
+                ),
+                false
         );
-        return AllianceRotation2d.fromBlueAllianceRotation(wantedAngle);
+        return wantedAngle;
     }
 }

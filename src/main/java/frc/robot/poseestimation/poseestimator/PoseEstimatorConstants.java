@@ -5,7 +5,6 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
-import frc.utils.allianceutils.AlliancePose2d;
 
 public class PoseEstimatorConstants {
 
@@ -22,6 +21,6 @@ public class PoseEstimatorConstants {
      */
     protected static final Vector<N3> ODOMETRY_STANDARD_DEVIATIONS = VecBuilder.fill(0.003, 0.003, 0.0002);
 
-    protected static final AlliancePose2d DEFAULT_POSE = AlliancePose2d.fromBlueAlliancePose(new Pose2d(2, 5, new Rotation2d()));
+    protected static final Pose2d DEFAULT_POSE = new Pose2d(2, 5, new Rotation2d());
 
 }

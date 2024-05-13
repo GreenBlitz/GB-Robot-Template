@@ -7,8 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.utils.allianceutils.AlliancePose2d;
-import frc.utils.allianceutils.AllianceRotation2d;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.RobotContainer.POSE_ESTIMATOR;
@@ -21,7 +19,7 @@ public class PoseEstimator implements AutoCloseable {
 
     private final Field2d field = new Field2d();
     private final PoseEstimator6328 swerveDrivePoseEstimator = PoseEstimator6328.getInstance();
-    private AlliancePose2d robotPose;
+    private Pose2d robotPose;
 
     public PoseEstimator() {
         this.robotPose = PoseEstimatorConstants.DEFAULT_POSE;
@@ -44,37 +42,26 @@ public class PoseEstimator implements AutoCloseable {
     }
 
     public void periodic() {
-        robotPose = AlliancePose2d.fromBlueAlliancePose(swerveDrivePoseEstimator.getEstimatedPose());
+        robotPose = swerveDrivePoseEstimator.getEstimatedPose();
 
         logCurrentPose();
-        field.setRobotPose(getCurrentPose().getBlueAlliancePose());
+        field.setRobotPose(getCurrentPose());
     }
 
     private void logCurrentPose() {
-        Logger.recordOutput(PoseEstimatorConstants.POSE_LOG_PATH, getCurrentPose().getBlueAlliancePose());
+        Logger.recordOutput(PoseEstimatorConstants.POSE_LOG_PATH, getCurrentPose());
     }
 
-    /**
-     * Resets the pose estimator to the given pose, and the gyro to the given pose's heading.
-     *
-     * @param currentPose the pose to reset to, as an {@link AlliancePose2d}
-     */
-    public void resetPose(AlliancePose2d currentPose) {
-        RobotContainer.SWERVE.setHeading(currentPose.getRotation2d());
-        swerveDrivePoseEstimator.resetPose(currentPose.getBlueAlliancePose());
+    public void resetPose(Pose2d currentPose) {
+        RobotContainer.SWERVE.setHeading(currentPose.getRotation());
+        swerveDrivePoseEstimator.resetPose(currentPose);
     }
 
-    public void resetHeading(AllianceRotation2d targetAngle) {
-        resetPose(AlliancePose2d.fromBlueAlliancePose(
-                getCurrentPose().getBlueAlliancePose().getTranslation(),
-                targetAngle.getBlueAllianceAngle()
-        ));
+    public void resetHeading(Rotation2d targetAngle) {
+        resetPose(new Pose2d(getCurrentPose().getTranslation(), targetAngle));
     }
 
-    /**
-     * @return the estimated pose of the robot, as an {@link AlliancePose2d}
-     */
-    public AlliancePose2d getCurrentPose() {
+    public Pose2d getCurrentPose() {
         return robotPose;
     }
 

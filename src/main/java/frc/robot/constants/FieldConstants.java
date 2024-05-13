@@ -1,9 +1,8 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.DriverStationUtils;
-import frc.utils.allianceutils.AllianceRotation2d;
-import frc.utils.allianceutils.AllianceTranslation2d;
+import frc.utils.mirrorutils.MirrorablePose2d;
+import frc.utils.mirrorutils.MirrorableRotation2d;
 
 public class FieldConstants {
 
@@ -11,18 +10,8 @@ public class FieldConstants {
 
     public static final double FIELD_WIDTH = 8.0137;
 
-    private static final AllianceTranslation2d SPEAKER = AllianceTranslation2d.fromBlueAllianceTranslation(
-            0.23,
-            FIELD_WIDTH - 2.55
-    );
+    public static final MirrorablePose2d SPEAKER = new MirrorablePose2d(0.23, FIELD_WIDTH - 2.55, new Rotation2d(), true);
 
-    public static AllianceTranslation2d getAllianceSpeaker() {
-        if (DriverStationUtils.isBlueAlliance()) {
-            return AllianceTranslation2d.fromBlueAllianceTranslation(SPEAKER.getBlueAllianceTranslation2d());
-        }
-        return AllianceTranslation2d.fromBlueAllianceTranslation(SPEAKER.getMirroredAllianceTranslation2d());
-    }
-
-    public static final AllianceRotation2d ANGLE_TO_AMP = AllianceRotation2d.fromBlueAllianceRotation(Rotation2d.fromDegrees(90));
+    public static final MirrorableRotation2d ANGLE_TO_AMP = MirrorableRotation2d.fromDegrees(90, false);
 
 }

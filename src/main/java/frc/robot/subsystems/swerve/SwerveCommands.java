@@ -15,8 +15,8 @@ import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
-import frc.utils.allianceutils.AlliancePose2d;
-import frc.utils.allianceutils.AllianceRotation2d;
+import frc.utils.mirrorutils.MirrorablePose2d;
+import frc.utils.mirrorutils.MirrorableRotation2d;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import frc.utils.utilcommands.InitExecuteCommand;
 
@@ -64,7 +64,7 @@ public class SwerveCommands {
     }
 
     public static Command getRotateToAngleCommand(
-            AllianceRotation2d targetAngle
+            MirrorableRotation2d targetAngle
     ) {
         return new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(new SwerveState()),
@@ -74,7 +74,7 @@ public class SwerveCommands {
     }
 
     public static Command getRotateToAngleCommand(
-            AllianceRotation2d targetAngle, RotateAxis rotateAxis
+            MirrorableRotation2d targetAngle, RotateAxis rotateAxis
     ) {
         return new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(new SwerveState().withRotateAxis(rotateAxis)),
@@ -124,11 +124,11 @@ public class SwerveCommands {
     }
 
 
-    public static Command getDriveToPoseCommand(Supplier<AlliancePose2d> targetPose, PathConstraints constraints) {
+    public static Command getDriveToPoseCommand(Supplier<MirrorablePose2d> targetPose, PathConstraints constraints) {
         return new DeferredCommand(() -> getCurrentDriveToPoseCommand(targetPose.get(), constraints), Set.of(SWERVE));
     }
 
-    private static Command getCurrentDriveToPoseCommand(AlliancePose2d targetPose, PathConstraints constraints) {
+    private static Command getCurrentDriveToPoseCommand(MirrorablePose2d targetPose, PathConstraints constraints) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState().withDriveMode(DriveMode.SELF_RELATIVE))),
                 getPathfindToPoseCommand(targetPose, constraints),
@@ -136,9 +136,9 @@ public class SwerveCommands {
         );
     }
 
-    private static Command getPathfindToPoseCommand(AlliancePose2d targetPose, PathConstraints pathConstraints) {
-        Pose2d targetBluePose = targetPose.getBlueAlliancePose();
-        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose().getBlueAlliancePose();
+    private static Command getPathfindToPoseCommand(MirrorablePose2d targetPose, PathConstraints pathConstraints) {
+        Pose2d targetBluePose = targetPose.get();
+        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
         // todo - maybe move all func to "PathPlannerUtils"
         double distance = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         //todo - understand why the if
@@ -152,7 +152,7 @@ public class SwerveCommands {
         return AutoBuilder.pathfindToPose(targetBluePose, pathConstraints);
     }
 
-    private static Command getPIDToPoseCommand(AlliancePose2d targetPose) {
+    private static Command getPIDToPoseCommand(MirrorablePose2d targetPose) {
         return new InstantCommand(SWERVE::resetRotationController).andThen(
                 new RunCommand(() -> SWERVE.pidToPose(targetPose)).until(
                         () -> SWERVE.isAtPosition(targetPose)

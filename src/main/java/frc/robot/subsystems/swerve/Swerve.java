@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -46,42 +45,18 @@ public class Swerve extends GBSubsystem {
 
     public Swerve() {
         setName("Swerve");
-        currentState = new SwerveState();
+        currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
         gyro = SwerveGyroFactory.createSwerve();
         modules = getModules();
 
         gyroInputs = new SwerveGyroInputsAutoLogged();
-
-        configurePathPlanner();
     }
 
     @Override
     protected String getLogPath() {
         return SwerveConstants.SWERVE_LOG_PATH;
     }
-
-    private Module[] getModules() {
-        return new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
-        };
-    }
-
-    private void configurePathPlanner() {
-        AutoBuilder.configureHolonomic(
-                () -> POSE_ESTIMATOR.getCurrentPose(),
-                (pose2d) -> POSE_ESTIMATOR.resetPose(pose2d),//todo - check
-                this::getSelfRelativeVelocity,
-                this::driveByState,
-                SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
-                DriverStationUtils::isRedAlliance,
-                this
-        );
-    }
-
 
     @Override
     public void subsystemPeriodic() {
@@ -91,6 +66,15 @@ public class Swerve extends GBSubsystem {
 
         updatePoseEstimator();
         updateNetworkTables();
+    }
+
+    private Module[] getModules() {
+        return new Module[]{
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
+        };
     }
 
     private void updateAllInputs() {
@@ -325,11 +309,11 @@ public class Swerve extends GBSubsystem {
     }
 
     // todo - maybe move some of work to SwerveMath class
-    private Rotation2d getAimAssistThetaVelocity() {
+    private Rotation2d getAimAssistThetaVelocity(AimAssist aimAssist) {
         if (currentState.getAimAssist().equals(AimAssist.NONE)) {
             return new Rotation2d();
         }
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentState.getAimAssist().targetAngleSupplier.get());
+        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(aimAssist.targetAngleSupplier.get());
         //todo - make value have same range like joystick
         //todo - distance factor
         //todo - current robot velocity factor
@@ -374,9 +358,13 @@ public class Swerve extends GBSubsystem {
     }
 
     private void driveByState(ChassisSpeeds chassisSpeeds) {
-        chassisSpeeds = currentState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
+        driveByState(chassisSpeeds, currentState);
+    }
 
-        chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity().getRadians();//todo - clamp
+    public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+        chassisSpeeds = swerveState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
+
+        chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity(swerveState.getAimAssist()).getRadians();//todo - clamp
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {
@@ -386,7 +374,7 @@ public class Swerve extends GBSubsystem {
 
         SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(
                 chassisSpeeds,
-                currentState.getRotateAxis().getRotateAxis()
+                swerveState.getRotateAxis().getRotateAxis()
         );
         setTargetModuleStates(swerveModuleStates);
     }

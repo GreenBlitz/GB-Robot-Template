@@ -1,7 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-// todo - create new class "SwerveMode" which will contain: "DriverDrive", "FollowPath", "Autonomous", "RotateToAngle"
-
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
@@ -11,11 +9,14 @@ import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 //todo - add all swerve funcs that depend on this classes into this classes instead of in swerve (if possible)
 public class SwerveState {
 
-    public static final DriveMode DEFAULT_DRIVE_MODE = DriveMode.FIELD_RELATIVE;
-    public static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.NORMAL;
-    public static final LoopMode DEFAULT_LOOP_MODE = LoopMode.OPEN;
-    public static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_ROBOT;
-    public static final AimAssist DEFAULT_AIM_ASSIST = AimAssist.NONE;
+    private static final DriveMode DEFAULT_DRIVE_MODE = DriveMode.FIELD_RELATIVE;
+    private static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.NORMAL;
+    private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.OPEN;
+    private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_ROBOT;
+    private static final AimAssist DEFAULT_AIM_ASSIST = AimAssist.NONE;
+
+    public static final SwerveState DEFAULT_PATH_PLANNER = new SwerveState().withDriveMode(DriveMode.SELF_RELATIVE);
+    public static final SwerveState DEFAULT_DRIVE = new SwerveState();
 
 
     private DriveMode driveMode;
@@ -24,11 +25,19 @@ public class SwerveState {
     private RotateAxis rotateAxis;
     private AimAssist aimAssist;
 
-    public SwerveState() {
+    private SwerveState() {
         this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
     }
 
-    public SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
+    public SwerveState(SwerveState swerveState) {
+        this.driveMode = swerveState.driveMode;
+        this.driveSpeed = swerveState.driveSpeed;
+        this.loopMode = swerveState.loopMode;
+        this.rotateAxis = swerveState.rotateAxis;
+        this.aimAssist = swerveState.aimAssist;
+    }
+
+    private SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
         this.driveMode = driveMode;
         this.driveSpeed = driveSpeed;
         this.loopMode = loopMode;
@@ -37,36 +46,41 @@ public class SwerveState {
     }
 
     public SwerveState withDriveMode(DriveMode driveMode) {
-        this.driveMode = driveMode;
-        return this;
+        SwerveState swerveState = new SwerveState(this);
+        swerveState.driveMode = driveMode;
+        return swerveState;
     }
 
     public SwerveState withDriveSpeed(DriveSpeed driveSpeed) {
-        this.driveSpeed = driveSpeed;
-        return this;
+        SwerveState swerveState = new SwerveState(this);
+        swerveState.driveSpeed = driveSpeed;
+        return swerveState;
     }
 
     public SwerveState withLoopMode(LoopMode loopMode) {
-        this.loopMode = loopMode;
-        return this;
+        SwerveState swerveState = new SwerveState(this);
+        swerveState.loopMode = loopMode;
+        return swerveState;
     }
 
     public SwerveState withRotateAxis(RotateAxis rotateAxis) {
-        this.rotateAxis = rotateAxis;
-        return this;
+        SwerveState swerveState = new SwerveState(this);
+        swerveState.rotateAxis = rotateAxis;
+        return swerveState;
     }
 
     public SwerveState withAimAssist(AimAssist aimAssist) {
-        this.aimAssist = aimAssist;
-        return this;
+        SwerveState swerveState = new SwerveState(this);
+        swerveState.aimAssist = aimAssist;
+        return swerveState;
     }
 
     public void updateState(SwerveState newState) {
-        withDriveMode(newState.driveMode);
-        withDriveSpeed(newState.driveSpeed);
-        withLoopMode(newState.loopMode);
-        withRotateAxis(newState.rotateAxis);
-        withAimAssist(newState.aimAssist);
+        this.driveMode = newState.driveMode;
+        this.driveSpeed = newState.driveSpeed;
+        this.loopMode = newState.loopMode;
+        this.rotateAxis = newState.rotateAxis;
+        this.aimAssist = newState.aimAssist;
     }
 
     public DriveMode getDriveMode() {

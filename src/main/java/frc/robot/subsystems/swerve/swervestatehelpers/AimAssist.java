@@ -1,10 +1,11 @@
 package frc.robot.subsystems.swerve.swervestatehelpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.RobotContainer;
 import frc.robot.constants.FieldConstants;
-import frc.utils.mirrorutils.MirrorablePose2d;
 import frc.utils.mirrorutils.MirrorableRotation2d;
+import frc.utils.mirrorutils.MirrorableTranslation3d;
 
 import java.util.function.Supplier;
 
@@ -35,11 +36,11 @@ public enum AimAssist {
         this.targetAngleSupplier = targetAllianceRotation;
     }
 
-    AimAssist(MirrorablePose2d targetAllianceTranslation) {
+    AimAssist(MirrorableTranslation3d targetAllianceTranslation) {
         this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslation);
     }
 
-    AimAssist(MirrorablePose2dSupplier targetAllianceTranslationSupplier) {
+    AimAssist(MirrorableTranslation3dSupplier targetAllianceTranslationSupplier) {
         this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
     }
 
@@ -47,12 +48,12 @@ public enum AimAssist {
     private interface MirrorableRotation2dSupplier extends Supplier<frc.utils.mirrorutils.MirrorableRotation2d> {}
 
     //Todo - Maybe in kinda math util or pose util
-    private interface MirrorablePose2dSupplier extends Supplier<MirrorablePose2d> {}
+    private interface MirrorableTranslation3dSupplier extends Supplier<MirrorableTranslation3d> {}
 
     //Todo - Maybe in kinda math util or pose util or swerveMath
-    private MirrorableRotation2d getTargetAngleFromTargetTranslation(MirrorablePose2d targetPose2d) {
+    private MirrorableRotation2d getTargetAngleFromTargetTranslation(MirrorableTranslation3d targetPose2d) {
         Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
-        Pose2d targetMirroredPose = targetPose2d.get();
+        Translation2d targetMirroredPose = targetPose2d.get().toTranslation2d();
         double wantedAngleRadians = Math.atan2(
                 targetMirroredPose.getY() - currentBluePose.getY(),
                 targetMirroredPose.getX() - currentBluePose.getX()

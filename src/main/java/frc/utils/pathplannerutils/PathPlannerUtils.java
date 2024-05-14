@@ -7,11 +7,17 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
@@ -26,6 +32,26 @@ public class PathPlannerUtils {
 
     public static void scheduleWarmup() {
         PathfindingCommand.warmupCommand().schedule();
+    }
+
+    public static void configurePathPlanner(
+            Supplier<Pose2d> poseSupplier,
+            Consumer<Pose2d> resetPose,
+            Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+            Consumer<ChassisSpeeds> robotRelativeOutput,
+            HolonomicPathFollowerConfig config,
+            BooleanSupplier shouldFlipPath,
+            Subsystem driveSubsystem
+    ) {
+        AutoBuilder.configureHolonomic(
+                poseSupplier,
+                resetPose,//todo - trigon cancel
+                robotRelativeSpeedsSupplier,
+                robotRelativeOutput,
+                config,
+                shouldFlipPath,
+                driveSubsystem
+        );
     }
 
     public static void registerCommand(String commandName, Command command) {

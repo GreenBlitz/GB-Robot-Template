@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.mirrorutils.MirrorablePose2d;
@@ -31,7 +30,7 @@ public class SwerveCommands {
         return new FunctionalCommand(
                 () -> {},
                 SWERVE::lockSwerve,
-                inter -> {}, () -> false
+                inter -> {}, () -> false//todo
         );
     }
 
@@ -40,7 +39,7 @@ public class SwerveCommands {
                 () -> {},
                 () -> SWERVE.pointWheels(wheelsAngle),
                 inter -> {},
-                () -> false
+                () -> false//todo
         );
     }
 
@@ -48,7 +47,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState().withDriveSpeed(DriveSpeed.SLOW)),
+                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -56,7 +55,7 @@ public class SwerveCommands {
 
     public static Command getRotateToSpeaker(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState().withAimAssist(AimAssist.SPEAKER)),
+                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -66,7 +65,7 @@ public class SwerveCommands {
             MirrorableRotation2d targetAngle
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState()),
+                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE),
                 () -> SWERVE.rotateToAngle(targetAngle),
                 SWERVE
         );
@@ -76,7 +75,7 @@ public class SwerveCommands {
             MirrorableRotation2d targetAngle, RotateAxis rotateAxis
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState().withRotateAxis(rotateAxis)),
+                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 () -> SWERVE.rotateToAngle(targetAngle),
                 SWERVE
         );
@@ -87,7 +86,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<RotateAxis> rotateAxis
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState().withRotateAxis(rotateAxis.get())),
+                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -97,7 +96,7 @@ public class SwerveCommands {
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
     ) {
         return new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState().withDriveMode(DriveMode.SELF_RELATIVE)),
+                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -112,16 +111,29 @@ public class SwerveCommands {
      * @param thetaSupplier the target theta power, CCW+
      * @return the command
      */
-    public static Command getOpenLoopFieldRelativeDriveCommand(
-            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier
-    ) {
+    public static Command getOpenLoopFieldRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier,
+            DoubleSupplier thetaSupplier) {
         Command defaultFieldRelative = new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(new SwerveState()),
+                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
         defaultFieldRelative.setName("Default - Field Relative"); // todo - to all
         return defaultFieldRelative;
+    }
+
+    public static Command debugCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
+        Command command = new InitExecuteCommand(
+                () -> SWERVE.initializeDrive(
+                        SwerveState.DEFAULT_DRIVE
+                                .withRotateAxis(RotateAxis.FRONT_LEFT_MODULE)
+                                .withAimAssist(AimAssist.SPEAKER)
+                ),
+                () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                SWERVE
+        );
+        command.setName("Debug");
+        return command;
     }
 
 
@@ -131,9 +143,9 @@ public class SwerveCommands {
 
     private static Command getCurrentDriveToPoseCommand(MirrorablePose2d targetPose, PathConstraints constraints) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState().withDriveMode(DriveMode.SELF_RELATIVE))),
+                new InstantCommand(() -> SWERVE.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER)),
                 getPathfindToPoseCommand(targetPose, constraints),
-                new InstantCommand(() -> SWERVE.initializeDrive(new SwerveState().withDriveMode(DriveMode.FIELD_RELATIVE))),
+                new InstantCommand(() -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE)),
                 getPIDToPoseCommand(targetPose)
         );
     }

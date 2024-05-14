@@ -45,7 +45,7 @@ public class Swerve extends GBSubsystem {
 
     public Swerve() {
         setName("Swerve");
-        currentState = new SwerveState();
+        currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
         gyro = SwerveGyroFactory.createSwerve();
         modules = getModules();
@@ -311,11 +311,11 @@ public class Swerve extends GBSubsystem {
     }
 
     // todo - maybe move some of work to SwerveMath class
-    private Rotation2d getAimAssistThetaVelocity() {
+    private Rotation2d getAimAssistThetaVelocity(AimAssist aimAssist) {
         if (currentState.getAimAssist().equals(AimAssist.NONE)) {
             return new Rotation2d();
         }
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentState.getAimAssist().targetAngleSupplier.get());
+        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(aimAssist.targetAngleSupplier.get());
         //todo - make value have same range like joystick
         //todo - distance factor
         //todo - current robot velocity factor
@@ -359,10 +359,14 @@ public class Swerve extends GBSubsystem {
         driveByState(powersToSpeeds(xPower, yPower, thetaPower));
     }
 
-    public void driveByState(ChassisSpeeds chassisSpeeds) {
-        chassisSpeeds = currentState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
+    private void driveByState(ChassisSpeeds chassisSpeeds) {
+        driveByState(chassisSpeeds, currentState);
+    }
 
-        chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity().getRadians();//todo - clamp
+    public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+        chassisSpeeds = swerveState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
+
+        chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity(swerveState.getAimAssist()).getRadians();//todo - clamp
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {
@@ -372,7 +376,7 @@ public class Swerve extends GBSubsystem {
 
         SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(
                 chassisSpeeds,
-                currentState.getRotateAxis().getRotateAxis()
+                swerveState.getRotateAxis().getRotateAxis()
         );
         setTargetModuleStates(swerveModuleStates);
     }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveState;
 import frc.utils.DriverStationUtils;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
@@ -93,7 +94,7 @@ public class Robot extends LoggedRobot {
                 RobotContainer.POSE_ESTIMATOR::getCurrentPose,
                 RobotContainer.POSE_ESTIMATOR::resetPose,
                 RobotContainer.SWERVE::getSelfRelativeVelocity,
-                RobotContainer.SWERVE::driveByState,
+                (speeds) -> RobotContainer.SWERVE.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
                 SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
                 DriverStationUtils::isRedAlliance,
                 RobotContainer.SWERVE

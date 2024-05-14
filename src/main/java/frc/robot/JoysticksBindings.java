@@ -74,15 +74,15 @@ public class JoysticksBindings {
 
         //Self Relative Drive
         usedJoystick.L3.whileTrue(SwerveCommands.getSelfDriveCommand(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
         ));
         //Drive and Aim Assist to Speaker
         usedJoystick.L1.whileTrue(SwerveCommands.getRotateToSpeaker(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
         ));
 
         //Drive and Aim Assist to Speaker and Rotate around front Left
@@ -101,23 +101,23 @@ public class JoysticksBindings {
 
         //Rotate Around Module:
         usedJoystick.R2.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X),
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X),
                 RotateAxis::getRightFarRotateAxis
         ));
         usedJoystick.L2.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X),
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X),
                 RotateAxis::getLeftFarRotateAxis
         ));
 
         // Default Drive
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
+                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
+                () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
         ));
 
         // Move To Pose (4, 4, 17Deg)

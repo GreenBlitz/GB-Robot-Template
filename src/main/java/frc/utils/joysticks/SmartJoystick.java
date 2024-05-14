@@ -144,7 +144,7 @@ public class SmartJoystick {
     }
 
     private double getSoftJoystickValue(double axisValue, double power) {
-        return Math.abs(Math.pow(axisValue, power)) * Math.signum(axisValue);
+        return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
     }
 
     public double getSquaredSoftAxis(Axis axis) {

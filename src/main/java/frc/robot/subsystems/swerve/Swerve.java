@@ -47,7 +47,7 @@ public class Swerve extends GBSubsystem {
         setName("Swerve");
         currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
-        gyro = SwerveGyroFactory.createGyro();
+        gyro = SwerveGyroFactory.createSwerveGyro();
         modules = getModules();
 
         gyroInputs = new SwerveGyroInputsAutoLogged();

@@ -7,7 +7,7 @@ import frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro.Pigeon2SwerveGyr
 
 public class SwerveGyroFactory {
 
-    public static ISwerveGyro createGyro() {
+    public static ISwerveGyro createSwerveGyro() {
         return switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> new Pigeon2SwerveGyro();
             case SIMULATION -> new SimulationSwerveGyro();

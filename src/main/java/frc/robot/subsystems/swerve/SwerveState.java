@@ -6,7 +6,6 @@ import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 
-//todo - add all swerve funcs that depend on this classes into this classes instead of in swerve (if possible)
 public class SwerveState {
 
     private static final DriveMode DEFAULT_DRIVE_MODE = DriveMode.FIELD_RELATIVE;
@@ -25,16 +24,12 @@ public class SwerveState {
     private RotateAxis rotateAxis;
     private AimAssist aimAssist;
 
-    private SwerveState() {
-        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
+    public SwerveState(SwerveState swerveState) {
+        this(swerveState.driveMode, swerveState.driveSpeed, swerveState.loopMode, swerveState.rotateAxis, swerveState.aimAssist);
     }
 
-    public SwerveState(SwerveState swerveState) {
-        this.driveMode = swerveState.driveMode;
-        this.driveSpeed = swerveState.driveSpeed;
-        this.loopMode = swerveState.loopMode;
-        this.rotateAxis = swerveState.rotateAxis;
-        this.aimAssist = swerveState.aimAssist;
+    private SwerveState() {
+        this(DEFAULT_DRIVE_MODE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
     }
 
     private SwerveState(DriveMode driveMode, DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
@@ -44,6 +39,7 @@ public class SwerveState {
         this.rotateAxis = rotateAxis;
         this.aimAssist = aimAssist;
     }
+
 
     public SwerveState withDriveMode(DriveMode driveMode) {
         SwerveState swerveState = new SwerveState(this);
@@ -75,6 +71,7 @@ public class SwerveState {
         return swerveState;
     }
 
+
     public void updateState(SwerveState newState) {
         this.driveMode = newState.driveMode;
         this.driveSpeed = newState.driveSpeed;
@@ -82,6 +79,7 @@ public class SwerveState {
         this.rotateAxis = newState.rotateAxis;
         this.aimAssist = newState.aimAssist;
     }
+
 
     public DriveMode getDriveMode() {
         return driveMode;

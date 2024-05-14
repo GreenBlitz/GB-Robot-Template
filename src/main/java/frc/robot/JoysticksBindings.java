@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
@@ -47,7 +46,9 @@ public class JoysticksBindings {
         // Reset Angle to 0
         usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetHeading(new Rotation2d())));
         // Reset Pose to (5, 5, 0Deg)
-        usedJoystick.B.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetPose(new Pose2d(5, 5, new Rotation2d()))));
+        usedJoystick.B.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetPose(
+                new MirrorablePose2d(5, 5, new Rotation2d(), true).get()
+        )));
 
         // Swerve X Pose
         usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());

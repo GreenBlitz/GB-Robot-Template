@@ -58,6 +58,16 @@ public class Swerve extends GBSubsystem {
         return SwerveConstants.SWERVE_LOG_PATH;
     }
 
+    @Override
+    public void subsystemPeriodic() {
+        ODOMETRY_LOCK.lock();
+        updateAllInputs();
+        ODOMETRY_LOCK.unlock();
+
+        updatePoseEstimator();
+        updateNetworkTables();
+    }
+
     private Module[] getModules() {
         return new Module[]{
                 new Module(ModuleUtils.ModuleName.FRONT_LEFT),
@@ -65,18 +75,6 @@ public class Swerve extends GBSubsystem {
                 new Module(ModuleUtils.ModuleName.BACK_LEFT),
                 new Module(ModuleUtils.ModuleName.BACK_RIGHT),
         };
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic(); //Todo - (Solved in pr) make it a must somehow
-
-        ODOMETRY_LOCK.lock();
-        updateAllInputs();
-        ODOMETRY_LOCK.unlock();
-
-        updatePoseEstimator();
-        updateNetworkTables();
     }
 
     private void updateAllInputs() {

@@ -27,20 +27,27 @@ public class SwerveCommands {
     private static final Swerve SWERVE = RobotContainer.SWERVE;
 
     public static Command getLockSwerveCommand() {
-        return new FunctionalCommand(
+        Command command = new FunctionalCommand(
                 () -> {},
                 SWERVE::lockSwerve,
-                inter -> {}, () -> false//todo
+                inter -> {},
+                SWERVE::isModulesAtStates,
+                SWERVE
         );
+        command.setName("Lock");
+        return command;
     }
 
     public static Command getPointWheelsCommand(MirrorableRotation2d wheelsAngle) {
-        return new FunctionalCommand(
+        Command command = new FunctionalCommand(
                 () -> {},
                 () -> SWERVE.pointWheels(wheelsAngle),
                 inter -> {},
-                () -> false//todo
+                SWERVE::isModulesAtStates,
+                SWERVE
         );
+        command.setName("Point Wheels");
+        return command;
     }
 
     public static Command getOpenLoopFieldRelativeDriveCommandSlow(

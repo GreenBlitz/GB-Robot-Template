@@ -1,7 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-// todo - create new class "SwerveMode" which will contain: "DriverDrive", "FollowPath", "Autonomous", "RotateToAngle"
-
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;

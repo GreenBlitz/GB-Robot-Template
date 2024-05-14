@@ -29,9 +29,9 @@ public class SwerveCommands {
     public static Command getLockSwerveCommand() {
         Command command = new FunctionalCommand(
                 () -> {},
-                SWERVE::lockSwerve,
+                SWERVE.modules::lockSwerve,
                 inter -> {},
-                SWERVE::isModulesAtStates,
+                SWERVE.modules::isModulesAtStates,
                 SWERVE
         );
         command.setName("Lock");
@@ -41,9 +41,9 @@ public class SwerveCommands {
     public static Command getPointWheelsCommand(MirrorableRotation2d wheelsAngle) {
         Command command = new FunctionalCommand(
                 () -> {},
-                () -> SWERVE.pointWheels(wheelsAngle),
+                () -> SWERVE.modules.pointWheels(wheelsAngle),
                 inter -> {},
-                SWERVE::isModulesAtStates,
+                SWERVE.modules::isModulesAtStates,
                 SWERVE
         );
         command.setName("Point Wheels");

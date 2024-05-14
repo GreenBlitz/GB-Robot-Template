@@ -71,7 +71,7 @@ public class PoseEstimator implements AutoCloseable {
         Rotation2d[] gyroRotations = new Rotation2d[odometryUpdates];
 
         for (int i = 0; i < odometryUpdates; i++) {
-            swerveWheelPositions[i] = SWERVE.getSwerveWheelPositions(i);
+            swerveWheelPositions[i] = SWERVE.modules.getSwerveWheelPositions(i);
             gyroRotations[i] = SWERVE.getOdometryYawUpdates()[i];
         }
 

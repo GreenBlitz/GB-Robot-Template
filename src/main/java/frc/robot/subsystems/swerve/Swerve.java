@@ -5,13 +5,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.modules.Module;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroFactory;
@@ -22,10 +18,8 @@ import frc.utils.GBSubsystem;
 import frc.utils.mirrorutils.MirrorablePose2d;
 import frc.utils.mirrorutils.MirrorableRotation2d;
 import frc.utils.roborioutils.RoborioUtils;
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -39,8 +33,9 @@ public class Swerve extends GBSubsystem {
 
     private final ISwerveGyro gyro;
 
-    private final Module[] modules;
     private final SwerveState currentState;
+
+    public final Modules modules;
 
 
     public Swerve() {
@@ -48,7 +43,7 @@ public class Swerve extends GBSubsystem {
         currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
         gyro = SwerveGyroFactory.createSwerveGyro();
-        modules = getModules();
+        modules = new Modules();
 
         gyroInputs = new SwerveGyroInputsAutoLogged();
     }
@@ -68,24 +63,13 @@ public class Swerve extends GBSubsystem {
         updateNetworkTables();
     }
 
-    private Module[] getModules() {
-        return new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
-        };
-    }
-
     private void updateAllInputs() {
         logState();
 
         gyro.updateInputs(gyroInputs);
         Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
 
-        for (Module currentModule : modules) {
-            currentModule.periodic();
-        }
+        modules.periodic();
     }
 
     private void updatePoseEstimator() {
@@ -107,38 +91,11 @@ public class Swerve extends GBSubsystem {
         Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Y", getSelfRelativeVelocity().vyMetersPerSecond);
     }
 
-
-    public void stop() {
-        for (Module currentModule : modules) {
-            currentModule.stop();
-        }
-    }
-
-    public void setBrake(boolean brake) {
-        for (Module currentModule : modules) {
-            currentModule.setBrake(brake);
-        }
-    }
-
-    public void resetModulesAngleByEncoder() {
-        for (Module module : getModules()) {
-            module.resetByEncoder();
-        }
-    }
-
     protected void initializeDrive(SwerveState updatedState) {
         currentState.updateState(updatedState);
-        setClosedLoopForModules();
+        modules.setClosedLoopForModules(currentState.getLoopMode());
         resetRotationController();
     }
-
-
-    protected void setClosedLoopForModules() {
-        for (Module currentModule : modules) {
-            currentModule.setDriveMotorClosedLoop(currentState.getLoopMode().isClosedLoop);
-        }
-    }
-
 
     protected void resetRotationController() {
         SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.reset((POSE_ESTIMATOR.getCurrentPose().getRotation().getDegrees()));
@@ -179,13 +136,8 @@ public class Swerve extends GBSubsystem {
         return new Translation3d(gyroInputs.accelerationX, gyroInputs.accelerationY, gyroInputs.accelerationZ);
     }
 
-
-    public Rotation2d[] getModulesDriveDistances() {
-        return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
-    }
-
     public ChassisSpeeds getSelfRelativeVelocity() {
-        return SwerveConstants.KINEMATICS.toChassisSpeeds(getModuleStates());
+        return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getModuleStates());
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
@@ -201,77 +153,6 @@ public class Swerve extends GBSubsystem {
     public void runWheelRadiusCharacterization(Rotation2d omegaPerSec) {
         driveByState(new ChassisSpeeds(0, 0, omegaPerSec.getRadians()));
     }
-
-    /**
-     * Point all wheels in same angle
-     *
-     * @param targetAngle - angle to point to
-     */
-    public void pointWheels(MirrorableRotation2d targetAngle) {
-        Rotation2d targetMirroredAngle = targetAngle.get();
-        for (Module module : modules) {
-            module.setTargetState(new SwerveModuleState(0, targetMirroredAngle));
-        }
-    }
-
-    /**
-     * Lock swerve wheels in X position, so it's hard to move it.
-     */
-    public void lockSwerve() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
-
-        modules[0].setTargetState(frontLeftBackRight);
-        modules[1].setTargetState(frontRightBackLeft);
-        modules[2].setTargetState(frontRightBackLeft);
-        modules[3].setTargetState(frontLeftBackRight);
-    }
-
-    public boolean isModulesAtStates() {
-        boolean isAtStates = true;
-        for (Module module : modules) {
-            isAtStates = isAtStates && module.isAtTargetState();
-        }
-        return isAtStates;
-    }
-
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "CurrentModulesStates")
-    private SwerveModuleState[] getModuleStates() {
-        SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-        for (int i = 0; i < modules.length; i++) {
-            states[i] = modules[i].getCurrentState();
-        }
-
-        return states;
-    }
-
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "TargetModulesStates")
-    private SwerveModuleState[] getTargetStates() {
-        SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-        for (int i = 0; i < modules.length; i++) {
-            states[i] = modules[i].getTargetState();
-        }
-
-        return states;
-    }
-
-    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
-        SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
-        for (int i = 0; i < modules.length; i++) {
-            swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
-        }
-        return new SwerveDriveWheelPositions(swerveModulePositions);
-    }
-
-    private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
-        for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(swerveModuleStates[i]);
-        }
-    }
-
 
     protected void pidToPose(MirrorablePose2d targetPose) {
         Pose2d currentBluePose = POSE_ESTIMATOR.getCurrentPose();
@@ -368,7 +249,7 @@ public class Swerve extends GBSubsystem {
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {
-            stop();
+            modules.stop();
             return;
         }
 
@@ -376,7 +257,7 @@ public class Swerve extends GBSubsystem {
                 chassisSpeeds,
                 swerveState.getRotateAxis().getRotateAxis()
         );
-        setTargetModuleStates(swerveModuleStates);
+        modules.setTargetModuleStates(swerveModuleStates);
     }
 
     // todo - maybe move some of work to SwerveMath class

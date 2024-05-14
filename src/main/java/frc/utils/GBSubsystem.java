@@ -20,6 +20,6 @@ public abstract class GBSubsystem extends SubsystemBase {
 
     protected abstract String getLogPath();
 
-    public abstract void subsystemPeriodic();
+    protected abstract void subsystemPeriodic();
 
 }

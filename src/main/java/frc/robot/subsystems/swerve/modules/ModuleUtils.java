@@ -41,8 +41,9 @@ public class ModuleUtils {
         );
     }
 
-    public static double velocityToOpenLoopVoltage(double velocityMetersPerSecond,
-            Rotation2d steerVelocityPerSecond, double couplingRatio, Rotation2d maxSpeedPerSecond,
+    public static double velocityToOpenLoopVoltage(
+            double velocityMetersPerSecond, Rotation2d steerVelocityPerSecond,
+            double couplingRatio, Rotation2d maxSpeedPerSecond,
             double voltageCompensationSaturation
     ) {
         Rotation2d velocityRevolutionsPerSecond = fromDriveMetersToDriveAngle(velocityMetersPerSecond);

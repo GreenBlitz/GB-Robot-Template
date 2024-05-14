@@ -11,11 +11,12 @@ class MK4IModuleActions {
 
     private final TalonFXWrapper steerMotor, driveMotor;
 
-    private final VelocityVoltage driveVelocityRequest =
-            new VelocityVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
 
     private final VoltageOut driveVoltageRequest =
             new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
+
+    private final VelocityVoltage driveVelocityRequest =
+            new VelocityVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
 
     private final PositionVoltage steerPositionRequest =
             new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_STEER);
@@ -24,6 +25,24 @@ class MK4IModuleActions {
         this.driveMotor = moduleMotors.driveMotor();
         this.steerMotor = moduleMotors.steerMotor();
     }
+
+
+    public void stop() {
+        steerMotor.stopMotor();
+        driveMotor.stopMotor();
+    }
+
+    public void setBrake(boolean brake) {
+        NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+        driveMotor.setNeutralMode(neutralModeValue);
+        steerMotor.setNeutralMode(neutralModeValue);
+    }
+
+
+    public void resetSteerAngle(Rotation2d angle) {
+        steerMotor.setPosition(angle.getRotations());
+    }
+
 
     public void setTargetOpenLoopVelocity(double voltage) {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
@@ -35,21 +54,6 @@ class MK4IModuleActions {
 
     public void setTargetAngle(Rotation2d angle) {
         steerMotor.setControl(steerPositionRequest.withPosition(angle.getRotations()));
-    }
-
-    public void resetSteerAngle(Rotation2d angle) {
-        steerMotor.setPosition(angle.getRotations());
-    }
-
-    public void stop() {
-        steerMotor.stopMotor();
-        driveMotor.stopMotor();
-    }
-
-    public void setBrake(boolean brake) {
-        NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-        driveMotor.setNeutralMode(neutralModeValue);
-        steerMotor.setNeutralMode(neutralModeValue);
     }
 
 }

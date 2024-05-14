@@ -36,6 +36,7 @@ public class Module {
         resetByEncoder();
     }
 
+
     public void periodic() {
         updateAllInputs();
     }
@@ -52,6 +53,7 @@ public class Module {
             Logger.recordOutput(getAlertLoggingPath(moduleName) + "componentDisconnectedAt", Timer.getFPGATimestamp());
         }
     }
+
 
     public void stop() {
         module.stop();
@@ -104,6 +106,7 @@ public class Module {
         return isAtAngle && isAtVelocity;
     }
 
+
     /**
      * The odometry thread can update itself faster than the main code loop (which is 50 hertz).
      * Instead of using the latest odometry update, the accumulated odometry positions since the last loop to get a more
@@ -122,6 +125,7 @@ public class Module {
     public int getLastOdometryUpdateIndex() {
         return moduleInputs.odometryUpdatesSteerAngle.length - 1;
     }
+
 
     public void setTargetState(SwerveModuleState targetState) {
         this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());

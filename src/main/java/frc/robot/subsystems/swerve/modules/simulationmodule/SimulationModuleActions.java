@@ -18,17 +18,19 @@ public class SimulationModuleActions {
         this.steerMotor = simulationModuleConfigObject.getSteerMotor();
     }
 
+
+    public void stop() {
+        driveMotor.stop();
+        steerMotor.stop();
+    }
+
+
     public void setTargetOpenLoopVelocity(double voltage) {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
     }
 
     public void setTargetAngle(Rotation2d angle) {
         steerMotor.setControl(steerPositionRequest.withPosition(angle.getRotations()));
-    }
-
-    public void stop() {
-        driveMotor.stop();
-        steerMotor.stop();
     }
 
 }

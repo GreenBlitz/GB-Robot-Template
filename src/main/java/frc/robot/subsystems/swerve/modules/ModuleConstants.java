@@ -11,8 +11,13 @@ public class ModuleConstants {
     protected static String LOG_PATH = SwerveConstants.SWERVE_LOG_PATH + "Modules/";
     protected static String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 
+    public static final boolean DEFAULT_IS_DRIVE_MOTOR_CLOSED_LOOP = false;
+
     public static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
     public static final double SPEED_TOLERANCE_METERS_PER_SECOND = 0.1;
+
+    public static final double DRIVE_GEAR_RATIO = 6.12;
+    public static final double STEER_GEAR_RATIO = (150.0 / 7.0);
 
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(1.896924) * 2;
 
@@ -20,11 +25,5 @@ public class ModuleConstants {
             SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
             WHEEL_DIAMETER_METERS
     ));
-
-    public static final double DRIVE_GEAR_RATIO = 6.12;
-
-    public static final double STEER_GEAR_RATIO = (150.0 / 7.0);
-
-    public static final boolean DEFAULT_IS_DRIVE_MOTOR_CLOSED_LOOP = false;
 
 }

@@ -24,6 +24,23 @@ public class SimulationModule implements IModule {
         this.simulationModuleStatus = new SimulationModuleStatus(simulationModuleConfigObject);
     }
 
+
+    @Override
+    public void stop() {
+        simulationModuleActions.stop();
+    }
+
+    @Override
+    public void setBrake(boolean brake) {
+        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
+    }
+
+    @Override
+    public void resetByEncoder() {
+        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
+    }
+
+
     @Override
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
@@ -45,22 +62,6 @@ public class SimulationModule implements IModule {
     @Override
     public void setTargetAngle(Rotation2d angle) {
         simulationModuleActions.setTargetAngle(angle);
-    }
-
-
-    @Override
-    public void stop() {
-        simulationModuleActions.stop();
-    }
-
-    @Override
-    public void setBrake(boolean brake) {
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
-    }
-
-    @Override
-    public void resetByEncoder() {
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
     }
 
 

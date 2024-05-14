@@ -19,10 +19,8 @@ class MK4IModuleConfigObject {
 
     protected MK4IModuleConfigObject(
             String busChain,
-            int steerMotorId,
-            boolean isSteerMotorInverted,
-            int driveMotorId,
-            boolean isDriveMotorInverted,
+            int steerMotorId, boolean isSteerMotorInverted,
+            int driveMotorId, boolean isDriveMotorInverted,
             int steerEncoderId
     ) {
 

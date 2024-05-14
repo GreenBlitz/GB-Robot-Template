@@ -7,6 +7,18 @@ import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogge
 public class ReplayModule implements IModule {
 
     @Override
+    public void stop() {
+    }
+
+    @Override
+    public void setBrake(boolean brake) {
+    }
+
+    @Override
+    public void resetByEncoder() {
+    }
+
+    @Override
     public void setTargetOpenLoopVelocity(double voltage) {
     }
 
@@ -16,18 +28,6 @@ public class ReplayModule implements IModule {
 
     @Override
     public void setTargetAngle(Rotation2d angle) {
-    }
-
-    @Override
-    public void resetByEncoder() {
-    }
-
-    @Override
-    public void stop() {
-    }
-
-    @Override
-    public void setBrake(boolean brake) {
     }
 
     @Override

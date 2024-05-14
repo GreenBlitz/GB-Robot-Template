@@ -78,15 +78,22 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
         ));
-        // Drive and Aim Assist to Speaker
+        //Drive and Aim Assist to Speaker
         usedJoystick.L1.whileTrue(SwerveCommands.getRotateToSpeaker(
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
         ));
-        // Drive Slow
-        // not working in my joystick
-        //        usedJoystick.R1.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
+
+        //Drive and Aim Assist to Speaker and Rotate around front Left
+        //        usedJoystick.L1.whileTrue(SwerveCommands.debugCommand(
+        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
+        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
+        //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
+        //        ));
+
+        //Drive Slow
+        //        usedJoystick.Y.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
         //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
         //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),
         //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)

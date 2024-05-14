@@ -129,8 +129,27 @@ public class SmartJoystick {
         if (!isStickAxis(axis)) {
             return axis.getValue(this);
         }
-        double squaredAxisValue = axis.getValue(this) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
+        double squaredAxisValue = getAxisValue(axis) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
         return MathUtil.clamp(squaredAxisValue, -1, 1);
+    }
+
+    /**
+     * Make the stick value be parabolic instead of linear. By that it gives easier and soft control in low values.
+     *
+     * @param axis - axis the take value from
+     * @return the soft value
+     */
+    public double getSoftJoystickValue(Axis axis) {
+        return getSoftJoystickValue(getAxisValue(axis));
+    }
+
+    private double getSoftJoystickValue(double axisValue) {
+        return Math.abs(Math.pow(axisValue, 2)) * Math.signum(axisValue);
+    }
+
+    public double getSquaredSoftAxis(Axis axis) {
+        double squaredValue = getSquaredAxis(axis);
+        return getSoftJoystickValue(squaredValue);
     }
 
     private boolean isStickAxis(Axis axis) {

@@ -140,7 +140,7 @@ public class SmartJoystick {
      * @return the soft value
      */
     public double getSensitiveJoystickValue(Axis axis) {
-        return getSensitiveJoystickValue(getAxisValue(axis), SmartJoystickConstants.SOFT_AXIS_VALUE_POWER);
+        return getSensitiveJoystickValue(getAxisValue(axis), SmartJoystickConstants.SENSITIVE_AXIS_VALUE_POWER);
     }
 
     private double getSensitiveJoystickValue(double axisValue, double power) {
@@ -149,7 +149,7 @@ public class SmartJoystick {
 
     public double getSquaredSoftAxis(Axis axis) {
         double squaredValue = getSquaredAxis(axis);
-        return getSensitiveJoystickValue(squaredValue, SmartJoystickConstants.SOFT_SQUARED_AXIS_VALUE_POWER);
+        return getSensitiveJoystickValue(squaredValue, SmartJoystickConstants.SENSITIVE_SQUARED_AXIS_VALUE_POWER);
     }
 
     private boolean isStickAxis(Axis axis) {

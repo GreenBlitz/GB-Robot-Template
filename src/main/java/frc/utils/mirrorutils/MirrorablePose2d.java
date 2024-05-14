@@ -27,7 +27,7 @@ public class MirrorablePose2d extends Mirrorable<Pose2d> {
     @Override
     protected Pose2d mirror(Pose2d pose) {
         return new Pose2d(
-                FieldConstants.FIELD_LENGTH - pose.getX(),
+                FieldConstants.FIELD_LENGTH_METERS - pose.getX(),
                 pose.getY(),
                 MathConstants.HALF_CIRCLE.minus(pose.getRotation())
         );

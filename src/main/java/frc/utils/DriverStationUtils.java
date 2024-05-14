@@ -1,12 +1,16 @@
 package frc.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.constants.RobotConstants;
 
 public class DriverStationUtils {
 
     private static final DriverStation.Alliance DEFAULT_ALLIANCE = DriverStation.Alliance.Red;
 
     public static DriverStation.Alliance getAlliance() {
+        if (RobotConstants.ROBOT_TYPE.isSimulation()) {
+            return RobotConstants.SIMULATION_ALLIANCE;
+        }
         return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
     }
 

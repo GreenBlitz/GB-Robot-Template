@@ -112,7 +112,7 @@ public class Modules {
     }
 
 
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "CurrentModulesStates")
+    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "CurrentModulesStates")
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
@@ -123,7 +123,7 @@ public class Modules {
         return states;
     }
 
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "TargetModulesStates")
+    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "TargetModulesStates")
     public SwerveModuleState[] getTargetStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 

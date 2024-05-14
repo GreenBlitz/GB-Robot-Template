@@ -8,8 +8,8 @@ import frc.utils.Conversions;
 
 public class ModuleConstants {
 
-    protected static String LOG_PATH = SwerveConstants.SWERVE_LOG_PATH + "Modules/";
-    protected static String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
+    protected static final String LOG_PATH = SwerveConstants.SWERVE_LOG_PATH + "Modules/";
+    protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 
     public static final boolean DEFAULT_IS_DRIVE_MOTOR_CLOSED_LOOP = false;
 

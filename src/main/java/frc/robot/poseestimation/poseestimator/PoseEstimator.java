@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotContainer;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.RobotContainer.POSE_ESTIMATOR;
@@ -53,7 +52,7 @@ public class PoseEstimator implements AutoCloseable {
     }
 
     public void resetPose(Pose2d currentPose) {
-        RobotContainer.SWERVE.setHeading(currentPose.getRotation());
+        SWERVE.setHeading(currentPose.getRotation());
         swerveDrivePoseEstimator.resetPose(currentPose);
     }
 

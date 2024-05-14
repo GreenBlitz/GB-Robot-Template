@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -52,8 +51,6 @@ public class Swerve extends GBSubsystem {
         modules = getModules();
 
         gyroInputs = new SwerveGyroInputsAutoLogged();
-
-        configurePathPlanner();
     }
 
     @Override
@@ -69,19 +66,6 @@ public class Swerve extends GBSubsystem {
                 new Module(ModuleUtils.ModuleName.BACK_RIGHT),
         };
     }
-
-    private void configurePathPlanner() {
-        AutoBuilder.configureHolonomic(
-                () -> POSE_ESTIMATOR.getCurrentPose(),
-                (pose2d) -> POSE_ESTIMATOR.resetPose(pose2d),//todo - check
-                this::getSelfRelativeVelocity,
-                this::driveByState,
-                SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
-                DriverStationUtils::isRedAlliance,
-                this
-        );
-    }
-
 
     @Override
     public void periodic() {
@@ -375,7 +359,7 @@ public class Swerve extends GBSubsystem {
         driveByState(powersToSpeeds(xPower, yPower, thetaPower));
     }
 
-    private void driveByState(ChassisSpeeds chassisSpeeds) {
+    public void driveByState(ChassisSpeeds chassisSpeeds) {
         chassisSpeeds = currentState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
 
         chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity().getRadians();//todo - clamp

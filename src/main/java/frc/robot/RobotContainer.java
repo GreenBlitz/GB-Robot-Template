@@ -19,7 +19,7 @@ import frc.robot.subsystems.swerve.Swerve;
  */
 public class RobotContainer {
 
-    public static final Swerve SWERVE = new Swerve();
+    public static final Swerve SWERVE = new Swerve(); // Must be before POSE_ESTIMATOR
 
     public static final PoseEstimator POSE_ESTIMATOR = new PoseEstimator();
 

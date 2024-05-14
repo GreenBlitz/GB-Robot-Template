@@ -7,11 +7,9 @@ import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInpu
 public class ReplaySwerveGyro implements ISwerveGyro {
 
     @Override
-    public void setHeading(Rotation2d heading) {
-    }
+    public void setHeading(Rotation2d heading) {}
 
     @Override
-    public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
-    }
+    public void updateInputs(SwerveGyroInputsAutoLogged inputs) {}
 
 }

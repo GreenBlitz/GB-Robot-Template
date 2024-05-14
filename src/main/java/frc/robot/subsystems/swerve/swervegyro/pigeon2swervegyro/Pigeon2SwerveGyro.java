@@ -22,6 +22,7 @@ public class Pigeon2SwerveGyro implements ISwerveGyro {
 
     private final Queue<Double> timestampQueue;
 
+
     public Pigeon2SwerveGyro() {
         Pigeon2SwerveGyroConfigObject gyroPigeon2ConfigObject = new Pigeon2SwerveGyroConfigObject(
                 Ports.PIGEON_2_ID,
@@ -34,7 +35,7 @@ public class Pigeon2SwerveGyro implements ISwerveGyro {
         this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(
                 gyroPigeon2ConfigObject.getGyro(),
                 gyroPigeon2Status.getYAW_SIGNAL(false)
-        );
+        );//todo - maybe latency
         this.timestampQueue = PhoenixOdometryThread6328.getInstance().getTimestampQueue();
     }
 

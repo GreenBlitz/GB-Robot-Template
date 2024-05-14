@@ -23,6 +23,7 @@ public class SimulationSwerveGyro implements ISwerveGyro {
                 Rotation2d.fromRadians(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond),
                 RoborioUtils.getCurrentRoborioCycleTime()
         );
+
         inputs.gyroYaw = gyro.getGyroYaw();
         inputs.odometryUpdatesYaw = new Rotation2d[]{inputs.gyroYaw};
         inputs.odometryUpdatesTimestamp = new double[]{Timer.getFPGATimestamp()};

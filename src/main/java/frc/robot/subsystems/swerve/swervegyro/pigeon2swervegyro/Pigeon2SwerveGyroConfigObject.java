@@ -35,8 +35,8 @@ class Pigeon2SwerveGyroConfigObject {
                 signals.Z_ACCELERATION_SIGNAL()
         );
 
-        signals.PITCH_SIGNAL().setUpdateFrequency(100);
         signals.YAW_SIGNAL().setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);
+        signals.PITCH_SIGNAL().setUpdateFrequency(100);
 
         gyro.optimizeBusUtilization();
     }

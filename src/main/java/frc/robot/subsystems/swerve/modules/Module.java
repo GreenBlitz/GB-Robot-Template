@@ -94,9 +94,9 @@ public class Module {
 
     public boolean isAtTargetState() {
         boolean isAtAngle = MathUtil.isNear(
-                getTargetState().angle.getDegrees(),
-                getCurrentAngle().getDegrees(),
-                ModuleConstants.ANGLE_TOLERANCE.getDegrees()
+                MathUtil.angleModulus(getTargetState().angle.getRadians()),
+                MathUtil.angleModulus(getCurrentAngle().getRadians()),
+                ModuleConstants.ANGLE_TOLERANCE.getRadians()
         );
         boolean isAtVelocity = MathUtil.isNear(
                 getTargetState().speedMetersPerSecond,

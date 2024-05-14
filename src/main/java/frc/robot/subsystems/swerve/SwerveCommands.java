@@ -142,7 +142,6 @@ public class SwerveCommands {
         Pose2d currentPose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
         Pose2d targetMirroredPose = targetPose.get();
 
-        // todo - maybe move all func to "PathPlannerUtils"
         double distance = currentPose.getTranslation().getDistance(targetMirroredPose.getTranslation());
         if (distance < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
             return PathPlannerUtils.createOnTheFlyPathCommand(currentPose, targetMirroredPose, pathConstraints);

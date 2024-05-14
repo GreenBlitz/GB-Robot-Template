@@ -85,7 +85,7 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)
         ));
         // Drive Slow
-        //todo - not working in my joystick
+        // not working in my joystick
         //        usedJoystick.R1.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
         //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_Y),
         //                () -> usedJoystick.getAxisValue(SmartJoystick.Axis.LEFT_X),

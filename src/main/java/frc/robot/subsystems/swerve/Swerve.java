@@ -84,9 +84,7 @@ public class Swerve extends GBSubsystem {
 
 
     @Override
-    public void periodic() {
-        super.periodic(); //Todo - make it a must somehow
-
+    public void overridablePeriodic() {
         ODOMETRY_LOCK.lock();
         updateAllInputs();
         ODOMETRY_LOCK.unlock();

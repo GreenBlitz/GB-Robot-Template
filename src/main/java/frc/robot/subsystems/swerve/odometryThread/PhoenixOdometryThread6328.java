@@ -83,10 +83,8 @@ public class PhoenixOdometryThread6328 extends Thread {
         SIGNALS_LOCK.lock();
         Swerve.ODOMETRY_LOCK.lock();
         try {
-            isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
-            for (StatusSignal<Double> signal : signals) {
-                registerSignal(signal);
-            }
+            updateIsCANFD(device);
+            registerSignals(signals);
             updateIsLatencySignals(isLatencySignal);
             queues.add(queue);
         }
@@ -95,6 +93,16 @@ public class PhoenixOdometryThread6328 extends Thread {
             Swerve.ODOMETRY_LOCK.unlock();
         }
         return queue;
+    }
+
+    private void updateIsCANFD(ParentDevice device) {
+        isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
+    }
+
+    private void registerSignals(StatusSignal<Double>[] signals) {
+        for (StatusSignal<Double> signal : signals) {
+            registerSignal(signal);
+        }
     }
 
     private void registerSignal(StatusSignal<Double> signal) {

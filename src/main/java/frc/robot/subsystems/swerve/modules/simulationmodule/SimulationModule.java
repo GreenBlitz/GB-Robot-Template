@@ -5,7 +5,6 @@ import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
-import frc.utils.batteryutils.Battery;
 import org.littletonrobotics.junction.Logger;
 
 public class SimulationModule implements IModule {
@@ -48,7 +47,7 @@ public class SimulationModule implements IModule {
                 simulationModuleStatus.getSteerVelocity(),
                 0,
                 ModuleConstants.MAX_SPEED_PER_SECOND,
-                Battery.getCurrentVoltage()
+                ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
         simulationModuleActions.setTargetOpenLoopVelocity(voltage);

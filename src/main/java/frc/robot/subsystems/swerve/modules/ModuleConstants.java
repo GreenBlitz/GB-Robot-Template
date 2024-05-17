@@ -5,14 +5,18 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.constants.LogPathsConstants;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.Conversions;
+import frc.utils.batteryutils.Battery;
 
 public class ModuleConstants {
 
     protected static String LOG_PATH = SwerveConstants.SWERVE_LOG_PATH + "Modules/";
     protected static String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 
+    public static final boolean ENABLE_FOC_DRIVE = true;
+    public static final boolean ENABLE_FOC_STEER = true;
+
     public static final boolean DEFAULT_IS_DRIVE_MOTOR_CLOSED_LOOP = false;
-    public static final double VOLTAGE_COMPENSATION_SATURATION = 12;
+    public static final double VOLTAGE_COMPENSATION_SATURATION = Battery.getDefaultBatteryVoltage();
 
     public static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
     public static final double SPEED_TOLERANCE_METERS_PER_SECOND = 0.1;

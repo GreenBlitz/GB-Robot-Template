@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
@@ -64,9 +61,6 @@ public class Robot extends LoggedRobot {
     }
 
     private void initializeLogger() {
-        NetworkTableInstance.getDefault().getStructTopic("RobotPose", Pose2d.struct).publish();
-        NetworkTableInstance.getDefault().getStructTopic("MechanismPoses", Pose3d.struct).publish();
-
         switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> {
                 LoggerUtils.startRealLogger();

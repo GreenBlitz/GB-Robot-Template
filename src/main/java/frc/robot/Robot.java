@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.ToggleConstants;
 import frc.robot.simulation.MotorSimulation;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
@@ -34,6 +35,7 @@ public class Robot extends LoggedRobot {
         Battery.scheduleBatteryLimiterCommand();// Using RobotConstants.DISABLE_BATTERY_LIMITER, disable with it!
 
         robotContainer = new RobotContainer();
+        ToggleConstants.SIMULATION_ALLIANCE.get();//todo- delete
     }
 
     @Override

@@ -45,7 +45,7 @@ public class PathPlannerUtils {
     ) {
         AutoBuilder.configureHolonomic(
                 poseSupplier,
-                resetPose,//todo - trigon cancel
+                resetPose,//todo - maybe cancel and base vision
                 robotRelativeSpeedsSupplier,
                 robotRelativeOutput,
                 config,

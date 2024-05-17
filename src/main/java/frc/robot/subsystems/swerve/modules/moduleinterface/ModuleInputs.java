@@ -12,7 +12,7 @@ public class ModuleInputs {
     public Rotation2d steerEncoderVelocity = new Rotation2d();
     public double steerEncoderVoltage = 0;
 
-    public Rotation2d steerMotorAngle = new Rotation2d();//todo - double
+    public Rotation2d steerMotorAngle = new Rotation2d();
     public Rotation2d steerMotorVelocity = new Rotation2d();
     public Rotation2d steerMotorAcceleration = new Rotation2d();
     public double steerMotorVoltage = 0;

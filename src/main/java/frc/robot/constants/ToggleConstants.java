@@ -12,8 +12,10 @@ public class ToggleConstants {
         ALLIANCE_CHOOSER.addOption("RED", DriverStation.Alliance.Red);
     }
 
-    public static final LoggedDashboardChooser<DriverStation.Alliance> SIMULATION_ALLIANCE =
-            new LoggedDashboardChooser<>("Simulation Alliance", ALLIANCE_CHOOSER);
+    public static final LoggedDashboardChooser<DriverStation.Alliance> SIMULATION_ALLIANCE = new LoggedDashboardChooser<>(
+            "Simulation Alliance",
+            ALLIANCE_CHOOSER
+    );
 
 
     private static final SendableChooser<Boolean> BATTERY_LIMITER_CHOOSER = new SendableChooser<>();
@@ -23,7 +25,9 @@ public class ToggleConstants {
     }
 
     // Use this to disable battery limiter, don't comment!!!
-    public static final LoggedDashboardChooser<Boolean> DISABLE_BATTERY_LIMITER =
-            new LoggedDashboardChooser<>("Battery Limiter", BATTERY_LIMITER_CHOOSER);
+    public static final LoggedDashboardChooser<Boolean> DISABLE_BATTERY_LIMITER = new LoggedDashboardChooser<>(
+            "Battery Limiter",
+            BATTERY_LIMITER_CHOOSER
+    );
 
 }

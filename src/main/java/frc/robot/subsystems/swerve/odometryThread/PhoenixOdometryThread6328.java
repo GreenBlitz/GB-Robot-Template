@@ -43,7 +43,7 @@ public class PhoenixOdometryThread6328 extends Thread {
 
     private final Lock SIGNALS_LOCK = new ReentrantLock();
     private final List<Queue<Double>> queues = new ArrayList<>();
-    private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_QUEUE_SIZE);
+    private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
     private final ArrayList<StatusSignal<Double>> signals = new ArrayList<>();
     private final ArrayList<Boolean> isLatencySignals = new ArrayList<>();
     private boolean isCANFD = false; //assuming that all the devices using in odometry have same can network
@@ -79,7 +79,7 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private Queue<Double> registerSignals(boolean isLatencySignal, ParentDevice device, StatusSignal<Double>[] signals) {
-        Queue<Double> queue = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_QUEUE_SIZE);
+        Queue<Double> queue = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
         SIGNALS_LOCK.lock();
         Swerve.ODOMETRY_LOCK.lock();
         try {

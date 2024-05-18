@@ -1,16 +1,19 @@
 package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.utils.controllers.Controller;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 
-public class KeyboardController {
+public class KeyboardController implements Controller{
 
-    private final Trigger
+    private static final double KEY_PRESSED_VALUE = 0.5;
+
+    public final Trigger
             ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10,
             F11, F12, DELETE, BACKTICK, ONE, TWO, THREE, FOUR,
             FIVE, SIX, SEVEN, EIGHT, NINE, ZERO, MINUS, EQUALS,
             BACKSPACE, TAB, Q, W, E, R, T, Y, U, I, O, P, A, S,
-            D, F, G, H, J, K, L, SEMICOLON, APOSTROPHE, LEFTSHIFT,
+            D, F, G, H, J, K, L, SEMICOLON, APOSTROPHE, LEFT_SHIFT,
             Z, X, C, V, B, N, M, COMMA, PERIOD,
             RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL,
             LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW, NUMPAD_0, NUMPAD_1, NUMPAD_2,
@@ -71,7 +74,7 @@ public class KeyboardController {
         L = new Trigger(new LoggedDashboardBoolean("keyboard/l", false)::get);
         SEMICOLON = new Trigger(new LoggedDashboardBoolean("keyboard/;", false)::get);
         APOSTROPHE = new Trigger(new LoggedDashboardBoolean("keyboard/'", false)::get);
-        LEFTSHIFT = new Trigger(new LoggedDashboardBoolean("keyboard/shift", false)::get);
+        LEFT_SHIFT = new Trigger(new LoggedDashboardBoolean("keyboard/shift", false)::get);
         Z = new Trigger(new LoggedDashboardBoolean("keyboard/z", false)::get);
         X = new Trigger(new LoggedDashboardBoolean("keyboard/x", false)::get);
         C = new Trigger(new LoggedDashboardBoolean("keyboard/c", false)::get);
@@ -101,4 +104,26 @@ public class KeyboardController {
         NUMPAD_9 = new Trigger(new LoggedDashboardBoolean("keyboard/numpad9", false)::get);
     }
 
+    public double getAxisValue(Controller.Axis axis) {
+        return switch (axis) {
+            case LEFT_X -> getValueByButtons(D,A);
+            case LEFT_Y -> getValueByButtons(W,S);
+            case LEFT_TRIGGER -> 0.0;
+            case RIGHT_TRIGGER -> 0.0;
+            case RIGHT_X -> getValueByButtons(E,Q);
+            case RIGHT_Y -> getValueByButtons(X,Z);
+        };
+    }
+
+    private double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
+        if (positiveValue.getAsBoolean()) {
+            return KEY_PRESSED_VALUE;
+        }
+        else if (negativeValue.getAsBoolean()) {
+            return -KEY_PRESSED_VALUE;
+        }
+        else {
+            return 0;
+        }
+    }
 }

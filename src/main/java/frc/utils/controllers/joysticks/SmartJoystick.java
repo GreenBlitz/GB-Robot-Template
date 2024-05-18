@@ -5,8 +5,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.utils.controllers.Controller;
 
-public class SmartJoystick {
+public class SmartJoystick implements Controller{
 
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
 
@@ -122,7 +123,7 @@ public class SmartJoystick {
      * @formatter:on
      * </p>
      */
-    public double getSquaredAxis(Axis axis) {
+    public double getSquaredAxis(Controller.Axis axis) {
         if (joystick == null) {
             return 0;
         }
@@ -133,7 +134,7 @@ public class SmartJoystick {
         return MathUtil.clamp(squaredAxisValue, -1, 1);
     }
 
-    private boolean isStickAxis(Axis axis) {
+    private boolean isStickAxis(Controller.Axis axis) {
         return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
     }
 
@@ -146,7 +147,7 @@ public class SmartJoystick {
         return joystick;
     }
 
-    public double getAxisValue(Axis axis) {
+    public double getAxisValue(Controller.Axis axis) {
         return isStickAxis(axis) ? deadzone(axis.getValue(this)) : axis.getValue(this);
     }
 
@@ -162,32 +163,6 @@ public class SmartJoystick {
      */
     public void rumble(boolean left, double power) {
         joystick.setRumble(left ? GenericHID.RumbleType.kLeftRumble : GenericHID.RumbleType.kRightRumble, power);
-    }
-
-    public enum Axis {
-        LEFT_X(0, true),
-        LEFT_Y(1, true),
-        LEFT_TRIGGER(2, false),
-        RIGHT_TRIGGER(3, false),
-        RIGHT_X(4, false),
-        RIGHT_Y(5, true);
-
-        private final int axis;
-
-        private int inverted;
-
-        Axis(int axis, boolean isInverted) {
-            this.axis = axis;
-            setInverted(isInverted);
-        }
-
-        public void setInverted(boolean isInverted) {
-            inverted = isInverted ? -1 : 1;
-        }
-
-        public double getValue(SmartJoystick stick) {
-            return inverted * stick.getRawAxis(axis);
-        }
     }
 
 }

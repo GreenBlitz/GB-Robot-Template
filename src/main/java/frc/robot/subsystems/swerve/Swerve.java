@@ -65,7 +65,7 @@ public class Swerve extends GBSubsystem {
         ODOMETRY_LOCK.unlock();
 
         updatePoseEstimator();
-        updateNetworkTables();
+        logFieldRelativeVelocities();
     }
 
     private Module[] getModules() {
@@ -101,10 +101,11 @@ public class Swerve extends GBSubsystem {
         Logger.recordOutput(SwerveConstants.SWERVE_STATE_LOG_PATH + "AimAssist", currentState.getAimAssist());
     }
 
-    private void updateNetworkTables() {
-        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Rotation", getSelfRelativeVelocity().omegaRadiansPerSecond);
-        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "X", getSelfRelativeVelocity().vxMetersPerSecond);
-        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Y", getSelfRelativeVelocity().vyMetersPerSecond);
+    private void logFieldRelativeVelocities() {
+        ChassisSpeeds fieldRelativeSpeeds = getFieldRelativeVelocity();
+        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
+        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "X", fieldRelativeSpeeds.vxMetersPerSecond);
+        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
     }
 
 

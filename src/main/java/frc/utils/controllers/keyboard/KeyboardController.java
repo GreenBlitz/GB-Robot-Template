@@ -6,8 +6,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 
 public class KeyboardController implements Controller{
 
-    private static final double KEY_PRESSED_VALUE = 0.5;
-
     public final Trigger
             ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10,
             F11, F12, DELETE, BACKTICK, ONE, TWO, THREE, FOUR,
@@ -115,7 +113,9 @@ public class KeyboardController implements Controller{
         };
     }
 
-    private double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
+    private static final double KEY_PRESSED_VALUE = 0.5;
+
+    public double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
         if (positiveValue.getAsBoolean()) {
             return KEY_PRESSED_VALUE;
         }

@@ -20,7 +20,7 @@ public class SwerveConstants {
     public static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
     public static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 
-    public static final double TIME_STEP_DISCRETION_FACTOR = 3.5;
+    public static final double TIME_STEP_DISCRETION_FACTOR = 4;
 
 
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);
@@ -30,12 +30,14 @@ public class SwerveConstants {
 
 
     public static final double DRIVE_NEUTRAL_DEADBAND = 0.2;
-    public static final double ROTATION_NEUTRAL_DEADBAND = 0.2;
+    public static final double ROTATION_NEUTRAL_DEADBAND = 0.2;//todo - rot2d
 
-
+    //todo - why affecting max rot
     public static final double MAX_SPEED_METERS_PER_SECOND = 5.5;
+    //todo - why when increasing max on run gets higher
     public static final Rotation2d MAX_ROTATIONAL_SPEED_PER_SECOND = Rotation2d.fromRadians(10);
     public static final Rotation2d MAX_ROTATION_ACCELERATION_PER_SECOND = Rotation2d.fromDegrees(360);
+    public static final Rotation2d MAX_ROTATION_WHILE_MAX_VECTOR = MAX_ROTATIONAL_SPEED_PER_SECOND.div(2);
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
 

@@ -8,6 +8,7 @@ import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogge
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MK4IModule implements IModule {
 
@@ -16,6 +17,8 @@ public class MK4IModule implements IModule {
     private final MK4IModuleActions mk4IModuleActions;
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
+
+    private Rotation2d startSteerAngle;
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
@@ -34,6 +37,8 @@ public class MK4IModule implements IModule {
                 mk4IModuleStatus.getDriveMotorPositionSignal(false),
                 mk4IModuleStatus.getDriveMotorVelocitySignal(false)
         );
+
+        this.startSteerAngle = mk4IModuleStatus.getSteerMotorLatencyPosition(true);
     }
 
     private MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName) {
@@ -58,7 +63,9 @@ public class MK4IModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        mk4IModuleActions.resetSteerAngle(mk4IModuleStatus.getSteerEncoderAbsolutePosition(true));
+        Rotation2d steerEncoderAbsoluteAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(true);
+        mk4IModuleActions.resetSteerAngle(steerEncoderAbsoluteAngle);
+        startSteerAngle = steerEncoderAbsoluteAngle;//todo - do better
     }
 
 
@@ -114,11 +121,20 @@ public class MK4IModule implements IModule {
         inputs.steerMotorAcceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);
         inputs.steerMotorVoltage = mk4IModuleStatus.getSteerMotorVoltageSignal(false).getValue();
 
-        inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        AtomicInteger index = new AtomicInteger();
         inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(
+                driveDistance -> getDriveDistanceWithCoupling(driveDistance, inputs.odometryUpdatesSteerAngle[index.getAndIncrement()])
+        ).toArray(Rotation2d[]::new);
 
         steerPositionQueue.clear();
         drivePositionQueue.clear();
+    }
+
+    private Rotation2d getDriveDistanceWithCoupling(double driveDistanceRot, Rotation2d steerAngle) {
+        return Rotation2d.fromRotations(//todo - check about direction of coupling
+                driveDistanceRot + (steerAngle.getRotations() - startSteerAngle.getRotations()) * MK4IModuleConstants.COUPLING_RATIO
+        );
     }
 
 }

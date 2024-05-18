@@ -1,7 +1,7 @@
 package frc.robot;
 
 import frc.robot.constants.Ports;
-import frc.utils.joysticks.SmartJoystick;
+import frc.utils.controllers.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
 
@@ -38,6 +38,12 @@ public class JoysticksBindings {
     private static void fourthJoystickButtons() {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
         // bindings
+    }
+
+
+    private static void keyboardButtons() {
+        SmartJoystick usedJoystick = FOURTH_JOYSTICK;
+        // e
     }
 
 }

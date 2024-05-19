@@ -248,6 +248,20 @@ public class Swerve extends GBSubsystem {
         modules[3].setTargetState(frontLeftBackRight);
     }
 
+    /**
+     * Put swerve wheels in circle position, so it's ready to spin
+     */
+    public void readySpinSwerve() {
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+
+        modules[0].setTargetState(frontLeftBackRight);
+        modules[1].setTargetState(frontRightBackLeft);
+        modules[2].setTargetState(frontRightBackLeft);
+        modules[3].setTargetState(frontLeftBackRight);
+    }
+
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "IsModulesAtStates")
     public boolean isModulesAtStates() {
         boolean isAtStates = true;
         for (Module module : modules) {

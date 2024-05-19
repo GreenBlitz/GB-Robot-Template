@@ -33,13 +33,15 @@ public class SwerveCommands {
     private static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(
             true,
             SWERVE,
-            SWERVE::runModuleSteerByVoltage
+            SWERVE::runModuleSteerByVoltage,
+            2
     );
 
     private static final SysIdCalibrator DRIVE_CALIBRATOR = new SysIdCalibrator(
             true,
             SWERVE,
-            SWERVE::runModulesDriveByVoltage
+            SWERVE::runModulesDriveByVoltage,
+            2
     );
 
     public static Command getSteerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
@@ -49,22 +51,25 @@ public class SwerveCommands {
         return command;
     }
 
+    // Must start when all wheels looking forward
     public static Command getDriveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-        //todo - add point wheels at start
         Command command = DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
         command.setName("Drive Calibration");
         return command;
     }
 
     public static Command getWheelRadiusCalibrationCommand() {
-        Command command = new WheelRadiusCharacterization(//todo - add point wheels at start
-                SWERVE,
-                SwerveConstants.DRIVE_RADIUS_METERS,
-                Rotation2d.fromRotations(0.5),
-                SWERVE::getModulesDriveDistances,
-                SWERVE::getAbsoluteHeading,
-                SWERVE::runWheelRadiusCharacterization,
-                SWERVE::stop
+        Command command = new SequentialCommandGroup(
+                getReadySpinSwerveCommand(),
+                new WheelRadiusCharacterization(
+                        SWERVE,
+                        SwerveConstants.DRIVE_RADIUS_METERS,
+                        Rotation2d.fromRotations(0.5),
+                        SWERVE::getModulesDriveDistances,
+                        SWERVE::getAbsoluteHeading,
+                        SWERVE::runWheelRadiusCharacterization,
+                        SWERVE::stop
+                )
         );
         command.setName("Wheel Radius Calibration");
         return command;
@@ -79,6 +84,18 @@ public class SwerveCommands {
                 SWERVE
         );
         command.setName("Lock");
+        return command;
+    }
+
+    public static Command getReadySpinSwerveCommand() {
+        Command command = new FunctionalCommand(
+                () -> {},
+                SWERVE::readySpinSwerve,
+                inter -> {},
+                SWERVE::isModulesAtStates,
+                SWERVE
+        );
+        command.setName("Ready Spin");
         return command;
     }
 

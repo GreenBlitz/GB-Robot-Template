@@ -76,9 +76,12 @@ public class SwerveCommands {
         return command;
     }
 
-    public static Command getRotateToSpeaker(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
+    public static Command getDriveWithAimAssist(
+            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
+            AimAssist aimAssist
+    ) {
         Command command = new InitExecuteCommand(
-                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
+                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)),
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
@@ -142,7 +145,7 @@ public class SwerveCommands {
      * @param thetaSupplier the target theta power, CCW+
      * @return the command
      */
-    public static Command getOpenLoopFieldRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier,
+    public static Command getDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier,
             DoubleSupplier thetaSupplier) {
         Command defaultFieldRelative = new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE),
@@ -153,7 +156,7 @@ public class SwerveCommands {
         return defaultFieldRelative;
     }
 
-    public static Command debugCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
+    public static Command getMultiplyStateCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         Command command = new InitExecuteCommand(
                 () -> SWERVE.initializeDrive(
                         SwerveState.DEFAULT_DRIVE
@@ -163,7 +166,7 @@ public class SwerveCommands {
                 () -> SWERVE.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 SWERVE
         );
-        command.setName("Debug");
+        command.setName("Multiply State");
         return command;
     }
 
@@ -188,24 +191,17 @@ public class SwerveCommands {
         Pose2d targetMirroredPose = targetPose.get();
 
         double distance = currentPose.getTranslation().getDistance(targetMirroredPose.getTranslation());
-        Command command;
         if (distance < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-            command = PathPlannerUtils.createOnTheFlyPathCommand(currentPose, targetMirroredPose, pathConstraints);
+            return PathPlannerUtils.createOnTheFlyPathCommand(currentPose, targetMirroredPose, pathConstraints);
         }
-        else {
-            command = AutoBuilder.pathfindToPose(targetMirroredPose, pathConstraints);
-        }
-        command.setName("Path Finding to " + targetPose.get());
-        return command;
+        return AutoBuilder.pathfindToPose(targetMirroredPose, pathConstraints);
     }
 
     private static Command getPIDToPoseCommand(MirrorablePose2d targetPose) {
-        Command command = new SequentialCommandGroup(
+        return new SequentialCommandGroup(
                 new InstantCommand(SWERVE::resetRotationController),
                 new RunCommand(() -> SWERVE.pidToPose(targetPose)).until(() -> SWERVE.isAtPosition(targetPose))
         );
-        command.setName("Pid To " + targetPose.get());
-        return command;
     }
 
 }

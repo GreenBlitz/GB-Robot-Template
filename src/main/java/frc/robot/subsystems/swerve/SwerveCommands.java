@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.mirrorutils.MirrorablePose2d;
 import frc.utils.mirrorutils.MirrorableRotation2d;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -28,8 +30,34 @@ public class SwerveCommands {
 
     private static final Swerve SWERVE = RobotContainer.SWERVE;
 
+    private static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(
+            true,
+            SWERVE,
+            SWERVE::runModuleSteerByVoltage
+    );
+
+    private static final SysIdCalibrator DRIVE_CALIBRATOR = new SysIdCalibrator(
+            true,
+            SWERVE,
+            SWERVE::runModulesDriveByVoltage
+    );
+
+    public static Command getSteerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+        //todo - add coupling handel
+        Command command = STEER_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
+        command.setName("Steer Calibration");
+        return command;
+    }
+
+    public static Command getDriveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+        //todo - add point wheels at start
+        Command command = DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
+        command.setName("Drive Calibration");
+        return command;
+    }
+
     public static Command getWheelRadiusCalibrationCommand() {
-        Command command = new WheelRadiusCharacterization(
+        Command command = new WheelRadiusCharacterization(//todo - add point wheels at start
                 SWERVE,
                 SwerveConstants.DRIVE_RADIUS_METERS,
                 Rotation2d.fromRotations(0.5),

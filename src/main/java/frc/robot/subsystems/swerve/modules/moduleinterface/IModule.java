@@ -10,6 +10,10 @@ public interface IModule {
 
     void resetByEncoder();
 
+    void runSteerMotorByVoltage(double voltage);
+
+    void runDriveMotorByVoltage(double voltage);
+
     void setTargetOpenLoopVelocity(double voltage);
 
     void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond);

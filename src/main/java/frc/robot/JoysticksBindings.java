@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.robot.subsystems.swerve.SwerveConstants;
@@ -140,6 +141,8 @@ public class JoysticksBindings {
         // bindings
 
         usedJoystick.A.whileTrue(SwerveCommands.getWheelRadiusCalibrationCommand());
+        usedJoystick.B.whileTrue(SwerveCommands.getSteerCalibration(true, SysIdRoutine.Direction.kForward));
+        usedJoystick.Y.whileTrue(SwerveCommands.getDriveCalibration(true, SysIdRoutine.Direction.kForward));
     }
 
     private static void thirdJoystickButtons() {

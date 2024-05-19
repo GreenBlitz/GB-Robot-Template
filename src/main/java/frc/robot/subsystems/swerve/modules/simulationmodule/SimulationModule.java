@@ -39,6 +39,16 @@ public class SimulationModule implements IModule {
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
     }
 
+    @Override
+    public void runSteerMotorByVoltage(double voltage) {
+        simulationModuleActions.setTargetSteerVoltage(voltage);
+    }
+
+    @Override
+    public void runDriveMotorByVoltage(double voltage) {
+        simulationModuleActions.setTargetDriveVoltage(voltage);
+    }
+
 
     @Override
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
@@ -50,7 +60,7 @@ public class SimulationModule implements IModule {
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
-        simulationModuleActions.setTargetOpenLoopVelocity(voltage);
+        simulationModuleActions.setTargetDriveVoltage(voltage);
     }
 
     @Override

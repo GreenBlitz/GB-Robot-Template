@@ -12,6 +12,8 @@ public class SimulationModuleActions {
 
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
 
+    private final VoltageOut steerVoltageRequest = new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
+
     private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
 
     public SimulationModuleActions(SimulationModuleConfigObject simulationModuleConfigObject) {
@@ -26,8 +28,12 @@ public class SimulationModuleActions {
     }
 
 
-    public void setTargetOpenLoopVelocity(double voltage) {
+    public void setTargetDriveVoltage(double voltage) {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
+    }
+
+    public void setTargetSteerVoltage(double voltage) {
+        steerMotor.setControl(steerVoltageRequest.withOutput(voltage));
     }
 
     public void setTargetAngle(Rotation2d angle) {

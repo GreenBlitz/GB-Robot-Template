@@ -22,6 +22,9 @@ class MK4IModuleActions {
     private final PositionVoltage steerPositionRequest =
             new PositionVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
 
+    private final VoltageOut steerVoltageRequest =
+            new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
+
     public MK4IModuleActions(MK4IModuleRecords.MK4IModuleMotors moduleMotors) {
         this.driveMotor = moduleMotors.driveMotor();
         this.steerMotor = moduleMotors.steerMotor();
@@ -45,12 +48,16 @@ class MK4IModuleActions {
     }
 
 
-    public void setTargetOpenLoopVelocity(double voltage) {
+    public void setTargetDriveVelocity(double voltage) {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
     }
 
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
         driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityMetersPerSecond));
+    }
+
+    public void setTargetSteerVelocity(double voltage) {
+        steerMotor.setControl(steerVoltageRequest.withOutput(voltage));
     }
 
     public void setTargetAngle(Rotation2d angle) {

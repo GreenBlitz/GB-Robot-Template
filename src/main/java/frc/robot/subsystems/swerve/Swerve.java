@@ -204,6 +204,26 @@ public class Swerve extends GBSubsystem {
     }
 
     /**
+     * Runs swerve module around itself for Sysid Steer Calibration
+     *
+     * @param voltage - voltage to run the swerve module steer
+     */
+    public void runModuleSteerByVoltage(double voltage) { //todo - add modules chooser
+        modules[0].runSteerMotorByVoltage(voltage);
+    }
+
+    /**
+     * Runs swerve module around itself for Sysid Steer Calibration
+     *
+     * @param voltage - voltage to run the swerve module drive
+     */
+    public void runModulesDriveByVoltage(double voltage) {
+        for (Module module : modules) {
+            module.runDriveMotorByVoltage(voltage);
+        }
+    }
+
+    /**
      * Point all wheels in same angle
      *
      * @param targetAngle - angle to point to

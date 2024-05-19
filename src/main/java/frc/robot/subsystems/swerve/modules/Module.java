@@ -156,4 +156,12 @@ public class Module {
         driveMotorClosedLoop = closedLoop;
     }
 
+    public void runSteerMotorByVoltage(double voltage) {
+        module.runSteerMotorByVoltage(voltage);
+    }
+
+    public void runDriveMotorByVoltage(double voltage) {
+        module.runDriveMotorByVoltage(voltage);
+    }
+
 }

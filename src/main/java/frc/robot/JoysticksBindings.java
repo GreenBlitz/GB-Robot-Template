@@ -136,6 +136,8 @@ public class JoysticksBindings {
     private static void secondJoystickButtons() {
         SmartJoystick usedJoystick = SECOND_JOYSTICK;
         // bindings
+
+        usedJoystick.A.whileTrue(SwerveCommands.getWheelRadiusCalibrationCommand());
     }
 
     private static void thirdJoystickButtons() {

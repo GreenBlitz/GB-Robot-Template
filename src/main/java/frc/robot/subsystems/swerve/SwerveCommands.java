@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -13,6 +14,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
+import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.mirrorutils.MirrorablePose2d;
 import frc.utils.mirrorutils.MirrorableRotation2d;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -25,6 +27,20 @@ import java.util.function.Supplier;
 public class SwerveCommands {
 
     private static final Swerve SWERVE = RobotContainer.SWERVE;
+
+    public static Command getWheelRadiusCalibrationCommand() {
+        Command command = new WheelRadiusCharacterization(
+                SWERVE,
+                SwerveConstants.DRIVE_RADIUS_METERS,
+                Rotation2d.fromRotations(0.5),
+                SWERVE::getModulesDriveDistances,
+                SWERVE::getAbsoluteHeading,
+                SWERVE::runWheelRadiusCharacterization,
+                SWERVE::stop
+        );
+        command.setName("Wheel Radius Calibration");
+        return command;
+    }
 
     public static Command getLockSwerveCommand() {
         Command command = new FunctionalCommand(

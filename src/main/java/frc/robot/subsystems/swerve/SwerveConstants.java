@@ -20,7 +20,8 @@ public class SwerveConstants {
     public static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
     public static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 
-    public static final double TIME_STEP_DISCRETION_FACTOR = 4;
+    public static final double SIMULATION_TIME_STEP_DISCRETION_FACTOR = 4;
+    public static final double REAL_TIME_STEP_DISCRETION_FACTOR = 8;
 
 
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);

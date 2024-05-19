@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
+import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
@@ -363,13 +364,13 @@ public class Swerve extends GBSubsystem {
             double currentDividedByMinWhileMax = Math.abs(current.omegaRadiansPerSecond) / minWhileMax;
 
             if (Math.abs(current.omegaRadiansPerSecond) > SwerveConstants.MAX_ROTATION_WHILE_MAX_VECTOR.getRadians()) {
-                timeFactor = (SwerveConstants.TIME_STEP_DISCRETION_FACTOR * currentDividedByMinWhileMax);
+                timeFactor = (getTimeStepDiscretionFactor() * currentDividedByMinWhileMax);
             }
             else {
                 double actualMax =
                         Math.abs(chassisSpeeds.omegaRadiansPerSecond / (SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians() - 0.9));
                 timeFactor =
-                        (SwerveConstants.TIME_STEP_DISCRETION_FACTOR * Math.abs(current.omegaRadiansPerSecond) / minWhileMax / actualMax);
+                        (getTimeStepDiscretionFactor() * Math.abs(current.omegaRadiansPerSecond) / minWhileMax / actualMax);
             }
         }
 
@@ -377,6 +378,13 @@ public class Swerve extends GBSubsystem {
                 chassisSpeeds,
                 RoborioUtils.getCurrentRoborioCycleTime() * timeFactor
         );
+    }
+
+    private double getTimeStepDiscretionFactor() {
+        if (RobotConstants.ROBOT_TYPE.isReal()) {
+            return SwerveConstants.REAL_TIME_STEP_DISCRETION_FACTOR;
+        }
+        return SwerveConstants.SIMULATION_TIME_STEP_DISCRETION_FACTOR;
     }
 
 

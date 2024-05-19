@@ -2,7 +2,6 @@ package frc.utils.batteryutils;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.constants.ToggleConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class Battery {
@@ -24,7 +23,6 @@ public class Battery {
     }
 
     public static void scheduleBatteryLimiterCommand() {
-        ToggleConstants.DISABLE_BATTERY_LIMITER.get();//todo - in master
         BatteryConstants.BATTERY_LIMITER.schedule();
     }
 

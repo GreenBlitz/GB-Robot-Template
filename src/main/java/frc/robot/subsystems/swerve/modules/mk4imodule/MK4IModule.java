@@ -73,9 +73,9 @@ public class MK4IModule implements IModule {
 
 
     @Override
-    public void setTargetOpenLoopVelocity(double targetVelocityMeterPerSecond) {
+    public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
-                targetVelocityMeterPerSecond,
+                targetVelocityMetersPerSecond,
                 mk4IModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO,
                 ModuleConstants.MAX_SPEED_PER_SECOND,

@@ -14,7 +14,7 @@ public interface IModule {
 
     void runDriveMotorByVoltage(double voltage);
 
-    void setTargetOpenLoopVelocity(double velocityMeterPerSecond);
+    void setTargetOpenLoopVelocity(double targetVelocityMeterPerSecond);
 
     void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond);
 

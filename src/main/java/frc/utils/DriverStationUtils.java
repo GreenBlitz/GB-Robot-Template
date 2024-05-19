@@ -2,7 +2,6 @@ package frc.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.RobotConstants;
-import frc.robot.constants.ToggleConstants;
 
 public class DriverStationUtils {
 
@@ -10,7 +9,7 @@ public class DriverStationUtils {
 
     public static DriverStation.Alliance getAlliance() {
         if (RobotConstants.ROBOT_TYPE.isSimulation()) {
-            return ToggleConstants.SIMULATION_ALLIANCE.get();
+            return RobotConstants.SIMULATION_ALLIANCE;
         }
         return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
     }

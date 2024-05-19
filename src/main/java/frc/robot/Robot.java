@@ -28,7 +28,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit() {
         initializeLogger();
-        Battery.scheduleBatteryLimiterCommand();// Using ToggleConstants.DISABLE_BATTERY_LIMITER, disable with it!
+        Battery.scheduleBatteryLimiterCommand();// Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 
         robotContainer = new RobotContainer();
     }

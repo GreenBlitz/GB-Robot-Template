@@ -63,25 +63,25 @@ public class MK4IModule implements IModule {
 
     @Override
     public void runSteerMotorByVoltage(double voltage) {
-        mk4IModuleActions.setTargetSteerVelocity(voltage);
+        mk4IModuleActions.setTargetSteerVoltage(voltage);
     }
 
     @Override
     public void runDriveMotorByVoltage(double voltage) {
-        mk4IModuleActions.setTargetDriveVelocity(voltage);
+        mk4IModuleActions.setTargetDriveVoltage(voltage);
     }
 
 
     @Override
-    public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
+    public void setTargetOpenLoopVelocity(double velocityMeterPerSecond) {
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
-                targetVelocityMetersPerSecond,
+                velocityMeterPerSecond,
                 mk4IModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO,
                 ModuleConstants.MAX_SPEED_PER_SECOND,
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        mk4IModuleActions.setTargetDriveVelocity(voltage);
+        mk4IModuleActions.setTargetDriveVoltage(voltage);
     }
 
     @Override

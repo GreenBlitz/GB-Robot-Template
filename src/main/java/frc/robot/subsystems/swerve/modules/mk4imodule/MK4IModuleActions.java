@@ -48,7 +48,7 @@ class MK4IModuleActions {
     }
 
 
-    public void setTargetDriveVelocity(double voltage) {
+    public void setTargetDriveVoltage(double voltage) {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
     }
 
@@ -56,7 +56,7 @@ class MK4IModuleActions {
         driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityMetersPerSecond));
     }
 
-    public void setTargetSteerVelocity(double voltage) {
+    public void setTargetSteerVoltage(double voltage) {
         steerMotor.setControl(steerVoltageRequest.withOutput(voltage));
     }
 

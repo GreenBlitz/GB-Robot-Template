@@ -51,9 +51,9 @@ public class SimulationModule implements IModule {
 
 
     @Override
-    public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
+    public void setTargetOpenLoopVelocity(double velocityMeterPerSecond) {
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
-                targetVelocityMetersPerSecond,
+                velocityMeterPerSecond,
                 simulationModuleStatus.getSteerVelocity(),
                 0,
                 ModuleConstants.MAX_SPEED_PER_SECOND,

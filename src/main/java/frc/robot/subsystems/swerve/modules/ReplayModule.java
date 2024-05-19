@@ -22,7 +22,7 @@ public class ReplayModule implements IModule {
     public void runDriveMotorByVoltage(double voltage) {}
 
     @Override
-    public void setTargetOpenLoopVelocity(double voltage) {}
+    public void setTargetOpenLoopVelocity(double velocityMeterPerSecond) {}
 
     @Override
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {}

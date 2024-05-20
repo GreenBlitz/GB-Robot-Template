@@ -14,6 +14,8 @@ java {
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
+def RADIO_IP = "10.45.90.2"
+def USB_B_IP = "172.22.11.2"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -37,7 +39,7 @@ deploy {
                     jvmArgs.add("-Dcom.sun.management.jmxremote.local.only=false")
                     jvmArgs.add("-Dcom.sun.management.jmxremote.ssl=false")
                     jvmArgs.add("-Dcom.sun.management.jmxremote.authenticate=false")
-                    jvmArgs.add("-Djava.rmi.server.hostname=10.45.90.2")
+                    jvmArgs.add("-Djava.rmi.server.hostname=${RADIO_IP}")
                 }
 
                 // Static files artifact

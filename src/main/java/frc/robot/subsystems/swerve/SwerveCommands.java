@@ -33,14 +33,16 @@ public class SwerveCommands {
             true,
             SWERVE,
             SWERVE::runModuleSteerByVoltage,
-            SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP
+            SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP,
+            SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
     );
 
     private static final SysIdCalibrator DRIVE_CALIBRATOR = new SysIdCalibrator(
             true,
             SWERVE,
             SWERVE::runModulesDriveByVoltage,
-            SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP
+            SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
+            SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
     );
 
     public static Command getSteerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {

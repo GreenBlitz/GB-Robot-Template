@@ -19,6 +19,7 @@ public class ModuleConstants {
     public static final double VOLTAGE_COMPENSATION_SATURATION = Battery.getDefaultBatteryVoltage();
 
     public static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
+    public static final Rotation2d ANGLE_VELOCITY_TOLERANCE = Rotation2d.fromDegrees(3);
     public static final double SPEED_TOLERANCE_METERS_PER_SECOND = 0.1;
 
     public static final double DRIVE_GEAR_RATIO = 6.12;

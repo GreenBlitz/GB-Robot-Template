@@ -107,11 +107,13 @@ public class Module {
     }
 
     public boolean isAtAngle(Rotation2d targetAngle) {
-        return MathUtil.isNear(
+        boolean isAtAngle = MathUtil.isNear(
                 MathUtil.angleModulus(targetAngle.getRadians()),
                 MathUtil.angleModulus(getCurrentAngle().getRadians()),
                 ModuleConstants.ANGLE_TOLERANCE.getRadians()
         );
+        boolean isStopping = moduleInputs.steerMotorVelocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_TOLERANCE.getRadians();
+        return isAtAngle && isStopping;
     }
 
 

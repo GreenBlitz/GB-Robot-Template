@@ -94,12 +94,16 @@ public class Module {
 
     public boolean isAtTargetState() {
         boolean isAtAngle = isAtAngle(getTargetState().angle);
-        boolean isAtVelocity = MathUtil.isNear(
-                getTargetState().speedMetersPerSecond,
+        boolean isAtVelocity = isAtVelocity(targetState.speedMetersPerSecond);
+        return isAtAngle && isAtVelocity;
+    }
+
+    public boolean isAtVelocity(double targetSpeedMetersPerSecond) {
+        return MathUtil.isNear(
+                targetSpeedMetersPerSecond,
                 getDriveVelocityMetersPerSecond(),
                 ModuleConstants.SPEED_TOLERANCE_METERS_PER_SECOND
         );
-        return isAtAngle && isAtVelocity;
     }
 
     public boolean isAtAngle(Rotation2d targetAngle) {

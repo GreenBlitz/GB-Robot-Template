@@ -21,6 +21,10 @@ public class SwerveConstants {
     public static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 
 
+    public static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
+    public static final double STEER_SYSID_CALIBRATION_VOLTAGE_STEP = 2;
+    public static final double DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP = 2;
+
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);
     public static final Rotation2d ROTATION_VELOCITY_TOLERANCE = Rotation2d.fromRadians(0.05);
     public static final double TRANSLATION_TOLERANCE_METERS = 0.05;
@@ -82,7 +86,6 @@ public class SwerveConstants {
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kD,
             ROTATION_CONSTRAINTS
     );
-
     static {
         PROFILED_ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
                 -MathConstants.HALF_CIRCLE.getDegrees(),

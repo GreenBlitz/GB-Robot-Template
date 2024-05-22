@@ -239,8 +239,8 @@ public class Swerve extends GBSubsystem {
      * Lock swerve wheels in X position, so it's hard to move it.
      */
     public void lockSwerve() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
 
         modules[0].setTargetState(frontLeftBackRight);
         modules[1].setTargetState(frontRightBackLeft);
@@ -252,8 +252,8 @@ public class Swerve extends GBSubsystem {
      * Put swerve wheels in circle position, so it's ready to spin
      */
     public void readySpinSwerve() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
 
         modules[0].setTargetState(frontLeftBackRight);
         modules[1].setTargetState(frontRightBackLeft);

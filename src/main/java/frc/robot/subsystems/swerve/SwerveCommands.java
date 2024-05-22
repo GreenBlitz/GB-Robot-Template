@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -34,14 +33,14 @@ public class SwerveCommands {
             true,
             SWERVE,
             SWERVE::runModuleSteerByVoltage,
-            2
+            SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP
     );
 
     private static final SysIdCalibrator DRIVE_CALIBRATOR = new SysIdCalibrator(
             true,
             SWERVE,
             SWERVE::runModulesDriveByVoltage,
-            2
+            SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP
     );
 
     public static Command getSteerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
@@ -64,7 +63,7 @@ public class SwerveCommands {
                 new WheelRadiusCharacterization(
                         SWERVE,
                         SwerveConstants.DRIVE_RADIUS_METERS,
-                        Rotation2d.fromRotations(0.5),
+                        SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY,
                         SWERVE::getModulesDriveDistances,
                         SWERVE::getAbsoluteHeading,
                         SWERVE::runWheelRadiusCharacterization,

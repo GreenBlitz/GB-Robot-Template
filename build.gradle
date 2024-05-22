@@ -103,16 +103,19 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
 }
 
 tasks.register('SetConnectionTypeIP') {
-    int PING_TIMEOUT_MILLISECONDS = 1000
-    boolean found = false
-    for (int i = 0; i < IPS.size() && !found; i++) {
-        if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
-            deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=" + IPS[i]);
-            found = true
+    doLast {
+        int PING_TIMEOUT_MILLISECONDS = 1000
+        boolean found = false
+        for (int i = 0; i < IPS.size() && !found; i++) {
+            if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
+                deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=" + IPS[i])
+                println("Using " + IPS[i])
+                found = true
+            }
         }
-    }
-    if (!found) {
-        System.out.println("No IP is reachable.");
+        if (!found) {
+            println("No IP is reachable.")
+        }
     }
 }
 

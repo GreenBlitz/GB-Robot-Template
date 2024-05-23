@@ -16,6 +16,8 @@ java {
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 def RADIO_IP = "10.45.90.2"
 def USB_B_IP = "172.22.11.2"
+def IPS = [RADIO_IP, USB_B_IP]
+
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -39,7 +41,7 @@ deploy {
                     jvmArgs.add("-Dcom.sun.management.jmxremote.local.only=false")
                     jvmArgs.add("-Dcom.sun.management.jmxremote.ssl=false")
                     jvmArgs.add("-Dcom.sun.management.jmxremote.authenticate=false")
-                    jvmArgs.add("-Djava.rmi.server.hostname=${RADIO_IP}")
+                    jvmArgs.add("-Djava.rmi.server.hostname=" + IPS[0])
                 }
 
                 // Static files artifact
@@ -100,8 +102,26 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     }
 }
 
+tasks.register('SetConnectionTypeIP') {
+    doLast {
+        int PING_TIMEOUT_MILLISECONDS = 1000
+        boolean found = false
+        for (int i = 0; i < IPS.size() && !found; i++) {
+            if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
+                deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=" + IPS[i])
+                println("Using " + IPS[i])
+                found = true
+            }
+        }
+        if (!found) {
+            println("No IP is reachable.")
+        }
+    }
+}
+
 compileJava.finalizedBy checkAkitInstall
 build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit
+discoverroborio.finalizedBy SetConnectionTypeIP
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.

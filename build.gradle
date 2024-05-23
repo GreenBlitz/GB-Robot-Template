@@ -120,7 +120,8 @@ tasks.register('SetConnectionTypeIP') {
 }
 
 compileJava.finalizedBy checkAkitInstall
-build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit, SetConnectionTypeIP
+build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit
+discoverroborio.finalizedBy SetConnectionTypeIP
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.

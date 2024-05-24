@@ -10,8 +10,6 @@ class RoborioUtilsConstants {
 
     protected static final double DEFAULT_ROBORIO_CYCLE_TIME = 0.02;
 
-    protected static final double MAX_CAN_UTILIZATION_PERCENT = 93;
-
     protected static final double TIME_STEP_TOLERANCE = 0.003;
 
 }

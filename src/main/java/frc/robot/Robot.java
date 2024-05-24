@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
+import frc.utils.CTREUtils.CanivoreStatus;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.roborioutils.RoborioUtils;
@@ -53,6 +54,7 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         RoborioUtils.updateRioUtils(); // Better to be first
         CommandScheduler.getInstance().run();
+        CanivoreStatus.logAllBusStatuses();
     }
 
     @Override

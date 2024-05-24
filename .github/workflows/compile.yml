@@ -14,7 +14,14 @@ jobs:
     name: Compile
     runs-on: ubuntu-latest
     container: wpilib/roborio-cross-ubuntu:2024-22.04
+    defaults:
+      run:
+        shell: bash -l {0}
     steps:
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Grant execute permission

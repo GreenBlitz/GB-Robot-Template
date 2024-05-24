@@ -1,7 +1,9 @@
 name: Check Labels For PR
 
 on:
-  pull_request:
+  pull_request_target:
+    branches:
+      - master
     types:
       - opened
       - labeled

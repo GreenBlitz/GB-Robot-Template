@@ -1,7 +1,6 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
 import groovy.json.JsonSlurper
 
-
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
@@ -62,6 +61,35 @@ wpi.java.debugJni = false
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
 
+
+// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
+// Also defines JUnit 5.
+dependencies {
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
+
+    roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
+    roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
+
+    roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
+    roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
+
+    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+    simulationDebug wpi.sim.enableDebug()
+
+    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+    simulationRelease wpi.sim.enableRelease()
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    def akitJson = new JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
+    annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
+}
+
+
 repositories {
     maven {
         url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
@@ -77,6 +105,43 @@ repositories {
 configurations.configureEach {
     exclude group: "edu.wpi.first.wpilibj"
 }
+
+
+test {
+    useJUnitPlatform()
+    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+}
+
+
+// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+// in order to make them all available at runtime. Also adding the manifest so WPILib
+// knows where to look for our Robot Class.
+jar {
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    from sourceSets.main.allSource
+    manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+// Configure jar and deploy tasks
+deployArtifact.jarTask = jar
+wpi.java.configureExecutableTasks(jar)
+wpi.java.configureTestTasks(test)
+
+
+// Configure string concat to always inline compile
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.add '-XDstringConcat=inline'
+}
+
+// Simulation configuration (e.g. environment variables).
+wpi.sim.addGui().defaultEnabled = true
+wpi.sim.addDriverstation()
+
 
 tasks.register('checkAkitInstall', JavaExec) {
     dependsOn "classes"
@@ -123,65 +188,6 @@ compileJava.finalizedBy checkAkitInstall
 build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit
 discoverroborio.finalizedBy SetConnectionTypeIP
 
-// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
-// Also defines JUnit 5.
-dependencies {
-    implementation wpi.java.deps.wpilib()
-    implementation wpi.java.vendor.java()
-
-    roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
-    roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
-
-    roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
-    roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
-
-    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
-    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
-    simulationDebug wpi.sim.enableDebug()
-
-    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
-    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
-    simulationRelease wpi.sim.enableRelease()
-
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    def akitJson = new JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
-    annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
-}
-
-test {
-    useJUnitPlatform()
-    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
-}
-
-// Simulation configuration (e.g. environment variables).
-wpi.sim.addGui().defaultEnabled = true
-wpi.sim.addDriverstation()
-
-// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
-// in order to make them all available at runtime. Also adding the manifest so WPILib
-// knows where to look for our Robot Class.
-jar {
-    from {
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-    from sourceSets.main.allSource
-    manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
-// Configure jar and deploy tasks
-deployArtifact.jarTask = jar
-wpi.java.configureExecutableTasks(jar)
-wpi.java.configureTestTasks(test)
-
-// Configure string concat to always inline compile
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs.add '-XDstringConcat=inline'
-}
 
 // Spotless formatting
 project.build.dependsOn(spotlessApply)

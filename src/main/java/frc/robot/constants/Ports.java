@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import frc.utils.CTREUtils.CTREDeviceID;
+
 public class Ports {
 
     public static final int PIGEON_2_ID = 0;
@@ -16,35 +18,35 @@ public class Ports {
 
     }
 
-    public static class TalonFXIds {
+    public static class TalonFXIDs {
 
-        public static final int FRONT_LEFT_STEER_MOTOR = 0;
+        public static final CTREDeviceID FRONT_LEFT_STEER_MOTOR = new CTREDeviceID(0, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int FRONT_LEFT_DRIVE_MOTOR = 1;
+        public static final CTREDeviceID FRONT_LEFT_DRIVE_MOTOR = new CTREDeviceID(1, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int FRONT_RIGHT_STEER_MOTOR = 2;
+        public static final CTREDeviceID FRONT_RIGHT_STEER_MOTOR = new CTREDeviceID(2, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int FRONT_RIGHT_DRIVE_MOTOR = 3;
+        public static final CTREDeviceID FRONT_RIGHT_DRIVE_MOTOR = new CTREDeviceID(3, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int BACK_LEFT_STEER_MOTOR = 4;
+        public static final CTREDeviceID BACK_LEFT_STEER_MOTOR = new CTREDeviceID(4, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int BACK_LEFT_DRIVE_MOTOR = 5;
+        public static final CTREDeviceID BACK_LEFT_DRIVE_MOTOR = new CTREDeviceID(5, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int BACK_RIGHT_STEER_MOTOR = 6;
+        public static final CTREDeviceID BACK_RIGHT_STEER_MOTOR = new CTREDeviceID(6, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int BACK_RIGHT_DRIVE_MOTOR = 7;
+        public static final CTREDeviceID BACK_RIGHT_DRIVE_MOTOR = new CTREDeviceID(7, Phoenix6Constants.CANIVORE_NAME);
 
     }
 
-    public static class CANCodersIds {
+    public static class CANCodersIDs {
 
-        public static final int FRONT_LEFT_ENCODER = 0;
+        public static final CTREDeviceID FRONT_LEFT_ENCODER = new CTREDeviceID(0, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int FRONT_RIGHT_ENCODER = 1;
+        public static final CTREDeviceID FRONT_RIGHT_ENCODER = new CTREDeviceID(1, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int BACK_LEFT_ENCODER = 2;
+        public static final CTREDeviceID BACK_LEFT_ENCODER = new CTREDeviceID(2, Phoenix6Constants.CANIVORE_NAME);
 
-        public static final int BACK_RIGHT_ENCODER = 3;
+        public static final CTREDeviceID BACK_RIGHT_ENCODER = new CTREDeviceID(3, Phoenix6Constants.CANIVORE_NAME);
 
     }
 

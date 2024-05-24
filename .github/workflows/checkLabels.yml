@@ -7,7 +7,6 @@ on:
       - labeled
       - unlabeled
       - synchronize
-      - edited
 
 
 jobs:

@@ -1,9 +1,7 @@
 name: Compile
 
 on:
-  pull_request_target:
-    branches:
-      - master
+  pull_request:
     types:
       - synchronize
       - opened

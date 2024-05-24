@@ -15,13 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     container: wpilib/roborio-cross-ubuntu:2024-22.04
     steps:
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          always-auth: true  # Ensure that the specified version is always used
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Grant execute permission
         run: chmod +x gradlew
       - name: Compile robot code

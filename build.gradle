@@ -184,7 +184,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 // Spotless formatting
-project.compileJava.dependsOn(spotlessApply)
+project.build.dependsOn(spotlessApply)
 spotless {
     java {
         target fileTree(".") {

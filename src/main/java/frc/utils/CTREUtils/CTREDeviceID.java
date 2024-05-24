@@ -18,7 +18,7 @@ public class CTREDeviceID {
         this.bus = bus;
     }
 
-    public int getDeviceNumber() {
+    public int getID() {
         return id;
     }
 

@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+          always-auth: true  # Ensure that the specified version is always used
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Grant execute permission

@@ -9,7 +9,7 @@ import frc.utils.roborioutils.RoborioUtils;
 
 public class ElevatorSimulation extends MotorSimulation {
 
-    GBSubsystem a;
+    GBSubsystem ac;
 
     private final ElevatorSim elevatorSimulation;
 

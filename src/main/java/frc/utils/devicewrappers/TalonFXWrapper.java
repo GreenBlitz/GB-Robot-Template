@@ -10,15 +10,15 @@ import frc.utils.CTREUtils.CTREDeviceID;
 public class TalonFXWrapper extends TalonFX {
 
     public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
-        this(ctreDeviceID.getID(), ctreDeviceID.getBus(), new TalonFXConfiguration());
-    }
-
-    public TalonFXWrapper(int deviceId) {
-        this(deviceId, Phoenix6Constants.CANBUS_NAME, new TalonFXConfiguration());
+        this(ctreDeviceID, new TalonFXConfiguration());
     }
 
     public TalonFXWrapper(CTREDeviceID ctreDeviceID, TalonFXConfiguration configuration) {
         this(ctreDeviceID.getID(), ctreDeviceID.getBus(), configuration);
+    }
+
+    public TalonFXWrapper(int deviceId) {
+        this(deviceId, new TalonFXConfiguration());
     }
 
     public TalonFXWrapper(int deviceId, TalonFXConfiguration configuration) {

@@ -53,7 +53,7 @@ public class PathPlannerUtils {
     ) {
         AutoBuilder.configureHolonomic(
                 poseSupplier,
-                resetPose,//todo - trigon cancel
+                resetPose,//todo - maybe cancel, if vision very accurate solving wrong robot placement
                 robotRelativeSpeedsSupplier,
                 robotRelativeOutput,
                 config,
@@ -92,11 +92,11 @@ public class PathPlannerUtils {
         PPHolonomicDriveController.setRotationTargetOverride(() -> overrider.get().map(MirrorableRotation2d::get));
     }
 
-    public static Command createOnTheFlyPathCommand(MirrorablePose2d currentPose, MirrorablePose2d targetPose,
+    public static Command createOnTheFlyPathCommand(Pose2d currentBluePose, MirrorablePose2d targetPose,
             PathConstraints constraints
     ) {
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                currentPose.get(),
+                currentBluePose,
                 targetPose.get()
         );
 

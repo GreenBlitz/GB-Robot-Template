@@ -4,9 +4,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.utils.Conversions;
+import frc.utils.GBSubsystem;
 import frc.utils.roborioutils.RoborioUtils;
 
 public class ElevatorSimulation extends MotorSimulation {
+
+    GBSubsystem a;
 
     private final ElevatorSim elevatorSimulation;
 

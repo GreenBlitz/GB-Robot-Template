@@ -9,7 +9,7 @@ import frc.utils.roborioutils.RoborioUtils;
 
 public class ElevatorSimulation extends MotorSimulation {
 
-    TalonFXWrapper b;
+    TalonFXWrapper rrr;
 
     private final ElevatorSim elevatorSimulation;
 

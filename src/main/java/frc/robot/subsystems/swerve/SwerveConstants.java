@@ -33,6 +33,7 @@ public class SwerveConstants {
     public static final double DRIVE_NEUTRAL_DEADBAND = 0.2;
     public static final double ROTATION_NEUTRAL_DEADBAND = 0.2;//todo - rot2d
 
+
     //todo - why affecting max rot
     public static final double MAX_SPEED_METERS_PER_SECOND = 5.5;
     //todo - why when increasing max on run gets higher

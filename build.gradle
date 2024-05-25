@@ -1,7 +1,6 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
 import groovy.json.JsonSlurper
 
-
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
@@ -14,6 +13,10 @@ java {
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
+def RADIO_IP = "10.45.90.2"
+def USB_B_IP = "172.22.11.2"
+def IPS = [RADIO_IP, USB_B_IP]
+
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -32,6 +35,12 @@ deploy {
                 // getTargetTypeClass is a shortcut to get the class type using a string
 
                 frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
+                    jvmArgs.add("-Dcom.sun.management.jmxremote=true")
+                    jvmArgs.add("-Dcom.sun.management.jmxremote.port=1198")
+                    jvmArgs.add("-Dcom.sun.management.jmxremote.local.only=false")
+                    jvmArgs.add("-Dcom.sun.management.jmxremote.ssl=false")
+                    jvmArgs.add("-Dcom.sun.management.jmxremote.authenticate=false")
+                    jvmArgs.add("-Djava.rmi.server.hostname=" + IPS[0])
                 }
 
                 // Static files artifact
@@ -52,48 +61,6 @@ wpi.java.debugJni = false
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
 
-repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
-        credentials {
-            username = "Mechanical-Advantage-Bot"
-            password = "\u0067\u0068\u0070\u005f\u006e\u0056\u0051\u006a\u0055\u004f\u004c\u0061\u0079\u0066\u006e\u0078\u006e\u0037\u0051\u0049\u0054\u0042\u0032\u004c\u004a\u006d\u0055\u0070\u0073\u0031\u006d\u0037\u004c\u005a\u0030\u0076\u0062\u0070\u0063\u0051"
-        }
-    }
-    mavenLocal()
-}
-
-
-configurations.configureEach {
-    exclude group: "edu.wpi.first.wpilibj"
-}
-
-tasks.register('checkAkitInstall', JavaExec) {
-    dependsOn "classes"
-    mainClass = "org.littletonrobotics.junction.CheckInstall"
-    classpath = sourceSets.main.runtimeClasspath
-}
-
-tasks.register('installLocalGitHookPostCheckout', Copy) {
-    from new File(rootProject.rootDir, '.scripts/post-checkout')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
-    doLast {
-        println("---Added Post Checkout Git Hook Script---")
-    }
-}
-
-tasks.register('installLocalGitHookPreCommit', Copy) {
-    from new File(rootProject.rootDir, '.scripts/pre-commit')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
-    doLast {
-        println("---Added Post Checkout Git Hook Script---")
-    }
-}
-
-compileJava.finalizedBy checkAkitInstall
-build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
@@ -122,6 +89,24 @@ dependencies {
     annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
 }
 
+
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
+        credentials {
+            username = "Mechanical-Advantage-Bot"
+            password = "\u0067\u0068\u0070\u005f\u006e\u0056\u0051\u006a\u0055\u004f\u004c\u0061\u0079\u0066\u006e\u0078\u006e\u0037\u0051\u0049\u0054\u0042\u0032\u004c\u004a\u006d\u0055\u0070\u0073\u0031\u006d\u0037\u004c\u005a\u0030\u0076\u0062\u0070\u0063\u0051"
+        }
+    }
+    mavenLocal()
+}
+
+
+configurations.configureEach {
+    exclude group: "edu.wpi.first.wpilibj"
+}
+
+
 test {
     useJUnitPlatform()
     systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
@@ -130,6 +115,7 @@ test {
 // Simulation configuration (e.g. environment variables).
 wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
+
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
@@ -150,13 +136,61 @@ deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
 
+
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+
+tasks.register('checkAkitInstall', JavaExec) {
+    dependsOn "classes"
+    mainClass = "org.littletonrobotics.junction.CheckInstall"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.register('installLocalGitHookPostCheckout', Copy) {
+    from new File(rootProject.rootDir, '.scripts/post-checkout')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0775
+    doLast {
+        println("---Added Post Checkout Git Hook Script---")
+    }
+}
+
+tasks.register('installLocalGitHookPreCommit', Copy) {
+    from new File(rootProject.rootDir, '.scripts/pre-commit')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0775
+    doLast {
+        println("---Added Post Checkout Git Hook Script---")
+    }
+}
+
+tasks.register('SetConnectionTypeIP') {
+    doLast {
+        int PING_TIMEOUT_MILLISECONDS = 1000
+        boolean found = false
+        for (int i = 0; i < IPS.size() && !found; i++) {
+            if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
+                deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=" + IPS[i])
+                println("Using " + IPS[i])
+                found = true
+            }
+        }
+        if (!found) {
+            println("No IP is reachable.")
+        }
+    }
+}
+
+compileJava.finalizedBy checkAkitInstall
+build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit
+discoverroborio.finalizedBy SetConnectionTypeIP
+
+
 // Spotless formatting
-project.compileJava.dependsOn(spotlessApply)
+project.build.dependsOn(spotlessApply)
 spotless {
     java {
         target fileTree(".") {

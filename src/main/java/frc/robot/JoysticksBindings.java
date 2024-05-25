@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.joysticks.SmartJoystick;
 import frc.utils.mirrorutils.MirrorablePose2d;
@@ -80,10 +81,11 @@ public class JoysticksBindings {
                 () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
         ));
         //Drive and Aim Assist to Speaker
-        usedJoystick.L1.whileTrue(SwerveCommands.getRotateToSpeaker(
+        usedJoystick.L1.whileTrue(SwerveCommands.getDriveWithAimAssist(
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
-                () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
+                () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X),
+                AimAssist.SPEAKER
         ));
 
         //Drive and Aim Assist to Speaker and Rotate around front Left
@@ -115,7 +117,7 @@ public class JoysticksBindings {
         ));
 
         // Default Drive
-        RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getOpenLoopFieldRelativeDriveCommand(
+        RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getDriveCommand(
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
@@ -136,6 +138,8 @@ public class JoysticksBindings {
     private static void secondJoystickButtons() {
         SmartJoystick usedJoystick = SECOND_JOYSTICK;
         // bindings
+
+        usedJoystick.A.whileTrue(SwerveCommands.getWheelRadiusCalibrationCommand());
     }
 
     private static void thirdJoystickButtons() {

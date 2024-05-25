@@ -6,8 +6,8 @@ class SmartJoystickConstants {
 
     protected static final double JOYSTICK_AXIS_TO_SQUARE_FACTOR = Math.sqrt(2);
 
-    protected static final double SENSITIVE_AXIS_VALUE_POWER = 2.5;
+    protected static final double SENSITIVE_AXIS_VALUE_POWER = 2;
 
-    protected static final double SENSITIVE_SQUARED_AXIS_VALUE_POWER = 4;
+    protected static final double SENSITIVE_SQUARED_AXIS_VALUE_POWER = 2.5;
 
 }

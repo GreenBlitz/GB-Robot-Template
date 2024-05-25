@@ -53,7 +53,7 @@ class FindKg extends Command {
             cycleCounter = 0;
 
             lastVoltage = currentVoltage;
-            currentVoltage -= RoborioUtils.getCurrentRoborioCycleTime() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
+            currentVoltage -= RoborioUtils.getAverageRoborioCycleTime() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
             voltageConsumer.accept(currentVoltage);
         }
     }

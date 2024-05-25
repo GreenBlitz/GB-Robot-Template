@@ -14,6 +14,7 @@ import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.MathConstants;
 
 public class SwerveConstants {
+    //todo - swerve const as object that depends on sim or real or robot, calibration const (all const that needs calibration (maybe))
 
     public static final String SWERVE_LOG_PATH = LogPathsConstants.SUBSYSTEM_LOG_PATH + "Swerve/";
     protected static final String SWERVE_ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + SWERVE_LOG_PATH;

@@ -31,9 +31,8 @@ public class SwerveConstants {
     public static final double ROTATION_NEUTRAL_DEADBAND = 0.2;//todo - rot2d
 
 
-    //todo - why affecting max rot
-    public static final double MAX_SPEED_METERS_PER_SECOND = 5.5;
-    //todo - why when increasing max on run gets higher
+    //todo - actual max in sim maybe in real will be 5.27. sim need moi calibration
+    public static final double MAX_SPEED_METERS_PER_SECOND = 5.033;
     public static final Rotation2d MAX_ROTATIONAL_SPEED_PER_SECOND = Rotation2d.fromRadians(10);
     public static final Rotation2d MAX_ROTATION_ACCELERATION_PER_SECOND = Rotation2d.fromDegrees(360);
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;

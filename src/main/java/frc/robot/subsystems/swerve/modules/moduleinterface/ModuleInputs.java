@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class ModuleInputs {
+public class ModuleInputs {//todo-maybe organize in more inputs packages in the module(steer, drive, encoder, general in module itself)
 
     public boolean allComponentsConnected = true;
 
@@ -19,6 +19,7 @@ public class ModuleInputs {
     public Rotation2d[] odometryUpdatesSteerAngle = new Rotation2d[0];
 
     public double driveMotorDistanceMeters = 0;
+    public double driveMotorVelocityMeters = 0;
     public Rotation2d driveMotorAngle = new Rotation2d();
     public Rotation2d driveMotorVelocity = new Rotation2d();
     public Rotation2d driveMotorAcceleration = new Rotation2d();

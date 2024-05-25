@@ -44,6 +44,7 @@ public class Module {
     private void updateAllInputs() {
         module.updateInputs(moduleInputs);
         moduleInputs.driveMotorDistanceMeters = toDriveMeters(moduleInputs.driveMotorAngle);
+        moduleInputs.driveMotorVelocityMeters = toDriveMeters(moduleInputs.driveMotorVelocity);
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
         reportAlertsToLog();
     }

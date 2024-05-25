@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.poseestimation.poseestimator.PoseEstimatorConstants;
+import frc.utils.CTREUtils.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 class MK4IModuleConfigObject {
@@ -17,17 +18,16 @@ class MK4IModuleConfigObject {
 
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
-    protected MK4IModuleConfigObject(
-            String busChain,
-            int steerMotorId, boolean isSteerMotorInverted,
-            int driveMotorId, boolean isDriveMotorInverted,
-            int steerEncoderId
+    protected MK4IModuleConfigObject(//todo - naming
+            CTREDeviceID steerMotorID, boolean isSteerMotorInverted,
+            CTREDeviceID driveMotorID, boolean isDriveMotorInverted,
+            CTREDeviceID steerEncoderID
     ) {
 
-        this.steerEncoder = new CANcoder(steerEncoderId, busChain);
+        this.steerEncoder = new CANcoder(steerEncoderID.getID(), steerEncoderID.getBus());
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
-                new TalonFXWrapper(driveMotorId, busChain),
-                new TalonFXWrapper(steerMotorId, busChain)
+                new TalonFXWrapper(driveMotorID),
+                new TalonFXWrapper(steerMotorID)
         );
         this.steerMotor = moduleMotors.steerMotor();
         this.driveMotor = moduleMotors.driveMotor();

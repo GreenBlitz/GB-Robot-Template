@@ -7,7 +7,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
@@ -83,39 +82,35 @@ class MK4IModuleConstants {
     }
 
     protected static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.FRONT_LEFT_STEER_MOTOR,
+            Ports.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
             true,
-            Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
+            Ports.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.FRONT_LEFT_ENCODER
+            Ports.CANCodersIDs.FRONT_LEFT_ENCODER
     );
 
     protected static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.FRONT_RIGHT_STEER_MOTOR,
+            Ports.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
             true,
-            Ports.TalonFXIds.FRONT_RIGHT_DRIVE_MOTOR,
+            Ports.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
             true,
-            Ports.CANCodersIds.FRONT_RIGHT_ENCODER
+            Ports.CANCodersIDs.FRONT_RIGHT_ENCODER
     );
 
     protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.BACK_LEFT_STEER_MOTOR,
+            Ports.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
             false,
-            Ports.TalonFXIds.BACK_LEFT_DRIVE_MOTOR,
+            Ports.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.BACK_LEFT_ENCODER
+            Ports.CANCodersIDs.BACK_LEFT_ENCODER
     );
 
     protected static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.BACK_RIGHT_STEER_MOTOR,
+            Ports.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
             true,
-            Ports.TalonFXIds.BACK_RIGHT_DRIVE_MOTOR,
+            Ports.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.BACK_RIGHT_ENCODER
+            Ports.CANCodersIDs.BACK_RIGHT_ENCODER
     );
 
 }

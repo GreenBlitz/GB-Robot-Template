@@ -5,11 +5,20 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.constants.Phoenix6Constants;
+import frc.utils.CTREUtils.CTREDeviceID;
 
 public class TalonFXWrapper extends TalonFX {
 
+    public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
+        this(ctreDeviceID, new TalonFXConfiguration());
+    }
+
+    public TalonFXWrapper(CTREDeviceID ctreDeviceID, TalonFXConfiguration configuration) {
+        this(ctreDeviceID.getID(), ctreDeviceID.getBus(), configuration);
+    }
+
     public TalonFXWrapper(int deviceId) {
-        this(deviceId, Phoenix6Constants.CANBUS_NAME, new TalonFXConfiguration());
+        this(deviceId, new TalonFXConfiguration());
     }
 
     public TalonFXWrapper(int deviceId, TalonFXConfiguration configuration) {

@@ -19,6 +19,7 @@ public class ModuleInputs {
     public Rotation2d[] odometryUpdatesSteerAngle = new Rotation2d[0];
 
     public double driveMotorDistanceMeters = 0;
+    public double driveMotorVelocityMeters = 0;
     public Rotation2d driveMotorAngle = new Rotation2d();
     public Rotation2d driveMotorVelocity = new Rotation2d();
     public Rotation2d driveMotorAcceleration = new Rotation2d();

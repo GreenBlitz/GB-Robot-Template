@@ -119,7 +119,7 @@ public class JoysticksBindings {
         // Default Drive
         RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getDriveCommand(
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
-                () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
+                () -> 0,
                 () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
         ));
 

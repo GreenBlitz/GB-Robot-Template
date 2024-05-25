@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.Conversions;
+import org.littletonrobotics.junction.Logger;
 
 public class ModuleUtils {
 
@@ -52,7 +53,10 @@ public class ModuleUtils {
                 steerVelocityPerSecond,
                 couplingRatio
         );
+        Logger.recordOutput("BeforeMX", toDriveMeters(Rotation2d.fromRotations(optimizedVelocityRevolutionsPerSecond)));
+        Logger.recordOutput("max", toDriveMeters(maxSpeedPerSecond));
         double power = optimizedVelocityRevolutionsPerSecond / maxSpeedPerSecond.getRotations();
+        Logger.recordOutput("power", power);
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
 

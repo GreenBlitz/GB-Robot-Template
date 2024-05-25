@@ -376,7 +376,7 @@ public class Swerve extends GBSubsystem {
 
         return ChassisSpeeds.discretize(
                 chassisSpeeds,
-                RoborioUtils.getCurrentRoborioCycleTime() * timeFactor
+                RoborioUtils.getAverageRoborioCycleTime() * timeFactor
         );
     }
 

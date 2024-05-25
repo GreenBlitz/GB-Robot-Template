@@ -21,7 +21,7 @@ public class SimulationSwerveGyro implements ISwerveGyro {
     public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
         gyro.updateYaw(
                 Rotation2d.fromRadians(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond),
-                RoborioUtils.getCurrentRoborioCycleTime()
+                RoborioUtils.getAverageRoborioCycleTime()
         );
 
         inputs.gyroYaw = gyro.getGyroYaw();

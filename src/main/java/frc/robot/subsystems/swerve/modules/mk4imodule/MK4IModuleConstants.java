@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
@@ -17,6 +18,7 @@ class MK4IModuleConstants {
     public static final boolean ENABLE_FOC_STEER = true;
 
     public static final double COUPLING_RATIO = 0.59; //todo - add direction
+    public static final Rotation2d ENCODER_TO_MOTOR_TOLERANCE = Rotation2d.fromDegrees(5); //todo - calibrate
 
     private static final InvertedValue DRIVE_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive;
     private static final InvertedValue STEER_MOTOR_INVERTED_VALUE = InvertedValue.CounterClockwise_Positive;

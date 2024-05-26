@@ -121,11 +121,19 @@ public class MK4IModule implements IModule {
         inputs.steerMotorAcceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);
         inputs.steerMotorVoltage = mk4IModuleStatus.getSteerMotorVoltageSignal(false).getValue();
 
-        AtomicInteger index = new AtomicInteger();
         inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
-        inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(
-                driveDistance -> getDriveDistanceWithCoupling(driveDistance, inputs.odometryUpdatesSteerAngle[index.getAndIncrement()])
-        ).toArray(Rotation2d[]::new);
+
+        //todo - check if needs angle modulo
+        if (Math.abs(inputs.steerEncoderAngle.getRadians() - inputs.steerMotorAngle.getRadians()) > MK4IModuleConstants.ENCODER_TO_MOTOR_TOLERANCE.getRadians()) {
+            startSteerAngle = inputs.steerMotorAngle;
+            inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        }
+        else {
+            AtomicInteger index = new AtomicInteger();
+            inputs.odometryUpdatesDriveDistance =
+                    drivePositionQueue.stream().map(driveDistance -> getDriveDistanceWithCoupling(
+                            driveDistance, inputs.odometryUpdatesSteerAngle[index.getAndIncrement()])).toArray(Rotation2d[]::new);
+        }
 
         steerPositionQueue.clear();
         drivePositionQueue.clear();

@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.constants.Ports;
 import frc.utils.joysticks.SmartJoystick;
+import frc.utils.utilcommands.TestShootObject;
 
 public class JoysticksBindings {
 
@@ -22,7 +23,7 @@ public class JoysticksBindings {
 
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        // bindings
+        usedJoystick.A.whileTrue(new TestShootObject());
     }
 
     private static void secondJoystickButtons() {

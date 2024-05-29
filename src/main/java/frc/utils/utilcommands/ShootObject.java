@@ -60,12 +60,19 @@ public abstract class ShootObject extends Command {
     }
 
     private Translation3d getPosition() {
-        //based on the formula x = x0 + v0*t + a * t^2 / 2   from physics
-        double relativePosition = timer.get() * speed + (gravity / 2 * Math.pow(timer.get(),2));
+
+        double relativePosition = timer.get() * speed;
 
         return startingNotePosition.
                 times(relativePosition).
-                plus(shooterPose3D.getTranslation());
+                plus(shooterPose3D.getTranslation()).
+                minus(
+                        new Translation3d(
+                            0,
+                            0,
+                            (gravity / 2 * Math.pow(timer.get(),2))
+                        )
+                );
     }
 
     @Override
@@ -76,7 +83,7 @@ public abstract class ShootObject extends Command {
                 new Pose3d[]{
                         new Pose3d(
                                 getPosition(),
-                                shooterRotation
+                                shooterRotation.unaryMinus()
                         )
                 }
         );
@@ -89,6 +96,6 @@ public abstract class ShootObject extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        Logger.recordOutput("NoteVisualizer", new Pose3d[]{});
+        Logger.recordOutput("ObjectVisualizer", new Pose3d[]{});
     }
 }

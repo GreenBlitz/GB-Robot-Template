@@ -40,8 +40,8 @@ public class SwerveConstants {
 
 
     //todo - actual max in sim maybe in real will be 5.27. sim need moi calibration
-    public static final double MAX_SPEED_METERS_PER_SECOND = 5.033;
-    public static final Rotation2d MAX_ROTATIONAL_SPEED_PER_SECOND = Rotation2d.fromRadians(10);
+    public static final double MAX_SPEED_METERS_PER_SECOND = 5.033;//todo - calibrate for real
+    public static final Rotation2d MAX_ROTATIONAL_SPEED_PER_SECOND = Rotation2d.fromRadians(10);//todo - calibrate for real
     public static final Rotation2d MAX_ROTATION_ACCELERATION_PER_SECOND = Rotation2d.fromDegrees(360);
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
@@ -82,7 +82,7 @@ public class SwerveConstants {
     );
 
     public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);
-    //todo - think about what better: Profile PID controller VS Regular PID controller
+    //todo - calibrate for real (maybe use regular pid in sim)
     public static final ProfiledPIDController PROFILED_ROTATION_PID_DEGREES_CONTROLLER = new ProfiledPIDController(
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kP,
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kI,
@@ -96,7 +96,7 @@ public class SwerveConstants {
         );
     }
 
-    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);
+    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);//todo - calibrate
     public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(
             TRANSLATION_PID_CONSTANTS.kP,
             TRANSLATION_PID_CONSTANTS.kI,
@@ -104,8 +104,8 @@ public class SwerveConstants {
     );
 
 
-    public static final PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);
-    public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);
+    public static final PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);//todo - calibrate
+    public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);//todo - calibrate
     public static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
     public static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
     public static final HolonomicPathFollowerConfig HOLONOMIC_PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(

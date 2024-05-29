@@ -38,11 +38,11 @@ public abstract class ShootObject extends Command {
         this.shooterPosition = shooterPositionRelativeToRobot;
         this.gravity = gravityMetersPerSecondSquared;
         this.swervePosition = swervePosition;
+        timer = new Timer();
     }
 
     @Override
     public void initialize() {
-        timer = new Timer();
         timer.start();
 
 
@@ -59,9 +59,9 @@ public abstract class ShootObject extends Command {
         shooterRotation = new Rotation3d(0, startingShooterAngle.getRadians(), 0).plus(shooterPose3D.getRotation());
     }
 
-    private Translation3d getPosition() {
+    private Translation3d getPosition(double time) {
 
-        double relativePosition = timer.get() * speed;
+        double relativePosition = time * speed;
 
         return startingNotePosition.
                 times(relativePosition).
@@ -70,7 +70,7 @@ public abstract class ShootObject extends Command {
                         new Translation3d(
                             0,
                             0,
-                            (gravity / 2 * Math.pow(timer.get(),2))
+                            (gravity / 2 * Math.pow(time,2))
                         )
                 );
     }
@@ -82,7 +82,7 @@ public abstract class ShootObject extends Command {
                 "ObjectVisualizer",
                 new Pose3d[]{
                         new Pose3d(
-                                getPosition(),
+                                getPosition(timer.get()),
                                 shooterRotation.unaryMinus()
                         )
                 }
@@ -96,6 +96,8 @@ public abstract class ShootObject extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        timer.stop();
+        timer.reset();
         Logger.recordOutput("ObjectVisualizer", new Pose3d[]{});
     }
 }

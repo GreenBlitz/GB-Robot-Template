@@ -11,35 +11,35 @@ public class CycleTimeUtils {
     private static int timeStepsCounter = 0;
 
 
-    public static void updateRioUtils() {
+    public static void updateCycleTime() {
         lastTime = currentTime;
         currentTime = Timer.getFPGATimestamp();
-        sumOfTimeSteps += getCurrentRoborioCycleTime();
+        sumOfTimeSteps += getCurrentCycleTime();
         timeStepsCounter++;
 
         logStatus();
         reportAlertsToLog();
     }
 
-    private static double getCurrentRoborioCycleTime() {
+    private static double getCurrentCycleTime() {
         return currentTime - lastTime;
     }
 
     private static void logStatus() {
-        Logger.recordOutput(CycleTimeConstants.LOG_PATH + "CycleTime", getCurrentRoborioCycleTime());
+        Logger.recordOutput(CycleTimeConstants.LOG_PATH + "CycleTime", getCurrentCycleTime());
     }
 
     private static void reportAlertsToLog() {
-        if (getCurrentRoborioCycleTime() > getDefaultRoborioCycleTime() + CycleTimeConstants.TIME_STEP_TOLERANCE) {
+        if (getCurrentCycleTime() > getDefaultCycleTime() + CycleTimeConstants.TIME_STEP_TOLERANCE) {
             Logger.recordOutput(CycleTimeConstants.ALERT_LOG_PATH + "CycleOverrunAt", currentTime);
         }
     }
 
-    public static double getDefaultRoborioCycleTime() {
+    public static double getDefaultCycleTime() {
         return CycleTimeConstants.DEFAULT_ROBORIO_CYCLE_TIME;
     }
 
-    public static double getAverageRoborioCycleTime() {
+    public static double getAverageCycleTime() {//todo - maybe remove (or other way that more accurate)
         return sumOfTimeSteps / timeStepsCounter;
     }
 

@@ -35,7 +35,7 @@ public class SimpleMotorSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        motorSimulation.update(CycleTimeUtils.getAverageRoborioCycleTime());
+        motorSimulation.update(CycleTimeUtils.getAverageCycleTime());
     }
 
 }

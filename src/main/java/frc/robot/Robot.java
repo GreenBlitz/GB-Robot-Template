@@ -52,7 +52,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotPeriodic() {
-        CycleTimeUtils.updateRioUtils(); // Better to be first
+        CycleTimeUtils.updateCycleTime(); // Better to be first
         CommandScheduler.getInstance().run();
         CanivoreStatus.logAllBusStatuses();
     }

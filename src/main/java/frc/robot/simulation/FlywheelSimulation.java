@@ -42,8 +42,8 @@ public class FlywheelSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        flywheelSimulation.update(CycleTimeUtils.getAverageRoborioCycleTime());
-        lastPositionRadians += getVelocity().getRadians() * CycleTimeUtils.getAverageRoborioCycleTime();
+        flywheelSimulation.update(CycleTimeUtils.getAverageCycleTime());
+        lastPositionRadians += getVelocity().getRadians() * CycleTimeUtils.getAverageCycleTime();
     }
 
 }

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.utils.Conversions;
-import frc.utils.roborioutils.RoborioUtils;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 
 public class ElevatorSimulation extends MotorSimulation {
 
@@ -77,7 +77,7 @@ public class ElevatorSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        elevatorSimulation.update(RoborioUtils.getCurrentRoborioCycleTime());
+        elevatorSimulation.update(CycleTimeUtils.getAverageRoborioCycleTime());
     }
 
 }

@@ -3,7 +3,7 @@ package frc.utils.calibration.staticcharacterization;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.utils.GBSubsystem;
-import frc.utils.roborioutils.RoborioUtils;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
@@ -53,7 +53,7 @@ class FindKs extends Command {
             cycleCounter = 0;
 
             lastVoltage = currentVoltage;
-            currentVoltage += RoborioUtils.getCurrentRoborioCycleTime() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
+            currentVoltage += CycleTimeUtils.getAverageRoborioCycleTime() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
             voltageConsumer.accept(currentVoltage);
         }
     }

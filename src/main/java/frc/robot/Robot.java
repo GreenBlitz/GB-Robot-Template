@@ -11,7 +11,7 @@ import frc.robot.simulation.MotorSimulation;
 import frc.utils.CTREUtils.CanivoreStatus;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
-import frc.utils.roborioutils.RoborioUtils;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -52,7 +52,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotPeriodic() {
-        RoborioUtils.updateRioUtils(); // Better to be first
+        CycleTimeUtils.updateRioUtils(); // Better to be first
         CommandScheduler.getInstance().run();
         CanivoreStatus.logAllBusStatuses();
     }

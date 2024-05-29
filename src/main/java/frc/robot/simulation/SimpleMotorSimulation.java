@@ -3,7 +3,7 @@ package frc.robot.simulation;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.utils.roborioutils.RoborioUtils;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 
 public class SimpleMotorSimulation extends MotorSimulation {
 
@@ -35,7 +35,7 @@ public class SimpleMotorSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        motorSimulation.update(RoborioUtils.getCurrentRoborioCycleTime());
+        motorSimulation.update(CycleTimeUtils.getAverageRoborioCycleTime());
     }
 
 }

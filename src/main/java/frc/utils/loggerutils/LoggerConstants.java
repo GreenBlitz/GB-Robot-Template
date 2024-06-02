@@ -8,6 +8,6 @@ class LoggerConstants {
 
     protected static final String SIMULATION_LOG_PATH = System.getProperty("user.home") + "\\Desktop\\SimulationLogs";
 
-    protected static final boolean IS_CTRE_AUTO_LOGGING = false;
+    protected static final boolean IS_CTRE_AUTO_LOGGING = true;
 
 }

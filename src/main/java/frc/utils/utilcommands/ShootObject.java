@@ -10,23 +10,14 @@ import java.util.function.Supplier;
 public abstract class ShootObject extends Command {
 
     private Timer timer;
-
     private double duration;
-
     private double speed;
-
     private Supplier<Rotation2d> shooterAngle;
-
     private Translation3d shooterPosition;
-
     private Supplier<Pose3d> swervePosition;
-
     private double gravity;
-
     private Pose3d shooterPose3D;
-
     private Translation3d startingNotePosition;
-
     private Rotation3d shooterRotation;
 
     public ShootObject(double durationSeconds, double speedMetersPerSecond, Supplier<Rotation2d> shooterAngle,
@@ -39,6 +30,11 @@ public abstract class ShootObject extends Command {
         this.gravity = gravityMetersPerSecondSquared;
         this.swervePosition = swervePosition;
         timer = new Timer();
+    }
+
+    public ShootObject(double durationSeconds, double speedMetersPerSecond, Supplier<Rotation2d> shooterAngle,
+                       Translation3d shooterPositionRelativeToRobot,Supplier<Pose3d> swervePosition) {
+        this(durationSeconds, speedMetersPerSecond, shooterAngle, shooterPositionRelativeToRobot, swervePosition, 0);
     }
 
     @Override

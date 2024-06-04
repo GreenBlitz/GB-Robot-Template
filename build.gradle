@@ -92,6 +92,16 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     }
 }
 
+tasks.register('runKeyboard', Exec) {
+    commandLine 'cmd', '/c', 'java', "${rootProject.rootDir}/src/main/java/frc/utils/LaptopRunner.java"
+}
+
+tasks.register('deployWithKeyboard') {
+    dependsOn('runKeyboard')
+    dependsOn('deploy')
+    tasks.findByName('deploy').mustRunAfter('runKeyboard')
+}
+
 compileJava.finalizedBy checkAkitInstall
 build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit
 

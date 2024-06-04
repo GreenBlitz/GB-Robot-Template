@@ -7,35 +7,34 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class KeyboardListener implements NativeKeyListener {
 
+    public static final String IP = "";
+    public static final int PORT = 1;
+
+    private static PrintWriter sender;
+
     public static void startTrackingKeyboard() {
-        waitForTables();
         try {
+            startConnection();
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(new KeyboardListener());
-        } catch (NativeHookException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void waitForTables() {
-        NetworkTableInstance instance = NetworkTableInstance.getDefault();
-        instance.startClient4("Keyboard");
-        instance.setServer("127.0.0.1");
-        instance.startDSClient();
+    private static void startConnection() throws IOException {
+        Socket socket = new Socket(IP, PORT);
+        sender = new PrintWriter(socket.getOutputStream(), true);
+    }
 
-        while (!instance.isConnected()) {
-            try {
-                Thread.sleep(20);
-            } catch (Exception e) {
-
-            }
-        }
-
-        System.out.println("CONNECTED");
-
-
+    private static void sendMessage(String message) {
+        sender.println(message);
     }
 
     @Override

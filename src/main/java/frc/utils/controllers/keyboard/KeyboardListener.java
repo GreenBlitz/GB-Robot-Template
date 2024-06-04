@@ -4,7 +4,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 
 
-class KeyboardListener implements NativeKeyListener {
+public class KeyboardListener implements NativeKeyListener {
 
     protected static boolean ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10,
     F11, F12, DELETE, TILDA, ONE, TWO, THREE, FOUR,

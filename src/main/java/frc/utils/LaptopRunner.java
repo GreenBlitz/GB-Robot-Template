@@ -1,13 +1,23 @@
 package frc.utils;
 
+import frc.utils.controllers.keyboard.KeyboardListener;
+
 import java.io.IOException;
 
 public class LaptopRunner {
 
     private static Runtime rt = Runtime.getRuntime();
 
-    public static void main(String[] args) {
+    public static void deployWithKeyboard() {
+        openClassOnLaptop(KeyboardListener.class);
+        deployGradle();
+    }
 
+    public static void main(String[] args) {
+        deployGradle();
+    }
+    public static void deployGradle() {
+        runCMDCommand("gradle deploy");// TODO make this work
     }
 
     public static void openClassOnLaptop(Class classOfThing) {
@@ -20,10 +30,12 @@ public class LaptopRunner {
 
         filePath = filePath.replace('/', '\\');
 
+        runCMDCommand("java" + filePath);
+    }
 
-        System.out.println(filePath);
+    public static void runCMDCommand(String command) {
         try {
-            rt.exec(new String[]{"cmd.exe","/c","java " + filePath});
+            rt.exec(new String[]{"cmd.exe","/c",command});
         } catch (IOException e) {
             e.printStackTrace();
         }

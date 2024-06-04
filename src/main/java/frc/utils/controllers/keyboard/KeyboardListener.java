@@ -4,7 +4,7 @@ import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class KeyboardListener implements NativeKeyListener {
 
@@ -19,11 +19,15 @@ public class KeyboardListener implements NativeKeyListener {
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent nativeEvent) {
-        System.out.println(NativeKeyEvent.getKeyText(nativeEvent.getKeyCode()));
+        SmartDashboard.putBoolean(getName(nativeEvent), true);
+    }
+
+    public String getName(NativeKeyEvent event) {
+        return "Keyboard/" + NativeKeyEvent.getKeyText(event.getKeyCode());
     }
 
     @Override
     public void nativeKeyReleased(NativeKeyEvent nativeEvent) {
-
+        SmartDashboard.putBoolean(getName(nativeEvent), false);
     }
 }

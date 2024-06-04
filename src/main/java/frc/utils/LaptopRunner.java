@@ -23,7 +23,9 @@ public class LaptopRunner {
     }
 
     private static void laptopStart() {
-        KeyboardListener.startTrackingKeyboard();
+        if (ENABLE_KEYBOARD) {
+            KeyboardListener.startTrackingKeyboard();
+        }
     }
 
     private static void laptopPeriodic() {

@@ -44,7 +44,7 @@ public class JoysticksBindings {
         // bindings
     }
 
-    private static void keyboardButtons() {
+    private static void KeyboardButtons() {
         KeyboardController usedJoystick = KEYBOARD_CONTROLLER;
         //bindings
     }

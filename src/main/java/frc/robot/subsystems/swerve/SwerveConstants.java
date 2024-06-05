@@ -29,7 +29,7 @@ public class SwerveConstants {
 
 
     public static final double DRIVE_NEUTRAL_DEADBAND = 0.2;
-    public static final double ROTATION_NEUTRAL_DEADBAND = 0.2;//todo - rot2d
+    public static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.2);
 
 
     //todo - actual max in sim maybe in real will be 5.27. sim need moi calibration

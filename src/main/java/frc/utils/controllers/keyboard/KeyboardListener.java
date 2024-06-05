@@ -3,16 +3,45 @@ package frc.utils.controllers.keyboard;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.utils.laptopcomms.LaptopSender;
 
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 public class KeyboardListener implements NativeKeyListener {
 
-    public static void startTrackingKeyboard() {
 
+    private static PrintWriter sender;
+
+    public static void main(String[] args) {
+        startTrackingKeyboard();
+    }
+
+    private static void startConnection() {
+        try {
+            new ServerSocket(LaptopSender.PORT);
+            System.out.println("SERVER CREATED");
+            Socket socket = new Socket(LaptopSender.ROBOT_IP, LaptopSender.PORT);
+            System.out.println("SERVER ACCEPTED");
+            sender = new PrintWriter(socket.getOutputStream(), true);
+            System.out.println("SENDER CREATED");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void sendMessage(String message) {
+        try {
+            sender.println(message);
+            System.out.println("Sent Message: " + message);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void startTrackingKeyboard() {
+        startConnection();
         try {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(new KeyboardListener());
@@ -23,7 +52,7 @@ public class KeyboardListener implements NativeKeyListener {
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent nativeEvent) {
-        SmartDashboard.putBoolean(getName(nativeEvent), true);
+        sendMessage(getName(nativeEvent) + ", true");
     }
 
     public String getName(NativeKeyEvent event) {
@@ -32,6 +61,6 @@ public class KeyboardListener implements NativeKeyListener {
 
     @Override
     public void nativeKeyReleased(NativeKeyEvent nativeEvent) {
-        SmartDashboard.putBoolean(getName(nativeEvent), false);
+        sendMessage(getName(nativeEvent) + ", false");
     }
 }

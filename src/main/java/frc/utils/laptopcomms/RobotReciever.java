@@ -17,9 +17,11 @@ public class RobotReciever extends GBSubsystem {
     public RobotReciever() {
         lastMessage = "";
         try {
-            socket = new Socket(LaptopSender.IP, LaptopSender.PORT);
+            socket = new Socket(LaptopSender.ROBOT_IP, LaptopSender.PORT);
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            SmartDashboard.putBoolean("isRecieverWorking", true);
         } catch (Exception e) {
+            SmartDashboard.putBoolean("isRecieverWorking", false);
 
         }
     }
@@ -34,6 +36,7 @@ public class RobotReciever extends GBSubsystem {
     private void recieveMessage() {
         try {
             lastMessage = input.readLine();
+            System.out.println(lastMessage);
         } catch (Exception e) {
 
         }

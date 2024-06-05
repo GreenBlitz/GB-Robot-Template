@@ -92,17 +92,17 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     }
 }
 
-tasks.register('runWithLaptop', JavaExec) {
+tasks.register('runKeyboard', JavaExec) {
     group = "Execution"
     description = "Run the main class in LaptopRunner"
     classpath = sourceSets.main.runtimeClasspath
-    main = "${rootProject.rootDir}/src/main/java/frc/utils/LaptopRunner.java"
+    main = "${rootProject.rootDir}/src/main/java/frc/utils/controllers/keyboard/KeyboardListener.java"
 }
 
 tasks.register('deployWithLaptop') {
-    dependsOn('runWithLaptop')
+    dependsOn('runKeyboard')
     dependsOn('deploy')
-    tasks.findByName('runWithLaptop').mustRunAfter('deploy')
+    tasks.findByName('runKeyboard').mustRunAfter('deploy')
 }
 
 compileJava.finalizedBy checkAkitInstall

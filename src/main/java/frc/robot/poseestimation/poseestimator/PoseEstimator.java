@@ -29,7 +29,7 @@ public class PoseEstimator implements AutoCloseable {
     }
 
     private void setLoggingPathToPaths() {
-        PathPlannerLogging.setLogActivePathCallback((pose) -> {
+        PathPlannerLogging.setLogActivePathCallback((pose) -> {//todo - move to pp util
             field.getObject("path").setPoses(pose);
             Logger.recordOutput("Path", pose.toArray(new Pose2d[0]));
         });

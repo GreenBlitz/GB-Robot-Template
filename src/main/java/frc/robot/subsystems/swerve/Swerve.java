@@ -368,7 +368,7 @@ public class Swerve extends GBSubsystem {
             }
             else {
                 double actualMax =
-                        Math.abs(chassisSpeeds.omegaRadiansPerSecond / (SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians() - 0.9));
+                        Math.abs(chassisSpeeds.omegaRadiansPerSecond / (SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians()));
                 timeFactor =
                         (getTimeStepDiscretionFactor() * Math.abs(current.omegaRadiansPerSecond) / minWhileMax / actualMax);
             }

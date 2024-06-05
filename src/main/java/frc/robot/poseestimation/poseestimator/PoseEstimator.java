@@ -16,11 +16,13 @@ import static frc.robot.RobotContainer.SWERVE;
  */
 public class PoseEstimator implements AutoCloseable {
 
-    private final Field2d field = new Field2d();
-    private final PoseEstimator6328 swerveDrivePoseEstimator = PoseEstimator6328.getInstance();
+    private final Field2d field; //todo - maybe create field class
+    private final PoseEstimator6328 swerveDrivePoseEstimator;
     private Pose2d robotPose;
 
     public PoseEstimator() {
+        this.field = new Field2d();
+        this.swerveDrivePoseEstimator = PoseEstimator6328.getInstance();
         this.robotPose = PoseEstimatorConstants.DEFAULT_POSE;
         resetPose(robotPose);
 

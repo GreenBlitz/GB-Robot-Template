@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.RobotContainer.POSE_ESTIMATOR;
@@ -33,7 +34,8 @@ public class PoseEstimator implements AutoCloseable {
     private void setLoggingPathToPaths() {
         PathPlannerLogging.setLogActivePathCallback((pose) -> {//todo - move to pp util
             field.getObject("path").setPoses(pose);
-            Logger.recordOutput("Path", pose.toArray(new Pose2d[0]));
+            //todo - move to swerve
+            Logger.recordOutput(SwerveConstants.SWERVE_LOG_PATH + "Current Path To Follow", pose.toArray(new Pose2d[0]));
         });
     }
 

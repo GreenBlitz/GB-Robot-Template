@@ -353,9 +353,9 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds current = getSelfRelativeVelocity();
 
         double driveMagnitude = Math.sqrt(Math.pow(current.vxMetersPerSecond, 2) + Math.pow(current.vyMetersPerSecond, 2));
-        boolean isDriving = driveMagnitude > SwerveConstants.ROTATION_NEUTRAL_DEADBAND;
+        boolean isDriving = driveMagnitude > SwerveConstants.DRIVE_NEUTRAL_DEADBAND;
 
-        boolean isSpinning = Math.abs(current.omegaRadiansPerSecond) > SwerveConstants.ROTATION_NEUTRAL_DEADBAND;
+        boolean isSpinning = Math.abs(current.omegaRadiansPerSecond) > SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
 
         double timeFactor = 1;
         if (isSpinning && isDriving) {

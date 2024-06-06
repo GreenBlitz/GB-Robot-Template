@@ -18,16 +18,16 @@ class MK4IModuleConfigObject {
 
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
-    protected MK4IModuleConfigObject(//todo - naming
-            CTREDeviceID steerMotorID, boolean isSteerMotorInverted,
-            CTREDeviceID driveMotorID, boolean isDriveMotorInverted,
+    protected MK4IModuleConfigObject(
+            CTREDeviceID steerMotorDeviceID, boolean isSteerMotorInverted,
+            CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted,
             CTREDeviceID steerEncoderID
     ) {
 
         this.steerEncoder = new CANcoder(steerEncoderID.getID(), steerEncoderID.getBus());
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
-                new TalonFXWrapper(driveMotorID),
-                new TalonFXWrapper(steerMotorID)
+                new TalonFXWrapper(driveMotorDeviceID),
+                new TalonFXWrapper(steerMotorDeviceID)
         );
         this.steerMotor = moduleMotors.steerMotor();
         this.driveMotor = moduleMotors.driveMotor();

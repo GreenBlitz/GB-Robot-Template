@@ -40,17 +40,25 @@ public class Swerve extends GBSubsystem {
     private final ISwerveGyro gyro;
 
     private final Module[] modules;
+
     private final SwerveState currentState;
 
 
     public Swerve() {
         setName("Swerve");
-        currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
+        this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
+        this.modules = getModules();
+        this.gyro = SwerveGyroFactory.createSwerveGyro();
+        this.gyroInputs = new SwerveGyroInputsAutoLogged();
+    }
 
-        gyro = SwerveGyroFactory.createSwerveGyro();
-        modules = getModules();
-
-        gyroInputs = new SwerveGyroInputsAutoLogged();
+    private Module[] getModules() {
+        return new Module[]{
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
+        };
     }
 
     @Override
@@ -65,21 +73,12 @@ public class Swerve extends GBSubsystem {
         ODOMETRY_LOCK.unlock();
 
         updatePoseEstimator();
+        logState();
         logFieldRelativeVelocities();
     }
 
-    private Module[] getModules() {
-        return new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
-        };
-    }
 
     private void updateAllInputs() {
-        logState();
-
         gyro.updateInputs(gyroInputs);
         Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
 
@@ -418,7 +417,7 @@ public class Swerve extends GBSubsystem {
     public boolean isStill(ChassisSpeeds chassisSpeeds) {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-                && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND;
+                && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
     }
 
     // todo - maybe move some of work to SwerveMath class

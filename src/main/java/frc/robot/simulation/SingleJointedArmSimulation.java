@@ -45,7 +45,7 @@ public class SingleJointedArmSimulation extends MotorSimulation {
 
     @Override
     protected void updateMotor() {
-        armSimulation.update(CycleTimeUtils.getAverageCycleTime());
+        armSimulation.update(CycleTimeUtils.getDefaultCycleTime());
     }
 
 }

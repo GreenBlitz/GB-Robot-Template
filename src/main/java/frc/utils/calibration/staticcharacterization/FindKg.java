@@ -53,7 +53,7 @@ class FindKg extends Command {
             cycleCounter = 0;
 
             lastVoltage = currentVoltage;
-            currentVoltage -= CycleTimeUtils.getAverageCycleTime() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
+            currentVoltage -= CycleTimeUtils.getCurrentCycleTime() * StaticCharacterizationConstants.RAMP_VOLTS_PER_SEC;
             voltageConsumer.accept(currentVoltage);
         }
     }

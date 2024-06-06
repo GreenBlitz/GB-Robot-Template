@@ -5,7 +5,7 @@ import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.Phoenix6Constants;
 import org.littletonrobotics.junction.Logger;
 
-public class CanivoreStatus {
+public class CANStatus {
 
     private static final double MAX_CAN_UTILIZATION_PERCENT = 90;
     private static final double MAX_RECEIVE_ERRORS = 3;
@@ -17,8 +17,8 @@ public class CanivoreStatus {
         updateBusStatus(Phoenix6Constants.CANIVORE_NAME);
     }
 
-    private static void updateBusStatus(String name){
-        var busStatus = CANBus.getStatus(name);
+    private static void updateBusStatus(String name) {
+        CANBus.CANBusStatus busStatus = CANBus.getStatus(name);
         logBusStatus(busStatus, name);
         reportBusAlerts(busStatus, name);
     }
@@ -33,23 +33,25 @@ public class CanivoreStatus {
     }
 
     private static void reportBusAlerts(CANBus.CANBusStatus busStatus, String name) {
+        String currentAlertLogPath = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name;
+
         if (!busStatus.Status.isOK()) {
-            Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name + "/Status", busStatus.Status.getName());
+            Logger.recordOutput(currentAlertLogPath + "/Status", busStatus.Status.getName());
         }
         if (busStatus.BusUtilization > MAX_CAN_UTILIZATION_PERCENT) {
-            Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name + "/FloodedAt", busStatus.BusUtilization);
+            Logger.recordOutput(currentAlertLogPath + "/FloodedAt", busStatus.BusUtilization);
         }
         if (busStatus.BusOffCount > 0) {
-            Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name + "/DisconnectedAt", busStatus.BusOffCount);
+            Logger.recordOutput(currentAlertLogPath + "/DisconnectedAt", busStatus.BusOffCount);
         }
         if (busStatus.TxFullCount > 0) {
-            Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name + "/FullAt", busStatus.TxFullCount);
+            Logger.recordOutput(currentAlertLogPath + "/FullAt", busStatus.TxFullCount);
         }
         if (busStatus.REC > MAX_RECEIVE_ERRORS) {
-            Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name + "/MaxReceiveErrors", busStatus.REC);
+            Logger.recordOutput(currentAlertLogPath + "/MaxReceiveErrors", busStatus.REC);
         }
         if (busStatus.REC > MAX_TRANSMIT_ERRORS) {
-            Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name + "/MaxTransmitErrors", busStatus.TEC);
+            Logger.recordOutput(currentAlertLogPath + "/MaxTransmitErrors", busStatus.TEC);
         }
     }
 

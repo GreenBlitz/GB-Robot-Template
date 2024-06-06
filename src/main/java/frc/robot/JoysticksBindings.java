@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.constants.Ports;
 import frc.utils.controllers.joysticks.SmartJoystick;
 import frc.utils.controllers.keyboard.KeyboardController;
@@ -22,6 +23,7 @@ public class JoysticksBindings {
         secondJoystickButtons();
         thirdJoystickButtons();
         fourthJoystickButtons();
+        keyboardButtons();
     }
 
     private static void mainJoystickButtons() {
@@ -44,9 +46,12 @@ public class JoysticksBindings {
         // bindings
     }
 
-    private static void KeyboardButtons() {
+    private static void keyboardButtons() {
         KeyboardController usedJoystick = KEYBOARD_CONTROLLER;
-        //bindings
+        usedJoystick.A.onTrue(new PrintCommand("A PRESSED"));
+        usedJoystick.A.onFalse(new PrintCommand("A RELEASED"));
+        usedJoystick.B.onTrue(new PrintCommand("B PRESSED"));
+        usedJoystick.B.onFalse(new PrintCommand("B RELEASED"));
     }
 
 }

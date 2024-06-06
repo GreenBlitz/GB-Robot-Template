@@ -8,14 +8,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
 class MK4IModuleConstants {
-
-    public static final boolean ENABLE_FOC_DRIVE = true;
-    public static final boolean ENABLE_FOC_STEER = true;
 
     public static final double COUPLING_RATIO = 0.59; //todo - add direction
     public static final Rotation2d ENCODER_TO_MOTOR_TOLERANCE = Rotation2d.fromDegrees(5); //todo - calibrate
@@ -41,14 +37,12 @@ class MK4IModuleConstants {
     private static final double DRIVE_MOTOR_D = 0;
 
     protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
-
     static {
         ENCODER_CONFIG.MagnetSensor.SensorDirection = STEER_ENCODER_DIRECTION;
         ENCODER_CONFIG.MagnetSensor.AbsoluteSensorRange = STEER_ENCODER_RANGE;
     }
 
     protected static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration();
-
     static {
         DRIVE_MOTOR_CONFIG.MotorOutput.Inverted = DRIVE_MOTOR_INVERTED_VALUE;
         DRIVE_MOTOR_CONFIG.MotorOutput.NeutralMode = DRIVE_MOTOR_NEUTRAL_MODE_VALUE;
@@ -68,7 +62,6 @@ class MK4IModuleConstants {
     }
 
     protected static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
-
     static {
         STEER_MOTOR_CONFIG.MotorOutput.Inverted = STEER_MOTOR_INVERTED_VALUE;
         STEER_MOTOR_CONFIG.MotorOutput.NeutralMode = STEER_MOTOR_NEUTRAL_MODE_VALUE;
@@ -88,39 +81,35 @@ class MK4IModuleConstants {
     }
 
     protected static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.FRONT_LEFT_STEER_MOTOR,
+            Ports.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
             true,
-            Ports.TalonFXIds.FRONT_LEFT_DRIVE_MOTOR,
+            Ports.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.FRONT_LEFT_ENCODER
+            Ports.CANCodersIDs.FRONT_LEFT_ENCODER
     );
 
     protected static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.FRONT_RIGHT_STEER_MOTOR,
+            Ports.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
             true,
-            Ports.TalonFXIds.FRONT_RIGHT_DRIVE_MOTOR,
+            Ports.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
             true,
-            Ports.CANCodersIds.FRONT_RIGHT_ENCODER
+            Ports.CANCodersIDs.FRONT_RIGHT_ENCODER
     );
 
     protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.BACK_LEFT_STEER_MOTOR,
+            Ports.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
             false,
-            Ports.TalonFXIds.BACK_LEFT_DRIVE_MOTOR,
+            Ports.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.BACK_LEFT_ENCODER
+            Ports.CANCodersIDs.BACK_LEFT_ENCODER
     );
 
     protected static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
-            Phoenix6Constants.CANIVORE_NAME,
-            Ports.TalonFXIds.BACK_RIGHT_STEER_MOTOR,
+            Ports.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
             true,
-            Ports.TalonFXIds.BACK_RIGHT_DRIVE_MOTOR,
+            Ports.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIds.BACK_RIGHT_ENCODER
+            Ports.CANCodersIDs.BACK_RIGHT_ENCODER
     );
 
 }

@@ -181,5 +181,3 @@ networktables.json
 simgui-ds.json
 simgui.json
 
-#Special libraries
-!libs/*

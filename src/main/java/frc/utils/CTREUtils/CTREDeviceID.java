@@ -2,10 +2,10 @@ package frc.utils.CTREUtils;
 
 import frc.robot.constants.Phoenix6Constants;
 
-public record CTREDeviceID(int id, String bus) {
+public record CTREDeviceID(int ID, String bus) {
 
-    public CTREDeviceID(int id) {
-        this(id, Phoenix6Constants.CANBUS_NAME);
+    public CTREDeviceID(int ID) {
+        this(ID, Phoenix6Constants.CANBUS_NAME);
     }
 
 }

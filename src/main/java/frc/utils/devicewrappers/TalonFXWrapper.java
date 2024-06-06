@@ -14,7 +14,7 @@ public class TalonFXWrapper extends TalonFX {
     }
 
     public TalonFXWrapper(CTREDeviceID ctreDeviceID, TalonFXConfiguration configuration) {
-        this(ctreDeviceID.id(), ctreDeviceID.bus(), configuration);
+        this(ctreDeviceID.ID(), ctreDeviceID.bus(), configuration);
     }
 
     public TalonFXWrapper(int deviceId) {

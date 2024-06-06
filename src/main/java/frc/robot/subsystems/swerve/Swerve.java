@@ -73,13 +73,12 @@ public class Swerve extends GBSubsystem {
         ODOMETRY_LOCK.unlock();
 
         updatePoseEstimator();
+        logState();
         logFieldRelativeVelocities();
     }
 
 
     private void updateAllInputs() {
-        logState();
-
         gyro.updateInputs(gyroInputs);
         Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
 

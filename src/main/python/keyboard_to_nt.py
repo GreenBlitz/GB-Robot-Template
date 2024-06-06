@@ -3,11 +3,15 @@
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#lets go trigon
+
+#if this library is not installed, dont install ntcore but pyntcore
 import ntcore
+
 import keyboard
 import time
 
-team = 5990
+team = 4590#GREENBLITZ 🐐🐐🐐🐐
 
 
 def main():
@@ -32,7 +36,7 @@ def main():
         time.sleep(0.1)
 
     print("Connected!")
-    table = ntcoreinst.getTable("SmartDashboard/keyboard")
+    table = ntcoreinst.getTable("SmartDashboard/Keyboard")
 
     keyboard.hook(lambda e: on_action(e))
     keyboard.wait()

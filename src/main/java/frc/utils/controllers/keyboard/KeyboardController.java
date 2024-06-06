@@ -3,36 +3,46 @@ package frc.utils.controllers.keyboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.utils.controllers.Controller;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
-
+/*
+* very much inspired from Trigon code
+*
+* @author Yoni Kiriaty, Trigon
+*
+ */
 public class KeyboardController implements Controller{
 
-    public final Trigger
-            ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, DELETE,
-            BACKTICK, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO, MINUS, EQUALS, BACKSPACE,
-            TAB, Q, W, E, R, T, Y, U, I, O, P,
-            A, S, D, F, G, H, J, K, L, SEMICOLON, APOSTROPHE,
-            LEFT_SHIFT, Z, X, C, V, B, N, M, COMMA, PERIOD, RIGHT_SHIFT,
-            LEFT_CONTROL, LEFT_ALT, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW;
+    private static final double KEY_PRESSED_VALUE = 0.5;
 
+    public final Trigger
+            ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10,
+            F11, F12, DELETE, BACKTICK, ONE, TWO, THREE, FOUR,
+            FIVE, SIX, SEVEN, EIGHT, NINE, ZERO, MINUS, EQUALS,
+            BACKSPACE, TAB, Q, W, E, R, T, Y, U, I, O, P, A, S,
+            D, F, G, H, J, K, L, SEMICOLON, APOSTROPHE, LEFT_SHIFT,
+            Z, X, C, V, B, N, M, COMMA, PERIOD,
+            RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL,
+            LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW, NUMPAD_0, NUMPAD_1, NUMPAD_2,
+            NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8,
+            NUMPAD_9;
     /**
      * Construct an instance of a device.
      */
     public KeyboardController() {
-        ESC = new Trigger(new LoggedDashboardBoolean("Keyboard/Escape", false)::get);
-        F1 = new Trigger(new LoggedDashboardBoolean("Keyboard/F1", false)::get);
-        F2 = new Trigger(new LoggedDashboardBoolean("Keyboard/F2", false)::get);
-        F3 = new Trigger(new LoggedDashboardBoolean("Keyboard/F3", false)::get);
-        F4 = new Trigger(new LoggedDashboardBoolean("Keyboard/F4", false)::get);
-        F5 = new Trigger(new LoggedDashboardBoolean("Keyboard/F5", false)::get);
-        F6 = new Trigger(new LoggedDashboardBoolean("Keyboard/F6", false)::get);
-        F7 = new Trigger(new LoggedDashboardBoolean("Keyboard/F7", false)::get);
-        F8 = new Trigger(new LoggedDashboardBoolean("Keyboard/F8", false)::get);
-        F9 = new Trigger(new LoggedDashboardBoolean("Keyboard/F9", false)::get);
-        F10 = new Trigger(new LoggedDashboardBoolean("Keyboard/F10", false)::get);
-        F11 = new Trigger(new LoggedDashboardBoolean("Keyboard/F11", false)::get);
-        F12 = new Trigger(new LoggedDashboardBoolean("Keyboard/F12", false)::get);
-        DELETE = new Trigger(new LoggedDashboardBoolean("Keyboard/Delete", false)::get);
-        BACKTICK = new Trigger(new LoggedDashboardBoolean("Keyboard/Back Quote", false)::get);
+        ESC = new Trigger(new LoggedDashboardBoolean("Keyboard/esc", false)::get);
+        F1 = new Trigger(new LoggedDashboardBoolean("Keyboard/f1", false)::get);
+        F2 = new Trigger(new LoggedDashboardBoolean("Keyboard/f2", false)::get);
+        F3 = new Trigger(new LoggedDashboardBoolean("Keyboard/f3", false)::get);
+        F4 = new Trigger(new LoggedDashboardBoolean("Keyboard/f4", false)::get);
+        F5 = new Trigger(new LoggedDashboardBoolean("Keyboard/f5", false)::get);
+        F6 = new Trigger(new LoggedDashboardBoolean("Keyboard/f6", false)::get);
+        F7 = new Trigger(new LoggedDashboardBoolean("Keyboard/f7", false)::get);
+        F8 = new Trigger(new LoggedDashboardBoolean("Keyboard/f8", false)::get);
+        F9 = new Trigger(new LoggedDashboardBoolean("Keyboard/f9", false)::get);
+        F10 = new Trigger(new LoggedDashboardBoolean("Keyboard/f10", false)::get);
+        F11 = new Trigger(new LoggedDashboardBoolean("Keyboard/f11", false)::get);
+        F12 = new Trigger(new LoggedDashboardBoolean("Keyboard/f12", false)::get);
+        DELETE = new Trigger(new LoggedDashboardBoolean("Keyboard/delete", false)::get);
+        BACKTICK = new Trigger(new LoggedDashboardBoolean("Keyboard/`", false)::get);
         ONE = new Trigger(new LoggedDashboardBoolean("Keyboard/1", false)::get);
         TWO = new Trigger(new LoggedDashboardBoolean("Keyboard/2", false)::get);
         THREE = new Trigger(new LoggedDashboardBoolean("Keyboard/3", false)::get);
@@ -43,48 +53,59 @@ public class KeyboardController implements Controller{
         EIGHT = new Trigger(new LoggedDashboardBoolean("Keyboard/8", false)::get);
         NINE = new Trigger(new LoggedDashboardBoolean("Keyboard/9", false)::get);
         ZERO = new Trigger(new LoggedDashboardBoolean("Keyboard/0", false)::get);
-        MINUS = new Trigger(new LoggedDashboardBoolean("Keyboard/Minus", false)::get);
-        EQUALS = new Trigger(new LoggedDashboardBoolean("Keyboard/Equals", false)::get);
-        BACKSPACE = new Trigger(new LoggedDashboardBoolean("Keyboard/Backspace", false)::get);
-        TAB = new Trigger(new LoggedDashboardBoolean("Keyboard/Tab", false)::get);
-        Q = new Trigger(new LoggedDashboardBoolean("Keyboard/Q", false)::get);
-        W = new Trigger(new LoggedDashboardBoolean("Keyboard/W", false)::get);
-        E = new Trigger(new LoggedDashboardBoolean("Keyboard/E", false)::get);
-        R = new Trigger(new LoggedDashboardBoolean("Keyboard/R", false)::get);
-        T = new Trigger(new LoggedDashboardBoolean("Keyboard/T", false)::get);
-        Y = new Trigger(new LoggedDashboardBoolean("Keyboard/Y", false)::get);
-        U = new Trigger(new LoggedDashboardBoolean("Keyboard/U", false)::get);
-        I = new Trigger(new LoggedDashboardBoolean("Keyboard/I", false)::get);
-        O = new Trigger(new LoggedDashboardBoolean("Keyboard/O", false)::get);
-        P = new Trigger(new LoggedDashboardBoolean("Keyboard/P", false)::get);
-        A = new Trigger(new LoggedDashboardBoolean("Keyboard/A", false)::get);
-        S = new Trigger(new LoggedDashboardBoolean("Keyboard/S", false)::get);
-        D = new Trigger(new LoggedDashboardBoolean("Keyboard/D", false)::get);
-        F = new Trigger(new LoggedDashboardBoolean("Keyboard/F", false)::get);
-        G = new Trigger(new LoggedDashboardBoolean("Keyboard/G", false)::get);
-        H = new Trigger(new LoggedDashboardBoolean("Keyboard/H", false)::get);
-        J = new Trigger(new LoggedDashboardBoolean("Keyboard/J", false)::get);
-        K = new Trigger(new LoggedDashboardBoolean("Keyboard/K", false)::get);
-        L = new Trigger(new LoggedDashboardBoolean("Keyboard/L", false)::get);
-        SEMICOLON = new Trigger(new LoggedDashboardBoolean("Keyboard/Semicolon", false)::get);
-        APOSTROPHE = new Trigger(new LoggedDashboardBoolean("Keyboard/Quote", false)::get);
-        LEFT_SHIFT = new Trigger(new LoggedDashboardBoolean("Keyboard/Shift", false)::get);
-        Z = new Trigger(new LoggedDashboardBoolean("Keyboard/Z", false)::get);
-        X = new Trigger(new LoggedDashboardBoolean("Keyboard/X", false)::get);
-        C = new Trigger(new LoggedDashboardBoolean("Keyboard/C", false)::get);
-        V = new Trigger(new LoggedDashboardBoolean("Keyboard/V", false)::get);
-        B = new Trigger(new LoggedDashboardBoolean("Keyboard/B", false)::get);
-        N = new Trigger(new LoggedDashboardBoolean("Keyboard/N", false)::get);
-        M = new Trigger(new LoggedDashboardBoolean("Keyboard/M", false)::get);
-        COMMA = new Trigger(new LoggedDashboardBoolean("Keyboard/Comma", false)::get);
-        PERIOD = new Trigger(new LoggedDashboardBoolean("Keyboard/Period", false)::get);
-        RIGHT_SHIFT = new Trigger(new LoggedDashboardBoolean("Keyboard/Unknown keyCode: 0xe36", false)::get);
-        LEFT_CONTROL = new Trigger(new LoggedDashboardBoolean("Keyboard/Ctrl", false)::get);
-        LEFT_ALT = new Trigger(new LoggedDashboardBoolean("Keyboard/Alt", false)::get);
-        LEFT_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/Left", false)::get);
-        RIGHT_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/Right", false)::get);
-        UP_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/Up", false)::get);
-        DOWN_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/Down", false)::get);
+        MINUS = new Trigger(new LoggedDashboardBoolean("Keyboard/-", false)::get);
+        EQUALS = new Trigger(new LoggedDashboardBoolean("Keyboard/=", false)::get);
+        BACKSPACE = new Trigger(new LoggedDashboardBoolean("Keyboard/backspace", false)::get);
+        TAB = new Trigger(new LoggedDashboardBoolean("Keyboard/tab", false)::get);
+        Q = new Trigger(new LoggedDashboardBoolean("Keyboard/q", false)::get);
+        W = new Trigger(new LoggedDashboardBoolean("Keyboard/w", false)::get);
+        E = new Trigger(new LoggedDashboardBoolean("Keyboard/e", false)::get);
+        R = new Trigger(new LoggedDashboardBoolean("Keyboard/r", false)::get);
+        T = new Trigger(new LoggedDashboardBoolean("Keyboard/t", false)::get);
+        Y = new Trigger(new LoggedDashboardBoolean("Keyboard/y", false)::get);
+        U = new Trigger(new LoggedDashboardBoolean("Keyboard/u", false)::get);
+        I = new Trigger(new LoggedDashboardBoolean("Keyboard/i", false)::get);
+        O = new Trigger(new LoggedDashboardBoolean("Keyboard/o", false)::get);
+        P = new Trigger(new LoggedDashboardBoolean("Keyboard/p", false)::get);
+        A = new Trigger(new LoggedDashboardBoolean("Keyboard/a", false)::get);
+        S = new Trigger(new LoggedDashboardBoolean("Keyboard/s", false)::get);
+        D = new Trigger(new LoggedDashboardBoolean("Keyboard/d", false)::get);
+        F = new Trigger(new LoggedDashboardBoolean("Keyboard/f", false)::get);
+        G = new Trigger(new LoggedDashboardBoolean("Keyboard/g", false)::get);
+        H = new Trigger(new LoggedDashboardBoolean("Keyboard/h", false)::get);
+        J = new Trigger(new LoggedDashboardBoolean("Keyboard/j", false)::get);
+        K = new Trigger(new LoggedDashboardBoolean("Keyboard/k", false)::get);
+        L = new Trigger(new LoggedDashboardBoolean("Keyboard/l", false)::get);
+        SEMICOLON = new Trigger(new LoggedDashboardBoolean("Keyboard/;", false)::get);
+        APOSTROPHE = new Trigger(new LoggedDashboardBoolean("Keyboard/'", false)::get);
+        LEFT_SHIFT = new Trigger(new LoggedDashboardBoolean("Keyboard/shift", false)::get);
+        Z = new Trigger(new LoggedDashboardBoolean("Keyboard/z", false)::get);
+        X = new Trigger(new LoggedDashboardBoolean("Keyboard/x", false)::get);
+        C = new Trigger(new LoggedDashboardBoolean("Keyboard/c", false)::get);
+        V = new Trigger(new LoggedDashboardBoolean("Keyboard/v", false)::get);
+        B = new Trigger(new LoggedDashboardBoolean("Keyboard/b", false)::get);
+        N = new Trigger(new LoggedDashboardBoolean("Keyboard/n", false)::get);
+        M = new Trigger(new LoggedDashboardBoolean("Keyboard/m", false)::get);
+        COMMA = new Trigger(new LoggedDashboardBoolean("Keyboard/,", false)::get);
+        PERIOD = new Trigger(new LoggedDashboardBoolean("Keyboard/.", false)::get);
+        RIGHT_SHIFT = new Trigger(new LoggedDashboardBoolean("Keyboard/right shift", false)::get);
+        LEFT_CONTROL = new Trigger(new LoggedDashboardBoolean("Keyboard/ctrl", false)::get);
+        LEFT_ALT = new Trigger(new LoggedDashboardBoolean("Keyboard/alt", false)::get);
+        RIGHT_CONTROL = new Trigger(new LoggedDashboardBoolean("Keyboard/right ctrl", false)::get);
+        LEFT_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/left", false)::get);
+        RIGHT_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/right", false)::get);
+        UP_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/up", false)::get);
+        DOWN_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/down", false)::get);
+        NUMPAD_0 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad0", false)::get);
+        NUMPAD_1 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad1", false)::get);
+        NUMPAD_2 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad2", false)::get);
+        NUMPAD_3 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad3", false)::get);
+        NUMPAD_4 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad4", false)::get);
+        NUMPAD_5 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad5", false)::get);
+        NUMPAD_6 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad6", false)::get);
+        NUMPAD_7 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad7", false)::get);
+        NUMPAD_8 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad8", false)::get);
+        NUMPAD_9 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad9", false)::get);
     }
 
 
@@ -98,8 +119,6 @@ public class KeyboardController implements Controller{
             case RIGHT_Y -> getValueByButtons(X,Z);
         };
     }
-
-    private static final double KEY_PRESSED_VALUE = 0.5;
 
     public double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
         if (positiveValue.getAsBoolean()) {

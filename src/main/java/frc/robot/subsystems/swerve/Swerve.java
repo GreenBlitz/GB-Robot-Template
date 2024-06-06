@@ -52,6 +52,15 @@ public class Swerve extends GBSubsystem {
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
     }
 
+    private Module[] getModules() {
+        return new Module[]{
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
+        };
+    }
+
     @Override
     protected String getLogPath() {
         return SwerveConstants.SWERVE_LOG_PATH;
@@ -67,14 +76,6 @@ public class Swerve extends GBSubsystem {
         logFieldRelativeVelocities();
     }
 
-    private Module[] getModules() {
-        return new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
-        };
-    }
 
     private void updateAllInputs() {
         logState();

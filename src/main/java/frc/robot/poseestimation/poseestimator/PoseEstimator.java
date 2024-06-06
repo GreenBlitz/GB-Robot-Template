@@ -17,7 +17,7 @@ import static frc.robot.RobotContainer.SWERVE;
  */
 public class PoseEstimator implements AutoCloseable {
 
-    private final Field2d field; //todo - maybe create field class
+    private final Field2d field; //todo - maybe create field class, maybe delete field
     private final PoseEstimator6328 swerveDrivePoseEstimator;
     private Pose2d robotPose;
 

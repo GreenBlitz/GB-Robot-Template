@@ -14,7 +14,7 @@ echo "---------------------------------------------------------"
 status=$?
 
 if [ "$status" = 0 ] ; then
-    echo -e "${GREEN}Static analysis found no problems. Running add${NO_COLOR}"
+    echo -e "${GREEN}Static analysis found no problems. Running add"
     git add .
 else
     echo -e "${RED}---------------------------------------------------------"

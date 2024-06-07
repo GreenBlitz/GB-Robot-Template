@@ -1,21 +1,25 @@
 package frc.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.constants.RobotConstants;
 
 public class DriverStationUtils {
 
     private static final DriverStation.Alliance DEFAULT_ALLIANCE = DriverStation.Alliance.Red;
 
+    public static DriverStation.Alliance getAlliance() {
+        if (RobotConstants.ROBOT_TYPE.isSimulation()) {
+            return RobotConstants.SIMULATION_ALLIANCE;
+        }
+        return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
+    }
+
     public static boolean isBlueAlliance() {
         return getAlliance().equals(DriverStation.Alliance.Blue);
     }
 
-    public static DriverStation.Alliance getAlliance() {
-        return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
-    }
-
     public static boolean isRedAlliance() {
-        return getAlliance().equals(DriverStation.Alliance.Red);
+        return !isBlueAlliance();
     }
 
     public static boolean isConnectedToFMS() {
@@ -44,6 +48,10 @@ public class DriverStationUtils {
 
     public static boolean isTestEnabled() {
         return DriverStation.isTestEnabled();
+    }
+
+    public static boolean isGame() {
+        return DriverStation.getMatchType() != DriverStation.MatchType.None;
     }
 
 }

@@ -163,7 +163,7 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     into { new File(rootProject.rootDir, '.git/hooks') }
     fileMode 0775
     doLast {
-        println("---Added Post Checkout Git Hook Script---")
+        println("---Added Pre Commit Git Hook Script---")
     }
 }
 

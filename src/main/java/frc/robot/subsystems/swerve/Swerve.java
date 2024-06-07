@@ -345,37 +345,36 @@ public class Swerve extends GBSubsystem {
      * When the robot drives while rotating it skews a bit to the side.
      * This should fix the chassis speeds, so they won't make the robot skew while rotating.
      *
-     * @param chassisSpeeds the chassis speeds to fix skewing for
+     * @param targetSpeeds the chassis speeds to fix skewing for
      * @return the fixed speeds
      */
     // todo - maybe move some of work to SwerveMath class
-    private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        ChassisSpeeds current = getSelfRelativeVelocity();
-
-        double driveMagnitude = Math.sqrt(Math.pow(current.vxMetersPerSecond, 2) + Math.pow(current.vyMetersPerSecond, 2));
-        boolean isDriving = driveMagnitude > SwerveConstants.DRIVE_NEUTRAL_DEADBAND;
-
-        boolean isSpinning = Math.abs(current.omegaRadiansPerSecond) > SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
-
+    private ChassisSpeeds discretize(ChassisSpeeds targetSpeeds) {
+        ChassisSpeeds currentSpeeds = getSelfRelativeVelocity();
         double timeFactor = 1;
+
+        double driveMagnitude = Math.sqrt(Math.pow(currentSpeeds.vxMetersPerSecond, 2) + Math.pow(currentSpeeds.vyMetersPerSecond, 2));
+        boolean isDriving = driveMagnitude > SwerveConstants.DRIVE_NEUTRAL_DEADBAND;
+        boolean isSpinning = Math.abs(currentSpeeds.omegaRadiansPerSecond) > SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
+
         if (isSpinning && isDriving) {
             double minWhileMax = SwerveConstants.MAX_ROTATION_WHILE_MAX_VECTOR.getRadians();
-            double currentDividedByMinWhileMax = Math.abs(current.omegaRadiansPerSecond) / minWhileMax;
 
-            if (Math.abs(current.omegaRadiansPerSecond) > SwerveConstants.MAX_ROTATION_WHILE_MAX_VECTOR.getRadians()) {
-                timeFactor = (getTimeStepDiscretionFactor() * currentDividedByMinWhileMax);
+            if (Math.abs(currentSpeeds.omegaRadiansPerSecond) > SwerveConstants.MAX_ROTATION_WHILE_MAX_VECTOR.getRadians()) {
+                timeFactor = Math.abs(currentSpeeds.omegaRadiansPerSecond) / minWhileMax;
             }
             else {
-                double actualMax =
-                        Math.abs(chassisSpeeds.omegaRadiansPerSecond / (SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians()));
-                timeFactor =
-                        (getTimeStepDiscretionFactor() * Math.abs(current.omegaRadiansPerSecond) / minWhileMax / actualMax);
+                double speedsRatio = currentSpeeds.omegaRadiansPerSecond / targetSpeeds.omegaRadiansPerSecond;
+                double constRatio = SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians() / minWhileMax;
+                timeFactor = Math.abs(constRatio * speedsRatio);
             }
+
+            timeFactor *= getTimeStepDiscretionFactor();
         }
 
         return ChassisSpeeds.discretize(
-                chassisSpeeds,
-                RoborioUtils.getAverageRoborioCycleTime() * timeFactor
+                targetSpeeds,
+                RoborioUtils.getDefaultRoborioCycleTime() * timeFactor
         );
     }
 

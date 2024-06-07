@@ -20,10 +20,6 @@ public class RoborioUtils {
         logStatus();
     }
 
-    private static double getCurrentRoborioCycleTime() {
-        return currentTime - lastTime;
-    }
-
     private static void logStatus() {
         Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "CanUtilization", getCANUtilizationPercent());
         Logger.recordOutput(RoborioUtilsConstants.LOG_PATH + "AverageCycleTime", getAverageRoborioCycleTime());
@@ -53,6 +49,10 @@ public class RoborioUtils {
 
     public static double getDefaultRoborioCycleTime() {
         return RoborioUtilsConstants.DEFAULT_ROBORIO_CYCLE_TIME;
+    }
+
+    public static double getCurrentRoborioCycleTime() {
+        return currentTime - lastTime;
     }
 
     public static double getAverageRoborioCycleTime() {

@@ -1,7 +1,7 @@
 package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.utils.controllers.Controller;
+import frc.robot.Robot;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 /*
 * very much inspired from Trigon code
@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 * @author Yoni Kiriaty, Trigon
 *
  */
-public class KeyboardController implements Controller{
+public class KeyboardController{
 
     private static final double KEY_PRESSED_VALUE = 0.5;
 
@@ -28,6 +28,10 @@ public class KeyboardController implements Controller{
      * Construct an instance of a device.
      */
     public KeyboardController() {
+        if (Robot.isSimulation()) {
+            runKeyboardToNetworkTables();
+        }
+
         ESC = new Trigger(new LoggedDashboardBoolean("Keyboard/esc", false)::get);
         F1 = new Trigger(new LoggedDashboardBoolean("Keyboard/f1", false)::get);
         F2 = new Trigger(new LoggedDashboardBoolean("Keyboard/f2", false)::get);
@@ -108,27 +112,23 @@ public class KeyboardController implements Controller{
         NUMPAD_9 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad9", false)::get);
     }
 
+    public void runKeyboardToNetworkTables() {
 
-    public double getAxisValue(Controller.Axis axis) {
-        return switch (axis) {
-            case LEFT_X -> getValueByButtons(D,A);
-            case LEFT_Y -> getValueByButtons(W,S);
-            case LEFT_TRIGGER -> 0.0;
-            case RIGHT_TRIGGER -> 0.0;
-            case RIGHT_X -> getValueByButtons(E,Q);
-            case RIGHT_Y -> getValueByButtons(X,Z);
-        };
     }
 
-    public double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
+    public double getValueByButtons(Trigger positiveValue, Trigger negativeValue, double value) {
         if (positiveValue.getAsBoolean()) {
-            return KEY_PRESSED_VALUE;
+            return value;
         }
         else if (negativeValue.getAsBoolean()) {
-            return -KEY_PRESSED_VALUE;
+            return -value;
         }
         else {
             return 0;
         }
+    }
+
+    public double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
+        return getValueByButtons(positiveValue, negativeValue, KEY_PRESSED_VALUE);
     }
 }

@@ -22,7 +22,7 @@ public class KeyboardController {
             FIVE, SIX, SEVEN, EIGHT, NINE, ZERO, MINUS, EQUALS,
             BACKSPACE, TAB, Q, W, E, R, T, Y, U, I, O, P, A, S,
             D, F, G, H, J, K, L, SEMICOLON, APOSTROPHE, LEFT_SHIFT,
-            Z, X, C, V, B, N, M, COMMA, PERIOD,
+            Z, X, C, V, B, N, M, COMMA, PERIOD, SLASH,
             RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL,
             LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW, NUMPAD_0, NUMPAD_1, NUMPAD_2,
             NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8,
@@ -49,8 +49,10 @@ public class KeyboardController {
         this.F10 = new Trigger(new LoggedDashboardBoolean("Keyboard/f10", false)::get);
         this.F11 = new Trigger(new LoggedDashboardBoolean("Keyboard/f11", false)::get);
         this.F12 = new Trigger(new LoggedDashboardBoolean("Keyboard/f12", false)::get);
+
         this.DELETE = new Trigger(new LoggedDashboardBoolean("Keyboard/delete", false)::get);
         this.BACKTICK = new Trigger(new LoggedDashboardBoolean("Keyboard/`", false)::get);
+
         this.ONE = new Trigger(new LoggedDashboardBoolean("Keyboard/1", false)::get);
         this.TWO = new Trigger(new LoggedDashboardBoolean("Keyboard/2", false)::get);
         this.THREE = new Trigger(new LoggedDashboardBoolean("Keyboard/3", false)::get);
@@ -65,6 +67,7 @@ public class KeyboardController {
         this.EQUALS = new Trigger(new LoggedDashboardBoolean("Keyboard/=", false)::get);
         this.BACKSPACE = new Trigger(new LoggedDashboardBoolean("Keyboard/backspace", false)::get);
         this.TAB = new Trigger(new LoggedDashboardBoolean("Keyboard/tab", false)::get);
+
         this.Q = new Trigger(new LoggedDashboardBoolean("Keyboard/q", false)::get);
         this.W = new Trigger(new LoggedDashboardBoolean("Keyboard/w", false)::get);
         this.E = new Trigger(new LoggedDashboardBoolean("Keyboard/e", false)::get);
@@ -84,9 +87,6 @@ public class KeyboardController {
         this.J = new Trigger(new LoggedDashboardBoolean("Keyboard/j", false)::get);
         this.K = new Trigger(new LoggedDashboardBoolean("Keyboard/k", false)::get);
         this.L = new Trigger(new LoggedDashboardBoolean("Keyboard/l", false)::get);
-        this.SEMICOLON = new Trigger(new LoggedDashboardBoolean("Keyboard/;", false)::get);
-        this.APOSTROPHE = new Trigger(new LoggedDashboardBoolean("Keyboard/'", false)::get);
-        this.LEFT_SHIFT = new Trigger(new LoggedDashboardBoolean("Keyboard/shift", false)::get);
         this.Z = new Trigger(new LoggedDashboardBoolean("Keyboard/z", false)::get);
         this.X = new Trigger(new LoggedDashboardBoolean("Keyboard/x", false)::get);
         this.C = new Trigger(new LoggedDashboardBoolean("Keyboard/c", false)::get);
@@ -94,16 +94,23 @@ public class KeyboardController {
         this.B = new Trigger(new LoggedDashboardBoolean("Keyboard/b", false)::get);
         this.N = new Trigger(new LoggedDashboardBoolean("Keyboard/n", false)::get);
         this.M = new Trigger(new LoggedDashboardBoolean("Keyboard/m", false)::get);
+
+        this.SEMICOLON = new Trigger(new LoggedDashboardBoolean("Keyboard/;", false)::get);
+        this.APOSTROPHE = new Trigger(new LoggedDashboardBoolean("Keyboard/'", false)::get);
+        this.LEFT_SHIFT = new Trigger(new LoggedDashboardBoolean("Keyboard/shift", false)::get);
         this.COMMA = new Trigger(new LoggedDashboardBoolean("Keyboard/,", false)::get);
         this.PERIOD = new Trigger(new LoggedDashboardBoolean("Keyboard/.", false)::get);
+        this.SLASH = new Trigger(new LoggedDashboardBoolean("Keyboard/slash", false)::get);
         this.RIGHT_SHIFT = new Trigger(new LoggedDashboardBoolean("Keyboard/right shift", false)::get);
         this.LEFT_CONTROL = new Trigger(new LoggedDashboardBoolean("Keyboard/ctrl", false)::get);
         this.LEFT_ALT = new Trigger(new LoggedDashboardBoolean("Keyboard/alt", false)::get);
         this.RIGHT_CONTROL = new Trigger(new LoggedDashboardBoolean("Keyboard/right ctrl", false)::get);
+
         this.LEFT_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/left", false)::get);
         this.RIGHT_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/right", false)::get);
         this.UP_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/up", false)::get);
         this.DOWN_ARROW = new Trigger(new LoggedDashboardBoolean("Keyboard/down", false)::get);
+
         this.NUMPAD_0 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad0", false)::get);
         this.NUMPAD_1 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad1", false)::get);
         this.NUMPAD_2 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad2", false)::get);

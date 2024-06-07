@@ -3,6 +3,10 @@ package frc.utils.controllers.keyboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
 /*
 * very much inspired from Trigon code
 *
@@ -113,7 +117,21 @@ public class KeyboardController{
     }
 
     public void runKeyboardToNetworkTables() {
+        Runtime rt = Runtime.getRuntime();
+        try {
+            System.out.println("py " + getPathToPython() + "keyboard_to_nt.py");
+            rt.exec(new String[]{"cmd.exe","/c","py " + getPathToPython() + "keyboard_to_nt.py"});
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getPathToPython() {
+        String repoPath = Path.of("").toAbsolutePath().toString();
+        String pythonPath = repoPath + "/src/main/python/";
+
+        return pythonPath;
     }
 
     public double getValueByButtons(Trigger positiveValue, Trigger negativeValue, double value) {

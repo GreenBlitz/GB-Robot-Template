@@ -22,7 +22,7 @@ else
     echo 1>&2 "Spotless Apply found violations it could not fix."
     echo "Run spotless apply in your terminal and fix the issues before trying to commit again."
     echo "       --------------------------------------------      "
-    echo "---------------------------------------------------------${NO_COLOR}"
+    echo -e "---------------------------------------------------------${NO_COLOR}"
 fi
 
 echo "*********************************************************"

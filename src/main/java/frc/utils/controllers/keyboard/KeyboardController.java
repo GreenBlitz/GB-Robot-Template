@@ -127,7 +127,7 @@ public class KeyboardController {
         FileHandler.runCmd(
                 "py " +
                         FileHandler.getPathToPythonDirectory() +
-                        "keyboard_to_nt.py"
+                        "/keyboard_to_nt.py"
         );
     }
 

@@ -36,6 +36,7 @@ public class RobotContainer {
      */
     private void configureBindings() {
         JoysticksBindings.configureBindings();
+        KeyboardBindings.configurateBindings();
     }
 
     /**

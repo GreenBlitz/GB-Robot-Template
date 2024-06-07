@@ -167,17 +167,6 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     }
 }
 
-tasks.register('runKeyboardProgram', Exec) {
-    workingDir = 'src/main/python'
-
-    commandLine 'python', 'keyboard_to_nt.py'
-}
-
-tasks.register('deployWithKeyboard') {
-    dependsOn("deploy")
-    dependsOn("runKeyboardProgram")
-    tasks.findByName('runKeyboardProgram').mustRunAfter('deploy')
-}
 tasks.register('SetConnectionTypeIP') {
     doLast {
         int PING_TIMEOUT_MILLISECONDS = 1000

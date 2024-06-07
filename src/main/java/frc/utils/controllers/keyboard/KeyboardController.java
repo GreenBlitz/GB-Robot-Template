@@ -1,19 +1,18 @@
 package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Robot;
+import frc.robot.constants.RobotConstants;
+import frc.utils.FileHandler;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 
-import java.io.IOException;
-import java.nio.file.Path;
 
 /*
-* very much inspired from Trigon code
-*
-* @author Yoni Kiriaty, Trigon
-*
+ * very much inspired from Trigon code
+ *
+ * @author Yoni Kiriaty, Trigon
+ *
  */
-public class KeyboardController{
+public class KeyboardController {
 
     private static final double KEY_PRESSED_VALUE = 0.5;
 
@@ -28,11 +27,12 @@ public class KeyboardController{
             LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW, NUMPAD_0, NUMPAD_1, NUMPAD_2,
             NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8,
             NUMPAD_9;
+
     /**
      * Construct an instance of a device.
      */
     public KeyboardController() {
-        if (Robot.isSimulation()) {
+        if (RobotConstants.ENABLE_KEYBOARD) {
             runKeyboardToNetworkTables();
         }
 
@@ -116,22 +116,16 @@ public class KeyboardController{
         this.NUMPAD_9 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad9", false)::get);
     }
 
-    public void runKeyboardToNetworkTables() {
-        Runtime rt = Runtime.getRuntime();
-        try {
-            System.out.println("py " + getPathToPython() + "keyboard_to_nt.py");
-            rt.exec(new String[]{"cmd.exe","/c","py " + getPathToPython() + "keyboard_to_nt.py"});
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void runKeyboardToNetworkTables() {
+        FileHandler.runCmd(
+                "py " +
+                        FileHandler.getPathToPythonDirectory() +
+                        "keyboard_to_nt.py"
+        );
     }
 
-    public String getPathToPython() {
-        String repoPath = Path.of("").toAbsolutePath().toString();
-        String pythonPath = repoPath + "/src/main/python/";
-
-        return pythonPath;
+    public double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
+        return getValueByButtons(positiveValue, negativeValue, KEY_PRESSED_VALUE);
     }
 
     public double getValueByButtons(Trigger positiveValue, Trigger negativeValue, double value) {
@@ -146,7 +140,6 @@ public class KeyboardController{
         }
     }
 
-    public double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
-        return getValueByButtons(positiveValue, negativeValue, KEY_PRESSED_VALUE);
-    }
+
+
 }

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-public class SmartJoystick{
+public class SmartJoystick {
 
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
 
@@ -183,7 +183,7 @@ public class SmartJoystick{
         joystick.setRumble(left ? GenericHID.RumbleType.kLeftRumble : GenericHID.RumbleType.kRightRumble, power);
     }
 
-    enum Axis {
+    public enum Axis {
         LEFT_X(0, true),
         LEFT_Y(1, true),
         LEFT_TRIGGER(2, false),

@@ -1,8 +1,12 @@
 #!/bin/bash
 
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NO_COLOR='\033[0m'
+
 echo "*********************************************************"
-echo "Running git pre-commit hook. Running spotlessApply... "
-echo "*********************************************************"
+echo "Running git pre-commit hook. Running spotlessApply and Git Add... "
+echo "---------------------------------------------------------"
 
 # Run spotless apply
 ./gradlew spotlessApply
@@ -10,15 +14,18 @@ echo "*********************************************************"
 status=$?
 
 if [ "$status" = 0 ] ; then
-    echo "Static analysis found no problems."
+    echo -e "${GREEN}Static analysis found no problems. Running add${NO_COLOR}"
     git add .
     exit 0
 else
-    echo "---------------------------------------------------------"
+    echo -e "${RED}---------------------------------------------------------"
     echo "       --------------------------------------------      "
     echo 1>&2 "Spotless Apply found violations it could not fix."
     echo "Run spotless apply in your terminal and fix the issues before trying to commit again."
     echo "       --------------------------------------------      "
-    echo "---------------------------------------------------------"
+    echo "---------------------------------------------------------${NO_COLOR}"
     exit 1
 fi
+
+echo "*********************************************************"
+

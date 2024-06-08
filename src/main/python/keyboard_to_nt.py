@@ -5,14 +5,13 @@
 
 # Lets go Trigon
 
-import time
 import atexit
-
 import keyboard
 # if this library is not installed, dont install ntcore but pyntcore
 import ntcore
+import time
 
-TEAM = 4590  # GREENBLITZ 🐐🐐🐐🐐
+TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "KeyboardToNetworkTables"
 DASHBOARD_SERVER = "127.0.0.1"
 CONNECTION_COOLDOWN_SECONDS = 0.1
@@ -27,9 +26,9 @@ def is_pressed(event: keyboard.KeyboardEvent):
 def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
     if event is None or event.name is None:
         return
-    if event.name == "/":
+    elif event.name == "/":
         table.putBoolean("slash", is_pressed(event))
-    if event.is_keypad:
+    elif event.is_keypad:
         table.putBoolean("numpad" + event.name, is_pressed(event))
     else:
         table.putBoolean(event.name.lower(), is_pressed(event))
@@ -38,7 +37,7 @@ def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
 def get_table_and_network_table():
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
-    print("Setting up NetworkTables client for team {}".format(TEAM))
+    print("Setting up NetworkTables client for team {}".format(TEAM_NUMBER))
     network_table_instance.startClient4(CLIENT_NAME)
     network_table_instance.setServer(DASHBOARD_SERVER)
     network_table_instance.startDSClient()

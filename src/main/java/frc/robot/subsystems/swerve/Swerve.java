@@ -10,7 +10,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
@@ -369,7 +368,7 @@ public class Swerve extends GBSubsystem {
                 timeFactor = Math.abs(constRatio * speedsRatio);
             }
 
-            timeFactor *= getTimeStepDiscretionFactor();
+            timeFactor *= SwerveConstants.SWERVE_DEPEND_CONSTANTS.getDiscretionFactor();
         }
 
         return ChassisSpeeds.discretize(
@@ -377,14 +376,6 @@ public class Swerve extends GBSubsystem {
                 RoborioUtils.getDefaultRoborioCycleTime() * timeFactor
         );
     }
-
-    private double getTimeStepDiscretionFactor() {
-        if (RobotConstants.ROBOT_TYPE.isReal()) {
-            return SwerveConstants.REAL_TIME_STEP_DISCRETION_FACTOR;
-        }
-        return SwerveConstants.SIMULATION_TIME_STEP_DISCRETION_FACTOR;
-    }
-
 
     protected void drive(double xPower, double yPower, double thetaPower) {
         driveByState(powersToSpeeds(xPower, yPower, thetaPower));

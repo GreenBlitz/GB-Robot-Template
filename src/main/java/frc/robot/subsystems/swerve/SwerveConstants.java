@@ -12,18 +12,18 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.MathConstants;
+import frc.robot.subsystems.swerve.swervedependconstants.SwerveDependConstants;
+import frc.robot.subsystems.swerve.swervedependconstants.SwerveDependConstantsFactory;
 
+//todo - swerve const as object that depends on sim or real or robot, calibration const (all const that needs calibration (maybe))
 public class SwerveConstants {
-    //todo - swerve const as object that depends on sim or real or robot, calibration const (all const that needs calibration (maybe))
+
+    public static final SwerveDependConstants SWERVE_DEPEND_CONSTANTS = SwerveDependConstantsFactory.createSwerveDependConstants();
 
     public static final String SWERVE_LOG_PATH = LogPathsConstants.SUBSYSTEM_LOG_PATH + "Swerve/";
     protected static final String SWERVE_ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + SWERVE_LOG_PATH;
     public static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
     public static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
-
-    public static final double SIMULATION_TIME_STEP_DISCRETION_FACTOR = 4;
-    public static final double REAL_TIME_STEP_DISCRETION_FACTOR = 8;
-
 
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);
     public static final Rotation2d ROTATION_VELOCITY_TOLERANCE = Rotation2d.fromRadians(0.05);
@@ -86,7 +86,6 @@ public class SwerveConstants {
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kD,
             ROTATION_CONSTRAINTS
     );
-
     static {
         PROFILED_ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
                 -MathConstants.HALF_CIRCLE.getDegrees(),

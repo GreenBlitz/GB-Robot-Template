@@ -58,7 +58,7 @@ def get_network_table():
     started_time = time.time()
     while not network_table_instance.isConnected():
         if time.time() - started_time > CONNECTION_TIMEOUT:
-            cleanup(network_table)
+            cleanup(network_table_instance)
             sys.exit()
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
 

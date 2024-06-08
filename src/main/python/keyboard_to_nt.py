@@ -18,6 +18,7 @@ DASHBOARD_SERVER = "127.0.0.1"
 CONNECTION_COOLDOWN_SECONDS = 0.1
 KEYBOARD_TABLE = "Keyboard"
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
+global network_table_instance
 
 
 def is_pressed(event: keyboard.KeyboardEvent):
@@ -35,7 +36,7 @@ def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
         table.putBoolean(event.name.lower(), is_pressed(event))
 
 
-def get_table_and_network_table():
+def get_table():
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
     print("Setting up NetworkTables client for team {}".format(TEAM))
@@ -49,7 +50,7 @@ def get_table_and_network_table():
 
     network_table_instance.getTable(KEYBOARD_TABLE).putBoolean("Is Connected", True)
     table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
-    return table, network_table_instance
+    return table
 
 
 def cleanup():
@@ -58,8 +59,7 @@ def cleanup():
 
 
 def main():
-    global network_table_instance
-    table, network_table_instance = get_table_and_network_table()
+    table = get_table()
     atexit.register(cleanup)
 
     keyboard.hook(lambda key_event: on_action(key_event, table))

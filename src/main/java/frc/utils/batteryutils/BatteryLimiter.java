@@ -5,8 +5,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants;
 import frc.utils.CMDHandler;
 import frc.utils.DriverStationUtils;
+import frc.utils.dashboard.LoggedTableBoolean;
 
 class BatteryLimiter extends Command {
+
+    private final LoggedTableBoolean isBatteryLow = new LoggedTableBoolean("Battery", "is low", false);
 
     private final LinearFilter voltageFilter;
 
@@ -15,10 +18,11 @@ class BatteryLimiter extends Command {
     public BatteryLimiter() {
         this.voltageFilter = LinearFilter.movingAverage(BatteryConstants.NUMBER_OF_VALUES_IN_AVERAGE);
         this.showedMessage = false;
+        CMDHandler.runCMDCommand(BatteryConstants.SHOW_BATTERY_MESSAGE_COMMAND);
     }
 
     private void showBatteryMessage() {
-        CMDHandler.runCMDCommand(BatteryConstants.SHOW_BATTERY_MESSAGE_COMMAND);
+        isBatteryLow.set(true);
         showedMessage = true;
     }
 

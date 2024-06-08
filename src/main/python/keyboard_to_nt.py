@@ -3,20 +3,21 @@
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#Lets go Trigon
+# Lets go Trigon
 
-#if this library is not installed, dont install ntcore but pyntcore
-import ntcore
+import time
+import atexit
 
 import keyboard
-import time
+# if this library is not installed, dont install ntcore but pyntcore
+import ntcore
 
-TEAM = 4590  #GREENBLITZ 🐐🐐🐐🐐
-CLIENT_NAME = "KeyboardToNT"
+TEAM = 4590  # GREENBLITZ 🐐🐐🐐🐐
+CLIENT_NAME = "KeyboardToNetworkTables"
 DASHBOARD_SERVER = "127.0.0.1"
 CONNECTION_COOLDOWN_SECONDS = 0.1
-KEYBOARD_TABLE = "SmartDashboard/Keyboard"
-KEYBOARD_KEYS_TABLE = "SmartDashboard/Keyboard/Keys"
+KEYBOARD_TABLE = "Keyboard"
+KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
 
 
 def is_pressed(event: keyboard.KeyboardEvent):
@@ -34,7 +35,7 @@ def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
         table.putBoolean(event.name.lower(), is_pressed(event))
 
 
-def get_table():
+def get_table_and_network_table():
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
     print("Setting up NetworkTables client for team {}".format(TEAM))
@@ -48,11 +49,18 @@ def get_table():
 
     network_table_instance.getTable(KEYBOARD_TABLE).putBoolean("Is Connected", True)
     table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
-    return table
+    return table, network_table_instance
+
+
+def cleanup():
+    network_table_instance.stopDSClient()
+    network_table_instance.stopClient()
 
 
 def main():
-    table = get_table()
+    global network_table_instance
+    table, network_table_instance = get_table_and_network_table()
+    atexit.register(cleanup)
 
     keyboard.hook(lambda key_event: on_action(key_event, table))
     keyboard.wait()

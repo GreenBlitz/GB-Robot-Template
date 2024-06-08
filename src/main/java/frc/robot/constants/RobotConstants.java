@@ -12,6 +12,6 @@ public class RobotConstants {
 
     public static final DriverStation.Alliance SIMULATION_ALLIANCE = DriverStation.Alliance.Blue;
 
-    public static final boolean ENABLE_KEYBOARD = true;
+    public static final boolean ENABLE_KEYBOARD = false;
 
 }

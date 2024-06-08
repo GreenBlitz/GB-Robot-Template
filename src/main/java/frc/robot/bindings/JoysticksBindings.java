@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.bindings;
 
 import frc.robot.constants.Ports;
 import frc.utils.controllers.joysticks.SmartJoystick;

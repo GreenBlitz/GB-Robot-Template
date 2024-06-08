@@ -1,8 +1,7 @@
 package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.constants.RobotConstants;
-import frc.utils.FileHandler;
+import frc.utils.CMDHandler;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 
 
@@ -16,27 +15,25 @@ public class KeyboardController {
 
     private static final double KEY_PRESSED_VALUE = 0.5;
 
-    public final Trigger
-            ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10,
-            F11, F12, DELETE, BACKTICK, ONE, TWO, THREE, FOUR,
-            FIVE, SIX, SEVEN, EIGHT, NINE, ZERO, MINUS, EQUALS,
-            BACKSPACE, TAB, Q, W, E, R, T, Y, U, I, O, P, A, S,
-            D, F, G, H, J, K, L, SEMICOLON, APOSTROPHE, LEFT_SHIFT,
-            Z, X, C, V, B, N, M, COMMA, PERIOD, SLASH,
-            RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL,
-            LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW, NUMPAD_0, NUMPAD_1, NUMPAD_2,
-            NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8,
-            NUMPAD_9;
+    private static final String KEYBOARD_TO_NETWORK_TABLES_PATH = "py " + CMDHandler.PATH_TO_PYTHON_DIRECTORY + "/keyboard_to_nt.py";
 
-    /**
-     * Construct an instance of a device.
-     */
+    public final Trigger
+            ESC,
+            F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
+            DELETE, BACKTICK,
+            ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO,
+            MINUS, EQUALS,
+            BACKSPACE, TAB,
+            Q, W, E, R, T, Y, U, I, O, P, A, S, D, F, G, H, J, K, L, Z, X, C, V, B, N, M,
+            SEMICOLON, APOSTROPHE, LEFT_SHIFT, COMMA, PERIOD, SLASH, RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL,
+            LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW,
+            NUMPAD_0, NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9;
+
     public KeyboardController() {
-        if (RobotConstants.ENABLE_KEYBOARD) {
-            runKeyboardToNetworkTables();
-        }
+        CMDHandler.runCMDCommand(KEYBOARD_TO_NETWORK_TABLES_PATH);
 
         this.ESC = new Trigger(new LoggedDashboardBoolean("Keyboard/esc", false)::get);
+
         this.F1 = new Trigger(new LoggedDashboardBoolean("Keyboard/f1", false)::get);
         this.F2 = new Trigger(new LoggedDashboardBoolean("Keyboard/f2", false)::get);
         this.F3 = new Trigger(new LoggedDashboardBoolean("Keyboard/f3", false)::get);
@@ -63,6 +60,7 @@ public class KeyboardController {
         this.EIGHT = new Trigger(new LoggedDashboardBoolean("Keyboard/8", false)::get);
         this.NINE = new Trigger(new LoggedDashboardBoolean("Keyboard/9", false)::get);
         this.ZERO = new Trigger(new LoggedDashboardBoolean("Keyboard/0", false)::get);
+
         this.MINUS = new Trigger(new LoggedDashboardBoolean("Keyboard/-", false)::get);
         this.EQUALS = new Trigger(new LoggedDashboardBoolean("Keyboard/=", false)::get);
         this.BACKSPACE = new Trigger(new LoggedDashboardBoolean("Keyboard/backspace", false)::get);
@@ -123,14 +121,6 @@ public class KeyboardController {
         this.NUMPAD_9 = new Trigger(new LoggedDashboardBoolean("Keyboard/numpad9", false)::get);
     }
 
-    private void runKeyboardToNetworkTables() {
-        FileHandler.runCmd(
-                "py " +
-                        FileHandler.getPathToPythonDirectory() +
-                        "/keyboard_to_nt.py"
-        );
-    }
-
     public double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
         return getValueByButtons(positiveValue, negativeValue, KEY_PRESSED_VALUE);
     }
@@ -146,7 +136,5 @@ public class KeyboardController {
             return 0;
         }
     }
-
-
 
 }

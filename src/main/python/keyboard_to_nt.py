@@ -11,11 +11,12 @@ import ntcore
 import keyboard
 import time
 
-team = 4590  #GREENBLITZ 🐐🐐🐐🐐
-client_name = "KeyboardToNT"
-dashboard_server = "127.0.0.1"
-connection_cooldown = 0.1
-keyboard_table = "SmartDashboard/Keyboard"
+TEAM = 4590  #GREENBLITZ 🐐🐐🐐🐐
+CLIENT_NAME = "KeyboardToNT"
+DASHBOARD_SERVER = "127.0.0.1"
+CONNECTION_COOLDOWN_SECONDS = 0.1
+KEYBOARD_TABLE = "SmartDashboard/Keyboard"
+KEYBOARD_KEYS_TABLE = "SmartDashboard/Keyboard/Keys"
 
 
 def is_pressed(event: keyboard.KeyboardEvent):
@@ -23,7 +24,7 @@ def is_pressed(event: keyboard.KeyboardEvent):
 
 
 def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
-    if event == None or event.name is None:
+    if event is None or event.name is None:
         return
     if event.name == "/":
         table.putBoolean("slash", is_pressed(event))
@@ -36,18 +37,17 @@ def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
 def get_table():
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
-    print("Setting up NetworkTables client for team {}".format(team))
-    network_table_instance.startClient4(client_name)
-    network_table_instance.setServer(dashboard_server)
+    print("Setting up NetworkTables client for team {}".format(TEAM))
+    network_table_instance.startClient4(CLIENT_NAME)
+    network_table_instance.setServer(DASHBOARD_SERVER)
     network_table_instance.startDSClient()
 
-    # Wait for connection
     print("Waiting for connection to NetworkTables server...")
     while not network_table_instance.isConnected():
-        time.sleep(connection_cooldown)
+        time.sleep(CONNECTION_COOLDOWN_SECONDS)
 
-    table = network_table_instance.getTable(keyboard_table)
-    table.putBoolean("Is Connected", True)
+    network_table_instance.getTable(KEYBOARD_TABLE).putBoolean("Is Connected", True)
+    table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
     return table
 
 

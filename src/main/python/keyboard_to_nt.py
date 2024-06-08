@@ -10,7 +10,6 @@
 
 # Lets go Trigon
 
-import atexit
 import keyboard
 # if this library is not installed, dont install ntcore but pyntcore
 import ntcore

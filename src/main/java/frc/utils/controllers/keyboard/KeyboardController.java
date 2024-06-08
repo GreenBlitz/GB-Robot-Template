@@ -39,7 +39,7 @@ public class KeyboardController {
         this.F3 = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/f3", false)::get);
         this.F4 = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/f4", false)::get);
         this.F5 = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/f5", false)::get);
-        this.F6 = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/Keys/f6", false)::get);
+        this.F6 = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/f6", false)::get);
         this.F7 = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/f7", false)::get);
         this.F8 = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/f8", false)::get);
         this.F9 = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/f9", false)::get);

@@ -3,10 +3,13 @@ package frc.utils.batteryutils;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.LogPathsConstants;
+import frc.utils.CMDHandler;
 
 class BatteryConstants {
 
     protected static final String LOG_PATH = "Battery/";
+
+    protected static final String SHOW_BATTERY_MESSAGE_COMMAND = "py " + CMDHandler.PATH_TO_PYTHON_DIRECTORY + "/battery_message.py";
 
     protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 

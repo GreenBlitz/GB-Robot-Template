@@ -3,14 +3,23 @@ package frc.utils.batteryutils;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants;
+import frc.utils.CMDHandler;
 import frc.utils.DriverStationUtils;
 
 class BatteryLimiter extends Command {
 
     private final LinearFilter voltageFilter;
 
+    private boolean showedMessage; // todo - maybe add that image is showed every 5 minutes (like reminder)
+
     public BatteryLimiter() {
         this.voltageFilter = LinearFilter.movingAverage(BatteryConstants.NUMBER_OF_VALUES_IN_AVERAGE);
+        this.showedMessage = false;
+    }
+
+    private void showBatteryMessage() {
+        CMDHandler.runCMDCommand(BatteryConstants.SHOW_BATTERY_MESSAGE_COMMAND);
+        showedMessage = true;
     }
 
     @Override
@@ -28,8 +37,11 @@ class BatteryLimiter extends Command {
         double currentAverageVoltage = voltageFilter.calculate(Battery.getCurrentVoltage());
         if (currentAverageVoltage <= Battery.getMinimumVoltage()) {
             Battery.reportAlertsToLog();
-            if (!DriverStationUtils.isGame() && RobotConstants.ENABLE_BATTERY_LIMITER) {
-                throw new java.lang.RuntimeException("BATTERY IS LOW");
+            if (!DriverStationUtils.isGame() && !showedMessage) {
+                showBatteryMessage();
+                if (RobotConstants.ENABLE_BATTERY_LIMITER) {
+                    throw new java.lang.RuntimeException("BATTERY IS LOW");
+                }
             }
         }
     }

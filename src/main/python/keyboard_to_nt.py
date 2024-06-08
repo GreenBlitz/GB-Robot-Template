@@ -63,10 +63,12 @@ def cleanup(network_table_instance: ntcore.NetworkTableInstance):
 
 def main():
     table, network_table_instance = get_table_and_network_table()
-    atexit.register(cleanup, network_table_instance)
 
     keyboard.hook(lambda key_event: on_action(key_event, table))
-    keyboard.wait()
+    while network_table_instance.isConnected():
+        print("llo")
+        time.sleep(0.01)
+    cleanup(network_table_instance)
 
 
 if __name__ == '__main__':

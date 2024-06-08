@@ -81,7 +81,7 @@ public class SwerveConstants {
             MAX_ROTATION_ACCELERATION_PER_SECOND.getDegrees()
     );
 
-    public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);
+    public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);//todo - calibrate
     //todo - calibrate for real (maybe use regular pid in sim)
     public static final ProfiledPIDController PROFILED_ROTATION_PID_DEGREES_CONTROLLER = new ProfiledPIDController(
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kP,

@@ -113,7 +113,7 @@ public class Module {
                 MathUtil.angleModulus(getCurrentAngle().getRadians()),
                 ModuleConstants.ANGLE_TOLERANCE.getRadians()
         );
-        boolean isStopping = moduleInputs.steerMotorVelocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_TOLERANCE.getRadians();
+        boolean isStopping = moduleInputs.steerMotorVelocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
         return isAtAngle && isStopping;
     }
 

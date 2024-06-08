@@ -1,6 +1,6 @@
 package frc.utils.cycletimeutils;
 
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.hal.HALUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class CycleTimeUtils {
@@ -11,7 +11,7 @@ public class CycleTimeUtils {
 
     public static void updateCycleTime() {
         lastTime = currentTime;
-        currentTime = Timer.getFPGATimestamp();
+        currentTime = HALUtil.getFPGATime() / 1e6;
 
         logStatus();
         reportAlertsToLog();

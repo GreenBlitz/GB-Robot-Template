@@ -349,6 +349,7 @@ public class Swerve extends GBSubsystem {
      */
     // todo - maybe move some of work to SwerveMath class
     private ChassisSpeeds discretize(ChassisSpeeds targetSpeeds) {
+        //todo - add magnitude consider in calculation
         ChassisSpeeds currentSpeeds = getSelfRelativeVelocity();
         double timeFactor = 1;
 

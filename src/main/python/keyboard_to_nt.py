@@ -19,8 +19,9 @@ TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "KeyboardToNetworkTables"
 DASHBOARD_SERVER = "127.0.0.1"
 CONNECTION_COOLDOWN_SECONDS = 0.1
-KEYBOARD_TABLE = "SmartDashboard/Keyboard"
-KEYBOARD_KEYS_TABLE = "SmartDashboard/Keyboard/Keys"
+KEYBOARD_CHECKING_COOLDOWN_SECONDS = 0.01
+KEYBOARD_TABLE = "Keyboard"
+KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
 
 
 def is_pressed(event: keyboard.KeyboardEvent):
@@ -50,7 +51,6 @@ def get_table_and_network_table():
     while not network_table_instance.isConnected():
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
 
-    network_table_instance.getTable(KEYBOARD_TABLE).putBoolean("Is Connected", True)
     table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
     return table, network_table_instance
 
@@ -65,8 +65,7 @@ def main():
 
     keyboard.hook(lambda key_event: on_action(key_event, table))
     while network_table_instance.isConnected():
-        print("llo")
-        time.sleep(0.01)
+        time.sleep(KEYBOARD_CHECKING_COOLDOWN_SECONDS)
     cleanup(network_table_instance)
 
 

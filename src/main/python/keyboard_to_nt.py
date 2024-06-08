@@ -16,9 +16,8 @@ TEAM = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "KeyboardToNetworkTables"
 DASHBOARD_SERVER = "127.0.0.1"
 CONNECTION_COOLDOWN_SECONDS = 0.1
-KEYBOARD_TABLE = "Keyboard"
-KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
-global network_table_instance
+KEYBOARD_TABLE = "SmartDashboard/Keyboard"
+KEYBOARD_KEYS_TABLE = "SmartDashboard/Keyboard/Keys"
 
 
 def is_pressed(event: keyboard.KeyboardEvent):
@@ -36,7 +35,7 @@ def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
         table.putBoolean(event.name.lower(), is_pressed(event))
 
 
-def get_table():
+def get_table_and_network_table():
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
     print("Setting up NetworkTables client for team {}".format(TEAM))
@@ -50,17 +49,17 @@ def get_table():
 
     network_table_instance.getTable(KEYBOARD_TABLE).putBoolean("Is Connected", True)
     table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
-    return table
+    return table, network_table_instance
 
 
-def cleanup():
+def cleanup(network_table_instance: ntcore.NetworkTableInstance):
     network_table_instance.stopDSClient()
     network_table_instance.stopClient()
 
 
 def main():
-    table = get_table()
-    atexit.register(cleanup)
+    table, network_table_instance = get_table_and_network_table()
+    atexit.register(cleanup, network_table_instance)
 
     keyboard.hook(lambda key_event: on_action(key_event, table))
     keyboard.wait()

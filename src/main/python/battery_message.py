@@ -1,16 +1,17 @@
 import sys
 import time
 import tkinter as tk
+import os
 from tkinter import PhotoImage
 
 # if this library is not installed, dont install ntcore but pyntcore
 import ntcore
 
-IMAGE_PATH = "images/NoamBatteryMessage.png"
+IMAGE_PATH = os.getcwd() + "/images/NoamBatteryMessage.png"
 WINDOW_NAME = "Battery Message"
 TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "BatteryMessageToNetworkTables"
-DASHBOARD_SERVER = "127.0.0.1"
+DASHBOARD_SERVER = "10.45.90.2"
 CONNECTION_COOLDOWN_SECONDS = 0.1
 CONNECTION_TIMEOUT = 30
 TABLE_NAME = "Battery"
@@ -63,6 +64,7 @@ def get_network_table():
             sys.exit()
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
 
+    print("connected")
     return network_table_instance
 
 

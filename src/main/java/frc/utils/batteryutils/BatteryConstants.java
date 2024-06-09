@@ -15,7 +15,7 @@ class BatteryConstants {
 
     protected static final double DEFAULT_BATTERY_VOLTAGE = 12;
 
-    protected static final double MIN_VOLTAGE_BATTERY = 10.5;
+    protected static final double MIN_VOLTAGE_BATTERY = 12;
 
     protected static final int NUMBER_OF_VALUES_IN_AVERAGE = 50;
 

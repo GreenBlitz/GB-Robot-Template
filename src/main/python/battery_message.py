@@ -57,6 +57,7 @@ def get_network_table():
     print("Waiting for connection to NetworkTables server...")
     started_time = time.time()
     while not network_table_instance.isConnected():
+        # terminate client and program if it takes to long to connect
         if time.time() - started_time > CONNECTION_TIMEOUT:
             cleanup(network_table_instance)
             sys.exit()

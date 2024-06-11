@@ -8,7 +8,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class CANStatus {
 
-    private static final double MAX_CAN_UTILIZATION_PERCENT = 60;
+    private static final double MAX_CAN_UTILIZATION_PERCENT = 0.6;
     private static final double MAX_RECEIVE_ERRORS = 1;
     private static final double MAX_TRANSMIT_ERRORS = 1;
     private static final String LOG_PATH = "Bus/";

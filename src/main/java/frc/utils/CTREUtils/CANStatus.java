@@ -1,15 +1,16 @@
 package frc.utils.CTREUtils;
 
 import com.ctre.phoenix6.CANBus;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.Phoenix6Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class CANStatus {
 
-    private static final double MAX_CAN_UTILIZATION_PERCENT = 90;
-    private static final double MAX_RECEIVE_ERRORS = 3;
-    private static final double MAX_TRANSMIT_ERRORS = 3;
+    private static final double MAX_CAN_UTILIZATION_PERCENT = 60;
+    private static final double MAX_RECEIVE_ERRORS = 1;
+    private static final double MAX_TRANSMIT_ERRORS = 1;
     private static final String LOG_PATH = "Bus/";
 
     public static void logAllBusStatuses() {
@@ -28,30 +29,31 @@ public class CANStatus {
         Logger.recordOutput(LOG_PATH + name + "/Utilization", busStatus.BusUtilization);
         Logger.recordOutput(LOG_PATH + name + "/TimesDisconnected", busStatus.BusOffCount);
         Logger.recordOutput(LOG_PATH + name + "/Full", busStatus.TxFullCount);
-        Logger.recordOutput(LOG_PATH + name + "/ReceiveErrorCount", busStatus.REC);
-        Logger.recordOutput(LOG_PATH + name + "/TransmitErrorCount", busStatus.TEC);
+        Logger.recordOutput(LOG_PATH + name + "/ReceiveError", busStatus.REC);
+        Logger.recordOutput(LOG_PATH + name + "/TransmitError", busStatus.TEC);
     }
 
     private static void reportBusAlerts(CANBus.CANBusStatus busStatus, String name) {
         String currentAlertLogPath = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name;
+        double currentTime = Timer.getFPGATimestamp();
 
         if (!busStatus.Status.isOK()) {
-            Logger.recordOutput(currentAlertLogPath + "/Status", busStatus.Status.getName());
+            Logger.recordOutput(currentAlertLogPath + "/StatusErrorAt", currentTime);
         }
         if (busStatus.BusUtilization > MAX_CAN_UTILIZATION_PERCENT) {
-            Logger.recordOutput(currentAlertLogPath + "/FloodedAt", busStatus.BusUtilization);
+            Logger.recordOutput(currentAlertLogPath + "/FloodedAt", currentTime);
         }
         if (busStatus.BusOffCount > 0) {
-            Logger.recordOutput(currentAlertLogPath + "/DisconnectedAt", busStatus.BusOffCount);
+            Logger.recordOutput(currentAlertLogPath + "/DisconnectedAt", currentTime);
         }
         if (busStatus.TxFullCount > 0) {
-            Logger.recordOutput(currentAlertLogPath + "/FullAt", busStatus.TxFullCount);
+            Logger.recordOutput(currentAlertLogPath + "/FullAt", currentTime);
         }
         if (busStatus.REC > MAX_RECEIVE_ERRORS) {
-            Logger.recordOutput(currentAlertLogPath + "/MaxReceiveErrors", busStatus.REC);
+            Logger.recordOutput(currentAlertLogPath + "/ReceiveErrorAt", currentTime);
         }
-        if (busStatus.REC > MAX_TRANSMIT_ERRORS) {
-            Logger.recordOutput(currentAlertLogPath + "/MaxTransmitErrors", busStatus.TEC);
+        if (busStatus.TEC > MAX_TRANSMIT_ERRORS) {
+            Logger.recordOutput(currentAlertLogPath + "/TransmitErrorsAt", currentTime);
         }
     }
 

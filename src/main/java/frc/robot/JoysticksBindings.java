@@ -46,12 +46,16 @@ public class JoysticksBindings {
 
         // Reset Angle to 0
         usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetHeading(new Rotation2d())));
+        // Reset Pose to (5, 5, 0Deg)
         usedJoystick.B.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetPose(
                 new MirrorablePose2d(5, 5, new Rotation2d(), true).get()
         )));
 
+        // Swerve X Pose
+        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());
         // Swerve Wheels to 90 Degrees
-        usedJoystick.A.whileTrue(SwerveCommands.getPointWheelsCommand(MirrorableRotation2d.fromDegrees(90, false)));
+        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(MirrorableRotation2d.fromDegrees(90, false)));
+
         // Rotate to 180 Deg
         usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(
                 MirrorableRotation2d.fromDegrees(180, false)

@@ -125,14 +125,14 @@ public class MK4IModule implements IModule {
 
         AtomicInteger count = new AtomicInteger();
         inputs.odometryUpdatesDriveDistance =
-                drivePositionQueue.stream().map(drive -> getDriveDistanceWithCoupling(drive, inputs.odometryUpdatesSteerAngle[count.getAndIncrement()])).toArray(Rotation2d[]::new);
+                drivePositionQueue.stream().map(drive -> getDriveDistanceWithoutCoupling(drive, inputs.odometryUpdatesSteerAngle[count.getAndIncrement()])).toArray(Rotation2d[]::new);
 
         steerPositionQueue.clear();
         drivePositionQueue.clear();
     }
 
-    private Rotation2d getDriveDistanceWithCoupling(double driveDistanceRot, Rotation2d steerAngle) {
-        return Rotation2d.fromRotations(//todo - check about direction of coupling
+    private Rotation2d getDriveDistanceWithoutCoupling(double driveDistanceRot, Rotation2d steerAngle) {
+        return Rotation2d.fromRotations(
                 driveDistanceRot - ((steerAngle.getRotations() - startSteerAngle.getRotations()) * MK4IModuleConstants.COUPLING_RATIO)
         );
     }

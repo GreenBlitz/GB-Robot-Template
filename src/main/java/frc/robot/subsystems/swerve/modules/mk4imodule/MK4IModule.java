@@ -38,7 +38,7 @@ public class MK4IModule implements IModule {
                 mk4IModuleStatus.getDriveMotorVelocitySignal(false)
         );
 
-        this.startSteerAngle = mk4IModuleStatus.getSteerMotorLatencyPosition(true);
+        this.startSteerAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(true);
     }
 
     private MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName) {
@@ -65,7 +65,7 @@ public class MK4IModule implements IModule {
     public void resetByEncoder() {
         Rotation2d steerEncoderAbsoluteAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(true);
         mk4IModuleActions.resetSteerAngle(steerEncoderAbsoluteAngle);
-        startSteerAngle = steerEncoderAbsoluteAngle;//todo - do better
+        startSteerAngle = steerEncoderAbsoluteAngle;
     }
 
 
@@ -123,17 +123,9 @@ public class MK4IModule implements IModule {
 
         inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
 
-        //todo - check if needs angle modulo
-        if (Math.abs(inputs.steerEncoderAngle.getRadians() - inputs.steerMotorAngle.getRadians()) > MK4IModuleConstants.ENCODER_TO_MOTOR_TOLERANCE.getRadians()) {
-            startSteerAngle = inputs.steerMotorAngle;
-            inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
-        }
-        else {
-            AtomicInteger index = new AtomicInteger();
-            inputs.odometryUpdatesDriveDistance =
-                    drivePositionQueue.stream().map(driveDistance -> getDriveDistanceWithCoupling(
-                            driveDistance, inputs.odometryUpdatesSteerAngle[index.getAndIncrement()])).toArray(Rotation2d[]::new);
-        }
+        AtomicInteger count = new AtomicInteger();
+        inputs.odometryUpdatesDriveDistance =
+                drivePositionQueue.stream().map(drive -> getDriveDistanceWithCoupling(drive, inputs.odometryUpdatesSteerAngle[count.getAndIncrement()])).toArray(Rotation2d[]::new);
 
         steerPositionQueue.clear();
         drivePositionQueue.clear();
@@ -141,8 +133,7 @@ public class MK4IModule implements IModule {
 
     private Rotation2d getDriveDistanceWithCoupling(double driveDistanceRot, Rotation2d steerAngle) {
         return Rotation2d.fromRotations(//todo - check about direction of coupling
-                driveDistanceRot + (steerAngle.getRotations() - startSteerAngle.getRotations()) * MK4IModuleConstants.COUPLING_RATIO
+                driveDistanceRot - ((steerAngle.getRotations() - startSteerAngle.getRotations()) * MK4IModuleConstants.COUPLING_RATIO)
         );
     }
-
 }

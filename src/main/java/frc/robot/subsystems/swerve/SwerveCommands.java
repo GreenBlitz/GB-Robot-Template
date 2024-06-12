@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
@@ -32,7 +33,7 @@ public class SwerveCommands {
     private static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(
             true,
             SWERVE,
-            SWERVE::runModuleSteerByVoltage,
+            voltage -> SWERVE.runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
             SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP,
             SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
     );

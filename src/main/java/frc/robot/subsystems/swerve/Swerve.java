@@ -207,8 +207,8 @@ public class Swerve extends GBSubsystem {
      *
      * @param voltage - voltage to run the swerve module steer
      */
-    public void runModuleSteerByVoltage(double voltage) { //todo - add modules chooser
-        modules[0].runSteerMotorByVoltage(voltage);
+    public void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
+        modules[module.index].runSteerMotorByVoltage(voltage);
     }
 
     /**

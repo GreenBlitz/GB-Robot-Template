@@ -66,7 +66,7 @@ public class GyroSimulation {
      * @return the ranged angle
      */
     private Rotation2d rangeAngle(Rotation2d angle) {
-        return Rotation2d.fromDegrees(MathUtil.angleModulus(angle.getRadians()));
+        return Rotation2d.fromRadians(MathUtil.angleModulus(angle.getRadians()));
     }
 
 }

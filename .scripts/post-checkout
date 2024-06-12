@@ -1,7 +1,22 @@
 #!/bin/bash
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NO_COLOR='\033[0m'
+
 echo "*********************************************************"
 echo "Running git post-checkout hook. Running Git Pull... "
-echo "*********************************************************"
+echo "---------------------------------------------------------"
 
-# run git pull
-git pull;
+# Run git pull and capture the output and exit status
+output=$(git pull 2>&1)
+status=$?
+
+# Check the status and print the output in the corresponding color
+if [ $status -eq 0 ]; then
+    echo -e "${GREEN}$output${NO_COLOR}"
+else
+    echo -e "${RED}$output${NO_COLOR}"
+fi
+
+echo "*********************************************************"

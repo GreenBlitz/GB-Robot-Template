@@ -215,7 +215,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
      * @return the ranged angle
      */
     private Rotation2d rangeAngle(Rotation2d angle) {
-        return Rotation2d.fromDegrees(MathUtil.angleModulus(angle.getRadians()));
+        return Rotation2d.fromRadians(MathUtil.angleModulus(angle.getRadians()));
     }
 
 }

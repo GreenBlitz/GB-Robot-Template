@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
@@ -155,12 +154,8 @@ public class Swerve extends GBSubsystem {
     }
 
     public Rotation2d getAbsoluteHeading() {
-        double inputtedHeading = MathUtil.inputModulus(
-                gyroInputs.gyroYaw.getDegrees(),
-                -MathConstants.HALF_CIRCLE.getDegrees(),
-                MathConstants.HALF_CIRCLE.getDegrees()
-        );
-        return Rotation2d.fromDegrees(inputtedHeading);
+        double inputtedHeadingRads = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
+        return Rotation2d.fromRadians(inputtedHeadingRads);
     }
 
     public Rotation2d getRelativeHeading() {

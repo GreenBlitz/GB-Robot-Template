@@ -45,6 +45,7 @@ public class Module {
         module.updateInputs(moduleInputs);
         moduleInputs.driveMotorDistanceMeters = toDriveMeters(moduleInputs.driveMotorAngle);
         moduleInputs.driveMotorVelocityMeters = toDriveMeters(moduleInputs.driveMotorVelocity);
+        moduleInputs.isAtTargetState = isAtTargetState();
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
         reportAlertsToLog();
     }
@@ -94,17 +95,27 @@ public class Module {
     }
 
     public boolean isAtTargetState() {
-        boolean isAtAngle = MathUtil.isNear(
-                MathUtil.angleModulus(getTargetState().angle.getRadians()),
-                MathUtil.angleModulus(getCurrentAngle().getRadians()),
-                ModuleConstants.ANGLE_TOLERANCE.getRadians()
-        );
-        boolean isAtVelocity = MathUtil.isNear(
-                getTargetState().speedMetersPerSecond,
+        boolean isAtAngle = isAtAngle(getTargetState().angle);
+        boolean isAtVelocity = isAtVelocity(targetState.speedMetersPerSecond);
+        return isAtAngle && isAtVelocity;
+    }
+
+    public boolean isAtVelocity(double targetSpeedMetersPerSecond) {
+        return MathUtil.isNear(
+                targetSpeedMetersPerSecond,
                 getDriveVelocityMetersPerSecond(),
                 ModuleConstants.SPEED_TOLERANCE_METERS_PER_SECOND
         );
-        return isAtAngle && isAtVelocity;
+    }
+
+    public boolean isAtAngle(Rotation2d targetAngle) {
+        boolean isAtAngle = MathUtil.isNear(
+                MathUtil.angleModulus(targetAngle.getRadians()),
+                MathUtil.angleModulus(getCurrentAngle().getRadians()),
+                ModuleConstants.ANGLE_TOLERANCE.getRadians()
+        );
+        boolean isStopping = moduleInputs.steerMotorVelocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
+        return isAtAngle && isStopping;
     }
 
 
@@ -155,6 +166,14 @@ public class Module {
 
     public void setDriveMotorClosedLoop(boolean closedLoop) {
         driveMotorClosedLoop = closedLoop;
+    }
+
+    public void runSteerMotorByVoltage(double voltage) {
+        module.runSteerMotorByVoltage(voltage);
+    }
+
+    public void runDriveMotorByVoltage(double voltage) {
+        module.runDriveMotorByVoltage(voltage);
     }
 
 }

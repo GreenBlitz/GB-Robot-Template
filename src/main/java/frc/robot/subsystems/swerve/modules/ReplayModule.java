@@ -16,7 +16,13 @@ public class ReplayModule implements IModule {
     public void resetByEncoder() {}
 
     @Override
-    public void setTargetOpenLoopVelocity(double voltage) {}
+    public void runSteerMotorByVoltage(double voltage) {}
+
+    @Override
+    public void runDriveMotorByVoltage(double voltage) {}
+
+    @Override
+    public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {}
 
     @Override
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {}

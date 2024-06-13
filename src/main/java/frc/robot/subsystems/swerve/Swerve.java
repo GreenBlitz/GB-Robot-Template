@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
@@ -198,6 +199,26 @@ public class Swerve extends GBSubsystem {
     }
 
     /**
+     * Runs swerve module around itself for Sysid Steer Calibration
+     *
+     * @param voltage - voltage to run the swerve module steer
+     */
+    public void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
+        modules[module.index].runSteerMotorByVoltage(voltage);
+    }
+
+    /**
+     * Runs swerve module around itself for Sysid Steer Calibration
+     *
+     * @param voltage - voltage to run the swerve module drive
+     */
+    public void runModulesDriveByVoltage(double voltage) {
+        for (Module module : modules) {
+            module.runDriveMotorByVoltage(voltage);
+        }
+    }
+
+    /**
      * Point all wheels in same angle
      *
      * @param targetAngle - angle to point to
@@ -213,8 +234,8 @@ public class Swerve extends GBSubsystem {
      * Lock swerve wheels in X position, so it's hard to move it.
      */
     public void lockSwerve() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
 
         modules[0].setTargetState(frontLeftBackRight);
         modules[1].setTargetState(frontRightBackLeft);
@@ -222,6 +243,20 @@ public class Swerve extends GBSubsystem {
         modules[3].setTargetState(frontLeftBackRight);
     }
 
+    /**
+     * Put swerve wheels in circle position, so it's ready to spin
+     */
+    public void pointWheelsInCircle() {
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+
+        modules[0].setTargetState(frontLeftBackRight);
+        modules[1].setTargetState(frontRightBackLeft);
+        modules[2].setTargetState(frontRightBackLeft);
+        modules[3].setTargetState(frontLeftBackRight);
+    }
+
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "IsModulesAtStates")
     public boolean isModulesAtStates() {
         boolean isAtStates = true;
         for (Module module : modules) {

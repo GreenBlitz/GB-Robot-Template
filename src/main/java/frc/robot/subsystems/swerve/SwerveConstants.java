@@ -75,14 +75,13 @@ public class SwerveConstants {
     );
 
     public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);
-    //todo - think about what better: Profile PID controller VS Regular PID controller
+    //todo - move to regular pid
     public static final ProfiledPIDController PROFILED_ROTATION_PID_DEGREES_CONTROLLER = new ProfiledPIDController(
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kP,
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kI,
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kD,
             ROTATION_CONSTRAINTS
     );
-
     static {
         PROFILED_ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
                 -MathConstants.HALF_CIRCLE.getDegrees(),

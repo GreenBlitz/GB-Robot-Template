@@ -19,9 +19,9 @@ import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInpu
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 import frc.utils.mirrorutils.MirrorablePose2d;
 import frc.utils.mirrorutils.MirrorableRotation2d;
-import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -379,7 +379,7 @@ public class Swerve extends GBSubsystem {
      */
     // todo - maybe move some of work to SwerveMath class
     private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, RoborioUtils.getAverageRoborioCycleTime());
+        return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
     }
 
 

@@ -81,7 +81,7 @@ public class SwerveCommands {
         Command command = new FunctionalCommand(
                 () -> {},
                 SWERVE::lockSwerve,
-                inter -> {},
+                interrupted -> {},
                 SWERVE::isModulesAtStates,
                 SWERVE
         );
@@ -93,7 +93,7 @@ public class SwerveCommands {
         Command command = new FunctionalCommand(
                 () -> {},
                 SWERVE::readySpinSwerve,
-                inter -> {},
+                interrupted -> {},
                 SWERVE::isModulesAtStates,
                 SWERVE
         );
@@ -105,7 +105,7 @@ public class SwerveCommands {
         Command command = new FunctionalCommand(
                 () -> {},
                 () -> SWERVE.pointWheels(wheelsAngle),
-                inter -> {},
+                interrupted -> {},
                 SWERVE::isModulesAtStates,
                 SWERVE
         );

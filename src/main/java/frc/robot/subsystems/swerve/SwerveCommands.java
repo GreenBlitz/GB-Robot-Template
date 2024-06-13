@@ -62,7 +62,7 @@ public class SwerveCommands {
 
     public static Command getWheelRadiusCalibrationCommand() {
         Command command = new SequentialCommandGroup(
-                getReadySpinSwerveCommand(),
+                getPointWheelsInCircleCommand(),
                 new WheelRadiusCharacterization(
                         SWERVE,
                         SwerveConstants.DRIVE_RADIUS_METERS,
@@ -89,10 +89,10 @@ public class SwerveCommands {
         return command;
     }
 
-    public static Command getReadySpinSwerveCommand() {
+    public static Command getPointWheelsInCircleCommand() {
         Command command = new FunctionalCommand(
                 () -> {},
-                SWERVE::readySpinSwerve,
+                SWERVE::pointWheelsInCircle,
                 interrupted -> {},
                 SWERVE::isModulesAtStates,
                 SWERVE

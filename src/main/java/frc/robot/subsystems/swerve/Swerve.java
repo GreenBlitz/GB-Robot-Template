@@ -246,7 +246,7 @@ public class Swerve extends GBSubsystem {
     /**
      * Put swerve wheels in circle position, so it's ready to spin
      */
-    public void readySpinSwerve() {
+    public void pointWheelsInCircle() {
         SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
         SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
 

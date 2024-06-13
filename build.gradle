@@ -106,7 +106,6 @@ configurations.configureEach {
     exclude group: "edu.wpi.first.wpilibj"
 }
 
-
 test {
     useJUnitPlatform()
     systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
@@ -165,6 +164,13 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     doLast {
         println("---Added Pre Commit Git Hook Script---")
     }
+}
+
+tasks.register('runComputerLogic', JavaExec) {
+    group = "Execution"
+    description = "Run the main class in CMDHandler"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "${rootProject.rootDir}/src/main/java/frc/utils/ComputerStartup.java"
 }
 
 tasks.register('SetConnectionTypeIP') {

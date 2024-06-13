@@ -97,7 +97,7 @@ public class SwerveCommands {
                 SWERVE::isModulesAtStates,
                 SWERVE
         );
-        command.setName("Ready Spin");
+        command.setName("Point Wheels In Circle");
         return command;
     }
 

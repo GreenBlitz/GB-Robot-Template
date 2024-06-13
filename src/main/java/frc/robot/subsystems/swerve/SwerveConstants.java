@@ -82,7 +82,7 @@ public class SwerveConstants {
     );
 
     public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);//todo - calibrate
-    //todo - calibrate for real (maybe use regular pid in sim)
+    //todo - calibrate for real (use regular and not profile)
     public static final ProfiledPIDController PROFILED_ROTATION_PID_DEGREES_CONTROLLER = new ProfiledPIDController(
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kP,
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kI,

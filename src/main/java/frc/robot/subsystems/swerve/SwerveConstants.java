@@ -27,7 +27,7 @@ public class SwerveConstants {
     public static final double DRIVE_SYSID_CALIBRATION_RAMP_RATE = 0.5;
 
 
-    public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 1.5; // todo - calibrate
+    public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 3; // todo - calibrate
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
 

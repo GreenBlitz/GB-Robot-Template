@@ -27,7 +27,7 @@ public class SwerveConstants {
     public static final double DRIVE_SYSID_CALIBRATION_RAMP_RATE = 0.5;
 
 
-    public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 1.25; // todo - calibrate
+    public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 1.5; // todo - calibrate
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
 
@@ -76,11 +76,11 @@ public class SwerveConstants {
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
 
-    public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);//todo - calibrate
+    public static final PIDConstants ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);//todo - calibrate
     public static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(
-            PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kP,
-            PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kI,
-            PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kD
+            ROTATION_PID_DEGREES_CONSTANTS.kP,
+            ROTATION_PID_DEGREES_CONSTANTS.kI,
+            ROTATION_PID_DEGREES_CONSTANTS.kD
     );
     static {
         ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(

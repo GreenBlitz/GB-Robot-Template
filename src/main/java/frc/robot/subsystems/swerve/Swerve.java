@@ -339,7 +339,7 @@ public class Swerve extends GBSubsystem {
     }
 
     // todo - maybe move some of work to SwerveMath class
-    private ChassisSpeeds applyAimAssistRotationVelocity(ChassisSpeeds currentSpeeds) {
+    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds) {
         if (currentState.getAimAssist().equals(AimAssist.NONE)) {
             return currentSpeeds;
         }
@@ -411,7 +411,7 @@ public class Swerve extends GBSubsystem {
     public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         chassisSpeeds = swerveState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
 
-        chassisSpeeds = applyAimAssistRotationVelocity(chassisSpeeds);
+        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds);
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {

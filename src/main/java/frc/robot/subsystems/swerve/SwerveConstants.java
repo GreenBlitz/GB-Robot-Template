@@ -43,6 +43,8 @@ public class SwerveConstants {
     public static final Rotation2d MAX_ROTATION_ACCELERATION_PER_SECOND = Rotation2d.fromDegrees(360);
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
+    public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 1.25; // todo - calibrate
+
 
     public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
     public static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;

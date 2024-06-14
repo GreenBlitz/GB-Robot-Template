@@ -234,14 +234,14 @@ public class SwerveCommands {
     }
 
     private static Command getPathfindToPoseCommand(MirrorablePose2d targetPose, PathConstraints pathConstraints) {
-        Pose2d currentPose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
-        Pose2d targetMirroredPose = targetPose.get();
+        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
+        Pose2d targetBluePose = targetPose.get();
 
-        double distance = currentPose.getTranslation().getDistance(targetMirroredPose.getTranslation());
-        if (distance < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-            return PathPlannerUtils.createOnTheFlyPathCommand(currentPose, targetMirroredPose, pathConstraints);
+        double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
+        if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
+            return PathPlannerUtils.createOnTheFlyPathCommand(currentBluePose, targetBluePose, pathConstraints);
         }
-        return AutoBuilder.pathfindToPose(targetMirroredPose, pathConstraints);
+        return AutoBuilder.pathfindToPose(targetBluePose, pathConstraints);
     }
 
     private static Command getPIDToPoseCommand(MirrorablePose2d targetPose) {

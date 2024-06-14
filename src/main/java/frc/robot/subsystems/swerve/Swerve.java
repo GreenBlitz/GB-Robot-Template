@@ -19,9 +19,9 @@ import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInpu
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 import frc.utils.mirrorutils.MirrorablePose2d;
 import frc.utils.mirrorutils.MirrorableRotation2d;
-import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -155,12 +155,8 @@ public class Swerve extends GBSubsystem {
     }
 
     public Rotation2d getAbsoluteHeading() {
-        double inputtedHeading = MathUtil.inputModulus(
-                gyroInputs.gyroYaw.getDegrees(),
-                -MathConstants.HALF_CIRCLE.getDegrees(),
-                MathConstants.HALF_CIRCLE.getDegrees()
-        );
-        return Rotation2d.fromDegrees(inputtedHeading);
+        double inputtedHeadingRads = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
+        return Rotation2d.fromRadians(inputtedHeadingRads);
     }
 
     public Rotation2d getRelativeHeading() {
@@ -203,6 +199,26 @@ public class Swerve extends GBSubsystem {
     }
 
     /**
+     * Runs swerve module around itself for Sysid Steer Calibration
+     *
+     * @param voltage - voltage to run the swerve module steer
+     */
+    public void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
+        modules[module.index].runSteerMotorByVoltage(voltage);
+    }
+
+    /**
+     * Runs swerve module around itself for Sysid Steer Calibration
+     *
+     * @param voltage - voltage to run the swerve module drive
+     */
+    public void runModulesDriveByVoltage(double voltage) {
+        for (Module module : modules) {
+            module.runDriveMotorByVoltage(voltage);
+        }
+    }
+
+    /**
      * Point all wheels in same angle
      *
      * @param targetAngle - angle to point to
@@ -218,8 +234,8 @@ public class Swerve extends GBSubsystem {
      * Lock swerve wheels in X position, so it's hard to move it.
      */
     public void lockSwerve() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
 
         modules[0].setTargetState(frontLeftBackRight);
         modules[1].setTargetState(frontRightBackLeft);
@@ -227,6 +243,20 @@ public class Swerve extends GBSubsystem {
         modules[3].setTargetState(frontLeftBackRight);
     }
 
+    /**
+     * Put swerve wheels in circle position, so it's ready to spin
+     */
+    public void pointWheelsInCircle() {
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+
+        modules[0].setTargetState(frontLeftBackRight);
+        modules[1].setTargetState(frontRightBackLeft);
+        modules[2].setTargetState(frontRightBackLeft);
+        modules[3].setTargetState(frontLeftBackRight);
+    }
+
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "IsModulesAtStates")
     public boolean isModulesAtStates() {
         boolean isAtStates = true;
         for (Module module : modules) {
@@ -349,7 +379,7 @@ public class Swerve extends GBSubsystem {
      */
     // todo - maybe move some of work to SwerveMath class
     private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, RoborioUtils.getAverageRoborioCycleTime());
+        return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
     }
 
 

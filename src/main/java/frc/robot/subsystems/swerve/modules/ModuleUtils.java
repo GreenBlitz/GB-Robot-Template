@@ -8,10 +8,16 @@ import frc.utils.Conversions;
 public class ModuleUtils {
 
     public enum ModuleName {
-        FRONT_LEFT,
-        FRONT_RIGHT,
-        BACK_LEFT,
-        BACK_RIGHT
+        FRONT_LEFT(0),
+        FRONT_RIGHT(1),
+        BACK_LEFT(2),
+        BACK_RIGHT(3);
+
+        public final int index;
+
+        ModuleName(int index) {
+            this.index = index;
+        }
     }
 
     public static String getLoggingPath(ModuleName moduleName) {

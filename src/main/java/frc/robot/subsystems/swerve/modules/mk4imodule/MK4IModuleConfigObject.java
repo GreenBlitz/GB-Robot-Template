@@ -24,7 +24,7 @@ class MK4IModuleConfigObject {
             CTREDeviceID steerEncoderID
     ) {
 
-        this.steerEncoder = new CANcoder(steerEncoderID.getID(), steerEncoderID.getBus());
+        this.steerEncoder = new CANcoder(steerEncoderID.ID(), steerEncoderID.bus());
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
                 new TalonFXWrapper(driveMotorDeviceID),
                 new TalonFXWrapper(steerMotorDeviceID)

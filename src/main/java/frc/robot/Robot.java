@@ -10,11 +10,12 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveState;
+import frc.utils.CTREUtils.CANStatus;
 import frc.utils.DriverStationUtils;
 import frc.utils.batteryutils.Battery;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
-import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -57,9 +58,10 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotPeriodic() {
-        RoborioUtils.updateRioUtils(); // Better to be first
+        CycleTimeUtils.updateCycleTime(); // Better to be first
         CommandScheduler.getInstance().run();
         RobotContainer.POSE_ESTIMATOR.periodic();
+        CANStatus.logAllBusStatuses();
     }
 
     @Override

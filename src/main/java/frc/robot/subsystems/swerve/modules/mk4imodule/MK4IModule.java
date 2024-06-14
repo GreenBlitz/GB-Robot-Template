@@ -68,6 +68,16 @@ public class MK4IModule implements IModule {
         startSteerAngle = steerEncoderAbsoluteAngle;
     }
 
+    @Override
+    public void runSteerMotorByVoltage(double voltage) {
+        mk4IModuleActions.setTargetSteerVoltage(voltage);
+    }
+
+    @Override
+    public void runDriveMotorByVoltage(double voltage) {
+        mk4IModuleActions.setTargetDriveVoltage(voltage);
+    }
+
 
     @Override
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
@@ -78,7 +88,7 @@ public class MK4IModule implements IModule {
                 ModuleConstants.MAX_SPEED_PER_SECOND,
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        mk4IModuleActions.setTargetOpenLoopVelocity(voltage);
+        mk4IModuleActions.setTargetDriveVoltage(voltage);
     }
 
     @Override

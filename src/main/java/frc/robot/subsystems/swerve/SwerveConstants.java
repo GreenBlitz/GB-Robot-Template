@@ -5,11 +5,9 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.MathConstants;
 
@@ -76,21 +74,14 @@ public class SwerveConstants {
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
 
-    public static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            MAX_ROTATIONAL_SPEED_PER_SECOND.getDegrees(),
-            MAX_ROTATION_ACCELERATION_PER_SECOND.getDegrees()
-    );
-
     public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);//todo - calibrate
-    //todo - calibrate for real (use regular and not profile)
-    public static final ProfiledPIDController PROFILED_ROTATION_PID_DEGREES_CONTROLLER = new ProfiledPIDController(
+    public static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kP,
             PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kI,
-            PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kD,
-            ROTATION_CONSTRAINTS
+            PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kD
     );
     static {
-        PROFILED_ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
+        ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
                 -MathConstants.HALF_CIRCLE.getDegrees(),
                 MathConstants.HALF_CIRCLE.getDegrees()
         );

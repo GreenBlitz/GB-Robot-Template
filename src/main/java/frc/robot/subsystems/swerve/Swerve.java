@@ -141,7 +141,7 @@ public class Swerve extends GBSubsystem {
 
 
     protected void resetRotationController() {
-        SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.reset((POSE_ESTIMATOR.getCurrentPose().getRotation().getDegrees()));
+        SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.reset();
     }
 
     // Don't use this, only for pose estimation!!!
@@ -332,7 +332,7 @@ public class Swerve extends GBSubsystem {
     // todo - maybe move some of work to SwerveMath class
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(MirrorableRotation2d targetAngle) {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
-        return Rotation2d.fromDegrees(SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.calculate(
+        return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getDegrees(),
                 targetAngle.get().getDegrees()
         ));

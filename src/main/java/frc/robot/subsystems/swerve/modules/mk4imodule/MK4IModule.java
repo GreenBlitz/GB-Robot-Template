@@ -121,6 +121,7 @@ public class MK4IModule implements IModule {
         inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal(false).getValue();
 
         inputs.driveMotorAngle = mk4IModuleStatus.getDriveMotorLatencyPosition(false);
+        //todo - maybe add coupling, and reset at start for the drive distance
         inputs.driveMotorVelocity = mk4IModuleStatus.getDriveMotorLatencyVelocity(false);
         inputs.driveMotorAcceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
         inputs.driveMotorCurrent = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();

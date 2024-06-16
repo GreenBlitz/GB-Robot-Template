@@ -340,12 +340,12 @@ public class Swerve extends GBSubsystem {
     }
 
     // todo - maybe move some of work to SwerveMath class
-    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds) {
-        if (currentState.getAimAssist().equals(AimAssist.NONE)) {
+    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds, SwerveState swerveState) {
+        if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
             return currentSpeeds;
         }
         //PID
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentState.getAimAssist().targetAngleSupplier.get());
+        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(swerveState.getAimAssist().targetAngleSupplier.get());
 
         //Magnitude Factor
         double driveMagnitude = // todo - move to math
@@ -368,8 +368,8 @@ public class Swerve extends GBSubsystem {
         return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond, clampedAngularVelocity);
     }
 
-    private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds) {
-        if (currentState.getDriveMode() == DriveMode.SELF_RELATIVE) {
+    private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+        if (swerveState.getDriveMode() == DriveMode.SELF_RELATIVE) {
             return chassisSpeeds;
         }
         else {
@@ -419,9 +419,9 @@ public class Swerve extends GBSubsystem {
     }
 
     public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds);
+        chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 
-        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds);
+        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, swerveState);
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {

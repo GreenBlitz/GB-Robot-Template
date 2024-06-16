@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletimeutils.CycleTimeUtils;
@@ -367,13 +368,22 @@ public class Swerve extends GBSubsystem {
         return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond, clampedAngularVelocity);
     }
 
+    private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+        if (currentState.getDriveMode() == DriveMode.SELF_RELATIVE) {
+            return chassisSpeeds;
+        }
+        else {
+            return fieldRelativeSpeedsToSelfRelativeSpeeds(chassisSpeeds);
+        }
+    }
+
     //todo - move to drive mode or to SwerveMath class
-    public static ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
+    private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getDriveRelativeAngle());
     }
 
     // todo - maybe move some of work to SwerveMath class
-    public static Rotation2d getDriveRelativeAngle() {
+    public Rotation2d getDriveRelativeAngle() {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
     }
@@ -409,7 +419,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = swerveState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
+        chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds);
 
         chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds);
         chassisSpeeds = discretize(chassisSpeeds);

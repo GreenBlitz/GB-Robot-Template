@@ -12,7 +12,7 @@ import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
 class MK4IModuleConstants {
 
-    public static final double COUPLING_RATIO = -0.59;//todo - need to be +
+    public static final double COUPLING_RATIO = 0.59;
 
     private static final InvertedValue DRIVE_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive;
     private static final InvertedValue STEER_MOTOR_INVERTED_VALUE = InvertedValue.CounterClockwise_Positive;

@@ -141,7 +141,7 @@ public class Swerve extends GBSubsystem {
 
 
     protected void resetRotationController() {
-        SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.reset((POSE_ESTIMATOR.getCurrentPose().getRotation().getDegrees()));
+        SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.reset();
     }
 
     // Don't use this, only for pose estimation!!!
@@ -332,22 +332,39 @@ public class Swerve extends GBSubsystem {
     // todo - maybe move some of work to SwerveMath class
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(MirrorableRotation2d targetAngle) {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
-        return Rotation2d.fromDegrees(SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.calculate(
+        return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getDegrees(),
                 targetAngle.get().getDegrees()
         ));
     }
 
     // todo - maybe move some of work to SwerveMath class
-    private Rotation2d getAimAssistThetaVelocity(AimAssist aimAssist) {
+    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds) {
         if (currentState.getAimAssist().equals(AimAssist.NONE)) {
-            return new Rotation2d();
+            return currentSpeeds;
         }
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(aimAssist.targetAngleSupplier.get());
-        //todo - make value have same range like joystick
+        //PID
+        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentState.getAimAssist().targetAngleSupplier.get());
+
+        //Magnitude Factor
+        double driveMagnitude = // todo - move to math
+                Math.sqrt((currentSpeeds.vyMetersPerSecond * currentSpeeds.vyMetersPerSecond) + (currentSpeeds.vxMetersPerSecond * currentSpeeds.vxMetersPerSecond));
+        double angularVelocityRads =
+                pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+
+        //Joystick Output
+        double angularVelocityWithJoystick = angularVelocityRads + currentSpeeds.omegaRadiansPerSecond;
+
+        //Clamp
+        double clampedAngularVelocity = MathUtil.clamp(
+                angularVelocityWithJoystick,
+                -SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians(),
+                SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians()
+        );
+
+        //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
         //todo - distance factor
-        //todo - current robot velocity factor
-        return pidVelocity;
+        return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond, clampedAngularVelocity);
     }
 
     //todo - move to drive mode or to SwerveMath class
@@ -394,7 +411,7 @@ public class Swerve extends GBSubsystem {
     public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         chassisSpeeds = swerveState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
 
-        chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity(swerveState.getAimAssist()).getRadians();//todo - clamp
+        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds);
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {

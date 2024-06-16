@@ -173,6 +173,12 @@ tasks.register('runComputerLogic', JavaExec) {
     main = "${rootProject.rootDir}/src/main/java/frc/utils/applicationsutils/OnDeploy.java"
 }
 
+tasks.register('deployWithComputerLogic') {
+    dependsOn("deploy")
+    dependsOn("runComputerLogic")
+    tasks.findByName("runComputerLogic").mustRunAfter("deploy")
+}
+
 tasks.register('SetConnectionTypeIP') {
     doLast {
         int PING_TIMEOUT_MILLISECONDS = 1000

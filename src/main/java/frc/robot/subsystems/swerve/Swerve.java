@@ -488,9 +488,9 @@ public class Swerve extends GBSubsystem {
 
     // todo - maybe move some of work to SwerveMath class
     public boolean isAtPosition(MirrorablePose2d targetPose) {
-        Pose2d mirroredPose = targetPose.get();
-        return isAtXAxisPosition(mirroredPose.getX())
-                && isAtYAxisPosition(mirroredPose.getY())
+        Pose2d targetBluePose = targetPose.get();
+        return isAtXAxisPosition(targetBluePose.getX())
+                && isAtYAxisPosition(targetBluePose.getY())
                 && isAtAngle(targetPose.getRotation()
         );
     }

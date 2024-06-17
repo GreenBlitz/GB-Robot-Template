@@ -6,10 +6,10 @@ public class OnDeploy {
 
 
     public static void main(String[] args) {
-        startupLogic();
+        startComputerPrograms();
     }
 
-    private static void startupLogic() {
+    private static void startComputerPrograms() {
         //to be continued...
     }
 

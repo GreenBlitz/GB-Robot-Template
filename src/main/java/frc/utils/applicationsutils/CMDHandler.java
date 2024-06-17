@@ -14,9 +14,13 @@ public class CMDHandler {
     private static final String ERROR_MESSAGE = "Unable to execute: ";
 
     public static void runCMDCommand(String command) {
+        runCMDCommand(CMD_DEFAULT_DIRECTORY, command);
+    }
+
+    public static void runCMDCommand(String directory, String command) {
         Runtime runtime = Runtime.getRuntime();
         try {
-            runtime.exec(new String[]{APPLICATION, CMD_DEFAULT_DIRECTORY, command});
+            runtime.exec(new String[]{APPLICATION, directory, command});
         } catch (IOException exception) {
             System.out.println(ERROR_MESSAGE + command);// can't be logged because on computer side
         }
@@ -27,7 +31,10 @@ public class CMDHandler {
      *                 example: "frc/utils/applicationsutils/CMDHandler.java"
      */
     public static void runJavaClass(String javaPath) {
-        runCMDCommand("java " + PATH_TO_JAVA_DIRECTORY + javaPath);
+        int lastSlash = javaPath.lastIndexOf('/');
+        String className = javaPath.substring(lastSlash);
+        String packageName = javaPath.substring(0, lastSlash);
+        runCMDCommand(packageName ,"java " + className);
     }
 
     /**

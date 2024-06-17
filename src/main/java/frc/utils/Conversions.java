@@ -153,6 +153,17 @@ public class Conversions {
         return frequency / HUNDRED_MS_PER_SEC;
     }
 
+
+    /**
+     * Converts a micro seconds to seconds
+     *
+     * @param microSeconds the micro seconds
+     * @return the seconds
+     */
+    public static double microSecondsToSeconds(double microSeconds) {
+        return microSeconds / 1e6;
+    }
+
     /**
      * Converts revolutions to distance.
      *

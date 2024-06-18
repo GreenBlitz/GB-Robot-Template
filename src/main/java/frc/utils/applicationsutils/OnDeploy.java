@@ -9,7 +9,7 @@ public class OnDeploy {
     }
 
     private static void startComputerPrograms() {
-
+        CMDHandler.runPythonClass("keyboard_to_nt.py");
     }
 
 }

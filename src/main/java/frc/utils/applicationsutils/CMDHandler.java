@@ -6,8 +6,8 @@ import java.nio.file.Path;
 public class CMDHandler {
 
     public static final String REPOSITORY_PATH = Path.of("").toAbsolutePath().toString();
-    public static final String PATH_TO_PYTHON_DIRECTORY = REPOSITORY_PATH + "/src/main/python/";
-    public static final String PATH_TO_JAVA_DIRECTORY = REPOSITORY_PATH + "/src/main/java/";
+    public static final String PATH_TO_PYTHON_DIRECTORY = REPOSITORY_PATH + "/src/main/python";
+    public static final String PATH_TO_JAVA_DIRECTORY = REPOSITORY_PATH + "/src/main/java";
 
     private static final String APPLICATION = "cmd.exe";
     private static final String CMD_DIRECTORY = "/c";
@@ -34,7 +34,7 @@ public class CMDHandler {
         int lastSlash = javaPath.lastIndexOf('/');
         String className = javaPath.substring(lastSlash + 1);
         String packageName = javaPath.substring(0, lastSlash);
-        runCMDCommand(PATH_TO_JAVA_DIRECTORY + packageName, "java " + className);
+        runCMDCommand(PATH_TO_JAVA_DIRECTORY + "/" + packageName, "java " + className);
     }
 
     /**
@@ -52,6 +52,7 @@ public class CMDHandler {
      *                   example: "keyboard/keyboard_to_nt.py"
      */
     public static void runPythonClass(String pythonPath) {
+        System.out.println(PATH_TO_PYTHON_DIRECTORY + "     " + "py " + pythonPath);
         runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath);
     }
 }

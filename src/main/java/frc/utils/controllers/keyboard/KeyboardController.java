@@ -1,7 +1,9 @@
 package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.utils.CMDHandler;
+import frc.robot.Robot;
+import frc.robot.constants.RobotConstants;
+import frc.utils.applicationsutils.CMDHandler;
 import frc.utils.dashboard.LoggedTableBoolean;
 
 
@@ -15,7 +17,7 @@ public class KeyboardController {
 
     private static final double KEY_PRESSED_VALUE = 0.5;
 
-    private static final String KEYBOARD_TO_NETWORK_TABLES_PATH = "py " + CMDHandler.PATH_TO_PYTHON_DIRECTORY + "/keyboard_to_nt.py";
+    private static final String KEYBOARD_TO_NETWORK_TABLES_CLASS = "keyboard_to_nt.py";
 
     public final Trigger
             ESC,
@@ -30,7 +32,9 @@ public class KeyboardController {
             NUMPAD_0, NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9;
 
     public KeyboardController() {
-        CMDHandler.runCMDCommand(KEYBOARD_TO_NETWORK_TABLES_PATH);
+        if (Robot.isSimulation() && RobotConstants.ENABLE_KEYBOARD) {
+            CMDHandler.runPythonClass(KEYBOARD_TO_NETWORK_TABLES_CLASS);
+        }
 
         this.ESC = new Trigger(new LoggedTableBoolean("Keyboard", "Keys/esc", false)::get);
 
@@ -128,11 +132,9 @@ public class KeyboardController {
     public double getValueByButtons(Trigger positiveValue, Trigger negativeValue, double value) {
         if (positiveValue.getAsBoolean()) {
             return value;
-        }
-        else if (negativeValue.getAsBoolean()) {
+        } else if (negativeValue.getAsBoolean()) {
             return -value;
-        }
-        else {
+        } else {
             return 0;
         }
     }

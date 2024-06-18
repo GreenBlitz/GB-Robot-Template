@@ -113,7 +113,7 @@ public class MK4IModule implements IModule {
     public void updateInputs(ModuleInputsAutoLogged inputs) {
         inputs.allComponentsConnected = mk4IModuleStatus.refreshAllSignals().isOK();
 
-        inputs.steerEncoderAngle = Rotation2d.fromDegrees(mk4IModuleStatus.getSteerEncoderAbsolutePosition(false).getDegrees());
+        inputs.steerEncoderAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(false);
         inputs.steerEncoderVelocity = Rotation2d.fromRotations(mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue());
         inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal(false).getValue();
 
@@ -126,7 +126,7 @@ public class MK4IModule implements IModule {
                 mk4IModuleStatus.getDriveMotorLatencyPosition(false).getRotations(),
                 inputs.steerMotorAngle
         );
-        inputs.driveMotorVelocity = getDriveDistanceWithoutCoupling(
+        inputs.driveMotorVelocityWithoutCoupling = getDriveDistanceWithoutCoupling(
                 mk4IModuleStatus.getDriveMotorLatencyVelocity(false).getRotations(),
                 inputs.steerMotorVelocity
         );

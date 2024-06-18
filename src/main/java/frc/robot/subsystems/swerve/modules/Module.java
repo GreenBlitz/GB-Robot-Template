@@ -44,7 +44,7 @@ public class Module {
     private void updateAllInputs() {
         module.updateInputs(moduleInputs);
         moduleInputs.driveMotorDistanceMeters = toDriveMeters(moduleInputs.driveMotorAngleWithoutCoupling);
-        moduleInputs.driveMotorVelocityMeters = toDriveMeters(moduleInputs.driveMotorVelocity);
+        moduleInputs.driveMotorVelocityMeters = toDriveMeters(moduleInputs.driveMotorVelocityWithoutCoupling);
         moduleInputs.isAtTargetState = isAtTargetState();
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
         reportAlertsToLog();
@@ -83,7 +83,7 @@ public class Module {
     }
 
     private double getDriveVelocityMetersPerSecond() {
-        return ModuleUtils.toDriveMeters(moduleInputs.driveMotorVelocity);
+        return ModuleUtils.toDriveMeters(moduleInputs.driveMotorVelocityWithoutCoupling);
     }
 
     private Rotation2d getCurrentAngle() {

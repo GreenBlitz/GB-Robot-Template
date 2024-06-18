@@ -1,9 +1,11 @@
 package frc.utils.calibration.staticcharacterization;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
@@ -21,18 +23,32 @@ public class StaticCharacterizationObject {
 
     private final DoubleSupplier velocitySupplier;
 
-    private double ks;
+    private double kgPlusKs;
+    private double kgMinusKs;
 
     public StaticCharacterizationObject(GBSubsystem subsystem, Consumer<Double> voltageConsumer,
             DoubleSupplier velocitySupplier) {
         this.subsystem = subsystem;
         this.voltageConsumer = voltageConsumer;
         this.velocitySupplier = velocitySupplier;
-        this.ks = 0;
+        this.kgPlusKs = 0;
+        this.kgMinusKs = 0;
     }
 
-    private void setKs(double ks) {
-        this.ks = ks;
+    private void setKgPlusKs(double kgPlusKs) {
+        this.kgPlusKs = kgPlusKs;
+    }
+
+    private void setKgMinusKs(double kgMinusKs) {
+        this.kgMinusKs = kgMinusKs;
+    }
+
+    private double calculateKg() {
+        return kgMinusKs + kgPlusKs;
+    }
+
+    private double calculateKs() {
+        return kgPlusKs - calculateKg();
     }
 
     /**
@@ -43,7 +59,7 @@ public class StaticCharacterizationObject {
      * @return the command
      */
     public Command getFindKsCommand() {
-        return new FindKs(subsystem, voltageConsumer, velocitySupplier, this::setKs);
+        return new FindKs(subsystem, voltageConsumer, velocitySupplier, this::setKgPlusKs);
     }
 
     /**
@@ -52,15 +68,21 @@ public class StaticCharacterizationObject {
      * IMPORTANT: the command return KG of the current position of the system. If you're dealing with an arm system you need
      * to multiply the provided KG by cos(currentAngleOfSystem) when 0 is in parallel to the ground to get real KG.
      *
-     * @param stillVoltage - voltage to keep system still
+     * @param maxStillVoltage - max voltage to keep system still
      * @return the command
      */
-    public Command getFindKgCommand(double stillVoltage) {
-        return getFindKgCommand(() -> stillVoltage);
+    public Command getFindKgCommand(double maxStillVoltage) {
+        setKgPlusKs(maxStillVoltage);
+        return getFindKgCommand(() -> maxStillVoltage);
     }
 
     private Command getFindKgCommand(DoubleSupplier stillVoltageSupplier) {
-        return new FindKg(subsystem, stillVoltageSupplier, voltageConsumer, velocitySupplier);
+        return new SequentialCommandGroup(
+                new FindKg(subsystem, stillVoltageSupplier, voltageConsumer, velocitySupplier, this::setKgMinusKs),
+                new InstantCommand(() -> Logger.recordOutput(
+                        StaticCharacterizationConstants.LOG_PATH + "KG OF " + subsystem.getName(), calculateKg()
+                ))
+        );
     }
 
     /**
@@ -73,7 +95,10 @@ public class StaticCharacterizationObject {
         return new SequentialCommandGroup(
                 getFindKsCommand(),
                 new WaitCommand(StaticCharacterizationConstants.TIME_BETWEEN_COMMANDS),
-                getFindKgCommand(() -> ks)
+                getFindKgCommand(() -> kgPlusKs),
+                new InstantCommand(() -> Logger.recordOutput(
+                        StaticCharacterizationConstants.LOG_PATH + "KS OF " + subsystem.getName(), calculateKs()
+                ))
         );
     }
 

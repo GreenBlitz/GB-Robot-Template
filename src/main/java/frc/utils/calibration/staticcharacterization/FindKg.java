@@ -12,6 +12,7 @@ import java.util.function.DoubleSupplier;
 class FindKg extends Command {
 
     private final Consumer<Double> voltageConsumer;
+    private final Consumer<Double> setKgMinusKs;
 
     private final DoubleSupplier velocitySupplier;
 
@@ -28,9 +29,10 @@ class FindKg extends Command {
     private double cycleCounter;
 
     public FindKg(GBSubsystem subsystem, DoubleSupplier stillVoltage, Consumer<Double> voltageConsumer,
-            DoubleSupplier velocitySupplier) {
+            DoubleSupplier velocitySupplier, Consumer<Double> setKgMinusKs) {
         this.timer = new Timer();
         this.voltageConsumer = voltageConsumer;
+        this.setKgMinusKs = setKgMinusKs;
         this.velocitySupplier = velocitySupplier;
         this.stillVoltage = stillVoltage;
         this.subsystemName = subsystem.getName();
@@ -68,8 +70,9 @@ class FindKg extends Command {
         voltageConsumer.accept(lastVoltage);
         lastVoltage = Math.max(lastVoltage, 0);
         timer.stop();
+        setKgMinusKs.accept(lastVoltage);
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
-        Logger.recordOutput(StaticCharacterizationConstants.LOG_PATH + "KG OF " + subsystemName, toLog + lastVoltage);
+        Logger.recordOutput(StaticCharacterizationConstants.LOG_PATH + "KG MINUS KS OF " + subsystemName, toLog + lastVoltage);
     }
 
 }

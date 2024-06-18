@@ -69,7 +69,7 @@ class FindKs extends Command {
         timer.stop();
         updateKs.accept(lastVoltage);
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
-        Logger.recordOutput(StaticCharacterizationConstants.LOG_PATH + "KS OF " + subsystemName, toLog + lastVoltage);
+        Logger.recordOutput(StaticCharacterizationConstants.LOG_PATH + "KG PLUS KS OF " + subsystemName, toLog + lastVoltage);
     }
 
 }

@@ -32,8 +32,8 @@ class MK4IModuleActions {
 
 
     public void stop() {
-        steerMotor.stopMotor();
         driveMotor.stopMotor();
+        steerMotor.stopMotor();
     }
 
     public void setBrake(boolean brake) {
@@ -42,6 +42,10 @@ class MK4IModuleActions {
         steerMotor.setNeutralMode(neutralModeValue);
     }
 
+
+    public void resetDriveAngle(Rotation2d angle) {
+        driveMotor.setPosition(angle.getRotations());
+    }
 
     public void resetSteerAngle(Rotation2d angle) {
         steerMotor.setPosition(angle.getRotations());

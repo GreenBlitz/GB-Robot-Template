@@ -34,7 +34,6 @@ public class CMDHandler {
         int lastSlash = javaPath.lastIndexOf('/');
         String className = javaPath.substring(lastSlash + 1);
         String packageName = javaPath.substring(0, lastSlash);
-        System.out.println(PATH_TO_JAVA_DIRECTORY + packageName + "     ,       " + "java " + className);
         runCMDCommand(PATH_TO_JAVA_DIRECTORY + packageName, "java " + className);
     }
 

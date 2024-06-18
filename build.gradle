@@ -170,17 +170,17 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     }
 }
 
-tasks.register('runComputerLogic', JavaExec) {
+tasks.register('runComputerPrograms', JavaExec) {
     group = "Execution"
     description = "Run the main class in OnDeploy"
     classpath = sourceSets.main.runtimeClasspath
     main = "${rootProject.rootDir}/src/main/java/frc/utils/applicationsutils/OnDeploy.java"
 }
 
-tasks.register('deployWithComputerLogic') {
+tasks.register('deployWithComputerPrograms') {
     dependsOn("deploy")
-    dependsOn("runComputerLogic")
-    tasks.findByName("runComputerLogic").mustRunAfter("deploy")
+    dependsOn("runComputerPrograms")
+    tasks.findByName("runComputerPrograms").mustRunAfter("deploy")
 }
 
 tasks.register('SetConnectionTypeIP') {

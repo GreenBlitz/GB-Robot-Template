@@ -106,7 +106,6 @@ configurations.configureEach {
     exclude group: "edu.wpi.first.wpilibj"
 }
 
-
 test {
     useJUnitPlatform()
     systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
@@ -169,6 +168,19 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     doLast {
         println("---Added Pre Commit Git Hook Script---")
     }
+}
+
+tasks.register('runComputerPrograms', JavaExec) {
+    group = "Execution"
+    description = "Run the main class in OnDeploy"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "${rootProject.rootDir}/src/main/java/frc/utils/applicationsutils/OnDeploy.java"
+}
+
+tasks.register('deployWithComputerPrograms') {
+    dependsOn("deploy")
+    dependsOn("runComputerPrograms")
+    tasks.findByName("runComputerPrograms").mustRunAfter("deploy")
 }
 
 tasks.register('SetConnectionTypeIP') {

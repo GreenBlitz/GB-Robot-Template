@@ -13,7 +13,7 @@ class FindKs extends Command {
 
     private final Consumer<Double> voltageConsumer;
 
-    private final Consumer<Double> updateKs;
+    private final Consumer<Double> setKgPlusKs;
 
     private final DoubleSupplier velocitySupplier;
 
@@ -30,11 +30,11 @@ class FindKs extends Command {
     private double cycleCounter;
 
     public FindKs(GBSubsystem subsystem, double startingVoltage, Consumer<Double> voltageConsumer, DoubleSupplier velocitySupplier,
-            Consumer<Double> updateKs) {
+            Consumer<Double> setKgPlusKs) {
         this.timer = new Timer();
         this.voltageConsumer = voltageConsumer;
         this.velocitySupplier = velocitySupplier;
-        this.updateKs = updateKs;
+        this.setKgPlusKs = setKgPlusKs;
         this.subsystemName = subsystem.getName();
         this.startingVoltage = startingVoltage;
         addRequirements(subsystem);
@@ -70,7 +70,7 @@ class FindKs extends Command {
     public void end(boolean interrupted) {
         voltageConsumer.accept(lastVoltage);
         timer.stop();
-        updateKs.accept(lastVoltage);
+        setKgPlusKs.accept(lastVoltage);
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";
         Logger.recordOutput(StaticCharacterizationConstants.LOG_PATH + "KG PLUS KS OF " + subsystemName, toLog + lastVoltage);
     }

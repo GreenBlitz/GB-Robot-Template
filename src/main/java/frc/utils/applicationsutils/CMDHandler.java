@@ -10,20 +10,20 @@ public class CMDHandler {
     public static final String PATH_TO_JAVA_DIRECTORY = REPOSITORY_PATH + "/src/main/java/";
 
     private static final String APPLICATION = "cmd.exe";
-    private static final String CMD_DEFAULT_DIRECTORY = "/c";
+    private static final String CMD_DIRECTORY = "/c";
     private static final String ERROR_MESSAGE = "Unable to execute: ";
 
     public static void runCMDCommand(String command) {
-        runCMDCommand(CMD_DEFAULT_DIRECTORY, command);
-    }
-
-    public static void runCMDCommand(String directory, String command) {
         Runtime runtime = Runtime.getRuntime();
         try {
-            runtime.exec(new String[]{APPLICATION, directory, command});
+            runtime.exec(new String[]{APPLICATION, CMD_DIRECTORY, command});
         } catch (IOException exception) {
             System.out.println(ERROR_MESSAGE + command);// can't be logged because on computer side
         }
+    }
+
+    public static void runCMDCommand(String directory, String command) {
+        runCMDCommand("cd " + directory + "&&" + command);
     }
 
     /**
@@ -32,9 +32,10 @@ public class CMDHandler {
      */
     public static void runJavaClass(String javaPath) {
         int lastSlash = javaPath.lastIndexOf('/');
-        String className = javaPath.substring(lastSlash);
+        String className = javaPath.substring(lastSlash + 1);
         String packageName = javaPath.substring(0, lastSlash);
-        runCMDCommand(packageName ,"java " + className);
+        System.out.println(PATH_TO_JAVA_DIRECTORY + packageName + "     ,       " + "java " + className);
+        runCMDCommand(PATH_TO_JAVA_DIRECTORY + packageName, "java " + className);
     }
 
     /**
@@ -42,7 +43,7 @@ public class CMDHandler {
      */
     public static void runJavaClass(Class classToRun) {
         String className = classToRun.getName();
-        className = className.replace('.','/');
+        className = className.replace('.', '/');
         className += ".java";
         runJavaClass(className);
     }

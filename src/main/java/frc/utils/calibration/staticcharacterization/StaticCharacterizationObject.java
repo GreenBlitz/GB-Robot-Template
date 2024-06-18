@@ -59,7 +59,14 @@ public class StaticCharacterizationObject {
      * @return the command
      */
     public Command getFindKsCommand() {
-        return new FindKs(subsystem, voltageConsumer, velocitySupplier, this::setKgPlusKs);
+        return getFindKsCommand(0);
+    }
+
+    /**
+     * @param startingVoltage - voltage to start from
+     */
+    public Command getFindKsCommand(double startingVoltage) {
+        return new FindKs(subsystem, startingVoltage, voltageConsumer, velocitySupplier, this::setKgPlusKs);
     }
 
     /**
@@ -92,8 +99,15 @@ public class StaticCharacterizationObject {
      * @return the command
      */
     public Command getFindKsKgCommand() {
+        return getFindKsKgCommand(0);
+    }
+
+    /**
+     * @param startingStillVoltage - voltage to start from
+     */
+    public Command getFindKsKgCommand(double startingStillVoltage) {
         return new SequentialCommandGroup(
-                getFindKsCommand(),
+                getFindKsCommand(startingStillVoltage),
                 new WaitCommand(StaticCharacterizationConstants.TIME_BETWEEN_COMMANDS),
                 getFindKgCommand(() -> kgPlusKs),
                 new InstantCommand(() -> Logger.recordOutput(

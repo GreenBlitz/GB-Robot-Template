@@ -21,25 +21,28 @@ class FindKs extends Command {
 
     private final String subsystemName;
 
+    private final double startingVoltage;
+
     private double currentVoltage;
 
     private double lastVoltage;
 
     private double cycleCounter;
 
-    public FindKs(GBSubsystem subsystem, Consumer<Double> voltageConsumer, DoubleSupplier velocitySupplier,
+    public FindKs(GBSubsystem subsystem, double startingVoltage, Consumer<Double> voltageConsumer, DoubleSupplier velocitySupplier,
             Consumer<Double> updateKs) {
         this.timer = new Timer();
         this.voltageConsumer = voltageConsumer;
         this.velocitySupplier = velocitySupplier;
         this.updateKs = updateKs;
         this.subsystemName = subsystem.getName();
+        this.startingVoltage = startingVoltage;
         addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        currentVoltage = 0;
+        currentVoltage = startingVoltage;
         cycleCounter = 0;
         timer.restart();
     }

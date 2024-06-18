@@ -151,7 +151,9 @@ tasks.register('checkAkitInstall', JavaExec) {
 tasks.register('installLocalGitHookPostCheckout', Copy) {
     from new File(rootProject.rootDir, '.scripts/post-checkout')
     into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
+    filePermissions {
+        unix(0775)
+    }
     doLast {
         println("---Added Post Checkout Git Hook Script---")
     }
@@ -160,7 +162,9 @@ tasks.register('installLocalGitHookPostCheckout', Copy) {
 tasks.register('installLocalGitHookPreCommit', Copy) {
     from new File(rootProject.rootDir, '.scripts/pre-commit')
     into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
+    filePermissions {
+        unix(0775)
+    }
     doLast {
         println("---Added Pre Commit Git Hook Script---")
     }

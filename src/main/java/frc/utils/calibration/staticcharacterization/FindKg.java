@@ -69,7 +69,6 @@ class FindKg extends Command {
     @Override
     public void end(boolean interrupted) {
         voltageConsumer.accept(lastVoltage);
-        lastVoltage = Math.max(lastVoltage, 0);
         timer.stop();
         setKgMinusKs.accept(lastVoltage);
         String toLog = (interrupted ? "got interrupted" : "finished") + ", ";

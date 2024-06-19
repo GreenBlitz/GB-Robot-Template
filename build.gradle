@@ -232,5 +232,6 @@ spotless {
 		greclipse()
 		indentWithTabs(4)
 		trimTrailingWhitespace()
+		endWithNewline()
 	}
 }

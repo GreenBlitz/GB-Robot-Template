@@ -12,6 +12,7 @@ import java.util.function.DoubleSupplier;
 class FindKg extends Command {
 
     private final Consumer<Double> voltageConsumer;
+
     private final Consumer<Double> setKgMinusKs;
 
     private final DoubleSupplier velocitySupplier;
@@ -62,7 +63,7 @@ class FindKg extends Command {
 
     @Override
     public boolean isFinished() {
-        return cycleCounter > StaticCharacterizationConstants.CYCLES_STABLE_NUMBER || lastVoltage <= 0;
+        return cycleCounter > StaticCharacterizationConstants.CYCLES_STABLE_NUMBER;
     }
 
     @Override

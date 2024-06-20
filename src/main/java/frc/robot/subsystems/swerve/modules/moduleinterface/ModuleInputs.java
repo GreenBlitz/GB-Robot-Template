@@ -21,8 +21,8 @@ public class ModuleInputs {//todo-maybe organize in more inputs packages in the 
 
     public double driveMotorDistanceMeters = 0;
     public double driveMotorVelocityMeters = 0;
-    public Rotation2d driveMotorAngle = new Rotation2d();
-    public Rotation2d driveMotorVelocity = new Rotation2d();
+    public Rotation2d driveMotorAngleWithoutCoupling = new Rotation2d();
+    public Rotation2d driveMotorVelocityWithoutCoupling = new Rotation2d();
     public Rotation2d driveMotorAcceleration = new Rotation2d();
     public double driveMotorCurrent = 0;
     public double driveMotorVoltage = 0;

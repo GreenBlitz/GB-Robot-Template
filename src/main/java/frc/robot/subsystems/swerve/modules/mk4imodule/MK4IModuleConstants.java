@@ -12,7 +12,7 @@ import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
 class MK4IModuleConstants {
 
-    public static final double COUPLING_RATIO = 0; //todo - calibrate
+    public static final double COUPLING_RATIO = 0.59;
 
     private static final InvertedValue DRIVE_MOTOR_INVERTED_VALUE = InvertedValue.Clockwise_Positive;
     private static final InvertedValue STEER_MOTOR_INVERTED_VALUE = InvertedValue.CounterClockwise_Positive;
@@ -34,15 +34,14 @@ class MK4IModuleConstants {
     private static final double DRIVE_MOTOR_I = 0;//todo - calibrate
     private static final double DRIVE_MOTOR_D = 0;//todo - calibrate
 
-    protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();//todo - calibrate offsets
 
+    protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();//todo - calibrate offsets
     static {
         ENCODER_CONFIG.MagnetSensor.SensorDirection = STEER_ENCODER_DIRECTION;
         ENCODER_CONFIG.MagnetSensor.AbsoluteSensorRange = STEER_ENCODER_RANGE;
     }
 
     protected static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration();
-
     static {
         DRIVE_MOTOR_CONFIG.MotorOutput.Inverted = DRIVE_MOTOR_INVERTED_VALUE;
         DRIVE_MOTOR_CONFIG.MotorOutput.NeutralMode = DRIVE_MOTOR_NEUTRAL_MODE_VALUE;
@@ -62,7 +61,6 @@ class MK4IModuleConstants {
     }
 
     protected static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
-
     static {
         STEER_MOTOR_CONFIG.MotorOutput.Inverted = STEER_MOTOR_INVERTED_VALUE;
         STEER_MOTOR_CONFIG.MotorOutput.NeutralMode = STEER_MOTOR_NEUTRAL_MODE_VALUE;

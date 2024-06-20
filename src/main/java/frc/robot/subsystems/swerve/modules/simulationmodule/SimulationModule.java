@@ -76,8 +76,8 @@ public class SimulationModule implements IModule {
 
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
-        inputs.driveMotorAngle = simulationModuleStatus.getDrivePositionAngle();
-        inputs.driveMotorVelocity = simulationModuleStatus.getDriveVelocityAnglePerSecond();
+        inputs.driveMotorAngleWithoutCoupling = simulationModuleStatus.getDrivePositionAngle();
+        inputs.driveMotorVelocityWithoutCoupling = simulationModuleStatus.getDriveVelocityAnglePerSecond();
         inputs.driveMotorCurrent = simulationModuleStatus.getDriveCurrent();
         inputs.driveMotorVoltage = simulationModuleStatus.getDriveVoltage();
 
@@ -85,7 +85,7 @@ public class SimulationModule implements IModule {
         inputs.steerMotorVelocity = simulationModuleStatus.getSteerVelocity();
         inputs.steerMotorVoltage = simulationModuleStatus.getSteerVoltage();
 
-        inputs.odometryUpdatesDriveDistance = new Rotation2d[]{inputs.driveMotorAngle};
+        inputs.odometryUpdatesDriveDistance = new Rotation2d[]{inputs.driveMotorAngleWithoutCoupling};
         inputs.odometryUpdatesSteerAngle = new Rotation2d[]{inputs.steerMotorAngle};
     }
 

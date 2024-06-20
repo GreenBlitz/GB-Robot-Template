@@ -8,6 +8,7 @@ import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogge
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MK4IModule implements IModule {
 
@@ -16,6 +17,8 @@ public class MK4IModule implements IModule {
     private final MK4IModuleActions mk4IModuleActions;
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
+
+    private Rotation2d startSteerAngle;
 
     public MK4IModule(ModuleUtils.ModuleName moduleName) {
         MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
@@ -34,6 +37,9 @@ public class MK4IModule implements IModule {
                 mk4IModuleStatus.getDriveMotorPositionSignal(false),
                 mk4IModuleStatus.getDriveMotorVelocitySignal(false)
         );
+
+        this.startSteerAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(true);
+        mk4IModuleActions.resetDriveAngle(new Rotation2d()); // for drive distance calculation
     }
 
     private MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName) {
@@ -58,7 +64,9 @@ public class MK4IModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        mk4IModuleActions.resetSteerAngle(mk4IModuleStatus.getSteerEncoderAbsolutePosition(true));
+        Rotation2d steerEncoderAbsoluteAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(true);
+        mk4IModuleActions.resetSteerAngle(steerEncoderAbsoluteAngle);
+        startSteerAngle = steerEncoderAbsoluteAngle;
     }
 
     @Override
@@ -105,30 +113,43 @@ public class MK4IModule implements IModule {
     public void updateInputs(ModuleInputsAutoLogged inputs) {
         inputs.allComponentsConnected = mk4IModuleStatus.refreshAllSignals().isOK();
 
-        inputs.steerEncoderAngle = Rotation2d.fromDegrees(
-                mk4IModuleStatus.getSteerEncoderAbsolutePosition(false).getDegrees()
-        );
-        inputs.steerEncoderVelocity = Rotation2d.fromRotations(
-                mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue()
-        );
+        inputs.steerEncoderAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(false);
+        inputs.steerEncoderVelocity = Rotation2d.fromRotations(mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue());
         inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal(false).getValue();
-
-        inputs.driveMotorAngle = mk4IModuleStatus.getDriveMotorLatencyPosition(false);
-        inputs.driveMotorVelocity = mk4IModuleStatus.getDriveMotorLatencyVelocity(false);
-        inputs.driveMotorAcceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
-        inputs.driveMotorCurrent = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
-        inputs.driveMotorVoltage = mk4IModuleStatus.getDriveMotorVoltageSignal(false).getValue();
 
         inputs.steerMotorAngle = mk4IModuleStatus.getSteerMotorLatencyPosition(false);
         inputs.steerMotorVelocity = mk4IModuleStatus.getSteerMotorLatencyVelocity(false);
         inputs.steerMotorAcceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);
         inputs.steerMotorVoltage = mk4IModuleStatus.getSteerMotorVoltageSignal(false).getValue();
 
-        inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        inputs.driveMotorAngleWithoutCoupling = getDriveDistanceWithoutCoupling(
+                mk4IModuleStatus.getDriveMotorLatencyPosition(false).getRotations(),
+                inputs.steerMotorAngle
+        );
+        inputs.driveMotorVelocityWithoutCoupling = getDriveDistanceWithoutCoupling(
+                mk4IModuleStatus.getDriveMotorLatencyVelocity(false).getRotations(),
+                inputs.steerMotorVelocity
+        );
+        inputs.driveMotorAcceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
+        inputs.driveMotorCurrent = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
+        inputs.driveMotorVoltage = mk4IModuleStatus.getDriveMotorVoltageSignal(false).getValue();
+
         inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+
+        AtomicInteger count = new AtomicInteger();
+        inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(drive -> getDriveDistanceWithoutCoupling(
+                drive,
+                inputs.odometryUpdatesSteerAngle[count.getAndIncrement()]
+        )).toArray(Rotation2d[]::new);
 
         steerPositionQueue.clear();
         drivePositionQueue.clear();
+    }
+
+    private Rotation2d getDriveDistanceWithoutCoupling(double driveDistanceRot, Rotation2d steerAngle) {
+        return Rotation2d.fromRotations(
+                driveDistanceRot - ((steerAngle.getRotations() - startSteerAngle.getRotations()) * MK4IModuleConstants.COUPLING_RATIO)
+        );
     }
 
 }

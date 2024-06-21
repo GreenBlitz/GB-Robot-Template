@@ -11,7 +11,7 @@ public enum DriveSpeed {
     ),
     SLOW(
             NORMAL.maxTranslationSpeedMetersPerSecond * SwerveConstants.SLOW_DRIVE_MODE_FACTOR,
-            Rotation2d.fromDegrees(NORMAL.maxRotationSpeedPerSecond.getDegrees() * SwerveConstants.SLOW_DRIVE_MODE_FACTOR)
+            NORMAL.maxRotationSpeedPerSecond.times(SwerveConstants.SLOW_DRIVE_MODE_FACTOR)
     );
 
     public final double maxTranslationSpeedMetersPerSecond;

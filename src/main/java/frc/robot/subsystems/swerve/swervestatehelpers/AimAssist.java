@@ -53,10 +53,10 @@ public enum AimAssist {
     //Todo - Maybe in kinda math util or pose util or swerveMath
     private MirrorableRotation2d getTargetAngleFromTargetTranslation(MirrorableTranslation3d targetPose2d) {
         Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
-        Translation2d targetMirroredPose = targetPose2d.get().toTranslation2d();
+        Translation2d targetBluePose = targetPose2d.get().toTranslation2d();
         double wantedAngleRadians = Math.atan2(
-                targetMirroredPose.getY() - currentBluePose.getY(),
-                targetMirroredPose.getX() - currentBluePose.getX()
+                targetBluePose.getY() - currentBluePose.getY(),
+                targetBluePose.getX() - currentBluePose.getX()
         );
         return MirrorableRotation2d.fromRadians(wantedAngleRadians, false);
     }

@@ -3,18 +3,20 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.mirrorutils.MirrorablePose2d;
 import frc.utils.mirrorutils.MirrorableRotation2d;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -28,15 +30,48 @@ public class SwerveCommands {
 
     private static final Swerve SWERVE = RobotContainer.SWERVE;
 
+    private static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(
+            true,
+            SWERVE,
+            voltage -> SWERVE.runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
+            SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP,
+            SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
+    );
+
+    private static final SysIdCalibrator DRIVE_CALIBRATOR = new SysIdCalibrator(
+            true,
+            SWERVE,
+            SWERVE::runModulesDriveByVoltage,
+            SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
+            SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
+    );
+
+    public static Command getSteerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+        //todo - add coupling handel
+        Command command = STEER_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
+        command.setName("Steer Calibration");
+        return command;
+    }
+
+    // Must start when all wheels looking forward
+    public static Command getDriveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+        Command command = DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
+        command.setName("Drive Calibration");
+        return command;
+    }
+
     public static Command getWheelRadiusCalibrationCommand() {
-        Command command = new WheelRadiusCharacterization(
-                SWERVE,
-                SwerveConstants.DRIVE_RADIUS_METERS,
-                Rotation2d.fromRotations(0.5),
-                SWERVE::getModulesDriveDistances,
-                SWERVE::getAbsoluteHeading,
-                SWERVE::runWheelRadiusCharacterization,
-                SWERVE::stop
+        Command command = new SequentialCommandGroup(
+                getPointWheelsInCircleCommand(),
+                new WheelRadiusCharacterization(
+                        SWERVE,
+                        SwerveConstants.DRIVE_RADIUS_METERS,
+                        SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY,
+                        SWERVE::getModulesDriveDistances,
+                        SWERVE::getAbsoluteHeading,
+                        SWERVE::runWheelRadiusCharacterization,
+                        SWERVE::stop
+                )
         );
         command.setName("Wheel Radius Calibration");
         return command;
@@ -46,7 +81,7 @@ public class SwerveCommands {
         Command command = new FunctionalCommand(
                 () -> {},
                 SWERVE::lockSwerve,
-                inter -> {},
+                interrupted -> {},
                 SWERVE::isModulesAtStates,
                 SWERVE
         );
@@ -54,11 +89,23 @@ public class SwerveCommands {
         return command;
     }
 
+    public static Command getPointWheelsInCircleCommand() {
+        Command command = new FunctionalCommand(
+                () -> {},
+                SWERVE::pointWheelsInCircle,
+                interrupted -> {},
+                SWERVE::isModulesAtStates,
+                SWERVE
+        );
+        command.setName("Point Wheels In Circle");
+        return command;
+    }
+
     public static Command getPointWheelsCommand(MirrorableRotation2d wheelsAngle) {
         Command command = new FunctionalCommand(
                 () -> {},
                 () -> SWERVE.pointWheels(wheelsAngle),
-                inter -> {},
+                interrupted -> {},
                 SWERVE::isModulesAtStates,
                 SWERVE
         );
@@ -187,14 +234,14 @@ public class SwerveCommands {
     }
 
     private static Command getPathfindToPoseCommand(MirrorablePose2d targetPose, PathConstraints pathConstraints) {
-        Pose2d currentPose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
-        Pose2d targetMirroredPose = targetPose.get();
+        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
+        Pose2d targetBluePose = targetPose.get();
 
-        double distance = currentPose.getTranslation().getDistance(targetMirroredPose.getTranslation());
-        if (distance < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-            return PathPlannerUtils.createOnTheFlyPathCommand(currentPose, targetMirroredPose, pathConstraints);
+        double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
+        if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
+            return PathPlannerUtils.createOnTheFlyPathCommand(currentBluePose, targetBluePose, pathConstraints);
         }
-        return AutoBuilder.pathfindToPose(targetMirroredPose, pathConstraints);
+        return AutoBuilder.pathfindToPose(targetBluePose, pathConstraints);
     }
 
     private static Command getPIDToPoseCommand(MirrorablePose2d targetPose) {

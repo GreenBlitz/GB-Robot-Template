@@ -18,11 +18,12 @@ import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 import frc.utils.mirrorutils.MirrorablePose2d;
 import frc.utils.mirrorutils.MirrorableRotation2d;
-import frc.utils.roborioutils.RoborioUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -142,7 +143,7 @@ public class Swerve extends GBSubsystem {
 
 
     protected void resetRotationController() {
-        SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.reset((POSE_ESTIMATOR.getCurrentPose().getRotation().getDegrees()));
+        SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.reset();
     }
 
     // Don't use this, only for pose estimation!!!
@@ -156,12 +157,8 @@ public class Swerve extends GBSubsystem {
     }
 
     public Rotation2d getAbsoluteHeading() {
-        double inputtedHeading = MathUtil.inputModulus(
-                gyroInputs.gyroYaw.getDegrees(),
-                -MathConstants.HALF_CIRCLE.getDegrees(),
-                MathConstants.HALF_CIRCLE.getDegrees()
-        );
-        return Rotation2d.fromDegrees(inputtedHeading);
+        double inputtedHeadingRads = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
+        return Rotation2d.fromRadians(inputtedHeadingRads);
     }
 
     public Rotation2d getRelativeHeading() {
@@ -204,6 +201,26 @@ public class Swerve extends GBSubsystem {
     }
 
     /**
+     * Runs swerve module around itself for Sysid Steer Calibration
+     *
+     * @param voltage - voltage to run the swerve module steer
+     */
+    public void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
+        modules[module.index].runSteerMotorByVoltage(voltage);
+    }
+
+    /**
+     * Runs swerve module around itself for Sysid Steer Calibration
+     *
+     * @param voltage - voltage to run the swerve module drive
+     */
+    public void runModulesDriveByVoltage(double voltage) {
+        for (Module module : modules) {
+            module.runDriveMotorByVoltage(voltage);
+        }
+    }
+
+    /**
      * Point all wheels in same angle
      *
      * @param targetAngle - angle to point to
@@ -219,8 +236,8 @@ public class Swerve extends GBSubsystem {
      * Lock swerve wheels in X position, so it's hard to move it.
      */
     public void lockSwerve() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
 
         modules[0].setTargetState(frontLeftBackRight);
         modules[1].setTargetState(frontRightBackLeft);
@@ -228,6 +245,20 @@ public class Swerve extends GBSubsystem {
         modules[3].setTargetState(frontLeftBackRight);
     }
 
+    /**
+     * Put swerve wheels in circle position, so it's ready to spin
+     */
+    public void pointWheelsInCircle() {
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+
+        modules[0].setTargetState(frontLeftBackRight);
+        modules[1].setTargetState(frontRightBackLeft);
+        modules[2].setTargetState(frontRightBackLeft);
+        modules[3].setTargetState(frontLeftBackRight);
+    }
+
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "IsModulesAtStates")
     public boolean isModulesAtStates() {
         boolean isAtStates = true;
         for (Module module : modules) {
@@ -303,31 +334,57 @@ public class Swerve extends GBSubsystem {
     // todo - maybe move some of work to SwerveMath class
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(MirrorableRotation2d targetAngle) {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
-        return Rotation2d.fromDegrees(SwerveConstants.PROFILED_ROTATION_PID_DEGREES_CONTROLLER.calculate(
+        return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getDegrees(),
                 targetAngle.get().getDegrees()
         ));
     }
 
     // todo - maybe move some of work to SwerveMath class
-    private Rotation2d getAimAssistThetaVelocity(AimAssist aimAssist) {
-        if (currentState.getAimAssist().equals(AimAssist.NONE)) {
-            return new Rotation2d();
+    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds, SwerveState swerveState) {
+        if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
+            return currentSpeeds;
         }
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(aimAssist.targetAngleSupplier.get());
-        //todo - make value have same range like joystick
+        //PID
+        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(swerveState.getAimAssist().targetAngleSupplier.get());
+
+        //Magnitude Factor
+        double driveMagnitude = // todo - move to math
+                Math.sqrt((currentSpeeds.vyMetersPerSecond * currentSpeeds.vyMetersPerSecond) + (currentSpeeds.vxMetersPerSecond * currentSpeeds.vxMetersPerSecond));
+        double angularVelocityRads =
+                pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+
+        //Joystick Output
+        double angularVelocityWithJoystick = angularVelocityRads + currentSpeeds.omegaRadiansPerSecond;
+
+        //Clamp
+        double clampedAngularVelocity = MathUtil.clamp(
+                angularVelocityWithJoystick,
+                -SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians(),
+                SwerveConstants.MAX_ROTATIONAL_SPEED_PER_SECOND.getRadians()
+        );
+
+        //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
         //todo - distance factor
-        //todo - current robot velocity factor
-        return pidVelocity;
+        return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond, clampedAngularVelocity);
+    }
+
+    private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+        if (swerveState.getDriveMode() == DriveMode.SELF_RELATIVE) {
+            return chassisSpeeds;
+        }
+        else {
+            return fieldRelativeSpeedsToSelfRelativeSpeeds(chassisSpeeds);
+        }
     }
 
     //todo - move to drive mode or to SwerveMath class
-    public static ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
+    private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getDriveRelativeAngle());
     }
 
     // todo - maybe move some of work to SwerveMath class
-    public static Rotation2d getDriveRelativeAngle() {
+    public Rotation2d getDriveRelativeAngle() {
         Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
     }
@@ -374,7 +431,7 @@ public class Swerve extends GBSubsystem {
 
         return ChassisSpeeds.discretize(
                 targetSpeeds,
-                RoborioUtils.getDefaultRoborioCycleTime() * timeFactor
+                CycleTimeUtils.getCurrentCycleTime() * timeFactor
         );
     }
 
@@ -395,9 +452,9 @@ public class Swerve extends GBSubsystem {
     }
 
     public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = swerveState.getDriveMode().getDriveModeRelativeChassisSpeeds(chassisSpeeds);
+        chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 
-        chassisSpeeds.omegaRadiansPerSecond += getAimAssistThetaVelocity(swerveState.getAimAssist()).getRadians();//todo - clamp
+        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, swerveState);
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {
@@ -464,9 +521,9 @@ public class Swerve extends GBSubsystem {
 
     // todo - maybe move some of work to SwerveMath class
     public boolean isAtPosition(MirrorablePose2d targetPose) {
-        Pose2d mirroredPose = targetPose.get();
-        return isAtXAxisPosition(mirroredPose.getX())
-                && isAtYAxisPosition(mirroredPose.getY())
+        Pose2d targetBluePose = targetPose.get();
+        return isAtXAxisPosition(targetBluePose.getX())
+                && isAtYAxisPosition(targetBluePose.getY())
                 && isAtAngle(targetPose.getRotation()
         );
     }

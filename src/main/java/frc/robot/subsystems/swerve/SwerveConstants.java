@@ -5,11 +5,9 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.MathConstants;
 
@@ -23,6 +21,17 @@ public class SwerveConstants {
 
     public static final double SIMULATION_TIME_STEP_DISCRETION_FACTOR = 4;
     public static final double REAL_TIME_STEP_DISCRETION_FACTOR = 8;
+
+
+    public static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
+    public static final double STEER_SYSID_CALIBRATION_VOLTAGE_STEP = 1;
+    public static final double STEER_SYSID_CALIBRATION_RAMP_RATE = 0.5;
+    public static final double DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP = 1;
+    public static final double DRIVE_SYSID_CALIBRATION_RAMP_RATE = 0.5;
+
+
+    public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 3; // todo - calibrate
+    public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
 
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);
@@ -40,7 +49,6 @@ public class SwerveConstants {
     public static final Rotation2d MAX_ROTATIONAL_SPEED_PER_SECOND = Rotation2d.fromRadians(10);
     public static final Rotation2d MAX_ROTATION_ACCELERATION_PER_SECOND = Rotation2d.fromDegrees(360);
     public static final Rotation2d MAX_ROTATION_WHILE_MAX_VECTOR = Rotation2d.fromRadians(5.39);
-    public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
 
     public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
@@ -73,28 +81,20 @@ public class SwerveConstants {
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
 
-    public static final TrapezoidProfile.Constraints ROTATION_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            MAX_ROTATIONAL_SPEED_PER_SECOND.getDegrees(),
-            MAX_ROTATION_ACCELERATION_PER_SECOND.getDegrees()
+    public static final PIDConstants ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);//todo - calibrate
+    public static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(
+            ROTATION_PID_DEGREES_CONSTANTS.kP,
+            ROTATION_PID_DEGREES_CONSTANTS.kI,
+            ROTATION_PID_DEGREES_CONSTANTS.kD
     );
-
-    public static final PIDConstants PROFILED_ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);
-    //todo - think about what better: Profile PID controller VS Regular PID controller
-    public static final ProfiledPIDController PROFILED_ROTATION_PID_DEGREES_CONTROLLER = new ProfiledPIDController(
-            PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kP,
-            PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kI,
-            PROFILED_ROTATION_PID_DEGREES_CONSTANTS.kD,
-            ROTATION_CONSTRAINTS
-    );
-
     static {
-        PROFILED_ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
+        ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
                 -MathConstants.HALF_CIRCLE.getDegrees(),
                 MathConstants.HALF_CIRCLE.getDegrees()
         );
     }
 
-    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);
+    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);//todo - calibrate
     public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(
             TRANSLATION_PID_CONSTANTS.kP,
             TRANSLATION_PID_CONSTANTS.kI,
@@ -102,8 +102,8 @@ public class SwerveConstants {
     );
 
 
-    public static final PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);
-    public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);
+    public static final PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);//todo - calibrate
+    public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);//todo - calibrate
     public static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
     public static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
     public static final HolonomicPathFollowerConfig HOLONOMIC_PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
@@ -115,7 +115,6 @@ public class SwerveConstants {
     );
 
     public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
-
     public static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
 
 }

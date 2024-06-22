@@ -40,4 +40,5 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
         // bindings
     }
+
 }

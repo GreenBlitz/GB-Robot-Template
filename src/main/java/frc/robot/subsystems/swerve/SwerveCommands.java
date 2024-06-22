@@ -45,13 +45,14 @@ public class SwerveCommands {
             SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
             SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
     );
+    private static Command command;
 
     public static Command getSteerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-        //todo - add coupling handel
         Command command = STEER_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
         command.setName("Steer Calibration");
         return command;
     }
+
 
     // Must start when all wheels looking forward
     public static Command getDriveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {

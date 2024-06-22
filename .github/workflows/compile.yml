@@ -1,0 +1,23 @@
+name: Compile
+
+on:
+  pull_request:
+    types:
+      - synchronize
+      - opened
+      - reopened
+      - converted_to_draft
+      - edited
+
+jobs:
+  compile:
+    name: Compile
+    runs-on: ubuntu-latest
+    container: wpilib/roborio-cross-ubuntu:2024-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Compile robot code
+        run: ./gradlew compileJava

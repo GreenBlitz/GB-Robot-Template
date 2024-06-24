@@ -1,5 +1,8 @@
 package frc.utils.loggerutils;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public enum LogSaveSpot {
 
     USB(LoggerConstants.USB_LOG_PATH),
@@ -10,5 +13,10 @@ public enum LogSaveSpot {
 
     LogSaveSpot(String savePath) {
         this.savePath = savePath;
+    }
+
+    public boolean isWritable() {
+        Path path = Path.of(this.savePath);
+        return Files.exists(path) && Files.isWritable(path);
     }
 }

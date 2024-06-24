@@ -8,16 +8,13 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class LoggerUtils {
 
     public static void startRealLogger() {
         SignalLogger.enableAutoLogging(LoggerConstants.IS_CTRE_AUTO_LOGGING);
 
-        Path usbPath = Path.of(LogSaveSpot.USB.savePath);
-        if (Files.exists(usbPath) && Files.isWritable(usbPath)) {
+        if (LogSaveSpot.USB.isWritable()) {
             startLoggerOnUSB();
         }
         else {

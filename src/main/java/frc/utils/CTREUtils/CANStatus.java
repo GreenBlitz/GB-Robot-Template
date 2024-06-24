@@ -25,12 +25,13 @@ public class CANStatus {
     }
 
     private static void logBusStatus(CANBus.CANBusStatus busStatus, String name) {
-        Logger.recordOutput(LOG_PATH + name + "/Status", busStatus.Status.getName());
-        Logger.recordOutput(LOG_PATH + name + "/Utilization", busStatus.BusUtilization);
-        Logger.recordOutput(LOG_PATH + name + "/TimesDisconnected", busStatus.BusOffCount);
-        Logger.recordOutput(LOG_PATH + name + "/Full", busStatus.TxFullCount);
-        Logger.recordOutput(LOG_PATH + name + "/ReceiveError", busStatus.REC);
-        Logger.recordOutput(LOG_PATH + name + "/TransmitError", busStatus.TEC);
+        String currentLogPath = LOG_PATH + name;
+        Logger.recordOutput(currentLogPath + "/Status", busStatus.Status.getName());
+        Logger.recordOutput(currentLogPath + "/Utilization", busStatus.BusUtilization);
+        Logger.recordOutput(currentLogPath + "/TimesDisconnected", busStatus.BusOffCount);
+        Logger.recordOutput(currentLogPath + "/Full", busStatus.TxFullCount);
+        Logger.recordOutput(currentLogPath + "/ReceiveError", busStatus.REC);
+        Logger.recordOutput(currentLogPath + "/TransmitError", busStatus.TEC);
     }
 
     private static void reportBusAlerts(CANBus.CANBusStatus busStatus, String name) {

@@ -13,6 +13,7 @@ public class RobotTypeUtils {
     }
 
     public enum RobotType {
+
         REAL,
         SIMULATION,
         REPLAY;

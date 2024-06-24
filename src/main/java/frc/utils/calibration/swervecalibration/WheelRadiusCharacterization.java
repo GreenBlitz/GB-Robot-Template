@@ -20,23 +20,15 @@ import java.util.function.Supplier;
 public class WheelRadiusCharacterization extends Command {
 
     private final Supplier<Rotation2d> gyroAngleSupplier;
-
     private final Supplier<Rotation2d[]> wheelDriveDistanceSupplier;
-
     private final Consumer<Rotation2d> velocityControl;
-
     private final Rotation2d characterizationSpeed;
-
     private final Runnable onEnd;
-
     private final double driveRadiusMeters;
 
     private Rotation2d[] startWheelPositions;
-
     private double lastGyroYawRads = 0.0;
-
     private double accumGyroYawRads = 0.0;
-
     private double wheelRadiusMeters = 0.0;
 
     public WheelRadiusCharacterization(
@@ -90,12 +82,10 @@ public class WheelRadiusCharacterization extends Command {
     @Override
     public void end(boolean interrupted) {
         onEnd.run();
-        if (accumGyroYawRads <= MathConstants.FULL_CIRCLE.getRadians()) {
-            Logger.recordOutput(WheelRadiusConstants.LOG_PATH, "Not enough data for characterization");
-        }
-        else {
-            Logger.recordOutput(WheelRadiusConstants.LOG_PATH, wheelRadiusMeters + " meters");
-        }
+        String output = accumGyroYawRads <= MathConstants.FULL_CIRCLE.getRadians()
+                ? "Not enough data for characterization"
+                : wheelRadiusMeters + " meters";
+        Logger.recordOutput(WheelRadiusConstants.LOG_PATH, output);
     }
 
 }

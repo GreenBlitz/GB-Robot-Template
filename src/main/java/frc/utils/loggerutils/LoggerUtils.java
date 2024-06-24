@@ -16,39 +16,30 @@ public class LoggerUtils {
     public static void startRealLogger() {
         SignalLogger.enableAutoLogging(LoggerConstants.IS_CTRE_AUTO_LOGGING);
 
-        Path usbPath = Path.of(LoggerConstants.USB_LOG_PATH);
+        Path usbPath = Path.of(LogSaveSpot.USB.savePath);
         if (Files.exists(usbPath) && Files.isWritable(usbPath)) {
             startLoggerOnUSB();
         }
         else {
             startLoggerOnRoborio();
-            reportAlertsToLog();
+            reportNoUSBFoundToLog();
         }
     }
 
-    private static void reportAlertsToLog() {
+    private static void reportNoUSBFoundToLog() {
         Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + "/Didn't found USB");
     }
 
-    public static void startLoggerOnUSB() {
-        setLoggingPath(LoggerConstants.USB_LOG_PATH);
-        Logger.addDataReceiver(new NT4Publisher());
-        Logger.start();
-        Logger.recordOutput("Logged In", "USB");
+    private static void startLoggerOnUSB() {
+        startNonReplayLogger(LogSaveSpot.USB);
     }
 
-    public static void startLoggerOnRoborio() {
-        setLoggingPath(LoggerConstants.SAFE_ROBORIO_LOG_PATH);
-        Logger.addDataReceiver(new NT4Publisher());
-        Logger.start();
-        Logger.recordOutput("Logged In", "ROBORIO");
+    private static void startLoggerOnRoborio() {
+        startNonReplayLogger(LogSaveSpot.ROBORIO);
     }
 
     public static void startSimulationLogger() {
-        setLoggingPath(LoggerConstants.SIMULATION_LOG_PATH);
-        Logger.addDataReceiver(new NT4Publisher());
-        Logger.start();
-        Logger.recordOutput("Logged In", "COMPUTER");
+        startNonReplayLogger(LogSaveSpot.COMPUTER);
     }
 
     public static void startReplayLogger() {
@@ -56,6 +47,13 @@ public class LoggerUtils {
         Logger.setReplaySource(new WPILOGReader(logPath));
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_simulation")));
         Logger.start();
+    }
+
+    private static void startNonReplayLogger(LogSaveSpot logSaveSpot) {
+        setLoggingPath(logSaveSpot.savePath);
+        Logger.addDataReceiver(new NT4Publisher());
+        Logger.start();
+        Logger.recordOutput("Logged In", logSaveSpot);
     }
 
     private static void setLoggingPath(String path) {

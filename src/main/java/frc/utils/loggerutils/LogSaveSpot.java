@@ -16,7 +16,7 @@ public enum LogSaveSpot {
     }
 
     public boolean isWritable() {
-        Path path = Path.of(this.savePath);
+        Path path = Path.of(savePath);
         return Files.exists(path) && Files.isWritable(path);
     }
 }

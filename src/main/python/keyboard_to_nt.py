@@ -28,7 +28,7 @@ def is_pressed(event: keyboard.KeyboardEvent):
     return event.event_type == keyboard.KEY_DOWN
 
 
-# def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
+def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
     if event is None or event.name is None:
         return
     elif event.name == "/":

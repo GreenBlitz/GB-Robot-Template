@@ -6,7 +6,7 @@ import java.nio.file.Path;
 public enum LogSaveSpot {
 
     USB(LoggerConstants.USB_LOG_PATH),
-    ROBORIO(LoggerConstants.SAFE_ROBORIO_LOG_PATH),
+    ROBORIO(LoggerConstants.ROBORIO_LOG_PATH),
     COMPUTER(LoggerConstants.SIMULATION_LOG_PATH);
 
     public final String savePath;

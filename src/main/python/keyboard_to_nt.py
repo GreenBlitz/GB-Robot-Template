@@ -17,7 +17,7 @@ import time
 
 TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "KeyboardToNetworkTables"
-DASHBOARD_SERVER = "127.0.0.1"
+DASHBOARD_SERVER_SIMULATION = "127.0.0.1"
 CONNECTION_COOLDOWN_SECONDS = 0.1
 KEYBOARD_CHECKING_COOLDOWN_SECONDS = 0.01
 KEYBOARD_TABLE = "Keyboard"
@@ -28,7 +28,7 @@ def is_pressed(event: keyboard.KeyboardEvent):
     return event.event_type == keyboard.KEY_DOWN
 
 
-def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
+# def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
     if event is None or event.name is None:
         return
     elif event.name == "/":
@@ -44,7 +44,7 @@ def get_table_and_network_table():
 
     print("Setting up NetworkTables client for team {}".format(TEAM_NUMBER))
     network_table_instance.startClient4(CLIENT_NAME)
-    network_table_instance.setServer(DASHBOARD_SERVER)
+    network_table_instance.setServer(DASHBOARD_SERVER_SIMULATION)
     network_table_instance.startDSClient()
 
     print("Waiting for connection to NetworkTables server...")

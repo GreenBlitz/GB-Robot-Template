@@ -1,5 +1,7 @@
 package frc.utils.applicationsutils;
 
+import frc.robot.constants.RobotConstants;
+
 import javax.swing.*;
 
 public class OnDeploy {
@@ -9,7 +11,9 @@ public class OnDeploy {
     }
 
     private static void startComputerPrograms() {
-        CMDHandler.runPythonClass("keyboard_to_nt.py");
+        if (RobotConstants.ENABLE_KEYBOARD) {
+            CMDHandler.runPythonClass("keyboard_to_nt.py");
+        }
     }
 
 }

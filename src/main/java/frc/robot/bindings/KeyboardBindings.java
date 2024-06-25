@@ -5,15 +5,9 @@ import frc.utils.controllers.keyboard.KeyboardController;
 
 public class KeyboardBindings {
 
-    private static KeyboardController KEYBOARD_CONTROLLER;
+    private static final KeyboardController KEYBOARD_CONTROLLER = new KeyboardController();
 
     public static void configureBindings() {
-        KEYBOARD_CONTROLLER = new KeyboardController();
-
-        keyboardButtons();
-    }
-
-    private static void keyboardButtons() {
         KeyboardController usedKeyboard = KEYBOARD_CONTROLLER;
         usedKeyboard.A.onTrue(new PrintCommand("A PRESSED"));
         usedKeyboard.A.onFalse(new PrintCommand("A RELEASED"));

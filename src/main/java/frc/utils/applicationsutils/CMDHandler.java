@@ -52,7 +52,6 @@ public class CMDHandler {
      *                   example: "keyboard/keyboard_to_nt.py"
      */
     public static void runPythonClass(String pythonPath) {
-        System.out.println(PATH_TO_PYTHON_DIRECTORY + "     " + "py " + pythonPath);
         runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath);
     }
 }

@@ -17,7 +17,7 @@ public class KeyboardController {
 
     private static final double KEY_PRESSED_VALUE = 0.5;
 
-    private static final String KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS = "keyboard_to_nt.py";
+    private static final String KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS = "keyboard/keyboard_to_nt_simulation.py";
 
     private static final String KEYBOARD_TABLE = "Keyboard";
     private static final String KEYS_TAB = "Keys/";

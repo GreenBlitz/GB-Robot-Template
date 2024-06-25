@@ -19,6 +19,7 @@ import time
 TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "KeyboardToNetworkTables"
 CONNECTION_TIMEOUT_DURATION = 60
+ONE_SECOND_DURATION = 1
 KEYBOARD_CHECKING_COOLDOWN_SECONDS = 0.01
 KEYBOARD_TABLE = "Keyboard"
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
@@ -49,12 +50,12 @@ def get_table_and_network_table(IP: str):
 
     print("Waiting for connection to NetworkTables server...")
     for i in range(CONNECTION_TIMEOUT_DURATION):
-        time.sleep(1)
+        time.sleep(ONE_SECOND_DURATION)
         if network_table_instance.isConnected():
             break
 
     if not network_table_instance.isConnected():
-        network_table_instance.stopClient()
+        cleanup(network_table_instance)
         sys.exit(0)
 
     table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)

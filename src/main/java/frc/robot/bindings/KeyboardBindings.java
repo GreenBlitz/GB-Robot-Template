@@ -9,6 +9,7 @@ public class KeyboardBindings {
 
     public static void configureBindings() {
         KeyboardController usedKeyboard = KEYBOARD_CONTROLLER;
+
         usedKeyboard.A.onTrue(new PrintCommand("A PRESSED"));
         usedKeyboard.A.onFalse(new PrintCommand("A RELEASED"));
         usedKeyboard.B.onTrue(new PrintCommand("B PRESSED"));

@@ -23,7 +23,6 @@ public class SingleJointedArmSimulation extends MotorSimulation {
         );
     }
 
-    @Override
     public double getCurrent() {
         return armSimulation.getCurrentDrawAmps();
     }

@@ -10,13 +10,13 @@ class BatteryLimiter extends Command {
     private final LinearFilter voltageFilter;
 
     public BatteryLimiter() {
-        this.voltageFilter = LinearFilter.movingAverage(BatteryConstants.NUMBER_OF_VALUES_IN_AVERAGE);
+        this.voltageFilter = LinearFilter.movingAverage(BatteryConstants.NUMBER_OF_VALUES_TAKE_IN_AVERAGE);
     }
 
     @Override
     public void initialize() {
         // Fill linear filter with battery voltage values instead of 1/NUMBER_OF_VALUES_IN_AVERAGE
-        for (int i = 0; i < BatteryConstants.NUMBER_OF_VALUES_IN_AVERAGE; i++) {
+        for (int i = 0; i < BatteryConstants.NUMBER_OF_VALUES_TAKE_IN_AVERAGE; i++) {
             voltageFilter.calculate(Battery.getCurrentVoltage());
         }
     }
@@ -28,7 +28,7 @@ class BatteryLimiter extends Command {
         double currentAverageVoltage = voltageFilter.calculate(Battery.getCurrentVoltage());
         if (currentAverageVoltage <= Battery.getMinimumVoltage()) {
             Battery.reportAlertsToLog();
-            if (!DriverStationUtils.isGame() && RobotConstants.ENABLE_BATTERY_LIMITER) {
+            if (!DriverStationUtils.isMatch() && RobotConstants.ENABLE_BATTERY_LIMITER) {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }
         }

@@ -20,7 +20,6 @@ public class FlywheelSimulation extends MotorSimulation {
         this.flywheelSimulation = new FlywheelSim(LinearSystemId.identifyVelocitySystem(kv, ka), gearbox, gearRatio);
     }
 
-    @Override
     public double getCurrent() {
         return flywheelSimulation.getCurrentDrawAmps();
     }

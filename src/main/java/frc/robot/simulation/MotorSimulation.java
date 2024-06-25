@@ -71,8 +71,6 @@ public abstract class MotorSimulation {
         return Rotation2d.fromRotations(closedLoopReferenceSignal.refresh().getValue());
     }
 
-    public abstract double getCurrent();
-
     protected abstract void setInputVoltage(double voltage);
 
     protected abstract void updateMotor();

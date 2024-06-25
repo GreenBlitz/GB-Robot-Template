@@ -8,8 +8,8 @@ class CycleTimeConstants {
 
     protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 
-    protected static final double DEFAULT_ROBORIO_CYCLE_TIME = 0.02;
+    protected static final double DEFAULT_ROBORIO_CYCLE_TIME_MILLISECONDS = 0.02;
 
-    protected static final double TIME_STEP_TOLERANCE = 0.003;
+    protected static final double TIME_STEP_TOLERANCE_MILLISECONDS = 0.003;
 
 }

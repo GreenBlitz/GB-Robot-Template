@@ -27,7 +27,6 @@ public class ElevatorSimulation extends MotorSimulation {
         );
     }
 
-    @Override
     public double getCurrent() {
         return elevatorSimulation.getCurrentDrawAmps();
     }

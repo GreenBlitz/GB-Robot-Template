@@ -24,7 +24,7 @@ public class LoggerUtils {
     }
 
     private static void reportNoUSBFoundToLog() {
-        Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + "/Didn't found USB");
+        Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + "/Didn't find USB");
     }
 
     private static void startLoggerOnUSB() {

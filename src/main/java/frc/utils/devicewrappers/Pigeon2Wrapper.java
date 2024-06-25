@@ -90,9 +90,9 @@ public class Pigeon2Wrapper extends Pigeon2 {
      */
     //@formatter:on
 
-    private double rollOffSetDeg;
+    private double rollOffSetDegrees;
 
-    private double pitchOffSetDeg;
+    private double pitchOffSetDegrees;
 
     public Pigeon2Wrapper(int id) {
         this(id, Phoenix6Constants.CANBUS_NAME, new Pigeon2Configuration());
@@ -108,8 +108,8 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
     public Pigeon2Wrapper(int id, String busChain, Pigeon2Configuration configuration) {
         super(id, busChain);
-        this.rollOffSetDeg = 0;
-        this.pitchOffSetDeg = 0;
+        this.rollOffSetDegrees = 0;
+        this.pitchOffSetDegrees = 0;
         applyConfiguration(configuration);
     }
 
@@ -133,7 +133,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
      * @param newRoll - the wanted roll of the gyro to have
      */
     public void setRoll(Rotation2d newRoll) {
-        rollOffSetDeg = calculateOffset(newRoll.getDegrees(), getRoll().getValue());
+        rollOffSetDegrees = calculateOffset(newRoll.getDegrees(), getRoll().getValue());
     }
 
     /**
@@ -145,23 +145,23 @@ public class Pigeon2Wrapper extends Pigeon2 {
      * @param newPitch - the wanted pitch of the gyro to have
      */
     public void setPitch(Rotation2d newPitch) {
-        pitchOffSetDeg = calculateOffset(newPitch.getDegrees(), getPitch().getValue());
+        pitchOffSetDegrees = calculateOffset(newPitch.getDegrees(), getPitch().getValue());
     }
 
     public Rotation2d getRollOffSet() {
-        return Rotation2d.fromDegrees(rollOffSetDeg);
+        return Rotation2d.fromDegrees(rollOffSetDegrees);
     }
 
     public Rotation2d getPitchOffSet() {
-        return Rotation2d.fromDegrees(pitchOffSetDeg);
+        return Rotation2d.fromDegrees(pitchOffSetDegrees);
     }
 
     public Rotation2d getAdjustedRoll() {
-        return Rotation2d.fromDegrees(getRoll().getValue() + rollOffSetDeg);
+        return Rotation2d.fromDegrees(getRoll().getValue() + rollOffSetDegrees);
     }
 
     public Rotation2d getAdjustedPitch() {
-        return Rotation2d.fromDegrees(getPitch().getValue() + pitchOffSetDeg);
+        return Rotation2d.fromDegrees(getPitch().getValue() + pitchOffSetDegrees);
     }
 
     /**
@@ -200,12 +200,12 @@ public class Pigeon2Wrapper extends Pigeon2 {
     }
 
     /**
-     * @param newAngleDeg - the wanted angle in degrees
-     * @param currentAngleDeg - the current angle in degrees
+     * @param newAngleDegrees - the wanted angle in degrees
+     * @param currentAngleDegrees - the current angle in degrees
      * @return the offset
      */
-    private double calculateOffset(double newAngleDeg, double currentAngleDeg) {
-        return newAngleDeg - currentAngleDeg;
+    private double calculateOffset(double newAngleDegrees, double currentAngleDegrees) {
+        return newAngleDegrees - currentAngleDegrees;
     }
 
     /**

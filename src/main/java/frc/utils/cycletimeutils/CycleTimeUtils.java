@@ -24,13 +24,13 @@ public class CycleTimeUtils {
     }
 
     private static void reportAlertsToLog() {
-        if (getCurrentCycleTime() > getDefaultCycleTime() + CycleTimeConstants.TIME_STEP_TOLERANCE) {
+        if (getCurrentCycleTime() > getDefaultCycleTime() + CycleTimeConstants.TIME_STEP_TOLERANCE_MILLISECONDS) {
             Logger.recordOutput(CycleTimeConstants.ALERT_LOG_PATH + "CycleOverrunAt", currentTime);
         }
     }
 
     public static double getDefaultCycleTime() {
-        return CycleTimeConstants.DEFAULT_ROBORIO_CYCLE_TIME;
+        return CycleTimeConstants.DEFAULT_ROBORIO_CYCLE_TIME_MILLISECONDS;
     }
 
     public static double getCurrentCycleTime() {

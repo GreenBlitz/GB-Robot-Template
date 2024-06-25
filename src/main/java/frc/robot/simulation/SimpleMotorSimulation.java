@@ -5,6 +5,9 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.utils.cycletimeutils.CycleTimeUtils;
 
+/**
+ * This class uses to simulate subsystems that use simple motor. Rollers and intakes mostly.
+ */
 public class SimpleMotorSimulation extends MotorSimulation {
 
     private final DCMotorSim motorSimulation;
@@ -13,7 +16,6 @@ public class SimpleMotorSimulation extends MotorSimulation {
         this.motorSimulation = new DCMotorSim(gearbox, gearRatio, momentOfInertia);
     }
 
-    @Override
     public double getCurrent() {
         return motorSimulation.getCurrentDrawAmps();
     }

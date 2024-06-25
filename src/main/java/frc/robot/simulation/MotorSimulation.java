@@ -21,15 +21,15 @@ public abstract class MotorSimulation {
 
     private final TalonFXWrapper motor;
 
-    private final TalonFXSimState motorSimState;
+    private final TalonFXSimState motorSimulationState;
 
     private final StatusSignal<Double> closedLoopReferenceSignal;
 
     protected MotorSimulation() {
         REGISTERED_SIMULATIONS.add(this);
         this.motor = new TalonFXWrapper(REGISTERED_SIMULATIONS.size());
-        this.motorSimState = motor.getSimState();
-        this.motorSimState.setSupplyVoltage(Battery.getDefaultBatteryVoltage());
+        this.motorSimulationState = motor.getSimState();
+        this.motorSimulationState.setSupplyVoltage(Battery.getDefaultBatteryVoltage());
         this.closedLoopReferenceSignal = motor.getClosedLoopReference();
         this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / CycleTimeUtils.getDefaultCycleTime());
     }
@@ -41,10 +41,10 @@ public abstract class MotorSimulation {
     }
 
     private void updateSimulation() {
-        setInputVoltage(motorSimState.getMotorVoltage());
+        setInputVoltage(motorSimulationState.getMotorVoltage());
         updateMotor();
-        motorSimState.setRawRotorPosition(getPosition().getRotations());
-        motorSimState.setRotorVelocity(getVelocity().getRotations());
+        motorSimulationState.setRawRotorPosition(getPosition().getRotations());
+        motorSimulationState.setRotorVelocity(getVelocity().getRotations());
     }
 
     public void applyConfiguration(TalonFXConfiguration config) {

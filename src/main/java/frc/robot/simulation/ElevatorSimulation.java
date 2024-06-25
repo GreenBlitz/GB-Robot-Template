@@ -38,12 +38,7 @@ public class ElevatorSimulation extends MotorSimulation {
      */
     @Override
     public Rotation2d getPosition() {
-        return Rotation2d.fromRotations(
-                Conversions.distanceToRevolutions(
-                        getPositionMeters(),
-                        diameterMeters
-                )
-        );
+        return Rotation2d.fromRotations(Conversions.distanceToRevolutions(getPositionMeters(), diameterMeters));
     }
 
     public double getPositionMeters() {
@@ -57,12 +52,7 @@ public class ElevatorSimulation extends MotorSimulation {
      */
     @Override
     public Rotation2d getVelocity() {
-        return Rotation2d.fromRotations(
-                Conversions.distanceToRevolutions(
-                        getVelocityMetersPerSecond(),
-                        diameterMeters
-                )
-        );
+        return Rotation2d.fromRotations(Conversions.distanceToRevolutions(getVelocityMetersPerSecond(), diameterMeters));
     }
 
     public double getVelocityMetersPerSecond() {

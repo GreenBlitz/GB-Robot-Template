@@ -30,12 +30,12 @@ def is_pressed(event: keyboard.KeyboardEvent):
 def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
     if event is None or event.name is None:
         return
-elif event.name == "/":
-table.putBoolean("slash", is_pressed(event))
-elif event.is_keypad:
-table.putBoolean("numpad" + event.name, is_pressed(event))
-else:
-table.putBoolean(event.name.lower(), is_pressed(event))
+    elif event.name == "/":
+        table.putBoolean("slash", is_pressed(event))
+    elif event.is_keypad:
+        table.putBoolean("numpad" + event.name, is_pressed(event))
+    else:
+        table.putBoolean(event.name.lower(), is_pressed(event))
 
 
 def get_table_and_network_table(IP: str):
@@ -50,8 +50,8 @@ def get_table_and_network_table(IP: str):
     while not network_table_instance.isConnected():
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
 
-table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
-return table, network_table_instance
+    table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
+    return table, network_table_instance
 
 
 def cleanup(network_table_instance: ntcore.NetworkTableInstance):

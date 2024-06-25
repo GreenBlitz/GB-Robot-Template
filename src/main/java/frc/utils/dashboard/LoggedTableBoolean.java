@@ -11,10 +11,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardInput;
 public class LoggedTableBoolean implements LoggedDashboardInput {
 
     private final String key;
-    private boolean defaultValue;
-    private boolean value;
     private final LoggableInputs inputs;
     private final NetworkTable booleanTable;
+    private boolean defaultValue;
+    private boolean value;
 
     public LoggedTableBoolean(String table, String key) {
         this(table, key, false);

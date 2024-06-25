@@ -49,7 +49,7 @@ public class CMDHandler {
 
     /**
      * @param pythonPath The path from the java package to the class.
-     *                   example: "keyboard/keyboard_to_nt_real.py"
+     *                   example: "keyboard/keyboard_to_nt_router.py"
      */
     public static void runPythonClass(String pythonPath) {
         runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath);

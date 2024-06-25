@@ -10,7 +10,7 @@ public class RobotConstants {
 
     public static final DriverStation.Alliance SIMULATION_ALLIANCE = DriverStation.Alliance.Blue;
 
-    public static final boolean IS_RUNNING_ON_USB = false;
+    public static final boolean IS_RUNNING_ON_USB_B = false;
 
     public static final boolean ENABLE_KEYBOARD = true;
 

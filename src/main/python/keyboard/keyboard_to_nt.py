@@ -10,6 +10,7 @@
 
 # Lets go Trigon
 
+import sys
 import keyboard
 # if this library is not installed, dont install ntcore but pyntcore
 import ntcore
@@ -17,7 +18,7 @@ import time
 
 TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "KeyboardToNetworkTables"
-CONNECTION_COOLDOWN_SECONDS = 0.1
+CONNECTION_TIMEOUT_DURATION = 60
 KEYBOARD_CHECKING_COOLDOWN_SECONDS = 0.01
 KEYBOARD_TABLE = "Keyboard"
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
@@ -47,8 +48,14 @@ def get_table_and_network_table(IP: str):
     network_table_instance.startDSClient()
 
     print("Waiting for connection to NetworkTables server...")
-    while not network_table_instance.isConnected():
-        time.sleep(CONNECTION_COOLDOWN_SECONDS)
+    for i in range(CONNECTION_TIMEOUT_DURATION):
+        time.sleep(1)
+        if network_table_instance.isConnected():
+            break
+
+    if not network_table_instance.isConnected():
+        network_table_instance.stopClient()
+        sys.exit(0)
 
     table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
     return table, network_table_instance

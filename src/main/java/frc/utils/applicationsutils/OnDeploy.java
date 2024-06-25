@@ -18,7 +18,7 @@ public class OnDeploy {
 
     private static void runKeyboard() {
         if (RobotConstants.IS_RUNNING_ON_USB) {
-            CMDHandler.runPythonClass("keyboard/keyboard_to_nt_usb.py");
+            CMDHandler.runPythonClass("keyboard/keyboard_to_nt_usb_b.py");
         }
         else {
             CMDHandler.runPythonClass("keyboard/keyboard_to_nt_real.py");

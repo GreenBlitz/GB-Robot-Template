@@ -44,7 +44,7 @@ def get_table_and_network_table():
 
     print("Setting up NetworkTables client for team {}".format(TEAM_NUMBER))
     network_table_instance.startClient4(CLIENT_NAME)
-    network_table_instance.setServer(DASHBOARD_SERVER_SIMULATION)
+    network_table_instance.setServer(DASHBOARD_SERVER_USB)
     network_table_instance.startDSClient()
 
     print("Waiting for connection to NetworkTables server...")

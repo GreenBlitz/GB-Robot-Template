@@ -8,7 +8,7 @@ import frc.utils.dashboard.LoggedTableBoolean;
 
 
 /*
- * very much inspired from Trigon code
+ * inspired from Trigon code
  *
  * @author Yoni Kiriaty, Trigon
  *

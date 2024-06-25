@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.utils.cycletimeutils.CycleTimeUtils;
 
 /**
- * This class uses to simulate subsystems that use simple motor. Rollers and intakes mostly.
+ * This class simulates a motor. Used for Subsystems like rollers and intake.
  */
 public class SimpleMotorSimulation extends MotorSimulation {
 

@@ -8,6 +8,8 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import java.nio.file.Path;
+
 
 public class LoggerUtils {
 
@@ -47,15 +49,17 @@ public class LoggerUtils {
     }
 
     private static void startNonReplayLogger(LogSaveSpot logSaveSpot) {
-        setLoggingPath(logSaveSpot.savePath.toString());
+        setLoggingPath(logSaveSpot.savePath);
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", logSaveSpot);
     }
 
-    private static void setLoggingPath(String path) {
-        SignalLogger.setPath(path);
-        Logger.addDataReceiver(new WPILOGWriter(path));
+    private static void setLoggingPath(Path path) {
+        String stringPath = path.toString();
+        SignalLogger.setPath(stringPath);
+        Logger.addDataReceiver(new WPILOGWriter(stringPath));
     }
+
 
 }

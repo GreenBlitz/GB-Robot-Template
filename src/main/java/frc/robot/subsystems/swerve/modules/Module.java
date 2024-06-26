@@ -134,11 +134,6 @@ public class Module {
         );
     }
 
-    public int getLastOdometryUpdateIndex() {
-        return moduleInputs.odometryUpdatesSteerAngle.length - 1;
-    }
-
-
     public void setTargetState(SwerveModuleState targetState) {
         this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
         module.setTargetAngle(this.targetState.angle);

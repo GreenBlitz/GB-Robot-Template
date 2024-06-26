@@ -10,7 +10,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import java.nio.file.Path;
 
-
 public class LoggerUtils {
 
     public static void startRealLogger() {

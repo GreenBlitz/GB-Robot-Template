@@ -61,5 +61,4 @@ public class LoggerUtils {
         Logger.addDataReceiver(new WPILOGWriter(stringPath));
     }
 
-
 }

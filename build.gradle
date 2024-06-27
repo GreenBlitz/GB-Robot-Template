@@ -13,9 +13,10 @@ java {
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
-def RADIO_IP = "10.45.90.2"
+def ROUTER_IP = "10.45.90.2"
 def USB_B_IP = "172.22.11.2"
-def IPS = [RADIO_IP, USB_B_IP]
+def IPS = [ROUTER_IP, USB_B_IP]
+def reachableIP
 
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -170,26 +171,13 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     }
 }
 
-tasks.register('runComputerPrograms', JavaExec) {
-    group = "Execution"
-    description = "Run the main class in OnDeploy"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClassName = "frc.utils.applicationsutils.OnDeploy"
-}
-
-tasks.register('deployWithComputerPrograms') {
-    dependsOn("deploy")
-    dependsOn("runComputerPrograms")
-    tasks.named("runComputerPrograms").mustRunAfter("deploy")
-}
-
-tasks.register('SetConnectionTypeIP') {
+tasks.register('SetReachableIP') {
     doLast {
         int PING_TIMEOUT_MILLISECONDS = 1000
         boolean found = false
         for (int i = 0; i < IPS.size() && !found; i++) {
             if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
-                deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=" + IPS[i])
+                reachableIP = IPS[i]
                 println("Using " + IPS[i])
                 found = true
             }
@@ -200,12 +188,38 @@ tasks.register('SetConnectionTypeIP') {
     }
 }
 
-compileJava.finalizedBy checkAkitInstall
-build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit
-discoverroborio.finalizedBy SetConnectionTypeIP
+tasks.register('SetVisualVMHost'){
+    mustRunAfter('SetReachableIP')
+    doLast {
+        if (reachableIP) {
+            deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=" + reachableIP.toString())
+            println("Using reachable IP: " + reachableIP.toString())
+        } else {
+            println("No reachable IP to set as Host")
+        }
+    }
+}
+
+tasks.register('runComputerPrograms', JavaExec) {
+    group = "Execution"
+    description = "Run the main class in OnDeploy"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClassName = "frc.utils.applicationsutils.OnDeploy"
+}
+
+tasks.register('deployWithComputerPrograms') {
+    dependsOn('deploy')
+    dependsOn('runComputerPrograms')
+    tasks.named('runComputerPrograms').mustRunAfter('deploy')
+}
 
 
-// Spotless formatting
+compileJava.finalizedBy('checkAkitInstall')
+build.dependsOn('installLocalGitHookPostCheckout', 'installLocalGitHookPreCommit')
+discoverroborio.finalizedBy('SetReachableIP')
+SetReachableIP.finalizedBy('SetVisualVMHost')
+
+
 project.build.dependsOn(spotlessApply)
 spotless {
     java {

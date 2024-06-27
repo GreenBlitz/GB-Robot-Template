@@ -135,7 +135,16 @@ public class Module {
     }
 
     public void setTargetState(SwerveModuleState targetState) {
-        this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
+        setTargetState(targetState, true);
+    }
+
+    public void setTargetState(SwerveModuleState targetState, boolean optimize) {
+        if (optimize) {
+            this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
+        }
+        else {
+            this.targetState = targetState;
+        }
         module.setTargetAngle(this.targetState.angle);
         setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle);
     }

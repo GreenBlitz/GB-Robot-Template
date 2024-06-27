@@ -224,10 +224,10 @@ public class Swerve extends GBSubsystem {
      *
      * @param targetAngle - angle to point to
      */
-    public void pointWheels(MirrorableRotation2d targetAngle) {
+    public void pointWheels(MirrorableRotation2d targetAngle, boolean optimize) {
         Rotation2d targetMirroredAngle = targetAngle.get();
         for (Module module : modules) {
-            module.setTargetState(new SwerveModuleState(0, targetMirroredAngle));
+            module.setTargetState(new SwerveModuleState(0, targetMirroredAngle), optimize);
         }
     }
 

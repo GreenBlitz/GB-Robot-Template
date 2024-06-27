@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -56,7 +57,10 @@ public class SwerveCommands {
 
     // Must start when all wheels looking forward
     public static Command getDriveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-        Command command = DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
+        Command command = new SequentialCommandGroup(
+                getPointWheelsCommand(new MirrorableRotation2d(new Rotation2d(), false), false),
+                DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction)
+        );
         command.setName("Drive Calibration");
         return command;
     }
@@ -102,10 +106,10 @@ public class SwerveCommands {
         return command;
     }
 
-    public static Command getPointWheelsCommand(MirrorableRotation2d wheelsAngle) {
+    public static Command getPointWheelsCommand(MirrorableRotation2d wheelsAngle, boolean optimize) {
         Command command = new FunctionalCommand(
                 () -> {},
-                () -> SWERVE.pointWheels(wheelsAngle),
+                () -> SWERVE.pointWheels(wheelsAngle, optimize),
                 interrupted -> {},
                 SWERVE::isModulesAtStates,
                 SWERVE

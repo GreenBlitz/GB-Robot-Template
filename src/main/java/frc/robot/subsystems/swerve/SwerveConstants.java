@@ -23,7 +23,7 @@ public class SwerveConstants {
     public static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
     public static final double STEER_SYSID_CALIBRATION_VOLTAGE_STEP = 1;
     public static final double STEER_SYSID_CALIBRATION_RAMP_RATE = 0.5;
-    public static final double DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP = 1;
+    public static final double DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP = 2;
     public static final double DRIVE_SYSID_CALIBRATION_RAMP_RATE = 0.5;
 
 

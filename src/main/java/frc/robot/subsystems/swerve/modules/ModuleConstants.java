@@ -15,7 +15,7 @@ public class ModuleConstants {
     public static final boolean ENABLE_FOC_DRIVE = true;
     public static final boolean ENABLE_FOC_STEER = true;
 
-    public static final boolean DEFAULT_IS_DRIVE_MOTOR_CLOSED_LOOP = false;
+    public static final boolean DEFAULT_IS_DRIVE_MOTOR_CLOSED_LOOP = false; // todo - move to close probably (ks for couple handel)
     public static final double VOLTAGE_COMPENSATION_SATURATION = Battery.getDefaultBatteryVoltage();
 
     public static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);

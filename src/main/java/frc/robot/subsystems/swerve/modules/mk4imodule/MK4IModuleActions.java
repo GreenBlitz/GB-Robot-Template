@@ -17,7 +17,7 @@ class MK4IModuleActions {
             new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
 
     private final VelocityVoltage driveVelocityRequest =
-            new VelocityVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
+            new VelocityVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE); //todo - VelocityTorqueCurrentFOC (whats better)
 
     private final PositionVoltage steerPositionRequest =
             new PositionVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);

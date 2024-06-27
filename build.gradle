@@ -165,7 +165,7 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
     }
 }
 
-tasks.register('SetReachableIP') {
+tasks.register('setReachableIP') {
     doLast {
         int PING_TIMEOUT_MILLISECONDS = 1000
         boolean found = false
@@ -182,8 +182,8 @@ tasks.register('SetReachableIP') {
     }
 }
 
-tasks.register('SetVisualVMHost') {
-    mustRunAfter('SetReachableIP')
+tasks.register('setVisualVMHost') {
+    mustRunAfter('setReachableIP')
     doLast {
         if (reachableIP) {
             deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=${reachableIP}")
@@ -216,8 +216,8 @@ tasks.register('deployWithComputerPrograms') {
 
 compileJava.finalizedBy('checkAkitInstall')
 build.dependsOn('installLocalGitHookPostCheckout', 'installLocalGitHookPreCommit')
-discoverroborio.finalizedBy('SetReachableIP')
-SetReachableIP.finalizedBy('SetVisualVMHost')
+discoverroborio.finalizedBy('setReachableIP')
+setReachableIP.finalizedBy('setVisualVMHost')
 
 
 project.build.dependsOn(spotlessApply)

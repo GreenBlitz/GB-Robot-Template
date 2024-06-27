@@ -23,13 +23,15 @@ public class SysIdCalibrator {
 
     private final boolean isCTRE;
 
+    //todo - check if comment is right
+
     /**
      * IMPORTANT:
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
      */
     public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts,
-                           double rampRateVoltsPerSecond) {
+            double rampRateVoltsPerSecond) {
         this(
                 isCTRE,
                 subsystem,
@@ -78,7 +80,7 @@ public class SysIdCalibrator {
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
      */
     public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts,
-                           double rampRateVoltsPerSecond, double timeoutSeconds) {
+            double rampRateVoltsPerSecond, double timeoutSeconds) {
         this.usedSubSystem = subsystem;
         this.isCTRE = isCTRE;
 
@@ -120,11 +122,7 @@ public class SysIdCalibrator {
     }
 
     private Command getCTRECommand(Command sysIdCommand) {
-        return new SequentialCommandGroup(
-                new InstantCommand(SignalLogger::start),
-                sysIdCommand,
-                new InstantCommand(SignalLogger::stop)
-        ).handleInterrupt(SignalLogger::stop);
+        return new SequentialCommandGroup(new InstantCommand(SignalLogger::start), sysIdCommand);
     }
 
 }

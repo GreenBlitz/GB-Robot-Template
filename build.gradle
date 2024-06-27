@@ -174,7 +174,7 @@ tasks.register('runComputerPrograms', JavaExec) {
     group = "Execution"
     description = "Run the main class in OnDeploy"
     classpath = sourceSets.main.runtimeClasspath
-    main = "${rootProject.rootDir}/src/main/java/frc/utils/applicationsutils/OnDeploy.java"
+    mainClassName = "frc.utils.applicationsutils.OnDeploy"
 }
 
 tasks.register('deployWithComputerPrograms') {

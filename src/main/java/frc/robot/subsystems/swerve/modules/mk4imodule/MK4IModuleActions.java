@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.modules.mk4imodule;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,8 +16,8 @@ class MK4IModuleActions {
     private final VoltageOut driveVoltageRequest =
             new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
 
-    private final VelocityVoltage driveVelocityRequest =
-            new VelocityVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
+    private final VelocityTorqueCurrentFOC driveVelocityRequest =
+            new VelocityTorqueCurrentFOC(0);
 
     private final PositionVoltage steerPositionRequest =
             new PositionVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);

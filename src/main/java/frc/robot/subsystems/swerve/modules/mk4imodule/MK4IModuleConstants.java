@@ -21,15 +21,10 @@ class MK4IModuleConstants {
     private static final AbsoluteSensorRangeValue STEER_ENCODER_RANGE = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
 
     private static final NeutralModeValue DRIVE_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Brake;
-    private static final NeutralModeValue STEER_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Coast;
+    private static final NeutralModeValue STEER_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Brake;
 
-    private static final double DRIVE_SLIP_CURRENT = 30; //todo - return to 100
-    private static final double STEER_CURRENT_LIMIT = 30;//todo - return to 100
-
-    private static final double DRIVE_MOTOR_P = 3;//todo - calibrate
-    private static final double DRIVE_MOTOR_I = 0;//todo - calibrate
-    private static final double DRIVE_MOTOR_D = 0;//todo - calibrate
-
+    private static final double DRIVE_SLIP_CURRENT = 100; //todo - return to 100
+    private static final double STEER_CURRENT_LIMIT = 40;//todo - return to 100
 
     protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();//todo - calibrate offsets
     static {
@@ -48,12 +43,12 @@ class MK4IModuleConstants {
         DRIVE_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = DRIVE_SLIP_CURRENT;
         DRIVE_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        DRIVE_MOTOR_CONFIG.Slot0.kS = 0.009;//todo - calibrate
-        DRIVE_MOTOR_CONFIG.Slot0.kA = 0.22448;//todo - calibrate
-        DRIVE_MOTOR_CONFIG.Slot0.kV = 0.71632;//todo - calibrate
-        DRIVE_MOTOR_CONFIG.Slot0.kP = DRIVE_MOTOR_P;
-        DRIVE_MOTOR_CONFIG.Slot0.kI = DRIVE_MOTOR_I;
-        DRIVE_MOTOR_CONFIG.Slot0.kD = DRIVE_MOTOR_D;
+        DRIVE_MOTOR_CONFIG.Slot0.kS = 0.21549;
+        DRIVE_MOTOR_CONFIG.Slot0.kV = 0.72124;
+        DRIVE_MOTOR_CONFIG.Slot0.kA = 0.11218;
+        DRIVE_MOTOR_CONFIG.Slot0.kP = 0;
+        DRIVE_MOTOR_CONFIG.Slot0.kI = 0;
+        DRIVE_MOTOR_CONFIG.Slot0.kD = 0;
     }
 
     protected static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
@@ -69,7 +64,7 @@ class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.Slot0.kS = 0.19648;
         STEER_MOTOR_CONFIG.Slot0.kV = 2.5763;
         STEER_MOTOR_CONFIG.Slot0.kA = 0.50361;
-        STEER_MOTOR_CONFIG.Slot0.kP = 96;
+        STEER_MOTOR_CONFIG.Slot0.kP = 88;
         STEER_MOTOR_CONFIG.Slot0.kI = 0;
         STEER_MOTOR_CONFIG.Slot0.kD = 1.5;
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;

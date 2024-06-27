@@ -122,9 +122,10 @@ public class SysIdCalibrator {
     private Command getCTRECommand(Command sysIdCommand) {
         return new SequentialCommandGroup(
                 new InstantCommand(SignalLogger::start),
-                sysIdCommand,
-                new InstantCommand(SignalLogger::stop)
-        ).handleInterrupt(SignalLogger::stop);
+                sysIdCommand
+//                ,
+//                new InstantCommand(SignalLogger::stop)//todo - fix
+        );//.handleInterrupt(SignalLogger::stop);
     }
 
 }

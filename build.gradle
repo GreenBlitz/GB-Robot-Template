@@ -143,12 +143,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 
-tasks.register('checkAkitInstall', JavaExec) {
-    dependsOn "classes"
-    mainClass = "org.littletonrobotics.junction.CheckInstall"
-    classpath = sourceSets.main.runtimeClasspath
-}
-
 tasks.register('installLocalGitHookPostCheckout', Copy) {
     from new File(rootProject.rootDir, '.scripts/post-checkout')
     into { new File(rootProject.rootDir, '.git/hooks') }
@@ -198,6 +192,12 @@ tasks.register('SetVisualVMHost') {
             println("No reachable IP to set as Host")
         }
     }
+}
+
+tasks.register('checkAkitInstall', JavaExec) {
+    dependsOn "classes"
+    mainClass = "org.littletonrobotics.junction.CheckInstall"
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register('runComputerPrograms', JavaExec) {

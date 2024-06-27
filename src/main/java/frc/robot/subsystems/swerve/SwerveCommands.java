@@ -58,7 +58,7 @@ public class SwerveCommands {
     // Must start when all wheels looking forward
     public static Command getDriveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
         Command command = new SequentialCommandGroup(
-                getPointWheelsCommand(new MirrorableRotation2d(new Rotation2d(), false), false),
+                getPointWheelsCommand(new Rotation2d(), false),
                 DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction)
         );
         command.setName("Drive Calibration");
@@ -106,7 +106,7 @@ public class SwerveCommands {
         return command;
     }
 
-    public static Command getPointWheelsCommand(MirrorableRotation2d wheelsAngle, boolean optimize) {
+    public static Command getPointWheelsCommand(Rotation2d wheelsAngle, boolean optimize) {
         Command command = new FunctionalCommand(
                 () -> {},
                 () -> SWERVE.pointWheels(wheelsAngle, optimize),
@@ -142,15 +142,7 @@ public class SwerveCommands {
     }
 
     public static Command getRotateToAngleCommand(MirrorableRotation2d targetAngle) {
-        Command command = new FunctionalCommand(
-                () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE),
-                () -> SWERVE.rotateToAngle(targetAngle),
-                interrupted -> {},
-                () -> SWERVE.isAtAngle(targetAngle),
-                SWERVE
-        );
-        command.setName("Rotate To " + targetAngle.get().getDegrees());
-        return command;
+        return getRotateToAngleCommand(targetAngle, RotateAxis.MIDDLE_OF_ROBOT);
     }
 
     public static Command getRotateToAngleCommand(MirrorableRotation2d targetAngle, RotateAxis rotateAxis) {
@@ -161,7 +153,7 @@ public class SwerveCommands {
                 () -> SWERVE.isAtAngle(targetAngle),
                 SWERVE
         );
-        command.setName("Rotate Around " + rotateAxis.name());
+        command.setName("Rotate Around " + rotateAxis.name() + "To " + targetAngle.get().getDegrees());
         return command;
     }
 

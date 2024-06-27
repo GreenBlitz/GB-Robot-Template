@@ -41,7 +41,7 @@ def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
         table.putBoolean(event.name.lower(), is_pressed(event))
 
 
-def get_table_and_network_table(IP: str):
+def get_table(IP: str):
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
     print("Setting up NetworkTables client for team {}".format(TEAM_NUMBER))
@@ -69,7 +69,8 @@ def cleanup(network_table_instance: ntcore.NetworkTableInstance):
 
 
 def start(IP: str):
-    table, network_table_instance = get_table_and_network_table(IP)
+    table = get_table(IP)
+    network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
     keyboard.hook(lambda key_event: on_action(key_event, table))
     while network_table_instance.isConnected():

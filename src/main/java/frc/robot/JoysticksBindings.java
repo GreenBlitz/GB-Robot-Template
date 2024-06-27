@@ -53,36 +53,36 @@ public class JoysticksBindings {
         )));
 
         // Swerve X Pose
-        usedJoystick.A.whileTrue(SwerveCommands.getLockSwerveCommand());
+        usedJoystick.A.whileTrue(SwerveCommands.lockSwerve());
         // Swerve Wheels to 90 Degrees
-        usedJoystick.X.whileTrue(SwerveCommands.getPointWheelsCommand(Rotation2d.fromDegrees(90), true));
+        usedJoystick.X.whileTrue(SwerveCommands.pointWheels(Rotation2d.fromDegrees(90), true));
 
         // Rotate to 180 Deg
-        usedJoystick.POV_UP.whileTrue(SwerveCommands.getRotateToAngleCommand(
+        usedJoystick.POV_UP.whileTrue(SwerveCommands.rotateToAngle(
                 MirrorableRotation2d.fromDegrees(180, false)
         ));
         // Rotate to -17 Deg
-        usedJoystick.POV_DOWN.whileTrue(SwerveCommands.getRotateToAngleCommand(
+        usedJoystick.POV_DOWN.whileTrue(SwerveCommands.rotateToAngle(
                 MirrorableRotation2d.fromDegrees(-17, false)
         ));
 
         // Rotate Around FRONT_LEFT to 180 Deg
-        usedJoystick.POV_LEFT.whileTrue(SwerveCommands.getRotateToAngleCommand(
+        usedJoystick.POV_LEFT.whileTrue(SwerveCommands.rotateToAngle(
                 MirrorableRotation2d.fromDegrees(-17, false), RotateAxis.FRONT_LEFT_MODULE
         ));
         // Rotate Around BACK_RIGHT to -17 Deg
-        usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.getRotateToAngleCommand(
+        usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.rotateToAngle(
                 MirrorableRotation2d.fromDegrees(180, false), RotateAxis.BACK_RIGHT_MODULE
         ));
 
         //Self Relative Drive
-        usedJoystick.L3.whileTrue(SwerveCommands.getSelfDriveCommand(
+        usedJoystick.L3.whileTrue(SwerveCommands.selfDrive(
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
         ));
         //Drive and Aim Assist to Speaker
-        usedJoystick.L1.whileTrue(SwerveCommands.getDriveWithAimAssist(
+        usedJoystick.L1.whileTrue(SwerveCommands.driveWithAimAssist(
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X),
@@ -104,13 +104,13 @@ public class JoysticksBindings {
         //        ));
 
         //Rotate Around Module:
-        usedJoystick.R2.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
+        usedJoystick.R2.whileTrue(SwerveCommands.driveAroundWheel(
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X),
                 RotateAxis::getRightFarRotateAxis
         ));
-        usedJoystick.L2.whileTrue(SwerveCommands.getDriveAroundWheelCommand(
+        usedJoystick.L2.whileTrue(SwerveCommands.driveAroundWheel(
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X),
@@ -118,19 +118,19 @@ public class JoysticksBindings {
         ));
 
         // Default Drive
-        RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.getDriveCommand(
+        RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.drive(
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_Y),
                 () -> usedJoystick.getSquaredSensitiveAxis(SmartJoystick.Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveJoystickValue(SmartJoystick.Axis.RIGHT_X)
         ));
 
         // Move To Pose (4, 4, 17Deg)
-        usedJoystick.BACK.whileTrue(SwerveCommands.getDriveToPoseCommand(
+        usedJoystick.BACK.whileTrue(SwerveCommands.driveToPose(
                 () -> new MirrorablePose2d(4, 4, Rotation2d.fromDegrees(17), false),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
         // Move To Pose (5, 8, 90Deg)
-        usedJoystick.START.whileTrue(SwerveCommands.getDriveToPoseCommand(
+        usedJoystick.START.whileTrue(SwerveCommands.driveToPose(
                 () -> new MirrorablePose2d(5, 8, Rotation2d.fromDegrees(90), true),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
@@ -140,9 +140,9 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = SECOND_JOYSTICK;
         // bindings
 
-        usedJoystick.A.whileTrue(SwerveCommands.getWheelRadiusCalibrationCommand());
-        usedJoystick.B.whileTrue(SwerveCommands.getSteerCalibration(true, SysIdRoutine.Direction.kForward));
-        usedJoystick.Y.whileTrue(SwerveCommands.getDriveCalibration(true, SysIdRoutine.Direction.kForward));
+        usedJoystick.A.whileTrue(SwerveCommands.wheelRadiusCalibration());
+        usedJoystick.B.whileTrue(SwerveCommands.steerCalibration(true, SysIdRoutine.Direction.kForward));
+        usedJoystick.Y.whileTrue(SwerveCommands.driveCalibration(true, SysIdRoutine.Direction.kForward));
     }
 
     private static void thirdJoystickButtons() {

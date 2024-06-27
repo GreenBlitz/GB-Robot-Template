@@ -48,6 +48,7 @@ public class SwerveConstants {
 
     public static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
     public static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
+    public static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
 
     public static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
             MODULE_X_DISTANCE_FROM_CENTER,
@@ -72,16 +73,10 @@ public class SwerveConstants {
             BACK_LEFT_TRANSLATION2D,
             BACK_RIGHT_TRANSLATION2D
     };
-
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
 
-    public static final PIDConstants ROTATION_PID_DEGREES_CONSTANTS = new PIDConstants(6, 0, 0);//todo - calibrate
-    public static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(
-            ROTATION_PID_DEGREES_CONSTANTS.kP,
-            ROTATION_PID_DEGREES_CONSTANTS.kI,
-            ROTATION_PID_DEGREES_CONSTANTS.kD
-    );
+    public static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(6, 0, 0);//todo - calibrate
     static {
         ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
                 -MathConstants.HALF_CIRCLE.getDegrees(),
@@ -89,17 +84,11 @@ public class SwerveConstants {
         );
     }
 
-    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);//todo - calibrate
-    public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(
-            TRANSLATION_PID_CONSTANTS.kP,
-            TRANSLATION_PID_CONSTANTS.kI,
-            TRANSLATION_PID_CONSTANTS.kD
-    );
+    public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(5, 0, 0);//todo - calibrate
 
 
     public static final PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);//todo - calibrate
     public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);//todo - calibrate
-    public static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
     public static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
     public static final HolonomicPathFollowerConfig HOLONOMIC_PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
             AUTO_TRANSLATION_PID_CONSTANTS,
@@ -109,7 +98,9 @@ public class SwerveConstants {
             REPLANNING_CONFIG
     );
 
-    public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
+    public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(
+            2.5, 2.5, 4, 4
+    );
     public static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
 
 }

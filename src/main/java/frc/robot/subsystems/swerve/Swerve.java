@@ -78,7 +78,6 @@ public class Swerve extends GBSubsystem {
         logFieldRelativeVelocities();
     }
 
-
     private void updateAllInputs() {
         gyro.updateInputs(gyroInputs);
         Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
@@ -91,7 +90,6 @@ public class Swerve extends GBSubsystem {
     private void updatePoseEstimator() {
         POSE_ESTIMATOR.updatePoseEstimatorOdometry();
     }
-
 
     private void logState() {
         Logger.recordOutput(SwerveConstants.SWERVE_STATE_LOG_PATH + "DriveMode", currentState.getDriveMode());
@@ -258,11 +256,12 @@ public class Swerve extends GBSubsystem {
 
     @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "IsModulesAtStates")
     public boolean isModulesAtStates() {
-        boolean isAtStates = true;
         for (Module module : modules) {
-            isAtStates = isAtStates && module.isAtTargetState();
+            if (!module.isAtTargetState()) {
+                return false;
+            }
         }
-        return isAtStates;
+        return true;
     }
 
     @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "CurrentModulesStates")

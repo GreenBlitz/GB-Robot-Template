@@ -26,10 +26,6 @@ class MK4IModuleConstants {
     private static final double DRIVE_SLIP_CURRENT = 30; //todo - return to 100
     private static final double STEER_CURRENT_LIMIT = 30;//todo - return to 100
 
-    private static final double STEER_MOTOR_P = 20;//todo - calibrate
-    private static final double STEER_MOTOR_I = 0;//todo - calibrate
-    private static final double STEER_MOTOR_D = 0;//todo - calibrate
-
     private static final double DRIVE_MOTOR_P = 3;//todo - calibrate
     private static final double DRIVE_MOTOR_I = 0;//todo - calibrate
     private static final double DRIVE_MOTOR_D = 0;//todo - calibrate
@@ -70,12 +66,12 @@ class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = ModuleConstants.STEER_GEAR_RATIO;
         STEER_MOTOR_CONFIG.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
-        STEER_MOTOR_CONFIG.Slot0.kS = 0.32;//todo - calibrate
-        STEER_MOTOR_CONFIG.Slot0.kA = 0;//todo - calibrate
-        STEER_MOTOR_CONFIG.Slot0.kV = 0;//todo - calibrate
-        STEER_MOTOR_CONFIG.Slot0.kP = STEER_MOTOR_P;
-        STEER_MOTOR_CONFIG.Slot0.kI = STEER_MOTOR_I;
-        STEER_MOTOR_CONFIG.Slot0.kD = STEER_MOTOR_D;
+        STEER_MOTOR_CONFIG.Slot0.kS = 0.19648;
+        STEER_MOTOR_CONFIG.Slot0.kV = 2.5763;
+        STEER_MOTOR_CONFIG.Slot0.kA = 0.50361;
+        STEER_MOTOR_CONFIG.Slot0.kP = 96;
+        STEER_MOTOR_CONFIG.Slot0.kI = 0;
+        STEER_MOTOR_CONFIG.Slot0.kD = 1.5;
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
 

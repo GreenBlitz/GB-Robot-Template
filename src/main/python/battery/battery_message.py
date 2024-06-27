@@ -36,7 +36,7 @@ def terminate_program(root):
     root.quit()
 
 
-def setup_window():
+def show_message():
     """Set up and run the Tkinter event loop."""
     root = create_window()
     image = load_image(IMAGE_PATH)
@@ -58,15 +58,15 @@ def get_network_table(IP: str):
     while not network_table_instance.isConnected():
         # terminate client and program if it takes to long to connect
         if time.time() - started_time > CONNECTION_TIMEOUT_SECONDS:
-            cleanup(network_table_instance)
+            close_client(network_table_instance)
             sys.exit()
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
 
-    print("Connected NetworkTables server...")
+    print("Connected NetworkTables server")
     return network_table_instance
 
 
-def cleanup(network_table_instance: ntcore.NetworkTableInstance):
+def close_client(network_table_instance: ntcore.NetworkTableInstance):
     network_table_instance.stopDSClient()
     network_table_instance.stopClient()
 
@@ -77,5 +77,5 @@ def start(IP: str):
     while network_table.isConnected() and not network_table.getTable(TABLE_NAME).getBoolean(KEY_NAME, defaultValue=False):
         time.sleep(1)
 
-    cleanup(network_table)
-    setup_window()
+    show_message()
+    close_client(network_table)

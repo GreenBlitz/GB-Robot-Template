@@ -217,21 +217,13 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    /**
-     * Point all wheels in same angle
-     *
-     * @param targetAngle - angle to point to
-     */
     public void pointWheels(Rotation2d targetAngle, boolean optimize) {
         for (Module module : modules) {
             module.setTargetState(new SwerveModuleState(0, targetAngle), optimize);
         }
     }
 
-    /**
-     * Lock swerve wheels in X position, so it's hard to move it.
-     */
-    public void lockSwerve() {
+    public void pointWheelsInX() {
         SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
         SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
 
@@ -241,9 +233,6 @@ public class Swerve extends GBSubsystem {
         modules[3].setTargetState(frontLeftBackRight);
     }
 
-    /**
-     * Put swerve wheels in circle position, so it's ready to spin
-     */
     public void pointWheelsInCircle() {
         SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
         SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);

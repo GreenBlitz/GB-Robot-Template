@@ -46,7 +46,6 @@ public class SwerveCommands {
             SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
             SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
     );
-    private static Command command;
 
     public static Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
         Command command = STEER_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
@@ -54,8 +53,6 @@ public class SwerveCommands {
         return command;
     }
 
-
-    // Must start when all wheels looking forward
     public static Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
         Command command = new SequentialCommandGroup(
                 pointWheels(new Rotation2d(), false),
@@ -82,15 +79,15 @@ public class SwerveCommands {
         return command;
     }
 
-    public static Command lockSwerve() {
+    public static Command pointWheelsInX() {
         Command command = new FunctionalCommand(
                 () -> {},
-                SWERVE::lockSwerve,
+                SWERVE::pointWheelsInX,
                 interrupted -> {},
                 SWERVE::isModulesAtStates,
                 SWERVE
         );
-        command.setName("Lock");
+        command.setName("Point Wheels In X");
         return command;
     }
 

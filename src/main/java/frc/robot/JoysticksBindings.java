@@ -53,7 +53,7 @@ public class JoysticksBindings {
         )));
 
         // Swerve X Pose
-        usedJoystick.A.whileTrue(SwerveCommands.lockSwerve());
+        usedJoystick.A.whileTrue(SwerveCommands.pointWheelsInX());
         // Swerve Wheels to 90 Degrees
         usedJoystick.X.whileTrue(SwerveCommands.pointWheels(Rotation2d.fromDegrees(90), true));
 

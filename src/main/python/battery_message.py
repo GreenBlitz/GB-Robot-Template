@@ -82,7 +82,7 @@ def start():
     while network_table_instance.isConnected():
         if battery_table.getBoolean(KEY_NAME, defaultValue=False):
             show_message()
-        time.sleep(1)
+        time.sleep(0.1)
 
     close_client(network_table_instance)
 

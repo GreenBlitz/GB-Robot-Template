@@ -31,7 +31,7 @@ public class Battery {
         Logger.recordOutput(BatteryConstants.LOG_PATH + "Current", getTotalCurrent());
     }
 
-    protected static void reportAlertsToLog() {
+    protected static void reportLowBatteryToLog() {
         Logger.recordOutput(BatteryConstants.ALERT_LOG_PATH + "LowVoltageAt", Timer.getFPGATimestamp());
     }
 

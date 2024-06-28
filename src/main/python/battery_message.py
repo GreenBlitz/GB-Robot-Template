@@ -6,21 +6,19 @@ from tkinter import PhotoImage
 # if this library is not installed, dont install ntcore but pyntcore
 import ntcore
 
+TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
+
 IMAGE_PATH = "noam-battery-message.png"
 WINDOW_NAME = "Battery Message"
-TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
+
 CLIENT_NAME = "BatteryMessage"
-CONNECTION_COOLDOWN_SECONDS = 0.1
-CONNECTION_TIMEOUT_SECONDS = 30
-TIME_BETWEEN_MESSAGES_SECONDS = 4
 TABLE_NAME = "Battery"
 KEY_NAME = "is low"
 IP = sys.argv[1]
 
-
-def disable_minimize(event, window):
-    window.attributes("-topmost", True)
-    window.state('normal')
+CONNECTION_COOLDOWN_SECONDS = 0.1
+CONNECTION_TIMEOUT_SECONDS = 30
+TIME_BETWEEN_MESSAGES_SECONDS = 4
 
 
 def config_window(window):
@@ -30,14 +28,19 @@ def config_window(window):
     window.bind("<Unmap>", lambda event: disable_minimize(event, window))
 
 
-def load_image(image_path):
-    return PhotoImage(file=image_path)
+def disable_minimize(event, window):
+    window.attributes("-topmost", True)
+    window.state('normal')
 
 
 def create_image_label(window, image):
     """Create a label widget to display the image on the given window."""
     label = tk.Label(window, image=image)
     label.pack()
+
+
+def load_image(image_path):
+    return PhotoImage(file=image_path)
 
 
 def show_message():

@@ -1,22 +1,19 @@
+# if this library is not installed, dont install ntcore but pyntcore
+import ntcore
 import sys
 import time
 import tkinter as tk
 from tkinter import PhotoImage
 
-# if this library is not installed, dont install ntcore but pyntcore
-import ntcore
-
 TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
-
 IMAGE_PATH = "noam-battery-message.png"
 WINDOW_NAME = "Battery Message"
-
 CLIENT_NAME = "BatteryMessage"
 TABLE_NAME = "Battery"
 KEY_NAME = "is low"
 IP = sys.argv[1]
 
-TIME_BETWEEN_MESSAGES_SECONDS = 180
+TIME_BETWEEN_MESSAGES_SECONDS = 4
 CONNECTION_TIMEOUT_SECONDS = 30
 LOOPS_COOLDOWN_SECONDS = 0.1
 
@@ -78,8 +75,10 @@ def close_client(network_table_instance: ntcore.NetworkTableInstance):
     network_table_instance.stopClient()
 
 
-def is_time_to_message(last_time_showed):
-    return time.time() - last_time_showed > TIME_BETWEEN_MESSAGES_SECONDS
+def should_show_message(battery_table, last_time_showed):
+    is_time_to_message = time.time() - last_time_showed > TIME_BETWEEN_MESSAGES_SECONDS
+    is_battery_low = battery_table.getBoolean(KEY_NAME, defaultValue=False)
+    return is_battery_low and is_time_to_message
 
 
 def start():
@@ -88,7 +87,7 @@ def start():
 
     last_time_showed = 0
     while network_table_instance.isConnected():
-        if battery_table.getBoolean(KEY_NAME, defaultValue=False) and is_time_to_message(last_time_showed):
+        if should_show_message(battery_table, last_time_showed):
             show_message()
             last_time_showed = time.time()
         time.sleep(LOOPS_COOLDOWN_SECONDS)

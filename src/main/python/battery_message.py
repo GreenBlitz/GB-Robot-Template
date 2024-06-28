@@ -20,6 +20,8 @@ IP = sys.argv[1]
 def create_window():
     root = tk.Tk()
     root.title(WINDOW_NAME)
+    root.attributes("-topmost", True)
+    root.after(0, lambda: root.focus_force())
     return root
 
 
@@ -77,7 +79,7 @@ def start():
     battery_table = network_table_instance.getTable(TABLE_NAME)  # todo: use less robust nt stuff then table
 
     # todo - add mult message
-    while network_table_instance.isConnected() and not battery_table.getBoolean(KEY_NAME, defaultValue=False):
+    while network_table_instance.isConnected(): #and not battery_table.getBoolean(KEY_NAME, defaultValue=False):
         time.sleep(1)
 
     show_message()

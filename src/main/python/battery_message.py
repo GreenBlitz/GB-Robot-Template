@@ -79,10 +79,11 @@ def start():
     battery_table = network_table_instance.getTable(TABLE_NAME)  # todo: use less robust nt stuff then table
 
     # todo - add mult message
-    while network_table_instance.isConnected(): #and not battery_table.getBoolean(KEY_NAME, defaultValue=False):
+    while network_table_instance.isConnected():
+        if battery_table.getBoolean(KEY_NAME, defaultValue=False):
+            show_message()
         time.sleep(1)
 
-    show_message()
     close_client(network_table_instance)
 
 

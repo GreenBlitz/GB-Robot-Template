@@ -26,6 +26,7 @@ KEYBOARD_TABLE = "Keyboard"
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
 IP = sys.argv[1]
 
+
 def is_pressed(event: keyboard.KeyboardEvent):
     return event.event_type == keyboard.KEY_DOWN
 
@@ -76,6 +77,7 @@ def start_keyboard_tracking():
     while network_table_instance.isConnected():
         time.sleep(KEYBOARD_CHECKING_COOLDOWN_SECONDS)
     close_client(network_table_instance)
+
 
 if __name__ == "__main__":
     start_keyboard_tracking()

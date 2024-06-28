@@ -6,6 +6,10 @@ import org.littletonrobotics.junction.Logger;
 
 public class Battery {
 
+    public static void setMin(double min){
+        BatteryConstants.MIN_VOLTAGE_BATTERY = min;
+    }
+
     public static double getDefaultBatteryVoltage() {
         return BatteryConstants.DEFAULT_BATTERY_VOLTAGE;
     }

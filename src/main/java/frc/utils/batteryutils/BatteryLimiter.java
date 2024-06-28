@@ -55,6 +55,9 @@ class BatteryLimiter extends Command {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }
         }
+        else {
+            isBatteryLow.set(false);
+        }
     }
 
 }

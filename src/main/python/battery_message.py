@@ -44,7 +44,6 @@ def show_message():
     root = create_window()
     image = load_image(IMAGE_PATH)
     create_image_label(root, image)
-    root.protocol("WM_DELETE_WINDOW", lambda: terminate_program(root))
     root.mainloop()
 
 
@@ -78,10 +77,11 @@ def start():
     network_table_instance = get_network_table()
     battery_table = network_table_instance.getTable(TABLE_NAME)  # todo: use less robust nt stuff then table
 
-    # todo - add mult message
+    last_time_showed = 0
     while network_table_instance.isConnected():
-        if battery_table.getBoolean(KEY_NAME, defaultValue=False):
+        if battery_table.getBoolean(KEY_NAME, defaultValue=False) and time.time() - last_time_showed > 4:
             show_message()
+            last_time_showed = time.time()
         time.sleep(0.1)
 
     close_client(network_table_instance)

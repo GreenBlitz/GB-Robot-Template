@@ -1,6 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Ports;
+import frc.utils.batteryutils.Battery;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
@@ -23,6 +25,7 @@ public class JoysticksBindings {
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
         // bindings
+        usedJoystick.A.onTrue(new InstantCommand(() -> Battery.setMin(14)));
     }
 
     private static void secondJoystickButtons() {

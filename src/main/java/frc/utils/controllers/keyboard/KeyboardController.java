@@ -16,7 +16,7 @@ public class KeyboardController {
 
     private static final double KEY_PRESSED_VALUE = 0.5;
 
-    private static final String KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS = "keyboard/keyboard_to_nt_simulation";
+    private static final String KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS = "keyboard/keyboard_to_nt";
 
     private static final String KEYBOARD_TABLE = "Keyboard";
     private static final String KEYS_TAB = "Keys/";
@@ -35,7 +35,7 @@ public class KeyboardController {
 
     public KeyboardController() {
         if (Robot.isSimulation()) {
-            CMDHandler.runPythonClass(KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS);
+            CMDHandler.runPythonClass(KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS, "127.0.0.1");
         }
 
         this.ESC = getNewKey("esc");

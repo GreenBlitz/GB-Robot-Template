@@ -24,7 +24,7 @@ CONNECTION_COOLDOWN_SECONDS = 0.1
 KEYBOARD_CHECKING_COOLDOWN_SECONDS = 0.01
 KEYBOARD_TABLE = "Keyboard"
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
-
+IP = sys.argv[1]
 
 def is_pressed(event: keyboard.KeyboardEvent):
     return event.event_type == keyboard.KEY_DOWN
@@ -41,7 +41,7 @@ def on_key_event(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
         table.putBoolean(event.name.lower(), is_pressed(event))
 
 
-def get_table(IP: str):
+def get_table():
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
     print("Setting up NetworkTables client for team {}".format(TEAM_NUMBER))
@@ -68,11 +68,14 @@ def close_client(network_table_instance: ntcore.NetworkTableInstance):
     network_table_instance.stopClient()
 
 
-def start(IP: str):
-    table = get_table(IP)
+def start_keyboard_tracking():
+    table = get_table()
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
     keyboard.hook(lambda key_event: on_key_event(key_event, table))
     while network_table_instance.isConnected():
         time.sleep(KEYBOARD_CHECKING_COOLDOWN_SECONDS)
     close_client(network_table_instance)
+
+if __name__ == "__main__":
+    start_keyboard_tracking()

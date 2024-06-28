@@ -15,6 +15,7 @@ public class CMDHandler {
 
     public static void runCMDCommand(String command) {
         Runtime runtime = Runtime.getRuntime();
+        System.out.println(command);
         try {
             runtime.exec(new String[]{APPLICATION, CMD_DIRECTORY, command});
         } catch (IOException exception) {
@@ -52,5 +53,18 @@ public class CMDHandler {
      */
     public static void runPythonClass(String pythonPath) {
         runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath + ".py");
+    }
+
+    /**
+     * @param pythonPath The path from the java package to the class.
+     *                   example: "keyboard/keyboard_to_nt_router"
+     *
+     * @param arguments The arguments given to the python file, each argument separated by a space.
+     *                  Note that it is only possible to transfer strings into the python class.
+     *                  Also note that when using the arguments in the python class,
+     *                  the first one will always be the path of the class.
+     */
+    public static void runPythonClass(String pythonPath, String arguments) {
+        runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath + ".py " + arguments);
     }
 }

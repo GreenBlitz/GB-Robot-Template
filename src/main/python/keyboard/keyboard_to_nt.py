@@ -60,7 +60,7 @@ def get_table(IP: str):
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
 
     table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
-    return table, network_table_instance
+    return table
 
 
 def cleanup(network_table_instance: ntcore.NetworkTableInstance):

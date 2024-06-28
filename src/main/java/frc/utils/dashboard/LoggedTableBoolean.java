@@ -55,6 +55,7 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
         if (!Logger.hasReplaySource()) {
             this.value = booleanTable.getValue(this.key).getBoolean();
         }
+        Logger.processInputs(prefix, inputs);
     }
 
 }

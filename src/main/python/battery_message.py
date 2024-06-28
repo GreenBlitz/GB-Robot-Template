@@ -12,6 +12,7 @@ TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "BatteryMessage"
 CONNECTION_COOLDOWN_SECONDS = 0.1
 CONNECTION_TIMEOUT_SECONDS = 30
+TIME_BETWEEN_MESSAGES_SECONDS = 4
 TABLE_NAME = "Battery"
 KEY_NAME = "is low"
 IP = sys.argv[1]
@@ -33,10 +34,6 @@ def create_image_label(root, image):
     """Create a label widget to display the image on the given root window."""
     label = tk.Label(root, image=image)
     label.pack()
-
-
-def terminate_program(root):
-    root.quit()
 
 
 def show_message():
@@ -73,13 +70,17 @@ def close_client(network_table_instance: ntcore.NetworkTableInstance):
     network_table_instance.stopClient()
 
 
+def is_time_to_message(last_time_showed):
+    return time.time() - last_time_showed > TIME_BETWEEN_MESSAGES_SECONDS
+
+
 def start():
     network_table_instance = get_network_table()
     battery_table = network_table_instance.getTable(TABLE_NAME)  # todo: use less robust nt stuff then table
 
     last_time_showed = 0
     while network_table_instance.isConnected():
-        if battery_table.getBoolean(KEY_NAME, defaultValue=False) and time.time() - last_time_showed > 4:
+        if battery_table.getBoolean(KEY_NAME, defaultValue=False) and is_time_to_message(last_time_showed):
             show_message()
             last_time_showed = time.time()
         time.sleep(0.1)

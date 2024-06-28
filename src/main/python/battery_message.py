@@ -40,6 +40,12 @@ def load_image(image_path):
     return PhotoImage(file=image_path)
 
 
+def should_show_message(battery_table, last_time_showed):
+    is_time_to_message = time.time() - last_time_showed > TIME_BETWEEN_MESSAGES_SECONDS
+    is_battery_low = battery_table.getBoolean(KEY_NAME, defaultValue=False)
+    return is_battery_low and is_time_to_message
+
+
 def show_message():
     """Set up and run the Tkinter event loop."""
     window = tk.Tk()
@@ -73,12 +79,6 @@ def get_network_table():
 def close_client(network_table_instance: ntcore.NetworkTableInstance):
     network_table_instance.stopDSClient()
     network_table_instance.stopClient()
-
-
-def should_show_message(battery_table, last_time_showed):
-    is_time_to_message = time.time() - last_time_showed > TIME_BETWEEN_MESSAGES_SECONDS
-    is_battery_low = battery_table.getBoolean(KEY_NAME, defaultValue=False)
-    return is_battery_low and is_time_to_message
 
 
 def start():

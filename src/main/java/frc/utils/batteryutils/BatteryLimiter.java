@@ -35,6 +35,10 @@ class BatteryLimiter extends Command {
         }
     }
 
+    private boolean passedMessageStartUpTime(){
+        return Timer.getFPGATimestamp() - showedMessageTime > WAITING_TIME_SECONDS;
+    }
+
     @Override
     public void initialize() {
         // Fill linear filter with battery voltage values instead of 1/NUMBER_OF_VALUES_IN_AVERAGE
@@ -51,7 +55,7 @@ class BatteryLimiter extends Command {
         if (currentAverageVoltage <= Battery.getMinimumVoltage()) {
             Battery.reportLowBatteryToLog();
             showBatteryMessage();
-            if (!DriverStationUtils.isGame() && RobotConstants.ENABLE_BATTERY_LIMITER && Timer.getFPGATimestamp() - showedMessageTime > WAITING_TIME_SECONDS) {
+            if (!DriverStationUtils.isGame() && RobotConstants.ENABLE_BATTERY_LIMITER && passedMessageStartUpTime()) {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }
         }

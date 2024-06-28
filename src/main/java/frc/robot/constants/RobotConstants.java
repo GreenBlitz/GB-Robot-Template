@@ -12,6 +12,6 @@ public class RobotConstants {
 
     public static final boolean IS_RUNNING_ON_USB_B = false;
 
-    public static final boolean ENABLE_BATTERY_LIMITER = false;
+    public static final boolean ENABLE_BATTERY_LIMITER = true;
 
 }

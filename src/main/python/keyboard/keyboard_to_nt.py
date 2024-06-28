@@ -30,7 +30,7 @@ def is_pressed(event: keyboard.KeyboardEvent):
     return event.event_type == keyboard.KEY_DOWN
 
 
-def on_action(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
+def on_key_event(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
     if event is None or event.name is None:
         return
     elif event.name == "/":
@@ -55,7 +55,7 @@ def get_table(IP: str):
     while not network_table_instance.isConnected():
         # terminate client and program if it takes to long to connect
         if time.time() - starting_time > CONNECTION_TIMEOUT_SECONDS:
-            cleanup(network_table_instance)
+            close_client(network_table_instance)
             sys.exit()
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
 
@@ -63,7 +63,7 @@ def get_table(IP: str):
     return table
 
 
-def cleanup(network_table_instance: ntcore.NetworkTableInstance):
+def close_client(network_table_instance: ntcore.NetworkTableInstance):
     network_table_instance.stopDSClient()
     network_table_instance.stopClient()
 
@@ -72,7 +72,7 @@ def start(IP: str):
     table = get_table(IP)
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
-    keyboard.hook(lambda key_event: on_action(key_event, table))
+    keyboard.hook(lambda key_event: on_key_event(key_event, table))
     while network_table_instance.isConnected():
         time.sleep(KEYBOARD_CHECKING_COOLDOWN_SECONDS)
-    cleanup(network_table_instance)
+    close_client(network_table_instance)

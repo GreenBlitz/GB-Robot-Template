@@ -1,4 +1,3 @@
-import keyboard_to_nt
+from keyboard_to_nt import start
 if __name__ == '__main__':
-    keyboard_to_nt.start("10.45.90.2")
-
+    start("10.45.90.2")

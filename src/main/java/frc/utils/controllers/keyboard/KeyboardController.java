@@ -2,7 +2,6 @@ package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.constants.RobotConstants;
 import frc.utils.applicationsutils.CMDHandler;
 import frc.utils.dashboard.LoggedTableBoolean;
 
@@ -17,7 +16,7 @@ public class KeyboardController {
 
     private static final double KEY_PRESSED_VALUE = 0.5;
 
-    private static final String KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS = "keyboard/keyboard_to_nt_simulation.py";
+    private static final String KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS = "keyboard/keyboard_to_nt_simulation";
 
     private static final String KEYBOARD_TABLE = "Keyboard";
     private static final String KEYS_TAB = "Keys/";
@@ -35,7 +34,7 @@ public class KeyboardController {
             NUMPAD_0, NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9;
 
     public KeyboardController() {
-        if (Robot.isSimulation() && RobotConstants.ENABLE_KEYBOARD) {
+        if (Robot.isSimulation()) {
             CMDHandler.runPythonClass(KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS);
         }
 

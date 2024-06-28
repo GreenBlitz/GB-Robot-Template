@@ -28,13 +28,13 @@ public class CMDHandler {
 
     /**
      * @param javaPath The path from the java package to the class.
-     *                 example: "frc/utils/applicationsutils/CMDHandler.java"
+     *                 example: "frc/utils/applicationsutils/CMDHandler"
      */
     public static void runJavaClass(String javaPath) {
         int lastSlash = javaPath.lastIndexOf('/');
         String className = javaPath.substring(lastSlash + 1);
         String packageName = javaPath.substring(0, lastSlash);
-        runCMDCommand(PATH_TO_JAVA_DIRECTORY + "/" + packageName, "java " + className);
+        runCMDCommand(PATH_TO_JAVA_DIRECTORY + "/" + packageName, "java " + className + ".java");
     }
 
     /**
@@ -43,15 +43,14 @@ public class CMDHandler {
     public static void runJavaClass(Class classToRun) {
         String className = classToRun.getName();
         className = className.replace('.', '/');
-        className += ".java";
         runJavaClass(className);
     }
 
     /**
      * @param pythonPath The path from the java package to the class.
-     *                   example: "keyboard/keyboard_to_nt_router.py"
+     *                   example: "keyboard/keyboard_to_nt_router"
      */
     public static void runPythonClass(String pythonPath) {
-        runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath);
+        runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath + ".py");
     }
 }

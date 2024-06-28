@@ -1,3 +1,3 @@
-import keyboard_to_nt
+from keyboard_to_nt import start
 if __name__ == '__main__':
-    keyboard_to_nt.start("127.0.0.1")
+    start("127.0.0.1")

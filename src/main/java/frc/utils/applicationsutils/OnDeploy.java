@@ -15,7 +15,7 @@ public class OnDeploy {
     }
 
     private static void runKeyboard() {
-        CMDHandler.runPythonClass("keyboard/keyboard_to_nt_" + (RobotConstants.IS_RUNNING_ON_USB_B ? "usb_b" : "router") + ".py");
+        CMDHandler.runPythonClass("keyboard/keyboard_to_nt_" + (RobotConstants.IS_RUNNING_ON_USB_B ? "usb_b" : "router"));
     }
 
 }

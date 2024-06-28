@@ -131,14 +131,14 @@ public class KeyboardController {
         return new Trigger(new LoggedTableBoolean(KEYBOARD_TABLE, KEYS_TAB + name)::get);
     }
 
-    public double getValueByButtons(Trigger positiveValue, Trigger negativeValue) {
-        return getValueByButtons(positiveValue, negativeValue, KEY_PRESSED_VALUE);
+    public double getValueByButtons(Trigger positiveButton, Trigger negativeButton) {
+        return getValueByButtons(positiveButton, negativeButton, KEY_PRESSED_VALUE);
     }
 
-    public double getValueByButtons(Trigger positiveValue, Trigger negativeValue, double value) {
-        if (positiveValue.getAsBoolean()) {
+    public double getValueByButtons(Trigger positiveButton, Trigger negativeButton, double value) {
+        if (positiveButton.getAsBoolean()) {
             return value;
-        } else if (negativeValue.getAsBoolean()) {
+        } else if (negativeButton.getAsBoolean()) {
             return -value;
         } else {
             return 0;

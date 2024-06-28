@@ -52,13 +52,13 @@ def get_table():
 
     print("Waiting for connection to NetworkTables server...")
     starting_time = time.time()
-
     while not network_table_instance.isConnected():
         # terminate client and program if it takes to long to connect
         if time.time() - starting_time > CONNECTION_TIMEOUT_SECONDS:
             close_client(network_table_instance)
             sys.exit()
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
+    print("Connection to NetworkTables server succeeded!")
 
     table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
     return table
@@ -70,8 +70,8 @@ def close_client(network_table_instance: ntcore.NetworkTableInstance):
 
 
 def start_keyboard_tracking():
-    table = get_table()
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
+    table = get_table()
 
     keyboard.hook(lambda key_event: on_key_event(key_event, table))
     while network_table_instance.isConnected():

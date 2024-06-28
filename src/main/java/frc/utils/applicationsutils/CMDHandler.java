@@ -49,7 +49,7 @@ public class CMDHandler {
 
     /**
      * @param pythonPath The path from the java package to the class.
-     *                   example: "keyboard_to_nt_router"
+     *                   example: "keyboard_to_nt"
      */
     public static void runPythonClass(String pythonPath) {
         runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath + ".py");
@@ -57,7 +57,7 @@ public class CMDHandler {
 
     /**
      * @param pythonPath The path from the java package to the class.
-     *                   example: "keyboard_to_nt_router"
+     *                   example: "keyboard_to_nt"
      *
      * @param arguments The arguments given to the python file, each argument separated by a space.
      *                  Note that it is only possible to transfer strings into the python class.

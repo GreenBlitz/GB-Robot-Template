@@ -27,7 +27,7 @@ class BatteryLimiter extends Command {
 
         double currentAverageVoltage = voltageFilter.calculate(Battery.getCurrentVoltage());
         if (currentAverageVoltage <= Battery.getMinimumVoltage()) {
-            Battery.reportAlertsToLog();
+            Battery.reportLowBatteryToLog();
             if (!DriverStationUtils.isMatch() && RobotConstants.ENABLE_BATTERY_LIMITER) {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }

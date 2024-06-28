@@ -16,6 +16,8 @@ class BatteryConstants {
 
     protected static final int NUMBER_OF_VALUES_IN_AVERAGE = 50;
 
+    protected static final double MESSAGE_STARTUP_TIME = 0.2;
+
     protected static final int POWER_DISTRIBUTION_CAN_ID = 20;
 
     protected static final PowerDistribution.ModuleType POWER_DISTRIBUTION_TYPE = PowerDistribution.ModuleType.kRev;

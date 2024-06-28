@@ -10,8 +10,6 @@ import frc.utils.dashboard.LoggedTableBoolean;
 
 class BatteryLimiter extends Command {
 
-    private static final double WAITING_TIME_SECONDS = 0.2;
-
     private final LoggedTableBoolean isBatteryLow;
 
     private final LinearFilter voltageFilter;
@@ -35,8 +33,8 @@ class BatteryLimiter extends Command {
         }
     }
 
-    private boolean passedMessageStartUpTime(){
-        return Timer.getFPGATimestamp() - showedMessageTime > WAITING_TIME_SECONDS;
+    private boolean passedMessageStartUpTime() {
+        return Timer.getFPGATimestamp() - showedMessageTime > BatteryConstants.MESSAGE_STARTUP_TIME;
     }
 
     @Override

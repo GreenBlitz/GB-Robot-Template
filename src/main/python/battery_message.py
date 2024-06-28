@@ -16,7 +16,7 @@ TABLE_NAME = "Battery"
 KEY_NAME = "is low"
 IP = sys.argv[1]
 
-TIME_BETWEEN_MESSAGES_SECONDS = 4  # todo: change to 180 seconds
+TIME_BETWEEN_MESSAGES_SECONDS = 180
 CONNECTION_TIMEOUT_SECONDS = 30
 LOOPS_COOLDOWN_SECONDS = 0.1
 
@@ -84,7 +84,7 @@ def is_time_to_message(last_time_showed):
 
 def start():
     network_table_instance = get_network_table()
-    battery_table = network_table_instance.getTable(TABLE_NAME)  # todo: use less robust nt stuff then table
+    battery_table = network_table_instance.getTable(TABLE_NAME)
 
     last_time_showed = 0
     while network_table_instance.isConnected():

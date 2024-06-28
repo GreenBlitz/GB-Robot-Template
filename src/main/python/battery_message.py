@@ -16,19 +16,19 @@ TABLE_NAME = "Battery"
 KEY_NAME = "is low"
 IP = sys.argv[1]
 
-CONNECTION_COOLDOWN_SECONDS = 0.1
+TIME_BETWEEN_MESSAGES_SECONDS = 4  # todo: change to 180 seconds
 CONNECTION_TIMEOUT_SECONDS = 30
-TIME_BETWEEN_MESSAGES_SECONDS = 4
+LOOPS_COOLDOWN_SECONDS = 0.1
 
 
 def config_window(window):
     window.title(WINDOW_NAME)
     window.attributes("-topmost", True)
     window.resizable(False, False)
-    window.bind("<Unmap>", lambda event: disable_minimize(event, window))
+    window.bind("<Unmap>", lambda event: cancel_minimize(event, window))
 
 
-def disable_minimize(event, window):
+def cancel_minimize(event, window):
     window.attributes("-topmost", True)
     window.state('normal')
 
@@ -67,7 +67,7 @@ def get_network_table():
         if time.time() - started_time > CONNECTION_TIMEOUT_SECONDS:
             close_client(network_table_instance)
             sys.exit()
-        time.sleep(CONNECTION_COOLDOWN_SECONDS)
+        time.sleep(LOOPS_COOLDOWN_SECONDS)
 
     print("Connected NetworkTables server")
     return network_table_instance
@@ -91,7 +91,7 @@ def start():
         if battery_table.getBoolean(KEY_NAME, defaultValue=False) and is_time_to_message(last_time_showed):
             show_message()
             last_time_showed = time.time()
-        time.sleep(0.1)
+        time.sleep(LOOPS_COOLDOWN_SECONDS)
 
     close_client(network_table_instance)
 

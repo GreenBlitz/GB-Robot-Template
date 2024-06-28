@@ -18,30 +18,35 @@ KEY_NAME = "is low"
 IP = sys.argv[1]
 
 
-def create_window():
-    root = tk.Tk()
-    root.title(WINDOW_NAME)
-    root.attributes("-topmost", True)
-    root.after(0, lambda: root.focus_force())
-    return root
+def disable_minimize(event, window):
+    window.attributes("-topmost", True)
+    window.state('normal')
+
+
+def config_window(window):
+    window.title(WINDOW_NAME)
+    window.attributes("-topmost", True)
+    window.resizable(False, False)
+    window.bind("<Unmap>", lambda event: disable_minimize(event, window))
 
 
 def load_image(image_path):
     return PhotoImage(file=image_path)
 
 
-def create_image_label(root, image):
-    """Create a label widget to display the image on the given root window."""
-    label = tk.Label(root, image=image)
+def create_image_label(window, image):
+    """Create a label widget to display the image on the given window."""
+    label = tk.Label(window, image=image)
     label.pack()
 
 
 def show_message():
     """Set up and run the Tkinter event loop."""
-    root = create_window()
+    window = tk.Tk()
+    config_window(window)
     image = load_image(IMAGE_PATH)
-    create_image_label(root, image)
-    root.mainloop()
+    create_image_label(window, image)
+    window.mainloop()
 
 
 def get_network_table():

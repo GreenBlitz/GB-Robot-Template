@@ -16,7 +16,10 @@ class BatteryLimiter extends Command {
     public BatteryLimiter() {
         this.isBatteryLow = new LoggedTableBoolean("Battery", "is low", false);
         this.voltageFilter = LinearFilter.movingAverage(BatteryConstants.NUMBER_OF_VALUES_IN_AVERAGE);
-        CMDHandler.runPythonClass("battery/battery_message_simulation.py");
+
+        if (RobotConstants.ROBOT_TYPE.isSimulation()) {
+            CMDHandler.runPythonClass("battery_message", "127.0.0.1");
+        }
     }
 
     private void showBatteryMessage() {
@@ -42,9 +45,6 @@ class BatteryLimiter extends Command {
             if (!DriverStationUtils.isGame() && RobotConstants.ENABLE_BATTERY_LIMITER) {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }
-        }
-        else {
-            isBatteryLow.set(false);
         }
     }
 

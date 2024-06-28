@@ -14,6 +14,7 @@ CONNECTION_COOLDOWN_SECONDS = 0.1
 CONNECTION_TIMEOUT_SECONDS = 30
 TABLE_NAME = "Battery"
 KEY_NAME = "is low"
+IP = sys.argv[1]
 
 
 def create_window():
@@ -45,7 +46,7 @@ def show_message():
     root.mainloop()
 
 
-def get_network_table(IP: str):
+def get_network_table():
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
     print("Setting up NetworkTables client for team {}".format(TEAM_NUMBER))
@@ -71,11 +72,17 @@ def close_client(network_table_instance: ntcore.NetworkTableInstance):
     network_table_instance.stopClient()
 
 
-def start(IP: str):
-    network_table = get_network_table(IP)
+def start():
+    network_table_instance = get_network_table()
+    battery_table = network_table_instance.getTable(TABLE_NAME)  # todo: use less robust nt stuff then table
+
     # todo - add mult message
-    while network_table.isConnected() and not network_table.getTable(TABLE_NAME).getBoolean(KEY_NAME, defaultValue=False):
+    while network_table_instance.isConnected() and not battery_table.getBoolean(KEY_NAME, defaultValue=False):
         time.sleep(1)
 
     show_message()
-    close_client(network_table)
+    close_client(network_table_instance)
+
+
+if __name__ == '__main__':
+    start()

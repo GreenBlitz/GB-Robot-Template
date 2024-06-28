@@ -2,8 +2,6 @@ package frc.utils.applicationsutils;
 
 import frc.robot.constants.RobotConstants;
 
-import javax.swing.*;
-
 public class OnDeploy {
 
     public static void main(String[] args) {
@@ -14,8 +12,8 @@ public class OnDeploy {
         runBatteryMessage();
     }
 
-    private static void runBatteryMessage(){
-        CMDHandler.runPythonClass("battery/battery_message" + (RobotConstants.IS_RUNNING_ON_USB_B ? "usb_b" : "router") + ".py");
+    private static void runBatteryMessage() {
+        CMDHandler.runPythonClass("battery_message", RobotConstants.IS_RUNNING_ON_USB_B ? "172.22.11.2" : "10.45.90.2");
     }
 
 }

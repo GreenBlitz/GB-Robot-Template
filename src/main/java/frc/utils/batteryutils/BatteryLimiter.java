@@ -27,8 +27,8 @@ class BatteryLimiter extends Command {
     }
 
     private void showBatteryMessage() {
-        isBatteryLow.set(true);
-        if (showedMessageTime == 0) {
+        if (!isBatteryLow.get()){
+            isBatteryLow.set(true);
             showedMessageTime = Timer.getFPGATimestamp();
         }
     }

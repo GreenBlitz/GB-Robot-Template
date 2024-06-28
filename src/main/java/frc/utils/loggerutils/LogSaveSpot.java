@@ -9,14 +9,13 @@ public enum LogSaveSpot {
     ROBORIO(LoggerConstants.ROBORIO_LOG_PATH),
     COMPUTER(LoggerConstants.SIMULATION_LOG_PATH);
 
-    public final String savePath;
+    public final Path savePath;
 
-    LogSaveSpot(String savePath) {
+    LogSaveSpot(Path savePath) {
         this.savePath = savePath;
     }
 
     public boolean isWritable() {
-        Path path = Path.of(savePath);
-        return Files.exists(path) && Files.isWritable(path);
+        return Files.exists(savePath) && Files.isWritable(savePath);
     }
 }

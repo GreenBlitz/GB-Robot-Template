@@ -128,7 +128,7 @@ public class KeyboardController {
     }
 
     private Trigger getNewKey(String name) {
-        return new Trigger(new LoggedTableBoolean(KEYBOARD_TABLE, KEYS_TAB + name)::get);
+        return new Trigger(new LoggedTableBoolean(KEYBOARD_TABLE, KEYS_TAB + name, false)::get);
     }
 
     public double getValueByButtons(Trigger positiveButton, Trigger negativeButton) {

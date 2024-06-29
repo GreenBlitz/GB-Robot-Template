@@ -34,7 +34,7 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
         this.defaultValue = defaultValue;
         this.value = defaultValue;
         this.booleanTable = NetworkTableInstance.getDefault().getTable(table);
-        booleanTable.putValue(key, NetworkTableValue.makeBoolean(defaultValue));
+//        booleanTable.putValue(key, NetworkTableValue.makeBoolean(value));
         this.periodic();
         Logger.registerDashboardInput(this);
     }
@@ -53,9 +53,12 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
 
     public void periodic() {
         if (!Logger.hasReplaySource()) {
-            this.value = booleanTable.getValue(this.key).getBoolean();
+            try {
+                this.value = booleanTable.getValue(this.key).getBoolean();
+            } catch (Exception e) {
+                this.value = defaultValue;
+            }
         }
-        Logger.processInputs(prefix, inputs);
     }
 
 }

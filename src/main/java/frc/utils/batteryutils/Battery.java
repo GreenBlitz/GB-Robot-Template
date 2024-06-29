@@ -6,8 +6,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class Battery {
 
-    public static double getDefaultBatteryVoltage() {
-        return BatteryConstants.DEFAULT_BATTERY_VOLTAGE;
+    public static double getDefaultVoltage() {
+        return BatteryConstants.DEFAULT_VOLTAGE;
     }
 
     public static double getTotalCurrent() {
@@ -19,11 +19,11 @@ public class Battery {
     }
 
     public static double getMinimumVoltage() {
-        return BatteryConstants.MIN_VOLTAGE_BATTERY;
+        return BatteryConstants.MIN_VOLTAGE;
     }
 
-    public static void scheduleBatteryLimiterCommand() {
-        BatteryConstants.BATTERY_LIMITER.schedule();
+    public static void scheduleLimiterCommand() {
+        BatteryConstants.LIMITER.schedule();
     }
 
     protected static void logStatus() {

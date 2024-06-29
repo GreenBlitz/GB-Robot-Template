@@ -11,9 +11,9 @@ class BatteryConstants {
     protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 
 
-    protected static final double DEFAULT_BATTERY_VOLTAGE = 12;
+    protected static final double DEFAULT_VOLTAGE = 12;
 
-    protected static final double MIN_VOLTAGE_BATTERY = 10.5;
+    protected static final double MIN_VOLTAGE = 10.5;
 
 
     protected static final int NUMBER_OF_VALUES_TAKEN_IN_AVERAGE = 50;
@@ -28,6 +28,6 @@ class BatteryConstants {
             POWER_DISTRIBUTION_TYPE
     );
 
-    protected static final Command BATTERY_LIMITER = new BatteryLimiter().ignoringDisable(true);
+    protected static final Command LIMITER = new BatteryLimiter().ignoringDisable(true);
 
 }

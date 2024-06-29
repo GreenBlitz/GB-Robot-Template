@@ -13,7 +13,6 @@ public class JoysticksBindings {
 
     private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.FOURTH);
 
-
     public static void configureBindings() {
         mainJoystickButtons();
         secondJoystickButtons();

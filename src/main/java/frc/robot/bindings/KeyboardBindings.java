@@ -12,8 +12,8 @@ public class KeyboardBindings {
 
         usedKeyboard.A.onTrue(new PrintCommand("A PRESSED"));
         usedKeyboard.A.onFalse(new PrintCommand("A RELEASED"));
-//        usedKeyboard.B.onTrue(new PrintCommand("B PRESSED"));
-//        usedKeyboard.B.onFalse(new PrintCommand("B RELEASED"));
+        usedKeyboard.B.onTrue(new PrintCommand("B PRESSED"));
+        usedKeyboard.B.onFalse(new PrintCommand("B RELEASED"));
     }
 
 }

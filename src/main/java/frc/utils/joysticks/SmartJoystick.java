@@ -43,16 +43,17 @@ public class SmartJoystick {
 
         this.L1 = new JoystickButton(joystick, ButtonID.L1.getId());
         this.R1 = new JoystickButton(joystick, ButtonID.R1.getId());
-        this.L3 = new JoystickButton(joystick, ButtonID.L3.getId());
-        this.R3 = new JoystickButton(joystick, ButtonID.R3.getId());
 
         this.BACK = new JoystickButton(joystick, ButtonID.BACK.getId());
         this.START = new JoystickButton(joystick, ButtonID.START.getId());
 
+        this.L3 = new JoystickButton(joystick, ButtonID.L3.getId());
+        this.R3 = new JoystickButton(joystick, ButtonID.R3.getId());
+
         this.POV_UP = new POVButton(joystick, ButtonID.POV_UP.getId());
-        this.POV_LEFT = new POVButton(joystick, ButtonID.POV_LEFT.getId());
         this.POV_RIGHT = new POVButton(joystick, ButtonID.POV_RIGHT.getId());
         this.POV_DOWN = new POVButton(joystick, ButtonID.POV_DOWN.getId());
+        this.POV_LEFT = new POVButton(joystick, ButtonID.POV_LEFT.getId());
     }
 
     /**

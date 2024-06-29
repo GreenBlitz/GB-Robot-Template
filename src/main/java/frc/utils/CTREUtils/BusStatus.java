@@ -6,19 +6,19 @@ import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.Phoenix6Constants;
 import org.littletonrobotics.junction.Logger;
 
-public class CANStatus {
+public class BusStatus {
 
     private static final double MAX_CAN_UTILIZATION_PERCENT = 0.6;
     private static final double MAX_RECEIVE_ERRORS = 1;
     private static final double MAX_TRANSMIT_ERRORS = 1;
     private static final String LOG_PATH = "Bus/";
 
-    public static void logAllBusStatuses() {
-        updateBusStatus(Phoenix6Constants.CANBUS_NAME);
-        updateBusStatus(Phoenix6Constants.CANIVORE_NAME);
+    public static void logChainsStatuses() {
+        updateChainStatus(Phoenix6Constants.CANBUS_NAME);
+        updateChainStatus(Phoenix6Constants.CANIVORE_NAME);
     }
 
-    private static void updateBusStatus(String name) {
+    private static void updateChainStatus(String name) {
         CANBus.CANBusStatus busStatus = CANBus.getStatus(name);
         logStatus(busStatus, name);
         reportAlerts(busStatus, name);

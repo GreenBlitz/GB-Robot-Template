@@ -18,7 +18,6 @@ public class CycleTimeUtils {
         reportAlerts();
     }
 
-
     private static void logStatus() {
         Logger.recordOutput(CycleTimeConstants.LOG_PATH + "CycleTime", getCurrentCycleTime());
     }

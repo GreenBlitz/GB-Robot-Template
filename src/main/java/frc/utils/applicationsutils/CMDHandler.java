@@ -11,8 +11,11 @@ public class CMDHandler {
 
     private static final String WINDOWS_CMD_SPECIFICATION = "cmd.exe /c ";
     private static final String NON_WINDOWS_CMD_SPECIFICATION = "bash -c ";
-    private static final String ERROR_MESSAGE = "Unable to execute: ";
 
+
+    public static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
+    }
 
     public static void runCMDCommand(Path directory, String command) {
         runCMDCommand("cd " + directory + "&&" + command);
@@ -25,12 +28,8 @@ public class CMDHandler {
             runtime.exec(cmdSpecification + command);
         }
         catch (IOException exception) {
-            System.out.println(ERROR_MESSAGE + command); // can't be logged because on computer side
+            System.out.println("Unable to execute: " + command); // can't be logged because on computer side
         }
-    }
-
-    public static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
     public static void runJavaClass(Path javaPath) {

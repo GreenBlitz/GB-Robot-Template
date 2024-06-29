@@ -31,24 +31,39 @@ public class CMDHandler {
      *                 example: "frc/utils/applicationsutils/CMDHandler"
      */
     public static void runJavaClass(String javaPath) {
+        runJavaClass(javaPath, "");
+    }
+
+    /**
+     * @param javaPath The path from the java package to the class.
+     *                 example: "frc/utils/applicationsutils/CMDHandler"
+     */
+    public static void runJavaClass(String javaPath, String arguments) {
         int lastSlash = javaPath.lastIndexOf('/');
         String className = javaPath.substring(lastSlash + 1);
         String packageName = javaPath.substring(0, lastSlash);
-        runCMDCommand(PATH_TO_JAVA_DIRECTORY + "/" + packageName, "java " + className + ".java");
+        runCMDCommand(PATH_TO_JAVA_DIRECTORY + "/" + packageName, "java " + className + ".java " + arguments);
     }
 
     /**
      * @param classToRun The class to run. example: CMDHandler.class
      */
     public static void runJavaClass(Class classToRun) {
+        runJavaClass(classToRun, "");
+    }
+
+    /**
+     * @param classToRun The class to run. example: CMDHandler.class
+     */
+    public static void runJavaClass(Class classToRun, String arguments) {
         String className = classToRun.getName();
         className = className.replace('.', '/');
-        runJavaClass(className);
+        runJavaClass(className, arguments);
     }
 
     /**
      * @param pythonPath The path from the java package to the class.
-     *                   example: "keyboard_to_nt"
+     *                   example: "directory/example_class"
      */
     public static void runPythonClass(String pythonPath) {
         runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath + ".py");
@@ -56,7 +71,7 @@ public class CMDHandler {
 
     /**
      * @param pythonPath The path from the java package to the class.
-     *                   example: "keyboard_to_nt"
+     *                   example: "directory/example_class"
      *
      * @param arguments The arguments given to the python file, each argument separated by a space.
      *                  Note that it is only possible to transfer strings into the python class.

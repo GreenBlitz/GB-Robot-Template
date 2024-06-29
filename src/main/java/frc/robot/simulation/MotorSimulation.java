@@ -9,15 +9,12 @@ import frc.utils.batteryutils.Battery;
 import frc.utils.devicewrappers.TalonFXWrapper;
 import frc.utils.cycletimeutils.CycleTimeUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A wrapper class for the WPILib default simulation classes, that'll act similarly to how the TalonFX motor controller works.
  */
 public abstract class MotorSimulation {
 
-    private static final List<MotorSimulation> REGISTERED_SIMULATIONS = new ArrayList<>();
 
     private final TalonFXWrapper motor;
 
@@ -26,21 +23,15 @@ public abstract class MotorSimulation {
     private final StatusSignal<Double> closedLoopReferenceSignal;
 
     protected MotorSimulation() {
-        REGISTERED_SIMULATIONS.add(this);
-        this.motor = new TalonFXWrapper(REGISTERED_SIMULATIONS.size());
+        SimulationManager.addSimulation(this);
+        this.motor = SimulationManager.createNewMotorForSimulation();
         this.motorSimulationState = motor.getSimState();
         this.motorSimulationState.setSupplyVoltage(Battery.getDefaultBatteryVoltage());
         this.closedLoopReferenceSignal = motor.getClosedLoopReference();
         this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / CycleTimeUtils.getDefaultCycleTime());
     }
 
-    public static void updateRegisteredSimulations() {
-        for (MotorSimulation motorSimulation : REGISTERED_SIMULATIONS) {
-            motorSimulation.updateSimulation();
-        }
-    }
-
-    private void updateSimulation() {
+    protected void updateSimulation() {
         setInputVoltage(motorSimulationState.getMotorVoltage());
         updateMotor();
         motorSimulationState.setRawRotorPosition(getPosition().getRotations());

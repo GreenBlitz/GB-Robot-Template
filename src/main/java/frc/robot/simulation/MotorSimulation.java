@@ -13,7 +13,7 @@ import frc.utils.cycletimeutils.CycleTimeUtils;
 /**
  * A wrapper class for the WPILib default simulation classes, that'll act similarly to how the TalonFX motor controller works.
  */
-public abstract class MotorSimulation {
+abstract class MotorSimulation {
 
 
     private final TalonFXWrapper motor;

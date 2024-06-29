@@ -1,7 +1,6 @@
 package frc.robot.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.utils.Conversions;
 import frc.utils.cycletimeutils.CycleTimeUtils;
@@ -12,19 +11,9 @@ public class ElevatorSimulation extends MotorSimulation {
 
     private final double diameterMeters;
 
-    public ElevatorSimulation(DCMotor gearbox, double gearRatio, double carriageMassKilograms, double drumRadiusMeters,
-            double minimumHeightMeters, double maximumHeightMeters, double startingHeightMeters, boolean simulateGravity) {
+    public ElevatorSimulation(ElevatorSim elevatorSimulation, double drumRadiusMeters) {
+        this.elevatorSimulation = elevatorSimulation;
         this.diameterMeters = 2 * drumRadiusMeters;
-        this.elevatorSimulation = new ElevatorSim(
-                gearbox,
-                gearRatio,
-                carriageMassKilograms,
-                drumRadiusMeters,
-                minimumHeightMeters,
-                maximumHeightMeters,
-                simulateGravity,
-                startingHeightMeters
-        );
     }
 
     public double getCurrent() {

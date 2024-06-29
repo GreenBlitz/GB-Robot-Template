@@ -9,8 +9,8 @@ public class CMDHandler {
     public static final Path PATH_TO_PYTHON_DIRECTORY = REPOSITORY_PATH.resolve("src/main/python");
     public static final Path PATH_TO_JAVA_DIRECTORY = REPOSITORY_PATH.resolve("src/main/java");
 
-    private static final String APPLICATION = "cmd.exe";
-    private static final String CMD_DIRECTORY = "/c";
+    private static final String WINDOWS_CMD_SPECIFICATION = "cmd.exe /c ";
+    private static final String NON_WINDOWS_CMD_SPECIFICATION = "bash -c ";
     private static final String ERROR_MESSAGE = "Unable to execute: ";
 
 
@@ -20,14 +20,18 @@ public class CMDHandler {
 
     public static void runCMDCommand(String command) {
         Runtime runtime = Runtime.getRuntime();
+        String cmdSpecification = isWindows() ? WINDOWS_CMD_SPECIFICATION : NON_WINDOWS_CMD_SPECIFICATION;
         try {
-            runtime.exec(new String[]{APPLICATION, CMD_DIRECTORY, command});
+            runtime.exec(cmdSpecification + command);
         }
         catch (IOException exception) {
             System.out.println(ERROR_MESSAGE + command);// can't be logged because on computer side
         }
     }
 
+    public static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
+    }
 
     public static void runJavaClass(Path javaPath) {
         runJavaClass(javaPath, "");

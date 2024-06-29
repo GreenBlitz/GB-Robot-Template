@@ -9,10 +9,14 @@ public enum LogSaveSpot {
     ROBORIO(LoggerConstants.ROBORIO_LOG_PATH),
     COMPUTER(LoggerConstants.SIMULATION_LOG_PATH);
 
-    public final Path savePath;
+    private final Path savePath;
 
     LogSaveSpot(Path savePath) {
         this.savePath = savePath;
+    }
+
+    public Path getSavePath() {
+        return savePath;
     }
 
     public boolean isWritable() {

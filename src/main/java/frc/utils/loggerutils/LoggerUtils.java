@@ -48,7 +48,7 @@ public class LoggerUtils {
     }
 
     private static void startNonReplayLogger(LogSaveSpot logSaveSpot) {
-        setLoggingPath(logSaveSpot.savePath);
+        setLoggingPath(logSaveSpot.getSavePath());
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
         Logger.recordOutput("Logged In", logSaveSpot);

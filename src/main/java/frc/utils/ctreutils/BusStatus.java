@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.LogPathsConstants;
 import org.littletonrobotics.junction.Logger;
 
-
 public class BusStatus {
 
     private static final double MAX_CAN_UTILIZATION_PERCENT = 0.6;

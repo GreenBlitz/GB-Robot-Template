@@ -104,6 +104,7 @@ public class Swerve extends GBSubsystem {
         Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
         Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "X", fieldRelativeSpeeds.vxMetersPerSecond);
         Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
+        Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Magnitude", getDriveMagnitude(fieldRelativeSpeeds));
     }
 
 
@@ -335,8 +336,7 @@ public class Swerve extends GBSubsystem {
         Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(swerveState.getAimAssist().targetAngleSupplier.get());
 
         //Magnitude Factor
-        double driveMagnitude = // todo - move to math
-                Math.sqrt((currentSpeeds.vyMetersPerSecond * currentSpeeds.vyMetersPerSecond) + (currentSpeeds.vxMetersPerSecond * currentSpeeds.vxMetersPerSecond));
+        double driveMagnitude = getDriveMagnitude(currentSpeeds);
         double angularVelocityRads =
                 pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 
@@ -382,6 +382,11 @@ public class Swerve extends GBSubsystem {
                 yPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
                 thetaPower * currentState.getDriveSpeed().maxRotationSpeedPerSecond.getRadians()
         );
+    }
+
+    // todo: move to math
+    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds){
+        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond,2) + Math.pow(chassisSpeeds.vyMetersPerSecond,2));
     }
 
     /**

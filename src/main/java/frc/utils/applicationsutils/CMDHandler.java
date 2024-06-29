@@ -28,7 +28,7 @@ public class CMDHandler {
 
     /**
      * @param javaPath The path from the java package to the class.
-     *                 example: "frc/utils/applicationsutils/CMDHandler"
+     *                 example: "my/directory/Example"
      */
     public static void runJavaClass(String javaPath) {
         runJavaClass(javaPath, "");
@@ -36,7 +36,7 @@ public class CMDHandler {
 
     /**
      * @param javaPath The path from the java package to the class.
-     *                 example: "frc/utils/applicationsutils/CMDHandler"
+     *                 example: "my/directory/Example"
      */
     public static void runJavaClass(String javaPath, String arguments) {
         int lastSlash = javaPath.lastIndexOf('/');
@@ -46,14 +46,14 @@ public class CMDHandler {
     }
 
     /**
-     * @param classToRun The class to run. example: CMDHandler.class
+     * @param classToRun The class to run. example: Example.class
      */
     public static void runJavaClass(Class classToRun) {
         runJavaClass(classToRun, "");
     }
 
     /**
-     * @param classToRun The class to run. example: CMDHandler.class
+     * @param classToRun The class to run. example: Example.class
      */
     public static void runJavaClass(Class classToRun, String arguments) {
         String className = classToRun.getName();

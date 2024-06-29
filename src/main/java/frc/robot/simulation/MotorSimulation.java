@@ -15,7 +15,6 @@ import frc.utils.cycletimeutils.CycleTimeUtils;
  */
 abstract class MotorSimulation {
 
-
     private final TalonFXWrapper motor;
 
     private final TalonFXSimState motorSimulationState;

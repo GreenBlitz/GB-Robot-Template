@@ -27,67 +27,53 @@ public class CMDHandler {
     }
 
     /**
-     * @param javaPath The path from the java package to the class.
-     *                 example: "directory/to/my/Example"
+     * @param javaPath The path from the java package to the class. example: "directory/to/my/Example".
      */
-    public static void runJavaClass(String javaPath) {
+    public static void runJavaClass(Path javaPath) {
         runJavaClass(javaPath, "");
     }
 
     /**
-     * @param javaPath The path from the java package to the class.
-     *                 example: "directory/to/my/Example"
+     * @param javaPath The path from the java package to the class. example: "directory/to/my/Example".
+     *
      * @param arguments The arguments given to the java file, each argument separated by a space.
-     *                  Note that it is only possible to transfer strings into the java class.
-     *                  Also note that when using the arguments in the python class,
-     *                  the first one will always be the path of the class.
      */
-    public static void runJavaClass(String javaPath, String arguments) {
-        int lastSlash = javaPath.lastIndexOf('/');
-        String className = javaPath.substring(lastSlash + 1);
-        String packageName = javaPath.substring(0, lastSlash);
+    public static void runJavaClass(Path javaPath, String arguments) {
+        Path className = javaPath.getName(javaPath.getNameCount() - 1);
+        Path packageName = javaPath.getParent();
         runCMDCommand(PATH_TO_JAVA_DIRECTORY.resolve(packageName), "java " + className + ".java " + arguments);
     }
 
     /**
-     * @param classToRun The class to run. example: Example.class
+     * @param classToRun The class to run. example: Example.class .
      */
     public static void runJavaClass(Class classToRun) {
         runJavaClass(classToRun, "");
     }
 
     /**
-     * @param classToRun The class to run. example: Example.class
-     *
+     * @param classToRun The class to run. example: Example.class .
      * @param arguments The arguments given to the java file, each argument separated by a space.
-     *                  Note that it is only possible to transfer strings into the java class.
-     *                  Also note that when using the arguments in the java class,
-     *                  the first one will always be the path of the class.
      */
     public static void runJavaClass(Class classToRun, String arguments) {
         String className = classToRun.getName();
         className = className.replace('.', '/');
-        runJavaClass(className, arguments);
+        Path pathOfClass = Path.of(className);
+        runJavaClass(pathOfClass, arguments);
     }
 
     /**
-     * @param pythonPath The path from the java package to the class.
-     *                   example: "directory/example_class"
+     * @param pythonPath The path from the java package to the class. example: "directory/example_class".
      */
-    public static void runPythonClass(String pythonPath) {
+    public static void runPythonClass(Path pythonPath) {
         runPythonClass(pythonPath, "");
     }
 
     /**
-     * @param pythonPath The path from the java package to the class.
-     *                   example: "directory/example_class"
-     *
+     * @param pythonPath The path from the java package to the class. example: "directory/example_class".
      * @param arguments The arguments given to the python file, each argument separated by a space.
-     *                  Note that it is only possible to transfer strings into the python class.
-     *                  Also note that when using the arguments in the python class,
-     *                  the first one will always be the path of the class.
      */
-    public static void runPythonClass(String pythonPath, String arguments) {
+    public static void runPythonClass(Path pythonPath, String arguments) {
         runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath + ".py " + arguments);
     }
 }

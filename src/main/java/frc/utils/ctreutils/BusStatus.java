@@ -18,10 +18,10 @@ public class BusStatus {
         updateChainStatus(Phoenix6Constants.CANIVORE_NAME);
     }
 
-    private static void updateChainStatus(String name) {
-        CANBus.CANBusStatus busStatus = CANBus.getStatus(name);
-        logStatus(busStatus, name);
-        reportAlerts(busStatus, name);
+    private static void updateChainStatus(String chainName) {
+        CANBus.CANBusStatus busStatus = CANBus.getStatus(chainName);
+        logStatus(busStatus, chainName);
+        reportAlerts(busStatus, chainName);
     }
 
     private static void logStatus(CANBus.CANBusStatus busStatus, String name) {

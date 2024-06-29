@@ -20,11 +20,11 @@ public class CANStatus {
 
     private static void updateBusStatus(String name) {
         CANBus.CANBusStatus busStatus = CANBus.getStatus(name);
-        logBusStatus(busStatus, name);
-        reportBusAlerts(busStatus, name);
+        logStatus(busStatus, name);
+        reportAlerts(busStatus, name);
     }
 
-    private static void logBusStatus(CANBus.CANBusStatus busStatus, String name) {
+    private static void logStatus(CANBus.CANBusStatus busStatus, String name) {
         String currentLogPath = LOG_PATH + name;
         Logger.recordOutput(currentLogPath + "/Status", busStatus.Status.getName());
         Logger.recordOutput(currentLogPath + "/Utilization", busStatus.BusUtilization);
@@ -34,7 +34,7 @@ public class CANStatus {
         Logger.recordOutput(currentLogPath + "/TransmitError", busStatus.TEC);
     }
 
-    private static void reportBusAlerts(CANBus.CANBusStatus busStatus, String name) {
+    private static void reportAlerts(CANBus.CANBusStatus busStatus, String name) {
         String currentAlertLogPath = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name;
         double currentTime = Timer.getFPGATimestamp();
 

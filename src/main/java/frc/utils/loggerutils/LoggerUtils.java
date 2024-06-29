@@ -20,11 +20,11 @@ public class LoggerUtils {
         }
         else {
             startLoggerOnRoborio();
-            reportNoUSBFoundToLog();
+            reportNoUSBFound();
         }
     }
 
-    private static void reportNoUSBFoundToLog() {
+    private static void reportNoUSBFound() {
         Logger.recordOutput(LogPathsConstants.ALERT_LOG_PATH + "/Didn't find USB");
     }
 

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.constants.Ports;
 
 public class SmartJoystick {
 
@@ -12,90 +13,50 @@ public class SmartJoystick {
 
     public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 
+    private final Joystick joystick;
+
     private final double deadzone;
 
-    private Joystick joystick;
 
-    /**
-     * This constructor constructs the joystick based on the joystick port we give it.
-     *
-     * @param joystick_port The port of the joystick.
-     * @param deadzone values if the stick below it will count as 0.
-     */
-    public SmartJoystick(int joystick_port, double deadzone) {
-        this(new Joystick(joystick_port), deadzone);
+    public SmartJoystick(Ports.JoystickPorts joystickPort) {
+        this(joystickPort, SmartJoystickConstants.DEADZONE);
     }
 
-    /**
-     * This constructor uses a joystick and assigns it button values and numbers.
-     *
-     * @param stick The joystick object.
-     * @param deadzone values if the stick below it will count as 0.
-     */
-    public SmartJoystick(Joystick stick, double deadzone) {
+    public SmartJoystick(Ports.JoystickPorts joystickPort, double deadzone) {
+        this(new Joystick(joystickPort.getPort()), deadzone);
+    }
+
+    private SmartJoystick(Joystick joystick, double deadzone) {
         this.deadzone = deadzone;
-        this.joystick = stick;
+        this.joystick = joystick;
 
-        this.A = new JoystickButton(joystick, ButtonID.A.getId());
-        this.B = new JoystickButton(joystick, ButtonID.B.getId());
-        this.X = new JoystickButton(joystick, ButtonID.X.getId());
-        this.Y = new JoystickButton(joystick, ButtonID.Y.getId());
+        this.A = new JoystickButton(this.joystick, ButtonID.A.getId());
+        this.B = new JoystickButton(this.joystick, ButtonID.B.getId());
+        this.X = new JoystickButton(this.joystick, ButtonID.X.getId());
+        this.Y = new JoystickButton(this.joystick, ButtonID.Y.getId());
 
-        this.L1 = new JoystickButton(joystick, ButtonID.L1.getId());
-        this.R1 = new JoystickButton(joystick, ButtonID.R1.getId());
+        this.L1 = new JoystickButton(this.joystick, ButtonID.L1.getId());
+        this.R1 = new JoystickButton(this.joystick, ButtonID.R1.getId());
 
-        this.BACK = new JoystickButton(joystick, ButtonID.BACK.getId());
-        this.START = new JoystickButton(joystick, ButtonID.START.getId());
+        this.BACK = new JoystickButton(this.joystick, ButtonID.BACK.getId());
+        this.START = new JoystickButton(this.joystick, ButtonID.START.getId());
 
-        this.L3 = new JoystickButton(joystick, ButtonID.L3.getId());
-        this.R3 = new JoystickButton(joystick, ButtonID.R3.getId());
+        this.L3 = new JoystickButton(this.joystick, ButtonID.L3.getId());
+        this.R3 = new JoystickButton(this.joystick, ButtonID.R3.getId());
 
-        this.POV_UP = new POVButton(joystick, ButtonID.POV_UP.getId());
-        this.POV_RIGHT = new POVButton(joystick, ButtonID.POV_RIGHT.getId());
-        this.POV_DOWN = new POVButton(joystick, ButtonID.POV_DOWN.getId());
-        this.POV_LEFT = new POVButton(joystick, ButtonID.POV_LEFT.getId());
+        this.POV_UP = new POVButton(this.joystick, ButtonID.POV_UP.getId());
+        this.POV_RIGHT = new POVButton(this.joystick, ButtonID.POV_RIGHT.getId());
+        this.POV_DOWN = new POVButton(this.joystick, ButtonID.POV_DOWN.getId());
+        this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
     }
 
     /**
-     * This constructor constructs the joystick based on the joystick port we give it.
-     *
-     * @param joystick_port The port of the joystick.
+     * @param power the power to rumble the joystick between [-1, 1]
      */
-    public SmartJoystick(int joystick_port) {
-        this(new Joystick(joystick_port));
+    public void startRumble(GenericHID.RumbleType rumbleSide, double power) {
+        joystick.setRumble(rumbleSide, power);
     }
 
-    public SmartJoystick(Joystick stick) {
-        this(stick, SmartJoystickConstants.DEADZONE);
-    }
-
-    /**
-     * This function binds a joystick using a joystick port.
-     *
-     * @param port The port of the joystick which we bind the joystick to.
-     */
-    public void bind(int port) {
-        bind(new Joystick(port));
-    }
-
-    /**
-     * This function binds a joystick using a joystick object.
-     *
-     * @param stick This stick object which we bind the joystick to.
-     */
-    public void bind(Joystick stick) {
-        joystick = stick;
-    }
-
-    /**
-     * This function returns the axis based on an axis number.
-     *
-     * @param raw_axis The axis number we want to return.
-     * @return A joystick axis based off of the joystick axis number.
-     */
-    public double getRawAxis(int raw_axis) {
-        return joystick == null ? 0 : joystick.getRawAxis(raw_axis);
-    }
 
     /**
      * This function returns the value of the axis, if the stick was square instead of circle
@@ -124,11 +85,8 @@ public class SmartJoystick {
      * </p>
      */
     public double getSquaredAxis(Axis axis) {
-        if (joystick == null) {
-            return 0;
-        }
         if (!isStickAxis(axis)) {
-            return axis.getValue(this);
+            return axis.getValue(joystick);
         }
         double squaredAxisValue = getAxisValue(axis) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
         return MathUtil.clamp(squaredAxisValue, -1, 1);
@@ -144,45 +102,35 @@ public class SmartJoystick {
         return getSensitiveJoystickValue(getAxisValue(axis), SmartJoystickConstants.SENSITIVE_AXIS_VALUE_POWER);
     }
 
-    private double getSensitiveJoystickValue(double axisValue, double power) {
-        return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
-    }
-
     public double getSquaredSensitiveAxis(Axis axis) {
         double squaredValue = getSquaredAxis(axis);
         return getSensitiveJoystickValue(squaredValue, SmartJoystickConstants.SENSITIVE_SQUARED_AXIS_VALUE_POWER);
     }
 
-    private boolean isStickAxis(Axis axis) {
-        return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
+    private static double getSensitiveJoystickValue(double axisValue, double power) {
+        return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
     }
 
-    /**
-     * This function returns a joystick
-     *
-     * @return The joystick used in this class.
-     */
-    public Joystick getRawJoystick() {
-        return joystick;
-    }
-
-    public double getAxisValue(Axis axis) {
-        return isStickAxis(axis) ? deadzone(axis.getValue(this)) : axis.getValue(this);
-    }
-
-    private double deadzone(double power) {
+    private static double deadzone(double power, double deadzone) {
         return MathUtil.applyDeadband(power, deadzone);
     }
 
-    /**
-     * Rumbles the controller at a certain side
-     *
-     * @param left rumble side (false for left)
-     * @param power normalized rumble [0, 1]
-     */
-    public void rumble(boolean left, double power) {
-        joystick.setRumble(left ? GenericHID.RumbleType.kLeftRumble : GenericHID.RumbleType.kRightRumble, power);
+    public double getAxisValue(Axis axis) {
+        return isStickAxis(axis) ? deadzone(axis.getValue(joystick), deadzone) : axis.getValue(joystick);
     }
+
+    public AxisButton getAxisAsButton(Axis axis) {
+        return getAxisAsButton(axis, SmartJoystickConstants.DEFAULT_THRESHOLD_FOR_AXIS_BUTTON);
+    }
+
+    public AxisButton getAxisAsButton(Axis axis, double threshold) {
+        return axis.getAsButton(joystick, threshold);
+    }
+
+    private static boolean isStickAxis(Axis axis) {
+        return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
+    }
+
 
     public enum Axis {
         LEFT_X(0, true),
@@ -193,20 +141,19 @@ public class SmartJoystick {
         RIGHT_Y(5, true);
 
         private final int axis;
-
-        private int inverted;
+        private final int invertedSign;
 
         Axis(int axis, boolean isInverted) {
             this.axis = axis;
-            setInverted(isInverted);
+            this.invertedSign = isInverted ? -1 : 1;
         }
 
-        public void setInverted(boolean isInverted) {
-            inverted = isInverted ? -1 : 1;
+        private AxisButton getAsButton(Joystick joystick, double threshold) {
+            return new AxisButton(joystick, axis, threshold);
         }
 
-        public double getValue(SmartJoystick stick) {
-            return inverted * stick.getRawAxis(axis);
+        private double getValue(Joystick joystick) {
+            return invertedSign * joystick.getRawAxis(axis);
         }
     }
 

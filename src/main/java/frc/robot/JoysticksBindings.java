@@ -5,19 +5,20 @@ import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
 
-    private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.MAIN);
-
-    private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.SECOND);
-
-    private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.THIRD);
-
-    private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(Ports.JoystickDriverStationPorts.FOURTH);
+    private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(Ports.JoystickPorts.MAIN);
+    private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(Ports.JoystickPorts.SECOND);
+    private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(Ports.JoystickPorts.THIRD);
+    private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(Ports.JoystickPorts.FOURTH);
+    private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(Ports.JoystickPorts.FIFTH);
+    private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(Ports.JoystickPorts.SIXTH);
 
     public static void configureBindings() {
         mainJoystickButtons();
         secondJoystickButtons();
         thirdJoystickButtons();
         fourthJoystickButtons();
+        fifthJoystickButtons();
+        sixthJoystickButtons();
     }
 
     private static void mainJoystickButtons() {
@@ -37,6 +38,16 @@ public class JoysticksBindings {
 
     private static void fourthJoystickButtons() {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
+        // bindings
+    }
+
+    private static void fifthJoystickButtons() {
+        SmartJoystick usedJoystick = FIFTH_JOYSTICK;
+        // bindings
+    }
+
+    private static void sixthJoystickButtons() {
+        SmartJoystick usedJoystick = SIXTH_JOYSTICK;
         // bindings
     }
 

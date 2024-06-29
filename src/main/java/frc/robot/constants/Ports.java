@@ -2,16 +2,23 @@ package frc.robot.constants;
 
 public class Ports {
 
-    public static class JoystickDriverStationPorts {
+    public enum JoystickPorts {
+        MAIN(0),
+        SECOND(1),
+        THIRD(2),
+        FOURTH(3),
+        FIFTH(4),
+        SIXTH(5);
 
-        public static final int MAIN = 0;
+        private final int port;
 
-        public static final int SECOND = 1;
+        JoystickPorts(int port) {
+            this.port = port;
+        }
 
-        public static final int THIRD = 2;
-
-        public static final int FOURTH = 3;
-
+        public int getPort() {
+            return port;
+        }
     }
 
 }

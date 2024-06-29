@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.SimulationManager;
-import frc.utils.CTREUtils.BusStatus;
+import frc.utils.ctreutils.BusStatus;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.cycletimeutils.CycleTimeUtils;

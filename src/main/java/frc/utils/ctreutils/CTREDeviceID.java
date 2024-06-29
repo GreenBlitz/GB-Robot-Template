@@ -1,4 +1,4 @@
-package frc.utils.CTREUtils;
+package frc.utils.ctreutils;
 
 import frc.robot.constants.Phoenix6Constants;
 

@@ -1,4 +1,4 @@
-package frc.utils.CTREUtils;
+package frc.utils.ctreutils;
 
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.Timer;
@@ -9,8 +9,8 @@ import org.littletonrobotics.junction.Logger;
 public class BusStatus {
 
     private static final double MAX_CAN_UTILIZATION_PERCENT = 0.6;
-    private static final double MAX_RECEIVE_ERRORS = 1;
-    private static final double MAX_TRANSMIT_ERRORS = 1;
+    private static final double MAX_RECEIVE_ERRORS = 0;
+    private static final double MAX_TRANSMIT_ERRORS = 0;
     private static final String LOG_PATH = "Bus/";
 
     public static void logChainsStatuses() {

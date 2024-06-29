@@ -10,8 +10,6 @@ public class SmartJoystick {
 
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
 
-    public final AxisButton L2, R2;
-
     public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 
     private final double deadzone;
@@ -37,22 +35,24 @@ public class SmartJoystick {
     public SmartJoystick(Joystick stick, double deadzone) {
         this.deadzone = deadzone;
         this.joystick = stick;
-        this.A = new JoystickButton(joystick, 1);
-        this.B = new JoystickButton(joystick, 2);
-        this.X = new JoystickButton(joystick, 3);
-        this.Y = new JoystickButton(joystick, 4);
-        this.L1 = new JoystickButton(joystick, 5);
-        this.R1 = new JoystickButton(joystick, 6);
-        this.BACK = new JoystickButton(joystick, 7);
-        this.START = new JoystickButton(joystick, 8);
-        this.L3 = new JoystickButton(joystick, 9);
-        this.R3 = new JoystickButton(joystick, 10);
-        this.L2 = new AxisButton(joystick, 2, 0.1);
-        this.R2 = new AxisButton(joystick, 3, 0.1);
-        this.POV_UP = new POVButton(joystick, 0);
-        this.POV_RIGHT = new POVButton(joystick, 90);
-        this.POV_DOWN = new POVButton(joystick, 180);
-        this.POV_LEFT = new POVButton(joystick, 270);
+
+        this.A = new JoystickButton(joystick, ButtonID.A.getId());
+        this.B = new JoystickButton(joystick, ButtonID.B.getId());
+        this.X = new JoystickButton(joystick, ButtonID.X.getId());
+        this.Y = new JoystickButton(joystick, ButtonID.Y.getId());
+
+        this.L1 = new JoystickButton(joystick, ButtonID.L1.getId());
+        this.R1 = new JoystickButton(joystick, ButtonID.R1.getId());
+        this.L3 = new JoystickButton(joystick, ButtonID.L3.getId());
+        this.R3 = new JoystickButton(joystick, ButtonID.R3.getId());
+
+        this.BACK = new JoystickButton(joystick, ButtonID.BACK.getId());
+        this.START = new JoystickButton(joystick, ButtonID.START.getId());
+
+        this.POV_UP = new POVButton(joystick, ButtonID.POV_UP.getId());
+        this.POV_LEFT = new POVButton(joystick, ButtonID.POV_LEFT.getId());
+        this.POV_RIGHT = new POVButton(joystick, ButtonID.POV_RIGHT.getId());
+        this.POV_DOWN = new POVButton(joystick, ButtonID.POV_DOWN.getId());
     }
 
     /**

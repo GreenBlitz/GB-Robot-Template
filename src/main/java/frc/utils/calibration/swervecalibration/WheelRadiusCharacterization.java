@@ -45,7 +45,17 @@ public class WheelRadiusCharacterization extends Command {
         addRequirements(drive);
     }
 
-    public double getAverageDriveDistanceRads() {
+    private void updateAnglePassedFromStart() {
+        double currentGyroYawRads = gyroAngleSupplier.get().getRadians();
+        accumGyroYawRads += MathUtil.angleModulus(currentGyroYawRads - lastGyroYawRads);
+        lastGyroYawRads = currentGyroYawRads;
+    }
+
+    private double getDriveDistanceMeters() {
+        return accumGyroYawRads * driveRadiusMeters;
+    }
+
+    private double getAverageDriveDistanceRads() {
         Rotation2d[] wheelPositions = wheelDriveDistanceSupplier.get();
         double averageDriveDistanceRads = 0.0;
         for (int i = 0; i < WheelRadiusConstants.NUMBER_OF_MODULES; i++) {
@@ -66,17 +76,10 @@ public class WheelRadiusCharacterization extends Command {
     public void execute() {
         velocityControl.accept(characterizationSpeed);
 
-        // Update the angle passed from start
-        double currentGyroYawRads = gyroAngleSupplier.get().getRadians();
-        accumGyroYawRads += MathUtil.angleModulus(currentGyroYawRads - lastGyroYawRads);
-        lastGyroYawRads = currentGyroYawRads;
-
-        // Update the drive distance of the wheels
-        double averageDriveDistanceRads = getAverageDriveDistanceRads();
-        double driveDistanceMeters = accumGyroYawRads * driveRadiusMeters;
+        updateAnglePassedFromStart();
 
         // Distance meters / Distance Radians = Radius Meters
-        wheelRadiusMeters = driveDistanceMeters / averageDriveDistanceRads;
+        wheelRadiusMeters = getDriveDistanceMeters() / getAverageDriveDistanceRads();
     }
 
     @Override

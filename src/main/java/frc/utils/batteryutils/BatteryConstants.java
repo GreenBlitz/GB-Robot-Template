@@ -10,13 +10,16 @@ class BatteryConstants {
 
     protected static final String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
 
+
     protected static final double DEFAULT_BATTERY_VOLTAGE = 12;
 
     protected static final double MIN_VOLTAGE_BATTERY = 10.5;
 
+
     protected static final int NUMBER_OF_VALUES_TAKEN_IN_AVERAGE = 50;
 
     protected static final int POWER_DISTRIBUTION_CAN_ID = 20;
+
 
     protected static final PowerDistribution.ModuleType POWER_DISTRIBUTION_TYPE = PowerDistribution.ModuleType.kRev;
 

@@ -26,7 +26,7 @@ public class Battery {
         BatteryConstants.BATTERY_LIMITER.schedule();
     }
 
-    protected static void logBatteryStatus() {
+    protected static void logStatus() {
         Logger.recordOutput(BatteryConstants.LOG_PATH + "Voltage", getCurrentVoltage());
         Logger.recordOutput(BatteryConstants.LOG_PATH + "Current", getTotalCurrent());
     }

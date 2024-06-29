@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.Phoenix6Constants;
+import frc.utils.ctreutils.CTREDeviceID;
 
 public class Pigeon2Wrapper extends Pigeon2 {
 
@@ -95,19 +95,15 @@ public class Pigeon2Wrapper extends Pigeon2 {
     private double pitchOffSetDegrees;
 
     public Pigeon2Wrapper(int id) {
-        this(id, Phoenix6Constants.CANBUS_NAME, new Pigeon2Configuration());
+        this(new CTREDeviceID(id));
     }
 
-    public Pigeon2Wrapper(int id, String busChain) {
-        this(id, busChain, new Pigeon2Configuration());
+    public Pigeon2Wrapper(CTREDeviceID deviceID) {
+        this(deviceID, new Pigeon2Configuration());
     }
 
-    public Pigeon2Wrapper(int id, Pigeon2Configuration configuration) {
-        this(id, Phoenix6Constants.CANBUS_NAME, configuration);
-    }
-
-    public Pigeon2Wrapper(int id, String busChain, Pigeon2Configuration configuration) {
-        super(id, busChain);
+    public Pigeon2Wrapper(CTREDeviceID deviceID, Pigeon2Configuration configuration) {
+        super(deviceID.ID(), deviceID.busChain().getChainName());
         this.rollOffSetDegrees = 0;
         this.pitchOffSetDegrees = 0;
         applyConfiguration(configuration);

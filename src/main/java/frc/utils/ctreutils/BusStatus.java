@@ -3,7 +3,6 @@ package frc.utils.ctreutils;
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.LogPathsConstants;
-import frc.robot.constants.Phoenix6Constants;
 import org.littletonrobotics.junction.Logger;
 
 
@@ -15,18 +14,19 @@ public class BusStatus {
     private static final String LOG_PATH = "Bus/";
 
     public static void logChainsStatuses() {
-        updateChainStatus(Phoenix6Constants.CANBUS_NAME);
-        updateChainStatus(Phoenix6Constants.CANIVORE_NAME);
+        for (BusChain chain : BusChain.values()) {
+            updateChainStatus(chain);
+        }
     }
 
-    private static void updateChainStatus(String chainName) {
-        CANBus.CANBusStatus busStatus = CANBus.getStatus(chainName);
-        logStatus(busStatus, chainName);
-        reportAlerts(busStatus, chainName);
+    private static void updateChainStatus(BusChain busChain) {
+        CANBus.CANBusStatus busStatus = CANBus.getStatus(busChain.getChainName());
+        logStatus(busStatus, busChain);
+        reportAlerts(busStatus, busChain);
     }
 
-    private static void logStatus(CANBus.CANBusStatus busStatus, String chainName) {
-        String currentLogPath = LOG_PATH + chainName;
+    private static void logStatus(CANBus.CANBusStatus busStatus, BusChain busChain) {
+        String currentLogPath = LOG_PATH + busChain.getChainName();
         Logger.recordOutput(currentLogPath + "/Status", busStatus.Status.getName());
         Logger.recordOutput(currentLogPath + "/Utilization", busStatus.BusUtilization);
         Logger.recordOutput(currentLogPath + "/TimesDisconnected", busStatus.BusOffCount);
@@ -35,8 +35,8 @@ public class BusStatus {
         Logger.recordOutput(currentLogPath + "/TransmitError", busStatus.TEC);
     }
 
-    private static void reportAlerts(CANBus.CANBusStatus busStatus, String chainName) {
-        String currentAlertLogPath = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + chainName;
+    private static void reportAlerts(CANBus.CANBusStatus busStatus,  BusChain busChain) {
+        String currentAlertLogPath = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + busChain.getChainName();
         double currentTime = Timer.getFPGATimestamp();
 
         if (!busStatus.Status.isOK()) {

@@ -84,12 +84,12 @@ public class SmartJoystick {
      * @formatter:on
      * </p>
      */
+
     public double getSquaredAxis(Axis axis) {
         if (!isStickAxis(axis)) {
             return axis.getValue(joystick);
         }
-        double squaredAxisValue = getAxisValue(axis) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
-        return MathUtil.clamp(squaredAxisValue, -1, 1);
+        return getSquaredValue(axis.getValue(joystick), SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR);
     }
 
     /**
@@ -105,6 +105,11 @@ public class SmartJoystick {
     public double getSquaredSensitiveAxis(Axis axis) {
         double squaredValue = getSquaredAxis(axis);
         return getSensitiveJoystickValue(squaredValue, SmartJoystickConstants.SENSITIVE_SQUARED_AXIS_VALUE_POWER);
+    }
+
+    private static double getSquaredValue(double value, double factor) {
+        double squaredAxisValue = value * factor;
+        return MathUtil.clamp(squaredAxisValue, -1, 1);
     }
 
     private static double getSensitiveJoystickValue(double axisValue, double power) {

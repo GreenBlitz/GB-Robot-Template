@@ -59,8 +59,8 @@ def get_network_table():
             close_client(network_table_instance)
             sys.exit()
         time.sleep(CONNECTION_COOLDOWN_SECONDS)
-    print("Connection to NetworkTables server succeeded!")
 
+    print("Connection to NetworkTables server succeeded!")
     return network_table_instance
 
 

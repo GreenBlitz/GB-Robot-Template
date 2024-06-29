@@ -5,6 +5,8 @@ import frc.robot.Robot;
 import frc.utils.applicationsutils.CMDHandler;
 import frc.utils.dashboard.LoggedTableBoolean;
 
+import java.nio.file.Path;
+
 
 /*
  * inspired from Trigon code
@@ -16,7 +18,7 @@ public class KeyboardController {
 
     private static final double KEY_PRESSED_VALUE = 0.5;
 
-    private static final String KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS = "keyboard_to_nt";
+    private static final Path KEYBOARD_TO_NETWORK_TABLES_SIMULATION_CLASS = Path.of("keyboard_to_nt");
 
     private static final String KEYBOARD_TABLE = "Keyboard";
     private static final String KEYS_TAB = "Keys/";

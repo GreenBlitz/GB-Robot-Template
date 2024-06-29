@@ -10,18 +10,19 @@
 
 # Lets go Trigon
 
-import sys
-import time
-import keyboard
 # if this library is not installed, dont install ntcore but pyntcore
 import ntcore
+import sys
+import keyboard
 import time
 
 TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
 CLIENT_NAME = "KeyboardToNetworkTables"
+
 CONNECTION_TIMEOUT_SECONDS = 60
 CONNECTION_COOLDOWN_SECONDS = 0.1
 KEYBOARD_CHECKING_COOLDOWN_SECONDS = 0.01
+
 KEYBOARD_TABLE = "Keyboard"
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
 IP = sys.argv[1]

@@ -6,6 +6,7 @@ import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.Phoenix6Constants;
 import org.littletonrobotics.junction.Logger;
 
+
 public class BusStatus {
 
     private static final double MAX_CAN_UTILIZATION_PERCENT = 0.6;
@@ -24,8 +25,8 @@ public class BusStatus {
         reportAlerts(busStatus, chainName);
     }
 
-    private static void logStatus(CANBus.CANBusStatus busStatus, String name) {
-        String currentLogPath = LOG_PATH + name;
+    private static void logStatus(CANBus.CANBusStatus busStatus, String chainName) {
+        String currentLogPath = LOG_PATH + chainName;
         Logger.recordOutput(currentLogPath + "/Status", busStatus.Status.getName());
         Logger.recordOutput(currentLogPath + "/Utilization", busStatus.BusUtilization);
         Logger.recordOutput(currentLogPath + "/TimesDisconnected", busStatus.BusOffCount);
@@ -34,8 +35,8 @@ public class BusStatus {
         Logger.recordOutput(currentLogPath + "/TransmitError", busStatus.TEC);
     }
 
-    private static void reportAlerts(CANBus.CANBusStatus busStatus, String name) {
-        String currentAlertLogPath = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + name;
+    private static void reportAlerts(CANBus.CANBusStatus busStatus, String chainName) {
+        String currentAlertLogPath = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH + chainName;
         double currentTime = Timer.getFPGATimestamp();
 
         if (!busStatus.Status.isOK()) {

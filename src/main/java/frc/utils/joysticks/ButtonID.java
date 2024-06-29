@@ -1,6 +1,6 @@
 package frc.utils.joysticks;
 
-public enum ButtonID {
+enum ButtonID {
 
     A(1),
     B(2),

@@ -9,17 +9,17 @@ import frc.robot.constants.Ports;
 
 public class SmartJoystick {
 
+    private static final double DEADZONE = 0.07;
+    private static final double DEFAULT_THRESHOLD_FOR_AXIS_BUTTON = 0.1;
+    private static final double SENSITIVE_AXIS_VALUE_POWER = 2;
+
     public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
-
     public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
-
     private final Joystick joystick;
-
     private final double deadzone;
 
-
     public SmartJoystick(Ports.JoystickPorts joystickPort) {
-        this(joystickPort, SmartJoystickConstants.DEADZONE);
+        this(joystickPort, DEADZONE);
     }
 
     public SmartJoystick(Ports.JoystickPorts joystickPort, double deadzone) {
@@ -57,75 +57,31 @@ public class SmartJoystick {
         joystick.setRumble(rumbleSide, power);
     }
 
-
-    /**
-     * This function returns the value of the axis, if the stick was square instead of circle
-     *
-     * @param axis The axis we want to use.
-     * @return stick value if stick was square.
-     * <p>
-     * if @ marks the 1 point of each axis:
-     * <p>
-     * @formatter:off
-     *             Before:                                    After:
-     *              (1,0)
-     *           *****@*******      @ (1,1)                *************
-     *      *****           *****                    *****    (1,0)     *****
-     *     ***                   ***                ***  -------@-------@   ***
-     *    **                       **              **   |          (1,1)|    **
-     *   **                         **            **    |               |     **
-     *   **                         *@ (0,1)      **    |          (0,1)@     **
-     *   **                         **            **    |               |     **
-     *   **                         **            **    |               |     **
-     *    **                       **              **   |_______________|    **
-     *     ***                   ***                ***                    ***
-     *       *****           *****                    *****            *****
-     *           *************                            *************
-     * @formatter:on
-     * </p>
-     */
-
-    public double getSquaredAxis(Axis axis) {
-        if (!isStickAxis(axis)) {
-            return axis.getValue(joystick);
-        }
-        return getSquaredValue(axis.getValue(joystick), SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR);
+    public void stopRumble(GenericHID.RumbleType rumbleSide) {
+        joystick.setRumble(rumbleSide, 0);
     }
 
     /**
-     * Make the stick value be parabolic instead of linear. By that it gives easier and soft control in low values.
-     *
-     * @param axis - axis the take value from
-     * @return the soft value
+     * Sample axis value with parabolic curve, allowing for finer control for smaller values.
      */
     public double getSensitiveJoystickValue(Axis axis) {
-        return getSensitiveJoystickValue(getAxisValue(axis), SmartJoystickConstants.SENSITIVE_AXIS_VALUE_POWER);
-    }
-
-    public double getSquaredSensitiveAxis(Axis axis) {
-        double squaredValue = getSquaredAxis(axis);
-        return getSensitiveJoystickValue(squaredValue, SmartJoystickConstants.SENSITIVE_SQUARED_AXIS_VALUE_POWER);
-    }
-
-    private static double getSquaredValue(double value, double factor) {
-        double squaredAxisValue = value * factor;
-        return MathUtil.clamp(squaredAxisValue, -1, 1);
-    }
-
-    private static double getSensitiveJoystickValue(double axisValue, double power) {
-        return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
-    }
-
-    private static double deadzone(double power, double deadzone) {
-        return MathUtil.applyDeadband(power, deadzone);
+        return sensitiveValue(getAxisValue(axis), SENSITIVE_AXIS_VALUE_POWER);
     }
 
     public double getAxisValue(Axis axis) {
-        return isStickAxis(axis) ? deadzone(axis.getValue(joystick), deadzone) : axis.getValue(joystick);
+        return isStickAxis(axis) ? applyDeadzone(axis.getValue(joystick), deadzone) : axis.getValue(joystick);
+    }
+
+    private static double applyDeadzone(double power, double deadzone) {
+        return MathUtil.applyDeadband(power, deadzone);
+    }
+
+    private static double sensitiveValue(double axisValue, double power) {
+        return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
     }
 
     public AxisButton getAxisAsButton(Axis axis) {
-        return getAxisAsButton(axis, SmartJoystickConstants.DEFAULT_THRESHOLD_FOR_AXIS_BUTTON);
+        return getAxisAsButton(axis, DEFAULT_THRESHOLD_FOR_AXIS_BUTTON);
     }
 
     public AxisButton getAxisAsButton(Axis axis, double threshold) {
@@ -134,32 +90,6 @@ public class SmartJoystick {
 
     private static boolean isStickAxis(Axis axis) {
         return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
-    }
-
-
-    public enum Axis {
-        LEFT_X(0, true),
-        LEFT_Y(1, true),
-        LEFT_TRIGGER(2, false),
-        RIGHT_TRIGGER(3, false),
-        RIGHT_X(4, false),
-        RIGHT_Y(5, true);
-
-        private final int axis;
-        private final int invertedSign;
-
-        Axis(int axis, boolean isInverted) {
-            this.axis = axis;
-            this.invertedSign = isInverted ? -1 : 1;
-        }
-
-        private AxisButton getAsButton(Joystick joystick, double threshold) {
-            return new AxisButton(joystick, axis, threshold);
-        }
-
-        private double getValue(Joystick joystick) {
-            return invertedSign * joystick.getRawAxis(axis);
-        }
     }
 
 }

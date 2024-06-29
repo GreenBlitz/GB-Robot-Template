@@ -25,7 +25,7 @@ public class CMDHandler {
             runtime.exec(cmdSpecification + command);
         }
         catch (IOException exception) {
-            System.out.println(ERROR_MESSAGE + command);// can't be logged because on computer side
+            System.out.println(ERROR_MESSAGE + command); // can't be logged because on computer side
         }
     }
 

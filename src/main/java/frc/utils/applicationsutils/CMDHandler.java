@@ -18,12 +18,12 @@ public class CMDHandler {
     }
 
     public static void runCMDCommand(Path directory, String command) {
-        runCMDCommand("cd " + directory + "&&" + command);
+        runCMDCommand("cd \"" + directory.toString() + "\" && " + command);
     }
 
     public static void runCMDCommand(String command) {
-        Runtime runtime = Runtime.getRuntime();
         String cmdSpecification = isWindows() ? WINDOWS_CMD_SPECIFICATION : NON_WINDOWS_CMD_SPECIFICATION;
+        Runtime runtime = Runtime.getRuntime();
         try {
             runtime.exec(cmdSpecification + command);
         }

@@ -18,8 +18,8 @@ class BatteryConstants {
 
     protected static final int NUMBER_OF_VALUES_TAKEN_IN_AVERAGE = 50;
 
-    protected static final int POWER_DISTRIBUTION_CAN_ID = 20;
 
+    protected static final int POWER_DISTRIBUTION_CAN_ID = 20;
 
     protected static final PowerDistribution.ModuleType POWER_DISTRIBUTION_TYPE = PowerDistribution.ModuleType.kRev;
 

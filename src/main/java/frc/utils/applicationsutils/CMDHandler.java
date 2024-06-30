@@ -1,5 +1,6 @@
 package frc.utils.applicationsutils;
 
+import java.io.File;
 import java.nio.file.Path;
 
 public class CMDHandler {
@@ -7,6 +8,7 @@ public class CMDHandler {
     public static final Path REPOSITORY_PATH = Path.of("").toAbsolutePath();
     public static final Path PATH_TO_PYTHON_DIRECTORY = REPOSITORY_PATH.resolve("src/main/python");
     public static final Path PATH_TO_JAVA_DIRECTORY = REPOSITORY_PATH.resolve("src/main/java");
+    public static final Path PATH_TO_ERROR_DIRECTORY = REPOSITORY_PATH.resolve("filesonrun");
 
     private static final String WINDOWS_CMD_SPECIFICATION = "cmd.exe /c ";
     private static final String NON_WINDOWS_CMD_SPECIFICATION = "bash -c ";
@@ -28,7 +30,9 @@ public class CMDHandler {
             runtime.exec(cmdSpecification + command);
         }
         catch (Exception exception) {
-            System.out.println("Unable to execute: " + command); // can't be logged because on computer side
+            System.out.println(exception);
+            File errorFile = FileCreator.createErrorFile(PATH_TO_ERROR_DIRECTORY, "CMDHandler Errors", exception.toString());
+            FileCreator.openFile(errorFile);
         }
     }
 

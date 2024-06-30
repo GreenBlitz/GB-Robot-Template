@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.applicationsutils.CMDHandler;
 import frc.utils.batteryutils.Battery;
 import frc.utils.ctreutils.BusStatus;
 import frc.utils.cycletimeutils.CycleTimeUtils;
@@ -30,6 +31,8 @@ public class Robot extends LoggedRobot {
     public void robotInit() {
         initializeLogger();
         Battery.scheduleLimiterCommand(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
+
+        CMDHandler.runCMDCommand("lol");
 
         robotContainer = new RobotContainer();
     }

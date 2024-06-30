@@ -46,6 +46,17 @@ public class FileCreator {
         }
     }
 
+    public static void clearTextFile(File file) {
+        try {
+            FileWriter myWriter = new FileWriter(file);
+            myWriter.flush();
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
     public static void openFile(File file) {
         try
         {
@@ -55,12 +66,20 @@ public class FileCreator {
                 return;
             }
             Desktop desktop = Desktop.getDesktop();
-            if(file.exists())
+            if(file.exists()) {
                 desktop.open(file);
+            }
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    public static File createErrorFile(Path parent, String name, String text) {
+        File errorFile = createFile(parent,name, "txt");
+        clearTextFile(errorFile);
+        writeToTextFile(errorFile, text);
+        return errorFile;
     }
 }

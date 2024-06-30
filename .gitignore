@@ -182,7 +182,6 @@ simgui-ds.json
 simgui.json
 
 # Python
-src/main/python/__pycache__/
-*.py[cod]
+__pycache__/
 
 

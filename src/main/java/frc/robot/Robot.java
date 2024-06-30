@@ -11,7 +11,7 @@ import frc.robot.simulation.SimulationManager;
 import frc.utils.CTREutils.BusStatus;
 import frc.utils.batteryutils.Battery;
 import frc.utils.cycletimeutils.CycleTimeUtils;
-import frc.utils.loggerutils.LoggerStartup;
+import frc.utils.loggerutils.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -28,7 +28,8 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotInit() {
-        initializeLogger();
+        if (RobotConstants.ROBOT_TYPE.isReplay()) setUseTiming(false); // run as fast as possible
+        LoggerFactory.initializeLogger();
         Battery.scheduleLimiterCommand(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 
         robotContainer = new RobotContainer();
@@ -62,19 +63,6 @@ public class Robot extends LoggedRobot {
         SimulationManager.updateRegisteredSimulations();
     }
 
-    private void initializeLogger(Robot robot) {
-        switch (RobotConstants.ROBOT_TYPE) {
-            case REAL -> {
-                LoggerStartup.startRealLogger();
-            }
-            case SIMULATION -> {
-                LoggerStartup.startSimulationLogger();
-            }
-            case REPLAY -> {
-                robot.setUseTiming(false); // Run as fast as possible
-                LoggerStartup.startReplayLogger();
-            }
-        }
-    }
+
 
 }

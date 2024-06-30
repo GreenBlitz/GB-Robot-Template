@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class CMDHandler {
 
-    private static final File OUTPUT_FILE = DirectoryPathsConstants.RUNNING_FILES_DIRECTORY_PATH.resolve("CMDHandler.txt").toFile();
+    private static final File OUTPUT_FILE = DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.resolve("CMDHandler.txt").toFile();
     private static final String WINDOWS_SHELL = "cmd.exe /c ";
     private static final String NON_WINDOWS_SHELL = "bash -c ";
 

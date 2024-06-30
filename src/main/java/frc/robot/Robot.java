@@ -10,8 +10,8 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.ctreutils.BusStatus;
 import frc.utils.batteryutils.Battery;
-import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.cycletimeutils.CycleTimeUtils;
+import frc.utils.loggerutils.LoggerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**

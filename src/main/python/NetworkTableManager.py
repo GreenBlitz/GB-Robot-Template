@@ -18,7 +18,7 @@ CONNECTION_COOLDOWN_SECONDS = 0.1
 
 
 def terminate_client(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
-    print("Terminating client named: " + client_name)
+    print("Terminating client named {}".format(client_name))
     ntcore.NetworkTableInstance.destroy(network_table_instance)
 
 
@@ -40,7 +40,7 @@ def connect_client_to_server(network_table_instance, client_name):
 def get_connected_client(ip: str, client_name: str):
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
-    print("Setting up NetworkTables client")
+    print("Setting up NetworkTables client named {}".format(client_name))
     network_table_instance.startClient4(client_name)
     network_table_instance.setServer(ip)
     network_table_instance.startDSClient()

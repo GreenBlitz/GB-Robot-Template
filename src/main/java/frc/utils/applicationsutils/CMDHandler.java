@@ -1,6 +1,5 @@
 package frc.utils.applicationsutils;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 public class CMDHandler {
@@ -24,10 +23,11 @@ public class CMDHandler {
     public static void runCMDCommand(String command) {
         String cmdSpecification = isWindows() ? WINDOWS_CMD_SPECIFICATION : NON_WINDOWS_CMD_SPECIFICATION;
         Runtime runtime = Runtime.getRuntime();
+        System.out.println("Running: " + cmdSpecification + command);
         try {
             runtime.exec(cmdSpecification + command);
         }
-        catch (IOException exception) {
+        catch (Exception exception) {
             System.out.println("Unable to execute: " + command); // can't be logged because on computer side
         }
     }
@@ -47,7 +47,7 @@ public class CMDHandler {
     }
 
 
-    public static void runJavaClass(Class classToRun) {
+    public static void runJavaClass(Class<?> classToRun) {
         runJavaClass(classToRun, "");
     }
 
@@ -55,7 +55,7 @@ public class CMDHandler {
      * @param classToRun The class to run. example: Example.class .
      * @param arguments The arguments given to the java file, each argument separated by a space.
      */
-    public static void runJavaClass(Class classToRun, String arguments) {
+    public static void runJavaClass(Class<?> classToRun, String arguments) {
         String className = classToRun.getName();
         className = className.replace('.', '/');
         Path pathOfClass = Path.of(className);

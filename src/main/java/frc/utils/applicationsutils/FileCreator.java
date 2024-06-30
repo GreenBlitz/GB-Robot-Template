@@ -17,32 +17,6 @@ public class FileCreator {
         }
     }
 
-    public static void writeToTextFile(File file, String text) {
-        try {
-            write(file, text);
-        }
-        catch (Exception exception) {
-            FILE_CREATOR_OUTPUT_FILE.write("Exception while writing to text file " + file + "\n" + exception);
-        }
-    }
-
-    private static void write(File file, String text) throws Exception {
-        FileWriter myWriter = new FileWriter(file, true);
-        myWriter.write(text);
-        myWriter.close();
-    }
-
-    public static void clearTextFile(File file) {
-        try {
-            FileWriter myWriter = new FileWriter(file);
-            myWriter.flush();
-            myWriter.close();
-        }
-        catch (Exception exception) {
-            FILE_CREATOR_OUTPUT_FILE.write("Exception while clearing text file " + file + "\n" + exception);
-        }
-    }
-
     public static void openFile(File file) {
         try {
             if (!Desktop.isDesktopSupported()) {
@@ -54,6 +28,28 @@ public class FileCreator {
         }
         catch (Exception exception) {
             FILE_CREATOR_OUTPUT_FILE.write("Exception While Opening File " + file + "\n" + exception);
+        }
+    }
+
+    public static void writeToTextFile(File file, String text) {
+        try {
+            FileWriter myWriter = new FileWriter(file, true);
+            myWriter.write(text);
+            myWriter.close();
+        }
+        catch (Exception exception) {
+            FILE_CREATOR_OUTPUT_FILE.write("Exception while writing to text file " + file + "\n" + exception);
+        }
+    }
+
+    public static void clearTextFile(File file) {
+        try {
+            FileWriter myWriter = new FileWriter(file);
+            myWriter.flush();
+            myWriter.close();
+        }
+        catch (Exception exception) {
+            FILE_CREATOR_OUTPUT_FILE.write("Exception while clearing text file " + file + "\n" + exception);
         }
     }
 

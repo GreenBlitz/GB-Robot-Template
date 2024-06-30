@@ -3,7 +3,6 @@ package frc.utils.applicationsutils;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Path;
 
 public class FileCreator {
@@ -28,9 +27,9 @@ public class FileCreator {
         try {
             file.createNewFile();
             return file;
-        } catch (IOException e) {
+        } catch (Exception exception) {
             System.out.println("Unable To create File");
-            e.printStackTrace();
+            exception.printStackTrace();
             return null;
         }
     }
@@ -40,9 +39,9 @@ public class FileCreator {
             FileWriter myWriter = new FileWriter(file);
             myWriter.write(text);
             myWriter.close();
-        } catch (IOException e) {
+        } catch (Exception exception) {
             System.out.println("An error occurred.");
-            e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
@@ -51,9 +50,9 @@ public class FileCreator {
             FileWriter myWriter = new FileWriter(file);
             myWriter.flush();
             myWriter.close();
-        } catch (IOException e) {
+        } catch (Exception exception) {
             System.out.println("An error occurred.");
-            e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
@@ -70,13 +69,17 @@ public class FileCreator {
                 desktop.open(file);
             }
         }
-        catch(Exception e)
+        catch(Exception exception)
         {
-            e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
     public static File createPrintingTextFile(Path parent, String name, String text) {
+        File parentFile = parent.toFile();
+        if (!parentFile.exists()) {
+            parentFile.mkdir();//makes folder
+        }
         File file = createFile(parent,name, "txt");
         clearTextFile(file);
         writeToTextFile(file, text);

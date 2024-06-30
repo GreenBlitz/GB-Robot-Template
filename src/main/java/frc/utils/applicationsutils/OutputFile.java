@@ -4,13 +4,14 @@ import frc.robot.constants.DirectoryPathsConstants;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class OutputFile {
 
     private String name;
     private File file;
 
-    private static OutputFile OUTPUT_FILE_OUTPUT_FILE = new OutputFile("OutputFile");
+    private static OutputFile SELF_OUTPUT_FILE = new OutputFile("OutputFile");
 
     public OutputFile(String name) {
         this.name = name;
@@ -24,9 +25,7 @@ public class OutputFile {
 
     public void write(String text) {
         try {
-            FileWriter myWriter = new FileWriter(file, true);
-            myWriter.write("\n" + text);
-            myWriter.close();
+            writeUsingWriter(file, text);
         }
         catch (Exception exception) {
             try {
@@ -38,15 +37,18 @@ public class OutputFile {
         }
     }
 
+    private static void writeUsingWriter(File file, String text) throws IOException {
+        FileWriter myWriter = new FileWriter(file, true);
+        myWriter.write("\n" + text);
+        myWriter.close();
+    }
+
     private static void writeToOwnOutputFile(String nameOfOutputFile) {
         try {
-            FileWriter myWriter = new FileWriter(OUTPUT_FILE_OUTPUT_FILE.file, true);
-            myWriter.write("\n Unable to write to output file: " + nameOfOutputFile);
-            myWriter.close();
+            writeUsingWriter(SELF_OUTPUT_FILE.file, "Unable to write to output file: " + nameOfOutputFile);
         } catch (Exception exception) {
 
         }
-
     }
 
     public void openFile() {

@@ -2,12 +2,11 @@ package frc.utils.applicationsutils;
 
 import frc.robot.constants.DirectoryPathsConstants;
 
-import java.io.File;
 import java.nio.file.Path;
 
 public class CMDHandler {
 
-    private static final File OUTPUT_FILE = DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.resolve("CMDHandler.txt").toFile();
+    private static final OutputFile CMD_OUTPUT_FILE = new OutputFile("CMDHandler.txt");
     private static final String WINDOWS_SHELL = "cmd.exe /c ";
     private static final String NON_WINDOWS_SHELL = "bash -c ";
 
@@ -25,12 +24,13 @@ public class CMDHandler {
         String executedCommand = operatingSystemShell + command;
 
         try {
-            FileCreator.writeToOutputFile(OUTPUT_FILE, "Trying To Run: " + executedCommand);
+            CMD_OUTPUT_FILE.write("Trying To Run: " + executedCommand);
             Runtime.getRuntime().exec(executedCommand);
+            throw new Exception();
         }
         catch (Exception exception) {
-            FileCreator.writeToOutputFile(OUTPUT_FILE, "\nGot Exception: \n" + exception);
-            FileCreator.openFile(OUTPUT_FILE);
+            CMD_OUTPUT_FILE.write("\nGot Exception: \n" + exception);
+            CMD_OUTPUT_FILE.openFile();
         }
     }
 

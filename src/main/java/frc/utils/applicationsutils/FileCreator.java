@@ -1,21 +1,19 @@
 package frc.utils.applicationsutils;
 
-import frc.robot.constants.DirectoryPathsConstants;
-
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 
 public class FileCreator {
 
-    public static final File OUTPUT_FILE = DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.resolve("FileCreator.txt").toFile();
+    public static final OutputFile FILE_CREATOR_OUTPUT_FILE = new OutputFile("FileCreator.txt");
 
     public static void createFile(File file) {
         try {
             file.createNewFile();
         }
         catch (Exception exception) {
-            writeToOutputFile(OUTPUT_FILE, "Exception while creating file " + file + "\n" + exception);
+            FILE_CREATOR_OUTPUT_FILE.write( "Exception while creating file " + file + "\n" + exception);
         }
     }
 
@@ -24,7 +22,7 @@ public class FileCreator {
             write(file, text);
         }
         catch (Exception exception) {
-            writeToOutputFile(OUTPUT_FILE, "Exception while writing to text file " + file + "\n" + exception);
+            FILE_CREATOR_OUTPUT_FILE.write("Exception while writing to text file " + file + "\n" + exception);
         }
     }
 
@@ -41,41 +39,27 @@ public class FileCreator {
             myWriter.close();
         }
         catch (Exception exception) {
-            writeToOutputFile(OUTPUT_FILE, "Exception while clearing text file " + file + "\n" + exception);
+            FILE_CREATOR_OUTPUT_FILE.write("Exception while clearing text file " + file + "\n" + exception);
         }
     }
 
     public static void openFile(File file) {
         try {
             if (!Desktop.isDesktopSupported()) {
-                writeToOutputFile(OUTPUT_FILE, "Desktop does not support this file: " + file);
+                FILE_CREATOR_OUTPUT_FILE.write("Desktop does not support this file: " + file);
             }
             else if (file.exists()) {
                 Desktop.getDesktop().open(file);
             }
         }
         catch (Exception exception) {
-            writeToOutputFile(OUTPUT_FILE, "Exception While Opening File " + file + "\n" + exception);
+            FILE_CREATOR_OUTPUT_FILE.write("Exception While Opening File " + file + "\n" + exception);
         }
     }
 
     public static void ensureFolderExistence(File folder) {
         if (!folder.exists()) {
             folder.mkdir();
-        }
-    }
-
-    public static void writeToOutputFile(File outputFile, String text) {
-        ensureFolderExistence(DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.toFile());
-        if (!outputFile.exists()) {
-            FileCreator.createFile(outputFile);
-        }
-
-        try {
-            write(outputFile, "\n" + text);
-        }
-        catch (Exception exception) {
-            exception.printStackTrace();
         }
     }
 

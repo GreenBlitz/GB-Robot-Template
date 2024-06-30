@@ -39,7 +39,7 @@ public class OutputFile {
 
     private static void writeUsingWriter(File file, String text) throws IOException {
         FileWriter myWriter = new FileWriter(file, true);
-        myWriter.write("\n" + text);
+        myWriter.write(text + "\n");
         myWriter.close();
     }
 

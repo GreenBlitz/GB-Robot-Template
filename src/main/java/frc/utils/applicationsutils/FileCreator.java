@@ -49,6 +49,17 @@ public class FileCreator {
         }
     }
 
+    private static void safeWriteToTextFile(File file, String text, boolean isAppending) {
+        try {
+            FileWriter myWriter = new FileWriter(file,isAppending);
+            myWriter.write(text);
+            myWriter.close();
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        }
+    }
+
     public static void clearTextFile(File file) {
         try {
             FileWriter myWriter = new FileWriter(file);
@@ -85,7 +96,7 @@ public class FileCreator {
         if (!outputFile.exists()) {
             FileCreator.createFile(outputFile);
         }
-        writeToTextFile(outputFile, text, isAppending);
+        safeWriteToTextFile(outputFile, text, isAppending);
     }
 
 }

@@ -181,7 +181,3 @@ networktables.json
 simgui-ds.json
 simgui.json
 
-# Python
-__pycache__/
-
-

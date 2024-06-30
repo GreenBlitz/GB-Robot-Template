@@ -8,7 +8,7 @@ public class CMDHandler {
     public static final Path REPOSITORY_PATH = Path.of("").toAbsolutePath();
     public static final Path PATH_TO_PYTHON_DIRECTORY = REPOSITORY_PATH.resolve("src/main/python");
     public static final Path PATH_TO_JAVA_DIRECTORY = REPOSITORY_PATH.resolve("src/main/java");
-    public static final Path PATH_TO_ERROR_DIRECTORY = REPOSITORY_PATH.resolve("filesonrun");
+    public static final Path PATH_TO_RUNNING_FILES_DIRECTORY = REPOSITORY_PATH.resolve("filesonrun");
 
     private static final String WINDOWS_CMD_SPECIFICATION = "cmd.exe /c ";
     private static final String NON_WINDOWS_CMD_SPECIFICATION = "bash -c ";
@@ -25,15 +25,23 @@ public class CMDHandler {
     public static void runCMDCommand(String command) {
         String cmdSpecification = isWindows() ? WINDOWS_CMD_SPECIFICATION : NON_WINDOWS_CMD_SPECIFICATION;
         Runtime runtime = Runtime.getRuntime();
-        System.out.println("Running: " + cmdSpecification + command);
+        command = cmdSpecification + command;
+        printToFile("Running: " + command);
         try {
-            runtime.exec(cmdSpecification + command);
+            runtime.exec(command);
         }
         catch (Exception exception) {
-            System.out.println(exception);
-            File errorFile = FileCreator.createErrorFile(PATH_TO_ERROR_DIRECTORY, "CMDHandler Errors", exception.toString());
+            File errorFile = printToFile("Tried Running: " + command + "\nGot Exception: " + exception.toString());
             FileCreator.openFile(errorFile);
         }
+    }
+
+    private static File printToFile(String text) {
+        return FileCreator.createPrintingTextFile(
+                PATH_TO_RUNNING_FILES_DIRECTORY,
+                "CMDHandler",
+                text
+        );
     }
 
     public static void runJavaClass(Path javaPath) {

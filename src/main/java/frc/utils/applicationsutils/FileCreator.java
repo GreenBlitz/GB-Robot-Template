@@ -76,10 +76,10 @@ public class FileCreator {
         }
     }
 
-    public static File createErrorFile(Path parent, String name, String text) {
-        File errorFile = createFile(parent,name, "txt");
-        clearTextFile(errorFile);
-        writeToTextFile(errorFile, text);
-        return errorFile;
+    public static File createPrintingTextFile(Path parent, String name, String text) {
+        File file = createFile(parent,name, "txt");
+        clearTextFile(file);
+        writeToTextFile(file, text);
+        return file;
     }
 }

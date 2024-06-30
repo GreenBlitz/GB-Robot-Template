@@ -5,13 +5,9 @@ import java.nio.file.Path;
 
 public class CMDHandler {
 
-    public static final Path REPOSITORY_PATH = Path.of("").toAbsolutePath();
-    public static final Path PATH_TO_PYTHON_DIRECTORY = REPOSITORY_PATH.resolve("src/main/python");
-    public static final Path PATH_TO_JAVA_DIRECTORY = REPOSITORY_PATH.resolve("src/main/java");
-    public static final Path PATH_TO_RUNNING_FILES_DIRECTORY = REPOSITORY_PATH.resolve("filesonrun");
-
-    private static final String WINDOWS_CMD_SPECIFICATION = "cmd.exe /c ";
-    private static final String NON_WINDOWS_CMD_SPECIFICATION = "bash -c ";
+    private static final File OUTPUT_FILE = ApplicationsConstants.RUNNING_FILES_DIRECTORY_PATH.resolve("CMDHandler.txt").toFile();
+    private static final String WINDOWS_SHELL = "cmd.exe /c ";
+    private static final String NON_WINDOWS_SHELL = "bash -c ";
 
 
     public static boolean isWindows() {
@@ -23,26 +19,22 @@ public class CMDHandler {
     }
 
     public static void runCMDCommand(String command) {
-        String cmdSpecification = isWindows() ? WINDOWS_CMD_SPECIFICATION : NON_WINDOWS_CMD_SPECIFICATION;
+        String operatingSystemShell = isWindows() ? WINDOWS_SHELL : NON_WINDOWS_SHELL;
+        command = operatingSystemShell + command;
+
+        FileCreator.writeToOutputFile(OUTPUT_FILE, "\nRunning: " + command, true);
+
         Runtime runtime = Runtime.getRuntime();
-        command = cmdSpecification + command;
-        printToFile("Running: " + command);
         try {
             runtime.exec(command);
+            throw new Exception("test");
         }
         catch (Exception exception) {
-            File errorFile = printToFile("Tried Running: " + command + "\nGot Exception: " + exception.toString());
-            FileCreator.openFile(errorFile);
+            FileCreator.writeToOutputFile(OUTPUT_FILE, "\n\nGot Exception: \n" + exception, true);
+            FileCreator.openFile(OUTPUT_FILE);
         }
     }
 
-    private static File printToFile(String text) {
-        return FileCreator.createPrintingTextFile(
-                PATH_TO_RUNNING_FILES_DIRECTORY,
-                "CMDHandler",
-                text
-        );
-    }
 
     public static void runJavaClass(Path javaPath) {
         runJavaClass(javaPath, "");
@@ -55,7 +47,7 @@ public class CMDHandler {
     public static void runJavaClass(Path javaPath, String arguments) {
         Path className = javaPath.getName(javaPath.getNameCount() - 1);
         Path packageName = javaPath.getParent();
-        runCMDCommand(PATH_TO_JAVA_DIRECTORY.resolve(packageName), "java " + className + ".java " + arguments);
+        runCMDCommand(ApplicationsConstants.JAVA_DIRECTORY_PATH.resolve(packageName), "java " + className + ".java " + arguments);
     }
 
 
@@ -84,7 +76,7 @@ public class CMDHandler {
      * @param arguments The arguments given to the python file, each argument separated by a space.
      */
     public static void runPythonClass(Path pythonPath, String arguments) {
-        runCMDCommand(PATH_TO_PYTHON_DIRECTORY, "py " + pythonPath + ".py " + arguments);
+        runCMDCommand(ApplicationsConstants.PYTHON_DIRECTORY_PATH, "py " + pythonPath + ".py " + arguments);
     }
 
 }

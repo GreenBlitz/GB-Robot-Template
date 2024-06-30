@@ -5,27 +5,10 @@ import frc.robot.constants.DirectoryPathsConstants;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.nio.file.Path;
 
 public class FileCreator {
 
     public static final File OUTPUT_FILE = DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.resolve("FileCreator.txt").toFile();
-
-    public static File createFile(Path pathName) {
-        return createFile(new File(pathName.toString()));
-    }
-
-    public static File createFile(Path parent, String fileName, String type) {
-        return createFile(new File(parent.toString()), fileName, type);
-    }
-
-    public static File createFile(File parent, String fileName, String type) {
-        return createFile(new File(parent, fileName + "." + type));
-    }
-
-    public static File createFile(String fileName, String type) {
-        return createFile(new File(fileName + "." + type));
-    }
 
     public static File createFile(File file) {
         try {

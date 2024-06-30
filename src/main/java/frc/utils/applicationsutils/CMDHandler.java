@@ -22,13 +22,12 @@ public class CMDHandler {
 
     public static void runCMDCommand(String command) {
         String operatingSystemShell = isWindows() ? WINDOWS_SHELL : NON_WINDOWS_SHELL;
-        command = operatingSystemShell + command;
 
         FileCreator.writeToOutputFile(OUTPUT_FILE, "\nRunning: " + command, true);
 
         Runtime runtime = Runtime.getRuntime();
         try {
-            runtime.exec(command);
+            runtime.exec(operatingSystemShell + command);
         }
         catch (Exception exception) {
             FileCreator.writeToOutputFile(OUTPUT_FILE, "\n\nGot Exception: \n" + exception, true);

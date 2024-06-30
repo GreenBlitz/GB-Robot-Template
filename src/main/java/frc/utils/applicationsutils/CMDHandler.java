@@ -1,11 +1,13 @@
 package frc.utils.applicationsutils;
 
+import frc.robot.constants.DirectoryPathsConstants;
+
 import java.io.File;
 import java.nio.file.Path;
 
 public class CMDHandler {
 
-    private static final File OUTPUT_FILE = ApplicationsConstants.RUNNING_FILES_DIRECTORY_PATH.resolve("CMDHandler.txt").toFile();
+    private static final File OUTPUT_FILE = DirectoryPathsConstants.RUNNING_FILES_DIRECTORY_PATH.resolve("CMDHandler.txt").toFile();
     private static final String WINDOWS_SHELL = "cmd.exe /c ";
     private static final String NON_WINDOWS_SHELL = "bash -c ";
 
@@ -27,7 +29,6 @@ public class CMDHandler {
         Runtime runtime = Runtime.getRuntime();
         try {
             runtime.exec(command);
-            throw new Exception("test");
         }
         catch (Exception exception) {
             FileCreator.writeToOutputFile(OUTPUT_FILE, "\n\nGot Exception: \n" + exception, true);
@@ -47,7 +48,7 @@ public class CMDHandler {
     public static void runJavaClass(Path javaPath, String arguments) {
         Path className = javaPath.getName(javaPath.getNameCount() - 1);
         Path packageName = javaPath.getParent();
-        runCMDCommand(ApplicationsConstants.JAVA_DIRECTORY_PATH.resolve(packageName), "java " + className + ".java " + arguments);
+        runCMDCommand(DirectoryPathsConstants.JAVA_DIRECTORY_PATH.resolve(packageName), "java " + className + ".java " + arguments);
     }
 
 
@@ -76,7 +77,7 @@ public class CMDHandler {
      * @param arguments The arguments given to the python file, each argument separated by a space.
      */
     public static void runPythonClass(Path pythonPath, String arguments) {
-        runCMDCommand(ApplicationsConstants.PYTHON_DIRECTORY_PATH, "py " + pythonPath + ".py " + arguments);
+        runCMDCommand(DirectoryPathsConstants.PYTHON_DIRECTORY_PATH, "py " + pythonPath + ".py " + arguments);
     }
 
 }

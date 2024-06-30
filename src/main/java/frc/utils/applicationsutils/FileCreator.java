@@ -1,5 +1,7 @@
 package frc.utils.applicationsutils;
 
+import frc.robot.constants.DirectoryPathsConstants;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,7 +9,7 @@ import java.nio.file.Path;
 
 public class FileCreator {
 
-    public static final File OUTPUT_FILE = ApplicationsConstants.RUNNING_FILES_DIRECTORY_PATH.resolve("FileCreator.txt").toFile();
+    public static final File OUTPUT_FILE = DirectoryPathsConstants.RUNNING_FILES_DIRECTORY_PATH.resolve("FileCreator.txt").toFile();
 
     public static File createFile(Path pathName) {
         return createFile(new File(pathName.toString()));
@@ -79,7 +81,7 @@ public class FileCreator {
     }
 
     public static void writeToOutputFile(File outputFile, String text, boolean isAppending) {
-        ensureFolderExistence(ApplicationsConstants.RUNNING_FILES_DIRECTORY_PATH.toFile());
+        ensureFolderExistence(DirectoryPathsConstants.RUNNING_FILES_DIRECTORY_PATH.toFile());
         if (!outputFile.exists()) {
             FileCreator.createFile(outputFile);
         }

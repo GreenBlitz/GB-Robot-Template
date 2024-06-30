@@ -13,7 +13,8 @@ public class FileCreator {
     public static void createFile(File file) {
         try {
             file.createNewFile();
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             writeToOutputFile(OUTPUT_FILE, "Exception while creating file " + file + "\n" + exception);
         }
     }
@@ -21,7 +22,8 @@ public class FileCreator {
     public static void writeToTextFile(File file, String text) {
         try {
             write(file, text);
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             writeToOutputFile(OUTPUT_FILE, "Exception while writing to text file " + file + "\n" + exception);
         }
     }
@@ -37,7 +39,8 @@ public class FileCreator {
             FileWriter myWriter = new FileWriter(file);
             myWriter.flush();
             myWriter.close();
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             writeToOutputFile(OUTPUT_FILE, "Exception while clearing text file " + file + "\n" + exception);
         }
     }
@@ -46,10 +49,12 @@ public class FileCreator {
         try {
             if (!Desktop.isDesktopSupported()) {
                 writeToOutputFile(OUTPUT_FILE, "Desktop does not support this file: " + file);
-            }else if (file.exists()) {
+            }
+            else if (file.exists()) {
                 Desktop.getDesktop().open(file);
             }
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             writeToOutputFile(OUTPUT_FILE, "Exception While Opening File " + file + "\n" + exception);
         }
     }
@@ -68,7 +73,8 @@ public class FileCreator {
 
         try {
             write(outputFile, "\n" + text);
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             exception.printStackTrace();
         }
     }

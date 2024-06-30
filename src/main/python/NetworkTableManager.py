@@ -23,7 +23,7 @@ def get_network_table(ip: str, client_name: str):
         # terminate client and program if it takes to long to connect
         if time.time() - started_time > CONNECTION_TIMEOUT_SECONDS:
             print("Didn't connected to network tables. Terminating...")
-            destroy_network_table_instance(network_table_instance)
+            destroy_network_table_instance(network_table_instance, client_name)
             sys.exit()
         time.sleep(LOOPS_COOLDOWN_SECONDS)
 
@@ -31,6 +31,6 @@ def get_network_table(ip: str, client_name: str):
     return network_table_instance
 
 
-def destroy_network_table_instance(network_table_instance: ntcore.NetworkTableInstance):
-    # todo: add a way to print client name
+def destroy_network_table_instance(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
+    print("Terminating client named: " + client_name)
     ntcore.NetworkTableInstance.destroy(network_table_instance)

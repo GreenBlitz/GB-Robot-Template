@@ -10,37 +10,26 @@ public class FileCreator {
 
     public static final File OUTPUT_FILE = DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.resolve("FileCreator.txt").toFile();
 
-    public static File createFile(File file) {
+    public static void createFile(File file) {
         try {
             file.createNewFile();
-            return file;
-        }
-        catch (Exception exception) {
-            writeToOutputFile(OUTPUT_FILE, "\nException while creating file " + file + "\n" + exception, true);
-            return null;
+        } catch (Exception exception) {
+            writeToOutputFile(OUTPUT_FILE, "Exception while creating file " + file + "\n" + exception);
         }
     }
 
-    public static void writeToTextFile(File file, String text, boolean isAppending) {
+    public static void writeToTextFile(File file, String text) {
         try {
-            FileWriter myWriter = new FileWriter(file,isAppending);
-            myWriter.write(text);
-            myWriter.close();
-        }
-        catch (Exception exception) {
-            writeToOutputFile(OUTPUT_FILE, "\nException while writing to text file " + file + "\n" + exception, true);
+            write(file, text);
+        } catch (Exception exception) {
+            writeToOutputFile(OUTPUT_FILE, "Exception while writing to text file " + file + "\n" + exception);
         }
     }
 
-    private static void safeWriteToTextFile(File file, String text, boolean isAppending) {
-        try {
-            FileWriter myWriter = new FileWriter(file,isAppending);
-            myWriter.write(text);
-            myWriter.close();
-        }
-        catch (Exception exception) {
-            System.out.println(exception);
-        }
+    private static void write(File file, String text) throws Exception {
+        FileWriter myWriter = new FileWriter(file, true);
+        myWriter.write(text);
+        myWriter.close();
     }
 
     public static void clearTextFile(File file) {
@@ -48,23 +37,20 @@ public class FileCreator {
             FileWriter myWriter = new FileWriter(file);
             myWriter.flush();
             myWriter.close();
-        }
-        catch (Exception exception) {
-            writeToOutputFile(OUTPUT_FILE, "\nException while clearing text file " + file + "\n" + exception, true);
+        } catch (Exception exception) {
+            writeToOutputFile(OUTPUT_FILE, "Exception while clearing text file " + file + "\n" + exception);
         }
     }
 
     public static void openFile(File file) {
         try {
             if (!Desktop.isDesktopSupported()) {
-                writeToOutputFile(OUTPUT_FILE, "\nDesktop does not support this file: " + file, true);
+                writeToOutputFile(OUTPUT_FILE, "Desktop does not support this file: " + file);
+            }else if (file.exists()) {
+                Desktop.getDesktop().open(file);
             }
-            else if (file.exists()) {
-                    Desktop.getDesktop().open(file);
-            }
-        }
-        catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (Exception exception) {
+            writeToOutputFile(OUTPUT_FILE, "Exception While Opening File " + file + "\n" + exception);
         }
     }
 
@@ -74,12 +60,17 @@ public class FileCreator {
         }
     }
 
-    public static void writeToOutputFile(File outputFile, String text, boolean isAppending) {
+    public static void writeToOutputFile(File outputFile, String text) {
         ensureFolderExistence(DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.toFile());
         if (!outputFile.exists()) {
             FileCreator.createFile(outputFile);
         }
-        safeWriteToTextFile(outputFile, text, isAppending);
+
+        try {
+            write(outputFile, "\n" + text);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
 }

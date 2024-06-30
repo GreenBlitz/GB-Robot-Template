@@ -22,15 +22,14 @@ public class CMDHandler {
 
     public static void runCMDCommand(String command) {
         String operatingSystemShell = isWindows() ? WINDOWS_SHELL : NON_WINDOWS_SHELL;
+        String executedCommand = operatingSystemShell + command;
 
-        FileCreator.writeToOutputFile(OUTPUT_FILE, "\nRunning: " + command, true);
-
-        Runtime runtime = Runtime.getRuntime();
         try {
-            runtime.exec(operatingSystemShell + command);
+            FileCreator.writeToOutputFile(OUTPUT_FILE, "Trying To Run: " + executedCommand);
+            Runtime.getRuntime().exec(executedCommand);
         }
         catch (Exception exception) {
-            FileCreator.writeToOutputFile(OUTPUT_FILE, "\n\nGot Exception: \n" + exception, true);
+            FileCreator.writeToOutputFile(OUTPUT_FILE, "\nGot Exception: \n" + exception);
             FileCreator.openFile(OUTPUT_FILE);
         }
     }
@@ -47,7 +46,8 @@ public class CMDHandler {
     public static void runJavaClass(Path javaPath, String arguments) {
         Path className = javaPath.getName(javaPath.getNameCount() - 1);
         Path packageName = javaPath.getParent();
-        runCMDCommand(DirectoryPathsConstants.JAVA_DIRECTORY_PATH.resolve(packageName), "java " + className + ".java " + arguments);
+        String command = "java " + className + ".java " + arguments;
+        runCMDCommand(DirectoryPathsConstants.JAVA_DIRECTORY_PATH.resolve(packageName), command);
     }
 
 
@@ -76,7 +76,8 @@ public class CMDHandler {
      * @param arguments The arguments given to the python file, each argument separated by a space.
      */
     public static void runPythonClass(Path pythonPath, String arguments) {
-        runCMDCommand(DirectoryPathsConstants.PYTHON_DIRECTORY_PATH, "py " + pythonPath + ".py " + arguments);
+        String command = "py " + pythonPath + ".py " + arguments;
+        runCMDCommand(DirectoryPathsConstants.PYTHON_DIRECTORY_PATH, command);
     }
 
 }

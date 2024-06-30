@@ -1,4 +1,4 @@
-package frc.utils.ctreutils;
+package frc.utils.CTREutils;
 
 public enum BusChain {
 

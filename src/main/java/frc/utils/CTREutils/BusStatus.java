@@ -1,4 +1,4 @@
-package frc.utils.ctreutils;
+package frc.utils.CTREutils;
 
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.Timer;

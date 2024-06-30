@@ -2,12 +2,13 @@ package frc.utils.loggerutils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public enum LogSaveSpot {
+enum LogSaveSpot {
 
-    USB(LoggerConstants.USB_LOG_PATH),
-    ROBORIO(LoggerConstants.ROBORIO_LOG_PATH),
-    COMPUTER(LoggerConstants.SIMULATION_LOG_PATH);
+    USB(Path.of("/media/sda1")),
+    ROBORIO(Path.of("/home/lvuser/logs")),
+    COMPUTER(Paths.get(System.getProperty("user.home"), "Desktop", "SimulationLogs"));
 
     private final Path savePath;
 
@@ -15,11 +16,11 @@ public enum LogSaveSpot {
         this.savePath = savePath;
     }
 
-    public Path getSavePath() {
+    Path getSavePath() {
         return savePath;
     }
 
-    public boolean isWritable() {
+    boolean isWritable() {
         return Files.exists(savePath) && Files.isWritable(savePath);
     }
 }

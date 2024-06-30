@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.CTREutils.BusStatus;
 import frc.utils.batteryutils.Battery;
-import frc.utils.ctreutils.BusStatus;
 import frc.utils.cycletimeutils.CycleTimeUtils;
-import frc.utils.loggerutils.LoggerUtils;
+import frc.utils.loggerutils.LoggerStartup;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -62,17 +62,17 @@ public class Robot extends LoggedRobot {
         SimulationManager.updateRegisteredSimulations();
     }
 
-    private void initializeLogger() {
+    private void initializeLogger(Robot robot) {
         switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> {
-                LoggerUtils.startRealLogger();
+                LoggerStartup.startRealLogger();
             }
             case SIMULATION -> {
-                LoggerUtils.startSimulationLogger();
+                LoggerStartup.startSimulationLogger();
             }
             case REPLAY -> {
-                setUseTiming(false); // Run as fast as possible
-                LoggerUtils.startReplayLogger();
+                robot.setUseTiming(false); // Run as fast as possible
+                LoggerStartup.startReplayLogger();
             }
         }
     }

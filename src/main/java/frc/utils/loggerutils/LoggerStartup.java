@@ -10,10 +10,10 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import java.nio.file.Path;
 
-public class LoggerUtils {
+public class LoggerStartup {
 
     public static void startRealLogger() {
-        SignalLogger.enableAutoLogging(LoggerConstants.IS_CTRE_AUTO_LOGGING);
+        SignalLogger.enableAutoLogging(true); // must be true to BusStatus to work
 
         if (LogSaveSpot.USB.isWritable()) {
             startLoggerOnUSB();

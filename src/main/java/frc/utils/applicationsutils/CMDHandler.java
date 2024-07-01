@@ -29,7 +29,7 @@ public class CMDHandler {
         }
         catch (Exception exception) {
             CMD_OUTPUT_FILE.write("\nGot Exception: \n" + exception);
-            CMD_OUTPUT_FILE.openFile();
+            CMD_OUTPUT_FILE.open();
         }
     }
 

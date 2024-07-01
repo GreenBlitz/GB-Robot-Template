@@ -47,14 +47,14 @@ public class OutputFile {
 
     public void write(String text) {
         try {
-            writeUsingWriter(file, text);
+            writeToFile(file, text);
         }
         catch (Exception exception) {
             reportFileError(name);
         }
     }
 
-    public void openFile() {
+    public void open() {
         try {
             if (!Desktop.isDesktopSupported()) {
                 SELF_OUTPUT_FILE.write("Desktop does not support this file: " + file);
@@ -79,7 +79,7 @@ public class OutputFile {
         }
     }
 
-    private static void writeUsingWriter(File file, String text) throws IOException {
+    private static void writeToFile(File file, String text) throws IOException {
         FileWriter myWriter = new FileWriter(file, true);
         myWriter.write(text + "\n");
         myWriter.close();
@@ -87,7 +87,7 @@ public class OutputFile {
 
     private static void reportFileError(String nameOfOutputFile) {
         try {
-            writeUsingWriter(SELF_OUTPUT_FILE.file, "Unable to write to output file: " + nameOfOutputFile);
+            writeToFile(SELF_OUTPUT_FILE.file, "Unable to write to output file: " + nameOfOutputFile);
         } catch (Exception exception) {
             System.out.println("Unable to write to Self Output file: \n" + exception);
         }

@@ -170,7 +170,10 @@ out/
 # Simulation GUI and other tools window save file
 *-window.json
 
-# Simulation data log directory
+# Simulation data logs
+SimulationLogs/
+
+# Wpilib puts here stuff
 logs/
 
 # Folder that has CTRE Phoenix Sim device config storage

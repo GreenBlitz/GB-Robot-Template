@@ -21,10 +21,10 @@ public class TalonFXWrapper extends TalonFX {
         applyConfiguration(configuration);
     }
 
-
     public void applyConfiguration(TalonFXConfiguration configuration) {
         super.getConfigurator().apply(configuration);
     }
+
 
     /**
      * Performs latency compensation on signal using the signalSlope and signal's

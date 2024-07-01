@@ -64,8 +64,12 @@ public class SmartJoystick {
     /**
      * Sample axis value with parabolic curve, allowing for finer control for smaller values.
      */
-    public double getSensitiveJoystickValue(Axis axis) {
+    public double getSensitiveAxisValue(Axis axis) {
         return sensitiveValue(getAxisValue(axis), SENSITIVE_AXIS_VALUE_POWER);
+    }
+
+    private static double sensitiveValue(double axisValue, double power) {
+        return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
     }
 
     public double getAxisValue(Axis axis) {
@@ -74,10 +78,6 @@ public class SmartJoystick {
 
     private static double applyDeadzone(double power, double deadzone) {
         return MathUtil.applyDeadband(power, deadzone);
-    }
-
-    private static double sensitiveValue(double axisValue, double power) {
-        return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
     }
 
     public AxisButton getAxisAsButton(Axis axis) {

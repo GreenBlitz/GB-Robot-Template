@@ -27,7 +27,7 @@ abstract class MotorSimulation {
         this.motorSimulationState = motor.getSimState();
         this.motorSimulationState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
         this.closedLoopReferenceSignal = motor.getClosedLoopReference();
-        this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / CycleTimeUtils.getDefaultCycleTime());
+        this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS);
     }
 
     protected void updateSimulation() {

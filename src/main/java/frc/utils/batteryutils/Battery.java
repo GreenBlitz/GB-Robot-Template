@@ -22,7 +22,7 @@ public class Battery {
         return BatteryConstants.MIN_VOLTAGE;
     }
 
-    public static void scheduleLimiterCommand() {
+    public static void scheduleLimiter() {
         BatteryConstants.LIMITER.schedule();
     }
 

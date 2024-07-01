@@ -32,7 +32,7 @@ public class Robot extends LoggedRobot {
             setUseTiming(false); // run as fast as possible
         }
         LoggerFactory.initializeLogger();
-        Battery.scheduleLimiterCommand(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
+        Battery.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 
         robotContainer = new RobotContainer();
     }

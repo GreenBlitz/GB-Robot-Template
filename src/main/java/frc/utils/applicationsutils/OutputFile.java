@@ -6,6 +6,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 public class OutputFile {
 
@@ -47,7 +48,7 @@ public class OutputFile {
 
     public void write(String text) {
         try {
-            Files.writeString(file.toPath(), Files.readString(file.toPath()) + text + "\n");
+            Files.writeString(file.toPath(), text + "\n", StandardOpenOption.APPEND);
         }
         catch (Exception exception) {
             reportFileError("Unable to write to output file: " + name + "\n" + exception);
@@ -81,7 +82,7 @@ public class OutputFile {
 
     private void reportFileError(String error) {
         try {
-            Files.writeString(SELF_OUTPUT_FILE.toPath(), Files.readString(file.toPath()) + error + "\n");
+            Files.writeString(SELF_OUTPUT_FILE.toPath(), error + "\n", StandardOpenOption.APPEND);
         } catch (Exception exception) {
             System.out.println("Unable to write to Self Output file: \n" + exception);
         }

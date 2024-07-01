@@ -26,7 +26,6 @@ public class CMDHandler {
         try {
             CMD_OUTPUT_FILE.write("Trying To Run: " + executedCommand);
             Runtime.getRuntime().exec(executedCommand);
-            throw new Exception();
         }
         catch (Exception exception) {
             CMD_OUTPUT_FILE.write("\nGot Exception: \n" + exception);

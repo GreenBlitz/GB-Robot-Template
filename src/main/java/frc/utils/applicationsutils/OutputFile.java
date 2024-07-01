@@ -57,7 +57,7 @@ public class OutputFile {
     public void open() {
         try {
             if (!Desktop.isDesktopSupported()) {
-                SELF_OUTPUT_FILE.write("Desktop does not support this file: " + file);
+                SELF_OUTPUT_FILE.write("Desktop is not supported on this platform");
             }
             else if (file.exists()) {
                 Desktop.getDesktop().open(file);

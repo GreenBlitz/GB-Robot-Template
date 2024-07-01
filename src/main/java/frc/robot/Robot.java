@@ -28,7 +28,9 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotInit() {
-        if (RobotConstants.ROBOT_TYPE.isReplay()) setUseTiming(false); // run as fast as possible
+        if (RobotConstants.ROBOT_TYPE.isReplay()) {
+            setUseTiming(false); // run as fast as possible
+        }
         LoggerFactory.initializeLogger();
         Battery.scheduleLimiterCommand(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 
@@ -62,7 +64,5 @@ public class Robot extends LoggedRobot {
     public void simulationPeriodic() {
         SimulationManager.updateRegisteredSimulations();
     }
-
-
 
 }

@@ -181,4 +181,5 @@ networktables.json
 simgui-ds.json
 simgui.json
 
-
+# Python
+src/main/python/__pycache__/

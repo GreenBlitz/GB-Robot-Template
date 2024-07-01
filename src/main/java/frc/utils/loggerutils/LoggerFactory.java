@@ -41,19 +41,19 @@ public class LoggerFactory {
         startNonReplayLogger(LogSaveSpot.COMPUTER);
     }
 
-    private static void startReplayLogger() {
-        String logPath = LogFileUtil.findReplayLog();
-        Logger.setReplaySource(new WPILOGReader(logPath));
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_simulation")));
-        Logger.start();
-    }
-
     private static void startLoggerOnUSB() {
         startNonReplayLogger(LogSaveSpot.USB);
     }
 
     private static void startLoggerOnRoborio() {
         startNonReplayLogger(LogSaveSpot.ROBORIO);
+    }
+
+    private static void startReplayLogger() {
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_simulation")));
+        Logger.start();
     }
 
     private static void startNonReplayLogger(LogSaveSpot logSaveSpot) {

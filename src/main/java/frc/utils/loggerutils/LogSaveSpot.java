@@ -23,4 +23,5 @@ enum LogSaveSpot {
     boolean isWritable() {
         return Files.exists(savePath) && Files.isWritable(savePath);
     }
+
 }

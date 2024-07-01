@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.SimulationManager;
-import frc.utils.batteryutils.Battery;
+import frc.utils.batteryutils.BatteryUtils;
 import frc.utils.ctreutils.BusStatus;
 import frc.utils.cycletimeutils.CycleTimeUtils;
 import frc.utils.loggerutils.LoggerFactory;
@@ -32,7 +32,7 @@ public class Robot extends LoggedRobot {
             setUseTiming(false); // run as fast as possible
         }
         LoggerFactory.initializeLogger();
-        Battery.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
+        BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 
         robotContainer = new RobotContainer();
     }
@@ -58,6 +58,7 @@ public class Robot extends LoggedRobot {
         CycleTimeUtils.updateCycleTime(); // Better to be first
         CommandScheduler.getInstance().run();
         BusStatus.logChainsStatuses();
+        BatteryUtils.logStatus();
     }
 
     @Override

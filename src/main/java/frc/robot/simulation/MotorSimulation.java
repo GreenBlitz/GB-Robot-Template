@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.batteryutils.Battery;
+import frc.utils.batteryutils.BatteryUtils;
 import frc.utils.cycletimeutils.CycleTimeUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
@@ -25,7 +25,7 @@ abstract class MotorSimulation {
         SimulationManager.addSimulation(this);
         this.motor = SimulationManager.createNewMotorForSimulation();
         this.motorSimulationState = motor.getSimState();
-        this.motorSimulationState.setSupplyVoltage(Battery.getDefaultVoltage());
+        this.motorSimulationState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
         this.closedLoopReferenceSignal = motor.getClosedLoopReference();
         this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / CycleTimeUtils.getDefaultCycleTime());
     }

@@ -9,10 +9,10 @@ import java.io.IOException;
 
 public class OutputFile {
 
-    private static final OutputFile SELF_OUTPUT_FILE = new OutputFile("OutputFile");
+    private static final File SELF_OUTPUT_FILE = getSelfOutputFile();
 
-    private String name;
-    private File file;
+    private final String name;
+    private final File file;
 
     public OutputFile(String name) {
         this.name = name;
@@ -41,7 +41,7 @@ public class OutputFile {
             file.createNewFile();
         }
         catch (Exception exception) {
-            SELF_OUTPUT_FILE.write( "Exception while creating file " + file + "\n" + exception);
+            reportFileError( "Exception while creating file " + file + "\n" + exception);
         }
     }
 
@@ -50,21 +50,21 @@ public class OutputFile {
             writeToFile(file, text);
         }
         catch (Exception exception) {
-            reportFileWritingError(name);
+            reportFileError("Unable to write to output file: " + name + "\n" + exception);
         }
     }
 
     public void open() {
         try {
             if (!Desktop.isDesktopSupported()) {
-                SELF_OUTPUT_FILE.write("Desktop is not supported on this platform");
+                reportFileError("Desktop is not supported on this platform");
             }
             else if (file.exists()) {
                 Desktop.getDesktop().open(file);
             }
         }
         catch (Exception exception) {
-            SELF_OUTPUT_FILE.write("Exception While Opening File " + file + "\n" + exception);
+            reportFileError("Exception While Opening File " + file + "\n" + exception);
         }
     }
 
@@ -75,22 +75,28 @@ public class OutputFile {
             myWriter.close();
         }
         catch (Exception exception) {
-            SELF_OUTPUT_FILE.write("Exception while clearing text file " + file + "\n" + exception);
+            reportFileError("Exception while clearing text file " + file + "\n" + exception);
         }
     }
 
-    private static void writeToFile(File file, String text) throws IOException {
+    private void writeToFile(File file, String text) throws IOException {
         FileWriter myWriter = new FileWriter(file, true);
         myWriter.write(text + "\n");
         myWriter.close();
     }
 
-    private static void reportFileWritingError(String nameOfOutputFile) {
+    private void reportFileError(String error) {
         try {
-            writeToFile(SELF_OUTPUT_FILE.file, "Unable to write to output file: " + nameOfOutputFile);
+            writeToFile(SELF_OUTPUT_FILE, error);
         } catch (Exception exception) {
             System.out.println("Unable to write to Self Output file: \n" + exception);
         }
+    }
+
+    private static File getSelfOutputFile() {
+        OutputFile selfOutputFile = new OutputFile("OutputFile");
+        selfOutputFile.clear();
+        return selfOutputFile.file;
     }
 
 }

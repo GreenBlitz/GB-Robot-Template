@@ -5,7 +5,7 @@ import frc.robot.constants.DirectoryPathsConstants;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.nio.file.Files;
 
 public class OutputFile {
 
@@ -47,7 +47,7 @@ public class OutputFile {
 
     public void write(String text) {
         try {
-            writeToFile(file, text);
+            Files.writeString(file.toPath(), Files.readString(file.toPath()) + text + "\n");
         }
         catch (Exception exception) {
             reportFileError("Unable to write to output file: " + name + "\n" + exception);
@@ -79,15 +79,9 @@ public class OutputFile {
         }
     }
 
-    private void writeToFile(File file, String text) throws IOException {
-        FileWriter myWriter = new FileWriter(file, true);
-        myWriter.write(text + "\n");
-        myWriter.close();
-    }
-
     private void reportFileError(String error) {
         try {
-            writeToFile(SELF_OUTPUT_FILE, error);
+            Files.writeString(SELF_OUTPUT_FILE.toPath(), Files.readString(file.toPath()) + error + "\n");
         } catch (Exception exception) {
             System.out.println("Unable to write to Self Output file: \n" + exception);
         }

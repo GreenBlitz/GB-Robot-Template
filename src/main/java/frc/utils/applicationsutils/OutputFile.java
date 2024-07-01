@@ -50,7 +50,7 @@ public class OutputFile {
             writeToFile(file, text);
         }
         catch (Exception exception) {
-            reportFileError(name);
+            reportFileWritingError(name);
         }
     }
 
@@ -85,7 +85,7 @@ public class OutputFile {
         myWriter.close();
     }
 
-    private static void reportFileError(String nameOfOutputFile) {
+    private static void reportFileWritingError(String nameOfOutputFile) {
         try {
             writeToFile(SELF_OUTPUT_FILE.file, "Unable to write to output file: " + nameOfOutputFile);
         } catch (Exception exception) {

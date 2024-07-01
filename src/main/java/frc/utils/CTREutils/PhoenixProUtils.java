@@ -1,4 +1,4 @@
-package frc.utils.CTREutils;
+package frc.utils.ctreutils;
 
 import com.ctre.phoenix6.StatusSignal;
 

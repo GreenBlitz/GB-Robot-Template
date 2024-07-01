@@ -80,11 +80,11 @@ public class CMDHandler {
     }
 
     private static String getSeparatedArguments(String[] arguments) {
-        String separated = "";
+        StringBuilder separated = new StringBuilder();
         for (String argument : arguments) {
-            separated += argument + " ";
+            separated.append(argument).append(" ");
         }
-        return separated;
+        return separated.toString();
     }
 
 }

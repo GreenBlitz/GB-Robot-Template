@@ -7,7 +7,7 @@ enum LogSaveSpot {
 
     USB(Path.of("/media/sda1")),
     ROBORIO(Path.of("/home/lvuser/logs")),
-    COMPUTER(Path.of("SimulationLogs"));
+    COMPUTER(Path.of("simulationlogs"));
 
     private final Path savePath;
 

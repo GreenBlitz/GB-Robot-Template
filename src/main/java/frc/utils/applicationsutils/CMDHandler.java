@@ -42,10 +42,10 @@ public class CMDHandler {
      * @param javaPath The path from the java package to the class. example: "directory/to/my/Example".
      * @param arguments The arguments given to the java file, each argument separated by a space.
      */
-    public static void runJavaClass(Path javaPath, String arguments) {
+    public static void runJavaClass(Path javaPath, String... arguments) {
         Path className = javaPath.getName(javaPath.getNameCount() - 1);
         Path packageName = javaPath.getParent();
-        String command = "java " + className + ".java " + arguments;
+        String command = "java " + className + ".java " + getSeparatedArguments(arguments);
         runCMDCommand(DirectoryPathsConstants.JAVA_DIRECTORY_PATH.resolve(packageName), command);
     }
 
@@ -56,13 +56,13 @@ public class CMDHandler {
 
     /**
      * @param classToRun The class to run. example: Example.class .
-     * @param arguments The arguments given to the java file, each argument separated by a space.
+     * @param arguments The arguments given to the java file.
      */
-    public static void runJavaClass(Class<?> classToRun, String arguments) {
+    public static void runJavaClass(Class<?> classToRun, String... arguments) {
         String className = classToRun.getName();
         className = className.replace('.', '/');
         Path pathOfClass = Path.of(className);
-        runJavaClass(pathOfClass, arguments);
+        runJavaClass(pathOfClass, getSeparatedArguments(arguments));
     }
 
 
@@ -72,11 +72,19 @@ public class CMDHandler {
 
     /**
      * @param pythonPath The path from the java package to the class. example: "directory/example_class".
-     * @param arguments The arguments given to the python file, each argument separated by a space.
+     * @param arguments The arguments given to the python file.
      */
-    public static void runPythonClass(Path pythonPath, String arguments) {
-        String command = "py " + pythonPath + ".py " + arguments;
+    public static void runPythonClass(Path pythonPath, String... arguments) {
+        String command = "py " + pythonPath + ".py " + getSeparatedArguments(arguments);
         runCMDCommand(DirectoryPathsConstants.PYTHON_DIRECTORY_PATH, command);
+    }
+
+    private static String getSeparatedArguments(String[] arguments) {
+        String separated = "";
+        for (String argument : arguments) {
+            separated += argument + " ";
+        }
+        return separated;
     }
 
 }

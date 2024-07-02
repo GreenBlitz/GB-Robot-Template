@@ -10,6 +10,8 @@ import java.nio.file.StandardOpenOption;
 
 public class OutputFile {
 
+    private static final String TYPE_OF_FILE = ".txt";
+
     private static final File PRINTING_FILE = new OutputFile("OutputFile").path.toFile();
 
     private final String name;
@@ -17,7 +19,7 @@ public class OutputFile {
 
     public OutputFile(String name) {
         this.name = name;
-        this.path = DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.resolve(name);
+        this.path = DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.resolve(name + TYPE_OF_FILE);
 
         ensureFolderExists();
         ensureFileExists();

@@ -1,6 +1,6 @@
 package frc.robot;
 
-public class OnDeploy {
+public class ComputerMain {
 
     public static void main(String[] args) {
         startComputerPrograms();

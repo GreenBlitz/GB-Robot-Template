@@ -40,7 +40,7 @@ public class CMDHandler {
 
     /**
      * @param javaPath The path from the java package to the class. example: "directory/to/my/Example".
-     * @param arguments The arguments given to the java file, each argument separated by a space.
+     * @param arguments The arguments given to the java file.
      */
     public static void runJavaClass(Path javaPath, String... arguments) {
         Path className = javaPath.getName(javaPath.getNameCount() - 1);
@@ -80,11 +80,11 @@ public class CMDHandler {
     }
 
     private static String getSeparatedArguments(String[] arguments) {
-        StringBuilder separated = new StringBuilder();
+        StringBuilder separatedArguments = new StringBuilder();
         for (String argument : arguments) {
-            separated.append(argument).append(" ");
+            separatedArguments.append(argument).append(" ");
         }
-        return separated.toString();
+        return separatedArguments.toString();
     }
 
 }

@@ -5,7 +5,6 @@ on:
     types:
       - opened
       - reopened
-      - converted_to_draft
       - synchronize
 
 jobs:

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
@@ -31,26 +32,26 @@ public class Module {
         this.module = ModuleFactory.createModule(moduleName);
         this.moduleInputs = new ModuleInputsAutoLogged();
         this.targetState = new SwerveModuleState();
-        this.driveMotorClosedLoop = ModuleConstants.DEFAULT_IS_DRIVE_MOTOR_CLOSED_LOOP;
+        this.driveMotorClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
 
         resetByEncoder();
     }
 
 
-    public void periodic() {
-        updateAllInputs();
+    public void logStatus() {
+        updateInputs();
+        reportAlerts();
     }
 
-    private void updateAllInputs() {
+    private void updateInputs() {
         module.updateInputs(moduleInputs);
         moduleInputs.driveMotorDistanceMeters = toDriveMeters(moduleInputs.driveMotorAngleWithoutCoupling);
         moduleInputs.driveMotorVelocityMeters = toDriveMeters(moduleInputs.driveMotorVelocityWithoutCoupling);
         moduleInputs.isAtTargetState = isAtTargetState();
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
-        reportAlertsToLog();
     }
 
-    private void reportAlertsToLog() {
+    private void reportAlerts() {
         if (!moduleInputs.allComponentsConnected) {
             Logger.recordOutput(getAlertLoggingPath(moduleName) + "componentDisconnectedAt", Timer.getFPGATimestamp());
         }

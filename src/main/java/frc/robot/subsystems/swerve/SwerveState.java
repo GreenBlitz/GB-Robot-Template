@@ -10,7 +10,7 @@ public class SwerveState {
 
     private static final DriveMode DEFAULT_DRIVE_MODE = DriveMode.FIELD_RELATIVE;
     private static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.NORMAL;
-    private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.OPEN;
+    private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.OPEN; // todo - move to close probably (ks for couple handel)
     private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_ROBOT;
     private static final AimAssist DEFAULT_AIM_ASSIST = AimAssist.NONE;
 

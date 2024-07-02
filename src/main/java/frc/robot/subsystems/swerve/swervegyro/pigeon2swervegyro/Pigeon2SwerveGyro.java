@@ -60,10 +60,10 @@ public class Pigeon2SwerveGyro implements ISwerveGyro {
         yawQueue.clear();
         timestampQueue.clear();
 
-        reportAlertsToLog(inputs);
+        reportAlerts(inputs);
     }
 
-    private void reportAlertsToLog(SwerveGyroInputsAutoLogged inputs) {
+    private void reportAlerts(SwerveGyroInputsAutoLogged inputs) {
         if (!inputs.connected) {
             Logger.recordOutput(SwerveGyroConstants.ALERT_LOG_PATH + "/gyroDisconnectedAt", Timer.getFPGATimestamp());
         }

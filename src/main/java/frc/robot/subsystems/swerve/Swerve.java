@@ -46,7 +46,7 @@ public class Swerve extends GBSubsystem {
 
 
     public Swerve() {
-        setName("Swerve");
+        setName(getClass().getSimpleName());
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
         this.modules = getModules();
         this.gyro = SwerveGyroFactory.createSwerveGyro();
@@ -70,7 +70,7 @@ public class Swerve extends GBSubsystem {
     @Override
     public void subsystemPeriodic() {
         ODOMETRY_LOCK.lock();
-        updateAllInputs();
+        updateInputs();
         ODOMETRY_LOCK.unlock();
 
         updatePoseEstimator();
@@ -78,12 +78,12 @@ public class Swerve extends GBSubsystem {
         logFieldRelativeVelocities();
     }
 
-    private void updateAllInputs() {
+    private void updateInputs() {
         gyro.updateInputs(gyroInputs);
         Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
 
         for (Module currentModule : modules) {
-            currentModule.periodic();
+            currentModule.logStatus();
         }
     }
 

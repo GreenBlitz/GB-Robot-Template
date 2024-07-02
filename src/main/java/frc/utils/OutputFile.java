@@ -24,13 +24,14 @@ public class OutputFile {
         ensureFolderExists();
         ensureFileExists();
         clear();
+        reportMessageToFile("Created Output File: " + name);
     }
 
     private void ensureFolderExists() {
         try {
             Files.createDirectories(DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH);
         } catch (Exception exception) {
-            reportFileError("Could not ensure output files folder exists: " + exception);
+            reportMessageToFile("Could not ensure output files folder exists: " + exception);
         }
     }
 
@@ -44,7 +45,7 @@ public class OutputFile {
         try {
             Files.createFile(path);
         } catch (Exception exception) {
-            reportFileError("Exception while creating file " + path + "\n" + exception);
+            reportMessageToFile("Exception while creating file " + name + "\n" + exception);
         }
     }
 
@@ -52,19 +53,20 @@ public class OutputFile {
         try {
             Files.writeString(path, text + "\n", StandardOpenOption.APPEND);
         } catch (Exception exception) {
-            reportFileError("Unable to write to output file: " + name + "\n" + exception);
+            reportMessageToFile("Unable to write to output file: " + name + "\n" + exception);
         }
     }
 
     public void open() {
         try {
             if (!Desktop.isDesktopSupported()) {
-                reportFileError("Desktop is not supported on this platform");
+                reportMessageToFile("Desktop is not supported on this platform");
             } else if (Files.exists(path)) {
                 Desktop.getDesktop().open(path.toFile());
+                reportMessageToFile("Opened file: " + name);
             }
         } catch (Exception exception) {
-            reportFileError("Exception While Opening File " + path + "\n" + exception);
+            reportMessageToFile("Exception While Opening File " + name + "\n" + exception);
         }
     }
 
@@ -72,15 +74,15 @@ public class OutputFile {
         try {
             Files.writeString(path, "");
         } catch (Exception exception) {
-            reportFileError("Exception while clearing text file " + path + "\n" + exception);
+            reportMessageToFile("Exception while clearing text file " + name + "\n" + exception);
         }
     }
 
-    private void reportFileError(String error) {
+    private void reportMessageToFile(String message) {
         try {
-            Files.writeString(PRINTING_FILE.toPath(), error + "\n", StandardOpenOption.APPEND);
+            Files.writeString(PRINTING_FILE.toPath(), message + "\n", StandardOpenOption.APPEND);
         } catch (Exception exception) {
-            System.out.println(error + "\n\nUnable to write to Self Output file: \n" + exception);
+            System.out.println(message + "\n\nUnable to write to Self Output file: \n" + exception);
         }
     }
 

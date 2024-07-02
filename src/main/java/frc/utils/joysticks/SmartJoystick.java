@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.constants.Ports;
 
 public class SmartJoystick {
 
@@ -18,11 +17,11 @@ public class SmartJoystick {
     private final Joystick joystick;
     private final double deadzone;
 
-    public SmartJoystick(Ports.JoystickPorts joystickPort) {
+    public SmartJoystick(JoystickPorts joystickPort) {
         this(joystickPort, DEADZONE);
     }
 
-    public SmartJoystick(Ports.JoystickPorts joystickPort, double deadzone) {
+    public SmartJoystick(JoystickPorts joystickPort, double deadzone) {
         this(new Joystick(joystickPort.getPort()), deadzone);
     }
 

@@ -26,4 +26,5 @@ public enum Axis {
     double getValue(Joystick joystick) {
         return invertedSign * joystick.getRawAxis(id);
     }
+
 }

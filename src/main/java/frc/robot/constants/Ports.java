@@ -3,6 +3,7 @@ package frc.robot.constants;
 public class Ports {
 
     public enum JoystickPorts {
+
         MAIN(0),
         SECOND(1),
         THIRD(2),
@@ -19,6 +20,7 @@ public class Ports {
         public int getPort() {
             return port;
         }
+
     }
 
 }

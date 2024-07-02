@@ -9,12 +9,12 @@ public class SimulationManager {
 
     private static final List<MotorSimulation> REGISTERED_SIMULATIONS = new ArrayList<>();
 
-    static void addSimulation(MotorSimulation simulation) {
-        REGISTERED_SIMULATIONS.add(simulation);
-    }
-
     static TalonFXWrapper createNewMotorForSimulation(){
         return new TalonFXWrapper(REGISTERED_SIMULATIONS.size());
+    }
+
+    static void addSimulation(MotorSimulation simulation) {
+        REGISTERED_SIMULATIONS.add(simulation);
     }
 
     public static void updateRegisteredSimulations() {

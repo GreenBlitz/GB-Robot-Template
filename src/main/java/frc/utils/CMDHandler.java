@@ -1,4 +1,4 @@
-package frc.utils.applicationsutils;
+package frc.utils;
 
 import frc.robot.constants.DirectoryPathsConstants;
 

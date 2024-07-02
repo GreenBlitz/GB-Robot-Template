@@ -1,4 +1,4 @@
-package frc.utils.applicationsutils;
+package frc.robot;
 
 public class OnDeploy {
 

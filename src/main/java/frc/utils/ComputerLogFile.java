@@ -24,14 +24,14 @@ public class ComputerLogFile {
         ensureFolderExists();
         ensureFileExists();
         clear();
-        reportMessageToFile("Initialized Output File: " + name);
+        reportMessageToFile("Initialized Computer Log File: " + name);
     }
 
     private void ensureFolderExists() {
         try {
             Files.createDirectories(DirectoryPathsConstants.COMPUTER_LOG_FILES_DIRECTORY_PATH);
         } catch (Exception exception) {
-            reportMessageToFile("Could not ensure output files folder exists: " + exception);
+            reportMessageToFile("Could not ensure computer log files folder exists: " + exception);
         }
     }
 
@@ -53,7 +53,7 @@ public class ComputerLogFile {
         try {
             Files.writeString(path, text + "\n", StandardOpenOption.APPEND);
         } catch (Exception exception) {
-            reportMessageToFile("Unable to write to output file: " + name + "\n" + exception);
+            reportMessageToFile("Unable to write to computer log file: " + name + "\n" + exception);
         }
     }
 
@@ -74,7 +74,7 @@ public class ComputerLogFile {
         try {
             Files.writeString(path, "");
         } catch (Exception exception) {
-            reportMessageToFile("Exception while clearing text file " + name + "\n" + exception);
+            reportMessageToFile("Exception while clearing computer log file " + name + "\n" + exception);
         }
     }
 
@@ -82,7 +82,7 @@ public class ComputerLogFile {
         try {
             Files.writeString(LOGGING_FILE.toPath(), message + "\n", StandardOpenOption.APPEND);
         } catch (Exception exception) {
-            System.out.println(message + "\n\nUnable to write to Self Output file: \n" + exception);
+            System.out.println(message + "\n\nUnable to write to own computer logging file: \n" + exception);
         }
     }
 

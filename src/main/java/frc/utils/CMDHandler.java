@@ -6,7 +6,7 @@ import java.nio.file.Path;
 
 public class CMDHandler {
 
-    private static final OutputFile CMD_OUTPUT_FILE = new OutputFile("CMDHandler");
+    private static final ComputerLogFile CMD_COMPUTER_LOG_FILE = new ComputerLogFile("CMDHandler");
     private static final String WINDOWS_SHELL = "cmd.exe /c ";
     private static final String NON_WINDOWS_SHELL = "bash -c ";
 
@@ -24,11 +24,11 @@ public class CMDHandler {
         String executedCommand = operatingSystemShell + command;
 
         try {
-            CMD_OUTPUT_FILE.write("Trying To Run: " + executedCommand);
+            CMD_COMPUTER_LOG_FILE.write("Trying To Run: " + executedCommand);
             Runtime.getRuntime().exec(executedCommand);
         } catch (Exception exception) {
-            CMD_OUTPUT_FILE.write("\nGot Exception: \n" + exception);
-            CMD_OUTPUT_FILE.open();
+            CMD_COMPUTER_LOG_FILE.write("\nGot Exception: \n" + exception);
+            CMD_COMPUTER_LOG_FILE.open();
         }
     }
 

@@ -8,28 +8,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-public class OutputFile {
+public class ComputerLogFile {
 
     private static final String TYPE_OF_FILE = ".txt";
 
-    private static final File PRINTING_FILE = new OutputFile("OutputFile").path.toFile();
+    private static final File LOGGING_FILE = new ComputerLogFile("ComputerLogFile").path.toFile();
 
     private final String name;
     private final Path path;
 
-    public OutputFile(String name) {
+    public ComputerLogFile(String name) {
         this.name = name;
-        this.path = DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH.resolve(name + TYPE_OF_FILE);
+        this.path = DirectoryPathsConstants.COMPUTER_LOG_FILES_DIRECTORY_PATH.resolve(name + TYPE_OF_FILE);
 
         ensureFolderExists();
         ensureFileExists();
         clear();
-        reportMessageToFile("Created Output File: " + name);
+        reportMessageToFile("Initialized Output File: " + name);
     }
 
     private void ensureFolderExists() {
         try {
-            Files.createDirectories(DirectoryPathsConstants.OUTPUT_FILES_DIRECTORY_PATH);
+            Files.createDirectories(DirectoryPathsConstants.COMPUTER_LOG_FILES_DIRECTORY_PATH);
         } catch (Exception exception) {
             reportMessageToFile("Could not ensure output files folder exists: " + exception);
         }
@@ -80,7 +80,7 @@ public class OutputFile {
 
     private void reportMessageToFile(String message) {
         try {
-            Files.writeString(PRINTING_FILE.toPath(), message + "\n", StandardOpenOption.APPEND);
+            Files.writeString(LOGGING_FILE.toPath(), message + "\n", StandardOpenOption.APPEND);
         } catch (Exception exception) {
             System.out.println(message + "\n\nUnable to write to Self Output file: \n" + exception);
         }

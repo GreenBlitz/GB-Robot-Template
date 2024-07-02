@@ -1,4 +1,4 @@
-package frc.utils.CTRE;
+package frc.utils.ctre;
 
 
 public class BusStatus {

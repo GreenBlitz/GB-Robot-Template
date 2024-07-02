@@ -3,7 +3,6 @@ package frc.utils;
 import frc.robot.constants.DirectoryPathsConstants;
 
 import java.awt.*;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -12,7 +11,7 @@ public class ComputerLogFile {
 
     private static final String TYPE_OF_FILE = ".txt";
 
-    private static final File LOGGING_FILE = new ComputerLogFile("ComputerLogFile").path.toFile();
+    private static final Path LOGGING_FILE_PATH = new ComputerLogFile("ComputerLogFile").path;
 
     private final String name;
     private final Path path;
@@ -80,7 +79,7 @@ public class ComputerLogFile {
 
     private void reportMessageToFile(String message) {
         try {
-            Files.writeString(LOGGING_FILE.toPath(), message + "\n", StandardOpenOption.APPEND);
+            Files.writeString(LOGGING_FILE_PATH, message + "\n", StandardOpenOption.APPEND);
         } catch (Exception exception) {
             System.out.println(message + "\n\nUnable to write to own computer logging file: \n" + exception);
         }

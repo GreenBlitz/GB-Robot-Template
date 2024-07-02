@@ -184,5 +184,8 @@ networktables.json
 simgui-ds.json
 simgui.json
 
+#Files that are generated midway through the robot running to output stuff
+computerlogfiles
+
 # Python
 src/main/python/__pycache__/

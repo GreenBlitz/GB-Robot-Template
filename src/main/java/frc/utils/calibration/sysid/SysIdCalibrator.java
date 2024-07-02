@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.utils.GBSubsystem;
+import frc.utils.joysticks.SmartJoystick;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
@@ -26,7 +27,7 @@ public class SysIdCalibrator {
     //todo - check if comment is right
 
     /**
-     * IMPORTANT:
+     * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
      */
@@ -43,7 +44,7 @@ public class SysIdCalibrator {
     }
 
     /**
-     * IMPORTANT:
+     * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
      */
@@ -59,7 +60,7 @@ public class SysIdCalibrator {
     }
 
     /**
-     * IMPORTANT:
+     * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
      */
@@ -75,7 +76,7 @@ public class SysIdCalibrator {
     }
 
     /**
-     * IMPORTANT:
+     * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
      */
@@ -100,6 +101,21 @@ public class SysIdCalibrator {
         );
 
         this.sysIdRoutine = new SysIdRoutine(config, mechanism);
+    }
+
+    /**
+     * Sets for you all the buttons you need to do sysid calibration.
+     * The buttons are ordered by the click order.
+     * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
+     *
+     * @param smartJoystick - the joystick the apply the buttons on
+     */
+    public void setAllButtonsForCalibration(SmartJoystick smartJoystick) {
+        smartJoystick.A.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kForward));
+        smartJoystick.B.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
+        smartJoystick.X.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kForward));
+        smartJoystick.Y.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
+        smartJoystick.START.onTrue(new InstantCommand(SignalLogger::stop));
     }
 
     public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {

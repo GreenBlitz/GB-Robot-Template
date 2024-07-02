@@ -1,4 +1,4 @@
-package frc.utils.ctreutils;
+package frc.utils.CTREUtils;
 
 
 public record CTREDeviceID(int ID, BusChain busChain) {

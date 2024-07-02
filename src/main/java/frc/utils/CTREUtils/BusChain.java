@@ -1,4 +1,4 @@
-package frc.utils.ctreutils;
+package frc.utils.CTREUtils;
 
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.Timer;
@@ -12,7 +12,7 @@ public enum BusChain {
 
     private final String chainName;
 
-    BusChain(String chainName){
+    BusChain(String chainName) {
         this.chainName = chainName;
     }
 

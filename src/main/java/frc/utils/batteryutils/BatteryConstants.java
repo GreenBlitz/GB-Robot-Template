@@ -16,7 +16,7 @@ class BatteryConstants {
 
     protected static final int NUMBER_OF_VALUES_IN_AVERAGE = 50;
 
-    protected static final double MESSAGE_STARTUP_TIME = 0.2;
+    protected static final double MESSAGE_STARTUP_TIME = 0.2; // 2 python cycles
 
     protected static final int POWER_DISTRIBUTION_CAN_ID = 20;
 

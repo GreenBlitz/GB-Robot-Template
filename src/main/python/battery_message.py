@@ -18,29 +18,29 @@ CONNECTION_TIMEOUT_SECONDS = 30
 LOOPS_COOLDOWN_SECONDS = 0.1
 
 
-def config_window(window):
+def config_window(window: tk.Tk):
     window.title(WINDOW_NAME)
     window.attributes("-topmost", True)
     window.resizable(False, False)
     window.bind("<Unmap>", lambda event: cancel_minimize(event, window))
 
 
-def cancel_minimize(event, window):
+def cancel_minimize(event, window: tk.Tk):
     window.attributes("-topmost", True)
     window.state('normal')
 
 
-def create_image_label(window, image):
+def create_image_label(window: tk.Tk, image: PhotoImage):
     """Create a label widget to display the image on the given window."""
     label = tk.Label(window, image=image)
     label.pack()
 
 
-def load_image(image_path):
+def load_image(image_path: str) -> PhotoImage:
     return PhotoImage(file=image_path)
 
 
-def should_show_message(battery_table, last_time_showed):
+def should_show_message(battery_table: ntcore.NetworkTable, last_time_showed: float) -> bool:
     is_time_to_message = time.time() - last_time_showed > TIME_BETWEEN_MESSAGES_SECONDS
     is_battery_low = battery_table.getBoolean(KEY_NAME, defaultValue=False)
     return is_battery_low and is_time_to_message

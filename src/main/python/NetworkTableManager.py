@@ -17,11 +17,14 @@ import logging
 
 __CONNECTION_TIMEOUT_SECONDS = 30
 __CONNECTION_COOLDOWN_SECONDS = 0.1
-__LOGGER_NAME = "network tables logger"
+
+logging.basicConfig()
+__LOGGER = (logging.getLogger("network table logger"))
+__LOGGER.setLevel(logging.INFO)
 
 
 def terminate_client(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
-    logging.getLogger(__LOGGER_NAME).info("Terminating client named {}".format(client_name))
+    __LOGGER.warning("Terminating client named {}".format(client_name))
     ntcore.NetworkTableInstance.destroy(network_table_instance)
 
 
@@ -34,7 +37,7 @@ def wait_for_client_to_connect(network_table_instance: ntcore.NetworkTableInstan
     while not network_table_instance.isConnected():
         # terminate client and program if it takes to long to connect
         if past_connection_timeout(starting_time):
-            logging.getLogger(__LOGGER_NAME).info("Didn't connect to network tables. Terminating...")
+            __LOGGER.error("Didn't connect to network tables. Terminating...")
             terminate_client(network_table_instance, client_name)
             sys.exit()
         time.sleep(__CONNECTION_COOLDOWN_SECONDS)
@@ -43,13 +46,13 @@ def wait_for_client_to_connect(network_table_instance: ntcore.NetworkTableInstan
 def get_connected_client(ip: str, client_name: str) -> ntcore.NetworkTableInstance:
     network_table_instance = ntcore.NetworkTableInstance.getDefault()
 
-    logging.getLogger(__LOGGER_NAME).info("Setting up NetworkTables client named {}".format(client_name))
+    __LOGGER.info("Setting up NetworkTables client named {}".format(client_name))
     network_table_instance.startClient4(client_name)
     network_table_instance.setServer(ip)
     network_table_instance.startDSClient()
 
-    logging.getLogger(__LOGGER_NAME).info("Waiting for connection to NetworkTables server...")
+    __LOGGER.info("Waiting for connection to NetworkTables server...")
     wait_for_client_to_connect(network_table_instance, client_name)
 
-    logging.getLogger(__LOGGER_NAME).info("Connected {} to NetworkTables server".format(client_name))
+    __LOGGER.info("Connected {} to NetworkTables server".format(client_name))
     return network_table_instance

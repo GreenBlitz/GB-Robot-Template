@@ -32,7 +32,6 @@ public class CMDHandler {
         }
     }
 
-
     public static void runJavaClass(Path javaPath) {
         runJavaClass(javaPath, "");
     }
@@ -48,7 +47,6 @@ public class CMDHandler {
         runCMDCommand(DirectoryPathsConstants.JAVA_DIRECTORY_PATH.resolve(packageName), command);
     }
 
-
     public static void runJavaClass(Class<?> classToRun) {
         runJavaClass(classToRun, "");
     }
@@ -63,7 +61,6 @@ public class CMDHandler {
         Path pathOfClass = Path.of(className);
         runJavaClass(pathOfClass, getSeparatedArguments(arguments));
     }
-
 
     public static void runPythonClass(Path pythonPath) {
         runPythonClass(pythonPath, "");

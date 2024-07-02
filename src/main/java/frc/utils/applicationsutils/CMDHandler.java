@@ -6,7 +6,7 @@ import java.nio.file.Path;
 
 public class CMDHandler {
 
-    private static final OutputFile CMD_OUTPUT_FILE = new OutputFile("CMDHandler.txt");
+    private static final OutputFile CMD_OUTPUT_FILE = new OutputFile("CMDHandler");
     private static final String WINDOWS_SHELL = "cmd.exe /c ";
     private static final String NON_WINDOWS_SHELL = "bash -c ";
 
@@ -26,8 +26,7 @@ public class CMDHandler {
         try {
             CMD_OUTPUT_FILE.write("Trying To Run: " + executedCommand);
             Runtime.getRuntime().exec(executedCommand);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             CMD_OUTPUT_FILE.write("\nGot Exception: \n" + exception);
             CMD_OUTPUT_FILE.open();
         }
@@ -39,7 +38,7 @@ public class CMDHandler {
     }
 
     /**
-     * @param javaPath The path from the java package to the class. example: "directory/to/my/Example".
+     * @param javaPath  The path from the java package to the class. example: "directory/to/my/Example".
      * @param arguments The arguments given to the java file.
      */
     public static void runJavaClass(Path javaPath, String... arguments) {
@@ -56,7 +55,7 @@ public class CMDHandler {
 
     /**
      * @param classToRun The class to run. example: Example.class .
-     * @param arguments The arguments given to the java file.
+     * @param arguments  The arguments given to the java file.
      */
     public static void runJavaClass(Class<?> classToRun, String... arguments) {
         String className = classToRun.getName();
@@ -72,7 +71,7 @@ public class CMDHandler {
 
     /**
      * @param pythonPath The path from the java package to the class. example: "directory/example_class".
-     * @param arguments The arguments given to the python file.
+     * @param arguments  The arguments given to the python file.
      */
     public static void runPythonClass(Path pythonPath, String... arguments) {
         String command = "py " + pythonPath + ".py " + getSeparatedArguments(arguments);

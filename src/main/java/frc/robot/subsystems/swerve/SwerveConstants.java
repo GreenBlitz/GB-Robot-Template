@@ -76,7 +76,7 @@ public class SwerveConstants {
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
 
-    public static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(5, 0, 0);//todo - calibrate
+    public static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(4, 0, 0);//todo - calibrate
     static {
         ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
                 -MathConstants.HALF_CIRCLE.getDegrees(),
@@ -84,11 +84,11 @@ public class SwerveConstants {
         );
     }
 
-    public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(5, 0, 0);//todo - calibrate
+    public static final PIDController TRANSLATION_PID_CONTROLLER = new PIDController(6, 0, 0);//todo - calibrate
 
 
-    public static final PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0, 0);//todo - calibrate
-    public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(3, 0, 0);//todo - calibrate
+    public static final PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(6, 0, 0);//todo - calibrate
+    public static final PIDConstants AUTO_ROTATION_PID_CONSTANTS = new PIDConstants(4, 0, 0);//todo - calibrate
     public static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
     public static final HolonomicPathFollowerConfig HOLONOMIC_PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
             AUTO_TRANSLATION_PID_CONSTANTS,

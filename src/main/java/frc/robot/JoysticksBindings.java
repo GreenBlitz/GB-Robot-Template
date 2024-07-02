@@ -126,12 +126,12 @@ public class JoysticksBindings {
 
         // Move To Pose (4, 4, 17Deg)
         usedJoystick.BACK.whileTrue(SwerveCommands.driveToPose(
-                () -> new MirrorablePose2d(4, 4, Rotation2d.fromDegrees(17), false),
+                () -> new MirrorablePose2d(4, 4, Rotation2d.fromDegrees(17), true),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
         // Move To Pose (5, 8, 90Deg)
         usedJoystick.START.whileTrue(SwerveCommands.driveToPose(
-                () -> new MirrorablePose2d(5, 8, Rotation2d.fromDegrees(90), true),
+                () -> new MirrorablePose2d(6, 6, Rotation2d.fromDegrees(90), true),
                 SwerveConstants.REAL_TIME_CONSTRAINTS
         ));
     }

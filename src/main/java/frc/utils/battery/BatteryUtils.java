@@ -1,12 +1,12 @@
-package frc.utils.batteryutils;
+package frc.utils.battery;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.littletonrobotics.junction.Logger;
 
-import static frc.utils.batteryutils.BatteryConstants.POWER_DISTRIBUTION_CAN_ID;
-import static frc.utils.batteryutils.BatteryConstants.POWER_DISTRIBUTION_TYPE;
+import static frc.utils.battery.BatteryConstants.POWER_DISTRIBUTION_CAN_ID;
+import static frc.utils.battery.BatteryConstants.POWER_DISTRIBUTION_TYPE;
 
 public class BatteryUtils {
 

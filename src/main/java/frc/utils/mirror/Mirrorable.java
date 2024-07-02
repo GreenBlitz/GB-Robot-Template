@@ -1,4 +1,4 @@
-package frc.utils.mirrorutils;
+package frc.utils.mirror;
 
 import frc.robot.constants.FieldConstants;
 import frc.utils.DriverStationUtils;

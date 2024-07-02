@@ -1,4 +1,4 @@
-package frc.utils.cycletimeutils;
+package frc.utils.cycletime;
 
 import frc.robot.constants.LogPathsConstants;
 

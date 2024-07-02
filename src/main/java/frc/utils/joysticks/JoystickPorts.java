@@ -18,4 +18,5 @@ public enum JoystickPorts {
     public int getPort() {
         return port;
     }
+
 }

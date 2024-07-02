@@ -1,4 +1,4 @@
-package frc.utils.cycletimeutils;
+package frc.utils.cycletime;
 
 import edu.wpi.first.hal.HALUtil;
 import frc.utils.Conversions;

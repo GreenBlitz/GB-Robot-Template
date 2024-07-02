@@ -1,4 +1,4 @@
-package frc.utils.mirrorutils;
+package frc.utils.mirror;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.MathConstants;

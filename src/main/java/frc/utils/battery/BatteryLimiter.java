@@ -1,4 +1,4 @@
-package frc.utils.batteryutils;
+package frc.utils.battery;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.Timer;

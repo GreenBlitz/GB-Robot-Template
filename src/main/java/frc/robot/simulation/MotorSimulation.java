@@ -5,8 +5,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.batteryutils.BatteryUtils;
-import frc.utils.cycletimeutils.CycleTimeUtils;
+import frc.utils.battery.BatteryUtils;
+import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 

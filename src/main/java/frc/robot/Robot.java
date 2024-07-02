@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.SimulationManager;
-import frc.utils.batteryutils.BatteryUtils;
-import frc.utils.CTREUtils.BusStatus;
-import frc.utils.cycletimeutils.CycleTimeUtils;
-import frc.utils.loggerutils.LoggerFactory;
+import frc.utils.battery.BatteryUtils;
+import frc.utils.CTRE.BusStatus;
+import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**

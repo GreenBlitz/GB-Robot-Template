@@ -1,4 +1,4 @@
-package frc.utils.batteryutils;
+package frc.utils.battery;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.robot.constants.LogPathsConstants;

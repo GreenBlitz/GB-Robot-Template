@@ -2,7 +2,7 @@ package frc.robot.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.utils.cycletimeutils.CycleTimeUtils;
+import frc.utils.cycletime.CycleTimeUtils;
 
 /**
  * This class simulates a motor. Used for Subsystems like rollers and intake.

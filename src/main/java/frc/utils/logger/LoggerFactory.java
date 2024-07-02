@@ -1,4 +1,4 @@
-package frc.utils.loggerutils;
+package frc.utils.logger;
 
 import com.ctre.phoenix6.SignalLogger;
 import frc.robot.constants.LogPathsConstants;

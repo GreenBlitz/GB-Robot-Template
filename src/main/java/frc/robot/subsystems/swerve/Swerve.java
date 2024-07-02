@@ -220,7 +220,7 @@ public class Swerve extends GBSubsystem {
 
     public void pointWheels(Rotation2d targetAngle, boolean optimize) {
         for (Module module : modules) {
-            module.setTargetState(new SwerveModuleState(0, targetAngle), optimize);
+            module.setTargetAngle(targetAngle, optimize);
         }
     }
 

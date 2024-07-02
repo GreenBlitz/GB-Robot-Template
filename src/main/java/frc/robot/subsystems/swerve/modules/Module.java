@@ -134,17 +134,19 @@ public class Module {
         );
     }
 
-    public void setTargetState(SwerveModuleState targetState) {
-        setTargetState(targetState, true);
-    }
-
-    public void setTargetState(SwerveModuleState targetState, boolean optimize) {
+    public void setTargetAngle(Rotation2d angle, boolean optimize) {
+        SwerveModuleState moduleState = new SwerveModuleState(0, angle);
         if (optimize) {
-            this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
+            this.targetState = SwerveModuleState.optimize(moduleState, getCurrentAngle());
         }
         else {
-            this.targetState = targetState;
+            this.targetState = moduleState;
         }
+        module.setTargetAngle(targetState.angle);
+    }
+
+    public void setTargetState(SwerveModuleState targetState) {
+        this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
         module.setTargetAngle(this.targetState.angle);
         setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle);
     }

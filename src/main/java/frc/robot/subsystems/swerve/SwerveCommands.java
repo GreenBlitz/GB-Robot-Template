@@ -198,7 +198,7 @@ public class SwerveCommands {
 
     public static Command driveToPose(Supplier<MirrorablePose2d> targetPose, PathConstraints constraints) {
         Command command = new DeferredCommand(() -> driveToPose(targetPose.get(), constraints), Set.of(SWERVE));
-        command.setName("Drive to " + targetPose.get());
+        command.setName("Drive to " + targetPose.get().get());
         return command;
     }
 

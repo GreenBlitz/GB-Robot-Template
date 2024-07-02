@@ -10,6 +10,7 @@
 
 # If this library is not installed, don't install ntcore but pyntcore.
 import ntcore
+
 import sys
 import time
 
@@ -22,7 +23,7 @@ def terminate_client(network_table_instance: ntcore.NetworkTableInstance, client
     ntcore.NetworkTableInstance.destroy(network_table_instance)
 
 
-def passed_connection_timeout(starting_time):
+def past_connection_timeout(starting_time):
     return time.time() - starting_time > CONNECTION_TIMEOUT_SECONDS
 
 
@@ -30,7 +31,7 @@ def connect_client_to_server(network_table_instance, client_name):
     starting_time = time.time()
     while not network_table_instance.isConnected():
         # terminate client and program if it takes to long to connect
-        if passed_connection_timeout(starting_time):
+        if past_connection_timeout(starting_time):
             print("Didn't connect to network tables. Terminating...")
             terminate_client(network_table_instance, client_name)
             sys.exit()

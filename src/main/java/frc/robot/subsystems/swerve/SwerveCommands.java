@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -54,9 +55,15 @@ public class SwerveCommands {
     }
 
     public static Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+        Command sysIdCommand = DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
+        sysIdCommand.getRequirements().clear();
+
         Command command = new SequentialCommandGroup(
                 pointWheels(new Rotation2d(), false),
-                DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction)
+                new ParallelDeadlineGroup(
+                        sysIdCommand,
+                        pointWheels(new Rotation2d(), false).repeatedly()
+                )
         );
         command.setName("Drive Calibration");
         return command;

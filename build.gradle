@@ -143,12 +143,14 @@ tasks.withType(JavaCompile).configureEach {
 
 
 tasks.register('checkAkitInstall', JavaExec) {
+    group = 'mechanical advantage'
     dependsOn "classes"
     mainClass = "org.littletonrobotics.junction.CheckInstall"
     classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register('installLocalGitHookPostCheckout', Copy) {
+    group = 'git'
     from new File(rootProject.rootDir, '.scripts/post-checkout')
     into { new File(rootProject.rootDir, '.git/hooks') }
     filePermissions {
@@ -160,6 +162,7 @@ tasks.register('installLocalGitHookPostCheckout', Copy) {
 }
 
 tasks.register('installLocalGitHookPreCommit', Copy) {
+    group = 'git'
     from new File(rootProject.rootDir, '.scripts/pre-commit')
     into { new File(rootProject.rootDir, '.git/hooks') }
     filePermissions {
@@ -171,19 +174,21 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
 }
 
 tasks.register('runComputerPrograms', JavaExec) {
-    group = "Execution"
+    group = 'computer'
     description = "Run the main class in OnDeploy"
     classpath = sourceSets.main.runtimeClasspath
     main = "${rootProject.rootDir}/src/main/java/frc/utils/applicationsutils/OnDeploy.java"
 }
 
 tasks.register('deployWithComputerPrograms') {
+    group = 'computer'
     dependsOn("deploy")
     dependsOn("runComputerPrograms")
     tasks.findByName("runComputerPrograms").mustRunAfter("deploy")
 }
 
 tasks.register('SetConnectionTypeIP') {
+    group = 'deployutils'
     doLast {
         int PING_TIMEOUT_MILLISECONDS = 1000
         boolean found = false

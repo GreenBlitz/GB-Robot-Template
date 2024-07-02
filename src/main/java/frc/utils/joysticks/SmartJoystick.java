@@ -53,12 +53,12 @@ public class SmartJoystick {
     /**
      * @param power the power to rumble the joystick between [-1, 1]
      */
-    public void startRumble(GenericHID.RumbleType rumbleSide, double power) {
+    public void setRumble(GenericHID.RumbleType rumbleSide, double power) {
         joystick.setRumble(rumbleSide, power);
     }
 
     public void stopRumble(GenericHID.RumbleType rumbleSide) {
-        joystick.setRumble(rumbleSide, 0);
+        setRumble(rumbleSide, 0);
     }
 
     /**

@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.CMDHandler;
 import frc.utils.batteryutils.BatteryUtils;
-import frc.utils.ctreutils.BusStatus;
+import frc.utils.CTREUtils.BusStatus;
 import frc.utils.cycletimeutils.CycleTimeUtils;
 import frc.utils.loggerutils.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -33,6 +34,8 @@ public class Robot extends LoggedRobot {
         }
         LoggerFactory.initializeLogger();
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
+
+        CMDHandler.runCMDCommand("echo test");
 
         robotContainer = new RobotContainer();
     }

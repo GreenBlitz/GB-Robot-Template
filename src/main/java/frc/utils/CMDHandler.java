@@ -26,8 +26,9 @@ public class CMDHandler {
         try {
             CMD_COMPUTER_LOG_FILE.write("Trying To Run: " + executedCommand);
             Runtime.getRuntime().exec(executedCommand);
+            CMD_COMPUTER_LOG_FILE.write("Success!");
         } catch (Exception exception) {
-            CMD_COMPUTER_LOG_FILE.write("\nGot Exception: \n" + exception);
+            CMD_COMPUTER_LOG_FILE.write("Got Exception: \n" + exception);
             CMD_COMPUTER_LOG_FILE.open();
         }
     }

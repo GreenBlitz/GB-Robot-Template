@@ -11,7 +11,7 @@ public class ComputerLogFile {
 
     private static final String TYPE_OF_FILE = ".txt";
 
-    private static final Path LOGGING_FILE_PATH = new ComputerLogFile("ComputerLogFile").path;
+    private static final Path LOGGING_FILES_LOGGING_PATH = new ComputerLogFile("ComputerLogFile").path;
 
     private final String name;
     private final Path path;
@@ -79,7 +79,7 @@ public class ComputerLogFile {
 
     private void reportMessageToFile(String message) {
         try {
-            Files.writeString(LOGGING_FILE_PATH, message + "\n", StandardOpenOption.APPEND);
+            Files.writeString(LOGGING_FILES_LOGGING_PATH, message + "\n", StandardOpenOption.APPEND);
         } catch (Exception exception) {
             System.out.println(message + "\n\nUnable to write to own computer logging file: \n" + exception);
         }

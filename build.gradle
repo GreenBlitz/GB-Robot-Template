@@ -144,6 +144,7 @@ tasks.withType(JavaCompile).configureEach {
 
 
 tasks.register('installLocalGitHookPostCheckout', Copy) {
+    group = 'git'
     from new File(rootProject.rootDir, '.scripts/post-checkout')
     into { new File(rootProject.rootDir, '.git/hooks') }
     filePermissions {
@@ -155,6 +156,7 @@ tasks.register('installLocalGitHookPostCheckout', Copy) {
 }
 
 tasks.register('installLocalGitHookPreCommit', Copy) {
+    group = 'git'
     from new File(rootProject.rootDir, '.scripts/pre-commit')
     into { new File(rootProject.rootDir, '.git/hooks') }
     filePermissions {
@@ -166,6 +168,7 @@ tasks.register('installLocalGitHookPreCommit', Copy) {
 }
 
 tasks.register('setReachableIP') {
+    group = 'networkUtils'
     doLast {
         int PING_TIMEOUT_MILLISECONDS = 1000
         boolean found = false
@@ -183,6 +186,7 @@ tasks.register('setReachableIP') {
 }
 
 tasks.register('setVisualVMHost') {
+    group = 'externalTools'
     mustRunAfter('setReachableIP')
     doLast {
         if (reachableIP) {
@@ -195,19 +199,21 @@ tasks.register('setVisualVMHost') {
 }
 
 tasks.register('checkAkitInstall', JavaExec) {
+    group = 'execution'
     dependsOn "classes"
     mainClass = "org.littletonrobotics.junction.CheckInstall"
     classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register('runComputerPrograms', JavaExec) {
-    group = "Execution"
+    group = 'execution'
     description = "Run the main class in OnDeploy"
     classpath = sourceSets.main.runtimeClasspath
     mainClassName = "frc.utils.applicationsutils.OnDeploy"
 }
 
 tasks.register('deployWithComputerPrograms') {
+    group = 'deployutils'
     dependsOn("deploy")
     dependsOn("runComputerPrograms")
     tasks.findByName("runComputerPrograms").mustRunAfter("deploy")

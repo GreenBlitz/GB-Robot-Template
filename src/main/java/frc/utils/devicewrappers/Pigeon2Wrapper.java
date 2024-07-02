@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.CTREUtils.CTREDeviceID;
+import frc.utils.ctreutils.CTREDeviceID;
 
 public class Pigeon2Wrapper extends Pigeon2 {
 

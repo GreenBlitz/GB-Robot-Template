@@ -53,7 +53,7 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
     private void updateValue() {
         try {
             this.value = booleanTable.getValue(this.key).getBoolean();
-        } catch (Exception e) {
+        } catch (Exception exception) {
             this.value = defaultValue;
         }
     }

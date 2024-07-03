@@ -170,7 +170,10 @@ out/
 # Simulation GUI and other tools window save file
 *-window.json
 
-# Simulation data log directory
+# Simulation data logs
+simulationlogs/
+
+# Wpilib puts here stuff
 logs/
 
 # Folder that has CTRE Phoenix Sim device config storage
@@ -181,5 +184,11 @@ networktables.json
 simgui-ds.json
 simgui.json
 
+<<<<<<< HEAD
+=======
+# Files that are generated midway through the robot running to output stuff
+computerlogfiles
+
+>>>>>>> origin/cr-java
 # Python
 src/main/python/__pycache__/

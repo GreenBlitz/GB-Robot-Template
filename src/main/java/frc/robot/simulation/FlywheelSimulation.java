@@ -1,10 +1,8 @@
 package frc.robot.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.utils.cycletimeutils.CycleTimeUtils;
+import frc.utils.cycletime.CycleTimeUtils;
 
 public class FlywheelSimulation extends MotorSimulation {
 
@@ -12,15 +10,10 @@ public class FlywheelSimulation extends MotorSimulation {
 
     private double lastPositionRadians = 0;
 
-    public FlywheelSimulation(DCMotor gearbox, double gearRatio, double momentOfInertia) {
-        this.flywheelSimulation = new FlywheelSim(gearbox, gearRatio, momentOfInertia);
+    public FlywheelSimulation(FlywheelSim flywheelSimulation) {
+        this.flywheelSimulation = flywheelSimulation;
     }
 
-    public FlywheelSimulation(DCMotor gearbox, double gearRatio, double kv, double ka) {
-        this.flywheelSimulation = new FlywheelSim(LinearSystemId.identifyVelocitySystem(kv, ka), gearbox, gearRatio);
-    }
-
-    @Override
     public double getCurrent() {
         return flywheelSimulation.getCurrentDrawAmps();
     }

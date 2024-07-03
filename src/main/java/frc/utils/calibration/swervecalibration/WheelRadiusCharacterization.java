@@ -20,23 +20,15 @@ import java.util.function.Supplier;
 public class WheelRadiusCharacterization extends Command {
 
     private final Supplier<Rotation2d> gyroAngleSupplier;
-
     private final Supplier<Rotation2d[]> wheelDriveDistanceSupplier;
-
     private final Consumer<Rotation2d> velocityControl;
-
     private final Rotation2d characterizationSpeed;
-
     private final Runnable onEnd;
-
     private final double driveRadiusMeters;
 
     private Rotation2d[] startWheelPositions;
-
     private double lastGyroYawRads = 0.0;
-
     private double accumGyroYawRads = 0.0;
-
     private double wheelRadiusMeters = 0.0;
 
     public WheelRadiusCharacterization(
@@ -53,7 +45,17 @@ public class WheelRadiusCharacterization extends Command {
         addRequirements(drive);
     }
 
-    public double getAverageDriveDistanceRads() {
+    private void updateAnglePassedFromStart() {
+        double currentGyroYawRads = gyroAngleSupplier.get().getRadians();
+        accumGyroYawRads += MathUtil.angleModulus(currentGyroYawRads - lastGyroYawRads);
+        lastGyroYawRads = currentGyroYawRads;
+    }
+
+    private double getDriveDistanceMeters() {
+        return accumGyroYawRads * driveRadiusMeters;
+    }
+
+    private double getAverageDriveDistanceRads() {
         Rotation2d[] wheelPositions = wheelDriveDistanceSupplier.get();
         double averageDriveDistanceRads = 0.0;
         for (int i = 0; i < WheelRadiusConstants.NUMBER_OF_MODULES; i++) {
@@ -74,28 +76,19 @@ public class WheelRadiusCharacterization extends Command {
     public void execute() {
         velocityControl.accept(characterizationSpeed);
 
-        // Update the angle passed from start
-        double currentGyroYawRads = gyroAngleSupplier.get().getRadians();
-        accumGyroYawRads += MathUtil.angleModulus(currentGyroYawRads - lastGyroYawRads);
-        lastGyroYawRads = currentGyroYawRads;
-
-        // Update the drive distance of the wheels
-        double averageDriveDistanceRads = getAverageDriveDistanceRads();
-        double driveDistanceMeters = accumGyroYawRads * driveRadiusMeters;
+        updateAnglePassedFromStart();
 
         // Distance meters / Distance Radians = Radius Meters
-        wheelRadiusMeters = driveDistanceMeters / averageDriveDistanceRads;
+        wheelRadiusMeters = getDriveDistanceMeters() / getAverageDriveDistanceRads();
     }
 
     @Override
     public void end(boolean interrupted) {
         onEnd.run();
-        if (accumGyroYawRads <= MathConstants.FULL_CIRCLE.getRadians()) {
-            Logger.recordOutput(WheelRadiusConstants.LOG_PATH, "Not enough data for characterization");
-        }
-        else {
-            Logger.recordOutput(WheelRadiusConstants.LOG_PATH, wheelRadiusMeters + " meters");
-        }
+        String output = accumGyroYawRads <= MathConstants.FULL_CIRCLE.getRadians()
+                ? "Not enough data for characterization"
+                : wheelRadiusMeters + " meters";
+        Logger.recordOutput(WheelRadiusConstants.LOG_PATH, output);
     }
 
 }

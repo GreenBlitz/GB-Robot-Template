@@ -211,7 +211,9 @@ tasks.register('runComputerPrograms', JavaExec) {
     description = "Run the main class in ComputerMain"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "frc.robot.ComputerMain"
-    args = ["$reachableIP"]
+    doFirst {
+        args = ["$reachableIP"]
+    }
 }
 
 tasks.register('deployWithComputerPrograms') {

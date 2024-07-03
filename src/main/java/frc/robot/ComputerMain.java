@@ -8,12 +8,11 @@ import java.nio.file.Path;
 public class ComputerMain {
 
     public static void main(String[] args) {
-//        startComputerPrograms(args);
-        testMessage(args[0]);
+        startComputerPrograms(args);
     }
 
     private static void testMessage(String message) {
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame(message);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setSize(500,500);

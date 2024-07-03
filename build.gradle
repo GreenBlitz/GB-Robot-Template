@@ -1,5 +1,6 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
 import groovy.json.JsonSlurper
+import java.nio.file.Files
 
 plugins {
 	id "java"
@@ -142,18 +143,34 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-tasks.named("build").configure { dependsOn('installLocalGitHookPostCheckout') }
-tasks.register('installLocalGitHookPostCheckout', Copy) {
-	group = 'git'
-	from new File(rootProject.rootDir, '.scripts/post-checkout')
-	into { new File(rootProject.rootDir, '.git/hooks') }
-	filePermissions {
-		unix(0775)
-	}
+// Setup local git hooks
+def gitConfig = 'Git Configuration'
+tasks.register('installLocalGitHookSymlinks') {
+	group = gitConfig
+
+	outputs.dir "$rootDir/.git/hooks/"
+
 	doLast {
-		println("---Added Post Checkout Git Hook Script---")
+		def linkDir = file("$rootDir/.git/hooks/").toPath()
+		def gitHooks = fileTree("$rootDir/.scripts/git-hooks/")
+		gitHooks.forEach { File target ->
+			def link = linkDir.resolve(target.toPath().getFileName())
+
+			if (!Files.isSymbolicLink(link)) {
+				if (Files.exists(link)) {
+					Files.delete(link)
+				}
+
+				Files.createSymbolicLink(link, target.toPath())
+
+				println("---Installed Symbolic Link ${rootDir.relativize(link)} -> ${rootDir.relativize(target)} ---")
+			}
+		}
 	}
 }
+
+tasks.matching({ it.group != gitConfig }).configureEach {  it.dependsOn installLocalGitHookSymlinks }
+
 
 discoverroborio.finalizedBy('setReachableIP')
 tasks.register('setReachableIP') {

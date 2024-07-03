@@ -8,7 +8,7 @@ import java.nio.file.Path;
 
 public class ComputerMain {
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         startComputerPrograms(args);
     }
 
@@ -19,15 +19,15 @@ public class ComputerMain {
         frame.setSize(500,500);
     }
 
-    private static void startComputerPrograms(String[] args) {
-        // start programs on computer...
+    private static void startComputerPrograms(String... args) {
+        String connectedIP = args[0];
         if (RobotConstants.ENABLE_KEYBOARD) {
-            runKeyboard(args);
+            runKeyboard(connectedIP);
         }
     }
 
-    private static void runKeyboard(String[] args) {
-        CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), args[0]);
+    private static void runKeyboard(String connectedIP) {
+        CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);
     }
 
 }

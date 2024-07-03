@@ -16,10 +16,6 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
     private boolean defaultValue;
     private boolean value;
 
-    public LoggedTableBoolean(String table, String key) {
-        this(table, key, false);
-    }
-
     public LoggedTableBoolean(String table, String key, boolean defaultValue) {
         this.inputs = new LoggableInputs() {
             public void toLog(LogTable table) {
@@ -36,6 +32,10 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
         this.booleanTable = NetworkTableInstance.getDefault().getTable(table);
         this.periodic();
         Logger.registerDashboardInput(this);
+    }
+
+    public LoggedTableBoolean(String table, String key) {
+        this(table, key, false);
     }
 
     public void setDefault(boolean defaultValue) {

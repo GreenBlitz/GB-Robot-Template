@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 
 /*
- * inspired from Trigon code
+ * Inspired from Trigon code.
  *
  * @author Yoni Kiriaty, Trigon
  *
@@ -28,9 +28,8 @@ public class KeyboardController {
             F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
             DELETE, BACKTICK,
             ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO,
-            MINUS, EQUALS,
-            BACKSPACE, TAB,
-            Q, W, E, R, T, Y, U, I, O, P, A, S, D, F, G, H, J, K, L, Z, X, C, V, B, N, M,
+            MINUS, EQUALS, BACKSPACE, TAB,
+            A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
             SEMICOLON, APOSTROPHE, LEFT_SHIFT, COMMA, PERIOD, SLASH, RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL,
             LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW,
             NUMPAD_0, NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9;
@@ -74,32 +73,32 @@ public class KeyboardController {
         this.BACKSPACE = getNewKey("backspace");
         this.TAB = getNewKey("tab");
 
-        this.Q = getNewKey("q");
-        this.W = getNewKey("w");
-        this.E = getNewKey("e");
-        this.R = getNewKey("r");
-        this.T = getNewKey("t");
-        this.Y = getNewKey("y");
-        this.U = getNewKey("u");
-        this.I = getNewKey("i");
-        this.O = getNewKey("o");
-        this.P = getNewKey("p");
         this.A = getNewKey("a");
-        this.S = getNewKey("s");
+        this.B = getNewKey("b");
+        this.C = getNewKey("c");
         this.D = getNewKey("d");
+        this.E = getNewKey("e");
         this.F = getNewKey("f");
         this.G = getNewKey("g");
         this.H = getNewKey("h");
+        this.I = getNewKey("i");
         this.J = getNewKey("j");
         this.K = getNewKey("k");
         this.L = getNewKey("l");
-        this.Z = getNewKey("z");
-        this.X = getNewKey("x");
-        this.C = getNewKey("c");
-        this.V = getNewKey("v");
-        this.B = getNewKey("b");
-        this.N = getNewKey("n");
         this.M = getNewKey("m");
+        this.N = getNewKey("n");
+        this.O = getNewKey("o");
+        this.P = getNewKey("p");
+        this.Q = getNewKey("q");
+        this.R = getNewKey("r");
+        this.S = getNewKey("s");
+        this.T = getNewKey("t");
+        this.U = getNewKey("u");
+        this.V = getNewKey("v");
+        this.W = getNewKey("w");
+        this.X = getNewKey("x");
+        this.Y = getNewKey("y");
+        this.Z = getNewKey("z");
 
         this.SEMICOLON = getNewKey(";");
         this.APOSTROPHE = getNewKey("'");
@@ -140,9 +139,11 @@ public class KeyboardController {
     public double getValueByButtons(Trigger positiveButton, Trigger negativeButton, double value) {
         if (positiveButton.getAsBoolean()) {
             return value;
-        } else if (negativeButton.getAsBoolean()) {
+        }
+        else if (negativeButton.getAsBoolean()) {
             return -value;
-        } else {
+        }
+        else {
             return 0;
         }
     }

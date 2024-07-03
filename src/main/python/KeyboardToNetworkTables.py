@@ -9,43 +9,47 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-import NetworkTableManager as nt
+import NetworkTableManager
 import sys
 import ntcore
 import keyboard
 import time
 
-KEYBOARD_CHECKING_COOLDOWN_SECONDS = 0.01
-KEYBOARD_TABLE = "Keyboard"
-KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
-CLIENT_NAME = "KeyboardToNetworkTables"
-IP = sys.argv[1]
+__KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS = 0.01
+__KEYBOARD_TABLE = "Keyboard"
+__KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
+__CLIENT_NAME = "KeyboardToNetworkTables"
+__IP = sys.argv[1]
 
 
-def is_pressed(event: keyboard.KeyboardEvent):
+def __is_pressed(event: keyboard.KeyboardEvent) -> bool:
     return event.event_type == keyboard.KEY_DOWN
 
 
-def on_key_event(event: keyboard.KeyboardEvent, table: ntcore.NetworkTable):
+def __on_key_event(event: keyboard.KeyboardEvent, table: ntcore.NetworkTableInstance):
     if event is None or event.name is None:
         return
     elif event.name == "/":
-        table.putBoolean("slash", is_pressed(event))
+        table.putBoolean("slash", __is_pressed(event))
     elif event.is_keypad:
-        table.putBoolean("numpad" + event.name, is_pressed(event))
+        table.putBoolean("numpad" + event.name, __is_pressed(event))
     else:
-        table.putBoolean(event.name.lower(), is_pressed(event))
+        table.putBoolean(event.name.lower(), __is_pressed(event))
 
 
-def start_keyboard_tracking():
-    network_table_instance = nt.get_connected_client(IP, CLIENT_NAME)
-    table = network_table_instance.getTable(KEYBOARD_KEYS_TABLE)
+def __continue_tracking_keyboard_until_disconnection(keyboard_client: ntcore.NetworkTableInstance):
+    while keyboard_client.isConnected():
+        time.sleep(__KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS)
+    NetworkTableManager.terminate_client(keyboard_client, __CLIENT_NAME)
 
-    keyboard.hook(lambda key_event: on_key_event(key_event, table))
-    while network_table_instance.isConnected():
-        time.sleep(KEYBOARD_CHECKING_COOLDOWN_SECONDS)
-    nt.terminate_client(network_table_instance, CLIENT_NAME)
+
+def __track_keyboard():
+    keyboard_client = NetworkTableManager.get_connected_client(__IP, __CLIENT_NAME)
+    keys_table = keyboard_client.getTable(__KEYBOARD_KEYS_TABLE)
+
+    keyboard.hook(lambda key_event: __on_key_event(key_event, keys_table))
+    __continue_tracking_keyboard_until_disconnection(keyboard_client)
 
 
 if __name__ == "__main__":
-    start_keyboard_tracking()
+    __track_keyboard()

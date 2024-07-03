@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.mk4imodule;
+package frc.robot.subsystems.swerve.modules.mk4i;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;

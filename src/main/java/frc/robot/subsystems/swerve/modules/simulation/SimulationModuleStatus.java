@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.simulationmodule;
+package frc.robot.subsystems.swerve.modules.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;

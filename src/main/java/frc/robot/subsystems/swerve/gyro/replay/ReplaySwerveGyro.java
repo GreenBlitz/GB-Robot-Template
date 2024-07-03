@@ -1,8 +1,8 @@
-package frc.robot.subsystems.swerve.swervegyro;
+package frc.robot.subsystems.swerve.gyro.replay;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
-import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
 
 public class ReplaySwerveGyro implements ISwerveGyro {
 

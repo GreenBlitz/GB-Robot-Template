@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.swervegyro.swervegyrointerface;
+package frc.robot.subsystems.swerve.gyro.gyrointerface;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;

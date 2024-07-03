@@ -1,36 +1,36 @@
-package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
+package frc.robot.subsystems.swerve.gyro.pigeon2gyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Phoenix6Constants;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
-import frc.robot.subsystems.swerve.swervegyro.SwerveGyroConstants;
-import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
-import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
+import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Queue;
 
-public class Pigeon2SwerveGyro implements ISwerveGyro {
+public class Pigeon2Gyro implements ISwerveGyro {
 
-    private final Pigeon2SwerveGyroStatus gyroPigeon2Status;
+    private final Pigeon2GyroStatus gyroPigeon2Status;
 
-    private final Pigeon2SwerveGyroActions gyroPigeon2Actions;
+    private final Pigeon2GyroActions gyroPigeon2Actions;
 
     private final Queue<Double> yawQueue;
 
     private final Queue<Double> timestampQueue;
 
 
-    public Pigeon2SwerveGyro() {
-        Pigeon2SwerveGyroConfigObject gyroPigeon2ConfigObject = new Pigeon2SwerveGyroConfigObject(
+    public Pigeon2Gyro() {
+        Pigeon2GyroConfigObject gyroPigeon2ConfigObject = new Pigeon2GyroConfigObject(
                 Ports.PIGEON_2_ID,
                 Phoenix6Constants.CANIVORE_NAME
         );
 
-        this.gyroPigeon2Status = new Pigeon2SwerveGyroStatus(gyroPigeon2ConfigObject.getSignals());
-        this.gyroPigeon2Actions = new Pigeon2SwerveGyroActions(gyroPigeon2ConfigObject.getGyro());
+        this.gyroPigeon2Status = new Pigeon2GyroStatus(gyroPigeon2ConfigObject.getSignals());
+        this.gyroPigeon2Actions = new Pigeon2GyroActions(gyroPigeon2ConfigObject.getGyro());
 
         this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(
                 gyroPigeon2ConfigObject.getGyro(),

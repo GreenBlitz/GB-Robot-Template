@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.swervegyro.pigeon2swervegyro;
+package frc.robot.subsystems.swerve.gyro.pigeon2gyro;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
@@ -6,12 +6,12 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.CTREUtils.PhoenixProUtils;
 
-class Pigeon2SwerveGyroStatus {
+class Pigeon2GyroStatus {
 
-    private final Pigeon2SwerveGyroRecords.GyroPigeon2Signals gyroPigeon2Signals;
+    private final Pigeon2GyroRecords.GyroPigeon2Signals gyroPigeon2Signals;
 
 
-    protected Pigeon2SwerveGyroStatus(Pigeon2SwerveGyroRecords.GyroPigeon2Signals gyroPigeon2Signals) {
+    protected Pigeon2GyroStatus(Pigeon2GyroRecords.GyroPigeon2Signals gyroPigeon2Signals) {
         this.gyroPigeon2Signals = gyroPigeon2Signals;
     }
 

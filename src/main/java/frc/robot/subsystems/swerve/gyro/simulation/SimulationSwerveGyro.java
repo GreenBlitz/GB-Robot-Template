@@ -1,11 +1,11 @@
-package frc.robot.subsystems.swerve.swervegyro;
+package frc.robot.subsystems.swerve.gyro.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.simulation.GyroSimulation;
-import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.ISwerveGyro;
-import frc.robot.subsystems.swerve.swervegyro.swervegyrointerface.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
 import frc.utils.cycletimeutils.CycleTimeUtils;
 
 public class SimulationSwerveGyro implements ISwerveGyro {

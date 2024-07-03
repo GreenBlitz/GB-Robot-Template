@@ -2,6 +2,7 @@ package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.constants.IPConstants;
 import frc.utils.CMDHandler;
 import frc.utils.dashboard.LoggedTableBoolean;
 
@@ -36,7 +37,7 @@ public class KeyboardController {
 
     public KeyboardController() {
         if (Robot.isSimulation()) {
-            CMDHandler.runPythonClass(KEYBOARD_TO_NETWORK_TABLES_CLASS, "127.0.0.1");
+            CMDHandler.runPythonClass(KEYBOARD_TO_NETWORK_TABLES_CLASS, IPConstants.SIMULATION_IP);
         }
 
         this.ESC = getNewKey("esc");

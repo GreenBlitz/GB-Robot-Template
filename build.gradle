@@ -187,7 +187,7 @@ tasks.register('setReachableIP') {
 
 tasks.register('setVisualVMHost') {
     group = 'externalTools'
-    mustRunAfter('setReachableIP')
+    dependsOn('setReachableIP')
     doLast {
         if (reachableIP) {
             deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=${reachableIP}")

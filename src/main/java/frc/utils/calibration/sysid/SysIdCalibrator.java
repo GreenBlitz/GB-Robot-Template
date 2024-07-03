@@ -108,7 +108,7 @@ public class SysIdCalibrator {
      * The buttons are ordered by the click order.
      * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
      *
-     * @param smartJoystick - the joystick the apply the buttons on
+     * @param smartJoystick - the joystick to apply the buttons on
      */
     public void setAllButtonsForCalibration(SmartJoystick smartJoystick) {
         smartJoystick.A.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kForward));

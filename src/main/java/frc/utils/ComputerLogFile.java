@@ -11,7 +11,7 @@ public class ComputerLogFile {
 
     private static final String TYPE_OF_FILE = ".txt";
 
-    private static final Path LOG_FILES_ACTIVITY_FILE_PATH = new ComputerLogFile("ComputerLogFile").path;
+    private static final Path LOG_FILES_ACTIVITY_FILE_PATH = new ComputerLogFile("LogFilesActivity").path;
 
     private final String name;
     private final Path path;

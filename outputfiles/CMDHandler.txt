@@ -1,4 +1,0 @@
-Trying To Run: cmd.exe /c lol
-
-Got Exception: 
-java.lang.Exception

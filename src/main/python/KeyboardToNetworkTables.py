@@ -45,7 +45,7 @@ def __track_keyboard_until_client_disconnect(keys_table: ntcore.NetworkTable, ke
         time.sleep(__KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS)
 
 
-def __track_keyboard():
+def __run_keyboard_tracking_client():
     keyboard_client = NetworkTableManager.get_connected_client(__IP, __CLIENT_NAME)
     keys_table = keyboard_client.getTable(__KEYBOARD_KEYS_TABLE)
 
@@ -54,4 +54,4 @@ def __track_keyboard():
 
 
 if __name__ == "__main__":
-    __track_keyboard()
+    __run_keyboard_tracking_client()

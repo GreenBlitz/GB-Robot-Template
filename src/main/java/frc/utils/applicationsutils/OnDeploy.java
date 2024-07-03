@@ -7,17 +7,17 @@ import java.nio.file.Path;
 public class OnDeploy {
 
     public static void main(String[] args) {
-        startComputerPrograms();
+        startComputerPrograms(args);
     }
 
-    private static void startComputerPrograms() {
+    private static void startComputerPrograms(String[] args) {
         if (RobotConstants.ENABLE_KEYBOARD) {
-            runKeyboard();
+            runKeyboard(args);
         }
     }
 
-    private static void runKeyboard() {
-        CMDHandler.runPythonClass(Path.of("keyboard_to_nt"), RobotConstants.IS_RUNNING_ON_USB_B ? "172.22.11.2" : "10.45.90.2");
+    private static void runKeyboard(String[] args) {
+        CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), args[0]);
     }
 
 }

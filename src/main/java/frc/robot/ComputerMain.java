@@ -3,23 +3,32 @@ package frc.robot;
 import frc.robot.constants.RobotConstants;
 import frc.utils.CMDHandler;
 
+import javax.swing.*;
 import java.nio.file.Path;
 
 public class ComputerMain {
 
     public static void main(String[] args) {
-        startComputerPrograms();
+//        startComputerPrograms(args);
+        testMessage(args[0]);
     }
 
-    private static void startComputerPrograms() {
+    private static void testMessage(String message) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+        frame.setSize(500,500);
+    }
+
+    private static void startComputerPrograms(String[] args) {
         // start programs on computer...
         if (RobotConstants.ENABLE_KEYBOARD) {
-            runKeyboard();
+            runKeyboard(args);
         }
     }
 
-    private static void runKeyboard() {
-        CMDHandler.runPythonClass(Path.of("keyboard_to_nt"), RobotConstants.IS_RUNNING_ON_USB_B ? "172.22.11.2" : "10.45.90.2");
+    private static void runKeyboard(String[] args) {
+        CMDHandler.runPythonClass(Path.of("keyboard_to_nt"), args[0]);
     }
 
 }

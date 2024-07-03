@@ -208,10 +208,10 @@ tasks.register('checkAkitInstall', JavaExec) {
 tasks.register('runComputerPrograms', JavaExec) {
     dependsOn("setReachableIP")
     group = 'execution'
-    description = "Run the main class in OnDeploy"
+    description = "Run the main class in ComputerMain"
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = "frc.utils.applicationsutils.OnDeploy"
-    args reachableIP
+    mainClass = "frc.robot.ComputerMain"
+    args = ["$reachableIP"]
 }
 
 tasks.register('deployWithComputerPrograms') {

@@ -1,12 +1,8 @@
 package frc.robot.bindings;
 
-<<<<<<< HEAD:src/main/java/frc/robot/bindings/JoysticksBindings.java
-import frc.robot.constants.Ports;
+
 import frc.utils.controllers.joysticks.SmartJoystick;
-=======
 import frc.utils.joysticks.JoystickPorts;
-import frc.utils.joysticks.SmartJoystick;
->>>>>>> origin/cr-java:src/main/java/frc/robot/JoysticksBindings.java
 
 public class JoysticksBindings {
 

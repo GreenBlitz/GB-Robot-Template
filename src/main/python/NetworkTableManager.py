@@ -23,9 +23,19 @@ __LOGGER = (logging.getLogger("network table logger"))
 __LOGGER.setLevel(logging.INFO)
 
 
-def terminate_client(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
-    __LOGGER.warning("Terminating client named {}".format(client_name))
-    ntcore.NetworkTableInstance.destroy(network_table_instance)
+def __past_connection_timeout(starting_time: float) -> bool:
+    return time.time() - starting_time > __CONNECTION_TIMEOUT_SECONDS
+
+
+def __wait_for_client_to_connect(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
+    starting_time = time.time()
+    while not network_table_instance.isConnected():
+        # terminate client and program if it takes to long to connect
+        if __past_connection_timeout(starting_time):
+            __LOGGER.error("Didn't connect to network tables. Terminating...")
+            terminate_client(network_table_instance, client_name)
+            sys.exit()
+        time.sleep(__CONNECTION_COOLDOWN_SECONDS)
 
 
 def get_connected_client(ip: str, client_name: str) -> ntcore.NetworkTableInstance:
@@ -43,16 +53,6 @@ def get_connected_client(ip: str, client_name: str) -> ntcore.NetworkTableInstan
     return network_table_instance
 
 
-def __past_connection_timeout(starting_time: float) -> bool:
-    return time.time() - starting_time > __CONNECTION_TIMEOUT_SECONDS
-
-
-def __wait_for_client_to_connect(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
-    starting_time = time.time()
-    while not network_table_instance.isConnected():
-        # terminate client and program if it takes to long to connect
-        if __past_connection_timeout(starting_time):
-            __LOGGER.error("Didn't connect to network tables. Terminating...")
-            terminate_client(network_table_instance, client_name)
-            sys.exit()
-        time.sleep(__CONNECTION_COOLDOWN_SECONDS)
+def terminate_client(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
+    __LOGGER.warning("Terminating client named {}".format(client_name))
+    ntcore.NetworkTableInstance.destroy(network_table_instance)

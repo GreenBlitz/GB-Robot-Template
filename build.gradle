@@ -1,5 +1,6 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
 import groovy.json.JsonSlurper
+import java.nio.file.Files
 
 plugins {
     id "java"
@@ -149,33 +150,45 @@ tasks.register('checkAkitInstall', JavaExec) {
 }
 
 // Setup local git settings
-tasks.register('installLocalGitHookPostCheckout', Copy) {
-    from new File(rootProject.rootDir, '.scripts/post-checkout')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    filePermissions {
-        unix(0775)
-    }
-    doLast {
-        println("---Added Post Checkout Git Hook Script---")
-    }
-}
+def gitConfig = 'Git Configuration'
+tasks.register('installLocalGitHookSymlinks') {
+    group = gitConfig
 
-tasks.register('installLocalGitHookPreCommit', Copy) {
-    from new File(rootProject.rootDir, '.scripts/pre-commit')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    filePermissions {
-        unix(0775)
-    }
+    outputs.dir "$rootDir/.git/hooks/"
+
     doLast {
-        println("---Added Pre Commit Git Hook Script---")
+        def linkDir = file("$rootDir/.git/hooks/").toPath()
+        def gitHooks = fileTree("$rootDir/.scripts/git-hooks/")
+        gitHooks.forEach { File target ->
+            def link = linkDir.resolve(target.toPath().getFileName())
+
+            if (!Files.isSymbolicLink(link)) {
+                if (Files.exists(link)) {
+                    Files.delete(link)
+                }
+
+                Files.createSymbolicLink(link, target.toPath())
+
+                println("---Installed Symbolic Link ${rootDir.relativize(link)} -> ${rootDir.relativize(target)} ---")
+            }
+        }
     }
 }
 
 tasks.register('configLocalGitBlameIgnoreRevsFile', Exec) {
+    group = gitConfig
+
     workingDir rootProject.rootDir
     commandLine 'git', 'config', '--local', 'blame.ignoreRevsFile', '.git-blame-ignore-revs'
+
     outputs.file('.git/config')
 }
+
+tasks.matching { task -> task.group != gitConfig }
+.configureEach { task ->
+    task.dependsOn installLocalGitHookSymlinks, configLocalGitBlameIgnoreRevsFile
+}
+
 
 tasks.register('runComputerPrograms', JavaExec) {
     group = "Execution"
@@ -208,7 +221,7 @@ tasks.register('SetConnectionTypeIP') {
 }
 
 compileJava.finalizedBy checkAkitInstall
-build.dependsOn installLocalGitHookPostCheckout, installLocalGitHookPreCommit, configLocalGitBlameIgnoreRevsFile
+// build.dependsOn installLocalGitHookScripts configLocalGitBlameIgnoreRevsFile
 discoverroborio.finalizedBy SetConnectionTypeIP
 
 

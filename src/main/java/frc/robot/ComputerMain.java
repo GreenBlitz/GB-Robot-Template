@@ -9,8 +9,7 @@ import java.nio.file.Path;
 public class ComputerMain {
 
     public static void main(String[] args) {
-//        startComputerPrograms(args);
-        testMessage(args[0]);
+        startComputerPrograms(args);
     }
 
     private static void testMessage(String message) {

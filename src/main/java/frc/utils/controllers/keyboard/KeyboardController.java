@@ -2,7 +2,7 @@ package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.utils.applicationsutils.CMDHandler;
+import frc.utils.CMDHandler;
 import frc.utils.dashboard.LoggedTableBoolean;
 
 import java.nio.file.Path;

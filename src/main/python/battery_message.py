@@ -4,95 +4,68 @@ import sys
 import time
 import tkinter as tk
 from tkinter import PhotoImage
+import NetworkTableManager
 
-TEAM_NUMBER = 4590  # GREENBLITZ 🐐🐐🐐🐐
-IMAGE_PATH = "noam-battery-message.png"
-WINDOW_NAME = "Battery Message"
-CLIENT_NAME = "BatteryMessage"
-TABLE_NAME = "Battery"
-KEY_NAME = "is low"
-IP = sys.argv[1]
+__IMAGE_PATH = "noam-battery-message.png"
+__WINDOW_NAME = "Battery Message"
+__CLIENT_NAME = "BatteryMessage"
+__TABLE_NAME = "Battery"
+__KEY_NAME = "is low"
+__IP = sys.argv[1]
 
-TIME_BETWEEN_MESSAGES_SECONDS = 180
-CONNECTION_TIMEOUT_SECONDS = 30
-LOOPS_COOLDOWN_SECONDS = 0.1
+__TIME_BETWEEN_MESSAGES_SECONDS = 180
+__LOOPS_COOLDOWN_SECONDS = 0.1
 
 
-def config_window(window: tk.Tk):
-    window.title(WINDOW_NAME)
+def __config_window(window: tk.Tk):
+    window.title(__WINDOW_NAME)
     window.attributes("-topmost", True)
     window.resizable(False, False)
-    window.bind("<Unmap>", lambda event: cancel_minimize(event, window))
+    window.bind("<Unmap>", lambda event: __cancel_minimize(event, window))
 
 
-def cancel_minimize(event, window: tk.Tk):
+def __cancel_minimize(event, window: tk.Tk):
     window.attributes("-topmost", True)
     window.state('normal')
 
 
-def create_image_label(window: tk.Tk, image: PhotoImage):
+def __create_image_label(window: tk.Tk, image: PhotoImage):
     """Create a label widget to display the image on the given window."""
     label = tk.Label(window, image=image)
     label.pack()
 
 
-def load_image(image_path: str) -> PhotoImage:
+def __load_image(image_path: str) -> PhotoImage:
     return PhotoImage(file=image_path)
 
 
-def should_show_message(battery_table: ntcore.NetworkTable, last_time_showed: float) -> bool:
-    is_time_to_message = time.time() - last_time_showed > TIME_BETWEEN_MESSAGES_SECONDS
-    is_battery_low = battery_table.getBoolean(KEY_NAME, defaultValue=False)
+def __should_show_message(battery_table: ntcore.NetworkTable, last_time_showed: float) -> bool:
+    is_time_to_message = time.time() - last_time_showed > __TIME_BETWEEN_MESSAGES_SECONDS
+    is_battery_low = battery_table.getBoolean(__KEY_NAME, defaultValue=False)
     return is_battery_low and is_time_to_message
 
 
-def show_message():
+def __show_message():
     """Set up and run the Tkinter event loop."""
     window = tk.Tk()
-    config_window(window)
-    image = load_image(IMAGE_PATH)
-    create_image_label(window, image)
+    __config_window(window)
+    image = __load_image(__IMAGE_PATH)
+    __create_image_label(window, image)
     window.mainloop()
 
 
-def get_network_table():
-    network_table_instance = ntcore.NetworkTableInstance.getDefault()
-
-    print("Setting up NetworkTables client for team {}".format(TEAM_NUMBER))
-    network_table_instance.startClient4(CLIENT_NAME)
-    network_table_instance.setServer(IP)
-    network_table_instance.startDSClient()
-
-    print("Waiting for connection to NetworkTables server...")
-    started_time = time.time()
-    while not network_table_instance.isConnected():
-        # terminate client and program if it takes to long to connect
-        if time.time() - started_time > CONNECTION_TIMEOUT_SECONDS:
-            close_client(network_table_instance)
-            sys.exit()
-        time.sleep(LOOPS_COOLDOWN_SECONDS)
-
-    print("Connected NetworkTables server")
-    return network_table_instance
-
-
-def close_client(network_table_instance: ntcore.NetworkTableInstance):
-    network_table_instance.stopDSClient()
-    network_table_instance.stopClient()
-
-
 def start():
-    network_table_instance = get_network_table()
-    battery_table = network_table_instance.getTable(TABLE_NAME)
+    battery_message_client = NetworkTableManager.get_connected_client(__IP, __CLIENT_NAME)
+    battery_table = battery_message_client.getTable(__TABLE_NAME)
 
     last_time_showed = 0
-    while network_table_instance.isConnected():
-        if should_show_message(battery_table, last_time_showed):
-            show_message()
+    while battery_message_client.isConnected():
+        if __should_show_message(battery_table, last_time_showed):
+            __show_message()
             last_time_showed = time.time()
-        time.sleep(LOOPS_COOLDOWN_SECONDS)
+        time.sleep(__LOOPS_COOLDOWN_SECONDS)
 
-    close_client(network_table_instance)
+    NetworkTableManager.terminate_client(battery_message_client, __CLIENT_NAME)
 
 
 if __name__ == '__main__':

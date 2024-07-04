@@ -5,46 +5,36 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.batteryutils.Battery;
+import frc.utils.battery.BatteryUtils;
+import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
-import frc.utils.cycletimeutils.CycleTimeUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A wrapper class for the WPILib default simulation classes, that'll act similarly to how the TalonFX motor controller works.
  */
-public abstract class MotorSimulation {
-
-    private static final List<MotorSimulation> REGISTERED_SIMULATIONS = new ArrayList<>();
+abstract class MotorSimulation {
 
     private final TalonFXWrapper motor;
 
-    private final TalonFXSimState motorSimState;
+    private final TalonFXSimState motorSimulationState;
 
     private final StatusSignal<Double> closedLoopReferenceSignal;
 
     protected MotorSimulation() {
-        REGISTERED_SIMULATIONS.add(this);
-        this.motor = new TalonFXWrapper(REGISTERED_SIMULATIONS.size());
-        this.motorSimState = motor.getSimState();
-        this.motorSimState.setSupplyVoltage(Battery.getDefaultBatteryVoltage());
+        SimulationManager.addSimulation(this);
+        this.motor = SimulationManager.createNewMotorForSimulation();
+        this.motorSimulationState = motor.getSimState();
+        this.motorSimulationState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
         this.closedLoopReferenceSignal = motor.getClosedLoopReference();
-        this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / CycleTimeUtils.getDefaultCycleTime());
+        this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS);
     }
 
-    public static void updateRegisteredSimulations() {
-        for (MotorSimulation motorSimulation : REGISTERED_SIMULATIONS) {
-            motorSimulation.updateSimulation();
-        }
-    }
-
-    private void updateSimulation() {
-        setInputVoltage(motorSimState.getMotorVoltage());
+    protected void updateSimulation() {
+        setInputVoltage(motorSimulationState.getMotorVoltage());
         updateMotor();
-        motorSimState.setRawRotorPosition(getPosition().getRotations());
-        motorSimState.setRotorVelocity(getVelocity().getRotations());
+        motorSimulationState.setRawRotorPosition(getPosition().getRotations());
+        motorSimulationState.setRotorVelocity(getVelocity().getRotations());
     }
 
     public void applyConfiguration(TalonFXConfiguration config) {
@@ -70,8 +60,6 @@ public abstract class MotorSimulation {
     public Rotation2d getProfiledSetPoint() {
         return Rotation2d.fromRotations(closedLoopReferenceSignal.refresh().getValue());
     }
-
-    public abstract double getCurrent();
 
     protected abstract void setInputVoltage(double voltage);
 

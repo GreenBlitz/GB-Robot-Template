@@ -6,8 +6,6 @@ on:
       - synchronize
       - opened
       - reopened
-      - converted_to_draft
-      - edited
 
 jobs:
   compile:

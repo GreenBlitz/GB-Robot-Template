@@ -5,14 +5,11 @@ import frc.robot.Robot;
 public class RobotTypeUtils {
 
     public static RobotType determineRobotType(RobotType wantedType) {
-        return Robot.isSimulation() ? getNonRealRobotType(wantedType) : RobotType.REAL;
-    }
-
-    private static RobotType getNonRealRobotType(RobotType wantedType) {
-        return wantedType.isReplay() ? RobotType.REPLAY : RobotType.SIMULATION;
+        return Robot.isSimulation() ? (wantedType.isReplay() ? RobotType.REPLAY : RobotType.SIMULATION) : RobotType.REAL;
     }
 
     public enum RobotType {
+
         REAL,
         SIMULATION,
         REPLAY;

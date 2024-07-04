@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static frc.robot.Robot.swerve;
 
 public class Swerve extends GBSubsystem {
 
@@ -204,7 +203,7 @@ public class Swerve extends GBSubsystem {
 
         SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[odometryUpdates];
         for (int i = 0; i < odometryUpdates; i++) {
-            swerveWheelPositions[i] = swerve.getSwerveWheelPositions(i);
+            swerveWheelPositions[i] = getSwerveWheelPositions(i);
         }
 
         OdometryObservation[] odometryObservations = new OdometryObservation[odometryUpdates];

@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.poseestimation.poseestimator.PoseEstimatorConstants;
-import frc.utils.CTREUtils.CTREDeviceID;
+import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 class MK4IModuleConfigObject {
@@ -24,7 +24,7 @@ class MK4IModuleConfigObject {
             CTREDeviceID steerEncoderID
     ) {
 
-        this.steerEncoder = new CANcoder(steerEncoderID.ID(), steerEncoderID.bus());
+        this.steerEncoder = new CANcoder(steerEncoderID.ID(), steerEncoderID.busChain().getChainName());
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
                 new TalonFXWrapper(driveMotorDeviceID),
                 new TalonFXWrapper(steerMotorDeviceID)

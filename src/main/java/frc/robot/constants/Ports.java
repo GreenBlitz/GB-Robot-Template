@@ -6,7 +6,7 @@ import frc.utils.ctre.CTREDeviceID;
 
 public class Ports {
 
-    public static final int PIGEON_2_ID = 0;
+    public static final CTREDeviceID PIGEON_2_DEVICE_ID = new CTREDeviceID(0, BusChain.CANIVORE);
 
     public static class TalonFXIDs {
 

@@ -19,8 +19,6 @@ import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.mirrorutils.MirrorablePose2d;
-import frc.utils.mirrorutils.MirrorableRotation2d;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import frc.utils.utilcommands.InitExecuteCommand;
 
@@ -145,11 +143,11 @@ public class SwerveCommands {
         return command;
     }
 
-    public static Command rotateToAngle(MirrorableRotation2d targetAngle) {
+    public static Command rotateToAngle(Rotation2d targetAngle) {
         return rotateToAngle(targetAngle, RotateAxis.MIDDLE_OF_ROBOT);
     }
 
-    public static Command rotateToAngle(MirrorableRotation2d targetAngle, RotateAxis rotateAxis) {
+    public static Command rotateToAngle(Rotation2d targetAngle, RotateAxis rotateAxis) {
         Command command = new FunctionalCommand(
                 () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 () -> SWERVE.rotateToAngle(targetAngle),
@@ -157,7 +155,7 @@ public class SwerveCommands {
                 () -> SWERVE.isAtAngle(targetAngle),
                 SWERVE
         );
-        command.setName("Rotate Around " + rotateAxis.name() + "To " + targetAngle.get().getDegrees());
+        command.setName("Rotate Around " + rotateAxis.name() + "To " + targetAngle.getDegrees());
         return command;
     }
 
@@ -203,13 +201,13 @@ public class SwerveCommands {
         return defaultFieldRelative;
     }
 
-    public static Command driveToPose(Supplier<MirrorablePose2d> targetPose, PathConstraints constraints) {
+    public static Command driveToPose(Supplier<Pose2d> targetPose, PathConstraints constraints) {
         Command command = new DeferredCommand(() -> driveToPose(targetPose.get(), constraints), Set.of(SWERVE));
-        command.setName("Drive to " + targetPose.get().get());
+        command.setName("Drive to " + targetPose.get());
         return command;
     }
 
-    private static Command driveToPose(MirrorablePose2d targetPose, PathConstraints constraints) {
+    private static Command driveToPose(Pose2d targetPose, PathConstraints constraints) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> SWERVE.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER)),
                 pathToPose(targetPose, constraints),
@@ -218,9 +216,8 @@ public class SwerveCommands {
         );
     }
 
-    private static Command pathToPose(MirrorablePose2d targetPose, PathConstraints pathConstraints) {
+    private static Command pathToPose(Pose2d targetBluePose, PathConstraints pathConstraints) {
         Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
-        Pose2d targetBluePose = targetPose.get();
 
         double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
@@ -229,7 +226,7 @@ public class SwerveCommands {
         return AutoBuilder.pathfindToPose(targetBluePose, pathConstraints);
     }
 
-    private static Command pidToPose(MirrorablePose2d targetPose) {
+    private static Command pidToPose(Pose2d targetPose) {
         return new SequentialCommandGroup(
                 new InstantCommand(SWERVE::resetRotationController),
                 new RunCommand(() -> SWERVE.pidToPose(targetPose)).until(() -> SWERVE.isAtPosition(targetPose))

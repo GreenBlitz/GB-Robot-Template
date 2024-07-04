@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.modules.simulation;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.simulation.SimpleMotorSimulation;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
@@ -10,14 +11,18 @@ public class SimulationModuleConfigObject {
 
     public SimulationModuleConfigObject() {
         this.steerMotor = new SimpleMotorSimulation(
-                SimulationModuleConstants.STEER_MOTOR_GEARBOX,
-                ModuleConstants.STEER_GEAR_RATIO,
-                SimulationModuleConstants.STEER_MOMENT_OF_INERTIA
+                new DCMotorSim(
+                        SimulationModuleConstants.STEER_MOTOR_GEARBOX,
+                        ModuleConstants.STEER_GEAR_RATIO,
+                        SimulationModuleConstants.STEER_MOMENT_OF_INERTIA
+                )
         );
         this.driveMotor = new SimpleMotorSimulation(
-                SimulationModuleConstants.DRIVE_MOTOR_GEARBOX,
-                ModuleConstants.DRIVE_GEAR_RATIO,
-                SimulationModuleConstants.DRIVE_MOMENT_OF_INERTIA
+                new DCMotorSim(
+                        SimulationModuleConstants.DRIVE_MOTOR_GEARBOX,
+                        ModuleConstants.DRIVE_GEAR_RATIO,
+                        SimulationModuleConstants.DRIVE_MOMENT_OF_INERTIA
+                )
         );
 
         configureDriveMotor();

@@ -6,7 +6,7 @@ import frc.robot.RobotContainer;
 import frc.robot.simulation.GyroSimulation;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
-import frc.utils.cycletimeutils.CycleTimeUtils;
+import frc.utils.cycletime.CycleTimeUtils;
 
 public class SimulationSwerveGyro implements ISwerveGyro {
 

@@ -20,7 +20,7 @@ import com.ctre.phoenix6.jni.CANBusJNI;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.poseestimation.poseestimator.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.utils.cycletimeutils.CycleTimeUtils;
+import frc.utils.cycletime.CycleTimeUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -171,7 +171,7 @@ public class PhoenixOdometryThread6328 extends Thread {
     }
 
     private void waitForCanFDSignals() {
-        BaseStatusSignal.waitForAll(CycleTimeUtils.getDefaultCycleTime(), signals.toArray(StatusSignal[]::new));
+        BaseStatusSignal.waitForAll(CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS, signals.toArray(StatusSignal[]::new));
     }
 
     private void waitForNonCanFDSignals() throws InterruptedException {

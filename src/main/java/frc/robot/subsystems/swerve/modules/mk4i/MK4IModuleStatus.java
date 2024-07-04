@@ -4,7 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.CTREUtils.PhoenixProUtils;
+import frc.utils.ctre.PhoenixProUtils;
 
 class MK4IModuleStatus {
 

@@ -215,7 +215,6 @@ public class Swerve extends GBSubsystem {
     }
 
 
-
     public ChassisSpeeds getSelfRelativeVelocity() {
         return SwerveConstants.KINEMATICS.toChassisSpeeds(getModulesStates());
     }

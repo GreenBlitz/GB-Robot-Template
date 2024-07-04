@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
@@ -90,7 +91,7 @@ public class PoseEstimator implements AutoCloseable {
      */
     private void updatePoseEstimatorStates(SwerveDriveWheelPositions[] swerveWheelPositions, Rotation2d[] gyroRotations, double[] timestamps) {
         for (int i = 0; i < swerveWheelPositions.length; i++) {
-            poseEstimator6328.addOdometryObservation(new PoseEstimator6328.OdometryObservation(swerveWheelPositions[i], gyroRotations[i], timestamps[i]));
+            poseEstimator6328.addOdometryObservation(new OdometryObservation(swerveWheelPositions[i], gyroRotations[i], timestamps[i]));
         }
     }
 

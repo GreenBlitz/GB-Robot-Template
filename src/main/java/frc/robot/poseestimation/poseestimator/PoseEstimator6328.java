@@ -20,6 +20,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimation.observations.VisionObservation;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 
@@ -28,10 +30,6 @@ import java.util.NoSuchElementException;
 import static frc.robot.Robot.swerve;
 
 public class PoseEstimator6328 {
-
-    public record OdometryObservation(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, double timestamp) {}
-
-    public record VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {}
 
     private static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 
@@ -83,7 +81,7 @@ public class PoseEstimator6328 {
         Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
         lastWheelPositions = observation.wheelPositions();
         // Check gyro connected
-        if (observation.gyroAngle != null) {
+        if (observation.gyroAngle() != null) {
             // Update dtheta for twist if gyro connected
             twist = new Twist2d(twist.dx, twist.dy, observation.gyroAngle().minus(lastGyroAngle).getRadians());
             lastGyroAngle = observation.gyroAngle();

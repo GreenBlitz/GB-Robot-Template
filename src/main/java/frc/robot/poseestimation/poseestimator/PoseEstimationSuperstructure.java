@@ -1,9 +1,9 @@
-package frc.robot.subsystems.poseestimation.poseestimator;
+package frc.robot.poseestimation.poseestimator;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.Logger;
 

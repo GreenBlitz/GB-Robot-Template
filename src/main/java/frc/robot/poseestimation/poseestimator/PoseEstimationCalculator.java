@@ -4,7 +4,7 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file at
 // the root directory of this project.
-package frc.robot.subsystems.poseestimation.poseestimator;
+package frc.robot.poseestimation.poseestimator;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -20,8 +20,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.subsystems.poseestimation.observations.OdometryObservation;
-import frc.robot.subsystems.poseestimation.observations.VisionObservation;
+import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimation.observations.VisionObservation;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 

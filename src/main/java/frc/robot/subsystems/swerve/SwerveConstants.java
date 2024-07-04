@@ -68,7 +68,7 @@ public class SwerveConstants {
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
 
-    protected static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(4, 0, 0);//todo - calibrate
+    protected static final PIDController ROTATION_PID_DEGREES_CONTROLLER = new PIDController(5, 0, 0);//todo - calibrate
     static {
         ROTATION_PID_DEGREES_CONTROLLER.enableContinuousInput(
                 -MathConstants.HALF_CIRCLE.getDegrees(),

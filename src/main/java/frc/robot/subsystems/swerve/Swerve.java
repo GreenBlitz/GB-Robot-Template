@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
+import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroFactory;
@@ -29,6 +30,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static frc.robot.Robot.poseEstimator;
+import static frc.robot.Robot.swerve;
 
 public class Swerve extends GBSubsystem {
 
@@ -64,26 +66,8 @@ public class Swerve extends GBSubsystem {
 
     @Override
     public void subsystemPeriodic() {
-        ODOMETRY_LOCK.lock();
-        updateInputs();
-        ODOMETRY_LOCK.unlock();
-
-        updatePoseEstimator();
         logState();
         logFieldRelativeVelocities();
-    }
-
-    private void updateInputs() {
-        gyro.updateInputs(gyroInputs);
-        Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
-
-        for (Module currentModule : modules) {
-            currentModule.logStatus();
-        }
-    }
-
-    private void updatePoseEstimator() {
-        poseEstimator.updatePoseEstimatorOdometry();
     }
 
     private void logState() {
@@ -102,6 +86,16 @@ public class Swerve extends GBSubsystem {
         Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Magnitude", getDriveMagnitude(fieldRelativeSpeeds));
     }
 
+    public void updateInputs() {
+        ODOMETRY_LOCK.lock(); {
+            gyro.updateInputs(gyroInputs);
+            Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
+
+            for (Module currentModule : modules) {
+                currentModule.logStatus();
+            }
+        } ODOMETRY_LOCK.unlock();
+    }
 
 
     protected void initializeDrive(SwerveState updatedState) {
@@ -124,15 +118,6 @@ public class Swerve extends GBSubsystem {
 
     public void setHeading(Rotation2d heading) {
         gyro.setHeading(heading);
-    }
-
-
-    public double[] getOdometryTimeStepQueue() {
-        return gyroInputs.odometryUpdatesTimestamp;
-    }
-
-    public Rotation2d[] getOdometryYawUpdates() {
-        return gyroInputs.odometryUpdatesYaw;
     }
 
 
@@ -200,7 +185,11 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
+    protected Rotation2d[] getModulesDriveDistances() {
+        return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
+    }
+
+    private SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
         SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
             swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
@@ -208,9 +197,24 @@ public class Swerve extends GBSubsystem {
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }
 
-    public Rotation2d[] getModulesDriveDistances() {
-        return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
+    public OdometryObservation[] getAllOdometryObservations() {
+        double[] timestamps = gyroInputs.odometryUpdatesTimestamp;
+        Rotation2d[] gyroRotations = gyroInputs.odometryUpdatesYaw;
+        int odometryUpdates = timestamps.length;
+
+        SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[odometryUpdates];
+        for (int i = 0; i < odometryUpdates; i++) {
+            swerveWheelPositions[i] = swerve.getSwerveWheelPositions(i);
+        }
+
+        OdometryObservation[] odometryObservations = new OdometryObservation[odometryUpdates];
+        for (int i = 0; i < odometryUpdates; i++) {
+            odometryObservations[i] = new OdometryObservation(swerveWheelPositions[i], gyroRotations[i], timestamps[i]);
+        }
+
+        return odometryObservations;
     }
+
 
 
     public ChassisSpeeds getSelfRelativeVelocity() {

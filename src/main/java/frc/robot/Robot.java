@@ -98,6 +98,11 @@ public class Robot {
     }
 
     // reset pose
+    // reset heading
     // update pose
     // get pose
+
+    public static void updatePoseEstimator(){
+        poseEstimator.updatePoseEstimatorOdometry(swerve.getAllOdometryObservations());
+    }
 }

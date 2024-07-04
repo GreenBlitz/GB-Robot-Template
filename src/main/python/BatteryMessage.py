@@ -14,7 +14,7 @@ __TABLE_NAME = "Battery"
 __KEY_NAME = "is low"
 __IP = sys.argv[1]
 
-__TIME_BETWEEN_MESSAGES_SECONDS = 180
+__TIME_BETWEEN_MESSAGES_SECONDS = 120
 __SHOW_MESSAGE_CHECKING_COOLDOWN_SECONDS = 0.1
 
 
@@ -66,11 +66,11 @@ def __track_message_until_client_disconnect(battery_message_client: ntcore.Netwo
         time.sleep(__SHOW_MESSAGE_CHECKING_COOLDOWN_SECONDS)
 
 
-def start():
+def __run_battery_message_client():
     battery_message_client = NetworkTableManager.get_connected_client(__IP, __CLIENT_NAME)
     __track_message_until_client_disconnect(battery_message_client)
     NetworkTableManager.terminate_client(battery_message_client, __CLIENT_NAME)
 
 
 if __name__ == '__main__':
-    start()
+    __run_battery_message_client()

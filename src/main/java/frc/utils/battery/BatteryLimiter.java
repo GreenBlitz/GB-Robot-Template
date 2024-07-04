@@ -27,7 +27,7 @@ class BatteryLimiter extends Command {
         this.showedMessageTime = Timer.getFPGATimestamp();
 
         if (RobotConstants.ROBOT_TYPE.isSimulation()) {
-            CMDHandler.runPythonClass(Path.of("battery_message"), IPConstants.SIMULATION_IP);
+            CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPConstants.SIMULATION_IP);
         }
     }
 

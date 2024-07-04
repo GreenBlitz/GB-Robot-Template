@@ -8,13 +8,14 @@ import NetworkTableManager
 
 __IMAGE_PATH = "noam-battery-message.png"
 __WINDOW_NAME = "Battery Message"
+
 __CLIENT_NAME = "BatteryMessage"
 __TABLE_NAME = "Battery"
 __KEY_NAME = "is low"
 __IP = sys.argv[1]
 
 __TIME_BETWEEN_MESSAGES_SECONDS = 180
-__LOOPS_COOLDOWN_SECONDS = 0.1
+__SHOW_MESSAGE_CHECKING_COOLDOWN_SECONDS = 0.1
 
 
 def __config_window(window: tk.Tk):
@@ -54,8 +55,7 @@ def __show_message():
     window.mainloop()
 
 
-def start():
-    battery_message_client = NetworkTableManager.get_connected_client(__IP, __CLIENT_NAME)
+def __track_message_until_client_disconnect(battery_message_client: ntcore.NetworkTableInstance):
     battery_table = battery_message_client.getTable(__TABLE_NAME)
 
     last_time_showed = 0
@@ -63,8 +63,12 @@ def start():
         if __should_show_message(battery_table, last_time_showed):
             __show_message()
             last_time_showed = time.time()
-        time.sleep(__LOOPS_COOLDOWN_SECONDS)
+        time.sleep(__SHOW_MESSAGE_CHECKING_COOLDOWN_SECONDS)
 
+
+def start():
+    battery_message_client = NetworkTableManager.get_connected_client(__IP, __CLIENT_NAME)
+    __track_message_until_client_disconnect(battery_message_client)
     NetworkTableManager.terminate_client(battery_message_client, __CLIENT_NAME)
 
 

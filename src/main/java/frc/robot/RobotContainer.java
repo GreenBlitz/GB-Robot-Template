@@ -10,6 +10,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.poseestimation.poseestimator.PoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveState;
+import frc.utils.DriverStationUtils;
+import frc.utils.pathplannerutils.PathPlannerUtils;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,6 +31,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        buildPathPlannerForAuto();
         configureBindings();
     }
 
@@ -51,5 +56,21 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return new InstantCommand();
     }
+
+
+    private void buildPathPlannerForAuto() {
+        // Register commands...
+        PathPlannerUtils.configurePathPlanner(
+                RobotContainer.POSE_ESTIMATOR::getCurrentPose,
+                RobotContainer.POSE_ESTIMATOR::resetPose,
+                RobotContainer.SWERVE::getSelfRelativeVelocity,
+                (speeds) -> RobotContainer.SWERVE.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
+                SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
+                DriverStationUtils::isRedAlliance,
+                RobotContainer.SWERVE
+        );
+    }
+
+
 
 }

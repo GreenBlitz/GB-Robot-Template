@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.SwerveCommands;
-import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.joysticks.Axis;
@@ -68,7 +67,7 @@ public class JoysticksBindings {
         usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.rotateToAngle(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE));
 
         //Self Relative Drive
-        usedJoystick.L3.whileTrue(SwerveCommands.selfDrive(
+        usedJoystick.L3.whileTrue(SwerveCommands.driveSelfRelative(
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)
@@ -117,15 +116,9 @@ public class JoysticksBindings {
         ));
 
         // Move To Pose (4, 4, 17Deg)
-        usedJoystick.BACK.whileTrue(SwerveCommands.driveToPose(
-                () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)),
-                SwerveConstants.REAL_TIME_CONSTRAINTS
-        ));
+        usedJoystick.BACK.whileTrue(SwerveCommands.driveToPose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))));
         // Move To Pose (5, 8, 90Deg)
-        usedJoystick.START.whileTrue(SwerveCommands.driveToPose(
-                () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)),
-                SwerveConstants.REAL_TIME_CONSTRAINTS)
-        );
+        usedJoystick.START.whileTrue(SwerveCommands.driveToPose(new Pose2d(6, 6, Rotation2d.fromDegrees(90))));
     }
 
     private static void secondJoystickButtons() {

@@ -29,13 +29,6 @@ public class SwerveConstants {
     public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 3; // todo - calibrate
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
-
-    protected static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);
-    protected static final Rotation2d ROTATION_VELOCITY_TOLERANCE = Rotation2d.fromRadians(0.05);
-    protected static final double TRANSLATION_TOLERANCE_METERS = 0.05;
-    protected static final double TRANSLATION_VELOCITY_TOLERANCE = 0.05;
-
-
     protected static final double DRIVE_NEUTRAL_DEADBAND = 0.2;
     protected static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.2);
 

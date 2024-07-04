@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
-import static frc.robot.Robot.POSE_ESTIMATOR;
-import static frc.robot.Robot.SWERVE;
+import static frc.robot.Robot.poseEstimator;
+import static frc.robot.Robot.swerve;
 
 /**
  * A class that estimates the robot's pose using team 6328's custom pose estimator.
@@ -19,13 +19,11 @@ public class PoseEstimator implements AutoCloseable {
 
     private final Field2d field; //todo - maybe create field class, maybe delete field
     private final PoseEstimator6328 poseEstimator6328;
-    private Pose2d robotPose;
 
-    public PoseEstimator() {
+    public PoseEstimator(Pose2d startingPose) {
         this.field = new Field2d();
         this.poseEstimator6328 = PoseEstimator6328.getInstance();
-        this.robotPose = PoseEstimatorConstants.DEFAULT_POSE;
-        resetPose(robotPose);
+        resetPose(startingPose);
 
         SmartDashboard.putData("Field", field);
         setLoggingPathToPaths();
@@ -45,8 +43,6 @@ public class PoseEstimator implements AutoCloseable {
     }
 
     public void periodic() {
-        robotPose = poseEstimator6328.getEstimatedPose();
-
         logCurrentPose();
         field.setRobotPose(getCurrentPose());
     }
@@ -56,7 +52,7 @@ public class PoseEstimator implements AutoCloseable {
     }
 
     public void resetPose(Pose2d currentPose) {
-        SWERVE.setHeading(currentPose.getRotation());
+        swerve.setHeading(currentPose.getRotation());
         poseEstimator6328.resetPose(currentPose);
     }
 
@@ -65,21 +61,21 @@ public class PoseEstimator implements AutoCloseable {
     }
 
     public Pose2d getCurrentPose() {
-        return robotPose;
+        return poseEstimator6328.getEstimatedPose();
     }
 
 
     public void updatePoseEstimatorOdometry() {
-        int odometryUpdates = SWERVE.getOdometryTimeStepQueue().length;
+        int odometryUpdates = swerve.getOdometryTimeStepQueue().length;
         SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[odometryUpdates];
         Rotation2d[] gyroRotations = new Rotation2d[odometryUpdates];
 
         for (int i = 0; i < odometryUpdates; i++) {
-            swerveWheelPositions[i] = SWERVE.getSwerveWheelPositions(i);
-            gyroRotations[i] = SWERVE.getOdometryYawUpdates()[i];
+            swerveWheelPositions[i] = swerve.getSwerveWheelPositions(i);
+            gyroRotations[i] = swerve.getOdometryYawUpdates()[i];
         }
 
-        POSE_ESTIMATOR.updatePoseEstimatorStates(swerveWheelPositions, gyroRotations, SWERVE.getOdometryTimeStepQueue());
+        poseEstimator.updatePoseEstimatorStates(swerveWheelPositions, gyroRotations, swerve.getOdometryTimeStepQueue());
     }
 
     /**

@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 public class SwerveCommands {
 
-    private static final Swerve SWERVE = Robot.SWERVE;
+    private static final Swerve SWERVE = Robot.swerve;
 
     private static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(// todo : maybe move place
             true,
@@ -131,7 +131,7 @@ public class SwerveCommands {
                 () -> SWERVE.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 () -> SWERVE.rotateToAngle(targetAngle),
                 interrupted -> {},
-                () -> SWERVE.isAtAngle(targetAngle),
+                () -> Robot.isAtAngle(targetAngle),
                 SWERVE
         );
         rotateToAngle.setName("Rotate Around " + rotateAxis.name() + "To " + targetAngle.getDegrees());
@@ -212,7 +212,7 @@ public class SwerveCommands {
     }
 
     private static Command pathToPose(Pose2d targetBluePose) {
-        Pose2d currentBluePose = Robot.POSE_ESTIMATOR.getCurrentPose();
+        Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
 
         double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
@@ -224,7 +224,7 @@ public class SwerveCommands {
     private static Command pidToPose(Pose2d targetPose) {
         return new SequentialCommandGroup(
                 new InstantCommand(SWERVE::resetRotationController),
-                new RunCommand(() -> SWERVE.pidToPose(targetPose)).until(() -> SWERVE.isAtPosition(targetPose))
+                new RunCommand(() -> SWERVE.pidToPose(targetPose)).until(() -> Robot.isAtPosition(targetPose))
         );
     }
 

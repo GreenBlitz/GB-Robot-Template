@@ -27,6 +27,7 @@ public class RobotManager extends LoggedRobot {
 
     private Robot robot;
 
+
     @Override
     public void robotInit() {
         if (RobotConstants.ROBOT_TYPE.isReplay()) {
@@ -59,7 +60,7 @@ public class RobotManager extends LoggedRobot {
     public void robotPeriodic() {
         CycleTimeUtils.updateCycleTime(); // Better to be first
         CommandScheduler.getInstance().run();
-        Robot.POSE_ESTIMATOR.periodic();
+        Robot.poseEstimator.periodic();
         BusStatus.logChainsStatuses();
         BatteryUtils.logStatus();
     }

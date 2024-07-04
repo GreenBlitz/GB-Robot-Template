@@ -24,7 +24,7 @@ public class SimulationSwerveGyro implements ISwerveGyro {
     @Override
     public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
         gyro.updateYaw(
-                Rotation2d.fromRadians(Robot.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond),
+                Rotation2d.fromRadians(Robot.swerve.getSelfRelativeVelocity().omegaRadiansPerSecond),
                 CycleTimeUtils.getCurrentCycleTime()
         );
 

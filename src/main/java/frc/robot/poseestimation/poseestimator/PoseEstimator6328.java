@@ -25,7 +25,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 
 import java.util.NoSuchElementException;
 
-import static frc.robot.Robot.SWERVE;
+import static frc.robot.Robot.swerve;
 
 public class PoseEstimator6328 {
 
@@ -75,8 +75,8 @@ public class PoseEstimator6328 {
     public void addOdometryObservation(OdometryObservation observation) {
         // Set the created values to starting values
         if (isFirstOdometryUpdate) {//todo - make it happen once
-            lastWheelPositions = SWERVE.getSwerveWheelPositions(0);
-            lastGyroAngle = SWERVE.getOdometryYawUpdates()[0];
+            lastWheelPositions = swerve.getSwerveWheelPositions(0);
+            lastGyroAngle = swerve.getOdometryYawUpdates()[0];
             isFirstOdometryUpdate = false;
         }
 

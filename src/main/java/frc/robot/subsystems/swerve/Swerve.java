@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static frc.robot.Robot.POSE_ESTIMATOR;
+import static frc.robot.Robot.poseEstimator;
 
 public class Swerve extends GBSubsystem {
 
@@ -83,7 +83,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private void updatePoseEstimator() {
-        POSE_ESTIMATOR.updatePoseEstimatorOdometry();
+        poseEstimator.updatePoseEstimatorOdometry();
     }
 
     private void logState() {
@@ -218,7 +218,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
-        return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), POSE_ESTIMATOR.getCurrentPose().getRotation());
+        return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), poseEstimator.getCurrentPose().getRotation());
     }
 
     private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
@@ -231,7 +231,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public static Rotation2d getAllianceRelativeAngle() {
-        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
+        Rotation2d currentAngle = poseEstimator.getCurrentPose().getRotation();
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
     }
 
@@ -298,7 +298,7 @@ public class Swerve extends GBSubsystem {
 
 
     protected void pidToPose(Pose2d targetBluePose) {
-        Pose2d currentBluePose = POSE_ESTIMATOR.getCurrentPose();
+        Pose2d currentBluePose = poseEstimator.getCurrentPose();
 
         double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getX(), targetBluePose.getX());
         double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getY(), targetBluePose.getY());
@@ -406,64 +406,17 @@ public class Swerve extends GBSubsystem {
     }
 
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
-        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
+        Rotation2d currentAngle = poseEstimator.getCurrentPose().getRotation();
         return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()
         ));
     }
 
-
-    public static boolean isStill(ChassisSpeeds chassisSpeeds) {
+    private static boolean isStill(ChassisSpeeds chassisSpeeds) {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
-    }
-
-    private static boolean isAtTranslationPosition(double currentTranslationPosition, double targetTranslationPosition,
-            double currentTranslationVelocity) {
-        boolean isNearTargetPosition = MathUtil.isNear(
-                targetTranslationPosition,
-                currentTranslationPosition,
-                SwerveConstants.TRANSLATION_TOLERANCE_METERS
-        );
-        boolean isStopping = Math.abs(currentTranslationVelocity) < SwerveConstants.TRANSLATION_VELOCITY_TOLERANCE;
-        return isNearTargetPosition && isStopping;
-    }
-
-    public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
-        double currentXAxisVelocity = getFieldRelativeVelocity().vxMetersPerSecond;
-        return isAtTranslationPosition(
-                POSE_ESTIMATOR.getCurrentPose().getX(),
-                targetXBlueAlliancePosition,
-                currentXAxisVelocity
-        );
-    }
-
-    public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
-        double currentYAxisVelocity = getFieldRelativeVelocity().vyMetersPerSecond;
-        return isAtTranslationPosition(
-                POSE_ESTIMATOR.getCurrentPose().getY(),
-                targetYBlueAlliancePosition,
-                currentYAxisVelocity
-        );
-    }
-
-    public boolean isAtAngle(Rotation2d targetAngle) {
-        double angleDifferenceDeg = Math.abs(targetAngle.minus(POSE_ESTIMATOR.getCurrentPose().getRotation()).getDegrees());
-        boolean isAtAngle = angleDifferenceDeg < SwerveConstants.ROTATION_TOLERANCE.getDegrees();
-
-        double currentRotationVelocityRadians = getSelfRelativeVelocity().omegaRadiansPerSecond;
-        boolean isStopping = Math.abs(currentRotationVelocityRadians) < SwerveConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
-
-        return isAtAngle && isStopping;
-    }
-
-    public boolean isAtPosition(Pose2d targetBluePose) {
-        return isAtXAxisPosition(targetBluePose.getX())
-                && isAtYAxisPosition(targetBluePose.getY())
-                && isAtAngle(targetBluePose.getRotation()
-        );
     }
 
 }

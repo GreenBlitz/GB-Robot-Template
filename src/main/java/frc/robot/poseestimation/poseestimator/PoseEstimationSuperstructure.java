@@ -93,7 +93,7 @@ public class PoseEstimationSuperstructure {
         return isAtAngle && isStopping;
     }
 
-    public boolean isAtPosition(Pose2d targetBluePose) {
+    public boolean isAtPose(Pose2d targetBluePose) {
         return isAtXAxisPosition(targetBluePose.getX())
                 && isAtYAxisPosition(targetBluePose.getY())
                 && isAtAngle(targetBluePose.getRotation()

@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.constants.RobotConstants;
-import frc.robot.poseestimation.poseestimator.PoseEstimatorConstants;
+import frc.robot.subsystems.poseestimation.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 

@@ -131,7 +131,7 @@ public class SwerveCommands {
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 () -> swerve.rotateToAngle(targetAngle),
                 interrupted -> {},
-                () -> Robot.isAtAngle(targetAngle),
+                () -> Robot.poseEstimator.isAtAngle(targetAngle),
                 swerve
         );
         rotateToAngle.setName("Rotate Around " + rotateAxis.name() + "To " + targetAngle.getDegrees());
@@ -212,7 +212,7 @@ public class SwerveCommands {
     }
 
     private static Command pathToPose(Pose2d targetBluePose) {
-        Pose2d currentBluePose = Robot.getCurrentPose();
+        Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
 
         double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
@@ -224,7 +224,7 @@ public class SwerveCommands {
     private static Command pidToPose(Pose2d targetPose) {
         return new SequentialCommandGroup(
                 new InstantCommand(swerve::resetRotationController),
-                new RunCommand(() -> swerve.pidToPose(targetPose)).until(() -> Robot.isAtPosition(targetPose))
+                new RunCommand(() -> swerve.pidToPose(targetPose)).until(() -> Robot.poseEstimator.isAtPosition(targetPose))
         );
     }
 

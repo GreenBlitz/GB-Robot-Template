@@ -37,9 +37,7 @@ public class RobotManager extends LoggedRobot {
         LoggerFactory.initializeLogger();
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
         PathPlannerUtils.startPathPlanner();
-        PathPlannerUtils.setLoggingPathToPaths((pose) -> Logger.recordOutput(
-                RobotConstants.ROBOT_LOG_PATH + "Current Path To " + "Follow", pose.toArray(new Pose2d[0])
-        ));
+        PathPlannerUtils.setLoggingPathToPaths((pose) -> Logger.recordOutput("Current Path To " + "Follow", pose.toArray(new Pose2d[0])));
 
         this.robot = new Robot();
     }
@@ -63,7 +61,7 @@ public class RobotManager extends LoggedRobot {
     @Override
     public void robotPeriodic() {
         CycleTimeUtils.updateCycleTime(); // Better to be first
-        Robot.updatePoseEstimator();
+        Robot.poseEstimator.updatePoseEstimator();
         CommandScheduler.getInstance().run();
         BusStatus.logChainsStatuses();
         BatteryUtils.logStatus();

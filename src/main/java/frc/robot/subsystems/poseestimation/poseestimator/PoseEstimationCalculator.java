@@ -4,7 +4,7 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file at
 // the root directory of this project.
-package frc.robot.poseestimation.poseestimator;
+package frc.robot.subsystems.poseestimation.poseestimator;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -20,23 +20,23 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.poseestimation.observations.VisionObservation;
+import frc.robot.subsystems.poseestimation.observations.OdometryObservation;
+import frc.robot.subsystems.poseestimation.observations.VisionObservation;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 import java.util.NoSuchElementException;
 
 
-public class PoseEstimator6328 {
+public class PoseEstimationCalculator {
 
     private static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 
-    private static PoseEstimator6328 instance;
+    private static PoseEstimationCalculator instance;
 
-    public static PoseEstimator6328 getInstance() {
+    public static PoseEstimationCalculator getInstance() {
         if (instance == null) {
-            instance = new PoseEstimator6328();
+            instance = new PoseEstimationCalculator();
         }
         return instance;
     }
@@ -59,7 +59,7 @@ public class PoseEstimator6328 {
     private Rotation2d lastGyroAngle = new Rotation2d();
     private boolean isFirstOdometryUpdate = true;
 
-    private PoseEstimator6328() {
+    private PoseEstimationCalculator() {
         for (int i = 0; i < 3; ++i) {
             qStdDevs.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
         }

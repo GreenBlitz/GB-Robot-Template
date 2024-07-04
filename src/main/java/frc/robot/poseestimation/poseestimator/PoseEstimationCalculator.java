@@ -166,7 +166,7 @@ public class PoseEstimationCalculator {
         return estimatedPose;
     }
 
-    @AutoLogOutput(key = "Poses/Robot/OdometryPose")
+    @AutoLogOutput(key = PoseEstimatorConstants.LOG_PATH + "Odometry Pose")
     public Pose2d getOdometryPose() {
         return odometryPose;
     }

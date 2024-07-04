@@ -33,7 +33,7 @@ public class PoseEstimationSuperstructure {
     }
 
     private void logCurrentPose(){
-        Logger.recordOutput(PoseEstimatorConstants.POSE_LOG_PATH, getCurrentPose());
+        Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Estimated Pose", getCurrentPose());
     }
 
 

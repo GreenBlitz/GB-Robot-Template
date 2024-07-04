@@ -8,11 +8,9 @@ import edu.wpi.first.math.numbers.N3;
 
 public class PoseEstimatorConstants {
 
-    protected static String LOG_PATH = "PoseEstimator/";
-    protected static String POSE_LOG_PATH = LOG_PATH + "Pose";
+    protected static final String LOG_PATH = "PoseEstimator/";
 
-
-    public static double ODOMETRY_FREQUENCY_HERTZ = 200.0;
+    public static final double ODOMETRY_FREQUENCY_HERTZ = 200.0;
 
     /**
      * The vector represents how ambiguous each value is.

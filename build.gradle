@@ -200,16 +200,24 @@ tasks.register('setVisualVMHost') {
 
 tasks.register('checkAkitInstall', JavaExec) {
     group = 'execution'
-    dependsOn "classes"
+    dependsOn('classes')
     mainClass = "org.littletonrobotics.junction.CheckInstall"
     classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register('runComputerPrograms', JavaExec) {
     group = 'execution'
-    description = "Run the main class in OnDeploy"
+    dependsOn('setReachableIP')
+    description = "Run the main class in ComputerMain"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "frc.utils.applicationsutils.OnDeploy"
+    doFirst {
+        if (reachableIP == null || reachableIP.isEmpty()) {
+            throw new GradleException("reachableIP is null or empty. Please set a valid IP address.")
+        }
+        args = ["$reachableIP"]
+        println("Using reachable IP: ${reachableIP}")
+    }
 }
 
 tasks.register('deployWithComputerPrograms') {

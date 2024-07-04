@@ -7,15 +7,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
-import frc.robot.simulation.MotorSimulation;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveState;
-import frc.utils.CTREUtils.CANStatus;
 import frc.utils.DriverStationUtils;
-import frc.utils.batteryutils.Battery;
-import frc.utils.cycletimeutils.CycleTimeUtils;
-import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
+import frc.robot.simulation.SimulationManager;
+import frc.utils.battery.BatteryUtils;
+import frc.utils.ctre.BusStatus;
+import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -32,8 +32,11 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotInit() {
-        initializeLogger();
-        Battery.scheduleBatteryLimiterCommand(); //Using RobotConstants.DISABLE_BATTERY_LIMITER, disable with it!
+        if (RobotConstants.ROBOT_TYPE.isReplay()) {
+            setUseTiming(false); // run as fast as possible
+        }
+        LoggerFactory.initializeLogger();
+        BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
         PathPlannerUtils.startPathPlanner();
 
         robotContainer = new RobotContainer();
@@ -61,27 +64,13 @@ public class Robot extends LoggedRobot {
         CycleTimeUtils.updateCycleTime(); // Better to be first
         CommandScheduler.getInstance().run();
         RobotContainer.POSE_ESTIMATOR.periodic();
-        CANStatus.logAllBusStatuses();
+        BusStatus.logChainsStatuses();
+        BatteryUtils.logStatus();
     }
 
     @Override
     public void simulationPeriodic() {
-        MotorSimulation.updateRegisteredSimulations();
-    }
-
-    private void initializeLogger() {
-        switch (RobotConstants.ROBOT_TYPE) {
-            case REAL -> {
-                LoggerUtils.startRealLogger();
-            }
-            case SIMULATION -> {
-                LoggerUtils.startSimulationLogger();
-            }
-            case REPLAY -> {
-                setUseTiming(false); // Run as fast as possible
-                LoggerUtils.startReplayLogger();
-            }
-        }
+        SimulationManager.updateRegisteredSimulations();
     }
 
     private void buildPathPlannerForAuto() {

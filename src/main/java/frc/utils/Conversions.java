@@ -5,7 +5,10 @@ import frc.robot.constants.MathConstants;
 
 public class Conversions {
 
-    public static final double MAG_TICKS = 4096, DEGREES_PER_REVOLUTIONS = 360, HUNDRED_MS_PER_SEC = 10, SEC_PER_MIN = 60;
+    public static final double MAG_TICKS = 4096;
+    public static final double DEGREES_PER_REVOLUTIONS = 360;
+    public static final double HUNDRED_MILLIESECONDS_PER_SECONDS = 10;
+    public static final double SECONDS_PER_MINUTE = 60;
 
     /**
      * Converts ticks from a Mag Encoder to degrees.
@@ -100,17 +103,17 @@ public class Conversions {
      * @return the frequency per second
      */
     public static double perMinuteToPerSecond(double frequency) {
-        return frequency / SEC_PER_MIN;
+        return frequency / SECONDS_PER_MINUTE;
     }
 
     /**
-     * Converts a frequency from per 100ms to per minute.
+     * Converts a frequency from per 100millieseconds to per minute.
      *
-     * @param frequency the frequency per 100ms
+     * @param frequency the frequency per 100millieseconds
      * @return the frequency per minute
      */
-    public static double perHundredMsToPerMinute(double frequency) {
-        return perSecondToPerMinute(perHundredMsToPerSecond(frequency));
+    public static double per100MilliesecondsToPerMinute(double frequency) {
+        return perSecondToPerMinute(per100MilliesecondsToPerSecond(frequency));
     }
 
     /**
@@ -120,37 +123,37 @@ public class Conversions {
      * @return the frequency per minute
      */
     public static double perSecondToPerMinute(double frequency) {
-        return frequency * SEC_PER_MIN;
+        return frequency * SECONDS_PER_MINUTE;
     }
 
     /**
-     * Converts a frequency from per 100ms to per second.
+     * Converts a frequency from per 100 millieseconds to per second.
      *
-     * @param frequency the frequency per 100ms
+     * @param frequency the frequency per 100 millieseconds
      * @return the frequency per second
      */
-    public static double perHundredMsToPerSecond(double frequency) {
-        return frequency * HUNDRED_MS_PER_SEC;
+    public static double per100MilliesecondsToPerSecond(double frequency) {
+        return frequency * HUNDRED_MILLIESECONDS_PER_SECONDS;
     }
 
     /**
-     * Converts a frequency from per minute to per 100ms.
+     * Converts a frequency from per minute to per 100 millieseconds.
      *
      * @param frequency the frequency per minute
-     * @return the frequency per 100ms
+     * @return the frequency per 100millieseconds
      */
-    public static double perMinToPerSec(double frequency) {
-        return perSecondToPerHundredMs(frequency) / SEC_PER_MIN;
+    public static double perMinuteToPer100Millieseconds(double frequency) {
+        return perSecondToPer100Millieseconds(frequency) / SECONDS_PER_MINUTE;
     }
 
     /**
-     * Converts a frequency from per second to per 100ms.
+     * Converts a frequency from per second to per 100millieseconds.
      *
      * @param frequency the frequency per second
-     * @return the frequency per 100ms
+     * @return the frequency per 100millieseconds
      */
-    public static double perSecondToPerHundredMs(double frequency) {
-        return frequency / HUNDRED_MS_PER_SEC;
+    public static double perSecondToPer100Millieseconds(double frequency) {
+        return frequency / HUNDRED_MILLIESECONDS_PER_SECONDS;
     }
 
 

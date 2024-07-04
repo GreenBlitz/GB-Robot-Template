@@ -1,21 +1,33 @@
 package frc.robot.constants;
 
-import frc.utils.mirrorutils.MirrorableRotation2d;
-import frc.utils.mirrorutils.MirrorableTranslation3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import frc.utils.DriverStationUtils;
+import frc.utils.mirror.MirrorUtils;
 
 public class FieldConstants {
 
-    public static final double FIELD_LENGTH_METERS = 16.54175;
+    public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
 
-    public static final double FIELD_WIDTH_METERS = 8.0137;
+    public static final double LENGTH_METERS = 16.54175;
+    public static final double WIDTH_METERS = 8.0137;
 
-    public static final MirrorableTranslation3d SPEAKER = new MirrorableTranslation3d(
-            0.23,
-            FIELD_WIDTH_METERS - 2.55,
-            2.045,
-            true
-    );
 
-    public static final MirrorableRotation2d ANGLE_TO_AMP = MirrorableRotation2d.fromDegrees(90, false);
+    private static final Translation3d SPEAKER = new Translation3d(0.23, WIDTH_METERS - 2.55, 2.045);
+    public static Translation3d getSpeaker() {
+        if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
+            return SPEAKER;
+        }
+        return new Translation3d(MirrorUtils.getMirroredX(SPEAKER.getX()), SPEAKER.getY(), SPEAKER.getZ());
+    }
+
+    private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
+    public static Rotation2d getAngleToAmp() {
+        if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
+            return ANGLE_TO_AMP;
+        }
+        return MirrorUtils.getMirroredAngle(ANGLE_TO_AMP);
+    }
 
 }

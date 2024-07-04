@@ -50,7 +50,7 @@ public class DriverStationUtils {
         return DriverStation.isTestEnabled();
     }
 
-    public static boolean isGame() {
+    public static boolean isMatch() {
         return DriverStation.getMatchType() != DriverStation.MatchType.None;
     }
 

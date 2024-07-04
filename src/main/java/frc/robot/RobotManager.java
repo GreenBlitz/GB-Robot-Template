@@ -4,9 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
@@ -14,6 +14,7 @@ import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -30,12 +31,15 @@ public class RobotManager extends LoggedRobot {
 
     @Override
     public void robotInit() {
-        if (RobotConstants.ROBOT_TYPE.isReplay()) {
+        if (Robot.ROBOT_TYPE.isReplay()) {
             setUseTiming(false); // run as fast as possible
         }
         LoggerFactory.initializeLogger();
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
         PathPlannerUtils.startPathPlanner();
+        PathPlannerUtils.setLoggingPathToPaths((pose) -> Logger.recordOutput(
+                frc.robot.RobotConstants.ROBOT_LOG_PATH + "Current Path To " + "Follow", pose.toArray(new Pose2d[0])
+        ));
 
         this.robot = new Robot();
     }
@@ -59,10 +63,8 @@ public class RobotManager extends LoggedRobot {
     @Override
     public void robotPeriodic() {
         CycleTimeUtils.updateCycleTime(); // Better to be first
-        Robot.swerve.updateInputs();
         Robot.updatePoseEstimator();
         CommandScheduler.getInstance().run();
-        Robot.poseEstimator.periodic(); // remove
         BusStatus.logChainsStatuses();
         BatteryUtils.logStatus();
     }

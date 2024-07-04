@@ -8,6 +8,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -32,6 +33,10 @@ public class PathPlannerUtils {
 
     public static void scheduleWarmup() {
         PathfindingCommand.warmupCommand().schedule();
+    }
+
+    public static void setLoggingPathToPaths(Consumer<List<Pose2d>> logActivePath) {
+        PathPlannerLogging.setLogActivePathCallback(logActivePath);
     }
 
     public static void configurePathPlanner(

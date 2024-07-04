@@ -5,6 +5,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class RobotConstants {
 
+    protected static String ROBOT_LOG_PATH = "Robot";
+    protected static String POSE_LOG_PATH = ROBOT_LOG_PATH + "/Pose";
+
+
     protected static final Pose2d DEFAULT_POSE = new Pose2d(2, 5, new Rotation2d());
 
     protected static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(1);

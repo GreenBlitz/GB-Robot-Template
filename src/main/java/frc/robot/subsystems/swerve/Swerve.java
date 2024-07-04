@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Robot;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
@@ -29,7 +30,6 @@ import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static frc.robot.Robot.poseEstimator;
 import static frc.robot.Robot.swerve;
 
 public class Swerve extends GBSubsystem {
@@ -222,7 +222,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
-        return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), poseEstimator.getCurrentPose().getRotation());
+        return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), Robot.getCurrentPose().getRotation());
     }
 
     private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
@@ -235,7 +235,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public static Rotation2d getAllianceRelativeAngle() {
-        Rotation2d currentAngle = poseEstimator.getCurrentPose().getRotation();
+        Rotation2d currentAngle = Robot.getCurrentPose().getRotation();
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
     }
 
@@ -302,7 +302,7 @@ public class Swerve extends GBSubsystem {
 
 
     protected void pidToPose(Pose2d targetBluePose) {
-        Pose2d currentBluePose = poseEstimator.getCurrentPose();
+        Pose2d currentBluePose = Robot.getCurrentPose();
 
         double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getX(), targetBluePose.getX());
         double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getY(), targetBluePose.getY());
@@ -410,7 +410,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
-        Rotation2d currentAngle = poseEstimator.getCurrentPose().getRotation();
+        Rotation2d currentAngle = Robot.getCurrentPose().getRotation();
         return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()

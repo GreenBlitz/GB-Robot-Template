@@ -14,18 +14,17 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.utils.DriverStationUtils;
+import frc.utils.RobotTypeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
+import org.littletonrobotics.junction.Logger;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link RobotManager}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
+
 public class Robot {
 
+    public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
+
     public static final Swerve swerve = new Swerve(); // Must be before POSE_ESTIMATOR
-    public static final PoseEstimator poseEstimator = new PoseEstimator(RobotConstants.DEFAULT_POSE);
+    private static final PoseEstimator poseEstimator = new PoseEstimator(RobotConstants.DEFAULT_POSE);
 
     public Robot() {
         buildPathPlannerForAuto();
@@ -35,8 +34,8 @@ public class Robot {
     private void buildPathPlannerForAuto() {
         // Register commands...
         PathPlannerUtils.configurePathPlanner(
-                Robot.poseEstimator::getCurrentPose,
-                Robot.poseEstimator::resetPose,
+                Robot::getCurrentPose,
+                Robot::resetPose,
                 Robot.swerve::getSelfRelativeVelocity,
                 (speeds) -> Robot.swerve.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
                 SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
@@ -67,7 +66,7 @@ public class Robot {
     public static boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
         return isAtTranslationPosition(
                 swerve.getFieldRelativeVelocity().vxMetersPerSecond,
-                poseEstimator.getCurrentPose().getX(),
+                getCurrentPose().getX(),
                 targetXBlueAlliancePosition
         );
     }
@@ -75,13 +74,13 @@ public class Robot {
     public static boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
         return isAtTranslationPosition(
                 swerve.getFieldRelativeVelocity().vyMetersPerSecond,
-                poseEstimator.getCurrentPose().getY(),
+                getCurrentPose().getY(),
                 targetYBlueAlliancePosition
         );
     }
 
     public static boolean isAtAngle(Rotation2d targetAngle) {
-        double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getCurrentPose().getRotation()).getDegrees());
+        double angleDifferenceDeg = Math.abs(targetAngle.minus(getCurrentPose().getRotation()).getDegrees());
         boolean isAtAngle = angleDifferenceDeg < RobotConstants.ROTATION_TOLERANCE.getDegrees();
 
         double currentRotationVelocityRadians = swerve.getSelfRelativeVelocity().omegaRadiansPerSecond;
@@ -97,12 +96,23 @@ public class Robot {
         );
     }
 
-    // reset pose
-    // reset heading
-    // update pose
-    // get pose
+    public static void resetPose(Pose2d currentPose) {
+        swerve.setHeading(currentPose.getRotation());
+        poseEstimator.resetPose(currentPose);
+    }
+
+    public static void resetHeading(Rotation2d targetAngle) {
+        resetPose(new Pose2d(Robot.getCurrentPose().getTranslation(), targetAngle));
+    }
 
     public static void updatePoseEstimator(){
+        swerve.updateInputs();
         poseEstimator.updatePoseEstimatorOdometry(swerve.getAllOdometryObservations());
+        Logger.recordOutput(frc.robot.RobotConstants.POSE_LOG_PATH, getCurrentPose());
     }
+
+    public static Pose2d getCurrentPose(){
+        return poseEstimator.poseEstimator6328.getEstimatedPose();
+    }
+
 }

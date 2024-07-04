@@ -8,9 +8,6 @@ public class PoseEstimatorConstants {
 
     public static double ODOMETRY_FREQUENCY_HERTZ = 200.0;
 
-    protected static String POSE_LOG_PATH = "Robot Pose";
-
-
     /**
      * The vector represents how ambiguous each value is.
      * The first value represents how ambiguous is the x,

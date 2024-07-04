@@ -212,7 +212,7 @@ public class SwerveCommands {
     }
 
     private static Command pathToPose(Pose2d targetBluePose) {
-        Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
+        Pose2d currentBluePose = Robot.getCurrentPose();
 
         double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {

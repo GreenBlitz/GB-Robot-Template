@@ -10,10 +10,9 @@
 
 # If this library is not installed, don't install ntcore but pyntcore.
 import ntcore
-
+import logging
 import sys
 import time
-import logging
 
 __CONNECTION_TIMEOUT_SECONDS = 30
 __CONNECTION_COOLDOWN_SECONDS = 0.1

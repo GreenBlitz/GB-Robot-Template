@@ -2,7 +2,7 @@ package frc.utils;
 
 import frc.robot.constants.DirectoryPathsConstants;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import frc.robot.RobotContainer;
+import frc.robot.Robot;
 import frc.robot.constants.FieldConstants;
 
 import java.util.function.Supplier;
@@ -52,7 +52,7 @@ public enum AimAssist {
 
     //Todo - Maybe in kinda math util or pose util or swerveMath
     private Rotation2d getTargetAngleFromTargetTranslation(Translation3d targetPose2d) {
-        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
+        Pose2d currentBluePose = Robot.POSE_ESTIMATOR.getCurrentPose();
         Translation2d targetBluePose = targetPose2d.toTranslation2d();
         double wantedAngleRadians = Math.atan2(
                 targetBluePose.getY() - currentBluePose.getY(),

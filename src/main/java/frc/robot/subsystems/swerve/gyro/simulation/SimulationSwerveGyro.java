@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.gyro.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.RobotContainer;
+import frc.robot.Robot;
 import frc.robot.simulation.GyroSimulation;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
@@ -24,7 +24,7 @@ public class SimulationSwerveGyro implements ISwerveGyro {
     @Override
     public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
         gyro.updateYaw(
-                Rotation2d.fromRadians(RobotContainer.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond),
+                Rotation2d.fromRadians(Robot.SWERVE.getSelfRelativeVelocity().omegaRadiansPerSecond),
                 CycleTimeUtils.getCurrentCycleTime()
         );
 

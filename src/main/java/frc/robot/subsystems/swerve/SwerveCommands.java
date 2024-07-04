@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotContainer;
+import frc.robot.Robot;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 public class SwerveCommands {
 
-    private static final Swerve SWERVE = RobotContainer.SWERVE;
+    private static final Swerve SWERVE = Robot.SWERVE;
 
     private static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(// todo : maybe move place
             true,
@@ -212,7 +212,7 @@ public class SwerveCommands {
     }
 
     private static Command pathToPose(Pose2d targetBluePose) {
-        Pose2d currentBluePose = RobotContainer.POSE_ESTIMATOR.getCurrentPose();
+        Pose2d currentBluePose = Robot.POSE_ESTIMATOR.getCurrentPose();
 
         double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {

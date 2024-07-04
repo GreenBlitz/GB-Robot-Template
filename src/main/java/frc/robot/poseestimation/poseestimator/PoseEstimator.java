@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
-import static frc.robot.RobotContainer.POSE_ESTIMATOR;
-import static frc.robot.RobotContainer.SWERVE;
+import static frc.robot.Robot.POSE_ESTIMATOR;
+import static frc.robot.Robot.SWERVE;
 
 /**
  * A class that estimates the robot's pose using team 6328's custom pose estimator.
@@ -18,12 +18,12 @@ import static frc.robot.RobotContainer.SWERVE;
 public class PoseEstimator implements AutoCloseable {
 
     private final Field2d field; //todo - maybe create field class, maybe delete field
-    private final PoseEstimator6328 swerveDrivePoseEstimator;
+    private final PoseEstimator6328 poseEstimator6328;
     private Pose2d robotPose;
 
     public PoseEstimator() {
         this.field = new Field2d();
-        this.swerveDrivePoseEstimator = PoseEstimator6328.getInstance();
+        this.poseEstimator6328 = PoseEstimator6328.getInstance();
         this.robotPose = PoseEstimatorConstants.DEFAULT_POSE;
         resetPose(robotPose);
 
@@ -45,7 +45,7 @@ public class PoseEstimator implements AutoCloseable {
     }
 
     public void periodic() {
-        robotPose = swerveDrivePoseEstimator.getEstimatedPose();
+        robotPose = poseEstimator6328.getEstimatedPose();
 
         logCurrentPose();
         field.setRobotPose(getCurrentPose());
@@ -57,7 +57,7 @@ public class PoseEstimator implements AutoCloseable {
 
     public void resetPose(Pose2d currentPose) {
         SWERVE.setHeading(currentPose.getRotation());
-        swerveDrivePoseEstimator.resetPose(currentPose);
+        poseEstimator6328.resetPose(currentPose);
     }
 
     public void resetHeading(Rotation2d targetAngle) {
@@ -92,14 +92,9 @@ public class PoseEstimator implements AutoCloseable {
      * @param swerveWheelPositions the swerve wheel positions accumulated since the last update
      * @param gyroRotations the gyro rotations accumulated since the last update
      */
-    private void updatePoseEstimatorStates(SwerveDriveWheelPositions[] swerveWheelPositions, Rotation2d[] gyroRotations,
-            double[] timestamps) {
+    private void updatePoseEstimatorStates(SwerveDriveWheelPositions[] swerveWheelPositions, Rotation2d[] gyroRotations, double[] timestamps) {
         for (int i = 0; i < swerveWheelPositions.length; i++) {
-            swerveDrivePoseEstimator.addOdometryObservation(new PoseEstimator6328.OdometryObservation(
-                    swerveWheelPositions[i],
-                    gyroRotations[i],
-                    timestamps[i]
-            ));
+            poseEstimator6328.addOdometryObservation(new PoseEstimator6328.OdometryObservation(swerveWheelPositions[i], gyroRotations[i], timestamps[i]));
         }
     }
 

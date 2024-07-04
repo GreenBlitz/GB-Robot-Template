@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.swervestatehelpers;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.RobotContainer;
+import frc.robot.Robot;
 import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 
@@ -37,7 +37,7 @@ public enum RotateAxis {
     }
 
     private static RotateAxis getFarRotateAxis(boolean isLeft) {
-        Rotation2d currentAllianceAngle = RobotContainer.SWERVE.getAllianceRelativeAngle();//todo - math class
+        Rotation2d currentAllianceAngle = Robot.SWERVE.getAllianceRelativeAngle();//todo - math class
         if (Math.abs(currentAllianceAngle.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= deg <= 45
             return isLeft ? FRONT_LEFT_MODULE : FRONT_RIGHT_MODULE;
         }

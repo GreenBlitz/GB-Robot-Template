@@ -10,12 +10,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.modules.Module;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.Module;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.utils.DriverStationUtils;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static frc.robot.RobotContainer.POSE_ESTIMATOR;
+import static frc.robot.Robot.POSE_ESTIMATOR;
 
 public class Swerve extends GBSubsystem {
 
@@ -221,11 +221,6 @@ public class Swerve extends GBSubsystem {
         return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), POSE_ESTIMATOR.getCurrentPose().getRotation());
     }
 
-    public Rotation2d getAllianceRelativeAngle() {
-        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
-        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
-    }
-
     private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         if (swerveState.getDriveMode() == DriveRelative.SELF_RELATIVE) {
             return chassisSpeeds;
@@ -233,6 +228,11 @@ public class Swerve extends GBSubsystem {
         else {
             return fieldRelativeSpeedsToSelfRelativeSpeeds(chassisSpeeds);
         }
+    }
+
+    public static Rotation2d getAllianceRelativeAngle() {
+        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
+        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
     }
 
     private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds){

@@ -47,9 +47,9 @@ public class JoysticksBindings {
         // - pose estimator resets - CHECKED
 
         // Reset Angle to 0
-        usedJoystick.Y.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetHeading(new Rotation2d())));
+        usedJoystick.Y.onTrue(new InstantCommand(() -> Robot.POSE_ESTIMATOR.resetHeading(new Rotation2d())));
         // Reset Pose to (5, 5, 0Deg)
-        usedJoystick.B.onTrue(new InstantCommand(() -> RobotContainer.POSE_ESTIMATOR.resetPose(new Pose2d(5, 5, new Rotation2d()))));
+        usedJoystick.B.onTrue(new InstantCommand(() -> Robot.POSE_ESTIMATOR.resetPose(new Pose2d(5, 5, new Rotation2d()))));
 
         // Swerve X Pose
         usedJoystick.A.whileTrue(SwerveCommands.pointWheelsInX());
@@ -109,7 +109,7 @@ public class JoysticksBindings {
         ));
 
         // Default Drive
-        RobotContainer.SWERVE.setDefaultCommand(SwerveCommands.drive(
+        Robot.SWERVE.setDefaultCommand(SwerveCommands.drive(
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)

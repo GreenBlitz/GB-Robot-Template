@@ -108,7 +108,7 @@ public class Robot {
     public static void updatePoseEstimator(){
         swerve.updateInputs();
         poseEstimator.updatePoseEstimatorOdometry(swerve.getAllOdometryObservations());
-        Logger.recordOutput(frc.robot.RobotConstants.POSE_LOG_PATH, getCurrentPose());
+        Logger.recordOutput(RobotConstants.POSE_LOG_PATH, getCurrentPose());
     }
 
     public static Pose2d getCurrentPose(){

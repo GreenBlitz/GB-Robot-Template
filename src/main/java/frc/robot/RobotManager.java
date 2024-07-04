@@ -38,7 +38,7 @@ public class RobotManager extends LoggedRobot {
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
         PathPlannerUtils.startPathPlanner();
         PathPlannerUtils.setLoggingPathToPaths((pose) -> Logger.recordOutput(
-                frc.robot.RobotConstants.ROBOT_LOG_PATH + "Current Path To " + "Follow", pose.toArray(new Pose2d[0])
+                RobotConstants.ROBOT_LOG_PATH + "Current Path To " + "Follow", pose.toArray(new Pose2d[0])
         ));
 
         this.robot = new Robot();

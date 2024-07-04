@@ -3,12 +3,14 @@ package frc.utils;
 import frc.robot.constants.DirectoryPathsConstants;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CMDHandler {
 
     private static final ComputerLogFile CMD_COMPUTER_LOG_FILE = new ComputerLogFile("CMDHandler");
-    private static final String WINDOWS_SHELL = "cmd.exe /c ";
-    private static final String NON_WINDOWS_SHELL = "bash -c ";
+    private static final List<String> WINDOWS_SHELL = List.of("cmd.exe","/c");
+    private static final List<String> NON_WINDOWS_SHELL = List.of("bash","-c");
 
 
     public static boolean isWindows() {
@@ -20,12 +22,12 @@ public class CMDHandler {
     }
 
     public static void runCMDCommand(String command) {
-        String operatingSystemShell = isWindows() ? WINDOWS_SHELL : NON_WINDOWS_SHELL;
-        String executedCommand = operatingSystemShell + command;
+        ArrayList<String> executedCommand = new ArrayList<>(isWindows() ? WINDOWS_SHELL : NON_WINDOWS_SHELL);
+        executedCommand.add(command);
 
         try {
             CMD_COMPUTER_LOG_FILE.write("Trying To Run: " + executedCommand);
-            Runtime.getRuntime().exec(executedCommand);
+            new ProcessBuilder(executedCommand).start();
             CMD_COMPUTER_LOG_FILE.write("Success!");
         } catch (Exception exception) {
             CMD_COMPUTER_LOG_FILE.write("Got Exception: \n" + exception);

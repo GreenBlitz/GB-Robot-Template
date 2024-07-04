@@ -215,7 +215,7 @@ tasks.register('runComputerPrograms', JavaExec) {
         if (reachableIP == null || reachableIP.isEmpty()) {
             throw new GradleException("reachableIP is null or empty. Please set a valid IP address.")
         }
-        args = ["$reachableIP"]
+        args = ["${reachableIP}"]
         println("Using reachable IP: ${reachableIP}")
     }
 }

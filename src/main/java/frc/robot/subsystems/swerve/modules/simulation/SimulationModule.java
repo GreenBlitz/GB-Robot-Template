@@ -21,7 +21,6 @@ public class SimulationModule implements IModule {
         this.simulationModuleStatus = new SimulationModuleStatus(simulationModuleConfigObject);
     }
 
-
     @Override
     public void stop() {
         simulationModuleActions.stop();

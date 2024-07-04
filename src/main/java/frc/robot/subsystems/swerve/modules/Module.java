@@ -37,8 +37,8 @@ public class Module {
 
     private void updateInputs() {
         module.updateInputs(moduleInputs);
-        moduleInputs.driveMotorDistanceMeters = ModuleUtils.toDriveMeters(moduleInputs.driveMotorAngleWithoutCoupling);
-        moduleInputs.driveMotorVelocityMeters = ModuleUtils.toDriveMeters(moduleInputs.driveMotorVelocityWithoutCoupling);
+        moduleInputs.driveMotorDistanceMeters = getDriveDistanceMeters();
+        moduleInputs.driveMotorVelocityMeters = getDriveVelocityMetersPerSecond();
         moduleInputs.isAtTargetState = isAtTargetState();
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
     }
@@ -82,16 +82,20 @@ public class Module {
         );
     }
 
+    public SwerveModuleState getTargetState() {
+        return targetState;
+    }
+
     public SwerveModuleState getCurrentState() {
         return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
     }
 
-    public Rotation2d getDriveDistanceAngle() {
-        return moduleInputs.driveMotorAngleWithoutCoupling;
-    }
-
     public double getDriveDistanceMeters() {
         return ModuleUtils.toDriveMeters(getDriveDistanceAngle());
+    }
+
+    public Rotation2d getDriveDistanceAngle() {
+        return moduleInputs.driveMotorAngleWithoutCoupling;
     }
 
     private double getDriveVelocityMetersPerSecond() {
@@ -102,15 +106,10 @@ public class Module {
         return moduleInputs.steerMotorAngle;
     }
 
-    public SwerveModuleState getTargetState() {
-        return targetState;
-    }
 
 
     public boolean isAtTargetState() {
-        boolean isAtAngle = isAtAngle(getTargetState().angle);
-        boolean isAtVelocity = isAtVelocity(targetState.speedMetersPerSecond);
-        return isAtAngle && isAtVelocity;
+        return isAtAngle(getTargetState().angle) && isAtVelocity(getTargetState().speedMetersPerSecond);
     }
 
     public boolean isAtVelocity(double targetSpeedMetersPerSecond) {
@@ -122,13 +121,16 @@ public class Module {
     }
 
     public boolean isAtAngle(Rotation2d targetAngle) {
+        boolean isStopping = moduleInputs.steerMotorVelocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
+        if (!isStopping){
+            return false;
+        }
         boolean isAtAngle = MathUtil.isNear(
                 MathUtil.angleModulus(targetAngle.getRadians()),
                 MathUtil.angleModulus(getCurrentAngle().getRadians()),
                 ModuleConstants.ANGLE_TOLERANCE.getRadians()
         );
-        boolean isStopping = moduleInputs.steerMotorVelocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
-        return isAtAngle && isStopping;
+        return isAtAngle;
     }
 
 

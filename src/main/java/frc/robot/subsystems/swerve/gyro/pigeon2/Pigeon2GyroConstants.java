@@ -11,4 +11,5 @@ class Pigeon2GyroConstants {
         PIGEON_2_CONFIGURATION.MountPose.MountPosePitch = SwerveGyroConstants.GYRO_MOUNT_POSITION_DEGREES.getY();
         PIGEON_2_CONFIGURATION.MountPose.MountPoseYaw = SwerveGyroConstants.GYRO_MOUNT_POSITION_DEGREES.getZ();
     }
+
 }

@@ -14,8 +14,8 @@ class MK4IModuleConstants {
 
     public static final double COUPLING_RATIO = 0.59;
 
-    private static final double DRIVE_SLIP_CURRENT = 30; //todo - return to 100
-    private static final double STEER_CURRENT_LIMIT = 30;//todo - return to 100
+    private static final double DRIVE_SLIP_CURRENT = 30; //todo - calibrate
+    private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
 
     protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
     static {

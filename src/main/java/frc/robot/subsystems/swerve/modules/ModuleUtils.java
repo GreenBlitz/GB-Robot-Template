@@ -8,16 +8,22 @@ import frc.utils.Conversions;
 public class ModuleUtils {
 
     public enum ModuleName {
+
         FRONT_LEFT(0),
         FRONT_RIGHT(1),
         BACK_LEFT(2),
         BACK_RIGHT(3);
 
-        public final int index;
+        private final int index;
 
         ModuleName(int index) {
             this.index = index;
         }
+
+        public int getIndex() {
+            return index;
+        }
+
     }
 
     public static String getLoggingPath(ModuleName moduleName) {
@@ -28,6 +34,7 @@ public class ModuleUtils {
         return ModuleConstants.ALERT_LOG_PATH + moduleName + "/";
     }
 
+
     public static Translation2d getModulePositionRelativeToMiddleOfRobot(ModuleName moduleName) {
         return switch (moduleName) {
             case FRONT_LEFT -> SwerveConstants.FRONT_LEFT_TRANSLATION2D;
@@ -35,7 +42,8 @@ public class ModuleUtils {
             case BACK_LEFT -> SwerveConstants.BACK_LEFT_TRANSLATION2D;
             case BACK_RIGHT -> SwerveConstants.BACK_RIGHT_TRANSLATION2D;
         };
-    }
+    } // maybe move place
+
 
     public static double toDriveMeters(Rotation2d revolutions) {
         return Conversions.revolutionsToDistance(revolutions.getRotations(), ModuleConstants.WHEEL_DIAMETER_METERS);
@@ -46,6 +54,7 @@ public class ModuleUtils {
                 Conversions.distanceToRevolutions(velocityMetersPerSecond, ModuleConstants.WHEEL_DIAMETER_METERS)
         );
     }
+
 
     public static double velocityToOpenLoopVoltage(
             double velocityMetersPerSecond, Rotation2d steerVelocityPerSecond,

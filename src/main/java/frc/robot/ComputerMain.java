@@ -16,7 +16,7 @@ public class ComputerMain {
     }
 
     private static void testMessage(String message) {
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame(message);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setSize(500,500);

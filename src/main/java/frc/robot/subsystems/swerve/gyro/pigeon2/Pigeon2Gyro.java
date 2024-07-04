@@ -49,7 +49,6 @@ public class Pigeon2Gyro implements ISwerveGyro {
         inputs.connected = gyroPigeon2Status.refreshAllSignals().isOK();
 
         inputs.gyroYaw = gyroPigeon2Status.getYaw(false);
-        inputs.gyroPitch = gyroPigeon2Status.getPitch(false);
         inputs.accelerationX = gyroPigeon2Status.getXAccelerationSignal(false).getValue();
         inputs.accelerationY = gyroPigeon2Status.getYAccelerationSignal(false).getValue();
         inputs.accelerationZ = gyroPigeon2Status.getZAccelerationSignal(false).getValue();

@@ -37,7 +37,7 @@ public enum RotateAxis {
     }
 
     private static RotateAxis getFarRotateAxis(boolean isLeft) {
-        Rotation2d currentAllianceAngle = RobotContainer.SWERVE.getDriveRelativeAngle();//todo - math class
+        Rotation2d currentAllianceAngle = RobotContainer.SWERVE.getAllianceRelativeAngle();//todo - math class
         if (Math.abs(currentAllianceAngle.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= deg <= 45
             return isLeft ? FRONT_LEFT_MODULE : FRONT_RIGHT_MODULE;
         }

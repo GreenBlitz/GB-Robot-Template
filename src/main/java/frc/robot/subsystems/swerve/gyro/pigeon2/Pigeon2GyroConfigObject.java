@@ -16,7 +16,6 @@ class Pigeon2GyroConfigObject {
         this.gyro = new Pigeon2Wrapper(pigeon2DeviceID);
         this.signals = new Pigeon2GyroRecords.GyroPigeon2Signals(
                 gyro.getYaw(),
-                gyro.getPitch(),
                 gyro.getAccelerationX(),
                 gyro.getAccelerationY(),
                 gyro.getAccelerationZ()
@@ -38,9 +37,7 @@ class Pigeon2GyroConfigObject {
                 signals.Y_ACCELERATION_SIGNAL(),
                 signals.Z_ACCELERATION_SIGNAL()
         );
-
         signals.YAW_SIGNAL().setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);
-        signals.PITCH_SIGNAL().setUpdateFrequency(RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
         gyro.optimizeBusUtilization();
     }

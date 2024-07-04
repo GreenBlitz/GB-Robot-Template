@@ -35,13 +35,9 @@ public class Swerve extends GBSubsystem {
     public static final Lock ODOMETRY_LOCK = new ReentrantLock();
 
     private final SwerveGyroInputsAutoLogged gyroInputs;
-
     private final ISwerveGyro gyro;
-
     private final Module[] modules;
-
     private final SwerveState currentState;
-
 
     public Swerve() {
         setName(getClass().getSimpleName());
@@ -64,6 +60,7 @@ public class Swerve extends GBSubsystem {
     protected String getLogPath() {
         return SwerveConstants.SWERVE_LOG_PATH;
     }
+
 
     @Override
     public void subsystemPeriodic() {
@@ -106,23 +103,6 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    public void stop() {
-        for (Module currentModule : modules) {
-            currentModule.stop();
-        }
-    }
-
-    public void setBrake(boolean brake) {
-        for (Module currentModule : modules) {
-            currentModule.setBrake(brake);
-        }
-    }
-
-    public void resetModulesAngleByEncoder() {
-        for (Module module : getModules()) {
-            module.resetByEncoder();
-        }
-    }
 
     protected void initializeDrive(SwerveState updatedState) {
         currentState.updateState(updatedState);
@@ -130,27 +110,31 @@ public class Swerve extends GBSubsystem {
         resetRotationController();
     }
 
-
     protected void setClosedLoopForModules() {
         for (Module currentModule : modules) {
             currentModule.setDriveMotorClosedLoop(currentState.getLoopMode().isClosedLoop);
         }
     }
 
-
-    protected void resetRotationController() {
-        SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.reset();
+    protected void setBrake(boolean brake) {
+        for (Module currentModule : modules) {
+            currentModule.setBrake(brake);
+        }
     }
 
-    // Don't use this, only for pose estimation!!!
+    public void setHeading(Rotation2d heading) {
+        gyro.setHeading(heading);
+    }
+
+
     public double[] getOdometryTimeStepQueue() {
         return gyroInputs.odometryUpdatesTimestamp;
     }
 
-    // Don't use this, only for pose estimation!!!
     public Rotation2d[] getOdometryYawUpdates() {
         return gyroInputs.odometryUpdatesYaw;
     }
+
 
     public Rotation2d getAbsoluteHeading() {
         double inputtedHeadingRads = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
@@ -161,29 +145,125 @@ public class Swerve extends GBSubsystem {
         return Rotation2d.fromDegrees(gyroInputs.gyroYaw.getDegrees());
     }
 
-    public void setHeading(Rotation2d heading) {
-        gyro.setHeading(heading);
-    }
-
-    public Rotation2d getPitch() {
-        return gyroInputs.gyroPitch;
-    }
-
     public Translation3d getGyroAcceleration() {
         return new Translation3d(gyroInputs.accelerationX, gyroInputs.accelerationY, gyroInputs.accelerationZ);
     }
 
 
+    protected void resetModulesAngleByEncoder() {
+        for (Module module : getModules()) {
+            module.resetByEncoder();
+        }
+    }
+
+    protected void resetRotationController() {
+        SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.reset();
+    }
+
+
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "IsModulesAtStates")
+    public boolean isModulesAtStates() {
+        for (Module module : modules) {
+            if (!module.isAtTargetState()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "TargetModulesStates")
+    private SwerveModuleState[] getTargetStates() {
+        SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
+        for (int i = 0; i < modules.length; i++) {
+            states[i] = modules[i].getTargetState();
+        }
+
+        return states;
+    }
+
+    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "CurrentModulesStates")
+    private SwerveModuleState[] getModulesStates() {
+        SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
+        for (int i = 0; i < modules.length; i++) {
+            states[i] = modules[i].getCurrentState();
+        }
+
+        return states;
+    }
+
+    private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setTargetState(swerveModuleStates[i]);
+        }
+    }
+
+    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
+        SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
+        for (int i = 0; i < modules.length; i++) {
+            swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
+        }
+        return new SwerveDriveWheelPositions(swerveModulePositions);
+    }
+
     public Rotation2d[] getModulesDriveDistances() {
         return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
     }
 
+
     public ChassisSpeeds getSelfRelativeVelocity() {
-        return SwerveConstants.KINEMATICS.toChassisSpeeds(getModuleStates());
+        return SwerveConstants.KINEMATICS.toChassisSpeeds(getModulesStates());
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
         return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), POSE_ESTIMATOR.getCurrentPose().getRotation());
+    }
+
+    public Rotation2d getAllianceRelativeAngle() {
+        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
+        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
+    }
+
+    private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+        if (swerveState.getDriveMode() == DriveRelative.SELF_RELATIVE) {
+            return chassisSpeeds;
+        }
+        else {
+            return fieldRelativeSpeedsToSelfRelativeSpeeds(chassisSpeeds);
+        }
+    }
+
+    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds){
+        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond,2) + Math.pow(chassisSpeeds.vyMetersPerSecond,2));
+    }
+
+
+    public void pointWheels(Rotation2d targetAngle, boolean optimize) {
+        for (Module module : modules) {
+            module.pointToAngle(targetAngle, optimize);
+        }
+    }
+
+    public void pointWheelsInX() {
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
+
+        modules[0].setTargetState(frontLeftBackRight);
+        modules[1].setTargetState(frontRightBackLeft);
+        modules[2].setTargetState(frontRightBackLeft);
+        modules[3].setTargetState(frontLeftBackRight);
+    }
+
+    public void pointWheelsInCircle() {
+        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
+        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+
+        modules[0].setTargetState(frontLeftBackRight);
+        modules[1].setTargetState(frontRightBackLeft);
+        modules[2].setTargetState(frontRightBackLeft);
+        modules[3].setTargetState(frontLeftBackRight);
     }
 
 
@@ -216,79 +296,6 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    public void pointWheels(Rotation2d targetAngle, boolean optimize) {
-        for (Module module : modules) {
-            module.pointToAngle(targetAngle, optimize);
-        }
-    }
-
-    public void pointWheelsInX() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-
-        modules[0].setTargetState(frontLeftBackRight);
-        modules[1].setTargetState(frontRightBackLeft);
-        modules[2].setTargetState(frontRightBackLeft);
-        modules[3].setTargetState(frontLeftBackRight);
-    }
-
-    public void pointWheelsInCircle() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
-
-        modules[0].setTargetState(frontLeftBackRight);
-        modules[1].setTargetState(frontRightBackLeft);
-        modules[2].setTargetState(frontRightBackLeft);
-        modules[3].setTargetState(frontLeftBackRight);
-    }
-
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "IsModulesAtStates")
-    public boolean isModulesAtStates() {
-        for (Module module : modules) {
-            if (!module.isAtTargetState()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "CurrentModulesStates")
-    private SwerveModuleState[] getModuleStates() {
-        SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-        for (int i = 0; i < modules.length; i++) {
-            states[i] = modules[i].getCurrentState();
-        }
-
-        return states;
-    }
-
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "TargetModulesStates")
-    private SwerveModuleState[] getTargetStates() {
-        SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-        for (int i = 0; i < modules.length; i++) {
-            states[i] = modules[i].getTargetState();
-        }
-
-        return states;
-    }
-
-    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
-        SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
-        for (int i = 0; i < modules.length; i++) {
-            swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
-        }
-        return new SwerveDriveWheelPositions(swerveModulePositions);
-    }
-
-    private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED_METERS_PER_SECOND);
-        for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(swerveModuleStates[i]);
-        }
-    }
-
 
     protected void pidToPose(Pose2d targetBluePose) {
         Pose2d currentBluePose = POSE_ESTIMATOR.getCurrentPose();
@@ -315,16 +322,39 @@ public class Swerve extends GBSubsystem {
         driveByState(targetFieldRelativeSpeeds);
     }
 
-    // todo - maybe move some of work to SwerveMath class
-    private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
-        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
-        return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
-                currentAngle.getDegrees(),
-                targetAngle.getDegrees()
-        ));
+
+    protected void drive(double xPower, double yPower, double thetaPower) {
+        driveByState(powersToSpeeds(xPower, yPower, thetaPower));
     }
 
-    // todo - maybe move some of work to SwerveMath class
+    private void driveByState(ChassisSpeeds chassisSpeeds) {
+        driveByState(chassisSpeeds, currentState);
+    }
+
+    public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+        chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
+        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, swerveState);
+        chassisSpeeds = discretize(chassisSpeeds);
+
+        if (isStill(chassisSpeeds)) {
+            stop();
+            return;
+        }
+
+        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(
+                chassisSpeeds,
+                swerveState.getRotateAxis().getRotateAxis()
+        );
+        setTargetModuleStates(swerveModuleStates);
+    }
+
+    protected void stop() {
+        for (Module currentModule : modules) {
+            currentModule.stop();
+        }
+    }
+
+
     private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds, SwerveState swerveState) {
         if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
             return currentSpeeds;
@@ -352,38 +382,16 @@ public class Swerve extends GBSubsystem {
         return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond, clampedAngularVelocity);
     }
 
-    private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        if (swerveState.getDriveMode() == DriveRelative.SELF_RELATIVE) {
-            return chassisSpeeds;
-        }
-        else {
-            return fieldRelativeSpeedsToSelfRelativeSpeeds(chassisSpeeds);
-        }
-    }
-
-    //todo - move to drive mode or to SwerveMath class
     private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
-        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getDriveRelativeAngle());
+        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getAllianceRelativeAngle());
     }
 
-    // todo - maybe move some of work to SwerveMath class
-    public Rotation2d getDriveRelativeAngle() {
-        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
-        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
-    }
-
-    // todo - maybe move some of work to SwerveMath class
     private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
         return new ChassisSpeeds(
                 xPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
                 yPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
                 thetaPower * currentState.getDriveSpeed().maxRotationSpeedPerSecond.getRadians()
         );
-    }
-
-    // todo: move to math
-    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds){
-        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond,2) + Math.pow(chassisSpeeds.vyMetersPerSecond,2));
     }
 
     /**
@@ -393,47 +401,26 @@ public class Swerve extends GBSubsystem {
      * @param chassisSpeeds the chassis speeds to fix skewing for
      * @return the fixed speeds
      */
-    // todo - maybe move some of work to SwerveMath class
-    private ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
+    private static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
         return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
     }
 
-
-    protected void drive(double xPower, double yPower, double thetaPower) {
-        driveByState(powersToSpeeds(xPower, yPower, thetaPower));
+    private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
+        Rotation2d currentAngle = POSE_ESTIMATOR.getCurrentPose().getRotation();
+        return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
+                currentAngle.getDegrees(),
+                targetAngle.getDegrees()
+        ));
     }
 
-    private void driveByState(ChassisSpeeds chassisSpeeds) {
-        driveByState(chassisSpeeds, currentState);
-    }
 
-    public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
-
-        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, swerveState);
-        chassisSpeeds = discretize(chassisSpeeds);
-
-        if (isStill(chassisSpeeds)) {
-            stop();
-            return;
-        }
-
-        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(
-                chassisSpeeds,
-                swerveState.getRotateAxis().getRotateAxis()
-        );
-        setTargetModuleStates(swerveModuleStates);
-    }
-
-    // todo - maybe move some of work to SwerveMath class
-    public boolean isStill(ChassisSpeeds chassisSpeeds) {
+    public static boolean isStill(ChassisSpeeds chassisSpeeds) {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
     }
 
-    // todo - maybe move some of work to SwerveMath class
-    private boolean isAtTranslationPosition(double currentTranslationPosition, double targetTranslationPosition,
+    private static boolean isAtTranslationPosition(double currentTranslationPosition, double targetTranslationPosition,
             double currentTranslationVelocity) {
         boolean isNearTargetPosition = MathUtil.isNear(
                 targetTranslationPosition,
@@ -444,7 +431,6 @@ public class Swerve extends GBSubsystem {
         return isNearTargetPosition && isStopping;
     }
 
-    // todo - maybe move some of work to SwerveMath class
     public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
         double currentXAxisVelocity = getFieldRelativeVelocity().vxMetersPerSecond;
         return isAtTranslationPosition(
@@ -454,7 +440,6 @@ public class Swerve extends GBSubsystem {
         );
     }
 
-    // todo - maybe move some of work to SwerveMath class
     public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
         double currentYAxisVelocity = getFieldRelativeVelocity().vyMetersPerSecond;
         return isAtTranslationPosition(
@@ -464,7 +449,6 @@ public class Swerve extends GBSubsystem {
         );
     }
 
-    // todo - maybe move some of work to SwerveMath class
     public boolean isAtAngle(Rotation2d targetAngle) {
         double angleDifferenceDeg = Math.abs(targetAngle.minus(POSE_ESTIMATOR.getCurrentPose().getRotation()).getDegrees());
         boolean isAtAngle = angleDifferenceDeg < SwerveConstants.ROTATION_TOLERANCE.getDegrees();
@@ -475,7 +459,6 @@ public class Swerve extends GBSubsystem {
         return isAtAngle && isStopping;
     }
 
-    // todo - maybe move some of work to SwerveMath class
     public boolean isAtPosition(Pose2d targetBluePose) {
         return isAtXAxisPosition(targetBluePose.getX())
                 && isAtYAxisPosition(targetBluePose.getY())

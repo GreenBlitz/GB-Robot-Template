@@ -46,7 +46,7 @@ public class PhoenixOdometryThread6328 extends Thread {
     private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
     private final ArrayList<StatusSignal<Double>> signals = new ArrayList<>();
     private final ArrayList<Boolean> isLatencySignals = new ArrayList<>();
-    private boolean isCANFD = false; //assuming that all the devices using in odometry have same can network
+    private boolean isCANFD = false; // Assuming that all the devices using in odometry have same can network.
 
 
     private static PhoenixOdometryThread6328 INSTANCE = null;
@@ -95,10 +95,6 @@ public class PhoenixOdometryThread6328 extends Thread {
         return queue;
     }
 
-    private void updateIsCANFD(ParentDevice device) {
-        isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
-    }
-
     private void registerSignals(StatusSignal<Double>[] signals) {
         for (StatusSignal<Double> signal : signals) {
             registerSignal(signal);
@@ -107,6 +103,10 @@ public class PhoenixOdometryThread6328 extends Thread {
 
     private void registerSignal(StatusSignal<Double> signal) {
         signals.add(signal);
+    }
+
+    private void updateIsCANFD(ParentDevice device) {
+        isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
     }
 
     private void updateIsLatencySignals(boolean isLatencySignal) {
@@ -123,6 +123,7 @@ public class PhoenixOdometryThread6328 extends Thread {
         }
     }
 
+
     private void waitForUpdatesFromSignals() {
         SIGNALS_LOCK.lock();
         try {
@@ -135,6 +136,27 @@ public class PhoenixOdometryThread6328 extends Thread {
             SIGNALS_LOCK.unlock();
         }
     }
+
+    private void waitForAllSignals() throws InterruptedException {
+        if (isCANFD) {
+            waitForCanFDSignals();
+        }
+        else {
+            waitForNonCanFDSignals();
+        }
+    }
+
+    private void waitForCanFDSignals() {
+        BaseStatusSignal.waitForAll(CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS, signals.toArray(StatusSignal[]::new));
+    }
+
+    private void waitForNonCanFDSignals() throws InterruptedException {
+        Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
+        if (!signals.isEmpty()) {
+            BaseStatusSignal.refreshAll(signals.toArray(StatusSignal[]::new));
+        }
+    }
+
 
     private void saveNewData() {
         double fpgaTimestamp = Logger.getRealTimestamp() / 1.0e6;
@@ -149,15 +171,6 @@ public class PhoenixOdometryThread6328 extends Thread {
         }
     }
 
-    private void waitForAllSignals() throws InterruptedException {
-        if (isCANFD) {
-            waitForCanFDSignals();
-        }
-        else {
-            waitForNonCanFDSignals();
-        }
-    }
-
     private void saveNewDataToQueues() {
         for (int signalIndex = 0, queueIndex = 0; queueIndex < queues.size(); signalIndex++, queueIndex++) {
             if (isLatencySignals.get(queueIndex)) {
@@ -167,17 +180,6 @@ public class PhoenixOdometryThread6328 extends Thread {
             else {
                 saveRegularValue(signalIndex, queueIndex);
             }
-        }
-    }
-
-    private void waitForCanFDSignals() {
-        BaseStatusSignal.waitForAll(CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS, signals.toArray(StatusSignal[]::new));
-    }
-
-    private void waitForNonCanFDSignals() throws InterruptedException {
-        Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
-        if (!signals.isEmpty()) {
-            BaseStatusSignal.refreshAll(signals.toArray(StatusSignal[]::new));
         }
     }
 

@@ -11,20 +11,13 @@ import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleFactory;
 import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
-import static frc.robot.subsystems.swerve.modules.ModuleUtils.getAlertLoggingPath;
-import static frc.robot.subsystems.swerve.modules.ModuleUtils.reduceSkew;
-import static frc.robot.subsystems.swerve.modules.ModuleUtils.toDriveMeters;
-
 public class Module {
 
     private final ModuleInputsAutoLogged moduleInputs;
-
     private final ModuleUtils.ModuleName moduleName;
-
     private final IModule module;
 
     private boolean driveMotorClosedLoop;
-
     private SwerveModuleState targetState;
 
     public Module(ModuleUtils.ModuleName moduleName) {
@@ -37,7 +30,6 @@ public class Module {
         resetByEncoder();
     }
 
-
     public void logStatus() {
         updateInputs();
         reportAlerts();
@@ -45,18 +37,22 @@ public class Module {
 
     private void updateInputs() {
         module.updateInputs(moduleInputs);
-        moduleInputs.driveMotorDistanceMeters = toDriveMeters(moduleInputs.driveMotorAngleWithoutCoupling);
-        moduleInputs.driveMotorVelocityMeters = toDriveMeters(moduleInputs.driveMotorVelocityWithoutCoupling);
+        moduleInputs.driveMotorDistanceMeters = ModuleUtils.toDriveMeters(moduleInputs.driveMotorAngleWithoutCoupling);
+        moduleInputs.driveMotorVelocityMeters = ModuleUtils.toDriveMeters(moduleInputs.driveMotorVelocityWithoutCoupling);
         moduleInputs.isAtTargetState = isAtTargetState();
         Logger.processInputs(ModuleUtils.getLoggingPath(moduleName), moduleInputs);
     }
 
     private void reportAlerts() {
         if (!moduleInputs.allComponentsConnected) {
-            Logger.recordOutput(getAlertLoggingPath(moduleName) + "componentDisconnectedAt", Timer.getFPGATimestamp());
+            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "componentDisconnectedAt", Timer.getFPGATimestamp());
         }
     }
 
+
+    public void setDriveMotorClosedLoop(boolean closedLoop) {
+        driveMotorClosedLoop = closedLoop;
+    }
 
     public void stop() {
         module.stop();
@@ -70,6 +66,21 @@ public class Module {
         module.resetByEncoder();
     }
 
+
+    /**
+     * The odometry thread can update itself faster than the main code loop (which is 50 hertz).
+     * Instead of using the latest odometry update, the accumulated odometry positions since the last loop to get a more
+     * accurate position.
+     *
+     * @param odometryUpdateIndex the index of the odometry update
+     * @return the position of the module at the given odometry update index
+     */
+    public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
+        return new SwerveModulePosition(
+                ModuleUtils.toDriveMeters(moduleInputs.odometryUpdatesDriveDistance[odometryUpdateIndex]),
+                moduleInputs.odometryUpdatesSteerAngle[odometryUpdateIndex]
+        );
+    }
 
     public SwerveModuleState getCurrentState() {
         return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
@@ -94,6 +105,7 @@ public class Module {
     public SwerveModuleState getTargetState() {
         return targetState;
     }
+
 
     public boolean isAtTargetState() {
         boolean isAtAngle = isAtAngle(getTargetState().angle);
@@ -120,22 +132,7 @@ public class Module {
     }
 
 
-    /**
-     * The odometry thread can update itself faster than the main code loop (which is 50 hertz).
-     * Instead of using the latest odometry update, the accumulated odometry positions since the last loop to get a more
-     * accurate position.
-     *
-     * @param odometryUpdateIndex the index of the odometry update
-     * @return the position of the module at the given odometry update index
-     */
-    public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
-        return new SwerveModulePosition(
-                ModuleUtils.toDriveMeters(moduleInputs.odometryUpdatesDriveDistance[odometryUpdateIndex]),
-                moduleInputs.odometryUpdatesSteerAngle[odometryUpdateIndex]
-        );
-    }
-
-    public void setTargetAngle(Rotation2d angle, boolean optimize) {
+    public void pointToAngle(Rotation2d angle, boolean optimize) {
         SwerveModuleState moduleState = new SwerveModuleState(0, angle);
         if (optimize) {
             this.targetState = SwerveModuleState.optimize(moduleState, getCurrentAngle());
@@ -146,6 +143,14 @@ public class Module {
         module.setTargetAngle(targetState.angle);
     }
 
+    public void runDriveMotorByVoltage(double voltage) {
+        module.runDriveMotorByVoltage(voltage);
+    }
+
+    public void runSteerMotorByVoltage(double voltage) {
+        module.runSteerMotorByVoltage(voltage);
+    }
+
     public void setTargetState(SwerveModuleState targetState) {
         this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
         module.setTargetAngle(this.targetState.angle);
@@ -153,7 +158,7 @@ public class Module {
     }
 
     private void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle) {
-        targetVelocityMetersPerSecond = reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
+        targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
 
         if (driveMotorClosedLoop) {
             setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
@@ -169,18 +174,6 @@ public class Module {
 
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         module.setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
-    }
-
-    public void setDriveMotorClosedLoop(boolean closedLoop) {
-        driveMotorClosedLoop = closedLoop;
-    }
-
-    public void runSteerMotorByVoltage(double voltage) {
-        module.runSteerMotorByVoltage(voltage);
-    }
-
-    public void runDriveMotorByVoltage(double voltage) {
-        module.runDriveMotorByVoltage(voltage);
     }
 
 }

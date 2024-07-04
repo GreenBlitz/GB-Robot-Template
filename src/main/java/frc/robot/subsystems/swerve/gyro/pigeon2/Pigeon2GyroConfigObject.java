@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.gyro.pigeon2gyro;
+package frc.robot.subsystems.swerve.gyro.pigeon2;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import frc.robot.poseestimation.poseestimator.PoseEstimatorConstants;

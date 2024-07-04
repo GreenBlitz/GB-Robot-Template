@@ -1,7 +1,8 @@
 package frc.robot.subsystems.swerve.swervestatehelpers;
 
-public enum DriveMode {
+public enum DriveRelative {
 
     FIELD_RELATIVE,
     SELF_RELATIVE;
+
 }

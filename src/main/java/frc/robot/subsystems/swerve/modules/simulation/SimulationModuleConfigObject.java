@@ -7,21 +7,21 @@ import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
 public class SimulationModuleConfigObject {
 
-    private final SimpleMotorSimulation steerMotor, driveMotor;
+    private final SimpleMotorSimulation driveMotor, steerMotor;
 
     public SimulationModuleConfigObject() {
-        this.steerMotor = new SimpleMotorSimulation(
-                new DCMotorSim(
-                        SimulationModuleConstants.STEER_MOTOR_GEARBOX,
-                        ModuleConstants.STEER_GEAR_RATIO,
-                        SimulationModuleConstants.STEER_MOMENT_OF_INERTIA
-                )
-        );
         this.driveMotor = new SimpleMotorSimulation(
                 new DCMotorSim(
                         SimulationModuleConstants.DRIVE_MOTOR_GEARBOX,
                         ModuleConstants.DRIVE_GEAR_RATIO,
                         SimulationModuleConstants.DRIVE_MOMENT_OF_INERTIA
+                )
+        );
+        this.steerMotor = new SimpleMotorSimulation(
+                new DCMotorSim(
+                        SimulationModuleConstants.STEER_MOTOR_GEARBOX,
+                        ModuleConstants.STEER_GEAR_RATIO,
+                        SimulationModuleConstants.STEER_MOMENT_OF_INERTIA
                 )
         );
 
@@ -32,15 +32,14 @@ public class SimulationModuleConfigObject {
     private void configureDriveMotor() {
         driveMotor.applyConfiguration(new TalonFXConfiguration());
     }
-
     private void configureSteerMotor() {
         steerMotor.applyConfiguration(SimulationModuleConstants.STEER_MOTOR_CONFIG);
     }
 
+
     public SimpleMotorSimulation getDriveMotor() {
         return driveMotor;
     }
-
     public SimpleMotorSimulation getSteerMotor() {
         return steerMotor;
     }

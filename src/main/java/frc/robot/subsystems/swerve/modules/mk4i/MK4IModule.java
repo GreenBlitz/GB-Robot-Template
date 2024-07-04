@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MK4IModule implements IModule {
 
     private final MK4IModuleStatus mk4IModuleStatus;
-
     private final MK4IModuleActions mk4IModuleActions;
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
@@ -69,6 +68,7 @@ public class MK4IModule implements IModule {
         startSteerAngle = steerEncoderAbsoluteAngle;
     }
 
+
     @Override
     public void runSteerMotorByVoltage(double voltage) {
         mk4IModuleActions.setTargetSteerVoltage(voltage);
@@ -109,6 +109,13 @@ public class MK4IModule implements IModule {
     }
 
 
+    // todo: delete and do resistance instead
+    private Rotation2d getDriveDistanceWithoutCoupling(double driveDistanceRot, Rotation2d steerAngle) {
+        return Rotation2d.fromRotations(
+                driveDistanceRot - ((steerAngle.getRotations() - startSteerAngle.getRotations()) * MK4IModuleConstants.COUPLING_RATIO)
+        );
+    }
+
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
         inputs.allComponentsConnected = mk4IModuleStatus.refreshAllSignals().isOK();
@@ -136,6 +143,7 @@ public class MK4IModule implements IModule {
 
         inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
 
+        // todo: delete and do resistance instead
         AtomicInteger count = new AtomicInteger();
         inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(drive -> getDriveDistanceWithoutCoupling(
                 drive,
@@ -144,12 +152,6 @@ public class MK4IModule implements IModule {
 
         steerPositionQueue.clear();
         drivePositionQueue.clear();
-    }
-
-    private Rotation2d getDriveDistanceWithoutCoupling(double driveDistanceRot, Rotation2d steerAngle) {
-        return Rotation2d.fromRotations(
-                driveDistanceRot - ((steerAngle.getRotations() - startSteerAngle.getRotations()) * MK4IModuleConstants.COUPLING_RATIO)
-        );
     }
 
 }

@@ -10,9 +10,7 @@ import org.littletonrobotics.junction.Logger;
 public class SimulationModule implements IModule {
 
     private final ModuleUtils.ModuleName moduleName;
-
     private final SimulationModuleActions simulationModuleActions;
-
     private final SimulationModuleStatus simulationModuleStatus;
 
     public SimulationModule(ModuleUtils.ModuleName moduleName) {
@@ -39,6 +37,7 @@ public class SimulationModule implements IModule {
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
     }
 
+
     @Override
     public void runSteerMotorByVoltage(double voltage) {
         simulationModuleActions.setTargetSteerVoltage(voltage);
@@ -60,7 +59,7 @@ public class SimulationModule implements IModule {
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
-        simulationModuleActions.setTargetDriveVoltage(voltage);
+        runDriveMotorByVoltage(voltage);
     }
 
     @Override

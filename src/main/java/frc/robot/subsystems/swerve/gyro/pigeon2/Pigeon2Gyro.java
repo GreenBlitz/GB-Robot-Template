@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.gyro.pigeon2gyro;
+package frc.robot.subsystems.swerve.gyro.pigeon2;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -14,13 +14,10 @@ import java.util.Queue;
 public class Pigeon2Gyro implements ISwerveGyro {
 
     private final Pigeon2GyroStatus gyroPigeon2Status;
-
     private final Pigeon2GyroActions gyroPigeon2Actions;
 
     private final Queue<Double> yawQueue;
-
     private final Queue<Double> timestampQueue;
-
 
     public Pigeon2Gyro() {
         Pigeon2GyroConfigObject gyroPigeon2ConfigObject = new Pigeon2GyroConfigObject(Ports.PIGEON_2_DEVICE_ID);
@@ -30,7 +27,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
         this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(
                 gyroPigeon2ConfigObject.getGyro(),
-                gyroPigeon2Status.getYAW_SIGNAL(false)
+                gyroPigeon2Status.getYawSignal(false)
         );//todo - maybe latency
         this.timestampQueue = PhoenixOdometryThread6328.getInstance().getTimestampQueue();
     }
@@ -40,15 +37,22 @@ public class Pigeon2Gyro implements ISwerveGyro {
         gyroPigeon2Actions.setYaw(heading);
     }
 
+
+    private void reportAlerts(SwerveGyroInputsAutoLogged inputs) {
+        if (!inputs.connected) {
+            Logger.recordOutput(SwerveGyroConstants.ALERT_LOG_PATH + "/gyroDisconnectedAt", Timer.getFPGATimestamp());
+        }
+    }
+
     @Override
     public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
         inputs.connected = gyroPigeon2Status.refreshAllSignals().isOK();
 
         inputs.gyroYaw = gyroPigeon2Status.getYaw(false);
         inputs.gyroPitch = gyroPigeon2Status.getPitch(false);
-        inputs.accelerationX = gyroPigeon2Status.getX_ACCELERATION_SIGNAL(false).getValue();
-        inputs.accelerationY = gyroPigeon2Status.getY_ACCELERATION_SIGNAL(false).getValue();
-        inputs.accelerationZ = gyroPigeon2Status.getZ_ACCELERATION_SIGNAL(false).getValue();
+        inputs.accelerationX = gyroPigeon2Status.getXAccelerationSignal(false).getValue();
+        inputs.accelerationY = gyroPigeon2Status.getYAccelerationSignal(false).getValue();
+        inputs.accelerationZ = gyroPigeon2Status.getZAccelerationSignal(false).getValue();
 
         inputs.odometryUpdatesYaw = yawQueue.stream().map(Rotation2d::fromDegrees).toArray(Rotation2d[]::new);
         inputs.odometryUpdatesTimestamp = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
@@ -59,10 +63,5 @@ public class Pigeon2Gyro implements ISwerveGyro {
         reportAlerts(inputs);
     }
 
-    private void reportAlerts(SwerveGyroInputsAutoLogged inputs) {
-        if (!inputs.connected) {
-            Logger.recordOutput(SwerveGyroConstants.ALERT_LOG_PATH + "/gyroDisconnectedAt", Timer.getFPGATimestamp());
-        }
-    }
 
 }

@@ -17,7 +17,7 @@ import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveMode;
+import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
@@ -218,7 +218,7 @@ public class Swerve extends GBSubsystem {
 
     public void pointWheels(Rotation2d targetAngle, boolean optimize) {
         for (Module module : modules) {
-            module.setTargetAngle(targetAngle, optimize);
+            module.pointToAngle(targetAngle, optimize);
         }
     }
 
@@ -353,7 +353,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        if (swerveState.getDriveMode() == DriveMode.SELF_RELATIVE) {
+        if (swerveState.getDriveMode() == DriveRelative.SELF_RELATIVE) {
             return chassisSpeeds;
         }
         else {

@@ -12,24 +12,17 @@ class MK4IModuleActions {
 
     private final TalonFXWrapper steerMotor, driveMotor;
 
+    //todo - VelocityTorqueCurrentFOC (whats better)
+    private final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
+    private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
 
-    private final VoltageOut driveVoltageRequest =
-            new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
-
-    private final VelocityVoltage driveVelocityRequest =
-            new VelocityVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE); //todo - VelocityTorqueCurrentFOC (whats better)
-
-    private final PositionVoltage steerPositionRequest =
-            new PositionVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
-
-    private final VoltageOut steerVoltageRequest =
-            new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
+    private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
+    private final VoltageOut steerVoltageRequest = new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
 
     public MK4IModuleActions(MK4IModuleRecords.MK4IModuleMotors moduleMotors) {
         this.driveMotor = moduleMotors.driveMotor();
         this.steerMotor = moduleMotors.steerMotor();
     }
-
 
     public void stop() {
         driveMotor.stopMotor();
@@ -56,12 +49,13 @@ class MK4IModuleActions {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
     }
 
-    public void setTargetClosedLoopVelocity(double targetVelocityRotationsPerSecond) {
-        driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityRotationsPerSecond));
-    }
-
     public void setTargetSteerVoltage(double voltage) {
         steerMotor.setControl(steerVoltageRequest.withOutput(voltage));
+    }
+
+
+    public void setTargetClosedLoopVelocity(double targetVelocityRotationsPerSecond) {
+        driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityRotationsPerSecond));
     }
 
     public void setTargetAngle(Rotation2d angle) {

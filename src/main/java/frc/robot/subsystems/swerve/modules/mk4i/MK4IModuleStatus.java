@@ -14,8 +14,6 @@ class MK4IModuleStatus {
         this.moduleSignals = moduleSignals;
     }
 
-
-    // Encoder Status
     public Rotation2d getSteerEncoderAbsolutePosition(boolean refresh) {
         return Rotation2d.fromRotations(getSteerEncoderAbsolutePositionSignal(refresh).getValue());
     }
@@ -33,7 +31,6 @@ class MK4IModuleStatus {
     }
 
 
-    // Drive Motor Status
     public Rotation2d getDriveMotorLatencyPosition(boolean refresh) {
         return Rotation2d.fromRotations(BaseStatusSignal.getLatencyCompensatedValue(
                 getDriveMotorPositionSignal(refresh),
@@ -73,7 +70,6 @@ class MK4IModuleStatus {
     }
 
 
-    // Steer Motor Status
     public Rotation2d getSteerMotorLatencyPosition(boolean refresh) {
         return Rotation2d.fromRotations(BaseStatusSignal.getLatencyCompensatedValue(
                 getSteerMotorPositionSignal(refresh),
@@ -109,7 +105,6 @@ class MK4IModuleStatus {
     }
 
 
-    // Refresh All
     public StatusCode refreshAllSignals() {
         return BaseStatusSignal.refreshAll(
                 getSteerEncoderAbsolutePositionSignal(false),

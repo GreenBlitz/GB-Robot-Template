@@ -11,7 +11,6 @@ public class SimulationModuleActions {
     private final SimpleMotorSimulation steerMotor, driveMotor;
 
     private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
-
     private final VoltageOut steerVoltageRequest = new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_STEER);
 
     private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(ModuleConstants.ENABLE_FOC_DRIVE);
@@ -21,12 +20,10 @@ public class SimulationModuleActions {
         this.steerMotor = simulationModuleConfigObject.getSteerMotor();
     }
 
-
     public void stop() {
         driveMotor.stop();
         steerMotor.stop();
     }
-
 
     public void setTargetDriveVoltage(double voltage) {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));

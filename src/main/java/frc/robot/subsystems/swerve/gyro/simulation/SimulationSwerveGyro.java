@@ -10,7 +10,11 @@ import frc.utils.cycletime.CycleTimeUtils;
 
 public class SimulationSwerveGyro implements ISwerveGyro {
 
-    private final GyroSimulation gyro = new GyroSimulation();
+    private final GyroSimulation gyro;
+
+    public SimulationSwerveGyro(){
+        this.gyro = new GyroSimulation();
+    }
 
     @Override
     public void setHeading(Rotation2d heading) {

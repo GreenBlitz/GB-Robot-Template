@@ -10,12 +10,10 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 class MK4IModuleConfigObject {
 
-    private final TalonFXWrapper steerMotor, driveMotor;
-
+    private final TalonFXWrapper driveMotor, steerMotor;
     private final CANcoder steerEncoder;
 
     private final MK4IModuleRecords.MK4IModuleMotors moduleMotors;
-
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
     protected MK4IModuleConfigObject(
@@ -23,7 +21,6 @@ class MK4IModuleConfigObject {
             CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted,
             CTREDeviceID steerEncoderID
     ) {
-
         this.steerEncoder = new CANcoder(steerEncoderID.ID(), steerEncoderID.busChain().getChainName());
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
                 new TalonFXWrapper(driveMotorDeviceID),

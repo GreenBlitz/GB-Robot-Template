@@ -13,7 +13,6 @@ public class SimulationModuleStatus {
     }
 
 
-    // Drive Motor Status
     public Rotation2d getDrivePositionAngle() {
         return driveMotor.getPosition();
     }
@@ -31,7 +30,6 @@ public class SimulationModuleStatus {
     }
 
 
-    // Steer Motor Status
     public Rotation2d getSteerPosition() {
         return steerMotor.getPosition();
     }

@@ -1,6 +1,7 @@
-package frc.robot.subsystems.swerve.modules.moduleinterface;
+package frc.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 
 public interface IModule {
 
@@ -20,6 +21,6 @@ public interface IModule {
 
     void setTargetAngle(Rotation2d angle);
 
-    void updateInputs(ModuleInputsAutoLogged inputs);
+    void updateInputs(ModuleInputsContainer inputs);
 
 }

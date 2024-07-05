@@ -1,10 +1,10 @@
 package frc.robot.subsystems.swerve.modules.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
-import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import org.littletonrobotics.junction.Logger;
 
 public class SimulationModule implements IModule {
@@ -73,18 +73,18 @@ public class SimulationModule implements IModule {
 
 
     @Override
-    public void updateInputs(ModuleInputsAutoLogged inputs) {
-        inputs.driveMotorAngleWithoutCoupling = simulationModuleStatus.getDrivePositionAngle();
-        inputs.driveMotorVelocityWithoutCoupling = simulationModuleStatus.getDriveVelocityAnglePerSecond();
-        inputs.driveMotorCurrent = simulationModuleStatus.getDriveCurrent();
-        inputs.driveMotorVoltage = simulationModuleStatus.getDriveVoltage();
+    public void updateInputs(ModuleInputsContainer inputs) {
+        inputs.getSteerMotorInputs().steerMotorAngle = simulationModuleStatus.getSteerPosition();
+        inputs.getSteerMotorInputs().steerMotorVelocity = simulationModuleStatus.getSteerVelocity();
+        inputs.getSteerMotorInputs().steerMotorVoltage = simulationModuleStatus.getSteerVoltage();
+        inputs.getSteerMotorInputs().odometrySamplesSteerAngle = new Rotation2d[]{inputs.getSteerMotorInputs().steerMotorAngle};
 
-        inputs.steerMotorAngle = simulationModuleStatus.getSteerPosition();
-        inputs.steerMotorVelocity = simulationModuleStatus.getSteerVelocity();
-        inputs.steerMotorVoltage = simulationModuleStatus.getSteerVoltage();
-
-        inputs.odometrySamplesDriveDistance = new Rotation2d[]{inputs.driveMotorAngleWithoutCoupling};
-        inputs.odometrySamplesSteerAngle = new Rotation2d[]{inputs.steerMotorAngle};
+        inputs.getDriveMotorInputs().driveMotorAngleWithoutCoupling = simulationModuleStatus.getDrivePositionAngle();
+        inputs.getDriveMotorInputs().driveMotorVelocityWithoutCoupling = simulationModuleStatus.getDriveVelocityAnglePerSecond();
+        inputs.getDriveMotorInputs().driveMotorCurrent = simulationModuleStatus.getDriveCurrent();
+        inputs.getDriveMotorInputs().driveMotorVoltage = simulationModuleStatus.getDriveVoltage();
+        inputs.getDriveMotorInputs().odometrySamplesDriveDistance =
+                new Rotation2d[]{inputs.getDriveMotorInputs().driveMotorAngleWithoutCoupling};
     }
 
 }

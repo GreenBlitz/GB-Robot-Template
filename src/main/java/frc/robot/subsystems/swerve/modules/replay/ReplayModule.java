@@ -1,8 +1,8 @@
 package frc.robot.subsystems.swerve.modules.replay;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.modules.moduleinterface.IModule;
-import frc.robot.subsystems.swerve.modules.moduleinterface.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.IModule;
+import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 
 public class ReplayModule implements IModule {
 
@@ -31,6 +31,6 @@ public class ReplayModule implements IModule {
     public void setTargetAngle(Rotation2d angle) {}
 
     @Override
-    public void updateInputs(ModuleInputsAutoLogged inputs) {}
+    public void updateInputs(ModuleInputsContainer inputs) {}
 
 }

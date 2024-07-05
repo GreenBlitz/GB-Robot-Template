@@ -34,7 +34,7 @@ public class SwerveConstants {
 
 
     //todo - actual max in sim maybe in real will be 5.27. sim need moi calibration
-    public static final double MAX_SPEED_METERS_PER_SECOND = 5.033;//todo - calibrate for real
+    public static final double MAX_SPEED_METERS_PER_SECOND = 5.052;//todo - calibrate for real
     public static final Rotation2d MAX_ROTATIONAL_SPEED_PER_SECOND = Rotation2d.fromRadians(10);//todo - calibrate for real
 
 

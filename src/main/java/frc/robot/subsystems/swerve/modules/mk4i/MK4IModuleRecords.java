@@ -8,9 +8,9 @@ class MK4IModuleRecords {
     public record MK4IModuleMotors(TalonFXWrapper driveMotor, TalonFXWrapper steerMotor) {}
 
     public record MK4IModuleSignals(
-            StatusSignal<Double> steerEncoderAbsolutePositionSignal,
-            StatusSignal<Double> steerEncoderVelocitySignal,
-            StatusSignal<Double> steerEncoderVoltageSignal,
+            StatusSignal<Double> encoderAbsolutePositionSignal,
+            StatusSignal<Double> encoderVelocitySignal,
+            StatusSignal<Double> encoderVoltageSignal,
 
             StatusSignal<Double> drivePositionSignal,
             StatusSignal<Double> driveVelocitySignal,

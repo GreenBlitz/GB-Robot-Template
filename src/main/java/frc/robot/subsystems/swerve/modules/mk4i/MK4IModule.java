@@ -37,7 +37,7 @@ public class MK4IModule implements IModule {
                 mk4IModuleStatus.getDriveMotorVelocitySignal(false)
         );
 
-        this.startSteerAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(true);
+        this.startSteerAngle = mk4IModuleStatus.getEncoderAbsolutePosition(true);
         mk4IModuleActions.resetDriveAngle(new Rotation2d()); // for drive distance calculation
     }
 
@@ -63,9 +63,9 @@ public class MK4IModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        Rotation2d steerEncoderAbsoluteAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(true);
-        mk4IModuleActions.resetSteerAngle(steerEncoderAbsoluteAngle);
-        startSteerAngle = steerEncoderAbsoluteAngle;
+        Rotation2d encoderAbsoluteAngle = mk4IModuleStatus.getEncoderAbsolutePosition(true);
+        mk4IModuleActions.resetSteerAngle(encoderAbsoluteAngle);
+        startSteerAngle = encoderAbsoluteAngle;
     }
 
 
@@ -118,12 +118,12 @@ public class MK4IModule implements IModule {
 
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
-        inputs.isSteerEncoderConnected = mk4IModuleStatus.refreshSteerEncoderSignals().isOK();
-        inputs.steerEncoderAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(false);
-        inputs.steerEncoderVelocity = Rotation2d.fromRotations(mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue());
-        inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal(false).getValue();
+        inputs.isEncoderConnected = mk4IModuleStatus.refreshEncoderSignals().isOK();
+        inputs.encoderAngle = mk4IModuleStatus.getEncoderAbsolutePosition(false);
+        inputs.encoderVelocity = Rotation2d.fromRotations(mk4IModuleStatus.getEncoderVelocitySignal(false).getValue());
+        inputs.encoderVoltage = mk4IModuleStatus.getEncoderVoltageSignal(false).getValue();
 
-        inputs.isSteerEncoderConnected = mk4IModuleStatus.refreshSteerMotorSignals().isOK();
+        inputs.isEncoderConnected = mk4IModuleStatus.refreshSteerMotorSignals().isOK();
         inputs.steerMotorAngle = mk4IModuleStatus.getSteerMotorLatencyPosition(false);
         inputs.steerMotorVelocity = mk4IModuleStatus.getSteerMotorLatencyVelocity(false);
         inputs.steerMotorAcceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);

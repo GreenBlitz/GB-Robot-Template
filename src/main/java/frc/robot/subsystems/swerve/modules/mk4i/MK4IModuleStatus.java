@@ -14,28 +14,28 @@ class MK4IModuleStatus {
         this.moduleSignals = moduleSignals;
     }
 
-    public StatusCode refreshSteerEncoderSignals() {
+    public StatusCode refreshEncoderSignals() {
         return BaseStatusSignal.refreshAll(
-                getSteerEncoderAbsolutePositionSignal(false),
-                getSteerEncoderVelocitySignal(false),
-                getSteerEncoderVoltageSignal(false)
+                getEncoderAbsolutePositionSignal(false),
+                getEncoderVelocitySignal(false),
+                getEncoderVoltageSignal(false)
         );
     }
 
-    public Rotation2d getSteerEncoderAbsolutePosition(boolean refresh) {
-        return Rotation2d.fromRotations(getSteerEncoderAbsolutePositionSignal(refresh).getValue());
+    public Rotation2d getEncoderAbsolutePosition(boolean refresh) {
+        return Rotation2d.fromRotations(getEncoderAbsolutePositionSignal(refresh).getValue());
     }
 
-    private StatusSignal<Double> getSteerEncoderAbsolutePositionSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerEncoderAbsolutePositionSignal());
+    private StatusSignal<Double> getEncoderAbsolutePositionSignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.encoderAbsolutePositionSignal());
     }
 
-    public StatusSignal<Double> getSteerEncoderVelocitySignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
+    public StatusSignal<Double> getEncoderVelocitySignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.encoderVelocitySignal());
     }
 
-    public StatusSignal<Double> getSteerEncoderVoltageSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
+    public StatusSignal<Double> getEncoderVoltageSignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.encoderVelocitySignal());
     }
 
 

@@ -42,7 +42,7 @@ public class ModuleUtils {
             case BACK_LEFT -> SwerveConstants.BACK_LEFT_TRANSLATION2D;
             case BACK_RIGHT -> SwerveConstants.BACK_RIGHT_TRANSLATION2D;
         };
-    } // maybe move place
+    }
 
 
     public static double toDriveMeters(Rotation2d revolutions) {

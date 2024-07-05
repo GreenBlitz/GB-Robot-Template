@@ -44,7 +44,7 @@ public class Module {
     }
 
     private void reportAlerts() {
-        if (!moduleInputs.isSteerEncoderConnected) {
+        if (!moduleInputs.isEncoderConnected) {
             Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "steer encoder disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputs.isSteerMotorConnected) {

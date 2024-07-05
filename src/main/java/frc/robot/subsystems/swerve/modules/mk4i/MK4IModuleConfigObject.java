@@ -12,7 +12,7 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 class MK4IModuleConfigObject {
 
     private final TalonFXWrapper driveMotor, steerMotor;
-    private final CANcoder steerEncoder;
+    private final CANcoder encoder;
 
     private final MK4IModuleRecords.MK4IModuleMotors moduleMotors;
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
@@ -20,9 +20,9 @@ class MK4IModuleConfigObject {
     protected MK4IModuleConfigObject(
             CTREDeviceID steerMotorDeviceID, boolean isSteerMotorInverted,
             CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted,
-            CTREDeviceID steerEncoderID
+            CTREDeviceID encoderID
     ) {
-        this.steerEncoder = new CANcoder(steerEncoderID.ID(), steerEncoderID.busChain().getChainName());
+        this.encoder = new CANcoder(encoderID.ID(), encoderID.busChain().getChainName());
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
                 new TalonFXWrapper(driveMotorDeviceID),
                 new TalonFXWrapper(steerMotorDeviceID)
@@ -31,9 +31,9 @@ class MK4IModuleConfigObject {
         this.driveMotor = moduleMotors.driveMotor();
 
         this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(
-                steerEncoder.getAbsolutePosition(),
-                steerEncoder.getVelocity(),
-                steerEncoder.getSupplyVoltage(),
+                encoder.getAbsolutePosition(),
+                encoder.getVelocity(),
+                encoder.getSupplyVoltage(),
 
                 driveMotor.getPosition(),
                 driveMotor.getVelocity(),
@@ -61,23 +61,23 @@ class MK4IModuleConfigObject {
 
     private void configEncoder() {
         MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
-        steerEncoder.getConfigurator().refresh(magnetSensorConfigs);
+        encoder.getConfigurator().refresh(magnetSensorConfigs);
         MK4IModuleConstants.ENCODER_CONFIG.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-        steerEncoder.getConfigurator().apply(MK4IModuleConstants.ENCODER_CONFIG);
+        encoder.getConfigurator().apply(MK4IModuleConstants.ENCODER_CONFIG);
     }
 
     private void optimizeBusAndSignalOfEncoder() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
-                moduleSignals.steerEncoderAbsolutePositionSignal()
+                moduleSignals.encoderAbsolutePositionSignal()
         );
         BaseStatusSignal.setUpdateFrequencyForAll(
                 RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-                moduleSignals.steerEncoderVelocitySignal(),
-                moduleSignals.steerEncoderVoltageSignal()
+                moduleSignals.encoderVelocitySignal(),
+                moduleSignals.encoderVoltageSignal()
         );
 
-        steerEncoder.optimizeBusUtilization();
+        encoder.optimizeBusUtilization();
     }
 
     private void configDriveMotor() {
@@ -102,7 +102,7 @@ class MK4IModuleConfigObject {
 
     private void configSteerMotor() {
         TalonFXConfiguration configuration = MK4IModuleConstants.STEER_MOTOR_CONFIG;
-        configuration.Feedback.FeedbackRemoteSensorID = steerEncoder.getDeviceID();
+        configuration.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
         steerMotor.applyConfiguration(configuration);
     }
 
@@ -118,8 +118,8 @@ class MK4IModuleConfigObject {
         steerMotor.optimizeBusUtilization();
     }
 
-    public CANcoder getSteerEncoder() {
-        return steerEncoder;
+    public CANcoder getEncoder() {
+        return encoder;
     }
 
     public MK4IModuleRecords.MK4IModuleMotors getMotors() {

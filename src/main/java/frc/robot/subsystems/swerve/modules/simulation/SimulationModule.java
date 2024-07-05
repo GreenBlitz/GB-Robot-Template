@@ -74,17 +74,17 @@ public class SimulationModule implements IModule {
 
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
-        inputs.getSteerMotorInputs().steerMotorAngle = simulationModuleStatus.getSteerPosition();
-        inputs.getSteerMotorInputs().steerMotorVelocity = simulationModuleStatus.getSteerVelocity();
-        inputs.getSteerMotorInputs().steerMotorVoltage = simulationModuleStatus.getSteerVoltage();
-        inputs.getSteerMotorInputs().odometrySamplesSteerAngle = new Rotation2d[]{inputs.getSteerMotorInputs().steerMotorAngle};
+        inputs.getSteerMotorInputs().angle = simulationModuleStatus.getSteerPosition();
+        inputs.getSteerMotorInputs().velocity = simulationModuleStatus.getSteerVelocity();
+        inputs.getSteerMotorInputs().voltage = simulationModuleStatus.getSteerVoltage();
+        inputs.getSteerMotorInputs().odometrySamplesAngle = new Rotation2d[]{inputs.getSteerMotorInputs().angle};
 
-        inputs.getDriveMotorInputs().driveMotorAngleWithoutCoupling = simulationModuleStatus.getDrivePositionAngle();
-        inputs.getDriveMotorInputs().driveMotorVelocityWithoutCoupling = simulationModuleStatus.getDriveVelocityAnglePerSecond();
-        inputs.getDriveMotorInputs().driveMotorCurrent = simulationModuleStatus.getDriveCurrent();
-        inputs.getDriveMotorInputs().driveMotorVoltage = simulationModuleStatus.getDriveVoltage();
-        inputs.getDriveMotorInputs().odometrySamplesDriveDistance =
-                new Rotation2d[]{inputs.getDriveMotorInputs().driveMotorAngleWithoutCoupling};
+        inputs.getDriveMotorInputs().angleWithoutCoupling = simulationModuleStatus.getDrivePositionAngle();
+        inputs.getDriveMotorInputs().velocityWithoutCoupling = simulationModuleStatus.getDriveVelocityAnglePerSecond();
+        inputs.getDriveMotorInputs().current = simulationModuleStatus.getDriveCurrent();
+        inputs.getDriveMotorInputs().voltage = simulationModuleStatus.getDriveVoltage();
+        inputs.getDriveMotorInputs().odometrySamplesDistance =
+                new Rotation2d[]{inputs.getDriveMotorInputs().angleWithoutCoupling};
     }
 
 }

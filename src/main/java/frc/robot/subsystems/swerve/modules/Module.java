@@ -36,21 +36,21 @@ public class Module {
     private void updateInputs() {
         module.updateInputs(moduleInputsContainer);
 
-        moduleInputsContainer.getDriveMotorInputs().driveMotorDistanceMeters = getDriveDistanceMeters();
-        moduleInputsContainer.getDriveMotorInputs().driveMotorVelocityMeters = getDriveVelocityMetersPerSecond();
+        moduleInputsContainer.getDriveMotorInputs().distanceMeters = getDriveDistanceMeters();
+        moduleInputsContainer.getDriveMotorInputs().velocityMeters = getDriveVelocityMetersPerSecond();
         moduleInputsContainer.getModuleInputs().isAtTargetState = isAtTargetState();
 
         moduleInputsContainer.processInputs(ModuleUtils.getLoggingPath(moduleName));
     }
 
     private void reportAlerts() {
-        if (!moduleInputsContainer.getEncoderInputs().isEncoderConnected) {
+        if (!moduleInputsContainer.getEncoderInputs().isConnected) {
             Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "encoder disconnect", Timer.getFPGATimestamp());
         }
-        if (!moduleInputsContainer.getSteerMotorInputs().isSteerMotorConnected) {
+        if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
             Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "steer motor disconnect", Timer.getFPGATimestamp());
         }
-        if (!moduleInputsContainer.getDriveMotorInputs().isDriveMotorConnected) {
+        if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
             Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "drive motor disconnect", Timer.getFPGATimestamp());
         }
     }
@@ -83,8 +83,8 @@ public class Module {
      */
     public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
-                ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().odometrySamplesDriveDistance[odometryUpdateIndex]),
-                moduleInputsContainer.getSteerMotorInputs().odometrySamplesSteerAngle[odometryUpdateIndex]
+                ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().odometrySamplesDistance[odometryUpdateIndex]),
+                moduleInputsContainer.getSteerMotorInputs().odometrySamplesAngle[odometryUpdateIndex]
         );
     }
 
@@ -101,15 +101,15 @@ public class Module {
     }
 
     public Rotation2d getDriveDistanceAngle() {
-        return moduleInputsContainer.getDriveMotorInputs().driveMotorAngleWithoutCoupling;
+        return moduleInputsContainer.getDriveMotorInputs().angleWithoutCoupling;
     }
 
     private double getDriveVelocityMetersPerSecond() {
-        return ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().driveMotorVelocityWithoutCoupling);
+        return ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().velocityWithoutCoupling);
     }
 
     private Rotation2d getCurrentAngle() {
-        return moduleInputsContainer.getSteerMotorInputs().steerMotorAngle;
+        return moduleInputsContainer.getSteerMotorInputs().angle;
     }
 
 
@@ -127,7 +127,7 @@ public class Module {
     }
 
     public boolean isAtAngle(Rotation2d targetAngle) {
-        boolean isStopping = moduleInputsContainer.getSteerMotorInputs().steerMotorVelocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
+        boolean isStopping = moduleInputsContainer.getSteerMotorInputs().velocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
         if (!isStopping){
             return false;
         }

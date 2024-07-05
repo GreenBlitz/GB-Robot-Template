@@ -164,7 +164,7 @@ public class Swerve extends GBSubsystem {
     }
 
     @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "TargetModulesStates")
-    private SwerveModuleState[] getTargetStates() {
+    public SwerveModuleState[] getTargetStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
         for (int i = 0; i < modules.length; i++) {
@@ -175,7 +175,7 @@ public class Swerve extends GBSubsystem {
     }
 
     @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "CurrentModulesStates")
-    private SwerveModuleState[] getModulesStates() {
+    public SwerveModuleState[] getModulesStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
         for (int i = 0; i < modules.length; i++) {
@@ -192,11 +192,11 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    protected Rotation2d[] getModulesDriveDistances() {
+    public Rotation2d[] getModulesDriveDistances() {
         return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
     }
 
-    private SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
+    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
         SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
             swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
@@ -250,13 +250,13 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    public void pointWheels(Rotation2d targetAngle, boolean optimize) {
+    protected void pointWheels(Rotation2d targetAngle, boolean optimize) {
         for (Module module : modules) {
             module.pointToAngle(targetAngle, optimize);
         }
     }
 
-    public void pointWheelsInX() {
+    protected void pointWheelsInX() {
         SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
         SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
 
@@ -266,7 +266,7 @@ public class Swerve extends GBSubsystem {
         modules[3].setTargetState(frontLeftBackRight);
     }
 
-    public void pointWheelsInCircle() {
+    protected void pointWheelsInCircle() {
         SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
         SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
 
@@ -282,7 +282,7 @@ public class Swerve extends GBSubsystem {
      *
      * @param omegaPerSec - velocity to run the swerve
      */
-    public void runWheelRadiusCharacterization(Rotation2d omegaPerSec) {
+    protected void runWheelRadiusCharacterization(Rotation2d omegaPerSec) {
         driveByState(new ChassisSpeeds(0, 0, omegaPerSec.getRadians()));
     }
 
@@ -291,7 +291,7 @@ public class Swerve extends GBSubsystem {
      *
      * @param voltage - voltage to run the swerve module steer
      */
-    public void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
+    protected void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
         modules[module.getIndex()].runSteerMotorByVoltage(voltage);
     }
 
@@ -300,7 +300,7 @@ public class Swerve extends GBSubsystem {
      *
      * @param voltage - voltage to run the swerve module drive
      */
-    public void runModulesDriveByVoltage(double voltage) {
+    protected void runModulesDriveByVoltage(double voltage) {
         for (Module module : modules) {
             module.runDriveMotorByVoltage(voltage);
         }
@@ -360,6 +360,16 @@ public class Swerve extends GBSubsystem {
         for (Module currentModule : modules) {
             currentModule.stop();
         }
+    }
+
+    public boolean isAtAngle(Rotation2d targetAngle) {
+        double angleDifferenceDeg = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
+        boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
+
+        double currentRotationVelocityRadians = getSelfRelativeVelocity().omegaRadiansPerSecond;
+        boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+
+        return isAtAngle && isStopping;
     }
 
 
@@ -425,16 +435,6 @@ public class Swerve extends GBSubsystem {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
-    }
-
-    public boolean isAtAngle(Rotation2d targetAngle) {
-        double angleDifferenceDeg = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
-        boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
-
-        double currentRotationVelocityRadians = getSelfRelativeVelocity().omegaRadiansPerSecond;
-        boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
-
-        return isAtAngle && isStopping;
     }
 
 }

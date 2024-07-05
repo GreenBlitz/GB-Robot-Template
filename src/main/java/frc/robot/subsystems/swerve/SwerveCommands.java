@@ -29,7 +29,7 @@ public class SwerveCommands {
 
     private static final Swerve swerve = Robot.swerve;
 
-    private static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(// todo : maybe move place
+    public static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(
             true,
             swerve,
             voltage -> swerve.runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
@@ -37,7 +37,7 @@ public class SwerveCommands {
             SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
     );
 
-    private static final SysIdCalibrator DRIVE_CALIBRATOR = new SysIdCalibrator(// todo : maybe move place
+    public static final SysIdCalibrator DRIVE_CALIBRATOR = new SysIdCalibrator(
             true,
             swerve,
             swerve::runModulesDriveByVoltage,

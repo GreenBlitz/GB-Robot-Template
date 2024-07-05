@@ -9,9 +9,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Robot;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimation.poseestimator.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroFactory;
@@ -29,6 +29,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 
 public class Swerve extends GBSubsystem {
@@ -39,13 +40,16 @@ public class Swerve extends GBSubsystem {
     private final ISwerveGyro gyro;
     private final Module[] modules;
     private final SwerveState currentState;
+    private Supplier<Rotation2d> currentAngleSupplier;
 
     public Swerve() {
         setName(getClass().getSimpleName());
+
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
         this.modules = getModules();
         this.gyro = SwerveGyroFactory.createSwerveGyro();
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
+        this.currentAngleSupplier = this::getAbsoluteHeading;
     }
 
     private Module[] getModules() {
@@ -113,6 +117,10 @@ public class Swerve extends GBSubsystem {
         for (Module currentModule : modules) {
             currentModule.setBrake(brake);
         }
+    }
+
+    public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier){
+        this.currentAngleSupplier = currentAngleSupplier;
     }
 
     public void setHeading(Rotation2d heading) {
@@ -220,7 +228,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
-        return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), Robot.poseEstimator.getCurrentPose().getRotation());
+        return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), currentAngleSupplier.get());
     }
 
     private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
@@ -232,8 +240,8 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    public static Rotation2d getAllianceRelativeAngle() {
-        Rotation2d currentAngle = Robot.poseEstimator.getCurrentPose().getRotation();
+    public Rotation2d getAllianceRelativeAngle() {
+        Rotation2d currentAngle = currentAngleSupplier.get();
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
     }
 
@@ -406,7 +414,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
-        Rotation2d currentAngle = Robot.poseEstimator.getCurrentPose().getRotation();
+        Rotation2d currentAngle = currentAngleSupplier.get();
         return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()
@@ -417,6 +425,16 @@ public class Swerve extends GBSubsystem {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
+    }
+
+    public boolean isAtAngle(Rotation2d targetAngle) {
+        double angleDifferenceDeg = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
+        boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
+
+        double currentRotationVelocityRadians = getSelfRelativeVelocity().omegaRadiansPerSecond;
+        boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+
+        return isAtAngle && isStopping;
     }
 
 }

@@ -28,18 +28,9 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import java.util.NoSuchElementException;
 
 
-public class PoseEstimationCalculator {
+public class PoseCalculator {
 
     private static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
-
-    private static PoseEstimationCalculator instance;
-
-    public static PoseEstimationCalculator getInstance() {
-        if (instance == null) {
-            instance = new PoseEstimationCalculator();
-        }
-        return instance;
-    }
 
     // Pose Estimation Members
     private Pose2d odometryPose = new Pose2d();
@@ -59,7 +50,7 @@ public class PoseEstimationCalculator {
     private Rotation2d lastGyroAngle = new Rotation2d();
     private boolean isFirstOdometryUpdate = true;
 
-    private PoseEstimationCalculator() {
+    public PoseCalculator() {
         for (int i = 0; i < 3; ++i) {
             qStdDevs.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
         }

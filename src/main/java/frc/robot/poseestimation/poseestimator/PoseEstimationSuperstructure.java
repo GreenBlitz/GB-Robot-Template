@@ -10,22 +10,23 @@ import org.littletonrobotics.junction.Logger;
 
 public class PoseEstimationSuperstructure {
 
-    private final PoseEstimationCalculator poseEstimationCalculator;
+    private final PoseCalculator poseCalculator;
     private final Swerve swerve;
 
-    public PoseEstimationSuperstructure(Swerve swerve) {
-        this.poseEstimationCalculator = PoseEstimationCalculator.getInstance();
+    public PoseEstimationSuperstructure(PoseCalculator poseCalculator, Swerve swerve) {
+        this.poseCalculator = poseCalculator;
         this.swerve = swerve;
+        swerve.setCurrentAngleSupplier(() -> getCurrentPose().getRotation());
         resetPose(PoseEstimatorConstants.DEFAULT_POSE);
     }
 
     public Pose2d getCurrentPose(){
-        return poseEstimationCalculator.getEstimatedPose();
+        return poseCalculator.getEstimatedPose();
     }
 
     public void resetPose(Pose2d currentPose) {
         swerve.setHeading(currentPose.getRotation());
-        poseEstimationCalculator.resetPose(currentPose);
+        poseCalculator.resetPose(currentPose);
     }
 
     public void resetHeading(Rotation2d targetAngle) {
@@ -46,7 +47,7 @@ public class PoseEstimationSuperstructure {
      */
     public void updatePoseEstimatorOdometry(OdometryObservation[] odometryObservations) {
         for (OdometryObservation odometryObservation : odometryObservations) {
-            poseEstimationCalculator.addOdometryObservation(odometryObservation);
+            poseCalculator.addOdometryObservation(odometryObservation);
         }
     }
 

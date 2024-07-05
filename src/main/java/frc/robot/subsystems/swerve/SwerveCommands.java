@@ -131,7 +131,7 @@ public class SwerveCommands {
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 () -> swerve.rotateToAngle(targetAngle),
                 interrupted -> {},
-                () -> Robot.poseEstimator.isAtAngle(targetAngle),
+                () -> swerve.isAtAngle(targetAngle),
                 swerve
         );
         rotateToAngle.setName("Rotate Around " + rotateAxis.name() + "To " + targetAngle.getDegrees());

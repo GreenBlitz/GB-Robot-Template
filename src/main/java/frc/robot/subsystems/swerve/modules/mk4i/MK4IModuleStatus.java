@@ -26,6 +26,10 @@ class MK4IModuleStatus {
         return Rotation2d.fromRotations(getEncoderAbsolutePositionSignal(refresh).getValue());
     }
 
+    public Rotation2d getEncoderVelocity(boolean refresh) {
+        return Rotation2d.fromRotations(getEncoderVelocitySignal(refresh).getValue());
+    }
+
     private StatusSignal<Double> getEncoderAbsolutePositionSignal(boolean refresh) {
         return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.encoderAbsolutePositionSignal());
     }

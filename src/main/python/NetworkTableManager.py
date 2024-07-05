@@ -8,11 +8,12 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# If this library is not installed, don't install ntcore but pyntcore.
-import ntcore
 import logging
 import sys
 import time
+
+# If this library is not installed, don't install ntcore but pyntcore.
+import ntcore
 
 __CONNECTION_TIMEOUT_SECONDS = 30
 __CONNECTION_COOLDOWN_SECONDS = 0.1

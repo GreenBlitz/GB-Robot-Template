@@ -71,6 +71,7 @@ public class Swerve extends GBSubsystem {
     public void subsystemPeriodic() {
         logState();
         logFieldRelativeVelocities();
+        logNumberOfOdometrySamples();
     }
 
     private void logState() {
@@ -89,6 +90,10 @@ public class Swerve extends GBSubsystem {
         Logger.recordOutput(SwerveConstants.SWERVE_VELOCITY_LOG_PATH + "Magnitude", getDriveMagnitude(fieldRelativeSpeeds));
     }
 
+    private void logNumberOfOdometrySamples() {
+        Logger.recordOutput(getLogPath() + "Odometry Samples", getNumberOfOdometrySamples());
+    }
+
     public void updateInputs() {
         ODOMETRY_LOCK.lock(); {
             gyro.updateInputs(gyroInputs);
@@ -98,7 +103,7 @@ public class Swerve extends GBSubsystem {
                 currentModule.logStatus();
             }
         } ODOMETRY_LOCK.unlock();
-    }
+    } // todo: fix
 
 
     protected void initializeDrive(SwerveState updatedState) {
@@ -204,18 +209,27 @@ public class Swerve extends GBSubsystem {
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }
 
-    public OdometryObservation[] getAllOdometryObservations() {
-        double[] timestamps = gyroInputs.odometryUpdatesTimestamp;
-        Rotation2d[] gyroRotations = gyroInputs.odometryUpdatesYaw;
-        int odometryUpdates = timestamps.length;
-
-        SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[odometryUpdates];
-        for (int i = 0; i < odometryUpdates; i++) {
+    public SwerveDriveWheelPositions[] getAllSwerveWheelPositionSamples(){
+        int numberOfOdometrySamples = getNumberOfOdometrySamples();
+        SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[numberOfOdometrySamples];
+        for (int i = 0; i < numberOfOdometrySamples; i++) {
             swerveWheelPositions[i] = getSwerveWheelPositions(i);
         }
+        return swerveWheelPositions;
+    }
 
-        OdometryObservation[] odometryObservations = new OdometryObservation[odometryUpdates];
-        for (int i = 0; i < odometryUpdates; i++) {
+    public int getNumberOfOdometrySamples(){
+        return gyroInputs.odometrySamplesTimestamp.length;
+    }
+
+    public OdometryObservation[] getAllOdometryObservations() {
+        int odometrySamples = getNumberOfOdometrySamples();
+        double[] timestamps = gyroInputs.odometrySamplesTimestamp;
+        Rotation2d[] gyroRotations = gyroInputs.odometrySamplesYaw;
+        SwerveDriveWheelPositions[] swerveWheelPositions = getAllSwerveWheelPositionSamples();
+
+        OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
+        for (int i = 0; i < odometrySamples; i++) {
             odometryObservations[i] = new OdometryObservation(swerveWheelPositions[i], gyroRotations[i], timestamps[i]);
         }
 
@@ -236,7 +250,7 @@ public class Swerve extends GBSubsystem {
             return chassisSpeeds;
         }
         else {
-            return fieldRelativeSpeedsToSelfRelativeSpeeds(chassisSpeeds);
+            return fieldRelativeToSelfRelativeSpeeds(chassisSpeeds, getAllianceRelativeAngle());
         }
     }
 
@@ -311,7 +325,7 @@ public class Swerve extends GBSubsystem {
         double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getX(), targetBluePose.getX());
         double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getY(), targetBluePose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
-        Rotation2d thetaSpeed = calculateProfiledAngleSpeedToTargetAngle(targetBluePose.getRotation());
+        Rotation2d thetaSpeed = calculateProfiledAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
 
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
@@ -325,14 +339,14 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
-                calculateProfiledAngleSpeedToTargetAngle(targetAngle).getRadians()
+                calculateProfiledAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetAngle).getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);
     }
 
 
     protected void drive(double xPower, double yPower, double thetaPower) {
-        driveByState(powersToSpeeds(xPower, yPower, thetaPower));
+        driveByState(powersToSpeeds(xPower, yPower, thetaPower, currentState));
     }
 
     private void driveByState(ChassisSpeeds chassisSpeeds) {
@@ -341,7 +355,7 @@ public class Swerve extends GBSubsystem {
 
     public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
-        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, swerveState);
+        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState);
         chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {
@@ -354,7 +368,7 @@ public class Swerve extends GBSubsystem {
                 swerveState.getRotateAxis().getRotateAxis()
         );
         setTargetModuleStates(swerveModuleStates);
-    }
+    } // todo: private, short maybe
 
     protected void stop() {
         for (Module currentModule : modules) {
@@ -373,12 +387,13 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds, SwerveState swerveState) {
+    //todo: make shorter
+    private static ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds, Rotation2d currentAngle, SwerveState swerveState) {
         if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
             return currentSpeeds;
         }
         //PID
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(swerveState.getAimAssist().targetAngleSupplier.get());
+        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
 
         //Magnitude Factor
         double driveMagnitude = getDriveMagnitude(currentSpeeds);
@@ -400,15 +415,15 @@ public class Swerve extends GBSubsystem {
         return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond, clampedAngularVelocity);
     }
 
-    private ChassisSpeeds fieldRelativeSpeedsToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds) {
-        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getAllianceRelativeAngle());
+    private static ChassisSpeeds fieldRelativeToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
+        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
     }
 
-    private ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower) {
+    private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, SwerveState swerveState) {
         return new ChassisSpeeds(
-                xPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
-                yPower * currentState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
-                thetaPower * currentState.getDriveSpeed().maxRotationSpeedPerSecond.getRadians()
+                xPower * swerveState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
+                yPower * swerveState.getDriveSpeed().maxTranslationSpeedMetersPerSecond,
+                thetaPower * swerveState.getDriveSpeed().maxRotationSpeedPerSecond.getRadians()
         );
     }
 
@@ -423,8 +438,7 @@ public class Swerve extends GBSubsystem {
         return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
     }
 
-    private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d targetAngle) {
-        Rotation2d currentAngle = currentAngleSupplier.get();
+    private static Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
         return Rotation2d.fromDegrees(SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()

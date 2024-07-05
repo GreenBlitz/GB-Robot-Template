@@ -53,8 +53,8 @@ public class Pigeon2Gyro implements ISwerveGyro {
         inputs.accelerationY = gyroPigeon2Status.getYAccelerationSignal(false).getValue();
         inputs.accelerationZ = gyroPigeon2Status.getZAccelerationSignal(false).getValue();
 
-        inputs.odometryUpdatesYaw = yawQueue.stream().map(Rotation2d::fromDegrees).toArray(Rotation2d[]::new);
-        inputs.odometryUpdatesTimestamp = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
+        inputs.odometrySamplesYaw = yawQueue.stream().map(Rotation2d::fromDegrees).toArray(Rotation2d[]::new);
+        inputs.odometrySamplesTimestamp = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
 
         yawQueue.clear();
         timestampQueue.clear();

@@ -14,7 +14,7 @@ public class SwerveGyroInputs {
     public double accelerationY = 0;
     public double accelerationZ = 0;
 
-    public Rotation2d[] odometryUpdatesYaw = new Rotation2d[0];
-    public double[] odometryUpdatesTimestamp = new double[0];
+    public Rotation2d[] odometrySamplesYaw = new Rotation2d[0];
+    public double[] odometrySamplesTimestamp = new double[0];
 
 }

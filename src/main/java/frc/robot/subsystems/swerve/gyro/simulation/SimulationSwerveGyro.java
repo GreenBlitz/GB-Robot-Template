@@ -29,8 +29,8 @@ public class SimulationSwerveGyro implements ISwerveGyro {
         );
 
         inputs.gyroYaw = gyro.getGyroYaw();
-        inputs.odometryUpdatesYaw = new Rotation2d[]{inputs.gyroYaw};
-        inputs.odometryUpdatesTimestamp = new double[]{Timer.getFPGATimestamp()};
+        inputs.odometrySamplesYaw = new Rotation2d[]{inputs.gyroYaw};
+        inputs.odometrySamplesTimestamp = new double[]{Timer.getFPGATimestamp()};
     }
 
 }

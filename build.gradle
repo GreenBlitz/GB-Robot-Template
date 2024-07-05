@@ -167,9 +167,11 @@ tasks.register('installLocalGitHookSymlinks') {
                     Files.delete(link)
                 }
 
+                def rel = { f -> rootDir.toPath().relativize(f) }
                 Files.createSymbolicLink(link, target.toPath())
 
-                println("---Installed Symbolic Link ${rootDir.relativize(link)} -> ${rootDir.relativize(target)} ---")
+
+                println("---Installed Symbolic Link ${rel(link)} -> ${rel(target.toPath())} ---")
             }
         }
     }
@@ -184,11 +186,19 @@ tasks.register('configLocalGitBlameIgnoreRevsFile', Exec) {
     outputs.file('.git/config')
 }
 
-tasks.matching { task -> task.group != gitConfig }
-.configureEach { task ->
-    task.dependsOn installLocalGitHookSymlinks, configLocalGitBlameIgnoreRevsFile
-}
+tasks
+        .matching { it.group != gitConfig }
+        .configureEach {
+            it.dependsOn tasks.matching {
+                it.group == gitConfig
+            }
+        }
 
+if (System.getenv().containsKey('CI') || !file('.git').isDirectory()) {
+    tasks
+            .matching { it.group == gitConfig }
+            .configureEach { it.enabled = false }
+}
 
 tasks.register('runComputerPrograms', JavaExec) {
     group = "Execution"

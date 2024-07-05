@@ -224,7 +224,8 @@ public class SwerveCommands {
     private static Command pidToPose(Pose2d targetPose) {
         return new SequentialCommandGroup(
                 new InstantCommand(swerve::resetRotationController),
-                new RunCommand(() -> swerve.pidToPose(targetPose)).until(() -> Robot.poseEstimator.isAtPose(targetPose))
+                new RunCommand(() -> swerve.pidToPose(Robot.poseEstimator.getCurrentPose(), targetPose))
+                        .until(() -> Robot.poseEstimator.isAtPose(targetPose))
         );
     }
 

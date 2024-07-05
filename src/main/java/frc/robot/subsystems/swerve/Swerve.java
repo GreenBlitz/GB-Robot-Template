@@ -299,9 +299,7 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    protected void pidToPose(Pose2d targetBluePose) {
-        Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
-
+    protected void pidToPose(Pose2d currentBluePose, Pose2d targetBluePose) {
         double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getX(), targetBluePose.getX());
         double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getY(), targetBluePose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;

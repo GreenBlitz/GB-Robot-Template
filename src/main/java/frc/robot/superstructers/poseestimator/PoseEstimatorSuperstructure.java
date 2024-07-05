@@ -1,20 +1,22 @@
-package frc.robot.poseestimation.poseestimator;
+package frc.robot.superstructers.poseestimator;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimation.poseestimator.PoseCalculator;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
 
-public class PoseEstimationSuperstructure {
+public class PoseEstimatorSuperstructure {
 
     private final PoseCalculator poseCalculator;
     private final Swerve swerve;
 
-    public PoseEstimationSuperstructure(PoseCalculator poseCalculator, Swerve swerve) {
-        this.poseCalculator = poseCalculator;
+    public PoseEstimatorSuperstructure(Swerve swerve) {
+        this.poseCalculator = new PoseCalculator(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS, SwerveConstants.KINEMATICS);
         this.swerve = swerve;
         swerve.setCurrentAngleSupplier(() -> getCurrentPose().getRotation());
         resetPose(PoseEstimatorConstants.DEFAULT_POSE);
@@ -37,6 +39,10 @@ public class PoseEstimationSuperstructure {
         Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Estimated Pose", getCurrentPose());
     }
 
+    private void logCurrentOdometryPose(){
+        Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Odometry Pose", getCurrentPose());
+    }
+
 
     /**
      * Updates the pose estimator with the given swerve wheel positions and gyro rotations.
@@ -54,7 +60,9 @@ public class PoseEstimationSuperstructure {
     public void updatePoseEstimator(){
         swerve.updateInputs();
         updatePoseEstimatorOdometry(swerve.getAllOdometryObservations());
+
         logCurrentPose();
+        logCurrentOdometryPose();
     }
 
 

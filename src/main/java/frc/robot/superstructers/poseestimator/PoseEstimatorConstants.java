@@ -1,4 +1,4 @@
-package frc.robot.poseestimation.poseestimator;
+package frc.robot.superstructers.poseestimator;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -19,7 +19,6 @@ public class PoseEstimatorConstants {
      * Increase these numbers to trust the estimate less.
      */
     protected static final Vector<N3> ODOMETRY_STANDARD_DEVIATIONS = VecBuilder.fill(0.003, 0.003, 0.0002);
-
 
     protected static final Pose2d DEFAULT_POSE = new Pose2d(2, 5, new Rotation2d());
 

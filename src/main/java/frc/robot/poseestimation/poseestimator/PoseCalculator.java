@@ -22,8 +22,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.poseestimation.observations.VisionObservation;
-import frc.robot.subsystems.swerve.SwerveConstants;
-import org.littletonrobotics.junction.AutoLogOutput;
 
 import java.util.NoSuchElementException;
 
@@ -50,11 +48,11 @@ public class PoseCalculator {
     private Rotation2d lastGyroAngle = new Rotation2d();
     private boolean isFirstOdometryUpdate = true;
 
-    public PoseCalculator() {
+    public PoseCalculator(Vector<N3> odometryStandardDeviations, SwerveDriveKinematics kinematics) {
         for (int i = 0; i < 3; ++i) {
-            qStdDevs.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
+            qStdDevs.set(i, 0, Math.pow(odometryStandardDeviations.get(i, 0), 2));
         }
-        kinematics = SwerveConstants.KINEMATICS;
+        this.kinematics = kinematics;
     }
 
     /**
@@ -157,7 +155,6 @@ public class PoseCalculator {
         return estimatedPose;
     }
 
-    @AutoLogOutput(key = PoseEstimatorConstants.LOG_PATH + "Odometry Pose")
     public Pose2d getOdometryPose() {
         return odometryPose;
     }

@@ -29,7 +29,7 @@ public class SwerveCommands {
 
     private static final Swerve swerve = Robot.swerve;
 
-    public static final SysIdCalibrator STEER_CALIBRATOR = new SysIdCalibrator(
+    public static final SysIdCalibrator steerCalibrator = new SysIdCalibrator(
             true,
             swerve,
             voltage -> swerve.runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
@@ -37,7 +37,7 @@ public class SwerveCommands {
             SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
     );
 
-    public static final SysIdCalibrator DRIVE_CALIBRATOR = new SysIdCalibrator(
+    public static final SysIdCalibrator driveCalibrator = new SysIdCalibrator(
             true,
             swerve,
             swerve::runModulesDriveByVoltage,
@@ -47,13 +47,13 @@ public class SwerveCommands {
 
 
     public static Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-        Command steerCalibration = STEER_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
+        Command steerCalibration = steerCalibrator.getSysIdCommand(isQuasistatic, direction);
         steerCalibration.setName("Steer Calibration");
         return steerCalibration;
     }
 
     public static Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-        Command sysIdCommand = DRIVE_CALIBRATOR.getSysIdCommand(isQuasistatic, direction);
+        Command sysIdCommand = driveCalibrator.getSysIdCommand(isQuasistatic, direction);
         sysIdCommand.getRequirements().clear();
 
         Command driveCalibration = new SequentialCommandGroup(

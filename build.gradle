@@ -231,7 +231,6 @@ tasks.register('SetConnectionTypeIP') {
 }
 
 compileJava.finalizedBy checkAkitInstall
-// build.dependsOn installLocalGitHookScripts configLocalGitBlameIgnoreRevsFile
 discoverroborio.finalizedBy SetConnectionTypeIP
 
 

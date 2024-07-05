@@ -11,11 +11,11 @@ RESET=$(printf '\033[0m')
 
 status=0
 
-test -f .pre_commit_head || exit 0
+test -f .pre_commit_head || exit 0 # This will only happen if `git commit` was called with `--no-verify`.
 pre_commit_head=$(cat .pre_commit_head)
 rm .pre_commit_head
 
-# Keep unstaged files somewhere safe
+# Keep unstaged files somewhere safe until we're done formatting (or exit early by other means)
 message="Post-commit script temporary store on $pre_commit_head"
 git stash push --all --include-untracked --message "$message" --quiet
 if [[ $(git stash list -n 1 --format=%s) =~ "$message" ]]; then # Actually pushed to the stash
@@ -29,7 +29,7 @@ if [ "$status" = 0 ]; then
     echo "${BOLD}${GREEN}Static analysis succeeded. Updating commit...${RESET}"
     # --no-verify is crucial! It ensures the scripts aren't infinitely called recursively.
     git commit --amend --all --no-edit --no-verify
-    echo "Pre-formatting commit details: (ignore)" # Git will print this no matter what
+    echo "${BOLD}Pre-formatting commit details: (ignore)${RESET}" # Git will print this no matter what
 else
     echo "${BOLD}${RED}Automatic Spotless formatting failed. Cancelling commit..."
     echo       "Please fix code formatting before committing.${RESET}"

@@ -134,10 +134,14 @@ public class MK4IModule implements IModule {
         inputs.getDriveMotorInputs().isConnected = mk4IModuleStatus.refreshDriveMotorSignals().isOK();
         // todo: delete and do resistance instead
         inputs.getDriveMotorInputs().angleWithoutCoupling = getDriveDistanceWithoutCoupling(
-                mk4IModuleStatus.getDriveMotorLatencyPosition(false).getRotations(), inputs.getSteerMotorInputs().angle);
+                mk4IModuleStatus.getDriveMotorLatencyPosition(false).getRotations(),
+                inputs.getSteerMotorInputs().angle
+        );
         // todo: delete and do resistance instead
         inputs.getDriveMotorInputs().velocityWithoutCoupling = getDriveDistanceWithoutCoupling(
-                mk4IModuleStatus.getDriveMotorLatencyVelocity(false).getRotations(), inputs.getSteerMotorInputs().velocity);
+                mk4IModuleStatus.getDriveMotorLatencyVelocity(false).getRotations(),
+                inputs.getSteerMotorInputs().velocity
+        );
         inputs.getDriveMotorInputs().acceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
         inputs.getDriveMotorInputs().current = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
         inputs.getDriveMotorInputs().voltage = mk4IModuleStatus.getDriveMotorVoltageSignal(false).getValue();

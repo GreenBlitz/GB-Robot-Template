@@ -83,8 +83,8 @@ public class SimulationModule implements IModule {
         inputs.steerMotorVelocity = simulationModuleStatus.getSteerVelocity();
         inputs.steerMotorVoltage = simulationModuleStatus.getSteerVoltage();
 
-        inputs.odometryUpdatesDriveDistance = new Rotation2d[]{inputs.driveMotorAngleWithoutCoupling};
-        inputs.odometryUpdatesSteerAngle = new Rotation2d[]{inputs.steerMotorAngle};
+        inputs.odometrySamplesDriveDistance = new Rotation2d[]{inputs.driveMotorAngleWithoutCoupling};
+        inputs.odometrySamplesSteerAngle = new Rotation2d[]{inputs.steerMotorAngle};
     }
 
 }

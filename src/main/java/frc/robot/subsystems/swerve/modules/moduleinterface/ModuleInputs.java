@@ -18,7 +18,7 @@ public class ModuleInputs {//todo-maybe organize in more inputs packages in the 
     public Rotation2d steerMotorVelocity = new Rotation2d();
     public Rotation2d steerMotorAcceleration = new Rotation2d();
     public double steerMotorVoltage = 0;
-    public Rotation2d[] odometryUpdatesSteerAngle = new Rotation2d[0];
+    public Rotation2d[] odometrySamplesSteerAngle = new Rotation2d[0];
 
     public boolean isDriveMotorConnected = true;// todo - test for each component
     public double driveMotorDistanceMeters = 0;
@@ -28,6 +28,6 @@ public class ModuleInputs {//todo-maybe organize in more inputs packages in the 
     public Rotation2d driveMotorAcceleration = new Rotation2d();
     public double driveMotorCurrent = 0;
     public double driveMotorVoltage = 0;
-    public Rotation2d[] odometryUpdatesDriveDistance = new Rotation2d[0];
+    public Rotation2d[] odometrySamplesDriveDistance = new Rotation2d[0];
 
 }

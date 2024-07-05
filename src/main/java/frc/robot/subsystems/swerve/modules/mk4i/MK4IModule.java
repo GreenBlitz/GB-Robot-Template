@@ -128,7 +128,7 @@ public class MK4IModule implements IModule {
         inputs.steerMotorVelocity = mk4IModuleStatus.getSteerMotorLatencyVelocity(false);
         inputs.steerMotorAcceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);
         inputs.steerMotorVoltage = mk4IModuleStatus.getSteerMotorVoltageSignal(false).getValue();
-        inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        inputs.odometrySamplesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
         steerPositionQueue.clear();
 
         inputs.isDriveMotorConnected = mk4IModuleStatus.refreshDriveMotorSignals().isOK();
@@ -145,9 +145,9 @@ public class MK4IModule implements IModule {
         inputs.driveMotorVoltage = mk4IModuleStatus.getDriveMotorVoltageSignal(false).getValue();
         // todo: delete and do resistance instead
         AtomicInteger count = new AtomicInteger();
-        inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(drive -> getDriveDistanceWithoutCoupling(
+        inputs.odometrySamplesDriveDistance = drivePositionQueue.stream().map(drive -> getDriveDistanceWithoutCoupling(
                 drive,
-                inputs.odometryUpdatesSteerAngle[count.getAndIncrement()]
+                inputs.odometrySamplesSteerAngle[count.getAndIncrement()]
         )).toArray(Rotation2d[]::new);
         drivePositionQueue.clear();
     }

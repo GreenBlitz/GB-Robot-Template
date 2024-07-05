@@ -37,7 +37,7 @@ public class Robot {
                 Robot.poseEstimator::getCurrentPose,
                 Robot.poseEstimator::resetPose,
                 Robot.swerve::getSelfRelativeVelocity,
-                (speeds) -> Robot.swerve.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
+                (speeds) -> Robot.swerve.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: use command
                 SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
                 DriverStationUtils::isRedAlliance,
                 Robot.swerve

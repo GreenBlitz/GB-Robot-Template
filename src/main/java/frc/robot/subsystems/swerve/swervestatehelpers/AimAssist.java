@@ -44,13 +44,10 @@ public enum AimAssist {
         this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
     }
 
-    //Todo - Maybe in kinda math util or pose util
     private interface Rotation2dSupplier extends Supplier<Rotation2d> {}
 
-    //Todo - Maybe in kinda math util or pose util
     private interface Translation3dSupplier extends Supplier<Translation3d> {}
 
-    //Todo - Maybe in kinda math util or pose util or swerveMath
     private Rotation2d getTargetAngleFromTargetTranslation(Translation3d targetPose2d) {
         Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
         Translation2d targetBluePose = targetPose2d.toTranslation2d();

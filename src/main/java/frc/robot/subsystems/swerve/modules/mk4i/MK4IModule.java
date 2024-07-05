@@ -118,39 +118,37 @@ public class MK4IModule implements IModule {
 
     @Override
     public void updateInputs(ModuleInputsAutoLogged inputs) {
-        inputs.allComponentsConnected = mk4IModuleStatus.refreshAllSignals().isOK();
-
+        inputs.isSteerEncoderConnected = mk4IModuleStatus.refreshSteerEncoderSignals().isOK();
         inputs.steerEncoderAngle = mk4IModuleStatus.getSteerEncoderAbsolutePosition(false);
         inputs.steerEncoderVelocity = Rotation2d.fromRotations(mk4IModuleStatus.getSteerEncoderVelocitySignal(false).getValue());
         inputs.steerEncoderVoltage = mk4IModuleStatus.getSteerEncoderVoltageSignal(false).getValue();
 
+        inputs.isSteerEncoderConnected = mk4IModuleStatus.refreshSteerMotorSignals().isOK();
         inputs.steerMotorAngle = mk4IModuleStatus.getSteerMotorLatencyPosition(false);
         inputs.steerMotorVelocity = mk4IModuleStatus.getSteerMotorLatencyVelocity(false);
         inputs.steerMotorAcceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);
         inputs.steerMotorVoltage = mk4IModuleStatus.getSteerMotorVoltageSignal(false).getValue();
+        inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        steerPositionQueue.clear();
 
-        inputs.driveMotorAngleWithoutCoupling = getDriveDistanceWithoutCoupling(
+        inputs.isDriveMotorConnected = mk4IModuleStatus.refreshDriveMotorSignals().isOK();
+        inputs.driveMotorAngleWithoutCoupling = getDriveDistanceWithoutCoupling(// todo: delete and do resistance instead
                 mk4IModuleStatus.getDriveMotorLatencyPosition(false).getRotations(),
                 inputs.steerMotorAngle
         );
-        inputs.driveMotorVelocityWithoutCoupling = getDriveDistanceWithoutCoupling(
+        inputs.driveMotorVelocityWithoutCoupling = getDriveDistanceWithoutCoupling(// todo: delete and do resistance instead
                 mk4IModuleStatus.getDriveMotorLatencyVelocity(false).getRotations(),
                 inputs.steerMotorVelocity
         );
         inputs.driveMotorAcceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
         inputs.driveMotorCurrent = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
         inputs.driveMotorVoltage = mk4IModuleStatus.getDriveMotorVoltageSignal(false).getValue();
-
-        inputs.odometryUpdatesSteerAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
-
         // todo: delete and do resistance instead
         AtomicInteger count = new AtomicInteger();
         inputs.odometryUpdatesDriveDistance = drivePositionQueue.stream().map(drive -> getDriveDistanceWithoutCoupling(
                 drive,
                 inputs.odometryUpdatesSteerAngle[count.getAndIncrement()]
         )).toArray(Rotation2d[]::new);
-
-        steerPositionQueue.clear();
         drivePositionQueue.clear();
     }
 

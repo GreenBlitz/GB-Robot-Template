@@ -14,6 +14,14 @@ class MK4IModuleStatus {
         this.moduleSignals = moduleSignals;
     }
 
+    public StatusCode refreshSteerEncoderSignals() {
+        return BaseStatusSignal.refreshAll(
+                getSteerEncoderAbsolutePositionSignal(false),
+                getSteerEncoderVelocitySignal(false),
+                getSteerEncoderVoltageSignal(false)
+        );
+    }
+
     public Rotation2d getSteerEncoderAbsolutePosition(boolean refresh) {
         return Rotation2d.fromRotations(getSteerEncoderAbsolutePositionSignal(refresh).getValue());
     }
@@ -30,6 +38,16 @@ class MK4IModuleStatus {
         return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerEncoderVelocitySignal());
     }
 
+
+    public StatusCode refreshDriveMotorSignals() {
+        return BaseStatusSignal.refreshAll(
+                getDriveMotorPositionSignal(false),
+                getDriveMotorVelocitySignal(false),
+                getDriveMotorAccelerationSignal(false),
+                getDriveMotorVoltageSignal(false),
+                getDriveMotorStatorCurrentSignal(false)
+        );
+    }
 
     public Rotation2d getDriveMotorLatencyPosition(boolean refresh) {
         return Rotation2d.fromRotations(BaseStatusSignal.getLatencyCompensatedValue(
@@ -70,6 +88,15 @@ class MK4IModuleStatus {
     }
 
 
+    public StatusCode refreshSteerMotorSignals() {
+        return BaseStatusSignal.refreshAll(
+                getSteerMotorPositionSignal(false),
+                getSteerMotorVelocitySignal(false),
+                getSteerMotorAccelerationSignal(false),
+                getSteerMotorVoltageSignal(false)
+        );
+    }
+
     public Rotation2d getSteerMotorLatencyPosition(boolean refresh) {
         return Rotation2d.fromRotations(BaseStatusSignal.getLatencyCompensatedValue(
                 getSteerMotorPositionSignal(refresh),
@@ -102,26 +129,6 @@ class MK4IModuleStatus {
 
     public StatusSignal<Double> getSteerMotorVoltageSignal(boolean refresh) {
         return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.steerMotorVoltageSignal());
-    }
-
-
-    public StatusCode refreshAllSignals() {
-        return BaseStatusSignal.refreshAll(
-                getSteerEncoderAbsolutePositionSignal(false),
-                getSteerEncoderVelocitySignal(false),
-                getSteerEncoderVoltageSignal(false),
-
-                getDriveMotorPositionSignal(false),
-                getDriveMotorVelocitySignal(false),
-                getDriveMotorAccelerationSignal(false),
-                getDriveMotorVoltageSignal(false),
-                getDriveMotorStatorCurrentSignal(false),
-
-                getSteerMotorPositionSignal(false),
-                getSteerMotorVelocitySignal(false),
-                getSteerMotorAccelerationSignal(false),
-                getSteerMotorVoltageSignal(false)
-        );
     }
 
 }

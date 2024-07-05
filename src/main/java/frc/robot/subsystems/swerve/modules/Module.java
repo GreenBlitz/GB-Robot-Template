@@ -44,8 +44,14 @@ public class Module {
     }
 
     private void reportAlerts() {
-        if (!moduleInputs.allComponentsConnected) {
-            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "componentDisconnectedAt", Timer.getFPGATimestamp());
+        if (!moduleInputs.isSteerEncoderConnected) {
+            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "steer encoder disconnect", Timer.getFPGATimestamp());
+        }
+        if (!moduleInputs.isSteerMotorConnected) {
+            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "steer motor disconnect", Timer.getFPGATimestamp());
+        }
+        if (!moduleInputs.isDriveMotorConnected) {
+            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "drive motor disconnect", Timer.getFPGATimestamp());
         }
     }
 

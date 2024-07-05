@@ -32,19 +32,7 @@ public class JoysticksBindings {
 
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        // bindings
-
-        //todo
-        // - lock x - CHECKED
-        // - point wheels - CHECKED
-        // - slow mode - CHECKED
-        // - follow path - CHECKED
-        // - closed loop drive - Doing Noises, Not Fun
-        // - rotate to angle - CHECKED
-        // - drive around wheel - CHECKED
-        // - rotate to angle around wheel - need to check on carpet
-        // - self relative drive - CHECKED
-        // - pose estimator resets - CHECKED
+        // bindings...
 
         // Reset Angle to 0
         usedJoystick.Y.onTrue(new InstantCommand(() -> Robot.poseEstimator.resetHeading(new Rotation2d())));
@@ -123,7 +111,7 @@ public class JoysticksBindings {
 
     private static void secondJoystickButtons() {
         SmartJoystick usedJoystick = SECOND_JOYSTICK;
-        // bindings
+        // bindings...
 
         usedJoystick.A.whileTrue(SwerveCommands.wheelRadiusCalibration());
         usedJoystick.B.whileTrue(SwerveCommands.steerCalibration(true, SysIdRoutine.Direction.kForward));
@@ -132,22 +120,22 @@ public class JoysticksBindings {
 
     private static void thirdJoystickButtons() {
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
-        // bindings
+        // bindings...
     }
 
     private static void fourthJoystickButtons() {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-        // bindings
+        // bindings...
     }
 
     private static void fifthJoystickButtons() {
         SmartJoystick usedJoystick = FIFTH_JOYSTICK;
-        // bindings
+        // bindings...
     }
 
     private static void sixthJoystickButtons() {
         SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-        // bindings
+        // bindings...
     }
 
 }

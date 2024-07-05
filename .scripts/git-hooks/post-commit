@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -e
+trap 'echo "${RED}post-commit script error on line ${LINENO}! Cannot continue.
+(If you have missing local changes, check the git stash).${RESET}"; git reset --soft "$pre_commit_head"' ERR
+
+RED=$(printf '\033[31m')
+GREEN=$(printf '\033[32m')
+BOLD=$(printf '\033[1m')
+RESET=$(printf '\033[0m')
+
+status=0
+
+test -f .pre_commit_head || exit 0
+pre_commit_head=$(cat .pre_commit_head)
+rm .pre_commit_head
+
+# Keep unstaged files somewhere safe
+message="Post-commit script temporary store on $pre_commit_head"
+git stash push --all --include-untracked --message "$message" --quiet
+if [[ $(git stash list -n 1 --format=%s) =~ "$message" ]]; then # Actually pushed to the stash
+    echo "Pushed $message"
+    trap "git stash pop --quiet" EXIT
+fi
+
+# Run spotlessCheck on committed files
+./gradlew spotlessApply || status=$?
+
+if [ "$status" = 0 ]; then
+    echo "${BOLD}${GREEN}Static analysis succeeded. Updating commit...${RESET}"
+    # --no-verify is crucial! It ensures the scripts aren't infinitely called recursively.
+    git commit --amend --all --no-edit --no-verify
+    echo "Pre-formatting commit details: (ignore)" # Git will print this no matter what
+else
+    echo "${BOLD}${RED}Automatic Spotless formatting failed. Cancelling commit..."
+    echo       "Please fix code formatting before committing.${RESET}"
+    echo "${BOLD}Help:${RESET} to autoformat all local changes, run \`./gradlew spotlessApply\`."
+    git reset --soft "$pre_commit_head"
+fi
+
+exit "$status"

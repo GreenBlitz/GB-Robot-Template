@@ -184,4 +184,5 @@ networktables.json
 simgui-ds.json
 simgui.json
 
-
+# Git hooks internal temporary file
+.pre_commit_head

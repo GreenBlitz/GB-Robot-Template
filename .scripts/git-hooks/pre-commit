@@ -1,31 +1,3 @@
 #!/bin/bash
 
-set -e
-trap 'echo "${RED}pre-commit script error on line ${LINE}! Cannot continue.
-(If you have missing local changes, check the git stash).${RESET}"' ERR
-
-RED=$(printf '\033[0;31m')
-GREEN=$(printf '\033[0;32m')
-BOLD=$(printf '\033[0;1m')
-RESET=$(printf '\033[0m')
-
-status=0
-
-# Keep unstaged files somewhere safe
-git stash push --keep-index --include-untracked --message="Pre-commit script temporary store" --quiet
-
-# Run spotlessCheck only on staged files
-./gradlew --quiet spotlessCheck > /dev/null 2>& 1 || status=$?
-
-# Restore all unstaged files
-git stash pop --quiet
-
-if [ "$status" = 0 ]; then
-    echo "${GREEN}Static analysis succeeded. Committing changes...${RESET}"
-else
-    echo  "${RED}Spotless check failed. Cancelling commit..."
-    echo        "Please fix code formatting before committing.${RESET}"
-    echo "${BOLD}Help:${RESET} to autoformat all local changes, run \`./gradlew spotlessApply\`."
-fi
-
-exit "$status"
+git rev-parse HEAD > .pre_commit_head

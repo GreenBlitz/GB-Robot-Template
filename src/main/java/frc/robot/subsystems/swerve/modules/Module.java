@@ -83,8 +83,8 @@ public class Module {
      */
     public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
-                ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().odometrySamplesDistance[odometryUpdateIndex]),
-                moduleInputsContainer.getSteerMotorInputs().odometrySamplesAngle[odometryUpdateIndex]
+                ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().distanceOdometrySamples[odometryUpdateIndex]),
+                moduleInputsContainer.getSteerMotorInputs().angleOdometrySamples[odometryUpdateIndex]
         );
     }
 

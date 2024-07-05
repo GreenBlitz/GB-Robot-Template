@@ -11,6 +11,6 @@ public class SteerMotorInputs {
     public Rotation2d velocity = new Rotation2d();
     public Rotation2d acceleration = new Rotation2d();
     public double voltage = 0;
-    public Rotation2d[] odometrySamplesAngle = new Rotation2d[0];
+    public Rotation2d[] angleOdometrySamples = new Rotation2d[0];
 
 }

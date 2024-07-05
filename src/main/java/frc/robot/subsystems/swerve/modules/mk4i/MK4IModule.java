@@ -128,30 +128,24 @@ public class MK4IModule implements IModule {
         inputs.getSteerMotorInputs().velocity = mk4IModuleStatus.getSteerMotorLatencyVelocity(false);
         inputs.getSteerMotorInputs().acceleration = mk4IModuleStatus.getSteerMotorAcceleration(false);
         inputs.getSteerMotorInputs().voltage = mk4IModuleStatus.getSteerMotorVoltageSignal(false).getValue();
-        inputs.getSteerMotorInputs().odometrySamplesAngle = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        inputs.getSteerMotorInputs().angleOdometrySamples = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
         steerPositionQueue.clear();
 
         inputs.getDriveMotorInputs().isConnected = mk4IModuleStatus.refreshDriveMotorSignals().isOK();
         // todo: delete and do resistance instead
         inputs.getDriveMotorInputs().angleWithoutCoupling = getDriveDistanceWithoutCoupling(
-                mk4IModuleStatus.getDriveMotorLatencyPosition(false).getRotations(),
-                inputs.getSteerMotorInputs().angle
-        );
+                mk4IModuleStatus.getDriveMotorLatencyPosition(false).getRotations(), inputs.getSteerMotorInputs().angle);
         // todo: delete and do resistance instead
         inputs.getDriveMotorInputs().velocityWithoutCoupling = getDriveDistanceWithoutCoupling(
-                mk4IModuleStatus.getDriveMotorLatencyVelocity(false).getRotations(),
-                inputs.getSteerMotorInputs().velocity
-        );
+                mk4IModuleStatus.getDriveMotorLatencyVelocity(false).getRotations(), inputs.getSteerMotorInputs().velocity);
         inputs.getDriveMotorInputs().acceleration = mk4IModuleStatus.getDriveMotorAcceleration(false);
         inputs.getDriveMotorInputs().current = mk4IModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
         inputs.getDriveMotorInputs().voltage = mk4IModuleStatus.getDriveMotorVoltageSignal(false).getValue();
         // todo: delete and do resistance instead
         AtomicInteger count = new AtomicInteger();
-        inputs.getDriveMotorInputs().odometrySamplesDistance =
+        inputs.getDriveMotorInputs().distanceOdometrySamples =
                 drivePositionQueue.stream().map(drive -> getDriveDistanceWithoutCoupling(
-                        drive,
-                        inputs.getSteerMotorInputs().odometrySamplesAngle[count.getAndIncrement()]
-        )).toArray(Rotation2d[]::new);
+                        drive, inputs.getSteerMotorInputs().angleOdometrySamples[count.getAndIncrement()])).toArray(Rotation2d[]::new);
         drivePositionQueue.clear();
     }
 

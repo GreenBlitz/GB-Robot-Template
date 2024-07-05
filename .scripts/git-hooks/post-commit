@@ -19,7 +19,6 @@ rm .pre_commit_head
 message="Post-commit script temporary store on $pre_commit_head"
 git stash push --all --include-untracked --message "$message" --quiet
 if [[ $(git stash list -n 1 --format=%s) =~ "$message" ]]; then # Actually pushed to the stash
-    echo "Pushed $message"
     trap "git stash pop --quiet" EXIT
 fi
 

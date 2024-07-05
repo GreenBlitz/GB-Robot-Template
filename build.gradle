@@ -226,7 +226,6 @@ discoverroborio.finalizedBy SetConnectionTypeIP
 
 
 // Spotless formatting
-project.build.dependsOn(spotlessApply)
 spotless {
     java {
         target fileTree(".") {

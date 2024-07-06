@@ -322,8 +322,8 @@ public class Swerve extends GBSubsystem {
 
 
     protected void pidToPose(Pose2d currentBluePose, Pose2d targetBluePose) {
-        double xSpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getX(), targetBluePose.getX());
-        double ySpeed = SwerveConstants.TRANSLATION_PID_CONTROLLER.calculate(currentBluePose.getY(), targetBluePose.getY());
+        double xSpeed = SwerveConstants.TRANSLATION_PID_METERS_CONTROLLER.calculate(currentBluePose.getX(), targetBluePose.getX());
+        double ySpeed = SwerveConstants.TRANSLATION_PID_METERS_CONTROLLER.calculate(currentBluePose.getY(), targetBluePose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
         Rotation2d thetaSpeed = calculateProfiledAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
 

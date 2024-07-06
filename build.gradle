@@ -144,6 +144,20 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 // Setup local git hooks
+
+def ensureSymlink(link, target) {
+    if (!Files.isSymbolicLink(link)) {
+        if (Files.exists(link)) {
+            Files.delete(link)
+        }
+
+        Files.createSymbolicLink(link, target)
+
+        def relative = { f -> rootDir.toPath().relativize(f) }
+        println("--- Installed Symbolic Link ${relative(link)} -> ${relative(target)} ---")
+    }
+}
+
 def gitConfig = 'Git Configuration'
 tasks.register('installLocalGitHookSymlinks') {
 	group = gitConfig
@@ -156,16 +170,7 @@ tasks.register('installLocalGitHookSymlinks') {
 		gitHooks.forEach { File target ->
 			def link = linkDir.resolve(target.toPath().getFileName())
 
-			if (!Files.isSymbolicLink(link)) {
-				if (Files.exists(link)) {
-					Files.delete(link)
-				}
-
-				Files.createSymbolicLink(link, target.toPath())
-
-				def rel = { f -> rootDir.toPath().relativize(f) }
-				println("---Installed Symbolic Link ${rel(link)} -> ${rel(target.toPath())} ---")
-			}
+			ensureSymlink(link, target.toPath())
 		}
 	}
 }

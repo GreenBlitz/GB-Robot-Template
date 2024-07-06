@@ -9,8 +9,8 @@ public class DriveMotorInputs {
     public boolean isConnected = true;// todo - test for each component
     public double distanceMeters = 0;
     public double velocityMeters = 0;
-    public Rotation2d angleWithoutCoupling = new Rotation2d();
-    public Rotation2d velocityWithoutCoupling = new Rotation2d();
+    public Rotation2d angle = new Rotation2d();
+    public Rotation2d velocity = new Rotation2d();
     public Rotation2d acceleration = new Rotation2d();
     public double current = 0;
     public double voltage = 0;

@@ -101,11 +101,11 @@ public class Module {
     }
 
     public Rotation2d getDriveDistanceAngle() {
-        return moduleInputsContainer.getDriveMotorInputs().angleWithoutCoupling;
+        return moduleInputsContainer.getDriveMotorInputs().angle;
     }
 
     private double getDriveVelocityMetersPerSecond() {
-        return ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().velocityWithoutCoupling);
+        return ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().velocity);
     }
 
     private Rotation2d getCurrentAngle() {

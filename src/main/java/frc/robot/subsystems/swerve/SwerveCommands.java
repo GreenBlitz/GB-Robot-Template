@@ -142,7 +142,7 @@ public class SwerveCommands {
     public static Command driveSlow(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         Command driveSlow = new InitExecuteCommand(
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)),
-                () -> swerve.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 swerve
         );
         driveSlow.setName("Slow Drive");
@@ -154,7 +154,7 @@ public class SwerveCommands {
     ) {
         Command driveWithAimAssist = new InitExecuteCommand(
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)),
-                () -> swerve.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 swerve
         );
         driveWithAimAssist.setName("Rotate to Speaker");
@@ -166,7 +166,7 @@ public class SwerveCommands {
     ) {
         Command driveAroundWheel = new InitExecuteCommand(
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())),
-                () -> swerve.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 swerve
         );
         driveAroundWheel.setName("Drive Around " + rotateAxis.get().name());
@@ -176,7 +176,7 @@ public class SwerveCommands {
     public static Command driveSelfRelative(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         Command driveSelfRelative = new InitExecuteCommand(
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER),
-                () -> swerve.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 swerve
         );
         driveSelfRelative.setName("Self Relative Drive");
@@ -186,7 +186,7 @@ public class SwerveCommands {
     public static Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         Command drive = new InitExecuteCommand(
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE),
-                () -> swerve.drive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 swerve
         );
         drive.setName("Default Drive");

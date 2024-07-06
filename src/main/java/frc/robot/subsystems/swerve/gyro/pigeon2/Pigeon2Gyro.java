@@ -3,9 +3,9 @@ package frc.robot.subsystems.swerve.gyro.pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Ports;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
-import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import org.littletonrobotics.junction.Logger;
 
@@ -53,8 +53,8 @@ public class Pigeon2Gyro implements ISwerveGyro {
         inputs.accelerationY = gyroPigeon2Status.getYAccelerationSignal(false).getValue();
         inputs.accelerationZ = gyroPigeon2Status.getZAccelerationSignal(false).getValue();
 
-        inputs.odometrySamplesYaw = yawQueue.stream().map(Rotation2d::fromDegrees).toArray(Rotation2d[]::new);
-        inputs.odometrySamplesTimestamp = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
+        inputs.yawOdometrySamples = yawQueue.stream().map(Rotation2d::fromDegrees).toArray(Rotation2d[]::new);
+        inputs.timestampOdometrySamples = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
 
         yawQueue.clear();
         timestampQueue.clear();

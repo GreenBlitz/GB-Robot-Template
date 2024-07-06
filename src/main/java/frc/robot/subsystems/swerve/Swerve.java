@@ -11,10 +11,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroFactory;
-import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
@@ -219,13 +219,13 @@ public class Swerve extends GBSubsystem {
     }
 
     public int getNumberOfOdometrySamples(){
-        return gyroInputs.odometrySamplesTimestamp.length;
+        return gyroInputs.timestampOdometrySamples.length;
     }
 
     public OdometryObservation[] getAllOdometryObservations() {
         int odometrySamples = getNumberOfOdometrySamples();
-        double[] timestamps = gyroInputs.odometrySamplesTimestamp;
-        Rotation2d[] gyroRotations = gyroInputs.odometrySamplesYaw;
+        double[] timestamps = gyroInputs.timestampOdometrySamples;
+        Rotation2d[] gyroRotations = gyroInputs.yawOdometrySamples;
         SwerveDriveWheelPositions[] swerveWheelPositions = getAllSwerveWheelPositionSamples();
 
         OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
@@ -345,7 +345,7 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    protected void drive(double xPower, double yPower, double thetaPower) {
+    protected void driveByState(double xPower, double yPower, double thetaPower) {
         driveByState(powersToSpeeds(xPower, yPower, thetaPower, currentState));
     }
 

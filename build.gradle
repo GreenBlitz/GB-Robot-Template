@@ -149,6 +149,19 @@ tasks.register('checkAkitInstall', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+def ensureSymlink(link, target) {
+    if (!Files.isSymbolicLink(link)) {
+        if (Files.exists(link)) {
+            Files.delete(link)
+        }
+
+        Files.createSymbolicLink(link, target)
+
+        def relative = { f -> rootDir.toPath().relativize(f) }
+        println("--- Installed Symbolic Link ${relative(link)} -> ${relative(target)} ---")
+    }
+}
+
 // Setup local git settings
 def gitConfig = 'Git Configuration'
 tasks.register('installLocalGitHookSymlinks') {
@@ -162,17 +175,7 @@ tasks.register('installLocalGitHookSymlinks') {
         gitHooks.forEach { File target ->
             def link = linkDir.resolve(target.toPath().getFileName())
 
-            if (!Files.isSymbolicLink(link)) {
-                if (Files.exists(link)) {
-                    Files.delete(link)
-                }
-
-                def rel = { f -> rootDir.toPath().relativize(f) }
-                Files.createSymbolicLink(link, target.toPath())
-
-
-                println("---Installed Symbolic Link ${rel(link)} -> ${rel(target.toPath())} ---")
-            }
+            ensureSymlink(link, target.toPath())
         }
     }
 }
@@ -186,18 +189,13 @@ tasks.register('configLocalGitBlameIgnoreRevsFile', Exec) {
     outputs.file('.git/config')
 }
 
+def gitConfigTasks = tasks.matching { it.group == gitConfig }
 tasks
         .matching { it.group != gitConfig }
-        .configureEach {
-            it.dependsOn tasks.matching {
-                it.group == gitConfig
-            }
-        }
+        .configureEach { it.dependsOn gitConfigTasks }
 
 if (System.getenv().containsKey('CI') || !file('.git').isDirectory()) {
-    tasks
-            .matching { it.group == gitConfig }
-            .configureEach { it.enabled = false }
+    gitConfigTasks.configureEach { it.enabled = false }
 }
 
 tasks.register('runComputerPrograms', JavaExec) {
@@ -269,7 +267,6 @@ spotless {
             exclude "**/build/**", "**/build-*/**"
         }
         trimTrailingWhitespace()
-        indentWithSpaces(4)
         endWithNewline()
     }
 }

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.robot.simulation.GyroSimulation;
-import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
 import frc.utils.cycletime.CycleTimeUtils;
 

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.gyro.gyrointerface;
+package frc.robot.subsystems.swerve.gyro;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2Gyro;

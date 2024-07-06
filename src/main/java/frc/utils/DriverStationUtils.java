@@ -2,7 +2,7 @@ package frc.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
-import frc.robot.constants.RobotConstants;
+import frc.robot.constants.GlobalConstants;
 
 public class DriverStationUtils {
 
@@ -10,7 +10,7 @@ public class DriverStationUtils {
 
     public static DriverStation.Alliance getAlliance() {
         if (Robot.ROBOT_TYPE.isSimulation()) {
-            return RobotConstants.SIMULATION_ALLIANCE;
+            return GlobalConstants.SIMULATION_ALLIANCE;
         }
         return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
     }

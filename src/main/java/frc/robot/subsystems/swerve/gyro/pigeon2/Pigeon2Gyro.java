@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
-import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import org.littletonrobotics.junction.Logger;

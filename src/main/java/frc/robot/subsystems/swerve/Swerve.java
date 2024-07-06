@@ -12,8 +12,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
-import frc.robot.subsystems.swerve.gyro.gyrointerface.ISwerveGyro;
-import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroFactory;
+import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.gyro.gyrointerface.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -363,12 +363,16 @@ public class Swerve extends GBSubsystem {
             return;
         }
 
+        applySpeeds(chassisSpeeds, swerveState);
+    }
+
+    private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(
                 chassisSpeeds,
                 swerveState.getRotateAxis().getRotateAxis()
         );
         setTargetModuleStates(swerveModuleStates);
-    } // todo: private, short maybe
+    }
 
     protected void stop() {
         for (Module currentModule : modules) {

@@ -4,7 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
-import frc.robot.constants.RobotConstants;
+import frc.robot.constants.GlobalConstants;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
@@ -72,7 +72,7 @@ class MK4IModuleConfigObject {
                 moduleSignals.encoderAbsolutePositionSignal()
         );
         BaseStatusSignal.setUpdateFrequencyForAll(
-                RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+                GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
                 moduleSignals.encoderVelocitySignal(),
                 moduleSignals.encoderVoltageSignal()
         );
@@ -92,7 +92,7 @@ class MK4IModuleConfigObject {
                 moduleSignals.driveAccelerationSignal()
         );
         BaseStatusSignal.setUpdateFrequencyForAll(
-                RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+                GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
                 moduleSignals.driveVoltageSignal(),
                 moduleSignals.driveStatorCurrentSignal()
         );
@@ -113,7 +113,7 @@ class MK4IModuleConfigObject {
                 moduleSignals.steerMotorVelocitySignal(),
                 moduleSignals.steerMotorAccelerationSignal()
         );
-        BaseStatusSignal.setUpdateFrequencyForAll(RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, moduleSignals.steerMotorVoltageSignal());
+        BaseStatusSignal.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, moduleSignals.steerMotorVoltageSignal());
 
         steerMotor.optimizeBusUtilization();
     }

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.gyro.pigeon2;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import frc.robot.constants.RobotConstants;
+import frc.robot.constants.GlobalConstants;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
@@ -32,7 +32,7 @@ class Pigeon2GyroConfigObject {
 
     private void optimizeBusAndSignalOfGyro() {
         BaseStatusSignal.setUpdateFrequencyForAll(
-                RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+                GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
                 signals.X_ACCELERATION_SIGNAL(),
                 signals.Y_ACCELERATION_SIGNAL(),
                 signals.Z_ACCELERATION_SIGNAL()

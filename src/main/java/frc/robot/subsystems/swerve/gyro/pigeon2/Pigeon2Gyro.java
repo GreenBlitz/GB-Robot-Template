@@ -6,7 +6,6 @@ import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
-import frc.utils.ctre.CTREDeviceID;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Queue;
@@ -19,9 +18,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
     private final Queue<Double> yawQueue;
     private final Queue<Double> timestampQueue;
 
-    public Pigeon2Gyro(CTREDeviceID deviceID) {
-        Pigeon2GyroConfigObject gyroPigeon2ConfigObject = new Pigeon2GyroConfigObject(deviceID, Pigeon2GyroConstants.PIGEON_2_CONFIGURATION);
-
+    public Pigeon2Gyro(Pigeon2GyroConfigObject gyroPigeon2ConfigObject) {
         this.gyroPigeon2Status = new Pigeon2GyroStatus(gyroPigeon2ConfigObject.getSignals());
         this.gyroPigeon2Actions = new Pigeon2GyroActions(gyroPigeon2ConfigObject.getGyro());
 

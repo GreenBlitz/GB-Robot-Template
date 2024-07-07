@@ -7,7 +7,7 @@ import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 
-class Pigeon2GyroConfigObject {
+public class Pigeon2GyroConfigObject {
 
     private final Pigeon2Wrapper gyro;
 

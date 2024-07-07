@@ -44,8 +44,6 @@ public class Swerve extends GBSubsystem {
     private Supplier<Rotation2d> currentAngleSupplier;
 
     public Swerve(RobotType robotType) {
-        setName(getClass().getSimpleName());
-
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
         this.modules = new Module[]{
                 new Module(ModuleUtils.ModuleName.FRONT_LEFT, robotType),

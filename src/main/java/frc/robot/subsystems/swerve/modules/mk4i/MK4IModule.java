@@ -16,8 +16,7 @@ public class MK4IModule implements IModule {
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
 
-    public MK4IModule(ModuleUtils.ModuleName moduleName) {
-        MK4IModuleConfigObject moduleConfigObject = getModuleConfigObject(moduleName);
+    public MK4IModule(MK4IModuleConfigObject moduleConfigObject) {
         MK4IModuleRecords.MK4IModuleMotors motors = moduleConfigObject.getMotors();
 
         this.mk4IModuleStatus = new MK4IModuleStatus(moduleConfigObject.getModuleSignals());
@@ -35,15 +34,6 @@ public class MK4IModule implements IModule {
         );
 
         mk4IModuleActions.resetDriveAngle(new Rotation2d());
-    }
-
-    private MK4IModuleConfigObject getModuleConfigObject(ModuleUtils.ModuleName moduleName) {
-        return switch (moduleName) {
-            case FRONT_LEFT -> MK4IModuleConstants.FRONT_LEFT;
-            case FRONT_RIGHT -> MK4IModuleConstants.FRONT_RIGHT;
-            case BACK_LEFT -> MK4IModuleConstants.BACK_LEFT;
-            case BACK_RIGHT -> MK4IModuleConstants.BACK_RIGHT;
-        };
     }
 
 

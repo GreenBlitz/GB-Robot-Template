@@ -10,7 +10,7 @@ import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-class MK4IModuleConfigObject {
+public class MK4IModuleConfigObject {
 
     private final TalonFXWrapper driveMotor, steerMotor;
     private final CANcoder encoder;
@@ -118,15 +118,15 @@ class MK4IModuleConfigObject {
         steerMotor.optimizeBusUtilization();
     }
 
-    public CANcoder getEncoder() {
+    protected CANcoder getEncoder() {
         return encoder;
     }
 
-    public MK4IModuleRecords.MK4IModuleMotors getMotors() {
+    protected MK4IModuleRecords.MK4IModuleMotors getMotors() {
         return moduleMotors;
     }
 
-    public MK4IModuleRecords.MK4IModuleSignals getModuleSignals() {
+    protected MK4IModuleRecords.MK4IModuleSignals getModuleSignals() {
         return moduleSignals;
     }
 

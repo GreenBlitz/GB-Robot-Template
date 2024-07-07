@@ -20,7 +20,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
     private final Queue<Double> timestampQueue;
 
     public Pigeon2Gyro(CTREDeviceID deviceID) {
-        Pigeon2GyroConfigObject gyroPigeon2ConfigObject = new Pigeon2GyroConfigObject(deviceID);
+        Pigeon2GyroConfigObject gyroPigeon2ConfigObject = new Pigeon2GyroConfigObject(deviceID, Pigeon2GyroConstants.PIGEON_2_CONFIGURATION);
 
         this.gyroPigeon2Status = new Pigeon2GyroStatus(gyroPigeon2ConfigObject.getSignals());
         this.gyroPigeon2Actions = new Pigeon2GyroActions(gyroPigeon2ConfigObject.getGyro());

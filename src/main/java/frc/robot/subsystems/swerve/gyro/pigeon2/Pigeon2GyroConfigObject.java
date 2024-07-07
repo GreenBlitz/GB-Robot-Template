@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.gyro.pigeon2;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
@@ -12,7 +13,7 @@ class Pigeon2GyroConfigObject {
 
     private final Pigeon2GyroRecords.GyroPigeon2Signals signals;
 
-    protected Pigeon2GyroConfigObject(CTREDeviceID pigeon2DeviceID) {
+    protected Pigeon2GyroConfigObject(CTREDeviceID pigeon2DeviceID, Pigeon2Configuration configuration) {
         this.gyro = new Pigeon2Wrapper(pigeon2DeviceID);
         this.signals = new Pigeon2GyroRecords.GyroPigeon2Signals(
                 gyro.getYaw(),
@@ -21,13 +22,13 @@ class Pigeon2GyroConfigObject {
                 gyro.getAccelerationZ()
         );
 
-        configGyro();
+        configGyro(configuration);
         optimizeBusAndSignalOfGyro();
     }
 
 
-    private void configGyro() {
-        gyro.getConfigurator().apply(Pigeon2GyroConstants.PIGEON_2_CONFIGURATION);
+    private void configGyro(Pigeon2Configuration configuration) {
+        gyro.getConfigurator().apply(configuration);
     }
 
     private void optimizeBusAndSignalOfGyro() {

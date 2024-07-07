@@ -64,33 +64,45 @@ class MK4IModuleConstants {
     protected static final MK4IModuleConfigObject FRONT_LEFT = new MK4IModuleConfigObject(
             Ports.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
             true,
+            STEER_MOTOR_CONFIG,
             Ports.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIDs.FRONT_LEFT_ENCODER
+            DRIVE_MOTOR_CONFIG,
+            Ports.CANCodersIDs.FRONT_LEFT_ENCODER,
+            ENCODER_CONFIG
     );
 
     protected static final MK4IModuleConfigObject FRONT_RIGHT = new MK4IModuleConfigObject(
             Ports.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
             true,
+            STEER_MOTOR_CONFIG,
             Ports.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
             true,
-            Ports.CANCodersIDs.FRONT_RIGHT_ENCODER
+            DRIVE_MOTOR_CONFIG,
+            Ports.CANCodersIDs.FRONT_RIGHT_ENCODER,
+            ENCODER_CONFIG
     );
 
     protected static final MK4IModuleConfigObject BACK_LEFT = new MK4IModuleConfigObject(
             Ports.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
             false,
+            STEER_MOTOR_CONFIG,
             Ports.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIDs.BACK_LEFT_ENCODER
+            DRIVE_MOTOR_CONFIG,
+            Ports.CANCodersIDs.BACK_LEFT_ENCODER,
+            ENCODER_CONFIG
     );
 
     protected static final MK4IModuleConfigObject BACK_RIGHT = new MK4IModuleConfigObject(
             Ports.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
             true,
+            STEER_MOTOR_CONFIG,
             Ports.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
             false,
-            Ports.CANCodersIDs.BACK_RIGHT_ENCODER
+            DRIVE_MOTOR_CONFIG,
+            Ports.CANCodersIDs.BACK_RIGHT_ENCODER,
+            ENCODER_CONFIG
     );
 
 }

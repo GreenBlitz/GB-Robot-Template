@@ -22,7 +22,6 @@ import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
-import frc.utils.RobotTypeUtils.RobotType;
 import frc.utils.cycletime.CycleTimeUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -43,15 +42,15 @@ public class Swerve extends GBSubsystem {
     private final SwerveState currentState;
     private Supplier<Rotation2d> currentAngleSupplier;
 
-    public Swerve(RobotType robotType) {
+    public Swerve() {
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
         this.modules = new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT, robotType),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT, robotType),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT, robotType),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT, robotType),
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT),
         };
-        this.gyro = SwerveGyroFactory.createSwerveGyro(robotType);
+        this.gyro = SwerveGyroFactory.createSwerveGyro();
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
     }

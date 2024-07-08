@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
-import frc.utils.RobotTypeUtils.RobotType;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
@@ -19,9 +18,9 @@ public class Module {
     private boolean driveMotorClosedLoop;
     private SwerveModuleState targetState;
 
-    public Module(ModuleUtils.ModuleName moduleName, RobotType robotType) {
+    public Module(ModuleUtils.ModuleName moduleName) {
         this.moduleName = moduleName;
-        this.module = ModuleFactory.createModule(moduleName, robotType);
+        this.module = ModuleFactory.createModule(moduleName);
         this.moduleInputsContainer = new ModuleInputsContainer();
         this.targetState = new SwerveModuleState();
         this.driveMotorClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;

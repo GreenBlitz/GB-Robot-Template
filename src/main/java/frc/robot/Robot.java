@@ -20,7 +20,7 @@ public class Robot {
     public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
 
-    public static final Swerve swerve = new Swerve(ROBOT_TYPE);
+    public static final Swerve swerve = new Swerve();
     public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
 
     public Robot() {

@@ -8,18 +8,29 @@ public class TurretSubsystem extends GBSubsystem {
 
     ITurret turret;
     TurretState state;
+    TurretInputsAutoLogged inputs;
 
-    public TurretSubsystem(ITurret turret){
+    public TurretSubsystem(ITurret turret) {
         this.turret = turret;
         this.state = TurretState.HOLD_POSITION_RELATIVE_TO_ROBOT;
+        inputs = new TurretInputsAutoLogged();
     }
 
 
-    public void setState (TurretState targetState){
+    public void setState(TurretState targetState) {
         this.state = targetState;
     }
 
-    public void handleRotateToPoint (Translation2d targetPoint, Translation2d robotPosition){
+    public Rotation2d getPosition() {
+        return inputs.position;
+    }
+
+    public double getVelocity() {
+        return inputs.velocity;
+    }
+
+
+    public void handleRotateToPoint(Translation2d targetPoint, Translation2d robotPosition) {
         Translation2d normalizedRobotPosition = targetPoint.minus(robotPosition);
         this.turret.setPosition(
                 new Rotation2d(
@@ -28,13 +39,29 @@ public class TurretSubsystem extends GBSubsystem {
                 )
         );
     }
-    public void handleHoldPositionRelativeToRobot (Rotation2d targetAngle){
+
+    public void handleHoldPositionRelativeToRobot(Rotation2d targetAngle) {
         this.turret.setPosition(targetAngle);
     }
 
+    public void handleHoldPositionRelativeToRobot() {
+        this.turret.setPosition(getPosition());
+    }
 
+    public void handleRest() {
+        this.turret.stop();
+    }
 
-
+    private void handleState(TurretState state) {
+        switch (state) {
+            case ROTATE_TO_POINT -> handleRotateToPoint(
+                    TurretConstants.LOOKING_TARGET,
+                    new Translation2d() /*waiting for swerve to do get from pose estimation*/
+            );
+            case HOLD_POSITION_RELATIVE_TO_ROBOT -> handleHoldPositionRelativeToRobot();
+            case REST -> handleRest();
+        }
+    }
 
 
     @Override
@@ -44,7 +71,7 @@ public class TurretSubsystem extends GBSubsystem {
 
     @Override
     protected void subsystemPeriodic() {
-
+        handleState(this.state);
     }
 
 }

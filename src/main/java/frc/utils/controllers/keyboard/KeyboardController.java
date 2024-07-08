@@ -13,7 +13,6 @@ import java.nio.file.Path;
  * Inspired from Trigon code.
  *
  * @author Yoni Kiriaty, Trigon
- *
  */
 public class KeyboardController {
 

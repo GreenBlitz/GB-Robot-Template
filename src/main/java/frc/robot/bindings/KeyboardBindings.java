@@ -8,7 +8,7 @@ public class KeyboardBindings {
 
     public static void configureBindings() {
         KeyboardController usedKeyboard = KEYBOARD_CONTROLLER;
-        // bindings
+        // bindings...
     }
 
 }

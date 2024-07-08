@@ -199,7 +199,7 @@ tasks.register('setVisualVMHost') {
 }
 
 tasks.register('checkAkitInstall', JavaExec) {
-    group = 'execution'
+    group = 'execsution'
     dependsOn('classes')
     mainClass = "org.littletonrobotics.junction.CheckInstall"
     classpath = sourceSets.main.runtimeClasspath
@@ -207,7 +207,7 @@ tasks.register('checkAkitInstall', JavaExec) {
 
 tasks.register('runComputerPrograms', JavaExec) {
     group = 'execution'
-    dependsOn("setReachableIP")
+    dependsOn('ReachableIP')
     description = "Run the main class in ComputerMain"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "frc.robot.ComputerMain"

@@ -6,4 +6,5 @@ public interface ITurret {
     void setVelocity (double velocity);
     void setPosition (Rotation2d angle);
     void stop();
+    void updateInputs(TurretInputsAutoLogged inputs);
 }

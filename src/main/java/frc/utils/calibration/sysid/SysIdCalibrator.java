@@ -20,7 +20,7 @@ public class SysIdCalibrator {
 
     private final SysIdRoutine sysIdRoutine;
 
-    private final GBSubsystem usedSubsysem;
+    private final GBSubsystem usedSubsystem;
 
     private final boolean isCTRE;
 
@@ -80,7 +80,7 @@ public class SysIdCalibrator {
      */
     public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts,
                            double rampRateVoltsPerSecond, double timeoutSeconds) {
-        this.usedSubsysem = subsystem;
+        this.usedSubsystem = subsystem;
         this.isCTRE = isCTRE;
 
         final SysIdRoutine.Config config = new SysIdRoutine.Config(
@@ -94,8 +94,8 @@ public class SysIdCalibrator {
         final SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
                 (Measure<Voltage> volts) -> voltageSetControl.accept(volts.in(Volts)),
                 null,
-                usedSubsysem,
-                usedSubsysem.getName()
+                usedSubsystem,
+                usedSubsystem.getName()
         );
 
         this.sysIdRoutine = new SysIdRoutine(config, mechanism);
@@ -131,7 +131,7 @@ public class SysIdCalibrator {
     }
 
     private Command getAppropriateCommand(Command sysIdCommand) {
-        sysIdCommand.addRequirements(usedSubsysem);
+        sysIdCommand.addRequirements(usedSubsystem);
         return isCTRE ? getCTRECommand(sysIdCommand) : sysIdCommand;
     }
 

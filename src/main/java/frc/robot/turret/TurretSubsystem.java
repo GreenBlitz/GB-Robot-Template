@@ -72,6 +72,7 @@ public class TurretSubsystem extends GBSubsystem {
     @Override
     protected void subsystemPeriodic() {
         handleState(this.state);
+        turret.updateInputs(inputs);
     }
 
 }

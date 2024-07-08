@@ -37,7 +37,7 @@ class MK4IModuleConstants {
         DRIVE_MOTOR_CONFIG.Slot0.kS = 0.21549;
         DRIVE_MOTOR_CONFIG.Slot0.kV = 0.72124;
         DRIVE_MOTOR_CONFIG.Slot0.kA = 0.11218;
-        DRIVE_MOTOR_CONFIG.Slot0.kP = 0;
+        DRIVE_MOTOR_CONFIG.Slot0.kP = 30;
         DRIVE_MOTOR_CONFIG.Slot0.kI = 0;
         DRIVE_MOTOR_CONFIG.Slot0.kD = 0;
     }

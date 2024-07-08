@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.modules.mk4i;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -9,7 +10,7 @@ import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-class MK4IModuleConfigObject {
+public class MK4IModuleConfigObject {
 
     private final TalonFXWrapper driveMotor, steerMotor;
     private final CANcoder encoder;
@@ -18,9 +19,9 @@ class MK4IModuleConfigObject {
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
     protected MK4IModuleConfigObject(
-            CTREDeviceID steerMotorDeviceID, boolean isSteerMotorInverted,
-            CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted,
-            CTREDeviceID encoderID
+            CTREDeviceID steerMotorDeviceID, boolean isSteerMotorInverted, TalonFXConfiguration steerConfiguration,
+            CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted, TalonFXConfiguration driveConfiguration,
+            CTREDeviceID encoderID, CANcoderConfiguration encoderConfiguration
     ) {
         this.encoder = new CANcoder(encoderID.ID(), encoderID.busChain().getChainName());
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
@@ -47,23 +48,23 @@ class MK4IModuleConfigObject {
                 steerMotor.getMotorVoltage()
         );
 
-        configEncoder();
+        configEncoder(encoderConfiguration);
         optimizeBusAndSignalOfEncoder();
 
-        configDriveMotor();
+        configDriveMotor(driveConfiguration);
         driveMotor.setInverted(isDriveMotorInverted);
         optimizeBusAndSignalOfDriveMotor();
 
-        configSteerMotor();
+        configSteerMotor(steerConfiguration);
         steerMotor.setInverted(isSteerMotorInverted);
         optimizeBusAndSignalOfSteerMotor();
     }
 
-    private void configEncoder() {
+    private void configEncoder(CANcoderConfiguration encoderConfiguration) {
         MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
         encoder.getConfigurator().refresh(magnetSensorConfigs);
-        MK4IModuleConstants.ENCODER_CONFIG.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-        encoder.getConfigurator().apply(MK4IModuleConstants.ENCODER_CONFIG);
+        encoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
+        encoder.getConfigurator().apply(encoderConfiguration);
     }
 
     private void optimizeBusAndSignalOfEncoder() {
@@ -80,8 +81,8 @@ class MK4IModuleConfigObject {
         encoder.optimizeBusUtilization();
     }
 
-    private void configDriveMotor() {
-        driveMotor.applyConfiguration(MK4IModuleConstants.DRIVE_MOTOR_CONFIG);
+    private void configDriveMotor(TalonFXConfiguration driveConfiguration) {
+        driveMotor.applyConfiguration(driveConfiguration);
     }
 
     private void optimizeBusAndSignalOfDriveMotor() {
@@ -100,10 +101,9 @@ class MK4IModuleConfigObject {
         driveMotor.optimizeBusUtilization();
     }
 
-    private void configSteerMotor() {
-        TalonFXConfiguration configuration = MK4IModuleConstants.STEER_MOTOR_CONFIG;
-        configuration.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
-        steerMotor.applyConfiguration(configuration);
+    private void configSteerMotor(TalonFXConfiguration steerConfiguration) {
+        steerConfiguration.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
+        steerMotor.applyConfiguration(steerConfiguration);
     }
 
     private void optimizeBusAndSignalOfSteerMotor() {
@@ -118,15 +118,15 @@ class MK4IModuleConfigObject {
         steerMotor.optimizeBusUtilization();
     }
 
-    public CANcoder getEncoder() {
+    protected CANcoder getEncoder() {
         return encoder;
     }
 
-    public MK4IModuleRecords.MK4IModuleMotors getMotors() {
+    protected MK4IModuleRecords.MK4IModuleMotors getMotors() {
         return moduleMotors;
     }
 
-    public MK4IModuleRecords.MK4IModuleSignals getModuleSignals() {
+    protected MK4IModuleRecords.MK4IModuleSignals getModuleSignals() {
         return moduleSignals;
     }
 

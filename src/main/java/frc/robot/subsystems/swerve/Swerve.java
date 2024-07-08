@@ -43,22 +43,16 @@ public class Swerve extends GBSubsystem {
     private Supplier<Rotation2d> currentAngleSupplier;
 
     public Swerve() {
-        setName(getClass().getSimpleName());
-
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
-        this.modules = getModules();
-        this.gyro = SwerveGyroFactory.createSwerveGyro();
-        this.gyroInputs = new SwerveGyroInputsAutoLogged();
-        this.currentAngleSupplier = this::getAbsoluteHeading;
-    }
-
-    private Module[] getModules() {
-        return new Module[]{
+        this.modules = new Module[]{
                 new Module(ModuleUtils.ModuleName.FRONT_LEFT),
                 new Module(ModuleUtils.ModuleName.FRONT_RIGHT),
                 new Module(ModuleUtils.ModuleName.BACK_LEFT),
                 new Module(ModuleUtils.ModuleName.BACK_RIGHT),
         };
+        this.gyro = SwerveGyroFactory.createSwerveGyro();
+        this.gyroInputs = new SwerveGyroInputsAutoLogged();
+        this.currentAngleSupplier = this::getAbsoluteHeading;
     }
 
     @Override
@@ -148,7 +142,7 @@ public class Swerve extends GBSubsystem {
 
 
     protected void resetModulesAngleByEncoder() {
-        for (Module module : getModules()) {
+        for (Module module : modules) {
             module.resetByEncoder();
         }
     }

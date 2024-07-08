@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve.gyro.pigeon2;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.constants.Ports;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
@@ -19,9 +18,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
     private final Queue<Double> yawQueue;
     private final Queue<Double> timestampQueue;
 
-    public Pigeon2Gyro() {
-        Pigeon2GyroConfigObject gyroPigeon2ConfigObject = new Pigeon2GyroConfigObject(Ports.PIGEON_2_DEVICE_ID);
-
+    public Pigeon2Gyro(Pigeon2GyroConfigObject gyroPigeon2ConfigObject) {
         this.gyroPigeon2Status = new Pigeon2GyroStatus(gyroPigeon2ConfigObject.getSignals());
         this.gyroPigeon2Actions = new Pigeon2GyroActions(gyroPigeon2ConfigObject.getGyro());
 

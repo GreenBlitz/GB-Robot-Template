@@ -25,6 +25,7 @@ public class RobotTypeUtils {
         public boolean isReplay() {
             return this.equals(RobotType.REPLAY);
         }
+
     }
 
 }

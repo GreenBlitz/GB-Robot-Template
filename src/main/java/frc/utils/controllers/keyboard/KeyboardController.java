@@ -1,7 +1,7 @@
 package frc.utils.controllers.keyboard;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Robot;
+import frc.robot.RobotManager;
 import frc.robot.constants.IPConstants;
 import frc.utils.CMDHandler;
 import frc.utils.dashboard.LoggedTableBoolean;
@@ -35,7 +35,7 @@ public class KeyboardController {
             NUMPAD_0, NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9;
 
     public KeyboardController() {
-        if (Robot.isSimulation()) {
+        if (RobotManager.isSimulation()) {
             CMDHandler.runPythonClass(KEYBOARD_TO_NETWORK_TABLES_CLASS, IPConstants.SIMULATION_IP);
         }
 

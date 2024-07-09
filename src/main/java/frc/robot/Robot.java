@@ -5,65 +5,46 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.constants.RobotConstants;
-import frc.robot.simulation.SimulationManager;
-import frc.utils.battery.BatteryUtils;
-import frc.utils.ctre.BusStatus;
-import frc.utils.cycletime.CycleTimeUtils;
-import frc.utils.logger.LoggerFactory;
-import org.littletonrobotics.junction.LoggedRobot;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.bindings.JoysticksBindings;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link RobotManager}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class Robot extends LoggedRobot {
+public class Robot {
 
-    private Command autonomousCommand;
-
-    private RobotContainer robotContainer;
-
-    @Override
-    public void robotInit() {
-        if (RobotConstants.ROBOT_TYPE.isReplay()) {
-            setUseTiming(false); // run as fast as possible
-        }
-        LoggerFactory.initializeLogger();
-        BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
-
-        robotContainer = new RobotContainer();
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public Robot() {
+        configureBindings();
     }
 
-    @Override
-    public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
-
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
-        }
+    /**
+     * Use this method to define your trigger->command mappings. Triggers can be created via the
+     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+     * predicate, or via the named factories in {@link
+     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+     * joysticks}.
+     */
+    private void configureBindings() {
+        JoysticksBindings.configureBindings();
     }
 
-    @Override
-    public void teleopInit() {
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-    }
-
-    @Override
-    public void robotPeriodic() {
-        CycleTimeUtils.updateCycleTime(); // Better to be first
-        CommandScheduler.getInstance().run();
-        BusStatus.logChainsStatuses();
-        BatteryUtils.logStatus();
-    }
-
-    @Override
-    public void simulationPeriodic() {
-        SimulationManager.updateRegisteredSimulations();
+    /**
+     * Use this to pass the autonomous command to the main {@link RobotManager} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        return new InstantCommand();
     }
 
 }

@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.turret.TurretSubsystem;
+import frc.robot.turret.simulation.SimulationTurret;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -17,6 +19,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
+    public static TurretSubsystem TURRET = new TurretSubsystem(
+            new SimulationTurret()
+    );
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */

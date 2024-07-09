@@ -3,6 +3,9 @@ package frc.robot.turret;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.Objects;
 
 public class TurretSubsystem extends GBSubsystem {
 
@@ -12,8 +15,10 @@ public class TurretSubsystem extends GBSubsystem {
 
     public TurretSubsystem(ITurret turret) {
         this.turret = turret;
-        this.state = TurretState.HOLD_POSITION_RELATIVE_TO_ROBOT;
         inputs = new TurretInputsAutoLogged();
+        turret.updateInputs(inputs);
+
+        this.state = TurretState.REST;
     }
 
 
@@ -25,7 +30,7 @@ public class TurretSubsystem extends GBSubsystem {
         return inputs.position;
     }
 
-    public double getVelocity() {
+    public Rotation2d getVelocity() {
         return inputs.velocity;
     }
 
@@ -41,11 +46,11 @@ public class TurretSubsystem extends GBSubsystem {
     }
 
     public void handleHoldPositionRelativeToRobot(Rotation2d targetAngle) {
-        this.turret.setPosition(targetAngle);
+        this.turret.setPosition(Objects.requireNonNullElseGet(targetAngle, () -> Rotation2d.fromDegrees(0)));
     }
 
     public void handleHoldPositionRelativeToRobot() {
-        this.turret.setPosition(getPosition());
+       handleHoldPositionRelativeToRobot(inputs.position);
     }
 
     public void handleRest() {
@@ -55,7 +60,7 @@ public class TurretSubsystem extends GBSubsystem {
     private void handleState(TurretState state) {
         switch (state) {
             case ROTATE_TO_POINT -> handleRotateToPoint(
-                    TurretConstants.LOOKING_TARGET,
+                    new Translation2d(),
                     new Translation2d() /*waiting for swerve to do get from pose estimation*/
             );
             case HOLD_POSITION_RELATIVE_TO_ROBOT -> handleHoldPositionRelativeToRobot();
@@ -71,8 +76,13 @@ public class TurretSubsystem extends GBSubsystem {
 
     @Override
     protected void subsystemPeriodic() {
-        handleState(this.state);
+//        handleState(this.state);
+
+//        setState(TurretState.ROTATE_TO_POINT);
+        turret.setPosition(Rotation2d.fromRotations(0.5));
+
         turret.updateInputs(inputs);
+        Logger.processInputs("Turret",inputs);
     }
 
 }

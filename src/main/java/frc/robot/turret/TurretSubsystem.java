@@ -7,6 +7,8 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Objects;
 
+import static frc.robot.turret.TurretConstants.LOGGING_PATH;
+
 public class TurretSubsystem extends GBSubsystem {
 
     ITurret turret;
@@ -71,15 +73,12 @@ public class TurretSubsystem extends GBSubsystem {
 
     @Override
     protected String getLogPath() {
-        return null;
+        return LOGGING_PATH;
     }
 
     @Override
     protected void subsystemPeriodic() {
-//        handleState(this.state);
-
-//        setState(TurretState.ROTATE_TO_POINT);
-        turret.setPosition(Rotation2d.fromRotations(0.5));
+        handleState(this.state);
 
         turret.updateInputs(inputs);
         Logger.processInputs("Turret",inputs);

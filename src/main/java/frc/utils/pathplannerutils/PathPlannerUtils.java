@@ -11,21 +11,17 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.utils.mirrorutils.MirrorablePose2d;
-import frc.utils.mirrorutils.MirrorableRotation2d;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class PathPlannerUtils {
 
@@ -66,44 +62,28 @@ public class PathPlannerUtils {
         NamedCommands.registerCommand(commandName, command);
     }
 
-    public static void setDynamicObstacles(
-            List<Pair<MirrorablePose2d, MirrorablePose2d>> obstacles,
-            Pose2d currentRobotPose
-    ) {
-        List<Pair<Translation2d, Translation2d>> translationObstacles = obstacles.stream().map(pair ->
-                new Pair<>(
-                        pair.getFirst().get().getTranslation(),
-                        pair.getSecond().get().getTranslation()
-                )
-        ).collect(Collectors.toList());
-        Pathfinding.setDynamicObstacles(translationObstacles, currentRobotPose.getTranslation());
-    }
-
-    public static void setDynamicObstacles(Pair<MirrorablePose2d, MirrorablePose2d> obstacle, Pose2d currentRobotPose) {
-        setDynamicObstacles(Collections.singletonList(obstacle), currentRobotPose);
+    public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+        Pathfinding.setDynamicObstacles(obstacles, currentRobotPose.getTranslation());
     }
 
     public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {
-        List<Pair<MirrorablePose2d, MirrorablePose2d>> emptyList = new ArrayList<>();
-        setDynamicObstacles(emptyList, currentRobotPose);
+        setDynamicObstacles(List.of(), currentRobotPose);
     }
 
-    public static void setTargetRotationOverride(Supplier<Optional<MirrorableRotation2d>> overrider) {
-        PPHolonomicDriveController.setRotationTargetOverride(() -> overrider.get().map(MirrorableRotation2d::get));
+    public static void setTargetRotationOverride(Supplier<Optional<Rotation2d>> overrider) {
+        PPHolonomicDriveController.setRotationTargetOverride(overrider);
     }
 
-    public static Command createOnTheFlyPathCommand(Pose2d currentBluePose, MirrorablePose2d targetPose,
-            PathConstraints constraints
-    ) {
+    public static Command createOnTheFlyPathCommand(Pose2d currentBluePose, Pose2d targetPose, PathConstraints constraints) {
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 currentBluePose,
-                targetPose.get()
+                targetPose
         );
 
         PathPlannerPath path = new PathPlannerPath(
                 bezierPoints,
                 constraints,
-                new GoalEndState(0, targetPose.get().getRotation())
+                new GoalEndState(0, targetPose.getRotation())
         );
 
         path.preventFlipping = true;

@@ -34,7 +34,7 @@ public class Robot extends LoggedRobot {
         LoggerFactory.initializeLogger();
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 
-        robotContainer = new RobotContainer();
+        this.robotContainer = new RobotContainer();
     }
 
     @Override

@@ -10,7 +10,7 @@ public class PoseEstimatorConstants {
 
     protected static final String LOG_PATH = "PoseEstimator/";
 
-    public static final double ODOMETRY_FREQUENCY_HERTZ = 200.0;
+    public static final double ODOMETRY_FREQUENCY_HERTZ = 250;
 
     /**
      * The vector represents how ambiguous each value is.

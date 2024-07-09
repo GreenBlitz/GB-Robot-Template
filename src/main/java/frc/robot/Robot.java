@@ -36,7 +36,7 @@ public class Robot extends LoggedRobot {
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
         PathPlannerUtils.startPathPlanner();
 
-        robotContainer = new RobotContainer();
+        this.robotContainer = new RobotContainer();
     }
 
     @Override

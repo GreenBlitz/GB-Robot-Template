@@ -10,6 +10,6 @@ public class RobotConstants {
 
     public static final DriverStation.Alliance SIMULATION_ALLIANCE = DriverStation.Alliance.Blue;
 
-    public static final boolean DISABLE_BATTERY_LIMITER = false; // Use this to disable battery limiter, don't comment!!!
+    public static final boolean ENABLE_BATTERY_LIMITER = true;
 
 }

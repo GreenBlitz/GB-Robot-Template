@@ -6,7 +6,6 @@ on:
       - synchronize
       - opened
       - reopened
-      - converted_to_draft
 
 jobs:
   compile:
@@ -15,7 +14,7 @@ jobs:
     container: wpilib/roborio-cross-ubuntu:2024-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Grant execute permission
         run: chmod +x gradlew
       - name: Compile robot code

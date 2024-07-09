@@ -1,9 +1,9 @@
 package frc.utils.batteryutils;
 
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants;
+import frc.utils.DriverStationUtils;
 
 class BatteryLimiter extends Command {
 
@@ -28,7 +28,7 @@ class BatteryLimiter extends Command {
         double currentAverageVoltage = voltageFilter.calculate(Battery.getCurrentVoltage());
         if (currentAverageVoltage <= Battery.getMinimumVoltage()) {
             Battery.reportAlertsToLog();
-            if (DriverStation.getMatchType() == DriverStation.MatchType.None && !RobotConstants.DISABLE_BATTERY_LIMITER) {
+            if (!DriverStationUtils.isGame() && RobotConstants.ENABLE_BATTERY_LIMITER) {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }
         }

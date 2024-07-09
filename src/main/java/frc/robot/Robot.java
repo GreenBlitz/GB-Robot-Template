@@ -4,17 +4,15 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.RobotConstants;
 import frc.robot.simulation.MotorSimulation;
+import frc.utils.CTREUtils.CANStatus;
 import frc.utils.batteryutils.Battery;
 import frc.utils.loggerutils.LoggerUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
-import frc.utils.roborioutils.RoborioUtils;
+import frc.utils.cycletimeutils.CycleTimeUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -56,8 +54,9 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotPeriodic() {
-        RoborioUtils.updateRioUtils(); // Better to be first
+        CycleTimeUtils.updateCycleTime(); // Better to be first
         CommandScheduler.getInstance().run();
+        CANStatus.logAllBusStatuses();
     }
 
     @Override
@@ -66,9 +65,6 @@ public class Robot extends LoggedRobot {
     }
 
     private void initializeLogger() {
-        NetworkTableInstance.getDefault().getStructTopic("RobotPose", Pose2d.struct).publish();
-        NetworkTableInstance.getDefault().getStructTopic("MechanismPoses", Pose3d.struct).publish();
-
         switch (RobotConstants.ROBOT_TYPE) {
             case REAL -> {
                 LoggerUtils.startRealLogger();

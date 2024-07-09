@@ -27,10 +27,9 @@ public class SysIdCalibrator {
      * IMPORTANT:
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
-     * For more on kG look on calibration -> staticcharacterization -> StaticCharacterizationObject
      */
     public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts,
-            double rampRateVoltsPerSecond) {
+                           double rampRateVoltsPerSecond) {
         this(
                 isCTRE,
                 subsystem,
@@ -45,7 +44,6 @@ public class SysIdCalibrator {
      * IMPORTANT:
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
-     * For more on kG look on calibration -> static -> StaticCalibrationObject -> FindKG
      */
     public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStep) {
         this(
@@ -62,7 +60,6 @@ public class SysIdCalibrator {
      * IMPORTANT:
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
-     * For more on kG look on calibration -> static -> StaticCalibrationObject -> FindKG
      */
     public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl) {
         this(
@@ -79,10 +76,9 @@ public class SysIdCalibrator {
      * IMPORTANT:
      *
      * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
-     * For more on kG look on calibration -> static -> StaticCalibrationObject -> FindKG
      */
     public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStepVolts,
-            double rampRateVoltsPerSecond, double timeoutSeconds) {
+                           double rampRateVoltsPerSecond, double timeoutSeconds) {
         this.usedSubSystem = subsystem;
         this.isCTRE = isCTRE;
 

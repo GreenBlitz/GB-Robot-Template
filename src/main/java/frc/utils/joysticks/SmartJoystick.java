@@ -36,23 +36,23 @@ public class SmartJoystick {
      */
     public SmartJoystick(Joystick stick, double deadzone) {
         this.deadzone = deadzone;
-        joystick = stick;
-        A = new JoystickButton(joystick, 1);
-        B = new JoystickButton(joystick, 2);
-        X = new JoystickButton(joystick, 3);
-        Y = new JoystickButton(joystick, 4);
-        L1 = new JoystickButton(joystick, 5);
-        R1 = new JoystickButton(joystick, 6);
-        BACK = new JoystickButton(joystick, 7);
-        START = new JoystickButton(joystick, 8);
-        L3 = new JoystickButton(joystick, 9);
-        R3 = new JoystickButton(joystick, 10);
-        L2 = new AxisButton(joystick, 2, 0.1);
-        R2 = new AxisButton(joystick, 3, 0.1);
-        POV_UP = new POVButton(joystick, 0);
-        POV_RIGHT = new POVButton(joystick, 90);
-        POV_DOWN = new POVButton(joystick, 180);
-        POV_LEFT = new POVButton(joystick, 270);
+        this.joystick = stick;
+        this.A = new JoystickButton(joystick, 1);
+        this.B = new JoystickButton(joystick, 2);
+        this.X = new JoystickButton(joystick, 3);
+        this.Y = new JoystickButton(joystick, 4);
+        this.L1 = new JoystickButton(joystick, 5);
+        this.R1 = new JoystickButton(joystick, 6);
+        this.BACK = new JoystickButton(joystick, 7);
+        this.START = new JoystickButton(joystick, 8);
+        this.L3 = new JoystickButton(joystick, 9);
+        this.R3 = new JoystickButton(joystick, 10);
+        this.L2 = new AxisButton(joystick, 2, 0.1);
+        this.R2 = new AxisButton(joystick, 3, 0.1);
+        this.POV_UP = new POVButton(joystick, 0);
+        this.POV_RIGHT = new POVButton(joystick, 90);
+        this.POV_DOWN = new POVButton(joystick, 180);
+        this.POV_LEFT = new POVButton(joystick, 270);
     }
 
     /**
@@ -129,8 +129,27 @@ public class SmartJoystick {
         if (!isStickAxis(axis)) {
             return axis.getValue(this);
         }
-        double squaredAxisValue = axis.getValue(this) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
+        double squaredAxisValue = getAxisValue(axis) * SmartJoystickConstants.JOYSTICK_AXIS_TO_SQUARE_FACTOR;
         return MathUtil.clamp(squaredAxisValue, -1, 1);
+    }
+
+    /**
+     * Make the stick value be parabolic instead of linear. By that it gives easier and soft control in low values.
+     *
+     * @param axis - axis the take value from
+     * @return the soft value
+     */
+    public double getSensitiveJoystickValue(Axis axis) {
+        return getSensitiveJoystickValue(getAxisValue(axis), SmartJoystickConstants.SENSITIVE_AXIS_VALUE_POWER);
+    }
+
+    private double getSensitiveJoystickValue(double axisValue, double power) {
+        return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
+    }
+
+    public double getSquaredSensitiveAxis(Axis axis) {
+        double squaredValue = getSquaredAxis(axis);
+        return getSensitiveJoystickValue(squaredValue, SmartJoystickConstants.SENSITIVE_SQUARED_AXIS_VALUE_POWER);
     }
 
     private boolean isStickAxis(Axis axis) {

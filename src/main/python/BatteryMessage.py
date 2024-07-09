@@ -15,7 +15,7 @@ __KEY_NAME = "is low"
 __IP = sys.argv[1]
 
 __TIME_BETWEEN_MESSAGES_SECONDS = 120
-__SHOW_MESSAGE_CHECKING_COOLDOWN_SECONDS = 0.1
+__SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS = 0.1
 
 
 def __config_window(window: tk.Tk):
@@ -63,7 +63,7 @@ def __track_message_until_client_disconnect(battery_message_client: ntcore.Netwo
         if __should_show_message(battery_table, last_time_showed):
             __show_message()
             last_time_showed = time.time()
-        time.sleep(__SHOW_MESSAGE_CHECKING_COOLDOWN_SECONDS)
+        time.sleep(__SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS)
 
 
 def __run_battery_message_client():

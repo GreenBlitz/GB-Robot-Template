@@ -23,11 +23,11 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
     public LoggedTableBoolean(String table, String key, boolean defaultValue) {
         this.inputs = new LoggableInputs() {
             public void toLog(LogTable table) {
-                table.put(LoggedTableBoolean.this.key, LoggedTableBoolean.this.value);
+                table.put(key, value);
             }
 
             public void fromLog(LogTable table) {
-                LoggedTableBoolean.this.value = table.get(LoggedTableBoolean.this.key, LoggedTableBoolean.this.defaultValue);
+                LoggedTableBoolean.this.value = table.get(key, defaultValue);
             }
         };
         this.key = key;
@@ -44,7 +44,7 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
     }
 
     public void set(boolean value) {
-        booleanTable.putValue(this.key, NetworkTableValue.makeBoolean(value));
+        booleanTable.putValue(key, NetworkTableValue.makeBoolean(value));
     }
 
     public boolean get() {
@@ -53,7 +53,7 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
 
     public void periodic() {
         if (!Logger.hasReplaySource()) {
-            this.value = booleanTable.getValue(this.key).getBoolean();
+            value = booleanTable.getValue(key).getBoolean();
         }
     }
 

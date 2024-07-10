@@ -50,9 +50,9 @@ public class ModuleUtils {
             double couplingRatio, Rotation2d maxSpeedPerSecond,
             double wheelDiameterMeters, double voltageCompensationSaturation
     ) {
-        Rotation2d velocityRevolutionsPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
+        Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
         double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
-                velocityRevolutionsPerSecond,
+                velocityPerSecond,
                 steerVelocityPerSecond,
                 couplingRatio
         );

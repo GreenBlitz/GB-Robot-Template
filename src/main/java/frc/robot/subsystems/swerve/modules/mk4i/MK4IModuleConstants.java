@@ -16,10 +16,10 @@ public class MK4IModuleConstants {
 
     protected static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
 
-    protected static final Rotation2d MAX_SPEED_PER_SECOND = Rotation2d.fromRotations(Conversions.distanceToRevolutions(
+    protected static final Rotation2d MAX_SPEED_PER_SECOND = Conversions.distanceToAngle(
             SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
             WHEEL_DIAMETER_METERS
-    ));
+    );
 
 
     protected static final double COUPLING_RATIO = 0.59;

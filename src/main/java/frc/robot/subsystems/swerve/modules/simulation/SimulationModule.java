@@ -5,6 +5,7 @@ import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
+import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 
 public class SimulationModule implements IModule {
@@ -20,6 +21,12 @@ public class SimulationModule implements IModule {
         this.simulationModuleActions = new SimulationModuleActions(simulationModuleConfigObject);
         this.simulationModuleStatus = new SimulationModuleStatus(simulationModuleConfigObject);
     }
+
+
+    private double toDriveMeters(Rotation2d angle) {
+        return Conversions.angleToDistance(angle, SimulationModuleConstants.WHEEL_DIAMETER_METERS);
+    }
+
 
     @Override
     public void stop() {
@@ -84,7 +91,9 @@ public class SimulationModule implements IModule {
         inputs.getDriveMotorInputs().velocity = simulationModuleStatus.getDriveVelocityAnglePerSecond();
         inputs.getDriveMotorInputs().current = simulationModuleStatus.getDriveCurrent();
         inputs.getDriveMotorInputs().voltage = simulationModuleStatus.getDriveVoltage();
-        inputs.getDriveMotorInputs().distanceOdometrySamples = new Rotation2d[]{inputs.getDriveMotorInputs().angle};
+        inputs.getDriveMotorInputs().distanceMeters = toDriveMeters(inputs.getDriveMotorInputs().angle);
+        inputs.getDriveMotorInputs().velocityMeters = toDriveMeters(inputs.getDriveMotorInputs().velocity);
+        inputs.getDriveMotorInputs().distanceOdometrySamples = new double[]{inputs.getDriveMotorInputs().distanceMeters};
     }
 
 }

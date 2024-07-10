@@ -169,9 +169,9 @@ public class Conversions {
     }
 
     /**
-     * Converts revolutions to distance.
+     * Converts angle to distance.
      *
-     * @param angle the revolutions
+     * @param angle the angle
      * @param wheelDiameter the wheel diameter
      * @return the distance
      */
@@ -180,7 +180,7 @@ public class Conversions {
     }
 
     /**
-     * Converts distance to revolutions.
+     * Converts distance to angle.
      *
      * @param distance the distance
      * @param wheelDiameter the wheel diameter

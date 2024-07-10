@@ -24,8 +24,8 @@ public class SimulationModuleConstants {
     protected static final DCMotor DRIVE_MOTOR_GEARBOX = DCMotor.getFalcon500Foc(1);
     protected static final DCMotor STEER_MOTOR_GEARBOX = DCMotor.getFalcon500Foc(1);
 
-    protected static final double DRIVE_MOMENT_OF_INERTIA = 0.003;
-    protected static final double STEER_MOMENT_OF_INERTIA = 0.003;
+    protected static final double DRIVE_MOMENT_OF_INERTIA = 0.001;
+    protected static final double STEER_MOMENT_OF_INERTIA = 0.00001;
 
     protected static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
     static {

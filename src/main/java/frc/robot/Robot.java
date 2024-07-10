@@ -32,9 +32,9 @@ public class Robot {
         // Register commands...
         PathPlannerUtils.configurePathPlanner(
                 Robot.poseEstimator::getCurrentPose,
-                Robot.poseEstimator::resetPose,
+                Robot.poseEstimator::resetPose, // todo - maybe cancel and base vision
                 Robot.swerve::getRobotRelativeVelocity,
-                (speeds) -> Robot.swerve.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: use command
+                (speeds) -> Robot.swerve.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // Will not change loop mode!!!
                 SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
                 DriverStationUtils::isRedAlliance,
                 Robot.swerve

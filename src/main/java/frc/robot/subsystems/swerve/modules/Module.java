@@ -35,11 +35,7 @@ public class Module {
 
     private void updateInputs() {
         module.updateInputs(moduleInputsContainer);
-
-        moduleInputsContainer.getDriveMotorInputs().distanceMeters = getDriveDistanceMeters();
-        moduleInputsContainer.getDriveMotorInputs().velocityMeters = getDriveVelocityMetersPerSecond();
         moduleInputsContainer.getModuleInputs().isAtTargetState = isAtTargetState();
-
         moduleInputsContainer.processInputs(ModuleUtils.getLoggingPath(moduleName));
     }
 
@@ -83,7 +79,7 @@ public class Module {
      */
     public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
         return new SwerveModulePosition(
-                ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().distanceOdometrySamples[odometryUpdateIndex]),
+                moduleInputsContainer.getDriveMotorInputs().distanceMetersOdometrySamples[odometryUpdateIndex],
                 moduleInputsContainer.getSteerMotorInputs().angleOdometrySamples[odometryUpdateIndex]
         );
     }
@@ -96,16 +92,12 @@ public class Module {
         return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
     }
 
-    public double getDriveDistanceMeters() {
-        return ModuleUtils.toDriveMeters(getDriveDistanceAngle());
-    }
-
     public Rotation2d getDriveDistanceAngle() {
         return moduleInputsContainer.getDriveMotorInputs().angle;
     }
 
     private double getDriveVelocityMetersPerSecond() {
-        return ModuleUtils.toDriveMeters(moduleInputsContainer.getDriveMotorInputs().velocity);
+        return moduleInputsContainer.getDriveMotorInputs().velocityMeters;
     }
 
     private Rotation2d getCurrentAngle() {

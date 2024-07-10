@@ -7,12 +7,25 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Ports;
-import frc.robot.subsystems.swerve.modules.ModuleConstants;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.utils.Conversions;
 
 public class MK4IModuleConstants {
 
-    public static final double COUPLING_RATIO = 0.59;
+    protected static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
+
+    protected static final Rotation2d MAX_SPEED_PER_SECOND = Conversions.distanceToAngle(
+            SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
+            WHEEL_DIAMETER_METERS
+    );
+
+
+    protected static final double COUPLING_RATIO = 0.59;
+
+    protected static final boolean ENABLE_FOC_DRIVE = true;
+    protected static final boolean ENABLE_FOC_STEER = true;
 
     private static final double DRIVE_SLIP_CURRENT = 30; //todo - calibrate
     private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
@@ -27,7 +40,7 @@ public class MK4IModuleConstants {
     static {
         DRIVE_MOTOR_CONFIG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         DRIVE_MOTOR_CONFIG.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        DRIVE_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = ModuleConstants.DRIVE_GEAR_RATIO;
+        DRIVE_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = 6.12;
 
         DRIVE_MOTOR_CONFIG.TorqueCurrent.PeakForwardTorqueCurrent = DRIVE_SLIP_CURRENT;
         DRIVE_MOTOR_CONFIG.TorqueCurrent.PeakReverseTorqueCurrent = -DRIVE_SLIP_CURRENT;
@@ -49,7 +62,7 @@ public class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = STEER_CURRENT_LIMIT;
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        STEER_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = ModuleConstants.STEER_GEAR_RATIO;
+        STEER_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = 150.0 / 7.0;
         STEER_MOTOR_CONFIG.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
         STEER_MOTOR_CONFIG.Slot0.kS = 0.19648;

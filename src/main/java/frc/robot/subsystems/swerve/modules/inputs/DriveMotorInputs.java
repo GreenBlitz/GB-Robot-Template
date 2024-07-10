@@ -14,6 +14,6 @@ public class DriveMotorInputs {
     public Rotation2d acceleration = new Rotation2d();
     public double current = 0;
     public double voltage = 0;
-    public Rotation2d[] distanceOdometrySamples = new Rotation2d[0];
+    public double[] distanceMetersOdometrySamples = new double[0];
 
 }

@@ -1,5 +1,6 @@
 package frc.utils;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.constants.MathConstants;
 
@@ -168,25 +169,25 @@ public class Conversions {
     }
 
     /**
-     * Converts revolutions to distance.
+     * Converts angle to distance.
      *
-     * @param revolutions the revolutions
+     * @param angle the angle
      * @param wheelDiameter the wheel diameter
      * @return the distance
      */
-    public static double revolutionsToDistance(double revolutions, double wheelDiameter) {
-        return revolutions * wheelDiameter * MathConstants.HALF_CIRCLE.getRadians();
+    public static double angleToDistance(Rotation2d angle, double wheelDiameter) {
+        return angle.getRotations() * wheelDiameter * MathConstants.HALF_CIRCLE.getRadians();
     }
 
     /**
-     * Converts distance to revolutions.
+     * Converts distance to angle.
      *
      * @param distance the distance
      * @param wheelDiameter the wheel diameter
-     * @return the revolutions
+     * @return the angle
      */
-    public static double distanceToRevolutions(double distance, double wheelDiameter) {
-        return distance / (wheelDiameter * MathConstants.HALF_CIRCLE.getRadians());
+    public static Rotation2d distanceToAngle(double distance, double wheelDiameter) {
+        return Rotation2d.fromRotations(distance / (wheelDiameter * MathConstants.HALF_CIRCLE.getRadians()));
     }
 
     /**

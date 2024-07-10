@@ -33,7 +33,7 @@ public class Robot {
         PathPlannerUtils.configurePathPlanner(
                 Robot.poseEstimator::getCurrentPose,
                 Robot.poseEstimator::resetPose,
-                Robot.swerve::getSelfRelativeVelocity,
+                Robot.swerve::getRobotRelativeVelocity,
                 (speeds) -> Robot.swerve.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: use command
                 SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
                 DriverStationUtils::isRedAlliance,

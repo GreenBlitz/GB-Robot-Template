@@ -54,8 +54,8 @@ public class JoysticksBindings {
         // Rotate Around BACK_RIGHT to -17 Deg
         usedJoystick.POV_RIGHT.whileTrue(SwerveCommands.rotateToAngle(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE));
 
-        //Self Relative Drive
-        usedJoystick.L3.whileTrue(SwerveCommands.driveSelfRelative(
+        //Robot Relative Drive
+        usedJoystick.L3.whileTrue(SwerveCommands.driveRobotRelative(
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)

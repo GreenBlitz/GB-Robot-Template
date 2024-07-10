@@ -231,20 +231,20 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    public ChassisSpeeds getSelfRelativeVelocity() {
+    public ChassisSpeeds getRobotRelativeVelocity() {
         return SwerveConstants.KINEMATICS.toChassisSpeeds(getModulesStates());
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
-        return ChassisSpeeds.fromRobotRelativeSpeeds(getSelfRelativeVelocity(), currentAngleSupplier.get());
+        return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeVelocity(), currentAngleSupplier.get());
     }
 
     private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        if (swerveState.getDriveMode() == DriveRelative.SELF_RELATIVE) {
+        if (swerveState.getDriveMode() == DriveRelative.ROBOT_RELATIVE) {
             return chassisSpeeds;
         }
         else {
-            return fieldRelativeToSelfRelativeSpeeds(chassisSpeeds, getAllianceRelativeAngle());
+            return fieldRelativeToRobotRelativeSpeeds(chassisSpeeds, getAllianceRelativeAngle());
         }
     }
 
@@ -378,7 +378,7 @@ public class Swerve extends GBSubsystem {
         double angleDifferenceDeg = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
         boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
 
-        double currentRotationVelocityRadians = getSelfRelativeVelocity().omegaRadiansPerSecond;
+        double currentRotationVelocityRadians = getRobotRelativeVelocity().omegaRadiansPerSecond;
         boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
         return isAtAngle && isStopping;
@@ -413,7 +413,7 @@ public class Swerve extends GBSubsystem {
         return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond, clampedAngularVelocity);
     }
 
-    private static ChassisSpeeds fieldRelativeToSelfRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
+    private static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
     }
 

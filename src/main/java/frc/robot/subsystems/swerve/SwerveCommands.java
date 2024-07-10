@@ -173,14 +173,14 @@ public class SwerveCommands {
         return driveAroundWheel;
     }
 
-    public static Command driveSelfRelative(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
-        Command driveSelfRelative = new InitExecuteCommand(
+    public static Command driveRobotRelative(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
+        Command driveRobotRelative = new InitExecuteCommand(
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER),
                 () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 swerve
         );
-        driveSelfRelative.setName("Self Relative Drive");
-        return driveSelfRelative;
+        driveRobotRelative.setName("Robot Relative Drive");
+        return driveRobotRelative;
     }
 
     public static Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {

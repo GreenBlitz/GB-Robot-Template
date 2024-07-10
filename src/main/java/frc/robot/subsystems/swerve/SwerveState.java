@@ -14,7 +14,7 @@ public class SwerveState {
     private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_ROBOT;
     private static final AimAssist DEFAULT_AIM_ASSIST = AimAssist.NONE;
 
-    public static final SwerveState DEFAULT_PATH_PLANNER = new SwerveState().withDriveMode(DriveRelative.SELF_RELATIVE);
+    public static final SwerveState DEFAULT_PATH_PLANNER = new SwerveState().withDriveMode(DriveRelative.ROBOT_RELATIVE);
     public static final SwerveState DEFAULT_DRIVE = new SwerveState();
 
 

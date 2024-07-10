@@ -45,13 +45,13 @@ public class ModuleUtils {
     }
 
 
-    public static double toDriveMeters(Rotation2d revolutions) {
-        return Conversions.revolutionsToDistance(revolutions.getRotations(), ModuleConstants.WHEEL_DIAMETER_METERS);
+    public static double toDriveMeters(Rotation2d revolutions, double wheelDiameterMeters) {
+        return Conversions.revolutionsToDistance(revolutions.getRotations(), wheelDiameterMeters);
     }
 
-    public static Rotation2d fromDriveMetersToDriveAngle(double velocityMetersPerSecond) {
+    public static Rotation2d fromDriveMetersToDriveAngle(double velocityMetersPerSecond, double wheelDiameterMeters) {
         return Rotation2d.fromRotations(
-                Conversions.distanceToRevolutions(velocityMetersPerSecond, ModuleConstants.WHEEL_DIAMETER_METERS)
+                Conversions.distanceToRevolutions(velocityMetersPerSecond, wheelDiameterMeters)
         );
     }
 
@@ -59,9 +59,9 @@ public class ModuleUtils {
     public static double velocityToOpenLoopVoltage(
             double velocityMetersPerSecond, Rotation2d steerVelocityPerSecond,
             double couplingRatio, Rotation2d maxSpeedPerSecond,
-            double voltageCompensationSaturation
+            double wheelDiameterMeters, double voltageCompensationSaturation
     ) {
-        Rotation2d velocityRevolutionsPerSecond = fromDriveMetersToDriveAngle(velocityMetersPerSecond);
+        Rotation2d velocityRevolutionsPerSecond = fromDriveMetersToDriveAngle(velocityMetersPerSecond, wheelDiameterMeters);
         double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
                 velocityRevolutionsPerSecond,
                 steerVelocityPerSecond,

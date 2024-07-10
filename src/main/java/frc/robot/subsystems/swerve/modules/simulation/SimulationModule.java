@@ -54,7 +54,8 @@ public class SimulationModule implements IModule {
                 targetVelocityMetersPerSecond,
                 simulationModuleStatus.getSteerVelocity(),
                 0,
-                ModuleConstants.MAX_SPEED_PER_SECOND,
+                SimulationModuleConstants.MAX_SPEED_PER_SECOND,
+                SimulationModuleConstants.WHEEL_DIAMETER_METERS,
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());

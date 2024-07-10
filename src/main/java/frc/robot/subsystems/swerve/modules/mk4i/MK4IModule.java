@@ -129,7 +129,7 @@ public class MK4IModule implements IModule {
         inputs.getDriveMotorInputs().voltage = mk4iModuleStatus.getDriveMotorVoltageSignal(false).getValue();
         inputs.getDriveMotorInputs().distanceMeters = toDriveMeters(inputs.getDriveMotorInputs().angle);
         inputs.getDriveMotorInputs().velocityMeters = toDriveMeters(inputs.getDriveMotorInputs().velocity);
-        inputs.getDriveMotorInputs().distanceOdometrySamples = drivePositionQueue.stream().mapToDouble(this::toDriveMeters).toArray();
+        inputs.getDriveMotorInputs().distanceMetersOdometrySamples = drivePositionQueue.stream().mapToDouble(this::toDriveMeters).toArray();
         drivePositionQueue.clear();
     }
 

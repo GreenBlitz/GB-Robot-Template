@@ -93,7 +93,7 @@ public class SimulationModule implements IModule {
         inputs.getDriveMotorInputs().voltage = simulationModuleStatus.getDriveVoltage();
         inputs.getDriveMotorInputs().distanceMeters = toDriveMeters(inputs.getDriveMotorInputs().angle);
         inputs.getDriveMotorInputs().velocityMeters = toDriveMeters(inputs.getDriveMotorInputs().velocity);
-        inputs.getDriveMotorInputs().distanceOdometrySamples = new double[]{inputs.getDriveMotorInputs().distanceMeters};
+        inputs.getDriveMotorInputs().distanceMetersOdometrySamples = new double[]{inputs.getDriveMotorInputs().distanceMeters};
     }
 
 }

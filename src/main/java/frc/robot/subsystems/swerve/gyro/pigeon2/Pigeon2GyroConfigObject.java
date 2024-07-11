@@ -34,11 +34,11 @@ public class Pigeon2GyroConfigObject {
     private void optimizeBusAndSignalOfGyro() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-                signals.X_ACCELERATION_SIGNAL(),
-                signals.Y_ACCELERATION_SIGNAL(),
-                signals.Z_ACCELERATION_SIGNAL()
+                signals.xAccelerationSignal(),
+                signals.yAccelerationSignal(),
+                signals.zAccelerationSignal()
         );
-        signals.YAW_SIGNAL().setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);
+        signals.yawSignal().setUpdateFrequency(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ);
 
         gyro.optimizeBusUtilization();
     }

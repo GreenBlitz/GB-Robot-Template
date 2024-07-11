@@ -29,20 +29,20 @@ class Pigeon2GyroStatus {
     }
 
     public StatusSignal<Double> getYawSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.YAW_SIGNAL());
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.yawSignal());
     }
 
 
     public StatusSignal<Double> getXAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.X_ACCELERATION_SIGNAL());
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.xAccelerationSignal());
     }
 
     public StatusSignal<Double> getYAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.Y_ACCELERATION_SIGNAL());
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.yAccelerationSignal());
     }
 
     public StatusSignal<Double> getZAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.Z_ACCELERATION_SIGNAL());
+        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.zAccelerationSignal());
     }
 
 }

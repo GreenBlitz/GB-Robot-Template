@@ -11,15 +11,6 @@ public class Conversions {
     public static final double HUNDRED_MILLIESECONDS_PER_SECONDS = 10;
     public static final double SECONDS_PER_MINUTE = 60;
 
-    /**
-     * Converts ticks from a Mag Encoder to degrees.
-     *
-     * @param magTicks ticks from a Mag Encoder
-     * @return degrees
-     */
-    public static double magTicksToDegrees(double magTicks) {
-        return revolutionsToDegrees(magTicksToRevolutions(magTicks));
-    }
 
     /**
      * Converts revolutions to degrees.
@@ -29,6 +20,16 @@ public class Conversions {
      */
     public static double revolutionsToDegrees(double revolutions) {
         return revolutions * DEGREES_PER_REVOLUTIONS;
+    }
+
+    /**
+     * Converts ticks from a Mag Encoder to degrees.
+     *
+     * @param magTicks ticks from a Mag Encoder
+     * @return degrees
+     */
+    public static double magTicksToDegrees(double magTicks) {
+        return revolutionsToDegrees(magTicksToRevolutions(magTicks));
     }
 
     /**

@@ -62,7 +62,7 @@ public class Swerve extends GBSubsystem {
                 currentPoseSupplier,
                 resetPoseConsumer, // todo - maybe cancel and base vision
                 this::getRobotRelativeVelocity,
-                (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // Will not change loop mode!!!
+                (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: Will not change loop mode!!!
                 SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
                 DriverStationUtils::isRedAlliance,
                 this

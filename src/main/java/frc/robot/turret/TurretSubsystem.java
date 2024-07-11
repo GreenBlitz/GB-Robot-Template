@@ -36,6 +36,9 @@ public class TurretSubsystem extends GBSubsystem {
         return inputs.velocity;
     }
 
+    public void setPower (double power){
+        turret.setPower(power);
+    }
 
     public void handleRotateToPoint(Translation2d targetPoint, Translation2d robotPosition) {
         Translation2d normalizedRobotPosition = targetPoint.minus(robotPosition);

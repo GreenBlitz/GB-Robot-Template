@@ -23,12 +23,14 @@ import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 
@@ -53,6 +55,18 @@ public class Swerve extends GBSubsystem {
         this.gyro = SwerveGyroFactory.createSwerveGyro();
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
+    }
+
+    public void buildPathPlannerForAuto(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
+        PathPlannerUtils.configurePathPlanner(
+                currentPoseSupplier,
+                resetPoseConsumer, // todo - maybe cancel and base vision
+                this::getRobotRelativeVelocity,
+                (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // Will not change loop mode!!!
+                SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
+                DriverStationUtils::isRedAlliance,
+                this
+        );
     }
 
     @Override
@@ -347,7 +361,7 @@ public class Swerve extends GBSubsystem {
         driveByState(chassisSpeeds, currentState);
     }
 
-    public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+    protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState);
 
         if (isStill(chassisSpeeds)) {

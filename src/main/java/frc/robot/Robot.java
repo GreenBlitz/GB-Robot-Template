@@ -7,12 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
-import frc.utils.DriverStationUtils;
 import frc.utils.RobotTypeUtils;
-import frc.utils.pathplannerutils.PathPlannerUtils;
 
 
 public class Robot {
@@ -28,27 +24,17 @@ public class Robot {
         configureBindings();
     }
 
-
-    private void buildPathPlannerForAuto() {
-        // Register commands...
-        PathPlannerUtils.configurePathPlanner(
-                Robot.poseEstimator::getCurrentPose,
-                Robot.poseEstimator::resetPose, // todo - maybe cancel and base vision
-                Robot.swerve::getRobotRelativeVelocity,
-                (speeds) -> Robot.swerve.driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // Will not change loop mode!!!
-                SwerveConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
-                DriverStationUtils::isRedAlliance,
-                Robot.swerve
-        );
-    }
-
-
     private void initializeSubsystems() {
 
     }
 
     private void configureCommands() {
 
+    }
+
+    private void buildPathPlannerForAuto() {
+        // Register commands...
+        swerve.buildPathPlannerForAuto(poseEstimator::getCurrentPose, poseEstimator::resetPose);
     }
 
     private void configureBindings() {

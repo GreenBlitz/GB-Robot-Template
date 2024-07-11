@@ -124,14 +124,14 @@ public class SwerveCommands {
     public static Command driveWithAimAssist(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, AimAssist aimAssist) {
         return driveState(
                 xSupplier, ySupplier, thetaSupplier,
-                SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)
+                () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)
         ).withName("Aim Assist to: " + aimAssist);
     }
 
     public static Command driveAroundWheel(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<RotateAxis> rotateAxis) {
         return driveState(
                 xSupplier, ySupplier, thetaSupplier,
-                SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())
+                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())
         ).withName("Drive Around " + rotateAxis.get());
     }
 
@@ -147,16 +147,21 @@ public class SwerveCommands {
         return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE).withName("Default Drive");
     }
 
+    private static Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, SwerveState state) {
+        return driveState(xSupplier, ySupplier, thetaSupplier, () -> state);
+    }
+
     private static Command driveState(
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
-            SwerveState state
+            Supplier<SwerveState> state
     ) {
         return new InitExecuteCommand(
-                () -> swerve.initializeDrive(state),
+                () -> swerve.initializeDrive(state.get()),
                 () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 swerve
         );
     }
+
 
 
     public static Command driveToPose(Supplier<Pose2d> targetPose) {

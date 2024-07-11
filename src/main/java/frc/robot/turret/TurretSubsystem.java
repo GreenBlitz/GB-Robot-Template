@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 
 import static frc.robot.turret.TurretConstants.LOGGING_PATH;

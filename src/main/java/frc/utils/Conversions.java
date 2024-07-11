@@ -14,21 +14,23 @@ public class Conversions {
     /**
      * Converts ticks from a Mag Encoder to angle.
      *
+     * @param systemGearRatio the gear ratio of the system, when motor/ration = system
      * @param magTicks ticks from a Mag Encoder
      * @return angle
      */
-    public static Rotation2d magTicksToAngle(double magTicks) {
-        return Rotation2d.fromRotations(magTicks / MAG_TICKS);
+    public static Rotation2d magTicksToAngle(double magTicks, double systemGearRatio) {
+        return Rotation2d.fromRotations(magTicks / MAG_TICKS / systemGearRatio);
     }
 
     /**
      * Converts angle to Mag Encoder ticks.
      *
+     * @param systemGearRatio the gear ratio of the system, when motor/ration = system
      * @param angle angle
      * @return Mag Encoder ticks
      */
-    public static double angleToMagTicks(Rotation2d angle) {
-        return angle.getRotations() * MAG_TICKS;
+    public static double angleToMagTicks(Rotation2d angle, double systemGearRatio) {
+        return angle.getRotations() * MAG_TICKS * systemGearRatio;
     }
 
     /**

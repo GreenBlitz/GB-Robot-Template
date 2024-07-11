@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.constants.Ports;
+import frc.robot.turret.commands.TurretCommands;
 import frc.utils.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
@@ -22,6 +23,9 @@ public class JoysticksBindings {
 
     private static void mainJoystickButtons() {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
+
+        usedJoystick.A.whileTrue(TurretCommands.manualControl(usedJoystick));
+
         // bindings
     }
 

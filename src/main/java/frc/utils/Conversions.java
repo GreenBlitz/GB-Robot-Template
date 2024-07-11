@@ -7,69 +7,28 @@ import frc.robot.constants.MathConstants;
 public class Conversions {
 
     public static final double MAG_TICKS = 4096;
-    public static final double DEGREES_PER_REVOLUTIONS = 360;
     public static final double HUNDRED_MILLIESECONDS_PER_SECONDS = 10;
     public static final double SECONDS_PER_MINUTE = 60;
 
 
     /**
-     * Converts revolutions to degrees.
-     *
-     * @param revolutions revolutions
-     * @return degrees
-     */
-    public static double revolutionsToDegrees(double revolutions) {
-        return revolutions * DEGREES_PER_REVOLUTIONS;
-    }
-
-    /**
-     * Converts ticks from a Mag Encoder to degrees.
+     * Converts ticks from a Mag Encoder to angle.
      *
      * @param magTicks ticks from a Mag Encoder
-     * @return degrees
+     * @return angle
      */
-    public static double magTicksToDegrees(double magTicks) {
-        return revolutionsToDegrees(magTicksToRevolutions(magTicks));
+    public static Rotation2d magTicksToAngle(double magTicks) {
+        return Rotation2d.fromRotations(magTicks / MAG_TICKS);
     }
 
     /**
-     * Converts ticks from a Mag Encoder to revolutions.
+     * Converts angle to Mag Encoder ticks.
      *
-     * @param magTicks ticks from a Mag Encoder
-     * @return revolutions
-     */
-    public static double magTicksToRevolutions(double magTicks) {
-        return magTicks / MAG_TICKS;
-    }
-
-    /**
-     * Converts degrees to Mag Encoder ticks.
-     *
-     * @param degrees degrees
+     * @param angle angle
      * @return Mag Encoder ticks
      */
-    public static double degreesToMagTicks(double degrees) {
-        return revolutionsToMagTicks(degreesToRevolutions(degrees));
-    }
-
-    /**
-     * Converts revolutions to Mag Encoder ticks.
-     *
-     * @param revolutions revolutions
-     * @return Mag Encoder ticks
-     */
-    public static double revolutionsToMagTicks(double revolutions) {
-        return revolutions * MAG_TICKS;
-    }
-
-    /**
-     * Converts degrees to revolutions.
-     *
-     * @param degrees degrees
-     * @return revolutions
-     */
-    public static double degreesToRevolutions(double degrees) {
-        return degrees / DEGREES_PER_REVOLUTIONS;
+    public static double angleToMagTicks(Rotation2d angle) {
+        return angle.getRotations() * MAG_TICKS;
     }
 
     /**
@@ -170,7 +129,7 @@ public class Conversions {
     }
 
     /**
-     * Converts revolutions to distance.
+     * Converts angle to distance.
      *
      * @param angle the angle
      * @param wheelDiameter the wheel diameter
@@ -181,7 +140,7 @@ public class Conversions {
     }
 
     /**
-     * Converts distance to revolutions.
+     * Converts distance to angle.
      *
      * @param distance the distance
      * @param wheelDiameter the wheel diameter

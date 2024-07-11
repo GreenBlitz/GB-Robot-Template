@@ -3,7 +3,7 @@ package frc.utils.logger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-enum LogSaveSpot {
+enum LogSavePath {
 
     USB(Path.of("/media/sda1")),
     ROBORIO(Path.of("/home/lvuser/logs")),
@@ -11,7 +11,7 @@ enum LogSaveSpot {
 
     private final Path savePath;
 
-    LogSaveSpot(Path savePath) {
+    LogSavePath(Path savePath) {
         this.savePath = savePath;
     }
 

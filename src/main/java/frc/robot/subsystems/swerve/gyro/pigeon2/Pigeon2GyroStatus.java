@@ -14,6 +14,15 @@ class Pigeon2GyroStatus {
         this.gyroPigeon2Signals = gyroPigeon2Signals;
     }
 
+    public StatusCode refreshAllSignals() {
+        return BaseStatusSignal.refreshAll(
+                getYawSignal(false),
+                getXAccelerationSignal(false),
+                getYAccelerationSignal(false),
+                getZAccelerationSignal(false)
+        );
+    }
+
 
     public Rotation2d getYaw(boolean refresh) {
         return Rotation2d.fromDegrees(getYawSignal(refresh).getValue());
@@ -34,16 +43,6 @@ class Pigeon2GyroStatus {
 
     public StatusSignal<Double> getZAccelerationSignal(boolean refresh) {
         return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.Z_ACCELERATION_SIGNAL());
-    }
-
-
-    public StatusCode refreshAllSignals() {
-        return BaseStatusSignal.refreshAll(
-                getYawSignal(false),
-                getXAccelerationSignal(false),
-                getYAccelerationSignal(false),
-                getZAccelerationSignal(false)
-        );
     }
 
 }

@@ -84,7 +84,9 @@ public class TurretSubsystem extends GBSubsystem {
         handleState(this.state);
 
         turret.updateInputs(inputs);
-        Logger.processInputs("Turret",inputs);
+        Logger.processInputs(getLogPath(),inputs);
+
+        Logger.recordOutput(getLogPath()+"state", state);
     }
 
 }

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.gyro.pigeon2;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import frc.robot.constants.Ports;
+import frc.robot.constants.DeviceIDs;
 
 public class Pigeon2GyroConstants {
 
@@ -13,7 +13,7 @@ public class Pigeon2GyroConstants {
     }
 
     public static final Pigeon2GyroConfigObject PIGEON_2_GYRO_CONFIG_OBJECT = new Pigeon2GyroConfigObject(
-            Ports.PIGEON_2_DEVICE_ID,
+            DeviceIDs.PIGEON_2_DEVICE_ID,
             PIGEON_2_CONFIGURATION
     );
 

@@ -21,9 +21,7 @@ public class ElevatorSimulation extends MotorSimulation {
     }
 
     /**
-     * Returns in Rotation2D the position of the drum
-     *
-     * @return the position
+     * Returns in Rotation2D the position of the drum.
      */
     @Override
     public Rotation2d getPosition() {
@@ -35,9 +33,7 @@ public class ElevatorSimulation extends MotorSimulation {
     }
 
     /**
-     * Returns the velocity in Rotation2D of the drum
-     *
-     * @return the velocity
+     * Returns the velocity in Rotation2D of the drum.
      */
     @Override
     public Rotation2d getVelocity() {

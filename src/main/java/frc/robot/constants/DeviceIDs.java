@@ -1,10 +1,8 @@
 package frc.robot.constants;
 
-
 import frc.utils.ctre.BusChain;
 import frc.utils.ctre.CTREDeviceID;
-
-public class Ports {
+public class DeviceIDs {
 
     public static final CTREDeviceID PIGEON_2_DEVICE_ID = new CTREDeviceID(0, BusChain.CANIVORE);
 

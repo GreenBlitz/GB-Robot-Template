@@ -28,6 +28,7 @@ public class Robot {
         configureBindings();
     }
 
+
     private void buildPathPlannerForAuto() {
         // Register commands...
         PathPlannerUtils.configurePathPlanner(
@@ -39,6 +40,15 @@ public class Robot {
                 DriverStationUtils::isRedAlliance,
                 Robot.swerve
         );
+    }
+
+
+    private void initializeSubsystems() {
+
+    }
+
+    private void configureCommands() {
+
     }
 
     private void configureBindings() {

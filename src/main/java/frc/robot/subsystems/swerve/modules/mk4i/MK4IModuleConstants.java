@@ -8,7 +8,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.Ports;
+import frc.robot.constants.DeviceIDs;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.Conversions;
 
@@ -76,43 +76,43 @@ public class MK4IModuleConstants {
 
     public static final MK4IModuleConfigObject[] MODULE_CONFIG_OBJECTS = {
             new MK4IModuleConfigObject(
-                    Ports.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
+                    DeviceIDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
                     true,
                     STEER_MOTOR_CONFIG,
-                    Ports.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
+                    DeviceIDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
                     false,
                     DRIVE_MOTOR_CONFIG,
-                    Ports.CANCodersIDs.FRONT_LEFT_ENCODER,
+                    DeviceIDs.CANCodersIDs.FRONT_LEFT_ENCODER,
                     ENCODER_CONFIG
             ),
             new MK4IModuleConfigObject(
-                    Ports.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
+                    DeviceIDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
                     true,
                     STEER_MOTOR_CONFIG,
-                    Ports.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
+                    DeviceIDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
                     true,
                     DRIVE_MOTOR_CONFIG,
-                    Ports.CANCodersIDs.FRONT_RIGHT_ENCODER,
+                    DeviceIDs.CANCodersIDs.FRONT_RIGHT_ENCODER,
                     ENCODER_CONFIG
             ),
             new MK4IModuleConfigObject(
-                    Ports.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
+                    DeviceIDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
                     false,
                     STEER_MOTOR_CONFIG,
-                    Ports.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
+                    DeviceIDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
                     false,
                     DRIVE_MOTOR_CONFIG,
-                    Ports.CANCodersIDs.BACK_LEFT_ENCODER,
+                    DeviceIDs.CANCodersIDs.BACK_LEFT_ENCODER,
                     ENCODER_CONFIG
             ),
             new MK4IModuleConfigObject(
-                    Ports.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
+                    DeviceIDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
                     true,
                     STEER_MOTOR_CONFIG,
-                    Ports.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
+                    DeviceIDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
                     false,
                     DRIVE_MOTOR_CONFIG,
-                    Ports.CANCodersIDs.BACK_RIGHT_ENCODER,
+                    DeviceIDs.CANCodersIDs.BACK_RIGHT_ENCODER,
                     ENCODER_CONFIG
             )
     };

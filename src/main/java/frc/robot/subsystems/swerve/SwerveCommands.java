@@ -47,28 +47,21 @@ public class SwerveCommands {
 
 
     public static Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-        Command steerCalibration = steerCalibrator.getSysIdCommand(isQuasistatic, direction);
-        steerCalibration.setName("Steer Calibration");
-        return steerCalibration;
+        return steerCalibrator.getSysIdCommand(isQuasistatic, direction).withName("Steer Calibration");
     }
 
     public static Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
         Command sysIdCommand = driveCalibrator.getSysIdCommand(isQuasistatic, direction);
         sysIdCommand.getRequirements().clear();
 
-        Command driveCalibration = new SequentialCommandGroup(
+        return new SequentialCommandGroup(
                 pointWheels(new Rotation2d(), false),
-                new ParallelDeadlineGroup(
-                        sysIdCommand,
-                        pointWheels(new Rotation2d(), false).repeatedly()
-                )
-        );
-        driveCalibration.setName("Drive Calibration");
-        return driveCalibration;
+                new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false).repeatedly())
+        ).withName("Drive Calibration");
     }
 
     public static Command wheelRadiusCalibration() {
-        Command wheelRadiusCalibration = new SequentialCommandGroup(
+        return new SequentialCommandGroup(
                 pointWheelsInCircle(),
                 new WheelRadiusCharacterization(
                         swerve,
@@ -79,46 +72,37 @@ public class SwerveCommands {
                         swerve::runWheelRadiusCharacterization,
                         swerve::stop
                 )
-        );
-        wheelRadiusCalibration.setName("Wheel Radius Calibration");
-        return wheelRadiusCalibration;
+        ).withName("Wheel Radius Calibration");
     }
 
 
     public static Command pointWheelsInX() {
-        Command pointWheelsInX = new FunctionalCommand(
+        return new FunctionalCommand(
                 () -> {},
                 swerve::pointWheelsInX,
                 interrupted -> {},
                 swerve::isModulesAtStates,
                 swerve
-        );
-        pointWheelsInX.setName("Point Wheels In X");
-        return pointWheelsInX;
+        ).withName("Point Wheels In X");
     }
 
     public static Command pointWheelsInCircle() {
-        Command pointWheelsInCircle = new FunctionalCommand(
+        return new FunctionalCommand(
                 () -> {},
                 swerve::pointWheelsInCircle,
                 interrupted -> {},
-                swerve::isModulesAtStates,
-                swerve
-        );
-        pointWheelsInCircle.setName("Point Wheels In Circle");
-        return pointWheelsInCircle;
+                swerve::isModulesAtStates, swerve
+        ).withName("Point Wheels In Circle");
     }
 
     public static Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
-        Command pointWheels = new FunctionalCommand(
+        return new FunctionalCommand(
                 () -> {},
                 () -> swerve.pointWheels(wheelsAngle, optimize),
                 interrupted -> {},
                 swerve::isModulesAtStates,
                 swerve
-        );
-        pointWheels.setName("Point Wheels");
-        return pointWheels;
+        ).withName("Point Wheels");
     }
 
 
@@ -127,88 +111,70 @@ public class SwerveCommands {
     }
 
     public static Command rotateToAngle(Rotation2d targetAngle, RotateAxis rotateAxis) {
-        Command rotateToAngle = new FunctionalCommand(
+        return new FunctionalCommand(
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 () -> swerve.rotateToAngle(targetAngle),
                 interrupted -> {},
                 () -> swerve.isAtAngle(targetAngle),
                 swerve
-        );
-        rotateToAngle.setName("Rotate Around " + rotateAxis.name() + "To " + targetAngle.getDegrees());
-        return rotateToAngle;
+        ).withName("Rotate Around " + rotateAxis.name() + " To " + targetAngle.getDegrees() + " Degrees");
     }
 
+
+    public static Command driveWithAimAssist(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, AimAssist aimAssist) {
+        return driveState(
+                xSupplier, ySupplier, thetaSupplier,
+                () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)
+        ).withName("Aim Assist to: " + aimAssist);
+    }
+
+    public static Command driveAroundWheel(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<RotateAxis> rotateAxis) {
+        return driveState(
+                xSupplier, ySupplier, thetaSupplier,
+                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())
+        ).withName("Drive Around " + rotateAxis.get());
+    }
 
     public static Command driveSlow(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
-        Command driveSlow = new InitExecuteCommand(
-                () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)),
-                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
-                swerve
-        );
-        driveSlow.setName("Slow Drive");
-        return driveSlow;
-    }
-
-    public static Command driveWithAimAssist(
-            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, AimAssist aimAssist
-    ) {
-        Command driveWithAimAssist = new InitExecuteCommand(
-                () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)),
-                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
-                swerve
-        );
-        driveWithAimAssist.setName("Rotate to Speaker");
-        return driveWithAimAssist;
-    }
-
-    public static Command driveAroundWheel(
-            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<RotateAxis> rotateAxis
-    ) {
-        Command driveAroundWheel = new InitExecuteCommand(
-                () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())),
-                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
-                swerve
-        );
-        driveAroundWheel.setName("Drive Around " + rotateAxis.get().name());
-        return driveAroundWheel;
+        return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)).withName("Slow Drive");
     }
 
     public static Command driveRobotRelative(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
-        Command driveRobotRelative = new InitExecuteCommand(
-                () -> swerve.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER),
-                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
-                swerve
-        );
-        driveRobotRelative.setName("Robot Relative Drive");
-        return driveRobotRelative;
+        return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_PATH_PLANNER).withName("Robot Relative Drive");
     }
 
     public static Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
-        Command drive = new InitExecuteCommand(
-                () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE),
+        return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE).withName("Default Drive");
+    }
+
+    private static Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, SwerveState state) {
+        return driveState(xSupplier, ySupplier, thetaSupplier, () -> state);
+    }
+
+    private static Command driveState(
+            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
+            Supplier<SwerveState> state
+    ) {
+        return new InitExecuteCommand(
+                () -> swerve.initializeDrive(state.get()),
                 () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
                 swerve
         );
-        drive.setName("Default Drive");
-        return drive;
     }
+
 
 
     public static Command driveToPose(Supplier<Pose2d> targetPose) {
-        Command driveToPose = new DeferredCommand(() -> driveToPose(targetPose.get()), Set.of(swerve));
-        driveToPose.setName("Drive to " + targetPose.get());
-        return driveToPose;
+        return new DeferredCommand(() -> driveToPose(targetPose.get()), Set.of(swerve)).withName("Drive to " + targetPose.get());
     }
 
     public static Command driveToPose(Pose2d targetPose) {
-        Command driveToPose =  new SequentialCommandGroup(
+        return new SequentialCommandGroup(
                 new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER)),
                 pathToPose(targetPose),
                 new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE)),
                 pidToPose(targetPose)
-        );
-        driveToPose.setName("Drive to " + targetPose);
-        return driveToPose;
+        ).withName("Drive to " + targetPose);
     }
 
     private static Command pathToPose(Pose2d targetBluePose) {

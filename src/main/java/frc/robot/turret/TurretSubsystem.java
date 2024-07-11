@@ -5,27 +5,35 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 import static frc.robot.turret.TurretConstants.LOGGING_PATH;
 
 public class TurretSubsystem extends GBSubsystem {
 
-    ITurret turret;
-    TurretState state;
-    TurretInputsAutoLogged inputs;
+    private ITurret turret;
+    private TurretState state;
+    private TurretInputsAutoLogged inputs;
+    private Translation2d targetPoint;
 
     public TurretSubsystem(ITurret turret) {
         this.turret = turret;
+
         inputs = new TurretInputsAutoLogged();
         turret.updateInputs(inputs);
 
         this.state = TurretState.REST;
+        setTargetPoint(TurretConstants.LOOKING_TARGET);
     }
 
 
     public void setState(TurretState targetState) {
         this.state = targetState;
+    }
+
+    public void setTargetPoint(Translation2d targetPoint) {
+        this.targetPoint = targetPoint;
     }
 
     public Rotation2d getPosition() {
@@ -36,7 +44,7 @@ public class TurretSubsystem extends GBSubsystem {
         return inputs.velocity;
     }
 
-    public void setPower (double power){
+    public void setPower(double power) {
         turret.setPower(power);
     }
 
@@ -44,8 +52,8 @@ public class TurretSubsystem extends GBSubsystem {
         Translation2d normalizedRobotPosition = targetPoint.minus(robotPosition);
         this.turret.setPosition(
                 new Rotation2d(
-                        targetPoint.minus(robotPosition).getX(),
-                        targetPoint.minus(robotPosition).getY()
+                        normalizedRobotPosition.getX(),
+                        normalizedRobotPosition.getY()
                 )
         );
     }
@@ -55,7 +63,7 @@ public class TurretSubsystem extends GBSubsystem {
     }
 
     public void handleHoldPositionRelativeToRobot() {
-       handleHoldPositionRelativeToRobot(inputs.position);
+        handleHoldPositionRelativeToRobot(inputs.position);
     }
 
     public void handleRest() {
@@ -65,7 +73,7 @@ public class TurretSubsystem extends GBSubsystem {
     private void handleState(TurretState state) {
         switch (state) {
             case ROTATE_TO_POINT -> handleRotateToPoint(
-                    new Translation2d(),
+                    this.targetPoint,
                     new Translation2d() /*waiting for swerve to do get from pose estimation*/
             );
             case HOLD_POSITION_RELATIVE_TO_ROBOT -> handleHoldPositionRelativeToRobot();
@@ -84,9 +92,9 @@ public class TurretSubsystem extends GBSubsystem {
         handleState(this.state);
 
         turret.updateInputs(inputs);
-        Logger.processInputs(getLogPath(),inputs);
+        Logger.processInputs(getLogPath(), inputs);
 
-        Logger.recordOutput(getLogPath()+"state", state);
+        Logger.recordOutput(getLogPath() + "state", state);
     }
 
 }

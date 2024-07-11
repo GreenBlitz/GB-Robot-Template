@@ -13,6 +13,7 @@ import frc.utils.cycletimeutils.CycleTimeUtils;
 
 import static frc.robot.turret.simulation.SimulationConstants.GEARING;
 import static frc.robot.turret.simulation.SimulationConstants.JKG_METER_SQ;
+import static frc.robot.turret.simulation.SimulationConstants.MOTOR_CONFIGURATION;
 
 
 public class SimulationTurret implements ITurret {
@@ -28,6 +29,8 @@ public class SimulationTurret implements ITurret {
                 GEARING,
                 JKG_METER_SQ
         );
+
+        motor.applyConfiguration(MOTOR_CONFIGURATION);
 
         positionDutyCycle = new PositionDutyCycle(0);
         velocityDutyCycle = new VelocityDutyCycle(0);

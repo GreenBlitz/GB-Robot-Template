@@ -348,14 +348,16 @@ public class Swerve extends GBSubsystem {
     }
 
     public void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
         chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState);
-        chassisSpeeds = discretize(chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {
             stop();
             return;
         }
+
+        chassisSpeeds = applyDeadbandSpeeds(chassisSpeeds);
+        chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
+        chassisSpeeds = discretize(chassisSpeeds);
 
         applySpeeds(chassisSpeeds, swerveState);
     }
@@ -386,20 +388,20 @@ public class Swerve extends GBSubsystem {
 
 
     //todo: make shorter
-    private static ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds currentSpeeds, Rotation2d currentAngle, SwerveState swerveState) {
+    private static ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds chassisSpeeds, Rotation2d currentAngle, SwerveState swerveState) {
         if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
-            return currentSpeeds;
+            return chassisSpeeds;
         }
         //PID
         Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
 
         //Magnitude Factor
-        double driveMagnitude = getDriveMagnitude(currentSpeeds);
+        double driveMagnitude = getDriveMagnitude(chassisSpeeds);
         double angularVelocityRads =
                 pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 
         //Joystick Output
-        double angularVelocityWithJoystick = angularVelocityRads + currentSpeeds.omegaRadiansPerSecond;
+        double angularVelocityWithJoystick = angularVelocityRads + chassisSpeeds.omegaRadiansPerSecond;
 
         //Clamp
         double clampedAngularVelocity = MathUtil.clamp(
@@ -410,7 +412,26 @@ public class Swerve extends GBSubsystem {
 
         //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
         //todo - distance factor
-        return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond, clampedAngularVelocity);
+        return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, clampedAngularVelocity);
+    }
+
+    private static ChassisSpeeds applyDeadbandSpeeds(ChassisSpeeds chassisSpeeds) {
+        double newXSpeed = chassisSpeeds.vxMetersPerSecond;
+        if (Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND){
+            newXSpeed = 0;
+        }
+
+        double newYSpeed = chassisSpeeds.vyMetersPerSecond;
+        if (Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND){
+            newYSpeed = 0;
+        }
+
+        double newOmegaSpeed = chassisSpeeds.omegaRadiansPerSecond;
+        if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()){
+            newOmegaSpeed = 0;
+        }
+
+        return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
     }
 
     private static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
@@ -425,13 +446,6 @@ public class Swerve extends GBSubsystem {
         );
     }
 
-    /**
-     * When the robot drives while rotating it skews a bit to the side.
-     * This should fix the chassis speeds, so they won't make the robot skew while rotating.
-     *
-     * @param chassisSpeeds the chassis speeds to fix skewing for
-     * @return the fixed speeds
-     */
     private static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
         return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
     }

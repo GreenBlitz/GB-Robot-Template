@@ -28,7 +28,7 @@ public class SwerveConstants {
     protected static final double DRIVE_SYSID_CALIBRATION_RAMP_RATE = 0.5;
 
 
-    public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4; // todo - calibrate
+    public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
     public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
     protected static final double DRIVE_NEUTRAL_DEADBAND = 0.2;
@@ -88,7 +88,7 @@ public class SwerveConstants {
     }
 
     private static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
-    public static final HolonomicPathFollowerConfig HOLONOMIC_PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
+    protected static final HolonomicPathFollowerConfig HOLONOMIC_PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
             I_SWERVE_CONSTANTS.getTranslationPIDConstants(),
             I_SWERVE_CONSTANTS.getRotationPIDConstants(),
             MAX_SPEED_METERS_PER_SECOND,

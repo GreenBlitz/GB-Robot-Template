@@ -2,6 +2,7 @@ package frc.robot.turret.simulation;
 
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -19,6 +20,7 @@ public class SimulationTurret implements ITurret {
     private SimpleMotorSimulation motor;
     private VelocityDutyCycle velocityDutyCycle;
     private PositionDutyCycle positionDutyCycle;
+    private VoltageOut voltageOut;
 
     public SimulationTurret() {
         motor = new SimpleMotorSimulation(
@@ -29,6 +31,7 @@ public class SimulationTurret implements ITurret {
 
         positionDutyCycle = new PositionDutyCycle(0);
         velocityDutyCycle = new VelocityDutyCycle(0);
+        voltageOut = new VoltageOut(0);
     }
 
     @Override
@@ -39,6 +42,16 @@ public class SimulationTurret implements ITurret {
     @Override
     public void setPosition(Rotation2d angle) {
         motor.setControl(positionDutyCycle.withPosition(angle.getRotations()));
+    }
+
+    @Override
+    public void setVoltage(double voltage) {
+        motor.setControl(voltageOut.withOutput(voltage));
+    }
+
+    @Override
+    public void setPower(double power) {
+        motor.setPower(power);
     }
 
     @Override

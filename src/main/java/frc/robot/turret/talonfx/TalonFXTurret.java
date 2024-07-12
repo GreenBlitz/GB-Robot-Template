@@ -12,6 +12,8 @@ import frc.robot.turret.TurretInputsAutoLogged;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
+import static frc.robot.turret.talonfx.TalonFXTurretConstants.IS_FOC_ENABLED;
+
 public class TalonFXTurret implements ITurret {
 
     private final TalonFXWrapper motor;
@@ -19,24 +21,24 @@ public class TalonFXTurret implements ITurret {
     private final VelocityDutyCycle velocityDutyCycle;
     private final PositionDutyCycle positionDutyCycle;
 
-    private final StatusSignal<Double> velocitySignal;
-    private final StatusSignal<Double> voltageSignal;
-    private final StatusSignal<Double> currentSignal;
     private final StatusSignal<Double> positionSignal;
+    private final StatusSignal<Double> velocitySignal;
     private final StatusSignal<Double> accelerationSignal;
+    private final StatusSignal<Double> currentSignal;
+    private final StatusSignal<Double> voltageSignal;
 
     public TalonFXTurret(CTREDeviceID motorID, TalonFXConfiguration motorConfiguration) {
         this.motor = new TalonFXWrapper(motorID);
         motor.applyConfiguration(motorConfiguration);
 
-        this.positionDutyCycle = new PositionDutyCycle(0);
-        this.velocityDutyCycle = new VelocityDutyCycle(0);
+        this.positionDutyCycle = new PositionDutyCycle(0).withEnableFOC(IS_FOC_ENABLED);
+        this.velocityDutyCycle = new VelocityDutyCycle(0).withEnableFOC(IS_FOC_ENABLED);
 
-        this.velocitySignal = motor.getVelocity();
-        this.voltageSignal = motor.getMotorVoltage();
-        this.currentSignal = motor.getStatorCurrent();
-        this.accelerationSignal = motor.getAcceleration();
         this.positionSignal = motor.getPosition();
+        this.velocitySignal = motor.getVelocity();
+        this.accelerationSignal = motor.getAcceleration();
+        this.currentSignal = motor.getStatorCurrent();
+        this.voltageSignal = motor.getMotorVoltage();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
                 GlobalConstants.DEFAULT_CAN_FREQUENCY,

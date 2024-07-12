@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 public class TalonFXTurretConstants {
 
+    public static final boolean IS_FOC_ENABLED = true;
     public static final TalonFXConfiguration MOTOR_CONFIGURATION = new TalonFXConfiguration();
 
     static {

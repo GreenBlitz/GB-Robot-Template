@@ -18,10 +18,10 @@ import static frc.robot.turret.simulation.SimulationConstants.MOTOR_CONFIGURATIO
 
 public class SimulationTurret implements ITurret {
 
-    private SimpleMotorSimulation motor;
-    private VelocityDutyCycle velocityDutyCycle;
-    private PositionDutyCycle positionDutyCycle;
-    private VoltageOut voltageOut;
+    private final SimpleMotorSimulation motor;
+    private final VelocityDutyCycle velocityDutyCycle;
+    private final PositionDutyCycle positionDutyCycle;
+    private final VoltageOut voltageOut;
 
     public SimulationTurret() {
         motor = new SimpleMotorSimulation(

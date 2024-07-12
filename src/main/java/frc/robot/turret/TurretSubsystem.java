@@ -48,13 +48,7 @@ public class TurretSubsystem extends GBSubsystem {
     }
 
     public void handleRotateToPoint(Translation2d targetPoint, Translation2d robotPosition) {
-        Translation2d normalizedRobotPosition = targetPoint.minus(robotPosition);
-        this.turret.setPosition(
-                new Rotation2d(
-                        normalizedRobotPosition.getX(),
-                        normalizedRobotPosition.getY()
-                )
-        );
+        this.turret.setPosition(TurretUtils.calculateAbsoluteTargetAngle(robotPosition,targetPoint));
     }
 
     public void handleHoldPositionRelativeToRobot(Rotation2d targetAngle) {

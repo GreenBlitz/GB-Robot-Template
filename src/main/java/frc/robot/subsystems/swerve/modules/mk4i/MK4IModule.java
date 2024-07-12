@@ -12,29 +12,29 @@ import java.util.Queue;
 
 public class MK4IModule implements IModule {
 
-    private final MK4IModuleStatus mk4iModuleStatus;
-    private final MK4IModuleActions mk4iModuleActions;
+    private final MK4IModuleStatus status;
+    private final MK4IModuleActions actions;
     private final MK4IModuleConstants constants;
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
 
     public MK4IModule(MK4IModuleConstants constants) {
         this.constants = constants;
-        this.mk4iModuleStatus = new MK4IModuleStatus(constants.signals());
-        this.mk4iModuleActions = new MK4IModuleActions(constants);
+        this.status = new MK4IModuleStatus(constants.signals());
+        this.actions = new MK4IModuleActions(constants);
 
         this.steerPositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
                 constants.steerMotor(),
-                mk4iModuleStatus.getSteerMotorPositionSignal(false),
-                mk4iModuleStatus.getSteerMotorVelocitySignal(false)
+                status.getSteerMotorPositionSignal(false),
+                status.getSteerMotorVelocitySignal(false)
         );
         this.drivePositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
                 constants.driveMotor(),
-                mk4iModuleStatus.getDriveMotorPositionSignal(false),
-                mk4iModuleStatus.getDriveMotorVelocitySignal(false)
+                status.getDriveMotorPositionSignal(false),
+                status.getDriveMotorVelocitySignal(false)
         );
 
-        mk4iModuleActions.resetDriveAngle(new Rotation2d());
+        actions.resetDriveAngle(new Rotation2d());
     }
 
     private double toDriveMeters(double rotations) {
@@ -48,28 +48,28 @@ public class MK4IModule implements IModule {
 
     @Override
     public void stop() {
-        mk4iModuleActions.stop();
+        actions.stop();
     }
 
     @Override
     public void setBrake(boolean brake) {
-        mk4iModuleActions.setBrake(brake);
+        actions.setBrake(brake);
     }
 
     @Override
     public void resetByEncoder() {
-        mk4iModuleActions.resetSteerAngle(mk4iModuleStatus.getEncoderAbsolutePosition(true));
+        actions.resetSteerAngle(status.getEncoderAbsolutePosition(true));
     }
 
 
     @Override
     public void runSteerMotorByVoltage(double voltage) {
-        mk4iModuleActions.setTargetSteerVoltage(voltage);
+        actions.setTargetSteerVoltage(voltage);
     }
 
     @Override
     public void runDriveMotorByVoltage(double voltage) {
-        mk4iModuleActions.setTargetDriveVoltage(voltage);
+        actions.setTargetDriveVoltage(voltage);
     }
 
 
@@ -77,13 +77,13 @@ public class MK4IModule implements IModule {
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
                 targetVelocityMetersPerSecond,
-                mk4iModuleStatus.getSteerMotorLatencyVelocity(true),
+                status.getSteerMotorLatencyVelocity(true),
                 constants.couplingRatio(),
                 constants.maxVelocityPerSecond(),
                 constants.wheelDiameter(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        mk4iModuleActions.setTargetDriveVoltage(voltage);
+        actions.setTargetDriveVoltage(voltage);
     }
 
     @Override
@@ -94,39 +94,39 @@ public class MK4IModule implements IModule {
         );
         double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
                 targetVelocityPerSecond,
-                mk4iModuleStatus.getSteerMotorLatencyVelocity(true),
+                status.getSteerMotorLatencyVelocity(true),
                 constants.couplingRatio()
         );
-        mk4iModuleActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
+        actions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
     }
 
     @Override
     public void setTargetAngle(Rotation2d angle) {
-        mk4iModuleActions.setTargetAngle(angle);
+        actions.setTargetAngle(angle);
     }
 
 
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
-        inputs.getEncoderInputs().isConnected = mk4iModuleStatus.refreshEncoderSignals().isOK();
-        inputs.getEncoderInputs().angle = mk4iModuleStatus.getEncoderAbsolutePosition(false);
-        inputs.getEncoderInputs().velocity = mk4iModuleStatus.getEncoderVelocity(false);
-        inputs.getEncoderInputs().voltage = mk4iModuleStatus.getEncoderVoltageSignal(false).getValue();
+        inputs.getEncoderInputs().isConnected = status.refreshEncoderSignals().isOK();
+        inputs.getEncoderInputs().angle = status.getEncoderAbsolutePosition(false);
+        inputs.getEncoderInputs().velocity = status.getEncoderVelocity(false);
+        inputs.getEncoderInputs().voltage = status.getEncoderVoltageSignal(false).getValue();
 
-        inputs.getSteerMotorInputs().isConnected = mk4iModuleStatus.refreshSteerMotorSignals().isOK();
-        inputs.getSteerMotorInputs().angle = mk4iModuleStatus.getSteerMotorLatencyPosition(false);
-        inputs.getSteerMotorInputs().velocity = mk4iModuleStatus.getSteerMotorLatencyVelocity(false);
-        inputs.getSteerMotorInputs().acceleration = mk4iModuleStatus.getSteerMotorAcceleration(false);
-        inputs.getSteerMotorInputs().voltage = mk4iModuleStatus.getSteerMotorVoltageSignal(false).getValue();
+        inputs.getSteerMotorInputs().isConnected = status.refreshSteerMotorSignals().isOK();
+        inputs.getSteerMotorInputs().angle = status.getSteerMotorLatencyPosition(false);
+        inputs.getSteerMotorInputs().velocity = status.getSteerMotorLatencyVelocity(false);
+        inputs.getSteerMotorInputs().acceleration = status.getSteerMotorAcceleration(false);
+        inputs.getSteerMotorInputs().voltage = status.getSteerMotorVoltageSignal(false).getValue();
         inputs.getSteerMotorInputs().angleOdometrySamples = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
         steerPositionQueue.clear();
 
-        inputs.getDriveMotorInputs().isConnected = mk4iModuleStatus.refreshDriveMotorSignals().isOK();
-        inputs.getDriveMotorInputs().angle = mk4iModuleStatus.getDriveMotorLatencyPosition(false);
-        inputs.getDriveMotorInputs().velocity = mk4iModuleStatus.getDriveMotorLatencyVelocity(false);
-        inputs.getDriveMotorInputs().acceleration = mk4iModuleStatus.getDriveMotorAcceleration(false);
-        inputs.getDriveMotorInputs().current = mk4iModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
-        inputs.getDriveMotorInputs().voltage = mk4iModuleStatus.getDriveMotorVoltageSignal(false).getValue();
+        inputs.getDriveMotorInputs().isConnected = status.refreshDriveMotorSignals().isOK();
+        inputs.getDriveMotorInputs().angle = status.getDriveMotorLatencyPosition(false);
+        inputs.getDriveMotorInputs().velocity = status.getDriveMotorLatencyVelocity(false);
+        inputs.getDriveMotorInputs().acceleration = status.getDriveMotorAcceleration(false);
+        inputs.getDriveMotorInputs().current = status.getDriveMotorStatorCurrentSignal(false).getValue();
+        inputs.getDriveMotorInputs().voltage = status.getDriveMotorVoltageSignal(false).getValue();
         inputs.getDriveMotorInputs().distanceMeters = toDriveMeters(inputs.getDriveMotorInputs().angle);
         inputs.getDriveMotorInputs().velocityMeters = toDriveMeters(inputs.getDriveMotorInputs().velocity);
         inputs.getDriveMotorInputs().distanceMetersOdometrySamples = drivePositionQueue.stream().mapToDouble(this::toDriveMeters).toArray();

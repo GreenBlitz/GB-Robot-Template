@@ -1,6 +1,7 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.constants;
 
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.SwerveConstants;
 
 public class SwerveConstantsFactory {
 

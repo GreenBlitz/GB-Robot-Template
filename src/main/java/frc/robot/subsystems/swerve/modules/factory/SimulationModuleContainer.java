@@ -8,7 +8,7 @@ import frc.robot.subsystems.swerve.modules.simulation.SimulationModuleConstants;
 
 public class SimulationModuleContainer {
 
-    public static SimulationModuleConstants simulationModuleConstants(double maxVelocityMetersPerSecond){
+    protected static SimulationModuleConstants simulationModuleConstants(double maxVelocityMetersPerSecond){
         return new SimulationModuleConstants(
                 0.048359 * 2,
                 maxVelocityMetersPerSecond,

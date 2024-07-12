@@ -59,7 +59,7 @@ public class MK4IModuleContainer {
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
 
-    public static MK4IModuleConstants mk4iModuleConstants(double maxVelocityMetersPerSecond, ModuleID moduleID){
+    protected static MK4IModuleConstants mk4iModuleConstants(double maxVelocityMetersPerSecond, ModuleID moduleID){
         return new MK4IModuleConstants(
                 0.048359 * 2,
                 0.59,

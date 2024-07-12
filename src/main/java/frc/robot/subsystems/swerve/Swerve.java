@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -337,7 +338,11 @@ public class Swerve extends GBSubsystem {
         double xSpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
         double ySpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
-        Rotation2d thetaSpeed = calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
+        Rotation2d thetaSpeed = calculateAngleSpeedToTargetAngle(
+                currentAngleSupplier.get(),
+                targetBluePose.getRotation(),
+                constants.getRotationDegreesPIDController()
+        );
 
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
@@ -351,16 +356,13 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
-                calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetAngle).getRadians()
+                calculateAngleSpeedToTargetAngle(
+                        currentAngleSupplier.get(),
+                        targetAngle,
+                        constants.getRotationDegreesPIDController()
+                ).getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);
-    }
-
-    private Rotation2d calculateAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
-        return Rotation2d.fromDegrees(constants.getRotationDegreesPIDController().calculate(
-                currentAngle.getDegrees(),
-                targetAngle.getDegrees()
-        ));
     }
 
 
@@ -373,7 +375,7 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState);
+        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
 
         if (isStill(chassisSpeeds)) {
             stop();
@@ -413,12 +415,16 @@ public class Swerve extends GBSubsystem {
 
 
     //todo: make shorter
-    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds chassisSpeeds, Rotation2d currentAngle, SwerveState swerveState) {
+    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds chassisSpeeds, Rotation2d currentAngle, SwerveState swerveState, SwerveConstants constants) {
         if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
             return chassisSpeeds;
         }
         //PID
-        Rotation2d pidVelocity = calculateAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
+        Rotation2d pidVelocity = calculateAngleSpeedToTargetAngle(
+                currentAngle,
+                swerveState.getAimAssist().targetAngleSupplier.get(),
+                constants.getRotationDegreesPIDController()
+        );
 
         //Magnitude Factor
         double driveMagnitude = getDriveMagnitude(chassisSpeeds);
@@ -469,6 +475,10 @@ public class Swerve extends GBSubsystem {
                 yPower * driveSpeed.TranslationSpeedFactor * constants.getMaxSpeedMetersPerSecond(),
                 thetaPower * driveSpeed.RotationSpeedFactor * constants.getMaxRotationSpeedPerSecond().getRadians()
         );
+    }
+
+    private static Rotation2d calculateAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle, PIDController rotationPIDController) {
+        return Rotation2d.fromDegrees(rotationPIDController.calculate(currentAngle.getDegrees(), targetAngle.getDegrees()));
     }
 
     private static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {

@@ -48,7 +48,6 @@ public class TalonFXTurret implements ITurret {
         );
 
         motor.optimizeBusUtilization();
-
     }
 
     @Override

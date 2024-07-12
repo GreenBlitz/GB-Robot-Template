@@ -10,7 +10,7 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class MK4IModuleConstants {
 
-    private final double wheelDiameter;
+    private final double wheelDiameterMeters;
     private final double couplingRatio;
     private final Rotation2d maxVelocityPerSecond;
 
@@ -24,7 +24,7 @@ public class MK4IModuleConstants {
 
 
     public MK4IModuleConstants(
-            double wheelDiameter,
+            double wheelDiameterMeters,
             double couplingRatio,
             double maxVelocityMetersPerSecond,
             boolean enableFocSteer,
@@ -34,9 +34,9 @@ public class MK4IModuleConstants {
             CANcoderConfiguration encoderConfig,
             ModuleID moduleID
     ) {
-        this.wheelDiameter = wheelDiameter;
+        this.wheelDiameterMeters = wheelDiameterMeters;
         this.couplingRatio = couplingRatio;
-        this.maxVelocityPerSecond = Conversions.distanceToAngle(maxVelocityMetersPerSecond, wheelDiameter);
+        this.maxVelocityPerSecond = Conversions.distanceToAngle(maxVelocityMetersPerSecond, wheelDiameterMeters);
 
         this.enableFocSteer = enableFocSteer;
         this.enableFocDrive = enableFocDrive;
@@ -56,8 +56,8 @@ public class MK4IModuleConstants {
         return enableFocDrive;
     }
 
-    public double wheelDiameter() {
-        return wheelDiameter;
+    public double wheelDiameterMeters() {
+        return wheelDiameterMeters;
     }
 
     public Rotation2d maxVelocityPerSecond() {

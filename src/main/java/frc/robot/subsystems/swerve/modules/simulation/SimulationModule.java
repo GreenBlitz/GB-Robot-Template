@@ -24,7 +24,7 @@ public class SimulationModule implements IModule {
 
 
     private double toDriveMeters(Rotation2d angle) {
-        return Conversions.angleToDistance(angle, constants.wheelDiameter());
+        return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
     }
 
 
@@ -62,7 +62,7 @@ public class SimulationModule implements IModule {
                 simulationModuleStatus.getSteerVelocity(),
                 0,
                 constants.maxVelocityPerSecond(),
-                constants.wheelDiameter(),
+                constants.wheelDiameterMeters(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());

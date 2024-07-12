@@ -14,7 +14,7 @@ public class TurretSubsystem extends GBSubsystem {
     private TurretInputsAutoLogged inputs;
     private Translation2d targetPoint;
 
-    public TurretSubsystem(ITurret turret) {
+    public Turret(ITurret turret) {
         this.turret = turret;
 
         this.inputs = new TurretInputsAutoLogged();

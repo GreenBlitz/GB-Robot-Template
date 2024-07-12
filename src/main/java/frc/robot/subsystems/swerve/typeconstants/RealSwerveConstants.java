@@ -31,27 +31,27 @@ public class RealSwerveConstants extends SwerveConstants {
 
 
     @Override
-    protected double getMaxSpeedMetersPerSecond() {
+    protected double maxSpeedMetersPerSecond() {
         return MAX_SPEED_METERS_PER_SECOND;
     }
 
     @Override
-    protected Rotation2d getMaxRotationSpeedPerSecond() {
+    protected Rotation2d maxRotationSpeedPerSecond() {
         return MAX_ROTATIONAL_SPEED_PER_SECOND;
     }
 
     @Override
-    protected PIDController getTranslationMetersPIDController() {
+    protected PIDController translationMetersPIDController() {
         return TRANSLATION_PID_METERS_CONTROLLER;
     }
 
     @Override
-    protected PIDController getRotationDegreesPIDController() {
+    protected PIDController rotationDegreesPIDController() {
         return ROTATION_PID_DEGREES_CONTROLLER;
     }
 
     @Override
-    protected HolonomicPathFollowerConfig getHolonomicPathFollowerConfig() {
+    protected HolonomicPathFollowerConfig holonomicPathFollowerConfig() {
         return HOLONOMIC_PATH_FOLLOWER_CONFIG;
     }
 

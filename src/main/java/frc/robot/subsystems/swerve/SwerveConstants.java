@@ -34,20 +34,20 @@ public abstract class SwerveConstants {
 
     private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
     private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
-    public static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
-    public static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
+    protected static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
+    private static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
             MODULE_X_DISTANCE_FROM_CENTER,
             MODULE_Y_DISTANCE_FROM_CENTER
     );
-    public static final Translation2d FRONT_RIGHT_TRANSLATION2D = new Translation2d(
+    private static final Translation2d FRONT_RIGHT_TRANSLATION2D = new Translation2d(
             MODULE_X_DISTANCE_FROM_CENTER,
             -MODULE_Y_DISTANCE_FROM_CENTER
     );
-    public static final Translation2d BACK_LEFT_TRANSLATION2D = new Translation2d(
+    private static final Translation2d BACK_LEFT_TRANSLATION2D = new Translation2d(
             -MODULE_X_DISTANCE_FROM_CENTER,
             MODULE_Y_DISTANCE_FROM_CENTER
     );
-    public static final Translation2d BACK_RIGHT_TRANSLATION2D = new Translation2d(
+    private static final Translation2d BACK_RIGHT_TRANSLATION2D = new Translation2d(
             -MODULE_X_DISTANCE_FROM_CENTER,
             -MODULE_Y_DISTANCE_FROM_CENTER
     );
@@ -61,7 +61,7 @@ public abstract class SwerveConstants {
 
 
     protected static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
-    public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
+    protected static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
     protected static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
 
 
@@ -78,14 +78,14 @@ public abstract class SwerveConstants {
         return rotationDegreesPIDController;
     }
 
-    protected abstract double getMaxSpeedMetersPerSecond();
+    protected abstract double maxSpeedMetersPerSecond();
 
-    protected abstract Rotation2d getMaxRotationSpeedPerSecond();
+    protected abstract Rotation2d maxRotationSpeedPerSecond();
 
-    protected abstract PIDController getTranslationMetersPIDController();
+    protected abstract PIDController translationMetersPIDController();
 
-    protected abstract PIDController getRotationDegreesPIDController();
+    protected abstract PIDController rotationDegreesPIDController();
 
-    protected abstract HolonomicPathFollowerConfig getHolonomicPathFollowerConfig();
+    protected abstract HolonomicPathFollowerConfig holonomicPathFollowerConfig();
 
 }

@@ -77,7 +77,7 @@ public class TurretSubsystem extends GBSubsystem {
 
     @Override
     protected String getLogPath() {
-        return LOGGING_PATH;
+        return TurrentConstants.LOG_PATH;
     }
 
     @Override

@@ -120,7 +120,7 @@ public class Swerve extends GBSubsystem {
 
 
     protected void initializeDrive(SwerveState updatedState) {
-        currentState.updateState(updatedState);
+        currentState.update(updatedState);
         setClosedLoopForModules();
         resetTranslationController();
         resetRotationController();

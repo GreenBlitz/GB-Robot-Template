@@ -8,7 +8,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 
     @Override
     public final void periodic() {
-        Logger.recordOutput(getLogPath() + "Current Command", getCurrentCommandName());
+        Logger.recordOutput("Subsystems/"+ getLogPath() + "Current Command", getCurrentCommandName());
         subsystemPeriodic();
     }
 
@@ -17,7 +17,9 @@ public abstract class GBSubsystem extends SubsystemBase {
         return currentCommand != null ? currentCommand.getName() : "no command is currently running on the subsystem";
     }
 
-    protected abstract String getLogPath();
+    public String getLogPath(){
+        return "Subsystems/"+getName()+"/";
+    }
 
     protected abstract void subsystemPeriodic();
 

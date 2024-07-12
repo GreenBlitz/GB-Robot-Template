@@ -12,7 +12,6 @@ public class Turret extends GBSubsystem {
     private final ITurret turret;
     private TurretState state;
     private final TurretInputsAutoLogged inputs;
-    private Translation2d targetPoint;
 
     public Turret(ITurret turret) {
         this.turret = turret;
@@ -21,16 +20,11 @@ public class Turret extends GBSubsystem {
         turret.updateInputs(inputs);
 
         this.state = TurretState.REST;
-        setTargetPoint(TurretConstants.LOOKING_TARGET);
     }
 
 
     public void setState(TurretState targetState) {
         this.state = targetState;
-    }
-
-    public void setTargetPoint(Translation2d targetPoint) {
-        this.targetPoint = targetPoint;
     }
 
     public Rotation2d getPosition() {
@@ -45,8 +39,10 @@ public class Turret extends GBSubsystem {
         turret.setPower(power);
     }
 
-    public void handleRotateToPoint(Translation2d targetPoint, Translation2d robotPosition) {
-        this.turret.setPosition(TurretUtils.calculateAbsoluteTargetAngle(robotPosition,targetPoint));
+    public void handleRotateToTarget() {
+        this.turret.setPosition(TurretUtils.calculateAbsoluteTargetAngle(
+                new Translation2d() //until swerve gets merged
+                ,TurretConstants.LOOKING_TARGET));
     }
 
     public void handleHoldPositionRelativeToRobot(Rotation2d targetAngle) {
@@ -63,10 +59,7 @@ public class Turret extends GBSubsystem {
 
     private void handleState(TurretState state) {
         switch (state) {
-            case ROTATE_TO_POINT -> handleRotateToPoint(
-                    this.targetPoint,
-                    new Translation2d() /*waiting for swerve to do get from pose estimation*/
-            );
+            case ROTATE_TO_TARGET -> handleRotateToTarget();
             case HOLD_POSITION_RELATIVE_TO_ROBOT -> handleHoldPositionRelativeToRobot();
             case REST -> handleRest();
         }

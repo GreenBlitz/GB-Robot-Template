@@ -13,10 +13,11 @@ import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class TalonFXTurret implements ITurret {
+
     private final TalonFXWrapper motor;
+
     private final VelocityDutyCycle velocityDutyCycle;
     private final PositionDutyCycle positionDutyCycle;
-
 
     private final StatusSignal<Double> velocitySignal;
     private final StatusSignal<Double> voltageSignal;
@@ -26,16 +27,23 @@ public class TalonFXTurret implements ITurret {
         this.motor = new TalonFXWrapper(turretID);
         this.motor.applyConfiguration(motorConfiguration);
 
-        BaseStatusSignal.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_CAN_FREQUENCY);
+        this.velocitySignal = motor.getVelocity();
+        this.voltageSignal = motor.getMotorVoltage();
+        this.currentSignal = motor.getStatorCurrent();
+
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                GlobalConstants.DEFAULT_CAN_FREQUENCY,
+                velocitySignal,
+                voltageSignal,
+                currentSignal
+        );
 
         motor.optimizeBusUtilization();
 
         this.positionDutyCycle = new PositionDutyCycle(0);
         this.velocityDutyCycle = new VelocityDutyCycle(0);
 
-        this.velocitySignal = motor.getVelocity();
-        this.voltageSignal = motor.getMotorVoltage();
-        this.currentSignal = motor.getStatorCurrent();
+
     }
 
     @Override

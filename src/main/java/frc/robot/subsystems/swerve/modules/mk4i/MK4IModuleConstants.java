@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.utils.Conversions;
 import frc.utils.devicewrappers.TalonFXWrapper;
-import frc.robot.subsystems.swerve.modules.mk4i.MK4IModuleRecords.MK4IModuleSignals;
 
 public class MK4IModuleConstants {
 
@@ -81,7 +80,7 @@ public class MK4IModuleConstants {
         return encoder;
     }
 
-    public MK4IModuleSignals signals() {
+    protected MK4IModuleSignals signals() {
         return signals;
     }
 

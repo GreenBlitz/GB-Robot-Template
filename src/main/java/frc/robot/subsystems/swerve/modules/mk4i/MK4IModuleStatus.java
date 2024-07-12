@@ -8,9 +8,9 @@ import frc.utils.ctre.PhoenixProUtils;
 
 class MK4IModuleStatus {
 
-    private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
+    private final MK4IModuleSignals moduleSignals;
 
-    public MK4IModuleStatus(MK4IModuleRecords.MK4IModuleSignals moduleSignals) {
+    public MK4IModuleStatus(MK4IModuleSignals moduleSignals) {
         this.moduleSignals = moduleSignals;
     }
 

@@ -132,6 +132,10 @@ public class JoysticksBindings {
     private static void fourthJoystickButtons() {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
         // bindings...
+        usedJoystick.A.whileTrue(SwerveCommands.drive(() -> 0.2, ()-> 0, ()->0));
+        usedJoystick.B.whileTrue(SwerveCommands.drive(() -> 0.5, ()-> 0, ()->0));
+        usedJoystick.X.whileTrue(SwerveCommands.drive(() -> -0.2, ()-> 0, ()->0));
+        usedJoystick.Y.whileTrue(SwerveCommands.drive(() -> -0.5, ()-> 0, ()->0));
     }
 
     private static void fifthJoystickButtons() {

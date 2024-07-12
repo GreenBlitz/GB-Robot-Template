@@ -5,11 +5,9 @@ import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.simulation.SimpleMotorSimulation;
 import frc.robot.turret.ITurret;
 import frc.robot.turret.TurretInputsAutoLogged;
-import frc.utils.cycletimeutils.CycleTimeUtils;
 
 import static frc.robot.turret.simulation.SimulationConstants.GEAR_RATIO;
 import static frc.robot.turret.simulation.SimulationConstants.JKG_METER_SQ;
@@ -25,7 +23,7 @@ public class SimulationTurret implements ITurret {
 
     public SimulationTurret() {
         this.motor = new SimpleMotorSimulation(
-                DCMotor.getKrakenX60(SimulationConstants.AMOUNT_OF_MOTORS),
+                DCMotor.getKrakenX60(SimulationConstants.NUMBER_OF_MOTORS),
                 GEAR_RATIO,
                 JKG_METER_SQ
         );

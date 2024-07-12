@@ -8,12 +8,14 @@ import frc.robot.turret.TurretState;
 import frc.robot.turret.TurretSubsystem;
 import frc.utils.joysticks.SmartJoystick;
 
+import java.util.function.DoubleSupplier;
+
 public abstract class TurretCommands {
 
-    public static Command manualControl(SmartJoystick joystick) {
+    public static Command manualControl(DoubleSupplier powerSupplier) {
         return new FunctionalCommand(
                 () -> RobotContainer.TURRET.setState(TurretState.MANUAL),
-                () -> RobotContainer.TURRET.setPower(joystick.getAxisValue(SmartJoystick.Axis.RIGHT_X)),
+                () -> RobotContainer.TURRET.setPower(powerSupplier.getAsDouble()),
                 (interrupt) -> RobotContainer.TURRET.setState(TurretState.REST),
                 () -> false,
                 RobotContainer.TURRET

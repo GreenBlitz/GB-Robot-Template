@@ -51,10 +51,10 @@ public class Swerve extends GBSubsystem {
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
         this.constants = SwerveConstantsFactory.createSwerveConstants();
         this.modules = new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT, constants.maxVelocityMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT, constants.maxVelocityMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT, constants.maxVelocityMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT, constants.maxVelocityMetersPerSecond()),
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT, constants.getMaxVelocityMetersPerSecond()),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT, constants.getMaxVelocityMetersPerSecond()),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT, constants.getMaxVelocityMetersPerSecond()),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT, constants.getMaxVelocityMetersPerSecond()),
         };
         this.gyro = SwerveGyroFactory.createSwerveGyro();
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
@@ -67,7 +67,7 @@ public class Swerve extends GBSubsystem {
                 resetPoseConsumer, // todo - maybe cancel and base vision
                 this::getRobotRelativeVelocity,
                 (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: Will not change loop mode!!!
-                constants.holonomicPathFollowerConfig(),
+                constants.getHolonomicPathFollowerConfig(),
                 DriverStationUtils::isRedAlliance,
                 this
         );
@@ -166,10 +166,10 @@ public class Swerve extends GBSubsystem {
         }
     }
     protected void resetTranslationController() {
-        constants.translationMetersPIDController().reset();
+        constants.getTranslationMetersPIDController().reset();
     }
     protected void resetRotationController() {
-        constants.rotationDegreesPIDController().reset();
+        constants.getRotationDegreesPIDController().reset();
     }
 
 
@@ -206,7 +206,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.maxVelocityMetersPerSecond());
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.getMaxVelocityMetersPerSecond());
         for (int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(swerveModuleStates[i]);
         }
@@ -337,8 +337,8 @@ public class Swerve extends GBSubsystem {
 
 
     protected void pidToPose(Pose2d currentBluePose, Pose2d targetBluePose) {
-        double xSpeed = constants.translationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
-        double ySpeed = constants.translationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
+        double xSpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
+        double ySpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
         Rotation2d thetaSpeed = calculateProfiledAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
 
@@ -360,7 +360,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
-        return Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
+        return Rotation2d.fromDegrees(constants.getRotationDegreesPIDController().calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()
         ));
@@ -434,8 +434,8 @@ public class Swerve extends GBSubsystem {
         //Clamp
         double clampedAngularVelocity = MathUtil.clamp(
                 angularVelocityWithJoystick,
-                -constants.maxRotationalVelocityPerSecond().getRadians(),
-                constants.maxRotationalVelocityPerSecond().getRadians()
+                -constants.getMaxRotationalVelocityPerSecond().getRadians(),
+                constants.getMaxRotationalVelocityPerSecond().getRadians()
         );
 
         //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
@@ -468,9 +468,9 @@ public class Swerve extends GBSubsystem {
 
     private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
         return new ChassisSpeeds(
-                xPower * driveSpeed.translationSpeedFactor * constants.maxVelocityMetersPerSecond(),
-                yPower * driveSpeed.translationSpeedFactor * constants.maxVelocityMetersPerSecond(),
-                thetaPower * driveSpeed.rotationSpeedFactor * constants.maxRotationalVelocityPerSecond().getRadians()
+                xPower * driveSpeed.translationSpeedFactor * constants.getMaxVelocityMetersPerSecond(),
+                yPower * driveSpeed.translationSpeedFactor * constants.getMaxVelocityMetersPerSecond(),
+                thetaPower * driveSpeed.rotationSpeedFactor * constants.getMaxRotationalVelocityPerSecond().getRadians()
         );
     }
 

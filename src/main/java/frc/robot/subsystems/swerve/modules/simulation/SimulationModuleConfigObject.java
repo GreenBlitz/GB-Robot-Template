@@ -3,35 +3,34 @@ package frc.robot.subsystems.swerve.modules.simulation;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import frc.robot.simulation.SimpleMotorSimulation;
 
-public class SimulationModuleConfigObject {
+class SimulationModuleConfigObject {
 
-    private final SimpleMotorSimulation driveMotor, steerMotor;
+    private final SimpleMotorSimulation steerMotor, driveMotor;
 
-    public SimulationModuleConfigObject(
+    protected SimulationModuleConfigObject(
             SimpleMotorSimulation steerMotor,
             SimpleMotorSimulation driveMotor,
             TalonFXConfiguration steerConfig
     ) {
-        this.driveMotor = driveMotor;
         this.steerMotor = steerMotor;
+        this.driveMotor = driveMotor;
 
-        configureDriveMotor();
         configureSteerMotor(steerConfig);
+        configureDriveMotor();
     }
 
-    private void configureDriveMotor() {
-        driveMotor.applyConfiguration(new TalonFXConfiguration());
-    }
     private void configureSteerMotor(TalonFXConfiguration steerConfig) {
         steerMotor.applyConfiguration(steerConfig);
     }
-
-
-    public SimpleMotorSimulation driveMotor() {
-        return driveMotor;
+    private void configureDriveMotor() {
+        driveMotor.applyConfiguration(new TalonFXConfiguration());
     }
-    public SimpleMotorSimulation steerMotor() {
+
+    protected SimpleMotorSimulation getSteerMotor() {
         return steerMotor;
+    }
+    protected SimpleMotorSimulation getDriveMotor() {
+        return driveMotor;
     }
 
 }

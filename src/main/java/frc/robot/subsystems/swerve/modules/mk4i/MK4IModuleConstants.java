@@ -14,8 +14,8 @@ public class MK4IModuleConstants {
     private final double couplingRatio;
     private final Rotation2d maxVelocityPerSecond;
 
-    private final boolean enableFocSteer;
-    private final boolean enableFocDrive;
+    private final boolean enableFOCSteer;
+    private final boolean enableFOCDrive;
 
     private final TalonFXWrapper steerMotor;
     private final TalonFXWrapper driveMotor;
@@ -27,8 +27,8 @@ public class MK4IModuleConstants {
             double wheelDiameterMeters,
             double couplingRatio,
             double maxVelocityMetersPerSecond,
-            boolean enableFocSteer,
-            boolean enableFocDrive,
+            boolean enableFOCSteer,
+            boolean enableFOCDrive,
             TalonFXConfiguration steerMotorConfig,
             TalonFXConfiguration driveMotorConfig,
             CANcoderConfiguration encoderConfig,
@@ -38,49 +38,49 @@ public class MK4IModuleConstants {
         this.couplingRatio = couplingRatio;
         this.maxVelocityPerSecond = Conversions.distanceToAngle(maxVelocityMetersPerSecond, wheelDiameterMeters);
 
-        this.enableFocSteer = enableFocSteer;
-        this.enableFocDrive = enableFocDrive;
+        this.enableFOCSteer = enableFOCSteer;
+        this.enableFOCDrive = enableFOCDrive;
 
         MK4IModuleConfigObject moduleConfigObject = new MK4IModuleConfigObject(steerMotorConfig, driveMotorConfig, encoderConfig, moduleID);
-        this.steerMotor = moduleConfigObject.steerMotor();
-        this.driveMotor = moduleConfigObject.driveMotor();
-        this.encoder = moduleConfigObject.encoder();
-        this.signals = moduleConfigObject.signals();
+        this.steerMotor = moduleConfigObject.getSteerMotor();
+        this.driveMotor = moduleConfigObject.getDriveMotor();
+        this.encoder = moduleConfigObject.getEncoder();
+        this.signals = moduleConfigObject.getSignals();
     }
 
-    public boolean enableFocSteer(){
-        return enableFocSteer;
+    protected boolean getEnableFOCSteer(){
+        return enableFOCSteer;
     }
 
-    public boolean enableFocDrive(){
-        return enableFocDrive;
+    protected boolean getEnableFOCDrive(){
+        return enableFOCDrive;
     }
 
-    public double wheelDiameterMeters() {
+    protected double getWheelDiameterMeters() {
         return wheelDiameterMeters;
     }
 
-    public Rotation2d maxVelocityPerSecond() {
+    protected Rotation2d getMaxVelocityPerSecond() {
         return maxVelocityPerSecond;
     }
 
-    public double couplingRatio() {
+    protected double getCouplingRatio() {
         return couplingRatio;
     }
 
-    public TalonFXWrapper steerMotor() {
+    protected TalonFXWrapper getSteerMotor() {
         return steerMotor;
     }
 
-    public TalonFXWrapper driveMotor() {
+    protected TalonFXWrapper getDriveMotor() {
         return driveMotor;
     }
 
-    public CANcoder encoder() {
+    protected CANcoder getEncoder() {
         return encoder;
     }
 
-    protected MK4IModuleSignals signals() {
+    protected MK4IModuleSignals getSignals() {
         return signals;
     }
 

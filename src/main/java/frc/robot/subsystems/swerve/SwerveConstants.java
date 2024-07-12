@@ -98,27 +98,24 @@ public class SwerveConstants {
         );
     }
 
-    public double maxVelocityMetersPerSecond(){
+    public double getMaxVelocityMetersPerSecond(){
         return maxVelocityMetersPerSecond;
     }
 
-    public Rotation2d maxRotationalVelocityPerSecond(){
+    public Rotation2d getMaxRotationalVelocityPerSecond(){
         return maxRotationalVelocityPerSecond;
     }
 
-    public PIDController translationMetersPIDController(){
+    public PIDController getTranslationMetersPIDController(){
         return translationMetersPIDController;
     }
 
-    public PIDController rotationDegreesPIDController(){
+    public PIDController getRotationDegreesPIDController(){
         return rotationDegreesPIDController;
     }
 
-    public HolonomicPathFollowerConfig holonomicPathFollowerConfig(){
+    public HolonomicPathFollowerConfig getHolonomicPathFollowerConfig(){
         return holonomicPathFollowerConfig;
     }
-
-
-
 
 }

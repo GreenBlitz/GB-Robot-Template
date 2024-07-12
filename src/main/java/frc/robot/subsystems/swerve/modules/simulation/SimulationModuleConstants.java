@@ -12,8 +12,8 @@ public class SimulationModuleConstants {
     private final double wheelDiameterMeters;
     private final Rotation2d maxVelocityPerSecond;
 
-    private final boolean enableFocSteer;
-    private final boolean enableFocDrive;
+    private final boolean enableFOCSteer;
+    private final boolean enableFOCDrive;
 
     private final SimpleMotorSimulation steerMotor;
     private final SimpleMotorSimulation driveMotor;
@@ -23,15 +23,15 @@ public class SimulationModuleConstants {
             double maxVelocityMetersPerSecond,
             DCMotorSim steerMotor,
             DCMotorSim driveMotor,
-            boolean enableFocSteer,
-            boolean enableFocDrive,
+            boolean enableFOCSteer,
+            boolean enableFOCDrive,
             PIDConstants steerMotorPIDConstants
     ){
         this.wheelDiameterMeters = wheelDiameterMeters;
         this.maxVelocityPerSecond = Conversions.distanceToAngle(maxVelocityMetersPerSecond, wheelDiameterMeters);
 
-        this.enableFocSteer = enableFocSteer;
-        this.enableFocDrive = enableFocDrive;
+        this.enableFOCSteer = enableFOCSteer;
+        this.enableFOCDrive = enableFOCDrive;
 
         TalonFXConfiguration steerMotorConfig = new TalonFXConfiguration();
         steerMotorConfig.Slot0.kP = steerMotorPIDConstants.kP;
@@ -44,31 +44,31 @@ public class SimulationModuleConstants {
                 new SimpleMotorSimulation(driveMotor),
                 steerMotorConfig
         );
-        this.steerMotor = moduleConfigObject.steerMotor();
-        this.driveMotor = moduleConfigObject.driveMotor();
+        this.steerMotor = moduleConfigObject.getSteerMotor();
+        this.driveMotor = moduleConfigObject.getDriveMotor();
     }
 
-    public boolean enableFocSteer(){
-        return enableFocSteer;
+    protected boolean getEnableFocSteer(){
+        return enableFOCSteer;
     }
 
-    public boolean enableFocDrive(){
-        return enableFocDrive;
+    protected boolean getEnableFocDrive(){
+        return enableFOCDrive;
     }
 
-    public double wheelDiameterMeters() {
+    protected double getWheelDiameterMeters() {
         return wheelDiameterMeters;
     }
 
-    public Rotation2d maxVelocityPerSecond() {
+    protected Rotation2d getMaxVelocityPerSecond() {
         return maxVelocityPerSecond;
     }
 
-    public SimpleMotorSimulation steerMotor() {
+    protected SimpleMotorSimulation getSteerMotor() {
         return steerMotor;
     }
 
-    public SimpleMotorSimulation driveMotor() {
+    protected SimpleMotorSimulation getDriveMotor() {
         return driveMotor;
     }
 

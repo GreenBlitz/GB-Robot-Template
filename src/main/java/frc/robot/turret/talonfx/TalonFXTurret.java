@@ -69,7 +69,7 @@ public class TalonFXTurret implements ITurret {
 
     @Override
     public void updateInputs(TurretInputsAutoLogged inputs) {
-        BaseStatusSignal.refreshAll(velocitySignal, voltageSignal, currentSignal);
+        inputs.isMotorConnected = BaseStatusSignal.refreshAll(velocitySignal, voltageSignal, currentSignal).isOK();
 
         inputs.position = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
         inputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());

@@ -49,6 +49,8 @@ public class SimulationTurret implements ITurret {
 
     @Override
     public void updateInputs(TurretInputsAutoLogged inputs) {
+        inputs.isMotorConnected = true;
+
         inputs.position = motor.getPosition();
         inputs.velocity = motor.getVelocity();
         inputs.outputCurrent = motor.getCurrent();

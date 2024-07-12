@@ -25,8 +25,8 @@ public class TalonFXTurret implements ITurret {
     private final StatusSignal<Double> positionSignal;
     private final StatusSignal<Double> accelerationSignal;
 
-    public TalonFXTurret(CTREDeviceID turretID, TalonFXConfiguration motorConfiguration) {
-        this.motor = new TalonFXWrapper(turretID);
+    public TalonFXTurret(CTREDeviceID motorID, TalonFXConfiguration motorConfiguration) {
+        this.motor = new TalonFXWrapper(motorID);
         motor.applyConfiguration(motorConfiguration);
 
         this.positionDutyCycle = new PositionDutyCycle(0);

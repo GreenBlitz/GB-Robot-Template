@@ -29,16 +29,16 @@ public class MK4IModuleConfigObject {
                 encoder.getVelocity(),
                 encoder.getSupplyVoltage(),
 
+                steerMotor.getPosition(),
+                steerMotor.getVelocity(),
+                steerMotor.getAcceleration(),
+                steerMotor.getMotorVoltage(),
+
                 driveMotor.getPosition(),
                 driveMotor.getVelocity(),
                 driveMotor.getAcceleration(),
                 driveMotor.getMotorVoltage(),
-                driveMotor.getStatorCurrent(),
-
-                steerMotor.getPosition(),
-                steerMotor.getVelocity(),
-                steerMotor.getAcceleration(),
-                steerMotor.getMotorVoltage()
+                driveMotor.getStatorCurrent()
         );
 
         configEncoder(encoderConfiguration);

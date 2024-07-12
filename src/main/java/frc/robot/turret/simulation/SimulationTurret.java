@@ -50,9 +50,8 @@ public class SimulationTurret implements ITurret {
     public void updateInputs(TurretInputsAutoLogged inputs) {
         inputs.position = motor.getPosition();
         inputs.velocity = motor.getVelocity();
-
-        inputs.targetPosition = Rotation2d.fromRotations(velocityDutyCycle.Velocity);
-        inputs.targetVelocity = Rotation2d.fromRotations(positionDutyCycle.Position);
+        inputs.outputCurrent = motor.getCurrent();
+        inputs.outputVoltage = motor.getVoltage();
     }
 
 }

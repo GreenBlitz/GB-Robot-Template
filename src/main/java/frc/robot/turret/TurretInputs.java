@@ -7,7 +7,7 @@ import org.littletonrobotics.junction.AutoLog;
 public class TurretInputs {
 
     public Rotation2d position;
-    public Rotation2d targetPosition;
     public Rotation2d velocity;
-    public Rotation2d targetVelocity;
+    public double outputCurrent;
+    public double outputVoltage;
 }

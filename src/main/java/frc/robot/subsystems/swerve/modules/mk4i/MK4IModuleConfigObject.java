@@ -18,12 +18,12 @@ public class MK4IModuleConfigObject {
     private final MK4IModuleRecords.MK4IModuleMotors moduleMotors;
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
-    protected MK4IModuleConfigObject(
+    public MK4IModuleConfigObject(
             CTREDeviceID steerMotorDeviceID, boolean isSteerMotorInverted, TalonFXConfiguration steerConfiguration,
             CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted, TalonFXConfiguration driveConfiguration,
-            CTREDeviceID encoderID, CANcoderConfiguration encoderConfiguration
+            CTREDeviceID encoderDeviceID, CANcoderConfiguration encoderConfiguration
     ) {
-        this.encoder = new CANcoder(encoderID.ID(), encoderID.busChain().getChainName());
+        this.encoder = new CANcoder(encoderDeviceID.ID(), encoderDeviceID.busChain().getChainName());
         this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
                 new TalonFXWrapper(driveMotorDeviceID),
                 new TalonFXWrapper(steerMotorDeviceID)

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.mk4i;
+package frc.robot.subsystems.swerve.goodconstants.module;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -7,25 +7,9 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.DeviceIDs;
-import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.utils.Conversions;
+import frc.utils.ctre.CTREDeviceID;
 
-public class MK4IModuleConstants {
-
-    protected static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
-
-    protected static final Rotation2d MAX_SPEED_PER_SECOND = Conversions.distanceToAngle(
-            SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
-            WHEEL_DIAMETER_METERS
-    );
-
-
-    protected static final double COUPLING_RATIO = 0.59;
-
-    protected static final boolean ENABLE_FOC_DRIVE = true;
-    protected static final boolean ENABLE_FOC_STEER = true;
+public class MK4IModuleConstantsContainer {
 
     private static final double DRIVE_SLIP_CURRENT = 30; //todo - calibrate
     private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
@@ -74,47 +58,28 @@ public class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
 
-    public static final MK4IModuleConfigObject[] MODULE_CONFIG_OBJECTS = {
-            new MK4IModuleConfigObject(
-                    DeviceIDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
-                    true,
-                    STEER_MOTOR_CONFIG,
-                    DeviceIDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
-                    false,
-                    DRIVE_MOTOR_CONFIG,
-                    DeviceIDs.CANCodersIDs.FRONT_LEFT_ENCODER,
-                    ENCODER_CONFIG
-            ),
-            new MK4IModuleConfigObject(
-                    DeviceIDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
-                    true,
-                    STEER_MOTOR_CONFIG,
-                    DeviceIDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
-                    true,
-                    DRIVE_MOTOR_CONFIG,
-                    DeviceIDs.CANCodersIDs.FRONT_RIGHT_ENCODER,
-                    ENCODER_CONFIG
-            ),
-            new MK4IModuleConfigObject(
-                    DeviceIDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
-                    false,
-                    STEER_MOTOR_CONFIG,
-                    DeviceIDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
-                    false,
-                    DRIVE_MOTOR_CONFIG,
-                    DeviceIDs.CANCodersIDs.BACK_LEFT_ENCODER,
-                    ENCODER_CONFIG
-            ),
-            new MK4IModuleConfigObject(
-                    DeviceIDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
-                    true,
-                    STEER_MOTOR_CONFIG,
-                    DeviceIDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
-                    false,
-                    DRIVE_MOTOR_CONFIG,
-                    DeviceIDs.CANCodersIDs.BACK_RIGHT_ENCODER,
-                    ENCODER_CONFIG
-            )
-    };
+    public static MK4IModuleConstantsObject getMk4iModuleConstants(
+            double maxVelocityMetersPerSecond,
+            CTREDeviceID steerMotorDeviceID, boolean isSteerMotorInverted,
+            CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted,
+            CTREDeviceID encoderDeviceID
+    ){
+        return new MK4IModuleConstantsObject(
+                0.048359 * 2,
+                0.59,
+                maxVelocityMetersPerSecond,
+                true,
+                true,
+                isSteerMotorInverted,
+                isDriveMotorInverted,
+                STEER_MOTOR_CONFIG,
+                DRIVE_MOTOR_CONFIG,
+                ENCODER_CONFIG,
+                steerMotorDeviceID,
+                driveMotorDeviceID,
+                encoderDeviceID
+        );
+    }
+
 
 }

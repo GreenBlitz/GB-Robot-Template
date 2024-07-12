@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.goodconstants;
+package frc.robot.subsystems.swerve.goodconstants.swerve;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;

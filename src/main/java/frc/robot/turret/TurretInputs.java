@@ -10,5 +10,6 @@ public class TurretInputs {
     public Rotation2d velocity;
     public double outputCurrent;
     public double outputVoltage;
+    public boolean isMotorConnected;
 
 }

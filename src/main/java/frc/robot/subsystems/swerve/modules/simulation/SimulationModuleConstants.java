@@ -48,11 +48,11 @@ public class SimulationModuleConstants {
         this.driveMotor = moduleConfigObject.getDriveMotor();
     }
 
-    protected boolean getEnableFocSteer(){
+    protected boolean getEnableFOCSteer(){
         return enableFOCSteer;
     }
 
-    protected boolean getEnableFocDrive(){
+    protected boolean getEnableFOCDrive(){
         return enableFOCDrive;
     }
 

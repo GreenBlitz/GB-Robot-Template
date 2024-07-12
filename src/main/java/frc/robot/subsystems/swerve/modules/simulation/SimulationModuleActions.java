@@ -17,9 +17,10 @@ class SimulationModuleActions {
         this.steerMotor = constants.getSteerMotor();
         this.driveMotor = constants.getDriveMotor();
 
-        this.steerPositionRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFocSteer());
-        this.steerVoltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFocSteer());
-        this.driveVoltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFocDrive());
+        this.steerPositionRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOCSteer());
+        this.steerVoltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOCSteer());
+
+        this.driveVoltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOCDrive());
     }
 
     protected void stop() {

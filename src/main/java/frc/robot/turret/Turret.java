@@ -7,11 +7,11 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Objects;
 
-public class TurretSubsystem extends GBSubsystem {
+public class Turret extends GBSubsystem {
 
-    private ITurret turret;
+    private final ITurret turret;
     private TurretState state;
-    private TurretInputsAutoLogged inputs;
+    private final TurretInputsAutoLogged inputs;
     private Translation2d targetPoint;
 
     public Turret(ITurret turret) {

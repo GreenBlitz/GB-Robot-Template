@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.RobotContainer;
 import frc.robot.turret.TurretState;
-import frc.robot.turret.TurretSubsystem;
-import frc.utils.joysticks.SmartJoystick;
 
 import java.util.function.DoubleSupplier;
 

@@ -11,7 +11,7 @@ import frc.robot.turret.ITurret;
 import frc.robot.turret.TurretInputsAutoLogged;
 import frc.utils.cycletimeutils.CycleTimeUtils;
 
-import static frc.robot.turret.simulation.SimulationConstants.GEARING;
+import static frc.robot.turret.simulation.SimulationConstants.GEAR_RATIO;
 import static frc.robot.turret.simulation.SimulationConstants.JKG_METER_SQ;
 import static frc.robot.turret.simulation.SimulationConstants.MOTOR_CONFIGURATION;
 
@@ -26,7 +26,7 @@ public class SimulationTurret implements ITurret {
     public SimulationTurret() {
         this.motor = new SimpleMotorSimulation(
                 DCMotor.getKrakenX60(SimulationConstants.AMOUNT_OF_MOTORS),
-                GEARING,
+                GEAR_RATIO,
                 JKG_METER_SQ
         );
         this.motor.applyConfiguration(MOTOR_CONFIGURATION);

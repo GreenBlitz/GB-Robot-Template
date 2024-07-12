@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.turret.TurretSubsystem;
+import frc.robot.turret.Turret;
 import frc.robot.turret.simulation.SimulationTurret;
 
 /**
@@ -19,7 +19,7 @@ import frc.robot.turret.simulation.SimulationTurret;
  */
 public class RobotContainer {
 
-    public static TurretSubsystem TURRET = new TurretSubsystem(
+    public static Turret TURRET = new Turret(
             new SimulationTurret()
     );
     /**

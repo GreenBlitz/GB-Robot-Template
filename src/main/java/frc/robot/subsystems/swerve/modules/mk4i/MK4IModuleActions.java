@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.goodconstants.module.MK4IModuleConstantsObject;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 class MK4IModuleActions {
@@ -12,16 +13,22 @@ class MK4IModuleActions {
     private final TalonFXWrapper steerMotor, driveMotor;
 
     //todo - VelocityTorqueCurrentFOC (whats better)
-    private final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
-    private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
+    private final VelocityVoltage driveVelocityRequest;
+    private final VoltageOut driveVoltageRequest;
 
     //todo - MotionMagicExpoTorqueCurrentFOC (whats better)
-    private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_STEER);
-    private final VoltageOut steerVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_STEER);
+    private final PositionVoltage steerPositionRequest;
+    private final VoltageOut steerVoltageRequest;
 
-    public MK4IModuleActions(MK4IModuleRecords.MK4IModuleMotors moduleMotors) {
-        this.driveMotor = moduleMotors.driveMotor();
-        this.steerMotor = moduleMotors.steerMotor();
+    public MK4IModuleActions(MK4IModuleConstantsObject constants) {
+        this.driveMotor = constants.moduleConfigObject().getDriveMotor();
+        this.steerMotor = constants.moduleConfigObject().getSteerMotor();
+
+        this.driveVelocityRequest =  new VelocityVoltage(0).withEnableFOC(constants.enableFocDrive());
+        this.driveVoltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFocDrive());
+
+        this.steerPositionRequest = new PositionVoltage(0).withEnableFOC(constants.enableFocSteer());
+        this.steerVoltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFocSteer());
     }
 
     public void stop() {

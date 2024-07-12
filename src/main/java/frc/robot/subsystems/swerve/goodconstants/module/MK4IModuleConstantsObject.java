@@ -48,6 +48,28 @@ public class MK4IModuleConstantsObject {
         );
     }
 
+    public boolean enableFocSteer(){
+        return enableFocSteer;
+    }
 
+    public boolean enableFocDrive(){
+        return enableFocDrive;
+    }
+
+    public double wheelDiameter() {
+        return wheelDiameter;
+    }
+
+    public Rotation2d maxVelocityPerSecond() {
+        return maxVelocityPerSecond;
+    }
+
+    public double couplingRatio() {
+        return couplingRatio;
+    }
+
+    public MK4IModuleConfigObject moduleConfigObject() {//todo: change to save motors and get motors directly
+        return moduleConfigObject;
+    }
 
 }

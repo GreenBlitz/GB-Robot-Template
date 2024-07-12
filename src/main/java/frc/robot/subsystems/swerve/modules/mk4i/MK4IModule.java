@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.modules.mk4i;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.goodconstants.module.MK4IModuleConstantsObject;
 import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -14,22 +15,22 @@ public class MK4IModule implements IModule {
 
     private final MK4IModuleStatus mk4iModuleStatus;
     private final MK4IModuleActions mk4iModuleActions;
+    private final MK4IModuleConstantsObject constants;
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
 
-    public MK4IModule(MK4IModuleConfigObject moduleConfigObject) {
-        MK4IModuleRecords.MK4IModuleMotors motors = moduleConfigObject.getMotors();
-
-        this.mk4iModuleStatus = new MK4IModuleStatus(moduleConfigObject.getModuleSignals());
-        this.mk4iModuleActions = new MK4IModuleActions(motors);
+    public MK4IModule(MK4IModuleConstantsObject constants) {
+        this.constants = constants;
+        this.mk4iModuleStatus = new MK4IModuleStatus(constants.moduleConfigObject().getModuleSignals());
+        this.mk4iModuleActions = new MK4IModuleActions(constants);
 
         this.steerPositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
-                motors.steerMotor(),
+                constants.moduleConfigObject().getSteerMotor(),
                 mk4iModuleStatus.getSteerMotorPositionSignal(false),
                 mk4iModuleStatus.getSteerMotorVelocitySignal(false)
         );
         this.drivePositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
-                motors.driveMotor(),
+                constants.moduleConfigObject().getDriveMotor(),
                 mk4iModuleStatus.getDriveMotorPositionSignal(false),
                 mk4iModuleStatus.getDriveMotorVelocitySignal(false)
         );
@@ -42,7 +43,7 @@ public class MK4IModule implements IModule {
     }
 
     private double toDriveMeters(Rotation2d angle) {
-        return Conversions.angleToDistance(angle, MK4IModuleConstants.WHEEL_DIAMETER_METERS);
+        return Conversions.angleToDistance(angle, constants.wheelDiameter());
     }
 
 
@@ -78,9 +79,9 @@ public class MK4IModule implements IModule {
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
                 targetVelocityMetersPerSecond,
                 mk4iModuleStatus.getSteerMotorLatencyVelocity(true),
-                MK4IModuleConstants.COUPLING_RATIO,
-                MK4IModuleConstants.MAX_SPEED_PER_SECOND,
-                MK4IModuleConstants.WHEEL_DIAMETER_METERS,
+                constants.couplingRatio(),
+                constants.maxVelocityPerSecond(),
+                constants.wheelDiameter(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         mk4iModuleActions.setTargetDriveVoltage(voltage);
@@ -90,12 +91,12 @@ public class MK4IModule implements IModule {
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
         Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(
                 targetVelocityMetersPerSecond,
-                MK4IModuleConstants.WHEEL_DIAMETER_METERS
+                constants.wheelDiameter()
         );
         double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
                 targetVelocityPerSecond,
                 mk4iModuleStatus.getSteerMotorLatencyVelocity(true),
-                MK4IModuleConstants.COUPLING_RATIO
+                constants.couplingRatio()
         );
         mk4iModuleActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
     }

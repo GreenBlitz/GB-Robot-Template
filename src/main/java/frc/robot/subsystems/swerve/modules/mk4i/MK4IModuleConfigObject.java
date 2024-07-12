@@ -14,8 +14,6 @@ public class MK4IModuleConfigObject {
 
     private final TalonFXWrapper driveMotor, steerMotor;
     private final CANcoder encoder;
-
-    private final MK4IModuleRecords.MK4IModuleMotors moduleMotors;
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
     public MK4IModuleConfigObject(
@@ -24,12 +22,8 @@ public class MK4IModuleConfigObject {
             CTREDeviceID encoderDeviceID, CANcoderConfiguration encoderConfiguration
     ) {
         this.encoder = new CANcoder(encoderDeviceID.ID(), encoderDeviceID.busChain().getChainName());
-        this.moduleMotors = new MK4IModuleRecords.MK4IModuleMotors(
-                new TalonFXWrapper(driveMotorDeviceID),
-                new TalonFXWrapper(steerMotorDeviceID)
-        );
-        this.steerMotor = moduleMotors.steerMotor();
-        this.driveMotor = moduleMotors.driveMotor();
+        this.steerMotor = new TalonFXWrapper(steerMotorDeviceID);
+        this.driveMotor =  new TalonFXWrapper(driveMotorDeviceID);
 
         this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(
                 encoder.getAbsolutePosition(),
@@ -122,8 +116,12 @@ public class MK4IModuleConfigObject {
         return encoder;
     }
 
-    protected MK4IModuleRecords.MK4IModuleMotors getMotors() {
-        return moduleMotors;
+    protected TalonFXWrapper getSteerMotor() {
+        return steerMotor;
+    }
+
+    protected TalonFXWrapper getDriveMotor() {
+        return driveMotor;
     }
 
     protected MK4IModuleRecords.MK4IModuleSignals getModuleSignals() {

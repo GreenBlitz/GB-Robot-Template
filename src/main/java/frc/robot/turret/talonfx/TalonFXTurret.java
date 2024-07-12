@@ -22,27 +22,32 @@ public class TalonFXTurret implements ITurret {
     private final StatusSignal<Double> velocitySignal;
     private final StatusSignal<Double> voltageSignal;
     private final StatusSignal<Double> currentSignal;
+    private final StatusSignal<Double> positionSignal;
+    private final StatusSignal<Double> accelerationSignal;
 
     public TalonFXTurret(CTREDeviceID turretID, TalonFXConfiguration motorConfiguration) {
         this.motor = new TalonFXWrapper(turretID);
-        this.motor.applyConfiguration(motorConfiguration);
+        motor.applyConfiguration(motorConfiguration);
+
+        this.positionDutyCycle = new PositionDutyCycle(0);
+        this.velocityDutyCycle = new VelocityDutyCycle(0);
 
         this.velocitySignal = motor.getVelocity();
         this.voltageSignal = motor.getMotorVoltage();
         this.currentSignal = motor.getStatorCurrent();
+        this.accelerationSignal = motor.getAcceleration();
+        this.positionSignal = motor.getPosition();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
                 GlobalConstants.DEFAULT_CAN_FREQUENCY,
+                positionSignal,
+                accelerationSignal,
                 velocitySignal,
                 voltageSignal,
                 currentSignal
         );
 
         motor.optimizeBusUtilization();
-
-        this.positionDutyCycle = new PositionDutyCycle(0);
-        this.velocityDutyCycle = new VelocityDutyCycle(0);
-
 
     }
 
@@ -66,7 +71,7 @@ public class TalonFXTurret implements ITurret {
         BaseStatusSignal.refreshAll(velocitySignal, voltageSignal, currentSignal);
 
         inputs.position = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
-        inputs.velocity = Rotation2d.fromRotations(velocitySignal.getValue());
+        inputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
         inputs.outputCurrent = currentSignal.getValue();
         inputs.outputVoltage = voltageSignal.getValue();
     }

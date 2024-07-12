@@ -8,4 +8,6 @@ public class GlobalConstants {
 
     public static final boolean ENABLE_BATTERY_LIMITER = true;
 
+    public static final double DEFAULT_CAN_FREQUENCY = 50;
+
 }

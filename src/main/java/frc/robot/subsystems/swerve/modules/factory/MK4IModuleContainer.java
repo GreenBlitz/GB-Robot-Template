@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.goodconstants.module;
+package frc.robot.subsystems.swerve.modules.factory;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -7,9 +7,10 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import frc.utils.ctre.CTREDeviceID;
+import frc.robot.subsystems.swerve.modules.ModuleID;
+import frc.robot.subsystems.swerve.modules.mk4i.MK4IModuleConstants;
 
-public class MK4IModuleConstantsContainer {
+public class MK4IModuleContainer {
 
     private static final double DRIVE_SLIP_CURRENT = 30; //todo - calibrate
     private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
@@ -58,26 +59,17 @@ public class MK4IModuleConstantsContainer {
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
 
-    public static MK4IModuleConstantsObject getMk4iModuleConstants(
-            double maxVelocityMetersPerSecond,
-            CTREDeviceID steerMotorDeviceID, boolean isSteerMotorInverted,
-            CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted,
-            CTREDeviceID encoderDeviceID
-    ){
-        return new MK4IModuleConstantsObject(
+    public static MK4IModuleConstants mk4iModuleConstants(double maxVelocityMetersPerSecond, ModuleID moduleID){
+        return new MK4IModuleConstants(
                 0.048359 * 2,
                 0.59,
                 maxVelocityMetersPerSecond,
                 true,
                 true,
-                isSteerMotorInverted,
-                isDriveMotorInverted,
                 STEER_MOTOR_CONFIG,
                 DRIVE_MOTOR_CONFIG,
                 ENCODER_CONFIG,
-                steerMotorDeviceID,
-                driveMotorDeviceID,
-                encoderDeviceID
+                moduleID
         );
     }
 

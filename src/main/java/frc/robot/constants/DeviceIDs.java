@@ -1,5 +1,6 @@
 package frc.robot.constants;
 
+import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.utils.ctre.BusChain;
 import frc.utils.ctre.CTREDeviceID;
 public class DeviceIDs {
@@ -36,6 +37,39 @@ public class DeviceIDs {
 
         public static final CTREDeviceID BACK_RIGHT_ENCODER = new CTREDeviceID(3, BusChain.CANIVORE);
 
+    }
+
+    public static class ModulesIDs {
+        public static final ModuleID[] moduleIDS = {
+                new ModuleID(
+                        DeviceIDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
+                        true,
+                        DeviceIDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
+                        false,
+                        DeviceIDs.CANCodersIDs.FRONT_LEFT_ENCODER
+                ),
+                new ModuleID(
+                        DeviceIDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
+                        true,
+                        DeviceIDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
+                        true,
+                        DeviceIDs.CANCodersIDs.FRONT_RIGHT_ENCODER
+                ),
+                new ModuleID(
+                        DeviceIDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
+                        false,
+                        DeviceIDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
+                        false,
+                        DeviceIDs.CANCodersIDs.BACK_LEFT_ENCODER
+                ),
+                new ModuleID(
+                        DeviceIDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
+                        true,
+                        DeviceIDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
+                        false,
+                        DeviceIDs.CANCodersIDs.BACK_RIGHT_ENCODER
+                )
+        };
     }
 
 }

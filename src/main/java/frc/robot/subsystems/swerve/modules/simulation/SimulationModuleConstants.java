@@ -1,14 +1,13 @@
-package frc.robot.subsystems.swerve.goodconstants.module;
+package frc.robot.subsystems.swerve.modules.simulation;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.simulation.SimpleMotorSimulation;
-import frc.robot.subsystems.swerve.modules.simulation.SimulationModuleConfigObject;
 import frc.utils.Conversions;
 
-public class SimulationModuleConstantsObject {
+public class SimulationModuleConstants {
 
     private final double wheelDiameter;
     private final Rotation2d maxVelocityPerSecond;
@@ -16,9 +15,10 @@ public class SimulationModuleConstantsObject {
     private final boolean enableFocSteer;
     private final boolean enableFocDrive;
 
-    private final SimulationModuleConfigObject moduleConfigObject;
+    private final SimpleMotorSimulation steerMotor;
+    private final SimpleMotorSimulation driveMotor;
 
-    public SimulationModuleConstantsObject(
+    public SimulationModuleConstants(
             double wheelDiameter,
             double maxVelocityMetersPerSecond,
             DCMotorSim steerMotor,
@@ -39,11 +39,13 @@ public class SimulationModuleConstantsObject {
         steerMotorConfig.Slot0.kD = steerMotorPIDConstants.kD;
         steerMotorConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
-        this.moduleConfigObject = new SimulationModuleConfigObject(
+        SimulationModuleConfigObject moduleConfigObject = new SimulationModuleConfigObject(
                 new SimpleMotorSimulation(steerMotor),
                 new SimpleMotorSimulation(driveMotor),
                 steerMotorConfig
         );
+        this.steerMotor = moduleConfigObject.steerMotor();
+        this.driveMotor = moduleConfigObject.driveMotor();
     }
 
     public boolean enableFocSteer(){
@@ -62,8 +64,12 @@ public class SimulationModuleConstantsObject {
         return maxVelocityPerSecond;
     }
 
-    public SimulationModuleConfigObject moduleConfigObject() {
-        return moduleConfigObject;
+    public SimpleMotorSimulation steerMotor() {
+        return steerMotor;
+    }
+
+    public SimpleMotorSimulation driveMotor() {
+        return driveMotor;
     }
 
 }

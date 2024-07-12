@@ -1,13 +1,15 @@
-package frc.robot.subsystems.swerve.goodconstants.module;
+package frc.robot.subsystems.swerve.modules.mk4i;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.modules.mk4i.MK4IModuleConfigObject;
+import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.utils.Conversions;
-import frc.utils.ctre.CTREDeviceID;
+import frc.utils.devicewrappers.TalonFXWrapper;
+import frc.robot.subsystems.swerve.modules.mk4i.MK4IModuleRecords.MK4IModuleSignals;
 
-public class MK4IModuleConstantsObject {
+public class MK4IModuleConstants {
 
     private final double wheelDiameter;
     private final double couplingRatio;
@@ -16,23 +18,22 @@ public class MK4IModuleConstantsObject {
     private final boolean enableFocSteer;
     private final boolean enableFocDrive;
 
-    private final MK4IModuleConfigObject moduleConfigObject;
+    private final TalonFXWrapper steerMotor;
+    private final TalonFXWrapper driveMotor;
+    private final CANcoder encoder;
+    private final MK4IModuleSignals signals;
 
 
-    public MK4IModuleConstantsObject(
+    public MK4IModuleConstants(
             double wheelDiameter,
             double couplingRatio,
             double maxVelocityMetersPerSecond,
             boolean enableFocSteer,
             boolean enableFocDrive,
-            boolean steerInverted,
-            boolean driveInverted,
             TalonFXConfiguration steerMotorConfig,
             TalonFXConfiguration driveMotorConfig,
             CANcoderConfiguration encoderConfig,
-            CTREDeviceID steerMotorDeviceID,
-            CTREDeviceID driveMotorDeviceID,
-            CTREDeviceID encoderDeviceID
+            ModuleID moduleID
     ) {
         this.wheelDiameter = wheelDiameter;
         this.couplingRatio = couplingRatio;
@@ -41,11 +42,11 @@ public class MK4IModuleConstantsObject {
         this.enableFocSteer = enableFocSteer;
         this.enableFocDrive = enableFocDrive;
 
-        this.moduleConfigObject = new MK4IModuleConfigObject(
-                steerMotorDeviceID, steerInverted, steerMotorConfig,
-                driveMotorDeviceID, driveInverted, driveMotorConfig,
-                encoderDeviceID, encoderConfig
-        );
+        MK4IModuleConfigObject moduleConfigObject = new MK4IModuleConfigObject(steerMotorConfig, driveMotorConfig, encoderConfig, moduleID);
+        this.steerMotor = moduleConfigObject.steerMotor();
+        this.driveMotor = moduleConfigObject.driveMotor();
+        this.encoder = moduleConfigObject.encoder();
+        this.signals = moduleConfigObject.signals();
     }
 
     public boolean enableFocSteer(){
@@ -68,8 +69,20 @@ public class MK4IModuleConstantsObject {
         return couplingRatio;
     }
 
-    public MK4IModuleConfigObject moduleConfigObject() {//todo: change to save motors and get motors directly
-        return moduleConfigObject;
+    public TalonFXWrapper steerMotor() {
+        return steerMotor;
+    }
+
+    public TalonFXWrapper driveMotor() {
+        return driveMotor;
+    }
+
+    public CANcoder encoder() {
+        return encoder;
+    }
+
+    public MK4IModuleSignals signals() {
+        return signals;
     }
 
 }

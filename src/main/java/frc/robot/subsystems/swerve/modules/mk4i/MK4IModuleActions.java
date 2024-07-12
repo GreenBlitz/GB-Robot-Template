@@ -5,7 +5,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.goodconstants.module.MK4IModuleConstantsObject;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 class MK4IModuleActions {
@@ -20,9 +19,9 @@ class MK4IModuleActions {
     private final PositionVoltage steerPositionRequest;
     private final VoltageOut steerVoltageRequest;
 
-    public MK4IModuleActions(MK4IModuleConstantsObject constants) {
-        this.driveMotor = constants.moduleConfigObject().getDriveMotor();
-        this.steerMotor = constants.moduleConfigObject().getSteerMotor();
+    public MK4IModuleActions(MK4IModuleConstants constants) {
+        this.driveMotor = constants.driveMotor();
+        this.steerMotor = constants.steerMotor();
 
         this.driveVelocityRequest =  new VelocityVoltage(0).withEnableFOC(constants.enableFocDrive());
         this.driveVoltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFocDrive());

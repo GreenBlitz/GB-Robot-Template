@@ -6,8 +6,8 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
-import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class MK4IModuleConfigObject {
@@ -17,13 +17,12 @@ public class MK4IModuleConfigObject {
     private final MK4IModuleRecords.MK4IModuleSignals moduleSignals;
 
     public MK4IModuleConfigObject(
-            CTREDeviceID steerMotorDeviceID, boolean isSteerMotorInverted, TalonFXConfiguration steerConfiguration,
-            CTREDeviceID driveMotorDeviceID, boolean isDriveMotorInverted, TalonFXConfiguration driveConfiguration,
-            CTREDeviceID encoderDeviceID, CANcoderConfiguration encoderConfiguration
+            TalonFXConfiguration steerConfiguration, TalonFXConfiguration driveConfiguration,
+            CANcoderConfiguration encoderConfiguration, ModuleID moduleID
     ) {
-        this.encoder = new CANcoder(encoderDeviceID.ID(), encoderDeviceID.busChain().getChainName());
-        this.steerMotor = new TalonFXWrapper(steerMotorDeviceID);
-        this.driveMotor =  new TalonFXWrapper(driveMotorDeviceID);
+        this.encoder = new CANcoder(moduleID.encoderDeviceID().ID(), moduleID.encoderDeviceID().busChain().getChainName());
+        this.steerMotor = new TalonFXWrapper(moduleID.steerMotorDeviceID());
+        this.driveMotor =  new TalonFXWrapper(moduleID.driveMotorDeviceID());
 
         this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(
                 encoder.getAbsolutePosition(),
@@ -46,11 +45,11 @@ public class MK4IModuleConfigObject {
         optimizeBusAndSignalOfEncoder();
 
         configDriveMotor(driveConfiguration);
-        driveMotor.setInverted(isDriveMotorInverted);
+        driveMotor.setInverted(moduleID.isDriveMotorInverted());
         optimizeBusAndSignalOfDriveMotor();
 
         configSteerMotor(steerConfiguration);
-        steerMotor.setInverted(isSteerMotorInverted);
+        steerMotor.setInverted(moduleID.isSteerMotorInverted());
         optimizeBusAndSignalOfSteerMotor();
     }
 
@@ -112,19 +111,19 @@ public class MK4IModuleConfigObject {
         steerMotor.optimizeBusUtilization();
     }
 
-    protected CANcoder getEncoder() {
+    protected CANcoder encoder() {
         return encoder;
     }
 
-    protected TalonFXWrapper getSteerMotor() {
+    protected TalonFXWrapper steerMotor() {
         return steerMotor;
     }
 
-    protected TalonFXWrapper getDriveMotor() {
+    protected TalonFXWrapper driveMotor() {
         return driveMotor;
     }
 
-    protected MK4IModuleRecords.MK4IModuleSignals getModuleSignals() {
+    protected MK4IModuleRecords.MK4IModuleSignals signals() {
         return moduleSignals;
     }
 

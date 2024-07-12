@@ -4,7 +4,6 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;
-import frc.robot.subsystems.swerve.goodconstants.module.SimulationModuleConstantsObject;
 
 public class SimulationModuleActions {
 
@@ -14,9 +13,9 @@ public class SimulationModuleActions {
     private final VoltageOut steerVoltageRequest;
     private final VoltageOut driveVoltageRequest;
 
-    public SimulationModuleActions(SimulationModuleConstantsObject constants) {
-        this.driveMotor = constants.moduleConfigObject().driveMotor();
-        this.steerMotor = constants.moduleConfigObject().steerMotor();
+    public SimulationModuleActions(SimulationModuleConstants constants) {
+        this.driveMotor = constants.driveMotor();
+        this.steerMotor = constants.steerMotor();
 
         this.steerPositionRequest = new PositionVoltage(0).withEnableFOC(constants.enableFocSteer());
         this.steerVoltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFocSteer());

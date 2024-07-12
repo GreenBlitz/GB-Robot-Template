@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.modules.mk4i;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.goodconstants.module.MK4IModuleConstantsObject;
 import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -15,22 +14,22 @@ public class MK4IModule implements IModule {
 
     private final MK4IModuleStatus mk4iModuleStatus;
     private final MK4IModuleActions mk4iModuleActions;
-    private final MK4IModuleConstantsObject constants;
+    private final MK4IModuleConstants constants;
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
 
-    public MK4IModule(MK4IModuleConstantsObject constants) {
+    public MK4IModule(MK4IModuleConstants constants) {
         this.constants = constants;
-        this.mk4iModuleStatus = new MK4IModuleStatus(constants.moduleConfigObject().getModuleSignals());
+        this.mk4iModuleStatus = new MK4IModuleStatus(constants.signals());
         this.mk4iModuleActions = new MK4IModuleActions(constants);
 
         this.steerPositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
-                constants.moduleConfigObject().getSteerMotor(),
+                constants.steerMotor(),
                 mk4iModuleStatus.getSteerMotorPositionSignal(false),
                 mk4iModuleStatus.getSteerMotorVelocitySignal(false)
         );
         this.drivePositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
-                constants.moduleConfigObject().getDriveMotor(),
+                constants.driveMotor(),
                 mk4iModuleStatus.getDriveMotorPositionSignal(false),
                 mk4iModuleStatus.getDriveMotorVelocitySignal(false)
         );

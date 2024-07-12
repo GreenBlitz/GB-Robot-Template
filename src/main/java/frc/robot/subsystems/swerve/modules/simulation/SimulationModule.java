@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.modules.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.goodconstants.module.SimulationModuleConstantsObject;
 import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -14,13 +13,13 @@ public class SimulationModule implements IModule {
     private final ModuleUtils.ModuleName moduleName;
     private final SimulationModuleActions simulationModuleActions;
     private final SimulationModuleStatus simulationModuleStatus;
-    private final SimulationModuleConstantsObject constants;
+    private final SimulationModuleConstants constants;
 
-    public SimulationModule(ModuleUtils.ModuleName moduleName, SimulationModuleConstantsObject constants) {
+    public SimulationModule(ModuleUtils.ModuleName moduleName, SimulationModuleConstants constants) {
         this.moduleName = moduleName;
         this.constants = constants;
         this.simulationModuleActions = new SimulationModuleActions(constants);
-        this.simulationModuleStatus = new SimulationModuleStatus(constants.moduleConfigObject());
+        this.simulationModuleStatus = new SimulationModuleStatus(constants.steerMotor(), constants.driveMotor());
     }
 
 

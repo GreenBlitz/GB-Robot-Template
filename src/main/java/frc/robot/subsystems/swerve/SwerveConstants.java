@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.goodconstants.swerve;
+package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.LogPathsConstants;
 
-public class SwerveConstantsObject {
+public class SwerveConstants {
 
     public static final String SWERVE_LOG_PATH = LogPathsConstants.SUBSYSTEM_LOG_PATH + "Swerve/";
     protected static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
@@ -23,7 +23,6 @@ public class SwerveConstantsObject {
     protected static final double DRIVE_SYSID_CALIBRATION_RAMP_RATE = 0.5;
 
     public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
-    public static final double SLOW_DRIVE_MODE_FACTOR = 0.5;
 
     protected static final double DRIVE_NEUTRAL_DEADBAND = 0.2;
     protected static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.2);
@@ -68,7 +67,7 @@ public class SwerveConstantsObject {
     private final HolonomicPathFollowerConfig holonomicPathFollowerConfig;
 
 
-    public SwerveConstantsObject(
+    public SwerveConstants(
             double maxVelocityMetersPerSecond,
             Rotation2d maxRotationalVelocityPerSecond,
             PIDConstants translationMetersPIDConstants,
@@ -96,6 +95,27 @@ public class SwerveConstantsObject {
                 REPLANNING_CONFIG
         );
     }
+
+    public double maxVelocityMetersPerSecond(){
+        return maxVelocityMetersPerSecond;
+    }
+
+    public Rotation2d maxRotationalVelocityPerSecond(){
+        return maxRotationalVelocityPerSecond;
+    }
+
+    public PIDController translationMetersPIDController(){
+        return translationMetersPIDController;
+    }
+
+    public PIDController rotationDegreesPIDController(){
+        return rotationDegreesPIDController;
+    }
+
+    public HolonomicPathFollowerConfig holonomicPathFollowerConfig(){
+        return holonomicPathFollowerConfig;
+    }
+
 
 
 

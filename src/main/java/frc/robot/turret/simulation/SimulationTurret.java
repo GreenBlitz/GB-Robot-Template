@@ -24,17 +24,16 @@ public class SimulationTurret implements ITurret {
     private final VoltageOut voltageOut;
 
     public SimulationTurret() {
-        motor = new SimpleMotorSimulation(
+        this.motor = new SimpleMotorSimulation(
                 DCMotor.getKrakenX60(SimulationConstants.AMOUNT_OF_MOTORS),
                 GEARING,
                 JKG_METER_SQ
         );
+        this.motor.applyConfiguration(MOTOR_CONFIGURATION);
 
-        motor.applyConfiguration(MOTOR_CONFIGURATION);
-
-        positionDutyCycle = new PositionDutyCycle(0);
-        velocityDutyCycle = new VelocityDutyCycle(0);
-        voltageOut = new VoltageOut(0);
+        this.positionDutyCycle = new PositionDutyCycle(0);
+        this.velocityDutyCycle = new VelocityDutyCycle(0);
+        this.voltageOut = new VoltageOut(0);
     }
 
     @Override

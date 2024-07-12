@@ -4,15 +4,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Robot;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.modules.ModuleUtils.ModuleName;
 
 public enum RotateAxis {
 
     MIDDLE_OF_ROBOT(0, 0),
-    FRONT_LEFT_MODULE(ModuleUtils.getModulePositionRelativeToMiddleOfRobot(ModuleUtils.ModuleName.FRONT_LEFT)),
-    FRONT_RIGHT_MODULE(ModuleUtils.getModulePositionRelativeToMiddleOfRobot(ModuleUtils.ModuleName.FRONT_RIGHT)),
-    BACK_LEFT_MODULE(ModuleUtils.getModulePositionRelativeToMiddleOfRobot(ModuleUtils.ModuleName.BACK_LEFT)),
-    BACK_RIGHT_MODULE(ModuleUtils.getModulePositionRelativeToMiddleOfRobot(ModuleUtils.ModuleName.BACK_RIGHT));
+    FRONT_LEFT_MODULE(SwerveConstants.LOCATIONS[ModuleName.FRONT_LEFT.getIndex()]),
+    FRONT_RIGHT_MODULE(SwerveConstants.LOCATIONS[ModuleName.FRONT_RIGHT.getIndex()]),
+    BACK_LEFT_MODULE(SwerveConstants.LOCATIONS[ModuleName.BACK_LEFT.getIndex()]),
+    BACK_RIGHT_MODULE(SwerveConstants.LOCATIONS[ModuleName.BACK_RIGHT.getIndex()]);
 
     private final Translation2d rotateAxis;
 
@@ -27,6 +28,7 @@ public enum RotateAxis {
     public Translation2d getRotateAxis() {
         return new Translation2d(rotateAxis.getX(), rotateAxis.getY());
     }
+
 
     public static RotateAxis getLeftFarRotateAxis() {
         return getFarRotateAxis(true);
@@ -49,4 +51,5 @@ public enum RotateAxis {
         }
         return isLeft ? BACK_LEFT_MODULE : FRONT_LEFT_MODULE; // -45 >= x >= -135
     }
+
 }

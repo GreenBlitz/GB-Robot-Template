@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.LogPathsConstants;
+import frc.robot.constants.MathConstants;
 
 public class SwerveConstants {
 
@@ -86,6 +87,7 @@ public class SwerveConstants {
                 rotationDegreesPIDConstants.kI,
                 rotationDegreesPIDConstants.kD
         );
+        rotationDegreesPIDController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
 
         this.holonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
                 translationMetersPIDConstants,

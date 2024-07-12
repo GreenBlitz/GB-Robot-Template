@@ -46,4 +46,24 @@ public class SimulationModuleConstantsObject {
         );
     }
 
+    public boolean enableFocSteer(){
+        return enableFocSteer;
+    }
+
+    public boolean enableFocDrive(){
+        return enableFocDrive;
+    }
+
+    public double wheelDiameter() {
+        return wheelDiameter;
+    }
+
+    public Rotation2d maxVelocityPerSecond() {
+        return maxVelocityPerSecond;
+    }
+
+    public SimulationModuleConfigObject moduleConfigObject() {
+        return moduleConfigObject;
+    }
+
 }

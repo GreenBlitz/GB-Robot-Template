@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.modules.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.goodconstants.module.SimulationModuleConstantsObject;
 import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -13,18 +14,18 @@ public class SimulationModule implements IModule {
     private final ModuleUtils.ModuleName moduleName;
     private final SimulationModuleActions simulationModuleActions;
     private final SimulationModuleStatus simulationModuleStatus;
+    private final SimulationModuleConstantsObject constants;
 
-    public SimulationModule(ModuleUtils.ModuleName moduleName) {
+    public SimulationModule(ModuleUtils.ModuleName moduleName, SimulationModuleConstantsObject constants) {
         this.moduleName = moduleName;
-
-        SimulationModuleConfigObject simulationModuleConfigObject = new SimulationModuleConfigObject();
-        this.simulationModuleActions = new SimulationModuleActions(simulationModuleConfigObject);
-        this.simulationModuleStatus = new SimulationModuleStatus(simulationModuleConfigObject);
+        this.constants = constants;
+        this.simulationModuleActions = new SimulationModuleActions(constants);
+        this.simulationModuleStatus = new SimulationModuleStatus(constants.moduleConfigObject());
     }
 
 
     private double toDriveMeters(Rotation2d angle) {
-        return Conversions.angleToDistance(angle, SimulationModuleConstants.WHEEL_DIAMETER_METERS);
+        return Conversions.angleToDistance(angle, constants.wheelDiameter());
     }
 
 
@@ -61,8 +62,8 @@ public class SimulationModule implements IModule {
                 targetVelocityMetersPerSecond,
                 simulationModuleStatus.getSteerVelocity(),
                 0,
-                SimulationModuleConstants.MAX_SPEED_PER_SECOND,
-                SimulationModuleConstants.WHEEL_DIAMETER_METERS,
+                constants.maxVelocityPerSecond(),
+                constants.wheelDiameter(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());

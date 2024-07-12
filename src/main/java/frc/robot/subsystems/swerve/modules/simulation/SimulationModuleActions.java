@@ -4,19 +4,23 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;
+import frc.robot.subsystems.swerve.goodconstants.module.SimulationModuleConstantsObject;
 
 public class SimulationModuleActions {
 
     private final SimpleMotorSimulation steerMotor, driveMotor;
 
-    private final PositionVoltage steerPositionRequest = new PositionVoltage(0).withEnableFOC(SimulationModuleConstants.ENABLE_FOC_STEER);
-    private final VoltageOut steerVoltageRequest = new VoltageOut(0).withEnableFOC(SimulationModuleConstants.ENABLE_FOC_STEER);
+    private final PositionVoltage steerPositionRequest;
+    private final VoltageOut steerVoltageRequest;
+    private final VoltageOut driveVoltageRequest;
 
-    private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(SimulationModuleConstants.ENABLE_FOC_DRIVE);
+    public SimulationModuleActions(SimulationModuleConstantsObject constants) {
+        this.driveMotor = constants.moduleConfigObject().driveMotor();
+        this.steerMotor = constants.moduleConfigObject().steerMotor();
 
-    public SimulationModuleActions(SimulationModuleConfigObject simulationModuleConfigObject) {
-        this.driveMotor = simulationModuleConfigObject.getDriveMotor();
-        this.steerMotor = simulationModuleConfigObject.getSteerMotor();
+        this.steerPositionRequest = new PositionVoltage(0).withEnableFOC(constants.enableFocSteer());
+        this.steerVoltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFocSteer());
+        this.driveVoltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFocDrive());
     }
 
     public void stop() {

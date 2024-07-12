@@ -8,8 +8,8 @@ public class SimulationModuleStatus {
     private final SimpleMotorSimulation steerMotor, driveMotor;
 
     public SimulationModuleStatus(SimulationModuleConfigObject simulationModuleConfigObject) {
-        this.driveMotor = simulationModuleConfigObject.getDriveMotor();
-        this.steerMotor = simulationModuleConfigObject.getSteerMotor();
+        this.driveMotor = simulationModuleConfigObject.driveMotor();
+        this.steerMotor = simulationModuleConfigObject.steerMotor();
     }
 
 

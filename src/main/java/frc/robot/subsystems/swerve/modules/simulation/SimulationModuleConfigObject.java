@@ -27,10 +27,10 @@ public class SimulationModuleConfigObject {
     }
 
 
-    public SimpleMotorSimulation getDriveMotor() {
+    public SimpleMotorSimulation driveMotor() {
         return driveMotor;
     }
-    public SimpleMotorSimulation getSteerMotor() {
+    public SimpleMotorSimulation steerMotor() {
         return steerMotor;
     }
 

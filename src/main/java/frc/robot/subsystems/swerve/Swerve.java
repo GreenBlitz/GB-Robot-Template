@@ -115,8 +115,9 @@ public class Swerve extends GBSubsystem {
 
 
     protected void initializeDrive(SwerveState updatedState) {
-        currentState.updateState(updatedState);
+        currentState.update(updatedState);
         setClosedLoopForModules();
+        resetTranslationController();
         resetRotationController();
     }
 
@@ -160,7 +161,9 @@ public class Swerve extends GBSubsystem {
             module.resetByEncoder();
         }
     }
-
+    protected void resetTranslationController() {
+        SwerveConstants.TRANSLATION_PID_METERS_CONTROLLER.reset();
+    }
     protected void resetRotationController() {
         SwerveConstants.ROTATION_PID_DEGREES_CONTROLLER.reset();
     }

@@ -1,70 +1,36 @@
 package frc.utils;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.constants.MathConstants;
 
 public class Conversions {
 
-    public static final double MAG_TICKS = 4096, DEGREES_PER_REVOLUTIONS = 360, HUNDRED_MS_PER_SEC = 10, SEC_PER_MIN = 60;
+    public static final double MAG_TICKS = 4096;
+    public static final double HUNDRED_MILLIESECONDS_PER_SECONDS = 10;
+    public static final double SECONDS_PER_MINUTE = 60;
+
 
     /**
-     * Converts ticks from a Mag Encoder to degrees.
+     * Converts ticks from a Mag Encoder to angle.
      *
+     * @param systemGearRatio the gear ratio of the system, when motor/ration = system
      * @param magTicks ticks from a Mag Encoder
-     * @return degrees
+     * @return angle
      */
-    public static double magTicksToDegrees(double magTicks) {
-        return revolutionsToDegrees(magTicksToRevolutions(magTicks));
+    public static Rotation2d magTicksToAngle(double magTicks, double systemGearRatio) {
+        return Rotation2d.fromRotations(magTicks / MAG_TICKS / systemGearRatio);
     }
 
     /**
-     * Converts revolutions to degrees.
+     * Converts angle to Mag Encoder ticks.
      *
-     * @param revolutions revolutions
-     * @return degrees
-     */
-    public static double revolutionsToDegrees(double revolutions) {
-        return revolutions * DEGREES_PER_REVOLUTIONS;
-    }
-
-    /**
-     * Converts ticks from a Mag Encoder to revolutions.
-     *
-     * @param magTicks ticks from a Mag Encoder
-     * @return revolutions
-     */
-    public static double magTicksToRevolutions(double magTicks) {
-        return magTicks / MAG_TICKS;
-    }
-
-    /**
-     * Converts degrees to Mag Encoder ticks.
-     *
-     * @param degrees degrees
+     * @param systemGearRatio the gear ratio of the system, when motor/ration = system
+     * @param angle angle
      * @return Mag Encoder ticks
      */
-    public static double degreesToMagTicks(double degrees) {
-        return revolutionsToMagTicks(degreesToRevolutions(degrees));
-    }
-
-    /**
-     * Converts revolutions to Mag Encoder ticks.
-     *
-     * @param revolutions revolutions
-     * @return Mag Encoder ticks
-     */
-    public static double revolutionsToMagTicks(double revolutions) {
-        return revolutions * MAG_TICKS;
-    }
-
-    /**
-     * Converts degrees to revolutions.
-     *
-     * @param degrees degrees
-     * @return revolutions
-     */
-    public static double degreesToRevolutions(double degrees) {
-        return degrees / DEGREES_PER_REVOLUTIONS;
+    public static double angleToMagTicks(Rotation2d angle, double systemGearRatio) {
+        return angle.getRotations() * MAG_TICKS * systemGearRatio;
     }
 
     /**
@@ -100,17 +66,17 @@ public class Conversions {
      * @return the frequency per second
      */
     public static double perMinuteToPerSecond(double frequency) {
-        return frequency / SEC_PER_MIN;
+        return frequency / SECONDS_PER_MINUTE;
     }
 
     /**
-     * Converts a frequency from per 100ms to per minute.
+     * Converts a frequency from per 100millieseconds to per minute.
      *
-     * @param frequency the frequency per 100ms
+     * @param frequency the frequency per 100millieseconds
      * @return the frequency per minute
      */
-    public static double perHundredMsToPerMinute(double frequency) {
-        return perSecondToPerMinute(perHundredMsToPerSecond(frequency));
+    public static double per100MilliesecondsToPerMinute(double frequency) {
+        return perSecondToPerMinute(per100MilliesecondsToPerSecond(frequency));
     }
 
     /**
@@ -120,37 +86,37 @@ public class Conversions {
      * @return the frequency per minute
      */
     public static double perSecondToPerMinute(double frequency) {
-        return frequency * SEC_PER_MIN;
+        return frequency * SECONDS_PER_MINUTE;
     }
 
     /**
-     * Converts a frequency from per 100ms to per second.
+     * Converts a frequency from per 100 millieseconds to per second.
      *
-     * @param frequency the frequency per 100ms
+     * @param frequency the frequency per 100 millieseconds
      * @return the frequency per second
      */
-    public static double perHundredMsToPerSecond(double frequency) {
-        return frequency * HUNDRED_MS_PER_SEC;
+    public static double per100MilliesecondsToPerSecond(double frequency) {
+        return frequency * HUNDRED_MILLIESECONDS_PER_SECONDS;
     }
 
     /**
-     * Converts a frequency from per minute to per 100ms.
+     * Converts a frequency from per minute to per 100 millieseconds.
      *
      * @param frequency the frequency per minute
-     * @return the frequency per 100ms
+     * @return the frequency per 100millieseconds
      */
-    public static double perMinToPerSec(double frequency) {
-        return perSecondToPerHundredMs(frequency) / SEC_PER_MIN;
+    public static double perMinuteToPer100Millieseconds(double frequency) {
+        return perSecondToPer100Millieseconds(frequency) / SECONDS_PER_MINUTE;
     }
 
     /**
-     * Converts a frequency from per second to per 100ms.
+     * Converts a frequency from per second to per 100millieseconds.
      *
      * @param frequency the frequency per second
-     * @return the frequency per 100ms
+     * @return the frequency per 100millieseconds
      */
-    public static double perSecondToPerHundredMs(double frequency) {
-        return frequency / HUNDRED_MS_PER_SEC;
+    public static double perSecondToPer100Millieseconds(double frequency) {
+        return frequency / HUNDRED_MILLIESECONDS_PER_SECONDS;
     }
 
 
@@ -165,25 +131,25 @@ public class Conversions {
     }
 
     /**
-     * Converts revolutions to distance.
+     * Converts angle to distance.
      *
-     * @param revolutions the revolutions
+     * @param angle the angle
      * @param wheelDiameter the wheel diameter
      * @return the distance
      */
-    public static double revolutionsToDistance(double revolutions, double wheelDiameter) {
-        return revolutions * wheelDiameter * MathConstants.HALF_CIRCLE.getRadians();
+    public static double angleToDistance(Rotation2d angle, double wheelDiameter) {
+        return angle.getRotations() * wheelDiameter * MathConstants.HALF_CIRCLE.getRadians();
     }
 
     /**
-     * Converts distance to revolutions.
+     * Converts distance to angle.
      *
      * @param distance the distance
      * @param wheelDiameter the wheel diameter
-     * @return the revolutions
+     * @return the angle
      */
-    public static double distanceToRevolutions(double distance, double wheelDiameter) {
-        return distance / (wheelDiameter * MathConstants.HALF_CIRCLE.getRadians());
+    public static Rotation2d distanceToAngle(double distance, double wheelDiameter) {
+        return Rotation2d.fromRotations(distance / (wheelDiameter * MathConstants.HALF_CIRCLE.getRadians()));
     }
 
     /**

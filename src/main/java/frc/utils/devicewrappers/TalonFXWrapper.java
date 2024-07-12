@@ -4,39 +4,27 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import frc.robot.constants.Phoenix6Constants;
-import frc.utils.CTREUtils.CTREDeviceID;
+import frc.utils.ctre.CTREDeviceID;
 
 public class TalonFXWrapper extends TalonFX {
+
+    public TalonFXWrapper(int deviceId) {
+        this(new CTREDeviceID(deviceId));
+    }
 
     public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
         this(ctreDeviceID, new TalonFXConfiguration());
     }
 
     public TalonFXWrapper(CTREDeviceID ctreDeviceID, TalonFXConfiguration configuration) {
-        this(ctreDeviceID.ID(), ctreDeviceID.bus(), configuration);
-    }
-
-    public TalonFXWrapper(int deviceId) {
-        this(deviceId, new TalonFXConfiguration());
-    }
-
-    public TalonFXWrapper(int deviceId, TalonFXConfiguration configuration) {
-        this(deviceId, Phoenix6Constants.CANBUS_NAME, configuration);
-    }
-
-    public TalonFXWrapper(int deviceId, String BusChain) {
-        this(deviceId, BusChain, new TalonFXConfiguration());
-    }
-
-    public TalonFXWrapper(int deviceId, String BusChain, TalonFXConfiguration configuration) {
-        super(deviceId, BusChain);
+        super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
         applyConfiguration(configuration);
     }
 
     public void applyConfiguration(TalonFXConfiguration configuration) {
         super.getConfigurator().apply(configuration);
     }
+
 
     /**
      * Performs latency compensation on signal using the signalSlope and signal's

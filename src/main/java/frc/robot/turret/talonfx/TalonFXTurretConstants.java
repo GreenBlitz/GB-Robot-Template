@@ -2,10 +2,10 @@ package frc.robot.turret.talonfx;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
-public class TalonFXTurretConstants {
+class TalonFXTurretConstants {
 
-    public static final boolean IS_FOC_ENABLED = true;
-    public static final TalonFXConfiguration MOTOR_CONFIGURATION = new TalonFXConfiguration();
+    protected static final boolean IS_FOC_ENABLED = true;
+    protected static final TalonFXConfiguration MOTOR_CONFIGURATION = new TalonFXConfiguration();
 
     static {
         MOTOR_CONFIGURATION.Slot0.kP = 1;

@@ -72,7 +72,7 @@ public class SwerveState {
     }
 
 
-    public void updateState(SwerveState newState) {
+    public void update(SwerveState newState) {
         this.driveRelative = newState.driveRelative;
         this.driveSpeed = newState.driveSpeed;
         this.loopMode = newState.loopMode;

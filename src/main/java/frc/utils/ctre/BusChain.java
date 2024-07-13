@@ -7,7 +7,7 @@ import org.littletonrobotics.junction.Logger;
 
 public enum BusChain {
 
-    CANBUS("rio"),
+    ROBORIO("rio"),
     CANIVORE("CANivore");
 
     private final String chainName;
@@ -59,5 +59,4 @@ public enum BusChain {
             Logger.recordOutput(currentAlertLogPath + "/TransmitErrorsAt", currentTime);
         }
     }
-
 }

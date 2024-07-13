@@ -21,13 +21,11 @@ public class ElevatorSimulation extends MotorSimulation {
     }
 
     /**
-     * Returns in Rotation2D the position of the drum
-     *
-     * @return the position
+     * Returns in Rotation2D the position of the drum.
      */
     @Override
     public Rotation2d getPosition() {
-        return Rotation2d.fromRotations(Conversions.distanceToRevolutions(getPositionMeters(), diameterMeters));
+        return Conversions.distanceToAngle(getPositionMeters(), diameterMeters);
     }
 
     public double getPositionMeters() {
@@ -35,13 +33,11 @@ public class ElevatorSimulation extends MotorSimulation {
     }
 
     /**
-     * Returns the velocity in Rotation2D of the drum
-     *
-     * @return the velocity
+     * Returns the velocity in Rotation2D of the drum.
      */
     @Override
     public Rotation2d getVelocity() {
-        return Rotation2d.fromRotations(Conversions.distanceToRevolutions(getVelocityMetersPerSecond(), diameterMeters));
+        return Conversions.distanceToAngle(getVelocityMetersPerSecond(), diameterMeters);
     }
 
     public double getVelocityMetersPerSecond() {

@@ -10,7 +10,7 @@ public class SwerveGyroFactory {
 
     public static ISwerveGyro createSwerveGyro() {
         return switch (Robot.ROBOT_TYPE) {
-            case REAL -> new Pigeon2Gyro(Pigeon2GyroContainer.PIGEON_2_GYRO_CONFIG_OBJECT);
+            case REAL -> new Pigeon2Gyro(Pigeon2GyroContainer.pigeon2GyroConfigObject);
             case SIMULATION -> new SimulationSwerveGyro();
             case REPLAY -> new ReplaySwerveGyro();
         };

@@ -11,48 +11,49 @@
 # If this library is not installed, don't install ntcore but pyntcore.
 from ntcore import NetworkTableInstance
 
-import sys
 import time
 import logging
 
-__CONNECTION_TIMEOUT_SECONDS = 30
-__CONNECTION_COOLDOWN_SECONDS = 0.1
 
-logging.basicConfig()
-__LOGGER = (logging.getLogger("network table logger"))
-__LOGGER.setLevel(logging.INFO)
+class NetworkTableClient:
+    _CONNECTION_TIMEOUT_SECONDS = 30
+    _CONNECTION_COOLDOWN_SECONDS = 0.1
 
+    def __init__(self, ip: str, client_name: str):
+        self._ip = ip
+        self._client_name = client_name
+        self._network_table_instance = NetworkTableInstance.getDefault()
+        logging.basicConfig()
+        self._logger = logging.getLogger(f"client: {self._client_name}")
+        self._logger.setLevel(logging.INFO)
 
-def __past_connection_timeout(starting_time: float) -> bool:
-    return time.time() - starting_time > __CONNECTION_TIMEOUT_SECONDS
+    def _is_connection_timeout_exceeded(self, starting_time: float) -> bool:
+        return time.time() - starting_time > self._CONNECTION_TIMEOUT_SECONDS
 
+    def _wait_for_client_to_connect(self) -> None:
+        starting_time = time.time()
+        while not self.is_connected():
+            if self._is_connection_timeout_exceeded(starting_time):
+                self._logger.error("Didn't connect to network tables")
+                self.terminate()
+                raise TimeoutError("Past Connection Timeout")
+            time.sleep(self._CONNECTION_COOLDOWN_SECONDS)
 
-def __wait_for_client_to_connect(network_table_instance: NetworkTableInstance, client_name: str) -> None:
-    starting_time = time.time()
-    while not network_table_instance.isConnected():
-        # terminate client and program if it takes to long to connect
-        if __past_connection_timeout(starting_time):
-            __LOGGER.error("Didn't connect to network tables")
-            terminate_client(network_table_instance, client_name)
-            raise TimeoutError("Past Connection Timeout")
-        time.sleep(__CONNECTION_COOLDOWN_SECONDS)
+    def connect(self) -> NetworkTableInstance:
+        self._logger.info(f"Setting up NetworkTables client")
+        self._network_table_instance.startClient4(self._client_name)
+        self._network_table_instance.setServer(self._ip)
+        self._network_table_instance.startDSClient()
 
+        self._logger.info("Waiting for connection to NetworkTables server...")
+        self._wait_for_client_to_connect()
 
-def get_connected_client(ip: str, client_name: str) -> NetworkTableInstance:
-    network_table_instance = NetworkTableInstance.getDefault()
+        self._logger.info(f"Connected {self._client_name} to NetworkTables server")
+        return self._network_table_instance
 
-    __LOGGER.info("Setting up NetworkTables client named {}".format(client_name))
-    network_table_instance.startClient4(client_name)
-    network_table_instance.setServer(ip)
-    network_table_instance.startDSClient()
+    def is_connected(self) -> bool:
+        return self._network_table_instance.isConnected()
 
-    __LOGGER.info("Waiting for connection to NetworkTables server...")
-    __wait_for_client_to_connect(network_table_instance, client_name)
-
-    __LOGGER.info("Connected {} to NetworkTables server".format(client_name))
-    return network_table_instance
-
-
-def terminate_client(network_table_instance: NetworkTableInstance, client_name: str) -> None:
-    __LOGGER.warning("Terminating client named {}".format(client_name))
-    NetworkTableInstance.destroy(network_table_instance)
+    def terminate(self) -> None:
+        self._logger.warning(f"Terminating client")
+        NetworkTableInstance.destroy(self._network_table_instance)

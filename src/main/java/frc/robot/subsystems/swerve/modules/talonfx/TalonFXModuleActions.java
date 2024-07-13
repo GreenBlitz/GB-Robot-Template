@@ -19,7 +19,7 @@ class TalonFXModuleActions {
     private final VelocityVoltage driveVelocityRequest;
     private final VoltageOut driveVoltageRequest;
 
-    public TalonFXModuleActions(TalonFXModuleConstants constants) {
+    protected TalonFXModuleActions(TalonFXModuleConstants constants) {
         this.steerMotor = constants.getSteerMotor();
         this.driveMotor = constants.getDriveMotor();
 
@@ -30,37 +30,37 @@ class TalonFXModuleActions {
         this.driveVoltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOCDrive());
     }
 
-    public void stop() {
+    protected void stop() {
         steerMotor.stopMotor();
         driveMotor.stopMotor();
     }
-    public void setBrake(boolean brake) {
+    protected void setBrake(boolean brake) {
         NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         steerMotor.setNeutralMode(neutralModeValue);
         driveMotor.setNeutralMode(neutralModeValue);
     }
 
 
-    public void resetSteerAngle(Rotation2d angle) {
+    protected void resetSteerAngle(Rotation2d angle) {
         steerMotor.setPosition(angle.getRotations());
     }
-    public void resetDriveAngle(Rotation2d angle) {
+    protected void resetDriveAngle(Rotation2d angle) {
         driveMotor.setPosition(angle.getRotations());
     }
 
 
-    public void setTargetSteerVoltage(double voltage) {
+    protected void setTargetSteerVoltage(double voltage) {
         steerMotor.setControl(steerVoltageRequest.withOutput(voltage));
     }
-    public void setTargetDriveVoltage(double voltage) {
+    protected void setTargetDriveVoltage(double voltage) {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
     }
 
 
-    public void setTargetAngle(Rotation2d angle) {
+    protected void setTargetAngle(Rotation2d angle) {
         steerMotor.setControl(steerPositionRequest.withPosition(angle.getRotations()));
     }
-    public void setTargetClosedLoopVelocity(double targetVelocityRotationsPerSecond) {
+    protected void setTargetClosedLoopVelocity(double targetVelocityRotationsPerSecond) {
         driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityRotationsPerSecond));
     }
 

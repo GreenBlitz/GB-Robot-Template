@@ -61,7 +61,7 @@ public class SwerveConstants {
     protected static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
 
 
-    private final double maxVelocityMetersPerSecond;
+    private final double velocityAt12VoltsMetersPerSecond;
     private final Rotation2d maxRotationalVelocityPerSecond;
     private final PIDController translationMetersPIDController;
     private final PIDController rotationDegreesPIDController;
@@ -69,12 +69,12 @@ public class SwerveConstants {
 
 
     public SwerveConstants(
-            double maxVelocityMetersPerSecond,
+            double velocityAt12VoltsMetersPerSecond,
             Rotation2d maxRotationalVelocityPerSecond,
             PIDConstants translationMetersPIDConstants,
             PIDConstants rotationDegreesPIDConstants
     ){
-        this.maxVelocityMetersPerSecond = maxVelocityMetersPerSecond;
+        this.velocityAt12VoltsMetersPerSecond = velocityAt12VoltsMetersPerSecond;
         this.maxRotationalVelocityPerSecond = maxRotationalVelocityPerSecond;
 
         this.translationMetersPIDController = new PIDController(
@@ -92,14 +92,14 @@ public class SwerveConstants {
         this.holonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
                 translationMetersPIDConstants,
                 rotationDegreesPIDConstants,
-                maxVelocityMetersPerSecond,
+                velocityAt12VoltsMetersPerSecond,
                 DRIVE_RADIUS_METERS,
                 REPLANNING_CONFIG
         );
     }
 
-    public double getMaxVelocityMetersPerSecond(){
-        return maxVelocityMetersPerSecond;
+    public double getVelocityAt12VoltsMetersPerSecond(){
+        return velocityAt12VoltsMetersPerSecond;
     }
 
     public Rotation2d getMaxRotationalVelocityPerSecond(){

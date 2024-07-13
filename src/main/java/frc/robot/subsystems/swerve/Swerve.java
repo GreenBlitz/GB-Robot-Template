@@ -51,10 +51,10 @@ public class Swerve extends GBSubsystem {
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
         this.constants = SwerveConstantsFactory.createSwerveConstants();
         this.modules = new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT, constants.getMaxVelocityMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT, constants.getMaxVelocityMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT, constants.getMaxVelocityMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT, constants.getMaxVelocityMetersPerSecond()),
+                new Module(ModuleUtils.ModuleName.FRONT_LEFT, constants.getVelocityAt12VoltsMetersPerSecond()),
+                new Module(ModuleUtils.ModuleName.FRONT_RIGHT, constants.getVelocityAt12VoltsMetersPerSecond()),
+                new Module(ModuleUtils.ModuleName.BACK_LEFT, constants.getVelocityAt12VoltsMetersPerSecond()),
+                new Module(ModuleUtils.ModuleName.BACK_RIGHT, constants.getVelocityAt12VoltsMetersPerSecond()),
         };
         this.gyro = SwerveGyroFactory.createSwerveGyro();
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
@@ -206,7 +206,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.getMaxVelocityMetersPerSecond());
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.getVelocityAt12VoltsMetersPerSecond());
         for (int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(swerveModuleStates[i]);
         }
@@ -468,8 +468,8 @@ public class Swerve extends GBSubsystem {
 
     private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
         return new ChassisSpeeds(
-                xPower * driveSpeed.translationSpeedFactor * constants.getMaxVelocityMetersPerSecond(),
-                yPower * driveSpeed.translationSpeedFactor * constants.getMaxVelocityMetersPerSecond(),
+                xPower * driveSpeed.translationSpeedFactor * constants.getVelocityAt12VoltsMetersPerSecond(),
+                yPower * driveSpeed.translationSpeedFactor * constants.getVelocityAt12VoltsMetersPerSecond(),
                 thetaPower * driveSpeed.rotationSpeedFactor * constants.getMaxRotationalVelocityPerSecond().getRadians()
         );
     }

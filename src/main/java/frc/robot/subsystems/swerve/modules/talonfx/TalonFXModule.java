@@ -79,7 +79,7 @@ public class TalonFXModule implements IModule {
                 targetVelocityMetersPerSecond,
                 talonFXModuleStatus.getSteerMotorLatencyVelocity(true),
                 talonFXModuleConstants.getCouplingRatio(),
-                talonFXModuleConstants.getMaxVelocityPerSecond(),
+                talonFXModuleConstants.getVelocityAt12VoltsPerSecond(),
                 talonFXModuleConstants.getWheelDiameterMeters(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );

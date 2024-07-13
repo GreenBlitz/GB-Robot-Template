@@ -61,7 +61,7 @@ public class SimulationModule implements IModule {
                 targetVelocityMetersPerSecond,
                 simulationModuleStatus.getSteerVelocity(),
                 0,
-                simulationModuleConstants.getMaxVelocityPerSecond(),
+                simulationModuleConstants.getVelocityAt12VoltsPerSecond(),
                 simulationModuleConstants.getWheelDiameterMeters(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );

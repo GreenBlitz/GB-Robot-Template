@@ -10,7 +10,7 @@ import frc.utils.Conversions;
 public class SimulationModuleConstants {
 
     private final double wheelDiameterMeters;
-    private final Rotation2d maxVelocityPerSecond;
+    private final Rotation2d velocityAt12VoltsPerSecond;
 
     private final boolean enableFOCSteer;
     private final boolean enableFOCDrive;
@@ -20,7 +20,7 @@ public class SimulationModuleConstants {
 
     public SimulationModuleConstants(
             double wheelDiameterMeters,
-            double maxVelocityMetersPerSecond,
+            double velocityAt12VoltsMetersPerSecond,
             DCMotorSim steerMotor,
             DCMotorSim driveMotor,
             boolean enableFOCSteer,
@@ -28,7 +28,7 @@ public class SimulationModuleConstants {
             PIDConstants steerMotorPIDConstants
     ){
         this.wheelDiameterMeters = wheelDiameterMeters;
-        this.maxVelocityPerSecond = Conversions.distanceToAngle(maxVelocityMetersPerSecond, wheelDiameterMeters);
+        this.velocityAt12VoltsPerSecond = Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond, wheelDiameterMeters);
 
         this.enableFOCSteer = enableFOCSteer;
         this.enableFOCDrive = enableFOCDrive;
@@ -60,8 +60,8 @@ public class SimulationModuleConstants {
         return wheelDiameterMeters;
     }
 
-    protected Rotation2d getMaxVelocityPerSecond() {
-        return maxVelocityPerSecond;
+    protected Rotation2d getVelocityAt12VoltsPerSecond() {
+        return velocityAt12VoltsPerSecond;
     }
 
     protected SimpleMotorSimulation getSteerMotor() {

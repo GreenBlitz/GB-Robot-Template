@@ -12,7 +12,7 @@ public class TalonFXModuleConstants {
 
     private final double wheelDiameterMeters;
     private final double couplingRatio;
-    private final Rotation2d maxVelocityPerSecond;
+    private final Rotation2d velocityAt12VoltsPerSecond;
 
     private final boolean enableFOCSteer;
     private final boolean enableFOCDrive;
@@ -26,7 +26,7 @@ public class TalonFXModuleConstants {
     public TalonFXModuleConstants(
             double wheelDiameterMeters,
             double couplingRatio,
-            double maxVelocityMetersPerSecond,
+            double velocityAt12VoltsMetersPerSecond,
             boolean enableFOCSteer,
             boolean enableFOCDrive,
             TalonFXConfiguration steerMotorConfig,
@@ -36,7 +36,7 @@ public class TalonFXModuleConstants {
     ) {
         this.wheelDiameterMeters = wheelDiameterMeters;
         this.couplingRatio = couplingRatio;
-        this.maxVelocityPerSecond = Conversions.distanceToAngle(maxVelocityMetersPerSecond, wheelDiameterMeters);
+        this.velocityAt12VoltsPerSecond = Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond, wheelDiameterMeters);
 
         this.enableFOCSteer = enableFOCSteer;
         this.enableFOCDrive = enableFOCDrive;
@@ -60,8 +60,8 @@ public class TalonFXModuleConstants {
         return wheelDiameterMeters;
     }
 
-    protected Rotation2d getMaxVelocityPerSecond() {
-        return maxVelocityPerSecond;
+    protected Rotation2d getVelocityAt12VoltsPerSecond() {
+        return velocityAt12VoltsPerSecond;
     }
 
     protected double getCouplingRatio() {

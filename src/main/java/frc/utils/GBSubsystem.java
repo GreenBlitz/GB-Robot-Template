@@ -6,10 +6,10 @@ import org.littletonrobotics.junction.Logger;
 
 public abstract class GBSubsystem extends SubsystemBase {
 
-    private final String loggingPath;
+    private final String logPath;
 
-    public GBSubsystem(String loggingPath) {
-        this.loggingPath = "Subsystems/" + loggingPath;
+    public GBSubsystem(String logPath) {
+        this.logPath = "Subsystems/" + logPath;
     }
 
     @Override
@@ -24,7 +24,7 @@ public abstract class GBSubsystem extends SubsystemBase {
     }
 
     public String getLogPath() {
-        return loggingPath;
+        return logPath;
     }
 
     protected abstract void subsystemPeriodic();

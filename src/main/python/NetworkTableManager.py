@@ -32,9 +32,9 @@ def __wait_for_client_to_connect(network_table_instance: NetworkTableInstance, c
     while not network_table_instance.isConnected():
         # terminate client and program if it takes to long to connect
         if __past_connection_timeout(starting_time):
-            __LOGGER.error("Didn't connect to network tables. Terminating...")
+            __LOGGER.error("Didn't connect to network tables")
             terminate_client(network_table_instance, client_name)
-            sys.exit()
+            raise TimeoutError("Past Connection Timeout")
         time.sleep(__CONNECTION_COOLDOWN_SECONDS)
 
 

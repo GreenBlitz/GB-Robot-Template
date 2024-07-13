@@ -14,7 +14,7 @@ import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroFactory;
+import frc.robot.subsystems.swerve.gyro.factory.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;

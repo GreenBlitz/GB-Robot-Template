@@ -11,7 +11,7 @@ class Pigeon2GyroActions {
         this.pigeon2 = pigeon2;
     }
 
-    public void setYaw(Rotation2d angle) {
+    protected void setYaw(Rotation2d angle) {
         pigeon2.setYaw(angle.getDegrees());
     }
 

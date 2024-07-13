@@ -8,10 +8,10 @@ import frc.utils.ctre.PhoenixProUtils;
 
 class Pigeon2GyroStatus {
 
-    private final Pigeon2GyroRecords.GyroPigeon2Signals gyroPigeon2Signals;
+    private final Pigeon2GyroSignals pigeon2GyroSignals;
 
-    protected Pigeon2GyroStatus(Pigeon2GyroRecords.GyroPigeon2Signals gyroPigeon2Signals) {
-        this.gyroPigeon2Signals = gyroPigeon2Signals;
+    protected Pigeon2GyroStatus(Pigeon2GyroSignals pigeon2GyroSignals) {
+        this.pigeon2GyroSignals = pigeon2GyroSignals;
     }
 
     public StatusCode refreshAllSignals() {
@@ -29,20 +29,20 @@ class Pigeon2GyroStatus {
     }
 
     public StatusSignal<Double> getYawSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.yawSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, pigeon2GyroSignals.yawSignal());
     }
 
 
     public StatusSignal<Double> getXAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.xAccelerationSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, pigeon2GyroSignals.xAccelerationSignal());
     }
 
     public StatusSignal<Double> getYAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.yAccelerationSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, pigeon2GyroSignals.yAccelerationSignal());
     }
 
     public StatusSignal<Double> getZAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.zAccelerationSignal());
+        return PhoenixProUtils.getRefreshedSignal(refresh, pigeon2GyroSignals.zAccelerationSignal());
     }
 
 }

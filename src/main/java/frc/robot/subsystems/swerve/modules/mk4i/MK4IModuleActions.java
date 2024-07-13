@@ -28,7 +28,6 @@ class MK4IModuleActions {
 
         this.driveVelocityRequest =  new VelocityVoltage(0).withEnableFOC(constants.getEnableFOCDrive());
         this.driveVoltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOCDrive());
-
     }
 
     public void stop() {

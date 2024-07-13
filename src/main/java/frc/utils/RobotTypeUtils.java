@@ -1,11 +1,11 @@
 package frc.utils;
 
-import frc.robot.Robot;
+import frc.robot.RobotManager;
 
 public class RobotTypeUtils {
 
     public static RobotType determineRobotType(RobotType wantedType) {
-        return Robot.isSimulation() ? (wantedType.isReplay() ? RobotType.REPLAY : RobotType.SIMULATION) : RobotType.REAL;
+        return RobotManager.isSimulation() ? (wantedType.isReplay() ? RobotType.REPLAY : RobotType.SIMULATION) : RobotType.REAL;
     }
 
     public enum RobotType {
@@ -25,6 +25,7 @@ public class RobotTypeUtils {
         public boolean isReplay() {
             return this.equals(RobotType.REPLAY);
         }
+
     }
 
 }

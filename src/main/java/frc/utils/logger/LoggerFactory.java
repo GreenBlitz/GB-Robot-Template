@@ -1,8 +1,8 @@
 package frc.utils.logger;
 
 import com.ctre.phoenix6.SignalLogger;
+import frc.robot.Robot;
 import frc.robot.constants.LogPathsConstants;
-import frc.robot.constants.RobotConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 public class LoggerFactory {
 
     public static void initializeLogger() {
-        switch (RobotConstants.ROBOT_TYPE) {
+        switch (Robot.ROBOT_TYPE) {
             case REAL -> startRealLogger();
             case SIMULATION -> startSimulationLogger();
             case REPLAY -> startReplayLogger();
@@ -24,7 +24,7 @@ public class LoggerFactory {
     private static void startRealLogger() {
         SignalLogger.enableAutoLogging(true); // must be true to BusStatus to work
 
-        if (LogSaveSpot.USB.isWritable()) {
+        if (LogSavePath.USB.isWritable()) {
             startLoggerOnUSB();
         }
         else {
@@ -38,15 +38,15 @@ public class LoggerFactory {
     }
 
     private static void startSimulationLogger() {
-        startNonReplayLogger(LogSaveSpot.COMPUTER);
+        startNonReplayLogger(LogSavePath.COMPUTER);
     }
 
     private static void startLoggerOnUSB() {
-        startNonReplayLogger(LogSaveSpot.USB);
+        startNonReplayLogger(LogSavePath.USB);
     }
 
     private static void startLoggerOnRoborio() {
-        startNonReplayLogger(LogSaveSpot.ROBORIO);
+        startNonReplayLogger(LogSavePath.ROBORIO);
     }
 
     private static void startReplayLogger() {
@@ -56,11 +56,11 @@ public class LoggerFactory {
         Logger.start();
     }
 
-    private static void startNonReplayLogger(LogSaveSpot logSaveSpot) {
-        setLoggingPath(logSaveSpot.getSavePath());
+    private static void startNonReplayLogger(LogSavePath logSavePath) {
+        setLoggingPath(logSavePath.getSavePath());
         Logger.addDataReceiver(new NT4Publisher());
         Logger.start();
-        Logger.recordOutput("Logged In", logSaveSpot);
+        Logger.recordOutput("Logged In", logSavePath);
     }
 
     private static void setLoggingPath(Path path) {

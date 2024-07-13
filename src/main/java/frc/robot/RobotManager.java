@@ -11,6 +11,7 @@ import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
+import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -32,6 +33,7 @@ public class RobotManager extends LoggedRobot {
         }
         LoggerFactory.initializeLogger();
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
+        PathPlannerUtils.startPathPlanner();
 
         this.robot = new Robot();
     }

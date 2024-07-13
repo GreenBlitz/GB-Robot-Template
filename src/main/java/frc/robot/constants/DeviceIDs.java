@@ -40,7 +40,7 @@ public class DeviceIDs {
     }
 
     public static class ModulesIDs {
-        public static final ModuleID[] moduleIDS = {
+        public static final ModuleID[] MODULE_IDS = {
                 new ModuleID(
                         DeviceIDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
                         true,

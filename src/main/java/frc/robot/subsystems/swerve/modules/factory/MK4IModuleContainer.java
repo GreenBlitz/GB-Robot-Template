@@ -8,7 +8,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.subsystems.swerve.modules.ModuleID;
-import frc.robot.subsystems.swerve.modules.mk4i.MK4IModuleConstants;
+import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModuleConstants;
 
 public class MK4IModuleContainer {
 
@@ -59,8 +59,8 @@ public class MK4IModuleContainer {
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
 
-    protected static MK4IModuleConstants mk4iModuleConstants(double maxVelocityMetersPerSecond, ModuleID moduleID){
-        return new MK4IModuleConstants(
+    protected static TalonFXModuleConstants mk4iModuleConstants(double maxVelocityMetersPerSecond, ModuleID moduleID){
+        return new TalonFXModuleConstants(
                 0.048359 * 2,
                 0.59,
                 maxVelocityMetersPerSecond,

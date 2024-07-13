@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.mk4i;
+package frc.robot.subsystems.swerve.modules.talonfx;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
@@ -6,11 +6,11 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.ctre.PhoenixProUtils;
 
-class MK4IModuleStatus {
+class TalonFXModuleStatus {
 
-    private final MK4IModuleSignals moduleSignals;
+    private final TalonFXModuleSignals moduleSignals;
 
-    protected MK4IModuleStatus(MK4IModuleSignals moduleSignals) {
+    protected TalonFXModuleStatus(TalonFXModuleSignals moduleSignals) {
         this.moduleSignals = moduleSignals;
     }
 

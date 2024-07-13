@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.mk4i;
+package frc.robot.subsystems.swerve.modules.talonfx;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -8,7 +8,7 @@ import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.utils.Conversions;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-public class MK4IModuleConstants {
+public class TalonFXModuleConstants {
 
     private final double wheelDiameterMeters;
     private final double couplingRatio;
@@ -20,10 +20,10 @@ public class MK4IModuleConstants {
     private final TalonFXWrapper steerMotor;
     private final TalonFXWrapper driveMotor;
     private final CANcoder encoder;
-    private final MK4IModuleSignals signals;
+    private final TalonFXModuleSignals signals;
 
 
-    public MK4IModuleConstants(
+    public TalonFXModuleConstants(
             double wheelDiameterMeters,
             double couplingRatio,
             double maxVelocityMetersPerSecond,
@@ -41,7 +41,7 @@ public class MK4IModuleConstants {
         this.enableFOCSteer = enableFOCSteer;
         this.enableFOCDrive = enableFOCDrive;
 
-        MK4IModuleConfigObject moduleConfigObject = new MK4IModuleConfigObject(steerMotorConfig, driveMotorConfig, encoderConfig, moduleID);
+        TalonFXModuleConfigObject moduleConfigObject = new TalonFXModuleConfigObject(steerMotorConfig, driveMotorConfig, encoderConfig, moduleID);
         this.steerMotor = moduleConfigObject.getSteerMotor();
         this.driveMotor = moduleConfigObject.getDriveMotor();
         this.encoder = moduleConfigObject.getEncoder();
@@ -80,7 +80,7 @@ public class MK4IModuleConstants {
         return encoder;
     }
 
-    protected MK4IModuleSignals getSignals() {
+    protected TalonFXModuleSignals getSignals() {
         return signals;
     }
 

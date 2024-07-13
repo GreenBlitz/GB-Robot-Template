@@ -1,8 +1,8 @@
-package frc.robot.subsystems.swerve.modules.mk4i;
+package frc.robot.subsystems.swerve.modules.talonfx;
 
 import com.ctre.phoenix6.StatusSignal;
 
-public record MK4IModuleSignals(
+public record TalonFXModuleSignals(
         StatusSignal<Double> encoderAbsolutePositionSignal,
         StatusSignal<Double> encoderVelocitySignal,
         StatusSignal<Double> encoderVoltageSignal,

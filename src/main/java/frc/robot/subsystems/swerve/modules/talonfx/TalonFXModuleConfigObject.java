@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.mk4i;
+package frc.robot.subsystems.swerve.modules.talonfx;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -10,13 +10,13 @@ import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-public class MK4IModuleConfigObject {
+public class TalonFXModuleConfigObject {
 
     private final TalonFXWrapper driveMotor, steerMotor;
     private final CANcoder encoder;
-    private final MK4IModuleSignals moduleSignals;
+    private final TalonFXModuleSignals moduleSignals;
 
-    public MK4IModuleConfigObject(
+    public TalonFXModuleConfigObject(
             TalonFXConfiguration steerConfiguration, TalonFXConfiguration driveConfiguration,
             CANcoderConfiguration encoderConfiguration, ModuleID moduleID
     ) {
@@ -24,7 +24,7 @@ public class MK4IModuleConfigObject {
         this.steerMotor = new TalonFXWrapper(moduleID.steerMotorDeviceID());
         this.driveMotor =  new TalonFXWrapper(moduleID.driveMotorDeviceID());
 
-        this.moduleSignals = new MK4IModuleSignals(
+        this.moduleSignals = new TalonFXModuleSignals(
                 encoder.getAbsolutePosition(),
                 encoder.getVelocity(),
                 encoder.getSupplyVoltage(),
@@ -121,7 +121,7 @@ public class MK4IModuleConfigObject {
         return driveMotor;
     }
 
-    protected MK4IModuleSignals getSignals() {
+    protected TalonFXModuleSignals getSignals() {
         return moduleSignals;
     }
 

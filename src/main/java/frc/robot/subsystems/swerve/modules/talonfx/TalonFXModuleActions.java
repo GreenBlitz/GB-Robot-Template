@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.mk4i;
+package frc.robot.subsystems.swerve.modules.talonfx;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-class MK4IModuleActions {
+class TalonFXModuleActions {
 
     private final TalonFXWrapper steerMotor, driveMotor;
 
@@ -19,7 +19,7 @@ class MK4IModuleActions {
     private final VelocityVoltage driveVelocityRequest;
     private final VoltageOut driveVoltageRequest;
 
-    public MK4IModuleActions(MK4IModuleConstants constants) {
+    public TalonFXModuleActions(TalonFXModuleConstants constants) {
         this.steerMotor = constants.getSteerMotor();
         this.driveMotor = constants.getDriveMotor();
 

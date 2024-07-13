@@ -1,3 +1,3 @@
 package frc.robot.constants;
 
-public class DeviceIDs {}
+public class IDs {}

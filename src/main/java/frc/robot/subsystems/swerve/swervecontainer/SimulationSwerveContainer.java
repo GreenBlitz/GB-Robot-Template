@@ -26,7 +26,7 @@ public class SimulationSwerveContainer {
     protected static final SwerveConstants swerveConstants = new SwerveConstants(
             VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
             Rotation2d.fromRadians(10),
-            new PIDConstants(6, 0, 0),
+            new PIDConstants(7, 0, 0),
             new PIDConstants(6, 0, 0)
     );
 

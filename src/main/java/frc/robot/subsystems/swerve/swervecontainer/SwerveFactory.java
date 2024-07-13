@@ -39,10 +39,10 @@ public class SwerveFactory {
                     new Module(ModuleUtils.ModuleName.BACK_RIGHT, new TalonFXModule(RealSwerveContainer.moduleConstants[3]))
             };
             case SIMULATION -> new Module[]{
-                    new Module(ModuleUtils.ModuleName.FRONT_LEFT, new SimulationModule(ModuleUtils.ModuleName.FRONT_LEFT, SimulationSwerveContainer.moduleConstants)),
-                    new Module(ModuleUtils.ModuleName.FRONT_RIGHT, new SimulationModule(ModuleUtils.ModuleName.FRONT_RIGHT, SimulationSwerveContainer.moduleConstants)),
-                    new Module(ModuleUtils.ModuleName.BACK_LEFT, new SimulationModule(ModuleUtils.ModuleName.BACK_LEFT, SimulationSwerveContainer.moduleConstants)),
-                    new Module(ModuleUtils.ModuleName.BACK_RIGHT, new SimulationModule(ModuleUtils.ModuleName.BACK_RIGHT, SimulationSwerveContainer.moduleConstants))
+                    new Module(ModuleUtils.ModuleName.FRONT_LEFT, new SimulationModule(ModuleUtils.ModuleName.FRONT_LEFT, SimulationSwerveContainer.getModuleConstants())),
+                    new Module(ModuleUtils.ModuleName.FRONT_RIGHT, new SimulationModule(ModuleUtils.ModuleName.FRONT_RIGHT, SimulationSwerveContainer.getModuleConstants())),
+                    new Module(ModuleUtils.ModuleName.BACK_LEFT, new SimulationModule(ModuleUtils.ModuleName.BACK_LEFT, SimulationSwerveContainer.getModuleConstants())),
+                    new Module(ModuleUtils.ModuleName.BACK_RIGHT, new SimulationModule(ModuleUtils.ModuleName.BACK_RIGHT, SimulationSwerveContainer.getModuleConstants()))
             };
             case REPLAY -> new Module[]{
                     new Module(ModuleUtils.ModuleName.FRONT_LEFT, new ReplayModule()),

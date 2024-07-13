@@ -19,9 +19,9 @@ public class Module {
     private boolean driveMotorClosedLoop;
     private SwerveModuleState targetState;
 
-    public Module(ModuleUtils.ModuleName moduleName, double maxVelocityMetersPerSecond) {
+    public Module(ModuleUtils.ModuleName moduleName, double velocityAt12VoltsMetersPerSecond) {
         this.moduleName = moduleName;
-        this.module = ModuleFactory.createModule(moduleName, maxVelocityMetersPerSecond);
+        this.module = ModuleFactory.createModule(moduleName, velocityAt12VoltsMetersPerSecond);
         this.moduleInputsContainer = new ModuleInputsContainer();
         this.targetState = new SwerveModuleState();
         this.driveMotorClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;

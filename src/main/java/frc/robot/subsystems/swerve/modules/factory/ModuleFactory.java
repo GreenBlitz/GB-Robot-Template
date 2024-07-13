@@ -10,10 +10,10 @@ import frc.robot.subsystems.swerve.modules.simulation.SimulationModule;
 
 public class ModuleFactory {
 
-    public static IModule createModule(ModuleUtils.ModuleName moduleName, double maxVelocityMetersPerSecond) {
+    public static IModule createModule(ModuleUtils.ModuleName moduleName, double velocityAt12VoltsMetersPerSecond) {
         return switch (Robot.ROBOT_TYPE) {
-            case REAL -> new TalonFXModule(MK4IModuleContainer.mk4iModuleConstants(maxVelocityMetersPerSecond, ModulesIDs.MODULE_IDS[moduleName.getIndex()]));
-            case SIMULATION -> new SimulationModule(moduleName, SimulationModuleContainer.simulationModuleConstants(maxVelocityMetersPerSecond));
+            case REAL -> new TalonFXModule(MK4IModuleContainer.mk4iModuleConstants(velocityAt12VoltsMetersPerSecond, ModulesIDs.MODULE_IDS[moduleName.getIndex()]));
+            case SIMULATION -> new SimulationModule(moduleName, SimulationModuleContainer.simulationModuleConstants(velocityAt12VoltsMetersPerSecond));
             case REPLAY -> new ReplayModule();
         };
     }

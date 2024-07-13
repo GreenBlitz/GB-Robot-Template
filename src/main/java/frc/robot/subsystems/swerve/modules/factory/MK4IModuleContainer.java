@@ -59,11 +59,11 @@ public class MK4IModuleContainer {
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
 
-    protected static TalonFXModuleConstants mk4iModuleConstants(double maxVelocityMetersPerSecond, ModuleID moduleID){
+    protected static TalonFXModuleConstants mk4iModuleConstants(double velocityAt12VoltsMetersPerSecond, ModuleID moduleID){
         return new TalonFXModuleConstants(
                 0.048359 * 2,
                 0.59,
-                maxVelocityMetersPerSecond,
+                velocityAt12VoltsMetersPerSecond,
                 true,
                 true,
                 STEER_MOTOR_CONFIG,

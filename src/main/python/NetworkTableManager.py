@@ -9,7 +9,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # If this library is not installed, don't install ntcore but pyntcore.
-import ntcore
+from ntcore import NetworkTableInstance
 
 import sys
 import time
@@ -27,7 +27,7 @@ def __past_connection_timeout(starting_time: float) -> bool:
     return time.time() - starting_time > __CONNECTION_TIMEOUT_SECONDS
 
 
-def __wait_for_client_to_connect(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
+def __wait_for_client_to_connect(network_table_instance: NetworkTableInstance, client_name: str) -> None:
     starting_time = time.time()
     while not network_table_instance.isConnected():
         # terminate client and program if it takes to long to connect
@@ -38,8 +38,8 @@ def __wait_for_client_to_connect(network_table_instance: ntcore.NetworkTableInst
         time.sleep(__CONNECTION_COOLDOWN_SECONDS)
 
 
-def get_connected_client(ip: str, client_name: str) -> ntcore.NetworkTableInstance:
-    network_table_instance = ntcore.NetworkTableInstance.getDefault()
+def get_connected_client(ip: str, client_name: str) -> NetworkTableInstance:
+    network_table_instance = NetworkTableInstance.getDefault()
 
     __LOGGER.info("Setting up NetworkTables client named {}".format(client_name))
     network_table_instance.startClient4(client_name)
@@ -53,6 +53,6 @@ def get_connected_client(ip: str, client_name: str) -> ntcore.NetworkTableInstan
     return network_table_instance
 
 
-def terminate_client(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
+def terminate_client(network_table_instance: NetworkTableInstance, client_name: str) -> None:
     __LOGGER.warning("Terminating client named {}".format(client_name))
-    ntcore.NetworkTableInstance.destroy(network_table_instance)
+    NetworkTableInstance.destroy(network_table_instance)

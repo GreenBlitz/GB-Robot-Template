@@ -39,6 +39,9 @@ class NetworkTableClient:
                 raise TimeoutError("Past Connection Timeout")
             time.sleep(self._CONNECTION_COOLDOWN_SECONDS)
 
+    def is_connected(self) -> bool:
+        return self._network_table_instance.isConnected()
+
     def connect(self) -> NetworkTableInstance:
         self._logger.info(f"Setting up NetworkTables client")
         self._network_table_instance.startClient4(self._client_name)
@@ -50,9 +53,6 @@ class NetworkTableClient:
 
         self._logger.info(f"Connected {self._client_name} to NetworkTables server")
         return self._network_table_instance
-
-    def is_connected(self) -> bool:
-        return self._network_table_instance.isConnected()
 
     def terminate(self) -> None:
         self._logger.warning(f"Terminating client")

@@ -6,6 +6,12 @@ import org.littletonrobotics.junction.Logger;
 
 public abstract class GBSubsystem extends SubsystemBase {
 
+    private final String logPath;
+
+    public GBSubsystem(String logPath) {
+        this.logPath = "Subsystems/" + logPath;
+    }
+
     @Override
     public final void periodic() {
         Logger.recordOutput(getLogPath() + "Current Command", getCurrentCommandName());
@@ -17,7 +23,9 @@ public abstract class GBSubsystem extends SubsystemBase {
         return currentCommand != null ? currentCommand.getName() : "no command is currently running on the subsystem";
     }
 
-    protected abstract String getLogPath();
+    public String getLogPath() {
+        return logPath;
+    }
 
     protected abstract void subsystemPeriodic();
 

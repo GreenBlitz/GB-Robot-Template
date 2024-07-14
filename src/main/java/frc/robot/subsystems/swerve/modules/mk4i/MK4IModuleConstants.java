@@ -62,7 +62,7 @@ public class MK4IModuleConstants {
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = STEER_CURRENT_LIMIT;
         STEER_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        STEER_MOTOR_CONFIG.Feedback.SensorToMechanismRatio = 150.0 / 7.0;
+        STEER_MOTOR_CONFIG.Feedback.RotorToSensorRatio = 150.0 / 7.0;
         STEER_MOTOR_CONFIG.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
         STEER_MOTOR_CONFIG.Slot0.kS = 0.19648;

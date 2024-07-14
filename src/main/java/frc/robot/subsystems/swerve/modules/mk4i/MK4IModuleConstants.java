@@ -32,7 +32,7 @@ public class MK4IModuleConstants {
 
     private static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
     static {
-        ENCODER_CONFIG.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        ENCODER_CONFIG.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive; // TODO: check
         ENCODER_CONFIG.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     }
 

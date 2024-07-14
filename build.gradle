@@ -210,7 +210,7 @@ tasks.register('runComputerPrograms', JavaExec) {
     dependsOn('setReachableIP')
     description = "Run the main class in ComputerMain"
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = "frc.utils.applicationsutils.OnDeploy"
+    mainClass = "frc.robot.ComputerMain"
     doFirst {
         if (reachableIP == null || reachableIP.isEmpty()) {
             throw new GradleException("reachableIP is null or empty. Please set a valid IP address.")

@@ -1,14 +1,14 @@
 package frc.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.LogPathsConstants;
+import frc.robot.constants.LogPaths;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.battery.BatteryUtils;
 
 public class ModuleConstants {
 
     protected static String LOG_PATH = SwerveConstants.SWERVE_LOG_PATH + "Modules/";
-    protected static String ALERT_LOG_PATH = LogPathsConstants.ALERT_LOG_PATH + LOG_PATH;
+    protected static String ALERT_LOG_PATH = LogPaths.ALERT_LOG_PATH + LOG_PATH;
 
     public static final double VOLTAGE_COMPENSATION_SATURATION = BatteryUtils.DEFAULT_VOLTAGE;
 

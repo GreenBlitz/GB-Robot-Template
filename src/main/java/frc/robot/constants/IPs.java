@@ -1,6 +1,6 @@
 package frc.robot.constants;
 
-public class IPConstants {
+public class IPs {
 
     public static final String SIMULATION_IP = "127.0.0.1";
     public static final String ROUTER_IP = "10.45.90.2";

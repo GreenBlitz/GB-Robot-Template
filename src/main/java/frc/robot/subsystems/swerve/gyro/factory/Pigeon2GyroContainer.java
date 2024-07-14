@@ -1,8 +1,8 @@
 package frc.robot.subsystems.swerve.gyro.factory;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import frc.robot.constants.DeviceIDs;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2GyroConfigObject;
+import frc.robot.constants.IDs;
 
 public class Pigeon2GyroContainer {
 
@@ -14,7 +14,7 @@ public class Pigeon2GyroContainer {
     }
 
     protected static final Pigeon2GyroConfigObject pigeon2GyroConfigObject = new Pigeon2GyroConfigObject(
-            DeviceIDs.PIGEON_2_DEVICE_ID,
+            IDs.PIGEON_2_DEVICE_ID,
             PIGEON_2_CONFIGURATION
     );
 

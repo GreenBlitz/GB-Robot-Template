@@ -8,12 +8,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import frc.robot.constants.LogPathsConstants;
 import frc.robot.constants.MathConstants;
 
 public class SwerveConstants {
 
-    public static final String SWERVE_LOG_PATH = LogPathsConstants.SUBSYSTEM_LOG_PATH + "Swerve/";
+    public static final String SWERVE_LOG_PATH = "Subsystems/Swerve/";
     protected static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
     protected static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 

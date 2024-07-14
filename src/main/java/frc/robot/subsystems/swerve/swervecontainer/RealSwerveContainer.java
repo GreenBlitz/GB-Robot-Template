@@ -10,7 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.DeviceIDs;
+import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2GyroConfigObject;
 import frc.robot.subsystems.swerve.modules.ModuleID;
@@ -88,7 +88,6 @@ public class RealSwerveContainer {
         );
     }
 
-
     protected static final SwerveConstants swerveConstants = new SwerveConstants(
             VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
             Rotation2d.fromRadians(10),
@@ -98,37 +97,37 @@ public class RealSwerveContainer {
 
     protected static final TalonFXModuleConstants[] moduleConstants = {
             getMk4iModuleConstants(new ModuleID(
-                    DeviceIDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
+                    IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
                     true,
-                    DeviceIDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
+                    IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
                     false,
-                    DeviceIDs.CANCodersIDs.FRONT_LEFT_ENCODER
+                    IDs.CANCodersIDs.FRONT_LEFT_ENCODER
             )),
             getMk4iModuleConstants(new ModuleID(
-                    DeviceIDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
+                    IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
                     true,
-                    DeviceIDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
+                    IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
                     true,
-                    DeviceIDs.CANCodersIDs.FRONT_RIGHT_ENCODER
+                    IDs.CANCodersIDs.FRONT_RIGHT_ENCODER
             )),
             getMk4iModuleConstants(new ModuleID(
-                    DeviceIDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
+                    IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
                     false,
-                    DeviceIDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
+                    IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
                     false,
-                    DeviceIDs.CANCodersIDs.BACK_LEFT_ENCODER
+                    IDs.CANCodersIDs.BACK_LEFT_ENCODER
             )),
             getMk4iModuleConstants(new ModuleID(
-                    DeviceIDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
+                    IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
                     true,
-                    DeviceIDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
+                    IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
                     false,
-                    DeviceIDs.CANCodersIDs.BACK_RIGHT_ENCODER
+                    IDs.CANCodersIDs.BACK_RIGHT_ENCODER
             ))
     };
 
     protected static final Pigeon2GyroConfigObject pigeon2GyroConfigObject = new Pigeon2GyroConfigObject(
-            DeviceIDs.PIGEON_2_DEVICE_ID,
+            IDs.PIGEON_2_DEVICE_ID,
             PIGEON_2_CONFIGURATION
     );
 

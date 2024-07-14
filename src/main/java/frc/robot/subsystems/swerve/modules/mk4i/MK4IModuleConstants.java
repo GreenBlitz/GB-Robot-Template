@@ -31,12 +31,14 @@ public class MK4IModuleConstants {
     private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
 
     private static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
+
     static {
-        ENCODER_CONFIG.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive; // TODO: check
+        ENCODER_CONFIG.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         ENCODER_CONFIG.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     }
 
     private static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration();
+
     static {
         DRIVE_MOTOR_CONFIG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         DRIVE_MOTOR_CONFIG.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -56,6 +58,7 @@ public class MK4IModuleConstants {
     }
 
     private static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
+
     static {
         STEER_MOTOR_CONFIG.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         STEER_MOTOR_CONFIG.MotorOutput.NeutralMode = NeutralModeValue.Brake;

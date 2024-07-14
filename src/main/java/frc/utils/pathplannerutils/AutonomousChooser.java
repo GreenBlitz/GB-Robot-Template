@@ -1,23 +1,22 @@
 package frc.utils.pathplannerutils;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class AutonomousChooser {
 
-    private static final SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
+    private final LoggedDashboardChooser<Command> chooser;
 
-    public static void addSelectorToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Auto");
-        tab.add("Autonomous Chooser", chooser);
+    public AutonomousChooser(String name, String defaultOption) {
+        this.chooser = new LoggedDashboardChooser<Command>(name, AutoBuilder.buildAutoChooser(defaultOption));
     }
 
-    public static Command getChosenValue() {
-        Logger.recordOutput("Autonomous Chosen", chooser.getSelected().getName());
-        return chooser.getSelected();
+    public AutonomousChooser(String name) {
+        this(name, "");
+    }
+
+    public Command getChosenValue() {
+        return chooser.get();
     }
 }

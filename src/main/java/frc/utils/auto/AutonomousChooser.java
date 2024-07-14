@@ -1,4 +1,4 @@
-package frc.utils.pathplannerutils;
+package frc.utils.auto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,4 +19,5 @@ public class AutonomousChooser {
     public Command getChosenValue() {
         return chooser.get();
     }
+
 }

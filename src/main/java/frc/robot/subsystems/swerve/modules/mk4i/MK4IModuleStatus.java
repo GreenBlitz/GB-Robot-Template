@@ -16,22 +16,22 @@ class MK4IModuleStatus {
 
     public StatusCode refreshEncoderSignals() {
         return BaseStatusSignal.refreshAll(
-                getEncoderAbsolutePositionSignal(false),
+                getEncoderPositionSignal(false),
                 getEncoderVelocitySignal(false),
                 getEncoderVoltageSignal(false)
         );
     }
 
-    public Rotation2d getEncoderAbsolutePosition(boolean refresh) {
-        return Rotation2d.fromRotations(getEncoderAbsolutePositionSignal(refresh).getValue());
+    public Rotation2d getEncoderPosition(boolean refresh) {
+        return Rotation2d.fromRotations(getEncoderPositionSignal(refresh).getValue());
     }
 
     public Rotation2d getEncoderVelocity(boolean refresh) {
         return Rotation2d.fromRotations(getEncoderVelocitySignal(refresh).getValue());
     }
 
-    private StatusSignal<Double> getEncoderAbsolutePositionSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.encoderAbsolutePositionSignal());
+    private StatusSignal<Double> getEncoderPositionSignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.encoderPositionSignal());
     }
 
     public StatusSignal<Double> getEncoderVelocitySignal(boolean refresh) {

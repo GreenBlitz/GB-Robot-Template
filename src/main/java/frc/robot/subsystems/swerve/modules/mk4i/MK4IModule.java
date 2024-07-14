@@ -58,7 +58,7 @@ public class MK4IModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        mk4iModuleActions.resetSteerAngle(mk4iModuleStatus.getEncoderAbsolutePosition(true));
+        mk4iModuleActions.resetSteerAngle(mk4iModuleStatus.getEncoderPosition(true));
     }
 
 
@@ -109,7 +109,7 @@ public class MK4IModule implements IModule {
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
         inputs.getEncoderInputs().isConnected = mk4iModuleStatus.refreshEncoderSignals().isOK();
-        inputs.getEncoderInputs().angle = mk4iModuleStatus.getEncoderAbsolutePosition(false);
+        inputs.getEncoderInputs().angle = mk4iModuleStatus.getEncoderPosition(false);
         inputs.getEncoderInputs().velocity = mk4iModuleStatus.getEncoderVelocity(false);
         inputs.getEncoderInputs().voltage = mk4iModuleStatus.getEncoderVoltageSignal(false).getValue();
 

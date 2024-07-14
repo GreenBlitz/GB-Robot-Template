@@ -32,7 +32,7 @@ public class MK4IModuleConfigObject {
         this.driveMotor = moduleMotors.driveMotor();
 
         this.moduleSignals = new MK4IModuleRecords.MK4IModuleSignals(
-                encoder.getAbsolutePosition(),
+                encoder.getPosition(),
                 encoder.getVelocity(),
                 encoder.getSupplyVoltage(),
 
@@ -70,7 +70,7 @@ public class MK4IModuleConfigObject {
     private void optimizeBusAndSignalOfEncoder() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
-                moduleSignals.encoderAbsolutePositionSignal()
+                moduleSignals.encoderPositionSignal()
         );
         BaseStatusSignal.setUpdateFrequencyForAll(
                 GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,

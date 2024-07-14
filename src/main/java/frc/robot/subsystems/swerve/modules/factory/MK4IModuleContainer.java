@@ -10,7 +10,6 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModuleConstants;
 
-
 public class MK4IModuleContainer {
 
     private static final double DRIVE_SLIP_CURRENT = 30; //todo - calibrate

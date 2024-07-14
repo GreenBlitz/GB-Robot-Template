@@ -12,7 +12,6 @@ import frc.robot.constants.MathConstants;
 
 public class SwerveConstants {
 
-
     public static final String SWERVE_LOG_PATH = "Subsystems/Swerve/";
     protected static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
     protected static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";

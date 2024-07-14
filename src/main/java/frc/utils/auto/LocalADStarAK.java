@@ -1,4 +1,4 @@
-package frc.utils.pathplannerutils;
+package frc.utils.auto;
 
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;

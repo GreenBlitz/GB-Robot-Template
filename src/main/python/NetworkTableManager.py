@@ -7,9 +7,9 @@
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+import ntcore
 # If this library is not installed, don't install ntcore but pyntcore.
-from ntcore import NetworkTableInstance
+from ntcore import NetworkTableInstance, NetworkTable
 
 import time
 import logging
@@ -38,6 +38,9 @@ class NetworkTableClient:
                 self.terminate()
                 raise TimeoutError("Past Connection Timeout")
             time.sleep(self._CONNECTION_COOLDOWN_SECONDS)
+
+    def get_table(self, table_name: str) -> NetworkTable:
+        return self._network_table_instance.getTable(table_name)
 
     def is_connected(self) -> bool:
         return self._network_table_instance.isConnected()

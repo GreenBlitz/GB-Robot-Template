@@ -20,6 +20,8 @@ public class MK4IModule implements IModule {
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
 
+    private Rotation2d startingSteerAngle;
+
     public MK4IModule(MK4IModuleConfigObject moduleConfigObject) {
         MK4IModuleRecords.MK4IModuleMotors motors = moduleConfigObject.getMotors();
 
@@ -37,6 +39,7 @@ public class MK4IModule implements IModule {
                 mk4iModuleStatus.getDriveMotorVelocitySignal(false)
         );
 
+        this.startingSteerAngle = mk4iModuleStatus.getEncoderAbsolutePosition(true);
         mk4iModuleActions.resetDriveAngle(new Rotation2d());
     }
 
@@ -65,7 +68,8 @@ public class MK4IModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        mk4iModuleActions.resetSteerAngle(mk4iModuleStatus.getEncoderAbsolutePosition(true));
+        startingSteerAngle = mk4iModuleStatus.getEncoderAbsolutePosition(true);
+        mk4iModuleActions.resetSteerAngle(startingSteerAngle);
     }
 
 

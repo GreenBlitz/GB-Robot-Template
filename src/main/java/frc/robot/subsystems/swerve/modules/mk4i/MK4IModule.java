@@ -92,7 +92,7 @@ public class MK4IModule implements IModule {
                 targetVelocityMetersPerSecond,
                 MK4IModuleConstants.WHEEL_DIAMETER_METERS
         );
-        double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
+        double optimizedVelocityRevolutionsPerSecond = ModuleUtils.addCouplingFromRevolutions(
                 targetVelocityPerSecond,
                 mk4iModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO

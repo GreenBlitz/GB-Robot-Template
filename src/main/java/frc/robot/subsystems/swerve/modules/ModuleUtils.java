@@ -39,7 +39,7 @@ public class ModuleUtils {
             double wheelDiameterMeters, double voltageCompensationSaturation
     ) {
         Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-        double optimizedVelocityRevolutionsPerSecond = removeCouplingFromRevolutions(
+        double optimizedVelocityRevolutionsPerSecond = addCouplingFromRevolutions(
                 velocityPerSecond,
                 steerVelocityPerSecond,
                 couplingRatio
@@ -60,6 +60,11 @@ public class ModuleUtils {
     public static double removeCouplingFromRevolutions(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
         double coupledAngle = moduleAngle.getRotations() * couplingRatio;
         return drivePosition.getRotations() - coupledAngle;
+    }
+
+    public static double addCouplingFromRevolutions(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
+        double coupledAngle = moduleAngle.getRotations() * couplingRatio;
+        return drivePosition.getRotations() + coupledAngle;
     }
 
     /**

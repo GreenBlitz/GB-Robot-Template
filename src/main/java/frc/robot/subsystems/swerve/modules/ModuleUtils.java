@@ -39,12 +39,8 @@ public class ModuleUtils {
             double wheelDiameterMeters, double voltageCompensationSaturation
     ) {
         Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-        double optimizedVelocityRevolutionsPerSecond = addCouplingFromRevolutions(
-                velocityPerSecond,
-                steerVelocityPerSecond,
-                couplingRatio
-        );
-        double power = optimizedVelocityRevolutionsPerSecond / maxSpeedPerSecond.getRotations();
+        Rotation2d optimizedVelocityPerSecond = addCouplingToAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
+        double power = optimizedVelocityPerSecond.getRotations() / maxSpeedPerSecond.getRotations();
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
 
@@ -57,14 +53,14 @@ public class ModuleUtils {
      * @param moduleAngle the angle or velocity in angle of the module
      * @return the distance or velocity without the coupling
      */
-    public static double removeCouplingFromRevolutions(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
+    public static Rotation2d removeCouplingFromAngle(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
         double coupledAngle = moduleAngle.getRotations() * couplingRatio;
-        return drivePosition.getRotations() - coupledAngle;
+        return Rotation2d.fromRotations(drivePosition.getRotations() - coupledAngle);
     }
 
-    public static double addCouplingFromRevolutions(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
+    public static Rotation2d addCouplingToAngle(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
         double coupledAngle = moduleAngle.getRotations() * couplingRatio;
-        return drivePosition.getRotations() + coupledAngle;
+        return Rotation2d.fromRotations(drivePosition.getRotations() + coupledAngle);
     }
 
     /**

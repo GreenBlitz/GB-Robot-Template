@@ -54,8 +54,8 @@ class MK4IModuleActions {
     }
 
 
-    public void setTargetClosedLoopVelocity(double targetVelocityRotationsPerSecond) {
-        driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityRotationsPerSecond));
+    public void setTargetClosedLoopVelocity(Rotation2d targetVelocityPerSecond) {
+        driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityPerSecond.getRotations()));
     }
 
     public void setTargetAngle(Rotation2d angle) {

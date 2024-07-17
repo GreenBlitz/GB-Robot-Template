@@ -19,9 +19,9 @@ class MK4IModuleActions {
     private final TalonFXWrapper steerMotor, driveMotor;
 
     private final VelocityVoltage driveVoltageVelocityRequest = new VelocityVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
-    private final VelocityTorqueCurrentFOC driveCurrentVelocityRequest = new VelocityTorqueCurrentFOC(0).withSlot(1).withOverrideCoastDurNeutral(true);
+    private final VelocityTorqueCurrentFOC driveCurrentVelocityRequest = new VelocityTorqueCurrentFOC(0).withSlot(1);
     private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_DRIVE);
-    private final TorqueCurrentFOC driveCurrentRequest = new TorqueCurrentFOC(0).withOverrideCoastDurNeutral(true);
+    private final TorqueCurrentFOC driveCurrentRequest = new TorqueCurrentFOC(0);
 
     private final PositionVoltage steerVoltagePositionRequest = new PositionVoltage(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_STEER);
     private final VoltageOut steerVoltageRequest = new VoltageOut(0).withEnableFOC(MK4IModuleConstants.ENABLE_FOC_STEER);

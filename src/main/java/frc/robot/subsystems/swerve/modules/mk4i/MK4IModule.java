@@ -49,7 +49,7 @@ public class MK4IModule implements IModule {
     }
 
     private Rotation2d getCouplingRemovedDriveAngle(Rotation2d driveAngle, Rotation2d steerAngle){
-        return ModuleUtils.removeCouplingFromAngle(driveAngle, steerAngle, MK4IModuleConstants.COUPLING_RATIO);
+        return ModuleUtils.getUncoupledAngle(driveAngle, steerAngle, MK4IModuleConstants.COUPLING_RATIO);
     }
 
 
@@ -100,7 +100,7 @@ public class MK4IModule implements IModule {
                 targetVelocityMetersPerSecond,
                 MK4IModuleConstants.WHEEL_DIAMETER_METERS
         );
-        Rotation2d optimizedVelocityPerSecond = ModuleUtils.addCouplingToAngle(
+        Rotation2d optimizedVelocityPerSecond = ModuleUtils.getCoupledAngle(
                 targetVelocityPerSecond,
                 mk4iModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO

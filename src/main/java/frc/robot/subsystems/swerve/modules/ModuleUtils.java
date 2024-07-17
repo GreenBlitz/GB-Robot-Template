@@ -39,7 +39,7 @@ public class ModuleUtils {
             double wheelDiameterMeters, double voltageCompensationSaturation
     ) {
         Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-        Rotation2d optimizedVelocityPerSecond = addCouplingToAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
+        Rotation2d optimizedVelocityPerSecond = getCoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
         double power = optimizedVelocityPerSecond.getRotations() / maxSpeedPerSecond.getRotations();
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
@@ -49,18 +49,18 @@ public class ModuleUtils {
      * This will affect the current position of the drive motor, so we need to remove the coupling from the
      * velocity or the position.
      *
-     * @param drivePosition the position or velocity
-     * @param moduleAngle the angle or velocity in angle of the module
+     * @param driveCoupledAngle the position or velocity
+     * @param steerAngle the angle or velocity in angle of the module
      * @return the distance or velocity without the coupling
      */
-    public static Rotation2d removeCouplingFromAngle(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
-        double coupledAngle = moduleAngle.getRotations() * couplingRatio;
-        return Rotation2d.fromRotations(drivePosition.getRotations() - coupledAngle);
+    public static Rotation2d getUncoupledAngle(Rotation2d driveCoupledAngle, Rotation2d steerAngle, double couplingRatio) {
+        double steerCoupledAngle = steerAngle.getRotations() * couplingRatio;
+        return Rotation2d.fromRotations(driveCoupledAngle.getRotations() - steerCoupledAngle);
     }
 
-    public static Rotation2d addCouplingToAngle(Rotation2d drivePosition, Rotation2d moduleAngle, double couplingRatio) {
-        double coupledAngle = moduleAngle.getRotations() * couplingRatio;
-        return Rotation2d.fromRotations(drivePosition.getRotations() + coupledAngle);
+    public static Rotation2d getCoupledAngle(Rotation2d driveUncoupledAngle, Rotation2d steerAngle, double couplingRatio) {
+        double steerCoupledAngle = steerAngle.getRotations() * couplingRatio;
+        return Rotation2d.fromRotations(driveUncoupledAngle.getRotations() + steerCoupledAngle);
     }
 
     /**

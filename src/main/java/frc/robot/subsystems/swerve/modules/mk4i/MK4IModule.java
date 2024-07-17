@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.modules.mk4i;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
+import frc.robot.subsystems.swerve.modules.mk4i.MK4IModuleActions.ClosedLoopOutputType;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
@@ -69,7 +70,7 @@ public class MK4IModule implements IModule {
 
     @Override
     public void runDriveMotorByVoltage(double voltage) {
-        mk4iModuleActions.setTargetDriveVoltage(voltage);
+        mk4iModuleActions.setTargetDriveOutputValue(voltage, ClosedLoopOutputType.TorqueCurrentFOC);
     }
 
 
@@ -83,7 +84,7 @@ public class MK4IModule implements IModule {
                 MK4IModuleConstants.WHEEL_DIAMETER_METERS,
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        mk4iModuleActions.setTargetDriveVoltage(voltage);
+        mk4iModuleActions.setTargetDriveOutputValue(voltage, ClosedLoopOutputType.Voltage);
     }
 
     @Override
@@ -97,7 +98,7 @@ public class MK4IModule implements IModule {
                 mk4iModuleStatus.getSteerMotorLatencyVelocity(true),
                 MK4IModuleConstants.COUPLING_RATIO
         );
-        mk4iModuleActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
+        mk4iModuleActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond, ClosedLoopOutputType.TorqueCurrentFOC);
     }
 
     @Override

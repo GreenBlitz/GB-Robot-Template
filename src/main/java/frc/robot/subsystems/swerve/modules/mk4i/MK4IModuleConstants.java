@@ -27,8 +27,8 @@ public class MK4IModuleConstants {
     protected static final boolean ENABLE_FOC_DRIVE = true;
     protected static final boolean ENABLE_FOC_STEER = true;
 
-    private static final double DRIVE_SLIP_CURRENT = 50; //todo - calibrate
-    private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
+    private static final double DRIVE_SLIP_CURRENT = 80; //todo - calibrate
+    private static final double STEER_CURRENT_LIMIT = 40; //todo - calibrate
 
     private static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
     static {

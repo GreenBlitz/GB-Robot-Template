@@ -47,9 +47,8 @@ class NetworkTableClient:
 
     def connect(self) -> NetworkTableInstance:
         self._logger.info(f"Setting up NetworkTables client")
-        self._network_table_instance.startClient4(self._client_name)
         self._network_table_instance.setServer(self._ip)
-        self._network_table_instance.startDSClient()
+        self._network_table_instance.startClient4(self._client_name)
 
         self._logger.info("Waiting for connection to NetworkTables server...")
         self._wait_for_client_to_connect()

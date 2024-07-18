@@ -25,7 +25,7 @@ class TalonFXModuleConfigObject {
         this.driveMotor =  new TalonFXWrapper(moduleID.driveMotorDeviceID());
 
         this.moduleSignals = new TalonFXModuleSignals(
-                encoder.getAbsolutePosition(),
+                encoder.getPosition(),
                 encoder.getVelocity(),
                 encoder.getSupplyVoltage(),
 
@@ -62,7 +62,7 @@ class TalonFXModuleConfigObject {
     private void optimizeBusAndSignalOfEncoder() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
-                moduleSignals.encoderAbsolutePositionSignal()
+                moduleSignals.encoderPositionSignal()
         );
         BaseStatusSignal.setUpdateFrequencyForAll(
                 GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,

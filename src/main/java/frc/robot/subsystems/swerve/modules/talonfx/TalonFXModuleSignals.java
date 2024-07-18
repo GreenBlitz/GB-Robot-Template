@@ -3,7 +3,7 @@ package frc.robot.subsystems.swerve.modules.talonfx;
 import com.ctre.phoenix6.StatusSignal;
 
 record TalonFXModuleSignals(
-        StatusSignal<Double> encoderAbsolutePositionSignal,
+        StatusSignal<Double> encoderPositionSignal,
         StatusSignal<Double> encoderVelocitySignal,
         StatusSignal<Double> encoderVoltageSignal,
 

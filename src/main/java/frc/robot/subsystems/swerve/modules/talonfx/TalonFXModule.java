@@ -58,7 +58,7 @@ public class TalonFXModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        talonFXModuleActions.resetSteerAngle(talonFXModuleStatus.getEncoderAbsolutePosition(true));
+        talonFXModuleActions.resetSteerAngle(talonFXModuleStatus.getEncoderPosition(true));
     }
 
 
@@ -109,7 +109,7 @@ public class TalonFXModule implements IModule {
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
         inputs.getEncoderInputs().isConnected = talonFXModuleStatus.refreshEncoderSignals().isOK();
-        inputs.getEncoderInputs().angle = talonFXModuleStatus.getEncoderAbsolutePosition(false);
+        inputs.getEncoderInputs().angle = talonFXModuleStatus.getEncoderPosition(false);
         inputs.getEncoderInputs().velocity = talonFXModuleStatus.getEncoderVelocity(false);
         inputs.getEncoderInputs().voltage = talonFXModuleStatus.getEncoderVoltageSignal(false).getValue();
 

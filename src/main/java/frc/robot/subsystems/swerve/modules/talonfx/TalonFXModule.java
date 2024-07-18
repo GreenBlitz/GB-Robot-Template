@@ -92,12 +92,12 @@ public class TalonFXModule implements IModule {
                 targetVelocityMetersPerSecond,
                 talonFXModuleConstants.getWheelDiameterMeters()
         );
-        double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
+        Rotation2d optimizedVelocityPerSecond = ModuleUtils.getUncoupledAngle(
                 targetVelocityPerSecond,
                 talonFXModuleStatus.getSteerMotorLatencyVelocity(true),
                 talonFXModuleConstants.getCouplingRatio()
         );
-        talonFXModuleActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
+        talonFXModuleActions.setTargetClosedLoopVelocity(optimizedVelocityPerSecond);
     }
 
     @Override

@@ -60,8 +60,8 @@ class TalonFXModuleActions {
     protected void setTargetAngle(Rotation2d angle) {
         steerMotor.setControl(steerPositionRequest.withPosition(angle.getRotations()));
     }
-    protected void setTargetClosedLoopVelocity(double targetVelocityRotationsPerSecond) {
-        driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityRotationsPerSecond));
+    protected void setTargetClosedLoopVelocity(Rotation2d targetVelocityPerSecond) {
+        driveMotor.setControl(driveVelocityRequest.withVelocity(targetVelocityPerSecond.getRotations()));
     }
 
 }

@@ -10,13 +10,13 @@ import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-public class TalonFXModuleConfigObject {
+class TalonFXModuleConfigObject {
 
     private final TalonFXWrapper driveMotor, steerMotor;
     private final CANcoder encoder;
     private final TalonFXModuleSignals moduleSignals;
 
-    public TalonFXModuleConfigObject(
+    protected TalonFXModuleConfigObject(
             TalonFXConfiguration steerConfiguration, TalonFXConfiguration driveConfiguration,
             CANcoderConfiguration encoderConfiguration, ModuleID moduleID
     ) {

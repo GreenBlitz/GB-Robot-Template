@@ -11,10 +11,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.subsystems.swerve.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
-import frc.robot.subsystems.swerve.gyro.factory.SwerveGyroFactory;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -47,17 +45,14 @@ public class Swerve extends GBSubsystem {
     private final SwerveConstants constants;
     private Supplier<Rotation2d> currentAngleSupplier;
 
-    public Swerve() {
+    public Swerve(SwerveConstants constants, Module[] modules, ISwerveGyro gyro) {
         super(SwerveConstants.SWERVE_LOG_PATH);
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
-        this.constants = SwerveConstantsFactory.createSwerveConstants();
-        this.modules = new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT, constants.getVelocityAt12VoltsMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT, constants.getVelocityAt12VoltsMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT, constants.getVelocityAt12VoltsMetersPerSecond()),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT, constants.getVelocityAt12VoltsMetersPerSecond()),
-        };
-        this.gyro = SwerveGyroFactory.createSwerveGyro();
+
+        this.constants = constants;
+        this.modules = modules;
+        this.gyro = gyro;
+
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
     }

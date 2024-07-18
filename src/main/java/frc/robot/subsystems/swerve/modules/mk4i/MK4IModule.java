@@ -148,8 +148,8 @@ public class MK4IModule implements IModule {
 
         driveInputs.current = mk4iModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
         driveInputs.voltage = mk4iModuleStatus.getDriveMotorVoltageSignal(false).getValue();
-        driveInputs.distanceMeters = toDriveMeters(inputs.getDriveMotorInputs().angle);
-        driveInputs.velocityMeters = toDriveMeters(inputs.getDriveMotorInputs().velocity);
+        driveInputs.distanceMeters = toDriveMeters(driveInputs.angle);
+        driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
 
         final Rotation2d[] drivePositions = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
         for (int i = 0; i < drivePositions.length; i++){

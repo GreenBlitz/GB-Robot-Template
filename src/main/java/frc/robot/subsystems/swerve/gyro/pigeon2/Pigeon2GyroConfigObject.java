@@ -11,11 +11,11 @@ public class Pigeon2GyroConfigObject {
 
     private final Pigeon2Wrapper gyro;
 
-    private final Pigeon2GyroRecords.GyroPigeon2Signals signals;
+    private final Pigeon2GyroSignals signals;
 
-    protected Pigeon2GyroConfigObject(CTREDeviceID pigeon2DeviceID, Pigeon2Configuration configuration) {
+    public Pigeon2GyroConfigObject(CTREDeviceID pigeon2DeviceID, Pigeon2Configuration configuration) {
         this.gyro = new Pigeon2Wrapper(pigeon2DeviceID);
-        this.signals = new Pigeon2GyroRecords.GyroPigeon2Signals(
+        this.signals = new Pigeon2GyroSignals(
                 gyro.getYaw(),
                 gyro.getAccelerationX(),
                 gyro.getAccelerationY(),
@@ -48,7 +48,7 @@ public class Pigeon2GyroConfigObject {
         return gyro;
     }
 
-    protected Pigeon2GyroRecords.GyroPigeon2Signals getSignals() {
+    protected Pigeon2GyroSignals getSignals() {
         return signals;
     }
 

@@ -13,18 +13,18 @@ public class SimulationModule implements IModule {
     private final ModuleUtils.ModuleName moduleName;
     private final SimulationModuleActions simulationModuleActions;
     private final SimulationModuleStatus simulationModuleStatus;
+    private final SimulationModuleConstants simulationModuleConstants;
 
-    public SimulationModule(ModuleUtils.ModuleName moduleName) {
+    public SimulationModule(ModuleUtils.ModuleName moduleName, SimulationModuleConstants simulationModuleConstants) {
         this.moduleName = moduleName;
-
-        SimulationModuleConfigObject simulationModuleConfigObject = new SimulationModuleConfigObject();
-        this.simulationModuleActions = new SimulationModuleActions(simulationModuleConfigObject);
-        this.simulationModuleStatus = new SimulationModuleStatus(simulationModuleConfigObject);
+        this.simulationModuleConstants = simulationModuleConstants;
+        this.simulationModuleActions = new SimulationModuleActions(simulationModuleConstants);
+        this.simulationModuleStatus = new SimulationModuleStatus(simulationModuleConstants.getSteerMotor(), simulationModuleConstants.getDriveMotor());
     }
 
 
     private double toDriveMeters(Rotation2d angle) {
-        return Conversions.angleToDistance(angle, SimulationModuleConstants.WHEEL_DIAMETER_METERS);
+        return Conversions.angleToDistance(angle, simulationModuleConstants.getWheelDiameterMeters());
     }
 
 
@@ -61,8 +61,8 @@ public class SimulationModule implements IModule {
                 targetVelocityMetersPerSecond,
                 simulationModuleStatus.getSteerVelocity(),
                 0,
-                SimulationModuleConstants.MAX_SPEED_PER_SECOND,
-                SimulationModuleConstants.WHEEL_DIAMETER_METERS,
+                simulationModuleConstants.getVelocityAt12VoltsPerSecond(),
+                simulationModuleConstants.getWheelDiameterMeters(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
         Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());

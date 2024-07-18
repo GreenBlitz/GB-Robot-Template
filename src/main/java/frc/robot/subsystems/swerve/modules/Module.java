@@ -13,14 +13,14 @@ public class Module {
 
     private final ModuleInputsContainer moduleInputsContainer;
     private final ModuleUtils.ModuleName moduleName;
-    private final IModule module;
+    private final IModule iModule;
 
     private boolean driveMotorClosedLoop;
     private SwerveModuleState targetState;
 
-    public Module(ModuleUtils.ModuleName moduleName) {
+    public Module(ModuleUtils.ModuleName moduleName, IModule iModule) {
         this.moduleName = moduleName;
-        this.module = ModuleFactory.createModule(moduleName);
+        this.iModule = iModule;
         this.moduleInputsContainer = new ModuleInputsContainer();
         this.targetState = new SwerveModuleState();
         this.driveMotorClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
@@ -34,7 +34,7 @@ public class Module {
     }
 
     private void updateInputs() {
-        module.updateInputs(moduleInputsContainer);
+        iModule.updateInputs(moduleInputsContainer);
         moduleInputsContainer.getModuleInputs().isAtTargetState = isAtTargetState();
         moduleInputsContainer.processInputs(ModuleUtils.getLoggingPath(moduleName));
     }
@@ -57,15 +57,15 @@ public class Module {
     }
 
     public void stop() {
-        module.stop();
+        iModule.stop();
     }
 
     public void setBrake(boolean isBrake) {
-        module.setBrake(isBrake);
+        iModule.setBrake(isBrake);
     }
 
     public void resetByEncoder() {
-        module.resetByEncoder();
+        iModule.resetByEncoder();
     }
 
 
@@ -140,20 +140,20 @@ public class Module {
         else {
             this.targetState = moduleState;
         }
-        module.setTargetAngle(targetState.angle);
+        iModule.setTargetAngle(targetState.angle);
     }
 
     public void runDriveMotorByVoltage(double voltage) {
-        module.runDriveMotorByVoltage(voltage);
+        iModule.runDriveMotorByVoltage(voltage);
     }
 
     public void runSteerMotorByVoltage(double voltage) {
-        module.runSteerMotorByVoltage(voltage);
+        iModule.runSteerMotorByVoltage(voltage);
     }
 
     public void setTargetState(SwerveModuleState targetState) {
         this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
-        module.setTargetAngle(this.targetState.angle);
+        iModule.setTargetAngle(this.targetState.angle);
         setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle);
     }
 
@@ -169,11 +169,11 @@ public class Module {
     }
 
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
-        module.setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
+        iModule.setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
     }
 
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
-        module.setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
+        iModule.setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
     }
 
 }

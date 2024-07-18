@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class SteerMotorInputs {
 
-    public boolean isConnected = true;// todo - test for each component
+    public boolean isConnected = true;
     public Rotation2d angle = new Rotation2d();
     public Rotation2d velocity = new Rotation2d();
     public Rotation2d acceleration = new Rotation2d();

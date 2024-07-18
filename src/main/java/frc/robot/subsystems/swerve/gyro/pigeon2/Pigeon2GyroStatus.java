@@ -8,13 +8,13 @@ import frc.utils.ctre.PhoenixProUtils;
 
 class Pigeon2GyroStatus {
 
-    private final Pigeon2GyroRecords.GyroPigeon2Signals gyroPigeon2Signals;
+    private final Pigeon2GyroSignals pigeon2GyroSignals;
 
-    protected Pigeon2GyroStatus(Pigeon2GyroRecords.GyroPigeon2Signals gyroPigeon2Signals) {
-        this.gyroPigeon2Signals = gyroPigeon2Signals;
+    protected Pigeon2GyroStatus(Pigeon2GyroSignals pigeon2GyroSignals) {
+        this.pigeon2GyroSignals = pigeon2GyroSignals;
     }
 
-    public StatusCode refreshAllSignals() {
+    protected StatusCode refreshAllSignals() {
         return BaseStatusSignal.refreshAll(
                 getYawSignal(false),
                 getXAccelerationSignal(false),
@@ -24,25 +24,25 @@ class Pigeon2GyroStatus {
     }
 
 
-    public Rotation2d getYaw(boolean refresh) {
+    protected Rotation2d getYaw(boolean refresh) {
         return Rotation2d.fromDegrees(getYawSignal(refresh).getValue());
     }
 
-    public StatusSignal<Double> getYawSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.yawSignal());
+    protected StatusSignal<Double> getYawSignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, pigeon2GyroSignals.yawSignal());
     }
 
 
-    public StatusSignal<Double> getXAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.xAccelerationSignal());
+    protected StatusSignal<Double> getXAccelerationSignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, pigeon2GyroSignals.xAccelerationSignal());
     }
 
-    public StatusSignal<Double> getYAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.yAccelerationSignal());
+    protected StatusSignal<Double> getYAccelerationSignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, pigeon2GyroSignals.yAccelerationSignal());
     }
 
-    public StatusSignal<Double> getZAccelerationSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, gyroPigeon2Signals.zAccelerationSignal());
+    protected StatusSignal<Double> getZAccelerationSignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, pigeon2GyroSignals.zAccelerationSignal());
     }
 
 }

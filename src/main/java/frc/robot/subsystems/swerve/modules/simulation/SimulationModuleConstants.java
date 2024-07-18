@@ -1,37 +1,75 @@
 package frc.robot.subsystems.swerve.modules.simulation;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import frc.robot.subsystems.swerve.SwerveConstants;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.simulation.SimpleMotorSimulation;
 import frc.utils.Conversions;
 
 public class SimulationModuleConstants {
 
-    protected static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
+    private final double wheelDiameterMeters;
+    private final Rotation2d velocityAt12VoltsPerSecond;
 
-    protected static final Rotation2d MAX_SPEED_PER_SECOND = Conversions.distanceToAngle(
-            SwerveConstants.MAX_SPEED_METERS_PER_SECOND,
-            WHEEL_DIAMETER_METERS
-    );
+    private final boolean enableFOCSteer;
+    private final boolean enableFOCDrive;
 
-    protected static final double DRIVE_GEAR_RATIO = 6.12;
-    protected static final double STEER_GEAR_RATIO = (150.0 / 7.0);
+    private final SimpleMotorSimulation steerMotor;
+    private final SimpleMotorSimulation driveMotor;
 
-    protected static final boolean ENABLE_FOC_DRIVE = true;
-    protected static final boolean ENABLE_FOC_STEER = true;
+    public SimulationModuleConstants(
+            double wheelDiameterMeters,
+            double velocityAt12VoltsMetersPerSecond,
+            DCMotorSim steerMotor,
+            DCMotorSim driveMotor,
+            boolean enableFOCSteer,
+            boolean enableFOCDrive,
+            PIDConstants steerMotorPIDConstants
+    ){
+        this.wheelDiameterMeters = wheelDiameterMeters;
+        this.velocityAt12VoltsPerSecond = Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond, wheelDiameterMeters);
 
-    protected static final DCMotor DRIVE_MOTOR_GEARBOX = DCMotor.getFalcon500Foc(1);
-    protected static final DCMotor STEER_MOTOR_GEARBOX = DCMotor.getFalcon500Foc(1);
+        this.enableFOCSteer = enableFOCSteer;
+        this.enableFOCDrive = enableFOCDrive;
 
-    protected static final double DRIVE_MOMENT_OF_INERTIA = 0.001;
-    protected static final double STEER_MOMENT_OF_INERTIA = 0.00001;
+        TalonFXConfiguration steerMotorConfig = new TalonFXConfiguration();
+        steerMotorConfig.Slot0.kP = steerMotorPIDConstants.kP;
+        steerMotorConfig.Slot0.kI = steerMotorPIDConstants.kI;
+        steerMotorConfig.Slot0.kD = steerMotorPIDConstants.kD;
+        steerMotorConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
-    protected static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
-    static {
-        STEER_MOTOR_CONFIG.Slot0.kP = 72;
-        STEER_MOTOR_CONFIG.Slot0.kI = 0;
-        STEER_MOTOR_CONFIG.Slot0.kD = 0;
-        STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
+        SimulationModuleConfigObject moduleConfigObject = new SimulationModuleConfigObject(
+                new SimpleMotorSimulation(steerMotor),
+                new SimpleMotorSimulation(driveMotor),
+                steerMotorConfig
+        );
+        this.steerMotor = moduleConfigObject.getSteerMotor();
+        this.driveMotor = moduleConfigObject.getDriveMotor();
     }
+
+    protected boolean getEnableFOCSteer(){
+        return enableFOCSteer;
+    }
+
+    protected boolean getEnableFOCDrive(){
+        return enableFOCDrive;
+    }
+
+    protected double getWheelDiameterMeters() {
+        return wheelDiameterMeters;
+    }
+
+    protected Rotation2d getVelocityAt12VoltsPerSecond() {
+        return velocityAt12VoltsPerSecond;
+    }
+
+    protected SimpleMotorSimulation getSteerMotor() {
+        return steerMotor;
+    }
+
+    protected SimpleMotorSimulation getDriveMotor() {
+        return driveMotor;
+    }
+
 }

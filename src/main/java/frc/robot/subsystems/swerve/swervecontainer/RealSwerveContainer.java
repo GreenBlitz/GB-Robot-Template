@@ -27,8 +27,8 @@ public class RealSwerveContainer {
         PIGEON_2_CONFIGURATION.MountPose.MountPoseYaw = 0;
     }
 
-    private static final double DRIVE_SLIP_CURRENT = 30; //todo - calibrate
-    private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
+    private static final double DRIVE_SLIP_CURRENT = 40;
+    private static final double STEER_CURRENT_LIMIT = 30;
 
     private static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
     static {
@@ -47,12 +47,21 @@ public class RealSwerveContainer {
         DRIVE_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = DRIVE_SLIP_CURRENT;
         DRIVE_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        // Velocity Voltage
         DRIVE_MOTOR_CONFIG.Slot0.kS = 0.21549;
         DRIVE_MOTOR_CONFIG.Slot0.kV = 0.72124;
         DRIVE_MOTOR_CONFIG.Slot0.kA = 0.11218;
         DRIVE_MOTOR_CONFIG.Slot0.kP = 1.5;
         DRIVE_MOTOR_CONFIG.Slot0.kI = 0;
         DRIVE_MOTOR_CONFIG.Slot0.kD = 0;
+
+        // Velocity Torque Current
+        DRIVE_MOTOR_CONFIG.Slot1.kS = 5.5;
+        DRIVE_MOTOR_CONFIG.Slot1.kV = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kA = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kP = 55;
+        DRIVE_MOTOR_CONFIG.Slot1.kI = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kD = 0;
     }
 
     private static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();

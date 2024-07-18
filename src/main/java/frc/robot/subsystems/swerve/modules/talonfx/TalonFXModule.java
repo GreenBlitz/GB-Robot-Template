@@ -4,10 +4,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.modules.inputs.DriveMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.inputs.EncoderInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
+import frc.robot.subsystems.swerve.modules.inputs.SteerMotorInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.Conversions;
 
+import java.util.Arrays;
 import java.util.Queue;
 
 public class TalonFXModule implements IModule {
@@ -17,6 +21,8 @@ public class TalonFXModule implements IModule {
     private final TalonFXModuleConstants talonFXModuleConstants;
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
+
+    private Rotation2d startingSteerAngle;
 
     public TalonFXModule(TalonFXModuleConstants talonFXModuleConstants) {
         this.talonFXModuleConstants = talonFXModuleConstants;
@@ -34,15 +40,17 @@ public class TalonFXModule implements IModule {
                 talonFXModuleStatus.getDriveMotorVelocitySignal(false)
         );
 
+        this.startingSteerAngle = talonFXModuleStatus.getEncoderPosition(true);
         talonFXModuleActions.resetDriveAngle(new Rotation2d());
     }
 
-    private double toDriveMeters(double rotations) {
-        return toDriveMeters(Rotation2d.fromRotations(rotations));
-    }
 
     private double toDriveMeters(Rotation2d angle) {
         return Conversions.angleToDistance(angle, talonFXModuleConstants.getWheelDiameterMeters());
+    }
+
+    private Rotation2d getUncoupledAngle(Rotation2d driveCoupledAngle, Rotation2d steerAngle){
+        return ModuleUtils.getUncoupledAngle(driveCoupledAngle, steerAngle, talonFXModuleConstants.getCouplingRatio());
     }
 
 
@@ -58,7 +66,8 @@ public class TalonFXModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        talonFXModuleActions.resetSteerAngle(talonFXModuleStatus.getEncoderPosition(true));
+        startingSteerAngle = talonFXModuleStatus.getEncoderPosition(true);
+        talonFXModuleActions.resetSteerAngle(startingSteerAngle);
     }
 
 
@@ -92,12 +101,12 @@ public class TalonFXModule implements IModule {
                 targetVelocityMetersPerSecond,
                 talonFXModuleConstants.getWheelDiameterMeters()
         );
-        double optimizedVelocityRevolutionsPerSecond = ModuleUtils.removeCouplingFromRevolutions(
+        Rotation2d optimizedVelocityPerSecond = ModuleUtils.getCoupledAngle(
                 targetVelocityPerSecond,
                 talonFXModuleStatus.getSteerMotorLatencyVelocity(true),
                 talonFXModuleConstants.getCouplingRatio()
         );
-        talonFXModuleActions.setTargetClosedLoopVelocity(optimizedVelocityRevolutionsPerSecond);
+        talonFXModuleActions.setTargetClosedLoopVelocity(optimizedVelocityPerSecond);
     }
 
     @Override
@@ -108,28 +117,47 @@ public class TalonFXModule implements IModule {
 
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
-        inputs.getEncoderInputs().isConnected = talonFXModuleStatus.refreshEncoderSignals().isOK();
-        inputs.getEncoderInputs().angle = talonFXModuleStatus.getEncoderPosition(false);
-        inputs.getEncoderInputs().velocity = talonFXModuleStatus.getEncoderVelocity(false);
-        inputs.getEncoderInputs().voltage = talonFXModuleStatus.getEncoderVoltageSignal(false).getValue();
+        EncoderInputsAutoLogged encoderInputs = inputs.getEncoderInputs();
+        encoderInputs.isConnected = talonFXModuleStatus.refreshEncoderSignals().isOK();
+        encoderInputs.angle = talonFXModuleStatus.getEncoderPosition(false);
+        encoderInputs.velocity = talonFXModuleStatus.getEncoderVelocity(false);
+        encoderInputs.voltage = talonFXModuleStatus.getEncoderVoltageSignal(false).getValue();
 
-        inputs.getSteerMotorInputs().isConnected = talonFXModuleStatus.refreshSteerMotorSignals().isOK();
-        inputs.getSteerMotorInputs().angle = talonFXModuleStatus.getSteerMotorLatencyPosition(false);
-        inputs.getSteerMotorInputs().velocity = talonFXModuleStatus.getSteerMotorLatencyVelocity(false);
-        inputs.getSteerMotorInputs().acceleration = talonFXModuleStatus.getSteerMotorAcceleration(false);
-        inputs.getSteerMotorInputs().voltage = talonFXModuleStatus.getSteerMotorVoltageSignal(false).getValue();
-        inputs.getSteerMotorInputs().angleOdometrySamples = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        SteerMotorInputsAutoLogged steerInputs = inputs.getSteerMotorInputs();
+        steerInputs.isConnected = talonFXModuleStatus.refreshSteerMotorSignals().isOK();
+        steerInputs.angle = talonFXModuleStatus.getSteerMotorLatencyPosition(false);
+        steerInputs.velocity = talonFXModuleStatus.getSteerMotorLatencyVelocity(false);
+        steerInputs.acceleration = talonFXModuleStatus.getSteerMotorAcceleration(false);
+        steerInputs.voltage = talonFXModuleStatus.getSteerMotorVoltageSignal(false).getValue();
+        steerInputs.angleOdometrySamples = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
         steerPositionQueue.clear();
 
-        inputs.getDriveMotorInputs().isConnected = talonFXModuleStatus.refreshDriveMotorSignals().isOK();
-        inputs.getDriveMotorInputs().angle = talonFXModuleStatus.getDriveMotorLatencyPosition(false);
-        inputs.getDriveMotorInputs().velocity = talonFXModuleStatus.getDriveMotorLatencyVelocity(false);
-        inputs.getDriveMotorInputs().acceleration = talonFXModuleStatus.getDriveMotorAcceleration(false);
-        inputs.getDriveMotorInputs().current = talonFXModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
-        inputs.getDriveMotorInputs().voltage = talonFXModuleStatus.getDriveMotorVoltageSignal(false).getValue();
-        inputs.getDriveMotorInputs().distanceMeters = toDriveMeters(inputs.getDriveMotorInputs().angle);
-        inputs.getDriveMotorInputs().velocityMeters = toDriveMeters(inputs.getDriveMotorInputs().velocity);
-        inputs.getDriveMotorInputs().distanceMetersOdometrySamples = drivePositionQueue.stream().mapToDouble(this::toDriveMeters).toArray();
+        DriveMotorInputsAutoLogged driveInputs = inputs.getDriveMotorInputs();
+        driveInputs.isConnected = talonFXModuleStatus.refreshDriveMotorSignals().isOK();
+
+        final Rotation2d driveAngle = talonFXModuleStatus.getDriveMotorLatencyPosition(false);
+        final Rotation2d steerAngle = Rotation2d.fromRotations(steerInputs.angle.getRotations() - startingSteerAngle.getRotations());
+        driveInputs.angle = getUncoupledAngle(driveAngle, steerAngle);
+
+        final Rotation2d driveVelocity = talonFXModuleStatus.getDriveMotorLatencyVelocity(false);
+        final Rotation2d steerVelocity = steerInputs.velocity;
+        driveInputs.velocity = getUncoupledAngle(driveVelocity, steerVelocity);
+
+        final Rotation2d driveAcceleration = talonFXModuleStatus.getDriveMotorAcceleration(false);
+        final Rotation2d steerAcceleration = steerInputs.acceleration;
+        driveInputs.acceleration = getUncoupledAngle(driveAcceleration, steerAcceleration);
+
+        driveInputs.current = talonFXModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
+        driveInputs.voltage = talonFXModuleStatus.getDriveMotorVoltageSignal(false).getValue();
+        driveInputs.distanceMeters = toDriveMeters(driveInputs.angle);
+        driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
+
+        final Rotation2d[] drivePositions = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        for (int i = 0; i < drivePositions.length; i++){
+            Rotation2d steerDelta = Rotation2d.fromRotations(steerInputs.angleOdometrySamples[i].getRotations() - startingSteerAngle.getRotations());
+            drivePositions[i] = getUncoupledAngle(drivePositions[i], steerDelta);
+        }
+        driveInputs.distanceMetersOdometrySamples = Arrays.stream(drivePositions).mapToDouble(this::toDriveMeters).toArray();
         drivePositionQueue.clear();
     }
 

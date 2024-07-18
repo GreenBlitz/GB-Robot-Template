@@ -18,6 +18,8 @@ public class TalonFXModule implements IModule {
 
     private final Queue<Double> steerPositionQueue, drivePositionQueue;
 
+    private Rotation2d startingSteerAngle;
+
     public TalonFXModule(TalonFXModuleConstants talonFXModuleConstants) {
         this.talonFXModuleConstants = talonFXModuleConstants;
         this.talonFXModuleStatus = new TalonFXModuleStatus(talonFXModuleConstants.getSignals());
@@ -34,6 +36,7 @@ public class TalonFXModule implements IModule {
                 talonFXModuleStatus.getDriveMotorVelocitySignal(false)
         );
 
+        this.startingSteerAngle = talonFXModuleStatus.getEncoderPosition(true);
         talonFXModuleActions.resetDriveAngle(new Rotation2d());
     }
 
@@ -58,7 +61,8 @@ public class TalonFXModule implements IModule {
 
     @Override
     public void resetByEncoder() {
-        talonFXModuleActions.resetSteerAngle(talonFXModuleStatus.getEncoderPosition(true));
+        startingSteerAngle = talonFXModuleStatus.getEncoderPosition(true);
+        talonFXModuleActions.resetSteerAngle(startingSteerAngle);
     }
 
 
@@ -92,7 +96,7 @@ public class TalonFXModule implements IModule {
                 targetVelocityMetersPerSecond,
                 talonFXModuleConstants.getWheelDiameterMeters()
         );
-        Rotation2d optimizedVelocityPerSecond = ModuleUtils.getUncoupledAngle(
+        Rotation2d optimizedVelocityPerSecond = ModuleUtils.getCoupledAngle(
                 targetVelocityPerSecond,
                 talonFXModuleStatus.getSteerMotorLatencyVelocity(true),
                 talonFXModuleConstants.getCouplingRatio()

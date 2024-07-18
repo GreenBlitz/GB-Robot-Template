@@ -27,7 +27,7 @@ public class MK4IModuleConstants {
     protected static final boolean ENABLE_FOC_DRIVE = true;
     protected static final boolean ENABLE_FOC_STEER = true;
 
-    private static final double DRIVE_SLIP_CURRENT = 80; //todo - calibrate
+    private static final double DRIVE_SLIP_CURRENT = 40; //todo - calibrate
     private static final double STEER_CURRENT_LIMIT = 40; //todo - calibrate
 
     private static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
@@ -56,10 +56,10 @@ public class MK4IModuleConstants {
         DRIVE_MOTOR_CONFIG.Slot0.kD = 0;
 
         // Velocity Torque Current
-        DRIVE_MOTOR_CONFIG.Slot1.kS = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kS = 5.5;
         DRIVE_MOTOR_CONFIG.Slot1.kV = 0;
         DRIVE_MOTOR_CONFIG.Slot1.kA = 0;
-        DRIVE_MOTOR_CONFIG.Slot1.kP = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kP = 55;
         DRIVE_MOTOR_CONFIG.Slot1.kI = 0;
         DRIVE_MOTOR_CONFIG.Slot1.kD = 0;
     }

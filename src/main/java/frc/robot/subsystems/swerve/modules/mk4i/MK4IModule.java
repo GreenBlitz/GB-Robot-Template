@@ -48,8 +48,8 @@ public class MK4IModule implements IModule {
         return Conversions.angleToDistance(angle, MK4IModuleConstants.WHEEL_DIAMETER_METERS);
     }
 
-    private Rotation2d getCouplingRemovedDriveAngle(Rotation2d driveAngle, Rotation2d steerAngle){
-        return ModuleUtils.getUncoupledAngle(driveAngle, steerAngle, MK4IModuleConstants.COUPLING_RATIO);
+    private Rotation2d getUncoupledAngle(Rotation2d driveCoupledAngle, Rotation2d steerAngle){
+        return ModuleUtils.getUncoupledAngle(driveCoupledAngle, steerAngle, MK4IModuleConstants.COUPLING_RATIO);
     }
 
 
@@ -136,15 +136,15 @@ public class MK4IModule implements IModule {
 
         final Rotation2d driveAngle = mk4iModuleStatus.getDriveMotorLatencyPosition(false);
         final Rotation2d steerAngle = Rotation2d.fromRotations(steerInputs.angle.getRotations() - startingSteerAngle.getRotations());
-        driveInputs.angle = getCouplingRemovedDriveAngle(driveAngle, steerAngle);
+        driveInputs.angle = getUncoupledAngle(driveAngle, steerAngle);
 
         final Rotation2d driveVelocity = mk4iModuleStatus.getDriveMotorLatencyVelocity(false);
         final Rotation2d steerVelocity = steerInputs.velocity;
-        driveInputs.velocity = getCouplingRemovedDriveAngle(driveVelocity, steerVelocity);
+        driveInputs.velocity = getUncoupledAngle(driveVelocity, steerVelocity);
 
         final Rotation2d driveAcceleration = mk4iModuleStatus.getDriveMotorAcceleration(false);
-        final Rotation2d steerAcceleration= steerInputs.acceleration;
-        driveInputs.velocity = getCouplingRemovedDriveAngle(driveAcceleration, steerAcceleration);
+        final Rotation2d steerAcceleration = steerInputs.acceleration;
+        driveInputs.acceleration = getUncoupledAngle(driveAcceleration, steerAcceleration);
 
         driveInputs.current = mk4iModuleStatus.getDriveMotorStatorCurrentSignal(false).getValue();
         driveInputs.voltage = mk4iModuleStatus.getDriveMotorVoltageSignal(false).getValue();
@@ -154,7 +154,7 @@ public class MK4IModule implements IModule {
         final Rotation2d[] drivePositions = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
         for (int i = 0; i < drivePositions.length; i++){
             Rotation2d steerDelta = Rotation2d.fromRotations(steerInputs.angleOdometrySamples[i].getRotations() - startingSteerAngle.getRotations());
-            drivePositions[i] = getCouplingRemovedDriveAngle(drivePositions[i], steerDelta);
+            drivePositions[i] = getUncoupledAngle(drivePositions[i], steerDelta);
         }
         driveInputs.distanceMetersOdometrySamples = Arrays.stream(drivePositions).mapToDouble(this::toDriveMeters).toArray();
         drivePositionQueue.clear();

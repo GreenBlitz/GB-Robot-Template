@@ -39,7 +39,7 @@ public class ModuleUtils {
             double wheelDiameterMeters, double voltageCompensationSaturation
     ) {
         Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-        Rotation2d optimizedVelocityPerSecond = getUncoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
+        Rotation2d optimizedVelocityPerSecond = getCoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
         double power = optimizedVelocityPerSecond.getRotations() / maxSpeedPerSecond.getRotations();
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
@@ -54,13 +54,17 @@ public class ModuleUtils {
      * @return the distance or velocity without the coupling
      */
     public static Rotation2d getUncoupledAngle(Rotation2d driveCoupledAngle, Rotation2d steerAngle, double couplingRatio) {
-        double steerCoupledAngle = steerAngle.getRotations() * couplingRatio;
-        return Rotation2d.fromRotations(driveCoupledAngle.getRotations() - steerCoupledAngle);
+        Rotation2d steerCoupledAngle = getSteerCoupledAngle(steerAngle, couplingRatio);
+        return Rotation2d.fromRotations(driveCoupledAngle.getRotations() - steerCoupledAngle.getRotations());
     }
 
     public static Rotation2d getCoupledAngle(Rotation2d driveUncoupledAngle, Rotation2d steerAngle, double couplingRatio) {
-        double steerCoupledAngle = steerAngle.getRotations() * couplingRatio;
-        return Rotation2d.fromRotations(driveUncoupledAngle.getRotations() + steerCoupledAngle);
+        Rotation2d steerCoupledAngle = getSteerCoupledAngle(steerAngle, couplingRatio);
+        return Rotation2d.fromRotations(driveUncoupledAngle.getRotations() + steerCoupledAngle.getRotations());
+    }
+
+    public static Rotation2d getSteerCoupledAngle(Rotation2d steerAngle, double couplingRatio) {
+        return Rotation2d.fromRotations(steerAngle.getRotations() * couplingRatio);
     }
 
 

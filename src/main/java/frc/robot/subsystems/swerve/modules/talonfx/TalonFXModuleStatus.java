@@ -16,22 +16,22 @@ class TalonFXModuleStatus {
 
     protected StatusCode refreshEncoderSignals() {
         return BaseStatusSignal.refreshAll(
-                getEncoderAbsolutePositionSignal(false),
+                getEncoderPositionSignal(false),
                 getEncoderVelocitySignal(false),
                 getEncoderVoltageSignal(false)
         );
     }
 
-    protected Rotation2d getEncoderAbsolutePosition(boolean refresh) {
-        return Rotation2d.fromRotations(getEncoderAbsolutePositionSignal(refresh).getValue());
+    protected Rotation2d getEncoderPosition(boolean refresh) {
+        return Rotation2d.fromRotations(getEncoderPositionSignal(refresh).getValue());
     }
 
     protected Rotation2d getEncoderVelocity(boolean refresh) {
         return Rotation2d.fromRotations(getEncoderVelocitySignal(refresh).getValue());
     }
 
-    private StatusSignal<Double> getEncoderAbsolutePositionSignal(boolean refresh) {
-        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.encoderAbsolutePositionSignal());
+    private StatusSignal<Double> getEncoderPositionSignal(boolean refresh) {
+        return PhoenixProUtils.getRefreshedSignal(refresh, moduleSignals.encoderPositionSignal());
     }
 
     protected StatusSignal<Double> getEncoderVelocitySignal(boolean refresh) {

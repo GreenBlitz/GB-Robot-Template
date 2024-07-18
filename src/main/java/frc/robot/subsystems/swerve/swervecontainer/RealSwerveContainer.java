@@ -90,6 +90,7 @@ public class RealSwerveContainer {
                 VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
                 true,
                 true,
+                TalonFXModuleConstants.ClosedLoopOutputType.TorqueCurrentFOC,
                 STEER_MOTOR_CONFIG,
                 DRIVE_MOTOR_CONFIG,
                 ENCODER_CONFIG,

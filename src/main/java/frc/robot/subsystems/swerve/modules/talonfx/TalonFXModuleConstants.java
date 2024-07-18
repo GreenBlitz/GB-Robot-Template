@@ -10,12 +10,19 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class TalonFXModuleConstants {
 
+    public enum ClosedLoopOutputType {
+        TorqueCurrentFOC,
+        Voltage
+    }
+
     private final double wheelDiameterMeters;
     private final double couplingRatio;
     private final Rotation2d velocityAt12VoltsPerSecond;
 
     private final boolean enableFOCSteer;
     private final boolean enableFOCDrive;
+
+    private final ClosedLoopOutputType driveCloseLoopOutputType;
 
     private final TalonFXWrapper steerMotor;
     private final TalonFXWrapper driveMotor;
@@ -29,6 +36,7 @@ public class TalonFXModuleConstants {
             double velocityAt12VoltsMetersPerSecond,
             boolean enableFOCSteer,
             boolean enableFOCDrive,
+            ClosedLoopOutputType driveCloseLoopOutputType,
             TalonFXConfiguration steerMotorConfig,
             TalonFXConfiguration driveMotorConfig,
             CANcoderConfiguration encoderConfig,
@@ -40,6 +48,8 @@ public class TalonFXModuleConstants {
 
         this.enableFOCSteer = enableFOCSteer;
         this.enableFOCDrive = enableFOCDrive;
+
+        this.driveCloseLoopOutputType = driveCloseLoopOutputType;
 
         TalonFXModuleConfigObject moduleConfigObject = new TalonFXModuleConfigObject(steerMotorConfig, driveMotorConfig, encoderConfig, moduleID);
         this.steerMotor = moduleConfigObject.getSteerMotor();
@@ -54,6 +64,10 @@ public class TalonFXModuleConstants {
 
     protected boolean getEnableFOCDrive(){
         return enableFOCDrive;
+    }
+
+    protected ClosedLoopOutputType getDriveCloseLoopOutputType() {
+        return driveCloseLoopOutputType;
     }
 
     protected double getWheelDiameterMeters() {

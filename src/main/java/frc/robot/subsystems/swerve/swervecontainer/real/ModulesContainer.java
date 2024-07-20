@@ -13,6 +13,12 @@ import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModuleConstants;
 
 public class ModulesContainer {
 
+    private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
+    private static final double COUPLING_RATIO = 0.59;
+
+    private static final boolean ENABLE_FOC_STEER = true;
+    private static final boolean ENABLE_FOC_DRIVE = true;
+
     private static final double DRIVE_SLIP_CURRENT = 30; //todo - calibrate
     private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
 
@@ -62,11 +68,11 @@ public class ModulesContainer {
 
     private static TalonFXModuleConstants getMk4iModuleConstants(ModuleID moduleID) {
         return new TalonFXModuleConstants(
-                0.048359 * 2,
-                0.59,
+                WHEEL_DIAMETER_METERS,
+                COUPLING_RATIO,
                 RealSwerve.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
-                true,
-                true,
+                ENABLE_FOC_STEER,
+                ENABLE_FOC_DRIVE,
                 STEER_MOTOR_CONFIG,
                 DRIVE_MOTOR_CONFIG,
                 ENCODER_CONFIG,

@@ -44,15 +44,12 @@ public class Pigeon2Gyro implements ISwerveGyro {
     @Override
     public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
         inputs.connected = gyroPigeon2Status.refreshAllSignals().isOK();
-
         inputs.gyroYaw = gyroPigeon2Status.getYaw(false);
         inputs.accelerationX = gyroPigeon2Status.getXAccelerationSignal(false).getValue();
         inputs.accelerationY = gyroPigeon2Status.getYAccelerationSignal(false).getValue();
         inputs.accelerationZ = gyroPigeon2Status.getZAccelerationSignal(false).getValue();
-
         inputs.yawOdometrySamples = yawQueue.stream().map(Rotation2d::fromDegrees).toArray(Rotation2d[]::new);
         inputs.timestampOdometrySamples = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
-
         yawQueue.clear();
         timestampQueue.clear();
 

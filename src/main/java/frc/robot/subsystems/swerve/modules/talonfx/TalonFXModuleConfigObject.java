@@ -25,20 +25,20 @@ class TalonFXModuleConfigObject {
         this.driveMotor =  new TalonFXWrapper(moduleID.driveMotorDeviceID());
 
         this.moduleSignals = new TalonFXModuleSignals(
-                encoder.getPosition(),
-                encoder.getVelocity(),
-                encoder.getSupplyVoltage(),
+                encoder.getPosition().clone(),
+                encoder.getVelocity().clone(),
+                encoder.getSupplyVoltage().clone(),
 
-                steerMotor.getPosition(),
-                steerMotor.getVelocity(),
-                steerMotor.getAcceleration(),
-                steerMotor.getMotorVoltage(),
+                steerMotor.getPosition().clone(),
+                steerMotor.getVelocity().clone(),
+                steerMotor.getAcceleration().clone(),
+                steerMotor.getMotorVoltage().clone(),
 
-                driveMotor.getPosition(),
-                driveMotor.getVelocity(),
-                driveMotor.getAcceleration(),
-                driveMotor.getMotorVoltage(),
-                driveMotor.getStatorCurrent()
+                driveMotor.getPosition().clone(),
+                driveMotor.getVelocity().clone(),
+                driveMotor.getAcceleration().clone(),
+                driveMotor.getMotorVoltage().clone(),
+                driveMotor.getStatorCurrent().clone()
         );
 
         configEncoder(encoderConfiguration);

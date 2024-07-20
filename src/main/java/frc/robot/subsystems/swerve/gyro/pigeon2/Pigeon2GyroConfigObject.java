@@ -16,10 +16,10 @@ public class Pigeon2GyroConfigObject {
     public Pigeon2GyroConfigObject(CTREDeviceID pigeon2DeviceID, Pigeon2Configuration configuration) {
         this.gyro = new Pigeon2Wrapper(pigeon2DeviceID);
         this.signals = new Pigeon2GyroSignals(
-                gyro.getYaw(),
-                gyro.getAccelerationX(),
-                gyro.getAccelerationY(),
-                gyro.getAccelerationZ()
+                gyro.getYaw().clone(),
+                gyro.getAccelerationX().clone(),
+                gyro.getAccelerationY().clone(),
+                gyro.getAccelerationZ().clone()
         );
 
         configGyro(configuration);

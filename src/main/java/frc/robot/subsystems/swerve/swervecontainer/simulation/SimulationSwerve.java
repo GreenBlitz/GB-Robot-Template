@@ -4,20 +4,19 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.gyro.simulation.SimulationSwerveGyro;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.simulation.SimulationModule;
+import frc.robot.subsystems.swerve.swervecontainer.SwerveContainer;
 import frc.robot.subsystems.swerve.swervecontainer.SwerveFactory;
 
-public class SimulationSwerve {
+public class SimulationSwerve extends SwerveContainer {
 
     protected static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.052;
 
-
-    public final SwerveConstants constants;
-
-    public final SimulationSwerveGyro gyro;
-
-    public final SimulationModule[] modules;
+    private final SwerveConstants constants;
+    private final SimulationSwerveGyro gyro;
+    private final SimulationModule[] modules;
 
     public SimulationSwerve(SwerveFactory.SwerveContainerKey key){
+        super(key);
         this.constants = SimulationSwerveConstants.swerveConstants;
         this.gyro = new SimulationSwerveGyro();
         this.modules = new SimulationModule[]{
@@ -26,6 +25,21 @@ public class SimulationSwerve {
                 new SimulationModule(ModuleUtils.ModuleName.BACK_LEFT, SimulationModulesConstants.getModuleConstants()),
                 new SimulationModule(ModuleUtils.ModuleName.BACK_RIGHT, SimulationModulesConstants.getModuleConstants())
         };
+    }
+
+    @Override
+    public SwerveConstants getConstants() {
+        return constants;
+    }
+
+    @Override
+    public SimulationSwerveGyro getGyro() {
+        return gyro;
+    }
+
+    @Override
+    public SimulationModule[] getModules() {
+        return modules;
     }
 
 }

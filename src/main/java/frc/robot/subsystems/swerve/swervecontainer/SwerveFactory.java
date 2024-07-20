@@ -19,21 +19,21 @@ public class SwerveFactory {
 
     }
 
-    private static final RealSwerve REAL_SWERVE = new RealSwerve(new SwerveContainerKey());
-    private static final SimulationSwerve SIMULATION_SWERVE = new SimulationSwerve(new SwerveContainerKey());
+    private static final SwerveContainer REAL_SWERVE = new RealSwerve(new SwerveContainerKey());
+    private static final SwerveContainer SIMULATION_SWERVE = new SimulationSwerve(new SwerveContainerKey());
 
 
     public static SwerveConstants createConstants() {
         return switch (ROBOT_TYPE) {
-            case REAL, REPLAY -> REAL_SWERVE.constants;
-            case SIMULATION -> SIMULATION_SWERVE.constants;
+            case REAL, REPLAY -> REAL_SWERVE.getConstants();
+            case SIMULATION -> SIMULATION_SWERVE.getConstants();
         };
     }
 
     public static ISwerveGyro createGyro() {
         return switch (ROBOT_TYPE) {
-            case REAL -> REAL_SWERVE.gyro;
-            case SIMULATION -> SIMULATION_SWERVE.gyro;
+            case REAL -> REAL_SWERVE.getGyro();
+            case SIMULATION -> SIMULATION_SWERVE.getGyro();
             case REPLAY -> new ReplaySwerveGyro();
         };
     }
@@ -41,16 +41,16 @@ public class SwerveFactory {
     public static Module[] createModules(){
         return switch (ROBOT_TYPE) {
             case REAL -> new Module[]{
-                    new Module(ModuleUtils.ModuleName.FRONT_LEFT, REAL_SWERVE.modules[0]),
-                    new Module(ModuleUtils.ModuleName.FRONT_RIGHT, REAL_SWERVE.modules[1]),
-                    new Module(ModuleUtils.ModuleName.BACK_LEFT, REAL_SWERVE.modules[2]),
-                    new Module(ModuleUtils.ModuleName.BACK_RIGHT, REAL_SWERVE.modules[3])
+                    new Module(ModuleUtils.ModuleName.FRONT_LEFT, REAL_SWERVE.getModules()[0]),
+                    new Module(ModuleUtils.ModuleName.FRONT_RIGHT, REAL_SWERVE.getModules()[1]),
+                    new Module(ModuleUtils.ModuleName.BACK_LEFT, REAL_SWERVE.getModules()[2]),
+                    new Module(ModuleUtils.ModuleName.BACK_RIGHT, REAL_SWERVE.getModules()[3])
             };
             case SIMULATION -> new Module[]{
-                    new Module(ModuleUtils.ModuleName.FRONT_LEFT, SIMULATION_SWERVE.modules[0]),
-                    new Module(ModuleUtils.ModuleName.FRONT_RIGHT, SIMULATION_SWERVE.modules[1]),
-                    new Module(ModuleUtils.ModuleName.BACK_LEFT, SIMULATION_SWERVE.modules[2]),
-                    new Module(ModuleUtils.ModuleName.BACK_RIGHT, SIMULATION_SWERVE.modules[3])
+                    new Module(ModuleUtils.ModuleName.FRONT_LEFT, SIMULATION_SWERVE.getModules()[0]),
+                    new Module(ModuleUtils.ModuleName.FRONT_RIGHT, SIMULATION_SWERVE.getModules()[1]),
+                    new Module(ModuleUtils.ModuleName.BACK_LEFT, SIMULATION_SWERVE.getModules()[2]),
+                    new Module(ModuleUtils.ModuleName.BACK_RIGHT, SIMULATION_SWERVE.getModules()[3])
             };
             case REPLAY -> new Module[]{
                     new Module(ModuleUtils.ModuleName.FRONT_LEFT, new ReplayModule()),

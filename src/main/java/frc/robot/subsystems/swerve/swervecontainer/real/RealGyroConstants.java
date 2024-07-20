@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2GyroConfigObject;
 
-public class GyroContainer {
+public class RealGyroConstants {
 
     private static final Pigeon2Configuration PIGEON_2_CONFIGURATION = new Pigeon2Configuration();
     static {

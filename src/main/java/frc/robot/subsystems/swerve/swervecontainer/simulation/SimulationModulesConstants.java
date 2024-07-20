@@ -5,7 +5,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.swerve.modules.simulation.SimulationModuleConstants;
 
-public class ModulesContainer {
+public class SimulationModulesConstants {
 
     private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
 

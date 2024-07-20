@@ -12,13 +12,13 @@ public class SimulationSwerve {
     public static final SimulationSwerveGyro gyro = new SimulationSwerveGyro();
 
     public static final SimulationModule[] modules = {
-            new SimulationModule(ModuleUtils.ModuleName.FRONT_LEFT, ModulesContainer.getModuleConstants()),
-            new SimulationModule(ModuleUtils.ModuleName.FRONT_RIGHT, ModulesContainer.getModuleConstants()),
-            new SimulationModule(ModuleUtils.ModuleName.BACK_LEFT, ModulesContainer.getModuleConstants()),
-            new SimulationModule(ModuleUtils.ModuleName.BACK_RIGHT, ModulesContainer.getModuleConstants())
+            new SimulationModule(ModuleUtils.ModuleName.FRONT_LEFT, SimulationModulesConstants.getModuleConstants()),
+            new SimulationModule(ModuleUtils.ModuleName.FRONT_RIGHT, SimulationModulesConstants.getModuleConstants()),
+            new SimulationModule(ModuleUtils.ModuleName.BACK_LEFT, SimulationModulesConstants.getModuleConstants()),
+            new SimulationModule(ModuleUtils.ModuleName.BACK_RIGHT, SimulationModulesConstants.getModuleConstants())
     };
 
-    public static final SwerveConstants constants = ConstantsContainer.swerveConstants;
+    public static final SwerveConstants constants = SimulationSwerveConstants.swerveConstants;
 
 
 }

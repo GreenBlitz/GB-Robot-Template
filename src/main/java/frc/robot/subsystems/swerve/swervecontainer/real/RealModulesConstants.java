@@ -11,7 +11,7 @@ import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModuleConstants;
 
-public class ModulesContainer {
+public class RealModulesConstants {
 
     private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
     private static final double COUPLING_RATIO = 0.59;

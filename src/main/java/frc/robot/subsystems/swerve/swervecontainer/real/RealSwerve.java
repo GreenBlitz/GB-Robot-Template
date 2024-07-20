@@ -8,16 +8,16 @@ public class RealSwerve {
 
     protected static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.052;
 
-    public static final Pigeon2Gyro gyro = new Pigeon2Gyro(GyroContainer.pigeon2GyroConfigObject);
+    public static final Pigeon2Gyro gyro = new Pigeon2Gyro(RealGyroConstants.pigeon2GyroConfigObject);
 
     public static final TalonFXModule[] modules = {
-            new TalonFXModule(ModulesContainer.moduleConstants[0]),
-            new TalonFXModule(ModulesContainer.moduleConstants[1]),
-            new TalonFXModule(ModulesContainer.moduleConstants[2]),
-            new TalonFXModule(ModulesContainer.moduleConstants[3])
+            new TalonFXModule(RealModulesConstants.moduleConstants[0]),
+            new TalonFXModule(RealModulesConstants.moduleConstants[1]),
+            new TalonFXModule(RealModulesConstants.moduleConstants[2]),
+            new TalonFXModule(RealModulesConstants.moduleConstants[3])
     };
 
-    public static final SwerveConstants constants = ConstantsContainer.swerveConstants;
+    public static final SwerveConstants constants = RealSwerveConstants.swerveConstants;
 
 
 }

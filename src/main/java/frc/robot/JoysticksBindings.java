@@ -122,9 +122,9 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
         // bindings...
         usedJoystick.A.whileTrue(SwerveCommands.driveToPose(new Pose2d(1, 8, Rotation2d.fromDegrees(90))));
-        usedJoystick.X.whileTrue(SwerveCommands.driveToPose(new Pose2d(6, 6, Rotation2d.fromDegrees(117))));
+        usedJoystick.X.whileTrue(SwerveCommands.driveToPose(new Pose2d(2, 6, Rotation2d.fromDegrees(0))));
         usedJoystick.Y.whileTrue(SwerveCommands.driveToPose(new Pose2d(7, 2, Rotation2d.fromDegrees(180))));
-        usedJoystick.B.whileTrue(SwerveCommands.driveToPose(new Pose2d(16, 6, Rotation2d.fromDegrees(-75))));
+        usedJoystick.B.whileTrue(SwerveCommands.driveToPose(new Pose2d(6, 6, Rotation2d.fromDegrees(0))));
         usedJoystick.START.whileTrue(SwerveCommands.driveToPose(new Pose2d(12, 8, Rotation2d.fromDegrees(14))));
         usedJoystick.BACK.whileTrue(SwerveCommands.driveToPose(new Pose2d(10, 4, Rotation2d.fromDegrees(140))));
     }

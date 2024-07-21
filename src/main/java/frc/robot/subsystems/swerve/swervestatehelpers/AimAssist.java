@@ -13,13 +13,9 @@ public enum AimAssist {
 
     NONE(),
 
-    //todo - NOTE(),
+    SPEAKER(FieldConstants::getSpeaker),
 
-    //todo - STAGE();
-
-    SPEAKER(FieldConstants.getSpeaker()), // maybe do supplier
-
-    AMP(FieldConstants.getAngleToAmp()); // maybe do supplier
+    AMP(FieldConstants::getAngleToAmp);
 
 
     public final Supplier<Rotation2d> targetAngleSupplier;

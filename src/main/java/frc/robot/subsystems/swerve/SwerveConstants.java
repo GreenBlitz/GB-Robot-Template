@@ -29,7 +29,6 @@ public class SwerveConstants {
 
     private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
     private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
-    //todo: check what to give in pp
     public static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
     private static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
             MODULE_X_DISTANCE_FROM_CENTER,

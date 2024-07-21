@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.AlertLogger;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
 import frc.utils.cycletime.CycleTimeUtils;

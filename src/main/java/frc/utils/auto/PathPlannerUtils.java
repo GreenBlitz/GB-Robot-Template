@@ -1,4 +1,4 @@
-package frc.utils.pathplannerutils;
+package frc.utils.auto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;

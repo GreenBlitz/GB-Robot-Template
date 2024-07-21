@@ -12,7 +12,7 @@ import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
-import frc.utils.pathplannerutils.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 

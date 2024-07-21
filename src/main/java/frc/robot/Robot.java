@@ -4,11 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
 import frc.utils.RobotTypeUtils;
 import frc.utils.auto.AutonomousChooser;
+import frc.utils.auto.PathPlannerUtils;
+
+import java.util.Optional;
 
 
 public class Robot {
@@ -37,6 +41,24 @@ public class Robot {
         // Register commands...
         swerve.buildPathPlannerForAuto(poseEstimator::getCurrentPose, poseEstimator::resetPose);
         autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+        PathPlannerUtils.setTargetRotationOverride(
+                () -> {
+                    if (poseEstimator.getCurrentPose().getX() > 3)
+                        return Optional.of(Rotation2d.fromDegrees(45));
+                    else
+                        return Optional.empty();
+                }
+        );
+//        PathPlannerUtils.setDynamicObstacles(
+//                List.of(
+//                        Pair.of(
+//                                new Translation2d(3, 7),
+//                                new Translation2d(3.5, 5)
+//                        )
+//                ),
+//                poseEstimator.getCurrentPose()
+//        );
+//        PathPlannerUtils.removeAllDynamicObstacles(poseEstimator.getCurrentPose());
     }
 
     private void configureBindings() {

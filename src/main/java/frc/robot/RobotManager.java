@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.simulation.SimpleMotorSimulation;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
@@ -24,6 +27,7 @@ public class RobotManager extends LoggedRobot {
     private Command autonomousCommand;
 
     private Robot robot;
+    private SimpleMotorSimulation simpleMotorSimulation;
 
     @Override
     public void robotInit() {
@@ -50,6 +54,9 @@ public class RobotManager extends LoggedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+        simpleMotorSimulation = new SimpleMotorSimulation(
+                new DCMotorSim(DCMotor.getCIM(1),1,1));
+        simpleMotorSimulation.setPower(0.5);
     }
 
     @Override

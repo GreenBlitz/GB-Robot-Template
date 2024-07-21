@@ -15,6 +15,7 @@ import frc.utils.ctre.BusStatus;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -38,6 +39,8 @@ public class RobotManager extends LoggedRobot {
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 
         this.robot = new Robot();
+        simpleMotorSimulation = new SimpleMotorSimulation(
+                new DCMotorSim(DCMotor.getCIM(1),1,1));
     }
 
     @Override
@@ -54,9 +57,6 @@ public class RobotManager extends LoggedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-        simpleMotorSimulation = new SimpleMotorSimulation(
-                new DCMotorSim(DCMotor.getCIM(1),1,1));
-        simpleMotorSimulation.setPower(0.5);
     }
 
     @Override
@@ -65,6 +65,8 @@ public class RobotManager extends LoggedRobot {
         CommandScheduler.getInstance().run();
         BusStatus.logChainsStatuses();
         BatteryUtils.logStatus();
+        Logger.recordOutput("Tuning/position", simpleMotorSimulation.getPosition());
+        Logger.recordOutput("Tuning/setpoint", 5);
     }
 
     @Override

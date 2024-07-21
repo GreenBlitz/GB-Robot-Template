@@ -23,7 +23,7 @@ import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
-import frc.utils.pathplannerutils.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 

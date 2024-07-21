@@ -29,7 +29,7 @@ public class SimulationSwerveGyro implements ISwerveGyro {
                 CycleTimeUtils.getCurrentCycleTime()
         );
 
-        inputs.gyroYaw = gyro.getGyroYaw();
+        inputs.gyroYaw = gyro.getYaw();
         inputs.yawOdometrySamples = new Rotation2d[]{inputs.gyroYaw};
         inputs.timestampOdometrySamples = new double[]{Timer.getFPGATimestamp()};
     }

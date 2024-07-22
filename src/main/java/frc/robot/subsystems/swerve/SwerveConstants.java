@@ -29,7 +29,7 @@ public class SwerveConstants {
 
     private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
     private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
-    public static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
+    protected static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
     private static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
             MODULE_X_DISTANCE_FROM_CENTER,
             MODULE_Y_DISTANCE_FROM_CENTER
@@ -55,7 +55,7 @@ public class SwerveConstants {
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
     private static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
-    public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
+    protected static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
     protected static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
 
 

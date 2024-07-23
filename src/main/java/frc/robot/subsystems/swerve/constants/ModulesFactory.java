@@ -23,7 +23,7 @@ public class ModulesFactory {
         };
     }
 
-    public static Module[] createModules(ModuleConstants[] moduleConstants) {
+    public static Module[] create(ModuleConstants[] moduleConstants) {
         return switch (ROBOT_TYPE) {
             case REAL -> getModules(
                     new TalonFXModule[]{

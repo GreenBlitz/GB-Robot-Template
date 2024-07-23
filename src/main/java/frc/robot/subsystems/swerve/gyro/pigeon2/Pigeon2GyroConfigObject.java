@@ -3,11 +3,12 @@ package frc.robot.subsystems.swerve.gyro.pigeon2;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 
-public class Pigeon2GyroConfigObject {
+public class Pigeon2GyroConfigObject extends SwerveGyroConstants {
 
     private final Pigeon2Wrapper gyro;
 

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.MathConstants;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
 public class SwerveConstants {
@@ -67,13 +68,15 @@ public class SwerveConstants {
     private final HolonomicPathFollowerConfig holonomicPathFollowerConfig;
 
     private final ModuleConstants[] moduleConstants;
+    private final SwerveGyroConstants gyroConstants;
 
     public SwerveConstants(
             double velocityAt12VoltsMetersPerSecond,
             Rotation2d maxRotationalVelocityPerSecond,
             PIDConstants translationMetersPIDConstants,
             PIDConstants rotationDegreesPIDConstants,
-            ModuleConstants[] moduleConstants
+            ModuleConstants[] moduleConstants,
+            SwerveGyroConstants gyroConstants
     ){
         this.velocityAt12VoltsMetersPerSecond = velocityAt12VoltsMetersPerSecond;
         this.maxRotationalVelocityPerSecond = maxRotationalVelocityPerSecond;
@@ -99,6 +102,7 @@ public class SwerveConstants {
         );
 
         this.moduleConstants = moduleConstants;
+        this.gyroConstants = gyroConstants;
     }
 
     public double getVelocityAt12VoltsMetersPerSecond(){
@@ -123,6 +127,10 @@ public class SwerveConstants {
 
     public ModuleConstants[] getModuleConstants() {
         return moduleConstants;
+    }
+
+    public SwerveGyroConstants getGyroConstants() {
+        return gyroConstants;
     }
 
 }

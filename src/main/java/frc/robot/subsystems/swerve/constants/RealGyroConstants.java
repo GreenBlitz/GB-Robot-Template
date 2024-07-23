@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.swervecontainer.real;
+package frc.robot.subsystems.swerve.constants;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.constants.IDs;

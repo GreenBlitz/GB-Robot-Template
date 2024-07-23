@@ -17,7 +17,8 @@ public class RealSwerveConstants {
             MAX_ROTATION_VELOCITY,
             TRANSLATION_METERS_PID_CONSTANTS,
             ROTATION_DEGREES_PID_CONSTANTS,
-            RealModulesConstants.getModuleConstants(VELOCITY_AT_12_VOLTS_METERS_PER_SECOND)
+            RealModulesConstants.getModuleConstants(VELOCITY_AT_12_VOLTS_METERS_PER_SECOND),
+            RealGyroConstants.pigeon2GyroConfigObject
     );
 
 }

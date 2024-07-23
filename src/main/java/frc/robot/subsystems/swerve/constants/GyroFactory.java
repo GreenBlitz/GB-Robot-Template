@@ -8,7 +8,7 @@ import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2GyroConfigObject;
 import frc.robot.subsystems.swerve.gyro.replay.ReplaySwerveGyro;
 import frc.robot.subsystems.swerve.gyro.simulation.SimulationSwerveGyro;
 
-public class GyroConstants {
+public class GyroFactory {
 
     public static ISwerveGyro create(SwerveGyroConstants constants){
         return switch (Robot.ROBOT_TYPE){

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.swervecontainer.real;
+package frc.robot.subsystems.swerve.constants;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -65,12 +65,11 @@ public class RealModulesConstants {
         STEER_MOTOR_CONFIG.Slot0.kD = 1.5;
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
     }
-
-    private static TalonFXModuleConstants getMk4iModuleConstants(ModuleID moduleID) {
+    private static TalonFXModuleConstants getTalonFXModuleConstants(ModuleID moduleID, double velocityAt12VoltsMetersPerSecond) {
         return new TalonFXModuleConstants(
                 WHEEL_DIAMETER_METERS,
                 COUPLING_RATIO,
-                RealSwerve.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
+                velocityAt12VoltsMetersPerSecond,
                 ENABLE_FOC_STEER,
                 ENABLE_FOC_DRIVE,
                 STEER_MOTOR_CONFIG,
@@ -80,36 +79,49 @@ public class RealModulesConstants {
         );
     }
 
-
-    protected static final TalonFXModuleConstants[] moduleConstants = {
-            getMk4iModuleConstants(new ModuleID(
-                    IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
-                    true,
-                    IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
-                    false,
-                    IDs.CANCodersIDs.FRONT_LEFT_ENCODER
-            )),
-            getMk4iModuleConstants(new ModuleID(
-                    IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
-                    true,
-                    IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
-                    true,
-                    IDs.CANCodersIDs.FRONT_RIGHT_ENCODER
-            )),
-            getMk4iModuleConstants(new ModuleID(
-                    IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
-                    false,
-                    IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
-                    false,
-                    IDs.CANCodersIDs.BACK_LEFT_ENCODER
-            )),
-            getMk4iModuleConstants(new ModuleID(
-                    IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
-                    true,
-                    IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
-                    false,
-                    IDs.CANCodersIDs.BACK_RIGHT_ENCODER
-            ))
-    };
+    protected static TalonFXModuleConstants[] getModuleConstants(double velocityAt12VoltsMetersPerSecond) {
+        return new TalonFXModuleConstants[]{
+                getTalonFXModuleConstants(
+                        new ModuleID(
+                                IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
+                                true,
+                                IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
+                                false,
+                                IDs.CANCodersIDs.FRONT_LEFT_ENCODER
+                        ),
+                        velocityAt12VoltsMetersPerSecond
+                ),
+                getTalonFXModuleConstants(
+                        new ModuleID(
+                                IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
+                                true,
+                                IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
+                                true,
+                                IDs.CANCodersIDs.FRONT_RIGHT_ENCODER
+                        ),
+                        velocityAt12VoltsMetersPerSecond
+                ),
+                getTalonFXModuleConstants(
+                        new ModuleID(
+                                IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
+                                false,
+                                IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
+                                false,
+                                IDs.CANCodersIDs.BACK_LEFT_ENCODER
+                        ),
+                        velocityAt12VoltsMetersPerSecond
+                ),
+                getTalonFXModuleConstants(
+                        new ModuleID(
+                                IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
+                                true,
+                                IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
+                                false,
+                                IDs.CANCodersIDs.BACK_RIGHT_ENCODER
+                        ),
+                        velocityAt12VoltsMetersPerSecond
+                )
+        };
+    }
 
 }

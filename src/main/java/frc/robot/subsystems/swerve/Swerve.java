@@ -335,7 +335,7 @@ public class Swerve extends GBSubsystem {
         double xSpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
         double ySpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
-        Rotation2d thetaSpeed = calculateProfiledAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
+        Rotation2d thetaSpeed = calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
 
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
@@ -349,12 +349,12 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
-                calculateProfiledAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetAngle).getRadians()
+                calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetAngle).getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);
     }
 
-    private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
+    private Rotation2d calculateAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
         return Rotation2d.fromDegrees(constants.getRotationDegreesPIDController().calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()
@@ -416,7 +416,7 @@ public class Swerve extends GBSubsystem {
             return chassisSpeeds;
         }
         //PID
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
+        Rotation2d pidVelocity = calculateAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
 
         //Magnitude Factor
         double driveMagnitude = getDriveMagnitude(chassisSpeeds);

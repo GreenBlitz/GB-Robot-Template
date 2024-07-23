@@ -4,11 +4,12 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.utils.Conversions;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-public class TalonFXModuleConstants {
+public class TalonFXModuleConstants extends ModuleConstants {
 
     private final double wheelDiameterMeters;
     private final double couplingRatio;

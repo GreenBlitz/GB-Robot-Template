@@ -5,9 +5,10 @@ import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.simulation.SimpleMotorSimulation;
+import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.utils.Conversions;
 
-public class SimulationModuleConstants {
+public class SimulationModuleConstants extends ModuleConstants {
 
     private final double wheelDiameterMeters;
     private final Rotation2d velocityAt12VoltsPerSecond;

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.MathConstants;
+import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
 public class SwerveConstants {
 
@@ -65,12 +66,14 @@ public class SwerveConstants {
     private final PIDController rotationDegreesPIDController;
     private final HolonomicPathFollowerConfig holonomicPathFollowerConfig;
 
+    private final ModuleConstants[] moduleConstants;
 
     public SwerveConstants(
             double velocityAt12VoltsMetersPerSecond,
             Rotation2d maxRotationalVelocityPerSecond,
             PIDConstants translationMetersPIDConstants,
-            PIDConstants rotationDegreesPIDConstants
+            PIDConstants rotationDegreesPIDConstants,
+            ModuleConstants[] moduleConstants
     ){
         this.velocityAt12VoltsMetersPerSecond = velocityAt12VoltsMetersPerSecond;
         this.maxRotationalVelocityPerSecond = maxRotationalVelocityPerSecond;
@@ -94,6 +97,8 @@ public class SwerveConstants {
                 DRIVE_RADIUS_METERS,
                 REPLANNING_CONFIG
         );
+
+        this.moduleConstants = moduleConstants;
     }
 
     public double getVelocityAt12VoltsMetersPerSecond(){
@@ -114,6 +119,10 @@ public class SwerveConstants {
 
     public HolonomicPathFollowerConfig getHolonomicPathFollowerConfig(){
         return holonomicPathFollowerConfig;
+    }
+
+    public ModuleConstants[] getModuleConstants() {
+        return moduleConstants;
     }
 
 }

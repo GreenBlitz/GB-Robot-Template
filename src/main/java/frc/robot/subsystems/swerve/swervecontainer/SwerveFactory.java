@@ -20,8 +20,8 @@ public class SwerveFactory {
 
     }
 
-    private static final SwerveContainer REAL_SWERVE = new RealSwerve(new SwerveContainerKey());
-    private static final SwerveContainer SIMULATION_SWERVE = new SimulationSwerve(new SwerveContainerKey());
+    private static final SwerveContainer REAL_SWERVE = RealSwerve.getInstance(new SwerveContainerKey());
+    private static final SwerveContainer SIMULATION_SWERVE = SimulationSwerve.getInstance(new SwerveContainerKey());
 
 
     public static SwerveConstants createConstants() {

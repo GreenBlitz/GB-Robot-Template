@@ -9,13 +9,22 @@ import frc.robot.subsystems.swerve.swervecontainer.SwerveFactory;
 
 public class SimulationSwerve extends SwerveContainer {
 
+    private static SimulationSwerve instance;
+
+    public static SimulationSwerve getInstance(SwerveFactory.SwerveContainerKey key) {
+        if (instance == null){
+            instance = new SimulationSwerve(key);
+        }
+        return instance;
+    }
+
     protected static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.052;
 
     private final SwerveConstants constants;
     private final SimulationSwerveGyro gyro;
     private final SimulationModule[] modules;
 
-    public SimulationSwerve(SwerveFactory.SwerveContainerKey key){
+    private SimulationSwerve(SwerveFactory.SwerveContainerKey key){
         super(key);
         this.constants = SimulationSwerveConstants.swerveConstants;
         this.gyro = new SimulationSwerveGyro();

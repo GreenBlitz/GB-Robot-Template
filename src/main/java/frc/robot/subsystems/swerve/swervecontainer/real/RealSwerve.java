@@ -8,13 +8,22 @@ import frc.robot.subsystems.swerve.swervecontainer.SwerveFactory;
 
 public class RealSwerve extends SwerveContainer {
 
+    private static RealSwerve instance;
+
+    public static RealSwerve getInstance(SwerveFactory.SwerveContainerKey key) {
+        if (instance == null){
+            instance = new RealSwerve(key);
+        }
+        return instance;
+    }
+
     protected static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.052;
 
     private final SwerveConstants constants;
     private final Pigeon2Gyro gyro;
     private final TalonFXModule[] modules;
 
-    public RealSwerve(SwerveFactory.SwerveContainerKey key) {
+    private RealSwerve(SwerveFactory.SwerveContainerKey key) {
         super(key);
         this.constants = RealSwerveConstants.swerveConstants;
         this.gyro = new Pigeon2Gyro(RealGyroConstants.pigeon2GyroConfigObject);

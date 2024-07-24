@@ -4,7 +4,6 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2Gyro;
 import frc.robot.subsystems.swerve.gyro.replay.ReplaySwerveGyro;
-import frc.robot.subsystems.swerve.gyro.simulation.SimulationSwerveGyro;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.replay.ReplayModule;
@@ -25,8 +24,7 @@ public class SwerveFactory {
     public static ISwerveGyro createGyro() {
         return switch (ROBOT_TYPE) {
             case REAL -> new Pigeon2Gyro(RealSwerveContainer.pigeon2GyroConfigObject);
-            case SIMULATION -> new SimulationSwerveGyro();
-            case REPLAY -> new ReplaySwerveGyro();
+            case REPLAY, SIMULATION -> new ReplaySwerveGyro();
         };
     }
 

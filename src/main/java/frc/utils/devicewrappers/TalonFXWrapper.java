@@ -1,6 +1,7 @@
 package frc.utils.devicewrappers;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -21,8 +22,8 @@ public class TalonFXWrapper extends TalonFX {
         applyConfiguration(configuration);
     }
 
-    public void applyConfiguration(TalonFXConfiguration configuration) {
-        super.getConfigurator().apply(configuration);
+    public StatusCode applyConfiguration(TalonFXConfiguration configuration) {
+        return super.getConfigurator().apply(configuration);
     }
 
 

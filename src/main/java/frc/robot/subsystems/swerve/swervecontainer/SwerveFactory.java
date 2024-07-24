@@ -26,15 +26,15 @@ public class SwerveFactory {
 
     public static SwerveConstants createConstants() {
         return switch (ROBOT_TYPE) {
-            case REAL, REPLAY -> REAL_SWERVE.getConstants();
-            case SIMULATION -> SIMULATION_SWERVE.getConstants();
+            case REAL, REPLAY -> REAL_SWERVE.createConstants();
+            case SIMULATION -> SIMULATION_SWERVE.createConstants();
         };
     }
 
     public static ISwerveGyro createGyro() {
         return switch (ROBOT_TYPE) {
-            case REAL -> REAL_SWERVE.getGyro();
-            case SIMULATION -> SIMULATION_SWERVE.getGyro();
+            case REAL -> REAL_SWERVE.createGyro();
+            case SIMULATION -> SIMULATION_SWERVE.createGyro();
             case REPLAY -> new ReplaySwerveGyro();
         };
     }
@@ -50,8 +50,8 @@ public class SwerveFactory {
 
     public static Module[] createModules(){
         return switch (ROBOT_TYPE) {
-            case REAL -> getModules(REAL_SWERVE.getModules());
-            case SIMULATION -> getModules(SIMULATION_SWERVE.getModules());
+            case REAL -> getModules(REAL_SWERVE.createModules());
+            case SIMULATION -> getModules(SIMULATION_SWERVE.createModules());
             case REPLAY -> getModules(new ReplayModule[]{
                     new ReplayModule(),
                     new ReplayModule(),

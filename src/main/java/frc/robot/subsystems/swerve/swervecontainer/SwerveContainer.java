@@ -8,8 +8,8 @@ public abstract class SwerveContainer {
 
     public SwerveContainer(SwerveFactory.SwerveContainerKey key){}
 
-    public abstract SwerveConstants getConstants();
-    public abstract ISwerveGyro getGyro();
-    public abstract IModule[] getModules();
+    public abstract SwerveConstants createConstants();
+    public abstract ISwerveGyro createGyro();
+    public abstract IModule[] createModules();
 
 }

@@ -17,37 +17,31 @@ public class RealSwerve extends SwerveContainer {
         return instance;
     }
 
-    protected static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.052;
 
-    private final SwerveConstants constants;
-    private final Pigeon2Gyro gyro;
-    private final TalonFXModule[] modules;
+    protected static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.052;
 
     private RealSwerve(SwerveFactory.SwerveContainerKey key) {
         super(key);
-        this.constants = RealSwerveConstants.swerveConstants;
-        this.gyro = new Pigeon2Gyro(RealGyroConstants.pigeon2GyroConfigObject);
-        this.modules = new TalonFXModule[]{
+    }
+
+    @Override
+    public SwerveConstants createConstants() {
+        return RealSwerveConstants.swerveConstants;
+    }
+
+    @Override
+    public Pigeon2Gyro createGyro() {
+        return new Pigeon2Gyro(RealGyroConstants.pigeon2GyroConfigObject);
+    }
+
+    @Override
+    public TalonFXModule[] createModules() {
+        return new TalonFXModule[]{
                 new TalonFXModule(RealModulesConstants.moduleConstants[0]),
                 new TalonFXModule(RealModulesConstants.moduleConstants[1]),
                 new TalonFXModule(RealModulesConstants.moduleConstants[2]),
                 new TalonFXModule(RealModulesConstants.moduleConstants[3])
         };
-    }
-
-    @Override
-    public SwerveConstants getConstants() {
-        return constants;
-    }
-
-    @Override
-    public Pigeon2Gyro getGyro() {
-        return gyro;
-    }
-
-    @Override
-    public TalonFXModule[] getModules() {
-        return modules;
     }
 
 }

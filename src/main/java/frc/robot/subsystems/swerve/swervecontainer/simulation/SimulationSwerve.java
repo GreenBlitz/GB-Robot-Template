@@ -18,37 +18,31 @@ public class SimulationSwerve extends SwerveContainer {
         return instance;
     }
 
-    protected static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.052;
 
-    private final SwerveConstants constants;
-    private final SimulationSwerveGyro gyro;
-    private final SimulationModule[] modules;
+    protected static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.052;
 
     private SimulationSwerve(SwerveFactory.SwerveContainerKey key){
         super(key);
-        this.constants = SimulationSwerveConstants.swerveConstants;
-        this.gyro = new SimulationSwerveGyro();
-        this.modules = new SimulationModule[]{
+    }
+
+    @Override
+    public SwerveConstants createConstants() {
+        return SimulationSwerveConstants.swerveConstants;
+    }
+
+    @Override
+    public SimulationSwerveGyro createGyro() {
+        return new SimulationSwerveGyro();
+    }
+
+    @Override
+    public SimulationModule[] createModules() {
+        return new SimulationModule[]{
                 new SimulationModule(ModuleUtils.ModuleName.FRONT_LEFT, SimulationModulesConstants.getModuleConstants()),
                 new SimulationModule(ModuleUtils.ModuleName.FRONT_RIGHT, SimulationModulesConstants.getModuleConstants()),
                 new SimulationModule(ModuleUtils.ModuleName.BACK_LEFT, SimulationModulesConstants.getModuleConstants()),
                 new SimulationModule(ModuleUtils.ModuleName.BACK_RIGHT, SimulationModulesConstants.getModuleConstants())
         };
-    }
-
-    @Override
-    public SwerveConstants getConstants() {
-        return constants;
-    }
-
-    @Override
-    public SimulationSwerveGyro getGyro() {
-        return gyro;
-    }
-
-    @Override
-    public SimulationModule[] getModules() {
-        return modules;
     }
 
 }

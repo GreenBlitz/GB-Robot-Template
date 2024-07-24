@@ -65,7 +65,7 @@ public class Swerve extends GBSubsystem {
                 resetPoseConsumer, // todo - maybe cancel and base vision
                 this::getRobotRelativeVelocity,
                 (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: Will not change loop mode!!!
-                constants.getHolonomicPathFollowerConfig(),
+                constants.holonomicPathFollowerConfig(),
                 DriverStationUtils::isRedAlliance,
                 this
         );
@@ -175,11 +175,11 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void resetTranslationController() {
-        constants.getTranslationMetersPIDController().reset();
+        constants.translationMetersPIDController().reset();
     }
 
     protected void resetRotationController() {
-        constants.getRotationDegreesPIDController().reset();
+        constants.rotationDegreesPIDController().reset();
     }
 
 
@@ -216,7 +216,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.getVelocityAt12VoltsMetersPerSecond());
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.velocityAt12VoltsMetersPerSecond());
         for (int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(swerveModuleStates[i]);
         }
@@ -347,8 +347,8 @@ public class Swerve extends GBSubsystem {
 
 
     protected void pidToPose(Pose2d currentBluePose, Pose2d targetBluePose) {
-        double xSpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
-        double ySpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
+        double xSpeed = constants.translationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
+        double ySpeed = constants.translationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
         Rotation2d thetaSpeed = calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
 
@@ -370,7 +370,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private Rotation2d calculateAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
-        return Rotation2d.fromDegrees(constants.getRotationDegreesPIDController().calculate(
+        return Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()
         ));
@@ -444,8 +444,8 @@ public class Swerve extends GBSubsystem {
         //Clamp
         double clampedAngularVelocity = MathUtil.clamp(
                 angularVelocityWithJoystick,
-                -constants.getMaxRotationalVelocityPerSecond().getRadians(),
-                constants.getMaxRotationalVelocityPerSecond().getRadians()
+                -constants.maxRotationalVelocityPerSecond().getRadians(),
+                constants.maxRotationalVelocityPerSecond().getRadians()
         );
 
         //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
@@ -478,9 +478,9 @@ public class Swerve extends GBSubsystem {
 
     private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
         return new ChassisSpeeds(
-                xPower * driveSpeed.translationSpeedFactor * constants.getVelocityAt12VoltsMetersPerSecond(),
-                yPower * driveSpeed.translationSpeedFactor * constants.getVelocityAt12VoltsMetersPerSecond(),
-                thetaPower * driveSpeed.rotationSpeedFactor * constants.getMaxRotationalVelocityPerSecond().getRadians()
+                xPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
+                yPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
+                thetaPower * driveSpeed.rotationSpeedFactor * constants.maxRotationalVelocityPerSecond().getRadians()
         );
     }
 

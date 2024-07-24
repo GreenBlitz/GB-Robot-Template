@@ -419,16 +419,14 @@ public class Swerve extends GBSubsystem {
         boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
 
         double currentRotationVelocityRadians = getRobotRelativeVelocity().omegaRadiansPerSecond;
-        boolean isStopping =
-                Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+        boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
         return isAtAngle && isStopping;
     }
 
 
     //todo: make shorter
-    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds chassisSpeeds, Rotation2d currentAngle,
-            SwerveState swerveState) {
+    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds chassisSpeeds, Rotation2d currentAngle, SwerveState swerveState) {
         if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
             return chassisSpeeds;
         }
@@ -474,13 +472,11 @@ public class Swerve extends GBSubsystem {
         return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
     }
 
-    private static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds,
-            Rotation2d allianceRelativeAngle) {
+    private static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
     }
 
-    private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed,
-            SwerveConstants constants) {
+    private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
         return new ChassisSpeeds(
                 xPower * driveSpeed.translationSpeedFactor * constants.getVelocityAt12VoltsMetersPerSecond(),
                 yPower * driveSpeed.translationSpeedFactor * constants.getVelocityAt12VoltsMetersPerSecond(),

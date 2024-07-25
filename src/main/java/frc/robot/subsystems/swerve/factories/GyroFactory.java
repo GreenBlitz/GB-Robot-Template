@@ -6,15 +6,13 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2Gyro;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2GyroConfigObject;
 import frc.robot.subsystems.swerve.gyro.replay.ReplaySwerveGyro;
-import frc.robot.subsystems.swerve.gyro.simulation.SimulationSwerveGyro;
 
 public class GyroFactory {
 
     public static ISwerveGyro create(SwerveGyroConstants constants){
         return switch (Robot.ROBOT_TYPE){
             case REAL -> new Pigeon2Gyro((Pigeon2GyroConfigObject) constants);
-            case SIMULATION -> new SimulationSwerveGyro();
-            case REPLAY -> new ReplaySwerveGyro();
+            case SIMULATION, REPLAY -> new ReplaySwerveGyro();
         };
     }
 

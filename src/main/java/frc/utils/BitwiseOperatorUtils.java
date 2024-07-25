@@ -1,5 +1,7 @@
 package frc.utils;
 
+import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+
 import static java.lang.Math.pow;
 
 public class BitwiseOperatorUtils {
@@ -20,6 +22,9 @@ public class BitwiseOperatorUtils {
         for (int i = 0; i < binaryString.length(); i++) {
             binaryArray[i] = binaryString.charAt(i) != '0';
         }
+
+        final AimAssist none = AimAssist.NONE;
+
         return binaryArray;
     }
 

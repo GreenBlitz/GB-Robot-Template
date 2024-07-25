@@ -16,7 +16,6 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
@@ -371,8 +370,6 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState);
-
         if (isStill(chassisSpeeds)) {
             stop();
             return;
@@ -411,33 +408,6 @@ public class Swerve extends GBSubsystem {
 
 
     //todo: make shorter
-    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds chassisSpeeds, Rotation2d currentAngle, SwerveState swerveState) {
-        if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
-            return chassisSpeeds;
-        }
-        //PID
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
-
-        //Magnitude Factor
-        double driveMagnitude = getDriveMagnitude(chassisSpeeds);
-        double angularVelocityRads =
-                pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
-
-        //Joystick Output
-        double angularVelocityWithJoystick = angularVelocityRads + chassisSpeeds.omegaRadiansPerSecond;
-
-        //Clamp
-        double clampedAngularVelocity = MathUtil.clamp(
-                angularVelocityWithJoystick,
-                -constants.getMaxRotationalVelocityPerSecond().getRadians(),
-                constants.getMaxRotationalVelocityPerSecond().getRadians()
-        );
-
-        //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
-        //todo - distance factor
-        return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, clampedAngularVelocity);
-    }
-
     private static ChassisSpeeds applyDeadbandSpeeds(ChassisSpeeds chassisSpeeds) {
         double newXSpeed = chassisSpeeds.vxMetersPerSecond;
         if (Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND){

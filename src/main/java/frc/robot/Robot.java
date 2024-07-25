@@ -23,8 +23,8 @@ public class Robot {
     private static final SwerveConstants swerveConstants = ConstantsFactory.create();
     public static final Swerve swerve = new Swerve(
             swerveConstants,
-            ModulesFactory.create(swerveConstants.getModuleConstants()),
-            GyroFactory.create(swerveConstants.getGyroConstants())
+            ModulesFactory.create(swerveConstants.moduleConstants()),
+            GyroFactory.create(swerveConstants.gyroConstants())
     );
     public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
 

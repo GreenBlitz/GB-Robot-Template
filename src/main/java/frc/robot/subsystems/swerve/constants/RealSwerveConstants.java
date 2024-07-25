@@ -4,7 +4,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.SwerveConstants;
 
-public class RealSwerveConstants {
+class RealSwerveConstants {
 
     private static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.054;
     private static final Rotation2d MAX_ROTATION_VELOCITY = Rotation2d.fromRadians(10);

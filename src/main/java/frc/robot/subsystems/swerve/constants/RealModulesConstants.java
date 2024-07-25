@@ -11,7 +11,7 @@ import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModuleConstants;
 
-public class RealModulesConstants {
+class RealModulesConstants {
 
     protected static TalonFXModuleConstants[] getModulesConstants(double velocityAt12VoltsMetersPerSecond) {
         return new TalonFXModuleConstants[]{

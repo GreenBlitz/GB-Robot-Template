@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.modules.simulation.SimulationModuleConstants;
 
-public class SimulationSwerveConstants {
+class SimulationSwerveConstants {
 
     private static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 5.054;
 

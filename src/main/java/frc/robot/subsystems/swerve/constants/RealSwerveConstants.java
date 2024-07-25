@@ -18,7 +18,7 @@ class RealSwerveConstants {
             TRANSLATION_METERS_PID_CONSTANTS,
             ROTATION_DEGREES_PID_CONSTANTS,
             RealModulesConstants.getModulesConstants(VELOCITY_AT_12_VOLTS_METERS_PER_SECOND),
-            RealGyroConstants.pigeon2GyroConfigObject
+            RealGyroConstants.PIGEON_2_GYRO_CONFIG_OBJECT
     );
 
 }

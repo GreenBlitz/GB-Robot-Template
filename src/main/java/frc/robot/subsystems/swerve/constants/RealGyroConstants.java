@@ -13,7 +13,7 @@ class RealGyroConstants {
         PIGEON_2_CONFIGURATION.MountPose.MountPoseYaw = 0;
     }
 
-    protected static final Pigeon2GyroConfigObject pigeon2GyroConfigObject = new Pigeon2GyroConfigObject(
+    protected static final Pigeon2GyroConfigObject PIGEON_2_GYRO_CONFIG_OBJECT = new Pigeon2GyroConfigObject(
             IDs.PIGEON_2_DEVICE_ID,
             PIGEON_2_CONFIGURATION
     );

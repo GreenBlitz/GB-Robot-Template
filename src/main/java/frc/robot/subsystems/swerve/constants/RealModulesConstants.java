@@ -58,20 +58,6 @@ class RealModulesConstants {
         };
     }
 
-    private static TalonFXModuleConstants getTalonFXModuleConstants(ModuleID moduleID, double velocityAt12VoltsMetersPerSecond) {
-        return new TalonFXModuleConstants(
-                WHEEL_DIAMETER_METERS,
-                COUPLING_RATIO,
-                velocityAt12VoltsMetersPerSecond,
-                ENABLE_FOC_STEER,
-                ENABLE_FOC_DRIVE,
-                STEER_MOTOR_CONFIG,
-                DRIVE_MOTOR_CONFIG,
-                ENCODER_CONFIG,
-                moduleID
-        );
-    }
-
     private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
     private static final double COUPLING_RATIO = 0.59;
 
@@ -126,6 +112,20 @@ class RealModulesConstants {
         STEER_MOTOR_CONFIG.Slot0.kI = 0;
         STEER_MOTOR_CONFIG.Slot0.kD = 1.5;
         STEER_MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
+    }
+
+    private static TalonFXModuleConstants getTalonFXModuleConstants(ModuleID moduleID, double velocityAt12VoltsMetersPerSecond) {
+        return new TalonFXModuleConstants(
+                WHEEL_DIAMETER_METERS,
+                COUPLING_RATIO,
+                velocityAt12VoltsMetersPerSecond,
+                ENABLE_FOC_STEER,
+                ENABLE_FOC_DRIVE,
+                STEER_MOTOR_CONFIG,
+                DRIVE_MOTOR_CONFIG,
+                ENCODER_CONFIG,
+                moduleID
+        );
     }
 
 }

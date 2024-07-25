@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve.constants;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.modules.simulation.SimulationModuleConstants;
 
 public class SimulationSwerveConstants {
@@ -26,7 +25,7 @@ public class SimulationSwerveConstants {
                     SimulationModulesConstants.getModuleConstants(VELOCITY_AT_12_VOLTS_METERS_PER_SECOND),
                     SimulationModulesConstants.getModuleConstants(VELOCITY_AT_12_VOLTS_METERS_PER_SECOND)
             },
-            new SwerveGyroConstants()
+            null
     );
 
 }

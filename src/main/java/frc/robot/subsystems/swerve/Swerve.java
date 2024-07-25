@@ -9,6 +9,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
@@ -38,6 +40,7 @@ public class Swerve extends GBSubsystem {
 
     public static final Lock ODOMETRY_LOCK = new ReentrantLock();
 
+    private final SwerveCommands commands;
     private final SwerveGyroInputsAutoLogged gyroInputs;
     private final ISwerveGyro gyro;
     private final Module[] modules;
@@ -55,6 +58,12 @@ public class Swerve extends GBSubsystem {
 
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
+
+        this.commands = SwerveCommands.buildCommands(this);
+    }
+
+    public SwerveCommands getCommands() {
+        return commands;
     }
 
     public void buildPathPlannerForAuto(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
@@ -63,7 +72,7 @@ public class Swerve extends GBSubsystem {
                 resetPoseConsumer, // todo - maybe cancel and base vision
                 this::getRobotRelativeVelocity,
                 (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: Will not change loop mode!!!
-                constants.getHolonomicPathFollowerConfig(),
+                constants.holonomicPathFollowerConfig(),
                 DriverStationUtils::isRedAlliance,
                 this
         );
@@ -101,8 +110,18 @@ public class Swerve extends GBSubsystem {
         Logger.recordOutput(getLogPath() + "Odometry Samples", getNumberOfOdometrySamples());
     }
 
+    private void updateGyroSimulation() {
+        final double yawChangeRadians = getRobotRelativeVelocity().omegaRadiansPerSecond * CycleTimeUtils.getCurrentCycleTime();
+        gyroInputs.gyroYaw = Rotation2d.fromRadians(gyroInputs.gyroYaw.getRadians() + yawChangeRadians);
+        gyroInputs.yawOdometrySamples = new Rotation2d[]{gyroInputs.gyroYaw};
+        gyroInputs.timestampOdometrySamples = new double[]{Timer.getFPGATimestamp()};
+    }
+
     public void updateInputs() {
         ODOMETRY_LOCK.lock(); {
+            if (Robot.ROBOT_TYPE.isSimulation()) {
+                updateGyroSimulation();
+            }
             gyro.updateInputs(gyroInputs);
             Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
 
@@ -132,12 +151,13 @@ public class Swerve extends GBSubsystem {
         }
     }
 
-    public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier){
+    public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier) {
         this.currentAngleSupplier = currentAngleSupplier;
     }
 
     public void setHeading(Rotation2d heading) {
         gyro.setHeading(heading);
+        gyroInputs.gyroYaw = heading;
     }
 
 
@@ -160,11 +180,13 @@ public class Swerve extends GBSubsystem {
             module.resetByEncoder();
         }
     }
+
     protected void resetTranslationController() {
-        constants.getTranslationMetersPIDController().reset();
+        constants.translationMetersPIDController().reset();
     }
+
     protected void resetRotationController() {
-        constants.getRotationDegreesPIDController().reset();
+        constants.rotationDegreesPIDController().reset();
     }
 
 
@@ -201,7 +223,7 @@ public class Swerve extends GBSubsystem {
     }
 
     private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.getVelocityAt12VoltsMetersPerSecond());
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.velocityAt12VoltsMetersPerSecond());
         for (int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(swerveModuleStates[i]);
         }
@@ -219,7 +241,7 @@ public class Swerve extends GBSubsystem {
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }
 
-    public SwerveDriveWheelPositions[] getAllSwerveWheelPositionSamples(){
+    public SwerveDriveWheelPositions[] getAllSwerveWheelPositionSamples() {
         int numberOfOdometrySamples = getNumberOfOdometrySamples();
         SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[numberOfOdometrySamples];
         for (int i = 0; i < numberOfOdometrySamples; i++) {
@@ -228,7 +250,7 @@ public class Swerve extends GBSubsystem {
         return swerveWheelPositions;
     }
 
-    public int getNumberOfOdometrySamples(){
+    public int getNumberOfOdometrySamples() {
         return gyroInputs.timestampOdometrySamples.length;
     }
 
@@ -269,8 +291,8 @@ public class Swerve extends GBSubsystem {
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
     }
 
-    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds){
-        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond,2) + Math.pow(chassisSpeeds.vyMetersPerSecond,2));
+    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
+        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
     }
 
 
@@ -332,10 +354,10 @@ public class Swerve extends GBSubsystem {
 
 
     protected void pidToPose(Pose2d currentBluePose, Pose2d targetBluePose) {
-        double xSpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
-        double ySpeed = constants.getTranslationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
+        double xSpeed = constants.translationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
+        double ySpeed = constants.translationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
-        Rotation2d thetaSpeed = calculateProfiledAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
+        Rotation2d thetaSpeed = calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
 
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
@@ -349,13 +371,13 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
-                calculateProfiledAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetAngle).getRadians()
+                calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetAngle).getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);
     }
 
-    private Rotation2d calculateProfiledAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
-        return Rotation2d.fromDegrees(constants.getRotationDegreesPIDController().calculate(
+    private Rotation2d calculateAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
+        return Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
                 currentAngle.getDegrees(),
                 targetAngle.getDegrees()
         ));
@@ -416,7 +438,7 @@ public class Swerve extends GBSubsystem {
             return chassisSpeeds;
         }
         //PID
-        Rotation2d pidVelocity = calculateProfiledAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
+        Rotation2d pidVelocity = calculateAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
 
         //Magnitude Factor
         double driveMagnitude = getDriveMagnitude(chassisSpeeds);
@@ -429,8 +451,8 @@ public class Swerve extends GBSubsystem {
         //Clamp
         double clampedAngularVelocity = MathUtil.clamp(
                 angularVelocityWithJoystick,
-                -constants.getMaxRotationalVelocityPerSecond().getRadians(),
-                constants.getMaxRotationalVelocityPerSecond().getRadians()
+                -constants.maxRotationalVelocityPerSecond().getRadians(),
+                constants.maxRotationalVelocityPerSecond().getRadians()
         );
 
         //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
@@ -440,17 +462,17 @@ public class Swerve extends GBSubsystem {
 
     private static ChassisSpeeds applyDeadbandSpeeds(ChassisSpeeds chassisSpeeds) {
         double newXSpeed = chassisSpeeds.vxMetersPerSecond;
-        if (Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND){
+        if (Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND) {
             newXSpeed = 0;
         }
 
         double newYSpeed = chassisSpeeds.vyMetersPerSecond;
-        if (Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND){
+        if (Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND) {
             newYSpeed = 0;
         }
 
         double newOmegaSpeed = chassisSpeeds.omegaRadiansPerSecond;
-        if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()){
+        if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
             newOmegaSpeed = 0;
         }
 
@@ -463,9 +485,9 @@ public class Swerve extends GBSubsystem {
 
     private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
         return new ChassisSpeeds(
-                xPower * driveSpeed.translationSpeedFactor * constants.getVelocityAt12VoltsMetersPerSecond(),
-                yPower * driveSpeed.translationSpeedFactor * constants.getVelocityAt12VoltsMetersPerSecond(),
-                thetaPower * driveSpeed.rotationSpeedFactor * constants.getMaxRotationalVelocityPerSecond().getRadians()
+                xPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
+                yPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
+                thetaPower * driveSpeed.rotationSpeedFactor * constants.maxRotationalVelocityPerSecond().getRadians()
         );
     }
 

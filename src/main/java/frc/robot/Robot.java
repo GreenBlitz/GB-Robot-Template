@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.constants.ConstantsFactory;
-import frc.robot.subsystems.swerve.constants.GyroFactory;
-import frc.robot.subsystems.swerve.constants.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.GyroFactory;
+import frc.robot.subsystems.swerve.factories.ModulesFactory;
 import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
 import frc.utils.RobotTypeUtils;
 

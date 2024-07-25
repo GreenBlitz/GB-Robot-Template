@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.constants;
+package frc.robot.subsystems.swerve.factories;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;

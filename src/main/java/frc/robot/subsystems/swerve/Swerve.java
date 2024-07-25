@@ -40,6 +40,7 @@ public class Swerve extends GBSubsystem {
 
     public static final Lock ODOMETRY_LOCK = new ReentrantLock();
 
+    private final SwerveCommands commands;
     private final SwerveGyroInputsAutoLogged gyroInputs;
     private final ISwerveGyro gyro;
     private final Module[] modules;
@@ -57,6 +58,12 @@ public class Swerve extends GBSubsystem {
 
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
+
+        this.commands = SwerveCommands.buildCommands(this);
+    }
+
+    public SwerveCommands getCommands() {
+        return commands;
     }
 
     public void buildPathPlannerForAuto(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {

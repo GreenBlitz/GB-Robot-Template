@@ -27,30 +27,39 @@ import java.util.function.Supplier;
 
 public class SwerveCommands {
 
-    private static final Swerve swerve = Robot.swerve;
+    public static SwerveCommands buildCommands(Swerve swerve){
+        return new SwerveCommands(swerve);
+    }
 
-    private static final SysIdCalibrator steerCalibrator = new SysIdCalibrator(
-            true,
-            swerve,
-            voltage -> swerve.runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
-            SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP,
-            SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
-    );
+    private final Swerve swerve;
 
-    private static final SysIdCalibrator driveCalibrator = new SysIdCalibrator(
-            true,
-            swerve,
-            swerve::runModulesDriveByVoltage,
-            SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
-            SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
-    );
+    private final SysIdCalibrator steerCalibrator;
+    private final SysIdCalibrator driveCalibrator;
+
+    private SwerveCommands(Swerve swerve) {
+        this.swerve = swerve;
+        this.steerCalibrator = new SysIdCalibrator(
+                true,
+                swerve,
+                voltage -> swerve.runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
+                SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP,
+                SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
+        );
+        this.driveCalibrator = new SysIdCalibrator(
+                true,
+                swerve,
+                swerve::runModulesDriveByVoltage,
+                SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
+                SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
+        );
+    }
 
 
-    public static Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+    public Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
         return steerCalibrator.getSysIdCommand(isQuasistatic, direction).withName("Steer Calibration");
     }
 
-    public static Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+    public Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
         Command sysIdCommand = driveCalibrator.getSysIdCommand(isQuasistatic, direction);
         sysIdCommand.getRequirements().clear();
 
@@ -60,7 +69,7 @@ public class SwerveCommands {
         ).withName("Drive Calibration");
     }
 
-    public static Command wheelRadiusCalibration() {
+    public Command wheelRadiusCalibration() {
         return new SequentialCommandGroup(
                 pointWheelsInCircle(),
                 new WheelRadiusCharacterization(
@@ -76,7 +85,7 @@ public class SwerveCommands {
     }
 
 
-    public static Command pointWheelsInX() {
+    public Command pointWheelsInX() {
         return new FunctionalCommand(
                 () -> {},
                 swerve::pointWheelsInX,
@@ -86,7 +95,7 @@ public class SwerveCommands {
         ).withName("Point Wheels In X");
     }
 
-    public static Command pointWheelsInCircle() {
+    public Command pointWheelsInCircle() {
         return new FunctionalCommand(
                 () -> {},
                 swerve::pointWheelsInCircle,
@@ -95,7 +104,7 @@ public class SwerveCommands {
         ).withName("Point Wheels In Circle");
     }
 
-    public static Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
+    public Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
         return new FunctionalCommand(
                 () -> {},
                 () -> swerve.pointWheels(wheelsAngle, optimize),
@@ -106,11 +115,11 @@ public class SwerveCommands {
     }
 
 
-    public static Command rotateToAngle(Rotation2d targetAngle) {
+    public Command rotateToAngle(Rotation2d targetAngle) {
         return rotateToAngle(targetAngle, RotateAxis.MIDDLE_OF_ROBOT);
     }
 
-    public static Command rotateToAngle(Rotation2d targetAngle, RotateAxis rotateAxis) {
+    public Command rotateToAngle(Rotation2d targetAngle, RotateAxis rotateAxis) {
         return new FunctionalCommand(
                 () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 () -> swerve.rotateToAngle(targetAngle),
@@ -121,37 +130,40 @@ public class SwerveCommands {
     }
 
 
-    public static Command driveWithAimAssist(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, AimAssist aimAssist) {
+    public Command driveWithAimAssist(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
+            AimAssist aimAssist) {
         return driveState(
                 xSupplier, ySupplier, thetaSupplier,
                 () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)
         ).withName("Aim Assist to: " + aimAssist);
     }
 
-    public static Command driveAroundWheel(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<RotateAxis> rotateAxis) {
+    public Command driveAroundWheel(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
+            Supplier<RotateAxis> rotateAxis) {
         return driveState(
                 xSupplier, ySupplier, thetaSupplier,
                 () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())
         ).withName("Drive Around " + rotateAxis.get());
     }
 
-    public static Command driveSlow(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
-        return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)).withName("Slow Drive");
+    public Command driveSlow(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
+        return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)).withName(
+                "Slow Drive");
     }
 
-    public static Command driveRobotRelative(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
+    public Command driveRobotRelative(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_PATH_PLANNER).withName("Robot Relative Drive");
     }
 
-    public static Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
+    public Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE).withName("Default Drive");
     }
 
-    private static Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, SwerveState state) {
+    private Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, SwerveState state) {
         return driveState(xSupplier, ySupplier, thetaSupplier, () -> state);
     }
 
-    private static Command driveState(
+    private Command driveState(
             DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
             Supplier<SwerveState> state
     ) {
@@ -163,21 +175,25 @@ public class SwerveCommands {
     }
 
 
-    public static Command driveToPose(Supplier<Pose2d> targetPose) {
+    public Command driveToPose(Supplier<Pose2d> targetPose) {
         return new DeferredCommand(() -> driveToPose(targetPose.get()), Set.of(swerve)).withName("Drive to " + targetPose.get());
     }
 
-    public static Command driveToPose(Pose2d targetPose) {
+    public Command driveToPose(Pose2d targetPose) {
         return new SequentialCommandGroup(pathToPose(targetPose), pidToPose(targetPose)).withName("Drive to " + targetPose);
     }
 
-    private static Command pathToPose(Pose2d targetBluePose) {
+    private Command pathToPose(Pose2d targetBluePose) {
         Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
 
         Command pathFollowingCommand;
         double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
         if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-            pathFollowingCommand = PathPlannerUtils.createOnTheFlyPathCommand(currentBluePose, targetBluePose, SwerveConstants.REAL_TIME_CONSTRAINTS);
+            pathFollowingCommand = PathPlannerUtils.createOnTheFlyPathCommand(
+                    currentBluePose,
+                    targetBluePose,
+                    SwerveConstants.REAL_TIME_CONSTRAINTS
+            );
         }
         else {
             pathFollowingCommand = AutoBuilder.pathfindToPose(targetBluePose, SwerveConstants.REAL_TIME_CONSTRAINTS);
@@ -189,7 +205,7 @@ public class SwerveCommands {
         ).withName("Path following to: " + targetBluePose);
     }
 
-    private static Command pidToPose(Pose2d targetBluePose) {
+    private Command pidToPose(Pose2d targetBluePose) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE)),
                 new RunCommand(() -> swerve.pidToPose(Robot.poseEstimator.getCurrentPose(), targetBluePose))

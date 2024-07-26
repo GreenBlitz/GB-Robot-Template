@@ -8,7 +8,7 @@ public enum Axis {
     LEFT_Y(1, true),
     LEFT_TRIGGER(2, false),
     RIGHT_TRIGGER(3, false),
-    RIGHT_X(4, false),
+    RIGHT_X(4, true),
     RIGHT_Y(5, true);
 
     private final int id;

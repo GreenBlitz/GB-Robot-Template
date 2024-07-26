@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.swervestatehelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.constants.FieldConstants;
 
 import java.util.function.Function;
 
@@ -11,7 +12,7 @@ public enum AimAssist {
     NONE(0),
     SPEAKER(
             4,
-            (robotPose -> new Rotation2d()),
+            (robotPose -> FieldConstants.getSpeaker().toTranslation2d().minus(robotPose.getTranslation()).getAngle()),
             (robotPose -> new Translation2d())
     ),
     AMP(

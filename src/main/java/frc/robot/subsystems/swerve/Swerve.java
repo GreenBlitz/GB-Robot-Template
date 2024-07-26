@@ -18,6 +18,7 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHandler;
@@ -401,11 +402,12 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+        chassisSpeeds = stateHandler.applyStateOnInputsSpeeds(swerveState.getAimAssist(),chassisSpeeds);
+
         if (isStill(chassisSpeeds)) {
             stop();
             return;
         }
-
         chassisSpeeds = applyDeadbandSpeeds(chassisSpeeds);
         chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
         chassisSpeeds = discretize(chassisSpeeds);

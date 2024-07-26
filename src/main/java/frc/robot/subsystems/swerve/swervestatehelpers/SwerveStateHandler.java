@@ -23,18 +23,16 @@ public class SwerveStateHandler {
         this.swerveConstants = swerve.getConstants();
     }
 
-    public ChassisSpeeds applyStateOnInputsSpeeds (AimAssist aimAssistState, ChassisSpeeds inputSpeeds, ChassisSpeeds currentSpeeds){
+    public ChassisSpeeds applyStateOnInputsSpeeds (AimAssist aimAssistState, ChassisSpeeds inputSpeeds){
         return switch(aimAssistState){
             case SPEAKER -> handleSpeakerState(
                     inputSpeeds,
-                    swerve.getFieldRelativeVelocity(),
                     robotPoseSupplier,
                     AimAssist.SPEAKER.targetRotationSupplier,
                     swerveConstants
             );
             case AMP ->handleAmpState(
                     inputSpeeds,
-                    currentSpeeds,
                     robotPoseSupplier,
                     AimAssist.AMP.targetRotationSupplier,
                     swerveConstants
@@ -44,24 +42,23 @@ public class SwerveStateHandler {
     }
 
 
-    private static ChassisSpeeds handleAmpState(ChassisSpeeds inputSpeeds, ChassisSpeeds currentSpeeds,
-            Supplier<Pose2d> robotPoseSupplier,
+    private ChassisSpeeds handleAmpState(ChassisSpeeds inputSpeeds, Supplier<Pose2d> robotPoseSupplier,
             Function<Pose2d, Rotation2d> targetRotationSupplier, SwerveConstants swerveConstants) {
         return getRotationAssistedSpeeds(
                 inputSpeeds,
-                currentSpeeds,
+                swerve.getRobotRelativeVelocity(),
                 robotPoseSupplier,
                 targetRotationSupplier,
                 swerveConstants
         );
     }
 
-    private static ChassisSpeeds handleSpeakerState(ChassisSpeeds inputSpeeds, ChassisSpeeds currentSpeeds,
+    private ChassisSpeeds handleSpeakerState(ChassisSpeeds inputSpeeds,
             Supplier<Pose2d> robotPoseSupplier,
             Function<Pose2d ,Rotation2d> targetRotationSupplier, SwerveConstants swerveConstants) {
         return getRotationAssistedSpeeds(
                 inputSpeeds,
-                currentSpeeds,
+                swerve.getRobotRelativeVelocity(),
                 robotPoseSupplier,
                 targetRotationSupplier,
                 swerveConstants

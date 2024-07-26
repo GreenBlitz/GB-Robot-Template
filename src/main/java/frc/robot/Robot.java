@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.swerve.Swerve;
@@ -26,6 +27,7 @@ public class Robot {
     public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
     public static final SwerveStateHandler swerveStateHandler = new SwerveStateHandler(
             poseEstimator::getCurrentPose,
+            () -> new Translation2d(2,5),
             swerve
     );
 

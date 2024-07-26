@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -63,6 +64,7 @@ public class Swerve extends GBSubsystem {
 
         this.stateHandler = new SwerveStateHandler(
                 Pose2d::new, //default pose estimator
+                Translation2d::new,
                 this
         );
         this.commands = SwerveCommands.buildCommands(this);

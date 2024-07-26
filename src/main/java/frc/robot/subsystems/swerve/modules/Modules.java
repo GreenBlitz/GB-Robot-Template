@@ -25,7 +25,7 @@ public class Modules {
     }
 
 
-    protected void resetModulesAngleByEncoder() {
+    public void resetModulesAngleByEncoder() {
         for (Module module : modules) {
             module.resetByEncoder();
         }

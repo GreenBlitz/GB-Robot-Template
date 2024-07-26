@@ -49,9 +49,11 @@ public class JoysticksBindings {
         usedJoystick.POV_DOWN.whileTrue(Robot.swerve.getCommands().rotateToAngle(Rotation2d.fromDegrees(-17)));
 
         // Rotate Around FRONT_LEFT to 180 Deg
-        usedJoystick.POV_LEFT.whileTrue(Robot.swerve.getCommands().rotateToAngle(Rotation2d.fromDegrees(-17), RotateAxis.FRONT_LEFT_MODULE));
+        usedJoystick.POV_LEFT.whileTrue(Robot.swerve.getCommands()
+                                                    .rotateToAngle(Rotation2d.fromDegrees(-17), RotateAxis.FRONT_LEFT_MODULE));
         // Rotate Around BACK_RIGHT to -17 Deg
-        usedJoystick.POV_RIGHT.whileTrue(Robot.swerve.getCommands().rotateToAngle(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE));
+        usedJoystick.POV_RIGHT.whileTrue(Robot.swerve.getCommands()
+                                                     .rotateToAngle(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE));
 
         //Robot Relative Drive
         usedJoystick.L3.whileTrue(Robot.swerve.getCommands().driveRobotRelative(
@@ -103,9 +105,17 @@ public class JoysticksBindings {
         ));
 
         // Move To Pose (4, 4, 17Deg)
-        usedJoystick.BACK.whileTrue(Robot.swerve.getCommands().driveToPose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))));
+        usedJoystick.BACK.whileTrue(Robot.swerve.getCommands().driveToPose(
+                Robot.poseEstimator::getCurrentPose,
+                () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)),
+                Robot.poseEstimator::isAtPose
+        ));
         // Move To Pose (5, 8, 90Deg)
-        usedJoystick.START.whileTrue(Robot.swerve.getCommands().driveToPose(new Pose2d(6, 6, Rotation2d.fromDegrees(90))));
+        usedJoystick.START.whileTrue(Robot.swerve.getCommands().driveToPose(
+                Robot.poseEstimator::getCurrentPose,
+                () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)),
+                Robot.poseEstimator::isAtPose
+        ));
     }
 
     private static void secondJoystickButtons() {
@@ -120,21 +130,47 @@ public class JoysticksBindings {
     private static void thirdJoystickButtons() {
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
         // bindings...
-        usedJoystick.A.whileTrue(Robot.swerve.getCommands().driveToPose(new Pose2d(1, 8, Rotation2d.fromDegrees(90))));
-        usedJoystick.X.whileTrue(Robot.swerve.getCommands().driveToPose(new Pose2d(6, 6, Rotation2d.fromDegrees(117))));
-        usedJoystick.Y.whileTrue(Robot.swerve.getCommands().driveToPose(new Pose2d(7, 2, Rotation2d.fromDegrees(180))));
-        usedJoystick.B.whileTrue(Robot.swerve.getCommands().driveToPose(new Pose2d(16, 6, Rotation2d.fromDegrees(-75))));
-        usedJoystick.START.whileTrue(Robot.swerve.getCommands().driveToPose(new Pose2d(12, 8, Rotation2d.fromDegrees(14))));
-        usedJoystick.BACK.whileTrue(Robot.swerve.getCommands().driveToPose(new Pose2d(10, 4, Rotation2d.fromDegrees(140))));
+        usedJoystick.A.whileTrue(Robot.swerve.getCommands().driveToPose(
+                Robot.poseEstimator::getCurrentPose,
+                () -> new Pose2d(1, 8, Rotation2d.fromDegrees(90)),
+                Robot.poseEstimator::isAtPose
+
+        ));
+        usedJoystick.X.whileTrue(Robot.swerve.getCommands().driveToPose(
+                Robot.poseEstimator::getCurrentPose,
+                () -> new Pose2d(6, 6, Rotation2d.fromDegrees(117)),
+                Robot.poseEstimator::isAtPose
+        ));
+        usedJoystick.Y.whileTrue(Robot.swerve.getCommands().driveToPose(
+                Robot.poseEstimator::getCurrentPose,
+                () -> new Pose2d(7, 2, Rotation2d.fromDegrees(180)),
+                Robot.poseEstimator::isAtPose
+        ));
+        usedJoystick.B.whileTrue(Robot.swerve.getCommands().driveToPose(
+                Robot.poseEstimator::getCurrentPose,
+                () -> new Pose2d(16, 6, Rotation2d.fromDegrees(-75)),
+                Robot.poseEstimator::isAtPose
+        ));
+        usedJoystick.START.whileTrue(Robot.swerve.getCommands().driveToPose(
+                Robot.poseEstimator::getCurrentPose,
+                () -> new Pose2d(12, 8, Rotation2d.fromDegrees(14)),
+                Robot.poseEstimator::isAtPose
+        ));
+        usedJoystick.BACK.whileTrue(Robot.swerve.getCommands().driveToPose(
+                Robot.poseEstimator::getCurrentPose,
+                () -> new Pose2d(10, 4, Rotation2d.fromDegrees(140)),
+                Robot.poseEstimator::isAtPose
+
+        ));
     }
 
     private static void fourthJoystickButtons() {
         SmartJoystick usedJoystick = FOURTH_JOYSTICK;
         // bindings...
-        usedJoystick.A.whileTrue(Robot.swerve.getCommands().drive(() -> 0.2, ()-> 0, ()->0));
-        usedJoystick.B.whileTrue(Robot.swerve.getCommands().drive(() -> 0.5, ()-> 0, ()->0));
-        usedJoystick.X.whileTrue(Robot.swerve.getCommands().drive(() -> -0.2, ()-> 0, ()->0));
-        usedJoystick.Y.whileTrue(Robot.swerve.getCommands().drive(() -> -0.5, ()-> 0, ()->0));
+        usedJoystick.A.whileTrue(Robot.swerve.getCommands().drive(() -> 0.2, () -> 0, () -> 0));
+        usedJoystick.B.whileTrue(Robot.swerve.getCommands().drive(() -> 0.5, () -> 0, () -> 0));
+        usedJoystick.X.whileTrue(Robot.swerve.getCommands().drive(() -> -0.2, () -> 0, () -> 0));
+        usedJoystick.Y.whileTrue(Robot.swerve.getCommands().drive(() -> -0.5, () -> 0, () -> 0));
     }
 
     private static void fifthJoystickButtons() {

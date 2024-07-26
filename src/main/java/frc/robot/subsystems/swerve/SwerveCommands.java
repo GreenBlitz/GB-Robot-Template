@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Robot;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
@@ -23,11 +22,12 @@ import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
 import java.util.function.DoubleSupplier;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class SwerveCommands {
 
-    public static SwerveCommands buildCommands(Swerve swerve){
+    public static SwerveCommands build(Swerve swerve) {
         return new SwerveCommands(swerve);
     }
 
@@ -135,7 +135,7 @@ public class SwerveCommands {
         return driveState(
                 xSupplier, ySupplier, thetaSupplier,
                 () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)
-        ).withName("Aim Assist to: " + aimAssist);
+        ).withName("Drive with Aim Assist");
     }
 
     public Command driveAroundWheel(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
@@ -143,7 +143,7 @@ public class SwerveCommands {
         return driveState(
                 xSupplier, ySupplier, thetaSupplier,
                 () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())
-        ).withName("Drive Around " + rotateAxis.get());
+        ).withName("Drive Around Module");
     }
 
     public Command driveSlow(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
@@ -175,42 +175,42 @@ public class SwerveCommands {
     }
 
 
-    public Command driveToPose(Supplier<Pose2d> targetPose) {
-        return new DeferredCommand(() -> driveToPose(targetPose.get()), Set.of(swerve)).withName("Drive to " + targetPose.get());
+    public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, Function<Pose2d, Boolean> isAtPose) {
+        return new DeferredCommand(
+                () -> new SequentialCommandGroup(
+                        pathToPose(currentPose.get(), targetPose.get()),
+                        pidToPose(currentPose, targetPose.get(), isAtPose)
+                ),
+                Set.of(swerve)
+        ).withName("Drive to Pose");
     }
 
-    public Command driveToPose(Pose2d targetPose) {
-        return new SequentialCommandGroup(pathToPose(targetPose), pidToPose(targetPose)).withName("Drive to " + targetPose);
-    }
-
-    private Command pathToPose(Pose2d targetBluePose) {
-        Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
-
+    private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
         Command pathFollowingCommand;
-        double distanceFromTarget = currentBluePose.getTranslation().getDistance(targetBluePose.getTranslation());
+        double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
         if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
             pathFollowingCommand = PathPlannerUtils.createOnTheFlyPathCommand(
-                    currentBluePose,
-                    targetBluePose,
+                    currentPose,
+                    targetPose,
                     SwerveConstants.REAL_TIME_CONSTRAINTS
             );
         }
         else {
-            pathFollowingCommand = AutoBuilder.pathfindToPose(targetBluePose, SwerveConstants.REAL_TIME_CONSTRAINTS);
+            pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
         }
 
         return new SequentialCommandGroup(
                 new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER)),
                 pathFollowingCommand
-        ).withName("Path following to: " + targetBluePose);
+        ).withName("Path to Pose: " + targetPose);
     }
 
-    private Command pidToPose(Pose2d targetBluePose) {
+    private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose, Function<Pose2d, Boolean> isAtPose) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE)),
-                new RunCommand(() -> swerve.pidToPose(Robot.poseEstimator.getCurrentPose(), targetBluePose))
-                        .until(() -> Robot.poseEstimator.isAtPose(targetBluePose))
-        ).withName("PID to: " + targetBluePose);
+                new RunCommand(() -> swerve.pidToPose(currentPose.get(), targetPose))
+                        .until(() -> isAtPose.apply(targetPose))
+        ).withName("PID to Pose: " + targetPose);
     }
 
 }

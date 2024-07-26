@@ -59,7 +59,7 @@ public class Swerve extends GBSubsystem {
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
 
-        this.commands = SwerveCommands.buildCommands(this);
+        this.commands = SwerveCommands.build(this);
     }
 
     public SwerveCommands getCommands() {

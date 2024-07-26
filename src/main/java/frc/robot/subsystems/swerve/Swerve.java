@@ -131,9 +131,9 @@ public class Swerve extends GBSubsystem {
 
     protected void initializeDrive(SwerveState updatedState) {
         currentState.update(updatedState);
-        modules.setClosedLoopForModules(currentState.getLoopMode());
-        resetTranslationController();
-        resetRotationController();
+        modules.setClosedLoopForModules(currentState.getLoopMode());;
+        constants.translationMetersPIDController().reset();
+        constants.rotationDegreesPIDController().reset();
     }
 
     public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier) {
@@ -157,15 +157,6 @@ public class Swerve extends GBSubsystem {
 
     public Translation3d getGyroAcceleration() {
         return new Translation3d(gyroInputs.accelerationX, gyroInputs.accelerationY, gyroInputs.accelerationZ);
-    }
-
-
-    protected void resetTranslationController() {
-        constants.translationMetersPIDController().reset();
-    }
-
-    protected void resetRotationController() {
-        constants.rotationDegreesPIDController().reset();
     }
 
 

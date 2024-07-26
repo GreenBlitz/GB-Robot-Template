@@ -17,7 +17,7 @@ public class Robot {
     public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
 
-    private static final Swerve swerve = new Swerve(
+    public static final Swerve swerve = new Swerve(
             SwerveFactory.createConstants(),
             SwerveFactory.createModules(),
             SwerveFactory.createGyro()

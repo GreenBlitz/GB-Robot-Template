@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 
-public class ReplaySwerveGyro implements ISwerveGyro {
+public class EmptySwerveGyro implements ISwerveGyro {
 
     @Override
     public void setHeading(Rotation2d heading) {}

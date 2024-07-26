@@ -3,11 +3,10 @@ package frc.robot.subsystems.swerve.swervecontainer;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2Gyro;
-import frc.robot.subsystems.swerve.gyro.replay.ReplaySwerveGyro;
-import frc.robot.subsystems.swerve.gyro.simulation.SimulationSwerveGyro;
+import frc.robot.subsystems.swerve.gyro.replay.EmptySwerveGyro;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.replay.ReplayModule;
+import frc.robot.subsystems.swerve.modules.replay.EmptyModule;
 import frc.robot.subsystems.swerve.modules.simulation.SimulationModule;
 import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModule;
 
@@ -25,8 +24,7 @@ public class SwerveFactory {
     public static ISwerveGyro createGyro() {
         return switch (ROBOT_TYPE) {
             case REAL -> new Pigeon2Gyro(RealSwerveContainer.pigeon2GyroConfigObject);
-            case SIMULATION -> new SimulationSwerveGyro();
-            case REPLAY -> new ReplaySwerveGyro();
+            case REPLAY, SIMULATION -> new EmptySwerveGyro();
         };
     }
 
@@ -45,10 +43,10 @@ public class SwerveFactory {
                     new Module(ModuleUtils.ModuleName.BACK_RIGHT, new SimulationModule(ModuleUtils.ModuleName.BACK_RIGHT, SimulationSwerveContainer.getModuleConstants()))
             };
             case REPLAY -> new Module[]{
-                    new Module(ModuleUtils.ModuleName.FRONT_LEFT, new ReplayModule()),
-                    new Module(ModuleUtils.ModuleName.FRONT_RIGHT, new ReplayModule()),
-                    new Module(ModuleUtils.ModuleName.BACK_LEFT, new ReplayModule()),
-                    new Module(ModuleUtils.ModuleName.BACK_RIGHT, new ReplayModule())
+                    new Module(ModuleUtils.ModuleName.FRONT_LEFT, new EmptyModule()),
+                    new Module(ModuleUtils.ModuleName.FRONT_RIGHT, new EmptyModule()),
+                    new Module(ModuleUtils.ModuleName.BACK_LEFT, new EmptyModule()),
+                    new Module(ModuleUtils.ModuleName.BACK_RIGHT, new EmptyModule())
             };
         };
     }

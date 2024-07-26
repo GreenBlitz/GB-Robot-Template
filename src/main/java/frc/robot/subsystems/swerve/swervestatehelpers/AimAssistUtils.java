@@ -36,7 +36,7 @@ public class AimAssistUtils {
             Function<Pose2d, Rotation2d> targetRotationSupplier, SwerveConstants swerveConstants) {
 
         double driveMagnitude = getDriveMagnitude(currentSpeeds);
-        Rotation2d pidVelocity = Rotation2d.fromDegrees(swerveConstants.getRotationDegreesPIDController().calculate(
+        Rotation2d pidVelocity = Rotation2d.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(
                 robotPoseSupplier.get().getRotation().getDegrees(),
                 targetRotationSupplier.apply(robotPoseSupplier.get()).getDegrees()
         ));
@@ -48,8 +48,8 @@ public class AimAssistUtils {
 
         double clampedAngularVelocity = MathUtil.clamp(
                 angularVelocityWithJoystick,
-                -swerveConstants.getMaxRotationalVelocityPerSecond().getRadians(),
-                swerveConstants.getMaxRotationalVelocityPerSecond().getRadians()
+                -swerveConstants.maxRotationalVelocityPerSecond().getRadians(),
+                swerveConstants.maxRotationalVelocityPerSecond().getRadians()
         );
 
         return new ChassisSpeeds(inputSpeeds.vxMetersPerSecond, inputSpeeds.vyMetersPerSecond, clampedAngularVelocity);

@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 public class SwerveCommands {
 
-    public static SwerveCommands buildCommands(Swerve swerve) {
+    public static SwerveCommands build(Swerve swerve) {
         return new SwerveCommands(swerve);
     }
 

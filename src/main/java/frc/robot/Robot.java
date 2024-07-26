@@ -17,7 +17,7 @@ public class Robot {
     public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
 
-    public static final Swerve swerve = new Swerve(
+    private static final Swerve swerve = new Swerve(
             SwerveFactory.createConstants(),
             SwerveFactory.createModules(),
             SwerveFactory.createGyro()
@@ -27,6 +27,18 @@ public class Robot {
     public Robot() {
         buildPathPlannerForAuto();
         configureBindings();
+    }
+
+    public Command getAutonomousCommand() {
+        return new InstantCommand();
+    }
+
+    public Swerve getSwerve() {
+        return swerve;
+    }
+
+    public PoseEstimatorSuperstructure getPoseEstimator(){
+        return poseEstimator;
     }
 
     private void initializeSubsystems() {
@@ -43,11 +55,7 @@ public class Robot {
     }
 
     private void configureBindings() {
-        JoysticksBindings.configureBindings();
-    }
-
-    public Command getAutonomousCommand() {
-        return new InstantCommand();
+        JoysticksBindings.configureBindings(this);
     }
 
 }

@@ -17,10 +17,10 @@ public class SwerveStateHandler {
     private Swerve swerve;
     private SwerveConstants swerveConstants;
 
-    public SwerveStateHandler(Supplier<Pose2d> robotPoseSupplier, Swerve swerve, SwerveConstants swerveConstants) {
+    public SwerveStateHandler(Supplier<Pose2d> robotPoseSupplier, Swerve swerve) {
         this.robotPoseSupplier = robotPoseSupplier;
         this.swerve = swerve;
-        this.swerveConstants = swerveConstants;
+        this.swerveConstants = swerve.getConstants();
     }
 
     public ChassisSpeeds applyStateOnInputsSpeeds (AimAssist aimAssistState, ChassisSpeeds inputSpeeds, ChassisSpeeds currentSpeeds){

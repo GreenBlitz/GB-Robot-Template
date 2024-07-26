@@ -18,6 +18,7 @@ import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHandler;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
@@ -43,6 +44,7 @@ public class Swerve extends GBSubsystem {
     private final SwerveState currentState;
     private final SwerveConstants constants;
     private Supplier<Rotation2d> currentAngleSupplier;
+    private SwerveStateHandler stateHandler;
 
     public Swerve(SwerveConstants constants, Module[] modules, ISwerveGyro gyro) {
         super(SwerveConstants.SWERVE_LOG_PATH);
@@ -54,6 +56,11 @@ public class Swerve extends GBSubsystem {
 
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
+
+        this.stateHandler = new SwerveStateHandler(
+                Pose2d::new, //default pose estimator
+                this
+        );
     }
 
     public void buildPathPlannerForAuto(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
@@ -145,6 +152,9 @@ public class Swerve extends GBSubsystem {
         return Rotation2d.fromRadians(inputtedHeadingRads);
     }
 
+    public SwerveConstants getConstants (){
+        return this.constants;
+    }
     public Rotation2d getRelativeHeading() {
         return Rotation2d.fromDegrees(gyroInputs.gyroYaw.getDegrees());
     }
@@ -448,5 +458,10 @@ public class Swerve extends GBSubsystem {
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
     }
+
+    public void applyStateHandler(SwerveStateHandler swerveStateHandler){
+        this.stateHandler = swerveStateHandler;
+    }
+
 
 }

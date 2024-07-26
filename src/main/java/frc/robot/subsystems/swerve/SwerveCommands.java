@@ -135,7 +135,7 @@ public class SwerveCommands {
         return driveState(
                 xSupplier, ySupplier, thetaSupplier,
                 () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)
-        ).withName("Aim Assist to: " + aimAssist);
+        ).withName("Drive with Aim Assist");
     }
 
     public Command driveAroundWheel(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
@@ -143,7 +143,7 @@ public class SwerveCommands {
         return driveState(
                 xSupplier, ySupplier, thetaSupplier,
                 () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())
-        ).withName("Drive Around " + rotateAxis.get());
+        ).withName("Drive Around Module");
     }
 
     public Command driveSlow(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
@@ -180,9 +180,9 @@ public class SwerveCommands {
                 () -> new SequentialCommandGroup(
                         pathToPose(currentPose.get(), targetPose.get()),
                         pidToPose(currentPose, targetPose.get(), isAtPose)
-                ).withName("Drive to Pose"),
+                ),
                 Set.of(swerve)
-        );
+        ).withName("Drive to Pose");
     }
 
     private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {

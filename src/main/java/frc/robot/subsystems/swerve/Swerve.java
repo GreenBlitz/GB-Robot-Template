@@ -59,7 +59,7 @@ public class Swerve extends GBSubsystem {
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
 
-        this.commands = SwerveCommands.buildCommands(this);
+        this.commands = SwerveCommands.build(this);
     }
 
     public SwerveCommands getCommands() {
@@ -135,8 +135,8 @@ public class Swerve extends GBSubsystem {
     protected void initializeDrive(SwerveState updatedState) {
         currentState.update(updatedState);
         setClosedLoopForModules();
-        resetTranslationController();
-        resetRotationController();
+        constants.translationMetersPIDController().reset();
+        constants.rotationDegreesPIDController().reset();
     }
 
     protected void setClosedLoopForModules() {
@@ -179,14 +179,6 @@ public class Swerve extends GBSubsystem {
         for (Module module : modules) {
             module.resetByEncoder();
         }
-    }
-
-    protected void resetTranslationController() {
-        constants.translationMetersPIDController().reset();
-    }
-
-    protected void resetRotationController() {
-        constants.rotationDegreesPIDController().reset();
     }
 
 
@@ -288,7 +280,7 @@ public class Swerve extends GBSubsystem {
 
     public Rotation2d getAllianceRelativeAngle() {
         Rotation2d currentAngle = currentAngleSupplier.get();
-        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
+        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(MathConstants.HALF_CIRCLE) : currentAngle;
     }
 
     private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {

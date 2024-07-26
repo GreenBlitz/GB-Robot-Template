@@ -84,6 +84,10 @@ public class Module {
         );
     }
 
+    public int getNumberOfOdometrySamples(){
+        return moduleInputsContainer.getDriveMotorInputs().distanceMetersOdometrySamples.length;
+    }
+
     public SwerveModuleState getTargetState() {
         return targetState;
     }

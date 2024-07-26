@@ -280,7 +280,7 @@ public class Swerve extends GBSubsystem {
 
     public Rotation2d getAllianceRelativeAngle() {
         Rotation2d currentAngle = currentAngleSupplier.get();
-        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(Rotation2d.fromDegrees(180)) : currentAngle;
+        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(MathConstants.HALF_CIRCLE) : currentAngle;
     }
 
     private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {

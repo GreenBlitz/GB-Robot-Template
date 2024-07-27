@@ -161,11 +161,6 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.velocityAt12VoltsMetersPerSecond());
-        modules.setTargetModuleStates(swerveModuleStates);
-    }
-
     public int getNumberOfOdometrySamples() {
         return gyroInputs.timestampOdometrySamples.length;
     }
@@ -205,10 +200,6 @@ public class Swerve extends GBSubsystem {
     public Rotation2d getAllianceRelativeAngle() {
         Rotation2d currentAngle = currentAngleSupplier.get();
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(MathConstants.HALF_CIRCLE) : currentAngle;
-    }
-
-    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
-        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
     }
 
 
@@ -282,6 +273,11 @@ public class Swerve extends GBSubsystem {
                 swerveState.getRotateAxis().getRotateAxis()
         );
         setTargetModuleStates(swerveModuleStates);
+    }
+
+    private void setTargetModuleStates(SwerveModuleState[] moduleStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
+        modules.setTargetModuleStates(moduleStates);
     }
 
 
@@ -363,6 +359,10 @@ public class Swerve extends GBSubsystem {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
+    }
+
+    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
+        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
     }
 
 }

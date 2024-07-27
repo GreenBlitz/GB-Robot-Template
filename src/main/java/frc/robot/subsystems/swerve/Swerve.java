@@ -214,21 +214,14 @@ public class Swerve extends GBSubsystem {
         return states;
     }
 
-    private void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.velocityAt12VoltsMetersPerSecond());
-        for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(swerveModuleStates[i]);
-        }
-    }
-
     public Rotation2d[] getModulesDriveDistances() {
         return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
     }
 
-    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
+    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometrySampleIndex) {
         SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
-            swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
+            swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
         }
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }
@@ -281,10 +274,6 @@ public class Swerve extends GBSubsystem {
     public Rotation2d getAllianceRelativeAngle() {
         Rotation2d currentAngle = currentAngleSupplier.get();
         return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(MathConstants.HALF_CIRCLE) : currentAngle;
-    }
-
-    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
-        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
     }
 
 
@@ -407,6 +396,13 @@ public class Swerve extends GBSubsystem {
         setTargetModuleStates(swerveModuleStates);
     }
 
+    private void setTargetModuleStates(SwerveModuleState[] moduleStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setTargetState(moduleStates[i]);
+        }
+    }
+
     protected void stop() {
         for (Module currentModule : modules) {
             currentModule.stop();
@@ -491,6 +487,10 @@ public class Swerve extends GBSubsystem {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
+    }
+
+    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
+        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
     }
 
 }

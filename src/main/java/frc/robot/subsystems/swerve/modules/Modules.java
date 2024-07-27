@@ -37,12 +37,6 @@ public class Modules {
         }
     }
 
-    public void stop() {
-        for (Module currentModule : modules) {
-            currentModule.stop();
-        }
-    }
-
     public void setBrake(boolean brake) {
         for (Module currentModule : modules) {
             currentModule.setBrake(brake);
@@ -103,6 +97,13 @@ public class Modules {
             modules[i].setTargetState(moduleStates[i]);
         }
     }
+
+    public void stop() {
+        for (Module currentModule : modules) {
+            currentModule.stop();
+        }
+    }
+
 
     @AutoLogOutput(key = ModuleConstants.LOG_PATH + "IsModulesAtStates")
     public boolean isModulesAtStates() {

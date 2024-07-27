@@ -3,7 +3,7 @@ package frc.robot.subsystems.swerve.factories.modules;
 import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.replay.ReplayModule;
+import frc.robot.subsystems.swerve.modules.replay.EmptyModule;
 import frc.robot.subsystems.swerve.modules.simulation.SimulationModule;
 import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModule;
 
@@ -40,11 +40,11 @@ public class ModulesFactory {
 
             );
             case REPLAY -> getModules(
-                    new ReplayModule[]{
-                            new ReplayModule(),
-                            new ReplayModule(),
-                            new ReplayModule(),
-                            new ReplayModule()
+                    new EmptyModule[]{
+                            new EmptyModule(),
+                            new EmptyModule(),
+                            new EmptyModule(),
+                            new EmptyModule()
                     }
             );
         };

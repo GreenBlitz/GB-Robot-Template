@@ -30,6 +30,18 @@ public class Robot {
         configureBindings();
     }
 
+    public Command getAutonomousCommand() {
+        return new InstantCommand();
+    }
+
+    public Swerve getSwerve() {
+        return swerve;
+    }
+
+    public PoseEstimatorSuperstructure getPoseEstimator(){
+        return poseEstimator;
+    }
+
     private void initializeSubsystems() {
 
     }
@@ -44,11 +56,7 @@ public class Robot {
     }
 
     private void configureBindings() {
-        JoysticksBindings.configureBindings();
-    }
-
-    public Command getAutonomousCommand() {
-        return new InstantCommand();
+        JoysticksBindings.configureBindings(this);
     }
 
 }

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.modules.IModule;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 
-public class ReplayModule implements IModule {
+public class EmptyModule implements IModule {
 
     @Override
     public void stop() {}

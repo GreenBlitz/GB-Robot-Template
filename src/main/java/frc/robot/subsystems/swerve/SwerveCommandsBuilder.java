@@ -25,18 +25,14 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class SwerveCommands {
-
-    public static SwerveCommands build(Swerve swerve) {
-        return new SwerveCommands(swerve);
-    }
+public class SwerveCommandsBuilder {
 
     private final Swerve swerve;
 
     private final SysIdCalibrator steerCalibrator;
     private final SysIdCalibrator driveCalibrator;
 
-    private SwerveCommands(Swerve swerve) {
+    protected SwerveCommandsBuilder(Swerve swerve) {
         this.swerve = swerve;
         this.steerCalibrator = new SysIdCalibrator(
                 true,

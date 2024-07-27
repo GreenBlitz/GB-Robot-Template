@@ -98,9 +98,9 @@ public class Modules {
     }
 
 
-    public void setTargetModuleStates(SwerveModuleState[] swerveModuleStates) {
+    public void setTargetModuleStates(SwerveModuleState[] moduleStates) {
         for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(swerveModuleStates[i]);
+            modules[i].setTargetState(moduleStates[i]);
         }
     }
 
@@ -140,10 +140,10 @@ public class Modules {
         return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
     }
 
-    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometryUpdateIndex) {
+    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometrySampleIndex) {
         SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
-            swerveModulePositions[i] = modules[i].getOdometryPosition(odometryUpdateIndex);
+            swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
         }
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }

@@ -81,7 +81,7 @@ public class RealModulesConstants {
         );
     }
 
-    protected static final TalonFXModuleConstants[] moduleConstants = {
+    protected static final TalonFXModuleConstants[] MODULE_CONSTANTS = {
             getTalonFXModuleConstants(new ModuleID(
                     IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
                     true,

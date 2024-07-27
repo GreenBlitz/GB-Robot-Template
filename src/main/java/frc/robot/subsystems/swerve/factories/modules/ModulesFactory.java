@@ -24,10 +24,10 @@ public class ModulesFactory {
         return switch (ROBOT_TYPE) {
             case REAL -> getModules(
                     new TalonFXModule[]{
-                            new TalonFXModule(RealModulesConstants.moduleConstants[0]),
-                            new TalonFXModule(RealModulesConstants.moduleConstants[1]),
-                            new TalonFXModule(RealModulesConstants.moduleConstants[2]),
-                            new TalonFXModule(RealModulesConstants.moduleConstants[3])
+                            new TalonFXModule(RealModulesConstants.MODULE_CONSTANTS[0]),
+                            new TalonFXModule(RealModulesConstants.MODULE_CONSTANTS[1]),
+                            new TalonFXModule(RealModulesConstants.MODULE_CONSTANTS[2]),
+                            new TalonFXModule(RealModulesConstants.MODULE_CONSTANTS[3])
                     }
             );
             case SIMULATION -> getModules(

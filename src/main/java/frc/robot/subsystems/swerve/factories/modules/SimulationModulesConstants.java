@@ -10,6 +10,12 @@ class SimulationModulesConstants {
 
     private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
 
+    private static final double STEER_GEAR_RATIO = 150.0 / 7.0;
+    private static final double DRIVE_GEAR_RATIO = 6.12;
+
+    private static final double STEER_MOMENT_OF_INERTIA = 0.00001;
+    private static final double DRIVE_MOMENT_OF_INERTIA = 0.001;
+
     private static final boolean ENABLE_FOC_STEER = true;
     private static final boolean ENABLE_FOC_DRIVE = true;
 
@@ -19,8 +25,8 @@ class SimulationModulesConstants {
         return new SimulationModuleConstants(
                 WHEEL_DIAMETER_METERS,
                 SimulationSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
-                new DCMotorSim(DCMotor.getFalcon500Foc(1), 150.0 / 7.0, 0.00001),
-                new DCMotorSim(DCMotor.getFalcon500Foc(1), 6.12, 0.001),
+                new DCMotorSim(DCMotor.getFalcon500Foc(1), STEER_GEAR_RATIO, STEER_MOMENT_OF_INERTIA),
+                new DCMotorSim(DCMotor.getFalcon500Foc(1), DRIVE_GEAR_RATIO, DRIVE_MOMENT_OF_INERTIA),
                 ENABLE_FOC_STEER,
                 ENABLE_FOC_DRIVE,
                 STEER_PID_CONSTANTS

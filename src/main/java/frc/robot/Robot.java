@@ -7,7 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.swervecontainer.SwerveFactory;
+import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
 import frc.utils.RobotTypeUtils;
 
@@ -16,11 +18,10 @@ public class Robot {
 
     public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
-
     public static final Swerve swerve = new Swerve(
-            SwerveFactory.createConstants(),
-            SwerveFactory.createModules(),
-            SwerveFactory.createGyro()
+            SwerveConstantsFactory.create(),
+            ModulesFactory.create(),
+            GyroFactory.create()
     );
     public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
 

@@ -8,8 +8,8 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
-import org.opencv.core.Mat;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -20,9 +20,10 @@ public class SwerveStateHandler {
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Swerve swerve;
     private final SwerveConstants swerveConstants;
-    private final Supplier<Translation2d> noteTranslationSupplier;
+    private final Supplier<Optional<Translation2d>> noteTranslationSupplier;
 
-    public SwerveStateHandler(Supplier<Pose2d> robotPoseSupplier, Supplier<Translation2d> noteTranslationSupplier, Swerve swerve) {
+    public SwerveStateHandler(Supplier<Pose2d> robotPoseSupplier, Supplier<Optional<Translation2d>> noteTranslationSupplier,
+            Swerve swerve) {
         this.robotPoseSupplier = robotPoseSupplier;
         this.swerve = swerve;
         this.swerveConstants = swerve.getConstants();
@@ -55,29 +56,20 @@ public class SwerveStateHandler {
 
 
     private ChassisSpeeds handleNoteAssistState(ChassisSpeeds inputSpeeds, Supplier<Pose2d> robotPoseSupplier,
-            Supplier<Translation2d> noteTranslationSupplier) {
+            Supplier<Optional<Translation2d>> noteTranslationSupplier) {
+        if (noteTranslationSupplier.get().isEmpty()) {
+            return inputSpeeds;
+        }
 
+        Translation2d noteTranslation = noteTranslationSupplier.get().get();
 
-        Rotation2d robotAngle = robotPoseSupplier.get().getRotation();
-        Pose2d robotSpeeds = new Pose2d(
-                inputSpeeds.vxMetersPerSecond,
-                inputSpeeds.vyMetersPerSecond,
-                Rotation2d.fromRadians(inputSpeeds.omegaRadiansPerSecond)
+        return new ChassisSpeeds(
+                inputSpeeds.vxMetersPerSecond + swerveConstants.translationMetersPIDController()
+                        .calculate(robotPoseSupplier.get().getX(), noteTranslation.getX()),
+                inputSpeeds.vyMetersPerSecond + swerveConstants.translationMetersPIDController()
+                                                               .calculate(robotPoseSupplier.get().getY(), noteTranslation.getY()),
+                inputSpeeds.omegaRadiansPerSecond
         );
-        Translation2d rotatedNoteTranslation =
-                noteTranslationSupplier.get().minus(
-                        robotPoseSupplier.get().getTranslation()
-                ).rotateBy(robotPoseSupplier.get().getRotation());
-
-
-        Logger.recordOutput("note position", noteTranslationSupplier.get());
-        Logger.recordOutput("rotated note position", rotatedNoteTranslation);
-
-        robotSpeeds.rotateBy(robotAngle);
-
-
-        return inputSpeeds
-
     }
 
     private ChassisSpeeds handleAmpState(ChassisSpeeds inputSpeeds, Supplier<Pose2d> robotPoseSupplier,

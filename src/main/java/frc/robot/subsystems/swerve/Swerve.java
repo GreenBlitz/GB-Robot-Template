@@ -32,6 +32,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -64,7 +65,7 @@ public class Swerve extends GBSubsystem {
 
         this.stateHandler = new SwerveStateHandler(
                 Pose2d::new, //default pose estimator
-                Translation2d::new,
+                () -> Optional.of(new Translation2d()),
                 this
         );
         this.commands = SwerveCommands.buildCommands(this);

@@ -13,6 +13,8 @@ import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHandler;
 import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
 import frc.utils.RobotTypeUtils;
 
+import java.util.Optional;
+
 
 public class Robot {
 
@@ -27,7 +29,7 @@ public class Robot {
     public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
     public static final SwerveStateHandler swerveStateHandler = new SwerveStateHandler(
             poseEstimator::getCurrentPose,
-            () -> new Translation2d(2,5),
+            () -> Optional.of(new Translation2d(2,5)),
             swerve
     );
 

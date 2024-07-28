@@ -68,11 +68,10 @@ public class SwerveStateHandler {
 
         Logger.recordOutput("note pose", new Pose2d(noteTranslation, new Rotation2d()));
 
-        inputSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(inputSpeeds, robotRotation);
         double wantedHorizontalVelocity = swerveConstants.translationMetersPIDController().calculate(0, rotatedNoteTranslation.getY())
                 + inputSpeeds.vyMetersPerSecond;
         return ChassisSpeeds.fromRobotRelativeSpeeds(
-                inputSpeeds.vxMetersPerSecond,
+                -inputSpeeds.vxMetersPerSecond,
                 wantedHorizontalVelocity,
                 inputSpeeds.omegaRadiansPerSecond,
                 robotRotation.unaryMinus()

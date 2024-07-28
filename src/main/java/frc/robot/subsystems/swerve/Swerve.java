@@ -206,18 +206,18 @@ public class Swerve extends GBSubsystem {
     /**
      * Runs swerve around itself for WheelRadiusCharacterization
      *
-     * @param omegaPerSec - velocity to run the swerve
+     * @param omegaPerSecond - velocity to run the swerve
      */
-    protected void runWheelRadiusCharacterization(Rotation2d omegaPerSec) {
-        driveByState(new ChassisSpeeds(0, 0, omegaPerSec.getRadians()));
+    protected void runWheelRadiusCharacterization(Rotation2d omegaPerSecond) {
+        driveByState(new ChassisSpeeds(0, 0, omegaPerSecond.getRadians()));
     }
 
 
-    protected void pidToPose(Pose2d currentBluePose, Pose2d targetBluePose) {
-        double xSpeed = constants.translationMetersPIDController().calculate(currentBluePose.getX(), targetBluePose.getX());
-        double ySpeed = constants.translationMetersPIDController().calculate(currentBluePose.getY(), targetBluePose.getY());
+    protected void pidToPose(Pose2d currentPose, Pose2d targetPose) {
+        double xSpeed = constants.translationMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
+        double ySpeed = constants.translationMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
-        Rotation2d thetaSpeed = calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetBluePose.getRotation());
+        Rotation2d thetaSpeed = calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetPose.getRotation());
 
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,

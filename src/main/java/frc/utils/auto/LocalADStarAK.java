@@ -18,7 +18,7 @@ import java.util.List;
 
 public class LocalADStarAK implements Pathfinder {
 
-    private final ADStarIO io = new ADStarIO();
+    private final ADStarIO adStarIO = new ADStarIO();
 
     /**
      * Get if a new path has been calculated since the last time a path was retrieved
@@ -28,12 +28,12 @@ public class LocalADStarAK implements Pathfinder {
     @Override
     public boolean isNewPathAvailable() {
         if (!Logger.hasReplaySource()) {
-            io.updateIsNewPathAvailable();
+            adStarIO.updateIsNewPathAvailable();
         }
 
-        Logger.processInputs("LocalADStarAK", io);
+        Logger.processInputs("LocalADStarAK", adStarIO);
 
-        return io.isNewPathAvailable;
+        return adStarIO.isNewPathAvailable;
     }
 
     /**
@@ -46,16 +46,16 @@ public class LocalADStarAK implements Pathfinder {
     @Override
     public PathPlannerPath getCurrentPath(PathConstraints constraints, GoalEndState goalEndState) {
         if (!Logger.hasReplaySource()) {
-            io.updateCurrentPathPoints(constraints, goalEndState);
+            adStarIO.updateCurrentPathPoints(constraints, goalEndState);
         }
 
-        Logger.processInputs("LocalADStarAK", io);
+        Logger.processInputs("LocalADStarAK", adStarIO);
 
-        if (io.currentPathPoints.isEmpty()) {
+        if (adStarIO.currentPathPoints.isEmpty()) {
             return null;
         }
 
-        return PathPlannerPath.fromPathPoints(io.currentPathPoints, constraints, goalEndState);
+        return PathPlannerPath.fromPathPoints(adStarIO.currentPathPoints, constraints, goalEndState);
     }
 
     /**
@@ -67,7 +67,7 @@ public class LocalADStarAK implements Pathfinder {
     @Override
     public void setStartPosition(Translation2d startPosition) {
         if (!Logger.hasReplaySource()) {
-            io.adStar.setStartPosition(startPosition);
+            adStarIO.adStar.setStartPosition(startPosition);
         }
     }
 
@@ -80,7 +80,7 @@ public class LocalADStarAK implements Pathfinder {
     @Override
     public void setGoalPosition(Translation2d goalPosition) {
         if (!Logger.hasReplaySource()) {
-            io.adStar.setGoalPosition(goalPosition);
+            adStarIO.adStar.setGoalPosition(goalPosition);
         }
     }
 
@@ -95,7 +95,7 @@ public class LocalADStarAK implements Pathfinder {
     @Override
     public void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obs, Translation2d currentRobotPos) {
         if (!Logger.hasReplaySource()) {
-            io.adStar.setDynamicObstacles(obs, currentRobotPos);
+            adStarIO.adStar.setDynamicObstacles(obs, currentRobotPos);
         }
     }
 

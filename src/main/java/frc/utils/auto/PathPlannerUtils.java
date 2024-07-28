@@ -24,13 +24,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PathPlannerUtils {
+    private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
-    public static void startPathPlanner() {
-        makePathPlannerCompatibleWithAdvantageKit();
+    public static void startPathfinder() {
+        setAdvantageKitCompatiblePathfinder();
         scheduleWarmup();
     }
 
-    private static void makePathPlannerCompatibleWithAdvantageKit() {
+    private static void setAdvantageKitCompatiblePathfinder() {
         Pathfinding.setPathfinder(new LocalADStarAK());
     }
 
@@ -63,7 +64,13 @@ public class PathPlannerUtils {
     }
 
     public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+        dynamicObstacles = obstacles;
         Pathfinding.setDynamicObstacles(obstacles, currentRobotPose.getTranslation());
+    }
+
+    public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+        dynamicObstacles.addAll(obstacles);
+        setDynamicObstacles(dynamicObstacles, currentRobotPose);
     }
 
     public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {

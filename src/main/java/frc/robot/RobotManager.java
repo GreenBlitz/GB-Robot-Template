@@ -33,7 +33,7 @@ public class RobotManager extends LoggedRobot {
         }
         LoggerFactory.initializeLogger();
         BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
-        PathPlannerUtils.startPathPlanner();
+        PathPlannerUtils.startPathfinder();
 
         this.robot = new Robot();
     }

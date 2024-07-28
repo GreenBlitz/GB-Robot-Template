@@ -71,7 +71,7 @@ public class SwerveStateHandler {
         double wantedHorizontalVelocity = swerveConstants.translationMetersPIDController().calculate(0, rotatedNoteTranslation.getY())
                 + inputSpeeds.vyMetersPerSecond;
         return ChassisSpeeds.fromRobotRelativeSpeeds(
-                -inputSpeeds.vxMetersPerSecond,
+                inputSpeeds.vxMetersPerSecond,
                 wantedHorizontalVelocity,
                 inputSpeeds.omegaRadiansPerSecond,
                 robotRotation.unaryMinus()

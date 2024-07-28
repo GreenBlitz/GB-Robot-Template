@@ -52,7 +52,7 @@ public class Robot {
 
     private void buildPathPlannerForAuto() {
         // Register commands...
-        swerve.buildPathPlannerForAuto(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+        swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
     }
 
     private void configureBindings() {

@@ -1,27 +1,27 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.utils.cycletime.CycleTimeUtils;
 
 public class SwerveMath {
 
-    public static ChassisSpeeds applyDeadbandSpeeds(ChassisSpeeds chassisSpeeds) {
-        double newXSpeed = chassisSpeeds.vxMetersPerSecond;
-        if (Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND) {
-            newXSpeed = 0;
-        }
+    // todo: Problematic
+    public static Rotation2d calculateAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle, SwerveConstants constants) {
+        return Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
+                currentAngle.getDegrees(),
+                targetAngle.getDegrees()
+        ));
+    }
 
-        double newYSpeed = chassisSpeeds.vyMetersPerSecond;
-        if (Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND) {
-            newYSpeed = 0;
-        }
 
-        double newOmegaSpeed = chassisSpeeds.omegaRadiansPerSecond;
-        if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
-            newOmegaSpeed = 0;
-        }
+    public static ChassisSpeeds deadbandSpeeds(ChassisSpeeds chassisSpeeds) {
+        double newXSpeed = deadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
+        double newYSpeed = deadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
+        double newOmegaSpeed = deadbandSpeed(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians());
 
         return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
     }
@@ -42,6 +42,39 @@ public class SwerveMath {
         return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
     }
 
+    public static ChassisSpeeds applyAimAssistedRotationVelocity(
+            ChassisSpeeds chassisSpeeds,
+            Rotation2d currentAngle,
+            SwerveState swerveState,
+            SwerveConstants constants
+    ) {
+        if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
+            return chassisSpeeds;
+        }
+        //PID
+        Rotation2d pidVelocity = calculateAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get(), constants);
+
+        //Magnitude Factor
+        double driveMagnitude = SwerveMath.getDriveMagnitude(chassisSpeeds);
+        double angularVelocityRads =
+                pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+
+        //Joystick Output
+        double angularVelocityWithJoystick = angularVelocityRads + chassisSpeeds.omegaRadiansPerSecond;
+
+        //Clamp
+        double clampedAngularVelocity = MathUtil.clamp(
+                angularVelocityWithJoystick,
+                -constants.maxRotationalVelocityPerSecond().getRadians(),
+                constants.maxRotationalVelocityPerSecond().getRadians()
+        );
+
+        //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
+        //todo - distance factor
+        return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, clampedAngularVelocity);
+    }
+
+
     public static boolean isStill(ChassisSpeeds chassisSpeeds) {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
@@ -50,6 +83,10 @@ public class SwerveMath {
 
     public static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
         return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
+    }
+
+    public static double deadbandSpeed(double speed, double deadband){
+        return Math.abs(speed) <= deadband ? 0 : speed;
     }
 
 }

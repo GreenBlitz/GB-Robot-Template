@@ -60,15 +60,22 @@ public class SwerveStateHandler {
         if (noteTranslationSupplier.get().isEmpty()) {
             return inputSpeeds;
         }
+        Rotation2d robotRotation = robotPoseSupplier.get().getRotation().unaryMinus();
 
         Translation2d noteTranslation = noteTranslationSupplier.get().get();
+        Translation2d normalizedNoteTranslation = noteTranslation.minus(robotPoseSupplier.get().getTranslation());
+        Translation2d rotatedNoteTranslation = normalizedNoteTranslation.rotateBy(robotRotation);
 
-        return new ChassisSpeeds(
-                inputSpeeds.vxMetersPerSecond + swerveConstants.translationMetersPIDController()
-                        .calculate(robotPoseSupplier.get().getX(), noteTranslation.getX()),
-                inputSpeeds.vyMetersPerSecond + swerveConstants.translationMetersPIDController()
-                                                               .calculate(robotPoseSupplier.get().getY(), noteTranslation.getY()),
-                inputSpeeds.omegaRadiansPerSecond
+        Logger.recordOutput("note pose", new Pose2d(noteTranslation, new Rotation2d()));
+
+        inputSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(inputSpeeds, robotRotation);
+        double wantedHorizontalVelocity = swerveConstants.translationMetersPIDController().calculate(0, rotatedNoteTranslation.getY())
+                + inputSpeeds.vyMetersPerSecond;
+        return ChassisSpeeds.fromRobotRelativeSpeeds(
+                inputSpeeds.vxMetersPerSecond,
+                wantedHorizontalVelocity,
+                inputSpeeds.omegaRadiansPerSecond,
+                robotRotation.unaryMinus()
         );
     }
 

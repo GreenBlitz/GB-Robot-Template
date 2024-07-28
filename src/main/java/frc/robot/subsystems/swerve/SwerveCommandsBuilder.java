@@ -37,14 +37,14 @@ public class SwerveCommandsBuilder {
         this.steerCalibrator = new SysIdCalibrator(
                 true,
                 swerve,
-                voltage -> swerve.runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
+                voltage -> swerve.getModules().runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
                 SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP,
                 SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
         );
         this.driveCalibrator = new SysIdCalibrator(
                 true,
                 swerve,
-                swerve::runModulesDriveByVoltage,
+                swerve.getModules()::runModulesDriveByVoltage,
                 SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
                 SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
         );
@@ -72,10 +72,10 @@ public class SwerveCommandsBuilder {
                         swerve,
                         SwerveConstants.DRIVE_RADIUS_METERS,
                         SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY,
-                        swerve::getModulesDriveDistances,
+                        swerve.getModules()::getModulesDriveDistances,
                         swerve::getAbsoluteHeading,
                         swerve::runWheelRadiusCharacterization,
-                        swerve::stop
+                        swerve.getModules()::stop
                 )
         ).withName("Wheel Radius Calibration");
     }
@@ -84,9 +84,9 @@ public class SwerveCommandsBuilder {
     public Command pointWheelsInX() {
         return new FunctionalCommand(
                 () -> {},
-                swerve::pointWheelsInX,
+                swerve.getModules()::pointWheelsInX,
                 interrupted -> {},
-                swerve::isModulesAtStates,
+                swerve.getModules()::isModulesAtStates,
                 swerve
         ).withName("Point Wheels In X");
     }
@@ -94,18 +94,18 @@ public class SwerveCommandsBuilder {
     public Command pointWheelsInCircle() {
         return new FunctionalCommand(
                 () -> {},
-                swerve::pointWheelsInCircle,
+                swerve.getModules()::pointWheelsInCircle,
                 interrupted -> {},
-                swerve::isModulesAtStates, swerve
+                swerve.getModules()::isModulesAtStates, swerve
         ).withName("Point Wheels In Circle");
     }
 
     public Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
         return new FunctionalCommand(
                 () -> {},
-                () -> swerve.pointWheels(wheelsAngle, optimize),
+                () -> swerve.getModules().pointWheels(wheelsAngle, optimize),
                 interrupted -> {},
-                swerve::isModulesAtStates,
+                swerve.getModules()::isModulesAtStates,
                 swerve
         ).withName("Point Wheels");
     }

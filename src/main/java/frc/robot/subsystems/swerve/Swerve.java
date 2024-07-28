@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
@@ -16,8 +15,7 @@ import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.Module;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
@@ -26,10 +24,8 @@ import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -43,12 +39,12 @@ public class Swerve extends GBSubsystem {
     private final SwerveCommandsBuilder commandsBuilder;
     private final SwerveGyroInputsAutoLogged gyroInputs;
     private final ISwerveGyro gyro;
-    private final Module[] modules;
+    private final Modules modules;
     private final SwerveState currentState;
     private final SwerveConstants constants;
     private Supplier<Rotation2d> currentAngleSupplier;
 
-    public Swerve(SwerveConstants constants, Module[] modules, ISwerveGyro gyro) {
+    public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
         super(SwerveConstants.SWERVE_LOG_PATH);
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
@@ -60,6 +56,10 @@ public class Swerve extends GBSubsystem {
         this.currentAngleSupplier = this::getAbsoluteHeading;
 
         this.commandsBuilder = new SwerveCommandsBuilder(this);
+    }
+
+    protected Modules getModules() {
+        return modules;
     }
 
     public SwerveCommandsBuilder getCommandsBuilder() {
@@ -125,30 +125,16 @@ public class Swerve extends GBSubsystem {
             gyro.updateInputs(gyroInputs);
             Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
 
-            for (Module currentModule : modules) {
-                currentModule.logStatus();
-            }
+            modules.logStatus();
         } ODOMETRY_LOCK.unlock();
     } // todo: fix
 
 
     protected void initializeDrive(SwerveState updatedState) {
         currentState.update(updatedState);
-        setClosedLoopForModules();
+        modules.setClosedLoopForModules(currentState.getLoopMode());;
         constants.translationMetersPIDController().reset();
         constants.rotationDegreesPIDController().reset();
-    }
-
-    protected void setClosedLoopForModules() {
-        for (Module currentModule : modules) {
-            currentModule.setDriveMotorClosedLoop(currentState.getLoopMode().isClosedLoop);
-        }
-    }
-
-    protected void setBrake(boolean brake) {
-        for (Module currentModule : modules) {
-            currentModule.setBrake(brake);
-        }
     }
 
     public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier) {
@@ -175,66 +161,6 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    protected void resetModulesAngleByEncoder() {
-        for (Module module : modules) {
-            module.resetByEncoder();
-        }
-    }
-
-
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "IsModulesAtStates")
-    public boolean isModulesAtStates() {
-        for (Module module : modules) {
-            if (!module.isAtTargetState()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "TargetModulesStates")
-    public SwerveModuleState[] getTargetStates() {
-        SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-        for (int i = 0; i < modules.length; i++) {
-            states[i] = modules[i].getTargetState();
-        }
-
-        return states;
-    }
-
-    @AutoLogOutput(key = SwerveConstants.SWERVE_LOG_PATH + "CurrentModulesStates")
-    public SwerveModuleState[] getModulesStates() {
-        SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-        for (int i = 0; i < modules.length; i++) {
-            states[i] = modules[i].getCurrentState();
-        }
-
-        return states;
-    }
-
-    public Rotation2d[] getModulesDriveDistances() {
-        return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
-    }
-
-    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometrySampleIndex) {
-        SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
-        for (int i = 0; i < modules.length; i++) {
-            swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
-        }
-        return new SwerveDriveWheelPositions(swerveModulePositions);
-    }
-
-    public SwerveDriveWheelPositions[] getAllSwerveWheelPositionSamples() {
-        int numberOfOdometrySamples = getNumberOfOdometrySamples();
-        SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[numberOfOdometrySamples];
-        for (int i = 0; i < numberOfOdometrySamples; i++) {
-            swerveWheelPositions[i] = getSwerveWheelPositions(i);
-        }
-        return swerveWheelPositions;
-    }
-
     public int getNumberOfOdometrySamples() {
         return gyroInputs.timestampOdometrySamples.length;
     }
@@ -243,7 +169,7 @@ public class Swerve extends GBSubsystem {
         int odometrySamples = getNumberOfOdometrySamples();
         double[] timestamps = gyroInputs.timestampOdometrySamples;
         Rotation2d[] gyroRotations = gyroInputs.yawOdometrySamples;
-        SwerveDriveWheelPositions[] swerveWheelPositions = getAllSwerveWheelPositionSamples();
+        SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllSwerveWheelPositionSamples();
 
         OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
         for (int i = 0; i < odometrySamples; i++) {
@@ -255,7 +181,7 @@ public class Swerve extends GBSubsystem {
 
 
     public ChassisSpeeds getRobotRelativeVelocity() {
-        return SwerveConstants.KINEMATICS.toChassisSpeeds(getModulesStates());
+        return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getModulesStates());
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
@@ -277,33 +203,6 @@ public class Swerve extends GBSubsystem {
     }
 
 
-    protected void pointWheels(Rotation2d targetAngle, boolean optimize) {
-        for (Module module : modules) {
-            module.pointToAngle(targetAngle, optimize);
-        }
-    }
-
-    protected void pointWheelsInX() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-
-        modules[0].setTargetState(frontLeftBackRight);
-        modules[1].setTargetState(frontRightBackLeft);
-        modules[2].setTargetState(frontRightBackLeft);
-        modules[3].setTargetState(frontLeftBackRight);
-    }
-
-    protected void pointWheelsInCircle() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
-
-        modules[0].setTargetState(frontLeftBackRight);
-        modules[1].setTargetState(frontRightBackLeft);
-        modules[2].setTargetState(frontRightBackLeft);
-        modules[3].setTargetState(frontLeftBackRight);
-    }
-
-
     /**
      * Runs swerve around itself for WheelRadiusCharacterization
      *
@@ -311,26 +210,6 @@ public class Swerve extends GBSubsystem {
      */
     protected void runWheelRadiusCharacterization(Rotation2d omegaPerSec) {
         driveByState(new ChassisSpeeds(0, 0, omegaPerSec.getRadians()));
-    }
-
-    /**
-     * Runs swerve module around itself for Sysid Steer Calibration
-     *
-     * @param voltage - voltage to run the swerve module steer
-     */
-    protected void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
-        modules[module.getIndex()].runSteerMotorByVoltage(voltage);
-    }
-
-    /**
-     * Runs swerve module around itself for Sysid Steer Calibration
-     *
-     * @param voltage - voltage to run the swerve module drive
-     */
-    protected void runModulesDriveByVoltage(double voltage) {
-        for (Module module : modules) {
-            module.runDriveMotorByVoltage(voltage);
-        }
     }
 
 
@@ -377,7 +256,7 @@ public class Swerve extends GBSubsystem {
         chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState);
 
         if (isStill(chassisSpeeds)) {
-            stop();
+            modules.stop();
             return;
         }
 
@@ -398,16 +277,9 @@ public class Swerve extends GBSubsystem {
 
     private void setTargetModuleStates(SwerveModuleState[] moduleStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
-        for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(moduleStates[i]);
-        }
+        modules.setTargetModuleStates(moduleStates);
     }
 
-    protected void stop() {
-        for (Module currentModule : modules) {
-            currentModule.stop();
-        }
-    }
 
     public boolean isAtAngle(Rotation2d targetAngle) {
         double angleDifferenceDeg = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());

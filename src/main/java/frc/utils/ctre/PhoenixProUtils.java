@@ -11,7 +11,7 @@ public class PhoenixProUtils {
         return refresh ? signal.refresh() : signal;
     }
 
-    public static boolean applyConfig(Supplier<StatusCode> statusCodeSupplier, int tries){
+        public static boolean checkAndRetry(Supplier<StatusCode> statusCodeSupplier, int tries){
         for (int i = 0; i < tries; i++){
             if(statusCodeSupplier.get().isOK()){
                 return true;

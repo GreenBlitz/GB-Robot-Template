@@ -17,9 +17,7 @@ import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
@@ -114,7 +112,7 @@ public class Swerve extends GBSubsystem {
         Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
         Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "X", fieldRelativeSpeeds.vxMetersPerSecond);
         Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
-        Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "Magnitude", getDriveMagnitude(fieldRelativeSpeeds));
+        Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "Magnitude", SwerveMath.getDriveMagnitude(fieldRelativeSpeeds));
     }
 
     private void logNumberOfOdometrySamples() {
@@ -192,7 +190,7 @@ public class Swerve extends GBSubsystem {
             return chassisSpeeds;
         }
         else {
-            return fieldRelativeToRobotRelativeSpeeds(chassisSpeeds, getAllianceRelativeAngle());
+            return SwerveMath.fieldRelativeToRobotRelativeSpeeds(chassisSpeeds, getAllianceRelativeAngle());
         }
     }
 
@@ -246,7 +244,7 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void driveByState(double xPower, double yPower, double thetaPower) {
-        driveByState(powersToSpeeds(xPower, yPower, thetaPower, currentState.getDriveSpeed(), constants));
+        driveByState(SwerveMath.powersToSpeeds(xPower, yPower, thetaPower, currentState.getDriveSpeed(), constants));
     }
 
     private void driveByState(ChassisSpeeds chassisSpeeds) {
@@ -254,16 +252,16 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState);
+        chassisSpeeds = SwerveMath.applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
 
-        if (isStill(chassisSpeeds)) {
+        if (SwerveMath.isStill(chassisSpeeds)) {
             modules.stop();
             return;
         }
 
-        chassisSpeeds = applyDeadbandSpeeds(chassisSpeeds);
+        chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
         chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
-        chassisSpeeds = discretize(chassisSpeeds);
+        chassisSpeeds = SwerveMath.discretize(chassisSpeeds);
 
         applySpeeds(chassisSpeeds, swerveState);
     }
@@ -290,83 +288,6 @@ public class Swerve extends GBSubsystem {
         boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
         return isAtAngle && isStopping;
-    }
-
-
-    //todo: make shorter
-    private ChassisSpeeds applyAimAssistedRotationVelocity(ChassisSpeeds chassisSpeeds, Rotation2d currentAngle, SwerveState swerveState) {
-        if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
-            return chassisSpeeds;
-        }
-        //PID
-        Rotation2d pidVelocity = Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
-                currentAngle.getDegrees(),
-                swerveState.getAimAssist().targetAngleSupplier.get().getDegrees()
-        ));
-
-        //Magnitude Factor
-        double driveMagnitude = getDriveMagnitude(chassisSpeeds);
-        double angularVelocityRads =
-                pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
-
-        //Joystick Output
-        double angularVelocityWithJoystick = angularVelocityRads + chassisSpeeds.omegaRadiansPerSecond;
-
-        //Clamp
-        double clampedAngularVelocity = MathUtil.clamp(
-                angularVelocityWithJoystick,
-                -constants.maxRotationalVelocityPerSecond().getRadians(),
-                constants.maxRotationalVelocityPerSecond().getRadians()
-        );
-
-        //todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
-        //todo - distance factor
-        return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, clampedAngularVelocity);
-    }
-
-    private static ChassisSpeeds applyDeadbandSpeeds(ChassisSpeeds chassisSpeeds) {
-        double newXSpeed = chassisSpeeds.vxMetersPerSecond;
-        if (Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND) {
-            newXSpeed = 0;
-        }
-
-        double newYSpeed = chassisSpeeds.vyMetersPerSecond;
-        if (Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND) {
-            newYSpeed = 0;
-        }
-
-        double newOmegaSpeed = chassisSpeeds.omegaRadiansPerSecond;
-        if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
-            newOmegaSpeed = 0;
-        }
-
-        return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
-    }
-
-    private static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
-        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
-    }
-
-    private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
-        return new ChassisSpeeds(
-                xPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
-                yPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
-                thetaPower * driveSpeed.rotationSpeedFactor * constants.maxRotationalVelocityPerSecond().getRadians()
-        );
-    }
-
-    private static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
-    }
-
-    private static boolean isStill(ChassisSpeeds chassisSpeeds) {
-        return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-                && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-                && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
-    }
-
-    private static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
-        return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
     }
 
 }

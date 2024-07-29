@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PathPlannerUtils {
+
     private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
     public static void startPathfinder() {

@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
+import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
@@ -20,7 +21,6 @@ import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
-import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -79,7 +79,7 @@ public class Swerve extends GBSubsystem {
                 this::getRobotRelativeVelocity,
                 (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: Will not change loop mode!!!
                 constants.holonomicPathFollowerConfig(),
-                DriverStationUtils::isRedAlliance,
+                () -> !Field.isFieldConventionAlliance(),
                 this
         );
     }
@@ -184,7 +184,7 @@ public class Swerve extends GBSubsystem {
 
     public Rotation2d getAllianceRelativeAngle() {
         Rotation2d currentAngle = currentAngleSupplier.get();
-        return DriverStationUtils.isRedAlliance() ? currentAngle.rotateBy(MathConstants.HALF_CIRCLE) : currentAngle;
+        return Field.isFieldConventionAlliance() ? currentAngle : currentAngle.rotateBy(MathConstants.HALF_CIRCLE);
     }
 
     private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
@@ -210,7 +210,7 @@ public class Swerve extends GBSubsystem {
     protected void pidToPose(Pose2d currentPose, Pose2d targetPose) {
         double xSpeed = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
         double ySpeed = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
-        int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
+        int direction = Field.isFieldConventionAlliance() ? 1 : -1;
         Rotation2d thetaSpeed = Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
                 currentPose.getRotation().getDegrees(),
                 targetPose.getRotation().getDegrees()

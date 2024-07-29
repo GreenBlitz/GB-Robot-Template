@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.Robot;
-import frc.robot.constants.FieldConstants;
+import frc.robot.constants.Field;
 
 import java.util.function.Supplier;
 
@@ -13,9 +13,9 @@ public enum AimAssist {
 
     NONE(),
 
-    SPEAKER(FieldConstants::getSpeaker),
+    SPEAKER(Field::getSpeaker),
 
-    AMP(FieldConstants::getAngleToAmp);
+    AMP(Field::getAngleToAmp);
 
 
     public final Supplier<Rotation2d> targetAngleSupplier;

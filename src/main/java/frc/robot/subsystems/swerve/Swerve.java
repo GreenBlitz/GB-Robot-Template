@@ -197,7 +197,6 @@ public class Swerve extends GBSubsystem {
     }
 
 
-
     /**
      * Runs swerve around itself for WheelRadiusCharacterization
      *
@@ -212,7 +211,10 @@ public class Swerve extends GBSubsystem {
         double xSpeed = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
         double ySpeed = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
-        Rotation2d thetaSpeed = calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetPose.getRotation());
+        Rotation2d thetaSpeed = Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
+                currentPose.getRotation().getDegrees(),
+                targetPose.getRotation().getDegrees()
+        ));
 
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
@@ -226,16 +228,12 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
-                calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetAngle).getRadians()
+                Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
+                        currentAngleSupplier.get().getDegrees(),
+                        targetAngle.getDegrees()
+                )).getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);
-    }
-
-    private Rotation2d calculateAngleSpeedToTargetAngle(Rotation2d currentAngle, Rotation2d targetAngle) {
-        return Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
-                currentAngle.getDegrees(),
-                targetAngle.getDegrees()
-        ));
     }
 
 
@@ -301,7 +299,10 @@ public class Swerve extends GBSubsystem {
             return chassisSpeeds;
         }
         //PID
-        Rotation2d pidVelocity = calculateAngleSpeedToTargetAngle(currentAngle, swerveState.getAimAssist().targetAngleSupplier.get());
+        Rotation2d pidVelocity = Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
+                currentAngle.getDegrees(),
+                swerveState.getAimAssist().targetAngleSupplier.get().getDegrees()
+        ));
 
         //Magnitude Factor
         double driveMagnitude = getDriveMagnitude(chassisSpeeds);

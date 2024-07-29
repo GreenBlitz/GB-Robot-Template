@@ -18,16 +18,12 @@ public class SwerveMath {
     }
 
 
-    public static ChassisSpeeds deadbandSpeeds(ChassisSpeeds chassisSpeeds) {
-        double newXSpeed = deadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
-        double newYSpeed = deadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
-        double newOmegaSpeed = deadbandSpeed(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians());
-
-        return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
-    }
-
     public static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
+    }
+
+    public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
+        return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
     }
 
     public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
@@ -38,8 +34,12 @@ public class SwerveMath {
         );
     }
 
-    public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
+    public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
+        double newXSpeed = getDeadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
+        double newYSpeed = getDeadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
+        double newOmegaSpeed = getDeadbandSpeed(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians());
+
+        return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
     }
 
     public static ChassisSpeeds applyAimAssistedRotationVelocity(
@@ -85,7 +85,7 @@ public class SwerveMath {
         return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
     }
 
-    public static double deadbandSpeed(double speed, double deadband){
+    public static double getDeadbandSpeed(double speed, double deadband){
         return Math.abs(speed) <= deadband ? 0 : speed;
     }
 

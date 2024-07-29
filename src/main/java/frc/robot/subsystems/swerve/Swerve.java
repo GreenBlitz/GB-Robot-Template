@@ -253,7 +253,7 @@ public class Swerve extends GBSubsystem {
             return;
         }
 
-        chassisSpeeds = SwerveMath.deadbandSpeeds(chassisSpeeds);
+        chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
         chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
         chassisSpeeds = SwerveMath.discretize(chassisSpeeds);
 

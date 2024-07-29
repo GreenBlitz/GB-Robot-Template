@@ -1,15 +1,20 @@
 package frc.robot;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.SwerveCommands;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
+
+import java.util.List;
 
 
 public class JoysticksBindings {
@@ -121,12 +126,35 @@ public class JoysticksBindings {
     private static void thirdJoystickButtons() {
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
         // bindings...
-        usedJoystick.A.whileTrue(SwerveCommands.driveToPose(new Pose2d(1, 8, Rotation2d.fromDegrees(90))));
+        usedJoystick.A.whileTrue(SwerveCommands.driveToPose(new Pose2d(1, 8, Rotation2d.fromDegrees(0))));
         usedJoystick.X.whileTrue(SwerveCommands.driveToPose(new Pose2d(2, 6, Rotation2d.fromDegrees(0))));
-        usedJoystick.Y.whileTrue(SwerveCommands.driveToPose(new Pose2d(7, 2, Rotation2d.fromDegrees(180))));
+        usedJoystick.Y.whileTrue(SwerveCommands.driveToPose(new Pose2d(7, 2, Rotation2d.fromDegrees(0))));
         usedJoystick.B.whileTrue(SwerveCommands.driveToPose(new Pose2d(6, 6, Rotation2d.fromDegrees(0))));
-        usedJoystick.START.whileTrue(SwerveCommands.driveToPose(new Pose2d(12, 8, Rotation2d.fromDegrees(14))));
-        usedJoystick.BACK.whileTrue(SwerveCommands.driveToPose(new Pose2d(10, 4, Rotation2d.fromDegrees(140))));
+        usedJoystick.START.whileTrue(SwerveCommands.driveToPose(new Pose2d(12, 8, Rotation2d.fromDegrees(0))));
+        usedJoystick.BACK.whileTrue(SwerveCommands.driveToPose(new Pose2d(10, 4, Rotation2d.fromDegrees(0))));
+        usedJoystick.POV_DOWN.whileTrue(new InstantCommand(() -> PathPlannerUtils.removeAllDynamicObstacles(Robot.poseEstimator.getCurrentPose())));
+        usedJoystick.POV_UP.whileTrue(new InstantCommand(() ->
+                PathPlannerUtils.setDynamicObstacles(
+                        List.of(
+                                Pair.of(
+                                        new Translation2d(2.5, 7),
+                                        new Translation2d(3.5, 5)
+                                )
+                        ),
+                        Robot.poseEstimator.getCurrentPose()
+                )
+        ));
+        usedJoystick.POV_LEFT.whileTrue(new InstantCommand(() ->
+                PathPlannerUtils.setDynamicObstacles(
+                        List.of(
+                                Pair.of(
+                                        new Translation2d(9, 7.5),
+                                        new Translation2d(10, 6)
+                                )
+                        ),
+                        Robot.poseEstimator.getCurrentPose()
+                )
+        ));
     }
 
     private static void fourthJoystickButtons() {

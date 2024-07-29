@@ -4,9 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
@@ -14,7 +12,6 @@ import frc.utils.RobotTypeUtils;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtils;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -52,16 +49,6 @@ public class Robot {
                         return Optional.empty();
                 }
         );
-        PathPlannerUtils.setDynamicObstacles(
-                List.of(
-                        Pair.of(
-                                new Translation2d(2.5, 7),
-                                new Translation2d(3.5, 5)
-                        )
-                ),
-                poseEstimator.getCurrentPose()
-        );
-        PathPlannerUtils.removeAllDynamicObstacles(poseEstimator.getCurrentPose());
     }
 
     private void configureBindings() {

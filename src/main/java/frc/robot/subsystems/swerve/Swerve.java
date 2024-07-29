@@ -64,6 +64,11 @@ public class Swerve extends GBSubsystem {
         return commandsBuilder;
     }
 
+    @Override
+    public String getLogPath() {
+        return SwerveConstants.SWERVE_LOG_PATH;
+    }
+
 
     public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
         PathPlannerUtils.configurePathPlanner(

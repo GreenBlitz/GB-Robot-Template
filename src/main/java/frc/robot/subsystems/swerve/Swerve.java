@@ -209,8 +209,10 @@ public class Swerve extends GBSubsystem {
         double xSpeed = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
         double ySpeed = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
         int direction = DriverStationUtils.isBlueAlliance() ? 1 : -1;
-        Rotation2d thetaSpeed = SwerveMath.calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetPose.getRotation(), constants);
-
+        Rotation2d thetaSpeed = Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
+                currentPose.getRotation().getDegrees(),
+                targetPose.getRotation().getDegrees()
+        ));
 
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 xSpeed * direction,
@@ -224,7 +226,10 @@ public class Swerve extends GBSubsystem {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
-                SwerveMath.calculateAngleSpeedToTargetAngle(currentAngleSupplier.get(), targetAngle, constants).getRadians()
+                Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
+                        currentAngleSupplier.get().getDegrees(),
+                        targetAngle.getDegrees()
+                )).getRadians()
         );
         driveByState(targetFieldRelativeSpeeds);
     }

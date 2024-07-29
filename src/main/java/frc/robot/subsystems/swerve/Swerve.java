@@ -237,7 +237,7 @@ public class Swerve extends GBSubsystem {
 
     protected void initializeDrive(SwerveState updatedState) {
         currentState.update(updatedState);
-        modules.setClosedLoopForModules(currentState.getLoopMode());;
+        modules.setClosedLoopForModules(currentState.getLoopMode());
         constants.xMetersPIDController().reset();
         constants.yMetersPIDController().reset();
         constants.rotationDegreesPIDController().reset();

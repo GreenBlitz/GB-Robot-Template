@@ -13,7 +13,8 @@ import frc.robot.constants.MathConstants;
 public record SwerveConstants(
         double velocityAt12VoltsMetersPerSecond,
         Rotation2d maxRotationalVelocityPerSecond,
-        PIDController translationMetersPIDController,
+        PIDController xMetersPIDController,
+        PIDController yMetersPIDController,
         PIDController rotationDegreesPIDController,
         HolonomicPathFollowerConfig holonomicPathFollowerConfig
 ) {
@@ -27,6 +28,11 @@ public record SwerveConstants(
         this(
                 velocityAt12VoltsMetersPerSecond,
                 maxRotationalVelocityPerSecond,
+                new PIDController(
+                        translationMetersPIDConstants.kP,
+                        translationMetersPIDConstants.kI,
+                        translationMetersPIDConstants.kD
+                ),
                 new PIDController(
                         translationMetersPIDConstants.kP,
                         translationMetersPIDConstants.kI,

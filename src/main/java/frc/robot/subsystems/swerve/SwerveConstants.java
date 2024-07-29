@@ -53,8 +53,8 @@ public record SwerveConstants(
     }
 
     public static final String SWERVE_LOG_PATH = "Subsystems/Swerve/";
-    static final String SWERVE_STATE_LOG_PATH = SWERVE_LOG_PATH + "Current State/";
-    static final String SWERVE_VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
+    static final String STATE_LOG_PATH = SWERVE_LOG_PATH + "State/";
+    static final String VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 
     static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
     static final double STEER_SYSID_CALIBRATION_VOLTAGE_STEP = 1;

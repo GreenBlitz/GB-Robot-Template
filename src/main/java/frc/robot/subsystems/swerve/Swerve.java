@@ -75,7 +75,7 @@ public class Swerve extends GBSubsystem {
     public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
         PathPlannerUtils.configurePathPlanner(
                 currentPoseSupplier,
-                resetPoseConsumer, // todo - maybe cancel and base vision
+                resetPoseConsumer,
                 this::getRobotRelativeVelocity,
                 (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: Will not change loop mode!!!
                 constants.holonomicPathFollowerConfig(),

@@ -1,7 +1,7 @@
 package frc.utils.mirror;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.FieldConstants;
+import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 
 public class MirrorUtils {
@@ -11,11 +11,11 @@ public class MirrorUtils {
     }
 
     public static double getMirroredX(double x){
-        return FieldConstants.LENGTH_METERS - x;
+        return Field.LENGTH_METERS - x;
     }
 
     public static double getMirroredY(double y){
-        return FieldConstants.WIDTH_METERS - y;
+        return Field.WIDTH_METERS - y;
     }
 
 }

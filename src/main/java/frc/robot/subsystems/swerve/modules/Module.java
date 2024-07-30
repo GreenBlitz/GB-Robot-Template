@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.swerve.SwerveState;
+import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import org.littletonrobotics.junction.Logger;
 
@@ -35,8 +36,13 @@ public class Module {
 
     private void updateInputs() {
         iModule.updateInputs(moduleInputsContainer);
-        moduleInputsContainer.getModuleInputs().isAtTargetState = isAtTargetState();
-        moduleInputsContainer.getModuleInputs().isClosedLoop = isClosedLoop;
+
+        ModuleInputsAutoLogged moduleInputs = moduleInputsContainer.getModuleInputs();
+        moduleInputs.isAtTargetAngle = isAtTargetAngle();
+        moduleInputs.isAtTargetVelocity = isAtTargetVelocity();
+        moduleInputs.isAtTargetState = moduleInputs.isAtTargetVelocity && moduleInputs.isAtTargetAngle;
+        moduleInputs.isClosedLoop = isClosedLoop;
+
         moduleInputsContainer.processInputs(ModuleUtils.getLoggingPath(moduleName));
     }
 
@@ -110,30 +116,29 @@ public class Module {
     }
 
 
-
-    public boolean isAtTargetState() {
-        return isAtAngle(getTargetState().angle) && isAtVelocity(getTargetState().speedMetersPerSecond);
-    }
-
-    public boolean isAtVelocity(double targetSpeedMetersPerSecond) {
+    public boolean isAtTargetVelocity() {
         return MathUtil.isNear(
-                targetSpeedMetersPerSecond,
+                getTargetState().speedMetersPerSecond,
                 getDriveVelocityMetersPerSecond(),
                 ModuleConstants.SPEED_TOLERANCE_METERS_PER_SECOND
         );
     }
 
-    public boolean isAtAngle(Rotation2d targetAngle) {
+    public boolean isAtTargetAngle() {
         boolean isStopping = moduleInputsContainer.getSteerMotorInputs().velocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
         if (!isStopping){
             return false;
         }
         boolean isAtAngle = MathUtil.isNear(
-                MathUtil.angleModulus(targetAngle.getRadians()),
+                MathUtil.angleModulus(getTargetState().angle.getRadians()),
                 MathUtil.angleModulus(getCurrentAngle().getRadians()),
                 ModuleConstants.ANGLE_TOLERANCE.getRadians()
         );
         return isAtAngle;
+    }
+
+    public boolean isAtTargetState() {
+        return isAtTargetAngle() && isAtTargetVelocity();
     }
 
 

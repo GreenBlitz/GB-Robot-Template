@@ -103,15 +103,28 @@ public class Modules {
     }
 
 
-    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "IsModulesAtStates")
-    public boolean isModulesAtStates() {
+    public boolean isModulesAtVelocities() {
         for (Module module : modules) {
-            if (!module.isAtTargetState()) {
+            if (!module.isAtTargetVelocity()) {
                 return false;
             }
         }
         return true;
     }
+
+    public boolean isModulesAtAngles() {
+        for (Module module : modules) {
+            if (!module.isAtTargetAngle()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isModulesAtStates() {
+        return isModulesAtAngles() && isModulesAtAngles();
+    }
+
 
     @AutoLogOutput(key = ModuleConstants.LOG_PATH + "TargetModulesStates")
     public SwerveModuleState[] getTargetStates() {
@@ -134,6 +147,7 @@ public class Modules {
 
         return states;
     }
+
 
     public Rotation2d[] getModulesDriveDistances() {
         return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);

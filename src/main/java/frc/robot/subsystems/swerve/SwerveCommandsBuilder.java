@@ -86,7 +86,7 @@ public class SwerveCommandsBuilder {
                 () -> {},
                 swerve.getModules()::pointWheelsInX,
                 interrupted -> {},
-                swerve.getModules()::isModulesAtStates,
+                swerve.getModules()::isModulesAtAngles,
                 swerve
         ).withName("Point Wheels In X");
     }
@@ -96,7 +96,8 @@ public class SwerveCommandsBuilder {
                 () -> {},
                 swerve.getModules()::pointWheelsInCircle,
                 interrupted -> {},
-                swerve.getModules()::isModulesAtStates, swerve
+                swerve.getModules()::isModulesAtAngles,
+                swerve
         ).withName("Point Wheels In Circle");
     }
 

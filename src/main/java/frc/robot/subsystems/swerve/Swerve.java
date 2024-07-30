@@ -75,7 +75,7 @@ public class Swerve extends GBSubsystem {
                 currentPoseSupplier,
                 resetPoseConsumer,
                 this::getRobotRelativeVelocity,
-                (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER), // todo: Will not change loop mode!!!
+                (speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
                 constants.holonomicPathFollowerConfig(),
                 () -> !Field.isFieldConventionAlliance(),
                 this
@@ -184,10 +184,10 @@ public class Swerve extends GBSubsystem {
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
-        return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeVelocity(), currentAngleSupplier.get());
+        return SwerveMath.robotRelativeToFieldRelativeSpeeds(getRobotRelativeVelocity(), currentAngleSupplier.get());
     }
 
-    public Rotation2d getAllianceRelativeAngle() {
+    public Rotation2d getAllianceRelativeHeading() {
         Rotation2d currentAngle = currentAngleSupplier.get();
         return Field.isFieldConventionAlliance() ? currentAngle : currentAngle.rotateBy(MathConstants.HALF_CIRCLE);
     }
@@ -196,9 +196,7 @@ public class Swerve extends GBSubsystem {
         if (swerveState.getDriveMode() == DriveRelative.ROBOT_RELATIVE) {
             return chassisSpeeds;
         }
-        else {
-            return SwerveMath.fieldRelativeToRobotRelativeSpeeds(chassisSpeeds, getAllianceRelativeAngle());
-        }
+        return SwerveMath.fieldRelativeToRobotRelativeSpeeds(chassisSpeeds, getAllianceRelativeHeading());
     }
 
 
@@ -243,13 +241,14 @@ public class Swerve extends GBSubsystem {
 
 
     protected void driveByState(double xPower, double yPower, double thetaPower, SwerveState swerveState) {
-        driveByState(SwerveMath.powersToSpeeds(xPower, yPower, thetaPower, swerveState.getDriveSpeed(), constants), swerveState);
+        ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(xPower, yPower, thetaPower, swerveState.getDriveSpeed(), constants);
+        driveByState(speedsFromPowers, swerveState);
     }
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        currentState = swerveState;
-        chassisSpeeds = SwerveMath.applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
+        this.currentState = swerveState;
 
+        chassisSpeeds = SwerveMath.applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
         if (SwerveMath.isStill(chassisSpeeds)) {
             modules.stop();
             return;
@@ -277,11 +276,11 @@ public class Swerve extends GBSubsystem {
 
 
     public boolean isAtAngle(Rotation2d targetAngle) {
-        double angleDifferenceDeg = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
-        boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
+        double angleDifferenceDegrees = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
+        boolean isAtAngle = angleDifferenceDegrees < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
 
-        double currentRotationVelocityRadians = getRobotRelativeVelocity().omegaRadiansPerSecond;
-        boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+        double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
+        boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
         return isAtAngle && isStopping;
     }

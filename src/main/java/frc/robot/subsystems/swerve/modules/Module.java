@@ -161,7 +161,8 @@ public class Module {
         iModule.runSteerMotorByVoltage(voltage);
     }
 
-    public void setTargetState(SwerveModuleState targetState) {
+    public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
+        setClosedLoop(isClosedLoop);
         this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
         iModule.setTargetAngle(this.targetState.angle);
         setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle);

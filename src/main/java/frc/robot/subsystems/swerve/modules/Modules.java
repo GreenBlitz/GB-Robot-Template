@@ -17,16 +17,12 @@ public class Modules {
         this.modules = modules;
     }
 
+
     public void logStatus(){
         for (Module currentModule : modules) {
             currentModule.logStatus();
         }
     }
-
-
-
-
-
 
 
     public void pointWheels(Rotation2d targetAngle, boolean optimize) {

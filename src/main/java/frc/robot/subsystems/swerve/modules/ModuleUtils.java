@@ -80,8 +80,8 @@ public class ModuleUtils {
      * @return the reduced target velocity in revolutions per second
      */
     public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentSteerAngle) {
-        double steerDeltaRads = targetSteerAngle.getRadians() - currentSteerAngle.getRadians();
-        double cosineScalar = Math.abs(Math.cos(steerDeltaRads));
+        double steerDeltaRadians = targetSteerAngle.getRadians() - currentSteerAngle.getRadians();
+        double cosineScalar = Math.abs(Math.cos(steerDeltaRadians));
         return targetVelocityMetersPerSecond * cosineScalar;
     }
 

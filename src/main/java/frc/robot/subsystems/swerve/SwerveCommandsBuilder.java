@@ -119,7 +119,7 @@ public class SwerveCommandsBuilder {
     public Command rotateToAngle(Rotation2d targetAngle, RotateAxis rotateAxis) {
         return new FunctionalCommand(
                 swerve::resetPIDControllers,
-                () -> swerve.rotateToAngle(targetAngle),
+                () -> swerve.rotateToAngle(targetAngle, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 interrupted -> {},
                 () -> swerve.isAtAngle(targetAngle),
                 swerve

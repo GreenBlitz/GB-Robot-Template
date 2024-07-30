@@ -229,7 +229,7 @@ public class Swerve extends GBSubsystem {
         driveByState(targetFieldRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
     }
 
-    protected void rotateToAngle(Rotation2d targetAngle) {
+    protected void rotateToAngle(Rotation2d targetAngle, SwerveState swerveState) {
         ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
                 0,
                 0,
@@ -238,7 +238,7 @@ public class Swerve extends GBSubsystem {
                         targetAngle.getDegrees()
                 )).getRadians()
         );
-        driveByState(targetFieldRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
+        driveByState(targetFieldRelativeSpeeds, swerveState);
     }
 
 

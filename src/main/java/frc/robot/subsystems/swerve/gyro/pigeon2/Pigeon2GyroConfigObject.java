@@ -3,7 +3,7 @@ package frc.robot.subsystems.swerve.gyro.pigeon2;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.constants.GlobalConstants;
-import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
+import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 

@@ -10,7 +10,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.robot.superstructers.poseestimator.PoseEstimator;
+import frc.robot.poseestimation.PoseEstimator;
 import frc.utils.RobotTypeUtils;
 
 

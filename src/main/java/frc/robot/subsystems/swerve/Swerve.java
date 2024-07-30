@@ -39,6 +39,7 @@ public class Swerve extends GBSubsystem {
     private final ISwerveGyro gyro;
     private final Modules modules;
     private final SwerveConstants constants;
+
     private SwerveState currentState;
     private Supplier<Rotation2d> currentAngleSupplier;
 
@@ -276,8 +277,8 @@ public class Swerve extends GBSubsystem {
 
 
     public boolean isAtAngle(Rotation2d targetAngle) {
-        double angleDifferenceDegrees = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
-        boolean isAtAngle = angleDifferenceDegrees < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
+        double angleDeltaDegrees = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
+        boolean isAtAngle = angleDeltaDegrees < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
 
         double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
         boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();

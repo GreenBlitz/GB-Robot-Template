@@ -11,15 +11,18 @@ public interface IModule {
 
     void resetByEncoder();
 
+
     void runSteerMotorByVoltage(double voltage);
 
     void runDriveMotorByVoltage(double voltage);
+
 
     void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond);
 
     void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond);
 
     void setTargetAngle(Rotation2d angle);
+
 
     void updateInputs(ModuleInputsContainer inputs);
 

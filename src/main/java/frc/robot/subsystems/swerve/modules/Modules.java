@@ -24,17 +24,9 @@ public class Modules {
     }
 
 
-    public void resetModulesAngleByEncoder() {
-        for (Module module : modules) {
-            module.resetByEncoder();
-        }
-    }
 
-    public void setBrake(boolean brake) {
-        for (Module currentModule : modules) {
-            currentModule.setBrake(brake);
-        }
-    }
+
+
 
 
     public void pointWheels(Rotation2d targetAngle, boolean optimize) {
@@ -62,20 +54,10 @@ public class Modules {
     }
 
 
-    /**
-     * Runs swerve module around itself for Sysid Steer Calibration
-     *
-     * @param voltage - voltage to run the swerve module steer
-     */
     public void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
         modules[module.getIndex()].runSteerMotorByVoltage(voltage);
     }
 
-    /**
-     * Runs swerve module around itself for Sysid Steer Calibration
-     *
-     * @param voltage - voltage to run the swerve module drive
-     */
     public void runModulesDriveByVoltage(double voltage) {
         for (Module module : modules) {
             module.runDriveMotorByVoltage(voltage);
@@ -83,9 +65,21 @@ public class Modules {
     }
 
 
+    public void resetModulesAngleByEncoder() {
+        for (Module module : modules) {
+            module.resetByEncoder();
+        }
+    }
+
     public void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
         for (int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(moduleStates[i], isClosedLoop);
+        }
+    }
+
+    public void setBrake(boolean brake) {
+        for (Module currentModule : modules) {
+            currentModule.setBrake(brake);
         }
     }
 

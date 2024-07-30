@@ -17,8 +17,10 @@ class TalonFXModuleConfigObject {
     private final TalonFXModuleSignals moduleSignals;
 
     protected TalonFXModuleConfigObject(
-            TalonFXConfiguration steerConfiguration, TalonFXConfiguration driveConfiguration,
-            CANcoderConfiguration encoderConfiguration, ModuleID moduleID
+            TalonFXConfiguration steerConfiguration,
+            TalonFXConfiguration driveConfiguration,
+            CANcoderConfiguration encoderConfiguration,
+            ModuleID moduleID
     ) {
         this.encoder = new CANcoder(moduleID.encoderDeviceID().ID(), moduleID.encoderDeviceID().busChain().getChainName());
         this.steerMotor = new TalonFXWrapper(moduleID.steerMotorDeviceID());

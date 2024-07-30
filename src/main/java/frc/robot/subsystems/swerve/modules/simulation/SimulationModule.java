@@ -35,12 +35,12 @@ public class SimulationModule implements IModule {
 
     @Override
     public void setBrake(boolean brake) {
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
+        Logger.recordOutput(ModuleUtils.getModuleLogPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
     }
 
     @Override
     public void resetByEncoder() {
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "tried to reset by encoder");
+        Logger.recordOutput(ModuleUtils.getModuleLogPath(moduleName) + "tried to reset by encoder");
     }
 
 
@@ -65,7 +65,7 @@ public class SimulationModule implements IModule {
                 simulationModuleConstants.getWheelDiameterMeters(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        Logger.recordOutput(ModuleUtils.getLoggingPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
+        Logger.recordOutput(ModuleUtils.getModuleLogPath(moduleName) + "driveMotorVoltage", simulationModuleStatus.getDriveVoltage());
         runDriveMotorByVoltage(voltage);
     }
 

@@ -24,23 +24,26 @@ public class ModuleUtils {
 
     }
 
-    public static String getLoggingPath(ModuleName moduleName) {
+    public static String getModuleLogPath(ModuleName moduleName) {
         return ModuleConstants.LOG_PATH + moduleName + "/";
     }
 
-    public static String getAlertLoggingPath(ModuleName moduleName) {
+    public static String getModuleAlertLogPath(ModuleName moduleName) {
         return ModuleConstants.ALERT_LOG_PATH + moduleName + "/";
     }
 
 
     public static double velocityToOpenLoopVoltage(
-            double velocityMetersPerSecond, Rotation2d steerVelocityPerSecond,
-            double couplingRatio, Rotation2d maxSpeedPerSecond,
-            double wheelDiameterMeters, double voltageCompensationSaturation
+            double velocityMetersPerSecond,
+            Rotation2d steerVelocityPerSecond,
+            double couplingRatio,
+            Rotation2d maxSpeedPerSecond,
+            double wheelDiameterMeters,
+            double voltageCompensationSaturation
     ) {
         Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-        Rotation2d optimizedVelocityPerSecond = getCoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
-        double power = optimizedVelocityPerSecond.getRotations() / maxSpeedPerSecond.getRotations();
+        Rotation2d coupledVelocityPerSecond = getCoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
+        double power = coupledVelocityPerSecond.getRotations() / maxSpeedPerSecond.getRotations();
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
 
@@ -76,9 +79,9 @@ public class ModuleUtils {
      * @param targetSteerAngle the target steer angle
      * @return the reduced target velocity in revolutions per second
      */
-    public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentAngle) {
-        double closedLoopError = targetSteerAngle.getRadians() - currentAngle.getRadians();
-        double cosineScalar = Math.abs(Math.cos(closedLoopError));
+    public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentSteerAngle) {
+        double steerDeltaRads = targetSteerAngle.getRadians() - currentSteerAngle.getRadians();
+        double cosineScalar = Math.abs(Math.cos(steerDeltaRads));
         return targetVelocityMetersPerSecond * cosineScalar;
     }
 

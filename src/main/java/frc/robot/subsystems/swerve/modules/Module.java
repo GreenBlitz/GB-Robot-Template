@@ -43,18 +43,18 @@ public class Module {
         moduleInputs.isAtTargetState = moduleInputs.isAtTargetVelocity && moduleInputs.isAtTargetAngle;
         moduleInputs.isClosedLoop = isClosedLoop;
 
-        moduleInputsContainer.processInputs(ModuleUtils.getLoggingPath(moduleName));
+        moduleInputsContainer.processInputs(ModuleUtils.getModuleLogPath(moduleName));
     }
 
     private void reportAlerts() {
         if (!moduleInputsContainer.getEncoderInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "encoder disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "encoder disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "steer motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "steer motor disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "drive motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "drive motor disconnect", Timer.getFPGATimestamp());
         }
     }
 
@@ -153,6 +153,7 @@ public class Module {
         iModule.setTargetAngle(targetState.angle);
     }
 
+
     public void runDriveMotorByVoltage(double voltage) {
         iModule.runDriveMotorByVoltage(voltage);
     }
@@ -160,6 +161,7 @@ public class Module {
     public void runSteerMotorByVoltage(double voltage) {
         iModule.runSteerMotorByVoltage(voltage);
     }
+
 
     public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
         setClosedLoop(isClosedLoop);

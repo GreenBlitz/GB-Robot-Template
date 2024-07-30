@@ -31,12 +31,12 @@ class SimulationModuleActions {
     protected void setTargetSteerVoltage(double voltage) {
         steerMotor.setControl(steerVoltageRequest.withOutput(voltage));
     }
-    protected void setTargetAngle(Rotation2d angle) {
-        steerMotor.setControl(steerPositionRequest.withPosition(angle.getRotations()));
-    }
-
     protected void setTargetDriveVoltage(double voltage) {
         driveMotor.setControl(driveVoltageRequest.withOutput(voltage));
+    }
+
+    protected void setTargetAngle(Rotation2d angle) {
+        steerMotor.setControl(steerPositionRequest.withPosition(angle.getRotations()));
     }
 
 }

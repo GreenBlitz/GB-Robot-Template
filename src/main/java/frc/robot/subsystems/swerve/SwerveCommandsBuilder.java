@@ -30,7 +30,7 @@ public class SwerveCommandsBuilder {
     private final SysIdCalibrator steerCalibrator;
     private final SysIdCalibrator driveCalibrator;
 
-    protected SwerveCommandsBuilder(Swerve swerve) {
+    public SwerveCommandsBuilder(Swerve swerve) {
         this.swerve = swerve;
         this.steerCalibrator = new SysIdCalibrator(
                 true,

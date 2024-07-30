@@ -36,14 +36,14 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
 
     private void reportAlerts(SwerveGyroInputsAutoLogged inputs) {
-        if (!inputs.connected) {
+        if (!inputs.isConnected) {
             Logger.recordOutput(SwerveGyroConstants.ALERT_LOG_PATH + "/gyroDisconnectedAt", Timer.getFPGATimestamp());
         }
     }
 
     @Override
     public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
-        inputs.connected = gyroPigeon2Status.refreshAllSignals().isOK();
+        inputs.isConnected = gyroPigeon2Status.refreshAllSignals().isOK();
         inputs.gyroYaw = gyroPigeon2Status.getYaw(false);
         inputs.accelerationX = gyroPigeon2Status.getXAccelerationSignal(false).getValue();
         inputs.accelerationY = gyroPigeon2Status.getYAccelerationSignal(false).getValue();

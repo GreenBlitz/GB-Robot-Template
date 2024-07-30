@@ -84,7 +84,7 @@ public class SwerveCommandsBuilder {
     public Command pointWheelsInX() {
         return new FunctionalCommand(
                 () -> {},
-                swerve.getModules()::pointWheelsInX,
+                () -> swerve.getModules().pointWheelsInX(SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop),
                 interrupted -> {},
                 swerve.getModules()::isModulesAtAngles,
                 swerve

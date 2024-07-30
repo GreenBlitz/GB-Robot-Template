@@ -238,7 +238,6 @@ public class Swerve extends GBSubsystem {
 
     protected void initializeDrive(SwerveState updatedState) {
         currentState.update(updatedState);
-        modules.setClosedLoopForModules(currentState.getLoopMode());
         constants.xMetersPIDController().reset();
         constants.yMetersPIDController().reset();
         constants.rotationDegreesPIDController().reset();
@@ -272,12 +271,12 @@ public class Swerve extends GBSubsystem {
                 chassisSpeeds,
                 swerveState.getRotateAxis().getRotateAxis()
         );
-        setTargetModuleStates(swerveModuleStates);
+        setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop);
     }
 
-    private void setTargetModuleStates(SwerveModuleState[] moduleStates) {
+    private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
-        modules.setTargetModuleStates(moduleStates);
+        modules.setTargetModuleStates(moduleStates, isClosedLoop);
     }
 
 

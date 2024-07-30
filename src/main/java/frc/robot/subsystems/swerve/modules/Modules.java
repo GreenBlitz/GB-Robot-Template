@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 import java.util.Arrays;
@@ -31,12 +30,6 @@ public class Modules {
         }
     }
 
-    public void setClosedLoopForModules(LoopMode loopMode) {
-        for (Module currentModule : modules) {
-            currentModule.setClosedLoop(loopMode.isClosedLoop);
-        }
-    }
-
     public void setBrake(boolean brake) {
         for (Module currentModule : modules) {
             currentModule.setBrake(brake);
@@ -58,14 +51,14 @@ public class Modules {
         modules[3].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
     }
 
-    public void pointWheelsInX() {
+    public void pointWheelsInX(boolean isClosedLoop) {
         SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
         SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
 
-        modules[0].setTargetState(frontLeftBackRight);
-        modules[1].setTargetState(frontRightBackLeft);
-        modules[2].setTargetState(frontRightBackLeft);
-        modules[3].setTargetState(frontLeftBackRight);
+        modules[0].setTargetState(frontLeftBackRight, isClosedLoop);
+        modules[1].setTargetState(frontRightBackLeft, isClosedLoop);
+        modules[2].setTargetState(frontRightBackLeft, isClosedLoop);
+        modules[3].setTargetState(frontLeftBackRight, isClosedLoop);
     }
 
 
@@ -90,9 +83,9 @@ public class Modules {
     }
 
 
-    public void setTargetModuleStates(SwerveModuleState[] moduleStates) {
+    public void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
         for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(moduleStates[i]);
+            modules[i].setTargetState(moduleStates[i], isClosedLoop);
         }
     }
 

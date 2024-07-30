@@ -15,7 +15,7 @@ public class Module {
     private final ModuleUtils.ModuleName moduleName;
     private final IModule iModule;
 
-    private boolean driveMotorClosedLoop;
+    private boolean isClosedLoop;
     private SwerveModuleState targetState;
 
     public Module(ModuleUtils.ModuleName moduleName, IModule iModule) {
@@ -23,7 +23,7 @@ public class Module {
         this.iModule = iModule;
         this.moduleInputsContainer = new ModuleInputsContainer();
         this.targetState = new SwerveModuleState();
-        this.driveMotorClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
+        this.isClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
 
         resetByEncoder();
     }
@@ -36,6 +36,7 @@ public class Module {
     private void updateInputs() {
         iModule.updateInputs(moduleInputsContainer);
         moduleInputsContainer.getModuleInputs().isAtTargetState = isAtTargetState();
+        moduleInputsContainer.getModuleInputs().isClosedLoop = isClosedLoop;
         moduleInputsContainer.processInputs(ModuleUtils.getLoggingPath(moduleName));
     }
 
@@ -52,8 +53,8 @@ public class Module {
     }
 
 
-    public void setDriveMotorClosedLoop(boolean closedLoop) {
-        driveMotorClosedLoop = closedLoop;
+    public void setClosedLoop(boolean closedLoop) {
+        isClosedLoop = closedLoop;
     }
 
     public void stop() {
@@ -164,7 +165,7 @@ public class Module {
     private void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle) {
         targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
 
-        if (driveMotorClosedLoop) {
+        if (isClosedLoop) {
             setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
         }
         else {

@@ -6,5 +6,6 @@ import org.littletonrobotics.junction.AutoLog;
 public class ModuleInputs {
 
     public boolean isAtTargetState = true;
+    public boolean isClosedLoop = true;
 
 }

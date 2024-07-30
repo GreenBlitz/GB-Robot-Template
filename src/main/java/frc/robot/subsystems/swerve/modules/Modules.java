@@ -33,7 +33,7 @@ public class Modules {
 
     public void setClosedLoopForModules(LoopMode loopMode) {
         for (Module currentModule : modules) {
-            currentModule.setDriveMotorClosedLoop(loopMode.isClosedLoop);
+            currentModule.setClosedLoop(loopMode.isClosedLoop);
         }
     }
 

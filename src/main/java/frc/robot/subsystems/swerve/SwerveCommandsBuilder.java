@@ -118,8 +118,8 @@ public class SwerveCommandsBuilder {
 
     public Command rotateToAngle(Rotation2d targetAngle, RotateAxis rotateAxis) {
         return new FunctionalCommand(
-                () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
-                () -> swerve.rotateToAngle(targetAngle),
+                swerve::resetPIDControllers,
+                () -> swerve.rotateToAngle(targetAngle, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
                 interrupted -> {},
                 () -> swerve.isAtAngle(targetAngle),
                 swerve
@@ -129,17 +129,17 @@ public class SwerveCommandsBuilder {
 
     public Command driveWithAimAssist(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
             AimAssist aimAssist) {
-        return driveState(
-                xSupplier, ySupplier, thetaSupplier,
-                () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)
+        return new DeferredCommand(
+                () -> driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)),
+                Set.of(swerve)
         ).withName("Drive with Aim Assist");
     }
 
     public Command driveAroundWheel(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
             Supplier<RotateAxis> rotateAxis) {
-        return driveState(
-                xSupplier, ySupplier, thetaSupplier,
-                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())
+        return new DeferredCommand(
+                () -> driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())),
+                Set.of(swerve)
         ).withName("Drive Around Module");
     }
 
@@ -157,16 +157,9 @@ public class SwerveCommandsBuilder {
     }
 
     private Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, SwerveState state) {
-        return driveState(xSupplier, ySupplier, thetaSupplier, () -> state);
-    }
-
-    private Command driveState(
-            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
-            Supplier<SwerveState> state
-    ) {
         return new InitExecuteCommand(
-                () -> swerve.initializeDrive(state.get()),
-                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                swerve::resetPIDControllers,
+                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), state),
                 swerve
         );
     }
@@ -197,14 +190,14 @@ public class SwerveCommandsBuilder {
         }
 
         return new SequentialCommandGroup(
-                new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER)),
+                new InstantCommand(swerve::resetPIDControllers),
                 pathFollowingCommand
         ).withName("Path to Pose: " + targetPose);
     }
 
     private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose, Function<Pose2d, Boolean> isAtPose) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE)),
+                new InstantCommand(swerve::resetPIDControllers),
                 new RunCommand(() -> swerve.pidToPose(currentPose.get(), targetPose))
                         .until(() -> isAtPose.apply(targetPose))
         ).withName("PID to Pose: " + targetPose);

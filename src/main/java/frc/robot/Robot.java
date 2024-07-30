@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.swervecontainer.SwerveFactory;
-import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHandler;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
 import frc.utils.RobotTypeUtils;
 
@@ -27,14 +27,14 @@ public class Robot {
             SwerveFactory.createGyro()
     );
     public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
-    public static final SwerveStateHandler swerveStateHandler = new SwerveStateHandler(
+    public static final SwerveStateHelper SWERVE_STATE_HELPER = new SwerveStateHelper(
             poseEstimator::getCurrentPose,
             () -> Optional.of(new Translation2d(2,5)),
             swerve
     );
 
     static {
-        swerve.applyStateHandler(swerveStateHandler);
+        swerve.applyStateHandler(SWERVE_STATE_HELPER);
     }
     public Robot() {
         buildPathPlannerForAuto();

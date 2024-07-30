@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -15,14 +16,14 @@ import java.util.function.Supplier;
 
 import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistUtils.getRotationAssistedSpeeds;
 
-public class SwerveStateHandler {
+public class SwerveStateHelper {
 
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Swerve swerve;
     private final SwerveConstants swerveConstants;
     private final Supplier<Optional<Translation2d>> noteTranslationSupplier;
 
-    public SwerveStateHandler(Supplier<Pose2d> robotPoseSupplier, Supplier<Optional<Translation2d>> noteTranslationSupplier,
+    public SwerveStateHelper(Supplier<Pose2d> robotPoseSupplier, Supplier<Optional<Translation2d>> noteTranslationSupplier,
             Swerve swerve) {
         this.robotPoseSupplier = robotPoseSupplier;
         this.swerve = swerve;
@@ -30,7 +31,17 @@ public class SwerveStateHandler {
         this.noteTranslationSupplier = noteTranslationSupplier;
     }
 
-    public ChassisSpeeds applyStateOnInputsSpeeds(AimAssist aimAssistState, ChassisSpeeds inputSpeeds) {
+    public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
+        return switch (rotationAxisState) {
+            case FRONT_LEFT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.FRONT_LEFT.getIndex()];
+            case FRONT_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.FRONT_RIGHT.getIndex()];
+            case BACK_LEFT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.BACK_LEFT.getIndex()];
+            case BACK_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.BACK_RIGHT.getIndex()];
+            case MIDDLE_OF_ROBOT -> new Translation2d();
+        };
+    }
+
+    public ChassisSpeeds applyAimAssistOnInputsSpeeds(AimAssist aimAssistState, ChassisSpeeds inputSpeeds) {
         return switch (aimAssistState) {
             case SPEAKER -> handleSpeakerState(
                     inputSpeeds,

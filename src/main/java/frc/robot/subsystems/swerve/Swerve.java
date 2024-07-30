@@ -19,10 +19,9 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Module;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
-import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHandler;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
 import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
@@ -50,7 +49,7 @@ public class Swerve extends GBSubsystem {
     private final SwerveState currentState;
     private final SwerveConstants constants;
     private Supplier<Rotation2d> currentAngleSupplier;
-    private SwerveStateHandler stateHandler;
+    private SwerveStateHelper stateHandler;
 
     public Swerve(SwerveConstants constants, Module[] modules, ISwerveGyro gyro) {
         super(SwerveConstants.SWERVE_LOG_PATH);
@@ -63,7 +62,7 @@ public class Swerve extends GBSubsystem {
         this.gyroInputs = new SwerveGyroInputsAutoLogged();
         this.currentAngleSupplier = this::getAbsoluteHeading;
 
-        this.stateHandler = new SwerveStateHandler(
+        this.stateHandler = new SwerveStateHelper(
                 Pose2d::new, //default pose estimator
                 () -> Optional.of(new Translation2d()),
                 this
@@ -405,7 +404,7 @@ public class Swerve extends GBSubsystem {
     }
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        chassisSpeeds = stateHandler.applyStateOnInputsSpeeds(swerveState.getAimAssist(),chassisSpeeds);
+        chassisSpeeds = stateHandler.applyAimAssistOnInputsSpeeds(swerveState.getAimAssist(),chassisSpeeds);
 
         if (isStill(chassisSpeeds)) {
             stop();
@@ -421,7 +420,7 @@ public class Swerve extends GBSubsystem {
     private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(
                 chassisSpeeds,
-                swerveState.getRotateAxis().getRotateAxis()
+                stateHandler.getRotationAxis(swerveState.getRotateAxis())
         );
         setTargetModuleStates(swerveModuleStates);
     }
@@ -486,8 +485,8 @@ public class Swerve extends GBSubsystem {
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
     }
 
-    public void applyStateHandler(SwerveStateHandler swerveStateHandler){
-        this.stateHandler = swerveStateHandler;
+    public void applyStateHandler(SwerveStateHelper swerveStateHelper){
+        this.stateHandler = swerveStateHelper;
     }
 
 

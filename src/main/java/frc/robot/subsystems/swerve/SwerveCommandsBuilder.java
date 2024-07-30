@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -176,10 +175,12 @@ public class SwerveCommandsBuilder {
     }
 
     private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose, Function<Pose2d, Boolean> isAtPose) {
-        return new SequentialCommandGroup(
-                new InstantCommand(swerve::resetPIDControllers),
-                new RunCommand(() -> swerve.pidToPose(currentPose.get(), targetPose))
-                        .until(() -> isAtPose.apply(targetPose))
+        return new FunctionalCommand(
+                swerve::resetPIDControllers,
+                () -> swerve.pidToPose(currentPose.get(), targetPose),
+                interrupted -> {},
+                () ->  isAtPose.apply(targetPose),
+                swerve
         ).withName("PID to Pose: " + targetPose);
     }
 

@@ -3,22 +3,29 @@ package frc.robot.superstructers.poseestimator;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.poseestimation.poseestimator.PoseCalculator;
-import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public class PoseEstimatorSuperstructure {
+
+public class PoseEstimator {
 
     private final PoseCalculator poseCalculator;
-    private final Swerve swerve;
+    private final Consumer<Rotation2d> resetSwerveHeading;
+    private final Supplier<ChassisSpeeds> swerveSpeedsFieldRelative;
 
-    public PoseEstimatorSuperstructure(Swerve swerve) {
+    public PoseEstimator(
+            Consumer<Rotation2d> resetSwerveHeading,
+            Supplier<ChassisSpeeds> swerveSpeedsFieldRelative
+    ) {
         this.poseCalculator = new PoseCalculator(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS, SwerveConstants.KINEMATICS);
-        this.swerve = swerve;
-        swerve.setCurrentAngleSupplier(() -> getCurrentPose().getRotation());
+        this.resetSwerveHeading = resetSwerveHeading;
+        this.swerveSpeedsFieldRelative = swerveSpeedsFieldRelative;
         resetPose(PoseEstimatorConstants.DEFAULT_POSE);
     }
 
@@ -27,7 +34,7 @@ public class PoseEstimatorSuperstructure {
     }
 
     public void resetPose(Pose2d currentPose) {
-        swerve.setHeading(currentPose.getRotation());
+        resetSwerveHeading.accept(currentPose.getRotation());
         poseCalculator.resetPose(currentPose);
     }
 
@@ -57,9 +64,8 @@ public class PoseEstimatorSuperstructure {
         }
     }
 
-    public void updatePoseEstimator(){
-        swerve.updateInputs();
-        updatePoseEstimatorOdometry(swerve.getAllOdometryObservations());
+    public void updatePoseEstimator(OdometryObservation[] odometryObservations){
+        updatePoseEstimatorOdometry(odometryObservations);
 
         logCurrentPose();
         logCurrentOdometryPose();
@@ -78,7 +84,7 @@ public class PoseEstimatorSuperstructure {
 
     public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
         return isAtTranslationPosition(
-                swerve.getFieldRelativeVelocity().vxMetersPerSecond,
+                swerveSpeedsFieldRelative.get().vxMetersPerSecond,
                 getCurrentPose().getX(),
                 targetXBlueAlliancePosition
         );
@@ -86,7 +92,7 @@ public class PoseEstimatorSuperstructure {
 
     public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
         return isAtTranslationPosition(
-                swerve.getFieldRelativeVelocity().vyMetersPerSecond,
+                swerveSpeedsFieldRelative.get().vyMetersPerSecond,
                 getCurrentPose().getY(),
                 targetYBlueAlliancePosition
         );
@@ -96,7 +102,7 @@ public class PoseEstimatorSuperstructure {
         double angleDifferenceDeg = Math.abs(targetAngle.minus(getCurrentPose().getRotation()).getDegrees());
         boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
 
-        double currentRotationVelocityRadians = swerve.getRobotRelativeVelocity().omegaRadiansPerSecond;
+        double currentRotationVelocityRadians = swerveSpeedsFieldRelative.get().omegaRadiansPerSecond;// todo: can be robot relative
         boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
         return isAtAngle && isStopping;

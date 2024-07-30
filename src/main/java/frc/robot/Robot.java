@@ -10,7 +10,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
+import frc.robot.superstructers.poseestimator.PoseEstimator;
 import frc.utils.RobotTypeUtils;
 
 
@@ -23,7 +23,13 @@ public class Robot {
             ModulesFactory.create(),
             GyroFactory.create()
     );
-    public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
+    public static final PoseEstimator poseEstimator = new PoseEstimator(
+            swerve::setHeading,
+            swerve::getFieldRelativeVelocity
+    );
+    static {
+        swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+    }
 
     public Robot() {
         buildPathPlannerForAuto();
@@ -38,7 +44,7 @@ public class Robot {
         return swerve;
     }
 
-    public PoseEstimatorSuperstructure getPoseEstimator(){
+    public PoseEstimator getPoseEstimator(){
         return poseEstimator;
     }
 
@@ -58,5 +64,11 @@ public class Robot {
     private void configureBindings() {
         JoysticksBindings.configureBindings(this);
     }
+
+    public void periodic(){
+        swerve.wrapperPeriodic();
+        poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
+    }
+
 
 }

@@ -130,7 +130,7 @@ public class SwerveCommandsBuilder {
     public Command driveWithAimAssist(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
             AimAssist aimAssist) {
         return new DeferredCommand(
-                () -> driveState(xSupplier, ySupplier, thetaSupplier, () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)),
+                () -> driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)),
                 Set.of(swerve)
         ).withName("Drive with Aim Assist");
     }
@@ -157,16 +157,9 @@ public class SwerveCommandsBuilder {
     }
 
     private Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, SwerveState state) {
-        return driveState(xSupplier, ySupplier, thetaSupplier, () -> state);
-    }
-
-    private Command driveState(
-            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
-            Supplier<SwerveState> state
-    ) {
         return new InitExecuteCommand(
                 swerve::resetPIDControllers,
-                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), state.get()),
+                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), state),
                 swerve
         );
     }

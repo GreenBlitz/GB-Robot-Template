@@ -145,7 +145,6 @@ public class SwerveCommandsBuilder {
     }
 
 
-
     public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, Function<Pose2d, Boolean> isAtPose) {
         return new DeferredCommand(
                 () -> new SequentialCommandGroup(

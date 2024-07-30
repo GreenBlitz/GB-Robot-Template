@@ -38,8 +38,8 @@ public class Swerve extends GBSubsystem {
     private final SwerveGyroInputsAutoLogged gyroInputs;
     private final ISwerveGyro gyro;
     private final Modules modules;
-    private final SwerveState currentState;
     private final SwerveConstants constants;
+    private SwerveState currentState;
     private Supplier<Rotation2d> currentAngleSupplier;
 
     public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
@@ -237,7 +237,7 @@ public class Swerve extends GBSubsystem {
 
 
     protected void initializeDrive(SwerveState updatedState) {
-        currentState.update(updatedState);
+        currentState = updatedState;
         constants.xMetersPIDController().reset();
         constants.yMetersPIDController().reset();
         constants.rotationDegreesPIDController().reset();

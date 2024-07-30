@@ -72,15 +72,6 @@ public class SwerveState {
     }
 
 
-    public void update(SwerveState newState) {
-        this.driveRelative = newState.driveRelative;
-        this.driveSpeed = newState.driveSpeed;
-        this.loopMode = newState.loopMode;
-        this.rotateAxis = newState.rotateAxis;
-        this.aimAssist = newState.aimAssist;
-    }
-
-
     public DriveRelative getDriveMode() {
         return driveRelative;
     }

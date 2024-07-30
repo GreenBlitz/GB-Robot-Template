@@ -7,7 +7,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.subsystems.swerve.modules.ModuleID;
-import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
+import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 class TalonFXModuleConfigObject {

@@ -18,7 +18,7 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.superstructers.poseestimator.PoseEstimatorConstants;
+import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -94,9 +94,29 @@ public class Swerve extends GBSubsystem {
 
     @Override
     public void subsystemPeriodic() {
+        updateInputs();
         logState();
         logFieldRelativeVelocities();
         logNumberOfOdometrySamples();
+    }
+
+    private void updateGyroSimulation() {
+        final double yawChangeRadians = getRobotRelativeVelocity().omegaRadiansPerSecond * CycleTimeUtils.getCurrentCycleTime();
+        gyroInputs.gyroYaw = Rotation2d.fromRadians(gyroInputs.gyroYaw.getRadians() + yawChangeRadians);
+        gyroInputs.yawOdometrySamples = new Rotation2d[]{gyroInputs.gyroYaw};
+        gyroInputs.timestampOdometrySamples = new double[]{Timer.getFPGATimestamp()};
+    }
+
+    private void updateInputs() {
+        ODOMETRY_LOCK.lock(); {
+            if (Robot.ROBOT_TYPE.isSimulation()) {
+                updateGyroSimulation();
+            }
+            gyro.updateInputs(gyroInputs);
+            Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
+
+            modules.logStatus();
+        } ODOMETRY_LOCK.unlock();
     }
 
     private void logState() {
@@ -118,25 +138,6 @@ public class Swerve extends GBSubsystem {
     private void logNumberOfOdometrySamples() {
         Logger.recordOutput(getLogPath() + "Odometry Samples", getNumberOfOdometrySamples());
     }
-
-    private void updateGyroSimulation() {
-        final double yawChangeRadians = getRobotRelativeVelocity().omegaRadiansPerSecond * CycleTimeUtils.getCurrentCycleTime();
-        gyroInputs.gyroYaw = Rotation2d.fromRadians(gyroInputs.gyroYaw.getRadians() + yawChangeRadians);
-        gyroInputs.yawOdometrySamples = new Rotation2d[]{gyroInputs.gyroYaw};
-        gyroInputs.timestampOdometrySamples = new double[]{Timer.getFPGATimestamp()};
-    }
-
-    public void updateInputs() {
-        ODOMETRY_LOCK.lock(); {
-            if (Robot.ROBOT_TYPE.isSimulation()) {
-                updateGyroSimulation();
-            }
-            gyro.updateInputs(gyroInputs);
-            Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
-
-            modules.logStatus();
-        } ODOMETRY_LOCK.unlock();
-    } // todo: fix
 
 
     public Rotation2d getAbsoluteHeading() {

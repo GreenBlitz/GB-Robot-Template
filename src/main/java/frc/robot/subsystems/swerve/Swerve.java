@@ -91,6 +91,12 @@ public class Swerve extends GBSubsystem {
         gyroInputs.gyroYaw = heading;
     }
 
+    protected void resetPIDControllers() {
+        constants.xMetersPIDController().reset();
+        constants.yMetersPIDController().reset();
+        constants.rotationDegreesPIDController().reset();
+    }
+
 
     @Override
     public void subsystemPeriodic() {
@@ -202,7 +208,7 @@ public class Swerve extends GBSubsystem {
      * @param omegaPerSecond - velocity to run the swerve
      */
     protected void runWheelRadiusCharacterization(Rotation2d omegaPerSecond) {
-        driveByState(new ChassisSpeeds(0, 0, omegaPerSecond.getRadians()));
+        driveByState(new ChassisSpeeds(0, 0, omegaPerSecond.getRadians()), SwerveState.DEFAULT_DRIVE);
     }
 
 
@@ -220,7 +226,7 @@ public class Swerve extends GBSubsystem {
                 ySpeed * direction,
                 thetaSpeed.getRadians()
         );
-        driveByState(targetFieldRelativeSpeeds);
+        driveByState(targetFieldRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
     }
 
     protected void rotateToAngle(Rotation2d targetAngle) {
@@ -232,26 +238,16 @@ public class Swerve extends GBSubsystem {
                         targetAngle.getDegrees()
                 )).getRadians()
         );
-        driveByState(targetFieldRelativeSpeeds);
+        driveByState(targetFieldRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
     }
 
 
-    protected void initializeDrive(SwerveState updatedState) {
-        currentState = updatedState;
-        constants.xMetersPIDController().reset();
-        constants.yMetersPIDController().reset();
-        constants.rotationDegreesPIDController().reset();
-    }
-
-    protected void driveByState(double xPower, double yPower, double thetaPower) {
-        driveByState(SwerveMath.powersToSpeeds(xPower, yPower, thetaPower, currentState.getDriveSpeed(), constants));
-    }
-
-    private void driveByState(ChassisSpeeds chassisSpeeds) {
-        driveByState(chassisSpeeds, currentState);
+    protected void driveByState(double xPower, double yPower, double thetaPower, SwerveState swerveState) {
+        driveByState(SwerveMath.powersToSpeeds(xPower, yPower, thetaPower, swerveState.getDriveSpeed(), constants), swerveState);
     }
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+        currentState = swerveState;
         chassisSpeeds = SwerveMath.applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
 
         if (SwerveMath.isStill(chassisSpeeds)) {

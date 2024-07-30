@@ -118,7 +118,7 @@ public class SwerveCommandsBuilder {
 
     public Command rotateToAngle(Rotation2d targetAngle, RotateAxis rotateAxis) {
         return new FunctionalCommand(
-                () -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
+                swerve::resetPIDControllers,
                 () -> swerve.rotateToAngle(targetAngle),
                 interrupted -> {},
                 () -> swerve.isAtAngle(targetAngle),
@@ -165,8 +165,8 @@ public class SwerveCommandsBuilder {
             Supplier<SwerveState> state
     ) {
         return new InitExecuteCommand(
-                () -> swerve.initializeDrive(state.get()),
-                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                swerve::resetPIDControllers,
+                () -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), state.get()),
                 swerve
         );
     }
@@ -197,14 +197,14 @@ public class SwerveCommandsBuilder {
         }
 
         return new SequentialCommandGroup(
-                new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_PATH_PLANNER)),
+                new InstantCommand(swerve::resetPIDControllers),
                 pathFollowingCommand
         ).withName("Path to Pose: " + targetPose);
     }
 
     private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose, Function<Pose2d, Boolean> isAtPose) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> swerve.initializeDrive(SwerveState.DEFAULT_DRIVE)),
+                new InstantCommand(swerve::resetPIDControllers),
                 new RunCommand(() -> swerve.pidToPose(currentPose.get(), targetPose))
                         .until(() -> isAtPose.apply(targetPose))
         ).withName("PID to Pose: " + targetPose);

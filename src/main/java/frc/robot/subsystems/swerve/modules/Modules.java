@@ -33,7 +33,7 @@ public class Modules {
 
     public void setClosedLoopForModules(LoopMode loopMode) {
         for (Module currentModule : modules) {
-            currentModule.setDriveMotorClosedLoop(loopMode.isClosedLoop);
+            currentModule.setClosedLoop(loopMode.isClosedLoop);
         }
     }
 
@@ -50,19 +50,17 @@ public class Modules {
         }
     }
 
+    public void pointWheelsInCircle() {
+        boolean optimizeAngle = true;
+        modules[0].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+        modules[1].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+        modules[2].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+        modules[3].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+    }
+
     public void pointWheelsInX() {
         SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
         SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-
-        modules[0].setTargetState(frontLeftBackRight);
-        modules[1].setTargetState(frontRightBackLeft);
-        modules[2].setTargetState(frontRightBackLeft);
-        modules[3].setTargetState(frontLeftBackRight);
-    }
-
-    public void pointWheelsInCircle() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
 
         modules[0].setTargetState(frontLeftBackRight);
         modules[1].setTargetState(frontRightBackLeft);
@@ -105,15 +103,28 @@ public class Modules {
     }
 
 
-    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "IsModulesAtStates")
-    public boolean isModulesAtStates() {
+    public boolean isModulesAtVelocities() {
         for (Module module : modules) {
-            if (!module.isAtTargetState()) {
+            if (!module.isAtTargetVelocity()) {
                 return false;
             }
         }
         return true;
     }
+
+    public boolean isModulesAtAngles() {
+        for (Module module : modules) {
+            if (!module.isAtTargetAngle()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isModulesAtStates() {
+        return isModulesAtAngles() && isModulesAtAngles();
+    }
+
 
     @AutoLogOutput(key = ModuleConstants.LOG_PATH + "TargetModulesStates")
     public SwerveModuleState[] getTargetStates() {
@@ -136,6 +147,7 @@ public class Modules {
 
         return states;
     }
+
 
     public Rotation2d[] getModulesDriveDistances() {
         return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);

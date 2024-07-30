@@ -50,19 +50,17 @@ public class Modules {
         }
     }
 
+    public void pointWheelsInCircle() {
+        boolean optimizeAngle = true;
+        modules[0].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+        modules[1].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+        modules[2].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+        modules[3].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+    }
+
     public void pointWheelsInX() {
         SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
         SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-
-        modules[0].setTargetState(frontLeftBackRight);
-        modules[1].setTargetState(frontRightBackLeft);
-        modules[2].setTargetState(frontRightBackLeft);
-        modules[3].setTargetState(frontLeftBackRight);
-    }
-
-    public void pointWheelsInCircle() {
-        SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-        SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
 
         modules[0].setTargetState(frontLeftBackRight);
         modules[1].setTargetState(frontRightBackLeft);

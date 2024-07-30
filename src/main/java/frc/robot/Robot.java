@@ -48,13 +48,6 @@ public class Robot {
         return poseEstimator;
     }
 
-    private void initializeSubsystems() {
-
-    }
-
-    private void configureCommands() {
-
-    }
 
     private void buildPathPlannerForAuto() {
         // Register commands...

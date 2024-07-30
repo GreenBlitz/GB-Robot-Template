@@ -129,17 +129,17 @@ public class SwerveCommandsBuilder {
 
     public Command driveWithAimAssist(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
             AimAssist aimAssist) {
-        return driveState(
-                xSupplier, ySupplier, thetaSupplier,
-                () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)
+        return new DeferredCommand(
+                () -> driveState(xSupplier, ySupplier, thetaSupplier, () -> SwerveState.DEFAULT_DRIVE.withAimAssist(aimAssist)),
+                Set.of(swerve)
         ).withName("Drive with Aim Assist");
     }
 
     public Command driveAroundWheel(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier,
             Supplier<RotateAxis> rotateAxis) {
-        return driveState(
-                xSupplier, ySupplier, thetaSupplier,
-                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())
+        return new DeferredCommand(
+                () -> driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis.get())),
+                Set.of(swerve)
         ).withName("Drive Around Module");
     }
 

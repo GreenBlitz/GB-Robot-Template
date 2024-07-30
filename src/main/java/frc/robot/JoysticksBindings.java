@@ -69,20 +69,6 @@ public class JoysticksBindings {
                 AimAssist.SPEAKER
         ));
 
-        //Drive and Aim Assist to Speaker and Rotate around front Left
-        //        usedJoystick.L1.whileTrue(SwerveCommands.debugCommand(
-        //                () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-        //                () -> usedJoystick.getAxisValue(Axis.LEFT_X),
-        //                () -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-        //        ));
-
-        //Drive Slow
-        //        usedJoystick.Y.whileTrue(SwerveCommands.getOpenLoopFieldRelativeDriveCommandSlow(
-        //                () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-        //                () -> usedJoystick.getAxisValue(Axis.LEFT_X),
-        //                () -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-        //        ));
-
         //Rotate Around Module:
         usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(robot.getSwerve().getCommandsBuilder().driveAroundWheel(
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),

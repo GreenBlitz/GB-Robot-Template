@@ -50,10 +50,10 @@ public class RealModulesConstants {
         DRIVE_MOTOR_CONFIG.Slot0.kD = 0;
 
         // Velocity Torque Current
-        DRIVE_MOTOR_CONFIG.Slot1.kS = 0;
-        DRIVE_MOTOR_CONFIG.Slot1.kV = 0;
-        DRIVE_MOTOR_CONFIG.Slot1.kA = 0;
-        DRIVE_MOTOR_CONFIG.Slot1.kP = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kS = 5.0609;
+        DRIVE_MOTOR_CONFIG.Slot1.kV = 0.55937;
+        DRIVE_MOTOR_CONFIG.Slot1.kA = 1.4179;
+        DRIVE_MOTOR_CONFIG.Slot1.kP = 60;
         DRIVE_MOTOR_CONFIG.Slot1.kI = 0;
         DRIVE_MOTOR_CONFIG.Slot1.kD = 0;
     }

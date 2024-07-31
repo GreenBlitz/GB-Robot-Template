@@ -41,9 +41,7 @@ public class SwerveCommandsBuilder {
         this.driveCalibrator = new SysIdCalibrator(
                 true,
                 swerve,
-                swerve.getModules()::runModulesDriveByVoltage,
-                SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
-                SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
+                swerve.getModules()::runModulesDriveByVoltage
         );
     }
 

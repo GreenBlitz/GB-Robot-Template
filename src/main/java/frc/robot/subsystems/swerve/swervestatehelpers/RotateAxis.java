@@ -9,26 +9,11 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils.ModuleName;
 
 public enum RotateAxis {
 
-    MIDDLE_OF_ROBOT(0, 0),
-    FRONT_LEFT_MODULE(SwerveConstants.LOCATIONS[ModuleName.FRONT_LEFT.getIndex()]),
-    FRONT_RIGHT_MODULE(SwerveConstants.LOCATIONS[ModuleName.FRONT_RIGHT.getIndex()]),
-    BACK_LEFT_MODULE(SwerveConstants.LOCATIONS[ModuleName.BACK_LEFT.getIndex()]),
-    BACK_RIGHT_MODULE(SwerveConstants.LOCATIONS[ModuleName.BACK_RIGHT.getIndex()]);
-
-    private final Translation2d rotateAxis;
-
-    RotateAxis(double x, double y) {
-        this.rotateAxis = new Translation2d(x, y);
-    }
-
-    RotateAxis(Translation2d rotateAxis) {
-        this.rotateAxis = new Translation2d(rotateAxis.getX(), rotateAxis.getY());
-    }
-
-    public Translation2d getRotateAxis() {
-        return new Translation2d(rotateAxis.getX(), rotateAxis.getY());
-    }
-
+    MIDDLE_OF_ROBOT(),
+    FRONT_LEFT_MODULE(),
+    FRONT_RIGHT_MODULE(),
+    BACK_LEFT_MODULE(),
+    BACK_RIGHT_MODULE();
 
     public static RotateAxis getLeftFarRotateAxis() {
         return getFarRotateAxis(true);

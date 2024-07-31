@@ -2,8 +2,6 @@ package frc.utils.calibration.autoPIDtuner;
 
 import edu.greenblitz.robotName.utils.PIDObject;
 
-
-
 public class AutoPIDTuner {
 
     public PIDObject tunePController(double ku) {
@@ -24,5 +22,3 @@ public class AutoPIDTuner {
     }
 
 }
-
-

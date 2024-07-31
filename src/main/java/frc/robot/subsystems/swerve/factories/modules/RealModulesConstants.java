@@ -21,7 +21,7 @@ public class RealModulesConstants {
     private static final boolean ENABLE_FOC_STEER = true;
     private static final boolean ENABLE_FOC_DRIVE = true;
 
-    private static final double DRIVE_SLIP_CURRENT = 60; //todo - calibrate
+    private static final double DRIVE_SLIP_CURRENT = 60;
     private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
 
     private static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();

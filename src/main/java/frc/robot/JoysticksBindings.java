@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -99,18 +98,15 @@ public class JoysticksBindings {
         SmartJoystick usedJoystick = SECOND_JOYSTICK;
         // bindings...
 
-//        usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
-//        usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().steerCalibration(true, SysIdRoutine.Direction.kForward));
-        usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
-        usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kReverse));
-        usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
+        usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
+        usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().steerCalibration(true, SysIdRoutine.Direction.kForward));
         usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
-        usedJoystick.R1.whileTrue(new InstantCommand(SignalLogger::stop));
     }
 
     private static void thirdJoystickButtons(Robot robot) {
         SmartJoystick usedJoystick = THIRD_JOYSTICK;
         // bindings...
+
         usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
                 robot.getPoseEstimator()::getCurrentPose,
                 () -> new Pose2d(1, 8, Rotation2d.fromDegrees(90)),

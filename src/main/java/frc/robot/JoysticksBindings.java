@@ -100,7 +100,7 @@ public class JoysticksBindings {
 
         usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
         usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().steerCalibration(true, SysIdRoutine.Direction.kForward));
-        usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
+        usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
     }
 
     private static void thirdJoystickButtons(Robot robot) {

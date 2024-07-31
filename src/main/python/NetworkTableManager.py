@@ -46,7 +46,7 @@ class NetworkTableClient:
         return self._network_table_instance.isConnected()
 
     def connect(self) -> NetworkTableInstance:
-        self._logger.info(f"Setting up NetworkTables client")
+        self._logger.info("Setting up NetworkTables client")
         self._network_table_instance.setServer(self._ip)
         self._network_table_instance.startClient4(self._client_name)
 
@@ -57,5 +57,5 @@ class NetworkTableClient:
         return self._network_table_instance
 
     def terminate(self) -> None:
-        self._logger.warning(f"Terminating client")
+        self._logger.warning("Terminating client")
         NetworkTableInstance.destroy(self._network_table_instance)

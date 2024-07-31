@@ -8,6 +8,7 @@ import frc.robot.subsystems.swerve.modules.inputs.DriveMotorInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.EncoderInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.inputs.SteerMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModuleConstants.CloseLoopOutputType;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.Conversions;
 
@@ -78,7 +79,7 @@ public class TalonFXModule implements IModule {
 
     @Override
     public void runDriveMotorByVoltage(double voltage) {
-        talonFXModuleActions.setTargetDriveVoltage(voltage);
+        talonFXModuleActions.setTargetDriveOutputValue(voltage, talonFXModuleConstants.getCloseLoopOutputType());
     }
 
 
@@ -92,7 +93,7 @@ public class TalonFXModule implements IModule {
                 talonFXModuleConstants.getWheelDiameterMeters(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        talonFXModuleActions.setTargetDriveVoltage(voltage);
+        talonFXModuleActions.setTargetDriveOutputValue(voltage, CloseLoopOutputType.VOLTAGE);
     }
 
     @Override
@@ -106,7 +107,7 @@ public class TalonFXModule implements IModule {
                 talonFXModuleStatus.getSteerMotorLatencyVelocity(true),
                 talonFXModuleConstants.getCouplingRatio()
         );
-        talonFXModuleActions.setTargetClosedLoopVelocity(optimizedVelocityPerSecond);
+        talonFXModuleActions.setTargetClosedLoopVelocity(optimizedVelocityPerSecond, talonFXModuleConstants.getCloseLoopOutputType());
     }
 
     @Override

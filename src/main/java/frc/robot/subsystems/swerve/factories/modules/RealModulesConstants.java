@@ -11,6 +11,7 @@ import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 import frc.robot.subsystems.swerve.modules.ModuleID;
 import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModuleConstants;
+import frc.robot.subsystems.swerve.modules.talonfx.TalonFXModuleConstants.CloseLoopOutputType;
 
 public class RealModulesConstants {
 
@@ -20,7 +21,7 @@ public class RealModulesConstants {
     private static final boolean ENABLE_FOC_STEER = true;
     private static final boolean ENABLE_FOC_DRIVE = true;
 
-    private static final double DRIVE_SLIP_CURRENT = 30; //todo - calibrate
+    private static final double DRIVE_SLIP_CURRENT = 60; //todo - calibrate
     private static final double STEER_CURRENT_LIMIT = 30; //todo - calibrate
 
     private static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
@@ -40,12 +41,21 @@ public class RealModulesConstants {
         DRIVE_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = DRIVE_SLIP_CURRENT;
         DRIVE_MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        // Velocity Voltage
         DRIVE_MOTOR_CONFIG.Slot0.kS = 0.21549;
         DRIVE_MOTOR_CONFIG.Slot0.kV = 0.72124;
         DRIVE_MOTOR_CONFIG.Slot0.kA = 0.11218;
         DRIVE_MOTOR_CONFIG.Slot0.kP = 1.5;
         DRIVE_MOTOR_CONFIG.Slot0.kI = 0;
         DRIVE_MOTOR_CONFIG.Slot0.kD = 0;
+
+        // Velocity Torque Current
+        DRIVE_MOTOR_CONFIG.Slot1.kS = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kV = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kA = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kP = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kI = 0;
+        DRIVE_MOTOR_CONFIG.Slot1.kD = 0;
     }
 
     private static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
@@ -74,6 +84,7 @@ public class RealModulesConstants {
                 RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
                 ENABLE_FOC_STEER,
                 ENABLE_FOC_DRIVE,
+                CloseLoopOutputType.TORQUE_CURRENT,
                 STEER_MOTOR_CONFIG,
                 DRIVE_MOTOR_CONFIG,
                 ENCODER_CONFIG,

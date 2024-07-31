@@ -48,20 +48,20 @@ public class SimulationModuleConstants {
         this.driveMotor = moduleConfigObject.getDriveMotor();
     }
 
-    protected boolean getEnableFOCSteer(){
-        return enableFOCSteer;
-    }
-
-    protected boolean getEnableFOCDrive(){
-        return enableFOCDrive;
-    }
-
     protected double getWheelDiameterMeters() {
         return wheelDiameterMeters;
     }
 
     protected Rotation2d getVelocityAt12VoltsPerSecond() {
         return velocityAt12VoltsPerSecond;
+    }
+
+    protected boolean getEnableFOCSteer(){
+        return enableFOCSteer;
+    }
+
+    protected boolean getEnableFOCDrive(){
+        return enableFOCDrive;
     }
 
     protected SimpleMotorSimulation getSteerMotor() {

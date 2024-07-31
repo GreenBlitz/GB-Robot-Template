@@ -48,24 +48,24 @@ public class TalonFXModuleConstants {
         this.signals = moduleConfigObject.getSignals();
     }
 
-    protected boolean getEnableFOCSteer(){
-        return enableFOCSteer;
-    }
-
-    protected boolean getEnableFOCDrive(){
-        return enableFOCDrive;
-    }
-
     protected double getWheelDiameterMeters() {
         return wheelDiameterMeters;
+    }
+
+    protected double getCouplingRatio() {
+        return couplingRatio;
     }
 
     protected Rotation2d getVelocityAt12VoltsPerSecond() {
         return velocityAt12VoltsPerSecond;
     }
 
-    protected double getCouplingRatio() {
-        return couplingRatio;
+    protected boolean getEnableFOCSteer(){
+        return enableFOCSteer;
+    }
+
+    protected boolean getEnableFOCDrive(){
+        return enableFOCDrive;
     }
 
     protected TalonFXWrapper getSteerMotor() {

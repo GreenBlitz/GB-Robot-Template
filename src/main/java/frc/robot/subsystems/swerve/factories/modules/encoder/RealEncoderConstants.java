@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
-public class RealEncoderConstants {
+class RealEncoderConstants {
 
     protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
     static {

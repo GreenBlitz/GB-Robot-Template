@@ -5,7 +5,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.swerve.modules.steer.simulation.SimulationSteerConstants;
 
-public class SteerSimulationConstants {
+class SteerSimulationConstants {
 
     private static final double GEAR_RATIO = 150.0 / 7.0;
 

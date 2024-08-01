@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.modules.steer.talonfx.TalonFXSteerConstants;
 
-public class RealSteerConstants {
+class RealSteerConstants {
 
     private static final boolean ENABLE_FOC = true;
 

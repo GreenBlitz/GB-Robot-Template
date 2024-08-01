@@ -6,7 +6,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDriveConstants;
 
-public class DriveRealConstants {
+class DriveRealConstants {
 
     private static final boolean ENABLE_FOC = true;
 

@@ -228,7 +228,7 @@ public class Module {
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
         Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(
                 targetVelocityMetersPerSecond,
-                 constants.wheelDiameterMeters()
+                constants.wheelDiameterMeters()
         );
         Rotation2d optimizedVelocityPerSecond = ModuleUtils.getCoupledAngle(
                 targetVelocityPerSecond,

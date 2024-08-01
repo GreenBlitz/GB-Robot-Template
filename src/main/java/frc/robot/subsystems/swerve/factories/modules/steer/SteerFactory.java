@@ -12,10 +12,10 @@ public class SteerFactory {
     public static ISteer create(ModuleUtils.ModuleName moduleName) {
         return switch (Robot.ROBOT_TYPE) {
             case REAL -> switch (moduleName){
-                case FRONT_LEFT -> new TalonFXSteer(RealSteerConstants.FRONT_LEFT_CONSTANTS);
-                case FRONT_RIGHT -> new TalonFXSteer(RealSteerConstants.FRONT_RIGHT_CONSTANTS);
-                case BACK_LEFT -> new TalonFXSteer(RealSteerConstants.BACK_LEFT_CONSTANTS);
-                case BACK_RIGHT -> new TalonFXSteer(RealSteerConstants.BACK_RIGHT_CONSTANTS);
+                case FRONT_LEFT -> new TalonFXSteer(SteerRealConstants.FRONT_LEFT_CONSTANTS);
+                case FRONT_RIGHT -> new TalonFXSteer(SteerRealConstants.FRONT_RIGHT_CONSTANTS);
+                case BACK_LEFT -> new TalonFXSteer(SteerRealConstants.BACK_LEFT_CONSTANTS);
+                case BACK_RIGHT -> new TalonFXSteer(SteerRealConstants.BACK_RIGHT_CONSTANTS);
             };
             case SIMULATION -> new SimulationSteer(SteerSimulationConstants.getConstants());
             case REPLAY -> new EmptySteer();

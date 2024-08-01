@@ -17,7 +17,7 @@ public class SteerFactory {
                 case BACK_LEFT -> new TalonFXSteer(RealSteerConstants.BACK_LEFT_CONSTANTS);
                 case BACK_RIGHT -> new TalonFXSteer(RealSteerConstants.BACK_RIGHT_CONSTANTS);
             };
-            case SIMULATION -> new SimulationSteer(SteerSimulationConstants.getSteerConstants());
+            case SIMULATION -> new SimulationSteer(SteerSimulationConstants.getConstants());
             case REPLAY -> new EmptySteer();
         };
     }

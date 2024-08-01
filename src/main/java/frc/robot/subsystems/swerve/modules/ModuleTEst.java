@@ -6,13 +6,17 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.swerve.SwerveState;
+import frc.robot.subsystems.swerve.modules.check.drive.DriveMotorInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.check.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.check.encoder.IEncoder;
+import frc.robot.subsystems.swerve.modules.check.steer.SteerMotorInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.check.steer.ISteer;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.Arrays;
 
 public class ModuleTEst {
 
@@ -25,17 +29,24 @@ public class ModuleTEst {
 
     private boolean isClosedLoop;
     private SwerveModuleState targetState;
+    private Rotation2d startingSteerAngle;
 
     public ModuleTEst(ModuleUtils.ModuleName moduleName, ISteer iSteer, IDrive iDrive, IEncoder iEncoder, ModuleConstants constants) {
         this.moduleName = moduleName;
+        this.iEncoder = iEncoder;
+        this.iSteer = iSteer;
+        this.iDrive = iDrive;
+        this.constants = constants;
         this.moduleInputsContainer = new ModuleInputsContainer();
         this.targetState = new SwerveModuleState();
         this.isClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
-        this.iSteer = iSteer;
-        this.iDrive = iDrive;
-        this.iEncoder = iEncoder;
-        this.constants = constants;
+        this.startingSteerAngle = new Rotation2d();
+        logStatus();
         resetByEncoder();
+    }
+
+    private double toDriveMeters(Rotation2d angle) {
+        return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
     }
 
     public void logStatus() {
@@ -43,10 +54,30 @@ public class ModuleTEst {
         reportAlerts();
     }
 
+    private void fixDriveInputsCoupling(){
+        SteerMotorInputsAutoLogged steerInputs = moduleInputsContainer.getSteerMotorInputs();
+        DriveMotorInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
+
+        driveInputs.angle = ModuleUtils.getUncoupledAngle(driveInputs.angle, steerInputs.angle, constants.couplingRatio());
+        driveInputs.velocity = ModuleUtils.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
+        driveInputs.acceleration = ModuleUtils.getUncoupledAngle(driveInputs.acceleration, steerInputs.acceleration, constants.couplingRatio());
+        for (int i = 0; i < driveInputs.angleOdometrySamples.length; i++){
+            Rotation2d steerDelta = Rotation2d.fromRotations(steerInputs.angleOdometrySamples[i].getRotations() - startingSteerAngle.getRotations());
+            driveInputs.angleOdometrySamples[i] = ModuleUtils.getUncoupledAngle(driveInputs.angleOdometrySamples[i], steerDelta, constants.couplingRatio());
+        }
+    }
+
     private void updateInputs() {
         iEncoder.updateInputs(moduleInputsContainer);
         iSteer.updateInputs(moduleInputsContainer);
         iDrive.updateInputs(moduleInputsContainer);
+        fixDriveInputsCoupling();
+
+        DriveMotorInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
+        driveInputs.distanceMeters = toDriveMeters(driveInputs.angle);
+        driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
+        driveInputs.distanceMetersOdometrySamples = Arrays.stream(driveInputs.angleOdometrySamples).mapToDouble(this::toDriveMeters).toArray();
+
 
         ModuleInputsAutoLogged moduleInputs = moduleInputsContainer.getModuleInputs();
         moduleInputs.isAtTargetAngle = isAtTargetAngle();
@@ -85,7 +116,8 @@ public class ModuleTEst {
     }
 
     public void resetByEncoder() {
-        iSteer.resetToAngle(moduleInputsContainer.getEncoderInputs().angle);
+        startingSteerAngle = moduleInputsContainer.getEncoderInputs().angle;
+        iSteer.resetToAngle(startingSteerAngle);
     }
 
 

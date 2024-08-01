@@ -34,14 +34,14 @@ class TalonFXDriveConfigObject {
     private void optimizeBusAndSignalOfDriveMotor() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
-                signals.drivePositionSignal(),
-                signals.driveVelocitySignal(),
-                signals.driveAccelerationSignal()
+                signals.positionSignal(),
+                signals.velocitySignal(),
+                signals.accelerationSignal()
         );
         BaseStatusSignal.setUpdateFrequencyForAll(
                 GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-                signals.driveVoltageSignal(),
-                signals.driveStatorCurrentSignal()
+                signals.voltageSignal(),
+                signals.statorCurrentSignal()
         );
 
         driveMotor.optimizeBusUtilization();

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.inputs;
+package frc.robot.subsystems.swerve.modules.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;

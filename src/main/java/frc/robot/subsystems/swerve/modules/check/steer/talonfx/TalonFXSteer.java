@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.steer.talonfx;
+package frc.robot.subsystems.swerve.modules.check.steer.talonfx;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -6,8 +6,8 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
-import frc.robot.subsystems.swerve.modules.steer.ISteer;
-import frc.robot.subsystems.swerve.modules.steer.SteerMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.steer.ISteer;
+import frc.robot.subsystems.swerve.modules.check.steer.SteerMotorInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.devicewrappers.TalonFXWrapper;
 

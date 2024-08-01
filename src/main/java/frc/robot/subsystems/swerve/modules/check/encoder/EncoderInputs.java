@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.encoder;
+package frc.robot.subsystems.swerve.modules.check.encoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;

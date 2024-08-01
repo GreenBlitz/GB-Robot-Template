@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.encoder;
+package frc.robot.subsystems.swerve.modules.check.encoder;
 
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 

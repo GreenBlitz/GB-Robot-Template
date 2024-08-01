@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.encoder.cancoder;
+package frc.robot.subsystems.swerve.modules.check.encoder.cancoder;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -8,8 +8,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
-import frc.robot.subsystems.swerve.modules.encoder.EncoderInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
+import frc.robot.subsystems.swerve.modules.check.encoder.EncoderInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import frc.utils.ctre.CTREDeviceID;
 

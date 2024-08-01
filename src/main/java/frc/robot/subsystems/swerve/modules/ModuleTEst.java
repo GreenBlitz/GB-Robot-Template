@@ -6,11 +6,11 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.swerve.SwerveState;
-import frc.robot.subsystems.swerve.modules.drive.IDrive;
-import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
+import frc.robot.subsystems.swerve.modules.check.drive.IDrive;
+import frc.robot.subsystems.swerve.modules.check.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
-import frc.robot.subsystems.swerve.modules.steer.ISteer;
+import frc.robot.subsystems.swerve.modules.check.steer.ISteer;
 import org.littletonrobotics.junction.Logger;
 
 public class ModuleTEst {

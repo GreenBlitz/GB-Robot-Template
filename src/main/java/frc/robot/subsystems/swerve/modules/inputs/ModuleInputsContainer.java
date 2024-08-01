@@ -1,8 +1,8 @@
 package frc.robot.subsystems.swerve.modules.inputs;
 
-import frc.robot.subsystems.swerve.modules.drive.DriveMotorInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.encoder.EncoderInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.steer.SteerMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.drive.DriveMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.encoder.EncoderInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.steer.SteerMotorInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class ModuleInputsContainer {

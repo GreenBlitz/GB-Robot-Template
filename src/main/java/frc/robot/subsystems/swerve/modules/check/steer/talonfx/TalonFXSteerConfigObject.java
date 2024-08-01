@@ -7,7 +7,7 @@ import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-public class TalonFXSteerConfigObject {
+class TalonFXSteerConfigObject {
 
     private final TalonFXWrapper steerMotor;
 

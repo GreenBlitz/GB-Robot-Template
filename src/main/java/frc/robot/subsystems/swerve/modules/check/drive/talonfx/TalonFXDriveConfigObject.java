@@ -7,7 +7,7 @@ import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
-public class TalonFXDriveConfigObject {
+class TalonFXDriveConfigObject {
 
     private final TalonFXWrapper driveMotor;
     private final TalonFXDriveSignals signals;

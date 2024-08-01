@@ -15,11 +15,10 @@ public class SimulationSteer implements ISteer {
     private final VoltageOut voltageRequest;
 
     public SimulationSteer(SimulationSteerConstants constants){
-        this.steerMotor = constants.steerMotor();
-        this.steerMotor.applyConfiguration(constants.steerConfig());
+        this.steerMotor = constants.getSteerMotor();
 
-        this.positionRequest = new PositionVoltage(0).withEnableFOC(constants.enableFOC());
-        this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFOC());
+        this.positionRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
+        this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
     }
 
     @Override

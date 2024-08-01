@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class SteerMotorInputs {
+public class SteerInputs {
 
     public boolean isConnected = true;
     public Rotation2d angle = new Rotation2d();

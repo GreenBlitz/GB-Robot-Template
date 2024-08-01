@@ -12,7 +12,7 @@ class TalonFXDriveConfigObject {
     private final TalonFXWrapper driveMotor;
     private final TalonFXDriveSignals signals;
 
-    public TalonFXDriveConfigObject(CTREDeviceID driveMotorID, TalonFXConfiguration configuration) {
+    protected TalonFXDriveConfigObject(CTREDeviceID driveMotorID, TalonFXConfiguration configuration) {
         this.driveMotor = new TalonFXWrapper(driveMotorID);
         this.signals = new TalonFXDriveSignals(
                 driveMotor.getPosition().clone(),
@@ -48,11 +48,11 @@ class TalonFXDriveConfigObject {
     }
 
 
-    public TalonFXWrapper getDriveMotor() {
+    protected TalonFXWrapper getDriveMotor() {
         return driveMotor;
     }
 
-    public TalonFXDriveSignals getSignals() {
+    protected TalonFXDriveSignals getSignals() {
         return signals;
     }
 

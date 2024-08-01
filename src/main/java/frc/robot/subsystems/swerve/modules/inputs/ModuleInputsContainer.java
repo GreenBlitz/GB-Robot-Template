@@ -1,16 +1,16 @@
 package frc.robot.subsystems.swerve.modules.inputs;
 
-import frc.robot.subsystems.swerve.modules.check.drive.DriveMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.check.encoder.EncoderInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.check.steer.SteerMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.steer.SteerInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class ModuleInputsContainer {
 
     private final ModuleInputsAutoLogged moduleInputs = new ModuleInputsAutoLogged();
     private final EncoderInputsAutoLogged encoderInputs = new EncoderInputsAutoLogged();
-    private final SteerMotorInputsAutoLogged steerMotorInputs = new SteerMotorInputsAutoLogged();
-    private final DriveMotorInputsAutoLogged driveMotorInputs = new DriveMotorInputsAutoLogged();
+    private final SteerInputsAutoLogged steerMotorInputs = new SteerInputsAutoLogged();
+    private final DriveInputsAutoLogged driveMotorInputs = new DriveInputsAutoLogged();
 
     public void processInputs(String loggingPath){
         Logger.processInputs(loggingPath, moduleInputs);
@@ -27,11 +27,11 @@ public class ModuleInputsContainer {
         return encoderInputs;
     }
 
-    public SteerMotorInputsAutoLogged getSteerMotorInputs() {
+    public SteerInputsAutoLogged getSteerMotorInputs() {
         return steerMotorInputs;
     }
 
-    public DriveMotorInputsAutoLogged getDriveMotorInputs() {
+    public DriveInputsAutoLogged getDriveMotorInputs() {
         return driveMotorInputs;
     }
 

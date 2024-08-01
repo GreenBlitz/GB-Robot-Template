@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class DriveMotorInputs {
+public class DriveInputs {
 
     public boolean isConnected = true;
     public double distanceMeters = 0;

@@ -13,7 +13,7 @@ class TalonFXSteerConfigObject {
 
     private final TalonFXSteerSignals signals;
 
-    public TalonFXSteerConfigObject(CTREDeviceID motorID, int encoderID, TalonFXConfiguration configuration){
+    protected TalonFXSteerConfigObject(CTREDeviceID motorID, int encoderID, TalonFXConfiguration configuration){
         this.steerMotor = new TalonFXWrapper(motorID);
         this.signals = new TalonFXSteerSignals(
                 steerMotor.getPosition().clone(),
@@ -45,10 +45,10 @@ class TalonFXSteerConfigObject {
     }
 
 
-    public TalonFXWrapper getSteerMotor() {
+    protected TalonFXWrapper getSteerMotor() {
         return steerMotor;
     }
-    public TalonFXSteerSignals getSignals() {
+    protected TalonFXSteerSignals getSignals() {
         return signals;
     }
 

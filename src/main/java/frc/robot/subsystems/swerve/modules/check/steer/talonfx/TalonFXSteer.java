@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.check.steer.ISteer;
-import frc.robot.subsystems.swerve.modules.check.steer.SteerMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.steer.SteerInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
@@ -67,7 +67,7 @@ public class TalonFXSteer implements ISteer {
 
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
-        SteerMotorInputsAutoLogged steerInputs = inputs.getSteerMotorInputs();
+        SteerInputsAutoLogged steerInputs = inputs.getSteerMotorInputs();
         steerInputs.isConnected = BaseStatusSignal.refreshAll(
                 signals.positionSignal(),
                 signals.velocitySignal(),

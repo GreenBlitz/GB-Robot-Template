@@ -33,15 +33,15 @@ public class TalonFXSteerConstants {
     }
 
 
-    public TalonFXWrapper getSteerMotor() {
+    protected TalonFXWrapper getSteerMotor() {
         return steerMotor;
     }
 
-    public TalonFXSteerSignals getSignals() {
+    protected TalonFXSteerSignals getSignals() {
         return signals;
     }
 
-    public boolean getEnableFOC(){
+    protected boolean getEnableFOC(){
         return enableFOC;
     }
 

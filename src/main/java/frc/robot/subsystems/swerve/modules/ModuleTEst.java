@@ -6,10 +6,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.swerve.SwerveState;
-import frc.robot.subsystems.swerve.modules.check.drive.DriveMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.check.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.check.encoder.IEncoder;
-import frc.robot.subsystems.swerve.modules.check.steer.SteerMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.steer.SteerInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.check.steer.ISteer;
@@ -55,8 +55,8 @@ public class ModuleTEst {
     }
 
     private void fixDriveInputsCoupling(){
-        SteerMotorInputsAutoLogged steerInputs = moduleInputsContainer.getSteerMotorInputs();
-        DriveMotorInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
+        SteerInputsAutoLogged steerInputs = moduleInputsContainer.getSteerMotorInputs();
+        DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 
         driveInputs.angle = ModuleUtils.getUncoupledAngle(driveInputs.angle, steerInputs.angle, constants.couplingRatio());
         driveInputs.velocity = ModuleUtils.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
@@ -73,7 +73,7 @@ public class ModuleTEst {
         iDrive.updateInputs(moduleInputsContainer);
         fixDriveInputsCoupling();
 
-        DriveMotorInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
+        DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
         driveInputs.distanceMeters = toDriveMeters(driveInputs.angle);
         driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
         driveInputs.distanceMetersOdometrySamples = Arrays.stream(driveInputs.angleOdometrySamples).mapToDouble(this::toDriveMeters).toArray();

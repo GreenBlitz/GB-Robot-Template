@@ -19,15 +19,15 @@ public class TalonFXDriveConstants {
         this.enableFOC = enableFOC;
     }
 
-    public TalonFXWrapper getDriveMotor() {
+    protected TalonFXWrapper getDriveMotor() {
         return driveMotor;
     }
 
-    public TalonFXDriveSignals getSignals() {
+    protected TalonFXDriveSignals getSignals() {
         return signals;
     }
 
-    public boolean getEnableFOC(){
+    protected boolean getEnableFOC(){
         return enableFOC;
     }
 

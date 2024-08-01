@@ -5,7 +5,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.modules.check.drive.DriveMotorInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.check.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.check.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
@@ -63,7 +63,7 @@ public class TalonFXDrive implements IDrive {
 
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
-        DriveMotorInputsAutoLogged driveInputs = inputs.getDriveMotorInputs();
+        DriveInputsAutoLogged driveInputs = inputs.getDriveMotorInputs();
         driveInputs.isConnected = BaseStatusSignal.refreshAll(
                 signals.positionSignal(),
                 signals.velocitySignal(),

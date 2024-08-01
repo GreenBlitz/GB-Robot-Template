@@ -1,8 +1,8 @@
 package frc.robot.subsystems.swerve.modules.drive.replay;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
+import frc.robot.subsystems.swerve.modules.drive.IDrive;
 
 public class EmptyDrive implements IDrive {
 

@@ -31,11 +31,32 @@ public class DriveRealConstants {
         DRIVE_MOTOR_CONFIG.Slot0.kD = 0;
     }
 
-    protected static final TalonFXDriveConstants[] DRIVE_CONSTANTS = new TalonFXDriveConstants[]{
-            new TalonFXDriveConstants(IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR, false, DRIVE_MOTOR_CONFIG, ENABLE_FOC_DRIVE),
-            new TalonFXDriveConstants(IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR, true, DRIVE_MOTOR_CONFIG, ENABLE_FOC_DRIVE),
-            new TalonFXDriveConstants(IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR, false, DRIVE_MOTOR_CONFIG, ENABLE_FOC_DRIVE),
-            new TalonFXDriveConstants(IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR, false, DRIVE_MOTOR_CONFIG, ENABLE_FOC_DRIVE)
-    };
+    protected static final TalonFXDriveConstants FRONT_LEFT_CONSTANTS = new TalonFXDriveConstants(
+            IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
+            false,
+            DRIVE_MOTOR_CONFIG,
+            ENABLE_FOC_DRIVE
+    );
+
+    protected static final TalonFXDriveConstants FRONT_RIGHT_CONSTANTS = new TalonFXDriveConstants(
+            IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
+            true,
+            DRIVE_MOTOR_CONFIG,
+            ENABLE_FOC_DRIVE
+    );
+
+    protected static final TalonFXDriveConstants BACK_LEFT_CONSTANTS = new TalonFXDriveConstants(
+            IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
+            false,
+            DRIVE_MOTOR_CONFIG,
+            ENABLE_FOC_DRIVE
+    );
+
+    protected static final TalonFXDriveConstants BACK_RIGHT_CONSTANTS = new TalonFXDriveConstants(
+            IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
+            false,
+            DRIVE_MOTOR_CONFIG,
+            ENABLE_FOC_DRIVE
+    );
 
 }

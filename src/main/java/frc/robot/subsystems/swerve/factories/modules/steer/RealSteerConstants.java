@@ -5,7 +5,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.constants.IDs;
-import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDriveConstants;
 import frc.robot.subsystems.swerve.modules.steer.talonfx.TalonFXSteerConstants;
 
 public class RealSteerConstants {

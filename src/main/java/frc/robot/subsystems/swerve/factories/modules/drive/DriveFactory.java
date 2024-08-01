@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules.drive;
 
 import frc.robot.Robot;
-import frc.robot.subsystems.swerve.factories.modules.constants.RealModuleConstants;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.drive.replay.EmptyDrive;
 import frc.robot.subsystems.swerve.modules.drive.simulation.SimulationDrive;

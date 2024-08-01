@@ -12,15 +12,6 @@ import static frc.robot.Robot.ROBOT_TYPE;
 
 public class ModulesFactory {
 
-    private static Modules getModules(IModule[] iModules) {
-        return new Modules(new Module[]{
-                new Module(ModuleUtils.ModuleName.FRONT_LEFT, iModules[0]),
-                new Module(ModuleUtils.ModuleName.FRONT_RIGHT, iModules[1]),
-                new Module(ModuleUtils.ModuleName.BACK_LEFT, iModules[2]),
-                new Module(ModuleUtils.ModuleName.BACK_RIGHT, iModules[3])
-        });
-    }
-
     public static Modules create() {
         return switch (ROBOT_TYPE) {
             case REAL -> getModules(
@@ -31,15 +22,12 @@ public class ModulesFactory {
                             new TalonFXModule(RealModulesConstants.MODULE_CONSTANTS[3])
                     }
             );
-            case SIMULATION -> getModules(
-                    new SimulationModule[]{
-                            new SimulationModule(ModuleUtils.ModuleName.FRONT_LEFT, SimulationModulesConstants.getModuleConstants()),
-                            new SimulationModule(ModuleUtils.ModuleName.FRONT_RIGHT, SimulationModulesConstants.getModuleConstants()),
-                            new SimulationModule(ModuleUtils.ModuleName.BACK_LEFT, SimulationModulesConstants.getModuleConstants()),
-                            new SimulationModule(ModuleUtils.ModuleName.BACK_RIGHT, SimulationModulesConstants.getModuleConstants())
-                    }
-
-            );
+            case SIMULATION -> new Modules(new Module[]{
+               new Module(ModuleUtils.ModuleName.FRONT_LEFT, ),
+               new Module(),
+               new Module(),
+               new Module()
+            });
             case REPLAY -> getModules(
                     new EmptyModule[]{
                             new EmptyModule(),

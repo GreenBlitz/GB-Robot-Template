@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.modules;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.LogPaths;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
 public record ModuleConstants(
@@ -10,6 +11,10 @@ public record ModuleConstants(
         double couplingRatio,
         Rotation2d velocityAt12VoltsPerSecond
 ) {
+
+    public ModuleConstants(double wheelDiameterMeters, double couplingRatio, double velocityAt12VoltsMetersPerSecond){
+        this(wheelDiameterMeters, couplingRatio, Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond, wheelDiameterMeters));
+    }
 
     static final String LOG_PATH = SwerveConstants.SWERVE_LOG_PATH + "Modules/";
     static final String ALERT_LOG_PATH = LogPaths.ALERT_LOG_PATH + LOG_PATH;

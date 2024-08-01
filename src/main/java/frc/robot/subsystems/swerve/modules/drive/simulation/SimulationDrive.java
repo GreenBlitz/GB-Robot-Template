@@ -3,17 +3,20 @@ package frc.robot.subsystems.swerve.modules.drive.simulation;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;
+import frc.robot.subsystems.swerve.modules.ModuleConstants;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 
 public class SimulationDrive implements IDrive {
 
     private final SimpleMotorSimulation driveMotor;
-
+    private final SimulationDriveConstants constants;
     private final VoltageOut voltageRequest;
 
     public SimulationDrive(SimulationDriveConstants constants){
         this.driveMotor = constants.driveMotor();
+        this.constants = constants;
         this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFOC());
     }
 
@@ -35,7 +38,12 @@ public class SimulationDrive implements IDrive {
 
     @Override
     public void setTargetClosedLoopVelocity(Rotation2d velocityPerSecond) {
-        runMotorByVoltage(velocityPerSecond.getRotations() / 16 * 12);
+        double voltage = ModuleUtils.velocityToVoltage(
+                velocityPerSecond,
+                constants.maxVelocityPerSecond(),
+                ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
+        );
+        runMotorByVoltage(voltage);
     }
 
 

@@ -6,11 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.utils.RobotTypeUtils;
 
 

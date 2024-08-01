@@ -5,9 +5,9 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
-import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.devicewrappers.TalonFXWrapper;
 

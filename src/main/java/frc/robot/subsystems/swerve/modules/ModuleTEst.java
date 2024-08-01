@@ -11,6 +11,7 @@ import frc.robot.subsystems.swerve.modules.check.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.check.steer.ISteer;
+import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 
 public class ModuleTEst {
@@ -20,11 +21,12 @@ public class ModuleTEst {
     private final ISteer iSteer;
     private final IDrive iDrive;
     private final IEncoder iEncoder;
+    private final ModuleConstants constants;
 
     private boolean isClosedLoop;
     private SwerveModuleState targetState;
 
-    public ModuleTEst(ModuleUtils.ModuleName moduleName, ISteer iSteer, IDrive iDrive, IEncoder iEncoder) {
+    public ModuleTEst(ModuleUtils.ModuleName moduleName, ISteer iSteer, IDrive iDrive, IEncoder iEncoder, ModuleConstants constants) {
         this.moduleName = moduleName;
         this.moduleInputsContainer = new ModuleInputsContainer();
         this.targetState = new SwerveModuleState();
@@ -32,6 +34,7 @@ public class ModuleTEst {
         this.iSteer = iSteer;
         this.iDrive = iDrive;
         this.iEncoder = iEncoder;
+        this.constants = constants;
         resetByEncoder();
     }
 
@@ -192,11 +195,28 @@ public class ModuleTEst {
     }
 
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
-        iDrive.setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
+        Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(
+                targetVelocityMetersPerSecond,
+                 constants.wheelDiameterMeters()
+        );
+        Rotation2d optimizedVelocityPerSecond = ModuleUtils.getCoupledAngle(
+                targetVelocityPerSecond,
+                moduleInputsContainer.getSteerMotorInputs().velocity,
+                constants.couplingRatio()
+        );
+        iDrive.setTargetClosedLoopVelocity(optimizedVelocityPerSecond);
     }
 
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
-        iDrive.setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
+        double voltage = ModuleUtils.velocityToOpenLoopVoltage(
+                targetVelocityMetersPerSecond,
+                moduleInputsContainer.getSteerMotorInputs().velocity,
+                constants.couplingRatio(),
+                constants.velocityAt12VoltsPerSecond(),
+                constants.wheelDiameterMeters(),
+                ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
+        );
+        iDrive.runMotorByVoltage(voltage);
     }
 
 }

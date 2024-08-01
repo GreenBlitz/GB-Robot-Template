@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.modules.steer.simulation;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.simulation.SimpleMotorSimulation;
 
@@ -10,16 +9,10 @@ public class SimulationSteerConstants{
     private final SimpleMotorSimulation steerMotor;
     private final boolean enableFOC;
 
-    public SimulationSteerConstants(DCMotorSim steerMotor, PIDConstants steerPIDConstants, boolean enableFOC){
-        this.steerMotor = new SimpleMotorSimulation(steerMotor);
+    public SimulationSteerConstants(DCMotorSim steerDCMotor, TalonFXConfiguration steerConfiguration, boolean enableFOC){
+        this.steerMotor = new SimpleMotorSimulation(steerDCMotor);
         this.enableFOC = enableFOC;
-
-        TalonFXConfiguration steerConfiguration = new TalonFXConfiguration();
-        steerConfiguration.Slot0.kP = steerPIDConstants.kP;
-        steerConfiguration.Slot0.kI = steerPIDConstants.kI;
-        steerConfiguration.Slot0.kD = steerPIDConstants.kD;
-        steerConfiguration.ClosedLoopGeneral.ContinuousWrap = true;
-        this.steerMotor.applyConfiguration(steerConfiguration);
+        steerMotor.applyConfiguration(steerConfiguration);
     }
 
     protected SimpleMotorSimulation getSteerMotor() {

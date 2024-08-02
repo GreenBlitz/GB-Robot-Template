@@ -6,11 +6,7 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
-public record ModuleConstants(
-        double wheelDiameterMeters,
-        double couplingRatio,
-        Rotation2d velocityAt12VoltsPerSecond
-) {
+public record ModuleConstants(double wheelDiameterMeters, double couplingRatio, Rotation2d velocityAt12VoltsPerSecond) {
 
     public ModuleConstants(double wheelDiameterMeters, double couplingRatio, double velocityAt12VoltsMetersPerSecond){
         this(wheelDiameterMeters, couplingRatio, Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond, wheelDiameterMeters));

@@ -9,9 +9,9 @@ public interface IDrive {
 
     void stop();
 
-    void runMotorByVoltage(double voltage);
+    void setVoltage(double voltage);
 
-    void setTargetClosedLoopVelocity(Rotation2d velocityPerSecond);
+    void setTargetVelocity(Rotation2d velocityPerSecond);
 
     void updateInputs(ModuleInputsContainer inputs);
 

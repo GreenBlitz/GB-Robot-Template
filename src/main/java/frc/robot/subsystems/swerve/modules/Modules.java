@@ -51,12 +51,12 @@ public class Modules {
 
 
     public void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
-        modules[module.getIndex()].runSteerMotorByVoltage(voltage);
+        modules[module.getIndex()].setSteerVoltage(voltage);
     }
 
     public void runModulesDriveByVoltage(double voltage) {
         for (Module module : modules) {
-            module.runDriveMotorByVoltage(voltage);
+            module.setDriveVoltage(voltage);
         }
     }
 
@@ -67,15 +67,15 @@ public class Modules {
         }
     }
 
-    public void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
-        for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(moduleStates[i], isClosedLoop);
-        }
-    }
-
     public void setBrake(boolean brake) {
         for (Module currentModule : modules) {
             currentModule.setBrake(brake);
+        }
+    }
+
+    public void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setTargetState(moduleStates[i], isClosedLoop);
         }
     }
 

@@ -14,10 +14,10 @@ public class ModulesFactory {
     private static Module createModule(ModuleUtils.ModuleName moduleName) {
         return new Module(
                 moduleName,
-                SteerFactory.create(moduleName),
-                DriveFactory.create(moduleName),
+                ModuleConstantsFactory.create(),
                 EncoderFactory.create(moduleName),
-                ModuleConstantsFactory.create()
+                SteerFactory.create(moduleName),
+                DriveFactory.create(moduleName)
         );
     }
 

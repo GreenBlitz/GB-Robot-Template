@@ -17,12 +17,12 @@ public class EmptyDrive implements IDrive {
     }
 
     @Override
-    public void runMotorByVoltage(double voltage) {
+    public void setVoltage(double voltage) {
 
     }
 
     @Override
-    public void setTargetClosedLoopVelocity(Rotation2d velocityPerSecond) {
+    public void setTargetVelocity(Rotation2d velocityPerSecond) {
 
     }
 

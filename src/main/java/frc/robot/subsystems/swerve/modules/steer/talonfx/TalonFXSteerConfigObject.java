@@ -9,31 +9,31 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 class TalonFXSteerConfigObject {
 
-    private final TalonFXWrapper steerMotor;
-
+    private final TalonFXWrapper motor;
     private final TalonFXSteerSignals signals;
 
     protected TalonFXSteerConfigObject(CTREDeviceID motorID, boolean inverted, int encoderID, TalonFXConfiguration configuration){
-        this.steerMotor = new TalonFXWrapper(motorID);
+        this.motor = new TalonFXWrapper(motorID);
         this.signals = new TalonFXSteerSignals(
-                steerMotor.getPosition().clone(),
-                steerMotor.getVelocity().clone(),
-                steerMotor.getAcceleration().clone(),
-                steerMotor.getMotorVoltage().clone()
+                motor.getPosition().clone(),
+                motor.getVelocity().clone(),
+                motor.getAcceleration().clone(),
+                motor.getMotorVoltage().clone()
         );
 
         configMotor(encoderID, configuration);
-        steerMotor.setInverted(inverted);
-        optimizeBusAndSignalOfSteerMotor();
+        motor.setInverted(inverted);
+        optimizeBusAndSignals();
     }
 
-    private void configMotor(int encoderID, TalonFXConfiguration steerConfiguration) {
+    private void configMotor(int encoderID, TalonFXConfiguration configuration) {
         if (encoderID != TalonFXSteerConstants.NO_ENCODER_ID) {
-            steerConfiguration.Feedback.FeedbackRemoteSensorID = encoderID;
+            configuration.Feedback.FeedbackRemoteSensorID = encoderID;
         }
-        steerMotor.applyConfiguration(steerConfiguration);
+        motor.applyConfiguration(configuration);
     }
-    private void optimizeBusAndSignalOfSteerMotor() {
+
+    private void optimizeBusAndSignals() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
                 signals.positionSignal(),
@@ -42,12 +42,12 @@ class TalonFXSteerConfigObject {
         );
         BaseStatusSignal.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, signals.voltageSignal());
 
-        steerMotor.optimizeBusUtilization();
+        motor.optimizeBusUtilization();
     }
 
 
-    protected TalonFXWrapper getSteerMotor() {
-        return steerMotor;
+    protected TalonFXWrapper getMotor() {
+        return motor;
     }
     protected TalonFXSteerSignals getSignals() {
         return signals;

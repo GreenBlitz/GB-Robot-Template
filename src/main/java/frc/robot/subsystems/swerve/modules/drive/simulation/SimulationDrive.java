@@ -10,12 +10,12 @@ import frc.robot.subsystems.swerve.modules.drive.IDrive;
 
 public class SimulationDrive implements IDrive {
 
-    private final SimpleMotorSimulation driveMotor;
+    private final SimpleMotorSimulation motor;
     private final SimulationDriveConstants constants;
     private final VoltageOut voltageRequest;
 
     public SimulationDrive(SimulationDriveConstants constants){
-        this.driveMotor = constants.driveMotor();
+        this.motor = constants.motorSimulation();
         this.constants = constants;
         this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFOC());
     }
@@ -28,31 +28,31 @@ public class SimulationDrive implements IDrive {
 
     @Override
     public void stop() {
-        driveMotor.stop();
+        motor.stop();
     }
 
     @Override
-    public void runMotorByVoltage(double voltage) {
-        driveMotor.setControl(voltageRequest.withOutput(voltage));
+    public void setVoltage(double voltage) {
+        motor.setControl(voltageRequest.withOutput(voltage));
     }
 
     @Override
-    public void setTargetClosedLoopVelocity(Rotation2d velocityPerSecond) {
+    public void setTargetVelocity(Rotation2d velocityPerSecond) {
         double voltage = ModuleUtils.velocityToVoltage(
                 velocityPerSecond,
                 constants.maxVelocityPerSecond(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        runMotorByVoltage(voltage);
+        setVoltage(voltage);
     }
 
 
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
-        inputs.getDriveMotorInputs().angle = driveMotor.getPosition();
-        inputs.getDriveMotorInputs().velocity = driveMotor.getVelocity();
-        inputs.getDriveMotorInputs().current = driveMotor.getCurrent();
-        inputs.getDriveMotorInputs().voltage = driveMotor.getVoltage();
+        inputs.getDriveMotorInputs().angle = motor.getPosition();
+        inputs.getDriveMotorInputs().velocity = motor.getVelocity();
+        inputs.getDriveMotorInputs().current = motor.getCurrent();
+        inputs.getDriveMotorInputs().voltage = motor.getVoltage();
         inputs.getDriveMotorInputs().angleOdometrySamples = new Rotation2d[]{inputs.getDriveMotorInputs().angle};
     }
 

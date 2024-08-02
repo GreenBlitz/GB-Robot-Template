@@ -15,23 +15,23 @@ import java.util.Queue;
 
 public class TalonFXSteer implements ISteer {
 
-    private final TalonFXWrapper steerMotor;
+    private final TalonFXWrapper motor;
     private final TalonFXSteerSignals signals;
 
     private final PositionVoltage positionVoltageRequest;
     private final VoltageOut voltageRequest;
 
-    private final Queue<Double> steerPositionQueue;
+    private final Queue<Double> positionQueue;
 
     public TalonFXSteer(TalonFXSteerConstants constants){
-        this.steerMotor = constants.getSteerMotor();
+        this.motor = constants.getMotor();
         this.signals = constants.getSignals();
 
         this.positionVoltageRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
         this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
 
-        this.steerPositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
-                steerMotor,
+        this.positionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(
+                motor,
                 signals.positionSignal(),
                 signals.velocitySignal()
         );
@@ -40,28 +40,28 @@ public class TalonFXSteer implements ISteer {
     @Override
     public void setBrake(boolean brake) {
         NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-        steerMotor.setNeutralMode(neutralModeValue);
+        motor.setNeutralMode(neutralModeValue);
     }
 
     @Override
     public void resetToAngle(Rotation2d angle) {
-        steerMotor.setPosition(angle.getRotations());
+        motor.setPosition(angle.getRotations());
     }
 
 
     @Override
     public void stop() {
-        steerMotor.stopMotor();
+        motor.stopMotor();
     }
 
     @Override
-    public void runMotorByVoltage(double voltage) {
-        steerMotor.setControl(voltageRequest.withOutput(voltage));
+    public void setVoltage(double voltage) {
+        motor.setControl(voltageRequest.withOutput(voltage));
     }
 
     @Override
     public void setTargetAngle(Rotation2d angle) {
-        steerMotor.setControl(positionVoltageRequest.withPosition(angle.getRotations()));
+        motor.setControl(positionVoltageRequest.withPosition(angle.getRotations()));
     }
 
 
@@ -74,12 +74,12 @@ public class TalonFXSteer implements ISteer {
                 signals.accelerationSignal(),
                 signals.voltageSignal()
         ).isOK();
-        steerInputs.angle = Rotation2d.fromRotations(steerMotor.getLatencyCompensatedPosition());
-        steerInputs.velocity = Rotation2d.fromRotations(steerMotor.getLatencyCompensatedVelocity());
+        steerInputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
+        steerInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
         steerInputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());
         steerInputs.voltage = signals.voltageSignal().getValue();
-        steerInputs.angleOdometrySamples = steerPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
-        steerPositionQueue.clear();
+        steerInputs.angleOdometrySamples = positionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+        positionQueue.clear();
     }
 
 }

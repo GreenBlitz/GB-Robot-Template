@@ -13,11 +13,11 @@ public class ModuleInputsContainer {
     private final SteerInputsAutoLogged steerMotorInputs = new SteerInputsAutoLogged();
     private final DriveInputsAutoLogged driveMotorInputs = new DriveInputsAutoLogged();
 
-    public void processInputs(String loggingPath){
-        Logger.processInputs(loggingPath, moduleInputs);
-        Logger.processInputs(loggingPath + "Encoder", encoderInputs);
-        Logger.processInputs(loggingPath + "Steer Motor", steerMotorInputs);
-        Logger.processInputs(loggingPath + "Drive Motor", driveMotorInputs);
+    public void processInputs(String logPath){
+        Logger.processInputs(logPath, moduleInputs);
+        Logger.processInputs(logPath + "Encoder", encoderInputs);
+        Logger.processInputs(logPath + "Steer", steerMotorInputs);
+        Logger.processInputs(logPath + "Drive", driveMotorInputs);
     }
 
     public ModuleInputsAutoLogged getModuleInputs() {

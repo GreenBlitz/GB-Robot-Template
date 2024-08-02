@@ -24,7 +24,7 @@ public class TalonFXDrive implements IDrive {
     private final Queue<Double> drivePositionQueue;
 
     public TalonFXDrive(TalonFXDriveConstants constants) {
-        this.driveMotor = constants.getDriveMotor();
+        this.driveMotor = constants.getMotor();
         this.signals = constants.getSignals();
 
         this.velocityVoltageRequest = new VelocityVoltage(0).withEnableFOC(constants.getEnableFOC());
@@ -52,12 +52,12 @@ public class TalonFXDrive implements IDrive {
     }
 
     @Override
-    public void runMotorByVoltage(double voltage) {
+    public void setVoltage(double voltage) {
         driveMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
     @Override
-    public void setTargetClosedLoopVelocity(Rotation2d velocityPerSecond) {
+    public void setTargetVelocity(Rotation2d velocityPerSecond) {
         driveMotor.setControl(velocityVoltageRequest.withVelocity(velocityPerSecond.getRotations()));
     }
 

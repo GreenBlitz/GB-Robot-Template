@@ -6,21 +6,21 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class TalonFXDriveConstants {
 
-    private final TalonFXWrapper driveMotor;
+    private final TalonFXWrapper motor;
 
     private final TalonFXDriveSignals signals;
 
     private final boolean enableFOC;
 
-    public TalonFXDriveConstants(CTREDeviceID driveMotorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {
-        TalonFXDriveConfigObject talonFXDriveConfigObject = new TalonFXDriveConfigObject(driveMotorID, inverted, configuration);
-        this.driveMotor = talonFXDriveConfigObject.getDriveMotor();
+    public TalonFXDriveConstants(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {
+        TalonFXDriveConfigObject talonFXDriveConfigObject = new TalonFXDriveConfigObject(motorID, inverted, configuration);
+        this.motor = talonFXDriveConfigObject.getMotor();
         this.signals = talonFXDriveConfigObject.getSignals();
         this.enableFOC = enableFOC;
     }
 
-    protected TalonFXWrapper getDriveMotor() {
-        return driveMotor;
+    protected TalonFXWrapper getMotor() {
+        return motor;
     }
 
     protected TalonFXDriveSignals getSignals() {

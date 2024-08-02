@@ -9,30 +9,30 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 class TalonFXDriveConfigObject {
 
-    private final TalonFXWrapper driveMotor;
+    private final TalonFXWrapper motor;
     private final TalonFXDriveSignals signals;
 
-    protected TalonFXDriveConfigObject(CTREDeviceID driveMotorID, boolean inverted, TalonFXConfiguration configuration) {
-        this.driveMotor = new TalonFXWrapper(driveMotorID);
+    protected TalonFXDriveConfigObject(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration) {
+        this.motor = new TalonFXWrapper(motorID);
         this.signals = new TalonFXDriveSignals(
-                driveMotor.getPosition().clone(),
-                driveMotor.getVelocity().clone(),
-                driveMotor.getAcceleration().clone(),
-                driveMotor.getMotorVoltage().clone(),
-                driveMotor.getStatorCurrent().clone()
+                motor.getPosition().clone(),
+                motor.getVelocity().clone(),
+                motor.getAcceleration().clone(),
+                motor.getMotorVoltage().clone(),
+                motor.getStatorCurrent().clone()
         );
 
-        configDriveMotor(configuration);
-        driveMotor.setInverted(inverted);
-        optimizeBusAndSignalOfDriveMotor();
+        configMotor(configuration);
+        motor.setInverted(inverted);
+        optimizeBusAndSignals();
     }
 
 
-    private void configDriveMotor(TalonFXConfiguration driveConfiguration) {
-        driveMotor.applyConfiguration(driveConfiguration);
+    private void configMotor(TalonFXConfiguration driveConfiguration) {
+        motor.applyConfiguration(driveConfiguration);
     }
 
-    private void optimizeBusAndSignalOfDriveMotor() {
+    private void optimizeBusAndSignals() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
                 signals.positionSignal(),
@@ -45,12 +45,12 @@ class TalonFXDriveConfigObject {
                 signals.statorCurrentSignal()
         );
 
-        driveMotor.optimizeBusUtilization();
+        motor.optimizeBusUtilization();
     }
 
 
-    protected TalonFXWrapper getDriveMotor() {
-        return driveMotor;
+    protected TalonFXWrapper getMotor() {
+        return motor;
     }
 
     protected TalonFXDriveSignals getSignals() {

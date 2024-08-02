@@ -6,17 +6,17 @@ import frc.robot.simulation.SimpleMotorSimulation;
 
 public class SimulationSteerConstants{
 
-    private final SimpleMotorSimulation steerMotor;
+    private final SimpleMotorSimulation motor;
     private final boolean enableFOC;
 
-    public SimulationSteerConstants(DCMotorSim steerDCMotor, TalonFXConfiguration steerConfiguration, boolean enableFOC){
-        this.steerMotor = new SimpleMotorSimulation(steerDCMotor);
+    public SimulationSteerConstants(DCMotorSim dcMotorSim, TalonFXConfiguration configuration, boolean enableFOC){
+        this.motor = new SimpleMotorSimulation(dcMotorSim);
         this.enableFOC = enableFOC;
-        steerMotor.applyConfiguration(steerConfiguration);
+        motor.applyConfiguration(configuration);
     }
 
-    protected SimpleMotorSimulation getSteerMotor() {
-        return steerMotor;
+    protected SimpleMotorSimulation getMotor() {
+        return motor;
     }
 
     protected boolean getEnableFOC(){

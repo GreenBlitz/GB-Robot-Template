@@ -51,6 +51,7 @@ public class ModuleUtils {
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
 
+
     /**
      * When the steer motor moves, the drive motor moves as well due to the coupling.
      * This will affect the current position of the drive motor, so we need to remove the coupling from the

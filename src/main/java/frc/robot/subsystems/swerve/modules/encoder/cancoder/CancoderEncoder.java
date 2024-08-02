@@ -26,7 +26,7 @@ public class CancoderEncoder implements IEncoder {
         this.voltageSignal = encoder.getSupplyVoltage().clone();
 
         configEncoder(configuration);
-        optimizeBusAndSignalOfEncoder();
+        optimizeBusAndSignals();
     }
 
     private void configEncoder(CANcoderConfiguration encoderConfiguration) {
@@ -36,7 +36,7 @@ public class CancoderEncoder implements IEncoder {
         encoder.getConfigurator().apply(encoderConfiguration);
     }
 
-    private void optimizeBusAndSignalOfEncoder() {
+    private void optimizeBusAndSignals() {
         BaseStatusSignal.setUpdateFrequencyForAll(
                 PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
                 positionSignal

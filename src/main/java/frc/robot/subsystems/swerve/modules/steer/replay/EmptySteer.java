@@ -22,7 +22,7 @@ public class EmptySteer implements ISteer {
     }
 
     @Override
-    public void runMotorByVoltage(double voltage) {
+    public void setVoltage(double voltage) {
 
     }
 

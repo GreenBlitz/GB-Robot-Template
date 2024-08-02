@@ -11,7 +11,7 @@ public interface ISteer {
 
     void stop();
 
-    void runMotorByVoltage(double voltage);
+    void setVoltage(double voltage);
 
     void setTargetAngle(Rotation2d angle);
 

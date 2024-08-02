@@ -8,7 +8,7 @@ public class TalonFXSteerConstants {
 
     protected static final int NO_ENCODER_ID = -1;
 
-    private final TalonFXWrapper steerMotor;
+    private final TalonFXWrapper motor;
     private final TalonFXSteerSignals signals;
     private final boolean enableFOC;
 
@@ -29,14 +29,14 @@ public class TalonFXSteerConstants {
             boolean enableFOC
     ){
         TalonFXSteerConfigObject steerConfigObject = new TalonFXSteerConfigObject(steerMotorID, inverted, encoderID, configuration);
-        this.steerMotor = steerConfigObject.getSteerMotor();
+        this.motor = steerConfigObject.getMotor();
         this.signals = steerConfigObject.getSignals();
         this.enableFOC = enableFOC;
     }
 
 
-    protected TalonFXWrapper getSteerMotor() {
-        return steerMotor;
+    protected TalonFXWrapper getMotor() {
+        return motor;
     }
 
     protected TalonFXSteerSignals getSignals() {

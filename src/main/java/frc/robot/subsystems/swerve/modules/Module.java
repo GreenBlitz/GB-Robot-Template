@@ -26,25 +26,28 @@ public class Module {
     private final IEncoder iEncoder;
     private final ModuleConstants constants;
 
-    private boolean isClosedLoop;
     private SwerveModuleState targetState;
     private Rotation2d startingSteerAngle;
+    private boolean isClosedLoop;
 
-    public Module(ModuleUtils.ModuleName moduleName, ISteer iSteer, IDrive iDrive, IEncoder iEncoder, ModuleConstants constants) {
+    public Module(ModuleUtils.ModuleName moduleName, ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
         this.moduleName = moduleName;
+
+        this.constants = constants;
         this.iEncoder = iEncoder;
         this.iSteer = iSteer;
         this.iDrive = iDrive;
-        this.constants = constants;
         this.moduleInputsContainer = new ModuleInputsContainer();
+
         this.targetState = new SwerveModuleState();
-        this.isClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
         this.startingSteerAngle = new Rotation2d();
+        this.isClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
+
         logStatus();
         resetByEncoder();
     }
 
-    private double toDriveMeters(Rotation2d angle) {
+    public double toDriveMeters(Rotation2d angle) {
         return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
     }
 
@@ -66,7 +69,7 @@ public class Module {
         }
     }
 
-    private void updateInputs() {
+    public void updateInputs() {
         iEncoder.updateInputs(moduleInputsContainer);
         iSteer.updateInputs(moduleInputsContainer);
         iDrive.updateInputs(moduleInputsContainer);
@@ -87,7 +90,7 @@ public class Module {
         moduleInputsContainer.processInputs(ModuleUtils.getModuleLogPath(moduleName));
     }
 
-    private void reportAlerts() {
+    public void reportAlerts() {
         if (!moduleInputsContainer.getEncoderInputs().isConnected) {
             Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "encoder disconnect", Timer.getFPGATimestamp());
         }
@@ -102,11 +105,6 @@ public class Module {
 
     public void setClosedLoop(boolean closedLoop) {
         isClosedLoop = closedLoop;
-    }
-
-    public void stop() {
-        iSteer.stop();
-        iDrive.stop();
     }
 
     public void setBrake(boolean isBrake) {
@@ -151,11 +149,11 @@ public class Module {
         return moduleInputsContainer.getDriveMotorInputs().angle;
     }
 
-    private double getDriveVelocityMetersPerSecond() {
+    public double getDriveVelocityMetersPerSecond() {
         return moduleInputsContainer.getDriveMotorInputs().velocityMeters;
     }
 
-    private Rotation2d getCurrentAngle() {
+    public Rotation2d getCurrentAngle() {
         return moduleInputsContainer.getSteerMotorInputs().angle;
     }
 
@@ -186,35 +184,40 @@ public class Module {
     }
 
 
+    public void stop() {
+        iSteer.stop();
+        iDrive.stop();
+    }
+
+
+    public void setDriveVoltage(double voltage) {
+        iDrive.setVoltage(voltage);
+    }
+
+    public void setSteerVoltage(double voltage) {
+        iSteer.setVoltage(voltage);
+    }
+
+
     public void pointToAngle(Rotation2d angle, boolean optimize) {
         SwerveModuleState moduleState = new SwerveModuleState(0, angle);
         if (optimize) {
-            this.targetState = SwerveModuleState.optimize(moduleState, getCurrentAngle());
+            this.targetState.angle = SwerveModuleState.optimize(moduleState, getCurrentAngle()).angle;
         }
         else {
-            this.targetState = moduleState;
+            this.targetState.angle = moduleState.angle;
         }
         iSteer.setTargetAngle(targetState.angle);
     }
 
 
-    public void runDriveMotorByVoltage(double voltage) {
-        iDrive.runMotorByVoltage(voltage);
-    }
-
-    public void runSteerMotorByVoltage(double voltage) {
-        iSteer.runMotorByVoltage(voltage);
-    }
-
-
     public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
-        setClosedLoop(isClosedLoop);
         this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
         iSteer.setTargetAngle(this.targetState.angle);
-        setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle);
+        setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
     }
 
-    private void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle) {
+    public void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, boolean isClosedLoop) {
         targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
 
         if (isClosedLoop) {
@@ -226,19 +229,21 @@ public class Module {
     }
 
     public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
+        setClosedLoop(true);
         Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(
                 targetVelocityMetersPerSecond,
                 constants.wheelDiameterMeters()
         );
-        Rotation2d optimizedVelocityPerSecond = ModuleUtils.getCoupledAngle(
+        Rotation2d coupledVelocityPerSecond = ModuleUtils.getCoupledAngle(
                 targetVelocityPerSecond,
                 moduleInputsContainer.getSteerMotorInputs().velocity,
                 constants.couplingRatio()
         );
-        iDrive.setTargetClosedLoopVelocity(optimizedVelocityPerSecond);
+        iDrive.setTargetVelocity(coupledVelocityPerSecond);
     }
 
     public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
+        setClosedLoop(false);
         double voltage = ModuleUtils.velocityToOpenLoopVoltage(
                 targetVelocityMetersPerSecond,
                 moduleInputsContainer.getSteerMotorInputs().velocity,
@@ -247,7 +252,7 @@ public class Module {
                 constants.wheelDiameterMeters(),
                 ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
         );
-        iDrive.runMotorByVoltage(voltage);
+        iDrive.setVoltage(voltage);
     }
 
 }

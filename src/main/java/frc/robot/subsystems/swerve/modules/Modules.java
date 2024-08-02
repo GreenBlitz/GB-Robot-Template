@@ -136,7 +136,7 @@ public class Modules {
         return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
     }
 
-    public SwerveDriveWheelPositions getWheelPositions(int odometrySampleIndex) {
+    public SwerveDriveWheelPositions getWheelsPositions(int odometrySampleIndex) {
         SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
             swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
@@ -144,11 +144,11 @@ public class Modules {
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }
 
-    public SwerveDriveWheelPositions[] getAllWheelPositionSamples() {
+    public SwerveDriveWheelPositions[] getAllWheelsPositionsSamples() {
         int numberOfOdometrySamples = modules[0].getNumberOfOdometrySamples();
         SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[numberOfOdometrySamples];
         for (int i = 0; i < numberOfOdometrySamples; i++) {
-            swerveWheelPositions[i] = getWheelPositions(i);
+            swerveWheelPositions[i] = getWheelsPositions(i);
         }
         return swerveWheelPositions;
     }

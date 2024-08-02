@@ -169,7 +169,7 @@ public class Swerve extends GBSubsystem {
         int odometrySamples = getNumberOfOdometrySamples();
         double[] timestamps = gyroInputs.timestampOdometrySamples;
         Rotation2d[] gyroRotations = gyroInputs.yawOdometrySamples;
-        SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllWheelPositionSamples();
+        SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllWheelsPositionsSamples();
 
         OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
         for (int i = 0; i < odometrySamples; i++) {

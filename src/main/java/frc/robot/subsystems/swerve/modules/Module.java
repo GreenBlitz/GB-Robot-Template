@@ -145,7 +145,7 @@ public class Module {
         return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
     }
 
-    public Rotation2d getDriveDistanceAngle() {
+    public Rotation2d getDriveAngle() {
         return moduleInputsContainer.getDriveMotorInputs().angle;
     }
 

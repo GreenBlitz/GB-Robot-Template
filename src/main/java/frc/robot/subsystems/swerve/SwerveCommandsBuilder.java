@@ -69,7 +69,7 @@ public class SwerveCommandsBuilder {
                         swerve,
                         SwerveConstants.DRIVE_RADIUS_METERS,
                         SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY,
-                        swerve.getModules()::getDriveDistances,
+                        swerve.getModules()::getDrivesAngles,
                         swerve::getAbsoluteHeading,
                         swerve::runWheelRadiusCharacterization,
                         swerve.getModules()::stop

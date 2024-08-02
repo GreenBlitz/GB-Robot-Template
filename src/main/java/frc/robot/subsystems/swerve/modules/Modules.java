@@ -132,8 +132,8 @@ public class Modules {
     }
 
 
-    public Rotation2d[] getDriveDistances() {
-        return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
+    public Rotation2d[] getDrivesAngles() {
+        return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
     }
 
     public SwerveDriveWheelPositions getWheelsPositions(int odometrySampleIndex) {

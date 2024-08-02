@@ -191,6 +191,7 @@ public class Module {
 
 
     public void setDriveVoltage(double voltage) {
+        setClosedLoop(false);
         iDrive.setVoltage(voltage);
     }
 

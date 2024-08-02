@@ -88,7 +88,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public void setHeading(Rotation2d heading) {
-        gyro.setHeading(heading);
+        gyro.setYaw(heading);
         gyroInputs.gyroYaw = heading;
     }
 
@@ -157,7 +157,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public Translation3d getGyroAcceleration() {
-        return new Translation3d(gyroInputs.accelerationX, gyroInputs.accelerationY, gyroInputs.accelerationZ);
+        return new Translation3d(gyroInputs.xAcceleration, gyroInputs.yAcceleration, gyroInputs.zAcceleration);
     }
 
 

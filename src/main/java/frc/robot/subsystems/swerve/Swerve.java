@@ -169,7 +169,7 @@ public class Swerve extends GBSubsystem {
         int odometrySamples = getNumberOfOdometrySamples();
         double[] timestamps = gyroInputs.timestampOdometrySamples;
         Rotation2d[] gyroRotations = gyroInputs.yawOdometrySamples;
-        SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllSwerveWheelPositionSamples();
+        SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllWheelPositionSamples();
 
         OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
         for (int i = 0; i < odometrySamples; i++) {
@@ -181,7 +181,7 @@ public class Swerve extends GBSubsystem {
 
 
     public ChassisSpeeds getRobotRelativeVelocity() {
-        return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getModulesStates());
+        return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getCurrentStates());
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
@@ -272,7 +272,7 @@ public class Swerve extends GBSubsystem {
 
     private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
-        modules.setTargetModuleStates(moduleStates, isClosedLoop);
+        modules.setTargetStates(moduleStates, isClosedLoop);
     }
 
 

@@ -49,6 +49,7 @@ public class SimulationDrive implements IDrive {
 
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
+        inputs.getDriveMotorInputs().isConnected = true;
         inputs.getDriveMotorInputs().angle = motor.getPosition();
         inputs.getDriveMotorInputs().velocity = motor.getVelocity();
         inputs.getDriveMotorInputs().current = motor.getCurrent();

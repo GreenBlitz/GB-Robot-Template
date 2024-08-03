@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class DriveInputs {
 
-    public boolean isConnected = true;
+    public boolean isConnected = false;
     public double distanceMeters = 0;
     public double velocityMeters = 0;
     public Rotation2d angle = new Rotation2d();

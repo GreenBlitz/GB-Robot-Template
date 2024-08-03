@@ -50,6 +50,7 @@ public class SimulationSteer implements ISteer {
 
     @Override
     public void updateInputs(ModuleInputsContainer inputs) {
+        inputs.getSteerMotorInputs().isConnected = true;
         inputs.getSteerMotorInputs().angle = motor.getPosition();
         inputs.getSteerMotorInputs().velocity = motor.getVelocity();
         inputs.getSteerMotorInputs().voltage = motor.getVoltage();

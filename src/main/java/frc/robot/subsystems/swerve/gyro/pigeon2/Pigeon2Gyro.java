@@ -5,16 +5,13 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Queue;
 
@@ -65,13 +62,6 @@ public class Pigeon2Gyro implements ISwerveGyro {
         gyro.setYaw(heading.getDegrees());
     }
 
-
-    private void reportAlerts(SwerveGyroInputsAutoLogged inputs) {
-        if (!inputs.isConnected) {
-            Logger.recordOutput(SwerveGyroConstants.ALERT_LOG_PATH + "/gyroDisconnectedAt", Timer.getFPGATimestamp());
-        }
-    }
-
     @Override
     public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
         inputs.isConnected = BaseStatusSignal.refreshAll(
@@ -88,8 +78,6 @@ public class Pigeon2Gyro implements ISwerveGyro {
         inputs.timestampOdometrySamples = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
         yawQueue.clear();
         timestampQueue.clear();
-
-        reportAlerts(inputs);
     }
 
 }

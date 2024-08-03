@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Robot;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
@@ -114,13 +113,18 @@ public class Swerve extends GBSubsystem {
         gyroInputs.timestampOdometrySamples = new double[]{Timer.getFPGATimestamp()};
     }
 
+    private void reportGyroDisconnect() {
+        Logger.recordOutput(SwerveGyroConstants.ALERT_LOG_PATH + "/gyroDisconnectedAt", Timer.getFPGATimestamp());
+    }
+
     private void updateInputs() {
         ODOMETRY_LOCK.lock(); {
-            if (Robot.ROBOT_TYPE.isSimulation()) {
+            if (gyroInputs.isConnected) {
+                reportGyroDisconnect();
                 updateGyroSimulation();
             }
             gyro.updateInputs(gyroInputs);
-            Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
+            Logger.processInputs(SwerveConstants.GYRO_LOG_PATH, gyroInputs);
 
             modules.logStatus();
         } ODOMETRY_LOCK.unlock();

@@ -59,6 +59,7 @@ public record SwerveConstants(
     }
 
     public static final String SWERVE_LOG_PATH = "Subsystems/Swerve/";
+    static final String GYRO_LOG_PATH = SWERVE_LOG_PATH + "Gyro/";
     static final String STATE_LOG_PATH = SWERVE_LOG_PATH + "State/";
     static final String VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 

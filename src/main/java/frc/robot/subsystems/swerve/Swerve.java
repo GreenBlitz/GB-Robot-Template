@@ -119,7 +119,7 @@ public class Swerve extends GBSubsystem {
 
     private void updateInputs() {
         ODOMETRY_LOCK.lock(); {
-            if (gyroInputs.isConnected) {
+            if (!gyroInputs.isConnected) {
                 reportGyroDisconnect();
                 updateGyroSimulation();
             }

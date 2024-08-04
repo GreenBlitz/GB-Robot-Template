@@ -3,8 +3,8 @@ package frc.robot.subsystems.swerve.swervestatehelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
@@ -46,7 +46,7 @@ public class SwerveStateHelper {
             case SPEAKER -> handleSpeakerState(
                     inputSpeeds,
                     robotPoseSupplier,
-                    robotPose -> FieldConstants.getSpeaker().toTranslation2d().minus(robotPose.getTranslation()).getAngle(),
+                    robotPose -> new Translation3d(0,0,0).toTranslation2d().minus(robotPose.getTranslation()).getAngle(),
                     swerveConstants
             );
             case AMP -> handleAmpState(
@@ -79,7 +79,7 @@ public class SwerveStateHelper {
 
         Logger.recordOutput("note pose", new Pose2d(noteTranslation, new Rotation2d()));
 
-        double wantedHorizontalVelocity = swerveConstants.translationMetersPIDController().calculate(0, rotatedNoteTranslation.getY())
+        double wantedHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, rotatedNoteTranslation.getY())
                 + inputSpeeds.vyMetersPerSecond;
         return ChassisSpeeds.fromRobotRelativeSpeeds(
                 inputSpeeds.vxMetersPerSecond,

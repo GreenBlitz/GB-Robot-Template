@@ -4,62 +4,63 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.swervecontainer.SwerveFactory;
-import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.utils.RobotTypeUtils;
-
-import java.util.Optional;
 
 
 public class Robot {
 
     public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
-
     public static final Swerve swerve = new Swerve(
-            SwerveFactory.createConstants(),
-            SwerveFactory.createModules(),
-            SwerveFactory.createGyro()
+            SwerveConstantsFactory.create(),
+            ModulesFactory.create(),
+            GyroFactory.create()
     );
-    public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
-    public static final SwerveStateHelper SWERVE_STATE_HELPER = new SwerveStateHelper(
-            poseEstimator::getCurrentPose,
-            () -> Optional.of(new Translation2d(2,5)),
-            swerve
+    public static final PoseEstimator poseEstimator = new PoseEstimator(
+            swerve::setHeading,
+            swerve::getFieldRelativeVelocity
     );
-
     static {
-        swerve.applyStateHandler(SWERVE_STATE_HELPER);
+        swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
     }
+
     public Robot() {
         buildPathPlannerForAuto();
         configureBindings();
     }
 
-    private void initializeSubsystems() {
-
+    public Command getAutonomousCommand() {
+        return new InstantCommand();
     }
 
-    private void configureCommands() {
-
+    public Swerve getSwerve() {
+        return swerve;
     }
+
+    public PoseEstimator getPoseEstimator(){
+        return poseEstimator;
+    }
+
 
     private void buildPathPlannerForAuto() {
         // Register commands...
-        swerve.buildPathPlannerForAuto(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+        swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
     }
 
     private void configureBindings() {
-        JoysticksBindings.configureBindings();
+        JoysticksBindings.configureBindings(this);
     }
 
-    public Command getAutonomousCommand() {
-        return new InstantCommand();
+    public void periodic(){
+        swerve.wrapperPeriodic();
+        poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
     }
 
 }

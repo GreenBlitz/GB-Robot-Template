@@ -24,25 +24,33 @@ public class ModuleUtils {
 
     }
 
-    public static String getLoggingPath(ModuleName moduleName) {
+    public static String getModuleLogPath(ModuleName moduleName) {
         return ModuleConstants.LOG_PATH + moduleName + "/";
     }
 
-    public static String getAlertLoggingPath(ModuleName moduleName) {
+    public static String getModuleAlertLogPath(ModuleName moduleName) {
         return ModuleConstants.ALERT_LOG_PATH + moduleName + "/";
     }
 
 
     public static double velocityToOpenLoopVoltage(
-            double velocityMetersPerSecond, Rotation2d steerVelocityPerSecond,
-            double couplingRatio, Rotation2d maxSpeedPerSecond,
-            double wheelDiameterMeters, double voltageCompensationSaturation
+            double velocityMetersPerSecond,
+            Rotation2d steerVelocityPerSecond,
+            double couplingRatio,
+            Rotation2d maxVelocityPerSecond,
+            double wheelDiameterMeters,
+            double voltageCompensationSaturation
     ) {
         Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-        Rotation2d optimizedVelocityPerSecond = getCoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
-        double power = optimizedVelocityPerSecond.getRotations() / maxSpeedPerSecond.getRotations();
+        Rotation2d coupledVelocityPerSecond = getCoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
+        return velocityToVoltage(coupledVelocityPerSecond, maxVelocityPerSecond, voltageCompensationSaturation);
+    }
+
+    public static double velocityToVoltage(Rotation2d velocityPerSecond, Rotation2d maxVelocityPerSecond, double voltageCompensationSaturation){
+        double power = velocityPerSecond.getRotations() / maxVelocityPerSecond.getRotations();
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
+
 
     /**
      * When the steer motor moves, the drive motor moves as well due to the coupling.
@@ -76,9 +84,9 @@ public class ModuleUtils {
      * @param targetSteerAngle the target steer angle
      * @return the reduced target velocity in revolutions per second
      */
-    public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentAngle) {
-        double closedLoopError = targetSteerAngle.getRadians() - currentAngle.getRadians();
-        double cosineScalar = Math.abs(Math.cos(closedLoopError));
+    public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentSteerAngle) {
+        double steerDeltaRadians = targetSteerAngle.getRadians() - currentSteerAngle.getRadians();
+        double cosineScalar = Math.abs(Math.cos(steerDeltaRadians));
         return targetVelocityMetersPerSecond * cosineScalar;
     }
 

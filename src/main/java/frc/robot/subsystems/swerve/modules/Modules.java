@@ -16,7 +16,7 @@ public class Modules {
 
     public Modules(Module[] modules){
         this.modules = modules;
-        logPath = modules[0].getModulesLogPath();
+        logPath = this.modules[0].getModulesLogPath();
     }
 
 
@@ -24,8 +24,8 @@ public class Modules {
         for (Module currentModule : modules) {
             currentModule.logStatus();
         }
-        Logger.recordOutput(logPath + "TargetStates", getTargetStates());
         Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
+        Logger.recordOutput(logPath + "TargetStates", getTargetStates());
     }
 
 

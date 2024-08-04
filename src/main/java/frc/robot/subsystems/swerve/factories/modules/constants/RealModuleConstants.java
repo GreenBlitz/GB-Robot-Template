@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules.constants;
 
-import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.Robot;
 import frc.robot.subsystems.swerve.factories.swerveconstants.RealSwerveConstants;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 
@@ -12,7 +12,7 @@ public class RealModuleConstants {
 
     protected static ModuleConstants getModuleConstants(){
         return new ModuleConstants(
-                SwerveConstants.getSwerveLogPath(RealSwerveConstants.SWERVE_NAME),
+                Robot.swerve.getLogPath(),
                 MODULES_NAME,
                 WHEEL_DIAMETER_METERS,
                 COUPLING_RATIO,

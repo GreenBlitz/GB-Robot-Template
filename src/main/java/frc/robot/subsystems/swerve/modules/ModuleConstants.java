@@ -2,25 +2,21 @@ package frc.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.LogPaths;
-import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
-public record ModuleConstants(String swerveLogPath, String modulesName, double wheelDiameterMeters, double couplingRatio, Rotation2d velocityAt12VoltsPerSecond) {
+public record ModuleConstants(String modulesLogPath, double wheelDiameterMeters, double couplingRatio,
+        Rotation2d velocityAt12VoltsPerSecond) {
 
     public ModuleConstants(String swerveLogPath, String modulesName, double wheelDiameterMeters, double couplingRatio,
             double velocityAt12VoltsMetersPerSecond){
-        this(swerveLogPath, modulesName, wheelDiameterMeters, couplingRatio,
+        this(swerveLogPath + modulesName + "Modules/", wheelDiameterMeters, couplingRatio,
                 Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond,
                 wheelDiameterMeters));
     }
 
-    String getLogPath() {
-        return swerveLogPath() + modulesName() + "Modules/";
-    }
-
     String getAlertLogPath() {
-        return LogPaths.ALERT_LOG_PATH + getLogPath();
+        return LogPaths.ALERT_LOG_PATH + modulesLogPath();
     }
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);

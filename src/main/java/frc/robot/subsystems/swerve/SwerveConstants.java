@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.MathConstants;
 
 public record SwerveConstants(
-        String swerveName,
+        String swerveLogPath,
         double velocityAt12VoltsMetersPerSecond,
         Rotation2d maxRotationalVelocityPerSecond,
         PIDController xMetersPIDController,
@@ -28,7 +28,7 @@ public record SwerveConstants(
             PIDConstants rotationDegreesPIDConstants
     ){
         this(
-                swerveName,
+                "Subsystems/" + swerveName + "Swerve/",
                 velocityAt12VoltsMetersPerSecond,
                 maxRotationalVelocityPerSecond,
                 new PIDController(
@@ -61,20 +61,12 @@ public record SwerveConstants(
         );
     }
 
-    public static String getSwerveLogPath(String swerveName) {
-        return "Subsystems/" + swerveName + "Swerve/";
-    }
-
-    public String getSwerveLogPath() {
-        return getSwerveLogPath(swerveName());
-    }
-
     String getStateLogPath() {
-        return getSwerveLogPath() + "State/";
+        return swerveLogPath() + "State/";
     }
 
     String getVelocityLogPath() {
-        return getSwerveLogPath() + "Velocity/";
+        return swerveLogPath() + "Velocity/";
     }
 
     static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);

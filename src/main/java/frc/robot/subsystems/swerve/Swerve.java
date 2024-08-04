@@ -165,6 +165,7 @@ public class Swerve extends GBSubsystem {
     public SwerveConstants getConstants (){
         return this.constants;
     }
+
     public Rotation2d getRelativeHeading() {
         return Rotation2d.fromDegrees(gyroInputs.gyroYaw.getDegrees());
     }
@@ -261,7 +262,7 @@ public class Swerve extends GBSubsystem {
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         this.currentState = swerveState;
-        chassisSpeeds = stateHandler.applyAimAssistOnInputsSpeeds(swerveState.getAimAssist(),chassisSpeeds);
+        chassisSpeeds = stateHandler.applyAimAssistOnInputsSpeeds(swerveState.getAimAssist(), chassisSpeeds);
 
         if (SwerveMath.isStill(chassisSpeeds)) {
             modules.stop();
@@ -343,6 +344,4 @@ public class Swerve extends GBSubsystem {
     public void applyStateHandler(SwerveStateHelper swerveStateHelper){
         this.stateHandler = swerveStateHelper;
     }
-
-
 }

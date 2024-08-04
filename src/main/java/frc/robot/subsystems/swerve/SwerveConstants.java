@@ -61,9 +61,21 @@ public record SwerveConstants(
         );
     }
 
-    public static final String SWERVE_LOG_PATH = "Subsystems/Swerve" + this.swerveName + "/";
-    static final String STATE_LOG_PATH = SWERVE_LOG_PATH + "State/";
-    static final String VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
+    public static String getSwerveLogPath(String swerveName) {
+        return "Subsystems/" + swerveName + "Swerve/";
+    }
+
+    public String getSwerveLogPath() {
+        return getSwerveLogPath(swerveName());
+    }
+
+    String getStateLogPath() {
+        return getSwerveLogPath() + "State/";
+    }
+
+    String getVelocityLogPath() {
+        return getSwerveLogPath() + "Velocity/";
+    }
 
     static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
     static final double STEER_SYSID_CALIBRATION_VOLTAGE_STEP = 1;

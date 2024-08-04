@@ -24,14 +24,6 @@ public class ModuleUtils {
 
     }
 
-    public static String getModuleLogPath(ModuleName moduleName) {
-        return ModuleConstants.LOG_PATH + moduleName + "/";
-    }
-
-    public static String getModuleAlertLogPath(ModuleName moduleName) {
-        return ModuleConstants.ALERT_LOG_PATH + moduleName + "/";
-    }
-
 
     public static double velocityToOpenLoopVoltage(
             double velocityMetersPerSecond,

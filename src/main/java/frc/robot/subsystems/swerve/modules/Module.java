@@ -87,18 +87,18 @@ public class Module {
         moduleInputs.isAtTargetState = moduleInputs.isAtTargetVelocity && moduleInputs.isAtTargetAngle;
         moduleInputs.isClosedLoop = isClosedLoop;
 
-        moduleInputsContainer.processInputs(ModuleUtils.getModuleLogPath(moduleName));
+        moduleInputsContainer.processInputs(getModuleLogPath());
     }
 
     public void reportAlerts() {
         if (!moduleInputsContainer.getEncoderInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "encoder disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(getModuleAlertLogPath() + "encoder disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "steer motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(getModuleAlertLogPath() + "steer motor disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "drive motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(getModuleAlertLogPath() + "drive motor disconnect", Timer.getFPGATimestamp());
         }
     }
 
@@ -155,6 +155,18 @@ public class Module {
 
     public Rotation2d getCurrentAngle() {
         return moduleInputsContainer.getSteerMotorInputs().angle;
+    }
+
+    public String getModulesLogPath() {
+        return constants.getLogPath();
+    }
+
+    public String getModuleLogPath() {
+        return getModulesLogPath() + moduleName + "/";
+    }
+
+    public String getModuleAlertLogPath() {
+        return constants.getAlertLogPath() + moduleName + "/";
     }
 
 

@@ -24,7 +24,6 @@ public class ModuleUtils {
 
     }
 
-
     public static double velocityToOpenLoopVoltage(
             double velocityMetersPerSecond,
             Rotation2d steerVelocityPerSecond,

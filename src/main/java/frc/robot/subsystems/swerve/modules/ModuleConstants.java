@@ -5,14 +5,27 @@ import frc.robot.constants.LogPaths;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
-public record ModuleConstants(String modulesLogPath, double wheelDiameterMeters, double couplingRatio,
-        Rotation2d velocityAt12VoltsPerSecond) {
+public record ModuleConstants(
+        String modulesLogPath,
+        double wheelDiameterMeters,
+        double couplingRatio,
+        Rotation2d velocityAt12VoltsPerSecond
+) {
 
-    public ModuleConstants(String swerveLogPath, String modulesName, double wheelDiameterMeters, double couplingRatio,
-            double velocityAt12VoltsMetersPerSecond){
-        this(swerveLogPath + modulesName + "Modules/", wheelDiameterMeters, couplingRatio,
-                Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond,
-                wheelDiameterMeters));
+    public ModuleConstants(
+            String swerveLogPath,
+            String modulesName,
+            double wheelDiameterMeters,
+            double couplingRatio,
+            double velocityAt12VoltsMetersPerSecond) {
+        this(
+                swerveLogPath + modulesName + "Modules/",
+                wheelDiameterMeters, couplingRatio,
+                Conversions.distanceToAngle(
+                        velocityAt12VoltsMetersPerSecond,
+                        wheelDiameterMeters
+                )
+        );
     }
 
     String getAlertLogPath() {

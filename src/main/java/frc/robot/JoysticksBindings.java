@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
+import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -61,6 +62,12 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
                 SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)
+        ));
+        usedJoystick.R1.whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
+                () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+                () -> usedJoystick.getAxisValue(Axis.LEFT_X),
+                () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+                SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)
         ));
 
         usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(robot.getSwerve().getCommandsBuilder().driveState(

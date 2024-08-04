@@ -37,15 +37,20 @@ public class ModuleUtils {
             double velocityMetersPerSecond,
             Rotation2d steerVelocityPerSecond,
             double couplingRatio,
-            Rotation2d maxSpeedPerSecond,
+            Rotation2d maxVelocityPerSecond,
             double wheelDiameterMeters,
             double voltageCompensationSaturation
     ) {
         Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
         Rotation2d coupledVelocityPerSecond = getCoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
-        double power = coupledVelocityPerSecond.getRotations() / maxSpeedPerSecond.getRotations();
+        return velocityToVoltage(coupledVelocityPerSecond, maxVelocityPerSecond, voltageCompensationSaturation);
+    }
+
+    public static double velocityToVoltage(Rotation2d velocityPerSecond, Rotation2d maxVelocityPerSecond, double voltageCompensationSaturation){
+        double power = velocityPerSecond.getRotations() / maxVelocityPerSecond.getRotations();
         return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
     }
+
 
     /**
      * When the steer motor moves, the drive motor moves as well due to the coupling.

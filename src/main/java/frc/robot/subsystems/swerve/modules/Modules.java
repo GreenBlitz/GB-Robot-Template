@@ -50,13 +50,13 @@ public class Modules {
     }
 
 
-    public void runModuleSteerByVoltage(ModuleUtils.ModuleName module, double voltage) {
-        modules[module.getIndex()].runSteerMotorByVoltage(voltage);
+    public void setSteersVoltage(ModuleUtils.ModuleName module, double voltage) {
+        modules[module.getIndex()].setSteerVoltage(voltage);
     }
 
-    public void runModulesDriveByVoltage(double voltage) {
+    public void setDrivesVoltage(double voltage) {
         for (Module module : modules) {
-            module.runDriveMotorByVoltage(voltage);
+            module.setDriveVoltage(voltage);
         }
     }
 
@@ -67,15 +67,15 @@ public class Modules {
         }
     }
 
-    public void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
-        for (int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(moduleStates[i], isClosedLoop);
-        }
-    }
-
     public void setBrake(boolean brake) {
         for (Module currentModule : modules) {
             currentModule.setBrake(brake);
+        }
+    }
+
+    public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setTargetState(moduleStates[i], isClosedLoop);
         }
     }
 
@@ -86,7 +86,7 @@ public class Modules {
     }
 
 
-    public boolean isModulesAtVelocities() {
+    public boolean isAtTargetVelocities() {
         for (Module module : modules) {
             if (!module.isAtTargetVelocity()) {
                 return false;
@@ -95,7 +95,7 @@ public class Modules {
         return true;
     }
 
-    public boolean isModulesAtAngles() {
+    public boolean isAtTargetAngles() {
         for (Module module : modules) {
             if (!module.isAtTargetAngle()) {
                 return false;
@@ -104,12 +104,12 @@ public class Modules {
         return true;
     }
 
-    public boolean isModulesAtStates() {
-        return isModulesAtAngles() && isModulesAtAngles();
+    public boolean isAtTargetStates() {
+        return isAtTargetAngles() && isAtTargetAngles();
     }
 
 
-    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "TargetModulesStates")
+    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "TargetStates")
     public SwerveModuleState[] getTargetStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
@@ -120,8 +120,8 @@ public class Modules {
         return states;
     }
 
-    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "CurrentModulesStates")
-    public SwerveModuleState[] getModulesStates() {
+    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "CurrentStates")
+    public SwerveModuleState[] getCurrentStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
         for (int i = 0; i < modules.length; i++) {
@@ -132,11 +132,11 @@ public class Modules {
     }
 
 
-    public Rotation2d[] getModulesDriveDistances() {
-        return Arrays.stream(modules).map(Module::getDriveDistanceAngle).toArray(Rotation2d[]::new);
+    public Rotation2d[] getDrivesAngles() {
+        return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
     }
 
-    public SwerveDriveWheelPositions getSwerveWheelPositions(int odometrySampleIndex) {
+    public SwerveDriveWheelPositions getWheelsPositions(int odometrySampleIndex) {
         SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
             swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
@@ -144,11 +144,11 @@ public class Modules {
         return new SwerveDriveWheelPositions(swerveModulePositions);
     }
 
-    public SwerveDriveWheelPositions[] getAllSwerveWheelPositionSamples() {
+    public SwerveDriveWheelPositions[] getAllWheelsPositionsSamples() {
         int numberOfOdometrySamples = modules[0].getNumberOfOdometrySamples();
         SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[numberOfOdometrySamples];
         for (int i = 0; i < numberOfOdometrySamples; i++) {
-            swerveWheelPositions[i] = getSwerveWheelPositions(i);
+            swerveWheelPositions[i] = getWheelsPositions(i);
         }
         return swerveWheelPositions;
     }

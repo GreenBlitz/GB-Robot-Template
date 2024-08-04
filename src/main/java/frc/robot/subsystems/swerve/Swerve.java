@@ -12,13 +12,13 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
+import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -169,7 +169,7 @@ public class Swerve extends GBSubsystem {
         int odometrySamples = getNumberOfOdometrySamples();
         double[] timestamps = gyroInputs.timestampOdometrySamples;
         Rotation2d[] gyroRotations = gyroInputs.yawOdometrySamples;
-        SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllSwerveWheelPositionSamples();
+        SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllWheelsPositionsSamples();
 
         OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
         for (int i = 0; i < odometrySamples; i++) {
@@ -181,7 +181,7 @@ public class Swerve extends GBSubsystem {
 
 
     public ChassisSpeeds getRobotRelativeVelocity() {
-        return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getModulesStates());
+        return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getCurrentStates());
     }
 
     public ChassisSpeeds getFieldRelativeVelocity() {
@@ -272,7 +272,7 @@ public class Swerve extends GBSubsystem {
 
     private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
-        modules.setTargetModuleStates(moduleStates, isClosedLoop);
+        modules.setTargetStates(moduleStates, isClosedLoop);
     }
 
 

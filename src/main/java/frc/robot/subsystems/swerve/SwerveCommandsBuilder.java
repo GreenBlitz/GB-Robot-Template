@@ -34,14 +34,14 @@ public class SwerveCommandsBuilder {
         this.steerCalibrator = new SysIdCalibrator(
                 true,
                 swerve,
-                voltage -> swerve.getModules().runModuleSteerByVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
+                voltage -> swerve.getModules().setSteersVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
                 SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP,
                 SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
         );
         this.driveCalibrator = new SysIdCalibrator(
                 true,
                 swerve,
-                swerve.getModules()::runModulesDriveByVoltage,
+                swerve.getModules()::setDrivesVoltage,
                 SwerveConstants.DRIVE_SYSID_CALIBRATION_VOLTAGE_STEP,
                 SwerveConstants.DRIVE_SYSID_CALIBRATION_RAMP_RATE
         );
@@ -69,7 +69,7 @@ public class SwerveCommandsBuilder {
                         swerve,
                         SwerveConstants.DRIVE_RADIUS_METERS,
                         SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY,
-                        swerve.getModules()::getModulesDriveDistances,
+                        swerve.getModules()::getDrivesAngles,
                         swerve::getAbsoluteHeading,
                         swerve::runWheelRadiusCharacterization,
                         swerve.getModules()::stop
@@ -83,7 +83,7 @@ public class SwerveCommandsBuilder {
                 () -> {},
                 () -> swerve.getModules().pointWheelsInX(SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop),
                 interrupted -> {},
-                swerve.getModules()::isModulesAtAngles,
+                swerve.getModules()::isAtTargetAngles,
                 swerve
         ).withName("Point Wheels In X");
     }
@@ -93,7 +93,7 @@ public class SwerveCommandsBuilder {
                 () -> {},
                 swerve.getModules()::pointWheelsInCircle,
                 interrupted -> {},
-                swerve.getModules()::isModulesAtAngles,
+                swerve.getModules()::isAtTargetAngles,
                 swerve
         ).withName("Point Wheels In Circle");
     }
@@ -103,7 +103,7 @@ public class SwerveCommandsBuilder {
                 () -> {},
                 () -> swerve.getModules().pointWheels(wheelsAngle, optimize),
                 interrupted -> {},
-                swerve.getModules()::isModulesAtStates,
+                swerve.getModules()::isAtTargetStates,
                 swerve
         ).withName("Point Wheels");
     }

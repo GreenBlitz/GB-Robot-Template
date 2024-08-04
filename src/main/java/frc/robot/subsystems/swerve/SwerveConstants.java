@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.MathConstants;
 
 public record SwerveConstants(
+        String swerveName,
         double velocityAt12VoltsMetersPerSecond,
         Rotation2d maxRotationalVelocityPerSecond,
         PIDController xMetersPIDController,
@@ -20,12 +21,14 @@ public record SwerveConstants(
 ) {
 
     public SwerveConstants(
+            String swerveName,
             double velocityAt12VoltsMetersPerSecond,
             Rotation2d maxRotationalVelocityPerSecond,
             PIDConstants translationMetersPIDConstants,
             PIDConstants rotationDegreesPIDConstants
     ){
         this(
+                swerveName,
                 velocityAt12VoltsMetersPerSecond,
                 maxRotationalVelocityPerSecond,
                 new PIDController(
@@ -58,7 +61,7 @@ public record SwerveConstants(
         );
     }
 
-    public static final String SWERVE_LOG_PATH = "Subsystems/Swerve/";
+    public static final String SWERVE_LOG_PATH = "Subsystems/Swerve" + this.swerveName + "/";
     static final String STATE_LOG_PATH = SWERVE_LOG_PATH + "State/";
     static final String VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 

@@ -127,19 +127,19 @@ public class Swerve extends GBSubsystem {
     }
 
     private void logState() {
-        Logger.recordOutput(constants.getStateLogPath() + "DriveMode", currentState.getDriveMode());
-        Logger.recordOutput(constants.getStateLogPath() + "DriveSpeed", currentState.getDriveSpeed());
-        Logger.recordOutput(constants.getStateLogPath() + "LoopMode", currentState.getLoopMode());
-        Logger.recordOutput(constants.getStateLogPath() + "RotateAxis", currentState.getRotateAxis());
-        Logger.recordOutput(constants.getStateLogPath() + "AimAssist", currentState.getAimAssist());
+        Logger.recordOutput(constants.stateLogPath() + "DriveMode", currentState.getDriveMode());
+        Logger.recordOutput(constants.stateLogPath() + "DriveSpeed", currentState.getDriveSpeed());
+        Logger.recordOutput(constants.stateLogPath() + "LoopMode", currentState.getLoopMode());
+        Logger.recordOutput(constants.stateLogPath() + "RotateAxis", currentState.getRotateAxis());
+        Logger.recordOutput(constants.stateLogPath() + "AimAssist", currentState.getAimAssist());
     }
 
     private void logFieldRelativeVelocities() {
         ChassisSpeeds fieldRelativeSpeeds = getFieldRelativeVelocity();
-        Logger.recordOutput(constants.getVelocityLogPath() + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
-        Logger.recordOutput(constants.getVelocityLogPath() + "X", fieldRelativeSpeeds.vxMetersPerSecond);
-        Logger.recordOutput(constants.getVelocityLogPath() + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
-        Logger.recordOutput(constants.getVelocityLogPath() + "Magnitude", SwerveMath.getDriveMagnitude(fieldRelativeSpeeds));
+        Logger.recordOutput(constants.velocityLogPath() + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
+        Logger.recordOutput(constants.velocityLogPath() + "X", fieldRelativeSpeeds.vxMetersPerSecond);
+        Logger.recordOutput(constants.velocityLogPath() + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
+        Logger.recordOutput(constants.velocityLogPath() + "Magnitude", SwerveMath.getDriveMagnitude(fieldRelativeSpeeds));
     }
 
     private void logNumberOfOdometrySamples() {

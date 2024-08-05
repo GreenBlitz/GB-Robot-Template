@@ -158,7 +158,7 @@ public class Module {
     }
 
     public String getModuleLogPath() {
-        return constants.modulesLogPath() + modulePosition + "/";
+        return constants.logPath() + modulePosition + "/";
     }
 
     public String getModuleAlertLogPath() {

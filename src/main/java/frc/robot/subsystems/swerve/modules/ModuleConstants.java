@@ -5,7 +5,7 @@ import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
 public record ModuleConstants(
-        String modulesLogPath,
+        String logPath,
         String alertLogPath,
         double wheelDiameterMeters,
         double couplingRatio,

@@ -1,12 +1,7 @@
 package frc.robot.subsystems.swerve.gyro;
 
+public class SwerveGyroConstants {
 
-import frc.robot.constants.LogPaths;
-
-public record SwerveGyroConstants(String logPath, String alertLogPath) {
-
-    public SwerveGyroConstants (String swerveLogPath) {
-        this(swerveLogPath + "Gyro/", LogPaths.ALERT_LOG_PATH + swerveLogPath + "Gyro/");
-    }
+    public static final String LOG_PATH_ADDITION = "Gyro/";
 
 }

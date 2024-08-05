@@ -15,6 +15,7 @@ import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
@@ -119,7 +120,7 @@ public class Swerve extends GBSubsystem {
                 updateGyroSimulation();
             }
             gyro.updateInputs(gyroInputs);
-            Logger.processInputs(getLogPath() + "Gyro/", gyroInputs);
+            Logger.processInputs(getLogPath() + SwerveGyroConstants.LOG_PATH_ADDITION, gyroInputs);
 
             modules.logStatus();
         } ODOMETRY_LOCK.unlock();

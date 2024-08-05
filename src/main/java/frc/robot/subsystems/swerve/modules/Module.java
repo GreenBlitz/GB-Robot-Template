@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.LogPaths;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
@@ -162,7 +163,7 @@ public class Module {
     }
 
     public String getModuleAlertLogPath() {
-        return constants.alertLogPath() + modulePosition + "/";
+        return LogPaths.ALERT_LOG_PATH + getModuleLogPath();
     }
 
 

@@ -6,7 +6,6 @@ import frc.utils.battery.BatteryUtils;
 
 public record ModuleConstants(
         String logPath,
-        String alertLogPath,
         double wheelDiameterMeters,
         double couplingRatio,
         Rotation2d velocityAt12VoltsPerSecond
@@ -19,7 +18,6 @@ public record ModuleConstants(
             double velocityAt12VoltsMetersPerSecond) {
         this(
                 swerveLogPath + "Modules/",
-                swerveLogPath + "Modules/Alerts/",
                 wheelDiameterMeters,
                 couplingRatio,
                 Conversions.distanceToAngle(

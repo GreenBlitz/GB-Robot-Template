@@ -1,6 +1,6 @@
 package frc.utils;
 
-import frc.robot.constants.DirectoryPathsConstants;
+import frc.robot.constants.DirectoryPaths;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class CMDHandler {
         Path className = javaPath.getName(javaPath.getNameCount() - 1);
         Path packageName = javaPath.getParent();
         String command = "java " + className + ".java " + getSeparatedArguments(arguments);
-        runCMDCommand(DirectoryPathsConstants.JAVA_DIRECTORY_PATH.resolve(packageName), command);
+        runCMDCommand(DirectoryPaths.JAVA_DIRECTORY_PATH.resolve(packageName), command);
     }
 
     public static void runJavaClass(Class<?> classToRun) {
@@ -75,7 +75,7 @@ public class CMDHandler {
      */
     public static void runPythonClass(Path pythonPath, String... arguments) {
         String command = "py " + pythonPath + ".py " + getSeparatedArguments(arguments);
-        runCMDCommand(DirectoryPathsConstants.PYTHON_DIRECTORY_PATH, command);
+        runCMDCommand(DirectoryPaths.PYTHON_DIRECTORY_PATH, command);
     }
 
     private static String getSeparatedArguments(String[] arguments) {

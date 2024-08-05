@@ -1,6 +1,6 @@
 package frc.utils;
 
-import frc.robot.constants.DirectoryPathsConstants;
+import frc.robot.constants.DirectoryPaths;
 
 import java.awt.*;
 import java.nio.file.Files;
@@ -18,7 +18,7 @@ public class ComputerLogFile {
 
     public ComputerLogFile(String name) {
         this.name = name;
-        this.path = DirectoryPathsConstants.COMPUTER_LOG_FILES_DIRECTORY_PATH.resolve(name + TYPE_OF_FILE);
+        this.path = DirectoryPaths.COMPUTER_LOG_FILES_DIRECTORY_PATH.resolve(name + TYPE_OF_FILE);
 
         ensureFolderExists();
         ensureFileExists();
@@ -28,7 +28,7 @@ public class ComputerLogFile {
 
     private void ensureFolderExists() {
         try {
-            Files.createDirectories(DirectoryPathsConstants.COMPUTER_LOG_FILES_DIRECTORY_PATH);
+            Files.createDirectories(DirectoryPaths.COMPUTER_LOG_FILES_DIRECTORY_PATH);
         } catch (Exception exception) {
             reportMessageToFile("Could not ensure computer log files folder exists: " + exception);
         }

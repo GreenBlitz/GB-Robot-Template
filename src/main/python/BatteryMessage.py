@@ -4,70 +4,70 @@ import tkinter as tk
 from tkinter import PhotoImage
 from NetworkTableManager import NetworkTableClient
 
-__IMAGE_PATH = "noam-battery-message.png"
-__WINDOW_NAME = "Battery Message"
+IMAGE_PATH = "noam-battery-message.png"
+WINDOW_NAME = "Battery Message"
 
-__CLIENT_NAME = "BatteryMessage"
-__TABLE_NAME = "Battery"
-__KEY_NAME = "is low"
-__IP = sys.argv[1]
+CLIENT_NAME = "BatteryMessage"
+TABLE_NAME = "Battery"
+KEY_NAME = "is low"
+IP = sys.argv[1]
 
-__TIME_BETWEEN_MESSAGES_SECONDS = 4
-__SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS = 0.1
+TIME_BETWEEN_MESSAGES_SECONDS = 4
+SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS = 0.1
 
 
-def __config_window(window: tk.Tk) -> None:
-    window.title(__WINDOW_NAME)
+def config_window(window: tk.Tk) -> None:
     window.attributes("-topmost", True)
     window.resizable(False, False)
-    window.bind("<Unmap>", lambda event: __cancel_minimize(event, window))
+    window.bind("<Unmap>", lambda event: cancel_minimize(event, window))
 
 
-def __cancel_minimize(event, window: tk.Tk) -> None:
+def cancel_minimize(event, window: tk.Tk) -> None:
     window.attributes("-topmost", True)
     window.state('normal')
 
 
-def __create_image_label(window: tk.Tk, image: PhotoImage) -> None:
+def create_image_label(window: tk.Tk, image: PhotoImage) -> None:
     """Create a label widget to display the image on the given window."""
     label = tk.Label(window, image=image)
     label.pack()
 
 
-def __load_image(image_path: str) -> PhotoImage:
+def load_image(image_path: str) -> PhotoImage:
     return PhotoImage(file=image_path)
 
 
-def is_time_to_message(last_time_showed: float) -> bool:
-    return time.time() - last_time_showed > __TIME_BETWEEN_MESSAGES_SECONDS
-
-
-def __show_message() -> None:
+def show_message(window_name: str, image_path: str) -> None:
     """Set up and run the Tkinter event loop."""
     window = tk.Tk()
-    __config_window(window)
-    image = __load_image(__IMAGE_PATH)
-    __create_image_label(window, image)
+    window.title(window_name)
+    config_window(window)
+    image = load_image(image_path)
+    create_image_label(window, image)
     window.mainloop()
 
 
-def __track_message_until_client_disconnect(battery_message_client: NetworkTableClient) -> None:
-    battery_table = battery_message_client.get_table(__TABLE_NAME)
+def is_time_to_message(last_time_showed: float) -> bool:
+    return time.time() - last_time_showed > TIME_BETWEEN_MESSAGES_SECONDS
+
+
+def track_message_until_client_disconnect(battery_message_client: NetworkTableClient) -> None:
+    battery_table = battery_message_client.get_table(TABLE_NAME)
 
     last_time_showed = 0
     while battery_message_client.is_connected():
-        if battery_table.getBoolean(__KEY_NAME, defaultValue=False) and is_time_to_message(last_time_showed):
-            __show_message()
+        if battery_table.getBoolean(KEY_NAME, defaultValue=False) and is_time_to_message(last_time_showed):
+            show_message(WINDOW_NAME, IMAGE_PATH)
             last_time_showed = time.time()
-        time.sleep(__SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS)
+        time.sleep(SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS)
 
 
-def __run_battery_message_client() -> None:
-    battery_message_client = NetworkTableClient(__IP, __CLIENT_NAME)
-    battery_message_client.connect()
-    __track_message_until_client_disconnect(battery_message_client)
-    battery_message_client.terminate()
+def run_battery_message_client() -> None:
+    client = NetworkTableClient(IP, CLIENT_NAME)
+    client.connect()
+    track_message_until_client_disconnect(client)
+    client.terminate()
 
 
 if __name__ == '__main__':
-    __run_battery_message_client()
+    run_battery_message_client()

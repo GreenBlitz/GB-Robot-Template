@@ -12,12 +12,12 @@ public record ModuleConstants(
 ) {
 
     public ModuleConstants(
-            String swerveLogPath,
+            String logPathPrefix,
             double wheelDiameterMeters,
             double couplingRatio,
             double velocityAt12VoltsMetersPerSecond) {
         this(
-                swerveLogPath + "Modules/",
+                logPathPrefix + "Modules/",
                 wheelDiameterMeters,
                 couplingRatio,
                 Conversions.distanceToAngle(

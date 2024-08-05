@@ -12,7 +12,7 @@ __TABLE_NAME = "Battery"
 __KEY_NAME = "is low"
 __IP = sys.argv[1]
 
-__TIME_BETWEEN_MESSAGES_SECONDS = 120
+__TIME_BETWEEN_MESSAGES_SECONDS = 4
 __SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS = 0.1
 
 
@@ -64,6 +64,7 @@ def __track_message_until_client_disconnect(battery_message_client: NetworkTable
 
 def __run_battery_message_client() -> None:
     battery_message_client = NetworkTableClient(__IP, __CLIENT_NAME)
+    battery_message_client.connect()
     __track_message_until_client_disconnect(battery_message_client)
     battery_message_client.terminate()
 

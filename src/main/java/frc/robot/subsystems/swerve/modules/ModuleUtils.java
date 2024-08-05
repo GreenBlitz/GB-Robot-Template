@@ -5,7 +5,7 @@ import frc.utils.Conversions;
 
 public class ModuleUtils {
 
-    public enum ModuleName {
+    public enum ModulePosition {
 
         FRONT_LEFT(0),
         FRONT_RIGHT(1),
@@ -14,7 +14,7 @@ public class ModuleUtils {
 
         private final int index;
 
-        ModuleName(int index) {
+        ModulePosition(int index) {
             this.index = index;
         }
 
@@ -22,6 +22,19 @@ public class ModuleUtils {
             return index;
         }
 
+    }
+
+    public enum ModuleType {
+        TALON_FX("TalonFX");
+
+        private final String moduleType;
+        ModuleType(String moduleType) {
+            this.moduleType = moduleType;
+        }
+
+        public String getModuleType() {
+            return moduleType;
+        }
     }
 
     public static double velocityToOpenLoopVoltage(

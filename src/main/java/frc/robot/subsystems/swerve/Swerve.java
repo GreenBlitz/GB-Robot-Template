@@ -15,7 +15,6 @@ import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
@@ -44,7 +43,7 @@ public class Swerve extends GBSubsystem {
     private Supplier<Rotation2d> currentAngleSupplier;
 
     public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
-        super(constants.swerveLogPath());
+        super(constants.logPath());
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
         this.constants = constants;
@@ -67,7 +66,7 @@ public class Swerve extends GBSubsystem {
 
     @Override
     public String getLogPath() {
-        return constants.swerveLogPath();
+        return constants.logPath();
     }
 
 
@@ -120,7 +119,7 @@ public class Swerve extends GBSubsystem {
                 updateGyroSimulation();
             }
             gyro.updateInputs(gyroInputs);
-            Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
+            Logger.processInputs(getLogPath() + "Gyro/", gyroInputs);
 
             modules.logStatus();
         } ODOMETRY_LOCK.unlock();

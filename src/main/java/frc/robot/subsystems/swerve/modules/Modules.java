@@ -5,6 +5,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
+import frc.robot.subsystems.swerve.SwerveName;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -14,9 +15,9 @@ public class Modules {
     private final Module[] modules;
     private final String logPath;
 
-    public Modules(Module[] modules){
+    public Modules(SwerveName swerveName, ModuleUtils.ModuleType moduleType, Module[] modules){
         this.modules = modules;
-        logPath = this.modules[0].getModulesLogPath();
+        logPath = swerveName.getLogPath() + moduleType.getModuleType() + "Modules/";
     }
 
 
@@ -54,7 +55,7 @@ public class Modules {
     }
 
 
-    public void setSteersVoltage(ModuleUtils.ModuleName module, double voltage) {
+    public void setSteersVoltage(ModuleUtils.ModulePosition module, double voltage) {
         modules[module.getIndex()].setSteerVoltage(voltage);
     }
 

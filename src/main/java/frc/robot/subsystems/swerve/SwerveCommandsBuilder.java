@@ -34,7 +34,7 @@ public class SwerveCommandsBuilder {
         this.steerCalibrator = new SysIdCalibrator(
                 true,
                 swerve,
-                voltage -> swerve.getModules().setSteersVoltage(ModuleUtils.ModuleName.FRONT_LEFT, voltage),
+                voltage -> swerve.getModules().setSteersVoltage(ModuleUtils.ModulePosition.FRONT_LEFT, voltage),
                 SwerveConstants.STEER_SYSID_CALIBRATION_VOLTAGE_STEP,
                 SwerveConstants.STEER_SYSID_CALIBRATION_RAMP_RATE
         );

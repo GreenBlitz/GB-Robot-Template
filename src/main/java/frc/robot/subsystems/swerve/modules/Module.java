@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class Module {
 
     private final ModuleInputsContainer moduleInputsContainer;
-    private final ModuleUtils.ModuleName moduleName;
+    private final ModuleUtils.ModulePosition modulePosition;
     private final ISteer iSteer;
     private final IDrive iDrive;
     private final IEncoder iEncoder;
@@ -30,8 +30,8 @@ public class Module {
     private Rotation2d startingSteerAngle;
     private boolean isClosedLoop;
 
-    public Module(ModuleUtils.ModuleName moduleName, ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
-        this.moduleName = moduleName;
+    public Module(ModuleUtils.ModulePosition modulePosition, ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
+        this.modulePosition = modulePosition;
 
         this.constants = constants;
         this.iEncoder = iEncoder;
@@ -162,11 +162,11 @@ public class Module {
     }
 
     public String getModuleLogPath() {
-        return getModulesLogPath() + moduleName + "/";
+        return getModulesLogPath() + modulePosition + "/";
     }
 
     public String getModuleAlertLogPath() {
-        return constants.getAlertLogPath() + moduleName + "/";
+        return constants.alertLogPath() + modulePosition + "/";
     }
 
 

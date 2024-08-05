@@ -17,7 +17,7 @@ public class Modules {
 
     public Modules(SwerveName swerveName, Module[] modules){
         this.modules = modules;
-        this.logPath = swerveName.getLogPath() + "Modules/";
+        this.logPath = swerveName.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
     }
 
 

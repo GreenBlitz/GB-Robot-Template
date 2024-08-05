@@ -10,7 +10,7 @@ import frc.robot.subsystems.swerve.modules.steer.talonfx.TalonFXSteer;
 
 public class SteerFactory {
 
-    public static ISteer create(ModuleUtils.ModulePosition modulePosition, SwerveName swerveName) {
+    public static ISteer create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
         return switch (swerveName) {
             case SWERVE -> createSwerveSteer(modulePosition);
         };

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 public enum SwerveName {
-    SWERVE("Real");
+    SWERVE("");
 
     private final String swerveName;
 

@@ -17,8 +17,8 @@ public class ModulesFactory {
                 modulePosition,
                 ModuleConstantsFactory.create(swerveName),
                 EncoderFactory.create(modulePosition),
-                SteerFactory.create(modulePosition, swerveName),
-                DriveFactory.create(modulePosition, swerveName)
+                SteerFactory.create(swerveName, modulePosition),
+                DriveFactory.create(swerveName, modulePosition)
         );
     }
 

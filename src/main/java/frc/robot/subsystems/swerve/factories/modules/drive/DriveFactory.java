@@ -10,7 +10,7 @@ import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDrive;
 
 public class DriveFactory {
 
-    public static IDrive create(ModuleUtils.ModulePosition modulePosition, SwerveName swerveName) {
+    public static IDrive create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
         return switch (swerveName) {
             case SWERVE -> createSwerveDrive(modulePosition);
         };

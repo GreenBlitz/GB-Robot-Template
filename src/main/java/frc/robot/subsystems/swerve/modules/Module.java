@@ -26,6 +26,7 @@ public class Module {
     private final IDrive iDrive;
     private final IEncoder iEncoder;
     private final ModuleConstants constants;
+    private final String logPath;
 
     private SwerveModuleState targetState;
     private Rotation2d startingSteerAngle;
@@ -39,6 +40,7 @@ public class Module {
         this.iSteer = iSteer;
         this.iDrive = iDrive;
         this.moduleInputsContainer = new ModuleInputsContainer();
+        this.logPath = this.constants.logPath() + this.modulePosition + "/";
 
         this.targetState = new SwerveModuleState();
         this.startingSteerAngle = new Rotation2d();
@@ -93,13 +95,13 @@ public class Module {
 
     public void reportAlerts() {
         if (!moduleInputsContainer.getEncoderInputs().isConnected) {
-            Logger.recordOutput(getModuleAlertLogPath() + "encoder disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "encoder disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-            Logger.recordOutput(getModuleAlertLogPath() + "steer motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "steer motor disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-            Logger.recordOutput(getModuleAlertLogPath() + "drive motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "drive motor disconnect", Timer.getFPGATimestamp());
         }
     }
 
@@ -157,15 +159,6 @@ public class Module {
     public Rotation2d getCurrentAngle() {
         return moduleInputsContainer.getSteerMotorInputs().angle;
     }
-
-    public String getModuleLogPath() {
-        return constants.logPath() + modulePosition + "/";
-    }
-
-    public String getModuleAlertLogPath() {
-        return LogPaths.ALERT_LOG_PATH + getModuleLogPath();
-    }
-
 
     public boolean isAtTargetVelocity() {
         return MathUtil.isNear(

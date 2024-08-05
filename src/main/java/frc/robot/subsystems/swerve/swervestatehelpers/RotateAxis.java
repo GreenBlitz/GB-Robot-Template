@@ -5,15 +5,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Robot;
 import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.modules.ModuleUtils.ModuleName;
+import frc.robot.subsystems.swerve.modules.ModuleUtils.ModulePosition;
 
 public enum RotateAxis {
 
     MIDDLE_OF_ROBOT(0, 0),
-    FRONT_LEFT_MODULE(SwerveConstants.LOCATIONS[ModuleName.FRONT_LEFT.getIndex()]),
-    FRONT_RIGHT_MODULE(SwerveConstants.LOCATIONS[ModuleName.FRONT_RIGHT.getIndex()]),
-    BACK_LEFT_MODULE(SwerveConstants.LOCATIONS[ModuleName.BACK_LEFT.getIndex()]),
-    BACK_RIGHT_MODULE(SwerveConstants.LOCATIONS[ModuleName.BACK_RIGHT.getIndex()]);
+    FRONT_LEFT_MODULE(SwerveConstants.LOCATIONS[ModulePosition.FRONT_LEFT.getIndex()]),
+    FRONT_RIGHT_MODULE(SwerveConstants.LOCATIONS[ModulePosition.FRONT_RIGHT.getIndex()]),
+    BACK_LEFT_MODULE(SwerveConstants.LOCATIONS[ModulePosition.BACK_LEFT.getIndex()]),
+    BACK_RIGHT_MODULE(SwerveConstants.LOCATIONS[ModulePosition.BACK_RIGHT.getIndex()]);
 
     private final Translation2d rotateAxis;
 

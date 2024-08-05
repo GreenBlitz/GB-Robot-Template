@@ -44,7 +44,7 @@ public class Swerve extends GBSubsystem {
     private Supplier<Rotation2d> currentAngleSupplier;
 
     public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
-        super(constants.swerveLogPath());
+        super(constants.logPath());
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
         this.constants = constants;
@@ -67,7 +67,7 @@ public class Swerve extends GBSubsystem {
 
     @Override
     public String getLogPath() {
-        return constants.swerveLogPath();
+        return constants.logPath();
     }
 
 

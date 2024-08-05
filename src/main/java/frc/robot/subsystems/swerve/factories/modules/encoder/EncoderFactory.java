@@ -9,9 +9,9 @@ import frc.robot.subsystems.swerve.modules.encoder.simulation.EmptyEncoder;
 
 public class EncoderFactory {
 
-    public static IEncoder create(ModuleUtils.ModuleName moduleName){
+    public static IEncoder create(ModuleUtils.ModulePosition modulePosition){
         return switch (Robot.ROBOT_TYPE){
-            case REAL -> switch (moduleName) {
+            case REAL -> switch (modulePosition) {
                 case FRONT_LEFT -> new CancoderEncoder(IDs.CANCodersIDs.FRONT_LEFT_ENCODER, EncoderRealConstants.ENCODER_CONFIG);
                 case FRONT_RIGHT -> new CancoderEncoder(IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, EncoderRealConstants.ENCODER_CONFIG);
                 case BACK_LEFT -> new CancoderEncoder(IDs.CANCodersIDs.BACK_LEFT_ENCODER, EncoderRealConstants.ENCODER_CONFIG);

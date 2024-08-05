@@ -9,16 +9,22 @@ import frc.robot.subsystems.swerve.modules.steer.talonfx.TalonFXSteer;
 
 public class SteerFactory {
 
-    public static ISteer create(ModuleUtils.ModuleName moduleName) {
+    public static ISteer create(ModuleUtils.ModulePosition modulePosition, ModuleUtils.ModuleType moduleType) {
         return switch (Robot.ROBOT_TYPE) {
-            case REAL -> switch (moduleName){
+            case REAL -> getRealSteer(modulePosition, moduleType);
+            case SIMULATION -> new SimulationSteer(SteerSimulationConstants.getConstants());
+            case REPLAY -> new EmptySteer();
+        };
+    }
+
+    private static ISteer getRealSteer(ModuleUtils.ModulePosition modulePosition, ModuleUtils.ModuleType moduleType) {
+        return switch (moduleType) {
+            case TALON_FX -> switch (modulePosition) {
                 case FRONT_LEFT -> new TalonFXSteer(SteerRealConstants.FRONT_LEFT_CONSTANTS);
                 case FRONT_RIGHT -> new TalonFXSteer(SteerRealConstants.FRONT_RIGHT_CONSTANTS);
                 case BACK_LEFT -> new TalonFXSteer(SteerRealConstants.BACK_LEFT_CONSTANTS);
                 case BACK_RIGHT -> new TalonFXSteer(SteerRealConstants.BACK_RIGHT_CONSTANTS);
             };
-            case SIMULATION -> new SimulationSteer(SteerSimulationConstants.getConstants());
-            case REPLAY -> new EmptySteer();
         };
     }
 

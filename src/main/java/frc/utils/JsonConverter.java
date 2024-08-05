@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonConverter {
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static<T> T objectFromJson(String content, Class<T> classofObject) {
+    public static <T> T objectFromJson(String content, Class<T> classOfObject) {
         try {
-            return objectMapper.readValue(content, classofObject);
+            return objectMapper.readValue(content, classOfObject);
         }
         catch (JsonProcessingException ignored) {}
         return null;
@@ -19,7 +20,7 @@ public class JsonConverter {
             return objectMapper.writeValueAsString(object);
         }
         catch (JsonProcessingException ignored) {}
-        return null;
+        return "error - couldn't read from the object";
     }
 
 }

@@ -7,9 +7,11 @@ import edu.wpi.first.math.numbers.N3;
 
 
 public interface IVisionPose {
+
     void updateVision(VisionObservation visionObservation);
 
     Pose2d getVisionPose();
 
     void setStandardDeviations(Matrix<N3, N1> stdDevs);
+
 }

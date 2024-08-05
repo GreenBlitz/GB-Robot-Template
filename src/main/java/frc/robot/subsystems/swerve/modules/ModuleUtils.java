@@ -24,19 +24,6 @@ public class ModuleUtils {
 
     }
 
-    public enum ModuleType {
-        TALON_FX("TalonFX");
-
-        private final String moduleType;
-        ModuleType(String moduleType) {
-            this.moduleType = moduleType;
-        }
-
-        public String getModuleType() {
-            return moduleType;
-        }
-    }
-
     public static double velocityToOpenLoopVoltage(
             double velocityMetersPerSecond,
             Rotation2d steerVelocityPerSecond,

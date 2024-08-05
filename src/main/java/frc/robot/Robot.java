@@ -12,7 +12,6 @@ import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.utils.RobotTypeUtils;
 
 
@@ -22,7 +21,7 @@ public class Robot {
 
     public static final Swerve swerve = new Swerve(
             SwerveConstantsFactory.create(SwerveName.SWERVE),
-            ModulesFactory.create(SwerveName.SWERVE, ModuleUtils.ModuleType.TALON_FX),
+            ModulesFactory.create(SwerveName.SWERVE),
             GyroFactory.create(SwerveName.SWERVE)
     );
     public static final PoseEstimator poseEstimator = new PoseEstimator(

@@ -15,9 +15,9 @@ public class Modules {
     private final Module[] modules;
     private final String logPath;
 
-    public Modules(SwerveName swerveName, ModuleUtils.ModuleType moduleType, Module[] modules){
+    public Modules(SwerveName swerveName, Module[] modules){
         this.modules = modules;
-        logPath = swerveName.getLogPath() + moduleType.getModuleType() + "Modules/";
+        logPath = swerveName.getLogPath() + "Modules/";
     }
 
 

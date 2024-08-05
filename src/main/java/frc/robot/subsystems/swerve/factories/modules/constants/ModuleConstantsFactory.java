@@ -7,16 +7,16 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 
 public class ModuleConstantsFactory {
 
-    public static ModuleConstants create(SwerveName swerveName, ModuleUtils.ModuleType moduleType){
-        return switch (Robot.ROBOT_TYPE){
-            case REAL, REPLAY -> getRealModuleConstants(swerveName, moduleType);
-            case SIMULATION -> SimulationModuleConstants.getModuleConstants(swerveName, moduleType);
+    public static ModuleConstants create(SwerveName swerveName, ModuleUtils.ModuleType moduleType) {
+        return switch (moduleType) {
+            case TALON_FX -> getTalonFXModuleConstants(swerveName);
         };
     }
 
-    private static ModuleConstants getRealModuleConstants(SwerveName swerveName, ModuleUtils.ModuleType moduleType) {
-        return switch (moduleType) {
-            case TALON_FX -> RealModuleConstants.getModuleConstants(swerveName, moduleType);
+    private static ModuleConstants getTalonFXModuleConstants(SwerveName swerveName) {
+        return switch (Robot.ROBOT_TYPE) {
+            case REAL, REPLAY -> RealModuleConstants.getModuleConstants(swerveName, ModuleUtils.ModuleType.TALON_FX);
+            case SIMULATION -> SimulationModuleConstants.getModuleConstants(swerveName, ModuleUtils.ModuleType.TALON_FX);
         };
     }
 

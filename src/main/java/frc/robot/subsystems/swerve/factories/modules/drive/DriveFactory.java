@@ -10,21 +10,21 @@ import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDrive;
 public class DriveFactory {
 
     public static IDrive create(ModuleUtils.ModulePosition modulePosition, ModuleUtils.ModuleType moduleType) {
-        return switch (Robot.ROBOT_TYPE) {
-            case REAL -> getRealSteer(modulePosition, moduleType);
-            case SIMULATION -> new SimulationDrive(DriveSimulationConstants.getDriveConstants());
-            case REPLAY -> new EmptyDrive();
+        return switch (moduleType) {
+            case TALON_FX -> getTalonFXSteer(modulePosition);
         };
     }
 
-    private static IDrive getRealSteer(ModuleUtils.ModulePosition modulePosition, ModuleUtils.ModuleType moduleType) {
-        return switch (moduleType) {
-            case TALON_FX -> switch (modulePosition) {
+    private static IDrive getTalonFXSteer(ModuleUtils.ModulePosition modulePosition) {
+        return switch (Robot.ROBOT_TYPE) {
+            case REAL -> switch (modulePosition) {
                 case FRONT_LEFT -> new TalonFXDrive(DriveRealConstants.FRONT_LEFT_CONSTANTS);
                 case FRONT_RIGHT -> new TalonFXDrive(DriveRealConstants.FRONT_RIGHT_CONSTANTS);
                 case BACK_LEFT -> new TalonFXDrive(DriveRealConstants.BACK_LEFT_CONSTANTS);
                 case BACK_RIGHT -> new TalonFXDrive(DriveRealConstants.BACK_RIGHT_CONSTANTS);
             };
+            case SIMULATION -> new SimulationDrive(DriveSimulationConstants.getDriveConstants());
+            case REPLAY -> new EmptyDrive();
         };
     }
 

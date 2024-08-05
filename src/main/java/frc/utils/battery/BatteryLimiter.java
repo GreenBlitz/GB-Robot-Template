@@ -3,9 +3,10 @@ package frc.utils.battery;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.constants.IPConstants;
-import frc.robot.constants.RobotConstants;
 import frc.utils.CMDHandler;
+import frc.robot.constants.GlobalConstants;
 import frc.utils.DriverStationUtils;
 import frc.utils.dashboard.LoggedTableBoolean;
 import org.littletonrobotics.junction.Logger;
@@ -26,7 +27,7 @@ class BatteryLimiter extends Command {
         this.voltageFilter = LinearFilter.movingAverage(NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE);
         this.showedMessageTime = Timer.getFPGATimestamp();
 
-        if (RobotConstants.ROBOT_TYPE.isSimulation()) {
+        if (Robot.ROBOT_TYPE.isSimulation()) {
             CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPConstants.SIMULATION_IP);
         }
     }
@@ -59,8 +60,7 @@ class BatteryLimiter extends Command {
         double currentAverageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
         if (currentAverageVoltage <= BatteryUtils.MIN_VOLTAGE) {
             reportLowBattery();
-            showBatteryMessage();
-            if (RobotConstants.ENABLE_BATTERY_LIMITER && !DriverStationUtils.isMatch() && passedMessageStartUpTime()) {
+            if (GlobalConstants.ENABLE_BATTERY_LIMITER && !DriverStationUtils.isMatch() && passedMessageStartUpTime()) {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }
         }

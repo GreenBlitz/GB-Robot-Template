@@ -8,11 +8,11 @@ public class SwerveConstantsFactory {
 
     public static SwerveConstants create(SwerveName swerveName) {
         return switch (swerveName) {
-            case SWERVE -> getRealSwerveConstants();
+            case SWERVE -> createSwerveConstants();
         };
     }
 
-    private static SwerveConstants getRealSwerveConstants() {
+    private static SwerveConstants createSwerveConstants() {
         return switch (Robot.ROBOT_TYPE) {
             case REAL, REPLAY -> RealSwerveConstants.getSwerveConstants(SwerveName.SWERVE);
             case SIMULATION -> SimulationSwerveConstants.getSwerveConstants(SwerveName.SWERVE);

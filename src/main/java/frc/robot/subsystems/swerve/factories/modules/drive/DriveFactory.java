@@ -12,11 +12,11 @@ public class DriveFactory {
 
     public static IDrive create(ModuleUtils.ModulePosition modulePosition, SwerveName swerveName) {
         return switch (swerveName) {
-            case SWERVE -> getSwerveDrive(modulePosition);
+            case SWERVE -> createSwerveDrive(modulePosition);
         };
     }
 
-    private static IDrive getSwerveDrive(ModuleUtils.ModulePosition modulePosition) {
+    private static IDrive createSwerveDrive(ModuleUtils.ModulePosition modulePosition) {
         return switch (Robot.ROBOT_TYPE) {
             case REAL -> switch (modulePosition) {
                 case FRONT_LEFT -> new TalonFXDrive(DriveRealConstants.FRONT_LEFT_CONSTANTS);

@@ -12,11 +12,11 @@ public class SteerFactory {
 
     public static ISteer create(ModuleUtils.ModulePosition modulePosition, SwerveName swerveName) {
         return switch (swerveName) {
-            case SWERVE -> getSwerveSteer(modulePosition);
+            case SWERVE -> createSwerveSteer(modulePosition);
         };
     }
 
-    private static ISteer getSwerveSteer(ModuleUtils.ModulePosition modulePosition) {
+    private static ISteer createSwerveSteer(ModuleUtils.ModulePosition modulePosition) {
         return switch (Robot.ROBOT_TYPE) {
             case REAL -> switch (modulePosition) {
                 case FRONT_LEFT -> new TalonFXSteer(SteerRealConstants.FRONT_LEFT_CONSTANTS);

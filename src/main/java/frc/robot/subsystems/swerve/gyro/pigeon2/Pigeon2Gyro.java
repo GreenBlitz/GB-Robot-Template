@@ -26,9 +26,9 @@ public class Pigeon2Gyro implements ISwerveGyro {
     private final Queue<Double> yawQueue, timestampQueue;
     private final String logPath;
 
-    public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String swerveLogPath){
+    public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String logPathPrefix){
         this.gyro = new Pigeon2Wrapper(gyroID);
-        this.logPath = swerveLogPath + SwerveGyroConstants.LOG_PATH_ADDITION;
+        this.logPath = logPathPrefix + SwerveGyroConstants.LOG_PATH_ADDITION;
 
         this.yawSignal = gyro.getYaw().clone();
         this.xAccelerationSignal = gyro.getAccelerationX().clone();

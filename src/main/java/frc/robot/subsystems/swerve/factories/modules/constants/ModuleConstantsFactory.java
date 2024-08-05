@@ -8,11 +8,11 @@ public class ModuleConstantsFactory {
 
     public static ModuleConstants create(SwerveName swerveName) {
         return switch (swerveName) {
-            case SWERVE -> getSwerveModuleConstants(swerveName);
+            case SWERVE -> createSwerveModuleConstants(swerveName);
         };
     }
 
-    private static ModuleConstants getSwerveModuleConstants(SwerveName swerveName) {
+    private static ModuleConstants createSwerveModuleConstants(SwerveName swerveName) {
         return switch (Robot.ROBOT_TYPE) {
             case REAL, REPLAY -> RealModuleConstants.getModuleConstants(swerveName);
             case SIMULATION -> SimulationModuleConstants.getModuleConstants(swerveName);

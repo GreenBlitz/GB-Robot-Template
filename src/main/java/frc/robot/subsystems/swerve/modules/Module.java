@@ -90,7 +90,7 @@ public class Module {
         moduleInputs.isAtTargetState = moduleInputs.isAtTargetVelocity && moduleInputs.isAtTargetAngle;
         moduleInputs.isClosedLoop = isClosedLoop;
 
-        moduleInputsContainer.processInputs(getModuleLogPath());
+        moduleInputsContainer.processInputs(logPath);
     }
 
     public void reportAlerts() {

@@ -162,7 +162,7 @@ public class Swerve extends GBSubsystem {
         return Rotation2d.fromRadians(inputtedHeadingRads);
     }
 
-    public SwerveConstants getConstants (){
+    public SwerveConstants getConstants() {
         return this.constants;
     }
 

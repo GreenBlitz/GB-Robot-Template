@@ -8,44 +8,44 @@ import frc.utils.ctre.CTREDeviceID;
 
 public class TalonFXWrapper extends TalonFX {
 
-    public TalonFXWrapper(int deviceId) {
-        this(new CTREDeviceID(deviceId));
-    }
+	public TalonFXWrapper(int deviceId) {
+		this(new CTREDeviceID(deviceId));
+	}
 
-    public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
-        this(ctreDeviceID, new TalonFXConfiguration());
-    }
+	public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
+		this(ctreDeviceID, new TalonFXConfiguration());
+	}
 
-    public TalonFXWrapper(CTREDeviceID ctreDeviceID, TalonFXConfiguration configuration) {
-        super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
-        applyConfiguration(configuration);
-    }
+	public TalonFXWrapper(CTREDeviceID ctreDeviceID, TalonFXConfiguration configuration) {
+		super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
+		applyConfiguration(configuration);
+	}
 
-    public void applyConfiguration(TalonFXConfiguration configuration) {
-        super.getConfigurator().apply(configuration);
-    }
+	public void applyConfiguration(TalonFXConfiguration configuration) {
+		super.getConfigurator().apply(configuration);
+	}
 
 
-    /**
-     * Performs latency compensation on signal using the signalSlope and signal's
-     * latency to determine the magnitude of compensation.
-     */
-    private double getLatencyCompensatedValue(StatusSignal<Double> value, StatusSignal<Double> valueSlope) {
-        return BaseStatusSignal.getLatencyCompensatedValue(value, valueSlope);
-    }
+	/**
+	 * Performs latency compensation on signal using the signalSlope and signal's latency to determine the magnitude of
+	 * compensation.
+	 */
+	private double getLatencyCompensatedValue(StatusSignal<Double> value, StatusSignal<Double> valueSlope) {
+		return BaseStatusSignal.getLatencyCompensatedValue(value, valueSlope);
+	}
 
-    /**
-     * Performs latency compensation on velocity
-     */
-    public double getLatencyCompensatedVelocity() {
-        return getLatencyCompensatedValue(this.getVelocity(), this.getAcceleration());
-    }
+	/**
+	 * Performs latency compensation on velocity
+	 */
+	public double getLatencyCompensatedVelocity() {
+		return getLatencyCompensatedValue(this.getVelocity(), this.getAcceleration());
+	}
 
-    /**
-     * Performs latency compensation on position
-     */
-    public double getLatencyCompensatedPosition() {
-        return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
-    }
+	/**
+	 * Performs latency compensation on position
+	 */
+	public double getLatencyCompensatedPosition() {
+		return getLatencyCompensatedValue(this.getPosition(), this.getVelocity());
+	}
 
 }

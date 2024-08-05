@@ -16,7 +16,7 @@ public class ModulesFactory {
         return new Module(
                 modulePosition,
                 ModuleConstantsFactory.create(swerveName),
-                EncoderFactory.create(modulePosition),
+                EncoderFactory.create(swerveName, modulePosition),
                 SteerFactory.create(swerveName, modulePosition),
                 DriveFactory.create(swerveName, modulePosition)
         );

@@ -9,11 +9,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.MathConstants;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 
 public record SwerveConstants(
         String logPath,
         String stateLogPath,
         String velocityLogPath,
+        String gyroLogPath,
         double velocityAt12VoltsMetersPerSecond,
         Rotation2d maxRotationalVelocityPerSecond,
         PIDController xMetersPIDController,
@@ -33,6 +35,7 @@ public record SwerveConstants(
                 swerveName.getLogPath(),
                 swerveName.getLogPath() + "State/",
                 swerveName.getLogPath() + "Velocity/",
+                swerveName.getLogPath() + SwerveGyroConstants.LOG_PATH_ADDITION,
                 velocityAt12VoltsMetersPerSecond,
                 maxRotationalVelocityPerSecond,
                 new PIDController(

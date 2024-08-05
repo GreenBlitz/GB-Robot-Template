@@ -157,12 +157,8 @@ public class Module {
         return moduleInputsContainer.getSteerMotorInputs().angle;
     }
 
-    public String getModulesLogPath() {
-        return constants.modulesLogPath();
-    }
-
     public String getModuleLogPath() {
-        return getModulesLogPath() + modulePosition + "/";
+        return constants.modulesLogPath() + modulePosition + "/";
     }
 
     public String getModuleAlertLogPath() {

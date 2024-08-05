@@ -25,7 +25,7 @@ class BatteryLimiter extends Command {
     public BatteryLimiter() {
         this.isBatteryLow = new LoggedTableBoolean("Battery", "is low", false);
         this.voltageFilter = LinearFilter.movingAverage(NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE);
-        this.showedMessageTime = Timer.getFPGATimestamp();
+        this.showedMessageTime = 0;
 
         if (Robot.ROBOT_TYPE.isSimulation()) {
             CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPConstants.SIMULATION_IP);

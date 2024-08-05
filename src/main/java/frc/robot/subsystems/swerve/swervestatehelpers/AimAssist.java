@@ -7,20 +7,10 @@ import java.util.function.Function;
 
 public enum AimAssist {
 
-    NONE(0),
-    SPEAKER(4),
-    NOTE (4),
+    NONE,
+    SPEAKER,
+    NOTE,
 
-    AMP(4);
+    AMP;
 
-    public final int actionIndicator;
-
-    AimAssist(int actionIndicator) {
-        this(actionIndicator, (robotPose) -> null, (robotPose) -> null);
-    }
-
-    AimAssist(int actionIndicator, Function<Pose2d, Rotation2d> targetRotationSupplier,
-            Function<Pose2d, Translation2d> targetTranslationSupplier) {
-        this.actionIndicator = actionIndicator;
-    }
 }

@@ -93,6 +93,9 @@ public class Swerve extends GBSubsystem {
         );
     }
 
+    public void setStateHandler(SwerveStateHelper swerveStateHelper){
+        this.stateHandler = swerveStateHelper;
+    }
 
     public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier) {
         this.currentAngleSupplier = currentAngleSupplier;
@@ -108,6 +111,7 @@ public class Swerve extends GBSubsystem {
         constants.yMetersPIDController().reset();
         constants.rotationDegreesPIDController().reset();
     }
+
 
     @Override
     public void subsystemPeriodic() {
@@ -163,7 +167,7 @@ public class Swerve extends GBSubsystem {
     }
 
     public SwerveConstants getConstants() {
-        return this.constants;
+        return constants;
     }
 
     public Rotation2d getRelativeHeading() {
@@ -339,9 +343,5 @@ public class Swerve extends GBSubsystem {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
-    }
-
-    public void applyStateHandler(SwerveStateHelper swerveStateHelper){
-        this.stateHandler = swerveStateHelper;
     }
 }

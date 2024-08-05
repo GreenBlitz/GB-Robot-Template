@@ -35,19 +35,20 @@ public class AimAssistUtils {
             Supplier<Pose2d> robotPoseSupplier,
             Function<Pose2d, Rotation2d> targetRotationSupplier, SwerveConstants swerveConstants) {
 
-        double driveMagnitude = getDriveMagnitude(currentSpeeds);
-        Rotation2d pidVelocity = Rotation2d.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(
-                robotPoseSupplier.get().getRotation().getDegrees(),
-                targetRotationSupplier.apply(robotPoseSupplier.get()).getDegrees()
-        ));
+        Rotation2d pidVelocity = Rotation2d.fromDegrees(
+                swerveConstants.rotationDegreesPIDController().calculate(
+                    robotPoseSupplier.get().getRotation().getDegrees(),
+                    targetRotationSupplier.apply(robotPoseSupplier.get()).getDegrees()
+                )
+        );
 
         double angularVelocityRads =
-                pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+                pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (getDriveMagnitude(currentSpeeds) + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 
-        double angularVelocityWithJoystick = angularVelocityRads + inputSpeeds.omegaRadiansPerSecond;
+        double combinedAngularVelocity = angularVelocityRads + inputSpeeds.omegaRadiansPerSecond;
 
         double clampedAngularVelocity = MathUtil.clamp(
-                angularVelocityWithJoystick,
+                combinedAngularVelocity,
                 -swerveConstants.maxRotationalVelocityPerSecond().getRadians(),
                 swerveConstants.maxRotationalVelocityPerSecond().getRadians()
         );

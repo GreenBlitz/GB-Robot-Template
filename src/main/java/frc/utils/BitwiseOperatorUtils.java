@@ -1,11 +1,8 @@
 package frc.utils;
 
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
-
 import static java.lang.Math.pow;
 
 public class BitwiseOperatorUtils {
-
 
     /**
      * @param number positive integer
@@ -23,16 +20,15 @@ public class BitwiseOperatorUtils {
             binaryArray[i] = binaryString.charAt(i) != '0';
         }
 
-        final AimAssist none = AimAssist.NONE;
-
         return binaryArray;
     }
 
     public static int convertBinaryArrayToInteger(boolean[] binaryArray) {
         int sum = 0;
         for (int i = binaryArray.length - 1; i >= 0; i--) {
-            sum += (int) (binaryArray[i] ? 1 * pow(2,binaryArray.length - i - 1) : 0);
+            sum += (int) (binaryArray[i] ? 1 * pow(2, binaryArray.length - i - 1) : 0);
         }
         return sum;
     }
+
 }

@@ -11,17 +11,6 @@ import static frc.robot.subsystems.swerve.SwerveMath.getDriveMagnitude;
 
 public class AimAssistUtils {
 
-    /**
-     * @param currentSpeeds current chassis speeds, field relative
-     * @param inputSpeeds the speeds that the joysticks command on the robot
-     * @param robotRotationSupplier supplier of the robot rotation
-     * @param targetRotationSupplier target angle for the rotation (as a supplier)
-     * @param swerveConstants the constants of the swerve
-     *
-     * @return the aim assisted chassis speeds with only rotation speeds assisted (to look at somewhere)
-     *
-     * */
-
     public static ChassisSpeeds getRotationAssistedSpeeds(ChassisSpeeds inputSpeeds,
             ChassisSpeeds currentSpeeds,
             Supplier<Rotation2d> robotRotationSupplier,

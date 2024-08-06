@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -20,7 +19,6 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
@@ -268,7 +266,7 @@ public class Swerve extends GBSubsystem {
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         this.currentState = swerveState;
-        chassisSpeeds = stateHelper.applyAimAssistOnInputsSpeeds(swerveState.getAimAssist(), chassisSpeeds);
+        chassisSpeeds = stateHelper.applyAimAssistInputsSpeeds(swerveState.getAimAssist(), chassisSpeeds);
 
         if (SwerveMath.isStill(chassisSpeeds)) {
             modules.stop();

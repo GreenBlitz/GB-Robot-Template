@@ -14,10 +14,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistUtils.getRotationAssistedSpeeds;
-import static frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis.BACK_LEFT_MODULE;
-import static frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis.BACK_RIGHT_MODULE;
-import static frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis.FRONT_LEFT_MODULE;
-import static frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis.FRONT_RIGHT_MODULE;
 
 public class SwerveStateHelper {
 
@@ -34,7 +30,7 @@ public class SwerveStateHelper {
         this.noteTranslationSupplier = noteTranslationSupplier;
     }
 
-    public ChassisSpeeds applyAimAssistOnInputsSpeeds(AimAssist aimAssistState, ChassisSpeeds inputSpeeds) {
+    public ChassisSpeeds applyAimAssistInputsSpeeds(AimAssist aimAssistState, ChassisSpeeds inputSpeeds) {
         return switch (aimAssistState) {
             case SPEAKER -> getRotationAssistedSpeeds(
                     inputSpeeds,
@@ -91,18 +87,19 @@ public class SwerveStateHelper {
             case BACK_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.BACK_RIGHT.getIndex()];
         };
     }
+
     public RotateAxis getFarRotateAxis(boolean isLeft) {
         Rotation2d currentAllianceAngle = swerve.getAllianceRelativeHeading();
         if (Math.abs(currentAllianceAngle.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45
-            return isLeft ? FRONT_LEFT_MODULE : FRONT_RIGHT_MODULE;
+            return isLeft ? RotateAxis.FRONT_LEFT_MODULE : RotateAxis.FRONT_RIGHT_MODULE;
         }
         if (Math.abs(currentAllianceAngle.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) { // -135 - x - 135
-            return isLeft ? BACK_RIGHT_MODULE : BACK_LEFT_MODULE;
+            return isLeft ? RotateAxis.BACK_RIGHT_MODULE : RotateAxis.BACK_LEFT_MODULE;
         }
         if (currentAllianceAngle.getDegrees() > 0) { // 45 <= x <= 135
-            return isLeft ? FRONT_RIGHT_MODULE : BACK_RIGHT_MODULE;
+            return isLeft ? RotateAxis.FRONT_RIGHT_MODULE : RotateAxis.BACK_RIGHT_MODULE;
         }
-        return isLeft ? BACK_LEFT_MODULE : FRONT_LEFT_MODULE; // -45 >= x >= -135
+        return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE; // -45 >= x >= -135
     }
 
     public RotateAxis getFarRightRotateAxis() {
@@ -112,4 +109,5 @@ public class SwerveStateHelper {
     public RotateAxis getFarLeftRotateAxis() {
         return getFarRotateAxis(true);
     }
+
 }

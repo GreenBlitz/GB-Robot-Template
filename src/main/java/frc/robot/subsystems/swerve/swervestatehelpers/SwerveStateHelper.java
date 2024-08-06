@@ -64,7 +64,7 @@ public class SwerveStateHelper {
             return speeds;
         }
 
-        Translation2d noteRelativeToRobot = SwerveMath.getPoseRelativeTranslation(robotPoseSupplier.get(),
+        Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(robotPoseSupplier.get(),
                 noteTranslationSupplier.get().get());
 
 

@@ -56,11 +56,11 @@ public class SwerveMath {
     }
 
     public static Translation2d getRelativeTranslation(Translation2d relativeTo, Translation2d toRelative) {
-        return pointTranslation.minus(robotTranslation);
+        return toRelative.minus(relativeTo);
     }
 
     public static Translation2d getRelativeTranslation(Pose2d relativeTo, Translation2d toRelative) {
-        return getRelativeTranslation(robotPose.getTranslation(), pointTranslation).rotateBy(robotPose.getRotation().unaryMinus());
+        return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
     }
 
     public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity) {

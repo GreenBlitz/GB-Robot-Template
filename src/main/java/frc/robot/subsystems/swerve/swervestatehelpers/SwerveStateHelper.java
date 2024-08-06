@@ -62,12 +62,17 @@ public class SwerveStateHelper {
         if (noteTranslationSupplier.get().isEmpty()) {
             return speeds;
         }
+
         Translation2d noteRelativeToRobot = SwerveMath.getPoseRelativeTranslation(robotPoseSupplier.get(),
                 noteTranslationSupplier.get().get());
 
 
-        double wantedHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY())
-                + speeds.vyMetersPerSecond;
+        double pidGainHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(
+                0,
+                noteRelativeToRobot.getY()
+        );
+
+        double wantedHorizontalVelocity = pidGainHorizontalVelocity + speeds.vyMetersPerSecond;
 
         return ChassisSpeeds.fromRobotRelativeSpeeds(
                 speeds.vxMetersPerSecond,

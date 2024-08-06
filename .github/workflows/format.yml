@@ -8,8 +8,7 @@ on:
       - reopened
 
 jobs:
-  compile:
-    name: Compile
+  fompile:
     runs-on: ubuntu-latest
     container: wpilib/roborio-cross-ubuntu:2024-22.04
     steps:

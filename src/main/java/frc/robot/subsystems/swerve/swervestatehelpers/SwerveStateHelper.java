@@ -52,15 +52,15 @@ public class SwerveStateHelper {
             case SPEAKER -> getRotationAssistedSpeeds(
                     inputSpeeds,
                     swerve.getRobotRelativeVelocity(),
-                    robotPoseSupplier,
-                    robotPose ->SwerveMath.getNormalizedTranslation(robotPose.getTranslation(),new Translation2d(0,0)).getAngle(),
+                    () -> robotPoseSupplier.get().getRotation(),
+                    () -> SwerveMath.getNormalizedTranslation(robotPoseSupplier.get().getTranslation(),new Translation2d(0,0)).getAngle(),
                     swerveConstants
             );
             case AMP -> getRotationAssistedSpeeds(
                     inputSpeeds,
                     swerve.getRobotRelativeVelocity(),
-                    robotPoseSupplier,
-                    (robotPose -> Rotation2d.fromDegrees(90)),
+                    () -> robotPoseSupplier.get().getRotation(),
+                    () -> Rotation2d.fromDegrees(90),
                     swerveConstants
             );
             case NOTE -> handleNoteAssistState(

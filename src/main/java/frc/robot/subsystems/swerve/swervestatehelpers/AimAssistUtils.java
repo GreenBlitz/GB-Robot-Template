@@ -10,21 +10,14 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class AimAssistUtils {
+import static frc.robot.subsystems.swerve.SwerveMath.getDriveMagnitude;
 
-    /**
-     * @param speeds the robot speeds at "field-relative"
-     *
-     * @return the magnitude of the drive velocities vecotr
-     * */
-    private static double getDriveMagnitude(ChassisSpeeds speeds) {
-        return Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
-    }
+public class AimAssistUtils {
 
     /**
      * @param currentSpeeds current chassis speeds, field relative
      * @param inputSpeeds the speeds that the joysticks command on the robot
-     * @param robotPoseSupplier supplier of the robot position
+     * @param robotRotationSupplier supplier of the robot rotation
      * @param targetRotationSupplier target angle for the rotation (as a supplier)
      * @param swerveConstants the constants of the swerve
      *
@@ -34,14 +27,14 @@ public class AimAssistUtils {
 
     public static ChassisSpeeds getRotationAssistedSpeeds(ChassisSpeeds inputSpeeds,
             ChassisSpeeds currentSpeeds,
-            Supplier<Pose2d> robotPoseSupplier,
-            Function<Pose2d, Rotation2d> targetRotationSupplier,
+            Supplier<Rotation2d> robotRotationSupplier,
+            Supplier<Rotation2d> targetRotationSupplier,
             SwerveConstants swerveConstants) {
 
         Rotation2d pidVelocity = Rotation2d.fromDegrees(
                 swerveConstants.rotationDegreesPIDController().calculate(
-                    robotPoseSupplier.get().getRotation().getDegrees(),
-                    targetRotationSupplier.apply(robotPoseSupplier.get()).getDegrees()
+                    robotRotationSupplier.get().getDegrees(),
+                    targetRotationSupplier.get().getDegrees()
                 )
         );
 

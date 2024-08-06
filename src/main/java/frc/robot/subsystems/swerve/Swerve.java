@@ -61,7 +61,7 @@ public class Swerve extends GBSubsystem {
 
         this.stateHelper = new SwerveStateHelper(
                 () -> new Pose2d(0,0, currentAngleSupplier.get()), //default pose estimator
-                () -> Optional.of(new Translation2d()),
+                Optional::empty,
                 this
         );
 
@@ -78,6 +78,9 @@ public class Swerve extends GBSubsystem {
 
     public SwerveConstants getConstants() {
         return constants;
+    }
+    public SwerveStateHelper getStateHelper (){
+        return stateHelper;
     }
 
     @Override
@@ -217,10 +220,6 @@ public class Swerve extends GBSubsystem {
             return chassisSpeeds;
         }
         return SwerveMath.fieldRelativeToRobotRelativeSpeeds(chassisSpeeds, getAllianceRelativeHeading());
-    }
-
-    public SwerveStateHelper getStateHelper (){
-        return stateHelper;
     }
 
     /**

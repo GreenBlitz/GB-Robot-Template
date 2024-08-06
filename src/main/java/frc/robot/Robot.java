@@ -22,28 +22,26 @@ public class Robot {
 
     public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
-    public static final Swerve swerve = new Swerve(
+    public final Swerve swerve = new Swerve(
             SwerveConstantsFactory.create(),
             ModulesFactory.create(),
             GyroFactory.create()
     );
-    public static final PoseEstimator poseEstimator = new PoseEstimator(
+    public final PoseEstimator poseEstimator = new PoseEstimator(
             swerve::setHeading,
             swerve::getFieldRelativeVelocity
     );
 
-    private static final SwerveStateHelper swerveStateHelper = new SwerveStateHelper(
-            poseEstimator::getCurrentPose,
-            () -> Optional.of(new Translation2d(1,1)),
-            swerve
-    );
-
-    static {
-        swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-//        swerve.setStateHelper(swerveStateHelper);
-    }
 
     public Robot() {
+        swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+        swerve.setStateHelper(
+                new SwerveStateHelper(
+                        poseEstimator::getCurrentPose,
+                        () -> Optional.of(new Translation2d(1, 1)),
+                        swerve
+        ));
+
         buildPathPlannerForAuto();
         configureBindings();
     }

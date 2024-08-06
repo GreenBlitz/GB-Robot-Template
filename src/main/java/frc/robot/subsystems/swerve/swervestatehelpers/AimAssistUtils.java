@@ -14,8 +14,8 @@ public class AimAssistUtils {
     public static ChassisSpeeds getRotationAssistedSpeeds(
             ChassisSpeeds speeds,
             ChassisSpeeds currentSpeeds,
-            Rotation2d robotRotationSupplier,
-            Rotation2d targetRotationSupplier,
+            Rotation2d robotRotation,
+            Rotation2d targetRotation,
             SwerveConstants swerveConstants
     ) {
         Rotation2d pidVelocity = Rotation2d.fromDegrees(

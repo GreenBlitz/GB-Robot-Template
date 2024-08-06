@@ -14,14 +14,14 @@ public class AimAssistUtils {
     public static ChassisSpeeds getRotationAssistedSpeeds(
             ChassisSpeeds speeds,
             ChassisSpeeds currentSpeeds,
-            Supplier<Rotation2d> robotRotationSupplier,
-            Supplier<Rotation2d> targetRotationSupplier,
+            Rotation2d robotRotationSupplier,
+            Rotation2d targetRotationSupplier,
             SwerveConstants swerveConstants
     ) {
         Rotation2d pidVelocity = Rotation2d.fromDegrees(
                 swerveConstants.rotationDegreesPIDController().calculate(
-                    robotRotationSupplier.get().getDegrees(),
-                    targetRotationSupplier.get().getDegrees()
+                    robotRotationSupplier.getDegrees(),
+                    targetRotationSupplier.getDegrees()
                 )
         );
 

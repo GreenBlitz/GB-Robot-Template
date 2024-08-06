@@ -15,7 +15,7 @@ public class ModulesFactory {
     private static Module createModule(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
         return new Module(
                 modulePosition,
-                ModuleConstantsFactory.create(swerveName),
+                ModuleConstantsFactory.create(swerveName, modulePosition),
                 EncoderFactory.create(swerveName, modulePosition),
                 SteerFactory.create(swerveName, modulePosition),
                 DriveFactory.create(swerveName, modulePosition)

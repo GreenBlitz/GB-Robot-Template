@@ -5,7 +5,8 @@ import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
 public record ModuleConstants(
-        String logPath,
+        String modulesLogPath,
+        String moduleLogPath,
         double wheelDiameterMeters,
         double couplingRatio,
         Rotation2d velocityAt12VoltsPerSecond
@@ -13,11 +14,13 @@ public record ModuleConstants(
 
     public ModuleConstants(
             String logPathPrefix,
+            ModuleUtils.ModulePosition modulePosition,
             double wheelDiameterMeters,
             double couplingRatio,
             double velocityAt12VoltsMetersPerSecond) {
         this(
                 logPathPrefix + LOG_PATH_ADDITION,
+                logPathPrefix + LOG_PATH_ADDITION + modulePosition + "/",
                 wheelDiameterMeters,
                 couplingRatio,
                 Conversions.distanceToAngle(

@@ -25,7 +25,6 @@ public class Module {
     private final IDrive iDrive;
     private final IEncoder iEncoder;
     private final ModuleConstants constants;
-    private final String logPath;
 
     private SwerveModuleState targetState;
     private Rotation2d startingSteerAngle;
@@ -37,7 +36,6 @@ public class Module {
         this.iSteer = iSteer;
         this.iDrive = iDrive;
         this.moduleInputsContainer = new ModuleInputsContainer();
-        this.logPath = this.constants.logPath() + modulePosition + "/";
 
         this.targetState = new SwerveModuleState();
         this.startingSteerAngle = new Rotation2d();
@@ -87,18 +85,18 @@ public class Module {
         moduleInputs.isAtTargetState = moduleInputs.isAtTargetVelocity && moduleInputs.isAtTargetAngle;
         moduleInputs.isClosedLoop = isClosedLoop;
 
-        moduleInputsContainer.processInputs(logPath);
+        moduleInputsContainer.processInputs(constants.moduleLogPath());
     }
 
     public void reportAlerts() {
         if (!moduleInputsContainer.getEncoderInputs().isConnected) {
-            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "encoder disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.moduleLogPath() + "encoder disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "steer motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.moduleLogPath() + "steer motor disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "drive motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.moduleLogPath() + "drive motor disconnect", Timer.getFPGATimestamp());
         }
     }
 

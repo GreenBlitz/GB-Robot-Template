@@ -30,7 +30,7 @@ public class Module {
     private Rotation2d startingSteerAngle;
     private boolean isClosedLoop;
 
-    public Module(ModuleUtils.ModulePosition modulePosition, ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
+    public Module(ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
         this.constants = constants;
         this.iEncoder = iEncoder;
         this.iSteer = iSteer;

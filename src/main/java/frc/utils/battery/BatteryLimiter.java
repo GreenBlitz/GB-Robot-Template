@@ -16,7 +16,8 @@ import java.nio.file.Path;
 class BatteryLimiter extends Command {
 
     private static final int NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE = 50;
-    private static final double MESSAGE_STARTUP_TIME = 0.2; // 2 python cycles
+    private static final double PYTHON_CYCLE_TIME_SECONDS = 0.1;
+    private static final double MESSAGE_STARTUP_TIME = PYTHON_CYCLE_TIME_SECONDS * 2;
 
     private final LoggedTableBoolean isBatteryLow;
     private final LinearFilter voltageFilter;
@@ -65,10 +66,8 @@ class BatteryLimiter extends Command {
                 throw new java.lang.RuntimeException("BATTERY IS LOW");
             }
         }
-        else {
-            if (isBatteryLow.get()) {
-                isBatteryLow.set(false);
-            }
+        else if (isBatteryLow.get()) {
+            isBatteryLow.set(false);
         }
     }
 

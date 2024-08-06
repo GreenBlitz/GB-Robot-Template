@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
@@ -17,41 +18,39 @@ import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistUtils.getR
 
 public class SwerveStateHelper {
 
-    private final Supplier<Pose2d> robotPoseSupplier;
     private final Swerve swerve;
     private final SwerveConstants swerveConstants;
+    private final Supplier<Pose2d> robotPoseSupplier;
     private final Supplier<Optional<Translation2d>> noteTranslationSupplier;
 
     public SwerveStateHelper(Supplier<Pose2d> robotPoseSupplier, Supplier<Optional<Translation2d>> noteTranslationSupplier,
             Swerve swerve) {
-        this.robotPoseSupplier = robotPoseSupplier;
         this.swerve = swerve;
         this.swerveConstants = swerve.getConstants();
+        this.robotPoseSupplier = robotPoseSupplier;
         this.noteTranslationSupplier = noteTranslationSupplier;
     }
 
-    public ChassisSpeeds applyAimAssistOnSpeeds(AimAssist aimAssistState, ChassisSpeeds speeds) {
+    public ChassisSpeeds applyAimAssistOnSpeeds(AimAssist aimAssistState, ChassisSpeeds chassisSpeeds) {
         return switch (aimAssistState) {
             case SPEAKER -> getRotationAssistedSpeeds(
-                    speeds,
-                    swerve.getRobotRelativeVelocity(),
+                    chassisSpeeds,
                     robotPoseSupplier.get().getRotation(),
-                    SwerveMath.getRelativeTranslation(robotPoseSupplier.get().getTranslation(),new Translation2d(0,0)).getAngle(),
+                    SwerveMath.getRelativeTranslation(robotPoseSupplier.get().getTranslation(), new Translation2d(0,0)).getAngle(),
                     swerveConstants
             );
             case AMP -> getRotationAssistedSpeeds(
-                    speeds,
-                    swerve.getRobotRelativeVelocity(),
+                    chassisSpeeds,
                     robotPoseSupplier.get().getRotation(),
-                    Rotation2d.fromDegrees(90),
+                    Field.getAngleToAmp(),
                     swerveConstants
             );
             case NOTE -> handleNoteAssistState(
-                    speeds,
+                    chassisSpeeds,
                     robotPoseSupplier,
                     noteTranslationSupplier
             );
-            case NONE -> speeds;
+            case NONE -> chassisSpeeds;
         };
     }
 

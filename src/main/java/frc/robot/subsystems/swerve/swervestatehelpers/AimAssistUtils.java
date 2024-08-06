@@ -12,27 +12,26 @@ import static frc.robot.subsystems.swerve.SwerveMath.getDriveMagnitude;
 public class AimAssistUtils {
 
     public static ChassisSpeeds getRotationAssistedSpeeds(
-            ChassisSpeeds speeds,
-            ChassisSpeeds currentSpeeds,
+            ChassisSpeeds wantedSpeeds,
             Rotation2d robotRotation,
             Rotation2d targetRotation,
             SwerveConstants swerveConstants
     ) {
         Rotation2d pidVelocity = Rotation2d.fromDegrees(
                 swerveConstants.rotationDegreesPIDController().calculate(
-                    robotRotationSupplier.getDegrees(),
-                    targetRotationSupplier.getDegrees()
+                        robotRotation.getDegrees(),
+                        targetRotation.getDegrees()
                 )
         );
 
-        double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, currentSpeeds);
-        double combinedAngularVelocityRadians = angularVelocityRadians + speeds.omegaRadiansPerSecond;
+        double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, wantedSpeeds);
+        double combinedAngularVelocityRadians = angularVelocityRadians + wantedSpeeds.omegaRadiansPerSecond;
         Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(
                 Rotation2d.fromRadians(combinedAngularVelocityRadians),
                 swerveConstants.maxRotationalVelocityPerSecond()
         );
 
-        return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
+        return new ChassisSpeeds(wantedSpeeds.vxMetersPerSecond, wantedSpeeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
     }
 
     public static double applyMagnitudeCompensation(Rotation2d pidGain, ChassisSpeeds driveSpeeds){

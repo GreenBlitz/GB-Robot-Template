@@ -36,7 +36,8 @@ public class SwerveMath {
 
         return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
     }
-    static boolean isStill(ChassisSpeeds chassisSpeeds) {
+
+    public static boolean isStill(ChassisSpeeds chassisSpeeds) {
         return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
                 && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
@@ -53,9 +54,11 @@ public class SwerveMath {
     public static Translation2d getRelativeTranslation (Translation2d robotTranslation, Translation2d pointTranslation){
         return pointTranslation.minus(robotTranslation);
     }
+
     public static Translation2d getPoseRelativeTranslation(Pose2d robotPose, Translation2d pointTranslation){
         return getRelativeTranslation(robotPose.getTranslation(), pointTranslation).rotateBy(robotPose.getRotation().unaryMinus());
     }
+
     public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity){
         return Rotation2d.fromRadians(MathUtil.clamp(
                 velocity.getRadians(),

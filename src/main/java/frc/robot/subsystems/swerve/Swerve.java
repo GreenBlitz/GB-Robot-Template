@@ -201,7 +201,6 @@ public class Swerve extends GBSubsystem {
         return odometryObservations;
     }
 
-
     public ChassisSpeeds getRobotRelativeVelocity() {
         return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getCurrentStates());
     }
@@ -306,4 +305,5 @@ public class Swerve extends GBSubsystem {
 
         return isAtAngle && isStopping;
     }
+
 }

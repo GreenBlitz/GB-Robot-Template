@@ -40,7 +40,7 @@ public class AimAssistUtils {
 
         double angularVelocityRads = getAssistedValueInCompensationToDrive(pidVelocity.getRadians(), currentSpeeds);
         double combinedAngularVelocity = angularVelocityRads + inputSpeeds.omegaRadiansPerSecond;
-        double clampedAngularVelocity = SwerveMath.clampRotationalVelocity(Rotation2d.fromRadians(combinedAngularVelocity),
+        Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(Rotation2d.fromRadians(combinedAngularVelocity),
                 swerveConstants.maxRotationalVelocityPerSecond()).getRadians();
 
         return new ChassisSpeeds(inputSpeeds.vxMetersPerSecond, inputSpeeds.vyMetersPerSecond, clampedAngularVelocity);

@@ -50,7 +50,7 @@ public class SwerveMath {
         return Math.abs(speed) <= deadband ? 0 : speed;
     }
 
-    public static Translation2d getNormalizedTranslation (Translation2d robotTranslation, Translation2d pointTranslation){
+    public static Translation2d getRelativeTranslation (Translation2d robotTranslation, Translation2d pointTranslation){
         return pointTranslation.minus(robotTranslation);
     }
     public static Translation2d getPointTranslationInRobotCoordinateSystem (Pose2d robotPose, Translation2d pointTranslation){

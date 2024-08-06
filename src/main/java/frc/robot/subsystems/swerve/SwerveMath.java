@@ -53,8 +53,8 @@ public class SwerveMath {
     public static Translation2d getRelativeTranslation (Translation2d robotTranslation, Translation2d pointTranslation){
         return pointTranslation.minus(robotTranslation);
     }
-    public static Translation2d getPointTranslationInRobotCoordinateSystem (Pose2d robotPose, Translation2d pointTranslation){
-        return getNormalizedTranslation(robotPose.getTranslation(), pointTranslation).rotateBy(robotPose.getRotation().unaryMinus());
+    public static Translation2d getPoseRelativeTranslation(Pose2d robotPose, Translation2d pointTranslation){
+        return getRelativeTranslation(robotPose.getTranslation(), pointTranslation).rotateBy(robotPose.getRotation().unaryMinus());
     }
     public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity){
         return Rotation2d.fromRadians(MathUtil.clamp(

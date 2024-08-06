@@ -3,17 +3,14 @@ package frc.robot.subsystems.swerve.swervestatehelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistUtils.getRotationAssistedSpeeds;
@@ -37,23 +34,13 @@ public class SwerveStateHelper {
         this.noteTranslationSupplier = noteTranslationSupplier;
     }
 
-    public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
-        return switch (rotationAxisState) {
-            case MIDDLE_OF_ROBOT -> new Translation2d();
-            case FRONT_LEFT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.FRONT_LEFT.getIndex()];
-            case FRONT_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.FRONT_RIGHT.getIndex()];
-            case BACK_LEFT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.BACK_LEFT.getIndex()];
-            case BACK_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.BACK_RIGHT.getIndex()];
-        };
-    }
-
     public ChassisSpeeds applyAimAssistOnInputsSpeeds(AimAssist aimAssistState, ChassisSpeeds inputSpeeds) {
         return switch (aimAssistState) {
             case SPEAKER -> getRotationAssistedSpeeds(
                     inputSpeeds,
                     swerve.getRobotRelativeVelocity(),
                     () -> robotPoseSupplier.get().getRotation(),
-                    () -> SwerveMath.getNormalizedTranslation(robotPoseSupplier.get().getTranslation(),new Translation2d(0,0)).getAngle(),
+                    () -> SwerveMath.getRelativeTranslation(robotPoseSupplier.get().getTranslation(),new Translation2d(0,0)).getAngle(),
                     swerveConstants
             );
             case AMP -> getRotationAssistedSpeeds(
@@ -79,7 +66,7 @@ public class SwerveStateHelper {
         if (noteTranslationSupplier.get().isEmpty()) {
             return inputSpeeds;
         }
-        Translation2d noteRelativeToRobot = SwerveMath.getPointTranslationInRobotCoordinateSystem(robotPoseSupplier.get(),
+        Translation2d noteRelativeToRobot = SwerveMath.getPoseRelativeTranslation(robotPoseSupplier.get(),
                 noteTranslationSupplier.get().get());
 
 
@@ -94,6 +81,16 @@ public class SwerveStateHelper {
         );
     }
 
+
+    public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
+        return switch (rotationAxisState) {
+            case MIDDLE_OF_ROBOT -> new Translation2d();
+            case FRONT_LEFT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.FRONT_LEFT.getIndex()];
+            case FRONT_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.FRONT_RIGHT.getIndex()];
+            case BACK_LEFT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.BACK_LEFT.getIndex()];
+            case BACK_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModuleName.BACK_RIGHT.getIndex()];
+        };
+    }
     public RotateAxis getFarRotateAxis(boolean isLeft) {
         Rotation2d currentAllianceAngle = swerve.getAllianceRelativeHeading();
         if (Math.abs(currentAllianceAngle.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45

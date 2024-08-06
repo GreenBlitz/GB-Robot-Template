@@ -10,9 +10,11 @@ import frc.utils.cycletime.CycleTimeUtils;
 
 public class SwerveMath {
 
-    public static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
+    public static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds,
+            Rotation2d allianceRelativeAngle) {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
     }
+
     public static ChassisSpeeds robotRelativeToFieldRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Rotation2d robotHeading) {
         return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeSpeeds, robotHeading);
     }
@@ -21,7 +23,8 @@ public class SwerveMath {
         return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
     }
 
-    public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
+    public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed,
+            SwerveConstants constants) {
         return new ChassisSpeeds(
                 xPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
                 yPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
@@ -32,7 +35,10 @@ public class SwerveMath {
     public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
         double newXSpeed = getDeadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
         double newYSpeed = getDeadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
-        double newOmegaSpeed = getDeadbandSpeed(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians());
+        double newOmegaSpeed = getDeadbandSpeed(
+                chassisSpeeds.omegaRadiansPerSecond,
+                SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()
+        );
 
         return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
     }
@@ -47,23 +53,24 @@ public class SwerveMath {
         return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
     }
 
-    public static double getDeadbandSpeed(double speed, double deadband){
+    public static double getDeadbandSpeed(double speed, double deadband) {
         return Math.abs(speed) <= deadband ? 0 : speed;
     }
 
-    public static Translation2d getRelativeTranslation (Translation2d robotTranslation, Translation2d pointTranslation){
+    public static Translation2d getRelativeTranslation(Translation2d robotTranslation, Translation2d pointTranslation) {
         return pointTranslation.minus(robotTranslation);
     }
 
-    public static Translation2d getPoseRelativeTranslation(Pose2d robotPose, Translation2d pointTranslation){
+    public static Translation2d getPoseRelativeTranslation(Pose2d robotPose, Translation2d pointTranslation) {
         return getRelativeTranslation(robotPose.getTranslation(), pointTranslation).rotateBy(robotPose.getRotation().unaryMinus());
     }
 
-    public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity){
+    public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity) {
         return Rotation2d.fromRadians(MathUtil.clamp(
                 velocity.getRadians(),
                 -maxRotationalVelocity.getRadians(),
                 maxRotationalVelocity.getRadians()
         ));
     }
+
 }

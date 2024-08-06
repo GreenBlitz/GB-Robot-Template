@@ -81,6 +81,7 @@ public class Swerve extends GBSubsystem {
     public SwerveStateHelper getStateHelper() {
         return stateHelper;
     }
+
     @Override
     public String getLogPath() {
         return SwerveConstants.SWERVE_LOG_PATH;
@@ -266,7 +267,7 @@ public class Swerve extends GBSubsystem {
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         this.currentState = swerveState;
-        chassisSpeeds = stateHelper.applyAimAssistInputsSpeeds(swerveState.getAimAssist(), chassisSpeeds);
+        chassisSpeeds = stateHelper.applyAimAssistonSpeeds(swerveState.getAimAssist(), chassisSpeeds);
 
         if (SwerveMath.isStill(chassisSpeeds)) {
             modules.stop();

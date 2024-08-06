@@ -30,49 +30,49 @@ public class SwerveStateHelper {
         this.noteTranslationSupplier = noteTranslationSupplier;
     }
 
-    public ChassisSpeeds applyAimAssistInputsSpeeds(AimAssist aimAssistState, ChassisSpeeds inputSpeeds) {
+    public ChassisSpeeds applyAimAssistonSpeeds(AimAssist aimAssistState, ChassisSpeeds speeds) {
         return switch (aimAssistState) {
             case SPEAKER -> getRotationAssistedSpeeds(
-                    inputSpeeds,
+                    speeds,
                     swerve.getRobotRelativeVelocity(),
                     () -> robotPoseSupplier.get().getRotation(),
                     () -> SwerveMath.getRelativeTranslation(robotPoseSupplier.get().getTranslation(),new Translation2d(0,0)).getAngle(),
                     swerveConstants
             );
             case AMP -> getRotationAssistedSpeeds(
-                    inputSpeeds,
+                    speeds,
                     swerve.getRobotRelativeVelocity(),
                     () -> robotPoseSupplier.get().getRotation(),
                     () -> Rotation2d.fromDegrees(90),
                     swerveConstants
             );
             case NOTE -> handleNoteAssistState(
-                    inputSpeeds,
+                    speeds,
                     robotPoseSupplier,
                     noteTranslationSupplier
             );
-            case NONE -> inputSpeeds;
+            case NONE -> speeds;
         };
     }
 
 
-    private ChassisSpeeds handleNoteAssistState(ChassisSpeeds inputSpeeds,
+    private ChassisSpeeds handleNoteAssistState(ChassisSpeeds speeds,
             Supplier<Pose2d> robotPoseSupplier,
             Supplier<Optional<Translation2d>> noteTranslationSupplier) {
         if (noteTranslationSupplier.get().isEmpty()) {
-            return inputSpeeds;
+            return speeds;
         }
         Translation2d noteRelativeToRobot = SwerveMath.getPoseRelativeTranslation(robotPoseSupplier.get(),
                 noteTranslationSupplier.get().get());
 
 
         double wantedHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY())
-                + inputSpeeds.vyMetersPerSecond;
+                + speeds.vyMetersPerSecond;
 
         return ChassisSpeeds.fromRobotRelativeSpeeds(
-                inputSpeeds.vxMetersPerSecond,
+                speeds.vxMetersPerSecond,
                 wantedHorizontalVelocity,
-                inputSpeeds.omegaRadiansPerSecond,
+                speeds.omegaRadiansPerSecond,
                 robotPoseSupplier.get().getRotation()
         );
     }

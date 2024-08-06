@@ -42,7 +42,7 @@ public class Robot {
         swerve.setStateHelper(
                 new SwerveStateHelper(
                         poseEstimator::getCurrentPose,
-                        () -> Optional.of(new Translation2d(1, 1)),
+                        () -> Optional.of(new Translation2d(5, 5)),
                         swerve
         ));
 

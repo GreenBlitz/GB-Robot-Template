@@ -24,7 +24,7 @@ public class AimAssistUtils {
                 )
         );
 
-        double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, wantedSpeeds);
+        double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, getDriveMagnitude(wantedSpeeds));
         double combinedAngularVelocityRadians = angularVelocityRadians + wantedSpeeds.omegaRadiansPerSecond;
         Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(
                 Rotation2d.fromRadians(combinedAngularVelocityRadians),
@@ -34,8 +34,8 @@ public class AimAssistUtils {
         return new ChassisSpeeds(wantedSpeeds.vxMetersPerSecond, wantedSpeeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
     }
 
-    public static double applyMagnitudeCompensation(Rotation2d pidGain, ChassisSpeeds driveSpeeds){
-        return pidGain.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (getDriveMagnitude(driveSpeeds) + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+    public static double applyMagnitudeCompensation(Rotation2d pidGain, double magnitude){
+        return pidGain.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
     }
 
 }

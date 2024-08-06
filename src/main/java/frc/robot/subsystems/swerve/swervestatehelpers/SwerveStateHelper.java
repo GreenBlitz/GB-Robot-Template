@@ -10,6 +10,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -72,13 +73,12 @@ public class SwerveStateHelper {
                 noteRelativeToRobot.getY()
         );
 
-        double wantedHorizontalVelocity = pidGainHorizontalVelocity + speeds.vyMetersPerSecond;
-
-        return ChassisSpeeds.fromRobotRelativeSpeeds(
-                speeds.vxMetersPerSecond,
-                wantedHorizontalVelocity,
-                speeds.omegaRadiansPerSecond,
-                robotPoseSupplier.get().getRotation()
+        Logger.recordOutput("current angle", robotPoseSupplier.get().getRotation().getDegrees());
+        Logger.recordOutput("target note", noteTranslationSupplier.get().get());
+        return new ChassisSpeeds(
+                speeds.vxMetersPerSecond + pidGainHorizontalVelocity * Math.sin(robotPoseSupplier.get().getRotation().unaryMinus().getRadians()),
+                speeds.vyMetersPerSecond + pidGainHorizontalVelocity * Math.cos(robotPoseSupplier.get().getRotation().unaryMinus().getRadians()),
+                speeds.omegaRadiansPerSecond
         );
     }
 

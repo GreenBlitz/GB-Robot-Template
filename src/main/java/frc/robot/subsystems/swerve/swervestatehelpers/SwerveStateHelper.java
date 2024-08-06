@@ -56,7 +56,8 @@ public class SwerveStateHelper {
     }
 
 
-    private ChassisSpeeds handleNoteAssistState(ChassisSpeeds speeds,
+    private ChassisSpeeds handleNoteAssistState(
+            ChassisSpeeds speeds,
             Supplier<Pose2d> robotPoseSupplier,
             Supplier<Optional<Translation2d>> noteTranslationSupplier) {
         if (noteTranslationSupplier.get().isEmpty()) {

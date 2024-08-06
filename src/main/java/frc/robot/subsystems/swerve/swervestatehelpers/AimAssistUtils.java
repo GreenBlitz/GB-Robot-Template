@@ -18,7 +18,6 @@ public class AimAssistUtils {
             Supplier<Rotation2d> targetRotationSupplier,
             SwerveConstants swerveConstants
     ) {
-
         Rotation2d pidVelocity = Rotation2d.fromDegrees(
                 swerveConstants.rotationDegreesPIDController().calculate(
                     robotRotationSupplier.get().getDegrees(),

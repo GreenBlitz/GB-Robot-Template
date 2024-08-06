@@ -61,7 +61,7 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)
+                SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)
         ));
         usedJoystick.R1.whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
@@ -74,13 +74,13 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(RotateAxis.getRightFarRotateAxis()))
+                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHelper().getFarRightRotateAxis()))
         );
         usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(RotateAxis.getLeftFarRotateAxis()))
+                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHelper().getFarLeftRotateAxis()))
         );
 
         robot.getSwerve().setDefaultCommand(robot.getSwerve().getCommandsBuilder().drive(

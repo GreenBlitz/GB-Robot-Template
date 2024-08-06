@@ -40,7 +40,7 @@ public class Robot {
 
     static {
         swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-        swerve.setStateHandler(swerveStateHelper);
+        swerve.setStateHelper(swerveStateHelper);
     }
 
     public Robot() {

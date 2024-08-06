@@ -5,8 +5,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -15,6 +17,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistUtils.getRotationAssistedSpeeds;
+import static frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis.BACK_LEFT_MODULE;
+import static frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis.BACK_RIGHT_MODULE;
+import static frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis.FRONT_LEFT_MODULE;
+import static frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis.FRONT_RIGHT_MODULE;
 
 public class SwerveStateHelper {
 
@@ -71,21 +77,18 @@ public class SwerveStateHelper {
         if (noteTranslationSupplier.get().isEmpty()) {
             return inputSpeeds;
         }
-        Rotation2d robotRotation = robotPoseSupplier.get().getRotation().unaryMinus();
+        Translation2d noteRelativeToRobot = SwerveMath.getPointTranslationInRobotCoordinateSystem(robotPoseSupplier.get(),
+                noteTranslationSupplier.get().get());
 
-        Translation2d noteTranslation = noteTranslationSupplier.get().get();
-        Translation2d normalizedNoteTranslation = noteTranslation.minus(robotPoseSupplier.get().getTranslation());
-        Translation2d rotatedNoteTranslation = normalizedNoteTranslation.rotateBy(robotRotation);
 
-        Logger.recordOutput("note pose", new Pose2d(noteTranslation, new Rotation2d()));
-
-        double wantedHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, rotatedNoteTranslation.getY())
+        double wantedHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY())
                 + inputSpeeds.vyMetersPerSecond;
+
         return ChassisSpeeds.fromRobotRelativeSpeeds(
                 inputSpeeds.vxMetersPerSecond,
                 wantedHorizontalVelocity,
                 inputSpeeds.omegaRadiansPerSecond,
-                robotRotation.unaryMinus()
+                robotPoseSupplier.get().getRotation()
         );
     }
 
@@ -112,4 +115,25 @@ public class SwerveStateHelper {
         );
     }
 
+    public RotateAxis getFarRotateAxis(boolean isLeft) {
+        Rotation2d currentAllianceAngle = swerve.getAllianceRelativeHeading();
+        if (Math.abs(currentAllianceAngle.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45
+            return isLeft ? FRONT_LEFT_MODULE : FRONT_RIGHT_MODULE;
+        }
+        if (Math.abs(currentAllianceAngle.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) { // -135 - x - 135
+            return isLeft ? BACK_RIGHT_MODULE : BACK_LEFT_MODULE;
+        }
+        if (currentAllianceAngle.getDegrees() > 0) { // 45 <= x <= 135
+            return isLeft ? FRONT_RIGHT_MODULE : BACK_RIGHT_MODULE;
+        }
+        return isLeft ? BACK_LEFT_MODULE : FRONT_LEFT_MODULE; // -45 >= x >= -135
+    }
+
+    public RotateAxis getFarRightRotateAxis() {
+        return getFarRotateAxis(false);
+    }
+
+    public RotateAxis getFarLeftRotateAxis() {
+        return getFarRotateAxis(true);
+    }
 }

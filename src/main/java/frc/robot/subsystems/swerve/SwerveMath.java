@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.utils.cycletime.CycleTimeUtils;
@@ -47,4 +49,10 @@ public class SwerveMath {
         return Math.abs(speed) <= deadband ? 0 : speed;
     }
 
+    public static Translation2d getNormalizedTranslation (Translation2d robotTranslation, Translation2d pointTranslation){
+        return pointTranslation.minus(robotTranslation);
+    }
+    public static Translation2d getPointTranslationInRobotCoordinateSystem (Pose2d robotPose, Translation2d pointTranslation){
+        return getNormalizedTranslation(robotPose.getTranslation(), pointTranslation).rotateBy(robotPose.getRotation().unaryMinus());
+    }
 }

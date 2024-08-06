@@ -79,10 +79,10 @@ public class Swerve extends GBSubsystem {
     public SwerveConstants getConstants() {
         return constants;
     }
-    public SwerveStateHelper getStateHelper (){
+    
+    public SwerveStateHelper getStateHelper() {
         return stateHelper;
     }
-
     @Override
     public String getLogPath() {
         return SwerveConstants.SWERVE_LOG_PATH;

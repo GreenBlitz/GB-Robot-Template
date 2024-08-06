@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveMath;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -31,9 +32,11 @@ public class AimAssistUtils {
      *
      * */
 
-    public static ChassisSpeeds getRotationAssistedSpeeds(ChassisSpeeds inputSpeeds, ChassisSpeeds currentSpeeds,
+    public static ChassisSpeeds getRotationAssistedSpeeds(ChassisSpeeds inputSpeeds,
+            ChassisSpeeds currentSpeeds,
             Supplier<Pose2d> robotPoseSupplier,
-            Function<Pose2d, Rotation2d> targetRotationSupplier, SwerveConstants swerveConstants) {
+            Function<Pose2d, Rotation2d> targetRotationSupplier,
+            SwerveConstants swerveConstants) {
 
         Rotation2d pidVelocity = Rotation2d.fromDegrees(
                 swerveConstants.rotationDegreesPIDController().calculate(
@@ -42,18 +45,16 @@ public class AimAssistUtils {
                 )
         );
 
-        double angularVelocityRads =
-                pidVelocity.getRadians() * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (getDriveMagnitude(currentSpeeds) + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
-
+        double angularVelocityRads = getAssistedValueInCompensationToDrive(pidVelocity.getRadians(), currentSpeeds);
         double combinedAngularVelocity = angularVelocityRads + inputSpeeds.omegaRadiansPerSecond;
-
-        double clampedAngularVelocity = MathUtil.clamp(
-                combinedAngularVelocity,
-                -swerveConstants.maxRotationalVelocityPerSecond().getRadians(),
-                swerveConstants.maxRotationalVelocityPerSecond().getRadians()
-        );
+        double clampedAngularVelocity = SwerveMath.clampRotationalVelocity(Rotation2d.fromRadians(combinedAngularVelocity),
+                swerveConstants.maxRotationalVelocityPerSecond()).getRadians();
 
         return new ChassisSpeeds(inputSpeeds.vxMetersPerSecond, inputSpeeds.vyMetersPerSecond, clampedAngularVelocity);
+    }
+
+    public static double getAssistedValueInCompensationToDrive (double pidGain, ChassisSpeeds driveSpeeds){
+        return pidGain * SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR / (getDriveMagnitude(driveSpeeds) + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
     }
 
 }

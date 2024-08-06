@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -54,5 +55,12 @@ public class SwerveMath {
     }
     public static Translation2d getPointTranslationInRobotCoordinateSystem (Pose2d robotPose, Translation2d pointTranslation){
         return getNormalizedTranslation(robotPose.getTranslation(), pointTranslation).rotateBy(robotPose.getRotation().unaryMinus());
+    }
+    public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity){
+        return Rotation2d.fromRadians(MathUtil.clamp(
+                velocity.getRadians(),
+                -maxRotationalVelocity.getRadians(),
+                maxRotationalVelocity.getRadians()
+        ));
     }
 }

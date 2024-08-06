@@ -267,7 +267,7 @@ public class Swerve extends GBSubsystem {
 
     protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
         this.currentState = swerveState;
-        chassisSpeeds = stateHelper.applyAimAssistonSpeeds(swerveState.getAimAssist(), chassisSpeeds);
+        chassisSpeeds = stateHelper.applyAimAssistOnSpeeds(swerveState.getAimAssist(), chassisSpeeds);
 
         if (SwerveMath.isStill(chassisSpeeds)) {
             modules.stop();

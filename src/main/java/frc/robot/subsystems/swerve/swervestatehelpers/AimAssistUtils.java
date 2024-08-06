@@ -11,7 +11,8 @@ import static frc.robot.subsystems.swerve.SwerveMath.getDriveMagnitude;
 
 public class AimAssistUtils {
 
-    public static ChassisSpeeds getRotationAssistedSpeeds(ChassisSpeeds speeds,
+    public static ChassisSpeeds getRotationAssistedSpeeds(
+            ChassisSpeeds speeds,
             ChassisSpeeds currentSpeeds,
             Supplier<Rotation2d> robotRotationSupplier,
             Supplier<Rotation2d> targetRotationSupplier,
@@ -26,8 +27,10 @@ public class AimAssistUtils {
 
         double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, currentSpeeds);
         double combinedAngularVelocityRadians = angularVelocityRadians + speeds.omegaRadiansPerSecond;
-        Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(Rotation2d.fromRadians(combinedAngularVelocityRadians),
-                swerveConstants.maxRotationalVelocityPerSecond());
+        Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(
+                Rotation2d.fromRadians(combinedAngularVelocityRadians),
+                swerveConstants.maxRotationalVelocityPerSecond()
+        );
 
         return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
     }

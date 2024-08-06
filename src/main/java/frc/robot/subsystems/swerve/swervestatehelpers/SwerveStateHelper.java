@@ -30,7 +30,7 @@ public class SwerveStateHelper {
         this.noteTranslationSupplier = noteTranslationSupplier;
     }
 
-    public ChassisSpeeds applyAimAssistonSpeeds(AimAssist aimAssistState, ChassisSpeeds speeds) {
+    public ChassisSpeeds applyAimAssistOnSpeeds(AimAssist aimAssistState, ChassisSpeeds speeds) {
         return switch (aimAssistState) {
             case SPEAKER -> getRotationAssistedSpeeds(
                     speeds,

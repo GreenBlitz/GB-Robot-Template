@@ -69,7 +69,6 @@ public class SwerveStateHelper {
                     noteTranslationSupplier
             );
             case NONE -> inputSpeeds;
-            default -> inputSpeeds;
         };
     }
 

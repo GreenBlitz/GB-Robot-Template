@@ -60,7 +60,7 @@ public class Swerve extends GBSubsystem {
         this.currentAngleSupplier = this::getAbsoluteHeading;
 
         this.stateHelper = new SwerveStateHelper(
-                Pose2d::new, //default pose estimator
+                () -> new Pose2d(0,0, currentAngleSupplier.get()), //default pose estimator
                 () -> Optional.of(new Translation2d()),
                 this
         );
@@ -74,6 +74,10 @@ public class Swerve extends GBSubsystem {
 
     public SwerveCommandsBuilder getCommandsBuilder() {
         return commandsBuilder;
+    }
+
+    public SwerveConstants getConstants() {
+        return constants;
     }
 
     @Override
@@ -165,10 +169,6 @@ public class Swerve extends GBSubsystem {
     public Rotation2d getAbsoluteHeading() {
         double inputtedHeadingRads = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
         return Rotation2d.fromRadians(inputtedHeadingRads);
-    }
-
-    public SwerveConstants getConstants() {
-        return constants;
     }
 
     public Rotation2d getRelativeHeading() {

@@ -81,6 +81,7 @@ public class Swerve extends GBSubsystem {
         return SwerveConstants.SWERVE_LOG_PATH;
     }
 
+
     public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
         PathPlannerUtils.configurePathPlanner(
                 currentPoseSupplier,
@@ -305,46 +306,5 @@ public class Swerve extends GBSubsystem {
         boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
         return isAtAngle && isStopping;
-    }
-
-    private static ChassisSpeeds applyDeadbandSpeeds(ChassisSpeeds chassisSpeeds) {
-        double newXSpeed = chassisSpeeds.vxMetersPerSecond;
-        if (Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND) {
-            newXSpeed = 0;
-        }
-
-        double newYSpeed = chassisSpeeds.vyMetersPerSecond;
-        if (Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND) {
-            newYSpeed = 0;
-        }
-
-        double newOmegaSpeed = chassisSpeeds.omegaRadiansPerSecond;
-        if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
-            newOmegaSpeed = 0;
-        }
-
-        return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
-    }
-
-    private static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
-        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
-    }
-
-    private static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
-        return new ChassisSpeeds(
-                xPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
-                yPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
-                thetaPower * driveSpeed.rotationSpeedFactor * constants.maxRotationalVelocityPerSecond().getRadians()
-        );
-    }
-
-    private static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-        return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
-    }
-
-    private static boolean isStill(ChassisSpeeds chassisSpeeds) {
-        return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-                && Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-                && Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
     }
 }

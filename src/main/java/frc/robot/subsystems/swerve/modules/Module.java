@@ -80,7 +80,6 @@ public class Module {
         driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
         driveInputs.distanceMetersOdometrySamples = Arrays.stream(driveInputs.angleOdometrySamples).mapToDouble(this::toDriveMeters).toArray();
 
-
         ModuleInputsAutoLogged moduleInputs = moduleInputsContainer.getModuleInputs();
         moduleInputs.isAtTargetAngle = isAtTargetAngle();
         moduleInputs.isAtTargetVelocity = isAtTargetVelocity();

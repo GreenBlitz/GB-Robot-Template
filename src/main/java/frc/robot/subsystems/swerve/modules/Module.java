@@ -21,7 +21,6 @@ import java.util.Arrays;
 public class Module {
 
     private final ModuleInputsContainer moduleInputsContainer;
-    private final ModuleUtils.ModulePosition modulePosition;
     private final ISteer iSteer;
     private final IDrive iDrive;
     private final IEncoder iEncoder;
@@ -33,14 +32,12 @@ public class Module {
     private boolean isClosedLoop;
 
     public Module(ModuleUtils.ModulePosition modulePosition, ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
-        this.modulePosition = modulePosition;
-
         this.constants = constants;
         this.iEncoder = iEncoder;
         this.iSteer = iSteer;
         this.iDrive = iDrive;
         this.moduleInputsContainer = new ModuleInputsContainer();
-        this.logPath = this.constants.logPath() + this.modulePosition + "/";
+        this.logPath = this.constants.logPath() + modulePosition + "/";
 
         this.targetState = new SwerveModuleState();
         this.startingSteerAngle = new Rotation2d();
@@ -159,6 +156,7 @@ public class Module {
     public Rotation2d getCurrentAngle() {
         return moduleInputsContainer.getSteerMotorInputs().angle;
     }
+
 
     public boolean isAtTargetVelocity() {
         return MathUtil.isNear(

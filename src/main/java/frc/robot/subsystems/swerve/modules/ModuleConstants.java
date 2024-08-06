@@ -5,21 +5,19 @@ import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
 public record ModuleConstants(
-        String modulesLogPath,
-        String moduleLogPath,
+        String logPath,
         double wheelDiameterMeters,
         double couplingRatio,
         Rotation2d velocityAt12VoltsPerSecond
 ) {
 
     public ModuleConstants(
-            String logPathPrefix,
             ModuleUtils.ModulePosition modulePosition,
+            String logPathPrefix,
             double wheelDiameterMeters,
             double couplingRatio,
             double velocityAt12VoltsMetersPerSecond) {
         this(
-                logPathPrefix + LOG_PATH_ADDITION,
                 logPathPrefix + LOG_PATH_ADDITION + modulePosition + "/",
                 wheelDiameterMeters,
                 couplingRatio,

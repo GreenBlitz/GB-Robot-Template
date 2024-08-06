@@ -12,8 +12,8 @@ public class SimulationModuleConstants {
 
     protected static ModuleConstants getModuleConstants(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition){
         return new ModuleConstants(
-                swerveName.getLogPath(),
                 modulePosition,
+                swerveName.getLogPath(),
                 WHEEL_DIAMETER_METERS,
                 COUPLING_RATIO,
                 SimulationSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND

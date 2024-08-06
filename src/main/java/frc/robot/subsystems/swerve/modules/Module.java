@@ -85,18 +85,18 @@ public class Module {
         moduleInputs.isAtTargetState = moduleInputs.isAtTargetVelocity && moduleInputs.isAtTargetAngle;
         moduleInputs.isClosedLoop = isClosedLoop;
 
-        moduleInputsContainer.processInputs(constants.moduleLogPath());
+        moduleInputsContainer.processInputs(constants.logPath());
     }
 
     public void reportAlerts() {
         if (!moduleInputsContainer.getEncoderInputs().isConnected) {
-            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.moduleLogPath() + "encoder disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "encoder disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.moduleLogPath() + "steer motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "steer motor disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.moduleLogPath() + "drive motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "drive motor disconnect", Timer.getFPGATimestamp());
         }
     }
 

@@ -22,14 +22,6 @@ public class Robot {
         configureBindings();
     }
 
-    private void initializeSubsystems() {
-
-    }
-
-    private void configureCommands() {
-
-    }
-
     private void configureBindings() {
         JoysticksBindings.configureBindings();
     }

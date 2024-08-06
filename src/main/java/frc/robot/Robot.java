@@ -22,18 +22,22 @@ public class Robot {
 
     public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
-    public final Swerve swerve = new Swerve(
-            SwerveConstantsFactory.create(),
-            ModulesFactory.create(),
-            GyroFactory.create()
-    );
-    public final PoseEstimator poseEstimator = new PoseEstimator(
-            swerve::setHeading,
-            swerve::getFieldRelativeVelocity
-    );
+    private final Swerve swerve;
+    private final PoseEstimator poseEstimator;
 
 
     public Robot() {
+        this.swerve = new Swerve(
+                SwerveConstantsFactory.create(),
+                ModulesFactory.create(),
+                GyroFactory.create()
+        );
+
+        this.poseEstimator = new PoseEstimator(
+                swerve::setHeading,
+                swerve::getFieldRelativeVelocity
+        );
+
         swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
         swerve.setStateHelper(
                 new SwerveStateHelper(

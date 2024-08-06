@@ -49,14 +49,16 @@ public class SwerveStateHelper {
 
     public ChassisSpeeds applyAimAssistOnInputsSpeeds(AimAssist aimAssistState, ChassisSpeeds inputSpeeds) {
         return switch (aimAssistState) {
-            case SPEAKER -> handleSpeakerState(
+            case SPEAKER -> getRotationAssistedSpeeds(
                     inputSpeeds,
+                    swerve.getRobotRelativeVelocity(),
                     robotPoseSupplier,
-                    robotPose -> new Translation3d(0,0,0).toTranslation2d().minus(robotPose.getTranslation()).getAngle(),
+                    robotPose ->SwerveMath.getNormalizedTranslation(robotPose.getTranslation(),new Translation2d(0,0)).getAngle(),
                     swerveConstants
             );
-            case AMP -> handleAmpState(
+            case AMP -> getRotationAssistedSpeeds(
                     inputSpeeds,
+                    swerve.getRobotRelativeVelocity(),
                     robotPoseSupplier,
                     (robotPose -> Rotation2d.fromDegrees(90)),
                     swerveConstants
@@ -89,29 +91,6 @@ public class SwerveStateHelper {
                 wantedHorizontalVelocity,
                 inputSpeeds.omegaRadiansPerSecond,
                 robotPoseSupplier.get().getRotation()
-        );
-    }
-
-    private ChassisSpeeds handleAmpState(ChassisSpeeds inputSpeeds, Supplier<Pose2d> robotPoseSupplier,
-            Function<Pose2d, Rotation2d> targetRotationSupplier, SwerveConstants swerveConstants) {
-        return getRotationAssistedSpeeds(
-                inputSpeeds,
-                swerve.getRobotRelativeVelocity(),
-                robotPoseSupplier,
-                targetRotationSupplier,
-                swerveConstants
-        );
-    }
-
-    private ChassisSpeeds handleSpeakerState(ChassisSpeeds inputSpeeds,
-            Supplier<Pose2d> robotPoseSupplier,
-            Function<Pose2d, Rotation2d> targetRotationSupplier, SwerveConstants swerveConstants) {
-        return getRotationAssistedSpeeds(
-                inputSpeeds,
-                swerve.getRobotRelativeVelocity(),
-                robotPoseSupplier,
-                targetRotationSupplier,
-                swerveConstants
         );
     }
 

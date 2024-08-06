@@ -61,13 +61,13 @@ public class JoysticksBindings {
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)
+                SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)
         ));
         usedJoystick.R1.whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
                 () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
                 () -> usedJoystick.getAxisValue(Axis.LEFT_X),
                 () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)
+                SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)
         ));
 
         usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(robot.getSwerve().getCommandsBuilder().driveState(

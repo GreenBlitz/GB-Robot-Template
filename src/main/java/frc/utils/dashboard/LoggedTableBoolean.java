@@ -6,9 +6,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardInput;
 
 public class LoggedTableBoolean implements LoggedDashboardInput {
 
-    private final String key;
-    private final NetworkTableEntry booleanEntry;
     private final int TIME_TO_SET_BOOLEAN_MICRO_SECONDS = 1;
+
+    private final NetworkTableEntry booleanEntry;
     private boolean value;
     private boolean defaultValue;
 
@@ -17,7 +17,6 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
     }
 
     public LoggedTableBoolean(String table, String key, boolean defaultValue) {
-        this.key = key;
         this.defaultValue = defaultValue;
         this.value = this.defaultValue;
         this.booleanEntry = NetworkTableInstance.getDefault().getTable(table).getEntry(key);

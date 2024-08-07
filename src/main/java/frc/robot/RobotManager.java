@@ -17,7 +17,6 @@ import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
 
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
  * TimedRobot documentation. If you change the name of this class or the package after creating this project, you must also update
@@ -39,7 +38,7 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 		PathPlannerUtils.startPathPlanner();
 		PathPlannerUtils
-				.setLoggingPathToPaths((pose) -> Logger.recordOutput("Current Path To " + "Follow", pose.toArray(new Pose2d[0])));
+			.setLoggingPathToPaths((pose) -> Logger.recordOutput("Current Path To " + "Follow", pose.toArray(new Pose2d[0])));
 
 		this.robot = new Robot();
 	}

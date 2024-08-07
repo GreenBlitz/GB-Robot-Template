@@ -14,6 +14,7 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.ctre.CTREDeviceID;
+import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 import org.littletonrobotics.junction.Logger;
 
@@ -74,8 +75,10 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
 	@Override
 	public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
-		inputs.isConnected = BaseStatusSignal.refreshAll(yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal)
-			.isOK();
+		inputs.isConnected = PhoenixProUtils.checkWithRetry(
+			() -> BaseStatusSignal.refreshAll(yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal),
+			Pigeon2GyroConstants.NUMBER_OF_STATUS_CODE_RETRIES
+		);
 		inputs.gyroYaw = Rotation2d.fromDegrees(yawSignal.getValue());
 		inputs.xAcceleration = xAccelerationSignal.getValue();
 		inputs.yAcceleration = yAccelerationSignal.getValue();

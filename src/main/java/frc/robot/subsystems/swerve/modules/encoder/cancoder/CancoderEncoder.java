@@ -12,6 +12,7 @@ import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.utils.ctre.CTREDeviceID;
+import frc.utils.ctre.PhoenixProUtils;
 
 public class CancoderEncoder implements IEncoder {
 
@@ -46,7 +47,10 @@ public class CancoderEncoder implements IEncoder {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		EncoderInputsAutoLogged encoderInputs = inputs.getEncoderInputs();
-		encoderInputs.isConnected = BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal).isOK();
+		encoderInputs.isConnected = PhoenixProUtils.checkWithRetry(
+			() -> BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal),
+			CancoderEncoderConstants.NUMBER_OF_STATUS_CODE_RETRIES
+		);
 		encoderInputs.angle = Rotation2d.fromRotations(positionSignal.getValue());
 		encoderInputs.velocity = Rotation2d.fromRotations(velocitySignal.getValue());
 		encoderInputs.voltage = voltageSignal.getValue();

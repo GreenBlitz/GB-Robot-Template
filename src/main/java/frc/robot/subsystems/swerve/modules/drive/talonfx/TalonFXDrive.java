@@ -9,6 +9,7 @@ import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 import java.util.Queue;
@@ -61,15 +62,16 @@ public class TalonFXDrive implements IDrive {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		DriveInputsAutoLogged driveInputs = inputs.getDriveMotorInputs();
-		driveInputs.isConnected = BaseStatusSignal
-			.refreshAll(
+		driveInputs.isConnected = PhoenixProUtils.checkWithRetry(
+			() -> BaseStatusSignal.refreshAll(
 				signals.positionSignal(),
 				signals.velocitySignal(),
 				signals.accelerationSignal(),
 				signals.voltageSignal(),
 				signals.statorCurrentSignal()
-			)
-			.isOK();
+			),
+			TalonFXDriveConstants.NUMBER_OF_STATUS_CODE_RETRIES
+		);
 		driveInputs.angle = Rotation2d.fromRotations(driveMotor.getLatencyCompensatedPosition());
 		driveInputs.velocity = Rotation2d.fromRotations(driveMotor.getLatencyCompensatedVelocity());
 		driveInputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());

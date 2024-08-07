@@ -34,8 +34,8 @@ public class AimAssistUtils {
 		);
 	}
 
-	public static double applyMagnitudeCompensation(Rotation2d pidGain, double magnitude) {
-		return pidGain.getRadians()
+	public static double applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
+		return velocityPerSecond.getRadians()
 			* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
 			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}

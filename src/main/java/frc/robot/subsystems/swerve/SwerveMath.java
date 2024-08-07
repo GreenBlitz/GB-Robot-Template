@@ -65,9 +65,8 @@ public class SwerveMath {
 	}
 
 	public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity) {
-		return Rotation2d.fromRadians(
-			MathUtil.clamp(velocity.getRadians(), -maxRotationalVelocity.getRadians(), maxRotationalVelocity.getRadians())
-		);
+		return Rotation2d
+			.fromRadians(MathUtil.clamp(velocity.getRadians(), -maxRotationalVelocity.getRadians(), maxRotationalVelocity.getRadians()));
 	}
 
 }

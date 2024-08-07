@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.constants.LogPaths;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
@@ -23,9 +24,11 @@ public class Pigeon2Gyro implements ISwerveGyro {
     private final Pigeon2 gyro;
     private final StatusSignal<Double> yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal;
     private final Queue<Double> yawQueue, timestampQueue;
+    private final String logPath;
 
-    public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration){
+    public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String logPathPrefix){
         this.gyro = new Pigeon2Wrapper(gyroID);
+        this.logPath = logPathPrefix + SwerveGyroConstants.LOG_PATH_ADDITION;
 
         this.yawSignal = gyro.getYaw().clone();
         this.xAccelerationSignal = gyro.getAccelerationX().clone();
@@ -68,7 +71,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
     private void reportAlerts(SwerveGyroInputsAutoLogged inputs) {
         if (!inputs.isConnected) {
-            Logger.recordOutput(SwerveGyroConstants.ALERT_LOG_PATH + "/gyroDisconnectedAt", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "gyroDisconnectedAt", Timer.getFPGATimestamp());
         }
     }
 

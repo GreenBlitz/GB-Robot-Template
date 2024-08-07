@@ -5,7 +5,7 @@ import frc.utils.Conversions;
 
 public class ModuleUtils {
 
-    public enum ModuleName {
+    public enum ModulePosition {
 
         FRONT_LEFT(0),
         FRONT_RIGHT(1),
@@ -14,7 +14,7 @@ public class ModuleUtils {
 
         private final int index;
 
-        ModuleName(int index) {
+        ModulePosition(int index) {
             this.index = index;
         }
 
@@ -23,15 +23,6 @@ public class ModuleUtils {
         }
 
     }
-
-    public static String getModuleLogPath(ModuleName moduleName) {
-        return ModuleConstants.LOG_PATH + moduleName + "/";
-    }
-
-    public static String getModuleAlertLogPath(ModuleName moduleName) {
-        return ModuleConstants.ALERT_LOG_PATH + moduleName + "/";
-    }
-
 
     public static double velocityToOpenLoopVoltage(
             double velocityMetersPerSecond,

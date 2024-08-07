@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.LogPaths;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
@@ -20,7 +21,6 @@ import java.util.Arrays;
 public class Module {
 
     private final ModuleInputsContainer moduleInputsContainer;
-    private final ModuleUtils.ModuleName moduleName;
     private final ISteer iSteer;
     private final IDrive iDrive;
     private final IEncoder iEncoder;
@@ -30,9 +30,7 @@ public class Module {
     private Rotation2d startingSteerAngle;
     private boolean isClosedLoop;
 
-    public Module(ModuleUtils.ModuleName moduleName, ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
-        this.moduleName = moduleName;
-
+    public Module(ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
         this.constants = constants;
         this.iEncoder = iEncoder;
         this.iSteer = iSteer;
@@ -86,18 +84,18 @@ public class Module {
         moduleInputs.isAtTargetState = moduleInputs.isAtTargetVelocity && moduleInputs.isAtTargetAngle;
         moduleInputs.isClosedLoop = isClosedLoop;
 
-        moduleInputsContainer.processInputs(ModuleUtils.getModuleLogPath(moduleName));
+        moduleInputsContainer.processInputs(constants.logPath());
     }
 
     public void reportAlerts() {
         if (!moduleInputsContainer.getEncoderInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "encoder disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "encoder disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "steer motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "steer motor disconnect", Timer.getFPGATimestamp());
         }
         if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getModuleAlertLogPath(moduleName) + "drive motor disconnect", Timer.getFPGATimestamp());
+            Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "drive motor disconnect", Timer.getFPGATimestamp());
         }
     }
 

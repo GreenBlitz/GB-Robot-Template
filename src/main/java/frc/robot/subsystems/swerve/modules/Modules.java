@@ -5,16 +5,19 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import org.littletonrobotics.junction.AutoLogOutput;
+import frc.robot.subsystems.swerve.SwerveName;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 
 public class Modules {
 
     private final Module[] modules;
+    private final String logPath;
 
-    public Modules(Module[] modules){
+    public Modules(SwerveName swerveName, Module[] modules){
         this.modules = modules;
+        this.logPath = swerveName.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
     }
 
 
@@ -22,6 +25,8 @@ public class Modules {
         for (Module currentModule : modules) {
             currentModule.logStatus();
         }
+        Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
+        Logger.recordOutput(logPath + "TargetStates", getTargetStates());
     }
 
 
@@ -50,7 +55,7 @@ public class Modules {
     }
 
 
-    public void setSteersVoltage(ModuleUtils.ModuleName module, double voltage) {
+    public void setSteersVoltage(ModuleUtils.ModulePosition module, double voltage) {
         modules[module.getIndex()].setSteerVoltage(voltage);
     }
 
@@ -109,7 +114,6 @@ public class Modules {
     }
 
 
-    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "TargetStates")
     public SwerveModuleState[] getTargetStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 
@@ -120,7 +124,6 @@ public class Modules {
         return states;
     }
 
-    @AutoLogOutput(key = ModuleConstants.LOG_PATH + "CurrentStates")
     public SwerveModuleState[] getCurrentStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
 

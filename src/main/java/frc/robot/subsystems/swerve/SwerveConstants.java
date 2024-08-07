@@ -9,8 +9,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.MathConstants;
+import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 
 public record SwerveConstants(
+        String logPath,
+        String stateLogPath,
+        String velocityLogPath,
+        String gyroLogPath,
         double velocityAt12VoltsMetersPerSecond,
         Rotation2d maxRotationalVelocityPerSecond,
         PIDController xMetersPIDController,
@@ -20,12 +25,17 @@ public record SwerveConstants(
 ) {
 
     public SwerveConstants(
+            SwerveName swerveName,
             double velocityAt12VoltsMetersPerSecond,
             Rotation2d maxRotationalVelocityPerSecond,
             PIDConstants translationMetersPIDConstants,
             PIDConstants rotationDegreesPIDConstants
     ){
         this(
+                swerveName.getLogPath(),
+                swerveName.getLogPath() + "State/",
+                swerveName.getLogPath() + "Velocity/",
+                swerveName.getLogPath() + SwerveGyroConstants.LOG_PATH_ADDITION,
                 velocityAt12VoltsMetersPerSecond,
                 maxRotationalVelocityPerSecond,
                 new PIDController(
@@ -57,10 +67,6 @@ public record SwerveConstants(
                 MathConstants.HALF_CIRCLE.getDegrees()
         );
     }
-
-    public static final String SWERVE_LOG_PATH = "Subsystems/Swerve/";
-    static final String STATE_LOG_PATH = SWERVE_LOG_PATH + "State/";
-    static final String VELOCITY_LOG_PATH = SWERVE_LOG_PATH + "Velocity/";
 
     static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
     static final double STEER_SYSID_CALIBRATION_VOLTAGE_STEP = 1;

@@ -15,7 +15,6 @@ import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
@@ -44,7 +43,7 @@ public class Swerve extends GBSubsystem {
     private Supplier<Rotation2d> currentAngleSupplier;
 
     public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
-        super(SwerveConstants.SWERVE_LOG_PATH);
+        super(constants.logPath());
         this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
         this.constants = constants;
@@ -67,7 +66,7 @@ public class Swerve extends GBSubsystem {
 
     @Override
     public String getLogPath() {
-        return SwerveConstants.SWERVE_LOG_PATH;
+        return constants.logPath();
     }
 
 
@@ -120,26 +119,26 @@ public class Swerve extends GBSubsystem {
                 updateGyroSimulation();
             }
             gyro.updateInputs(gyroInputs);
-            Logger.processInputs(SwerveGyroConstants.LOG_PATH, gyroInputs);
+            Logger.processInputs(constants.gyroLogPath(), gyroInputs);
 
             modules.logStatus();
         } ODOMETRY_LOCK.unlock();
     }
 
     private void logState() {
-        Logger.recordOutput(SwerveConstants.STATE_LOG_PATH + "DriveMode", currentState.getDriveMode());
-        Logger.recordOutput(SwerveConstants.STATE_LOG_PATH + "DriveSpeed", currentState.getDriveSpeed());
-        Logger.recordOutput(SwerveConstants.STATE_LOG_PATH + "LoopMode", currentState.getLoopMode());
-        Logger.recordOutput(SwerveConstants.STATE_LOG_PATH + "RotateAxis", currentState.getRotateAxis());
-        Logger.recordOutput(SwerveConstants.STATE_LOG_PATH + "AimAssist", currentState.getAimAssist());
+        Logger.recordOutput(constants.stateLogPath() + "DriveMode", currentState.getDriveMode());
+        Logger.recordOutput(constants.stateLogPath() + "DriveSpeed", currentState.getDriveSpeed());
+        Logger.recordOutput(constants.stateLogPath() + "LoopMode", currentState.getLoopMode());
+        Logger.recordOutput(constants.stateLogPath() + "RotateAxis", currentState.getRotateAxis());
+        Logger.recordOutput(constants.stateLogPath() + "AimAssist", currentState.getAimAssist());
     }
 
     private void logFieldRelativeVelocities() {
         ChassisSpeeds fieldRelativeSpeeds = getFieldRelativeVelocity();
-        Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
-        Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "X", fieldRelativeSpeeds.vxMetersPerSecond);
-        Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
-        Logger.recordOutput(SwerveConstants.VELOCITY_LOG_PATH + "Magnitude", SwerveMath.getDriveMagnitude(fieldRelativeSpeeds));
+        Logger.recordOutput(constants.velocityLogPath() + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
+        Logger.recordOutput(constants.velocityLogPath() + "X", fieldRelativeSpeeds.vxMetersPerSecond);
+        Logger.recordOutput(constants.velocityLogPath() + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
+        Logger.recordOutput(constants.velocityLogPath() + "Magnitude", SwerveMath.getDriveMagnitude(fieldRelativeSpeeds));
     }
 
     private void logNumberOfOdometrySamples() {

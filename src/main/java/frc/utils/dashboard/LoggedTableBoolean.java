@@ -9,8 +9,8 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
 	private final int TIME_TO_SET_BOOLEAN_MICRO_SECONDS = 1;
 
 	private final NetworkTableEntry booleanEntry;
+	private final boolean defaultValue;
 	private boolean value;
-	private boolean defaultValue;
 
 	public LoggedTableBoolean(String table, String key) {
 		this(table, key, false);

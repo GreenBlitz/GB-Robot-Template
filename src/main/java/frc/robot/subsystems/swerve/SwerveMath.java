@@ -44,43 +44,6 @@ public class SwerveMath {
 		return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
 	}
 
-	public static ChassisSpeeds applyAimAssistedRotationVelocity(
-		ChassisSpeeds chassisSpeeds,
-		Rotation2d currentAngle,
-		SwerveState swerveState,
-		SwerveConstants constants
-	) {
-		if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
-			return chassisSpeeds;
-		}
-		// PID
-		Rotation2d pidVelocity = Rotation2d.fromDegrees(
-			constants.rotationDegreesPIDController()
-				.calculate(currentAngle.getDegrees(), swerveState.getAimAssist().targetAngleSupplier.get().getDegrees())
-		);
-
-		// Magnitude Factor
-		double driveMagnitude = SwerveMath.getDriveMagnitude(chassisSpeeds);
-		double angularVelocityRads = pidVelocity.getRadians()
-			* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
-			/ (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
-
-		// Joystick Output
-		double angularVelocityWithJoystick = angularVelocityRads + chassisSpeeds.omegaRadiansPerSecond;
-
-		// Clamp
-		double clampedAngularVelocity = MathUtil.clamp(
-			angularVelocityWithJoystick,
-			-constants.maxRotationalVelocityPerSecond().getRadians(),
-			constants.maxRotationalVelocityPerSecond().getRadians()
-		);
-
-		// todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
-		// todo - distance factor
-		return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, clampedAngularVelocity);
-	}
-
-
 	public static boolean isStill(ChassisSpeeds chassisSpeeds) {
 		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
 			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND

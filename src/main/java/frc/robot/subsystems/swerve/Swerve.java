@@ -274,8 +274,6 @@ public class Swerve extends GBSubsystem {
 		this.currentState = swerveState;
         chassisSpeeds = stateHelper.applyAimAssistOnSpeeds(swerveState.getAimAssist(), chassisSpeeds);
 
-		chassisSpeeds = SwerveMath
-			.applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
 		if (SwerveMath.isStill(chassisSpeeds)) {
 			modules.stop();
 			return;

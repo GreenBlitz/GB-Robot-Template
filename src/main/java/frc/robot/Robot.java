@@ -26,7 +26,7 @@ import java.util.Optional;
  */
 public class Robot {
 
-	private static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
+	public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
 	private static final Swerve swerve = new Swerve(
 		SwerveConstantsFactory.create(SwerveName.SWERVE),

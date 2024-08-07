@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistUtils.getRotationAssistedSpeeds;
+import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistUtils.getRotationAssistedChassisSpeeds;
 
 public class SwerveStateHelper {
 
@@ -35,10 +35,10 @@ public class SwerveStateHelper {
 		this.noteTranslationSupplier = noteTranslationSupplier;
 	}
 
-	public ChassisSpeeds applyAimAssistOnSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds) {
+	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds) {
 		return switch (aimAssist) {
 			case SPEAKER ->
-				getRotationAssistedSpeeds(
+				getRotationAssistedChassisSpeeds(
 					chassisSpeeds,
 					robotPoseSupplier.get().getRotation(),
 					SwerveMath.getRelativeTranslation(robotPoseSupplier.get().getTranslation(), new Translation2d(0, 0))
@@ -46,7 +46,7 @@ public class SwerveStateHelper {
 					swerveConstants
 				);
 			case AMP ->
-				getRotationAssistedSpeeds(
+				getRotationAssistedChassisSpeeds(
 					chassisSpeeds,
 					robotPoseSupplier.get().getRotation(),
 					Field.getAngleToAmp(),
@@ -58,12 +58,12 @@ public class SwerveStateHelper {
 	}
 
 	private ChassisSpeeds handleNoteAimAssist(
-		ChassisSpeeds wantedSpeeds,
+		ChassisSpeeds chassisSpeeds,
 		Supplier<Pose2d> robotPoseSupplier,
 		Supplier<Optional<Translation2d>> noteTranslationSupplier
 	) {
 		if (noteTranslationSupplier.get().isEmpty()) {
-			return wantedSpeeds;
+			return chassisSpeeds;
 		}
 
 		Logger.recordOutput("current angle", robotPoseSupplier.get().getRotation().getDegrees());
@@ -79,9 +79,9 @@ public class SwerveStateHelper {
 		double yFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.cos(robotPoseSupplier.get().getRotation().unaryMinus().getRadians());
 
 		return new ChassisSpeeds(
-			wantedSpeeds.vxMetersPerSecond + xFieldRelativeVelocityAddition,
-			wantedSpeeds.vyMetersPerSecond + yFieldRelativeVelocityAddition,
-			wantedSpeeds.omegaRadiansPerSecond
+			chassisSpeeds.vxMetersPerSecond + xFieldRelativeVelocityAddition,
+			chassisSpeeds.vyMetersPerSecond + yFieldRelativeVelocityAddition,
+			chassisSpeeds.omegaRadiansPerSecond
 		);
 	}
 

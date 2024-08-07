@@ -10,8 +10,8 @@ import static frc.robot.subsystems.swerve.SwerveMath.getDriveMagnitude;
 
 public class AimAssistUtils {
 
-	public static ChassisSpeeds getRotationAssistedSpeeds(
-		ChassisSpeeds wantedSpeeds,
+	public static ChassisSpeeds getRotationAssistedChassisSpeeds(
+		ChassisSpeeds chassisSpeeds,
 		Rotation2d currentRotation,
 		Rotation2d targetRotation,
 		SwerveConstants swerveConstants
@@ -20,16 +20,16 @@ public class AimAssistUtils {
 			swerveConstants.rotationDegreesPIDController().calculate(currentRotation.getDegrees(), targetRotation.getDegrees())
 		);
 
-		double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, getDriveMagnitude(wantedSpeeds));
-		double combinedAngularVelocityRadians = angularVelocityRadians + wantedSpeeds.omegaRadiansPerSecond;
+		double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, getDriveMagnitude(chassisSpeeds));
+		double combinedAngularVelocityRadians = angularVelocityRadians + chassisSpeeds.omegaRadiansPerSecond;
 		Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(
 			Rotation2d.fromRadians(combinedAngularVelocityRadians),
 			swerveConstants.maxRotationalVelocityPerSecond()
 		);
 
 		return new ChassisSpeeds(
-			wantedSpeeds.vxMetersPerSecond,
-			wantedSpeeds.vyMetersPerSecond,
+			chassisSpeeds.vxMetersPerSecond,
+			chassisSpeeds.vyMetersPerSecond,
 			clampedAngularVelocityPerSecond.getRadians()
 		);
 	}

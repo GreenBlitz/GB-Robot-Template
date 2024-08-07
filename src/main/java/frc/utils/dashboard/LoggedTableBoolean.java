@@ -1,68 +1,43 @@
 package frc.utils.dashboard;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableValue;
-import org.littletonrobotics.junction.LogTable;
+import edu.wpi.first.networktables.*;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
 import org.littletonrobotics.junction.networktables.LoggedDashboardInput;
 
 public class LoggedTableBoolean implements LoggedDashboardInput {
 
-    private final String key;
-    private final LoggableInputs inputs;
-    private final NetworkTable booleanTable;
-    private boolean defaultValue;
+    private final int TIME_TO_SET_BOOLEAN_MICRO_SECONDS = 1;
+
+    private final NetworkTableEntry booleanEntry;
     private boolean value;
-
-    public LoggedTableBoolean(String table, String key, boolean defaultValue) {
-        this.inputs = new LoggableInputs() {
-            public void toLog(LogTable table) {
-                table.put(LoggedTableBoolean.this.key, LoggedTableBoolean.this.value);
-            }
-
-            public void fromLog(LogTable table) {
-                LoggedTableBoolean.this.value = table.get(LoggedTableBoolean.this.key, LoggedTableBoolean.this.defaultValue);
-            }
-        };
-        this.key = key;
-        this.defaultValue = defaultValue;
-        this.value = defaultValue;
-        this.booleanTable = NetworkTableInstance.getDefault().getTable(table);
-        this.periodic();
-        Logger.registerDashboardInput(this);
-    }
+    private boolean defaultValue;
 
     public LoggedTableBoolean(String table, String key) {
         this(table, key, false);
     }
 
-    public void setDefault(boolean defaultValue) {
+    public LoggedTableBoolean(String table, String key, boolean defaultValue) {
         this.defaultValue = defaultValue;
+        this.value = this.defaultValue;
+        this.booleanEntry = NetworkTableInstance.getDefault().getTable(table).getEntry(key);
+
+        set(defaultValue);
+        periodic();
+        Logger.registerDashboardInput(this);
     }
 
     public void set(boolean value) {
-        booleanTable.putValue(this.key, NetworkTableValue.makeBoolean(value));
+        NetworkTablesJNI.setBoolean(booleanEntry.getHandle(), TIME_TO_SET_BOOLEAN_MICRO_SECONDS, value);
     }
 
     public boolean get() {
-        return this.value;
-    }
-
-    private void updateValue() {
-        try {
-            this.value = booleanTable.getValue(this.key).getBoolean();
-        } catch (Exception exception) {
-            this.value = defaultValue;
-        }
+        return value;
     }
 
     public void periodic() {
         if (!Logger.hasReplaySource()) {
-            updateValue();
+            value = booleanEntry.getBoolean(defaultValue);
         }
-        Logger.processInputs(prefix, inputs);
     }
 
 }

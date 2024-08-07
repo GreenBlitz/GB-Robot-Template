@@ -7,55 +7,51 @@ import frc.utils.cycletime.CycleTimeUtils;
 
 public class ElevatorSimulation extends MotorSimulation {
 
-    private final ElevatorSim elevatorSimulation;
+	private final ElevatorSim elevatorSimulation;
 
-    private final double diameterMeters;
+	private final double diameterMeters;
 
-    public ElevatorSimulation(ElevatorSim elevatorSimulation, double drumRadiusMeters) {
-        this.elevatorSimulation = elevatorSimulation;
-        this.diameterMeters = 2 * drumRadiusMeters;
-    }
+	public ElevatorSimulation(ElevatorSim elevatorSimulation, double drumRadiusMeters) {
+		this.elevatorSimulation = elevatorSimulation;
+		this.diameterMeters = 2 * drumRadiusMeters;
+	}
 
-    public double getCurrent() {
-        return elevatorSimulation.getCurrentDrawAmps();
-    }
+	public double getCurrent() {
+		return elevatorSimulation.getCurrentDrawAmps();
+	}
 
-    /**
-     * Returns in Rotation2D the position of the drum
-     *
-     * @return the position
-     */
-    @Override
-    public Rotation2d getPosition() {
-        return Rotation2d.fromRotations(Conversions.distanceToRevolutions(getPositionMeters(), diameterMeters));
-    }
+	/**
+	 * Returns in Rotation2D the position of the drum.
+	 */
+	@Override
+	public Rotation2d getPosition() {
+		return Conversions.distanceToAngle(getPositionMeters(), diameterMeters);
+	}
 
-    public double getPositionMeters() {
-        return elevatorSimulation.getPositionMeters();
-    }
+	public double getPositionMeters() {
+		return elevatorSimulation.getPositionMeters();
+	}
 
-    /**
-     * Returns the velocity in Rotation2D of the drum
-     *
-     * @return the velocity
-     */
-    @Override
-    public Rotation2d getVelocity() {
-        return Rotation2d.fromRotations(Conversions.distanceToRevolutions(getVelocityMetersPerSecond(), diameterMeters));
-    }
+	/**
+	 * Returns the velocity in Rotation2D of the drum.
+	 */
+	@Override
+	public Rotation2d getVelocity() {
+		return Conversions.distanceToAngle(getVelocityMetersPerSecond(), diameterMeters);
+	}
 
-    public double getVelocityMetersPerSecond() {
-        return elevatorSimulation.getVelocityMetersPerSecond();
-    }
+	public double getVelocityMetersPerSecond() {
+		return elevatorSimulation.getVelocityMetersPerSecond();
+	}
 
-    @Override
-    protected void setInputVoltage(double voltage) {
-        elevatorSimulation.setInputVoltage(voltage);
-    }
+	@Override
+	protected void setInputVoltage(double voltage) {
+		elevatorSimulation.setInputVoltage(voltage);
+	}
 
-    @Override
-    protected void updateMotor() {
-        elevatorSimulation.update(CycleTimeUtils.getCurrentCycleTime());
-    }
+	@Override
+	protected void updateMotor() {
+		elevatorSimulation.update(CycleTimeUtils.getCurrentCycleTime());
+	}
 
 }

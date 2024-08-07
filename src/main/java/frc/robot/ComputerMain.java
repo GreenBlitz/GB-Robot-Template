@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.nio.file.Path;
 
 /**
- *  Unless you know what you are doing, do not rename this file because it's being used elsewhere.
+ * Unless you know what you are doing, do not rename this file because it's being used elsewhere.
  */
 public class ComputerMain {
 

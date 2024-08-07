@@ -22,7 +22,7 @@ public class Robot {
 	}
 
 	private void configureBindings() {
-		JoysticksBindings.configureBindings();
+		JoysticksBindings.configureBindings(this);
 	}
 
 	public Command getAutonomousCommand() {

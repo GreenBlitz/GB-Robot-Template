@@ -12,12 +12,12 @@ public class AimAssistUtils {
 
 	public static ChassisSpeeds getRotationAssistedSpeeds(
 		ChassisSpeeds wantedSpeeds,
-		Rotation2d robotRotation,
+		Rotation2d currentRotation,
 		Rotation2d targetRotation,
 		SwerveConstants swerveConstants
 	) {
 		Rotation2d pidVelocity = Rotation2d.fromDegrees(
-			swerveConstants.rotationDegreesPIDController().calculate(robotRotation.getDegrees(), targetRotation.getDegrees())
+			swerveConstants.rotationDegreesPIDController().calculate(currentRotation.getDegrees(), targetRotation.getDegrees())
 		);
 
 		double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, getDriveMagnitude(wantedSpeeds));

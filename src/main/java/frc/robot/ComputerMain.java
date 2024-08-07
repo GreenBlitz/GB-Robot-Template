@@ -10,11 +10,10 @@ import java.nio.file.Path;
 public class ComputerMain {
 
 	public static void main(String[] args) {
-		startComputerPrograms(args);
+		startComputerPrograms(args[0]);
 	}
 
-	private static void startComputerPrograms(String... args) {
-		String connectedIP = args[0];
+	private static void startComputerPrograms(String connectedIP) {
 		CMDHandler.runPythonClass(Path.of("BatteryMessage"), connectedIP);
 	}
 

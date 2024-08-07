@@ -9,7 +9,6 @@ import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
-import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 import java.util.Queue;
@@ -66,15 +65,9 @@ public class TalonFXSteer implements ISteer {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		SteerInputsAutoLogged steerInputs = inputs.getSteerMotorInputs();
-		steerInputs.isConnected = PhoenixProUtils.checkWithRetry(
-			() -> BaseStatusSignal.refreshAll(
-				signals.positionSignal(),
-				signals.velocitySignal(),
-				signals.accelerationSignal(),
-				signals.voltageSignal()
-			),
-			TalonFXSteerConstants.NUMBER_OF_STATUS_CODE_RETRIES
-		);
+		steerInputs.isConnected = BaseStatusSignal
+			.refreshAll(signals.positionSignal(), signals.velocitySignal(), signals.accelerationSignal(), signals.voltageSignal())
+			.isOK();
 		steerInputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
 		steerInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
 		steerInputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());

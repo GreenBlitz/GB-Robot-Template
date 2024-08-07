@@ -34,7 +34,10 @@ public class CancoderEncoder implements IEncoder {
 		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
 		encoder.getConfigurator().refresh(magnetSensorConfigs);
 		encoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-		encoder.getConfigurator().apply(encoderConfiguration);
+		PhoenixProUtils.checkWithRetry(
+			() -> encoder.getConfigurator().apply(encoderConfiguration),
+			CancoderEncoderConstants.NUMBER_OF_STATUS_CODE_RETRIES
+		);
 	}
 
 	private void optimizeBusAndSignals() {
@@ -47,10 +50,7 @@ public class CancoderEncoder implements IEncoder {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		EncoderInputsAutoLogged encoderInputs = inputs.getEncoderInputs();
-		encoderInputs.isConnected = PhoenixProUtils.checkWithRetry(
-			() -> BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal),
-			CancoderEncoderConstants.NUMBER_OF_STATUS_CODE_RETRIES
-		);
+		encoderInputs.isConnected = BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal).isOK();
 		encoderInputs.angle = Rotation2d.fromRotations(positionSignal.getValue());
 		encoderInputs.velocity = Rotation2d.fromRotations(velocitySignal.getValue());
 		encoderInputs.voltage = voltageSignal.getValue();

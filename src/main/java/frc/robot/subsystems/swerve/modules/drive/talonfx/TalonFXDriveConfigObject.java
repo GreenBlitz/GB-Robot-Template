@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
+import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 class TalonFXDriveConfigObject {
@@ -29,7 +30,7 @@ class TalonFXDriveConfigObject {
 
 
 	private void configMotor(TalonFXConfiguration driveConfiguration) {
-		motor.applyConfiguration(driveConfiguration);
+		PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(driveConfiguration), TalonFXDriveConstants.NUMBER_OF_STATUS_CODE_RETRIES);
 	}
 
 	private void optimizeBusAndSignals() {

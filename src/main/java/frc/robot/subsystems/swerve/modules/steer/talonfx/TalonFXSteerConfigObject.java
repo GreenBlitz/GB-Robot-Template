@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
+import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 class TalonFXSteerConfigObject {
@@ -35,7 +36,8 @@ class TalonFXSteerConfigObject {
 		if (encoderID != TalonFXSteerConstants.NO_ENCODER_ID) {
 			configuration.Feedback.FeedbackRemoteSensorID = encoderID;
 		}
-		motor.applyConfiguration(configuration);
+		PhoenixProUtils
+			.checkWithRetry(() -> motor.applyConfiguration(configuration), TalonFXSteerConstants.NUMBER_OF_STATUS_CODE_RETRIES);
 	}
 
 	private void optimizeBusAndSignals() {

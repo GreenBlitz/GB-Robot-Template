@@ -39,19 +39,6 @@ public class Robot {
 		configureBindings();
 	}
 
-	public Command getAutonomousCommand() {
-		return new InstantCommand();
-	}
-
-	public Swerve getSwerve() {
-		return swerve;
-	}
-
-	public PoseEstimator getPoseEstimator() {
-		return poseEstimator;
-	}
-
-
 	private void buildPathPlannerForAuto() {
 		// Register commands...
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
@@ -64,6 +51,19 @@ public class Robot {
 	public void periodic() {
 		swerve.wrapperPeriodic();
 		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
+	}
+
+
+	public Command getAutonomousCommand() {
+		return new InstantCommand();
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
+	}
+
+	public PoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 
 }

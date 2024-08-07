@@ -14,13 +14,13 @@ public class TalonFXWrapper extends TalonFX {
 	}
 
 
-    public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
-        super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
-    }
+	public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
+		super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
+	}
 
-    public StatusCode applyConfiguration(TalonFXConfiguration configuration) {
-        return super.getConfigurator().apply(configuration);
-    }
+	public StatusCode applyConfiguration(TalonFXConfiguration configuration) {
+		return super.getConfigurator().apply(configuration);
+	}
 
 
 	/**

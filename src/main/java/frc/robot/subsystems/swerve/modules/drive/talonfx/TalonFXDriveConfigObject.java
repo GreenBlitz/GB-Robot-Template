@@ -32,7 +32,7 @@ class TalonFXDriveConfigObject {
 	private void configMotor(TalonFXConfiguration driveConfiguration) {
 		PhoenixProUtils.checkWithRetry(
 			() -> motor.applyConfiguration(driveConfiguration),
-			TalonFXDriveConstants.NUMBER_OF_STATUS_CODE_RETRIES
+			TalonFXDriveConstants.APPLY_CONFIG_RETRIES
 		);
 	}
 

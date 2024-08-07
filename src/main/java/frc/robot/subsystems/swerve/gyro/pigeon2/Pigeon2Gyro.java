@@ -25,6 +25,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 	private final Pigeon2 gyro;
 	private final StatusSignal<Double> yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal;
 	private final Queue<Double> yawQueue, timestampQueue;
+	private final int APPLY_CONFIG_RETRIES = 10;
 	private final String logPath;
 
 	public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String logPathPrefix) {
@@ -47,7 +48,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 	private void configGyro(Pigeon2Configuration configuration) {
 		PhoenixProUtils.checkWithRetry(
 			() -> gyro.getConfigurator().apply(configuration),
-			Pigeon2GyroConstants.NUMBER_OF_STATUS_CODE_RETRIES
+				APPLY_CONFIG_RETRIES
 		);
 	}
 

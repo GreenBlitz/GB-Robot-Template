@@ -6,7 +6,7 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class TalonFXDriveConstants {
 
-	protected static final int NUMBER_OF_STATUS_CODE_RETRIES = 10;
+	protected static final int APPLY_CONFIG_RETRIES = 10;
 
 
 	private final TalonFXWrapper motor;

@@ -38,7 +38,7 @@ class TalonFXSteerConfigObject {
 		}
 		PhoenixProUtils.checkWithRetry(
 				() -> motor.applyConfiguration(configuration),
-				TalonFXSteerConstants.NUMBER_OF_STATUS_CODE_RETRIES
+				TalonFXSteerConstants.APPLY_CONFIG_RETRIES
 		);
 	}
 

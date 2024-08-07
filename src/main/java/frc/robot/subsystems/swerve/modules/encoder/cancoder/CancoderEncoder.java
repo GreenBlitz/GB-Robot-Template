@@ -19,6 +19,7 @@ public class CancoderEncoder implements IEncoder {
 	private final CANcoder encoder;
 
 	private final StatusSignal<Double> positionSignal, velocitySignal, voltageSignal;
+	private final int APPLY_CONFIG_RETRIES = 10;
 
 	public CancoderEncoder(CTREDeviceID encoderID, CANcoderConfiguration configuration) {
 		this.encoder = new CANcoder(encoderID.ID(), encoderID.busChain().getChainName());
@@ -36,7 +37,7 @@ public class CancoderEncoder implements IEncoder {
 		encoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
 		PhoenixProUtils.checkWithRetry(
 			() -> encoder.getConfigurator().apply(encoderConfiguration),
-			CancoderEncoderConstants.NUMBER_OF_STATUS_CODE_RETRIES
+				APPLY_CONFIG_RETRIES
 		);
 	}
 

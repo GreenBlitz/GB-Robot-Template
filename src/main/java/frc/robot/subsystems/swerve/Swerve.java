@@ -73,17 +73,19 @@ public class Swerve extends GBSubsystem {
 		return commandsBuilder;
 	}
 
+	public SwerveConstants getConstants() {
+		return constants;
+	}
+
+	public SwerveStateHelper getStateHelper() {
+		return stateHelper;
+	}
+
 	@Override
 	public String getLogPath() {
 		return constants.logPath();
 	}
-    public SwerveConstants getConstants() {
-        return constants;
-    }
 
-    public SwerveStateHelper getStateHelper() {
-        return stateHelper;
-    }
 
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {

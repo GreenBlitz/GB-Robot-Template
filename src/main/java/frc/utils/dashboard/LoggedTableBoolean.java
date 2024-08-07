@@ -26,7 +26,6 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
         Logger.registerDashboardInput(this);
     }
 
-
     public void set(boolean value) {
         NetworkTablesJNI.setBoolean(booleanEntry.getHandle(), TIME_TO_SET_BOOLEAN_MICRO_SECONDS, value);
     }

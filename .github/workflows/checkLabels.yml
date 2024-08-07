@@ -1,4 +1,4 @@
-name: Check Labels For PR
+name: Check Labels
 
 on:
   pull_request:

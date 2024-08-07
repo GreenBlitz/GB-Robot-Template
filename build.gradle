@@ -142,7 +142,7 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-
+build.dependsOn('installLocalGitHookPostCheckout')
 tasks.register('installLocalGitHookPostCheckout', Copy) {
 	group = 'git'
 	from new File(rootProject.rootDir, '.scripts/post-checkout')
@@ -155,18 +155,7 @@ tasks.register('installLocalGitHookPostCheckout', Copy) {
 	}
 }
 
-tasks.register('installLocalGitHookPreCommit', Copy) {
-	group = 'git'
-	from new File(rootProject.rootDir, '.scripts/pre-commit')
-	into { new File(rootProject.rootDir, '.git/hooks') }
-	filePermissions {
-		unix(0775)
-	}
-	doLast {
-		println("---Added Pre Commit Git Hook Script---")
-	}
-}
-
+discoverroborio.finalizedBy('setReachableIP')
 tasks.register('setReachableIP') {
 	group = 'networkUtils'
 	doLast {
@@ -185,6 +174,7 @@ tasks.register('setReachableIP') {
 	}
 }
 
+setReachableIP.finalizedBy('setVisualVMHost')
 tasks.register('setVisualVMHost') {
 	group = 'externalTools'
 	dependsOn('setReachableIP')
@@ -198,6 +188,7 @@ tasks.register('setVisualVMHost') {
 	}
 }
 
+compileJava.finalizedBy('checkAkitInstall')
 tasks.register('checkAkitInstall', JavaExec) {
 	group = 'execution'
 	dependsOn('classes')
@@ -227,11 +218,6 @@ tasks.register('deployWithComputerPrograms') {
 	tasks.findByName("runComputerPrograms").mustRunAfter("deploy")
 }
 
-
-compileJava.finalizedBy('checkAkitInstall')
-build.dependsOn('installLocalGitHookPostCheckout', 'installLocalGitHookPreCommit')
-discoverroborio.finalizedBy('setReachableIP')
-setReachableIP.finalizedBy('setVisualVMHost')
 
 spotless {
 	java {

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtils;
-import frc.utils.mirror.MirrorUtils;
+import frc.utils.mirror.MirrorMath;
 
 public class Field {
 
@@ -24,7 +24,7 @@ public class Field {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return SPEAKER;
 		}
-		return new Translation3d(MirrorUtils.getMirroredX(SPEAKER.getX()), SPEAKER.getY(), SPEAKER.getZ());
+		return new Translation3d(MirrorMath.getMirroredX(SPEAKER.getX()), SPEAKER.getY(), SPEAKER.getZ());
 	}
 
 	private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
@@ -33,7 +33,7 @@ public class Field {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return ANGLE_TO_AMP;
 		}
-		return MirrorUtils.getMirroredAngle(ANGLE_TO_AMP);
+		return MirrorMath.getMirroredAngle(ANGLE_TO_AMP);
 	}
 
 }

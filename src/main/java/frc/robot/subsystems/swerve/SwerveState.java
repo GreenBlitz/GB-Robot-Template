@@ -25,26 +25,14 @@ public class SwerveState {
 	private AimAssist aimAssist;
 
 	public SwerveState(SwerveState swerveState) {
-		this(
-			swerveState.driveRelative,
-			swerveState.driveSpeed,
-			swerveState.loopMode,
-			swerveState.rotateAxis,
-			swerveState.aimAssist
-		);
+		this(swerveState.driveRelative, swerveState.driveSpeed, swerveState.loopMode, swerveState.rotateAxis, swerveState.aimAssist);
 	}
 
 	private SwerveState() {
 		this(DEFAULT_DRIVE_RELATIVE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
 	}
 
-	private SwerveState(
-		DriveRelative driveRelative,
-		DriveSpeed driveSpeed,
-		LoopMode loopMode,
-		RotateAxis rotateAxis,
-		AimAssist aimAssist
-	) {
+	private SwerveState(DriveRelative driveRelative, DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
 		this.driveRelative = driveRelative;
 		this.driveSpeed = driveSpeed;
 		this.loopMode = loopMode;

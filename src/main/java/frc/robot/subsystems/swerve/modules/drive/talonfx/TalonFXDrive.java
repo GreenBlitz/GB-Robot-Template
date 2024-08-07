@@ -61,15 +61,15 @@ public class TalonFXDrive implements IDrive {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		DriveInputsAutoLogged driveInputs = inputs.getDriveMotorInputs();
-		driveInputs.isConnected = BaseStatusSignal
-			.refreshAll(
-				signals.positionSignal(),
-				signals.velocitySignal(),
-				signals.accelerationSignal(),
-				signals.voltageSignal(),
-				signals.statorCurrentSignal()
-			)
-			.isOK();
+		//@formatter:off
+		driveInputs.isConnected = BaseStatusSignal.refreshAll(
+			signals.positionSignal(),
+			signals.velocitySignal(),
+			signals.accelerationSignal(),
+			signals.voltageSignal(),
+			signals.statorCurrentSignal()
+		).isOK();
+		//@formatter:on
 		driveInputs.angle = Rotation2d.fromRotations(driveMotor.getLatencyCompensatedPosition());
 		driveInputs.velocity = Rotation2d.fromRotations(driveMotor.getLatencyCompensatedVelocity());
 		driveInputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());

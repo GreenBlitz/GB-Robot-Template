@@ -56,14 +56,7 @@ public class SysIdCalibrator {
 	 * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
 	 */
 	public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl) {
-		this(
-			isCTRE,
-			subsystem,
-			voltageSetControl,
-			DEFAULT_VOLTAGE_STEP,
-			DEFAULT_RAMP_RATE_VOLTS_PER_SECOND,
-			DEFAULT_TIMEOUT_SECONDS
-		);
+		this(isCTRE, subsystem, voltageSetControl, DEFAULT_VOLTAGE_STEP, DEFAULT_RAMP_RATE_VOLTS_PER_SECOND, DEFAULT_TIMEOUT_SECONDS);
 	}
 
 	/**
@@ -101,8 +94,8 @@ public class SysIdCalibrator {
 	}
 
 	/**
-	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You
-	 * must do SignalLogger.stop() at the end of the calibration
+	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You must do
+	 * SignalLogger.stop() at the end of the calibration
 	 *
 	 * @param smartJoystick - the joystick to apply the buttons on
 	 */

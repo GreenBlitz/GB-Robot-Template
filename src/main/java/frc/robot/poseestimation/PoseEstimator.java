@@ -49,10 +49,9 @@ public class PoseEstimator {
 
 
 	/**
-	 * Updates the pose estimator with the given swerve wheel positions and gyro rotations. This function accepts an array of
-	 * swerve wheel positions and an array of gyro rotations because the odometry can be updated at a faster rate than the main
-	 * loop (which is 50 hertz). This means you could have a couple of odometry updates per main loop, and you would want to
-	 * update the pose estimator with all of them.
+	 * Updates the pose estimator with the given swerve wheel positions and gyro rotations. This function accepts an array of swerve wheel
+	 * positions and an array of gyro rotations because the odometry can be updated at a faster rate than the main loop (which is 50 hertz). This
+	 * means you could have a couple of odometry updates per main loop, and you would want to update the pose estimator with all of them.
 	 */
 	public void updatePoseEstimatorOdometry(OdometryObservation[] odometryObservations) {
 		for (OdometryObservation odometryObservation : odometryObservations) {
@@ -67,50 +66,35 @@ public class PoseEstimator {
 		logCurrentOdometryPose();
 	}
 
-
-	private static boolean isAtTranslationPosition(
-		double currentTranslationVelocity,
-		double currentTranslationPosition,
-		double targetTranslationPosition
-	) {
+	//@formatter:off
+	private static boolean isAtTranslationPosition(double currentTranslationVelocity, double currentTranslationPosition, double targetTranslationPosition) {
 		boolean isNearTargetPosition = MathUtil
 			.isNear(targetTranslationPosition, currentTranslationPosition, PoseEstimatorConstants.TRANSLATION_TOLERANCE_METERS);
 		boolean isStopping = Math.abs(currentTranslationVelocity) < PoseEstimatorConstants.TRANSLATION_VELOCITY_TOLERANCE;
 		return isNearTargetPosition && isStopping;
 	}
+	//@formatter:on
 
 	public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
-		return isAtTranslationPosition(
-			swerveSpeedsFieldRelative.get().vxMetersPerSecond,
-			getCurrentPose().getX(),
-			targetXBlueAlliancePosition
-		);
+		return isAtTranslationPosition(swerveSpeedsFieldRelative.get().vxMetersPerSecond, getCurrentPose().getX(), targetXBlueAlliancePosition);
 	}
 
 	public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
-		return isAtTranslationPosition(
-			swerveSpeedsFieldRelative.get().vyMetersPerSecond,
-			getCurrentPose().getY(),
-			targetYBlueAlliancePosition
-		);
+		return isAtTranslationPosition(swerveSpeedsFieldRelative.get().vyMetersPerSecond, getCurrentPose().getY(), targetYBlueAlliancePosition);
 	}
 
 	public boolean isAtAngle(Rotation2d targetAngle) {
 		double angleDifferenceDeg = Math.abs(targetAngle.minus(getCurrentPose().getRotation()).getDegrees());
 		boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
 
-		double currentRotationVelocityRadians = swerveSpeedsFieldRelative.get().omegaRadiansPerSecond;// todo: can be robot
-																										// relative
-		boolean isStopping = Math.abs(currentRotationVelocityRadians)
-			< PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+		double currentRotationVelocityRadians = swerveSpeedsFieldRelative.get().omegaRadiansPerSecond;
+		boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
 		return isAtAngle && isStopping;
 	}
 
 	public boolean isAtPose(Pose2d targetBluePose) {
-		return isAtXAxisPosition(targetBluePose.getX())
-			&& isAtYAxisPosition(targetBluePose.getY())
-			&& isAtAngle(targetBluePose.getRotation());
+		return isAtXAxisPosition(targetBluePose.getX()) && isAtYAxisPosition(targetBluePose.getY()) && isAtAngle(targetBluePose.getRotation());
 	}
 
 }

@@ -4,12 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
-public record ModuleConstants(
-	String logPath,
-	double wheelDiameterMeters,
-	double couplingRatio,
-	Rotation2d velocityAt12VoltsPerSecond
-) {
+public record ModuleConstants(String logPath, double wheelDiameterMeters, double couplingRatio, Rotation2d velocityAt12VoltsPerSecond) {
 
 	public ModuleConstants(
 		ModuleUtils.ModulePosition modulePosition,

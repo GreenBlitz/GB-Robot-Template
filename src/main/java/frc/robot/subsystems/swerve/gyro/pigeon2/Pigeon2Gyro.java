@@ -48,13 +48,13 @@ public class Pigeon2Gyro implements ISwerveGyro {
 	}
 
 	private void optimizeBusAndSignals() {
-		BaseStatusSignal.setUpdateFrequencyForAll(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ, yawSignal);
 		BaseStatusSignal.setUpdateFrequencyForAll(
 			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			xAccelerationSignal,
 			yAccelerationSignal,
 			zAccelerationSignal
 		);
+		BaseStatusSignal.setUpdateFrequencyForAll(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ, yawSignal);
 
 		gyro.optimizeBusUtilization();
 	}

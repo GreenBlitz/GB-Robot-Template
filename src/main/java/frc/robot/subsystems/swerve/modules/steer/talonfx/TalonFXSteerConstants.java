@@ -12,12 +12,7 @@ public class TalonFXSteerConstants {
 	private final TalonFXSteerSignals signals;
 	private final boolean enableFOC;
 
-	public TalonFXSteerConstants(
-		CTREDeviceID steerMotorID,
-		boolean inverted,
-		TalonFXConfiguration configuration,
-		boolean enableFOC
-	) {
+	public TalonFXSteerConstants(CTREDeviceID steerMotorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {
 		this(steerMotorID, inverted, NO_ENCODER_ID, configuration, enableFOC);
 	}
 
@@ -28,12 +23,7 @@ public class TalonFXSteerConstants {
 		TalonFXConfiguration configuration,
 		boolean enableFOC
 	) {
-		TalonFXSteerConfigObject steerConfigObject = new TalonFXSteerConfigObject(
-			steerMotorID,
-			inverted,
-			encoderID,
-			configuration
-		);
+		TalonFXSteerConfigObject steerConfigObject = new TalonFXSteerConfigObject(steerMotorID, inverted, encoderID, configuration);
 		this.motor = steerConfigObject.getMotor();
 		this.signals = steerConfigObject.getSignals();
 		this.enableFOC = enableFOC;

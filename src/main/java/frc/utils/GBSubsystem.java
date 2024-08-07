@@ -21,7 +21,6 @@ public abstract class GBSubsystem extends SubsystemBase {
 		return logPath;
 	}
 
-
 	/**
 	 * DON'T CALL THIS FUNCTION
 	 */

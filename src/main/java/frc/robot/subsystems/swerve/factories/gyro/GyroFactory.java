@@ -11,8 +11,7 @@ public class GyroFactory {
 
 	public static ISwerveGyro create(SwerveName swerveName) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL ->
-				new Pigeon2Gyro(IDs.PIGEON_2_DEVICE_ID, RealGyroConstants.PIGEON_2_CONFIGURATION, swerveName.getLogPath());
+			case REAL -> new Pigeon2Gyro(IDs.PIGEON_2_DEVICE_ID, RealGyroConstants.PIGEON_2_CONFIGURATION, swerveName.getLogPath());
 			case SIMULATION, REPLAY -> new EmptySwerveGyro();
 		};
 	}

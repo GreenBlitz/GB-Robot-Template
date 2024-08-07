@@ -17,8 +17,7 @@ public class AimAssistUtils {
 		SwerveConstants swerveConstants
 	) {
 		Rotation2d pidVelocity = Rotation2d.fromDegrees(
-			swerveConstants.rotationDegreesPIDController().calculate(currentRotation.getDegrees(), targetRotation.getDegrees())
-		);
+				swerveConstants.rotationDegreesPIDController().calculate(currentRotation.getDegrees(), targetRotation.getDegrees()));
 
 		double angularVelocityRadians = applyMagnitudeCompensation(pidVelocity, getDriveMagnitude(chassisSpeeds));
 		double combinedAngularVelocityRadians = angularVelocityRadians + chassisSpeeds.omegaRadiansPerSecond;
@@ -36,8 +35,8 @@ public class AimAssistUtils {
 
 	public static double applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
 		return velocityPerSecond.getRadians()
-			* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
-			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+				* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
+				/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
 }

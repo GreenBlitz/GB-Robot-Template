@@ -238,36 +238,32 @@ public class Swerve extends GBSubsystem {
 		double ySpeed = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
 		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
 		Rotation2d thetaSpeed = Rotation2d.fromDegrees(
-			constants.rotationDegreesPIDController()
-				.calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
+			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
 		);
 
-		ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
-			xSpeed * direction,
-			ySpeed * direction,
-			thetaSpeed.getRadians()
-		);
+		ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(xSpeed * direction, ySpeed * direction, thetaSpeed.getRadians());
 		driveByState(targetFieldRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}
 
+	//@formatter:off
 	protected void rotateToAngle(Rotation2d targetAngle, SwerveState swerveState) {
 		ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
 			0,
 			0,
-			Rotation2d
-				.fromDegrees(
-					constants.rotationDegreesPIDController()
-						.calculate(currentAngleSupplier.get().getDegrees(), targetAngle.getDegrees())
-				)
-				.getRadians()
+			Rotation2d.fromDegrees(
+					constants.rotationDegreesPIDController().calculate(
+							currentAngleSupplier.get().getDegrees(),
+							targetAngle.getDegrees()
+					)
+			).getRadians()
 		);
 		driveByState(targetFieldRelativeSpeeds, swerveState);
 	}
+	//@formatter:on
 
 
 	protected void driveByState(double xPower, double yPower, double thetaPower, SwerveState swerveState) {
-		ChassisSpeeds speedsFromPowers = SwerveMath
-			.powersToSpeeds(xPower, yPower, thetaPower, swerveState.getDriveSpeed(), constants);
+		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(xPower, yPower, thetaPower, swerveState.getDriveSpeed(), constants);
 		driveByState(speedsFromPowers, swerveState);
 	}
 
@@ -304,8 +300,7 @@ public class Swerve extends GBSubsystem {
 		boolean isAtAngle = angleDeltaDegrees < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond)
-			< PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
 		return isAtAngle && isStopping;
 	}

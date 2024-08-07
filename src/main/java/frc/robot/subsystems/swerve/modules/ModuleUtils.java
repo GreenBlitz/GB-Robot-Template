@@ -37,16 +37,15 @@ public class ModuleUtils {
 		return velocityToVoltage(coupledVelocityPerSecond, maxVelocityPerSecond, voltageCompensationSaturation);
 	}
 
-	public static double
-		velocityToVoltage(Rotation2d velocityPerSecond, Rotation2d maxVelocityPerSecond, double voltageCompensationSaturation) {
+	public static double velocityToVoltage(Rotation2d velocityPerSecond, Rotation2d maxVelocityPerSecond, double voltageCompensationSaturation) {
 		double power = velocityPerSecond.getRotations() / maxVelocityPerSecond.getRotations();
 		return Conversions.compensatedPowerToVoltage(power, voltageCompensationSaturation);
 	}
 
 
 	/**
-	 * When the steer motor moves, the drive motor moves as well due to the coupling. This will affect the current position of the
-	 * drive motor, so we need to remove the coupling from the velocity or the position.
+	 * When the steer motor moves, the drive motor moves as well due to the coupling. This will affect the current position of the drive motor,
+	 * so we need to remove the coupling from the velocity or the position.
 	 *
 	 * @param driveCoupledAngle the position or velocity
 	 * @param steerAngle        the angle or velocity in angle of the module
@@ -68,15 +67,14 @@ public class ModuleUtils {
 
 
 	/**
-	 * When changing direction, the module will skew since the angle motor is not at its target angle. This method will counter
-	 * that by reducing the target velocity according to the angle motor's error cosine.
+	 * When changing direction, the module will skew since the angle motor is not at its target angle. This method will counter that by reducing
+	 * the target velocity according to the angle motor's error cosine.
 	 *
 	 * @param targetVelocityMetersPerSecond the target velocity, in meters per second
 	 * @param targetSteerAngle              the target steer angle
 	 * @return the reduced target velocity in revolutions per second
 	 */
-	public static double
-		reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentSteerAngle) {
+	public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentSteerAngle) {
 		double steerDeltaRadians = targetSteerAngle.getRadians() - currentSteerAngle.getRadians();
 		double cosineScalar = Math.abs(Math.cos(steerDeltaRadians));
 		return targetVelocityMetersPerSecond * cosineScalar;

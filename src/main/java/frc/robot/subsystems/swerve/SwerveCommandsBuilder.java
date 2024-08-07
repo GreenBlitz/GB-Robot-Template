@@ -128,18 +128,12 @@ public class SwerveCommandsBuilder {
 		return driveState(xSupplier, ySupplier, thetaSupplier, SwerveState.DEFAULT_DRIVE).withName("Default Drive");
 	}
 
-	public Command driveState(
-		DoubleSupplier xSupplier,
-		DoubleSupplier ySupplier,
-		DoubleSupplier thetaSupplier,
-		Supplier<SwerveState> state
-	) {
+	public Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<SwerveState> state) {
 		return new DeferredCommand(() -> driveState(xSupplier, ySupplier, thetaSupplier, state.get()), Set.of(swerve))
 			.withName("Drive With Supplier State");
 	}
 
-	public Command
-		driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, SwerveState state) {
+	public Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, SwerveState state) {
 		return new InitExecuteCommand(
 			swerve::resetPIDControllers,
 			() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), state),
@@ -162,8 +156,7 @@ public class SwerveCommandsBuilder {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 		if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils
-				.createOnTheFlyPathCommand(currentPose, targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = PathPlannerUtils.createOnTheFlyPathCommand(currentPose, targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
 		} else {
 			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
 		}

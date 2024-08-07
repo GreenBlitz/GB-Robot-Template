@@ -37,10 +37,7 @@ public class SwerveMath {
 	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
 		double newXSpeed = getDeadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
 		double newYSpeed = getDeadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
-		double newOmegaSpeed = getDeadbandSpeed(
-			chassisSpeeds.omegaRadiansPerSecond,
-			SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()
-		);
+		double newOmegaSpeed = getDeadbandSpeed(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians());
 
 		return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
 	}

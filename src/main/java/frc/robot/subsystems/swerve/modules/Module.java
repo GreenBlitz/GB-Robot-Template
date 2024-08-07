@@ -10,7 +10,6 @@ import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
-import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
 import frc.utils.Conversions;
@@ -59,10 +58,9 @@ public class Module {
 		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 
 		driveInputs.angle = ModuleUtils.getUncoupledAngle(driveInputs.angle, steerInputs.angle, constants.couplingRatio());
-		driveInputs.velocity = ModuleUtils
-			.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
-		driveInputs.acceleration = ModuleUtils
-			.getUncoupledAngle(driveInputs.acceleration, steerInputs.acceleration, constants.couplingRatio());
+		driveInputs.velocity = ModuleUtils.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
+		driveInputs.acceleration = ModuleUtils.getUncoupledAngle(driveInputs.acceleration, steerInputs.acceleration, constants.couplingRatio());
+
 		for (int i = 0; i < driveInputs.angleOdometrySamples.length; i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerInputs.angleOdometrySamples[i].getRotations() - startingSteerAngle.getRotations());
@@ -80,9 +78,7 @@ public class Module {
 		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 		driveInputs.distanceMeters = toDriveMeters(driveInputs.angle);
 		driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
-		driveInputs.distanceMetersOdometrySamples = Arrays.stream(driveInputs.angleOdometrySamples)
-			.mapToDouble(this::toDriveMeters)
-			.toArray();
+		driveInputs.distanceMetersOdometrySamples = Arrays.stream(driveInputs.angleOdometrySamples).mapToDouble(this::toDriveMeters).toArray();
 
 		ModuleInputsAutoLogged moduleInputs = moduleInputsContainer.getModuleInputs();
 		moduleInputs.isAtTargetAngle = isAtTargetAngle();
@@ -98,12 +94,10 @@ public class Module {
 			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "encoder disconnect", Timer.getFPGATimestamp());
 		}
 		if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-			Logger
-				.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "steer motor disconnect", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "steer motor disconnect", Timer.getFPGATimestamp());
 		}
 		if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-			Logger
-				.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "drive motor disconnect", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "drive motor disconnect", Timer.getFPGATimestamp());
 		}
 	}
 
@@ -124,8 +118,8 @@ public class Module {
 
 
 	/**
-	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest
-	 * odometry update, the accumulated odometry positions since the last loop to get a more accurate position.
+	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest odometry update, the
+	 * accumulated odometry positions since the last loop to get a more accurate position.
 	 *
 	 * @param odometryUpdateIndex the index of the odometry update
 	 * @return the position of the module at the given odometry update index
@@ -162,6 +156,7 @@ public class Module {
 	}
 
 
+	//@formatter:off
 	public boolean isAtTargetVelocity() {
 		return MathUtil.isNear(
 			getTargetState().speedMetersPerSecond,
@@ -169,6 +164,7 @@ public class Module {
 			ModuleConstants.SPEED_TOLERANCE_METERS_PER_SECOND
 		);
 	}
+	//@formatter:on
 
 	public boolean isAtTargetAngle() {
 		boolean isStopping = moduleInputsContainer.getSteerMotorInputs().velocity.getRadians()
@@ -223,8 +219,7 @@ public class Module {
 	}
 
 	public void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, boolean isClosedLoop) {
-		targetVelocityMetersPerSecond = ModuleUtils
-			.reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
+		targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
 
 		if (isClosedLoop) {
 			setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
@@ -235,13 +230,9 @@ public class Module {
 
 	public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
 		setClosedLoop(true);
-		Rotation2d targetVelocityPerSecond = Conversions
-			.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
-		Rotation2d coupledVelocityPerSecond = ModuleUtils.getCoupledAngle(
-			targetVelocityPerSecond,
-			moduleInputsContainer.getSteerMotorInputs().velocity,
-			constants.couplingRatio()
-		);
+		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
+		Rotation2d coupledVelocityPerSecond = ModuleUtils
+			.getCoupledAngle(targetVelocityPerSecond, moduleInputsContainer.getSteerMotorInputs().velocity, constants.couplingRatio());
 		iDrive.setTargetVelocity(coupledVelocityPerSecond);
 	}
 

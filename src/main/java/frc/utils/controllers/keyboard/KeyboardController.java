@@ -16,8 +16,9 @@ import java.nio.file.Path;
  */
 public class KeyboardController {
 
-    private static final double KEY_PRESSED_VALUE = 0.5;
+    public static final boolean ENABLE_KEYBOARD = true;
 
+    private static final double KEY_PRESSED_VALUE = 0.5;
     private static final Path KEYBOARD_TO_NETWORK_TABLES_CLASS = Path.of("KeyboardToNetworkTables");
 
     private static final String KEYBOARD_TABLE = "Keyboard";
@@ -139,11 +140,9 @@ public class KeyboardController {
     public double getValueByButtons(Trigger positiveButton, Trigger negativeButton, double value) {
         if (positiveButton.getAsBoolean()) {
             return value;
-        }
-        else if (negativeButton.getAsBoolean()) {
+        } else if (negativeButton.getAsBoolean()) {
             return -value;
-        }
-        else {
+        } else {
             return 0;
         }
     }

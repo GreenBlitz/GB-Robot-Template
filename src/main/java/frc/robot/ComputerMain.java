@@ -1,7 +1,7 @@
 package frc.robot;
 
-import frc.robot.constants.RobotConstants;
 import frc.utils.CMDHandler;
+import frc.utils.controllers.keyboard.KeyboardController;
 
 import javax.swing.*;
 import java.nio.file.Path;
@@ -24,7 +24,7 @@ public class ComputerMain {
 
     private static void startComputerPrograms(String... args) {
         String connectedIP = args[0];
-        if (RobotConstants.ENABLE_KEYBOARD) {
+        if (KeyboardController.ENABLE_KEYBOARD) {
             runKeyboard(connectedIP);
         }
     }

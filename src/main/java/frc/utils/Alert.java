@@ -1,13 +1,13 @@
 package frc.utils;
 
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.LogPaths;
 import org.littletonrobotics.junction.Logger;
 
 public class Alert {
 
-    private AlertType type;
-    private String name;
-    private String description;
-    private static final String directory = "Alerts/";
+    private final AlertType type;
+    private final String name;
 
     public enum AlertType {
         ERROR,
@@ -15,20 +15,18 @@ public class Alert {
         LOG;
     }
 
-    public Alert(AlertType alertType, String alertName, String alertDescription){
+    public Alert(AlertType alertType, String alertName){
 
         this.type = alertType;
         this.name = alertName;
-        this.description = alertDescription;
     }
 
     public void logAlert(){
-        Logger.recordOutput(directory+type.toString()+"/"+name, description);
+        Logger.recordOutput(LogPaths.ALERT_LOG_PATH +type.toString()+"/"+name, Timer.getFPGATimestamp());
     }
 
     public void logAlert(GBSubsystem subsystem){
-        Logger.recordOutput(directory+subsystem.toString()+"/"+type.toString()+"/"+name, description);
+        Logger.recordOutput(LogPaths.ALERT_LOG_PATH+subsystem.toString()+"/"+type.toString()+"/"+name, description);
     }
-
 
 }

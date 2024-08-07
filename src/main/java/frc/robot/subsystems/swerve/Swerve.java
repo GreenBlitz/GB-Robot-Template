@@ -43,7 +43,7 @@ public class Swerve extends GBSubsystem {
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> currentAngleSupplier;
-    private SwerveStateHelper stateHelper;
+	private SwerveStateHelper stateHelper;
 
 	public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
 		super(constants.logPath());
@@ -56,11 +56,11 @@ public class Swerve extends GBSubsystem {
 		this.gyroInputs = new SwerveGyroInputsAutoLogged();
 		this.currentAngleSupplier = this::getAbsoluteHeading;
 
-        this.stateHelper = new SwerveStateHelper(
-                () -> new Pose2d(0, 0, currentAngleSupplier.get()), //default pose estimator
-                Optional::empty,
-                this
-        );
+		this.stateHelper = new SwerveStateHelper(
+			() -> new Pose2d(0, 0, currentAngleSupplier.get()), // default pose estimator
+			Optional::empty,
+			this
+		);
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 	}
@@ -87,7 +87,6 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
 		PathPlannerUtils.configurePathPlanner(
 			currentPoseSupplier,
@@ -100,9 +99,9 @@ public class Swerve extends GBSubsystem {
 		);
 	}
 
-    public void setStateHelper(SwerveStateHelper swerveStateHelper){
-        this.stateHelper = swerveStateHelper;
-    }
+	public void setStateHelper(SwerveStateHelper swerveStateHelper) {
+		this.stateHelper = swerveStateHelper;
+	}
 
 	public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier) {
 		this.currentAngleSupplier = currentAngleSupplier;
@@ -274,7 +273,7 @@ public class Swerve extends GBSubsystem {
 
 	protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
 		this.currentState = swerveState;
-        chassisSpeeds = stateHelper.applyAimAssistOnSpeeds(swerveState.getAimAssist(), chassisSpeeds);
+		chassisSpeeds = stateHelper.applyAimAssistOnSpeeds(swerveState.getAimAssist(), chassisSpeeds);
 
 		if (SwerveMath.isStill(chassisSpeeds)) {
 			modules.stop();
@@ -288,13 +287,11 @@ public class Swerve extends GBSubsystem {
 		applySpeeds(chassisSpeeds, swerveState);
 	}
 
-    private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
-        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(
-                chassisSpeeds,
-                stateHelper.getRotationAxis(swerveState.getRotateAxis())
-		);
-        setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop);
-    }
+	private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+		SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS
+			.toSwerveModuleStates(chassisSpeeds, stateHelper.getRotationAxis(swerveState.getRotateAxis()));
+		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop);
+	}
 
 	private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
 		SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());

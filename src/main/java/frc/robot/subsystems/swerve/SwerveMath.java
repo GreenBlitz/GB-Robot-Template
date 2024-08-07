@@ -5,14 +5,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.utils.cycletime.CycleTimeUtils;
 
 public class SwerveMath {
 
-	public static ChassisSpeeds
-		fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
+	public static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
 		return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
 	}
 
@@ -24,8 +22,7 @@ public class SwerveMath {
 		return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
 	}
 
-	public static ChassisSpeeds
-		powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
+	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
 		return new ChassisSpeeds(
 			xPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
 			yPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
@@ -58,20 +55,18 @@ public class SwerveMath {
 		return Math.abs(speed) <= deadband ? 0 : speed;
 	}
 
-    public static Translation2d getRelativeTranslation(Translation2d relativeTo, Translation2d toRelative) {
-        return toRelative.minus(relativeTo);
-    }
+	public static Translation2d getRelativeTranslation(Translation2d relativeTo, Translation2d toRelative) {
+		return toRelative.minus(relativeTo);
+	}
 
-    public static Translation2d getRelativeTranslation(Pose2d relativeTo, Translation2d toRelative) {
-        return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
-    }
+	public static Translation2d getRelativeTranslation(Pose2d relativeTo, Translation2d toRelative) {
+		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
+	}
 
-    public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity) {
-        return Rotation2d.fromRadians(MathUtil.clamp(
-                velocity.getRadians(),
-                -maxRotationalVelocity.getRadians(),
-                maxRotationalVelocity.getRadians()
-        ));
-    }
+	public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity) {
+		return Rotation2d.fromRadians(
+			MathUtil.clamp(velocity.getRadians(), -maxRotationalVelocity.getRadians(), maxRotationalVelocity.getRadians())
+		);
+	}
 
 }

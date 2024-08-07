@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -52,37 +51,59 @@ public class JoysticksBindings {
 			robot.getSwerve().getCommandsBuilder().rotateToAngle(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE)
 		);
 
-        usedJoystick.L3.whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
-                () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(Axis.LEFT_X),
-                () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)
-        ));
-        usedJoystick.L1.whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
-                () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(Axis.LEFT_X),
-                () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)
-        ));
-        usedJoystick.R1.whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
-                () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(Axis.LEFT_X),
-                () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)
-        ));
+		usedJoystick.L3.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveState(
+					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+					SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)
+				)
+		);
+		usedJoystick.L1.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveState(
+					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)
+				)
+		);
+		usedJoystick.R1.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveState(
+					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)
+				)
+		);
 
-        usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
-                () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(Axis.LEFT_X),
-                () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHelper().getFarRightRotateAxis()))
-        );
-        usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(robot.getSwerve().getCommandsBuilder().driveState(
-                () -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-                () -> usedJoystick.getAxisValue(Axis.LEFT_X),
-                () -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-                () -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHelper().getFarLeftRotateAxis()))
-        );
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
+			.whileTrue(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveState(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHelper().getFarRightRotateAxis())
+					)
+			);
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER)
+			.whileTrue(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveState(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHelper().getFarLeftRotateAxis())
+					)
+			);
 
 		robot.getSwerve()
 			.setDefaultCommand(

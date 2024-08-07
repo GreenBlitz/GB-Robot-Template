@@ -11,46 +11,47 @@ import java.util.function.Supplier;
 
 public enum AimAssist {
 
-    NONE(),
+	NONE(),
 
-    SPEAKER(Field::getSpeaker),
+	SPEAKER(Field::getSpeaker),
 
-    AMP(Field::getAngleToAmp);
+	AMP(Field::getAngleToAmp);
 
 
-    public final Supplier<Rotation2d> targetAngleSupplier;
+	public final Supplier<Rotation2d> targetAngleSupplier;
 
-    AimAssist() {
-        targetAngleSupplier = () -> Rotation2d.fromDegrees(0);
-    }
+	AimAssist() {
+		targetAngleSupplier = () -> Rotation2d.fromDegrees(0);
+	}
 
-    AimAssist(Rotation2d targetRotation) {
-        this.targetAngleSupplier = () -> targetRotation;
-    }
+	AimAssist(Rotation2d targetRotation) {
+		this.targetAngleSupplier = () -> targetRotation;
+	}
 
-    AimAssist(Rotation2dSupplier targetAllianceRotation) {
-        this.targetAngleSupplier = targetAllianceRotation;
-    }
+	AimAssist(Rotation2dSupplier targetAllianceRotation) {
+		this.targetAngleSupplier = targetAllianceRotation;
+	}
 
-    AimAssist(Translation3d targetAllianceTranslation) {
-        this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslation);
-    }
+	AimAssist(Translation3d targetAllianceTranslation) {
+		this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslation);
+	}
 
-    AimAssist(Translation3dSupplier targetAllianceTranslationSupplier) {
-        this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
-    }
+	AimAssist(Translation3dSupplier targetAllianceTranslationSupplier) {
+		this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
+	}
 
-    private interface Rotation2dSupplier extends Supplier<Rotation2d> {}
+	private interface Rotation2dSupplier extends Supplier<Rotation2d> {
+	}
 
-    private interface Translation3dSupplier extends Supplier<Translation3d> {}
+	private interface Translation3dSupplier extends Supplier<Translation3d> {
+	}
 
-    private Rotation2d getTargetAngleFromTargetTranslation(Translation3d targetPose2d) {
-        Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
-        Translation2d targetBluePose = targetPose2d.toTranslation2d();
-        double wantedAngleRadians = Math.atan2(
-                targetBluePose.getY() - currentBluePose.getY(),
-                targetBluePose.getX() - currentBluePose.getX()
-        );
-        return Rotation2d.fromRadians(wantedAngleRadians);
-    }
+	private Rotation2d getTargetAngleFromTargetTranslation(Translation3d targetPose2d) {
+		Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
+		Translation2d targetBluePose = targetPose2d.toTranslation2d();
+		double wantedAngleRadians = Math
+			.atan2(targetBluePose.getY() - currentBluePose.getY(), targetBluePose.getX() - currentBluePose.getX());
+		return Rotation2d.fromRadians(wantedAngleRadians);
+	}
+
 }

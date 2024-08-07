@@ -5,14 +5,14 @@ import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 
 public interface IDrive {
 
-    void setBrake(boolean brake);
+	void setBrake(boolean brake);
 
-    void stop();
+	void stop();
 
-    void setVoltage(double voltage);
+	void setVoltage(double voltage);
 
-    void setTargetVelocity(Rotation2d velocityPerSecond);
+	void setTargetVelocity(Rotation2d velocityPerSecond);
 
-    void updateInputs(ModuleInputsContainer inputs);
+	void updateInputs(ModuleInputsContainer inputs);
 
 }

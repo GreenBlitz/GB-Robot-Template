@@ -17,51 +17,48 @@ import frc.utils.RobotTypeUtils;
 
 public class Robot {
 
-    public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
+	public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
-    public static final Swerve swerve = new Swerve(
-            SwerveConstantsFactory.create(SwerveName.SWERVE),
-            ModulesFactory.create(SwerveName.SWERVE),
-            GyroFactory.create(SwerveName.SWERVE)
-    );
-    public static final PoseEstimator poseEstimator = new PoseEstimator(
-            swerve::setHeading,
-            swerve::getFieldRelativeVelocity
-    );
-    static {
-        swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-    }
+	public static final Swerve swerve = new Swerve(
+		SwerveConstantsFactory.create(SwerveName.SWERVE),
+		ModulesFactory.create(SwerveName.SWERVE),
+		GyroFactory.create(SwerveName.SWERVE)
+	);
+	public static final PoseEstimator poseEstimator = new PoseEstimator(swerve::setHeading, swerve::getFieldRelativeVelocity);
+	static {
+		swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+	}
 
-    public Robot() {
-        buildPathPlannerForAuto();
-        configureBindings();
-    }
+	public Robot() {
+		buildPathPlannerForAuto();
+		configureBindings();
+	}
 
-    public Command getAutonomousCommand() {
-        return new InstantCommand();
-    }
+	public Command getAutonomousCommand() {
+		return new InstantCommand();
+	}
 
-    public Swerve getSwerve() {
-        return swerve;
-    }
+	public Swerve getSwerve() {
+		return swerve;
+	}
 
-    public PoseEstimator getPoseEstimator(){
-        return poseEstimator;
-    }
+	public PoseEstimator getPoseEstimator() {
+		return poseEstimator;
+	}
 
 
-    private void buildPathPlannerForAuto() {
-        // Register commands...
-        swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
-    }
+	private void buildPathPlannerForAuto() {
+		// Register commands...
+		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+	}
 
-    private void configureBindings() {
-        JoysticksBindings.configureBindings(this);
-    }
+	private void configureBindings() {
+		JoysticksBindings.configureBindings(this);
+	}
 
-    public void periodic(){
-        swerve.wrapperPeriodic();
-        poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
-    }
+	public void periodic() {
+		swerve.wrapperPeriodic();
+		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
+	}
 
 }

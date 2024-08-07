@@ -1,15 +1,17 @@
 package frc.robot.subsystems.swerve;
 
 public enum SwerveName {
-    SWERVE("");
 
-    private final String swerveName;
+	SWERVE("");
 
-    SwerveName(String swerveName) {
-        this.swerveName = swerveName;
-    }
+	private final String swerveName;
 
-    public String getLogPath() {
-        return "Subsystems/" + swerveName + "Swerve/";
-    }
+	SwerveName(String swerveName) {
+		this.swerveName = swerveName;
+	}
+
+	public String getLogPath() {
+		return "Subsystems/" + swerveName + "Swerve/";
+	}
+
 }

@@ -12,25 +12,24 @@ import frc.robot.subsystems.swerve.modules.Modules;
 
 public class ModulesFactory {
 
-    private static Module createModule(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
-        return new Module(
-                ModuleConstantsFactory.create(swerveName, modulePosition),
-                EncoderFactory.create(swerveName, modulePosition),
-                SteerFactory.create(swerveName, modulePosition),
-                DriveFactory.create(swerveName, modulePosition)
-        );
-    }
+	private static Module createModule(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
+		return new Module(
+			ModuleConstantsFactory.create(swerveName, modulePosition),
+			EncoderFactory.create(swerveName, modulePosition),
+			SteerFactory.create(swerveName, modulePosition),
+			DriveFactory.create(swerveName, modulePosition)
+		);
+	}
 
-    public static Modules create(SwerveName swerveName) {
-        return new Modules(
-                swerveName,
-                new Module[]{
-                        createModule(swerveName, ModuleUtils.ModulePosition.FRONT_LEFT),
-                        createModule(swerveName, ModuleUtils.ModulePosition.FRONT_RIGHT),
-                        createModule(swerveName, ModuleUtils.ModulePosition.BACK_LEFT),
-                        createModule(swerveName, ModuleUtils.ModulePosition.BACK_RIGHT)
-                }
-        );
-    }
+	public static Modules create(SwerveName swerveName) {
+		return new Modules(
+			swerveName,
+			new Module[] {
+				createModule(swerveName, ModuleUtils.ModulePosition.FRONT_LEFT),
+				createModule(swerveName, ModuleUtils.ModulePosition.FRONT_RIGHT),
+				createModule(swerveName, ModuleUtils.ModulePosition.BACK_LEFT),
+				createModule(swerveName, ModuleUtils.ModulePosition.BACK_RIGHT)}
+		);
+	}
 
 }

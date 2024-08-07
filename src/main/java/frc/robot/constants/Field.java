@@ -8,30 +8,32 @@ import frc.utils.mirror.MirrorUtils;
 
 public class Field {
 
-    public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
+	public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
 
-    public static boolean isFieldConventionAlliance(){
-        return DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
-    }
+	public static boolean isFieldConventionAlliance() {
+		return DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
+	}
 
-    public static final double LENGTH_METERS = 16.54175;
-    public static final double WIDTH_METERS = 8.0137;
+	public static final double LENGTH_METERS = 16.54175;
+	public static final double WIDTH_METERS = 8.0137;
 
 
-    private static final Translation3d SPEAKER = new Translation3d(0.23, WIDTH_METERS - 2.55, 2.045);
-    public static Translation3d getSpeaker() {
-        if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-            return SPEAKER;
-        }
-        return new Translation3d(MirrorUtils.getMirroredX(SPEAKER.getX()), SPEAKER.getY(), SPEAKER.getZ());
-    }
+	private static final Translation3d SPEAKER = new Translation3d(0.23, WIDTH_METERS - 2.55, 2.045);
 
-    private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
-    public static Rotation2d getAngleToAmp() {
-        if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-            return ANGLE_TO_AMP;
-        }
-        return MirrorUtils.getMirroredAngle(ANGLE_TO_AMP);
-    }
+	public static Translation3d getSpeaker() {
+		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
+			return SPEAKER;
+		}
+		return new Translation3d(MirrorUtils.getMirroredX(SPEAKER.getX()), SPEAKER.getY(), SPEAKER.getZ());
+	}
+
+	private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
+
+	public static Rotation2d getAngleToAmp() {
+		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
+			return ANGLE_TO_AMP;
+		}
+		return MirrorUtils.getMirroredAngle(ANGLE_TO_AMP);
+	}
 
 }

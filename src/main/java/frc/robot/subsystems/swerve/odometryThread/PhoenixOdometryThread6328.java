@@ -34,161 +34,155 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Provides an interface for asynchronously reading high-frequency measurements to a set of queues.
  *
- * <p>This version is intended for Phoenix 6 devices on both the RIO and CANivore buses. When using
- * a CANivore, the thread uses the "waitForAll" blocking method to enable more consistent sampling.
- * This also allows Phoenix Pro users to benefit from lower latency between devices using CANivore
- * time synchronization.
+ * <p>This version is intended for Phoenix 6 devices on both the RIO and CANivore buses. When using a CANivore, the thread uses
+ * the "waitForAll" blocking method to enable more consistent sampling. This also allows Phoenix Pro users to benefit from lower
+ * latency between devices using CANivore time synchronization.
  */
 public class PhoenixOdometryThread6328 extends Thread {
 
-    private final Lock SIGNALS_LOCK = new ReentrantLock();
-    private final List<Queue<Double>> queues = new ArrayList<>();
-    private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
-    private final ArrayList<StatusSignal<Double>> signals = new ArrayList<>();
-    private final ArrayList<Boolean> isLatencySignals = new ArrayList<>();
-    private boolean isCANFD = false; // Assuming that all the devices using in odometry have same can network.
+	private final Lock SIGNALS_LOCK = new ReentrantLock();
+	private final List<Queue<Double>> queues = new ArrayList<>();
+	private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
+	private final ArrayList<StatusSignal<Double>> signals = new ArrayList<>();
+	private final ArrayList<Boolean> isLatencySignals = new ArrayList<>();
+	private boolean isCANFD = false; // Assuming that all the devices using in odometry have same can network.
 
 
-    private static PhoenixOdometryThread6328 INSTANCE = null;
+	private static PhoenixOdometryThread6328 INSTANCE = null;
 
-    public static PhoenixOdometryThread6328 getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new PhoenixOdometryThread6328();
-        }
-        return INSTANCE;
-    }
+	public static PhoenixOdometryThread6328 getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new PhoenixOdometryThread6328();
+		}
+		return INSTANCE;
+	}
 
-    private PhoenixOdometryThread6328() {
-        setName("PhoenixOdometryThread");
-        setDaemon(true);
-        start();
-    }
-
-
-    public Queue<Double> getTimestampQueue() {
-        return timestamps;
-    }
+	private PhoenixOdometryThread6328() {
+		setName("PhoenixOdometryThread");
+		setDaemon(true);
+		start();
+	}
 
 
-    public Queue<Double> registerLatencySignal(ParentDevice device, StatusSignal<Double> signal, StatusSignal<Double> signalSlope) {
-        return registerSignals(true, device, new StatusSignal[]{signal, signalSlope});
-    }
-
-    public Queue<Double> registerRegularSignal(ParentDevice device, StatusSignal<Double> signal) {
-        return registerSignals(false, device, new StatusSignal[]{signal});
-    }
-
-    private Queue<Double> registerSignals(boolean isLatencySignal, ParentDevice device, StatusSignal<Double>[] signals) {
-        Queue<Double> queue = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
-        SIGNALS_LOCK.lock();
-        Swerve.ODOMETRY_LOCK.lock();
-        try {
-            updateIsCANFD(device);
-            registerSignals(signals);
-            updateIsLatencySignals(isLatencySignal);
-            queues.add(queue);
-        }
-        finally {
-            SIGNALS_LOCK.unlock();
-            Swerve.ODOMETRY_LOCK.unlock();
-        }
-        return queue;
-    }
-
-    private void registerSignals(StatusSignal<Double>[] signals) {
-        for (StatusSignal<Double> signal : signals) {
-            registerSignal(signal);
-        }
-    }
-
-    private void registerSignal(StatusSignal<Double> signal) {
-        signals.add(signal);
-    }
-
-    private void updateIsCANFD(ParentDevice device) {
-        isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
-    }
-
-    private void updateIsLatencySignals(boolean isLatencySignal) {
-        isLatencySignals.add(isLatencySignal);
-    }
+	public Queue<Double> getTimestampQueue() {
+		return timestamps;
+	}
 
 
-    @Override
-    public void run() {
-        Timer.delay(OdometryThreadConstants.DELAY_STARTING_TIME_SECONDS);
-        while (true) {
-            waitForUpdatesFromSignals();
-            saveNewData();
-        }
-    }
+	public Queue<Double>
+		registerLatencySignal(ParentDevice device, StatusSignal<Double> signal, StatusSignal<Double> signalSlope) {
+		return registerSignals(true, device, new StatusSignal[] {signal, signalSlope});
+	}
+
+	public Queue<Double> registerRegularSignal(ParentDevice device, StatusSignal<Double> signal) {
+		return registerSignals(false, device, new StatusSignal[] {signal});
+	}
+
+	private Queue<Double> registerSignals(boolean isLatencySignal, ParentDevice device, StatusSignal<Double>[] signals) {
+		Queue<Double> queue = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
+		SIGNALS_LOCK.lock();
+		Swerve.ODOMETRY_LOCK.lock();
+		try {
+			updateIsCANFD(device);
+			registerSignals(signals);
+			updateIsLatencySignals(isLatencySignal);
+			queues.add(queue);
+		} finally {
+			SIGNALS_LOCK.unlock();
+			Swerve.ODOMETRY_LOCK.unlock();
+		}
+		return queue;
+	}
+
+	private void registerSignals(StatusSignal<Double>[] signals) {
+		for (StatusSignal<Double> signal : signals) {
+			registerSignal(signal);
+		}
+	}
+
+	private void registerSignal(StatusSignal<Double> signal) {
+		signals.add(signal);
+	}
+
+	private void updateIsCANFD(ParentDevice device) {
+		isCANFD = CANBusJNI.JNI_IsNetworkFD(device.getNetwork());
+	}
+
+	private void updateIsLatencySignals(boolean isLatencySignal) {
+		isLatencySignals.add(isLatencySignal);
+	}
 
 
-    private void waitForUpdatesFromSignals() {
-        SIGNALS_LOCK.lock();
-        try {
-            waitForAllSignals();
-        }
-        catch (InterruptedException exception) {
-            exception.printStackTrace();
-        }
-        finally {
-            SIGNALS_LOCK.unlock();
-        }
-    }
-
-    private void waitForAllSignals() throws InterruptedException {
-        if (isCANFD) {
-            waitForCanFDSignals();
-        }
-        else {
-            waitForNonCanFDSignals();
-        }
-    }
-
-    private void waitForCanFDSignals() {
-        BaseStatusSignal.waitForAll(CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS, signals.toArray(StatusSignal[]::new));
-    }
-
-    private void waitForNonCanFDSignals() throws InterruptedException {
-        Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
-        if (!signals.isEmpty()) {
-            BaseStatusSignal.refreshAll(signals.toArray(StatusSignal[]::new));
-        }
-    }
+	@Override
+	public void run() {
+		Timer.delay(OdometryThreadConstants.DELAY_STARTING_TIME_SECONDS);
+		while (true) {
+			waitForUpdatesFromSignals();
+			saveNewData();
+		}
+	}
 
 
-    private void saveNewData() {
-        double fpgaTimestamp = Logger.getRealTimestamp() / 1.0e6;
+	private void waitForUpdatesFromSignals() {
+		SIGNALS_LOCK.lock();
+		try {
+			waitForAllSignals();
+		} catch (InterruptedException exception) {
+			exception.printStackTrace();
+		} finally {
+			SIGNALS_LOCK.unlock();
+		}
+	}
 
-        Swerve.ODOMETRY_LOCK.lock();
-        try {
-            saveNewDataToQueues();
-            timestamps.offer(fpgaTimestamp);
-        }
-        finally {
-            Swerve.ODOMETRY_LOCK.unlock();
-        }
-    }
+	private void waitForAllSignals() throws InterruptedException {
+		if (isCANFD) {
+			waitForCanFDSignals();
+		} else {
+			waitForNonCanFDSignals();
+		}
+	}
 
-    private void saveNewDataToQueues() {
-        for (int signalIndex = 0, queueIndex = 0; queueIndex < queues.size(); signalIndex++, queueIndex++) {
-            if (isLatencySignals.get(queueIndex)) {
-                saveLatencyValue(signalIndex, queueIndex);
-                signalIndex++;
-            }
-            else {
-                saveRegularValue(signalIndex, queueIndex);
-            }
-        }
-    }
+	private void waitForCanFDSignals() {
+		BaseStatusSignal.waitForAll(CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS, signals.toArray(StatusSignal[]::new));
+	}
 
-    private void saveLatencyValue(int index, int queueIndex) {
-        queues.get(queueIndex).offer(BaseStatusSignal.getLatencyCompensatedValue(signals.get(index), signals.get(index + 1)));
-    }
+	private void waitForNonCanFDSignals() throws InterruptedException {
+		Thread.sleep((long) (1000.0 / PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ));
+		if (!signals.isEmpty()) {
+			BaseStatusSignal.refreshAll(signals.toArray(StatusSignal[]::new));
+		}
+	}
 
-    private void saveRegularValue(int index, int queueIndex) {
-        queues.get(queueIndex).offer(signals.get(index).getValueAsDouble());
-    }
+
+	private void saveNewData() {
+		double fpgaTimestamp = Logger.getRealTimestamp() / 1.0e6;
+
+		Swerve.ODOMETRY_LOCK.lock();
+		try {
+			saveNewDataToQueues();
+			timestamps.offer(fpgaTimestamp);
+		} finally {
+			Swerve.ODOMETRY_LOCK.unlock();
+		}
+	}
+
+	private void saveNewDataToQueues() {
+		for (int signalIndex = 0, queueIndex = 0; queueIndex < queues.size(); signalIndex++, queueIndex++) {
+			if (isLatencySignals.get(queueIndex)) {
+				saveLatencyValue(signalIndex, queueIndex);
+				signalIndex++;
+			} else {
+				saveRegularValue(signalIndex, queueIndex);
+			}
+		}
+	}
+
+	private void saveLatencyValue(int index, int queueIndex) {
+		queues.get(queueIndex).offer(BaseStatusSignal.getLatencyCompensatedValue(signals.get(index), signals.get(index + 1)));
+	}
+
+	private void saveRegularValue(int index, int queueIndex) {
+		queues.get(queueIndex).offer(signals.get(index).getValueAsDouble());
+	}
 
 }

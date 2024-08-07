@@ -15,104 +15,102 @@ import java.util.function.Supplier;
 
 public class PoseEstimator {
 
-    private final PoseCalculator poseCalculator;
-    private final Consumer<Rotation2d> resetSwerveHeading;
-    private final Supplier<ChassisSpeeds> swerveSpeedsFieldRelative;
+	private final PoseCalculator poseCalculator;
+	private final Consumer<Rotation2d> resetSwerveHeading;
+	private final Supplier<ChassisSpeeds> swerveSpeedsFieldRelative;
 
-    public PoseEstimator(
-            Consumer<Rotation2d> resetSwerveHeading,
-            Supplier<ChassisSpeeds> swerveSpeedsFieldRelative
-    ) {
-        this.poseCalculator = new PoseCalculator(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS, SwerveConstants.KINEMATICS);
-        this.resetSwerveHeading = resetSwerveHeading;
-        this.swerveSpeedsFieldRelative = swerveSpeedsFieldRelative;
-        resetPose(PoseEstimatorConstants.DEFAULT_POSE);
-    }
+	public PoseEstimator(Consumer<Rotation2d> resetSwerveHeading, Supplier<ChassisSpeeds> swerveSpeedsFieldRelative) {
+		this.poseCalculator = new PoseCalculator(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS, SwerveConstants.KINEMATICS);
+		this.resetSwerveHeading = resetSwerveHeading;
+		this.swerveSpeedsFieldRelative = swerveSpeedsFieldRelative;
+		resetPose(PoseEstimatorConstants.DEFAULT_POSE);
+	}
 
-    public Pose2d getCurrentPose(){
-        return poseCalculator.getEstimatedPose();
-    }
+	public Pose2d getCurrentPose() {
+		return poseCalculator.getEstimatedPose();
+	}
 
-    public void resetPose(Pose2d currentPose) {
-        resetSwerveHeading.accept(currentPose.getRotation());
-        poseCalculator.resetPose(currentPose);
-    }
+	public void resetPose(Pose2d currentPose) {
+		resetSwerveHeading.accept(currentPose.getRotation());
+		poseCalculator.resetPose(currentPose);
+	}
 
-    public void resetHeading(Rotation2d targetAngle) {
-        resetPose(new Pose2d(getCurrentPose().getTranslation(), targetAngle));
-    }
+	public void resetHeading(Rotation2d targetAngle) {
+		resetPose(new Pose2d(getCurrentPose().getTranslation(), targetAngle));
+	}
 
-    private void logCurrentPose(){
-        Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Estimated Pose", getCurrentPose());
-    }
+	private void logCurrentPose() {
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Estimated Pose", getCurrentPose());
+	}
 
-    private void logCurrentOdometryPose(){
-        Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Odometry Pose", getCurrentPose());
-    }
+	private void logCurrentOdometryPose() {
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Odometry Pose", getCurrentPose());
+	}
 
 
-    /**
-     * Updates the pose estimator with the given swerve wheel positions and gyro rotations.
-     * This function accepts an array of swerve wheel positions and an array of gyro rotations because the odometry can be updated
-     * at a faster rate than the main loop (which is 50 hertz).
-     * This means you could have a couple of odometry updates per main loop, and you would want to update the pose estimator with
-     * all of them.
-     */
-    public void updatePoseEstimatorOdometry(OdometryObservation[] odometryObservations) {
-        for (OdometryObservation odometryObservation : odometryObservations) {
-            poseCalculator.addOdometryObservation(odometryObservation);
-        }
-    }
+	/**
+	 * Updates the pose estimator with the given swerve wheel positions and gyro rotations. This function accepts an array of
+	 * swerve wheel positions and an array of gyro rotations because the odometry can be updated at a faster rate than the main
+	 * loop (which is 50 hertz). This means you could have a couple of odometry updates per main loop, and you would want to
+	 * update the pose estimator with all of them.
+	 */
+	public void updatePoseEstimatorOdometry(OdometryObservation[] odometryObservations) {
+		for (OdometryObservation odometryObservation : odometryObservations) {
+			poseCalculator.addOdometryObservation(odometryObservation);
+		}
+	}
 
-    public void updatePoseEstimator(OdometryObservation[] odometryObservations){
-        updatePoseEstimatorOdometry(odometryObservations);
+	public void updatePoseEstimator(OdometryObservation[] odometryObservations) {
+		updatePoseEstimatorOdometry(odometryObservations);
 
-        logCurrentPose();
-        logCurrentOdometryPose();
-    }
+		logCurrentPose();
+		logCurrentOdometryPose();
+	}
 
 
-    private static boolean isAtTranslationPosition(double currentTranslationVelocity, double currentTranslationPosition, double targetTranslationPosition) {
-        boolean isNearTargetPosition = MathUtil.isNear(
-                targetTranslationPosition,
-                currentTranslationPosition,
-                PoseEstimatorConstants.TRANSLATION_TOLERANCE_METERS
-        );
-        boolean isStopping = Math.abs(currentTranslationVelocity) < PoseEstimatorConstants.TRANSLATION_VELOCITY_TOLERANCE;
-        return isNearTargetPosition && isStopping;
-    }
+	private static boolean isAtTranslationPosition(
+		double currentTranslationVelocity,
+		double currentTranslationPosition,
+		double targetTranslationPosition
+	) {
+		boolean isNearTargetPosition = MathUtil
+			.isNear(targetTranslationPosition, currentTranslationPosition, PoseEstimatorConstants.TRANSLATION_TOLERANCE_METERS);
+		boolean isStopping = Math.abs(currentTranslationVelocity) < PoseEstimatorConstants.TRANSLATION_VELOCITY_TOLERANCE;
+		return isNearTargetPosition && isStopping;
+	}
 
-    public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
-        return isAtTranslationPosition(
-                swerveSpeedsFieldRelative.get().vxMetersPerSecond,
-                getCurrentPose().getX(),
-                targetXBlueAlliancePosition
-        );
-    }
+	public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
+		return isAtTranslationPosition(
+			swerveSpeedsFieldRelative.get().vxMetersPerSecond,
+			getCurrentPose().getX(),
+			targetXBlueAlliancePosition
+		);
+	}
 
-    public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
-        return isAtTranslationPosition(
-                swerveSpeedsFieldRelative.get().vyMetersPerSecond,
-                getCurrentPose().getY(),
-                targetYBlueAlliancePosition
-        );
-    }
+	public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
+		return isAtTranslationPosition(
+			swerveSpeedsFieldRelative.get().vyMetersPerSecond,
+			getCurrentPose().getY(),
+			targetYBlueAlliancePosition
+		);
+	}
 
-    public boolean isAtAngle(Rotation2d targetAngle) {
-        double angleDifferenceDeg = Math.abs(targetAngle.minus(getCurrentPose().getRotation()).getDegrees());
-        boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
+	public boolean isAtAngle(Rotation2d targetAngle) {
+		double angleDifferenceDeg = Math.abs(targetAngle.minus(getCurrentPose().getRotation()).getDegrees());
+		boolean isAtAngle = angleDifferenceDeg < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
 
-        double currentRotationVelocityRadians = swerveSpeedsFieldRelative.get().omegaRadiansPerSecond;// todo: can be robot relative
-        boolean isStopping = Math.abs(currentRotationVelocityRadians) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+		double currentRotationVelocityRadians = swerveSpeedsFieldRelative.get().omegaRadiansPerSecond;// todo: can be robot
+																										// relative
+		boolean isStopping = Math.abs(currentRotationVelocityRadians)
+			< PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
-        return isAtAngle && isStopping;
-    }
+		return isAtAngle && isStopping;
+	}
 
-    public boolean isAtPose(Pose2d targetBluePose) {
-        return isAtXAxisPosition(targetBluePose.getX())
-                && isAtYAxisPosition(targetBluePose.getY())
-                && isAtAngle(targetBluePose.getRotation()
-        );
-    }
+	public boolean isAtPose(Pose2d targetBluePose) {
+		return isAtXAxisPosition(targetBluePose.getX())
+			&& isAtYAxisPosition(targetBluePose.getY())
+			&& isAtAngle(targetBluePose.getRotation());
+	}
 
 }

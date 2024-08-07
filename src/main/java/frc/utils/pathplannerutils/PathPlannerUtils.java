@@ -22,62 +22,55 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-    public static void startPathPlanner() {
-        makePathPlannerCompatibleWithAdvantageKit();
-        scheduleWarmup();
-    }
+	public static void startPathPlanner() {
+		makePathPlannerCompatibleWithAdvantageKit();
+		scheduleWarmup();
+	}
 
-    public static void makePathPlannerCompatibleWithAdvantageKit() {
-        Pathfinding.setPathfinder(new LocalADStarAK());
-    }
+	public static void makePathPlannerCompatibleWithAdvantageKit() {
+		Pathfinding.setPathfinder(new LocalADStarAK());
+	}
 
-    public static void scheduleWarmup() {
-        PathfindingCommand.warmupCommand().schedule();
-    }
+	public static void scheduleWarmup() {
+		PathfindingCommand.warmupCommand().schedule();
+	}
 
-    public static void setLoggingPathToPaths(Consumer<List<Pose2d>> logActivePath) {
-        PathPlannerLogging.setLogActivePathCallback(logActivePath);
-    }
+	public static void setLoggingPathToPaths(Consumer<List<Pose2d>> logActivePath) {
+		PathPlannerLogging.setLogActivePathCallback(logActivePath);
+	}
 
-    public static void configurePathPlanner(
-            Supplier<Pose2d> poseSupplier,
-            Consumer<Pose2d> resetPose,
-            Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-            Consumer<ChassisSpeeds> robotRelativeOutput,
-            HolonomicPathFollowerConfig config,
-            BooleanSupplier shouldFlipPath,
-            Subsystem driveSubsystem
-    ) {
-        AutoBuilder.configureHolonomic(
-                poseSupplier,
-                resetPose,
-                robotRelativeSpeedsSupplier,
-                robotRelativeOutput,
-                config,
-                shouldFlipPath,
-                driveSubsystem
-        );
-    }
+	public static void configurePathPlanner(
+		Supplier<Pose2d> poseSupplier,
+		Consumer<Pose2d> resetPose,
+		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+		Consumer<ChassisSpeeds> robotRelativeOutput,
+		HolonomicPathFollowerConfig config,
+		BooleanSupplier shouldFlipPath,
+		Subsystem driveSubsystem
+	) {
+		AutoBuilder.configureHolonomic(
+			poseSupplier,
+			resetPose,
+			robotRelativeSpeedsSupplier,
+			robotRelativeOutput,
+			config,
+			shouldFlipPath,
+			driveSubsystem
+		);
+	}
 
-    public static void registerCommand(String commandName, Command command) {
-        NamedCommands.registerCommand(commandName, command);
-    }
+	public static void registerCommand(String commandName, Command command) {
+		NamedCommands.registerCommand(commandName, command);
+	}
 
-    public static Command createOnTheFlyPathCommand(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
-        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                currentPose,
-                targetPose
-        );
+	public static Command createOnTheFlyPathCommand(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
+		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentPose, targetPose);
 
-        PathPlannerPath path = new PathPlannerPath(
-                bezierPoints,
-                constraints,
-                new GoalEndState(0, targetPose.getRotation())
-        );
+		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
 
-        path.preventFlipping = true;
+		path.preventFlipping = true;
 
-        return AutoBuilder.followPath(path);
-    }
+		return AutoBuilder.followPath(path);
+	}
 
 }

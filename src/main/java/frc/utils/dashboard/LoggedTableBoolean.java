@@ -1,25 +1,25 @@
 package frc.utils.dashboard;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableValue;
+import edu.wpi.first.networktables.*;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardInput;
 
 public class LoggedTableBoolean implements LoggedDashboardInput {
 
-    private final String key;
-    private final NetworkTable booleanTable;
+    private final int TIME_TO_SET_BOOLEAN_MICRO_SECONDS = 1;
+
+    private final NetworkTableEntry booleanEntry;
     private boolean value;
+    private boolean defaultValue;
 
     public LoggedTableBoolean(String table, String key) {
         this(table, key, false);
     }
 
     public LoggedTableBoolean(String table, String key, boolean defaultValue) {
-        this.key = key;
-        this.value = defaultValue;
-        this.booleanTable = NetworkTableInstance.getDefault().getTable(table);
+        this.defaultValue = defaultValue;
+        this.value = this.defaultValue;
+        this.booleanEntry = NetworkTableInstance.getDefault().getTable(table).getEntry(key);
 
         set(defaultValue);
         periodic();
@@ -28,7 +28,7 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
 
 
     public void set(boolean value) {
-        booleanTable.putValue(key, NetworkTableValue.makeBoolean(value));
+        NetworkTablesJNI.setBoolean(booleanEntry.getHandle(), TIME_TO_SET_BOOLEAN_MICRO_SECONDS, value);
     }
 
     public boolean get() {
@@ -37,7 +37,7 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
 
     public void periodic() {
         if (!Logger.hasReplaySource()) {
-            value = booleanTable.getValue(key).getBoolean();
+            value = booleanEntry.getBoolean(defaultValue);
         }
     }
 

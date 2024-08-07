@@ -16,5 +16,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Grant execute permission
         run: chmod +x gradlew
-      - name: Compile robot code
+      - name: Format robot code
         run: ./gradlew spotlessCheck

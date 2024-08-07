@@ -22,10 +22,11 @@ import java.util.Queue;
 
 public class Pigeon2Gyro implements ISwerveGyro {
 
+	private static final int APPLY_CONFIG_RETRIES = 10;
+
 	private final Pigeon2 gyro;
 	private final StatusSignal<Double> yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal;
 	private final Queue<Double> yawQueue, timestampQueue;
-	private final int APPLY_CONFIG_RETRIES = 10;
 	private final String logPath;
 
 	public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String logPathPrefix) {

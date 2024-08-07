@@ -16,10 +16,11 @@ import frc.utils.ctre.PhoenixProUtils;
 
 public class CancoderEncoder implements IEncoder {
 
+	private static final int APPLY_CONFIG_RETRIES = 10;
+
 	private final CANcoder encoder;
 
 	private final StatusSignal<Double> positionSignal, velocitySignal, voltageSignal;
-	private final int APPLY_CONFIG_RETRIES = 10;
 
 	public CancoderEncoder(CTREDeviceID encoderID, CANcoderConfiguration configuration) {
 		this.encoder = new CANcoder(encoderID.ID(), encoderID.busChain().getChainName());

@@ -8,6 +8,7 @@ Don't remove this comment when you do!
 -->
 <profiles version="23">
     <profile kind="CodeFormatterProfile" name="GreenBlitz" version="23">
+        <setting id="org.eclipse.jdt.core.formatter.method_declaration_brace_position" value="same_line"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_after_ellipsis" value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_method_declaration_name" value="false"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_enum_declarations" value="insert"/>

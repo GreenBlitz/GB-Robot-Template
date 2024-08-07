@@ -122,8 +122,7 @@ public class PoseCalculator {
 		// difference between estimate and vision pose
 		Transform2d transform = new Transform2d(estimateAtTime, observation.visionPose());
 		// scale transform by visionK
-		var kTimesTransform = visionK
-			.times(VecBuilder.fill(transform.getX(), transform.getY(), transform.getRotation().getRadians()));
+		var kTimesTransform = visionK.times(VecBuilder.fill(transform.getX(), transform.getY(), transform.getRotation().getRadians()));
 		Transform2d scaledTransform = new Transform2d(
 			kTimesTransform.get(0, 0),
 			kTimesTransform.get(1, 0),

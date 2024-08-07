@@ -45,12 +45,10 @@ public class JoysticksBindings {
 		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().rotateToAngle(Rotation2d.fromDegrees(180)));
 		usedJoystick.POV_DOWN.whileTrue(robot.getSwerve().getCommandsBuilder().rotateToAngle(Rotation2d.fromDegrees(-17)));
 
-		usedJoystick.POV_LEFT.whileTrue(
-			robot.getSwerve().getCommandsBuilder().rotateToAngle(Rotation2d.fromDegrees(-17), RotateAxis.FRONT_LEFT_MODULE)
-		);
-		usedJoystick.POV_RIGHT.whileTrue(
-			robot.getSwerve().getCommandsBuilder().rotateToAngle(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE)
-		);
+		usedJoystick.POV_LEFT
+			.whileTrue(robot.getSwerve().getCommandsBuilder().rotateToAngle(Rotation2d.fromDegrees(-17), RotateAxis.FRONT_LEFT_MODULE));
+		usedJoystick.POV_RIGHT
+			.whileTrue(robot.getSwerve().getCommandsBuilder().rotateToAngle(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE));
 
 		usedJoystick.L3.whileTrue(
 			robot.getSwerve()

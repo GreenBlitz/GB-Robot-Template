@@ -36,11 +36,8 @@ public class SimulationDrive implements IDrive {
 
 	@Override
 	public void setTargetVelocity(Rotation2d velocityPerSecond) {
-		double voltage = ModuleUtils.velocityToVoltage(
-			velocityPerSecond,
-			constants.maxVelocityPerSecond(),
-			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
-		);
+		double voltage = ModuleUtils
+			.velocityToVoltage(velocityPerSecond, constants.maxVelocityPerSecond(), ModuleConstants.VOLTAGE_COMPENSATION_SATURATION);
 		setVoltage(voltage);
 	}
 

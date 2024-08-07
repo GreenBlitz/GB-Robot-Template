@@ -74,8 +74,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
 	@Override
 	public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
-		inputs.isConnected = BaseStatusSignal.refreshAll(yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal)
-			.isOK();
+		inputs.isConnected = BaseStatusSignal.refreshAll(yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal).isOK();
 		inputs.gyroYaw = Rotation2d.fromDegrees(yawSignal.getValue());
 		inputs.xAcceleration = xAccelerationSignal.getValue();
 		inputs.yAcceleration = yAccelerationSignal.getValue();

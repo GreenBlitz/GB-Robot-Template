@@ -22,11 +22,7 @@ class SteerSimulationConstants {
 	}
 
 	protected static SimulationSteerConstants getConstants() {
-		return new SimulationSteerConstants(
-			new DCMotorSim(DCMotor.getFalcon500Foc(1), GEAR_RATIO, MOMENT_OF_INERTIA),
-			MOTOR_CONFIG,
-			ENABLE_FOC
-		);
+		return new SimulationSteerConstants(new DCMotorSim(DCMotor.getFalcon500Foc(1), GEAR_RATIO, MOMENT_OF_INERTIA), MOTOR_CONFIG, ENABLE_FOC);
 	}
 
 }

@@ -39,11 +39,8 @@ class TalonFXDriveConfigObject {
 			signals.velocitySignal(),
 			signals.accelerationSignal()
 		);
-		BaseStatusSignal.setUpdateFrequencyForAll(
-			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			signals.voltageSignal(),
-			signals.statorCurrentSignal()
-		);
+		BaseStatusSignal
+			.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, signals.voltageSignal(), signals.statorCurrentSignal());
 
 		motor.optimizeBusUtilization();
 	}

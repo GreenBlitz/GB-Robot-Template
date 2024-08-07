@@ -49,8 +49,7 @@ public enum AimAssist {
 	private Rotation2d getTargetAngleFromTargetTranslation(Translation3d targetPose2d) {
 		Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
 		Translation2d targetBluePose = targetPose2d.toTranslation2d();
-		double wantedAngleRadians = Math
-			.atan2(targetBluePose.getY() - currentBluePose.getY(), targetBluePose.getX() - currentBluePose.getX());
+		double wantedAngleRadians = Math.atan2(targetBluePose.getY() - currentBluePose.getY(), targetBluePose.getX() - currentBluePose.getX());
 		return Rotation2d.fromRadians(wantedAngleRadians);
 	}
 

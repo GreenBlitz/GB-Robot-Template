@@ -38,16 +38,8 @@ public record SwerveConstants(
 			swerveName.getLogPath() + SwerveGyroConstants.LOG_PATH_ADDITION,
 			velocityAt12VoltsMetersPerSecond,
 			maxRotationalVelocityPerSecond,
-			new PIDController(
-				translationMetersPIDConstants.kP,
-				translationMetersPIDConstants.kI,
-				translationMetersPIDConstants.kD
-			),
-			new PIDController(
-				translationMetersPIDConstants.kP,
-				translationMetersPIDConstants.kI,
-				translationMetersPIDConstants.kD
-			),
+			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
+			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),
 			new HolonomicPathFollowerConfig(
 				translationMetersPIDConstants,
@@ -58,8 +50,7 @@ public record SwerveConstants(
 			)
 		);
 
-		this.rotationDegreesPIDController
-			.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
+		this.rotationDegreesPIDController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
 	}
 
 	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);

@@ -69,7 +69,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 	}
 
-
 	@Override
 	public void simulationPeriodic() {
 		SimulationManager.updateRegisteredSimulations();

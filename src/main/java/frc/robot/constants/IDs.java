@@ -38,4 +38,5 @@ public class IDs {
 		public static final CTREDeviceID BACK_RIGHT_ENCODER = new CTREDeviceID(3, BusChain.CANIVORE);
 
 	}
+
 }

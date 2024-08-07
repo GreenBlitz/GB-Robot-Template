@@ -8,6 +8,7 @@ public class TalonFXDriveConstants {
 
 	protected static final int NUMBER_OF_STATUS_CODE_RETRIES = 10;
 
+
 	private final TalonFXWrapper motor;
 
 	private final TalonFXDriveSignals signals;

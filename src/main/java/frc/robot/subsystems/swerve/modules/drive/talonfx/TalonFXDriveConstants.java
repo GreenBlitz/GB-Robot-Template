@@ -8,11 +8,8 @@ public class TalonFXDriveConstants {
 
 	protected static final int APPLY_CONFIG_RETRIES = 10;
 
-
 	private final TalonFXWrapper motor;
-
 	private final TalonFXDriveSignals signals;
-
 	private final boolean enableFOC;
 
 	public TalonFXDriveConstants(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {

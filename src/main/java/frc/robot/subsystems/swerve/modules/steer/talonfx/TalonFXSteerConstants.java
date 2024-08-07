@@ -7,7 +7,6 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 public class TalonFXSteerConstants {
 
 	protected static final int APPLY_CONFIG_RETRIES = 10;
-
 	protected static final int NO_ENCODER_ID = -1;
 
 	private final TalonFXWrapper motor;

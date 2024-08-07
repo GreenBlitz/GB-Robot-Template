@@ -41,8 +41,7 @@ public class SwerveStateHelper {
 				getRotationAssistedChassisSpeeds(
 					chassisSpeeds,
 					robotPoseSupplier.get().getRotation(),
-					SwerveMath.getRelativeTranslation(robotPoseSupplier.get().getTranslation(), new Translation2d(0, 0))
-						.getAngle(),
+					SwerveMath.getRelativeTranslation(robotPoseSupplier.get(), new Translation2d(0, 0)).getAngle(),
 					swerveConstants
 				);
 			case AMP ->

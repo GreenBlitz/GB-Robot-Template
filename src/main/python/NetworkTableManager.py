@@ -8,51 +8,53 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import logging
-import sys
-import time
-
 # If this library is not installed, don't install ntcore but pyntcore.
-import ntcore
-
-__CONNECTION_TIMEOUT_SECONDS = 30
-__CONNECTION_COOLDOWN_SECONDS = 0.1
-
-logging.basicConfig()
-__LOGGER = (logging.getLogger("network table logger"))
-__LOGGER.setLevel(logging.INFO)
+from ntcore import NetworkTableInstance, NetworkTable
+import time
+import logging
 
 
-def __past_connection_timeout(starting_time: float) -> bool:
-    return time.time() - starting_time > __CONNECTION_TIMEOUT_SECONDS
+class NetworkTableClient:
+    _CONNECTION_TIMEOUT_SECONDS = 30
+    _CONNECTION_COOLDOWN_SECONDS = 0.1
 
+    def __init__(self, ip: str, client_name: str):
+        self._ip = ip
+        self._client_name = client_name
+        self._network_table_instance = NetworkTableInstance.getDefault()
+        logging.basicConfig()
+        self._logger = logging.getLogger(f"client: {self._client_name}")
+        self._logger.setLevel(logging.INFO)
 
-def __wait_for_client_to_connect(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
-    starting_time = time.time()
-    while not network_table_instance.isConnected():
-        # terminate client and program if it takes to long to connect
-        if __past_connection_timeout(starting_time):
-            __LOGGER.error("Didn't connect to network tables. Terminating...")
-            terminate_client(network_table_instance, client_name)
-            sys.exit()
-        time.sleep(__CONNECTION_COOLDOWN_SECONDS)
+    def _is_connection_timeout_exceeded(self, starting_time: float) -> bool:
+        return time.time() - starting_time > self._CONNECTION_TIMEOUT_SECONDS
 
+    def _wait_for_client_to_connect(self) -> None:
+        starting_time = time.time()
+        while not self.is_connected():
+            if self._is_connection_timeout_exceeded(starting_time):
+                self._logger.error("Didn't connect to network tables")
+                self.terminate()
+                raise TimeoutError("Past Connection Timeout")
+            time.sleep(self._CONNECTION_COOLDOWN_SECONDS)
 
-def get_connected_client(ip: str, client_name: str) -> ntcore.NetworkTableInstance:
-    network_table_instance = ntcore.NetworkTableInstance.getDefault()
+    def get_table(self, table_name: str) -> NetworkTable:
+        return self._network_table_instance.getTable(table_name)
 
-    __LOGGER.info("Setting up NetworkTables client named {}".format(client_name))
-    network_table_instance.startClient4(client_name)
-    network_table_instance.setServer(ip)
-    network_table_instance.startDSClient()
+    def is_connected(self) -> bool:
+        return self._network_table_instance.isConnected()
 
-    __LOGGER.info("Waiting for connection to NetworkTables server...")
-    __wait_for_client_to_connect(network_table_instance, client_name)
+    def connect(self) -> NetworkTableInstance:
+        self._logger.info("Setting up NetworkTables client")
+        self._network_table_instance.setServer(self._ip)
+        self._network_table_instance.startClient4(self._client_name)
 
-    __LOGGER.info("Connected {} to NetworkTables server".format(client_name))
-    return network_table_instance
+        self._logger.info("Waiting for connection to NetworkTables server...")
+        self._wait_for_client_to_connect()
 
+        self._logger.info(f"Connected {self._client_name} to NetworkTables server")
+        return self._network_table_instance
 
-def terminate_client(network_table_instance: ntcore.NetworkTableInstance, client_name: str):
-    __LOGGER.warning("Terminating client named {}".format(client_name))
-    ntcore.NetworkTableInstance.destroy(network_table_instance)
+    def terminate(self) -> None:
+        self._logger.warning("Terminating client")
+        NetworkTableInstance.destroy(self._network_table_instance)

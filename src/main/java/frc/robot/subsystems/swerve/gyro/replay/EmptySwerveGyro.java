@@ -6,10 +6,10 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 
 public class EmptySwerveGyro implements ISwerveGyro {
 
-    @Override
-    public void setYaw(Rotation2d heading) {}
+	@Override
+	public void setYaw(Rotation2d heading) {}
 
-    @Override
-    public void updateInputs(SwerveGyroInputsAutoLogged inputs) {}
+	@Override
+	public void updateInputs(SwerveGyroInputsAutoLogged inputs) {}
 
 }

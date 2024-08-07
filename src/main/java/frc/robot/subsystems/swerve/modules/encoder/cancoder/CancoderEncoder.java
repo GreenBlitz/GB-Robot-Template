@@ -15,52 +15,41 @@ import frc.utils.ctre.CTREDeviceID;
 
 public class CancoderEncoder implements IEncoder {
 
-    private final CANcoder encoder;
+	private final CANcoder encoder;
 
-    private final StatusSignal<Double> positionSignal, velocitySignal, voltageSignal;
+	private final StatusSignal<Double> positionSignal, velocitySignal, voltageSignal;
 
-    public CancoderEncoder(CTREDeviceID encoderID, CANcoderConfiguration configuration){
-        this.encoder = new CANcoder(encoderID.ID(), encoderID.busChain().getChainName());
-        this.positionSignal = encoder.getPosition().clone();
-        this.velocitySignal = encoder.getVelocity().clone();
-        this.voltageSignal = encoder.getSupplyVoltage().clone();
+	public CancoderEncoder(CTREDeviceID encoderID, CANcoderConfiguration configuration) {
+		this.encoder = new CANcoder(encoderID.ID(), encoderID.busChain().getChainName());
+		this.positionSignal = encoder.getPosition().clone();
+		this.velocitySignal = encoder.getVelocity().clone();
+		this.voltageSignal = encoder.getSupplyVoltage().clone();
 
-        configEncoder(configuration);
-        optimizeBusAndSignals();
-    }
+		configEncoder(configuration);
+		optimizeBusAndSignals();
+	}
 
-    private void configEncoder(CANcoderConfiguration encoderConfiguration) {
-        MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
-        encoder.getConfigurator().refresh(magnetSensorConfigs);
-        encoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-        encoder.getConfigurator().apply(encoderConfiguration);
-    }
+	private void configEncoder(CANcoderConfiguration encoderConfiguration) {
+		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+		encoder.getConfigurator().refresh(magnetSensorConfigs);
+		encoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
+		encoder.getConfigurator().apply(encoderConfiguration);
+	}
 
-    private void optimizeBusAndSignals() {
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
-                positionSignal
-        );
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-                velocitySignal,
-                voltageSignal
-        );
+	private void optimizeBusAndSignals() {
+		BaseStatusSignal.setUpdateFrequencyForAll(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ, positionSignal);
+		BaseStatusSignal.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, velocitySignal, voltageSignal);
 
-        encoder.optimizeBusUtilization();
-    }
+		encoder.optimizeBusUtilization();
+	}
 
-    @Override
-    public void updateInputs(ModuleInputsContainer inputs) {
-        EncoderInputsAutoLogged encoderInputs = inputs.getEncoderInputs();
-        encoderInputs.isConnected = BaseStatusSignal.refreshAll(
-                positionSignal,
-                velocitySignal,
-                voltageSignal
-        ).isOK();
-        encoderInputs.angle = Rotation2d.fromRotations(positionSignal.getValue());
-        encoderInputs.velocity = Rotation2d.fromRotations(velocitySignal.getValue());
-        encoderInputs.voltage = voltageSignal.getValue();
-    }
+	@Override
+	public void updateInputs(ModuleInputsContainer inputs) {
+		EncoderInputsAutoLogged encoderInputs = inputs.getEncoderInputs();
+		encoderInputs.isConnected = BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal).isOK();
+		encoderInputs.angle = Rotation2d.fromRotations(positionSignal.getValue());
+		encoderInputs.velocity = Rotation2d.fromRotations(velocitySignal.getValue());
+		encoderInputs.voltage = voltageSignal.getValue();
+	}
 
 }

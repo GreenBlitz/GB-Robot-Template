@@ -9,52 +9,52 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 class TalonFXDriveConfigObject {
 
-    private final TalonFXWrapper motor;
-    private final TalonFXDriveSignals signals;
+	private final TalonFXWrapper motor;
+	private final TalonFXDriveSignals signals;
 
-    protected TalonFXDriveConfigObject(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration) {
-        this.motor = new TalonFXWrapper(motorID);
-        this.signals = new TalonFXDriveSignals(
-                motor.getPosition().clone(),
-                motor.getVelocity().clone(),
-                motor.getAcceleration().clone(),
-                motor.getMotorVoltage().clone(),
-                motor.getStatorCurrent().clone()
-        );
+	protected TalonFXDriveConfigObject(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration) {
+		this.motor = new TalonFXWrapper(motorID);
+		this.signals = new TalonFXDriveSignals(
+			motor.getPosition().clone(),
+			motor.getVelocity().clone(),
+			motor.getAcceleration().clone(),
+			motor.getMotorVoltage().clone(),
+			motor.getStatorCurrent().clone()
+		);
 
-        configMotor(configuration);
-        motor.setInverted(inverted);
-        optimizeBusAndSignals();
-    }
-
-
-    private void configMotor(TalonFXConfiguration driveConfiguration) {
-        motor.applyConfiguration(driveConfiguration);
-    }
-
-    private void optimizeBusAndSignals() {
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
-                signals.positionSignal(),
-                signals.velocitySignal(),
-                signals.accelerationSignal()
-        );
-        BaseStatusSignal.setUpdateFrequencyForAll(
-                GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-                signals.voltageSignal(),
-                signals.statorCurrentSignal()
-        );
-
-        motor.optimizeBusUtilization();
-    }
+		configMotor(configuration);
+		motor.setInverted(inverted);
+		optimizeBusAndSignals();
+	}
 
 
-    protected TalonFXWrapper getMotor() {
-        return motor;
-    }
+	private void configMotor(TalonFXConfiguration driveConfiguration) {
+		motor.applyConfiguration(driveConfiguration);
+	}
 
-    protected TalonFXDriveSignals getSignals() {
-        return signals;
-    }
+	private void optimizeBusAndSignals() {
+		BaseStatusSignal.setUpdateFrequencyForAll(
+			PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
+			signals.positionSignal(),
+			signals.velocitySignal(),
+			signals.accelerationSignal()
+		);
+		BaseStatusSignal.setUpdateFrequencyForAll(
+			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			signals.voltageSignal(),
+			signals.statorCurrentSignal()
+		);
+
+		motor.optimizeBusUtilization();
+	}
+
+
+	protected TalonFXWrapper getMotor() {
+		return motor;
+	}
+
+	protected TalonFXDriveSignals getSignals() {
+		return signals;
+	}
 
 }

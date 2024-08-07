@@ -5,16 +5,16 @@ import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 
 public interface ISteer {
 
-    void setBrake(boolean brake);
+	void setBrake(boolean brake);
 
-    void resetToAngle(Rotation2d angle);
+	void resetToAngle(Rotation2d angle);
 
-    void stop();
+	void stop();
 
-    void setVoltage(double voltage);
+	void setVoltage(double voltage);
 
-    void setTargetAngle(Rotation2d angle);
+	void setTargetAngle(Rotation2d angle);
 
-    void updateInputs(ModuleInputsContainer inputs);
+	void updateInputs(ModuleInputsContainer inputs);
 
 }

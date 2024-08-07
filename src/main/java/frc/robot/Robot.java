@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
@@ -18,63 +19,55 @@ import frc.utils.RobotTypeUtils;
 import java.util.Optional;
 
 
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little
+ * robot logic should actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead,
+ * the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
+ */
 public class Robot {
 
-    public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
+	private static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
-    private final Swerve swerve;
-    private final PoseEstimator poseEstimator;
+	private static final Swerve swerve = new Swerve(
+		SwerveConstantsFactory.create(SwerveName.SWERVE),
+		ModulesFactory.create(SwerveName.SWERVE),
+		GyroFactory.create(SwerveName.SWERVE)
+	);
+	private static final PoseEstimator poseEstimator = new PoseEstimator(swerve::setHeading, swerve::getFieldRelativeVelocity);
+	static {
+		swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+	}
 
+	public Robot() {
+		buildPathPlannerForAuto();
+		configureBindings();
+	}
 
-    public Robot() {
-        this.swerve = new Swerve(
-                SwerveConstantsFactory.create(),
-                ModulesFactory.create(),
-                GyroFactory.create()
-        );
+	public Command getAutonomousCommand() {
+		return new InstantCommand();
+	}
 
-        this.poseEstimator = new PoseEstimator(
-                swerve::setHeading,
-                swerve::getFieldRelativeVelocity
-        );
+	public Swerve getSwerve() {
+		return swerve;
+	}
 
-        swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-        swerve.setStateHelper(
-                new SwerveStateHelper(
-                        poseEstimator::getCurrentPose,
-                        () -> Optional.of(new Translation2d(5, 5)),
-                        swerve
-        ));
-
-        buildPathPlannerForAuto();
-        configureBindings();
-    }
-
-    public Command getAutonomousCommand() {
-        return new InstantCommand();
-    }
-
-    public Swerve getSwerve() {
-        return swerve;
-    }
-
-    public PoseEstimator getPoseEstimator(){
-        return poseEstimator;
-    }
+	public PoseEstimator getPoseEstimator() {
+		return poseEstimator;
+	}
 
 
-    private void buildPathPlannerForAuto() {
-        // Register commands...
-        swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
-    }
+	private void buildPathPlannerForAuto() {
+		// Register commands...
+		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+	}
 
-    private void configureBindings() {
-        JoysticksBindings.configureBindings(this);
-    }
+	private void configureBindings() {
+		JoysticksBindings.configureBindings(this);
+	}
 
-    public void periodic(){
-        swerve.wrapperPeriodic();
-        poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
-    }
+	public void periodic() {
+		swerve.wrapperPeriodic();
+		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
+	}
 
 }

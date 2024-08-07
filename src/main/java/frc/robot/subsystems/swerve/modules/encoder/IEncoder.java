@@ -4,6 +4,6 @@ import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 
 public interface IEncoder {
 
-    void updateInputs(ModuleInputsContainer inputs);
+	void updateInputs(ModuleInputsContainer inputs);
 
 }

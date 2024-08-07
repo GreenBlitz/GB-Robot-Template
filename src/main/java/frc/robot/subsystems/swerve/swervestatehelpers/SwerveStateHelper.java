@@ -68,14 +68,14 @@ public class SwerveStateHelper {
 		Logger.recordOutput("current angle", robotPoseSupplier.get().getRotation().getDegrees());
 		Logger.recordOutput("target note", noteTranslationSupplier.get().get());
 
-		Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(
-				robotPoseSupplier.get(),
-				noteTranslationSupplier.get().get()
-		);
+		Translation2d noteRelativeToRobot = SwerveMath
+			.getRelativeTranslation(robotPoseSupplier.get(), noteTranslationSupplier.get().get());
 
 		double pidHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
-		double xFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.sin(robotPoseSupplier.get().getRotation().unaryMinus().getRadians());
-		double yFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.cos(robotPoseSupplier.get().getRotation().unaryMinus().getRadians());
+		double xFieldRelativeVelocityAddition = pidHorizontalVelocity
+			* Math.sin(robotPoseSupplier.get().getRotation().unaryMinus().getRadians());
+		double yFieldRelativeVelocityAddition = pidHorizontalVelocity
+			* Math.cos(robotPoseSupplier.get().getRotation().unaryMinus().getRadians());
 
 		return new ChassisSpeeds(
 			chassisSpeeds.vxMetersPerSecond + xFieldRelativeVelocityAddition,

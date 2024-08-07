@@ -47,10 +47,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 	}
 
 	private void configGyro(Pigeon2Configuration configuration) {
-		PhoenixProUtils.checkWithRetry(
-			() -> gyro.getConfigurator().apply(configuration),
-				APPLY_CONFIG_RETRIES
-		);
+		PhoenixProUtils.checkWithRetry(() -> gyro.getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES);
 	}
 
 	private void optimizeBusAndSignals() {

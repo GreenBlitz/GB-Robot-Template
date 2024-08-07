@@ -36,10 +36,7 @@ public class CancoderEncoder implements IEncoder {
 		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
 		encoder.getConfigurator().refresh(magnetSensorConfigs);
 		encoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-		PhoenixProUtils.checkWithRetry(
-			() -> encoder.getConfigurator().apply(encoderConfiguration),
-				APPLY_CONFIG_RETRIES
-		);
+		PhoenixProUtils.checkWithRetry(() -> encoder.getConfigurator().apply(encoderConfiguration), APPLY_CONFIG_RETRIES);
 	}
 
 	private void optimizeBusAndSignals() {

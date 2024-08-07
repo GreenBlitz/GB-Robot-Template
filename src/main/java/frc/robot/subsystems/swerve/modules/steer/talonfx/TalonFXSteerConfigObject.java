@@ -36,10 +36,7 @@ class TalonFXSteerConfigObject {
 		if (encoderID != TalonFXSteerConstants.NO_ENCODER_ID) {
 			configuration.Feedback.FeedbackRemoteSensorID = encoderID;
 		}
-		PhoenixProUtils.checkWithRetry(
-				() -> motor.applyConfiguration(configuration),
-				TalonFXSteerConstants.APPLY_CONFIG_RETRIES
-		);
+		PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(configuration), TalonFXSteerConstants.APPLY_CONFIG_RETRIES);
 	}
 
 	private void optimizeBusAndSignals() {

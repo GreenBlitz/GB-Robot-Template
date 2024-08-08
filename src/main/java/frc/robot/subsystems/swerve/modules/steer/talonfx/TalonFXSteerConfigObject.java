@@ -2,23 +2,28 @@ package frc.robot.subsystems.swerve.modules.steer.talonfx;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
+import org.littletonrobotics.junction.Logger;
 
 class TalonFXSteerConfigObject {
 
+	private final String logPath;
 	private final TalonFXWrapper motor;
 	private final TalonFXSteerSignals signals;
 
 	protected TalonFXSteerConfigObject(
+		String logPathPrefix,
 		CTREDeviceID motorID,
 		boolean inverted,
 		int encoderID,
 		TalonFXConfiguration configuration
 	) {
+		this.logPath = logPathPrefix + "ConfigObject/";
 		this.motor = new TalonFXWrapper(motorID);
 		this.signals = new TalonFXSteerSignals(
 			motor.getPosition().clone(),
@@ -36,7 +41,8 @@ class TalonFXSteerConfigObject {
 		if (encoderID != TalonFXSteerConstants.NO_ENCODER_ID) {
 			configuration.Feedback.FeedbackRemoteSensorID = encoderID;
 		}
-		PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(configuration), TalonFXSteerConstants.APPLY_CONFIG_RETRIES);
+		if (!PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(configuration), TalonFXSteerConstants.APPLY_CONFIG_RETRIES))
+			Logger.recordOutput(logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
 	}
 
 	private void optimizeBusAndSignals() {

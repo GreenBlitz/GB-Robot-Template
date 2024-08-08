@@ -30,36 +30,48 @@ class SteerRealConstants {
 		MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
 	}
 
-	protected static final TalonFXSteerConstants FRONT_LEFT_CONSTANTS = new TalonFXSteerConstants(
-		IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
-		true,
-		IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
-		MOTOR_CONFIG,
-		ENABLE_FOC
-	);
+	protected static TalonFXSteerConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXSteerConstants(
+			logPathPrefix + "FRONT_LEFT/Steer/",
+			IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
+			true,
+			IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
+			MOTOR_CONFIG,
+			ENABLE_FOC
+		);
+	}
 
-	protected static final TalonFXSteerConstants FRONT_RIGHT_CONSTANTS = new TalonFXSteerConstants(
-		IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
-		true,
-		IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
-		MOTOR_CONFIG,
-		ENABLE_FOC
-	);
+	protected static TalonFXSteerConstants FRONT_RIGHT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXSteerConstants(
+			logPathPrefix + "FRONT_RIGHT/Steer/",
+			IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
+			true,
+			IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
+			MOTOR_CONFIG,
+			ENABLE_FOC
+		);
+	}
 
-	protected static final TalonFXSteerConstants BACK_LEFT_CONSTANTS = new TalonFXSteerConstants(
-		IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
-		false,
-		IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
-		MOTOR_CONFIG,
-		ENABLE_FOC
-	);
+	protected static TalonFXSteerConstants BACK_LEFT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXSteerConstants(
+				logPathPrefix + "BACK_LEFT/Steer/",
+				IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
+				false,
+				IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
+				MOTOR_CONFIG,
+				ENABLE_FOC
+		);
+	}
 
-	protected static final TalonFXSteerConstants BACK_RIGHT_CONSTANTS = new TalonFXSteerConstants(
-		IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
-		true,
-		IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
-		MOTOR_CONFIG,
-		ENABLE_FOC
-	);
+	protected static TalonFXSteerConstants BACK_RIGHT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXSteerConstants(
+				logPathPrefix + "BACK_RIGHT/Steer/",
+				IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
+				true,
+				IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
+				MOTOR_CONFIG,
+				ENABLE_FOC
+		);
+	}
 
 }

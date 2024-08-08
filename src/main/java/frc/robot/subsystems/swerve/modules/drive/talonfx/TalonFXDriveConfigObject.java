@@ -34,7 +34,7 @@ class TalonFXDriveConfigObject {
 
 
 	private void configMotor(TalonFXConfiguration driveConfiguration) {
-		if (PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(driveConfiguration), TalonFXDriveConstants.APPLY_CONFIG_RETRIES))
+		if (!PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(driveConfiguration), TalonFXDriveConstants.APPLY_CONFIG_RETRIES))
 			Logger.recordOutput(logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
 	}
 

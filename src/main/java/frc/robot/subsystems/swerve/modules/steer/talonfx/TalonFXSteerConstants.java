@@ -14,15 +14,17 @@ public class TalonFXSteerConstants {
 	private final boolean enableFOC;
 
 	public TalonFXSteerConstants(
+		String logPath,
 		CTREDeviceID steerMotorID,
 		boolean inverted,
 		TalonFXConfiguration configuration,
 		boolean enableFOC
 	) {
-		this(steerMotorID, inverted, NO_ENCODER_ID, configuration, enableFOC);
+		this(logPath, steerMotorID, inverted, NO_ENCODER_ID, configuration, enableFOC);
 	}
 
 	public TalonFXSteerConstants(
+		String logPath,
 		CTREDeviceID steerMotorID,
 		boolean inverted,
 		int encoderID,
@@ -30,6 +32,7 @@ public class TalonFXSteerConstants {
 		boolean enableFOC
 	) {
 		TalonFXSteerConfigObject steerConfigObject = new TalonFXSteerConfigObject(
+			logPath,
 			steerMotorID,
 			inverted,
 			encoderID,

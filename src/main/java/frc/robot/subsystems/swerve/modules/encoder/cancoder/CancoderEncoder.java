@@ -21,9 +21,7 @@ public class CancoderEncoder implements IEncoder {
 	private static final int APPLY_CONFIG_RETRIES = 10;
 
 	private final String logPath;
-
 	private final CANcoder encoder;
-
 	private final StatusSignal<Double> positionSignal, velocitySignal, voltageSignal;
 
 	public CancoderEncoder(String logPathPrefix, CTREDeviceID encoderID, CANcoderConfiguration configuration) {

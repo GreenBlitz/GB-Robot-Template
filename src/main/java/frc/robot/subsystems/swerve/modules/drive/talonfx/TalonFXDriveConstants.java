@@ -12,8 +12,8 @@ public class TalonFXDriveConstants {
 	private final TalonFXDriveSignals signals;
 	private final boolean enableFOC;
 
-	public TalonFXDriveConstants(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {
-		TalonFXDriveConfigObject talonFXDriveConfigObject = new TalonFXDriveConfigObject(motorID, inverted, configuration);
+	public TalonFXDriveConstants(String logPath, CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {
+		TalonFXDriveConfigObject talonFXDriveConfigObject = new TalonFXDriveConfigObject(logPath, motorID, inverted, configuration);
 		this.motor = talonFXDriveConfigObject.getMotor();
 		this.signals = talonFXDriveConfigObject.getSignals();
 		this.enableFOC = enableFOC;

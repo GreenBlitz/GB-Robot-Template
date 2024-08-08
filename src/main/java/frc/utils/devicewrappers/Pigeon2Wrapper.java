@@ -122,9 +122,9 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	/**
-	 * This function only set pitch for the function "getAdjustedRoll". If you want to use the pitch signal you need to use
-	 * "getRoll" but note to yourself that it won't be affected by "setRoll". If for some reason you want to get the needed offset
-	 * to make the returned value affected by resets use "getRollOffset".
+	 * This function only set pitch for the function "getAdjustedRoll". If you want to use the pitch signal you need to use "getRoll" but note to
+	 * yourself that it won't be affected by "setRoll". If for some reason you want to get the needed offset to make the returned value affected
+	 * by resets use "getRollOffset".
 	 *
 	 * @param newRoll - the wanted roll of the gyro to have
 	 */
@@ -133,9 +133,9 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	/**
-	 * This function only set pitch for the function "getAdjustedPitch". If you want to use the pitch signal you need to use
-	 * "getPitch" but note to yourself that it won't be affected by "setPitch". If for some reason you want to get the needed
-	 * offset to make the returned value affected by resets use "getPitchOffset".
+	 * This function only set pitch for the function "getAdjustedPitch". If you want to use the pitch signal you need to use "getPitch" but note
+	 * to yourself that it won't be affected by "setPitch". If for some reason you want to get the needed offset to make the returned value
+	 * affected by resets use "getPitchOffset".
 	 *
 	 * @param newPitch - the wanted pitch of the gyro to have
 	 */

@@ -65,9 +65,14 @@ public class TalonFXSteer implements ISteer {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		SteerInputsAutoLogged steerInputs = inputs.getSteerMotorInputs();
-		steerInputs.isConnected = BaseStatusSignal
-			.refreshAll(signals.positionSignal(), signals.velocitySignal(), signals.accelerationSignal(), signals.voltageSignal())
-			.isOK();
+		//@formatter:off
+		steerInputs.isConnected = BaseStatusSignal.refreshAll(
+			signals.positionSignal(),
+			signals.velocitySignal(),
+			signals.accelerationSignal(),
+			signals.voltageSignal()
+		).isOK();
+		//@formatter:on
 		steerInputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
 		steerInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
 		steerInputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());

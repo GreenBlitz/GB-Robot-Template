@@ -16,9 +16,9 @@ import frc.utils.RobotTypeUtils;
 
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little
- * robot logic should actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead,
- * the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
+ * (including subsystems, commands, and trigger mappings) should be declared here.
  */
 public class Robot {
 
@@ -39,19 +39,6 @@ public class Robot {
 		configureBindings();
 	}
 
-	public Command getAutonomousCommand() {
-		return new InstantCommand();
-	}
-
-	public Swerve getSwerve() {
-		return swerve;
-	}
-
-	public PoseEstimator getPoseEstimator() {
-		return poseEstimator;
-	}
-
-
 	private void buildPathPlannerForAuto() {
 		// Register commands...
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
@@ -64,6 +51,19 @@ public class Robot {
 	public void periodic() {
 		swerve.wrapperPeriodic();
 		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
+	}
+
+
+	public Command getAutonomousCommand() {
+		return new InstantCommand();
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
+	}
+
+	public PoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 
 }

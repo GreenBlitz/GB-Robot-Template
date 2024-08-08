@@ -16,15 +16,9 @@ class TalonFXSteerConfigObject {
 	private final TalonFXWrapper motor;
 	private final TalonFXSteerSignals signals;
 
-	protected TalonFXSteerConfigObject(
-		String logPathPrefix,
-		CTREDeviceID motorID,
-		boolean inverted,
-		int encoderID,
-		TalonFXConfiguration configuration
-	) {
-		this.logPath = logPathPrefix + "ConfigObject/";
-		this.motor = new TalonFXWrapper(motorID);
+	protected TalonFXSteerConfigObject(String logPathPrefix, CTREDeviceID motorID, boolean inverted, int encoderID, TalonFXConfiguration configuration) {
+        this.logPath = logPathPrefix + "ConfigObject/";
+        this.motor = new TalonFXWrapper(motorID);
 		this.signals = new TalonFXSteerSignals(
 			motor.getPosition().clone(),
 			motor.getVelocity().clone(),

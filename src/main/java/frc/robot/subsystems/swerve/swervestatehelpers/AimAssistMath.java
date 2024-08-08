@@ -8,7 +8,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 
 import static frc.robot.subsystems.swerve.SwerveMath.getDriveMagnitude;
 
-public class AimAssistUtils {
+public class AimAssistMath {
 
 	public static ChassisSpeeds getRotationAssistedChassisSpeeds(
 		ChassisSpeeds chassisSpeeds,

@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistUtils.getRotationAssistedChassisSpeeds;
+import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistMath.getRotationAssistedChassisSpeeds;
 
 public class SwerveStateHelper {
 

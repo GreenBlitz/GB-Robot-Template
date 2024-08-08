@@ -31,32 +31,44 @@ class DriveRealConstants {
 		MOTOR_CONFIG.Slot0.kD = 0;
 	}
 
-	protected static final TalonFXDriveConstants FRONT_LEFT_CONSTANTS = new TalonFXDriveConstants(
-		IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
-		false,
-		MOTOR_CONFIG,
-		ENABLE_FOC
-	);
+	protected static TalonFXDriveConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXDriveConstants(
+			logPathPrefix + "FRONT_LEFT/Drive/",
+			IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
+			false,
+			MOTOR_CONFIG,
+			ENABLE_FOC
+		);
+	}
 
-	protected static final TalonFXDriveConstants FRONT_RIGHT_CONSTANTS = new TalonFXDriveConstants(
-		IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
-		true,
-		MOTOR_CONFIG,
-		ENABLE_FOC
-	);
+	protected static TalonFXDriveConstants FRONT_RIGHT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXDriveConstants(
+				logPathPrefix + "FRONT_RIGHT/Drive/",
+			IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
+			true,
+			MOTOR_CONFIG,
+			ENABLE_FOC
+		);
+	}
 
-	protected static final TalonFXDriveConstants BACK_LEFT_CONSTANTS = new TalonFXDriveConstants(
-		IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
-		false,
-		MOTOR_CONFIG,
-		ENABLE_FOC
-	);
+	protected static TalonFXDriveConstants BACK_LEFT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXDriveConstants(
+				logPathPrefix + "BACK_LEFT/Drive/",
+			IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
+			false,
+			MOTOR_CONFIG,
+			ENABLE_FOC
+		);
+	}
 
-	protected static final TalonFXDriveConstants BACK_RIGHT_CONSTANTS = new TalonFXDriveConstants(
-		IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
-		false,
-		MOTOR_CONFIG,
-		ENABLE_FOC
-	);
+	protected static TalonFXDriveConstants BACK_RIGHT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXDriveConstants(
+				logPathPrefix + "BACK_RIGHT/Drive/",
+				IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
+				false,
+				MOTOR_CONFIG,
+				ENABLE_FOC
+		);
+	}
 
 }

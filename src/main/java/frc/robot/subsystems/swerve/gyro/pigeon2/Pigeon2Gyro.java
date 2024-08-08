@@ -14,12 +14,15 @@ import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.ctre.CTREDeviceID;
+import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Queue;
 
 public class Pigeon2Gyro implements ISwerveGyro {
+
+	private static final int APPLY_CONFIG_RETRIES = 10;
 
 	private final Pigeon2 gyro;
 	private final StatusSignal<Double> yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal;
@@ -44,7 +47,8 @@ public class Pigeon2Gyro implements ISwerveGyro {
 	}
 
 	private void configGyro(Pigeon2Configuration configuration) {
-		gyro.getConfigurator().apply(configuration);
+		if (!PhoenixProUtils.checkWithRetry(() -> gyro.getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES))
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
 	}
 
 	private void optimizeBusAndSignals() {

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimation.PoseEstimator;
@@ -12,7 +13,10 @@ import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.RobotTypeUtils;
+
+import java.util.Optional;
 
 
 /**
@@ -24,17 +28,21 @@ public class Robot {
 
 	public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
 
-	public static final Swerve swerve = new Swerve(
-		SwerveConstantsFactory.create(SwerveName.SWERVE),
-		ModulesFactory.create(SwerveName.SWERVE),
-		GyroFactory.create(SwerveName.SWERVE)
-	);
-	public static final PoseEstimator poseEstimator = new PoseEstimator(swerve::setHeading, swerve::getFieldRelativeVelocity);
-	static {
-		swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-	}
+	private final Swerve swerve;
+	private final PoseEstimator poseEstimator;
 
 	public Robot() {
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveName.SWERVE),
+			ModulesFactory.create(SwerveName.SWERVE),
+			GyroFactory.create(SwerveName.SWERVE)
+		);
+
+		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve::getFieldRelativeVelocity);
+
+		this.swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		this.swerve.setStateHelper(new SwerveStateHelper(poseEstimator::getCurrentPose, () -> Optional.of(new Translation2d(5, 5)), swerve));
+
 		buildPathPlannerForAuto();
 		configureBindings();
 	}

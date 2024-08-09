@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
+import frc.robot.constants.LogPaths;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
@@ -80,6 +81,7 @@ public class Swerve extends GBSubsystem {
 			() -> !Field.isFieldConventionAlliance(),
 			this
 		);
+		PathPlannerUtils.setLoggingPathToPaths(pose -> Logger.recordOutput(getLogPath() + "CurrentPathToFollow", pose.toArray(new Pose2d[0])));
 	}
 
 	public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier) {
@@ -113,6 +115,12 @@ public class Swerve extends GBSubsystem {
 		gyroInputs.timestampOdometrySamples = new double[] {Timer.getFPGATimestamp()};
 	}
 
+	private void reportGyroAlerts(SwerveGyroInputsAutoLogged gyroInputs) {
+		if (!gyroInputs.isConnected) {
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.gyroLogPath() + "GyroDisconnectedAt", Timer.getFPGATimestamp());
+		}
+	}
+
 	private void updateInputs() {
 		ODOMETRY_LOCK.lock();
 		{
@@ -120,6 +128,7 @@ public class Swerve extends GBSubsystem {
 				updateGyroSimulation();
 			}
 			gyro.updateInputs(gyroInputs);
+			reportGyroAlerts(gyroInputs);
 			Logger.processInputs(constants.gyroLogPath(), gyroInputs);
 
 			modules.logStatus();
@@ -144,7 +153,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void logNumberOfOdometrySamples() {
-		Logger.recordOutput(getLogPath() + "Odometry Samples", getNumberOfOdometrySamples());
+		Logger.recordOutput(getLogPath() + "OdometrySamples", getNumberOfOdometrySamples());
 	}
 
 

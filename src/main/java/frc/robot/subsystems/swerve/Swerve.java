@@ -116,7 +116,7 @@ public class Swerve extends GBSubsystem {
 
 	private void reportGyroAlerts(SwerveGyroInputsAutoLogged gyroInputs) {
 		if (!gyroInputs.isConnected) {
-			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.gyroLogPath() + "gyro disconnected at", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.gyroLogPath() + "Gyro Disconnected At", Timer.getFPGATimestamp());
 		}
 	}
 

@@ -91,13 +91,13 @@ public class Module {
 
 	public void reportAlerts() {
 		if (!moduleInputsContainer.getEncoderInputs().isConnected) {
-			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "encoder disconnect", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "encoder disconnect at", Timer.getFPGATimestamp());
 		}
 		if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "steer motor disconnect", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "steer disconnect at", Timer.getFPGATimestamp());
 		}
 		if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "drive motor disconnect", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "drive disconnect at", Timer.getFPGATimestamp());
 		}
 	}
 

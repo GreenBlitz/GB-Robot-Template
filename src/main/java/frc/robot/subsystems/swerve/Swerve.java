@@ -81,6 +81,7 @@ public class Swerve extends GBSubsystem {
 			() -> !Field.isFieldConventionAlliance(),
 			this
 		);
+		PathPlannerUtils.setLoggingPathToPaths(pose -> Logger.recordOutput(getLogPath() + "CurrentPathToFollow", pose.toArray(new Pose2d[0])));
 	}
 
 	public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier) {

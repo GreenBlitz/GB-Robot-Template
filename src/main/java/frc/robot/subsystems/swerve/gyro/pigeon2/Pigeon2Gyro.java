@@ -66,12 +66,6 @@ public class Pigeon2Gyro implements ISwerveGyro {
 	}
 
 
-	private void reportAlerts(SwerveGyroInputsAutoLogged inputs) {
-		if (!inputs.isConnected) {
-			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "gyroDisconnectedAt", Timer.getFPGATimestamp());
-		}
-	}
-
 	@Override
 	public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
 		inputs.isConnected = BaseStatusSignal.refreshAll(yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal).isOK();
@@ -83,8 +77,6 @@ public class Pigeon2Gyro implements ISwerveGyro {
 		inputs.timestampOdometrySamples = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
 		yawQueue.clear();
 		timestampQueue.clear();
-
-		reportAlerts(inputs);
 	}
 
 }

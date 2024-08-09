@@ -40,11 +40,11 @@ public class PoseEstimator {
 	}
 
 	private void logCurrentPose() {
-		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Estimated Pose", getCurrentPose());
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "EstimatedPose", getCurrentPose());
 	}
 
 	private void logCurrentOdometryPose() {
-		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "Odometry Pose", getCurrentPose());
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "OdometryPose", getCurrentPose());
 	}
 
 

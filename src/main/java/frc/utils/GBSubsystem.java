@@ -29,7 +29,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 	public final void periodic() {}
 
 	public final void wrapperPeriodic() {
-		Logger.recordOutput(getLogPath() + "Current Command", getCurrentCommandName());
+		Logger.recordOutput(getLogPath() + "CurrentCommand", getCurrentCommandName());
 		subsystemPeriodic();
 	}
 

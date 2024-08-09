@@ -116,7 +116,7 @@ public class Swerve extends GBSubsystem {
 
 	private void reportGyroAlerts(SwerveGyroInputsAutoLogged gyroInputs) {
 		if (!gyroInputs.isConnected) {
-			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.gyroLogPath() + "Gyro Disconnected At", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.gyroLogPath() + "GyroDisconnectedAt", Timer.getFPGATimestamp());
 		}
 	}
 
@@ -152,7 +152,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void logNumberOfOdometrySamples() {
-		Logger.recordOutput(getLogPath() + "Odometry Samples", getNumberOfOdometrySamples());
+		Logger.recordOutput(getLogPath() + "OdometrySamples", getNumberOfOdometrySamples());
 	}
 
 

@@ -6,17 +6,15 @@ import org.littletonrobotics.junction.Logger;
 
 public class Alert {
 
+    public enum AlertType {
+        ERROR,
+        WARNING;
+    }
+
     private final AlertType type;
     private final String name;
 
-    public enum AlertType {
-        ERROR,
-        WARNING,
-        LOG;
-    }
-
     public Alert(AlertType alertType, String alertName){
-
         this.type = alertType;
         this.name = alertName;
     }
@@ -26,7 +24,7 @@ public class Alert {
     }
 
     public void logAlert(GBSubsystem subsystem){
-        Logger.recordOutput(LogPaths.ALERT_LOG_PATH+subsystem.toString()+"/"+type.toString()+"/"+name, description);
+        Logger.recordOutput(LogPaths.ALERT_LOG_PATH+subsystem.toString()+"/"+type.toString()+"/"+name, Timer.getFPGATimestamp());
     }
 
 }

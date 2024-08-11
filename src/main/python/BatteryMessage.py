@@ -16,18 +16,18 @@ TIME_BETWEEN_MESSAGES_SECONDS = 4
 SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS = 0.1
 
 
-def config_window(window: tkinter.tkinter) -> None:
+def config_window(window: tkinter.Tk) -> None:
     window.attributes("-topmost", True)
     window.resizable(False, False)
     window.bind("<Unmap>", lambda event: cancel_minimize(event, window))
 
 
-def cancel_minimize(event, window: tkinter.tkinter) -> None:
+def cancel_minimize(event, window: tkinter.Tk) -> None:
     window.attributes("-topmost", True)
     window.state('normal')
 
 
-def create_image_label(window: tkinter.tkinter, image: PhotoImage) -> None:
+def create_image_label(window: tkinter.Tk, image: PhotoImage) -> None:
     """Create a label widget to display the image on the given window."""
     label = tkinter.Label(window, image=image)
     label.pack()

@@ -3,8 +3,7 @@ package frc.utils;
 import frc.robot.constants.DirectoryPaths;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CMDHandler {
 
@@ -26,13 +25,26 @@ public class CMDHandler {
 		executedCommand.add(command);
 
 		try {
-			CMD_COMPUTER_LOG_FILE.write("Trying To Run: " + executedCommand);
-			new ProcessBuilder(executedCommand).start();
-			CMD_COMPUTER_LOG_FILE.write("Success!");
+			ProcessBuilder builder = new ProcessBuilder(executedCommand);
+			builder.redirectErrorStream(true);
+			Process process = builder.start();
+			new Thread(() -> readOutput(executedCommand.toString() ,process)).start();
 		} catch (Exception exception) {
-			CMD_COMPUTER_LOG_FILE.write("Got Exception: \n" + exception);
+			CMD_COMPUTER_LOG_FILE.write("Trying To Run: " + executedCommand + "\nGot Exception: " + exception);
 			CMD_COMPUTER_LOG_FILE.open();
 		}
+	}
+
+	private static void readOutput(String executedCommandName, Process process) {
+		String fileMessage = "Trying To Run: " + executedCommandName + " At Time: " + Calendar.getInstance().getTime() + "\n";
+		String cmdOutput = "";
+		Scanner scanner = new Scanner(process.getInputStream(), "UTF-8");
+		while (scanner.hasNextLine()) {
+			cmdOutput += scanner.nextLine();
+		}
+		scanner.close();
+		fileMessage += "Got cmd Output: " + cmdOutput + " \nSuccessfully Ran Command At Time: " + Calendar.getInstance().getTime();
+		CMD_COMPUTER_LOG_FILE.write(fileMessage);
 	}
 
 	public static void runJavaClass(Path javaPath) {

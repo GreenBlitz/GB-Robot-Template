@@ -15,6 +15,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistMath.getObjectAssistedSpeeds;
 import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistMath.getRotationAssistedChassisSpeeds;
 
 public class SwerveStateHelper {
@@ -37,7 +38,7 @@ public class SwerveStateHelper {
 				getRotationAssistedChassisSpeeds(
 					chassisSpeeds,
 					robotPoseSupplier.get().getRotation(),
-					SwerveMath.getRelativeTranslation(robotPoseSupplier.get(), new Translation2d(0, 0)).getAngle(),
+					SwerveMath.getRelativeTranslation(robotPoseSupplier.get(), Field.getSpeaker().toTranslation2d()).getAngle(),
 					swerveConstants
 				);
 			case AMP ->
@@ -55,23 +56,7 @@ public class SwerveStateHelper {
 		if (noteTranslationSupplier.get().isEmpty()) {
 			return chassisSpeeds;
 		}
-
-		Logger.recordOutput("current angle", robotPoseSupplier.get().getRotation().getDegrees());
-		Logger.recordOutput("target note", noteTranslationSupplier.get().get());
-
-		Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(robotPoseSupplier.get(), noteTranslationSupplier.get().get());
-
-		double pidHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
-		double xFieldRelativeVelocityAddition = pidHorizontalVelocity
-			* Math.sin(robotPoseSupplier.get().getRotation().unaryMinus().getRadians());
-		double yFieldRelativeVelocityAddition = pidHorizontalVelocity
-			* Math.cos(robotPoseSupplier.get().getRotation().unaryMinus().getRadians());
-
-		return new ChassisSpeeds(
-			chassisSpeeds.vxMetersPerSecond + xFieldRelativeVelocityAddition,
-			chassisSpeeds.vyMetersPerSecond + yFieldRelativeVelocityAddition,
-			chassisSpeeds.omegaRadiansPerSecond
-		);
+		return getObjectAssistedSpeeds(chassisSpeeds,robotPoseSupplier.get(), noteTranslationSupplier.get().get(),swerveConstants);
 	}
 
 

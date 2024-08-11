@@ -9,6 +9,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.StringPublisher;
+import edu.wpi.first.networktables.StringTopic;
+import frc.utils.JsonConverter;
 
 public class PoseEstimator implements IPoseEstimator{
     private SwerveDrivePoseEstimator poseEstimator;
@@ -16,10 +20,11 @@ public class PoseEstimator implements IPoseEstimator{
     private SwerveDriveKinematics kinematics;
     private Rotation2d gyroAngle;
     private Pose2d startPose;
+    private  StringPublisher posePublisher;
     public PoseEstimator(SwerveDriveKinematics kinematics,
             Rotation2d gyroAngle,
             SwerveModulePosition[] wheelPositions,
-            Pose2d startPose){
+            Pose2d startPose,StringTopic poseTopic){
         this.gyroAngle = gyroAngle;
         this.kinematics = kinematics;
         this.wheelPositions = wheelPositions;
@@ -30,6 +35,7 @@ public class PoseEstimator implements IPoseEstimator{
                 this.wheelPositions,
                 this.startPose
         );
+        this.posePublisher = poseTopic.publish();
     }
 
     @Override
@@ -70,6 +76,10 @@ public class PoseEstimator implements IPoseEstimator{
     @Override
     public void restPose(Pose2d newPose) {
         poseEstimator.resetPosition(gyroAngle,wheelPositions,newPose);
+    }
+
+    public void periodic(){
+        posePublisher.set(JsonConverter.readFromObject(getEstimatedPose()));
     }
 
 }

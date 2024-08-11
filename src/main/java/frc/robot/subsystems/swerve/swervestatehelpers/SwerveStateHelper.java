@@ -37,29 +37,37 @@ public class SwerveStateHelper {
 			return chassisSpeeds;
 		}
 		return switch (aimAssist) {
-			case SPEAKER ->
-				getRotationAssistedChassisSpeeds(
-					chassisSpeeds,
-					robotPoseSupplier.get().get().getRotation(),
-					SwerveMath.getRelativeTranslation(robotPoseSupplier.get().get(), Field.getSpeaker().toTranslation2d()).getAngle(),
-					swerveConstants
-				);
+			case SPEAKER -> handleSpeakerAssist(chassisSpeeds,robotPoseSupplier);
 			case AMP ->
 				getRotationAssistedChassisSpeeds(chassisSpeeds, robotPoseSupplier.get().get().getRotation(), Field.getAngleToAmp(), swerveConstants);
-			case NOTE -> handleNoteAimAssist(chassisSpeeds, () -> robotPoseSupplier.get().get(), noteTranslationSupplier);
+			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPoseSupplier::get, noteTranslationSupplier);
 			case NONE -> chassisSpeeds;
 		};
 	}
 
 	private ChassisSpeeds handleNoteAimAssist(
 		ChassisSpeeds chassisSpeeds,
-		Supplier<Pose2d> robotPoseSupplier,
+		Supplier<Optional<Pose2d>> robotPoseSupplier,
 		Supplier<Optional<Translation2d>> noteTranslationSupplier
 	) {
-		if (noteTranslationSupplier.get().isEmpty()) {
+		if (noteTranslationSupplier.get().isEmpty() || robotPoseSupplier.get().isEmpty()) {
 			return chassisSpeeds;
 		}
-		return getObjectAssistedSpeeds(chassisSpeeds,robotPoseSupplier.get(), noteTranslationSupplier.get().get(),swerveConstants,swerve.getCurrentState());
+		return getObjectAssistedSpeeds(chassisSpeeds,robotPoseSupplier.get().get(), noteTranslationSupplier.get().get(),swerveConstants,swerve.getCurrentState());
+	}
+	private ChassisSpeeds handleSpeakerAssist (
+			ChassisSpeeds chassisSpeeds,
+			Supplier<Optional<Pose2d>> robotPoseSupplier
+	){
+		if (robotPoseSupplier.get().isEmpty()){
+			return chassisSpeeds;
+		}
+		return getRotationAssistedChassisSpeeds(
+				chassisSpeeds,
+				robotPoseSupplier.get().get().getRotation(),
+				SwerveMath.getRelativeTranslation(robotPoseSupplier.get().get(), Field.getSpeaker().toTranslation2d()).getAngle(),
+				swerveConstants
+		);
 	}
 
 

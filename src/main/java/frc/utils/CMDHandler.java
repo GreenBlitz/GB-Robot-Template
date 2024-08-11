@@ -25,26 +25,27 @@ public class CMDHandler {
 		executedCommand.add(command);
 
 		try {
+			CMD_COMPUTER_LOG_FILE.write("Trying To Run: " + executedCommand + " At Time: " + Calendar.getInstance().getTime());
 			ProcessBuilder builder = new ProcessBuilder(executedCommand);
 			builder.redirectErrorStream(true);
 			Process process = builder.start();
 			new Thread(() -> readOutput(executedCommand.toString() ,process)).start();
 		} catch (Exception exception) {
-			CMD_COMPUTER_LOG_FILE.write("Trying To Run: " + executedCommand + "\nGot Exception: " + exception);
+			CMD_COMPUTER_LOG_FILE.write("Got Exception: " + exception);
 			CMD_COMPUTER_LOG_FILE.open();
 		}
 	}
 
 	private static void readOutput(String executedCommandName, Process process) {
-		String fileMessage = "Trying To Run: " + executedCommandName + " At Time: " + Calendar.getInstance().getTime() + "\n";
-		String cmdOutput = "";
+		StringBuilder cmdOutput = new StringBuilder();
 		Scanner scanner = new Scanner(process.getInputStream(), "UTF-8");
 		while (scanner.hasNextLine()) {
-			cmdOutput += scanner.nextLine();
+			cmdOutput.append(scanner.nextLine());
 		}
 		scanner.close();
-		fileMessage += "Got cmd Output: " + cmdOutput + " \nSuccessfully Ran Command At Time: " + Calendar.getInstance().getTime();
-		CMD_COMPUTER_LOG_FILE.write(fileMessage);
+		CMD_COMPUTER_LOG_FILE.write("Got cmd Output From " + executedCommandName +":");
+		CMD_COMPUTER_LOG_FILE.write(cmdOutput.toString());
+		CMD_COMPUTER_LOG_FILE.write("Successfully Finished Running Command At Time: " + Calendar.getInstance().getTime() + "\n");
 	}
 
 	public static void runJavaClass(Path javaPath) {

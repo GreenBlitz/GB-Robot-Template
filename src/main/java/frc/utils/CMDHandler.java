@@ -26,8 +26,7 @@ public class CMDHandler {
 
 		try {
 			CMD_COMPUTER_LOG_FILE.write("Trying To Run: " + executedCommand + " At Time: " + Calendar.getInstance().getTime());
-			ProcessBuilder builder = new ProcessBuilder(executedCommand);
-			builder.redirectErrorStream(true);
+			ProcessBuilder builder = new ProcessBuilder(executedCommand).redirectErrorStream(true);
 			Process process = builder.start();
 			new Thread(() -> readOutput(executedCommand.toString(), process)).start();
 		} catch (Exception exception) {

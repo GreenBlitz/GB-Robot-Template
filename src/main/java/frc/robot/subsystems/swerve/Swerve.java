@@ -43,7 +43,7 @@ public class Swerve extends GBSubsystem {
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> currentAngleSupplier;
-	boolean headingTargetUpdated = false;
+	private boolean headingTargetUpdated;
 
 
 	public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
@@ -57,6 +57,7 @@ public class Swerve extends GBSubsystem {
 		this.gyroInputs = new SwerveGyroInputsAutoLogged();
 		this.currentAngleSupplier = this::getAbsoluteHeading;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
+		this.headingTargetUpdated = false;
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 	}

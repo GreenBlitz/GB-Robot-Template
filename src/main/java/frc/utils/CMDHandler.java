@@ -29,7 +29,7 @@ public class CMDHandler {
 			ProcessBuilder builder = new ProcessBuilder(executedCommand);
 			builder.redirectErrorStream(true);
 			Process process = builder.start();
-			new Thread(() -> readOutput(executedCommand.toString() ,process)).start();
+			new Thread(() -> readOutput(executedCommand.toString(), process)).start();
 		} catch (Exception exception) {
 			CMD_COMPUTER_LOG_FILE.write("Got Exception: " + exception);
 			CMD_COMPUTER_LOG_FILE.open();
@@ -43,7 +43,7 @@ public class CMDHandler {
 			cmdOutput.append(scanner.nextLine());
 		}
 		scanner.close();
-		CMD_COMPUTER_LOG_FILE.write("Got cmd Output From " + executedCommandName +":");
+		CMD_COMPUTER_LOG_FILE.write("Got cmd Output From " + executedCommandName + ":");
 		CMD_COMPUTER_LOG_FILE.write(cmdOutput.toString());
 		CMD_COMPUTER_LOG_FILE.write("Successfully Finished Running Command At Time: " + Calendar.getInstance().getTime() + "\n");
 	}

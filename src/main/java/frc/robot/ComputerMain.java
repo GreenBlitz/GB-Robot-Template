@@ -15,13 +15,6 @@ public class ComputerMain {
         startComputerPrograms(args);
     }
 
-    private static void testMessage(String message) {
-        JFrame frame = new JFrame(message);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.setSize(500,500);
-    }
-
     private static void startComputerPrograms(String... args) {
         String connectedIP = args[0];
         if (KeyboardController.ENABLE_KEYBOARD) {

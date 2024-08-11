@@ -39,6 +39,8 @@ public class Swerve extends GBSubsystem {
 	private final ISwerveGyro gyro;
 	private final Modules modules;
 	private final SwerveConstants constants;
+	private final HeadingStabilizer headingStabilizer;
+
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> currentAngleSupplier;
@@ -53,6 +55,7 @@ public class Swerve extends GBSubsystem {
 
 		this.gyroInputs = new SwerveGyroInputsAutoLogged();
 		this.currentAngleSupplier = this::getAbsoluteHeading;
+		this.headingStabilizer = new HeadingStabilizer(this.constants);
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 	}
@@ -257,7 +260,6 @@ public class Swerve extends GBSubsystem {
 
 	protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
 		this.currentState = swerveState;
-
 		chassisSpeeds = SwerveMath.applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
 		if (SwerveMath.isStill(chassisSpeeds)) {
 			modules.stop();
@@ -265,12 +267,26 @@ public class Swerve extends GBSubsystem {
 		}
 
 		chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
+		if (chassisSpeeds.omegaRadiansPerSecond == 0) {
+			if (!happend) {
+				targfet = currentAngleSupplier.get();
+				happend = true;
+			}
+			chassisSpeeds.omegaRadiansPerSecond = Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
+					currentAngleSupplier.get().getDegrees(), targfet.getDegrees())).getRadians();
+			System.out.println(chassisSpeeds.omegaRadiansPerSecond);
+		}
+		else {
+			happend = false;
+		}
 		chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 		chassisSpeeds = SwerveMath.discretize(chassisSpeeds);
 
 		applySpeeds(chassisSpeeds, swerveState);
 	}
 
+	boolean happend = false;
+	Rotation2d targfet = new Rotation2d();
 	private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
 		SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS
 			.toSwerveModuleStates(chassisSpeeds, swerveState.getRotateAxis().getRotateAxis());

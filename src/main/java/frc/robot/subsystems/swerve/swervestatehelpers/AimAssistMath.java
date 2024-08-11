@@ -59,7 +59,8 @@ public class AimAssistMath {
 			return new ChassisSpeeds(
 					chassisSpeeds.vxMetersPerSecond,
 					chassisSpeeds.vyMetersPerSecond + swerveConstants.yMetersPIDController().calculate(
-							0, SwerveMath.getRelativeTranslation(robotPose,objectTranslation).getY()
+							0,
+							SwerveMath.getRelativeTranslation(robotPose,objectTranslation).getY()
 					),
 					chassisSpeeds.omegaRadiansPerSecond
 			);

@@ -1,6 +1,6 @@
 import sys
 import time
-import tkinter as tk
+import tkinter
 from tkinter import PhotoImage
 from NetworkTableManager import NetworkTableClient
 
@@ -16,20 +16,20 @@ TIME_BETWEEN_MESSAGES_SECONDS = 4
 SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS = 0.1
 
 
-def config_window(window: tk.Tk) -> None:
+def config_window(window: tkinter.tkinter) -> None:
     window.attributes("-topmost", True)
     window.resizable(False, False)
     window.bind("<Unmap>", lambda event: cancel_minimize(event, window))
 
 
-def cancel_minimize(event, window: tk.Tk) -> None:
+def cancel_minimize(event, window: tkinter.tkinter) -> None:
     window.attributes("-topmost", True)
     window.state('normal')
 
 
-def create_image_label(window: tk.Tk, image: PhotoImage) -> None:
+def create_image_label(window: tkinter.tkinter, image: PhotoImage) -> None:
     """Create a label widget to display the image on the given window."""
-    label = tk.Label(window, image=image)
+    label = tkinter.Label(window, image=image)
     label.pack()
 
 
@@ -39,7 +39,7 @@ def load_image(image_path: str) -> PhotoImage:
 
 def show_message(window_name: str, image_path: str) -> None:
     """Set up and run the Tkinter event loop."""
-    window = tk.Tk()
+    window = tkinter.Tk()
     window.title(window_name)
     config_window(window)
     image = load_image(image_path)

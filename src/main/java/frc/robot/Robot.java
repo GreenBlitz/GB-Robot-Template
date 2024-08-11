@@ -41,7 +41,9 @@ public class Robot {
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve::getFieldRelativeVelocity);
 
 		this.swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		this.swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), () -> Optional.of(new Translation2d()), swerve));
+		this.swerve.setStateHelper(
+			new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), () -> Optional.of(new Translation2d()), swerve)
+		);
 
 		buildPathPlannerForAuto();
 		configureBindings();

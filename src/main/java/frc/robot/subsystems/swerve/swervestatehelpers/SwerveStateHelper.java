@@ -11,7 +11,6 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -26,7 +25,11 @@ public class SwerveStateHelper {
 	private final Supplier<Optional<Pose2d>> robotPoseSupplier;
 	private final Supplier<Optional<Translation2d>> noteTranslationSupplier;
 
-	public SwerveStateHelper(Supplier<Optional<Pose2d>> robotPoseSupplier, Supplier<Optional<Translation2d>> noteTranslationSupplier, Swerve swerve) {
+	public SwerveStateHelper(
+		Supplier<Optional<Pose2d>> robotPoseSupplier,
+		Supplier<Optional<Translation2d>> noteTranslationSupplier,
+		Swerve swerve
+	) {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = robotPoseSupplier;
@@ -34,13 +37,18 @@ public class SwerveStateHelper {
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds, SwerveState state) {
-		if(robotPoseSupplier.get().isEmpty()){
+		if (robotPoseSupplier.get().isEmpty()) {
 			return chassisSpeeds;
 		}
 		return switch (aimAssist) {
-			case SPEAKER -> handleSpeakerAssist(chassisSpeeds,robotPoseSupplier);
+			case SPEAKER -> handleSpeakerAssist(chassisSpeeds, robotPoseSupplier);
 			case AMP ->
-				getRotationAssistedChassisSpeeds(chassisSpeeds, robotPoseSupplier.get().get().getRotation(), Field.getAngleToAmp(), swerveConstants);
+				getRotationAssistedChassisSpeeds(
+					chassisSpeeds,
+					robotPoseSupplier.get().get().getRotation(),
+					Field.getAngleToAmp(),
+					swerveConstants
+				);
 			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPoseSupplier::get, noteTranslationSupplier, state);
 			case NONE -> chassisSpeeds;
 		};
@@ -55,20 +63,24 @@ public class SwerveStateHelper {
 		if (noteTranslationSupplier.get().isEmpty() || robotPoseSupplier.get().isEmpty()) {
 			return chassisSpeeds;
 		}
-		return getObjectAssistedSpeeds(chassisSpeeds,robotPoseSupplier.get().get(), noteTranslationSupplier.get().get(),swerveConstants,state);
+		return getObjectAssistedSpeeds(
+			chassisSpeeds,
+			robotPoseSupplier.get().get(),
+			noteTranslationSupplier.get().get(),
+			swerveConstants,
+			state
+		);
 	}
-	private ChassisSpeeds handleSpeakerAssist (
-			ChassisSpeeds chassisSpeeds,
-			Supplier<Optional<Pose2d>> robotPoseSupplier
-	){
-		if (robotPoseSupplier.get().isEmpty()){
+
+	private ChassisSpeeds handleSpeakerAssist(ChassisSpeeds chassisSpeeds, Supplier<Optional<Pose2d>> robotPoseSupplier) {
+		if (robotPoseSupplier.get().isEmpty()) {
 			return chassisSpeeds;
 		}
 		return getRotationAssistedChassisSpeeds(
-				chassisSpeeds,
-				robotPoseSupplier.get().get().getRotation(),
-				SwerveMath.getRelativeTranslation(robotPoseSupplier.get().get(), Field.getSpeaker().toTranslation2d()).getAngle(),
-				swerveConstants
+			chassisSpeeds,
+			robotPoseSupplier.get().get().getRotation(),
+			SwerveMath.getRelativeTranslation(robotPoseSupplier.get().get(), Field.getSpeaker().toTranslation2d()).getAngle(),
+			swerveConstants
 		);
 	}
 

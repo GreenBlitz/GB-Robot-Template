@@ -58,7 +58,7 @@ public class Swerve extends GBSubsystem {
 		this.currentAngleSupplier = this::getAbsoluteHeading;
 
 		this.stateHelper = new SwerveStateHelper(
-			() -> new Pose2d(0, 0, currentAngleSupplier.get()), // default pose estimator
+                Optional::empty, // default pose estimator
 			Optional::empty,
 			this
 		);

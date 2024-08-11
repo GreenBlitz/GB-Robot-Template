@@ -22,10 +22,10 @@ public class SwerveStateHelper {
 
 	private final Swerve swerve;
 	private final SwerveConstants swerveConstants;
-	private final Supplier<Pose2d> robotPoseSupplier;
+	private final Supplier<Optional<Pose2d>> robotPoseSupplier;
 	private final Supplier<Optional<Translation2d>> noteTranslationSupplier;
 
-	public SwerveStateHelper(Supplier<Pose2d> robotPoseSupplier, Supplier<Optional<Translation2d>> noteTranslationSupplier, Swerve swerve) {
+	public SwerveStateHelper(Supplier<Optional<Pose2d>> robotPoseSupplier, Supplier<Optional<Translation2d>> noteTranslationSupplier, Swerve swerve) {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = robotPoseSupplier;
@@ -33,17 +33,20 @@ public class SwerveStateHelper {
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds) {
+		if(robotPoseSupplier.get().isEmpty()){
+			return chassisSpeeds;
+		}
 		return switch (aimAssist) {
 			case SPEAKER ->
 				getRotationAssistedChassisSpeeds(
 					chassisSpeeds,
-					robotPoseSupplier.get().getRotation(),
-					SwerveMath.getRelativeTranslation(robotPoseSupplier.get(), Field.getSpeaker().toTranslation2d()).getAngle(),
+					robotPoseSupplier.get().get().getRotation(),
+					SwerveMath.getRelativeTranslation(robotPoseSupplier.get().get(), Field.getSpeaker().toTranslation2d()).getAngle(),
 					swerveConstants
 				);
 			case AMP ->
-				getRotationAssistedChassisSpeeds(chassisSpeeds, robotPoseSupplier.get().getRotation(), Field.getAngleToAmp(), swerveConstants);
-			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPoseSupplier, noteTranslationSupplier);
+				getRotationAssistedChassisSpeeds(chassisSpeeds, robotPoseSupplier.get().get().getRotation(), Field.getAngleToAmp(), swerveConstants);
+			case NOTE -> handleNoteAimAssist(chassisSpeeds, () -> robotPoseSupplier.get().get(), noteTranslationSupplier);
 			case NONE -> chassisSpeeds;
 		};
 	}

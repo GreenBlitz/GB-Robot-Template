@@ -56,7 +56,7 @@ public class SwerveStateHelper {
 		if (noteTranslationSupplier.get().isEmpty()) {
 			return chassisSpeeds;
 		}
-		return getObjectAssistedSpeeds(chassisSpeeds,robotPoseSupplier.get(), noteTranslationSupplier.get().get(),swerveConstants);
+		return getObjectAssistedSpeeds(chassisSpeeds,robotPoseSupplier.get(), noteTranslationSupplier.get().get(),swerveConstants,swerve.getCurrentState());
 	}
 
 

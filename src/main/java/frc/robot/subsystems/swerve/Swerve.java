@@ -78,6 +78,10 @@ public class Swerve extends GBSubsystem {
 		return constants;
 	}
 
+	public SwerveState getCurrentState(){
+		return currentState;
+	}
+
 	public SwerveStateHelper getStateHelper() {
 		return stateHelper;
 	}

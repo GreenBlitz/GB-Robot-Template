@@ -66,7 +66,7 @@ public class JoysticksBindings {
 					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)
+					SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withAimAssist(AimAssist.NOTE)
 				)
 		);
 		usedJoystick.R1.whileTrue(

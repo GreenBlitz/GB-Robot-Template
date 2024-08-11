@@ -25,12 +25,8 @@ public class ComputerMain {
     private static void startComputerPrograms(String... args) {
         String connectedIP = args[0];
         if (KeyboardController.ENABLE_KEYBOARD) {
-            runKeyboard(connectedIP);
+            CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);
         }
-    }
-
-    private static void runKeyboard(String connectedIP) {
-        CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);
     }
 
 }

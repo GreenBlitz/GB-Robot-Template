@@ -22,8 +22,8 @@ public class HeadingStabilizer {
         headingController.setSetpoint(headingSetpoint.getDegrees());
     }
 
-    public double calculate(Rotation2d currentHeading){
-        return headingController.calculate(currentHeading.getDegrees());
+    public Rotation2d calculate(Rotation2d currentHeading){
+        return Rotation2d.fromDegrees(headingController.calculate(currentHeading.getDegrees()));
     }
 
 }

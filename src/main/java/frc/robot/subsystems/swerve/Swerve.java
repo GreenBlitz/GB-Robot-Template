@@ -41,9 +41,10 @@ public class Swerve extends GBSubsystem {
 	private final SwerveConstants constants;
 	private final HeadingStabilizer headingStabilizer;
 
-
 	private SwerveState currentState;
 	private Supplier<Rotation2d> currentAngleSupplier;
+	boolean headingTargetUpdated = false;
+
 
 	public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
 		super(constants.logPath());
@@ -268,16 +269,14 @@ public class Swerve extends GBSubsystem {
 
 		chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
 		if (chassisSpeeds.omegaRadiansPerSecond == 0) {
-			if (!happend) {
-				targfet = currentAngleSupplier.get();
-				happend = true;
+			if (!headingTargetUpdated) {
+				headingStabilizer.setHeadingSetpoint(currentAngleSupplier.get());
+				headingTargetUpdated = true;
 			}
-			chassisSpeeds.omegaRadiansPerSecond = Rotation2d.fromDegrees(constants.rotationDegreesPIDController().calculate(
-					currentAngleSupplier.get().getDegrees(), targfet.getDegrees())).getRadians();
-			System.out.println(chassisSpeeds.omegaRadiansPerSecond);
+			chassisSpeeds.omegaRadiansPerSecond = headingStabilizer.calculate(currentAngleSupplier.get()).getRadians();
 		}
 		else {
-			happend = false;
+			headingTargetUpdated = false;
 		}
 		chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 		chassisSpeeds = SwerveMath.discretize(chassisSpeeds);
@@ -285,8 +284,6 @@ public class Swerve extends GBSubsystem {
 		applySpeeds(chassisSpeeds, swerveState);
 	}
 
-	boolean happend = false;
-	Rotation2d targfet = new Rotation2d();
 	private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
 		SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS
 			.toSwerveModuleStates(chassisSpeeds, swerveState.getRotateAxis().getRotateAxis());

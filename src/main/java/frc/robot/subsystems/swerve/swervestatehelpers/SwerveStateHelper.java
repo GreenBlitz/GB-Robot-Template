@@ -9,6 +9,7 @@ import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
+import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -32,7 +33,7 @@ public class SwerveStateHelper {
 		this.noteTranslationSupplier = noteTranslationSupplier;
 	}
 
-	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds) {
+	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds, SwerveState state) {
 		if(robotPoseSupplier.get().isEmpty()){
 			return chassisSpeeds;
 		}
@@ -40,7 +41,7 @@ public class SwerveStateHelper {
 			case SPEAKER -> handleSpeakerAssist(chassisSpeeds,robotPoseSupplier);
 			case AMP ->
 				getRotationAssistedChassisSpeeds(chassisSpeeds, robotPoseSupplier.get().get().getRotation(), Field.getAngleToAmp(), swerveConstants);
-			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPoseSupplier::get, noteTranslationSupplier);
+			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPoseSupplier::get, noteTranslationSupplier, state);
 			case NONE -> chassisSpeeds;
 		};
 	}
@@ -48,12 +49,13 @@ public class SwerveStateHelper {
 	private ChassisSpeeds handleNoteAimAssist(
 		ChassisSpeeds chassisSpeeds,
 		Supplier<Optional<Pose2d>> robotPoseSupplier,
-		Supplier<Optional<Translation2d>> noteTranslationSupplier
+		Supplier<Optional<Translation2d>> noteTranslationSupplier,
+		SwerveState state
 	) {
 		if (noteTranslationSupplier.get().isEmpty() || robotPoseSupplier.get().isEmpty()) {
 			return chassisSpeeds;
 		}
-		return getObjectAssistedSpeeds(chassisSpeeds,robotPoseSupplier.get().get(), noteTranslationSupplier.get().get(),swerveConstants,swerve.getCurrentState());
+		return getObjectAssistedSpeeds(chassisSpeeds,robotPoseSupplier.get().get(), noteTranslationSupplier.get().get(),swerveConstants,state);
 	}
 	private ChassisSpeeds handleSpeakerAssist (
 			ChassisSpeeds chassisSpeeds,
@@ -69,7 +71,6 @@ public class SwerveStateHelper {
 				swerveConstants
 		);
 	}
-
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
 		return switch (rotationAxisState) {

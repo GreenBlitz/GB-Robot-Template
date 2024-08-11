@@ -58,9 +58,9 @@ public class Swerve extends GBSubsystem {
 		this.currentAngleSupplier = this::getAbsoluteHeading;
 
 		this.stateHelper = new SwerveStateHelper(
-                Optional::empty, // default pose estimator
-			Optional::empty,
-			this
+				Optional::empty,
+				Optional::empty,
+				this
 		);
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -76,10 +76,6 @@ public class Swerve extends GBSubsystem {
 
 	public SwerveConstants getConstants() {
 		return constants;
-	}
-
-	public SwerveState getCurrentState(){
-		return currentState;
 	}
 
 	public SwerveStateHelper getStateHelper() {
@@ -282,7 +278,7 @@ public class Swerve extends GBSubsystem {
 
 	protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
 		this.currentState = swerveState;
-		chassisSpeeds = stateHelper.applyAimAssistOnChassisSpeeds(swerveState.getAimAssist(), chassisSpeeds);
+		chassisSpeeds = stateHelper.applyAimAssistOnChassisSpeeds(swerveState.getAimAssist(), chassisSpeeds, swerveState);
 
 		if (SwerveMath.isStill(chassisSpeeds)) {
 			modules.stop();

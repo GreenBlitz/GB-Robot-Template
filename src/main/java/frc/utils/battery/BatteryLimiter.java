@@ -10,6 +10,7 @@ import frc.utils.CMDHandler;
 import frc.utils.DriverStationUtils;
 import frc.utils.dashboard.LoggedTableBoolean;
 import org.littletonrobotics.junction.Logger;
+import java.lang.RuntimeException;
 
 import java.nio.file.Path;
 
@@ -64,7 +65,7 @@ class BatteryLimiter extends Command {
 			if (!DriverStationUtils.isMatch()) {
 				showBatteryMessage();
 				if (GlobalConstants.ENABLE_BATTERY_LIMITER && passedMessageStartUpTime()) {
-					throw new java.lang.RuntimeException("BATTERY IS LOW");
+					throw new RuntimeException("BATTERY IS LOW");
 				}
 			}
 		} else if (isBatteryLow.get()) {

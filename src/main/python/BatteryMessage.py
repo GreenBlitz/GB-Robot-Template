@@ -8,8 +8,7 @@ IMAGE_PATH = "noam-battery-message.png"
 WINDOW_NAME = "Battery Message"
 
 CLIENT_NAME = "BatteryMessage"
-TABLE_NAME = "Battery"
-KEY_NAME = "is low"
+LOW_BATTERY_TOPIC_NAME = "LowBattery"
 IP = sys.argv[1]
 
 TIME_BETWEEN_MESSAGES_SECONDS = 4
@@ -52,11 +51,11 @@ def is_time_to_message(last_time_showed: float) -> bool:
 
 
 def track_message_until_client_disconnect(battery_message_client: NetworkTableClient) -> None:
-    battery_table = battery_message_client.get_table(TABLE_NAME)
+    is_low_battery = battery_message_client.get_topic(LOW_BATTERY_TOPIC_NAME).subscribe(False)
 
     last_time_showed = 0
     while battery_message_client.is_connected():
-        if battery_table.getBoolean(KEY_NAME, defaultValue=False) and is_time_to_message(last_time_showed):
+        if is_low_battery.get() and is_time_to_message(last_time_showed):
             show_message(WINDOW_NAME, IMAGE_PATH)
             last_time_showed = time.time()
         time.sleep(SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS)

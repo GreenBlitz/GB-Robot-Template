@@ -1,13 +1,14 @@
 package frc.utils.battery;
 
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.networktables.BooleanEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.constants.IPs;
 import frc.utils.CMDHandler;
 import frc.utils.DriverStationUtils;
-import frc.utils.dashboard.LoggedTableBoolean;
 import org.littletonrobotics.junction.Logger;
 
 import java.nio.file.Path;
@@ -15,13 +16,14 @@ import java.nio.file.Path;
 class BatteryLimiter extends Command {
 
 	private static final int NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE = 50;
+	private static final String LOW_BATTERY_TOPIC_NAME = "LowBattery";
 
-	private final LoggedTableBoolean isBatteryLow;
+	private final BooleanEntry lowBatteryEntry;
 	private final LinearFilter voltageFilter;
 
 	public BatteryLimiter() {
-		this.isBatteryLow = new LoggedTableBoolean("Battery", "is low", false);
 		this.voltageFilter = LinearFilter.movingAverage(NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE);
+		this.lowBatteryEntry = NetworkTableInstance.getDefault().getBooleanTopic(LOW_BATTERY_TOPIC_NAME).getEntry(false);
 
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPs.SIMULATION_IP);
@@ -29,8 +31,8 @@ class BatteryLimiter extends Command {
 	}
 
 	private void showBatteryMessage() {
-		if (!isBatteryLow.get()) {
-			isBatteryLow.set(true);
+		if (!lowBatteryEntry.get()) {
+			lowBatteryEntry.set(true);
 		}
 	}
 
@@ -54,8 +56,8 @@ class BatteryLimiter extends Command {
 			if (!DriverStationUtils.isMatch()) {
 				showBatteryMessage();
 			}
-		} else if (isBatteryLow.get()) {
-			isBatteryLow.set(false);
+		} else if (lowBatteryEntry.get()){
+			lowBatteryEntry.set(false);
 		}
 	}
 

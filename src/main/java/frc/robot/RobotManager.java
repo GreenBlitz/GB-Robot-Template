@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
@@ -11,6 +14,7 @@ import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
+import frc.utils.mech2d.Mechanism2dUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**
@@ -31,8 +35,15 @@ public class RobotManager extends LoggedRobot {
 		}
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
-
 		this.robot = new Robot();
+
+		Mechanism2d mechanism2d = new Mechanism2d(3, 3);
+		Mechanism2dUtil mech2d = new Mechanism2dUtil(mechanism2d);
+		mech2d.addRoot("Try", 2, 0);
+		mech2d.addLigament("Try", "AnotherTry", 0.5, Rotation2d.fromDegrees(90));
+		Color8Bit d = new Color8Bit(61, 252, 3);
+		mech2d.extendLigament("AnotherTry", "yahoo", 1, Rotation2d.fromDegrees(180), 0.5, d);
+		mech2d.publish();
 	}
 
 	@Override

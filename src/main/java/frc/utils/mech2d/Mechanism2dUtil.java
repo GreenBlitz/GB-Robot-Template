@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public class Mechanism2dUtil {
 
 	private final Mechanism2d mechanism2d;
-	private MechanismLigament2d[] ligaments;
+	private MechanismLigament2d[] ligaments = new MechanismLigament2d[100];
 	private int numLigaments;
 
 	public Mechanism2dUtil(Mechanism2d mech2d) {
@@ -32,9 +32,23 @@ public class Mechanism2dUtil {
 		numLigaments++;
 	}
 
+	public void extendLigament(String ligament, String name, double length, Rotation2d angle) {
+		MechanismLigament2d ligament2d = new MechanismLigament2d(name, length, angle.getDegrees());
+		getLigament(ligament).append(ligament2d);
+		ligaments[numLigaments] = ligament2d;
+		numLigaments++;
+	}
+
 	public void addLigament(String root, String name, double length, Rotation2d angle, double width, Color8Bit color) {
 		MechanismLigament2d ligament2d = new MechanismLigament2d(name, length, angle.getDegrees(), width, color);
 		getExistingRoot(root).append(ligament2d);
+		ligaments[numLigaments] = ligament2d;
+		numLigaments++;
+	}
+
+	public void extendLigament(String ligament, String name, double length, Rotation2d angle, double width, Color8Bit color) {
+		MechanismLigament2d ligament2d = new MechanismLigament2d(name, length, angle.getDegrees(), width, color);
+		getLigament(ligament).append(ligament2d);
 		ligaments[numLigaments] = ligament2d;
 		numLigaments++;
 	}

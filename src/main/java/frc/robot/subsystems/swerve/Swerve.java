@@ -43,8 +43,6 @@ public class Swerve extends GBSubsystem {
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> currentAngleSupplier;
-	private boolean headingTargetUpdated;
-
 
 	public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
 		super(constants.logPath());
@@ -57,7 +55,6 @@ public class Swerve extends GBSubsystem {
 		this.gyroInputs = new SwerveGyroInputsAutoLogged();
 		this.currentAngleSupplier = this::getAbsoluteHeading;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
-		this.headingTargetUpdated = false;
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 	}
@@ -270,14 +267,12 @@ public class Swerve extends GBSubsystem {
 
 		chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
 		if (chassisSpeeds.omegaRadiansPerSecond == 0) {
-			if (!headingTargetUpdated) {
-				headingStabilizer.setTargetHeading(currentAngleSupplier.get());
-				headingTargetUpdated = true;
-			}
+			headingStabilizer.setTargetHeading(currentAngleSupplier.get());
+			headingStabilizer.lockTargetSetting();
 			chassisSpeeds.omegaRadiansPerSecond = headingStabilizer.calculate(currentAngleSupplier.get()).getRadians();
 		}
 		else {
-			headingTargetUpdated = false;
+			headingStabilizer.unlockTargetSetting();
 		}
 		chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 		chassisSpeeds = SwerveMath.discretize(chassisSpeeds);

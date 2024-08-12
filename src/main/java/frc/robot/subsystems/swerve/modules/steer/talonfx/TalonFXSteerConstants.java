@@ -1,32 +1,32 @@
 package frc.robot.subsystems.swerve.modules.steer.talonfx;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import frc.robot.subsystems.swerve.modules.steer.SteerConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class TalonFXSteerConstants {
 
-	protected static final int APPLY_CONFIG_RETRIES = 10;
+	static final int APPLY_CONFIG_RETRIES = 10;
 	protected static final int NO_ENCODER_ID = -1;
-	public static final String LOG_PATH_ADDITION = "Steer/";
 
 	private final TalonFXWrapper motor;
 	private final TalonFXSteerSignals signals;
 	private final boolean enableFOC;
 
-	public TalonFXSteerConstants(String logPathPrefix, CTREDeviceID steerMotorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {
-		this(logPathPrefix, steerMotorID, inverted, NO_ENCODER_ID, configuration, enableFOC);
+	public TalonFXSteerConstants(CTREDeviceID steerMotorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC, String logPathPrefix) {
+		this(steerMotorID, inverted, NO_ENCODER_ID, configuration, enableFOC, logPathPrefix);
 	}
 
 	public TalonFXSteerConstants(
-		String logPathPrefix,
 		CTREDeviceID steerMotorID,
 		boolean inverted,
 		int encoderID,
 		TalonFXConfiguration configuration,
-		boolean enableFOC
+		boolean enableFOC,
+		String logPathPrefix
 	) {
-		TalonFXSteerConfigObject steerConfigObject = new TalonFXSteerConfigObject(logPathPrefix + LOG_PATH_ADDITION, steerMotorID, inverted, encoderID, configuration);
+		TalonFXSteerConfigObject steerConfigObject = new TalonFXSteerConfigObject(steerMotorID, inverted, encoderID, configuration, logPathPrefix + SteerConstants.LOG_PATH_ADDITION);
 		this.motor = steerConfigObject.getMotor();
 		this.signals = steerConfigObject.getSignals();
 		this.enableFOC = enableFOC;

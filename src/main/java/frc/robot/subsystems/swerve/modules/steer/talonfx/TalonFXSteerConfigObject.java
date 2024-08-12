@@ -12,12 +12,11 @@ import org.littletonrobotics.junction.Logger;
 
 class TalonFXSteerConfigObject {
 
-	private final String logPath;
 	private final TalonFXWrapper motor;
 	private final TalonFXSteerSignals signals;
+	private final String logPath;
 
-	protected TalonFXSteerConfigObject(String logPath, CTREDeviceID motorID, boolean inverted, int encoderID, TalonFXConfiguration configuration) {
-        this.logPath = logPath;
+	protected TalonFXSteerConfigObject(CTREDeviceID motorID, boolean inverted, int encoderID, TalonFXConfiguration configuration, String logPath) {
         this.motor = new TalonFXWrapper(motorID);
 		this.signals = new TalonFXSteerSignals(
 			motor.getPosition().clone(),
@@ -25,6 +24,7 @@ class TalonFXSteerConfigObject {
 			motor.getAcceleration().clone(),
 			motor.getMotorVoltage().clone()
 		);
+		this.logPath = logPath;
 
 		configMotor(encoderID, configuration);
 		motor.setInverted(inverted);

@@ -1,11 +1,11 @@
 package frc.robot.subsystems.swerve.modules;
 
+import frc.robot.subsystems.swerve.modules.drive.DriveConstants;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDriveConstants;
+import frc.robot.subsystems.swerve.modules.encoder.EncoderConstants;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.encoder.cancoder.CancoderEncoderConstants;
+import frc.robot.subsystems.swerve.modules.steer.SteerConstants;
 import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.steer.talonfx.TalonFXSteerConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class ModuleInputsContainer {
@@ -17,9 +17,9 @@ public class ModuleInputsContainer {
 
 	public void processInputs(String logPath) {
 		Logger.processInputs(logPath, moduleInputs);
-		Logger.processInputs(logPath + CancoderEncoderConstants.LOG_PATH_ADDITION, encoderInputs);
-		Logger.processInputs(logPath + TalonFXSteerConstants.LOG_PATH_ADDITION, steerMotorInputs);
-		Logger.processInputs(logPath + TalonFXDriveConstants.LOG_PATH_ADDITION, driveMotorInputs);
+		Logger.processInputs(logPath + EncoderConstants.LOG_PATH_ADDITION, encoderInputs);
+		Logger.processInputs(logPath + SteerConstants.LOG_PATH_ADDITION, steerMotorInputs);
+		Logger.processInputs(logPath + DriveConstants.LOG_PATH_ADDITION, driveMotorInputs);
 	}
 
 	public ModuleInputsAutoLogged getModuleInputs() {

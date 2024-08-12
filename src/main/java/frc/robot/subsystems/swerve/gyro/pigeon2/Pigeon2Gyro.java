@@ -31,7 +31,6 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
 	public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String logPathPrefix) {
 		this.gyro = new Pigeon2Wrapper(gyroID);
-		this.logPath = logPathPrefix + SwerveGyroConstants.LOG_PATH_ADDITION;
 
 		this.yawSignal = gyro.getYaw().clone();
 		this.xAccelerationSignal = gyro.getAccelerationX().clone();
@@ -41,6 +40,8 @@ public class Pigeon2Gyro implements ISwerveGyro {
 		// todo - maybe latency
 		this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(gyro, yawSignal);
 		this.timestampQueue = PhoenixOdometryThread6328.getInstance().getTimestampQueue();
+
+		this.logPath = logPathPrefix + SwerveGyroConstants.LOG_PATH_ADDITION;
 
 		configGyro(configuration);
 		optimizeBusAndSignals();

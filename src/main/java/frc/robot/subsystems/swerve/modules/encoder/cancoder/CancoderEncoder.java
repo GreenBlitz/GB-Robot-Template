@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
+import frc.robot.subsystems.swerve.modules.encoder.EncoderConstants;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.utils.ctre.CTREDeviceID;
@@ -18,16 +19,18 @@ import org.littletonrobotics.junction.Logger;
 
 public class CancoderEncoder implements IEncoder {
 
-	private final String logPath;
+	private static final int APPLY_CONFIG_RETRIES = 10;
+
 	private final CANcoder encoder;
 	private final StatusSignal<Double> positionSignal, velocitySignal, voltageSignal;
+	private final String logPath;
 
-	public CancoderEncoder(String logPathPrefix, CTREDeviceID encoderID, CANcoderConfiguration configuration) {
-		this.logPath = logPathPrefix + CancoderEncoderConstants.LOG_PATH_ADDITION;
+	public CancoderEncoder(CTREDeviceID encoderID, CANcoderConfiguration configuration, String logPathPrefix) {
 		this.encoder = new CANcoder(encoderID.ID(), encoderID.busChain().getChainName());
 		this.positionSignal = encoder.getPosition().clone();
 		this.velocitySignal = encoder.getVelocity().clone();
 		this.voltageSignal = encoder.getSupplyVoltage().clone();
+		this.logPath = logPathPrefix + EncoderConstants.LOG_PATH_ADDITION;
 
 		configEncoder(configuration);
 		optimizeBusAndSignals();
@@ -37,7 +40,7 @@ public class CancoderEncoder implements IEncoder {
 		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
 		encoder.getConfigurator().refresh(magnetSensorConfigs);
 		encoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-		if (!PhoenixProUtils.checkWithRetry(() -> encoder.getConfigurator().apply(encoderConfiguration), CancoderEncoderConstants.APPLY_CONFIG_RETRIES)) {
+		if (!PhoenixProUtils.checkWithRetry(() -> encoder.getConfigurator().apply(encoderConfiguration), APPLY_CONFIG_RETRIES)) {
 			Logger.recordOutput(logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
 		}
 	}

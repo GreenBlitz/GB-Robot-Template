@@ -16,8 +16,7 @@ class TalonFXDriveConfigObject {
 	private final TalonFXDriveSignals signals;
 	private final String logPath;
 
-	protected TalonFXDriveConfigObject(String logPath, CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration) {
-		this.logPath = logPath;
+	protected TalonFXDriveConfigObject(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration, String logPath) {
 		this.motor = new TalonFXWrapper(motorID);
 		this.signals = new TalonFXDriveSignals(
 			motor.getPosition().clone(),
@@ -26,6 +25,7 @@ class TalonFXDriveConfigObject {
 			motor.getMotorVoltage().clone(),
 			motor.getStatorCurrent().clone()
 		);
+		this.logPath = logPath;
 
 		configMotor(configuration);
 		motor.setInverted(inverted);

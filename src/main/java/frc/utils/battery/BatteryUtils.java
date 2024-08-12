@@ -11,7 +11,7 @@ import static frc.utils.battery.BatteryConstants.POWER_DISTRIBUTION_TYPE;
 public class BatteryUtils {
 
 	public static final double DEFAULT_VOLTAGE = 12;
-	public static final double MIN_VOLTAGE = 10.5;
+	public static final double MIN_VOLTAGE = 14;
 
 	private static final PowerDistribution powerDistribution = new PowerDistribution(
 		POWER_DISTRIBUTION_CAN_ID,

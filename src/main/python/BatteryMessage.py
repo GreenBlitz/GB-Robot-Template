@@ -51,11 +51,11 @@ def is_time_to_message(last_time_showed: float) -> bool:
 
 
 def track_message_until_client_disconnect(battery_message_client: NetworkTableClient) -> None:
-    is_low_battery = battery_message_client.get_topic(LOW_BATTERY_TOPIC_NAME).subscribe(False)
+    is_low_battery = battery_message_client.get_topic(LOW_BATTERY_TOPIC_NAME).genericSubscribe()
 
     last_time_showed = 0
     while battery_message_client.is_connected():
-        if is_low_battery.get() and is_time_to_message(last_time_showed):
+        if is_low_battery.getBoolean(defaultValue=False) and is_time_to_message(last_time_showed):
             show_message(WINDOW_NAME, IMAGE_PATH)
             last_time_showed = time.time()
         time.sleep(SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS)

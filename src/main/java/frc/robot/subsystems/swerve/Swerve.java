@@ -271,20 +271,30 @@ public class Swerve extends GBSubsystem {
 		}
 
 		chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
-		if (swerveState.getHeadingControl().equals(HeadingControl.STABILIZE)) {
-			if (chassisSpeeds.omegaRadiansPerSecond == 0) {
-				headingStabilizer.setTargetHeading(currentAngleSupplier.get());
-				headingStabilizer.lockTargetSetting();
-				chassisSpeeds.omegaRadiansPerSecond = headingStabilizer.calculate(currentAngleSupplier.get()).getRadians();
-			}
-			else {
-				headingStabilizer.unlockTargetSetting();
-			}
-		}
+		chassisSpeeds = handleHeadingControl(chassisSpeeds, swerveState);
 		chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 		chassisSpeeds = SwerveMath.discretize(chassisSpeeds);
 
 		applySpeeds(chassisSpeeds, swerveState);
+	}
+
+	private ChassisSpeeds handleHeadingControl(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+		if (swerveState.getHeadingControl() == HeadingControl.NONE) {
+			return chassisSpeeds;
+		}
+
+		if (chassisSpeeds.omegaRadiansPerSecond != 0) {
+			headingStabilizer.unlockTargetSetting();
+			return chassisSpeeds;
+		}
+
+		headingStabilizer.setTargetHeading(currentAngleSupplier.get());
+		headingStabilizer.lockTargetSetting();
+		return new ChassisSpeeds(
+				chassisSpeeds.vxMetersPerSecond,
+				chassisSpeeds.vyMetersPerSecond,
+				headingStabilizer.calculate(currentAngleSupplier.get()).getRadians()
+		);
 	}
 
 	private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {

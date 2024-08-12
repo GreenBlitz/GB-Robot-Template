@@ -1,18 +1,16 @@
 package frc.utils.mech2d;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 
 import java.util.HashMap;
 
 public class Mechanism2dContainer {
 
 	private final Mechanism2d mechanism2d;
-	private final HashMap<String , MechanismLigament2d> ligaments;
+	private final HashMap<String, MechanismLigament2d> ligaments;
 	private final String name;
 
 	public Mechanism2dContainer(Mechanism2d mechanism2d, String name) {
@@ -25,7 +23,7 @@ public class Mechanism2dContainer {
 		return mechanism2d.getRoot(name, 0, 0);
 	}
 
-	public MechanismLigament2d getLigament(String name){
+	public MechanismLigament2d getLigament(String name) {
 		return ligaments.get(name);
 	}
 

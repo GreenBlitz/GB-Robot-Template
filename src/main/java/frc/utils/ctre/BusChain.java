@@ -11,9 +11,11 @@ public enum BusChain {
 	CANIVORE("CANivore");
 
 	private final String chainName;
+	private CANBus.CANBusStatus busStatus;
 
 	BusChain(String chainName) {
 		this.chainName = chainName;
+		this.busStatus = CANBus.getStatus(getChainName());
 	}
 
 	public String getChainName() {
@@ -21,12 +23,12 @@ public enum BusChain {
 	}
 
 	void updateStatus() {
-		CANBus.CANBusStatus busStatus = CANBus.getStatus(getChainName());
-		logStatus(busStatus);
-		reportAlerts(busStatus);
+		busStatus = CANBus.getStatus(getChainName());
+		logStatus();
+		reportAlerts();
 	}
 
-	private void logStatus(CANBus.CANBusStatus busStatus) {
+	private void logStatus() {
 		String currentLogPath = BusStatus.LOG_PATH + getChainName();
 		Logger.recordOutput(currentLogPath + "/Status", busStatus.Status.getName());
 		Logger.recordOutput(currentLogPath + "/Utilization", busStatus.BusUtilization);
@@ -36,7 +38,7 @@ public enum BusChain {
 		Logger.recordOutput(currentLogPath + "/TransmitError", busStatus.TEC);
 	}
 
-	private void reportAlerts(CANBus.CANBusStatus busStatus) {
+	private void reportAlerts() {
 		String currentAlertLogPath = LogPaths.ALERT_LOG_PATH + BusStatus.LOG_PATH + getChainName();
 		double currentTime = Timer.getFPGATimestamp();
 

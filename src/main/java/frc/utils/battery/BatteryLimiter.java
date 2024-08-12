@@ -16,7 +16,7 @@ import java.nio.file.Path;
 class BatteryLimiter extends Command {
 
 	private static final int NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE = 50;
-	private static final String LOW_BATTERY_TOPIC_NAME = "LowBattery";
+	private static final String LOW_BATTERY_TOPIC_NAME = "BatteryMessage/LowBattery";
 
 	private final BooleanEntry lowBatteryEntry;
 	private final LinearFilter voltageFilter;
@@ -24,6 +24,7 @@ class BatteryLimiter extends Command {
 	public BatteryLimiter() {
 		this.voltageFilter = LinearFilter.movingAverage(NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE);
 		this.lowBatteryEntry = NetworkTableInstance.getDefault().getBooleanTopic(LOW_BATTERY_TOPIC_NAME).getEntry(false);
+		lowBatteryEntry.set(false);
 
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPs.SIMULATION_IP);

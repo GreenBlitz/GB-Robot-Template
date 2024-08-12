@@ -32,7 +32,7 @@ class SteerRealConstants {
 
 	protected static TalonFXSteerConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
 		return new TalonFXSteerConstants(
-			logPathPrefix + "FRONT_LEFT/Steer/",
+			logPathPrefix + "FRONT_LEFT/",
 			IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
 			true,
 			IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
@@ -43,7 +43,7 @@ class SteerRealConstants {
 
 	protected static TalonFXSteerConstants FRONT_RIGHT_CONSTANTS(String logPathPrefix) {
 		return new TalonFXSteerConstants(
-			logPathPrefix + "FRONT_RIGHT/Steer/",
+			logPathPrefix + "FRONT_RIGHT/",
 			IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
 			true,
 			IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
@@ -54,23 +54,23 @@ class SteerRealConstants {
 
 	protected static TalonFXSteerConstants BACK_LEFT_CONSTANTS(String logPathPrefix) {
 		return new TalonFXSteerConstants(
-				logPathPrefix + "BACK_LEFT/Steer/",
-				IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
-				false,
-				IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
-				MOTOR_CONFIG,
-				ENABLE_FOC
+			logPathPrefix + "BACK_LEFT/",
+			IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
+			false,
+			IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
+			MOTOR_CONFIG,
+			ENABLE_FOC
 		);
 	}
 
 	protected static TalonFXSteerConstants BACK_RIGHT_CONSTANTS(String logPathPrefix) {
 		return new TalonFXSteerConstants(
-				logPathPrefix + "BACK_RIGHT/Steer/",
-				IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
-				true,
-				IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
-				MOTOR_CONFIG,
-				ENABLE_FOC
+			logPathPrefix + "BACK_RIGHT/",
+			IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
+			true,
+			IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
+			MOTOR_CONFIG,
+			ENABLE_FOC
 		);
 	}
 

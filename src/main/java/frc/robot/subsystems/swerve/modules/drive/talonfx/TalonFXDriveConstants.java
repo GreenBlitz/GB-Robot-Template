@@ -7,13 +7,14 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 public class TalonFXDriveConstants {
 
 	protected static final int APPLY_CONFIG_RETRIES = 10;
+	public static final String LOG_PATH_ADDITION = "Drive/";
 
 	private final TalonFXWrapper motor;
 	private final TalonFXDriveSignals signals;
 	private final boolean enableFOC;
 
-	public TalonFXDriveConstants(String logPath, CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {
-		TalonFXDriveConfigObject talonFXDriveConfigObject = new TalonFXDriveConfigObject(logPath, motorID, inverted, configuration);
+	public TalonFXDriveConstants(String logPathPrefix, CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration, boolean enableFOC) {
+		TalonFXDriveConfigObject talonFXDriveConfigObject = new TalonFXDriveConfigObject(logPathPrefix + LOG_PATH_ADDITION, motorID, inverted, configuration);
 		this.motor = talonFXDriveConfigObject.getMotor();
 		this.signals = talonFXDriveConfigObject.getSignals();
 		this.enableFOC = enableFOC;

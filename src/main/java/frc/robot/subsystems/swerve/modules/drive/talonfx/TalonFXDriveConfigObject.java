@@ -16,8 +16,8 @@ class TalonFXDriveConfigObject {
 	private final TalonFXDriveSignals signals;
 	private final String logPath;
 
-	protected TalonFXDriveConfigObject(String logPathPrefix, CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration) {
-		this.logPath = logPathPrefix + "ConfigObject/";
+	protected TalonFXDriveConfigObject(String logPath, CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration) {
+		this.logPath = logPath;
 		this.motor = new TalonFXWrapper(motorID);
 		this.signals = new TalonFXDriveSignals(
 			motor.getPosition().clone(),
@@ -34,8 +34,9 @@ class TalonFXDriveConfigObject {
 
 
 	private void configMotor(TalonFXConfiguration driveConfiguration) {
-		if (!PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(driveConfiguration), TalonFXDriveConstants.APPLY_CONFIG_RETRIES))
+		if (!PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(driveConfiguration), TalonFXDriveConstants.APPLY_CONFIG_RETRIES)) {
 			Logger.recordOutput(logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
+		}
 	}
 
 	//@formatter:off

@@ -16,8 +16,8 @@ class TalonFXSteerConfigObject {
 	private final TalonFXWrapper motor;
 	private final TalonFXSteerSignals signals;
 
-	protected TalonFXSteerConfigObject(String logPathPrefix, CTREDeviceID motorID, boolean inverted, int encoderID, TalonFXConfiguration configuration) {
-        this.logPath = logPathPrefix + "ConfigObject/";
+	protected TalonFXSteerConfigObject(String logPath, CTREDeviceID motorID, boolean inverted, int encoderID, TalonFXConfiguration configuration) {
+        this.logPath = logPath;
         this.motor = new TalonFXWrapper(motorID);
 		this.signals = new TalonFXSteerSignals(
 			motor.getPosition().clone(),
@@ -35,8 +35,9 @@ class TalonFXSteerConfigObject {
 		if (encoderID != TalonFXSteerConstants.NO_ENCODER_ID) {
 			configuration.Feedback.FeedbackRemoteSensorID = encoderID;
 		}
-		if (!PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(configuration), TalonFXSteerConstants.APPLY_CONFIG_RETRIES))
+		if (!PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(configuration), TalonFXSteerConstants.APPLY_CONFIG_RETRIES)) {
 			Logger.recordOutput(logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
+		}
 	}
 
 	private void optimizeBusAndSignals() {

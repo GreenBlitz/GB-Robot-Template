@@ -47,8 +47,9 @@ public class Pigeon2Gyro implements ISwerveGyro {
 	}
 
 	private void configGyro(Pigeon2Configuration configuration) {
-		if (!PhoenixProUtils.checkWithRetry(() -> gyro.getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES))
+		if (!PhoenixProUtils.checkWithRetry(() -> gyro.getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES)) {
 			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
+		}
 	}
 
 	private void optimizeBusAndSignals() {

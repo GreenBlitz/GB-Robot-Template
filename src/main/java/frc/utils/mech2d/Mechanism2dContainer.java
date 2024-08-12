@@ -25,6 +25,10 @@ public class Mechanism2dContainer {
 		return mechanism2d.getRoot(name, 0, 0);
 	}
 
+	public MechanismLigament2d getLigament(String name){
+		return ligaments.get(name);
+	}
+
 	public void addRoot(String name, double x, double y) {
 		mechanism2d.getRoot(name, x, y);
 	}
@@ -37,26 +41,6 @@ public class Mechanism2dContainer {
 	public void extendLigament(String addToLigament, MechanismLigament2d ligment) {
 		ligaments.get(addToLigament).append(ligment);
 		ligaments.put(ligment.getName(), ligment);
-	}
-
-	public void setRootPosition(String root, double x, double y) {
-		getExistingRoot(root).setPosition(x, y);
-	}
-
-	public void setLigamentAngle(String ligament, Rotation2d angle) {
-		ligaments.get(ligament).setAngle(angle);
-	}
-
-	public void setLigamentLength(String ligament, double length) {
-		ligaments.get(ligament).setLength(length);
-	}
-
-	public void setLigamentColor(String ligament, Color8Bit color) {
-		ligaments.get(ligament).setColor(color);
-	}
-
-	public void setLigamentWidth(String ligament, double width) {
-		ligaments.get(ligament).setLineWeight(width);
 	}
 
 	public void publish() {

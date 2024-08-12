@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
@@ -14,7 +11,6 @@ import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
-import frc.utils.mech2d.Mechanism2dUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 
 /**

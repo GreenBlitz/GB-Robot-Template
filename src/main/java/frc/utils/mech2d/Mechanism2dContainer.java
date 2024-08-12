@@ -17,8 +17,8 @@ public class Mechanism2dContainer {
 
 	public Mechanism2dContainer(Mechanism2d mechanism2d, String name) {
 		this.mechanism2d = mechanism2d;
-		this.name = name;
 		this.ligaments = new HashMap<String, MechanismLigament2d>();
+		this.name = name;
 	}
 
 	public MechanismRoot2d getExistingRoot(String name) {

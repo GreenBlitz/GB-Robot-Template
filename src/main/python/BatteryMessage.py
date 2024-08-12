@@ -4,7 +4,7 @@ import tkinter
 from tkinter import PhotoImage
 from NetworkTableManager import NetworkTableClient
 
-IMAGE_PATH = "noam-battery-message.png"
+IMAGE_PATH = "../../../noam-battery-message.png"
 WINDOW_NAME = "Battery Message"
 
 CLIENT_NAME = "BatteryMessage"

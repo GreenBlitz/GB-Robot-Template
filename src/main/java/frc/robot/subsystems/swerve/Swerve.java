@@ -271,7 +271,7 @@ public class Swerve extends GBSubsystem {
 		chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
 		if (chassisSpeeds.omegaRadiansPerSecond == 0) {
 			if (!headingTargetUpdated) {
-				headingStabilizer.setHeadingSetpoint(currentAngleSupplier.get());
+				headingStabilizer.setTargetHeading(currentAngleSupplier.get());
 				headingTargetUpdated = true;
 			}
 			chassisSpeeds.omegaRadiansPerSecond = headingStabilizer.calculate(currentAngleSupplier.get()).getRadians();

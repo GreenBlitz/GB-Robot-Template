@@ -17,9 +17,9 @@ public class HeadingStabilizer {
         headingController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
     }
 
-    public void setHeadingSetpoint(Rotation2d headingSetpoint){
+    public void setTargetHeading(Rotation2d targetHeading){
         headingController.reset();
-        headingController.setSetpoint(headingSetpoint.getDegrees());
+        headingController.setSetpoint(targetHeading.getDegrees());
     }
 
     public Rotation2d calculate(Rotation2d currentHeading){

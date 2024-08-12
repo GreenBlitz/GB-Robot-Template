@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
+import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 
@@ -13,6 +14,7 @@ public class SwerveState {
 	private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.CLOSED;
 	private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_ROBOT;
 	private static final AimAssist DEFAULT_AIM_ASSIST = AimAssist.NONE;
+	private static final HeadingControl DEFAULT_HEADING_CONTROL = HeadingControl.STABILIZE;
 
 	public static final SwerveState DEFAULT_PATH_PLANNER = new SwerveState().withDriveRelative(DriveRelative.ROBOT_RELATIVE);
 	public static final SwerveState DEFAULT_DRIVE = new SwerveState();
@@ -23,21 +25,44 @@ public class SwerveState {
 	private LoopMode loopMode;
 	private RotateAxis rotateAxis;
 	private AimAssist aimAssist;
+	private HeadingControl headingControl;
 
 	public SwerveState(SwerveState swerveState) {
-		this(swerveState.driveRelative, swerveState.driveSpeed, swerveState.loopMode, swerveState.rotateAxis, swerveState.aimAssist);
+		this(
+				swerveState.driveRelative,
+				swerveState.driveSpeed,
+				swerveState.loopMode,
+				swerveState.rotateAxis,
+				swerveState.aimAssist,
+				swerveState.headingControl
+		);
 	}
 
 	private SwerveState() {
-		this(DEFAULT_DRIVE_RELATIVE, DEFAULT_DRIVE_SPEED, DEFAULT_LOOP_MODE, DEFAULT_ROTATE_AXIS, DEFAULT_AIM_ASSIST);
+		this(
+				DEFAULT_DRIVE_RELATIVE,
+				DEFAULT_DRIVE_SPEED,
+				DEFAULT_LOOP_MODE,
+				DEFAULT_ROTATE_AXIS,
+				DEFAULT_AIM_ASSIST,
+				DEFAULT_HEADING_CONTROL
+		);
 	}
 
-	private SwerveState(DriveRelative driveRelative, DriveSpeed driveSpeed, LoopMode loopMode, RotateAxis rotateAxis, AimAssist aimAssist) {
+	private SwerveState(
+			DriveRelative driveRelative,
+			DriveSpeed driveSpeed,
+			LoopMode loopMode,
+			RotateAxis rotateAxis,
+			AimAssist aimAssist,
+			HeadingControl headingControl
+	) {
 		this.driveRelative = driveRelative;
 		this.driveSpeed = driveSpeed;
 		this.loopMode = loopMode;
 		this.rotateAxis = rotateAxis;
 		this.aimAssist = aimAssist;
+		this.headingControl = headingControl;
 	}
 
 
@@ -71,6 +96,12 @@ public class SwerveState {
 		return swerveState;
 	}
 
+	public SwerveState withHeadingControl(HeadingControl headingControl) {
+		SwerveState swerveState = new SwerveState(this);
+		swerveState.headingControl = headingControl;
+		return swerveState;
+	}
+
 
 	public DriveRelative getDriveMode() {
 		return driveRelative;
@@ -90,6 +121,10 @@ public class SwerveState {
 
 	public AimAssist getAimAssist() {
 		return aimAssist;
+	}
+
+	public HeadingControl getHeadingControl() {
+		return headingControl;
 	}
 
 }

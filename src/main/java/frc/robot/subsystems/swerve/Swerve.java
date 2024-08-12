@@ -19,6 +19,7 @@ import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
+import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -93,6 +94,8 @@ public class Swerve extends GBSubsystem {
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
 		gyroInputs.gyroYaw = heading;
+		headingStabilizer.unlockTargetSetting();
+		headingStabilizer.setTargetHeading(heading);
 	}
 
 	protected void resetPIDControllers() {
@@ -144,6 +147,7 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(constants.stateLogPath() + "LoopMode", currentState.getLoopMode());
 		Logger.recordOutput(constants.stateLogPath() + "RotateAxis", currentState.getRotateAxis());
 		Logger.recordOutput(constants.stateLogPath() + "AimAssist", currentState.getAimAssist());
+		Logger.recordOutput(constants.stateLogPath() + "HeadingControl", currentState.getHeadingControl());
 	}
 
 	private void logFieldRelativeVelocities() {
@@ -259,6 +263,7 @@ public class Swerve extends GBSubsystem {
 
 	protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
 		this.currentState = swerveState;
+
 		chassisSpeeds = SwerveMath.applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
 		if (SwerveMath.isStill(chassisSpeeds)) {
 			modules.stop();
@@ -266,13 +271,15 @@ public class Swerve extends GBSubsystem {
 		}
 
 		chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
-		if (chassisSpeeds.omegaRadiansPerSecond == 0) {
-			headingStabilizer.setTargetHeading(currentAngleSupplier.get());
-			headingStabilizer.lockTargetSetting();
-			chassisSpeeds.omegaRadiansPerSecond = headingStabilizer.calculate(currentAngleSupplier.get()).getRadians();
-		}
-		else {
-			headingStabilizer.unlockTargetSetting();
+		if (swerveState.getHeadingControl().equals(HeadingControl.STABILIZE)) {
+			if (chassisSpeeds.omegaRadiansPerSecond == 0) {
+				headingStabilizer.setTargetHeading(currentAngleSupplier.get());
+				headingStabilizer.lockTargetSetting();
+				chassisSpeeds.omegaRadiansPerSecond = headingStabilizer.calculate(currentAngleSupplier.get()).getRadians();
+			}
+			else {
+				headingStabilizer.unlockTargetSetting();
+			}
 		}
 		chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 		chassisSpeeds = SwerveMath.discretize(chassisSpeeds);

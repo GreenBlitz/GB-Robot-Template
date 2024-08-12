@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.ctre.BusStatus;
+import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -55,8 +55,10 @@ public class RobotManager extends LoggedRobot {
 	public void robotPeriodic() {
 		CycleTimeUtils.updateCycleTime(); // Better to be first
 		CommandScheduler.getInstance().run();
-		BusStatus.logChainsStatuses();
 		BatteryUtils.logStatus();
+		for (BusChain chain : BusChain.values()) {
+			chain.updateStatus();
+		}
 	}
 
 	@Override

@@ -12,12 +12,13 @@ import java.util.HashMap;
 public class Mechanism2dContainer {
 
 	private final Mechanism2d mechanism2d;
-	private HashMap<String , MechanismLigament2d> ligaments = new HashMap<String, MechanismLigament2d>();
-	private String name;
+	private final HashMap<String , MechanismLigament2d> ligaments;
+	private final String name;
 
 	public Mechanism2dContainer(Mechanism2d mechanism2d, String name) {
 		this.mechanism2d = mechanism2d;
 		this.name = name;
+		this.ligaments = new HashMap<String, MechanismLigament2d>();
 	}
 
 	public MechanismRoot2d getExistingRoot(String name) {
@@ -36,7 +37,6 @@ public class Mechanism2dContainer {
 	public void extendLigament(String addToLigament, MechanismLigament2d ligment) {
 		ligaments.get(addToLigament).append(ligment);
 		ligaments.put(ligment.getName(), ligment);
-
 	}
 
 	public void setRootPosition(String root, double x, double y) {
@@ -47,32 +47,16 @@ public class Mechanism2dContainer {
 		ligaments.get(ligament).setAngle(angle);
 	}
 
-	public Rotation2d getLigamentAngle(String ligament) {
-		return Rotation2d.fromDegrees(ligaments.get(ligament).getAngle());
-	}
-
 	public void setLigamentLength(String ligament, double length) {
 		ligaments.get(ligament).setLength(length);
-	}
-
-	public double getLigamentLength(String ligament) {
-		return ligaments.get(ligament).getLength();
 	}
 
 	public void setLigamentColor(String ligament, Color8Bit color) {
 		ligaments.get(ligament).setColor(color);
 	}
 
-	public Color8Bit getLigamentColor(String ligament) {
-		return ligaments.get(ligament).getColor();
-	}
-
 	public void setLigamentWidth(String ligament, double width) {
 		ligaments.get(ligament).setLineWeight(width);
-	}
-
-	public double getLigamentWidth(String ligament) {
-		return ligaments.get(ligament).getLineWeight();
 	}
 
 	public void publish() {

@@ -64,9 +64,6 @@ class BatteryLimiter extends Command {
 			reportLowBattery();
 			if (!DriverStationUtils.isMatch()) {
 				showBatteryMessage();
-				if (GlobalConstants.ENABLE_BATTERY_LIMITER && passedMessageStartUpTime()) {
-					throw new RuntimeException("BATTERY IS LOW");
-				}
 			}
 		} else if (isBatteryLow.get()) {
 			isBatteryLow.set(false);

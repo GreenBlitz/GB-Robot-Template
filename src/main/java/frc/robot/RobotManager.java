@@ -35,15 +35,8 @@ public class RobotManager extends LoggedRobot {
 		}
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
-		this.robot = new Robot();
 
-		Mechanism2d mechanism2d = new Mechanism2d(3, 3);
-		Mechanism2dUtil mech2d = new Mechanism2dUtil(mechanism2d);
-		mech2d.addRoot("Try", 2, 0);
-		mech2d.addLigament("Try", "AnotherTry", 0.5, Rotation2d.fromDegrees(90));
-		Color8Bit d = new Color8Bit(61, 252, 3);
-		mech2d.extendLigament("AnotherTry", "yahoo", 1, Rotation2d.fromDegrees(180), 0.5, d);
-		mech2d.publish();
+		this.robot = new Robot();
 	}
 
 	@Override

@@ -20,10 +20,24 @@ public class SteerFactory {
 	private static ISteer createSwerveSteer(ModuleUtils.ModulePosition modulePosition) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT -> new TalonFXSteer(SteerRealConstants.FRONT_LEFT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION));
-				case FRONT_RIGHT -> new TalonFXSteer(SteerRealConstants.FRONT_RIGHT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION));
-				case BACK_LEFT -> new TalonFXSteer(SteerRealConstants.BACK_LEFT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION));
-				case BACK_RIGHT -> new TalonFXSteer(SteerRealConstants.BACK_RIGHT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION));
+				case FRONT_LEFT ->
+					new TalonFXSteer(
+						SteerRealConstants.FRONT_LEFT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION)
+					);
+				case FRONT_RIGHT ->
+					new TalonFXSteer(
+						SteerRealConstants.FRONT_RIGHT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION)
+					);
+				// @formatter:off
+				case BACK_LEFT ->
+					new TalonFXSteer(
+							SteerRealConstants.BACK_LEFT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION)
+					);
+				// @formatter:on
+				case BACK_RIGHT ->
+					new TalonFXSteer(
+						SteerRealConstants.BACK_RIGHT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION)
+					);
 			};
 			case SIMULATION -> new SimulationSteer(SteerSimulationConstants.getConstants());
 			case REPLAY -> new EmptySteer();

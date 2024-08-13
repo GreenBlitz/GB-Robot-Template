@@ -16,8 +16,14 @@ class TalonFXSteerConfigObject {
 	private final TalonFXSteerSignals signals;
 	private final String logPath;
 
-	protected TalonFXSteerConfigObject(CTREDeviceID motorID, boolean inverted, int encoderID, TalonFXConfiguration configuration, String logPath) {
-        this.motor = new TalonFXWrapper(motorID);
+	protected TalonFXSteerConfigObject(
+		CTREDeviceID motorID,
+		boolean inverted,
+		int encoderID,
+		TalonFXConfiguration configuration,
+		String logPath
+	) {
+		this.motor = new TalonFXWrapper(motorID);
 		this.signals = new TalonFXSteerSignals(
 			motor.getPosition().clone(),
 			motor.getVelocity().clone(),

@@ -20,10 +20,24 @@ public class DriveFactory {
 	private static IDrive createSwerveDrive(ModuleUtils.ModulePosition modulePosition) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT -> new TalonFXDrive(DriveRealConstants.FRONT_LEFT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION));
-				case FRONT_RIGHT -> new TalonFXDrive(DriveRealConstants.FRONT_RIGHT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION));
-				case BACK_LEFT -> new TalonFXDrive(DriveRealConstants.BACK_LEFT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION));
-				case BACK_RIGHT -> new TalonFXDrive(DriveRealConstants.BACK_RIGHT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION));
+				case FRONT_LEFT ->
+					new TalonFXDrive(
+						DriveRealConstants.FRONT_LEFT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION)
+					);
+				case FRONT_RIGHT ->
+					new TalonFXDrive(
+						DriveRealConstants.FRONT_RIGHT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION)
+					);
+				// @formatter:off
+				case BACK_LEFT ->
+					new TalonFXDrive(
+							DriveRealConstants.BACK_LEFT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION)
+					);
+				// @formatter:on
+				case BACK_RIGHT ->
+					new TalonFXDrive(
+						DriveRealConstants.BACK_RIGHT_CONSTANTS(SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION)
+					);
 			};
 			case SIMULATION -> new SimulationDrive(DriveSimulationConstants.getDriveConstants());
 			case REPLAY -> new EmptyDrive();

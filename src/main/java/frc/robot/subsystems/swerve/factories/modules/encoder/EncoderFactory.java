@@ -20,10 +20,30 @@ public class EncoderFactory {
 	private static IEncoder createSwerveEncoder(ModuleUtils.ModulePosition modulePosition) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT -> new CancoderEncoder(IDs.CANCodersIDs.FRONT_LEFT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/");
-				case FRONT_RIGHT -> new CancoderEncoder(IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/");
-				case BACK_LEFT -> new CancoderEncoder(IDs.CANCodersIDs.BACK_LEFT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/");
-				case BACK_RIGHT -> new CancoderEncoder(IDs.CANCodersIDs.BACK_RIGHT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/");
+				case FRONT_LEFT ->
+					new CancoderEncoder(
+						IDs.CANCodersIDs.FRONT_LEFT_ENCODER,
+						EncoderRealConstants.ENCODER_CONFIG,
+						SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/"
+					);
+				case FRONT_RIGHT ->
+					new CancoderEncoder(
+						IDs.CANCodersIDs.FRONT_RIGHT_ENCODER,
+						EncoderRealConstants.ENCODER_CONFIG,
+						SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/"
+					);
+				case BACK_LEFT ->
+					new CancoderEncoder(
+						IDs.CANCodersIDs.BACK_LEFT_ENCODER,
+						EncoderRealConstants.ENCODER_CONFIG,
+						SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/"
+					);
+				case BACK_RIGHT ->
+					new CancoderEncoder(
+						IDs.CANCodersIDs.BACK_RIGHT_ENCODER,
+						EncoderRealConstants.ENCODER_CONFIG,
+						SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/"
+					);
 			};
 			case SIMULATION, REPLAY -> new EmptyEncoder();
 		};

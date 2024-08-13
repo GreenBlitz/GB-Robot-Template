@@ -7,7 +7,7 @@ import frc.robot.constants.MathConstants;
 public class HeadingStabilizer {
 
     private final PIDController headingController;
-    private boolean lock;
+    private boolean targetLock;
 
     public HeadingStabilizer(SwerveConstants constants) {
         this.headingController = new PIDController(
@@ -19,15 +19,15 @@ public class HeadingStabilizer {
     }
 
     public void lockTargetSetting() {
-        lock = true;
+        targetLock = true;
     }
 
     public void unlockTargetSetting() {
-        lock = false;
+        targetLock = false;
     }
 
     public void setTargetHeading(Rotation2d targetHeading) {
-        if (!lock) {
+        if (!targetLock) {
             headingController.reset();
             headingController.setSetpoint(targetHeading.getDegrees());
         }

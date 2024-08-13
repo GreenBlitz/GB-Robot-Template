@@ -37,10 +37,12 @@ public class AimAssistMath {
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
 	) {
-		if (swerveState.getDriveMode().equals(DriveRelative.FIELD_RELATIVE)) {
-			Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
+		Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
+		double pidHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
 
-			double pidHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
+		if (swerveState.getDriveMode().equals(DriveRelative.FIELD_RELATIVE)) {
+
+
 			double xFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.sin(robotPose.getRotation().unaryMinus().getRadians());
 			double yFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.cos(robotPose.getRotation().unaryMinus().getRadians());
 
@@ -52,9 +54,7 @@ public class AimAssistMath {
 		} else if (swerveState.getDriveMode().equals(DriveRelative.ROBOT_RELATIVE)) {
 			return new ChassisSpeeds(
 				chassisSpeeds.vxMetersPerSecond,
-				chassisSpeeds.vyMetersPerSecond
-					+ swerveConstants.yMetersPIDController()
-						.calculate(0, SwerveMath.getRelativeTranslation(robotPose, objectTranslation).getY()),
+				chassisSpeeds.vyMetersPerSecond + pidHorizontalVelocity,
 				chassisSpeeds.omegaRadiansPerSecond
 			);
 		}

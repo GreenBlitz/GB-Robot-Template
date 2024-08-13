@@ -291,9 +291,9 @@ public class Swerve extends GBSubsystem {
 		headingStabilizer.setTargetHeading(currentAngleSupplier.get());
 		headingStabilizer.lockTarget();
 		return new ChassisSpeeds(
-				chassisSpeeds.vxMetersPerSecond,
-				chassisSpeeds.vyMetersPerSecond,
-				headingStabilizer.calculate(currentAngleSupplier.get()).getRadians()
+			chassisSpeeds.vxMetersPerSecond,
+			chassisSpeeds.vyMetersPerSecond,
+			headingStabilizer.calculate(currentAngleSupplier.get()).getRadians()
 		);
 	}
 

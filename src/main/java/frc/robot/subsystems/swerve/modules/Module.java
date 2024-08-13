@@ -84,6 +84,7 @@ public class Module {
 		moduleInputs.isAtTargetAngle = isAtTargetAngle();
 		moduleInputs.isAtTargetVelocity = isAtTargetVelocity();
 		moduleInputs.isClosedLoop = isClosedLoop;
+		moduleInputs.targetState = targetState;
 
 		moduleInputsContainer.processInputs(constants.logPath());
 	}

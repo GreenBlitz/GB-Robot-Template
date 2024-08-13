@@ -283,7 +283,7 @@ public class Swerve extends GBSubsystem {
 			return chassisSpeeds;
 		}
 
-		if (chassisSpeeds.omegaRadiansPerSecond != 0) {
+		if (chassisSpeeds.omegaRadiansPerSecond > SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
 			headingStabilizer.unlockTargetSetting();
 			return chassisSpeeds;
 		}

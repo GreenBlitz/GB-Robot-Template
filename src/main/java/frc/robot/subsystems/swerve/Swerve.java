@@ -94,7 +94,7 @@ public class Swerve extends GBSubsystem {
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
 		gyroInputs.gyroYaw = heading;
-		headingStabilizer.unlockTargetSetting();
+		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
 
@@ -284,12 +284,12 @@ public class Swerve extends GBSubsystem {
 		}
 
 		if (chassisSpeeds.omegaRadiansPerSecond > SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
-			headingStabilizer.unlockTargetSetting();
+			headingStabilizer.unlockTarget();
 			return chassisSpeeds;
 		}
 
 		headingStabilizer.setTargetHeading(currentAngleSupplier.get());
-		headingStabilizer.lockTargetSetting();
+		headingStabilizer.lockTarget();
 		return new ChassisSpeeds(
 				chassisSpeeds.vxMetersPerSecond,
 				chassisSpeeds.vyMetersPerSecond,

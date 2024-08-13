@@ -18,11 +18,11 @@ public class HeadingStabilizer {
         headingController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
     }
 
-    public void lockTargetSetting() {
+    public void lockTarget() {
         targetLocked = true;
     }
 
-    public void unlockTargetSetting() {
+    public void unlockTarget() {
         targetLocked = false;
     }
 

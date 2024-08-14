@@ -56,7 +56,7 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-	public SuperStructure getSuperStructure(){
+	public SuperStructure getSuperStructure() {
 		return superStructure;
 	}
 

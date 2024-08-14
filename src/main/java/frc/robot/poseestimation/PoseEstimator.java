@@ -1,16 +1,13 @@
 package frc.robot.poseestimation;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.poseestimation.posecalculation.PoseCalculator;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 
 public class PoseEstimator {

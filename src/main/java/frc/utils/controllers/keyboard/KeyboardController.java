@@ -24,11 +24,16 @@ public class KeyboardController {
 	private static final String KEYBOARD_TABLE = "Keyboard";
 	private static final String KEYS_TAB = "Keys/";
 
-	public final Trigger ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, DELETE, BACKTICK, ONE, TWO, THREE, FOUR, FIVE,
-		SIX, SEVEN, EIGHT, NINE, ZERO, MINUS, EQUALS, BACKSPACE, TAB, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T,
-		U, V, W, X, Y, Z, SEMICOLON, APOSTROPHE, LEFT_SHIFT, COMMA, PERIOD, SLASH, RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT,
-		RIGHT_CONTROL, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW, NUMPAD_0, NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5,
-		NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9;
+    public final Trigger
+            ESC,
+            F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
+            DELETE, BACKTICK,
+            ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO,
+            MINUS, EQUALS, SPACE, BACKSPACE, TAB,
+            A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+            SEMICOLON, APOSTROPHE, LEFT_SHIFT, COMMA, PERIOD, SLASH, RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL,
+            LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW,
+            NUMPAD_0, NUMPAD_1, NUMPAD_2, NUMPAD_3, NUMPAD_4, NUMPAD_5, NUMPAD_6, NUMPAD_7, NUMPAD_8, NUMPAD_9;
 
 	public KeyboardController() {
 		if (RobotManager.isSimulation()) {
@@ -66,7 +71,8 @@ public class KeyboardController {
 
 		this.MINUS = getNewKey("-");
 		this.EQUALS = getNewKey("=");
-		this.BACKSPACE = getNewKey("backspace");
+		this.SPACE = getNewKey("space");
+        this.BACKSPACE = getNewKey("backspace");
 		this.TAB = getNewKey("tab");
 
 		this.A = getNewKey("a");

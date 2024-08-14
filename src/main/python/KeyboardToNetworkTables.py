@@ -12,8 +12,13 @@ from NetworkTableManager import NetworkTableInstance, NetworkTable, NetworkTable
 
 import sys
 import time
-import keyboard
+from typing import Callable, TypeVar
 
+from pynput import keyboard
+
+SpecialKey = TypeVar('SpecialKey')
+ASCIIKey = TypeVar('ASCIIKey')
+UndefinedKey = TypeVar('UndefinedKey')
 
 __KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS = 0.01
 __KEYBOARD_TABLE = "Keyboard"
@@ -22,25 +27,50 @@ __CLIENT_NAME = "KeyboardToNetworkTables"
 __IP = sys.argv[1]
 
 
-def is_pressed(event: keyboard.KeyboardEvent) -> bool:
-    return event.event_type == keyboard.KEY_DOWN
+def key_type_checker(key: object) -> TypeVar:
+    if hasattr(key, "name"):
+        return SpecialKey
+    elif hasattr(key, "char"):
+        return ASCIIKey
+
+    return UndefinedKey
 
 
-def on_key_event(event: keyboard.KeyboardEvent, table: NetworkTableInstance):
-    if event is None or event.name is None:
-        return
-    elif event.name == "/":
-        table.putBoolean("slash", is_pressed(event))
-    elif event.is_keypad:
-        table.putBoolean("numpad" + event.name, is_pressed(event))
-    else:
-        table.putBoolean(event.name.lower(), is_pressed(event))
+def keys_handler(table: NetworkTableInstance, is_pressed: bool) -> Callable:
+    # key type is changing in runtime + depends on platform. Checked for Xorg keyboard layout.
+    def update_table(key) -> None:
+        if key_type_checker(key) is UndefinedKey:
+            return
+
+        elif key_type_checker(key) is SpecialKey:
+            name = key.name
+            if name == "ctrl_r":
+                name = "right ctrl"
+            if name == "alt_r":
+                name = "right alt"
+
+            table.putBoolean(name, is_pressed)
+
+        elif key_type_checker(key) is ASCIIKey:
+            # Fixes wierd behavior on networktables
+            if key.char == "/":
+                table.putBoolean("slash", is_pressed)
+            else:  # Normal keys
+                character: str = key.char
+                table.putBoolean(character.lower(), is_pressed)
+
+    return update_table
 
 
-def track_keyboard_until_client_disconnect(keys_table: NetworkTable, keyboard_client: NetworkTableClient):
-    keyboard.hook(lambda key_event: on_key_event(key_event, keys_table))
-    while keyboard_client.is_connected():
-        time.sleep(__KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS)
+def track_keyboard_until_client_disconnect(keys_table: NetworkTable,
+                                             keyboard_client: NetworkTableClient):
+    with keyboard.Listener(
+            on_press=keys_handler(keys_table, True),
+            on_release=keys_handler(keys_table, False),
+    ) as listener:
+        listener.join()
+        if not keyboard_client.isConnected():
+            listener.stop()
 
 
 def run_keyboard_tracking_client():

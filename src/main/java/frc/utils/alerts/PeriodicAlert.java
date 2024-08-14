@@ -4,7 +4,7 @@ import java.util.function.BooleanSupplier;
 
 public class PeriodicAlert extends Alert {
 
-	private BooleanSupplier raiseSupplier;
+	private final BooleanSupplier raiseSupplier;
 
 	public PeriodicAlert(AlertType type, String name, BooleanSupplier raiseSupplier) {
 		super(type, name);

@@ -1,5 +1,6 @@
 package frc.utils.controllers.keyboard;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotManager;
 import frc.robot.constants.IPs;
@@ -130,7 +131,7 @@ public class KeyboardController {
     }
 
     private Trigger getNewKey(String name) {
-        return new Trigger(new LoggedTableBoolean(KEYBOARD_TABLE, KEYS_TAB + name, false)::get);
+        return new Trigger(NetworkTableInstance.getDefault().getTable(KEYBOARD_TABLE).getBooleanTopic(KEYS_TAB + name).subscribe(false)::get);
     }
 
     public double getValueByButtons(Trigger positiveButton, Trigger negativeButton) {

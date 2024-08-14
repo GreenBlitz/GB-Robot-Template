@@ -23,7 +23,7 @@ public enum BusChain {
 
     BusChain(String chainName) {
         this.chainName = chainName;
-        this.logPath = LOG_PATH + getChainName();
+        this.logPath = LOG_PATH + this.chainName + "/";
         this.busStatus = CANBus.getStatus(getChainName());
     }
 
@@ -37,19 +37,13 @@ public enum BusChain {
         reportAlerts();
     }
 
-    public static void logChainsStatuses() {
-		for (BusChain chain : BusChain.values()) {
-			chain.updateStatus();
-		}
-    }
-
     public void logStatus() {
-        Logger.recordOutput(logPath + "/Status", busStatus.Status.getName());
-        Logger.recordOutput(logPath + "/Utilization", busStatus.BusUtilization);
-        Logger.recordOutput(logPath + "/TimesDisconnected", busStatus.BusOffCount);
-        Logger.recordOutput(logPath + "/Full", busStatus.TxFullCount);
-        Logger.recordOutput(logPath + "/ReceiveError", busStatus.REC);
-        Logger.recordOutput(logPath + "/TransmitError", busStatus.TEC);
+        Logger.recordOutput(logPath + "Status", busStatus.Status.getName());
+        Logger.recordOutput(logPath + "Utilization", busStatus.BusUtilization);
+        Logger.recordOutput(logPath + "TimesDisconnected", busStatus.BusOffCount);
+        Logger.recordOutput(logPath + "Full", busStatus.TxFullCount);
+        Logger.recordOutput(logPath + "ReceiveError", busStatus.REC);
+        Logger.recordOutput(logPath + "TransmitError", busStatus.TEC);
     }
 
     public void reportAlerts() {
@@ -57,22 +51,28 @@ public enum BusChain {
         double currentTime = Timer.getFPGATimestamp();
 
         if (!busStatus.Status.isOK()) {
-            Logger.recordOutput(alertLogPath + "/StatusErrorAt", currentTime);
+            Logger.recordOutput(alertLogPath + "StatusErrorAt", currentTime);
         }
         if (busStatus.BusUtilization > MAX_CAN_UTILIZATION_PERCENT) {
-            Logger.recordOutput(alertLogPath + "/FloodedAt", currentTime);
+            Logger.recordOutput(alertLogPath + "FloodedAt", currentTime);
         }
         if (busStatus.BusOffCount > 0) {
-            Logger.recordOutput(alertLogPath + "/DisconnectedAt", currentTime);
+            Logger.recordOutput(alertLogPath + "DisconnectedAt", currentTime);
         }
         if (busStatus.TxFullCount > 0) {
-            Logger.recordOutput(alertLogPath + "/FullAt", currentTime);
+            Logger.recordOutput(alertLogPath + "FullAt", currentTime);
         }
         if (busStatus.REC > MAX_RECEIVE_ERRORS) {
-            Logger.recordOutput(alertLogPath + "/ReceiveErrorAt", currentTime);
+            Logger.recordOutput(alertLogPath + "ReceiveErrorAt", currentTime);
         }
         if (busStatus.TEC > MAX_TRANSMIT_ERRORS) {
-            Logger.recordOutput(alertLogPath + "/TransmitErrorsAt", currentTime);
+            Logger.recordOutput(alertLogPath + "TransmitErrorsAt", currentTime);
+        }
+    }
+    
+    public static void logChainsStatuses() {
+        for (BusChain chain : BusChain.values()) {
+            chain.updateStatus();
         }
     }
 

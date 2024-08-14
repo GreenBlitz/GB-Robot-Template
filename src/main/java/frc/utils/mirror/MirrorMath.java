@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 
-public class MirrorUtils {
+public class MirrorMath {
 
 	public static Rotation2d getMirroredAngle(Rotation2d angle) {
 		return MathConstants.HALF_CIRCLE.minus(angle);

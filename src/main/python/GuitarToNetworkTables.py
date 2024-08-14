@@ -1,26 +1,16 @@
+from NetworkTableManager import NetworkTableInstance, NetworkTable, NetworkTableClient
+
 import matplotlib.pyplot as plt
 import numpy
 import time
+import sys
 from pvrecorder import PvRecorder
 
 audio_resolution = 1
-
-
-def start():
-    recorder = PvRecorder(device_index=-1, frame_length=32 * audio_resolution)
-    try:
-        recorder.start()
-        start_time = time.time()
-        values = []
-        while True:
-            frame = recorder.read()
-            values.extend(frame)
-    except KeyboardInterrupt:
-        recorder.stop()
-    finally:
-        plot_sound(values)
-        plot_frequencies(values)
-        recorder.delete()
+__KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS = 0.01
+__GUITAR_TABLE = "Guitar/Keys"
+__CLIENT_NAME = "GuitarToNetworkTables"
+__IP = sys.argv[1]
 
 
 def plot_frequencies(values: list):
@@ -40,5 +30,29 @@ def plot_sound(values: list):
     plt.show()
 
 
+def track_guitar_until_client_disconnect(keys_table: NetworkTable, guitar_client: NetworkTableClient):
+    recorder = PvRecorder(device_index=-1, frame_length=32 * audio_resolution)
+    try:
+        recorder.start()
+        start_time = time.time()
+        values = []
+        while guitar_client.is_connected():
+            frame = recorder.read()
+            values.extend(frame)
+            time.sleep(__KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS)
+    except KeyboardInterrupt:
+        recorder.stop()
+    finally:
+        recorder.delete()
+
+
+def run_guitar_tracking_client():
+    guitar_client = NetworkTableClient(__IP, __CLIENT_NAME)
+    keys_table = guitar_client.connect().getTable(__GUITAR_TABLE)
+
+    track_guitar_until_client_disconnect(keys_table, guitar_client)
+    guitar_client.terminate()
+
+
 if __name__ == "__main__":
-    start()
+    run_guitar_tracking_client()

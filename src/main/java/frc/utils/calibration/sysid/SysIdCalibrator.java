@@ -18,10 +18,12 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class SysIdCalibrator {
 
+	public static final double DEFAULT_VOLTAGE_STEP = 7;
+	public static final double DEFAULT_RAMP_RATE_VOLTS_PER_SECOND = 1;
+	public static final double DEFAULT_TIMEOUT_SECONDS = 10;
+
 	private final SysIdRoutine sysIdRoutine;
-
 	private final GBSubsystem usedSubsystem;
-
 	private final boolean isCTRE;
 
 	/**
@@ -36,14 +38,7 @@ public class SysIdCalibrator {
 		double voltageStepVolts,
 		double rampRateVoltsPerSecond
 	) {
-		this(
-			isCTRE,
-			subsystem,
-			voltageSetControl,
-			voltageStepVolts,
-			rampRateVoltsPerSecond,
-			SysIdConstants.DEFAULT_TIMEOUT_SECONDS
-		);
+		this(isCTRE, subsystem, voltageSetControl, voltageStepVolts, rampRateVoltsPerSecond, DEFAULT_TIMEOUT_SECONDS);
 	}
 
 	/**
@@ -52,14 +47,7 @@ public class SysIdCalibrator {
 	 * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
 	 */
 	public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStep) {
-		this(
-			isCTRE,
-			subsystem,
-			voltageSetControl,
-			voltageStep,
-			SysIdConstants.DEFAULT_RAMP_RATE_VOLTS_PER_SECOND,
-			SysIdConstants.DEFAULT_TIMEOUT_SECONDS
-		);
+		this(isCTRE, subsystem, voltageSetControl, voltageStep, DEFAULT_RAMP_RATE_VOLTS_PER_SECOND, DEFAULT_TIMEOUT_SECONDS);
 	}
 
 	/**
@@ -72,9 +60,9 @@ public class SysIdCalibrator {
 			isCTRE,
 			subsystem,
 			voltageSetControl,
-			SysIdConstants.DEFAULT_VOLTAGE_STEP,
-			SysIdConstants.DEFAULT_RAMP_RATE_VOLTS_PER_SECOND,
-			SysIdConstants.DEFAULT_TIMEOUT_SECONDS
+			DEFAULT_VOLTAGE_STEP,
+			DEFAULT_RAMP_RATE_VOLTS_PER_SECOND,
+			DEFAULT_TIMEOUT_SECONDS
 		);
 	}
 

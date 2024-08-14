@@ -11,15 +11,15 @@ public class GyroSimulation {
 
 	private double pitchRadians = 0;
 
-	public Rotation2d getGyroYaw() {
+	public Rotation2d getYaw() {
 		return Rotation2d.fromRadians(yawRadians);
 	}
 
-	public Rotation2d getGyroRoll() {
+	public Rotation2d getRoll() {
 		return Rotation2d.fromRadians(rollRadians);
 	}
 
-	public Rotation2d getGyroPitch() {
+	public Rotation2d getPitch() {
 		return Rotation2d.fromRadians(pitchRadians);
 	}
 

@@ -11,15 +11,15 @@ import java.nio.file.Path;
  */
 public class ComputerMain {
 
-    public static void main(String... args) {
-        startComputerPrograms(args);
-    }
+	public static void main(String... args) {
+		startComputerPrograms(args);
+	}
 
-    private static void startComputerPrograms(String... args) {
-        String connectedIP = args[0];
-        if (KeyboardController.ENABLE_KEYBOARD) {
-            CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);
-        }
-    }
+	private static void startComputerPrograms(String... args) {
+		String connectedIP = args[0];
+		if (KeyboardController.ENABLE_KEYBOARD) {
+			CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);
+		}
+	}
 
 }

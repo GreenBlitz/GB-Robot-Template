@@ -1,5 +1,6 @@
 package frc.robot.bindings;
 
+import frc.robot.Robot;
 import frc.utils.controllers.joysticks.JoystickPorts;
 import frc.utils.controllers.joysticks.SmartJoystick;
 
@@ -12,41 +13,41 @@ public class JoysticksBindings {
 	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
-	public static void configureBindings() {
-		mainJoystickButtons();
-		secondJoystickButtons();
-		thirdJoystickButtons();
-		fourthJoystickButtons();
-		fifthJoystickButtons();
-		sixthJoystickButtons();
+	public static void configureBindings(Robot robot) {
+		mainJoystickButtons(robot);
+		secondJoystickButtons(robot);
+		thirdJoystickButtons(robot);
+		fourthJoystickButtons(robot);
+		fifthJoystickButtons(robot);
+		sixthJoystickButtons(robot);
 	}
 
-	private static void mainJoystickButtons() {
+	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings
 	}
 
-	private static void secondJoystickButtons() {
+	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings
 	}
 
-	private static void thirdJoystickButtons() {
+	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings
 	}
 
-	private static void fourthJoystickButtons() {
+	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings
 	}
 
-	private static void fifthJoystickButtons() {
+	private static void fifthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings
 	}
 
-	private static void sixthJoystickButtons() {
+	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 		// bindings
 	}

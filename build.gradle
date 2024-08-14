@@ -1,6 +1,8 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
 import groovy.json.JsonSlurper
 import java.nio.file.Files
+import java.nio.file.NotLinkException
+import java.io.FileFilter
 
 plugins {
 	id "java"
@@ -146,31 +148,39 @@ tasks.withType(JavaCompile).configureEach {
 // Setup local git hooks
 
 def ensureSymlink(link, target) {
-    if (!Files.isSymbolicLink(link)) {
-        if (Files.exists(link)) {
-            Files.delete(link)
-        }
+	if (!Files.isSymbolicLink(link)) {
+		Files.deleteIfExists(link)
 
-        Files.createSymbolicLink(link, target)
+		Files.createSymbolicLink(link, target)
 
-        def relative = { f -> rootDir.toPath().relativize(f) }
-        println("--- Installed Symbolic Link ${relative(link)} -> ${relative(target)} ---")
-    }
+		def relative = { f -> rootDir.toPath().relativize(f) }
+		println("--- Installed symbolic link ${relative(link)} -> ${relative(target)} ---")
+	}
 }
 
 def gitConfig = 'Git Configuration'
 tasks.register('installLocalGitHookSymlinks') {
 	group = gitConfig
 
+	inputs.dir "$rootDir/.scripts/git-hooks/"
+	inputs.dir "$rootDir/.git/hooks/"
 	outputs.dir "$rootDir/.git/hooks/"
 
 	doLast {
-		def linkDir = file("$rootDir/.git/hooks/").toPath()
-		def gitHooks = fileTree("$rootDir/.scripts/git-hooks/")
-		gitHooks.forEach { File target ->
-			def link = linkDir.resolve(target.toPath().getFileName())
+		def hooksSources = fileTree("$rootDir/.scripts/git-hooks/")
+		def hooksDest = file("$rootDir/.git/hooks/").toPath()
+
+		hooksSources.forEach { File target ->
+			def link = hooksDest.resolve(target.toPath().getFileName())
 
 			ensureSymlink(link, target.toPath())
+		}
+
+		hooksDest.toFile().listFiles().each { link ->
+			if (Files.isSymbolicLink(link.toPath()) && !Files.exists(Files.readSymbolicLink(link.toPath()))) {
+				link.delete()
+				println("--- Deleted stale link ${rootDir.toPath().relativize(link.toPath())} ---")
+			}
 		}
 	}
 }
@@ -181,6 +191,7 @@ tasks.matching({ it.group != gitConfig }).configureEach({ it.dependsOn gitConfig
 if (System.getenv().containsKey('CI') || !file('.git').isDirectory()) {
 	gitConfigTasks.configureEach { it.enabled = false }
 }
+
 
 discoverroborio.finalizedBy('setReachableIP')
 tasks.register('setReachableIP') {

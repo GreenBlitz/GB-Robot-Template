@@ -13,8 +13,8 @@ import frc.robot.Robot;
 import frc.robot.constants.Field;
 import frc.robot.constants.LogPaths;
 import frc.robot.constants.MathConstants;
-import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.strcutures.SuperStructureConstants;
 import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
 import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
@@ -302,10 +302,10 @@ public class Swerve extends GBSubsystem {
 
 	public boolean isAtAngle(Rotation2d targetAngle) {
 		double angleDeltaDegrees = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
-		boolean isAtAngle = angleDeltaDegrees < PoseEstimatorConstants.ROTATION_TOLERANCE.getDegrees();
+		boolean isAtAngle = angleDeltaDegrees < SuperStructureConstants.ROTATION_TOLERANCE.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < PoseEstimatorConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < SuperStructureConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
 		return isAtAngle && isStopping;
 	}

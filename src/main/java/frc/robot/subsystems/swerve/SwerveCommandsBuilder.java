@@ -83,7 +83,7 @@ public class SwerveCommandsBuilder {
 			() -> {},
 			() -> swerve.getModules().pointWheelsInX(SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop),
 			interrupted -> {},
-			swerve.getModules()::isAtTargetAngles,
+			swerve.getModules()::isAtTargetStates,
 			swerve
 		).withName("Point Wheels In X");
 	}
@@ -103,7 +103,7 @@ public class SwerveCommandsBuilder {
 			() -> {},
 			() -> swerve.getModules().pointWheels(wheelsAngle, optimize),
 			interrupted -> {},
-			swerve.getModules()::isAtTargetStates,
+			swerve.getModules()::isAtTargetAngles,
 			swerve
 		).withName("Point Wheels");
 	}

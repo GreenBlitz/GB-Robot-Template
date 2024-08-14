@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.strcutures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -30,6 +31,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
+	private final SuperStructure superStructure;
 
 	public Robot() {
 		this.swerve = new Swerve(
@@ -38,12 +40,14 @@ public class Robot {
 			GyroFactory.create(SwerveName.SWERVE)
 		);
 
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve::getFieldRelativeVelocity);
+		this.poseEstimator = new PoseEstimator(swerve::setHeading);
 
 		this.swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 		this.swerve.setStateHelper(
-			new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), () -> Optional::empty, swerve)
+			new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve)
 		);
+
+		this.superStructure = new SuperStructure(swerve, poseEstimator);
 
 		buildPathPlannerForAuto();
 		configureBindings();
@@ -58,14 +62,13 @@ public class Robot {
 		JoysticksBindings.configureBindings(this);
 	}
 
-	public void periodic() {
-		swerve.wrapperPeriodic();
-		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
-	}
-
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public SuperStructure getSuperStructure() {
+		return superStructure;
 	}
 
 	public Swerve getSwerve() {

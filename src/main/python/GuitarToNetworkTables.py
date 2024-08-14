@@ -1,49 +1,46 @@
 from NetworkTableManager import NetworkTableInstance, NetworkTable, NetworkTableClient
 
-import matplotlib.pyplot as plt
 import numpy
 import time
 import sys
 from pvrecorder import PvRecorder
 
-audio_resolution = 1
+audio_resolution = 32
 __KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS = 0.01
 __GUITAR_TABLE = "Guitar/Keys"
 __CLIENT_NAME = "GuitarToNetworkTables"
+__PRESSED_VALUE = 2000000
 __IP = sys.argv[1]
 
 
-def plot_frequencies(values: list):
-    frequencies = numpy.fft.fft(values)
-    plt.figure(figsize=(8, 6))
-    plt.plot(numpy.arange(0, 1, 1 / len(frequencies)), numpy.abs(frequencies), 'r')
-    plt.xlabel('Freq (Hz)')
-    plt.ylabel('Amplitude')
-    plt.show()
-
-
-def plot_sound(values: list):
-    plt.figure(figsize=(8, 6))
-    plt.plot(numpy.arange(0, 1, 1 / len(values)), values, 'r')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Amplitude')
-    plt.show()
-
-
 def track_guitar_until_client_disconnect(keys_table: NetworkTable, guitar_client: NetworkTableClient):
-    recorder = PvRecorder(device_index=-1, frame_length=32 * audio_resolution)
+    recorder = PvRecorder(device_index=-1, frame_length=audio_resolution)
     try:
         recorder.start()
-        start_time = time.time()
         values = []
         while guitar_client.is_connected():
             frame = recorder.read()
+            if len(values) > audio_resolution * 16:
+                del values[0:audio_resolution]
             values.extend(frame)
+            map_to_keys(keys_table, values)
             time.sleep(__KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS)
     except KeyboardInterrupt:
         recorder.stop()
     finally:
         recorder.delete()
+
+
+def map_to_keys(keys_table: NetworkTable, values: list):
+    frequencies = numpy.abs(numpy.fft.fft(values))
+    #TODO logic
+
+
+def is_frequncies_in_threshold(values: list, low_bound: int, high_bound: int) -> bool:
+    for i in range(low_bound, high_bound):
+        if values[i] > __PRESSED_VALUE:
+            return True
+    return False
 
 
 def run_guitar_tracking_client():

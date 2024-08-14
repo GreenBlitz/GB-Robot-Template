@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimation.PoseEstimator;
@@ -43,9 +42,7 @@ public class Robot {
 		this.poseEstimator = new PoseEstimator(swerve::setHeading);
 
 		this.swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		this.swerve.setStateHelper(
-			new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve)
-		);
+		this.swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
 
 		this.superStructure = new SuperStructure(swerve, poseEstimator);
 

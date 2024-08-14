@@ -1,0 +1,18 @@
+#!/bin/bash
+
+RED=$(printf '\033[31m')
+GREEN=$(printf '\033[32m')
+BOLD=$(printf '\033[1m')
+RESET=$(printf '\033[0m')
+
+# Run spotlessCheck on committed files
+if ./gradlew spotlessCheck; then
+    echo "${BOLD}${GREEN}Static analysis succeeded. You may push your commit.${RESET}"
+    exit 0
+else
+    echo "${BOLD}${RED}Spotless formatting check failed. Please update your commit before pushing."
+    echo              "Unformatted PRs will be rejected without review.${RESET}"
+    echo "${BOLD}Help:${RESET} to autoformat all local changes, run \`./gradlew spotlessApply && git commit --amend --no-edit\`."
+    echo        "     "       "(Never amend already-pushed commits! You will not be able to push them later!)"
+    exit 1
+fi

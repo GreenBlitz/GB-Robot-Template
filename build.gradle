@@ -196,6 +196,7 @@ tasks.register('checkAkitInstall', JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
 }
 
+tasks.findByName("deploy").finalizedBy('runComputerPrograms')
 tasks.register('runComputerPrograms', JavaExec) {
 	group = 'execution'
 	dependsOn('setReachableIP')
@@ -210,14 +211,6 @@ tasks.register('runComputerPrograms', JavaExec) {
 		println("Using reachable IP: ${reachableIP}")
 	}
 }
-
-tasks.register('deployWithComputerPrograms') {
-	group = 'deployutils'
-	dependsOn("deploy")
-	dependsOn("runComputerPrograms")
-	tasks.findByName("runComputerPrograms").mustRunAfter("deploy")
-}
-
 
 spotless {
 	java {

@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.constants.LogPaths;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderConstants;
@@ -41,7 +42,7 @@ public class CancoderEncoder implements IEncoder {
 		encoder.getConfigurator().refresh(magnetSensorConfigs);
 		encoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
 		if (!PhoenixProUtils.checkWithRetry(() -> encoder.getConfigurator().apply(encoderConfiguration), APPLY_CONFIG_RETRIES)) {
-			Logger.recordOutput(logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
 		}
 	}
 

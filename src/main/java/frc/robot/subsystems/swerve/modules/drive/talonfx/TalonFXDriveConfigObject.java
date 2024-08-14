@@ -4,6 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.constants.LogPaths;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.ctre.PhoenixProUtils;
@@ -35,7 +36,7 @@ class TalonFXDriveConfigObject {
 
 	private void configMotor(TalonFXConfiguration driveConfiguration) {
 		if (!PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(driveConfiguration), TalonFXDriveConstants.APPLY_CONFIG_RETRIES)) {
-			Logger.recordOutput(logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
 		}
 	}
 

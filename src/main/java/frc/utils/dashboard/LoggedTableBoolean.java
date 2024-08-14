@@ -21,7 +21,7 @@ public class LoggedTableBoolean implements LoggedDashboardInput {
 		this.value = this.defaultValue;
 		this.booleanEntry = NetworkTableInstance.getDefault().getTable(table).getEntry(key);
 
-		set(defaultValue);
+
 		periodic();
 		Logger.registerDashboardInput(this);
 	}

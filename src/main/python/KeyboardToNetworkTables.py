@@ -70,7 +70,7 @@ def track_keyboard_until_client_disconnect(keys_table: NetworkTable,
     ) as listener:
         listener.join()
         if not keyboard_client.isConnected():
-            listener.stop()  # TODO: i don't know how networkTables works so i guess it does the job but idk
+            listener.stop()
 
 
 def run_keyboard_tracking_client():

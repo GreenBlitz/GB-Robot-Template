@@ -29,7 +29,7 @@ public class KeyboardController {
             F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
             DELETE, BACKTICK,
             ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO,
-            MINUS, EQUALS, BACKSPACE, TAB,
+            MINUS, EQUALS, SPACE, BACKSPACE, TAB,
             A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
             SEMICOLON, APOSTROPHE, LEFT_SHIFT, COMMA, PERIOD, SLASH, RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL,
             LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW,
@@ -71,6 +71,7 @@ public class KeyboardController {
 
         this.MINUS = getNewKey("-");
         this.EQUALS = getNewKey("=");
+        this.SPACE = getNewKey("space");
         this.BACKSPACE = getNewKey("backspace");
         this.TAB = getNewKey("tab");
 

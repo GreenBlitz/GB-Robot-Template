@@ -57,7 +57,7 @@ class BatteryLimiter extends Command {
 			if (!DriverStationUtils.isMatch()) {
 				showBatteryMessage();
 			}
-		} else if (lowBatteryEntry.get()){
+		} else if (lowBatteryEntry.get()) {
 			lowBatteryEntry.set(false);
 		}
 	}

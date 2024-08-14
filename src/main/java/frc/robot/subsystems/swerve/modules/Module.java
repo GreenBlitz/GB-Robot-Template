@@ -83,8 +83,8 @@ public class Module {
 		ModuleInputsAutoLogged moduleInputs = moduleInputsContainer.getModuleInputs();
 		moduleInputs.isAtTargetAngle = isAtTargetAngle();
 		moduleInputs.isAtTargetVelocity = isAtTargetVelocity();
-		moduleInputs.isAtTargetState = moduleInputs.isAtTargetVelocity && moduleInputs.isAtTargetAngle;
 		moduleInputs.isClosedLoop = isClosedLoop;
+		moduleInputs.targetState = targetState;
 
 		moduleInputsContainer.processInputs(constants.logPath());
 	}
@@ -186,6 +186,7 @@ public class Module {
 
 
 	public void stop() {
+		targetState = new SwerveModuleState(0, moduleInputsContainer.getSteerMotorInputs().angle);
 		iSteer.stop();
 		iDrive.stop();
 	}
@@ -204,9 +205,9 @@ public class Module {
 	public void pointToAngle(Rotation2d angle, boolean optimize) {
 		SwerveModuleState moduleState = new SwerveModuleState(0, angle);
 		if (optimize) {
-			this.targetState.angle = SwerveModuleState.optimize(moduleState, getCurrentAngle()).angle;
+			targetState.angle = SwerveModuleState.optimize(moduleState, getCurrentAngle()).angle;
 		} else {
-			this.targetState.angle = moduleState.angle;
+			targetState.angle = moduleState.angle;
 		}
 		iSteer.setTargetAngle(targetState.angle);
 	}

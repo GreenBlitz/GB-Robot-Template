@@ -74,7 +74,8 @@ public class CMDHandler {
 	 * @param arguments  The arguments given to the python file.
 	 */
 	public static void runPythonClass(Path pythonPath, String... arguments) {
-		String command = "py " + pythonPath + ".py " + getSeparatedArguments(arguments);
+		String pythonName = isWindows() ? "py " : "python ";
+		String command = pythonName + pythonPath + ".py " + getSeparatedArguments(arguments);
 		runCMDCommand(DirectoryPaths.PYTHON_DIRECTORY_PATH, command);
 	}
 

@@ -121,7 +121,7 @@ public class JoysticksBindings {
 				.driveToPose(
 					robot.getPoseEstimator()::getCurrentPose,
 					() -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)),
-					robot.getPoseEstimator()::isAtPose
+					robot.getSuperStructure()::isAtPose
 				)
 		);
 		usedJoystick.START.whileTrue(
@@ -130,7 +130,7 @@ public class JoysticksBindings {
 				.driveToPose(
 					robot.getPoseEstimator()::getCurrentPose,
 					() -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)),
-					robot.getPoseEstimator()::isAtPose
+					robot.getSuperStructure()::isAtPose
 				)
 		);
 	}
@@ -153,7 +153,7 @@ public class JoysticksBindings {
 				.driveToPose(
 					robot.getPoseEstimator()::getCurrentPose,
 					() -> new Pose2d(1, 8, Rotation2d.fromDegrees(90)),
-					robot.getPoseEstimator()::isAtPose
+					robot.getSuperStructure()::isAtPose
 
 				)
 		);
@@ -163,7 +163,7 @@ public class JoysticksBindings {
 				.driveToPose(
 					robot.getPoseEstimator()::getCurrentPose,
 					() -> new Pose2d(6, 6, Rotation2d.fromDegrees(117)),
-					robot.getPoseEstimator()::isAtPose
+					robot.getSuperStructure()::isAtPose
 				)
 		);
 		usedJoystick.Y.whileTrue(
@@ -172,7 +172,7 @@ public class JoysticksBindings {
 				.driveToPose(
 					robot.getPoseEstimator()::getCurrentPose,
 					() -> new Pose2d(7, 2, Rotation2d.fromDegrees(180)),
-					robot.getPoseEstimator()::isAtPose
+					robot.getSuperStructure()::isAtPose
 				)
 		);
 		usedJoystick.B.whileTrue(
@@ -181,7 +181,7 @@ public class JoysticksBindings {
 				.driveToPose(
 					robot.getPoseEstimator()::getCurrentPose,
 					() -> new Pose2d(16, 6, Rotation2d.fromDegrees(-75)),
-					robot.getPoseEstimator()::isAtPose
+					robot.getSuperStructure()::isAtPose
 				)
 		);
 		usedJoystick.START.whileTrue(
@@ -190,7 +190,7 @@ public class JoysticksBindings {
 				.driveToPose(
 					robot.getPoseEstimator()::getCurrentPose,
 					() -> new Pose2d(12, 8, Rotation2d.fromDegrees(14)),
-					robot.getPoseEstimator()::isAtPose
+					robot.getSuperStructure()::isAtPose
 				)
 		);
 		usedJoystick.BACK.whileTrue(
@@ -199,7 +199,7 @@ public class JoysticksBindings {
 				.driveToPose(
 					robot.getPoseEstimator()::getCurrentPose,
 					() -> new Pose2d(10, 4, Rotation2d.fromDegrees(140)),
-					robot.getPoseEstimator()::isAtPose
+					robot.getSuperStructure()::isAtPose
 
 				)
 		);

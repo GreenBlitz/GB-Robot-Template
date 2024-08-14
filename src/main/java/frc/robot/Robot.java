@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.strcutures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -29,10 +30,12 @@ public class Robot {
 		ModulesFactory.create(SwerveName.SWERVE),
 		GyroFactory.create(SwerveName.SWERVE)
 	);
-	public static final PoseEstimator poseEstimator = new PoseEstimator(swerve::setHeading, swerve::getFieldRelativeVelocity);
+	public static final PoseEstimator poseEstimator = new PoseEstimator(swerve::setHeading);
 	static {
 		swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 	}
+
+	public static final SuperStructure superStructure = new SuperStructure(swerve, poseEstimator);
 
 	public Robot() {
 		buildPathPlannerForAuto();
@@ -48,14 +51,13 @@ public class Robot {
 		JoysticksBindings.configureBindings(this);
 	}
 
-	public void periodic() {
-		swerve.wrapperPeriodic();
-		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
-	}
-
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public SuperStructure getSuperStructure(){
+		return superStructure;
 	}
 
 	public Swerve getSwerve() {

@@ -55,6 +55,8 @@ public class Swerve extends GBSubsystem {
 		this.currentAngleSupplier = this::getAbsoluteHeading;
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+
+		updateInputs();
 	}
 
 	protected Modules getModules() {

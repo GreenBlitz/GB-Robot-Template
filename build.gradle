@@ -142,7 +142,7 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-build.dependsOn('installLocalGitHookPostCheckout')
+tasks.named("build").configure { dependsOn('installLocalGitHookPostCheckout') }
 tasks.register('installLocalGitHookPostCheckout', Copy) {
 	group = 'git'
 	from new File(rootProject.rootDir, '.scripts/post-checkout')
@@ -196,7 +196,7 @@ tasks.register('checkAkitInstall', JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
 }
 
-tasks.findByName("deploy").finalizedBy('runComputerPrograms')
+tasks.named("deploy").configure { finalizedBy('runComputerPrograms') }
 tasks.register('runComputerPrograms', JavaExec) {
 	group = 'execution'
 	dependsOn('setReachableIP')

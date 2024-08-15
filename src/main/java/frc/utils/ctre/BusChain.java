@@ -14,7 +14,7 @@ public enum BusChain {
 	private static final double MAX_CAN_UTILIZATION_PERCENT = 0.6;
 	private static final double MAX_RECEIVE_ERRORS = 0;
 	private static final double MAX_TRANSMIT_ERRORS = 0;
-	private static final String LOG_PATH = "Bus/";
+	private static final String LOG_PATH_PREFIX = "Bus/";
 
 	private final String chainName;
 	private final String logPath;
@@ -22,7 +22,7 @@ public enum BusChain {
 
 	BusChain(String chainName) {
 		this.chainName = chainName;
-		this.logPath = LOG_PATH + this.chainName + "/";
+		this.logPath = LOG_PATH_PREFIX + this.chainName + "/";
 		this.busStatus = CANBus.getStatus(getChainName());
 	}
 
@@ -40,7 +40,7 @@ public enum BusChain {
 		Logger.recordOutput(logPath + "Status", busStatus.Status.getName());
 		Logger.recordOutput(logPath + "Utilization", busStatus.BusUtilization);
 		Logger.recordOutput(logPath + "TimesDisconnected", busStatus.BusOffCount);
-		Logger.recordOutput(logPath + "Full", busStatus.TxFullCount);
+		Logger.recordOutput(logPath + "FullCount", busStatus.TxFullCount);
 		Logger.recordOutput(logPath + "ReceiveError", busStatus.REC);
 		Logger.recordOutput(logPath + "TransmitError", busStatus.TEC);
 	}

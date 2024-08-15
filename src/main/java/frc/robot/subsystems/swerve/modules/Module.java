@@ -46,7 +46,7 @@ public class Module {
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
-		return moduleInputsContainer.getSteerMotorInputs().sysIdConfigInfo;
+		return iSteer.getSysIdConfigInfo();
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {

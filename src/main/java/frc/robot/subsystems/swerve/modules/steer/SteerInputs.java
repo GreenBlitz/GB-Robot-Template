@@ -8,8 +8,6 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class SteerInputs {
 
-	public SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), false);
-
 	public boolean isConnected = false;
 	public Rotation2d angle = new Rotation2d();
 	public Rotation2d velocity = new Rotation2d();

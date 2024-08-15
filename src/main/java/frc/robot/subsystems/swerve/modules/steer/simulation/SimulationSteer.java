@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;
 import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class SimulationSteer implements ISteer {
 
@@ -21,6 +22,11 @@ public class SimulationSteer implements ISteer {
 
 		this.positionRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
+	}
+
+	@Override
+	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+		return constants.getSysIdConfigInfo();
 	}
 
 	@Override
@@ -48,8 +54,6 @@ public class SimulationSteer implements ISteer {
 
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
-		inputs.getSteerMotorInputs().sysIdConfigInfo = constants.getSysIdConfigInfo();
-
 		inputs.getSteerMotorInputs().isConnected = true;
 		inputs.getSteerMotorInputs().angle = motor.getPosition();
 		inputs.getSteerMotorInputs().velocity = motor.getVelocity();

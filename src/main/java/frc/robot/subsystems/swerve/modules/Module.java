@@ -50,7 +50,7 @@ public class Module {
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {
-		return moduleInputsContainer.getDriveMotorInputs().sysIdConfigInfo;
+		return iDrive.getSysIdConfigInfo();
 	}
 
 	public double toDriveMeters(Rotation2d angle) {

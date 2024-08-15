@@ -1,8 +1,6 @@
 package frc.robot.subsystems.swerve.modules.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog

@@ -14,8 +14,8 @@ import frc.robot.constants.LogPaths;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.strcutures.SuperStructureConstants;
-import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.IGyro;
+import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.utils.GBSubsystem;
@@ -34,15 +34,15 @@ public class Swerve extends GBSubsystem {
 	public static final Lock ODOMETRY_LOCK = new ReentrantLock();
 
 	private final SwerveCommandsBuilder commandsBuilder;
-	private final SwerveGyroInputsAutoLogged gyroInputs;
-	private final ISwerveGyro gyro;
+	private final GyroInputsAutoLogged gyroInputs;
+	private final IGyro gyro;
 	private final Modules modules;
 	private final SwerveConstants constants;
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> currentAngleSupplier;
 
-	public Swerve(SwerveConstants constants, Modules modules, ISwerveGyro gyro) {
+	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
@@ -50,7 +50,7 @@ public class Swerve extends GBSubsystem {
 		this.modules = modules;
 		this.gyro = gyro;
 
-		this.gyroInputs = new SwerveGyroInputsAutoLogged();
+		this.gyroInputs = new GyroInputsAutoLogged();
 		this.currentAngleSupplier = this::getAbsoluteHeading;
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -114,7 +114,7 @@ public class Swerve extends GBSubsystem {
 		gyroInputs.timestampOdometrySamples = new double[] {Timer.getFPGATimestamp()};
 	}
 
-	private void reportGyroAlerts(SwerveGyroInputsAutoLogged gyroInputs) {
+	private void reportGyroAlerts(GyroInputsAutoLogged gyroInputs) {
 		if (!gyroInputs.isConnected) {
 			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.gyroLogPath() + "GyroDisconnectedAt", Timer.getFPGATimestamp());
 		}

@@ -7,7 +7,7 @@ import org.littletonrobotics.junction.Logger;
 
 public enum BusChain {
 
-	ROBORIO("rio"),
+	ROBORIO("Rio"),
 	CANIVORE("CANivore");
 
 	private static final double MAX_CAN_UTILIZATION_PERCENT = 0.6;
@@ -30,7 +30,7 @@ public enum BusChain {
 	}
 
 	public void updateStatus() {
-		busStatus = CANBus.getStatus(this.chainName + "/");
+		busStatus = CANBus.getStatus(this.chainName);
 		logStatus();
 		reportAlerts();
 	}

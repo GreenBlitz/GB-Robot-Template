@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.LogPaths;
 import org.littletonrobotics.junction.Logger;
 
-
 public enum BusChain {
 
 	ROBORIO("rio"),
@@ -31,7 +30,7 @@ public enum BusChain {
 	}
 
 	public void updateStatus() {
-		busStatus = CANBus.getStatus(getChainName());
+		busStatus = CANBus.getStatus(this.chainName + "/");
 		logStatus();
 		reportAlerts();
 	}

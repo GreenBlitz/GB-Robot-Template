@@ -1,7 +1,9 @@
 package frc.robot.subsystems.swerve.factories.modules.drive;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.factories.modules.constants.SimulationModuleConstants;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SimulationSwerveConstants;
 import frc.robot.subsystems.swerve.modules.drive.simulation.SimulationDriveConstants;
@@ -22,7 +24,8 @@ class DriveSimulationConstants {
 			Conversions.distanceToAngle(
 				SimulationSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
 				SimulationModuleConstants.WHEEL_DIAMETER_METERS
-			)
+			),
+			new SysIdRoutine.Config()
 		);
 	}
 

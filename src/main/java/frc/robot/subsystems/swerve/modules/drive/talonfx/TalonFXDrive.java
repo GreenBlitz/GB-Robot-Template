@@ -17,6 +17,7 @@ public class TalonFXDrive implements IDrive {
 
 	private final TalonFXWrapper driveMotor;
 	private final TalonFXDriveSignals signals;
+	private final TalonFXDriveConstants constants;
 
 	private final VelocityVoltage velocityVoltageRequest;
 	private final VoltageOut voltageRequest;
@@ -26,6 +27,7 @@ public class TalonFXDrive implements IDrive {
 	public TalonFXDrive(TalonFXDriveConstants constants) {
 		this.driveMotor = constants.getMotor();
 		this.signals = constants.getSignals();
+		this.constants = constants;
 
 		this.velocityVoltageRequest = new VelocityVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
@@ -61,6 +63,8 @@ public class TalonFXDrive implements IDrive {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		DriveInputsAutoLogged driveInputs = inputs.getDriveMotorInputs();
+		driveInputs.sysIdConfig = constants.getSysIdConfig();
+
 		//@formatter:off
 		driveInputs.isConnected = BaseStatusSignal.refreshAll(
 			signals.positionSignal(),

@@ -10,7 +10,7 @@ public record SimulationDriveConstants(
 	SimpleMotorSimulation motorSimulation,
 	boolean enableFOC,
 	Rotation2d maxVelocityPerSecond,
-	SysIdCalibrator.SysIdConfigInfo sysIdConfig
+	SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo
 ) {
 
 	public SimulationDriveConstants(DCMotorSim dcMotorSim, boolean enableFOC, Rotation2d maxVelocityPerSecond, SysIdRoutine.Config sysIdConfig) {

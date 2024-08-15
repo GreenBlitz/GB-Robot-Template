@@ -6,16 +6,16 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimation.PoseEstimatorConstants;
-import frc.robot.subsystems.swerve.gyro.ISwerveGyro;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroConstants;
-import frc.robot.subsystems.swerve.gyro.SwerveGyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
+import frc.robot.subsystems.swerve.gyro.IGyro;
+import frc.robot.subsystems.swerve.gyro.GyroConstants;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
 
 import java.util.Queue;
 
-public class Pigeon2Gyro implements ISwerveGyro {
+public class Pigeon2Gyro implements IGyro {
 
 	private final Pigeon2 gyro;
 	private final StatusSignal<Double> yawSignal;
@@ -24,7 +24,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
 	public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String logPathPrefix) {
 		this.gyro = new Pigeon2Wrapper(gyroID);
-		this.logPath = logPathPrefix + SwerveGyroConstants.LOG_PATH_ADDITION;
+		this.logPath = logPathPrefix + GyroConstants.LOG_PATH_ADDITION;
 		this.yawSignal = gyro.getYaw().clone();
 
 		// todo - maybe latency
@@ -52,7 +52,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
 
 	@Override
-	public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
+	public void updateInputs(GyroInputsAutoLogged inputs) {
 		inputs.isConnected = BaseStatusSignal.refreshAll(yawSignal).isOK();
 		inputs.gyroYaw = Rotation2d.fromDegrees(yawSignal.getValue());
 		inputs.yawOdometrySamples = yawQueue.stream().map(Rotation2d::fromDegrees).toArray(Rotation2d[]::new);

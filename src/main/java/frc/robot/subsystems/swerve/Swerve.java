@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
@@ -157,20 +156,6 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRads = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
-		return Rotation2d.fromRadians(inputtedHeadingRads);
-	}
-
-	public Rotation2d getRelativeHeading() {
-		return Rotation2d.fromDegrees(gyroInputs.gyroYaw.getDegrees());
-	}
-
-	public Translation3d getGyroAcceleration() {
-		return new Translation3d(gyroInputs.xAcceleration, gyroInputs.yAcceleration, gyroInputs.zAcceleration);
-	}
-
-
 	public int getNumberOfOdometrySamples() {
 		return gyroInputs.timestampOdometrySamples.length;
 	}
@@ -190,17 +175,22 @@ public class Swerve extends GBSubsystem {
 	}
 
 
+	public Rotation2d getAbsoluteHeading() {
+		double inputtedHeadingRads = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
+		return Rotation2d.fromRadians(inputtedHeadingRads);
+	}
+
+	public Rotation2d getAllianceRelativeHeading() {
+		Rotation2d currentAngle = currentAngleSupplier.get();
+		return Field.isFieldConventionAlliance() ? currentAngle : currentAngle.rotateBy(MathConstants.HALF_CIRCLE);
+	}
+
 	public ChassisSpeeds getRobotRelativeVelocity() {
 		return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getCurrentStates());
 	}
 
 	public ChassisSpeeds getFieldRelativeVelocity() {
 		return SwerveMath.robotRelativeToFieldRelativeSpeeds(getRobotRelativeVelocity(), currentAngleSupplier.get());
-	}
-
-	public Rotation2d getAllianceRelativeHeading() {
-		Rotation2d currentAngle = currentAngleSupplier.get();
-		return Field.isFieldConventionAlliance() ? currentAngle : currentAngle.rotateBy(MathConstants.HALF_CIRCLE);
 	}
 
 	private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {

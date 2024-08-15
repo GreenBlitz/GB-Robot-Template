@@ -23,7 +23,7 @@ public class ComputerLogFile {
 		ensureFolderExists();
 		ensureFileExists();
 		clear();
-		reportMessageToFile("Initialized Computer Log File: " + name);
+		write("Initialized Computer Log File: " + name);
 	}
 
 	private void ensureFolderExists() {

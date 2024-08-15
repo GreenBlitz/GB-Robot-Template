@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.LogPaths;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
@@ -46,8 +45,12 @@ public class Module {
 		resetByEncoder();
 	}
 
-	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo(){
-		return moduleInputsContainer.getDriveMotorInputs().sysIdConfig;
+	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
+		return moduleInputsContainer.getSteerMotorInputs().sysIdConfigInfo;
+	}
+
+	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {
+		return moduleInputsContainer.getDriveMotorInputs().sysIdConfigInfo;
 	}
 
 	public double toDriveMeters(Rotation2d angle) {

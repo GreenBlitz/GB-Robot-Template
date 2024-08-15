@@ -63,7 +63,7 @@ public class TalonFXDrive implements IDrive {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		DriveInputsAutoLogged driveInputs = inputs.getDriveMotorInputs();
-		driveInputs.sysIdConfig = constants.getSysIdConfig();
+		driveInputs.sysIdConfigInfo = constants.getSysIdConfig();
 
 		//@formatter:off
 		driveInputs.isConnected = BaseStatusSignal.refreshAll(

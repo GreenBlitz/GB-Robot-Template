@@ -9,11 +9,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.utils.GBSubsystem;
 import frc.utils.joysticks.SmartJoystick;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
 
-import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 public class SysIdCalibrator {
@@ -29,9 +27,7 @@ public class SysIdCalibrator {
 	 *
 	 * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
 	 */
-	public SysIdCalibrator(
-			SysIdConfigInfo sysIdConfigInfo, GBSubsystem subsystem, Consumer<Double> voltageSetControl
-	) {
+	public SysIdCalibrator(SysIdConfigInfo sysIdConfigInfo, GBSubsystem subsystem, Consumer<Double> voltageSetControl) {
 		this.usedSubsystem = subsystem;
 		this.isCTRE = sysIdConfigInfo.isCTRE;
 

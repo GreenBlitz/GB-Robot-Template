@@ -17,11 +17,11 @@ public class TalonFXDriveConstants {
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfig;
 
 	public TalonFXDriveConstants(
-			CTREDeviceID motorID,
-			boolean inverted,
-			TalonFXConfiguration configuration,
-			boolean enableFOC,
-			SysIdRoutine.Config sysIdConfig
+		CTREDeviceID motorID,
+		boolean inverted,
+		TalonFXConfiguration configuration,
+		boolean enableFOC,
+		SysIdRoutine.Config sysIdConfig
 	) {
 		TalonFXDriveConfigObject talonFXDriveConfigObject = new TalonFXDriveConfigObject(motorID, inverted, configuration);
 		this.motor = talonFXDriveConfigObject.getMotor();
@@ -42,7 +42,7 @@ public class TalonFXDriveConstants {
 		return enableFOC;
 	}
 
-	public SysIdCalibrator.SysIdConfigInfo getSysIdConfig() {
+	protected SysIdCalibrator.SysIdConfigInfo getSysIdConfig() {
 		return sysIdConfig;
 	}
 

@@ -54,8 +54,6 @@ public record SwerveConstants(
 	}
 
 	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
-	static final double STEER_SYSID_CALIBRATION_VOLTAGE_STEP = 1;
-	static final double STEER_SYSID_CALIBRATION_RAMP_RATE = 0.5;
 
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 

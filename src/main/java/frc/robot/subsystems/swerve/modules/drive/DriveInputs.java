@@ -8,7 +8,7 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class DriveInputs {
 
-	public SysIdCalibrator.SysIdConfigInfo sysIdConfig = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), false);
+	public SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), false);
 
 	public boolean isConnected = false;
 	public double distanceMeters = 0;

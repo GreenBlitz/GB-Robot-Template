@@ -17,6 +17,7 @@ public class TalonFXSteer implements ISteer {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXSteerSignals signals;
+	private final TalonFXSteerConstants constants;
 
 	private final PositionVoltage positionVoltageRequest;
 	private final VoltageOut voltageRequest;
@@ -26,6 +27,7 @@ public class TalonFXSteer implements ISteer {
 	public TalonFXSteer(TalonFXSteerConstants constants) {
 		this.motor = constants.getMotor();
 		this.signals = constants.getSignals();
+		this.constants = constants;
 
 		this.positionVoltageRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
@@ -65,6 +67,8 @@ public class TalonFXSteer implements ISteer {
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
 		SteerInputsAutoLogged steerInputs = inputs.getSteerMotorInputs();
+		steerInputs.sysIdConfigInfo = constants.getSysIdConfigInfo();
+
 		//@formatter:off
 		steerInputs.isConnected = BaseStatusSignal.refreshAll(
 			signals.positionSignal(),

@@ -10,12 +10,14 @@ import frc.robot.subsystems.swerve.modules.steer.ISteer;
 public class SimulationSteer implements ISteer {
 
 	private final SimpleMotorSimulation motor;
+	private final SimulationSteerConstants constants;
 
 	private final PositionVoltage positionRequest;
 	private final VoltageOut voltageRequest;
 
 	public SimulationSteer(SimulationSteerConstants constants) {
 		this.motor = constants.getMotor();
+		this.constants = constants;
 
 		this.positionRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
@@ -46,6 +48,8 @@ public class SimulationSteer implements ISteer {
 
 	@Override
 	public void updateInputs(ModuleInputsContainer inputs) {
+		inputs.getSteerMotorInputs().sysIdConfigInfo = constants.getSysIdConfigInfo();
+
 		inputs.getSteerMotorInputs().isConnected = true;
 		inputs.getSteerMotorInputs().angle = motor.getPosition();
 		inputs.getSteerMotorInputs().velocity = motor.getVelocity();

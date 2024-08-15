@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.factories.modules.drive;
 
-import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;

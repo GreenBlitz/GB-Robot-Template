@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.LogPaths;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
@@ -38,7 +37,7 @@ public class Pigeon2Gyro implements IGyro {
 		this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(gyro, yawSignal);
 		this.timestampQueue = PhoenixOdometryThread6328.getInstance().getTimestampQueue();
 
-        this.logPath = logPathPrefix + GyroConstants.LOG_PATH_ADDITION;
+		this.logPath = logPathPrefix + GyroConstants.LOG_PATH_ADDITION;
 
 		configGyro(configuration);
 		optimizeBusAndSignals();

@@ -19,18 +19,14 @@ import java.util.Queue;
 public class Pigeon2Gyro implements ISwerveGyro {
 
 	private final Pigeon2 gyro;
-	private final StatusSignal<Double> yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal;
+	private final StatusSignal<Double> yawSignal;
 	private final Queue<Double> yawQueue, timestampQueue;
 	private final String logPath;
 
 	public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String logPathPrefix) {
 		this.gyro = new Pigeon2Wrapper(gyroID);
 		this.logPath = logPathPrefix + SwerveGyroConstants.LOG_PATH_ADDITION;
-
 		this.yawSignal = gyro.getYaw().clone();
-		this.xAccelerationSignal = gyro.getAccelerationX().clone();
-		this.yAccelerationSignal = gyro.getAccelerationY().clone();
-		this.zAccelerationSignal = gyro.getAccelerationZ().clone();
 
 		// todo - maybe latency
 		this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(gyro, yawSignal);
@@ -45,14 +41,7 @@ public class Pigeon2Gyro implements ISwerveGyro {
 	}
 
 	private void optimizeBusAndSignals() {
-		BaseStatusSignal.setUpdateFrequencyForAll(
-			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			xAccelerationSignal,
-			yAccelerationSignal,
-			zAccelerationSignal
-		);
 		BaseStatusSignal.setUpdateFrequencyForAll(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ, yawSignal);
-
 		gyro.optimizeBusUtilization();
 	}
 
@@ -65,11 +54,8 @@ public class Pigeon2Gyro implements ISwerveGyro {
 
 	@Override
 	public void updateInputs(SwerveGyroInputsAutoLogged inputs) {
-		inputs.isConnected = BaseStatusSignal.refreshAll(yawSignal, xAccelerationSignal, yAccelerationSignal, zAccelerationSignal).isOK();
+		inputs.isConnected = BaseStatusSignal.refreshAll(yawSignal).isOK();
 		inputs.gyroYaw = Rotation2d.fromDegrees(yawSignal.getValue());
-		inputs.xAcceleration = xAccelerationSignal.getValue();
-		inputs.yAcceleration = yAccelerationSignal.getValue();
-		inputs.zAcceleration = zAccelerationSignal.getValue();
 		inputs.yawOdometrySamples = yawQueue.stream().map(Rotation2d::fromDegrees).toArray(Rotation2d[]::new);
 		inputs.timestampOdometrySamples = timestampQueue.stream().mapToDouble(Double::doubleValue).toArray();
 		yawQueue.clear();

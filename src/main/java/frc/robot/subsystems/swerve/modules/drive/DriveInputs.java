@@ -2,12 +2,13 @@ package frc.robot.subsystems.swerve.modules.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
 public class DriveInputs {
 
-	public SysIdRoutine.Config sysIdConfig = new SysIdRoutine.Config();
+	public SysIdCalibrator.SysIdConfigInfo sysIdConfig = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), false);
 
 	public boolean isConnected = false;
 	public double distanceMeters = 0;

@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve.modules.drive.talonfx;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
@@ -13,7 +14,7 @@ public class TalonFXDriveConstants {
 
 	private final boolean enableFOC;
 
-	private final SysIdRoutine.Config sysIdConfig;
+	private final SysIdCalibrator.SysIdConfigInfo sysIdConfig;
 
 	public TalonFXDriveConstants(
 			CTREDeviceID motorID,
@@ -26,7 +27,7 @@ public class TalonFXDriveConstants {
 		this.motor = talonFXDriveConfigObject.getMotor();
 		this.signals = talonFXDriveConfigObject.getSignals();
 		this.enableFOC = enableFOC;
-		this.sysIdConfig = sysIdConfig;
+		this.sysIdConfig = new SysIdCalibrator.SysIdConfigInfo(sysIdConfig, true);
 	}
 
 	protected TalonFXWrapper getMotor() {
@@ -41,7 +42,7 @@ public class TalonFXDriveConstants {
 		return enableFOC;
 	}
 
-	public SysIdRoutine.Config getSysIdConfig() {
+	public SysIdCalibrator.SysIdConfigInfo getSysIdConfig() {
 		return sysIdConfig;
 	}
 

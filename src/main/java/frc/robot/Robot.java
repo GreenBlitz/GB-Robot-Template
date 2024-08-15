@@ -14,7 +14,6 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-import frc.utils.RobotTypeUtils;
 
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ import java.util.Optional;
  */
 public class Robot {
 
-	public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(RobotType.REAL);
 
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;

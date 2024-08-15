@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class SwerveGyroInputs {
+public class GyroInputs {
 
 	public boolean isConnected = false;
 	public Rotation2d gyroYaw = new Rotation2d();

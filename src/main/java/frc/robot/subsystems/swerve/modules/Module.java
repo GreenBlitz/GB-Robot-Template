@@ -14,6 +14,7 @@ import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
 import frc.utils.Conversions;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -45,7 +46,7 @@ public class Module {
 		resetByEncoder();
 	}
 
-	public SysIdRoutine.Config getDriveSysIdConfig(){
+	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo(){
 		return moduleInputsContainer.getDriveMotorInputs().sysIdConfig;
 	}
 

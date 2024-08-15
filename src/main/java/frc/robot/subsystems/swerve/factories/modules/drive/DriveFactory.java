@@ -21,24 +21,10 @@ public class DriveFactory {
 		String logPathPrefix = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT ->
-					new TalonFXDrive(
-						DriveRealConstants.FRONT_LEFT_CONSTANTS(logPathPrefix)
-					);
-				case FRONT_RIGHT ->
-					new TalonFXDrive(
-						DriveRealConstants.FRONT_RIGHT_CONSTANTS(logPathPrefix)
-					);
-				// @formatter:off
-				case BACK_LEFT ->
-					new TalonFXDrive(
-						DriveRealConstants.BACK_LEFT_CONSTANTS(logPathPrefix)
-					);
-				// @formatter:on
-				case BACK_RIGHT ->
-					new TalonFXDrive(
-						DriveRealConstants.BACK_RIGHT_CONSTANTS(logPathPrefix)
-					);
+				case FRONT_LEFT -> new TalonFXDrive(DriveRealConstants.FRONT_LEFT_CONSTANTS(logPathPrefix));
+				case FRONT_RIGHT -> new TalonFXDrive(DriveRealConstants.FRONT_RIGHT_CONSTANTS(logPathPrefix));
+				case BACK_LEFT -> new TalonFXDrive(DriveRealConstants.BACK_LEFT_CONSTANTS(logPathPrefix));
+				case BACK_RIGHT -> new TalonFXDrive(DriveRealConstants.BACK_RIGHT_CONSTANTS(logPathPrefix));
 			};
 			case SIMULATION -> new SimulationDrive(DriveSimulationConstants.getDriveConstants());
 			case REPLAY -> new EmptyDrive();

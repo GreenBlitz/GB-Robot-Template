@@ -21,30 +21,11 @@ public class EncoderFactory {
 		String logPathPrefix = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT ->
-					new CancoderEncoder(
-						IDs.CANCodersIDs.FRONT_LEFT_ENCODER,
-						EncoderRealConstants.ENCODER_CONFIG,
-						logPathPrefix
-					);
+				case FRONT_LEFT -> new CancoderEncoder(IDs.CANCodersIDs.FRONT_LEFT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, logPathPrefix);
 				case FRONT_RIGHT ->
-					new CancoderEncoder(
-						IDs.CANCodersIDs.FRONT_RIGHT_ENCODER,
-						EncoderRealConstants.ENCODER_CONFIG,
-						logPathPrefix
-					);
-				case BACK_LEFT ->
-					new CancoderEncoder(
-						IDs.CANCodersIDs.BACK_LEFT_ENCODER,
-						EncoderRealConstants.ENCODER_CONFIG,
-						logPathPrefix
-					);
-				case BACK_RIGHT ->
-					new CancoderEncoder(
-						IDs.CANCodersIDs.BACK_RIGHT_ENCODER,
-						EncoderRealConstants.ENCODER_CONFIG,
-						logPathPrefix
-					);
+					new CancoderEncoder(IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, logPathPrefix);
+				case BACK_LEFT -> new CancoderEncoder(IDs.CANCodersIDs.BACK_LEFT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, logPathPrefix);
+				case BACK_RIGHT -> new CancoderEncoder(IDs.CANCodersIDs.BACK_RIGHT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, logPathPrefix);
 			};
 			case SIMULATION, REPLAY -> new EmptyEncoder();
 		};

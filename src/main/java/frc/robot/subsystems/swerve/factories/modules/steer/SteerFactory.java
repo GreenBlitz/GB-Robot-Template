@@ -21,24 +21,10 @@ public class SteerFactory {
 		String logPathPrefix = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT ->
-					new TalonFXSteer(
-						SteerRealConstants.FRONT_LEFT_CONSTANTS(logPathPrefix)
-					);
-				case FRONT_RIGHT ->
-					new TalonFXSteer(
-						SteerRealConstants.FRONT_RIGHT_CONSTANTS(logPathPrefix)
-					);
-				// @formatter:off
-				case BACK_LEFT ->
-					new TalonFXSteer(
-						SteerRealConstants.BACK_LEFT_CONSTANTS(logPathPrefix)
-					);
-				// @formatter:on
-				case BACK_RIGHT ->
-					new TalonFXSteer(
-						SteerRealConstants.BACK_RIGHT_CONSTANTS(logPathPrefix)
-					);
+				case FRONT_LEFT -> new TalonFXSteer(SteerRealConstants.FRONT_LEFT_CONSTANTS(logPathPrefix));
+				case FRONT_RIGHT -> new TalonFXSteer(SteerRealConstants.FRONT_RIGHT_CONSTANTS(logPathPrefix));
+				case BACK_LEFT -> new TalonFXSteer(SteerRealConstants.BACK_LEFT_CONSTANTS(logPathPrefix));
+				case BACK_RIGHT -> new TalonFXSteer(SteerRealConstants.BACK_RIGHT_CONSTANTS(logPathPrefix));
 			};
 			case SIMULATION -> new SimulationSteer(SteerSimulationConstants.getConstants());
 			case REPLAY -> new EmptySteer();

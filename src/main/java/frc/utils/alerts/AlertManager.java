@@ -6,11 +6,11 @@ public class AlertManager {
 
 	private static ArrayList<PeriodicAlert> alertList = new ArrayList<>();
 
-	protected static void addToAlertList(PeriodicAlert periodicAlert) {
+	protected static void addAlert(PeriodicAlert periodicAlert) {
 		alertList.add(periodicAlert);
 	}
 
-	public static void periodic() {
+	public static void logAlerts() {
 		for (PeriodicAlert alert : alertList) {
 			alert.periodic();
 		}

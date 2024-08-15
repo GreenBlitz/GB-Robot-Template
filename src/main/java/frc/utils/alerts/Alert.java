@@ -7,26 +7,30 @@ import org.littletonrobotics.junction.Logger;
 
 public class Alert {
 
-	public enum AlertType {
-		ERROR,
-		WARNING;
-	}
+    public enum AlertType {
 
-	private final AlertType type;
-	private final String name;
-	private final String logPath;
-	private final String logPathAndTime;
+        ERROR,
+        WARNING;
 
-	public Alert(AlertType type, String name) {
-		this.type = type;
-		this.name = name;
-		this.logPath = LogPaths.ALERT_LOG_PATH + type.toString() + "/" + name;
-		this.logPathAndTime = logPath + " at time: " + Timer.getFPGATimestamp();
-	}
+    }
 
-	public void logAlert() {
-		Logger.recordOutput(logPath, Timer.getFPGATimestamp());
-		DriverStation.reportWarning(logPathAndTime, false);
-	}
+    private final AlertType type;
+    private final String logPath;
+    private final String logPathAndTime;
+
+    public Alert(AlertType type, String name) {
+        this.type = type;
+        this.logPath = LogPaths.ALERT_LOG_PATH + type.toString() + "/" + name;
+        this.logPathAndTime = logPath + " at time: " + Timer.getFPGATimestamp();
+    }
+
+    public void logAlert() {
+        Logger.recordOutput(logPath, Timer.getFPGATimestamp());
+        if (type == AlertType.WARNING) {
+            DriverStation.reportWarning(logPathAndTime, false);
+        } else {
+            DriverStation.reportError(logPathAndTime, false);
+        }
+    }
 
 }

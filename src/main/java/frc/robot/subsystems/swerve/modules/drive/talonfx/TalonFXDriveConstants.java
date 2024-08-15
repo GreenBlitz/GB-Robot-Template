@@ -9,11 +9,8 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 public class TalonFXDriveConstants {
 
 	private final TalonFXWrapper motor;
-
 	private final TalonFXDriveSignals signals;
-
 	private final boolean enableFOC;
-
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfig;
 
 	public TalonFXDriveConstants(

@@ -13,7 +13,6 @@ import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
-import frc.utils.RobotTypeUtils;
 
 
 /**
@@ -23,7 +22,7 @@ import frc.utils.RobotTypeUtils;
  */
 public class Robot {
 
-	public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(RobotType.REAL);
 
 	public static final Swerve swerve = new Swerve(
 		SwerveConstantsFactory.create(SwerveName.SWERVE),

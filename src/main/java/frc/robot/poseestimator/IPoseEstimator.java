@@ -6,6 +6,6 @@ public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
     Pose2d getEstimatedPose();
 
-    void restPose(Pose2d newPose);
+    void resetPose(Pose2d newPose);
 
 }

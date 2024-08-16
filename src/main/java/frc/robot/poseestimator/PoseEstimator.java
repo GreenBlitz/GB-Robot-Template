@@ -74,7 +74,7 @@ public class PoseEstimator implements IPoseEstimator{
     }
 
     @Override
-    public void restPose(Pose2d newPose) {
+    public void resetPose(Pose2d newPose) {
         poseEstimator.resetPosition(gyroAngle,wheelPositions,newPose);
     }
 

@@ -21,26 +21,19 @@ import frc.robot.poseestimator.observations.VisionObservation;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class PoseEstimatorMath {
+public class PoseEstimatorMath implements IPoseEstimator{
 
     private Pose2d odometryPose;
     private Pose2d estimatedPose;
     private final TimeInterpolatableBuffer<Pose2d> poseBuffer;
-    private final Matrix<N3, N1> qStdDevs;
+    private Matrix<N3, N1> qStdDevs;
     private final SwerveDriveKinematics kinematics;
     private SwerveDriveWheelPositions lastWheelPositions;
     private Rotation2d lastGyroAngle;
     private boolean isFirstOdometryUpdate;
-    private static PoseEstimatorMath instance;
+    private VisionObservation lastVisionObservation;
 
-    public static PoseEstimatorMath getInstance() {
-        if(instance == null) {
-            instance = new PoseEstimatorMath();
-        }
-        return instance;
-    }
-
-    private PoseEstimatorMath() {
+    public PoseEstimatorMath() {
         odometryPose = new Pose2d();
         estimatedPose = new Pose2d();
         poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
@@ -95,6 +88,7 @@ public class PoseEstimatorMath {
     }
 
     public void addVisionObservation(VisionObservation observation) {
+        lastVisionObservation = observation;
         if(isObservationTooOld(observation)) {
             return;
         }
@@ -152,6 +146,7 @@ public class PoseEstimatorMath {
         );
     }
 
+    @Override
     public void resetPose(Pose2d initialPose) {
         estimatedPose = initialPose;
         lastGyroAngle = initialPose.getRotation();
@@ -159,6 +154,7 @@ public class PoseEstimatorMath {
         poseBuffer.clear();
     }
 
+    @Override
     public Pose2d getEstimatedPose() {
         return estimatedPose;
     }
@@ -168,6 +164,42 @@ public class PoseEstimatorMath {
         for (int i = 0; i < 3; ++i) {
             qStdDevs.set(i, 0, Math.pow(newQStdDevs.get(i, 0), 2));
         }
+    }
+
+    @Override
+    public void updateOdometry(OdometryObservation odometryObservation) {
+        addOdometryObservation(odometryObservation);
+    }
+
+    @Override
+    public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose) {
+        this.lastWheelPositions = wheelPositions;
+        this.lastGyroAngle = gyroAngle;
+        this.odometryPose = pose;
+        poseBuffer.clear();
+    }
+
+    @Override
+    public Pose2d getOdometryPose() {
+        return odometryPose;
+    }
+
+    @Override
+    public void updateVision(VisionObservation visionObservation) {
+        addVisionObservation(visionObservation);
+    }
+
+    @Override
+    public Pose2d getVisionPose() {
+        if(lastVisionObservation != null) {
+            return lastVisionObservation.getVisionPose();
+        }
+        return null;
+    }
+
+    @Override
+    public void setStandardDeviations(Matrix<N3, N1> standardDeviations) {
+        this.qStdDevs = standardDeviations;
     }
 
 }

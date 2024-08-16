@@ -56,7 +56,6 @@ public class PoseEstimatorMath {
         isFirstOdometryUpdate = true;
 //        kinematics = SwerveConstants.KINEMATICS;
         kinematics = null; //todo - fix when SwerveConstants are made;
-
         for (int i = 0; i < 3; ++i) {
             qStdDevs.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
         }
@@ -64,12 +63,9 @@ public class PoseEstimatorMath {
 
     public void addOdometryObservation(OdometryObservation observation) {
         setInitialValuesAtStart();
-
         Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.getWheelPositions());
         lastWheelPositions = observation.getWheelPositions();
-
         boolean isGyroConnected = observation.getGyroAngle() != null;
-
         if (isGyroConnected) {
             twist = updateDeltaTheta(twist,observation);
         }

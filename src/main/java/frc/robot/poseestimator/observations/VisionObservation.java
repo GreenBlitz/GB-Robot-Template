@@ -9,12 +9,12 @@ public class VisionObservation extends Observation{
 
     private Pose2d visionPose;
 
-    private Matrix<N3, N1> stdDevs;
+    private Matrix<N3, N1> standardDeviations;
 
-    public VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {
+    public VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> standardDeviations) {
         this.visionPose = visionPose;
         this.timestamp = timestamp;
-        this.stdDevs = stdDevs;
+        this.standardDeviations = standardDeviations;
     }
 
     public Pose2d getVisionPose() {
@@ -33,12 +33,12 @@ public class VisionObservation extends Observation{
         this.timestamp = timestamp;
     }
 
-    public Matrix<N3, N1> getStdDevs() {
-        return stdDevs;
+    public Matrix<N3, N1> getStandardDeviations() {
+        return standardDeviations;
     }
 
-    public void setStdDevs(Matrix<N3, N1> stdDevs) {
-        this.stdDevs = stdDevs;
+    public void setStandardDeviations(Matrix<N3, N1> standardDeviations) {
+        this.standardDeviations = standardDeviations;
     }
 
 }

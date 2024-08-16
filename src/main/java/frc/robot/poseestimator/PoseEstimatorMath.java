@@ -26,7 +26,7 @@ public class PoseEstimatorMath implements IPoseEstimator{
     private Pose2d odometryPose;
     private Pose2d estimatedPose;
     private final TimeInterpolatableBuffer<Pose2d> poseBuffer;
-    private Matrix<N3, N1> qStdDevs;
+    private Matrix<N3, N1> standardDeviations;
     private final SwerveDriveKinematics kinematics;
     private SwerveDriveWheelPositions lastWheelPositions;
     private Rotation2d lastGyroAngle;
@@ -37,7 +37,7 @@ public class PoseEstimatorMath implements IPoseEstimator{
         odometryPose = new Pose2d();
         estimatedPose = new Pose2d();
         poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-        qStdDevs = new Matrix<>(Nat.N3(), Nat.N1());
+        standardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
         lastWheelPositions = new SwerveDriveWheelPositions(
                 new SwerveModulePosition[] {
                         new SwerveModulePosition(),
@@ -50,7 +50,7 @@ public class PoseEstimatorMath implements IPoseEstimator{
 //        kinematics = SwerveConstants.KINEMATICS;
         kinematics = null; //todo - fix when SwerveConstants are made;
         for (int i = 0; i < 3; ++i) {
-            qStdDevs.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
+            standardDeviations.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
         }
     }
 
@@ -114,17 +114,19 @@ public class PoseEstimatorMath implements IPoseEstimator{
     }
 
     private double[] getSquaredVisionMatrix(VisionObservation observation) {
-        double[] r = new double[3];
-        for (int i = 0; i < 3; ++i) {
-            r[i] = observation.getStdDevs().get(i, 0) * observation.getStdDevs().get(i, 0);
+        int rows = observation.getStandardDeviations().getNumRows();
+        double[] r = new double[rows];
+        for (int row = 0; row < rows; ++row) {
+            double standardDeviationInRow = observation.getStandardDeviations().get(row, 0);
+            r[row] = Math.pow(standardDeviationInRow,2);
         }
         return r;
     }
 
     private Matrix<N3, N3> kalmanFilterAlgorithm(double[] squaredVisionMatrix) {
         Matrix<N3, N3> visionK = new Matrix<>(Nat.N3(), Nat.N3());
-        for (int row = 0; row < 3; ++row) {
-            double stdDev = qStdDevs.get(row, 0);
+        for (int row = 0; row < visionK.getNumRows(); ++row) {
+            double stdDev = standardDeviations.get(row, 0);
             if (stdDev == 0.0) {
                 visionK.set(row, row, 0.0);
             }
@@ -160,9 +162,9 @@ public class PoseEstimatorMath implements IPoseEstimator{
     }
 
     public void setOdometryStandardDeviations(double x, double y, double rotation) {
-        Vector<N3> newQStdDevs = VecBuilder.fill(x, y, rotation);
-        for (int i = 0; i < 3; ++i) {
-            qStdDevs.set(i, 0, Math.pow(newQStdDevs.get(i, 0), 2));
+        Vector<N3> newStandardDeviations = VecBuilder.fill(x, y, rotation);
+        for (int i = 0; i < newStandardDeviations.getNumRows(); ++i) {
+            standardDeviations.set(i, 0, Math.pow(newStandardDeviations.get(i, 0), 2));
         }
     }
 
@@ -199,7 +201,7 @@ public class PoseEstimatorMath implements IPoseEstimator{
 
     @Override
     public void setStandardDeviations(Matrix<N3, N1> standardDeviations) {
-        this.qStdDevs = standardDeviations;
+        this.standardDeviations = standardDeviations;
     }
 
 }

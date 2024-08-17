@@ -37,7 +37,7 @@ public class SwerveStateHelper {
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds, SwerveState state) {
-		if (isPositionEmpty(robotPoseSupplier.get())) {
+		if (robotPoseSupplier.get().isEmpty()) {
 			return chassisSpeeds;
 		}
 		Pose2d robotPose = robotPoseSupplier.get().get();
@@ -96,10 +96,6 @@ public class SwerveStateHelper {
 
 	public RotateAxis getFarLeftRotateAxis() {
 		return getFarRotateAxis(true);
-	}
-
-	private boolean isPositionEmpty(Optional<Pose2d> robotPose) {
-		return robotPose.isEmpty();
 	}
 
 }

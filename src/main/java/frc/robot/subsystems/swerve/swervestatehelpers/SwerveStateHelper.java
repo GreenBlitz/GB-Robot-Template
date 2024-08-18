@@ -39,14 +39,14 @@ public class SwerveStateHelper {
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds, SwerveState state) {
 		if (robotPoseSupplier.get().isEmpty()) {
 			return switch (aimAssist){
-				case AMP -> handleAmpAssist(chassisSpeeds, new Pose2d());
+				case AMP -> handleAmpAssist(chassisSpeeds, swerve.getAbsoluteHeading());
 				default -> chassisSpeeds;
 			};
 		}
 		Pose2d robotPose = robotPoseSupplier.get().get();
 		return switch (aimAssist) {
 			case SPEAKER -> handleSpeakerAssist(chassisSpeeds, robotPose);
-			case AMP -> handleAmpAssist(chassisSpeeds, robotPose);
+			case AMP -> handleAmpAssist(chassisSpeeds, robotPose.getRotation());
 			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPose, noteTranslationSupplier.get().get(), state);
 			case NONE -> chassisSpeeds;
 		};
@@ -56,8 +56,8 @@ public class SwerveStateHelper {
 		return getObjectAssistedSpeeds(chassisSpeeds, robotPose, noteTranslation, swerveConstants, state);
 	}
 
-	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose) {
-		return getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), Field.getAngleToAmp(), swerveConstants);
+	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotAngle) {
+		return getRotationAssistedChassisSpeeds(chassisSpeeds, robotAngle, Field.getAngleToAmp(), swerveConstants);
 	}
 
 	private ChassisSpeeds handleSpeakerAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose) {

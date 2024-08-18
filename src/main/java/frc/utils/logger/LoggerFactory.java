@@ -34,18 +34,18 @@ public class LoggerFactory {
 	}
 
 	private static void startSimulationLogger() {
-		startNonReplayLogger(LogSavePath.COMPUTER);
+		startLogger(LogSavePath.COMPUTER);
 	}
 
 	private static void startLoggerOnUSB() {
-		startNonReplayLogger(LogSavePath.USB);
+		startLogger(LogSavePath.USB);
 	}
 
 	private static void startLoggerOnRoborio() {
-		startNonReplayLogger(LogSavePath.ROBORIO);
+		startLogger(LogSavePath.ROBORIO);
 	}
 
-	private static void startNonReplayLogger(LogSavePath logSavePath) {
+	private static void startLogger(LogSavePath logSavePath) {
 		setLoggingPath(logSavePath.getSavePath());
 		Logger.addDataReceiver(new NT4Publisher());
 		Logger.start();

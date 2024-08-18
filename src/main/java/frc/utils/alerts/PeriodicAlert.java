@@ -5,7 +5,6 @@ import java.util.function.BooleanSupplier;
 public class PeriodicAlert extends Alert {
 
 	private final BooleanSupplier raiseSupplier;
-	private boolean wasLogged;
 
 	public PeriodicAlert(AlertType type, String name, BooleanSupplier raiseSupplier) {
 		super(type, name);

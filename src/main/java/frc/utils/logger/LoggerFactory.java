@@ -2,7 +2,7 @@ package frc.utils.logger;
 
 import com.ctre.phoenix6.SignalLogger;
 import frc.robot.Robot;
-import frc.robot.constants.LogPaths;
+import frc.utils.alerts.Alert;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -33,7 +33,7 @@ public class LoggerFactory {
 	}
 
 	private static void reportNoUSBFound() {
-		Logger.recordOutput(LogPaths.ALERT_LOG_PATH + "/Didn't find USB");
+		Logger.recordOutput(Alert.ALERT_LOG_PATH + "/Didn't find USB");
 	}
 
 	private static void startSimulationLogger() {

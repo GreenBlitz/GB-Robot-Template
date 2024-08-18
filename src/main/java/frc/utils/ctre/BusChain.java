@@ -2,7 +2,7 @@ package frc.utils.ctre;
 
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.constants.LogPaths;
+import frc.utils.alerts.Alert;
 import org.littletonrobotics.junction.Logger;
 
 public enum BusChain {
@@ -37,7 +37,7 @@ public enum BusChain {
 	}
 
 	private void reportAlerts(CANBus.CANBusStatus busStatus) {
-		String currentAlertLogPath = LogPaths.ALERT_LOG_PATH + BusStatus.LOG_PATH + getChainName();
+		String currentAlertLogPath = Alert.ALERT_LOG_PATH + BusStatus.LOG_PATH + getChainName();
 		double currentTime = Timer.getFPGATimestamp();
 
 		if (!busStatus.Status.isOK()) {

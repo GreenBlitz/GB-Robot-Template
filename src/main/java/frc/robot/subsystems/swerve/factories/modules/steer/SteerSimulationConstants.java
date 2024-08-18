@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.factories.modules.steer;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.modules.steer.simulation.SimulationSteerConstants;
 
 class SteerSimulationConstants {
@@ -22,7 +23,12 @@ class SteerSimulationConstants {
 	}
 
 	protected static SimulationSteerConstants getConstants() {
-		return new SimulationSteerConstants(new DCMotorSim(DCMotor.getFalcon500Foc(1), GEAR_RATIO, MOMENT_OF_INERTIA), MOTOR_CONFIG, ENABLE_FOC);
+		return new SimulationSteerConstants(
+			new DCMotorSim(DCMotor.getFalcon500Foc(1), GEAR_RATIO, MOMENT_OF_INERTIA),
+			MOTOR_CONFIG,
+			ENABLE_FOC,
+			new SysIdRoutine.Config()
+		);
 	}
 
 }

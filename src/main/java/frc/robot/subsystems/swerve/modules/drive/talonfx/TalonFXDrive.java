@@ -9,6 +9,7 @@ import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 import java.util.Queue;
@@ -17,6 +18,7 @@ public class TalonFXDrive implements IDrive {
 
 	private final TalonFXWrapper driveMotor;
 	private final TalonFXDriveSignals signals;
+	private final TalonFXDriveConstants constants;
 
 	private final VelocityVoltage velocityVoltageRequest;
 	private final VoltageOut voltageRequest;
@@ -26,6 +28,7 @@ public class TalonFXDrive implements IDrive {
 	public TalonFXDrive(TalonFXDriveConstants constants) {
 		this.driveMotor = constants.getMotor();
 		this.signals = constants.getSignals();
+		this.constants = constants;
 
 		this.velocityVoltageRequest = new VelocityVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
@@ -36,6 +39,10 @@ public class TalonFXDrive implements IDrive {
 		driveMotor.setPosition(0);
 	}
 
+	@Override
+	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+		return constants.getSysIdConfig();
+	}
 
 	@Override
 	public void setBrake(boolean brake) {

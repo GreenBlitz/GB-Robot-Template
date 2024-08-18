@@ -38,7 +38,10 @@ public class SwerveStateHelper {
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds, SwerveState state) {
 		if (robotPoseSupplier.get().isEmpty()) {
-			return chassisSpeeds;
+			return switch (aimAssist){
+				case AMP -> handleAmpAssist(chassisSpeeds, new Pose2d());
+				default -> chassisSpeeds;
+			};
 		}
 		Pose2d robotPose = robotPoseSupplier.get().get();
 		return switch (aimAssist) {

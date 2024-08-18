@@ -39,24 +39,33 @@ public class AimAssistMath {
 	) {
 		Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
 		double pidHorizontalVelocity = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
+		double xVelocityMetersPerSecond = chassisSpeeds.vxMetersPerSecond;
+		double yVelocityMetersPerSecond = chassisSpeeds.vyMetersPerSecond;
+
+		switch (swerveState.getDriveMode()) {
+			case FIELD_RELATIVE -> {
+				double xFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.sin(robotPose.getRotation().unaryMinus().getRadians());
+				double yFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.cos(robotPose.getRotation().unaryMinus().getRadians());
+
+				xVelocityMetersPerSecond += xFieldRelativeVelocityAddition;
+				yVelocityMetersPerSecond += yFieldRelativeVelocityAddition;
+			}
+			case ROBOT_RELATIVE -> {
+				yVelocityMetersPerSecond += pidHorizontalVelocity;
+			}
+		}
 
 		if (swerveState.getDriveMode().equals(DriveRelative.FIELD_RELATIVE)) {
 			double xFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.sin(robotPose.getRotation().unaryMinus().getRadians());
 			double yFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.cos(robotPose.getRotation().unaryMinus().getRadians());
 
-			return new ChassisSpeeds(
-				chassisSpeeds.vxMetersPerSecond + xFieldRelativeVelocityAddition,
-				chassisSpeeds.vyMetersPerSecond + yFieldRelativeVelocityAddition,
-				chassisSpeeds.omegaRadiansPerSecond
-			);
+			xVelocityMetersPerSecond += xFieldRelativeVelocityAddition;
+			yVelocityMetersPerSecond += yFieldRelativeVelocityAddition;
 		} else if (swerveState.getDriveMode().equals(DriveRelative.ROBOT_RELATIVE)) {
-			return new ChassisSpeeds(
-				chassisSpeeds.vxMetersPerSecond,
-				chassisSpeeds.vyMetersPerSecond + pidHorizontalVelocity,
-				chassisSpeeds.omegaRadiansPerSecond
-			);
+			yVelocityMetersPerSecond += pidHorizontalVelocity;
 		}
-		return chassisSpeeds;
+
+		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
 	}
 
 	public static double applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {

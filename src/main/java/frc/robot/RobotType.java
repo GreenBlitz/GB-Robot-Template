@@ -3,8 +3,7 @@ package frc.robot;
 public enum RobotType {
 
 	REAL,
-	SIMULATION,
-	REPLAY;
+	SIMULATION;
 
 	public boolean isReal() {
 		return this.equals(RobotType.REAL);
@@ -14,12 +13,8 @@ public enum RobotType {
 		return this.equals(RobotType.SIMULATION);
 	}
 
-	public boolean isReplay() {
-		return this.equals(RobotType.REPLAY);
-	}
-
-	public static RobotType determineRobotType(RobotType wantedType) {
-		return RobotManager.isSimulation() ? (wantedType.isReplay() ? RobotType.REPLAY : RobotType.SIMULATION) : RobotType.REAL;
+	public static RobotType determineRobotType() {
+		return RobotManager.isSimulation() ? RobotType.SIMULATION : RobotType.REAL;
 	}
 
 }

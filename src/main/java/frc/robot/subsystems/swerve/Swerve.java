@@ -18,6 +18,7 @@ import frc.robot.subsystems.swerve.gyro.IGyro;
 import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
+import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -38,6 +39,7 @@ public class Swerve extends GBSubsystem {
 	private final IGyro gyro;
 	private final Modules modules;
 	private final SwerveConstants constants;
+	private final HeadingStabilizer headingStabilizer;
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> currentAngleSupplier;
@@ -52,6 +54,7 @@ public class Swerve extends GBSubsystem {
 
 		this.gyroInputs = new GyroInputsAutoLogged();
 		this.currentAngleSupplier = this::getAbsoluteHeading;
+		this.headingStabilizer = new HeadingStabilizer(this.constants);
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
@@ -92,6 +95,8 @@ public class Swerve extends GBSubsystem {
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
 		gyroInputs.gyroYaw = heading;
+		headingStabilizer.unlockTarget();
+		headingStabilizer.setTargetHeading(heading);
 	}
 
 	protected void resetPIDControllers() {
@@ -143,6 +148,7 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(constants.stateLogPath() + "LoopMode", currentState.getLoopMode());
 		Logger.recordOutput(constants.stateLogPath() + "RotateAxis", currentState.getRotateAxis());
 		Logger.recordOutput(constants.stateLogPath() + "AimAssist", currentState.getAimAssist());
+		Logger.recordOutput(constants.stateLogPath() + "HeadingControl", currentState.getHeadingControl());
 	}
 
 	private void logFieldRelativeVelocities() {
@@ -257,10 +263,30 @@ public class Swerve extends GBSubsystem {
 		}
 
 		chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
+		chassisSpeeds = handleHeadingControl(chassisSpeeds, swerveState);
 		chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 		chassisSpeeds = SwerveMath.discretize(chassisSpeeds);
 
 		applySpeeds(chassisSpeeds, swerveState);
+	}
+
+	private ChassisSpeeds handleHeadingControl(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+		if (swerveState.getHeadingControl() == HeadingControl.NONE) {
+			return chassisSpeeds;
+		}
+
+		if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) > SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
+			headingStabilizer.unlockTarget();
+			return chassisSpeeds;
+		}
+
+		headingStabilizer.setTargetHeading(currentAngleSupplier.get());
+		headingStabilizer.lockTarget();
+		return new ChassisSpeeds(
+			chassisSpeeds.vxMetersPerSecond,
+			chassisSpeeds.vyMetersPerSecond,
+			headingStabilizer.calculate(currentAngleSupplier.get()).getRadians()
+		);
 	}
 
 	private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {

@@ -12,7 +12,7 @@ public class AlertManager {
 
 	public static void logAlerts() {
 		for (PeriodicAlert alert : alertList) {
-			alert.logByCondition();
+ 			alert.logByCondition();
 		}
 	}
 

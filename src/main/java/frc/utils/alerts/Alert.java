@@ -14,7 +14,7 @@ public class Alert {
 
     }
 
-    private static final boolean logTrace = false;
+    private static final boolean LOG_TRACE = false;
     private final AlertType type;
     private final String logPath;
 
@@ -26,8 +26,8 @@ public class Alert {
     public void logAlert() {
         Logger.recordOutput(logPath, Timer.getFPGATimestamp());
         switch (type) {
-            case WARNING -> DriverStation.reportWarning(logPath, logTrace);
-            case ERROR -> DriverStation.reportError(logPath, logTrace);
+            case WARNING -> DriverStation.reportWarning(logPath, LOG_TRACE);
+            case ERROR -> DriverStation.reportError(logPath, LOG_TRACE);
         }
     }
 

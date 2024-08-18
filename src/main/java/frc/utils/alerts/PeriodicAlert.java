@@ -9,12 +9,15 @@ public class PeriodicAlert extends Alert {
 	public PeriodicAlert(AlertType type, String name, BooleanSupplier raiseSupplier) {
 		super(type, name);
 		this.raiseSupplier = raiseSupplier;
+	}
+
+	public void addToAlertManager() {
 		AlertManager.addAlert(this);
 	}
 
-	protected void logByCondition() {
+	protected void reportByCondition() {
 		if (raiseSupplier.getAsBoolean()) {
-			logAlert();
+			reportAlert();
 		}
 	}
 

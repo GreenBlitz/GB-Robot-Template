@@ -3,6 +3,7 @@ package frc.utils.ctre;
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.Timer;
 import frc.utils.alerts.Alert;
+import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 
 public enum BusChain {
@@ -11,9 +12,21 @@ public enum BusChain {
 	CANIVORE("CANivore");
 
 	private final String chainName;
+	public PeriodicAlert StatusError;
+	public PeriodicAlert Flooded;
+	public PeriodicAlert Disconnected;
+	public PeriodicAlert Full;
+	public PeriodicAlert ReceiveError;
+	public PeriodicAlert TransmitErrors;
 
 	BusChain(String chainName) {
 		this.chainName = chainName;
+		this.StatusError = new PeriodicAlert();
+		this.Flooded = new PeriodicAlert();
+		this.Disconnected = new PeriodicAlert();
+		this.Full = new PeriodicAlert();
+		this.ReceiveError = new PeriodicAlert();
+		this.TransmitErrors = new PeriodicAlert();
 	}
 
 	public String getChainName() {

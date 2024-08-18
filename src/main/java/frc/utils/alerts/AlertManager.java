@@ -10,9 +10,9 @@ public class AlertManager {
 		alertList.add(periodicAlert);
 	}
 
-	public static void logAlerts() {
+	public static void reportAlerts() {
 		for (PeriodicAlert alert : alertList) {
- 			alert.logByCondition();
+ 			alert.reportByCondition();
 		}
 	}
 

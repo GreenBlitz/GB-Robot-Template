@@ -23,7 +23,7 @@ public class Alert {
         this.logPath = this.ALERT_LOG_PATH + type.toString() + "/" + name;
     }
 
-    public void logAlert() {
+    public void reportAlert() {
         switch (type) {
             case ERROR -> DriverStation.reportError(logPath, LOG_TRACE);
         }

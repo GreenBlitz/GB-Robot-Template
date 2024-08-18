@@ -55,7 +55,7 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BusStatus.logChainsStatuses();
 		BatteryUtils.logStatus();
-		AlertManager.logAlerts();
+		AlertManager.reportAlerts();
 	}
 
 	@Override

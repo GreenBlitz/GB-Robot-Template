@@ -27,9 +27,6 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotInit() {
-		if (Robot.ROBOT_TYPE.isReplay()) {
-			setUseTiming(false); // run as fast as possible
-		}
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 

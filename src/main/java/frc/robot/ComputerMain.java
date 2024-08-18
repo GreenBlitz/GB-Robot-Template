@@ -13,7 +13,6 @@ public class ComputerMain {
 
 	private static void startComputerPrograms() {
 		// start programs on computer...
-		CMDHandler.runCMDCommand("echo sus");
 	}
 
 }

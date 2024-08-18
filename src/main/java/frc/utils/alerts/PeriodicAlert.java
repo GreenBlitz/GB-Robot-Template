@@ -11,13 +11,11 @@ public class PeriodicAlert extends Alert {
 		super(type, name);
 		this.raiseSupplier = raiseSupplier;
 		AlertManager.addAlert(this);
-		this.wasLogged = false;
 	}
 
-	protected void periodic() {
-		if (raiseSupplier.getAsBoolean() && !wasLogged) {
+	protected void logByCondition() {
+		if (raiseSupplier.getAsBoolean()) {
 			logAlert();
-			wasLogged = true;
 		}
 	}
 

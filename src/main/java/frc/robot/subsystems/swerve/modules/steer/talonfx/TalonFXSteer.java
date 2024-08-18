@@ -9,6 +9,7 @@ import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
 import java.util.Queue;
@@ -17,6 +18,7 @@ public class TalonFXSteer implements ISteer {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXSteerSignals signals;
+	private final TalonFXSteerConstants constants;
 
 	private final PositionVoltage positionVoltageRequest;
 	private final VoltageOut voltageRequest;
@@ -26,12 +28,18 @@ public class TalonFXSteer implements ISteer {
 	public TalonFXSteer(TalonFXSteerConstants constants) {
 		this.motor = constants.getMotor();
 		this.signals = constants.getSignals();
+		this.constants = constants;
 
 		this.positionVoltageRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
 
 		this.positionQueue = PhoenixOdometryThread6328.getInstance()
 			.registerLatencySignal(motor, signals.positionSignal(), signals.velocitySignal());
+	}
+
+	@Override
+	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+		return constants.getSysIdConfigInfo();
 	}
 
 	@Override

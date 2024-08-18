@@ -1,6 +1,6 @@
 package frc.utils.visualizing.Kinematics;
 
-import utils.Vector;
+import frc.utils.visualizing.Vector;
 
 public class Acceleration extends Vector {
     public Acceleration(double acceleration, double direction) {

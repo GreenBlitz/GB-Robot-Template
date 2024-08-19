@@ -303,7 +303,7 @@ public class Swerve extends GBSubsystem {
 
 	public boolean isAtHeading(Rotation2d targetHeading) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(currentHeadingSupplier.get()).getDegrees());
-		boolean isAtHeading = headingDeltaDegrees < SuperStructureConstants.ROTATION_TOLERANCE.getDegrees();
+		boolean isAtHeading = headingDeltaDegrees < SuperStructureConstants.HEADING_TOLERANCE.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
 		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < SuperStructureConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();

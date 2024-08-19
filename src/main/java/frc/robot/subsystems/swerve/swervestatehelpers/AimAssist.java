@@ -24,12 +24,12 @@ public enum AimAssist {
 		targetHeadingSupplier = () -> Rotation2d.fromDegrees(0);
 	}
 
-	AimAssist(Rotation2d targetRotation) {
-		this.targetHeadingSupplier = () -> targetRotation;
+	AimAssist(Rotation2d targetHeading) {
+		this.targetHeadingSupplier = () -> targetHeading;
 	}
 
-	AimAssist(Rotation2dSupplier targetAllianceRotation) {
-		this.targetHeadingSupplier = targetAllianceRotation;
+	AimAssist(Rotation2dSupplier targetAllianceHeading) {
+		this.targetHeadingSupplier = targetAllianceHeading;
 	}
 
 	AimAssist(Translation3d targetAllianceTranslation) {

@@ -37,11 +37,10 @@ public class Robot {
 			ModulesFactory.create(SwerveName.SWERVE),
 			GyroFactory.create(SwerveName.SWERVE)
 		);
-
 		this.poseEstimator = new PoseEstimator(swerve::setHeading);
 
-		this.swerve.setCurrentHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		this.swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		swerve.setCurrentHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
 
 		this.superStructure = new SuperStructure(swerve, poseEstimator);
 

@@ -188,4 +188,5 @@ simgui.json
 computerlogfiles
 
 # Python
-src/main/python/__pycache__/
+src/main/python/__pycache__/**
+

@@ -16,6 +16,6 @@ public interface IDrive {
 
 	void setTargetVelocity(Rotation2d velocityPerSecond);
 
-	void updateInputs(ModuleInputsContainer inputs);
+	void updateInputs(DriveInputsAutoLogged inputs);
 
 }

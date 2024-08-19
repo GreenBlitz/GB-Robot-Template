@@ -54,13 +54,11 @@ public class Swerve extends GBSubsystem {
 		this.constants = constants;
 		this.modules = modules;
 		this.gyro = gyro;
-
 		this.gyroInputs = new GyroInputsAutoLogged();
+
 		this.currentHeadingSupplier = this::getAbsoluteHeading;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
-
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
-
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		updateInputs();

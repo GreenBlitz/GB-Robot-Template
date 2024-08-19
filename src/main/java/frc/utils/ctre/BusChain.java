@@ -11,9 +11,9 @@ public enum BusChain {
 	ROBORIO("rio"),
 	CANIVORE("CANivore");
 
-	private static final double MAX_CAN_UTILIZATION_DECIMAL_PERCENT = 0.6;
-	private static final double MAX_RECEIVE_ERRORS = 0;
-	private static final double MAX_TRANSMIT_ERRORS = 0;
+	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_PERCENT = 0.6;
+	private static final double PERMITTED_RECEIVE_ERRORS = 0;
+	private static final double PERMITTED_TRANSMIT_ERRORS = 0;
 	private static final String LOG_PATH_PREFIX = "Bus/";
 
 	private final String chainName;
@@ -52,7 +52,7 @@ public enum BusChain {
 		if (!busStatus.Status.isOK()) {
 			Logger.recordOutput(alertLogPath + "StatusErrorAt", currentTime);
 		}
-		if (busStatus.BusUtilization > MAX_CAN_UTILIZATION_DECIMAL_PERCENT) {
+		if (busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_PERCENT) {
 			Logger.recordOutput(alertLogPath + "FloodedAt", currentTime);
 		}
 		if (busStatus.BusOffCount > 0) {
@@ -61,10 +61,10 @@ public enum BusChain {
 		if (busStatus.TxFullCount > 0) {
 			Logger.recordOutput(alertLogPath + "FullAt", currentTime);
 		}
-		if (busStatus.REC > MAX_RECEIVE_ERRORS) {
+		if (busStatus.REC > PERMITTED_RECEIVE_ERRORS) {
 			Logger.recordOutput(alertLogPath + "ReceiveErrorAt", currentTime);
 		}
-		if (busStatus.TEC > MAX_TRANSMIT_ERRORS) {
+		if (busStatus.TEC > PERMITTED_TRANSMIT_ERRORS) {
 			Logger.recordOutput(alertLogPath + "TransmitErrorsAt", currentTime);
 		}
 	}

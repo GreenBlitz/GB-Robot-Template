@@ -5,7 +5,6 @@ import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
-import frc.robot.subsystems.swerve.modules.steer.replay.EmptySteer;
 import frc.robot.subsystems.swerve.modules.steer.simulation.SimulationSteer;
 import frc.robot.subsystems.swerve.modules.steer.talonfx.TalonFXSteer;
 
@@ -27,7 +26,6 @@ public class SteerFactory {
 				case BACK_RIGHT -> new TalonFXSteer(SteerRealConstants.BACK_RIGHT_CONSTANTS(logPathPrefix));
 			};
 			case SIMULATION -> new SimulationSteer(SteerSimulationConstants.getConstants());
-			case REPLAY -> new EmptySteer();
 		};
 	}
 

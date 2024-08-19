@@ -4,21 +4,29 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.simulation.SimpleMotorSimulation;
-import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
+import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class SimulationSteer implements ISteer {
 
 	private final SimpleMotorSimulation motor;
+	private final SimulationSteerConstants constants;
 
 	private final PositionVoltage positionRequest;
 	private final VoltageOut voltageRequest;
 
 	public SimulationSteer(SimulationSteerConstants constants) {
 		this.motor = constants.getMotor();
+		this.constants = constants;
 
 		this.positionRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
+	}
+
+	@Override
+	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+		return constants.getSysIdConfigInfo();
 	}
 
 	@Override
@@ -45,12 +53,12 @@ public class SimulationSteer implements ISteer {
 
 
 	@Override
-	public void updateInputs(ModuleInputsContainer inputs) {
-		inputs.getSteerMotorInputs().isConnected = true;
-		inputs.getSteerMotorInputs().angle = motor.getPosition();
-		inputs.getSteerMotorInputs().velocity = motor.getVelocity();
-		inputs.getSteerMotorInputs().voltage = motor.getVoltage();
-		inputs.getSteerMotorInputs().angleOdometrySamples = new Rotation2d[] {inputs.getSteerMotorInputs().angle};
+	public void updateInputs(SteerInputsAutoLogged inputs) {
+		inputs.isConnected = true;
+		inputs.angle = motor.getPosition();
+		inputs.velocity = motor.getVelocity();
+		inputs.voltage = motor.getVoltage();
+		inputs.angleOdometrySamples = new Rotation2d[] {inputs.angle};
 	}
 
 }

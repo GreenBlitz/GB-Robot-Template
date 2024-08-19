@@ -22,7 +22,7 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(RobotType.REAL);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	public static final Swerve swerve = new Swerve(
 		SwerveConstantsFactory.create(SwerveName.SWERVE),
@@ -31,7 +31,7 @@ public class Robot {
 	);
 	public static final PoseEstimator poseEstimator = new PoseEstimator(swerve::setHeading);
 	static {
-		swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		swerve.setCurrentHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 	}
 
 	public static final SuperStructure superStructure = new SuperStructure(swerve, poseEstimator);

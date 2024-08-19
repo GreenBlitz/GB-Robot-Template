@@ -5,7 +5,6 @@ import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
-import frc.robot.subsystems.swerve.modules.drive.replay.EmptyDrive;
 import frc.robot.subsystems.swerve.modules.drive.simulation.SimulationDrive;
 import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDrive;
 
@@ -27,7 +26,6 @@ public class DriveFactory {
 				case BACK_RIGHT -> new TalonFXDrive(DriveRealConstants.BACK_RIGHT_CONSTANTS(logPathPrefix));
 			};
 			case SIMULATION -> new SimulationDrive(DriveSimulationConstants.getDriveConstants());
-			case REPLAY -> new EmptyDrive();
 		};
 	}
 

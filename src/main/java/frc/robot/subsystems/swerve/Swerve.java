@@ -18,6 +18,7 @@ import frc.robot.subsystems.swerve.gyro.IGyro;
 import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
+import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -38,9 +39,10 @@ public class Swerve extends GBSubsystem {
 	private final IGyro gyro;
 	private final Modules modules;
 	private final SwerveConstants constants;
+	private final HeadingStabilizer headingStabilizer;
 
 	private SwerveState currentState;
-	private Supplier<Rotation2d> currentAngleSupplier;
+	private Supplier<Rotation2d> currentHeadingSupplier;
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro) {
 		super(constants.logPath());
@@ -51,9 +53,12 @@ public class Swerve extends GBSubsystem {
 		this.gyro = gyro;
 
 		this.gyroInputs = new GyroInputsAutoLogged();
-		this.currentAngleSupplier = this::getAbsoluteHeading;
+		this.currentHeadingSupplier = this::getAbsoluteHeading;
+		this.headingStabilizer = new HeadingStabilizer(this.constants);
 
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+
+		updateInputs();
 	}
 
 	protected Modules getModules() {
@@ -83,13 +88,15 @@ public class Swerve extends GBSubsystem {
 		PathPlannerUtils.setLoggingPathToPaths(pose -> Logger.recordOutput(getLogPath() + "CurrentPathToFollow", pose.toArray(new Pose2d[0])));
 	}
 
-	public void setCurrentAngleSupplier(Supplier<Rotation2d> currentAngleSupplier) {
-		this.currentAngleSupplier = currentAngleSupplier;
+	public void setCurrentHeadingSupplier(Supplier<Rotation2d> currentHeadingSupplier) {
+		this.currentHeadingSupplier = currentHeadingSupplier;
 	}
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
 		gyroInputs.gyroYaw = heading;
+		headingStabilizer.unlockTarget();
+		headingStabilizer.setTargetHeading(heading);
 	}
 
 	protected void resetPIDControllers() {
@@ -141,6 +148,7 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(constants.stateLogPath() + "LoopMode", currentState.getLoopMode());
 		Logger.recordOutput(constants.stateLogPath() + "RotateAxis", currentState.getRotateAxis());
 		Logger.recordOutput(constants.stateLogPath() + "AimAssist", currentState.getAimAssist());
+		Logger.recordOutput(constants.stateLogPath() + "HeadingControl", currentState.getHeadingControl());
 	}
 
 	private void logFieldRelativeVelocities() {
@@ -163,12 +171,12 @@ public class Swerve extends GBSubsystem {
 	public OdometryObservation[] getAllOdometryObservations() {
 		int odometrySamples = getNumberOfOdometrySamples();
 		double[] timestamps = gyroInputs.timestampOdometrySamples;
-		Rotation2d[] gyroRotations = gyroInputs.yawOdometrySamples;
+		Rotation2d[] gyroHeadings = gyroInputs.yawOdometrySamples;
 		SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllWheelsPositionsSamples();
 
 		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
 		for (int i = 0; i < odometrySamples; i++) {
-			odometryObservations[i] = new OdometryObservation(swerveWheelPositions[i], gyroRotations[i], timestamps[i]);
+			odometryObservations[i] = new OdometryObservation(swerveWheelPositions[i], gyroHeadings[i], timestamps[i]);
 		}
 
 		return odometryObservations;
@@ -176,13 +184,13 @@ public class Swerve extends GBSubsystem {
 
 
 	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRads = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
-		return Rotation2d.fromRadians(inputtedHeadingRads);
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroInputs.gyroYaw.getRadians());
+		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 
 	public Rotation2d getAllianceRelativeHeading() {
-		Rotation2d currentAngle = currentAngleSupplier.get();
-		return Field.isFieldConventionAlliance() ? currentAngle : currentAngle.rotateBy(MathConstants.HALF_CIRCLE);
+		Rotation2d currentHeading = currentHeadingSupplier.get();
+		return Field.isFieldConventionAlliance() ? currentHeading : currentHeading.rotateBy(MathConstants.HALF_CIRCLE);
 	}
 
 	public ChassisSpeeds getRobotRelativeVelocity() {
@@ -190,7 +198,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public ChassisSpeeds getFieldRelativeVelocity() {
-		return SwerveMath.robotRelativeToFieldRelativeSpeeds(getRobotRelativeVelocity(), currentAngleSupplier.get());
+		return SwerveMath.robotRelativeToFieldRelativeSpeeds(getRobotRelativeVelocity(), currentHeadingSupplier.get());
 	}
 
 	private ChassisSpeeds getDriveModeRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
@@ -224,14 +232,14 @@ public class Swerve extends GBSubsystem {
 	}
 
 	//@formatter:off
-	protected void rotateToAngle(Rotation2d targetAngle, SwerveState swerveState) {
+	protected void turnToHeading(Rotation2d targetHeading, SwerveState swerveState) {
 		ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(
 			0,
 			0,
 			Rotation2d.fromDegrees(
 					constants.rotationDegreesPIDController().calculate(
-							currentAngleSupplier.get().getDegrees(),
-							targetAngle.getDegrees()
+							currentHeadingSupplier.get().getDegrees(),
+							targetHeading.getDegrees()
 					)
 			).getRadians()
 		);
@@ -248,17 +256,37 @@ public class Swerve extends GBSubsystem {
 	protected void driveByState(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
 		this.currentState = swerveState;
 
-		chassisSpeeds = SwerveMath.applyAimAssistedRotationVelocity(chassisSpeeds, currentAngleSupplier.get(), swerveState, constants);
+		chassisSpeeds = SwerveMath.applyAimAssistedRotationVelocity(chassisSpeeds, currentHeadingSupplier.get(), swerveState, constants);
 		if (SwerveMath.isStill(chassisSpeeds)) {
 			modules.stop();
 			return;
 		}
 
 		chassisSpeeds = SwerveMath.applyDeadband(chassisSpeeds);
+		chassisSpeeds = handleHeadingControl(chassisSpeeds, swerveState);
 		chassisSpeeds = getDriveModeRelativeChassisSpeeds(chassisSpeeds, swerveState);
 		chassisSpeeds = SwerveMath.discretize(chassisSpeeds);
 
 		applySpeeds(chassisSpeeds, swerveState);
+	}
+
+	private ChassisSpeeds handleHeadingControl(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+		if (swerveState.getHeadingControl() == HeadingControl.NONE) {
+			return chassisSpeeds;
+		}
+
+		if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) > SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
+			headingStabilizer.unlockTarget();
+			return chassisSpeeds;
+		}
+
+		headingStabilizer.setTargetHeading(currentHeadingSupplier.get());
+		headingStabilizer.lockTarget();
+		return new ChassisSpeeds(
+			chassisSpeeds.vxMetersPerSecond,
+			chassisSpeeds.vyMetersPerSecond,
+			headingStabilizer.calculate(currentHeadingSupplier.get()).getRadians()
+		);
 	}
 
 	private void applySpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
@@ -273,14 +301,14 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public boolean isAtAngle(Rotation2d targetAngle) {
-		double angleDeltaDegrees = Math.abs(targetAngle.minus(currentAngleSupplier.get()).getDegrees());
-		boolean isAtAngle = angleDeltaDegrees < SuperStructureConstants.ROTATION_TOLERANCE.getDegrees();
+	public boolean isAtHeading(Rotation2d targetHeading) {
+		double headingDeltaDegrees = Math.abs(targetHeading.minus(currentHeadingSupplier.get()).getDegrees());
+		boolean isAtHeading = headingDeltaDegrees < SuperStructureConstants.HEADING_TOLERANCE.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
 		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < SuperStructureConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
-		return isAtAngle && isStopping;
+		return isAtHeading && isStopping;
 	}
 
 }

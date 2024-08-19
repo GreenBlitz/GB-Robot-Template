@@ -10,8 +10,8 @@ import frc.utils.cycletime.CycleTimeUtils;
 public class SwerveMath {
 
 	//@formatter:off
-	public static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeAngle) {
-		return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeAngle);
+	public static ChassisSpeeds fieldRelativeToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeHeading) {
+		return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeHeading);
 	}
 	//@formatter:on
 
@@ -43,7 +43,7 @@ public class SwerveMath {
 
 	public static ChassisSpeeds applyAimAssistedRotationVelocity(
 		ChassisSpeeds chassisSpeeds,
-		Rotation2d currentAngle,
+		Rotation2d currentHeading,
 		SwerveState swerveState,
 		SwerveConstants constants
 	) {
@@ -53,7 +53,7 @@ public class SwerveMath {
 		// PID
 		Rotation2d pidVelocity = Rotation2d.fromDegrees(
 			constants.rotationDegreesPIDController()
-				.calculate(currentAngle.getDegrees(), swerveState.getAimAssist().targetAngleSupplier.get().getDegrees())
+				.calculate(currentHeading.getDegrees(), swerveState.getAimAssist().targetHeadingSupplier.get().getDegrees())
 		);
 
 		// Magnitude Factor

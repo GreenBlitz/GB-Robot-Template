@@ -28,7 +28,7 @@ public class EncoderFactory {
 				case BACK_LEFT -> new CancoderEncoder(IDs.CANCodersIDs.BACK_LEFT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, logPathPrefix);
 				case BACK_RIGHT -> new CancoderEncoder(IDs.CANCodersIDs.BACK_RIGHT_ENCODER, EncoderRealConstants.ENCODER_CONFIG, logPathPrefix);
 			};
-			case SIMULATION, REPLAY -> new EmptyEncoder();
+			case SIMULATION -> new EmptyEncoder();
 		};
 	}
 

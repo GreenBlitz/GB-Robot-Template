@@ -1,11 +1,19 @@
 package frc.robot.subsystems.swerve.factories.modules.drive;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDriveConstants;
+
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 class DriveRealConstants {
 
@@ -32,12 +40,16 @@ class DriveRealConstants {
 		MOTOR_CONFIG.Slot0.kD = 0;
 	}
 
+	private static final Measure<Velocity<Voltage>> SYSID_RAMP_RATE = Volts.of(0.5).per(Seconds.of(1));
+	private static final Measure<Voltage> SYSID_VOLTAGE_STEP = Volts.of(2);
+
 	protected static TalonFXDriveConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
 			false,
 			MOTOR_CONFIG,
 			ENABLE_FOC,
+			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
 		);
 	}
@@ -48,6 +60,7 @@ class DriveRealConstants {
 			true,
 			MOTOR_CONFIG,
 			ENABLE_FOC,
+			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
 		);
 	}
@@ -58,6 +71,7 @@ class DriveRealConstants {
 			false,
 			MOTOR_CONFIG,
 			ENABLE_FOC,
+			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
 		);
 	}
@@ -68,6 +82,7 @@ class DriveRealConstants {
 			false,
 			MOTOR_CONFIG,
 			ENABLE_FOC,
+			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"
 		);
 	}

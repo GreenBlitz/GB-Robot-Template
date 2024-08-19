@@ -55,16 +55,6 @@ public class AimAssistMath {
 			}
 		}
 
-		if (swerveState.getDriveMode().equals(DriveRelative.FIELD_RELATIVE)) {
-			double xFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.sin(robotPose.getRotation().unaryMinus().getRadians());
-			double yFieldRelativeVelocityAddition = pidHorizontalVelocity * Math.cos(robotPose.getRotation().unaryMinus().getRadians());
-
-			xVelocityMetersPerSecond += xFieldRelativeVelocityAddition;
-			yVelocityMetersPerSecond += yFieldRelativeVelocityAddition;
-		} else if (swerveState.getDriveMode().equals(DriveRelative.ROBOT_RELATIVE)) {
-			yVelocityMetersPerSecond += pidHorizontalVelocity;
-		}
-
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
 	}
 

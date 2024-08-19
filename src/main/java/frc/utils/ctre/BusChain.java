@@ -11,7 +11,7 @@ public enum BusChain {
 	ROBORIO("rio"),
 	CANIVORE("CANivore");
 
-	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_PERCENT = 0.6;
+	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
 	private static final double PERMITTED_RECEIVE_ERRORS = 0;
 	private static final double PERMITTED_TRANSMIT_ERRORS = 0;
 	private static final String LOG_PATH_PREFIX = "Bus/";
@@ -52,7 +52,7 @@ public enum BusChain {
 		if (!busStatus.Status.isOK()) {
 			Logger.recordOutput(alertLogPath + "StatusErrorAt", currentTime);
 		}
-		if (busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_PERCENT) {
+		if (busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE) {
 			Logger.recordOutput(alertLogPath + "FloodedAt", currentTime);
 		}
 		if (busStatus.BusOffCount > 0) {

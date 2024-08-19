@@ -34,15 +34,15 @@ public class SwerveStateHelper {
 		this.noteTranslationSupplier = noteTranslationSupplier;
 	}
 
-	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds, SwerveState state) {
+	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState state) {
 		if (robotPoseSupplier.get().isEmpty()) {
-			return switch (aimAssist) {
+			return switch (state.getAimAssist()) {
 				case AMP -> handleAmpAssist(chassisSpeeds, swerve.getAbsoluteHeading());
 				default -> chassisSpeeds;
 			};
 		}
 		Pose2d robotPose = robotPoseSupplier.get().get();
-		return switch (aimAssist) {
+		return switch (state.getAimAssist()) {
 			case SPEAKER -> handleSpeakerAssist(chassisSpeeds, robotPose);
 			case AMP -> handleAmpAssist(chassisSpeeds, robotPose.getRotation());
 			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPose, noteTranslationSupplier.get().get(), state);

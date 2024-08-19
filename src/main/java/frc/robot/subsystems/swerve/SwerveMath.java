@@ -24,21 +24,24 @@ public class SwerveMath {
 	}
 
 	//@formatter:off
-	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double thetaPower, DriveSpeed driveSpeed, SwerveConstants constants) {
+	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, DriveSpeed driveSpeed, SwerveConstants constants) {
 		return new ChassisSpeeds(
 			xPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
 			yPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
-			thetaPower * driveSpeed.rotationSpeedFactor * constants.maxRotationalVelocityPerSecond().getRadians()
+			rotationPower * driveSpeed.rotationSpeedFactor * constants.maxRotationalVelocityPerSecond().getRadians()
 		);
 	}
 	//@formatter:on
 
 	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
-		double newXSpeed = getDeadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
-		double newYSpeed = getDeadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
-		double newOmegaSpeed = getDeadbandSpeed(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians());
+		double xVelocityMetersPerSecond = getDeadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
+		double yVelocityPerSecond = getDeadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
+		double rotationVelocityPerSecond = getDeadbandSpeed(
+			chassisSpeeds.omegaRadiansPerSecond,
+			SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()
+		);
 
-		return new ChassisSpeeds(newXSpeed, newYSpeed, newOmegaSpeed);
+		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityPerSecond, rotationVelocityPerSecond);
 	}
 
 	public static ChassisSpeeds applyAimAssistedRotationVelocity(

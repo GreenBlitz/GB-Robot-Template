@@ -79,9 +79,9 @@ public class Module {
 	}
 
 	public void updateInputs() {
-		iEncoder.updateInputs(moduleInputsContainer);
-		iSteer.updateInputs(moduleInputsContainer);
-		iDrive.updateInputs(moduleInputsContainer);
+		iEncoder.updateInputs(moduleInputsContainer.getEncoderInputs());
+		iSteer.updateInputs(moduleInputsContainer.getSteerMotorInputs());
+		iDrive.updateInputs(moduleInputsContainer.getDriveMotorInputs());
 		fixDriveInputsCoupling();
 
 		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();

@@ -34,24 +34,24 @@ public class SwerveStateHelper {
 		this.noteTranslationSupplier = noteTranslationSupplier;
 	}
 
-	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState state) {
+	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
 		if (robotPoseSupplier.get().isEmpty()) {
-			return switch (state.getAimAssist()) {
+			return switch (swerveState.getAimAssist()) {
 				case AMP -> handleAmpAssist(chassisSpeeds, swerve.getAbsoluteHeading());
 				default -> chassisSpeeds;
 			};
 		}
 		Pose2d robotPose = robotPoseSupplier.get().get();
-		return switch (state.getAimAssist()) {
+		return switch (swerveState.getAimAssist()) {
 			case SPEAKER -> handleSpeakerAssist(chassisSpeeds, robotPose);
 			case AMP -> handleAmpAssist(chassisSpeeds, robotPose.getRotation());
-			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPose, noteTranslationSupplier.get().get(), state);
+			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPose, noteTranslationSupplier.get().get(), swerveState);
 			case NONE -> chassisSpeeds;
 		};
 	}
 
-	private ChassisSpeeds handleNoteAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Translation2d noteTranslation, SwerveState state) {
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, noteTranslation, swerveConstants, state);
+	private ChassisSpeeds handleNoteAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Translation2d noteTranslation, SwerveState swerveState) {
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, noteTranslation, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

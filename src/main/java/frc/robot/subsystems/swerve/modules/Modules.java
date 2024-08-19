@@ -20,6 +20,9 @@ public class Modules {
 		this.logPath = swerveName.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
 	}
 
+	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
+		return modules[modulePosition.getIndex()];
+	}
 
 	public void logStatus() {
 		for (Module currentModule : modules) {

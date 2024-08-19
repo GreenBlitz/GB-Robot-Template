@@ -9,7 +9,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # If this library is not installed, don't install ntcore but pyntcore.
-from ntcore import NetworkTableInstance, NetworkTable
+from ntcore import NetworkTableInstance, NetworkTable, Topic
+
 import time
 import logging
 
@@ -40,6 +41,9 @@ class NetworkTableClient:
 
     def get_table(self, table_name: str) -> NetworkTable:
         return self._network_table_instance.getTable(table_name)
+
+    def get_topic(self, topic_name: str) -> Topic:
+        return self._network_table_instance.getTopic(topic_name)
 
     def is_connected(self) -> bool:
         return self._network_table_instance.isConnected()

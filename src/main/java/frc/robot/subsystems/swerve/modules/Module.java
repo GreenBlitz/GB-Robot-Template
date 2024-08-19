@@ -13,6 +13,7 @@ import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
 import frc.utils.Conversions;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -44,6 +45,14 @@ public class Module {
 		resetByEncoder();
 	}
 
+	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
+		return iSteer.getSysIdConfigInfo();
+	}
+
+	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {
+		return iDrive.getSysIdConfigInfo();
+	}
+
 	public double toDriveMeters(Rotation2d angle) {
 		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
@@ -70,9 +79,9 @@ public class Module {
 	}
 
 	public void updateInputs() {
-		iEncoder.updateInputs(moduleInputsContainer);
-		iSteer.updateInputs(moduleInputsContainer);
-		iDrive.updateInputs(moduleInputsContainer);
+		iEncoder.updateInputs(moduleInputsContainer.getEncoderInputs());
+		iSteer.updateInputs(moduleInputsContainer.getSteerMotorInputs());
+		iDrive.updateInputs(moduleInputsContainer.getDriveMotorInputs());
 		fixDriveInputsCoupling();
 
 		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();

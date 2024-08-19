@@ -38,7 +38,7 @@ public class SwerveStateHelper {
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(AimAssist aimAssist, ChassisSpeeds chassisSpeeds, SwerveState state) {
 		if (robotPoseSupplier.get().isEmpty()) {
-			return switch (aimAssist){
+			return switch (aimAssist) {
 				case AMP -> handleAmpAssist(chassisSpeeds, swerve.getAbsoluteHeading());
 				default -> chassisSpeeds;
 			};

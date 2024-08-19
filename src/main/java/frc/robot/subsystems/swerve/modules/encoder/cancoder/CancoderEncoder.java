@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.poseestimation.PoseEstimatorConstants;
-import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.utils.ctre.CTREDeviceID;
@@ -44,12 +43,11 @@ public class CancoderEncoder implements IEncoder {
 	}
 
 	@Override
-	public void updateInputs(ModuleInputsContainer inputs) {
-		EncoderInputsAutoLogged encoderInputs = inputs.getEncoderInputs();
-		encoderInputs.isConnected = BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal).isOK();
-		encoderInputs.angle = Rotation2d.fromRotations(positionSignal.getValue());
-		encoderInputs.velocity = Rotation2d.fromRotations(velocitySignal.getValue());
-		encoderInputs.voltage = voltageSignal.getValue();
+	public void updateInputs(EncoderInputsAutoLogged inputs) {
+		inputs.isConnected = BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal).isOK();
+		inputs.angle = Rotation2d.fromRotations(positionSignal.getValue());
+		inputs.velocity = Rotation2d.fromRotations(velocitySignal.getValue());
+		inputs.voltage = voltageSignal.getValue();
 	}
 
 }

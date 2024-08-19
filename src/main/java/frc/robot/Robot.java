@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(RobotType.REAL);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
@@ -40,7 +40,7 @@ public class Robot {
 
 		this.poseEstimator = new PoseEstimator(swerve::setHeading);
 
-		this.swerve.setCurrentAngleSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		this.swerve.setCurrentHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 		this.swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
 
 		this.superStructure = new SuperStructure(swerve, poseEstimator);

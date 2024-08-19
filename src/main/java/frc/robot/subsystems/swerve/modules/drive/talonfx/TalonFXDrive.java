@@ -5,7 +5,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
@@ -66,10 +65,9 @@ public class TalonFXDrive implements IDrive {
 	}
 
 	@Override
-	public void updateInputs(ModuleInputsContainer inputs) {
-		DriveInputsAutoLogged driveInputs = inputs.getDriveMotorInputs();
+	public void updateInputs(DriveInputsAutoLogged inputs) {
 		//@formatter:off
-		driveInputs.isConnected = BaseStatusSignal.refreshAll(
+		inputs.isConnected = BaseStatusSignal.refreshAll(
 			signals.positionSignal(),
 			signals.velocitySignal(),
 			signals.accelerationSignal(),
@@ -77,12 +75,12 @@ public class TalonFXDrive implements IDrive {
 			signals.statorCurrentSignal()
 		).isOK();
 		//@formatter:on
-		driveInputs.angle = Rotation2d.fromRotations(driveMotor.getLatencyCompensatedPosition());
-		driveInputs.velocity = Rotation2d.fromRotations(driveMotor.getLatencyCompensatedVelocity());
-		driveInputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());
-		driveInputs.current = signals.statorCurrentSignal().getValue();
-		driveInputs.voltage = signals.voltageSignal().getValue();
-		driveInputs.angleOdometrySamples = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+		inputs.angle = Rotation2d.fromRotations(driveMotor.getLatencyCompensatedPosition());
+		inputs.velocity = Rotation2d.fromRotations(driveMotor.getLatencyCompensatedVelocity());
+		inputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());
+		inputs.current = signals.statorCurrentSignal().getValue();
+		inputs.voltage = signals.voltageSignal().getValue();
+		inputs.angleOdometrySamples = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
 		drivePositionQueue.clear();
 	}
 

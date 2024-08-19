@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.modules.steer;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.modules.ModuleInputsContainer;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface ISteer {
@@ -18,6 +17,6 @@ public interface ISteer {
 
 	void setTargetAngle(Rotation2d angle);
 
-	void updateInputs(ModuleInputsContainer inputs);
+	void updateInputs(SteerInputsAutoLogged inputs);
 
 }

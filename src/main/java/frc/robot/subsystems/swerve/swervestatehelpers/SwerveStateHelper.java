@@ -15,8 +15,6 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistMath.getObjectAssistedSpeeds;
-import static frc.robot.subsystems.swerve.swervestatehelpers.AimAssistMath.getRotationAssistedChassisSpeeds;
 
 public class SwerveStateHelper {
 
@@ -53,15 +51,15 @@ public class SwerveStateHelper {
 	}
 
 	private ChassisSpeeds handleNoteAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Translation2d noteTranslation, SwerveState state) {
-		return getObjectAssistedSpeeds(chassisSpeeds, robotPose, noteTranslation, swerveConstants, state);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, noteTranslation, swerveConstants, state);
 	}
 
 	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		return getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, Field.getAngleToAmp(), swerveConstants);
+		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, Field.getAngleToAmp(), swerveConstants);
 	}
 
 	private ChassisSpeeds handleSpeakerAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose) {
-		return getRotationAssistedChassisSpeeds(
+		return AimAssistMath.getRotationAssistedChassisSpeeds(
 			chassisSpeeds,
 			robotPose.getRotation(),
 			SwerveMath.getRelativeTranslation(robotPose, Field.getSpeaker().toTranslation2d()).getAngle(),

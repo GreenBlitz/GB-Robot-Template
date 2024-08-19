@@ -14,7 +14,6 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
  * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
@@ -23,6 +22,7 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(RobotType.REAL);
+
 
 	public static final Swerve swerve = new Swerve(
 		SwerveConstantsFactory.create(SwerveName.SWERVE),

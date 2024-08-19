@@ -23,7 +23,6 @@ public class TalonFXSteerConstants {
 		TalonFXConfiguration configuration,
 		boolean enableFOC,
 		SysIdRoutine.Config sysIdConfig,
-
 		String logPathPrefix
 	) {
 		this(steerMotorID, inverted, NO_ENCODER_ID, configuration, enableFOC, sysIdConfig, logPathPrefix);
@@ -37,7 +36,6 @@ public class TalonFXSteerConstants {
 		boolean enableFOC,
 		SysIdRoutine.Config sysIdConfig,
 		String logPathPrefix
-
 	) {
 		TalonFXSteerConfigObject steerConfigObject = new TalonFXSteerConfigObject(
 			steerMotorID,

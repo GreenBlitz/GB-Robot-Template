@@ -42,7 +42,6 @@ class SteerRealConstants {
 	private static final Measure<Velocity<Voltage>> SYSID_RAMP_RATE = Volts.of(0.5).per(Seconds.of(1));
 	private static final Measure<Voltage> SYSID_VOLTAGE_STEP = Volts.of(1);
 
-
 	protected static TalonFXSteerConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
 		return new TalonFXSteerConstants(
 			IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,

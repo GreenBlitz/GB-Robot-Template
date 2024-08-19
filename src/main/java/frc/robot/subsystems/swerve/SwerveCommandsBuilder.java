@@ -105,18 +105,18 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command rotateToAngle(Rotation2d targetAngle) {
-		return rotateToAngle(targetAngle, RotateAxis.MIDDLE_OF_ROBOT);
+	public Command turnToHeading(Rotation2d targetHeading) {
+		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_ROBOT);
 	}
 
-	public Command rotateToAngle(Rotation2d targetAngle, RotateAxis rotateAxis) {
+	public Command turnToHeading(Rotation2d targetHeading, RotateAxis rotateAxis) {
 		return new FunctionalCommand(
 			swerve::resetPIDControllers,
-			() -> swerve.rotateToAngle(targetAngle, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
+			() -> swerve.turnToHeading(targetHeading, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
 			interrupted -> {},
-			() -> swerve.isAtAngle(targetAngle),
+			() -> swerve.isAtHeading(targetHeading),
 			swerve
-		).withName("Rotate Around " + rotateAxis.name() + " To " + targetAngle.getDegrees() + " Degrees");
+		).withName("Rotate Around " + rotateAxis.name() + " To " + targetHeading.getDegrees() + " Degrees");
 	}
 
 

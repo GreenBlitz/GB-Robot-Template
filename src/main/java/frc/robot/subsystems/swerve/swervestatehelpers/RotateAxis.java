@@ -39,14 +39,14 @@ public enum RotateAxis {
 	}
 
 	private static RotateAxis getFarRotateAxis(boolean isLeft) {
-		Rotation2d currentAllianceAngle = Robot.swerve.getAllianceRelativeHeading();
-		if (Math.abs(currentAllianceAngle.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45
+		Rotation2d currentAllianceHeading = Robot.swerve.getAllianceRelativeHeading();
+		if (Math.abs(currentAllianceHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45
 			return isLeft ? FRONT_LEFT_MODULE : FRONT_RIGHT_MODULE;
 		}
-		if (Math.abs(currentAllianceAngle.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) { // -135 - x - 135
+		if (Math.abs(currentAllianceHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) { // -135 - x - 135
 			return isLeft ? BACK_RIGHT_MODULE : BACK_LEFT_MODULE;
 		}
-		if (currentAllianceAngle.getDegrees() > 0) { // 45 <= x <= 135
+		if (currentAllianceHeading.getDegrees() > 0) { // 45 <= x <= 135
 			return isLeft ? FRONT_RIGHT_MODULE : BACK_RIGHT_MODULE;
 		}
 		return isLeft ? BACK_LEFT_MODULE : FRONT_LEFT_MODULE; // -45 >= x >= -135

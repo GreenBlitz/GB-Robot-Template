@@ -56,8 +56,8 @@ public class SwerveStateHelper {
 		return getObjectAssistedSpeeds(chassisSpeeds, robotPose, noteTranslation, swerveConstants, state);
 	}
 
-	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotAngle) {
-		return getRotationAssistedChassisSpeeds(chassisSpeeds, robotAngle, Field.getAngleToAmp(), swerveConstants);
+	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
+		return getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, Field.getAngleToAmp(), swerveConstants);
 	}
 
 	private ChassisSpeeds handleSpeakerAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose) {
@@ -80,14 +80,14 @@ public class SwerveStateHelper {
 	}
 
 	public RotateAxis getFarRotateAxis(boolean isLeft) {
-		Rotation2d currentAllianceAngle = swerve.getAllianceRelativeHeading();
-		if (Math.abs(currentAllianceAngle.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45
+		Rotation2d currentAllianceHeading = swerve.getAllianceRelativeHeading();
+		if (Math.abs(currentAllianceHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45
 			return isLeft ? RotateAxis.FRONT_LEFT_MODULE : RotateAxis.FRONT_RIGHT_MODULE;
 		}
-		if (Math.abs(currentAllianceAngle.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) { // -135 - x - 135
+		if (Math.abs(currentAllianceHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) { // -135 - x - 135
 			return isLeft ? RotateAxis.BACK_RIGHT_MODULE : RotateAxis.BACK_LEFT_MODULE;
 		}
-		if (currentAllianceAngle.getDegrees() > 0) { // 45 <= x <= 135
+		if (currentAllianceHeading.getDegrees() > 0) { // 45 <= x <= 135
 			return isLeft ? RotateAxis.FRONT_RIGHT_MODULE : RotateAxis.BACK_RIGHT_MODULE;
 		}
 		return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE; // -45 >= x >= -135

@@ -18,26 +18,26 @@ public enum AimAssist {
 	AMP(Field::getAngleToAmp);
 
 
-	public final Supplier<Rotation2d> targetAngleSupplier;
+	public final Supplier<Rotation2d> targetHeadingSupplier;
 
 	AimAssist() {
-		targetAngleSupplier = () -> Rotation2d.fromDegrees(0);
+		targetHeadingSupplier = () -> Rotation2d.fromDegrees(0);
 	}
 
-	AimAssist(Rotation2d targetRotation) {
-		this.targetAngleSupplier = () -> targetRotation;
+	AimAssist(Rotation2d targetHeading) {
+		this.targetHeadingSupplier = () -> targetHeading;
 	}
 
-	AimAssist(Rotation2dSupplier targetAllianceRotation) {
-		this.targetAngleSupplier = targetAllianceRotation;
+	AimAssist(Rotation2dSupplier targetAllianceHeading) {
+		this.targetHeadingSupplier = targetAllianceHeading;
 	}
 
 	AimAssist(Translation3d targetAllianceTranslation) {
-		this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslation);
+		this.targetHeadingSupplier = () -> getTargetHeadingFromTargetTranslation(targetAllianceTranslation);
 	}
 
 	AimAssist(Translation3dSupplier targetAllianceTranslationSupplier) {
-		this.targetAngleSupplier = () -> getTargetAngleFromTargetTranslation(targetAllianceTranslationSupplier.get());
+		this.targetHeadingSupplier = () -> getTargetHeadingFromTargetTranslation(targetAllianceTranslationSupplier.get());
 	}
 
 	private interface Rotation2dSupplier extends Supplier<Rotation2d> {
@@ -46,11 +46,11 @@ public enum AimAssist {
 	private interface Translation3dSupplier extends Supplier<Translation3d> {
 	}
 
-	private Rotation2d getTargetAngleFromTargetTranslation(Translation3d targetPose2d) {
+	private Rotation2d getTargetHeadingFromTargetTranslation(Translation3d targetPose2d) {
 		Pose2d currentBluePose = Robot.poseEstimator.getCurrentPose();
 		Translation2d targetBluePose = targetPose2d.toTranslation2d();
-		double wantedAngleRadians = Math.atan2(targetBluePose.getY() - currentBluePose.getY(), targetBluePose.getX() - currentBluePose.getX());
-		return Rotation2d.fromRadians(wantedAngleRadians);
+		double wantedHeadingRadians = Math.atan2(targetBluePose.getY() - currentBluePose.getY(), targetBluePose.getX() - currentBluePose.getX());
+		return Rotation2d.fromRadians(wantedHeadingRadians);
 	}
 
 }

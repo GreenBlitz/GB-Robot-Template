@@ -71,21 +71,20 @@ public class TalonFXSteer implements ISteer {
 
 
 	@Override
-	public void updateInputs(ModuleInputsContainer inputs) {
-		SteerInputsAutoLogged steerInputs = inputs.getSteerMotorInputs();
+	public void updateInputs(SteerInputsAutoLogged inputs) {
 		//@formatter:off
-		steerInputs.isConnected = BaseStatusSignal.refreshAll(
+		inputs.isConnected = BaseStatusSignal.refreshAll(
 			signals.positionSignal(),
 			signals.velocitySignal(),
 			signals.accelerationSignal(),
 			signals.voltageSignal()
 		).isOK();
 		//@formatter:on
-		steerInputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
-		steerInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
-		steerInputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());
-		steerInputs.voltage = signals.voltageSignal().getValue();
-		steerInputs.angleOdometrySamples = positionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+		inputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
+		inputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
+		inputs.acceleration = Rotation2d.fromRotations(signals.accelerationSignal().getValue());
+		inputs.voltage = signals.voltageSignal().getValue();
+		inputs.angleOdometrySamples = positionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
 		positionQueue.clear();
 	}
 

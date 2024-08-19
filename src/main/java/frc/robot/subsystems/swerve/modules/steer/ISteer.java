@@ -18,6 +18,6 @@ public interface ISteer {
 
 	void setTargetAngle(Rotation2d angle);
 
-	void updateInputs(ModuleInputsContainer inputs);
+	void updateInputs(SteerInputsAutoLogged inputs);
 
 }

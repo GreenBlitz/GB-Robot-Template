@@ -34,26 +34,26 @@ public class SwerveStateHelper {
 		this.noteTranslationSupplier = noteTranslationSupplier;
 	}
 
-	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveState swerveState) {
+	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		return switch (swerveState.getAimAssist()) {
-			case NONE -> chassisSpeeds;
-			case SPEAKER -> handleSpeakerAssist(chassisSpeeds, robotPoseSupplier.get());
-			case NOTE -> handleNoteAimAssist(chassisSpeeds, robotPoseSupplier.get(), noteTranslationSupplier.get(), swerveState);
-			case AMP -> handleAmpAssist(chassisSpeeds, robotPoseSupplier.get());
+			case NONE -> speeds;
+			case SPEAKER -> handleSpeakerAssist(speeds, robotPoseSupplier.get());
+			case NOTE -> handleNoteAimAssist(speeds, robotPoseSupplier.get(), noteTranslationSupplier.get(), swerveState);
+			case AMP -> handleAmpAssist(speeds, robotPoseSupplier.get());
 		};
 	}
 
 	private ChassisSpeeds handleNoteAimAssist(
-		ChassisSpeeds chassisSpeeds,
+		ChassisSpeeds speeds,
 		Optional<Pose2d> optionalRobotPose,
 		Optional<Translation2d> optionalNoteTranslation,
 		SwerveState swerveState
 	) {
 		if (optionalRobotPose.isEmpty() || optionalNoteTranslation.isEmpty()) {
-			return chassisSpeeds;
+			return speeds;
 		}
 		return AimAssistMath
-			.getObjectAssistedSpeeds(chassisSpeeds, optionalRobotPose.get(), optionalNoteTranslation.get(), swerveConstants, swerveState);
+			.getObjectAssistedSpeeds(speeds, optionalRobotPose.get(), optionalNoteTranslation.get(), swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Optional<Pose2d> optionalRobotPose) {
@@ -61,17 +61,17 @@ public class SwerveStateHelper {
 		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, Field.getAngleToAmp(), swerveConstants);
 	}
 
-	private ChassisSpeeds handleSpeakerAssist(ChassisSpeeds chassisSpeeds, Optional<Pose2d> optionalRobotPose) {
-		return optionalRobotPose
-			.map(
-				robotPose -> AimAssistMath.getRotationAssistedChassisSpeeds(
-					chassisSpeeds,
-					robotPose.getRotation(),
-					SwerveMath.getRelativeTranslation(robotPose, Field.getSpeaker().toTranslation2d()).getAngle(),
-					swerveConstants
-				)
-			)
-			.orElse(chassisSpeeds);
+	private ChassisSpeeds handleSpeakerAssist(ChassisSpeeds speeds, Optional<Pose2d> optionalRobotPose) {
+		if (optionalRobotPose.isEmpty()) {
+			return speeds;
+		}
+		Pose2d robotPose = optionalRobotPose.get();
+		return AimAssistMath.getRotationAssistedChassisSpeeds(
+			speeds,
+				robotPose.getRotation(),
+			SwerveMath.getRelativeTranslation(robotPose, Field.getSpeaker().toTranslation2d()).getAngle(),
+			swerveConstants
+		);
 	}
 
 

@@ -39,7 +39,7 @@ public class Robot {
 		);
 		this.poseEstimator = new PoseEstimator(swerve::setHeading);
 
-		swerve.setCurrentHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
 
 		this.superStructure = new SuperStructure(swerve, poseEstimator);

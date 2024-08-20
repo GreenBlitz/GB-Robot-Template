@@ -25,19 +25,17 @@ public class Pigeon2Gyro implements IGyro {
 
 	private final Pigeon2 gyro;
 	private final StatusSignal<Double> yawSignal;
-	private final Queue<Double> yawQueue, timestampQueue;
 	private final String logPath;
+	private final Queue<Double> yawQueue, timestampQueue;
 
 	public Pigeon2Gyro(CTREDeviceID gyroID, Pigeon2Configuration configuration, String logPathPrefix) {
 		this.gyro = new Pigeon2Wrapper(gyroID);
-
 		this.yawSignal = gyro.getYaw().clone();
+		this.logPath = logPathPrefix + GyroConstants.LOG_PATH_ADDITION;
 
 		// todo - maybe latency
 		this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(gyro, yawSignal);
 		this.timestampQueue = PhoenixOdometryThread6328.getInstance().getTimestampQueue();
-
-		this.logPath = logPathPrefix + GyroConstants.LOG_PATH_ADDITION;
 
 		configGyro(configuration);
 		optimizeBusAndSignals();

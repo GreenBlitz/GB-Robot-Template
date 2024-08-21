@@ -27,7 +27,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
+		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
 	}

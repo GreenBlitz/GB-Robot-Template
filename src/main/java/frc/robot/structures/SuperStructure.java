@@ -1,4 +1,4 @@
-package frc.robot.strcutures;
+package frc.robot.structures;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;

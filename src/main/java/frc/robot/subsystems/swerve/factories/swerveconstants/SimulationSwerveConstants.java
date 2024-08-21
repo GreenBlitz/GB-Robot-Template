@@ -11,7 +11,7 @@ public class SimulationSwerveConstants {
 	private static final Rotation2d MAX_ROTATION_VELOCITY = Rotation2d.fromRadians(10);
 
 	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(7, 0, 0);
-	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(8, 0, 0);
+	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(7.5, 0, 0);
 
 	protected static SwerveConstants getSwerveConstants(SwerveName swerveName) {
 		return new SwerveConstants(

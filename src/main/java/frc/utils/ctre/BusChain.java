@@ -12,21 +12,51 @@ public enum BusChain {
 	CANIVORE("CANivore");
 
 	private final String chainName;
-	public PeriodicAlert StatusError;
-	public PeriodicAlert Flooded;
-	public PeriodicAlert Disconnected;
-	public PeriodicAlert Full;
-	public PeriodicAlert ReceiveError;
-	public PeriodicAlert TransmitErrors;
+	private final String currentAlertLogPath;
+	private CANBus.CANBusStatus busStatus;
 
 	BusChain(String chainName) {
 		this.chainName = chainName;
-		this.StatusError = new PeriodicAlert();
-		this.Flooded = new PeriodicAlert();
-		this.Disconnected = new PeriodicAlert();
-		this.Full = new PeriodicAlert();
-		this.ReceiveError = new PeriodicAlert();
-		this.TransmitErrors = new PeriodicAlert();
+		this.busStatus = CANBus.getStatus(this.chainName);
+		this.currentAlertLogPath = BusStatus.LOG_PATH + this.chainName;
+
+		PeriodicAlert StatusError = new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				currentAlertLogPath + "/StatusErrorAt",
+				() -> !busStatus.Status.isOK()
+		);
+		PeriodicAlert Flooded = new PeriodicAlert(
+				Alert.AlertType.PLACEHOLDER,
+				currentAlertLogPath + "/FloodedAt",
+				() -> busStatus.BusUtilization > BusStatus.MAX_CAN_UTILIZATION_PERCENT
+		);
+		PeriodicAlert Disconnected = new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				currentAlertLogPath + "/DisconnectedAt",
+				() -> busStatus.BusOffCount > 0
+		);
+		PeriodicAlert Full = new PeriodicAlert(
+				Alert.AlertType.PLACEHOLDER,
+				currentAlertLogPath + "/FullAt",
+				() -> busStatus.TxFullCount > 0
+		);
+		PeriodicAlert ReceiveError = new PeriodicAlert(
+				Alert.AlertType.PLACEHOLDER,
+				currentAlertLogPath + "/ReceiveErrorAt",
+				() -> busStatus.REC > BusStatus.MAX_RECEIVE_ERRORS
+		);
+		PeriodicAlert TransmitErrors = new PeriodicAlert(
+				Alert.AlertType.PLACEHOLDER,
+				currentAlertLogPath + "/TransmitErrorsAt",
+				() -> busStatus.TEC > BusStatus.MAX_TRANSMIT_ERRORS
+		);
+
+		StatusError.addToAlertManager();
+		Flooded.addToAlertManager();
+		Disconnected.addToAlertManager();
+		Full.addToAlertManager();
+		ReceiveError.addToAlertManager();
+		TransmitErrors.addToAlertManager();
 	}
 
 	public String getChainName() {
@@ -34,9 +64,8 @@ public enum BusChain {
 	}
 
 	void updateStatus() {
-		CANBus.CANBusStatus busStatus = CANBus.getStatus(getChainName());
+		this.busStatus = CANBus.getStatus(chainName);
 		logStatus(busStatus);
-		reportAlerts(busStatus);
 	}
 
 	private void logStatus(CANBus.CANBusStatus busStatus) {
@@ -47,30 +76,6 @@ public enum BusChain {
 		Logger.recordOutput(currentLogPath + "/Full", busStatus.TxFullCount);
 		Logger.recordOutput(currentLogPath + "/ReceiveError", busStatus.REC);
 		Logger.recordOutput(currentLogPath + "/TransmitError", busStatus.TEC);
-	}
-
-	private void reportAlerts(CANBus.CANBusStatus busStatus) {
-		String currentAlertLogPath = Alert.ALERT_LOG_PATH + BusStatus.LOG_PATH + getChainName();
-		double currentTime = Timer.getFPGATimestamp();
-
-		if (!busStatus.Status.isOK()) {
-			Logger.recordOutput(currentAlertLogPath + "/StatusErrorAt", currentTime);
-		}
-		if (busStatus.BusUtilization > BusStatus.MAX_CAN_UTILIZATION_PERCENT) {
-			Logger.recordOutput(currentAlertLogPath + "/FloodedAt", currentTime);
-		}
-		if (busStatus.BusOffCount > 0) {
-			Logger.recordOutput(currentAlertLogPath + "/DisconnectedAt", currentTime);
-		}
-		if (busStatus.TxFullCount > 0) {
-			Logger.recordOutput(currentAlertLogPath + "/FullAt", currentTime);
-		}
-		if (busStatus.REC > BusStatus.MAX_RECEIVE_ERRORS) {
-			Logger.recordOutput(currentAlertLogPath + "/ReceiveErrorAt", currentTime);
-		}
-		if (busStatus.TEC > BusStatus.MAX_TRANSMIT_ERRORS) {
-			Logger.recordOutput(currentAlertLogPath + "/TransmitErrorsAt", currentTime);
-		}
 	}
 
 }

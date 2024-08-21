@@ -9,6 +9,7 @@ public class Alert {
     public enum AlertType {
 
         ERROR,
+        PLACEHOLDER,
         WARNING;
 
     }
@@ -20,7 +21,7 @@ public class Alert {
 
     public Alert(AlertType type, String name) {
         this.type = type;
-        this.logPath = this.ALERT_LOG_PATH + type.toString() + "/" + name;
+        this.logPath = ALERT_LOG_PATH + type.toString() + "/" + name;
     }
 
     public void reportAlert() {

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.ctre.BusStatus;
+import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import frc.utils.pathplannerutils.PathPlannerUtils;
@@ -23,15 +23,13 @@ import org.littletonrobotics.junction.LoggedRobot;
 public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
-
 	private Robot robot;
-
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
 		PathPlannerUtils.startPathPlanner();
+		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
 	}
@@ -57,8 +55,8 @@ public class RobotManager extends LoggedRobot {
 		CycleTimeUtils.updateCycleTime(); // Better to be first
 		robot.getSuperStructure().periodic();
 		CommandScheduler.getInstance().run();
-		BusStatus.logChainsStatuses();
 		BatteryUtils.logStatus();
+		BusChain.logChainsStatuses();
 	}
 
 	@Override

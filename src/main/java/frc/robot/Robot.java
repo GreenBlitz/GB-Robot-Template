@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.bindings.KeyboardBindings;
-import frc.utils.RobotTypeUtils;
 import frc.robot.bindings.JoysticksBindings;
 import frc.utils.controllers.keyboard.KeyboardController;
 
@@ -18,7 +17,7 @@ import frc.utils.controllers.keyboard.KeyboardController;
  */
 public class Robot {
 
-	public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	public Robot() {
 		configureBindings();

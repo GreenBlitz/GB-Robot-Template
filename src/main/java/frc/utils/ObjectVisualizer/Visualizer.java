@@ -21,9 +21,9 @@ public class Visualizer {
         this.velocity = new Vector<N3>(velocity);
         this.location = new Vector<N3>(location);
     }
-    public Translation3d currentPosition(){
-        this.velocity.plus(acceleration.div(500));
-        this.location.plus(velocity.div(500));
+    public Translation3d currentPosition(double time){
+        location.plus(velocity.div(1/time);
+        location.plus(acceleration.div(2/(time*time)));
         return new Translation3DRan(location.getData());
     }
 }

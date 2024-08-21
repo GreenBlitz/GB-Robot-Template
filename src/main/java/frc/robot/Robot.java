@@ -13,6 +13,9 @@ import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+
+import java.util.Optional;
 
 
 /**
@@ -24,19 +27,23 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	public static final Swerve swerve = new Swerve(
-		SwerveConstantsFactory.create(SwerveName.SWERVE),
-		ModulesFactory.create(SwerveName.SWERVE),
-		GyroFactory.create(SwerveName.SWERVE)
-	);
-	public static final PoseEstimator poseEstimator = new PoseEstimator(swerve::setHeading);
-	static {
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-	}
-
-	public static final SuperStructure superStructure = new SuperStructure(swerve, poseEstimator);
+	private final Swerve swerve;
+	private final PoseEstimator poseEstimator;
+	private final SuperStructure superStructure;
 
 	public Robot() {
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveName.SWERVE),
+			ModulesFactory.create(SwerveName.SWERVE),
+			GyroFactory.create(SwerveName.SWERVE)
+		);
+		this.poseEstimator = new PoseEstimator(swerve::setHeading);
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+
+		this.superStructure = new SuperStructure(swerve, poseEstimator);
+
 		buildPathPlannerForAuto();
 		configureBindings();
 	}

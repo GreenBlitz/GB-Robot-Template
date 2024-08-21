@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -67,7 +66,7 @@ public class JoysticksBindings {
 					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)
+					SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withAimAssist(AimAssist.NOTE)
 				)
 		);
 		usedJoystick.R1.whileTrue(
@@ -77,7 +76,7 @@ public class JoysticksBindings {
 					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-					SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)
+					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)
 				)
 		);
 
@@ -89,7 +88,7 @@ public class JoysticksBindings {
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(RotateAxis.getRightFarRotateAxis())
+						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHelper().getFarRightRotateAxis())
 					)
 			);
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER)
@@ -100,7 +99,7 @@ public class JoysticksBindings {
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(RotateAxis.getLeftFarRotateAxis())
+						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHelper().getFarLeftRotateAxis())
 					)
 			);
 

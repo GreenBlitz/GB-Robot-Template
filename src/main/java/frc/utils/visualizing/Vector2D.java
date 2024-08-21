@@ -1,34 +1,34 @@
 package frc.utils.visualizing;
 
-public class Vector {
+public class Vector2D{
     protected double magnitude;
     protected double direction;
     protected VectorComponents vectorComponents;
 
-    public Vector(double magnitude, double direction) {
+    public Vector2D(double magnitude, double direction) {
         this.magnitude = magnitude;
         this.direction = direction;
         this.vectorComponents = new VectorComponents(cosDegrees(this.direction) * this.magnitude, sinDegrees(this.direction) * this.magnitude);
     }
 
-    public Vector(VectorComponents vectorComponents) {
+    public Vector2D(VectorComponents vectorComponents) {
         this.magnitude = calculateMagnitude();
         this.direction = shiftTanDegrees();
         this.vectorComponents = new VectorComponents(vectorComponents.getHorizontal(), vectorComponents.getVertical());
     }
 
-    public Vector(Vector other){
+    public Vector2D(Vector2D other){
         this.magnitude = other.magnitude;
         this.direction = other.direction;
         this.vectorComponents = new VectorComponents(other.vectorComponents);
     }
 
-    public void sumVectors(Vector other){
+    public void sumVectors(Vector2D other){
         this.addToHorizontal(other.vectorComponents.getHorizontal());
         this.addToVertical(other.vectorComponents.getVertical());
     }
 
-    public void sumVectorsAndDivideByConstant(Vector other, double divisionConstant){
+    public void sumVectorsAndDivideByConstant(Vector2D other, double divisionConstant){
         this.addToHorizontal(other.vectorComponents.getHorizontal()
                 /divisionConstant);
         this.addToVertical(other.vectorComponents.getVertical()

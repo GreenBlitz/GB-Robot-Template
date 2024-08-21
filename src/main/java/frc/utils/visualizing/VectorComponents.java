@@ -47,7 +47,7 @@ public class VectorComponents {
     public void addToInner(double addInner){
         setInner(addInner+this.inner);
     }
-    public void addToHorizontalAndVertical(double addHorizontal, double addVertical, double addInner){
+    public void addToHorizontalAndVerticalAndInner(double addHorizontal, double addVertical, double addInner){
         addToHorizontal(addHorizontal);
         addToVertical(addVertical);
         addToInner(addInner);

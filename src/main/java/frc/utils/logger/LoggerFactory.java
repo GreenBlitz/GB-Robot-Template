@@ -3,10 +3,8 @@ package frc.utils.logger;
 import com.ctre.phoenix6.SignalLogger;
 import frc.robot.Robot;
 import frc.robot.constants.LogPaths;
-import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import java.nio.file.Path;
@@ -17,7 +15,6 @@ public class LoggerFactory {
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> startRealLogger();
 			case SIMULATION -> startSimulationLogger();
-			case REPLAY -> startReplayLogger();
 		}
 	}
 
@@ -37,25 +34,18 @@ public class LoggerFactory {
 	}
 
 	private static void startSimulationLogger() {
-		startNonReplayLogger(LogSavePath.COMPUTER);
+		startLogger(LogSavePath.COMPUTER);
 	}
 
 	private static void startLoggerOnUSB() {
-		startNonReplayLogger(LogSavePath.USB);
+		startLogger(LogSavePath.USB);
 	}
 
 	private static void startLoggerOnRoborio() {
-		startNonReplayLogger(LogSavePath.ROBORIO);
+		startLogger(LogSavePath.ROBORIO);
 	}
 
-	private static void startReplayLogger() {
-		String logPath = LogFileUtil.findReplayLog();
-		Logger.setReplaySource(new WPILOGReader(logPath));
-		Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_simulation")));
-		Logger.start();
-	}
-
-	private static void startNonReplayLogger(LogSavePath logSavePath) {
+	private static void startLogger(LogSavePath logSavePath) {
 		setLoggingPath(logSavePath.getSavePath());
 		Logger.addDataReceiver(new NT4Publisher());
 		Logger.start();

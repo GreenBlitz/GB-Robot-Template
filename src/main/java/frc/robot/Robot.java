@@ -42,7 +42,7 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 		swerve.setStateHelper(
-			new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), () -> Optional.of(new Translation2d(5, 5)), swerve)
+			new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve)
 		);
 
 		this.superStructure = new SuperStructure(swerve, poseEstimator);

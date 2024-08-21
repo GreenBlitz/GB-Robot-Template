@@ -1,9 +1,10 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
 import frc.utils.cycletime.CycleTimeUtils;
 
@@ -44,43 +45,6 @@ public class SwerveMath {
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityPerSecond, rotationVelocityPerSecond);
 	}
 
-	public static ChassisSpeeds applyAimAssistedRotationVelocity(
-		ChassisSpeeds chassisSpeeds,
-		Rotation2d currentHeading,
-		SwerveState swerveState,
-		SwerveConstants constants
-	) {
-		if (swerveState.getAimAssist().equals(AimAssist.NONE)) {
-			return chassisSpeeds;
-		}
-		// PID
-		Rotation2d pidVelocity = Rotation2d.fromDegrees(
-			constants.rotationDegreesPIDController()
-				.calculate(currentHeading.getDegrees(), swerveState.getAimAssist().targetHeadingSupplier.get().getDegrees())
-		);
-
-		// Magnitude Factor
-		double driveMagnitude = SwerveMath.getDriveMagnitude(chassisSpeeds);
-		double angularVelocityRads = pidVelocity.getRadians()
-			* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
-			/ (driveMagnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
-
-		// Joystick Output
-		double angularVelocityWithJoystick = angularVelocityRads + chassisSpeeds.omegaRadiansPerSecond;
-
-		// Clamp
-		double clampedAngularVelocity = MathUtil.clamp(
-			angularVelocityWithJoystick,
-			-constants.maxRotationalVelocityPerSecond().getRadians(),
-			constants.maxRotationalVelocityPerSecond().getRadians()
-		);
-
-		// todo maybe - make value have stick range (P = MAX_ROT / MAX_ERROR = 10 rads / Math.PI) or clamp between MAX_ROT
-		// todo - distance factor
-		return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, clampedAngularVelocity);
-	}
-
-
 	public static boolean isStill(ChassisSpeeds chassisSpeeds) {
 		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
 			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
@@ -93,6 +57,19 @@ public class SwerveMath {
 
 	public static double getDeadbandSpeed(double speed, double deadband) {
 		return Math.abs(speed) <= deadband ? 0 : speed;
+	}
+
+	public static Translation2d getRelativeTranslation(Translation2d relativeTo, Translation2d toRelative) {
+		return toRelative.minus(relativeTo);
+	}
+
+	public static Translation2d getRelativeTranslation(Pose2d relativeTo, Translation2d toRelative) {
+		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
+	}
+
+	public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity) {
+		return Rotation2d
+			.fromRadians(MathUtil.clamp(velocity.getRadians(), -maxRotationalVelocity.getRadians(), maxRotationalVelocity.getRadians()));
 	}
 
 }

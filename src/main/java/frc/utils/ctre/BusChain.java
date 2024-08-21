@@ -12,8 +12,10 @@ public enum BusChain {
 	CANIVORE("CANivore");
 
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
-	private static final double PERMITTED_RECEIVE_ERRORS = 0;
-	private static final double PERMITTED_TRANSMIT_ERRORS = 0;
+	private static final int PERMITTED_RECEIVE_ERRORS = 0;
+	private static final int PERMITTED_TRANSMIT_ERRORS = 0;
+	private static final int PERMITTED_TX_FULLCOUNT = 0;
+	private static final int PERMITTED_BUS_OFF_COUNT = 0;
 	private static final String LOG_PATH_PREFIX = "Bus/";
 
 	private final String chainName;
@@ -55,10 +57,10 @@ public enum BusChain {
 		if (busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE) {
 			Logger.recordOutput(alertLogPath + "FloodedAt", currentTime);
 		}
-		if (busStatus.BusOffCount > 0) {
+		if (busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT) {
 			Logger.recordOutput(alertLogPath + "DisconnectedAt", currentTime);
 		}
-		if (busStatus.TxFullCount > 0) {
+		if (busStatus.TxFullCount > PERMITTED_TX_FULLCOUNT) {
 			Logger.recordOutput(alertLogPath + "FullAt", currentTime);
 		}
 		if (busStatus.REC > PERMITTED_RECEIVE_ERRORS) {

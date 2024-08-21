@@ -13,7 +13,7 @@ import frc.robot.constants.Field;
 import frc.robot.constants.LogPaths;
 import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.strcutures.SuperStructureConstants;
+import frc.robot.structures.SuperStructureConstants;
 import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.gyro.IGyro;
 import frc.robot.subsystems.swerve.modules.Modules;

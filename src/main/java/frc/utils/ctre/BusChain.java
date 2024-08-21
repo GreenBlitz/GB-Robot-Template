@@ -14,7 +14,7 @@ public enum BusChain {
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
 	private static final int PERMITTED_RECEIVE_ERRORS = 0;
 	private static final int PERMITTED_TRANSMIT_ERRORS = 0;
-	private static final int PERMITTED_TX_FULLCOUNT = 0;
+	private static final int PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT = 0;
 	private static final int PERMITTED_BUS_OFF_COUNT = 0;
 	private static final String LOG_PATH_PREFIX = "Bus/";
 
@@ -60,7 +60,7 @@ public enum BusChain {
 		if (busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT) {
 			Logger.recordOutput(alertLogPath + "DisconnectedAt", currentTime);
 		}
-		if (busStatus.TxFullCount > PERMITTED_TX_FULLCOUNT) {
+		if (busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT) {
 			Logger.recordOutput(alertLogPath + "FullAt", currentTime);
 		}
 		if (busStatus.REC > PERMITTED_RECEIVE_ERRORS) {

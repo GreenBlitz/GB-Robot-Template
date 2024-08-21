@@ -30,7 +30,7 @@ class BatteryLimiter extends Command {
         this.currentAverageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
         PeriodicAlert lowBatteryAlert = new PeriodicAlert(
                 Alert.AlertType.ERROR,
-                "LowVoltageAt",
+                BatteryConstants.LOG_PATH + "LowVoltageAt",
                 () -> currentAverageVoltage <= BatteryUtils.MIN_VOLTAGE);
         lowBatteryAlert.addToAlertManager();
         this.lowBatteryEntry = NetworkTableInstance.getDefault().getBooleanTopic(LOW_BATTERY_TOPIC_NAME).getEntry(false);

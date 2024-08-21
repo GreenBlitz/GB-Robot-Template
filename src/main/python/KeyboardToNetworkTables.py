@@ -13,7 +13,6 @@ UndefinedKey = TypeVar("UndefinedKey")
 KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS = 0.01
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
 CLIENT_NAME = "KeyboardToNetworkTables"
-IP = sys.argv[1]
 
 
 def key_type_checker(key: object) -> TypeVar:
@@ -24,7 +23,7 @@ def key_type_checker(key: object) -> TypeVar:
     return UndefinedKey
 
 
-def keys_event_functions_factory(table: NetworkTableInstance, is_pressed: bool) -> Callable:
+def get_update_table_function(table: NetworkTableInstance, is_pressed: bool) -> Callable:
     # key type is changing in runtime + depends on platform. Checked for Xorg keyboard layout.
     def update_table(key) -> None:
         if key_type_checker(key) is UndefinedKey:
@@ -41,7 +40,7 @@ def keys_event_functions_factory(table: NetworkTableInstance, is_pressed: bool) 
     return update_table
 
 
-def wait_until_client_disconnect(keyboard_client: NetworkTableClient):
+def wait_until_client_disconnect(keyboard_client: NetworkTableClient) -> None:
     while True:
         if not keyboard_client.is_connected():
             break
@@ -50,27 +49,28 @@ def wait_until_client_disconnect(keyboard_client: NetworkTableClient):
 
 def listener_factory(keys_table: NetworkTable) -> keyboard.Listener:
     return keyboard.Listener(
-        on_press=keys_event_functions_factory(keys_table, True),
-        on_release=keys_event_functions_factory(keys_table, False),
+        on_press=get_update_table_function(keys_table, True),
+        on_release=get_update_table_function(keys_table, False),
     )
 
 
 def track_keyboard_until_client_disconnect(
     keys_table: NetworkTable, keyboard_client: NetworkTableClient
-):
+) -> None:
     keyboard_listener = listener_factory(keys_table)
     keyboard_listener.start()
     wait_until_client_disconnect(keyboard_client)
     keyboard_listener.stop()
 
 
-def run_keyboard_tracking_client():
-    keyboard_client = NetworkTableClient(IP, CLIENT_NAME)
-    keys_table = keyboard_client.connect().getTable(KEYBOARD_KEYS_TABLE)
+def run_keyboard_tracking_client(ip: str) -> None:
+    keyboard_client = NetworkTableClient(ip, CLIENT_NAME)
+    keyboard_client.connect()
+    keys_table = keyboard_client.get_table(KEYBOARD_KEYS_TABLE)
 
     track_keyboard_until_client_disconnect(keys_table, keyboard_client)
     keyboard_client.terminate()
 
 
 if __name__ == "__main__":
-    run_keyboard_tracking_client()
+    run_keyboard_tracking_client(sys.argv[1])

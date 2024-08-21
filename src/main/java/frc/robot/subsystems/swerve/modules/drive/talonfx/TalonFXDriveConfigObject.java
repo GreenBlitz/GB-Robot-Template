@@ -2,17 +2,22 @@ package frc.robot.subsystems.swerve.modules.drive.talonfx;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.constants.LogPaths;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
+import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;
+import org.littletonrobotics.junction.Logger;
 
 class TalonFXDriveConfigObject {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXDriveSignals signals;
+	private final String logPath;
 
-	protected TalonFXDriveConfigObject(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration) {
+	protected TalonFXDriveConfigObject(CTREDeviceID motorID, boolean inverted, TalonFXConfiguration configuration, String logPath) {
 		this.motor = new TalonFXWrapper(motorID);
 		this.signals = new TalonFXDriveSignals(
 			motor.getPosition().clone(),
@@ -21,6 +26,7 @@ class TalonFXDriveConfigObject {
 			motor.getMotorVoltage().clone(),
 			motor.getStatorCurrent().clone()
 		);
+		this.logPath = logPath;
 
 		configMotor(configuration);
 		motor.setInverted(inverted);
@@ -29,7 +35,9 @@ class TalonFXDriveConfigObject {
 
 
 	private void configMotor(TalonFXConfiguration driveConfiguration) {
-		motor.applyConfiguration(driveConfiguration);
+		if (!PhoenixProUtils.checkWithRetry(() -> motor.applyConfiguration(driveConfiguration), TalonFXDriveConstants.APPLY_CONFIG_RETRIES)) {
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + logPath + "ConfigurationFailAt", Timer.getFPGATimestamp());
+		}
 	}
 
 	//@formatter:off

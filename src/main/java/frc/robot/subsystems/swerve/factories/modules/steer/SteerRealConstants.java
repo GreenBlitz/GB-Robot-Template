@@ -10,6 +10,7 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IDs;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.steer.talonfx.TalonFXSteerConstants;
 
 import static edu.wpi.first.units.Units.Seconds;
@@ -41,41 +42,52 @@ class SteerRealConstants {
 	private static final Measure<Velocity<Voltage>> SYSID_RAMP_RATE = Volts.of(0.5).per(Seconds.of(1));
 	private static final Measure<Voltage> SYSID_VOLTAGE_STEP = Volts.of(1);
 
-	protected static final TalonFXSteerConstants FRONT_LEFT_CONSTANTS = new TalonFXSteerConstants(
-		IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
-		true,
-		IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
-		MOTOR_CONFIG,
-		ENABLE_FOC,
-		new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString()))
-	);
+	protected static TalonFXSteerConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXSteerConstants(
+			IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
+			true,
+			IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
+			MOTOR_CONFIG,
+			ENABLE_FOC,
+			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
+			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
+		);
+	}
 
-	protected static final TalonFXSteerConstants FRONT_RIGHT_CONSTANTS = new TalonFXSteerConstants(
-		IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
-		true,
-		IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
-		MOTOR_CONFIG,
-		ENABLE_FOC,
-		new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString()))
-	);
+	protected static TalonFXSteerConstants FRONT_RIGHT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXSteerConstants(
+			IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
+			true,
+			IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
+			MOTOR_CONFIG,
+			ENABLE_FOC,
+			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
+			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
+		);
+	}
 
-	protected static final TalonFXSteerConstants BACK_LEFT_CONSTANTS = new TalonFXSteerConstants(
-		IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
-		false,
-		IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
-		MOTOR_CONFIG,
-		ENABLE_FOC,
-		new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString()))
-	);
+	protected static TalonFXSteerConstants BACK_LEFT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXSteerConstants(
+			IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
+			false,
+			IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
+			MOTOR_CONFIG,
+			ENABLE_FOC,
+			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
+			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
+		);
+	}
 
-	protected static final TalonFXSteerConstants BACK_RIGHT_CONSTANTS = new TalonFXSteerConstants(
-		IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
-		true,
-		IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
-		MOTOR_CONFIG,
-		ENABLE_FOC,
-		new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString()))
-
-	);
+	protected static TalonFXSteerConstants BACK_RIGHT_CONSTANTS(String logPathPrefix) {
+		return new TalonFXSteerConstants(
+			IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
+			true,
+			IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
+			MOTOR_CONFIG,
+			ENABLE_FOC,
+			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
+			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"
+		);
+	}
 
 }

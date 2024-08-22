@@ -9,14 +9,20 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ControlState;
 import frc.robot.hardware.IMotor;
 import frc.robot.hardware.MotorInputs;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class TalonFXMotor implements IMotor {
 
-	TalonFX mMotor;
-	TalonFXSignals signals;
+	protected TalonFX mMotor;
+	protected TalonFXSignals signals;
 	PositionVoltage positionVoltage;
 	MotionMagicExpoVoltage positionVoltageMagic;
 
+
+	@Override
+	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+		return constants.getSysiD;
+	}
 
 	@Override
 	public void setBrake(boolean brake) {
@@ -27,6 +33,11 @@ public class TalonFXMotor implements IMotor {
 	@Override
 	public void resetAngle(Rotation2d angle) {
 		mMotor.setPosition(angle.getRotations());
+	}
+
+	@Override
+	public void stop() {
+		mMotor.stopMotor();
 	}
 
 	@Override

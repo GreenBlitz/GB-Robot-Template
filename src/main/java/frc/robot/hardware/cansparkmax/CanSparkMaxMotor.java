@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ControlState;
 import frc.robot.hardware.IMotor;
 import frc.robot.hardware.MotorInputs;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 import java.util.function.BiFunction;
 
@@ -16,6 +17,11 @@ public class CanSparkMaxMotor implements IMotor {
 	ConstantsNeo constants;
 
 	@Override
+	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+		return constants.getSysiD;
+	}
+
+	@Override
 	public void setBrake(boolean brake) {
 		CANSparkBase.IdleMode idleMode = brake ? CANSparkBase.IdleMode.kBrake : CANSparkBase.IdleMode.kCoast;
 		mCanSparkMax.setIdleMode(idleMode);
@@ -24,6 +30,11 @@ public class CanSparkMaxMotor implements IMotor {
 	@Override
 	public void resetAngle(Rotation2d angle) {
 		mCanSparkMax.getEncoder().setPosition(angle.getRotations());
+	}
+
+	@Override
+	public void stop() {
+		mCanSparkMax.stopMotor();
 	}
 
 	@Override

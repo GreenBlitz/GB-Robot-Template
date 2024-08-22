@@ -6,12 +6,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.LogPaths;
+import frc.robot.hardware.ControlState;
+import frc.robot.hardware.IMotor;
+import frc.robot.hardware.MotorInputs;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.steer.TTTT;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
@@ -21,8 +25,8 @@ import java.util.Arrays;
 public class Module {
 
 	private final ModuleInputsContainer moduleInputsContainer;
-	private final ISteer iSteer;
-	private final IDrive iDrive;
+	private final TTTT iSteer;
+	private final IMotor iDrive;
 	private final IEncoder iEncoder;
 	private final ModuleConstants constants;
 
@@ -30,7 +34,7 @@ public class Module {
 	private Rotation2d startingSteerAngle;
 	private boolean isClosedLoop;
 
-	public Module(ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
+	public Module(ModuleConstants constants, IEncoder iEncoder, TTTT iSteer, IMotor iDrive) {
 		this.constants = constants;
 		this.iEncoder = iEncoder;
 		this.iSteer = iSteer;
@@ -63,7 +67,7 @@ public class Module {
 	}
 
 	private void fixDriveInputsCoupling() {
-		SteerInputsAutoLogged steerInputs = moduleInputsContainer.getSteerMotorInputs();
+		MotorInputs steerInputs = moduleInputsContainer.getSteerMotorInputs();
 		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 
 		driveInputs.angle = ModuleUtils.getUncoupledAngle(driveInputs.angle, steerInputs.angle, constants.couplingRatio());
@@ -122,7 +126,7 @@ public class Module {
 
 	public void resetByEncoder() {
 		startingSteerAngle = moduleInputsContainer.getEncoderInputs().angle;
-		iSteer.resetToAngle(startingSteerAngle);
+		iSteer.resetAngle(startingSteerAngle);
 	}
 
 
@@ -218,13 +222,13 @@ public class Module {
 		} else {
 			targetState.angle = moduleState.angle;
 		}
-		iSteer.setTargetAngle(targetState.angle);
+		iSteer.setTargetAngle(targetState.angle, ControlState.PID);
 	}
 
 
 	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
 		this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
-		iSteer.setTargetAngle(this.targetState.angle);
+		iSteer.setTargetAngle(this.targetState.angle, ControlState.PID);
 		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
 	}
 
@@ -243,7 +247,7 @@ public class Module {
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtils
 			.getCoupledAngle(targetVelocityPerSecond, moduleInputsContainer.getSteerMotorInputs().velocity, constants.couplingRatio());
-		iDrive.setTargetVelocity(coupledVelocityPerSecond);
+		iDrive.setTargetVelocity(coupledVelocityPerSecond, ControlState.PID);
 	}
 
 	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {

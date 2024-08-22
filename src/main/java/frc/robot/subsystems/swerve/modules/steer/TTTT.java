@@ -12,7 +12,7 @@ public class TTTT extends TalonFXMotor {
 
 	public TTTT() {
 		super();
-		this.positionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(mMotor, signals.position(), signals.velocity());
+		this.positionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(mMotor, mSignals.position(), mSignals.velocity());
 	}
 
 	public void updateInputs(SteerInputs steerInputs) {

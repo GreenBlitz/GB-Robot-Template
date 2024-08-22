@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.CloseLoopControl;
 import frc.robot.hardware.ControlState;
 import frc.robot.hardware.IMotor;
 import frc.robot.hardware.MotorInputsAutoLogged;
@@ -11,14 +13,18 @@ public class roller extends GBSubsystem {
 
 	IMotor roller;
 	MotorInputsAutoLogged inputs;
+	CloseLoopControl positionControl;
+
 
 	public roller() {
 		super("roller");
 		inputs = new MotorInputsAutoLogged();
+		PositionTorqueCurrentFOC a = new PositionTorqueCurrentFOC(0).withSlot(1);
+		positionControl = new CloseLoopControl(a, 0, () -> Rotation2d.fromRotations(a.Position), ControlState.PID);
 	}
 
 	public void setTargetAngle(Rotation2d angle) {
-		roller.setTargetAngle(angle, ControlState.PID);
+		roller.setTargetAngle(positionControl.withPosition()); //use angle
 	}
 
 	@Override

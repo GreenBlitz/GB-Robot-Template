@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.CloseLoopControl;
 import frc.robot.hardware.ControlState;
 import frc.robot.hardware.IMotor;
 import frc.robot.hardware.MotorInputsAutoLogged;
@@ -12,10 +14,14 @@ public class elevator extends GBSubsystem {
     IMotor elevator;
     MotorInputsAutoLogged motorInputs;
     MetersInputsAutoLogged metersInputs;
+    CloseLoopControl positionControl;
+
 
     public elevator(){
         super("arm");
         motorInputs = new MotorInputsAutoLogged();
+        PositionTorqueCurrentFOC a = new PositionTorqueCurrentFOC(0).withSlot(1);
+        positionControl = new CloseLoopControl(a, 0, () -> Rotation2d.fromRotations(a.Position), ControlState.PID);
     }
 
     double angleToMeters(Rotation2d rotation2d){
@@ -23,7 +29,7 @@ public class elevator extends GBSubsystem {
     }
 
     public void setTargetAngle(Rotation2d angle) {
-        elevator.setTargetAngle(angle, ControlState.MOTION_MAGIC);
+        elevator.setTargetAngle(positionControl.withPosition()); //use angle
     }
 
     @Override

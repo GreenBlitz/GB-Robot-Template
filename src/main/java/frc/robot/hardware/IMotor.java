@@ -10,9 +10,11 @@ public interface IMotor {
 
     void setVoltage(double voltage);
 
-    void setTargetVelocity(VelocityControl velocityControl);
+    void setTargetVelocity(Rotation2d targetVelocity, ControlState controlState);
 
-    void setTargetPosition(PositionControl positionControl);
+    void setTargetAngle(Rotation2d targetAngle, ControlState controlState);
+
+    void setTargetAngle(Rotation2d targetAngle, ControlState controlState, int pidSlot);
 
     void updateInputs(MotorInputs motorInputs);
 

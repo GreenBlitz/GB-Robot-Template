@@ -13,7 +13,7 @@ public class TalonFXDrive extends TalonFXMotor implements IDrive {
 	private final Queue<Double> drivePositionQueue;
 
 	public TalonFXDrive(TalonFXDriveConstants constants) {
-		super(constants.getMotor(), constants.getSignals(), constants.getSysIdConfig());
+		super(constants.getMotor(), constants.getSignals(), constants.getSysidConfig());
 
 		this.drivePositionQueue = PhoenixOdometryThread6328.getInstance()
 			.registerLatencySignal(mMotor, mSignals.position(), mSignals.velocity());

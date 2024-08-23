@@ -13,13 +13,13 @@ public class TalonFXDriveConstants {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXSignals signals;
-	private final SysIdRoutine.Config sysIdConfig;
+	private final SysIdRoutine.Config sysidConfig;
 
 	public TalonFXDriveConstants(
 		CTREDeviceID motorID,
 		boolean inverted,
 		TalonFXConfiguration configuration,
-		SysIdRoutine.Config sysIdConfig,
+		SysIdRoutine.Config sysidConfig,
 		String logPathPrefix
 	) {
 		TalonFXDriveConfigObject talonFXDriveConfigObject = new TalonFXDriveConfigObject(
@@ -30,7 +30,7 @@ public class TalonFXDriveConstants {
 		);
 		this.motor = talonFXDriveConfigObject.getMotor();
 		this.signals = talonFXDriveConfigObject.getSignals();
-		this.sysIdConfig = sysIdConfig;
+		this.sysidConfig = sysidConfig;
 	}
 
 	protected TalonFXWrapper getMotor() {
@@ -41,8 +41,8 @@ public class TalonFXDriveConstants {
 		return signals;
 	}
 
-	protected SysIdRoutine.Config getSysIdConfig() {
-		return sysIdConfig;
+	protected SysIdRoutine.Config getSysidConfig() {
+		return sysidConfig;
 	}
 
 }

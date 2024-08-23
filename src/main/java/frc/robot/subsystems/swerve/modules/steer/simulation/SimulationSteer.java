@@ -21,7 +21,7 @@ public class SimulationSteer implements ISteer {
 	}
 
 	@Override
-	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
 		return constants.getSysIdConfigInfo();
 	}
 

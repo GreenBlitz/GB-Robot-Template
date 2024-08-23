@@ -13,7 +13,7 @@ public class TalonFXSteer extends TalonFXMotor implements ISteer {
 	private final Queue<Double> positionQueue;
 
 	public TalonFXSteer(TalonFXSteerConstants constants) {
-		super(constants.getMotor(), constants.getSignals(), constants.getSysIdConfig());
+		super(constants.getMotor(), constants.getSignals(), constants.getSysidConfig());
 		this.positionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(mMotor, mSignals.position(), mSignals.velocity());
 	}
 

@@ -41,7 +41,6 @@ class TalonFXDriveConfigObject {
 		}
 	}
 
-	//@formatter:off
 	private void optimizeBusAndSignals() {
 		BaseStatusSignal.setUpdateFrequencyForAll(
 			PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
@@ -49,15 +48,10 @@ class TalonFXDriveConfigObject {
 			signals.velocity(),
 			signals.acceleration()
 		);
-		BaseStatusSignal.setUpdateFrequencyForAll(
-			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			signals.current(),
-			signals.voltage()
-		);
+		BaseStatusSignal.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, signals.current(), signals.voltage());
 
 		motor.optimizeBusUtilization();
 	}
-	//@formatter:on
 
 
 	protected TalonFXWrapper getMotor() {

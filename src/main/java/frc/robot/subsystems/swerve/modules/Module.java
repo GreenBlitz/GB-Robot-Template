@@ -57,12 +57,12 @@ public class Module {
 		resetByEncoder();
 	}
 
-	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
-		return iSteer.getSysIdConfigInfo();
+	public SysIdCalibrator.SysIdConfigInfo getSteerSysidConfigInfo() {
+		return iSteer.getSysidConfigInfo();
 	}
 
-	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {
-		return iDrive.getSysIdConfigInfo();
+	public SysIdCalibrator.SysIdConfigInfo getDriveSysidConfigInfo() {
+		return iDrive.getSysidConfigInfo();
 	}
 
 	public double toDriveMeters(Rotation2d angle) {

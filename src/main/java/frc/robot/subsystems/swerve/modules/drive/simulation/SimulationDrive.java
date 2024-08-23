@@ -22,7 +22,7 @@ public class SimulationDrive implements IDrive {
 	}
 
 	@Override
-	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
 		return constants.sysIdConfigInfo();
 	}
 

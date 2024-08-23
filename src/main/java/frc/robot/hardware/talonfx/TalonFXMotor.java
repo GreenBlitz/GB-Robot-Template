@@ -23,7 +23,7 @@ public class TalonFXMotor implements IMotor {
 	}
 
 	@Override
-	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
 		return mSysidConfigInfo;
 	}
 

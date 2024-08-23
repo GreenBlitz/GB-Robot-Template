@@ -14,16 +14,16 @@ public class TalonFXSteerConstants {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXSignals signals;
-	private final SysIdRoutine.Config sysIdConfig;
+	private final SysIdRoutine.Config sysidConfig;
 
 	public TalonFXSteerConstants(
 		CTREDeviceID steerMotorID,
 		boolean inverted,
 		TalonFXConfiguration configuration,
-		SysIdRoutine.Config sysIdConfig,
+		SysIdRoutine.Config sysidConfig,
 		String logPathPrefix
 	) {
-		this(steerMotorID, inverted, NO_ENCODER_ID, configuration, sysIdConfig, logPathPrefix);
+		this(steerMotorID, inverted, NO_ENCODER_ID, configuration, sysidConfig, logPathPrefix);
 	}
 
 	public TalonFXSteerConstants(
@@ -31,7 +31,7 @@ public class TalonFXSteerConstants {
 		boolean inverted,
 		int encoderID,
 		TalonFXConfiguration configuration,
-		SysIdRoutine.Config sysIdConfig,
+		SysIdRoutine.Config sysidConfig,
 		String logPathPrefix
 	) {
 		TalonFXSteerConfigObject steerConfigObject = new TalonFXSteerConfigObject(
@@ -43,7 +43,7 @@ public class TalonFXSteerConstants {
 		);
 		this.motor = steerConfigObject.getMotor();
 		this.signals = steerConfigObject.getSignals();
-		this.sysIdConfig = sysIdConfig;
+		this.sysidConfig = sysidConfig;
 	}
 
 
@@ -55,8 +55,8 @@ public class TalonFXSteerConstants {
 		return signals;
 	}
 
-	protected SysIdRoutine.Config getSysIdConfig() {
-		return sysIdConfig;
+	protected SysIdRoutine.Config getSysidConfig() {
+		return sysidConfig;
 	}
 
 }

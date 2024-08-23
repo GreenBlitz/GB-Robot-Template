@@ -5,7 +5,7 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface IMotor {
 
-	SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo();
+	SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
 
 	void setBrake(boolean brake);
 

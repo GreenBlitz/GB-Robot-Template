@@ -32,12 +32,12 @@ public class SwerveCommandsBuilder {
 	public SwerveCommandsBuilder(Swerve swerve) {
 		this.swerve = swerve;
 		this.steerCalibrator = new SysIdCalibrator(
-			swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getSteerSysIdConfigInfo(),
+			swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getSteerSysidConfigInfo(),
 			swerve,
 			voltage -> swerve.getModules().setSteersVoltage(ModuleUtils.ModulePosition.FRONT_LEFT, voltage)
 		);
 		this.driveCalibrator = new SysIdCalibrator(
-			swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getDriveSysIdConfigInfo(),
+			swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getDriveSysidConfigInfo(),
 			swerve,
 			swerve.getModules()::setDrivesVoltage
 		);

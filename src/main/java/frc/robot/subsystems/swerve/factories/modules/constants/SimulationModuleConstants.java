@@ -11,7 +11,8 @@ public class SimulationModuleConstants {
 
 	public static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
 	private static final double COUPLING_RATIO = 0;
-	private static final boolean ENABLE_FOC = true;
+	private static final boolean STEER_ENABLE_FOC = true;
+	private static final boolean DRIVE_ENABLE_FOC = true;
 
 	protected static ModuleConstants getModuleConstants(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
 		return new ModuleConstants(
@@ -20,8 +21,8 @@ public class SimulationModuleConstants {
 			WHEEL_DIAMETER_METERS,
 			COUPLING_RATIO,
 			SimulationSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
-			new PositionVoltage(0).withEnableFOC(ENABLE_FOC),
-			new VelocityVoltage(0)
+			new PositionVoltage(0).withEnableFOC(STEER_ENABLE_FOC),
+			new VelocityVoltage(0).withEnableFOC(DRIVE_ENABLE_FOC)
 		);
 	}
 

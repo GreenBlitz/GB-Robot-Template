@@ -12,62 +12,62 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class TalonFXMotor implements IMotor {
 
-	protected final TalonFXWrapper mMotor;
-	protected final TalonFXSignals mSignals;
-	protected final SysIdCalibrator.SysIdConfigInfo mSysidConfigInfo;
+	protected final TalonFXWrapper motor;
+	protected final TalonFXSignals signals;
+	protected final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
 	public TalonFXMotor(TalonFXWrapper motor, TalonFXSignals signals, SysIdRoutine.Config config) {
-		this.mMotor = motor;
-		this.mSignals = signals;
-		this.mSysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(config, true);
+		this.motor = motor;
+		this.signals = signals;
+		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(config, true);
 	}
 
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
-		return mSysidConfigInfo;
+		return sysidConfigInfo;
 	}
 
 	@Override
 	public void setBrake(boolean brake) {
 		NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-		mMotor.setNeutralMode(neutralModeValue);
+		motor.setNeutralMode(neutralModeValue);
 	}
 
 	@Override
 	public void resetAngle(Rotation2d angle) {
-		mMotor.setPosition(angle.getRotations());
+		motor.setPosition(angle.getRotations());
 	}
 
 	@Override
 	public void stop() {
-		mMotor.stopMotor();
+		motor.stopMotor();
 	}
 
 	@Override
 	public void setVoltage(double voltage) {
-		mMotor.setVoltage(voltage);
+		motor.setVoltage(voltage);
 	}
 
 	@Override
 	public void setTargetVelocity(CloseLoopControl velocityControl) {
-		mMotor.setControl(velocityControl.controlRequest());
+		motor.setControl(velocityControl.controlRequest());
 	}
 
 	@Override
 	public void setTargetAngle(CloseLoopControl positionControl) {
-		mMotor.setControl(positionControl.controlRequest());
+		motor.setControl(positionControl.controlRequest());
 	}
 
 	@Override
 	public void updateInputs(MotorInputsAutoLogged motorInputs) {
 		motorInputs.connected = BaseStatusSignal
-			.refreshAll(mSignals.position(), mSignals.velocity(), mSignals.acceleration(), mSignals.current(), mSignals.voltage())
+			.refreshAll(signals.position(), signals.velocity(), signals.acceleration(), signals.current(), signals.voltage())
 			.isOK();
-		motorInputs.angle = Rotation2d.fromRotations(mMotor.getLatencyCompensatedPosition());
-		motorInputs.velocity = Rotation2d.fromRotations(mMotor.getLatencyCompensatedVelocity());
-		motorInputs.acceleration = Rotation2d.fromRotations(mSignals.acceleration().getValue());
-		motorInputs.current = mSignals.current().getValue();
-		motorInputs.voltage = mSignals.voltage().getValue();
+		motorInputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
+		motorInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
+		motorInputs.acceleration = Rotation2d.fromRotations(signals.acceleration().getValue());
+		motorInputs.current = signals.current().getValue();
+		motorInputs.voltage = signals.voltage().getValue();
 	}
 
 }

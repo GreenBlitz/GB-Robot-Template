@@ -13,53 +13,53 @@ import java.util.function.BiFunction;
 
 public class SparkMaxMotor implements IMotor {
 
-	protected final CANSparkMax mMotor;
-	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> mFeedforward;
-	protected final SparkMaxConstants mConstants;
+	protected final CANSparkMax motor;
+	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
+	protected final SparkMaxConstants constants;
 
-	public SparkMaxMotor(CANSparkMax canSparkMax, BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SparkMaxConstants mConstants) {
-		this.mMotor = canSparkMax;
-		this.mFeedforward = feedforward;
-		this.mConstants = mConstants;
+	public SparkMaxMotor(CANSparkMax canSparkMax, BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SparkMaxConstants constants) {
+		this.motor = canSparkMax;
+		this.feedforward = feedforward;
+		this.constants = constants;
 	}
 
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
-		return mConstants.sysIdConfigInfo();
+		return constants.sysIdConfigInfo();
 	}
 
 	@Override
 	public void setBrake(boolean brake) {
 		CANSparkBase.IdleMode idleMode = brake ? CANSparkBase.IdleMode.kBrake : CANSparkBase.IdleMode.kCoast;
-		mMotor.setIdleMode(idleMode);
+		motor.setIdleMode(idleMode);
 	}
 
 	@Override
 	public void resetAngle(Rotation2d angle) {
-		mMotor.getEncoder().setPosition(angle.getRotations());
+		motor.getEncoder().setPosition(angle.getRotations());
 	}
 
 	@Override
 	public void stop() {
-		mMotor.stopMotor();
+		motor.stopMotor();
 	}
 
 	@Override
 	public void setVoltage(double voltage) {
-		mMotor.setVoltage(voltage);
+		motor.setVoltage(voltage);
 	}
 
 	@Override
 	public void setTargetVelocity(CloseLoopControl velocityControl) {
-		mMotor.getPIDController()
-			.setReference(
+		motor.getPIDController()
+			 .setReference(
 				velocityControl.targetSetPoint().getRotations(),
 				CANSparkBase.ControlType.kVelocity,
 				velocityControl.pidSlot(),
-				mFeedforward
+				feedforward
 					.apply(
-						Rotation2d.fromRotations(mMotor.getEncoder().getPosition()),
-						Rotation2d.fromRotations(mMotor.getEncoder().getVelocity())
+						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
+						Rotation2d.fromRotations(motor.getEncoder().getVelocity())
 					)
 					.getRotations()
 			);
@@ -70,15 +70,15 @@ public class SparkMaxMotor implements IMotor {
 		CANSparkBase.ControlType controlType = positionControl.controlState() == ControlState.MOTION_MAGIC
 			? CANSparkBase.ControlType.kSmartMotion
 			: CANSparkBase.ControlType.kPosition;
-		mMotor.getPIDController()
-			.setReference(
+		motor.getPIDController()
+			 .setReference(
 				positionControl.targetSetPoint().getRotations(),
 				controlType,
 				positionControl.pidSlot(),
-				mFeedforward
+				feedforward
 					.apply(
-						Rotation2d.fromRotations(mMotor.getEncoder().getPosition()),
-						Rotation2d.fromRotations(mMotor.getEncoder().getVelocity())
+						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
+						Rotation2d.fromRotations(motor.getEncoder().getVelocity())
 					)
 					.getRotations()
 			);
@@ -87,10 +87,10 @@ public class SparkMaxMotor implements IMotor {
 	@Override
 	public void updateInputs(MotorInputsAutoLogged motorInputs) {
 		motorInputs.connected = true;
-		motorInputs.angle = Rotation2d.fromRotations(mMotor.getEncoder().getPosition());
-		motorInputs.velocity = Rotation2d.fromRotations(mMotor.getEncoder().getVelocity());
-		motorInputs.current = mMotor.getOutputCurrent();
-		motorInputs.voltage = mMotor.getBusVoltage() * mMotor.getAppliedOutput();
+		motorInputs.angle = Rotation2d.fromRotations(motor.getEncoder().getPosition());
+		motorInputs.velocity = Rotation2d.fromRotations(motor.getEncoder().getVelocity());
+		motorInputs.current = motor.getOutputCurrent();
+		motorInputs.voltage = motor.getBusVoltage() * motor.getAppliedOutput();
 	}
 
 }

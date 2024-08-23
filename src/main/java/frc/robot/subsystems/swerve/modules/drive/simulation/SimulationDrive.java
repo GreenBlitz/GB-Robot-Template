@@ -1,24 +1,22 @@
 package frc.robot.subsystems.swerve.modules.drive.simulation;
 
-import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.CloseLoopControl;
+import frc.robot.hardware.MotorInputsAutoLogged;
 import frc.robot.simulation.SimpleMotorSimulation;
-import frc.robot.subsystems.swerve.modules.ModuleConstants;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.drive.DriveThreadMetersInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
+import frc.utils.battery.BatteryUtils;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class SimulationDrive implements IDrive {
 
 	private final SimpleMotorSimulation motor;
 	private final SimulationDriveConstants constants;
-	private final VoltageOut voltageRequest;
 
 	public SimulationDrive(SimulationDriveConstants constants) {
 		this.motor = constants.motorSimulation();
 		this.constants = constants;
-		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.enableFOC());
 	}
 
 	@Override
@@ -29,6 +27,8 @@ public class SimulationDrive implements IDrive {
 	@Override
 	public void setBrake(boolean brake) {}
 
+	@Override
+	public void resetAngle(Rotation2d angle) {}
 
 	@Override
 	public void stop() {
@@ -37,25 +37,32 @@ public class SimulationDrive implements IDrive {
 
 	@Override
 	public void setVoltage(double voltage) {
-		motor.setControl(voltageRequest.withOutput(voltage));
-	}
-
-	@Override
-	public void setTargetVelocity(Rotation2d velocityPerSecond) {
-		double voltage = ModuleUtils
-			.velocityToVoltage(velocityPerSecond, constants.maxVelocityPerSecond(), ModuleConstants.VOLTAGE_COMPENSATION_SATURATION);
-		setVoltage(voltage);
+		motor.setPower(voltage / BatteryUtils.DEFAULT_VOLTAGE);
 	}
 
 
 	@Override
-	public void updateInputs(DriveInputsAutoLogged inputs) {
-		inputs.isConnected = true;
-		inputs.angle = motor.getPosition();
-		inputs.velocity = motor.getVelocity();
-		inputs.current = motor.getCurrent();
-		inputs.voltage = motor.getVoltage();
-		inputs.angleOdometrySamples = new Rotation2d[] {inputs.angle};
+	public void setTargetVelocity(CloseLoopControl velocityControl) {
+		motor.setControl(velocityControl.controlRequest());
+	}
+
+	@Override
+	public void setTargetAngle(CloseLoopControl positionControl) {
+		motor.setControl(positionControl.controlRequest());
+	}
+
+	@Override
+	public void updateInputs(MotorInputsAutoLogged motorInputs) {
+		motorInputs.connected = true;
+		motorInputs.angle = motor.getPosition();
+		motorInputs.velocity = motor.getVelocity();
+		motorInputs.current = motor.getCurrent();
+		motorInputs.voltage = motor.getVoltage();
+	}
+
+	@Override
+	public void updateInputs(DriveThreadMetersInputsAutoLogged inputs) {
+		inputs.angleOdometrySamples = new Rotation2d[] {motor.getPosition()};
 	}
 
 }

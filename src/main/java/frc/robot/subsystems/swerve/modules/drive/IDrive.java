@@ -1,20 +1,9 @@
 package frc.robot.subsystems.swerve.modules.drive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.calibration.sysid.SysIdCalibrator;
+import frc.robot.hardware.IMotor;
 
-public interface IDrive {
+public interface IDrive extends IMotor {
 
-	SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo();
-
-	void setBrake(boolean brake);
-
-	void stop();
-
-	void setVoltage(double voltage);
-
-	void setTargetVelocity(Rotation2d velocityPerSecond);
-
-	void updateInputs(DriveInputsAutoLogged inputs);
+	void updateInputs(DriveThreadMetersInputsAutoLogged inputs);
 
 }

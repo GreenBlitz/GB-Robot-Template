@@ -8,13 +8,12 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public record SimulationDriveConstants(
 	SimpleMotorSimulation motorSimulation,
-	boolean enableFOC,
 	Rotation2d maxVelocityPerSecond,
 	SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo
 ) {
 
-	public SimulationDriveConstants(DCMotorSim dcMotorSim, boolean enableFOC, Rotation2d maxVelocityPerSecond, SysIdRoutine.Config sysIdConfig) {
-		this(new SimpleMotorSimulation(dcMotorSim), enableFOC, maxVelocityPerSecond, new SysIdCalibrator.SysIdConfigInfo(sysIdConfig, false));
+	public SimulationDriveConstants(DCMotorSim dcMotorSim, Rotation2d maxVelocityPerSecond, SysIdRoutine.Config sysIdConfig) {
+		this(new SimpleMotorSimulation(dcMotorSim), maxVelocityPerSecond, new SysIdCalibrator.SysIdConfigInfo(sysIdConfig, false));
 	}
 
 }

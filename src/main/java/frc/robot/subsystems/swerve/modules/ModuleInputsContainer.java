@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.modules;
 
 import frc.robot.subsystems.swerve.modules.drive.DriveConstants;
-import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.drive.DriveThreadMetersInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderConstants;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.steer.SteerConstants;
@@ -13,7 +13,7 @@ public class ModuleInputsContainer {
 	private final ModuleInputsAutoLogged moduleInputs = new ModuleInputsAutoLogged();
 	private final EncoderInputsAutoLogged encoderInputs = new EncoderInputsAutoLogged();
 	private final SteerThreadInputsAutoLogged steerMotorInputs = new SteerThreadInputsAutoLogged();
-	private final DriveInputsAutoLogged driveMotorInputs = new DriveInputsAutoLogged();
+	private final DriveThreadMetersInputsAutoLogged driveMotorInputs = new DriveThreadMetersInputsAutoLogged();
 
 	public void processInputs(String logPath) {
 		Logger.processInputs(logPath, moduleInputs);
@@ -34,7 +34,7 @@ public class ModuleInputsContainer {
 		return steerMotorInputs;
 	}
 
-	public DriveInputsAutoLogged getDriveMotorInputs() {
+	public DriveThreadMetersInputsAutoLogged getDriveMotorInputs() {
 		return driveMotorInputs;
 	}
 

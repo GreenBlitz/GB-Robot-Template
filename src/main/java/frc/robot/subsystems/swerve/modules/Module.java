@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.LogPaths;
 import frc.robot.subsystems.swerve.SwerveState;
-import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.drive.DriveThreadMetersInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
@@ -64,7 +64,7 @@ public class Module {
 
 	private void fixDriveInputsCoupling() {
 		SteerThreadInputsAutoLogged steerInputs = moduleInputsContainer.getSteerMotorInputs();
-		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
+		DriveThreadMetersInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 
 		driveInputs.angle = ModuleUtils.getUncoupledAngle(driveInputs.angle, steerInputs.angle, constants.couplingRatio());
 		driveInputs.velocity = ModuleUtils.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
@@ -84,7 +84,7 @@ public class Module {
 		iDrive.updateInputs(moduleInputsContainer.getDriveMotorInputs());
 		fixDriveInputsCoupling();
 
-		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
+		DriveThreadMetersInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 		driveInputs.distanceMeters = toDriveMeters(driveInputs.angle);
 		driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
 		driveInputs.distanceMetersOdometrySamples = Arrays.stream(driveInputs.angleOdometrySamples).mapToDouble(this::toDriveMeters).toArray();

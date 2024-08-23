@@ -17,8 +17,8 @@ public class SparkMaxMotor implements IMotor {
 	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
 	protected final SparkMaxConstants constants;
 
-	public SparkMaxMotor(CANSparkMax canSparkMax, BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SparkMaxConstants constants) {
-		this.motor = canSparkMax;
+	public SparkMaxMotor(CANSparkMax motor, BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SparkMaxConstants constants) {
+		this.motor = motor;
 		this.feedforward = feedforward;
 		this.constants = constants;
 	}
@@ -52,7 +52,7 @@ public class SparkMaxMotor implements IMotor {
 	@Override
 	public void setTargetVelocity(CloseLoopControl velocityControl) {
 		motor.getPIDController()
-			 .setReference(
+			.setReference(
 				velocityControl.targetSetPoint().getRotations(),
 				CANSparkBase.ControlType.kVelocity,
 				velocityControl.pidSlot(),
@@ -71,7 +71,7 @@ public class SparkMaxMotor implements IMotor {
 			? CANSparkBase.ControlType.kSmartMotion
 			: CANSparkBase.ControlType.kPosition;
 		motor.getPIDController()
-			 .setReference(
+			.setReference(
 				positionControl.targetSetPoint().getRotations(),
 				controlType,
 				positionControl.pidSlot(),

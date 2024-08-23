@@ -9,9 +9,7 @@ import frc.robot.subsystems.swerve.modules.steer.simulation.SimulationSteerConst
 class SteerSimulationConstants {
 
 	private static final double GEAR_RATIO = 150.0 / 7.0;
-
 	private static final double MOMENT_OF_INERTIA = 0.00001;
-
 	private static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration();
 	static {
 		MOTOR_CONFIG.Slot0.kP = 72;

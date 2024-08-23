@@ -26,7 +26,7 @@ public enum BusChain {
 				() -> !busStatus.Status.isOK()
 		);
 		PeriodicAlert Flooded = new PeriodicAlert(
-				Alert.AlertType.PLACEHOLDER,
+				Alert.AlertType.WARNING,
 				currentAlertLogPath + "/FloodedAt",
 				() -> busStatus.BusUtilization > BusStatus.MAX_CAN_UTILIZATION_PERCENT
 		);
@@ -36,17 +36,17 @@ public enum BusChain {
 				() -> busStatus.BusOffCount > 0
 		);
 		PeriodicAlert Full = new PeriodicAlert(
-				Alert.AlertType.PLACEHOLDER,
+				Alert.AlertType.ERROR,
 				currentAlertLogPath + "/FullAt",
 				() -> busStatus.TxFullCount > 0
 		);
 		PeriodicAlert ReceiveError = new PeriodicAlert(
-				Alert.AlertType.PLACEHOLDER,
+				Alert.AlertType.WARNING,
 				currentAlertLogPath + "/ReceiveErrorAt",
 				() -> busStatus.REC > BusStatus.MAX_RECEIVE_ERRORS
 		);
 		PeriodicAlert TransmitErrors = new PeriodicAlert(
-				Alert.AlertType.PLACEHOLDER,
+				Alert.AlertType.ERROR,
 				currentAlertLogPath + "/TransmitErrorsAt",
 				() -> busStatus.TEC > BusStatus.MAX_TRANSMIT_ERRORS
 		);

@@ -5,20 +5,20 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface IMotor {
 
-    SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo();
+	SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo();
 
-    void setBrake(boolean brake);
+	void setBrake(boolean brake);
 
-    void resetAngle(Rotation2d angle);
+	void resetAngle(Rotation2d angle);
 
-    void stop();
+	void stop();
 
-    void setVoltage(double voltage);
+	void setVoltage(double voltage);
 
-    void setTargetVelocity(CloseLoopControl velocityControl);
+	void setTargetVelocity(CloseLoopControl velocityControl);
 
-    void setTargetAngle(CloseLoopControl positionControl);
+	void setTargetAngle(CloseLoopControl positionControl);
 
-    void updateInputs(MotorInputsAutoLogged motorInputs);
+	void updateInputs(MotorInputsAutoLogged motorInputs);
 
 }

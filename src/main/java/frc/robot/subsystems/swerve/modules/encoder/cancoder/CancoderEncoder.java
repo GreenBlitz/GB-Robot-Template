@@ -54,7 +54,7 @@ public class CancoderEncoder implements IEncoder {
 
 	@Override
 	public void updateInputs(EncoderInputsAutoLogged inputs) {
-		inputs.isConnected = BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal).isOK();
+		inputs.connected = BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal).isOK();
 		inputs.angle = Rotation2d.fromRotations(positionSignal.getValue());
 		inputs.velocity = Rotation2d.fromRotations(velocitySignal.getValue());
 		inputs.voltage = voltageSignal.getValue();

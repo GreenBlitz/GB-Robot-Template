@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.talonfx.TalonFXSignals;
 import frc.robot.subsystems.swerve.modules.steer.SteerConstants;
-import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
@@ -15,7 +14,7 @@ public class TalonFXSteerConstants {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXSignals signals;
-	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
+	private final SysIdRoutine.Config sysIdConfig;
 
 	public TalonFXSteerConstants(
 		CTREDeviceID steerMotorID,
@@ -44,7 +43,7 @@ public class TalonFXSteerConstants {
 		);
 		this.motor = steerConfigObject.getMotor();
 		this.signals = steerConfigObject.getSignals();
-		this.sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysIdConfig, true);
+		this.sysIdConfig = sysIdConfig;
 	}
 
 
@@ -56,8 +55,8 @@ public class TalonFXSteerConstants {
 		return signals;
 	}
 
-	protected SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
-		return sysIdConfigInfo;
+	protected SysIdRoutine.Config getSysIdConfig() {
+		return sysIdConfig;
 	}
 
 }

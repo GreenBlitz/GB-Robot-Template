@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.CloseLoopControl;
 import frc.robot.hardware.ControlState;
 import frc.robot.hardware.IMotor;
-import frc.robot.hardware.MotorInputs;
 import frc.robot.hardware.MotorInputsAutoLogged;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 

@@ -11,11 +11,7 @@ public class SimulationSteerConstants {
 	private final SimpleMotorSimulation motor;
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
 
-	public SimulationSteerConstants(
-		DCMotorSim dcMotorSim,
-		TalonFXConfiguration configuration,
-		SysIdRoutine.Config sysIdConfig
-	) {
+	public SimulationSteerConstants(DCMotorSim dcMotorSim, TalonFXConfiguration configuration, SysIdRoutine.Config sysIdConfig) {
 		this.motor = new SimpleMotorSimulation(dcMotorSim);
 		this.sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysIdConfig, false);
 		motor.applyConfiguration(configuration);

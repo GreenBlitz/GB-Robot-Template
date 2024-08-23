@@ -1,23 +1,36 @@
 package frc.robot.subsystems.swerve.modules;
 
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtils;
 
-public record ModuleConstants(String logPath, double wheelDiameterMeters, double couplingRatio, Rotation2d velocityAt12VoltsPerSecond) {
+public record ModuleConstants(
+	String logPath,
+	double wheelDiameterMeters,
+	double couplingRatio,
+	Rotation2d velocityAt12VoltsPerSecond,
+	PositionVoltage steerPositionControl,
+	VelocityVoltage driveVelocityControl
+) {
 
 	public ModuleConstants(
 		ModuleUtils.ModulePosition modulePosition,
 		String logPathPrefix,
 		double wheelDiameterMeters,
 		double couplingRatio,
-		double velocityAt12VoltsMetersPerSecond
+		double velocityAt12VoltsMetersPerSecond,
+		PositionVoltage steerPositionControl,
+		VelocityVoltage driveVelocityControl
 	) {
 		this(
 			logPathPrefix + LOG_PATH_ADDITION + modulePosition + "/",
 			wheelDiameterMeters,
 			couplingRatio,
-			Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond, wheelDiameterMeters)
+			Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond, wheelDiameterMeters),
+			steerPositionControl,
+			driveVelocityControl
 		);
 	}
 

@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.CloseLoopControl;
 import frc.robot.hardware.MotorInputsAutoLogged;
 import frc.robot.simulation.SimpleMotorSimulation;
+import frc.robot.subsystems.swerve.modules.ModuleConstants;
+import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.drive.DriveThreadMetersInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.utils.battery.BatteryUtils;
@@ -43,7 +45,12 @@ public class SimulationDrive implements IDrive {
 
 	@Override
 	public void setTargetVelocity(CloseLoopControl velocityControl) {
-		motor.setControl(velocityControl.controlRequest());
+		double voltage = ModuleUtils.velocityToVoltage(
+			velocityControl.targetSetPoint(),
+			constants.maxVelocityPerSecond(),
+			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
+		);
+		setVoltage(voltage);
 	}
 
 	@Override

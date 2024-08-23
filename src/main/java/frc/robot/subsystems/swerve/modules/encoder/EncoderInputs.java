@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class EncoderInputs {
 
-	public boolean isConnected = false;
+	public boolean connected = false;
 	public Rotation2d angle = new Rotation2d();
 	public Rotation2d velocity = new Rotation2d();
 	public double voltage = 0;

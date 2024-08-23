@@ -1,10 +1,8 @@
 package frc.robot.subsystems.swerve.modules.steer.simulation;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.CloseLoopControl;
-import frc.robot.hardware.MotorInputs;
+import frc.robot.hardware.MotorInputsAutoLogged;
 import frc.robot.simulation.SimpleMotorSimulation;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerThreadInputsAutoLogged;
@@ -55,11 +53,11 @@ public class SimulationSteer implements ISteer {
 	}
 
 	@Override
-	public void updateInputs(MotorInputs inputs) {
-		inputs.connected = true;
-		inputs.angle = motor.getPosition();
-		inputs.velocity = motor.getVelocity();
-		inputs.voltage = motor.getVoltage();
+	public void updateInputs(MotorInputsAutoLogged motorInputs) {
+		motorInputs.connected = true;
+		motorInputs.angle = motor.getPosition();
+		motorInputs.velocity = motor.getVelocity();
+		motorInputs.voltage = motor.getVoltage();
 	}
 
 	@Override

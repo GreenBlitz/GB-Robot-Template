@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve.factories.modules.constants;
 
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.swerveconstants.RealSwerveConstants;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
@@ -9,6 +11,9 @@ public class RealModuleConstants {
 
 	private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
 	private static final double COUPLING_RATIO = 0.59;
+	private static final boolean STEER_ENABLE_FOC = true;
+	private static final boolean DRIVE_ENABLE_FOC = true;
+
 
 	protected static ModuleConstants getModuleConstants(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
 		return new ModuleConstants(
@@ -16,7 +21,9 @@ public class RealModuleConstants {
 			swerveName.getLogPath(),
 			WHEEL_DIAMETER_METERS,
 			COUPLING_RATIO,
-			RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND
+			RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
+			new PositionVoltage(0).withEnableFOC(STEER_ENABLE_FOC),
+			new VelocityVoltage(0).withEnableFOC(DRIVE_ENABLE_FOC)
 		);
 	}
 

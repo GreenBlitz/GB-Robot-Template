@@ -17,8 +17,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 class DriveRealConstants {
 
-	private static final boolean ENABLE_FOC = true;
-
 	private static final double SLIP_CURRENT = 60;
 
 	private static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration();
@@ -48,7 +46,6 @@ class DriveRealConstants {
 			IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
 			false,
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
 		);
@@ -59,7 +56,6 @@ class DriveRealConstants {
 			IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
 			true,
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
 		);
@@ -70,7 +66,6 @@ class DriveRealConstants {
 			IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
 			false,
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
 		);
@@ -81,7 +76,6 @@ class DriveRealConstants {
 			IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
 			false,
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"
 		);

@@ -8,8 +8,8 @@ import java.util.function.BiFunction;
 
 public record SparkMaxConstants(BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo) {
 
-    public SparkMaxConstants(BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SysIdRoutine.Config sysidConfig) {
-        this(feedforward, new SysIdCalibrator.SysIdConfigInfo(sysidConfig, false));
-    }
+	public SparkMaxConstants(BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SysIdRoutine.Config sysidConfig) {
+		this(feedforward, new SysIdCalibrator.SysIdConfigInfo(sysidConfig, false));
+	}
 
 }

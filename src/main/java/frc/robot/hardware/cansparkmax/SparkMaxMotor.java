@@ -52,7 +52,7 @@ public class SparkMaxMotor implements IMotor {
 	@Override
 	public void setTargetVelocity(CloseLoopControl velocityControl) {
 		motor.getPIDController()
-			 .setReference(
+			.setReference(
 				velocityControl.targetSetPoint().getRotations(),
 				CANSparkBase.ControlType.kVelocity,
 				velocityControl.pidSlot(),
@@ -71,7 +71,7 @@ public class SparkMaxMotor implements IMotor {
 			? CANSparkBase.ControlType.kSmartMotion
 			: CANSparkBase.ControlType.kPosition;
 		motor.getPIDController()
-			 .setReference(
+			.setReference(
 				positionControl.targetSetPoint().getRotations(),
 				controlType,
 				positionControl.pidSlot(),

@@ -16,10 +16,10 @@ public class TalonFXMotor implements IMotor {
 	protected final TalonFXSignals signals;
 	protected final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
-	public TalonFXMotor(TalonFXWrapper motor, TalonFXSignals signals, SysIdRoutine.Config config) {
+	public TalonFXMotor(TalonFXWrapper motor, TalonFXSignals signals, SysIdRoutine.Config sysidConfig) {
 		this.motor = motor;
 		this.signals = signals;
-		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(config, true);
+		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 	}
 
 	@Override

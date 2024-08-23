@@ -11,7 +11,6 @@ import frc.utils.Conversions;
 class DriveSimulationConstants {
 
 	private static final double DRIVE_GEAR_RATIO = 6.12;
-
 	private static final double DRIVE_MOMENT_OF_INERTIA = 0.001;
 
 	protected static SimulationDriveConstants getDriveConstants() {

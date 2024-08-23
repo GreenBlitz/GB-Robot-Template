@@ -5,14 +5,14 @@ import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderConstants;
 import frc.robot.subsystems.swerve.modules.encoder.EncoderInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.steer.SteerConstants;
-import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.steer.SteerThreadInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class ModuleInputsContainer {
 
 	private final ModuleInputsAutoLogged moduleInputs = new ModuleInputsAutoLogged();
 	private final EncoderInputsAutoLogged encoderInputs = new EncoderInputsAutoLogged();
-	private final SteerInputsAutoLogged steerMotorInputs = new SteerInputsAutoLogged();
+	private final SteerThreadInputsAutoLogged steerMotorInputs = new SteerThreadInputsAutoLogged();
 	private final DriveInputsAutoLogged driveMotorInputs = new DriveInputsAutoLogged();
 
 	public void processInputs(String logPath) {
@@ -30,7 +30,7 @@ public class ModuleInputsContainer {
 		return encoderInputs;
 	}
 
-	public SteerInputsAutoLogged getSteerMotorInputs() {
+	public SteerThreadInputsAutoLogged getSteerMotorInputs() {
 		return steerMotorInputs;
 	}
 

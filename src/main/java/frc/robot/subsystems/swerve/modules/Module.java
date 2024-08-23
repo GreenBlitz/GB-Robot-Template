@@ -11,7 +11,7 @@ import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
-import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.steer.SteerThreadInputsAutoLogged;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
@@ -63,7 +63,7 @@ public class Module {
 	}
 
 	private void fixDriveInputsCoupling() {
-		SteerInputsAutoLogged steerInputs = moduleInputsContainer.getSteerMotorInputs();
+		SteerThreadInputsAutoLogged steerInputs = moduleInputsContainer.getSteerMotorInputs();
 		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 
 		driveInputs.angle = ModuleUtils.getUncoupledAngle(driveInputs.angle, steerInputs.angle, constants.couplingRatio());

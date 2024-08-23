@@ -18,8 +18,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 class SteerRealConstants {
 
-	private static final boolean ENABLE_FOC = true;
-
 	private static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration();
 	static {
 		MOTOR_CONFIG.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -48,7 +46,6 @@ class SteerRealConstants {
 			true,
 			IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
 		);
@@ -60,7 +57,6 @@ class SteerRealConstants {
 			true,
 			IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
 		);
@@ -72,7 +68,6 @@ class SteerRealConstants {
 			false,
 			IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
 		);
@@ -84,7 +79,6 @@ class SteerRealConstants {
 			true,
 			IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config(SYSID_RAMP_RATE, SYSID_VOLTAGE_STEP, null, (state) -> SignalLogger.writeString("state", state.toString())),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"
 		);

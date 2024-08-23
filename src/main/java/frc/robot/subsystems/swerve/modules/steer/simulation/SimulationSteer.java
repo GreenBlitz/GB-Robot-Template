@@ -3,9 +3,12 @@ package frc.robot.subsystems.swerve.modules.steer.simulation;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.CloseLoopControl;
+import frc.robot.hardware.MotorInputs;
 import frc.robot.simulation.SimpleMotorSimulation;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
-import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.steer.SteerThreadInputsAutoLogged;
+import frc.utils.battery.BatteryUtils;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class SimulationSteer implements ISteer {
@@ -13,15 +16,10 @@ public class SimulationSteer implements ISteer {
 	private final SimpleMotorSimulation motor;
 	private final SimulationSteerConstants constants;
 
-	private final PositionVoltage positionRequest;
-	private final VoltageOut voltageRequest;
 
 	public SimulationSteer(SimulationSteerConstants constants) {
 		this.motor = constants.getMotor();
 		this.constants = constants;
-
-		this.positionRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
-		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
 	}
 
 	@Override
@@ -33,7 +31,7 @@ public class SimulationSteer implements ISteer {
 	public void setBrake(boolean brake) {}
 
 	@Override
-	public void resetToAngle(Rotation2d angle) {}
+	public void resetAngle(Rotation2d angle) {}
 
 
 	@Override
@@ -43,22 +41,30 @@ public class SimulationSteer implements ISteer {
 
 	@Override
 	public void setVoltage(double voltage) {
-		motor.setControl(voltageRequest.withOutput(voltage));
+		motor.setPower(voltage / BatteryUtils.DEFAULT_VOLTAGE);
 	}
 
 	@Override
-	public void setTargetAngle(Rotation2d angle) {
-		motor.setControl(positionRequest.withPosition(angle.getRotations()));
+	public void setTargetVelocity(CloseLoopControl velocityControl) {
+		motor.setControl(velocityControl.controlRequest());
 	}
 
+	@Override
+	public void setTargetAngle(CloseLoopControl positionControl) {
+		motor.setControl(positionControl.controlRequest());
+	}
 
 	@Override
-	public void updateInputs(SteerInputsAutoLogged inputs) {
-		inputs.isConnected = true;
+	public void updateInputs(MotorInputs inputs) {
+		inputs.connected = true;
 		inputs.angle = motor.getPosition();
 		inputs.velocity = motor.getVelocity();
 		inputs.voltage = motor.getVoltage();
-		inputs.angleOdometrySamples = new Rotation2d[] {inputs.angle};
+	}
+
+	@Override
+	public void updateInputs(SteerThreadInputsAutoLogged inputs) {
+		inputs.angleOdometrySamples = new Rotation2d[] {motor.getPosition()};
 	}
 
 }

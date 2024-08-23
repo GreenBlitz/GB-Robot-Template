@@ -12,8 +12,6 @@ class SteerSimulationConstants {
 
 	private static final double MOMENT_OF_INERTIA = 0.00001;
 
-	private static final boolean ENABLE_FOC = true;
-
 	private static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration();
 	static {
 		MOTOR_CONFIG.Slot0.kP = 72;
@@ -26,7 +24,6 @@ class SteerSimulationConstants {
 		return new SimulationSteerConstants(
 			new DCMotorSim(DCMotor.getFalcon500Foc(1), GEAR_RATIO, MOMENT_OF_INERTIA),
 			MOTOR_CONFIG,
-			ENABLE_FOC,
 			new SysIdRoutine.Config()
 		);
 	}

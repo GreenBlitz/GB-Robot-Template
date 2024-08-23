@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.LogPaths;
+import frc.robot.hardware.talonfx.TalonFXSignals;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.ctre.PhoenixProUtils;
@@ -14,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
 class TalonFXSteerConfigObject {
 
 	private final TalonFXWrapper motor;
-	private final TalonFXSteerSignals signals;
+	private final TalonFXSignals signals;
 	private final String logPath;
 
 	protected TalonFXSteerConfigObject(
@@ -25,10 +26,11 @@ class TalonFXSteerConfigObject {
 		String logPath
 	) {
 		this.motor = new TalonFXWrapper(motorID);
-		this.signals = new TalonFXSteerSignals(
+		this.signals = new TalonFXSignals(
 			motor.getPosition().clone(),
 			motor.getVelocity().clone(),
 			motor.getAcceleration().clone(),
+			motor.getStatorCurrent().clone(),
 			motor.getMotorVoltage().clone()
 		);
 		this.logPath = logPath;
@@ -50,11 +52,11 @@ class TalonFXSteerConfigObject {
 	private void optimizeBusAndSignals() {
 		BaseStatusSignal.setUpdateFrequencyForAll(
 			PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ,
-			signals.positionSignal(),
-			signals.velocitySignal(),
-			signals.accelerationSignal()
+			signals.position(),
+			signals.velocity(),
+			signals.acceleration()
 		);
-		BaseStatusSignal.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, signals.voltageSignal());
+		BaseStatusSignal.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, signals.current(), signals.voltage());
 
 		motor.optimizeBusUtilization();
 	}
@@ -64,7 +66,7 @@ class TalonFXSteerConfigObject {
 		return motor;
 	}
 
-	protected TalonFXSteerSignals getSignals() {
+	protected TalonFXSignals getSignals() {
 		return signals;
 	}
 

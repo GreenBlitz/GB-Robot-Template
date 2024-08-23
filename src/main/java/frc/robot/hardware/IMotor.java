@@ -19,6 +19,6 @@ public interface IMotor {
 
     void setTargetAngle(CloseLoopControl positionControl);
 
-    void updateInputs(MotorInputs motorInputs);
+    void updateInputs(MotorInputsAutoLogged motorInputs);
 
 }

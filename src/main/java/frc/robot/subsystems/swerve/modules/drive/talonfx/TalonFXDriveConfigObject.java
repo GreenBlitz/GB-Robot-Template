@@ -24,8 +24,8 @@ class TalonFXDriveConfigObject {
 			motor.getPosition().clone(),
 			motor.getVelocity().clone(),
 			motor.getAcceleration().clone(),
-			motor.getMotorVoltage().clone(),
-			motor.getStatorCurrent().clone()
+			motor.getStatorCurrent().clone(),
+			motor.getMotorVoltage().clone()
 		);
 		this.logPath = logPath;
 

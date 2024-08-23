@@ -42,7 +42,6 @@ public class SimulationDrive implements IDrive {
 		motor.setPower(voltage / BatteryUtils.DEFAULT_VOLTAGE);
 	}
 
-
 	@Override
 	public void setTargetVelocity(CloseLoopControl velocityControl) {
 		double voltage = ModuleUtils.velocityToVoltage(

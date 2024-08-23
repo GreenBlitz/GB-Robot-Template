@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.CloseLoopControl;
 import frc.robot.hardware.IMotor;
 import frc.robot.hardware.MotorInputs;
+import frc.robot.hardware.MotorInputsAutoLogged;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
@@ -16,14 +17,14 @@ public class TalonFXMotor implements IMotor {
 	protected final TalonFXSignals mSignals;
 	protected final SysIdCalibrator.SysIdConfigInfo mSysidConfigInfo;
 
-	public TalonFXMotor(TalonFXWrapper motor, TalonFXSignals signals, SysIdRoutine.Config config){
+	public TalonFXMotor(TalonFXWrapper motor, TalonFXSignals signals, SysIdRoutine.Config config) {
 		this.mMotor = motor;
 		this.mSignals = signals;
 		this.mSysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(config, true);
 	}
 
 	@Override
-	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
 		return mSysidConfigInfo;
 	}
 
@@ -59,10 +60,13 @@ public class TalonFXMotor implements IMotor {
 	}
 
 	@Override
-	public void updateInputs(MotorInputs motorInputs) {
-		motorInputs.connected = BaseStatusSignal.refreshAll(mSignals.position(), mSignals.velocity(), mSignals.current(), mSignals.voltage()).isOK();
-		motorInputs.angle = Rotation2d.fromRotations(mSignals.position().getValue());
-		motorInputs.velocity = Rotation2d.fromRotations(mSignals.velocity().getValue());
+	public void updateInputs(MotorInputsAutoLogged motorInputs) {
+		motorInputs.connected = BaseStatusSignal
+			.refreshAll(mSignals.position(), mSignals.velocity(), mSignals.acceleration(), mSignals.current(), mSignals.voltage())
+			.isOK();
+		motorInputs.angle = Rotation2d.fromRotations(mMotor.getLatencyCompensatedPosition());
+		motorInputs.velocity = Rotation2d.fromRotations(mMotor.getLatencyCompensatedVelocity());
+		motorInputs.acceleration = Rotation2d.fromRotations(mSignals.acceleration().getValue());
 		motorInputs.current = mSignals.current().getValue();
 		motorInputs.voltage = mSignals.voltage().getValue();
 	}

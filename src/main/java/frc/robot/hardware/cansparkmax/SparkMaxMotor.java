@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.CloseLoopControl;
 import frc.robot.hardware.ControlState;
 import frc.robot.hardware.IMotor;
-import frc.robot.hardware.MotorInputs;
+import frc.robot.hardware.MotorInputsAutoLogged;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 import java.util.function.BiFunction;
@@ -24,7 +24,7 @@ public class SparkMaxMotor implements IMotor {
 	}
 
 	@Override
-	public SysIdCalibrator.SysIdConfigInfo getSysIdConfigInfo() {
+	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
 		return mConstants.sysIdConfigInfo();
 	}
 
@@ -85,7 +85,7 @@ public class SparkMaxMotor implements IMotor {
 	}
 
 	@Override
-	public void updateInputs(MotorInputs motorInputs) {
+	public void updateInputs(MotorInputsAutoLogged motorInputs) {
 		motorInputs.connected = true;
 		motorInputs.angle = Rotation2d.fromRotations(mMotor.getEncoder().getPosition());
 		motorInputs.velocity = Rotation2d.fromRotations(mMotor.getEncoder().getVelocity());

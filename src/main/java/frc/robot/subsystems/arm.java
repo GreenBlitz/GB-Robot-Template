@@ -13,17 +13,18 @@ public class arm extends GBSubsystem {
 
 	IMotor arm;
 	MotorInputsAutoLogged inputs;
-	CloseLoopControl positionControl;
+	PositionTorqueCurrentFOC positionControl;
 
 	public arm() {
 		super("arm");
 		inputs = new MotorInputsAutoLogged();
-		PositionTorqueCurrentFOC a = new PositionTorqueCurrentFOC(0).withSlot(0);
-		positionControl = new CloseLoopControl(a, 0, () -> Rotation2d.fromRotations(a.Position), ControlState.PID);
+		positionControl = new PositionTorqueCurrentFOC(0).withSlot(0);
 	}
 
 	public void setTargetAngle(Rotation2d angle) {
-		arm.setTargetAngle(positionControl.withPosition());
+		arm.setTargetAngle(
+				new CloseLoopControl(positionControl.withPosition(angle.getRotations()), positionControl.Slot, angle, ControlState.PID)
+		);
 	}
 
 	@Override

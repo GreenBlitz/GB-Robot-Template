@@ -13,18 +13,19 @@ public class roller extends GBSubsystem {
 
 	IMotor roller;
 	MotorInputsAutoLogged inputs;
-	CloseLoopControl positionControl;
+	PositionTorqueCurrentFOC positionControl;
 
 
 	public roller() {
 		super("roller");
 		inputs = new MotorInputsAutoLogged();
-		PositionTorqueCurrentFOC a = new PositionTorqueCurrentFOC(0).withSlot(1);
-		positionControl = new CloseLoopControl(a, 0, () -> Rotation2d.fromRotations(a.Position), ControlState.PID);
+		positionControl = new PositionTorqueCurrentFOC(0).withSlot(1);
 	}
 
 	public void setTargetAngle(Rotation2d angle) {
-		roller.setTargetAngle(positionControl.withPosition()); //use angle
+		roller.setTargetAngle(
+			new CloseLoopControl(positionControl.withPosition(angle.getRotations()), positionControl.Slot, angle, ControlState.PID)
+		);
 	}
 
 	@Override

@@ -15,15 +15,13 @@ public class climber extends GBSubsystem {
 	IMotor climber;
 	MotorInputsAutoLogged motorInputs;
 	MetersInputsAutoLogged metersInputs;
-	CloseLoopControl positionControl;
-	CloseLoopControl climbingPositionControl;
+	PositionTorqueCurrentFOC positionControl;
+	PositionTorqueCurrentFOC climbingPositionControl;
 
 	public climber() {
 		super("climber");
-		PositionTorqueCurrentFOC a = new PositionTorqueCurrentFOC(0).withSlot(0);
-		PositionTorqueCurrentFOC b = new PositionTorqueCurrentFOC(0).withSlot(1);
-		positionControl = new CloseLoopControl(a, 0, () -> Rotation2d.fromRotations(a.Position), ControlState.PID);
-		climbingPositionControl = new CloseLoopControl(b, 1, () -> Rotation2d.fromRotations(a.Position), ControlState.PID);
+		positionControl = new PositionTorqueCurrentFOC(0).withSlot(0);
+		climbingPositionControl = new PositionTorqueCurrentFOC(0).withSlot(1);
 		motorInputs = new MotorInputsAutoLogged();
 	}
 
@@ -32,11 +30,15 @@ public class climber extends GBSubsystem {
 	}
 
 	public void setTargetAngle(Rotation2d angle) {
-		climber.setTargetAngle(positionControl.withPosition());
+		climber.setTargetAngle(
+			new CloseLoopControl(positionControl.withPosition(angle.getRotations()), positionControl.Slot, angle, ControlState.PID)
+		);
 	}
 
 	public void setClimbingAngleTargetAngle(Rotation2d angle) {
-		climber.setTargetAngle(climbingPositionControl.withPosition());
+		climber.setTargetAngle(
+			new CloseLoopControl(positionControl.withPosition(angle.getRotations()), positionControl.Slot, angle, ControlState.PID)
+		);
 	}
 
 	@Override

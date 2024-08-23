@@ -11,35 +11,36 @@ import org.littletonrobotics.junction.Logger;
 
 public class elevator extends GBSubsystem {
 
-    IMotor elevator;
-    MotorInputsAutoLogged motorInputs;
-    MetersInputsAutoLogged metersInputs;
-    CloseLoopControl positionControl;
+	IMotor elevator;
+	MotorInputsAutoLogged motorInputs;
+	MetersInputsAutoLogged metersInputs;
+    PositionTorqueCurrentFOC positionControl;
 
 
-    public elevator(){
-        super("arm");
-        motorInputs = new MotorInputsAutoLogged();
-        PositionTorqueCurrentFOC a = new PositionTorqueCurrentFOC(0).withSlot(1);
-        positionControl = new CloseLoopControl(a, 0, () -> Rotation2d.fromRotations(a.Position), ControlState.PID);
-    }
+	public elevator() {
+		super("arm");
+		motorInputs = new MotorInputsAutoLogged();
+        positionControl = new PositionTorqueCurrentFOC(0).withSlot(1);
+	}
 
-    double angleToMeters(Rotation2d rotation2d){
-        return 1;
-    }
+	double angleToMeters(Rotation2d rotation2d) {
+		return 1;
+	}
 
-    public void setTargetAngle(Rotation2d angle) {
-        elevator.setTargetAngle(positionControl.withPosition()); //use angle
-    }
+	public void setTargetAngle(Rotation2d angle) {
+		elevator.setTargetAngle(
+			new CloseLoopControl(positionControl.withPosition(angle.getRotations()), positionControl.Slot, angle, ControlState.PID)
+		);
+	}
 
-    @Override
-    protected void subsystemPeriodic() {
-        elevator.updateInputs(motorInputs);
-        Logger.processInputs("arm", motorInputs);
-    }
+	@Override
+	protected void subsystemPeriodic() {
+		elevator.updateInputs(motorInputs);
+		Logger.processInputs("arm", motorInputs);
+	}
 
-    public boolean isAtAngle(){
-        return false;
-    }
+	public boolean isAtAngle() {
+		return false;
+	}
 
 }

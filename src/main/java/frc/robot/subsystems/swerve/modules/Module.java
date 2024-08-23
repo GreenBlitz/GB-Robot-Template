@@ -55,6 +55,7 @@ public class Module {
 
 		logStatus();
 		resetByEncoder();
+		iDrive.resetAngle(new Rotation2d());
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysidConfigInfo() {

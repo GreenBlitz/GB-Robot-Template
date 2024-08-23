@@ -17,8 +17,6 @@ public class TalonFXDrive extends TalonFXMotor implements IDrive {
 
 		this.drivePositionQueue = PhoenixOdometryThread6328.getInstance()
 			.registerLatencySignal(mMotor, mSignals.position(), mSignals.velocity());
-
-		resetAngle(new Rotation2d());
 	}
 
 	@Override

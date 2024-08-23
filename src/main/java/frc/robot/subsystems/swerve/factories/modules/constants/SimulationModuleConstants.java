@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.factories.modules.constants;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SimulationSwerveConstants;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
@@ -20,7 +21,7 @@ public class SimulationModuleConstants {
 			COUPLING_RATIO,
 			SimulationSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
 			new PositionVoltage(0).withEnableFOC(ENABLE_FOC),
-			null
+			new VelocityVoltage(0)
 		);
 	}
 

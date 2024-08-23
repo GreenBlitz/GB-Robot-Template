@@ -18,8 +18,8 @@ public class TalonFXSteer extends TalonFXMotor implements ISteer {
 	}
 
 	@Override
-	public void updateInputs(SteerThreadInputsAutoLogged inputs) {
-		inputs.angleOdometrySamples = positionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+	public void updateInputs(SteerThreadInputsAutoLogged steerThreadInputs) {
+		steerThreadInputs.angleOdometrySamples = positionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
 		positionQueue.clear();
 	}
 

@@ -20,8 +20,8 @@ public class TalonFXDrive extends TalonFXMotor implements IDrive {
 	}
 
 	@Override
-	public void updateInputs(DriveThreadMetersInputsAutoLogged inputs) {
-		inputs.angleOdometrySamples = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
+	public void updateInputs(DriveThreadMetersInputsAutoLogged driveThreadMetersInputs) {
+		driveThreadMetersInputs.angleOdometrySamples = drivePositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
 		drivePositionQueue.clear();
 	}
 

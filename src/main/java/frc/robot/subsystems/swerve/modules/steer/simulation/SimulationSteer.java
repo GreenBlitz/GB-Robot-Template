@@ -25,6 +25,7 @@ public class SimulationSteer implements ISteer {
 		return constants.getSysIdConfigInfo();
 	}
 
+
 	@Override
 	public void setBrake(boolean brake) {}
 
@@ -52,6 +53,7 @@ public class SimulationSteer implements ISteer {
 		motor.setControl(positionControl.controlRequest());
 	}
 
+
 	@Override
 	public void updateInputs(MotorInputsAutoLogged motorInputs) {
 		motorInputs.connected = true;
@@ -61,8 +63,8 @@ public class SimulationSteer implements ISteer {
 	}
 
 	@Override
-	public void updateInputs(SteerThreadInputsAutoLogged inputs) {
-		inputs.angleOdometrySamples = new Rotation2d[] {motor.getPosition()};
+	public void updateInputs(SteerThreadInputsAutoLogged steerThreadInputs) {
+		steerThreadInputs.angleOdometrySamples = new Rotation2d[] {motor.getPosition()};
 	}
 
 }

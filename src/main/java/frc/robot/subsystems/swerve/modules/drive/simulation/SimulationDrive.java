@@ -57,6 +57,7 @@ public class SimulationDrive implements IDrive {
 		motor.setControl(positionControl.controlRequest());
 	}
 
+
 	@Override
 	public void updateInputs(MotorInputsAutoLogged motorInputs) {
 		motorInputs.connected = true;
@@ -67,8 +68,8 @@ public class SimulationDrive implements IDrive {
 	}
 
 	@Override
-	public void updateInputs(DriveThreadMetersInputsAutoLogged inputs) {
-		inputs.angleOdometrySamples = new Rotation2d[] {motor.getPosition()};
+	public void updateInputs(DriveThreadMetersInputsAutoLogged driveThreadMetersInputs) {
+		driveThreadMetersInputs.angleOdometrySamples = new Rotation2d[] {motor.getPosition()};
 	}
 
 }

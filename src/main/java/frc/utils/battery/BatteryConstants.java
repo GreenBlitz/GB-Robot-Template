@@ -1,7 +1,6 @@
 package frc.utils.battery;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
-import frc.utils.alerts.Alert;
 
 class BatteryConstants {
 

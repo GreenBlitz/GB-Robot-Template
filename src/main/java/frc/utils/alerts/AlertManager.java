@@ -12,7 +12,7 @@ public class AlertManager {
 
 	public static void reportAlerts() {
 		for (PeriodicAlert alert : alertList) {
- 			alert.reportByCondition();
+			alert.reportByCondition();
 		}
 	}
 

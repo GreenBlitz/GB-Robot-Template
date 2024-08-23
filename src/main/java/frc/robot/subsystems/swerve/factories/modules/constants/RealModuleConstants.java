@@ -14,7 +14,6 @@ public class RealModuleConstants {
 	private static final boolean STEER_ENABLE_FOC = true;
 	private static final boolean DRIVE_ENABLE_FOC = true;
 
-
 	protected static ModuleConstants getModuleConstants(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
 		return new ModuleConstants(
 			modulePosition,

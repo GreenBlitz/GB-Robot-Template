@@ -4,50 +4,60 @@ import com.ctre.phoenix6.CANBus;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
+import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 public enum BusChain {
 
 	ROBORIO("rio"),
 	CANIVORE("CANivore");
 
+	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
+	private static final int PERMITTED_RECEIVE_ERRORS = 0;
+	private static final int PERMITTED_TRANSMIT_ERRORS = 0;
+	private static final int PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT = 0;
+	private static final int PERMITTED_BUS_OFF_COUNT = 0;
+	private static final String LOG_PATH_PREFIX = "Bus/";
+
 	private final String chainName;
-	private final String currentAlertLogPath;
-	private CANBus.CANBusStatus busStatus;
+	private final String alertLogPath;
+	private final String logPath;
+	private CANBusStatus busStatus;
 
 	BusChain(String chainName) {
 		this.chainName = chainName;
+		this.logPath = LOG_PATH_PREFIX + this.chainName + "/";
+		this.alertLogPath = logPath + this.chainName + "/";
 		this.busStatus = CANBus.getStatus(this.chainName);
-		this.currentAlertLogPath = BusStatus.LOG_PATH + this.chainName;
 
 		PeriodicAlert StatusError = new PeriodicAlert(
 			Alert.AlertType.WARNING,
-			currentAlertLogPath + "/StatusErrorAt",
+			alertLogPath + "StatusErrorAt",
 			() -> !busStatus.Status.isOK()
 		);
 		PeriodicAlert Flooded = new PeriodicAlert(
 			Alert.AlertType.WARNING,
-			currentAlertLogPath + "/FloodedAt",
-			() -> busStatus.BusUtilization > BusStatus.MAX_CAN_UTILIZATION_PERCENT
+			alertLogPath + "FloodedAt",
+			() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
 		);
 		PeriodicAlert Disconnected = new PeriodicAlert(
 			Alert.AlertType.ERROR,
-			currentAlertLogPath + "/DisconnectedAt",
-			() -> busStatus.BusOffCount > 0
+			alertLogPath + "DisconnectedAt",
+			() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
 		);
 		PeriodicAlert Full = new PeriodicAlert(
 			Alert.AlertType.ERROR,
-			currentAlertLogPath + "/FullAt",
-			() -> busStatus.TxFullCount > 0
+			alertLogPath + "FullAt",
+			() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
 		);
 		PeriodicAlert ReceiveError = new PeriodicAlert(
 			Alert.AlertType.WARNING,
-			currentAlertLogPath + "/ReceiveErrorAt",
-			() -> busStatus.REC > BusStatus.MAX_RECEIVE_ERRORS
+			alertLogPath + "ReceiveErrorAt",
+			() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
 		);
 		PeriodicAlert TransmitErrors = new PeriodicAlert(
 			Alert.AlertType.ERROR,
-			currentAlertLogPath + "/TransmitErrorsAt",
-			() -> busStatus.TEC > BusStatus.MAX_TRANSMIT_ERRORS
+			alertLogPath + "TransmitErrorsAt",
+			() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
 		);
 
 		StatusError.addToAlertManager();
@@ -62,19 +72,24 @@ public enum BusChain {
 		return chainName;
 	}
 
-	void updateStatus() {
-		this.busStatus = CANBus.getStatus(chainName);
-		logStatus(busStatus);
+	public void updateStatus() {
+		busStatus = CANBus.getStatus(chainName);
+		logStatus();
 	}
 
-	private void logStatus(CANBus.CANBusStatus busStatus) {
-		String currentLogPath = BusStatus.LOG_PATH + getChainName();
-		Logger.recordOutput(currentLogPath + "/Status", busStatus.Status.getName());
-		Logger.recordOutput(currentLogPath + "/Utilization", busStatus.BusUtilization);
-		Logger.recordOutput(currentLogPath + "/TimesDisconnected", busStatus.BusOffCount);
-		Logger.recordOutput(currentLogPath + "/Full", busStatus.TxFullCount);
-		Logger.recordOutput(currentLogPath + "/ReceiveError", busStatus.REC);
-		Logger.recordOutput(currentLogPath + "/TransmitError", busStatus.TEC);
+	public void logStatus() {
+		Logger.recordOutput(logPath + "Status", busStatus.Status.getName());
+		Logger.recordOutput(logPath + "Utilization", busStatus.BusUtilization);
+		Logger.recordOutput(logPath + "TimesDisconnected", busStatus.BusOffCount);
+		Logger.recordOutput(logPath + "FullCount", busStatus.TxFullCount);
+		Logger.recordOutput(logPath + "ReceiveError", busStatus.REC);
+		Logger.recordOutput(logPath + "TransmitError", busStatus.TEC);
+	}
+
+	public static void logChainsStatuses() {
+		for (BusChain chain : BusChain.values()) {
+			chain.updateStatus();
+		}
 	}
 
 }

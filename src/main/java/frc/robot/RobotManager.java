@@ -12,7 +12,7 @@ import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
-import frc.utils.breakState.BrakeStateManager;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the

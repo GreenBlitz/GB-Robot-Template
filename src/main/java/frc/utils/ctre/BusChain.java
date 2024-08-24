@@ -2,6 +2,7 @@ package frc.utils.ctre;
 
 import com.ctre.phoenix6.CANBus;
 import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
@@ -29,43 +30,50 @@ public enum BusChain {
 		this.alertLogPath = logPath + this.chainName + "/";
 		this.busStatus = CANBus.getStatus(this.chainName);
 
-		PeriodicAlert StatusError = new PeriodicAlert(
-			Alert.AlertType.WARNING,
-			alertLogPath + "StatusErrorAt",
-			() -> !busStatus.Status.isOK()
+		//@formatter:off
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				alertLogPath + "StatusErrorAt",
+				() -> !busStatus.Status.isOK()
+			)
 		);
-		PeriodicAlert Flooded = new PeriodicAlert(
-			Alert.AlertType.WARNING,
-			alertLogPath + "FloodedAt",
-			() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
+		//@formatter:on
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				alertLogPath + "FloodedAt",
+				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
+			)
 		);
-		PeriodicAlert Disconnected = new PeriodicAlert(
-			Alert.AlertType.ERROR,
-			alertLogPath + "DisconnectedAt",
-			() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				alertLogPath + "DisconnectedAt",
+				() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+			)
 		);
-		PeriodicAlert Full = new PeriodicAlert(
-			Alert.AlertType.ERROR,
-			alertLogPath + "FullAt",
-			() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				alertLogPath + "FullAt",
+				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
+			)
 		);
-		PeriodicAlert ReceiveError = new PeriodicAlert(
-			Alert.AlertType.WARNING,
-			alertLogPath + "ReceiveErrorAt",
-			() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				alertLogPath + "ReceiveErrorAt",
+				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
+			)
 		);
-		PeriodicAlert TransmitErrors = new PeriodicAlert(
-			Alert.AlertType.ERROR,
-			alertLogPath + "TransmitErrorsAt",
-			() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				alertLogPath + "TransmitErrorsAt",
+				() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
+			)
 		);
-
-		StatusError.addToAlertManager();
-		Flooded.addToAlertManager();
-		Disconnected.addToAlertManager();
-		Full.addToAlertManager();
-		ReceiveError.addToAlertManager();
-		TransmitErrors.addToAlertManager();
 	}
 
 	public String getChainName() {

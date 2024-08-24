@@ -2,6 +2,7 @@ package frc.utils.alerts;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import frc.utils.DriverStationUtils;
 import org.littletonrobotics.junction.Logger;
 
 public class Alert {
@@ -25,9 +26,10 @@ public class Alert {
 	}
 
 	public void reportAlert() {
-		switch (type) {
-			case ERROR -> DriverStation.reportError(logPath, LOG_TRACE);
-		}
+		if (!DriverStationUtils.isConnectedToFMS())
+			switch (type) {
+				case ERROR -> DriverStation.reportError(logPath, LOG_TRACE);
+			}
 		Logger.recordOutput(logPath, Timer.getFPGATimestamp());
 	}
 

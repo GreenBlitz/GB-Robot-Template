@@ -11,10 +11,6 @@ public class PeriodicAlert extends Alert {
 		this.raiseSupplier = raiseSupplier;
 	}
 
-	public void addToAlertManager() {
-		AlertManager.addAlert(this);
-	}
-
 	protected void reportByCondition() {
 		if (raiseSupplier.getAsBoolean()) {
 			reportAlert();

@@ -9,6 +9,7 @@ import frc.robot.constants.IPs;
 import frc.utils.CMDHandler;
 import frc.utils.DriverStationUtils;
 import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 
 import java.nio.file.Path;
@@ -26,12 +27,13 @@ class BatteryLimiter extends Command {
 		this.voltageFilter = LinearFilter.movingAverage(NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE);
 		startVoltageFilter();
 		this.currentAverageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
-		PeriodicAlert lowBatteryAlert = new PeriodicAlert(
-			Alert.AlertType.ERROR,
-			BatteryConstants.LOG_PATH + "LowVoltageAt",
-			() -> currentAverageVoltage <= BatteryUtils.MIN_VOLTAGE
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				BatteryConstants.LOG_PATH + "LowVoltageAt",
+				() -> currentAverageVoltage <= BatteryUtils.MIN_VOLTAGE
+			)
 		);
-		lowBatteryAlert.addToAlertManager();
 		this.lowBatteryEntry = NetworkTableInstance.getDefault().getBooleanTopic(LOW_BATTERY_TOPIC_NAME).getEntry(false);
 		lowBatteryEntry.set(false);
 

@@ -6,7 +6,7 @@ public class AlertManager {
 
 	private static ArrayList<PeriodicAlert> alertList = new ArrayList<>();
 
-	protected static void addAlert(PeriodicAlert periodicAlert) {
+	public static void addAlert(PeriodicAlert periodicAlert) {
 		alertList.add(periodicAlert);
 	}
 

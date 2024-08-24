@@ -11,7 +11,7 @@ import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.gyro.IGyro;
 import frc.robot.subsystems.swerve.gyro.GyroConstants;
-import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.robot.subsystems.swerve.phoenix6signalsthread.Phoenix6SignalsThread;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.Pigeon2Wrapper;
@@ -34,8 +34,8 @@ public class Pigeon2Gyro implements IGyro {
 		this.logPath = logPathPrefix + GyroConstants.LOG_PATH_ADDITION;
 
 		// todo - maybe latency
-		this.yawQueue = PhoenixOdometryThread6328.getInstance().registerRegularSignal(gyro, yawSignal);
-		this.timestampQueue = PhoenixOdometryThread6328.getInstance().getTimestampQueue();
+		this.yawQueue = Phoenix6SignalsThread.getInstance().registerRegularSignal(gyro, yawSignal);
+		this.timestampQueue = Phoenix6SignalsThread.getInstance().getTimestampQueue();
 
 		configGyro(configuration);
 		optimizeBusAndSignals();

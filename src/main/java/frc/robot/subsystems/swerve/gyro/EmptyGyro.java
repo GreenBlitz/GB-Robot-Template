@@ -1,8 +1,6 @@
-package frc.robot.subsystems.swerve.gyro.simulation;
+package frc.robot.subsystems.swerve.gyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.gyro.IGyro;
-import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 
 public class EmptyGyro implements IGyro {
 

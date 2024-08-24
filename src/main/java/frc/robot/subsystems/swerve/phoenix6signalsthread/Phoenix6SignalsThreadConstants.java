@@ -1,6 +1,6 @@
-package frc.robot.subsystems.swerve.odometryThread;
+package frc.robot.subsystems.swerve.phoenix6signalsthread;
 
-class OdometryThreadConstants {
+class Phoenix6SignalsThreadConstants {
 
 	protected static final int MAX_UPDATES_PER_RIO_CYCLE = 100;
 

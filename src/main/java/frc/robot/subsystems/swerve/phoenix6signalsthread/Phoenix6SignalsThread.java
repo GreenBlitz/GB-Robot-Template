@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.swerve.odometryThread;
+package frc.robot.subsystems.swerve.phoenix6signalsthread;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -38,27 +38,27 @@ import java.util.concurrent.locks.ReentrantLock;
  * blocking method to enable more consistent sampling. This also allows Phoenix Pro users to benefit from lower latency between devices using
  * CANivore time synchronization.
  */
-public class PhoenixOdometryThread6328 extends Thread {
+public class Phoenix6SignalsThread extends Thread {
 
 	private final Lock SIGNALS_LOCK = new ReentrantLock();
 	private final List<Queue<Double>> queues = new ArrayList<>();
-	private final Queue<Double> timestamps = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
+	private final Queue<Double> timestamps = new ArrayBlockingQueue<>(Phoenix6SignalsThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
 	private final ArrayList<StatusSignal<Double>> signals = new ArrayList<>();
 	private final ArrayList<Boolean> isLatencySignals = new ArrayList<>();
 	private boolean isCANFD = false; // Assuming that all the devices using in odometry have same can network.
 
 
-	private static PhoenixOdometryThread6328 INSTANCE = null;
+	private static Phoenix6SignalsThread INSTANCE = null;
 
-	public static PhoenixOdometryThread6328 getInstance() {
+	public static Phoenix6SignalsThread getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new PhoenixOdometryThread6328();
+			INSTANCE = new Phoenix6SignalsThread();
 		}
 		return INSTANCE;
 	}
 
-	private PhoenixOdometryThread6328() {
-		setName("PhoenixOdometryThread");
+	private Phoenix6SignalsThread() {
+		setName("Phoenix6SignalsThread");
 		setDaemon(true);
 		start();
 	}
@@ -78,7 +78,7 @@ public class PhoenixOdometryThread6328 extends Thread {
 	}
 
 	private Queue<Double> registerSignals(boolean isLatencySignal, ParentDevice device, StatusSignal<Double>[] signals) {
-		Queue<Double> queue = new ArrayBlockingQueue<>(OdometryThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
+		Queue<Double> queue = new ArrayBlockingQueue<>(Phoenix6SignalsThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
 		SIGNALS_LOCK.lock();
 		Swerve.ODOMETRY_LOCK.lock();
 		try {
@@ -114,7 +114,7 @@ public class PhoenixOdometryThread6328 extends Thread {
 
 	@Override
 	public void run() {
-		Timer.delay(OdometryThreadConstants.DELAY_STARTING_TIME_SECONDS);
+		Timer.delay(Phoenix6SignalsThreadConstants.DELAY_STARTING_TIME_SECONDS);
 		while (true) {
 			waitForUpdatesFromSignals();
 			saveNewData();

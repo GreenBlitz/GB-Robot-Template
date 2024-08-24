@@ -5,7 +5,7 @@ import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.gyro.IGyro;
 import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2Gyro;
-import frc.robot.subsystems.swerve.gyro.simulation.EmptyGyro;
+import frc.robot.subsystems.swerve.gyro.EmptyGyro;
 
 public class GyroFactory {
 

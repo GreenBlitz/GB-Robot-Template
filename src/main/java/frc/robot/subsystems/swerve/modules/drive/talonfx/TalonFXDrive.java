@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
-import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.robot.subsystems.swerve.phoenix6signalsthread.Phoenix6SignalsThread;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
@@ -32,8 +32,8 @@ public class TalonFXDrive implements IDrive {
 		this.velocityVoltageRequest = new VelocityVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
 
-		this.drivePositionQueue = PhoenixOdometryThread6328.getInstance()
-			.registerLatencySignal(driveMotor, signals.positionSignal(), signals.velocitySignal());
+		this.drivePositionQueue = Phoenix6SignalsThread.getInstance()
+													   .registerLatencySignal(driveMotor, signals.positionSignal(), signals.velocitySignal());
 
 		driveMotor.setPosition(0);
 	}

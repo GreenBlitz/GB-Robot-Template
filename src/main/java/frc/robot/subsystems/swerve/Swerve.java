@@ -269,7 +269,7 @@ public class Swerve extends GBSubsystem {
 
 
 	protected void driveByState(double xPower, double yPower, double rotationPower, SwerveState swerveState) {
-		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(xPower, yPower, rotationPower, swerveState.getDriveSpeed(), constants);
+		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(xPower, yPower, rotationPower, constants);
 		driveByState(speedsFromPowers, swerveState);
 	}
 
@@ -282,6 +282,7 @@ public class Swerve extends GBSubsystem {
 			return;
 		}
 
+		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
 		speeds = SwerveMath.applyDeadband(speeds);
 		speeds = handleHeadingControl(speeds, swerveState);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);

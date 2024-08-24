@@ -57,8 +57,8 @@ public record SwerveConstants(
 
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
-	static final double DRIVE_NEUTRAL_DEADBAND = 0.2;
-	static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.2);
+	static final double DRIVE_NEUTRAL_DEADBAND = 0.05;
+	static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.05);
 
 	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
 	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;

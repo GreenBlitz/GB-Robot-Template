@@ -12,6 +12,7 @@ import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
+import frc.utils.breakState.breakStateManager;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -28,8 +29,17 @@ public class RobotManager extends LoggedRobot {
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
-
 		this.robot = new Robot();
+	}
+
+	@Override
+	public void disabledInit() {
+		breakStateManager.breakState();
+	}
+
+	@Override
+	public void disabledExit() {
+		breakStateManager.coastState();
 	}
 
 	@Override

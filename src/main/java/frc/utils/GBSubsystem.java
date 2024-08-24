@@ -3,7 +3,7 @@ package frc.utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
-import frc.utils.breakState.breakStateManager;
+import frc.utils.breakState.BrakeStateManager;
 
 public abstract class GBSubsystem extends SubsystemBase {
 
@@ -11,7 +11,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	public GBSubsystem(String logPath) {
 		this.logPath = "Subsystems/" + logPath;
-		breakStateManager.addSubsystem(this);
+		BrakeStateManager.addSubsystem(this);
 	}
 
 	private String getCurrentCommandName() {
@@ -31,8 +31,6 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	protected abstract void subsystemPeriodic();
 
-	public abstract void setBreak();
-
-	public abstract void setCoast();
+	public abstract void setBrake(boolean brake);
 
 }

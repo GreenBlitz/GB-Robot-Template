@@ -33,7 +33,7 @@ public class TalonFXDrive implements IDrive {
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
 
 		this.drivePositionQueue = Phoenix6SignalsThread.getInstance()
-													   .registerLatencySignal(driveMotor, signals.positionSignal(), signals.velocitySignal());
+			.registerLatencySignal(driveMotor, signals.positionSignal(), signals.velocitySignal());
 
 		driveMotor.setPosition(0);
 	}

@@ -33,7 +33,7 @@ public class TalonFXSteer implements ISteer {
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
 
 		this.positionQueue = Phoenix6SignalsThread.getInstance()
-                                                  .registerLatencySignal(motor, signals.positionSignal(), signals.velocitySignal());
+			.registerLatencySignal(motor, signals.positionSignal(), signals.velocitySignal());
 	}
 
 	@Override

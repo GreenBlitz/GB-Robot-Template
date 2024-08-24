@@ -7,7 +7,7 @@ import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
 import frc.robot.subsystems.swerve.modules.encoder.cancoder.CancoderEncoder;
-import frc.robot.subsystems.swerve.modules.encoder.simulation.EmptyEncoder;
+import frc.robot.subsystems.swerve.modules.encoder.EmptyEncoder;
 
 public class EncoderFactory {
 

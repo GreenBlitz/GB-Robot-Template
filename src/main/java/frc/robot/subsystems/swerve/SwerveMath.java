@@ -25,11 +25,21 @@ public class SwerveMath {
 	}
 
 	//@formatter:off
-	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, DriveSpeed driveSpeed, SwerveConstants constants) {
+	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, SwerveConstants constants) {
 		return new ChassisSpeeds(
-			xPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
-			yPower * driveSpeed.translationSpeedFactor * constants.velocityAt12VoltsMetersPerSecond(),
-			rotationPower * driveSpeed.rotationSpeedFactor * constants.maxRotationalVelocityPerSecond().getRadians()
+			xPower * constants.velocityAt12VoltsMetersPerSecond(),
+			yPower * constants.velocityAt12VoltsMetersPerSecond(),
+			rotationPower * constants.maxRotationalVelocityPerSecond().getRadians()
+		);
+	}
+	//@formatter:on
+
+	//@formatter:off
+	public static ChassisSpeeds factorSpeeds(ChassisSpeeds speeds, DriveSpeed driveSpeed) {
+		return new ChassisSpeeds(
+				speeds.vxMetersPerSecond * driveSpeed.translationSpeedFactor,
+				speeds.vyMetersPerSecond * driveSpeed.translationSpeedFactor,
+				speeds.omegaRadiansPerSecond * driveSpeed.rotationSpeedFactor
 		);
 	}
 	//@formatter:on

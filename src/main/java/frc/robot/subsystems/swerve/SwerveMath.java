@@ -24,7 +24,6 @@ public class SwerveMath {
 		return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
 	}
 
-	//@formatter:off
 	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, SwerveConstants constants) {
 		return new ChassisSpeeds(
 			xPower * constants.velocityAt12VoltsMetersPerSecond(),
@@ -32,17 +31,14 @@ public class SwerveMath {
 			rotationPower * constants.maxRotationalVelocityPerSecond().getRadians()
 		);
 	}
-	//@formatter:on
 
-	//@formatter:off
 	public static ChassisSpeeds factorSpeeds(ChassisSpeeds speeds, DriveSpeed driveSpeed) {
 		return new ChassisSpeeds(
-				speeds.vxMetersPerSecond * driveSpeed.translationSpeedFactor,
-				speeds.vyMetersPerSecond * driveSpeed.translationSpeedFactor,
-				speeds.omegaRadiansPerSecond * driveSpeed.rotationSpeedFactor
+			speeds.vxMetersPerSecond * driveSpeed.translationSpeedFactor,
+			speeds.vyMetersPerSecond * driveSpeed.translationSpeedFactor,
+			speeds.omegaRadiansPerSecond * driveSpeed.rotationSpeedFactor
 		);
 	}
-	//@formatter:on
 
 	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
 		double xVelocityMetersPerSecond = getDeadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);

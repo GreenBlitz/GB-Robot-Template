@@ -11,6 +11,12 @@ import java.nio.file.Path;
 
 public class LoggerFactory {
 
+	private static final String ALERT_LOG_PATH = "Logger/";
+	private static final Alert USBNotFound = new Alert(
+			Alert.AlertType.WARNING,
+			ALERT_LOG_PATH + "Didn't find USB"
+	);
+
 	public static void initializeLogger() {
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> startRealLogger();
@@ -25,12 +31,8 @@ public class LoggerFactory {
 			startLoggerOnUSB();
 		} else {
 			startLoggerOnRoborio();
-			reportNoUSBFound();
+			USBNotFound.reportAlert();
 		}
-	}
-
-	private static void reportNoUSBFound() {
-		Logger.recordOutput(Alert.ALERT_LOG_PATH + "/Didn't find USB");
 	}
 
 	private static void startSimulationLogger() {

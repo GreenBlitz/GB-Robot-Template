@@ -32,7 +32,7 @@ public class PoseEstimatorGil implements IPoseEstimator{
     private boolean isFirstOdometryUpdate;
     private VisionObservation lastVisionObservation;
 
-    public PoseEstimatorGil() {
+    public PoseEstimatorGil(SwerveDriveKinematics kinematics) {
         odometryPose = new Pose2d();
         estimatedPose = new Pose2d();
         poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
@@ -46,8 +46,7 @@ public class PoseEstimatorGil implements IPoseEstimator{
                 });
         lastGyroAngle = new Rotation2d();
         isFirstOdometryUpdate = true;
-//        this.kinematics = kinematics;
-        kinematics = null; //todo - fix when SwerveConstants are made;
+        this.kinematics = kinematics;
         for (int i = 0; i < 3; ++i) {
             standardDeviations.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
         }

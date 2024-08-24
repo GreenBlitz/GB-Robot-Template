@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.talonfx.TalonFXMotor;
 import frc.robot.subsystems.swerve.modules.drive.DriveThreadMetersInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
-import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.robot.subsystems.swerve.phoenix6signalsthread.Phoenix6SignalsThread;
 
 import java.util.Queue;
 
@@ -14,8 +14,7 @@ public class TalonFXDrive extends TalonFXMotor implements IDrive {
 
 	public TalonFXDrive(TalonFXDriveConstants constants) {
 		super(constants.getMotor(), constants.getSignals(), constants.getSysidConfig());
-
-		this.drivePositionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(motor, signals.position(), signals.velocity());
+		this.drivePositionQueue = Phoenix6SignalsThread.getInstance().registerLatencySignal(motor, signals.position(), signals.velocity());
 	}
 
 	@Override

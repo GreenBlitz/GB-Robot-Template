@@ -4,7 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.talonfx.TalonFXMotor;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerThreadInputsAutoLogged;
-import frc.robot.subsystems.swerve.odometryThread.PhoenixOdometryThread6328;
+import frc.robot.subsystems.swerve.phoenix6signalsthread.Phoenix6SignalsThread;
+
 
 import java.util.Queue;
 
@@ -14,7 +15,7 @@ public class TalonFXSteer extends TalonFXMotor implements ISteer {
 
 	public TalonFXSteer(TalonFXSteerConstants constants) {
 		super(constants.getMotor(), constants.getSignals(), constants.getSysidConfig());
-		this.positionQueue = PhoenixOdometryThread6328.getInstance().registerLatencySignal(motor, signals.position(), signals.velocity());
+		this.positionQueue = Phoenix6SignalsThread.getInstance().registerLatencySignal(motor, signals.position(), signals.velocity());
 	}
 
 	@Override

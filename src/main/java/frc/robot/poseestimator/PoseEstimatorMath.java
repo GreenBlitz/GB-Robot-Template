@@ -42,17 +42,17 @@ public class PoseEstimatorMath {
     }
 
     public static Matrix<N3, N3> kalmanFilterAlgorithm(double[] squaredVisionMatrix, Matrix<N3, N1> standardDeviations) {
-        Matrix<N3, N3> visionK = new Matrix<>(Nat.N3(), Nat.N3());
-        for (int row = 0; row < visionK.getNumRows(); ++row) {
+        Matrix<N3, N3> visionCalculationMatrix = new Matrix<>(Nat.N3(), Nat.N3());
+        for (int row = 0; row < visionCalculationMatrix.getNumRows(); ++row) {
             double standardDeviation = standardDeviations.get(row, 0);
             if (standardDeviation == 0.0) {
-                visionK.set(row, row, 0.0);
+                visionCalculationMatrix.set(row, row, 0.0);
             }
             else {
-                visionK.set(row, row, kalmanFilterFunction(standardDeviation, squaredVisionMatrix[row]));
+                visionCalculationMatrix.set(row, row, kalmanFilterFunction(standardDeviation, squaredVisionMatrix[row]));
             }
         }
-        return visionK;
+        return visionCalculationMatrix;
     }
 
     public static double kalmanFilterFunction(double standardDeviation, double squaredMatrixValue) {

@@ -7,8 +7,6 @@ import frc.utils.beamBreaker.IBeamBreaker;
 
 public class Digital implements IBeamBreaker {
 
-	private static Digital digital;
-
 	private static DigitalInput input;
 
 	private Debouncer debouncer;
@@ -19,9 +17,7 @@ public class Digital implements IBeamBreaker {
 	}
 
 	@Override
-	public void setIsObstructed(boolean newIsObstructed) {
-
-	}
+	public void setIsObstructed(boolean newIsObstructed) {}
 
 	@Override
 	public void updateInputs(BeamBreakerInputsAutoLogged inputs) {

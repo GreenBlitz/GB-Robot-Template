@@ -1,7 +1,9 @@
 package frc.utils.beamBreaker;
 
 public interface IBeamBreaker {
-    void setIsObstructed();
 
-    void updateInputs(BeamBreakerInputsAutoLogged inputs);
+	void setIsObstructed();
+
+	void updateInputs(BeamBreakerInputsAutoLogged inputs);
+
 }

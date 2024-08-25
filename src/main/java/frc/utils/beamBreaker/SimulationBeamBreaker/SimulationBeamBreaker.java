@@ -9,32 +9,22 @@ import java.util.function.Consumer;
 public class SimulationBeamBreaker implements IBeamBreaker {
 
 
+	Consumer<Boolean> isObstructedConsumer = obstructed -> setIsObstructed(obstructed);
 	public SendableChooser<Boolean> isObstructedSendableChooser;
 	public boolean isObstructed = false;
 
 	public SimulationBeamBreaker() {
 		isObstructedSendableChooser = new SendableChooser<Boolean>();
-		Consumer<Boolean> isObstructedConsumer = obstructed -> setIsObstructed(obstructed);
 		isObstructedSendableChooser.onChange(isObstructedConsumer);
 	}
 
-	private void subsystemPeriodic() {
-		isObstructed = isObstructedSendableChooser.getSelected();
-	}
-
-	public boolean getIsObstructed() {
-		return isObstructed;
-	}
-
-
 	public void setIsObstructed(boolean isObstructed) {
-		this.isObstructed = isObstructed;
+		isObstructedConsumer.accept(isObstructed);
 	}
-
 
 	@Override
 	public void updateInputs(BeamBreakerInputsAutoLogged inputs) {
-		inputs.isObstructed = getIsObstructed();
+		inputs.isObstructed = isObstructed;
 	}
 
 }

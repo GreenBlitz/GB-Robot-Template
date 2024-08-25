@@ -1,9 +1,9 @@
-package frc.utils.beamBreaker.digitalBeamBreaker;
+package frc.utils.beambreaker.digitalbeambreaker;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.utils.beamBreaker.BeamBreakerInputsAutoLogged;
-import frc.utils.beamBreaker.IBeamBreaker;
+import frc.utils.beambreaker.BeamBreakerInputsAutoLogged;
+import frc.utils.beambreaker.IBeamBreaker;
 
 public class DigitalBeamBreaker implements IBeamBreaker {
 

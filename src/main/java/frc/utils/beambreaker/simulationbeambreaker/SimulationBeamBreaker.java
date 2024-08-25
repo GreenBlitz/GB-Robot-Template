@@ -1,8 +1,8 @@
-package frc.utils.beamBreaker.SimulationBeamBreaker;
+package frc.utils.beambreaker.simulationbeambreaker;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.utils.beamBreaker.BeamBreakerInputsAutoLogged;
-import frc.utils.beamBreaker.IBeamBreaker;
+import frc.utils.beambreaker.BeamBreakerInputsAutoLogged;
+import frc.utils.beambreaker.IBeamBreaker;
 
 import java.util.function.Consumer;
 

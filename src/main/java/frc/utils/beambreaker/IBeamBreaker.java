@@ -1,4 +1,4 @@
-package frc.utils.beamBreaker;
+package frc.utils.beambreaker;
 
 public interface IBeamBreaker {
 

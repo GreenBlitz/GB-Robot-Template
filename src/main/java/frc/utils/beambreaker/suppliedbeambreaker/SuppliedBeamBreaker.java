@@ -1,8 +1,8 @@
-package frc.utils.beamBreaker.suppliedBeamBreaker;
+package frc.utils.beambreaker.suppliedbeambreaker;
 
 import edu.wpi.first.math.filter.Debouncer;
-import frc.utils.beamBreaker.BeamBreakerInputsAutoLogged;
-import frc.utils.beamBreaker.IBeamBreaker;
+import frc.utils.beambreaker.BeamBreakerInputsAutoLogged;
+import frc.utils.beambreaker.IBeamBreaker;
 
 import java.util.function.Supplier;
 

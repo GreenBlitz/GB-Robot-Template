@@ -18,8 +18,9 @@ public class Digital implements IBeamBreaker {
 		debouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 	}
 
-	public void setIsObstructed() {
-		digital.setIsObstructed();
+	@Override
+	public void setIsObstructed(boolean newIsObstructed) {
+
 	}
 
 	@Override

@@ -18,12 +18,12 @@ public class PoseEstimatorMath {
     public static Twist2d addGyroToTwistCalculations(OdometryObservation observation, Twist2d twist, Rotation2d lastGyroAngle) {
         boolean isGyroConnected = observation.gyroAngle() != null;
         if (isGyroConnected) {
-            twist = updateDeltaTheta(twist, observation, lastGyroAngle);
+            twist = updateChangeInAngle(twist, observation, lastGyroAngle);
         }
         return twist;
     }
 
-    public static Twist2d updateDeltaTheta(Twist2d twist, OdometryObservation observation, Rotation2d lastGyroAngle) {
+    public static Twist2d updateChangeInAngle(Twist2d twist, OdometryObservation observation, Rotation2d lastGyroAngle) {
         return new Twist2d(
                 twist.dx,
                 twist.dy,
@@ -45,18 +45,22 @@ public class PoseEstimatorMath {
         Matrix<N3, N3> visionCalculationMatrix = new Matrix<>(Nat.N3(), Nat.N3());
         for (int row = 0; row < visionCalculationMatrix.getNumRows(); ++row) {
             double standardDeviation = standardDeviations.get(row, 0);
-            if (standardDeviation == 0.0) {
-                visionCalculationMatrix.set(row, row, 0.0);
-            }
-            else {
-                visionCalculationMatrix.set(row, row, kalmanFilterFunction(standardDeviation, squaredVisionMatrix[row]));
-            }
+            visionCalculationMatrix.set(
+                    row,
+                    row,
+                    kalmanFilterFunction(standardDeviation, squaredVisionMatrix[row])
+            );
         }
         return visionCalculationMatrix;
     }
 
     public static double kalmanFilterFunction(double standardDeviation, double squaredMatrixValue) {
-        return standardDeviation / (standardDeviation + Math.sqrt(standardDeviation * squaredMatrixValue));
+        if(standardDeviation == 0) {
+            return standardDeviation / (standardDeviation + Math.sqrt(standardDeviation * squaredMatrixValue));
+        }
+        else {
+            return 0;
+        }
     }
 
     public static Transform2d useKalmanOnTransform(VisionObservation observation, Pose2d estimateAtTime, Matrix<N3, N1> standardDeviations) {

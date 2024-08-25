@@ -11,7 +11,6 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	public GBSubsystem(String logPath) {
 		this.logPath = "Subsystems/" + logPath;
-		BrakeStateManager.addSubsystem(this);
 	}
 
 	private String getCurrentCommandName() {

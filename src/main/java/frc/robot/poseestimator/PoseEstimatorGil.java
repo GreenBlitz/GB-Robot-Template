@@ -10,17 +10,15 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.observations.Observation;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
-
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class PoseEstimatorGil implements IPoseEstimator{
+public class PoseEstimatorGil implements IPoseEstimator {
 
     private Pose2d odometryPose;
     private Pose2d estimatedPose;
@@ -29,31 +27,32 @@ public class PoseEstimatorGil implements IPoseEstimator{
     private final SwerveDriveKinematics kinematics;
     private SwerveDriveWheelPositions lastWheelPositions;
     private Rotation2d lastGyroAngle;
-    private boolean isFirstOdometryUpdate;
     private VisionObservation lastVisionObservation;
 
-    public PoseEstimatorGil(SwerveDriveKinematics kinematics) {
+    public PoseEstimatorGil (
+            SwerveDriveKinematics kinematics,
+            SwerveDriveWheelPositions initialWheelPositions,
+            Rotation2d initialGyroAngle
+    ) {
         odometryPose = new Pose2d();
         estimatedPose = new Pose2d();
         poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
         standardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
-        lastWheelPositions = new SwerveDriveWheelPositions(
-                new SwerveModulePosition[] {
-                        new SwerveModulePosition(),
-                        new SwerveModulePosition(),
-                        new SwerveModulePosition(),
-                        new SwerveModulePosition()
-                });
-        lastGyroAngle = new Rotation2d();
-        isFirstOdometryUpdate = true;
         this.kinematics = kinematics;
+        this.lastWheelPositions = initialWheelPositions;
+        this.lastGyroAngle = initialGyroAngle;
         for (int i = 0; i < 3; ++i) {
-            standardDeviations.set(i, 0, Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0), 2));
+            standardDeviations.set(
+                    i,
+                    0,
+                    Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0),
+                            PoseEstimatorConstants.KALMAN_EXPONENT
+                    )
+            );
         }
     }
 
     public void addOdometryObservation(OdometryObservation observation) {
-        setInitialValuesAtStart();
         Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.getWheelPositions());
         lastWheelPositions = observation.getWheelPositions();
         lastGyroAngle = observation.getGyroAngle();
@@ -61,14 +60,6 @@ public class PoseEstimatorGil implements IPoseEstimator{
         odometryPose = odometryPose.exp(twist);
         poseBuffer.addSample(observation.getTimestamp(), odometryPose);
         estimatedPose = estimatedPose.exp(twist);
-    }
-
-    private void setInitialValuesAtStart() {
-        if (isFirstOdometryUpdate) {
-//            lastWheelPositions = SWERVE.getSwerveWheelPositions(0);todo - fix when swerve is made
-//            lastGyroAngle = SWERVE.getOdometryYawUpdates()[0];
-            isFirstOdometryUpdate = false;
-        }
     }
 
     public void addVisionObservation(VisionObservation observation) {
@@ -114,7 +105,7 @@ public class PoseEstimatorGil implements IPoseEstimator{
     public void setOdometryStandardDeviations(double x, double y, double rotation) {
         Vector<N3> newStandardDeviations = VecBuilder.fill(x, y, rotation);
         for (int i = 0; i < newStandardDeviations.getNumRows(); ++i) {
-            standardDeviations.set(i, 0, Math.pow(newStandardDeviations.get(i, 0), 2));
+            standardDeviations.set(i, 0, Math.pow(newStandardDeviations.get(i, 0), PoseEstimatorConstants.KALMAN_EXPONENT));
         }
     }
 

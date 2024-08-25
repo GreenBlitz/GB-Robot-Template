@@ -1,14 +1,13 @@
 package edu.greenblitz.robotName.subsystems.limelight;
 
-import edu.greenblitz.robotName.VisionConstants;
-import edu.greenblitz.robotName.utils.AllianceUtilities;
-import edu.greenblitz.robotName.utils.GBSubsystem;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.poseestimator.limelight.VisionConstants;
+import frc.utils.GBSubsystem;
 
 import java.util.Optional;
 
@@ -19,6 +18,7 @@ public class Limelight extends GBSubsystem {
 	private String name;
 
 	public Limelight(String limelightName) {
+        super(limelightName);
 		this.name = limelightName;
 		String robotPoseQuery =  "botpose_wpiblue";
 		robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry(robotPoseQuery);
@@ -26,7 +26,12 @@ public class Limelight extends GBSubsystem {
 		idEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("tid");
 	}
 
-	public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
+    @Override
+    protected void subsystemPeriodic() {
+
+    }
+
+    public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
 		double[] poseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		double processingLatency = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.TOTAL_LATENCY)] / 1000;
 		double timestamp = Timer.getFPGATimestamp() - processingLatency;

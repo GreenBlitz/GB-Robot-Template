@@ -44,8 +44,14 @@ public enum BusChain {
 				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
 			)
 		);
+		//@formatter:off
 		AlertManager.addAlert(
-			new PeriodicAlert(Alert.AlertType.WARNING, logPath + "ReceiveErrorAt", () -> busStatus.REC > PERMITTED_RECEIVE_ERRORS)
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "ReceiveErrorAt",
+				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
+			)
+		//@formatter:on
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(

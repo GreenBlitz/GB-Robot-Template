@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.VecBuilder;
+import frc.utils.ObjectVisualizer.VisualizerCommand;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -23,6 +25,11 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+		usedJoystick.A.whileTrue(new VisualizerCommand(
+				VecBuilder.fill(0,-1,0),
+				VecBuilder.fill(2,1,2),
+				VecBuilder.fill(2,1,2))
+		);
 		// bindings
 	}
 

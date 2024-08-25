@@ -48,17 +48,9 @@ public class MultiLimelight extends GBSubsystem {
         for (Limelight limelight : limelights) {
             currentPosition = Robot.getPosEstimator.getOdometryPose();
             if (limelight.hasTarget()) {
-                if (limelight.getAprilTagConfidence())
-                    if (limelight.getUpdatedPose2DEstimation().isPresent()) {
-                        limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
-                        TansformDiffrenece = limelightPosition.minus(currentPosition);
-                        RotationDiffrenece = limelightPosition.getRotation().minus(currentPosition.getRotation());
-
-                        if (TansformDiffrenece.getTranslation().getNorm() >= VisionConstants.POSITION_TOLERANCE
-                        && RotationDiffrenece.getDegrees() >= VisionConstants.ROTATION_TOLERANCE.getDegrees()) {
-                            estimates.add(limelight.getUpdatedPose2DEstimation());
-                        }
-                    }
+                if (getIflLimeliteOutputInTolarance(limelight)) {
+                    estimates.add(limelight.getUpdatedPose2DEstimation());
+                }
             }
         }
 
@@ -67,11 +59,22 @@ public class MultiLimelight extends GBSubsystem {
 
     public boolean getIflLimeliteOutputInTolarance(Limelight limelight) {
         Pose2d limelightPosition;
-        Transform2d transformDiffrence;
-        Rotation2d rotationDiffrenece;
+        Transform2d transformDifference;
+        Rotation2d rotationDifference;
+
+        if (limelight.getAprilTagConfidence())
+            if (limelight.getUpdatedPose2DEstimation().isPresent()) {
+                limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
+                transformDifference = limelightPosition.minus(currentPosition);
+                rotationDifference = limelightPosition.getRotation().minus(currentPosition.getRotation());
+
+                return transformDifference.getTranslation().getNorm() >= VisionConstants.POSITION_TOLERANCE
+                        && rotationDifference.getDegrees() >= VisionConstants.ROTATION_TOLERANCE.getDegrees();
+            }
 
         return false;
     }
+
 
     public void recordEstimatedPositions() {
         int i = 0;

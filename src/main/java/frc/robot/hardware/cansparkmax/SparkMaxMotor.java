@@ -17,9 +17,9 @@ public class SparkMaxMotor implements IMotor {
 	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
 	protected final SparkMaxConstants constants;
 
-	public SparkMaxMotor(CANSparkMax motor, BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SparkMaxConstants constants) {
+	public SparkMaxMotor(CANSparkMax motor, SparkMaxConstants constants) {
 		this.motor = motor;
-		this.feedforward = feedforward;
+		this.feedforward = constants.feedforward();
 		this.constants = constants;
 	}
 

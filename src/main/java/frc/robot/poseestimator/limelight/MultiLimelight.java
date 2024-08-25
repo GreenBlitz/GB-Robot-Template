@@ -41,14 +41,11 @@ public class MultiLimelight extends GBSubsystem {
 
     public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {
         ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
-        Pose2d limelightPosition;
-        Transform2d TansformDiffrenece;
-        Rotation2d RotationDiffrenece;
 
         for (Limelight limelight : limelights) {
             currentPosition = Robot.getPosEstimator.getOdometryPose();
             if (limelight.hasTarget()) {
-                if (getIflLimeliteOutputInTolarance(limelight)) {
+                if (getLimelightedOutputInTolerance(limelight)) {
                     estimates.add(limelight.getUpdatedPose2DEstimation());
                 }
             }
@@ -57,7 +54,7 @@ public class MultiLimelight extends GBSubsystem {
         return estimates;
     }
 
-    public boolean getIflLimeliteOutputInTolarance(Limelight limelight) {
+    public boolean getLimelightedOutputInTolerance(Limelight limelight) {
         Pose2d limelightPosition;
         Transform2d transformDifference;
         Rotation2d rotationDifference;

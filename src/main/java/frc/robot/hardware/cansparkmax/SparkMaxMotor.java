@@ -19,8 +19,8 @@ public class SparkMaxMotor implements IMotor {
 
 	public SparkMaxMotor(CANSparkMax motor, SparkMaxConstants constants) {
 		this.motor = motor;
-		this.feedforward = constants.feedforward();
 		this.constants = constants;
+		this.feedforward = constants.feedforward();
 	}
 
 	@Override

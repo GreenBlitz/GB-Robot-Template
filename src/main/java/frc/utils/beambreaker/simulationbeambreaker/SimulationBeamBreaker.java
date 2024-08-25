@@ -8,17 +8,19 @@ import java.util.function.Consumer;
 
 public class SimulationBeamBreaker implements IBeamBreaker {
 
-	private final Consumer<Boolean> isObstructedConsumer = obstructed -> setIsObstructed(obstructed);
+	private Consumer<Boolean> isObstructedConsumer;
 	private final SendableChooser<Boolean> isObstructedSendableChooser;
-	private boolean isObstructed = false;
+	private boolean isObstructed;
 
 	public SimulationBeamBreaker() {
+		this.isObstructedConsumer = this::setIsObstructed;
 		this.isObstructedSendableChooser = new SendableChooser<Boolean>();
+		this.isObstructed= false;
 		isObstructedSendableChooser.onChange(isObstructedConsumer);
 	}
 
 	public void setIsObstructed(boolean isObstructed) {
-		isObstructedConsumer.accept(isObstructed);
+		this.isObstructed=isObstructed;
 	}
 
 	@Override

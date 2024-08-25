@@ -11,9 +11,9 @@ public class DigitalBeamBreaker implements IBeamBreaker {
 
 	private final Debouncer debouncer;
 
-	public DigitalBeamBreaker(int DigitalInputChannel, double debounceTime, Debouncer.DebounceType DebounceType) {
-		this.beambreaker = new DigitalInput(DigitalInputChannel);
-		this.debouncer = new Debouncer(debounceTime, DebounceType);
+	public DigitalBeamBreaker(int channel, double debounceTime, Debouncer.DebounceType debounceType) {
+		this.beambreaker = new DigitalInput(channel);
+		this.debouncer = new Debouncer(debounceTime, debounceType);
 	}
 
 	@Override

@@ -6,6 +6,9 @@ public class VisionConstants {
             "limelight-back",
             "limelight-gb"
     };
+    public static final double ROTATION_TOLARENCE_DEGREES = ;
+
+    public static final double POSITION_TOLARENCE = ;
 
     public static int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 

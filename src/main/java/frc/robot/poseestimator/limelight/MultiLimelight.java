@@ -2,6 +2,9 @@ package frc.robot.poseestimator.limelight;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import frc.robot.Robot;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -15,6 +18,7 @@ public class MultiLimelight extends GBSubsystem {
     private static MultiLimelight instance;
 
     private List<Limelight> limelights;
+    private Pose2d currentPosition;
 
     private MultiLimelight() {
         super("MultiLimeLight/");
@@ -37,10 +41,24 @@ public class MultiLimelight extends GBSubsystem {
 
     public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {
         ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
+        Pose2d limelightPosition;
+        Transform2d TansformDiffrenece;
+        Rotation2d RotationDiffrenece;
+
         for (Limelight limelight : limelights) {
+            currentPosition = Robot.getPosEstimator.getOdometryPose();
             if (limelight.hasTarget()) {
                 if (limelight.getAprilTagConfidence())
-                    estimates.add(limelight.getUpdatedPose2DEstimation());
+                    if (limelight.getUpdatedPose2DEstimation().isPresent()) {
+                        limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
+                        TansformDiffrenece = limelightPosition.minus(currentPosition);
+                        RotationDiffrenece = limelightPosition.getRotation().minus(currentPosition.getRotation())
+
+                        if (TansformDiffrenece.getTranslation().getNorm() >= VisionConstants.POSITION_TOLARENCE
+                        && RotationDiffrenece.getDegrees() >= VisionConstants.ROTATION_TOLARENCE_DEGREES) {
+                            estimates.add(limelight.getUpdatedPose2DEstimation());
+                        }
+                    }
             }
         }
         return estimates;

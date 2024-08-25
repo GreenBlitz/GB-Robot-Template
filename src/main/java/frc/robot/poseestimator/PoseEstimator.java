@@ -29,7 +29,7 @@ public class PoseEstimator implements IPoseEstimator {
     private Rotation2d lastGyroAngle;
     private VisionObservation lastVisionObservation;
 
-    public PoseEstimator(
+    public PoseEstimator (
             SwerveDriveKinematics kinematics,
             SwerveDriveWheelPositions initialWheelPositions,
             Rotation2d initialGyroAngle

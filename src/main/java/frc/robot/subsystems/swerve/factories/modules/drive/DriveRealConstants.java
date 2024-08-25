@@ -19,10 +19,10 @@ class DriveRealConstants {
 	private static final double SLIP_CURRENT = 60;
 
 	private static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-			Volts.of(0.5).per(Seconds.of(1)),
-			Volts.of(2),
-			null,
-			state -> SignalLogger.writeString("state", state.toString())
+		Volts.of(0.5).per(Seconds.of(1)),
+		Volts.of(2),
+		null,
+		state -> SignalLogger.writeString("state", state.toString())
 	);
 
 	private static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration();

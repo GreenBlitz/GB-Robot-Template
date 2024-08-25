@@ -52,16 +52,25 @@ public class MultiLimelight extends GBSubsystem {
                     if (limelight.getUpdatedPose2DEstimation().isPresent()) {
                         limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
                         TansformDiffrenece = limelightPosition.minus(currentPosition);
-                        RotationDiffrenece = limelightPosition.getRotation().minus(currentPosition.getRotation())
+                        RotationDiffrenece = limelightPosition.getRotation().minus(currentPosition.getRotation());
 
-                        if (TansformDiffrenece.getTranslation().getNorm() >= VisionConstants.POSITION_TOLARENCE
-                        && RotationDiffrenece.getDegrees() >= VisionConstants.ROTATION_TOLARENCE_DEGREES) {
+                        if (TansformDiffrenece.getTranslation().getNorm() >= VisionConstants.POSITION_TOLERANCE
+                        && RotationDiffrenece.getDegrees() >= VisionConstants.ROTATION_TOLERANCE.getDegrees()) {
                             estimates.add(limelight.getUpdatedPose2DEstimation());
                         }
                     }
             }
         }
+
         return estimates;
+    }
+
+    public boolean getIflLimeliteOutputInTolarance(Limelight limelight) {
+        Pose2d limelightPosition;
+        Transform2d transformDiffrence;
+        Rotation2d rotationDiffrenece;
+
+        return false;
     }
 
     public void recordEstimatedPositions() {

@@ -1,14 +1,16 @@
 package frc.robot.poseestimator.limelight;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public class VisionConstants {
     public static final String[] LIMELIGHT_NAMES = new String[]{
             "limelight-front",
             "limelight-back",
             "limelight-gb"
     };
-    public static final double ROTATION_TOLARENCE_DEGREES = ;
+    public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(40);
 
-    public static final double POSITION_TOLARENCE = ;
+    public static final double POSITION_TOLERANCE = ;
 
     public static int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 

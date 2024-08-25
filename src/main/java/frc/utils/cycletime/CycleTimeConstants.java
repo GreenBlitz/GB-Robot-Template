@@ -1,6 +1,5 @@
 package frc.utils.cycletime;
 
-import frc.utils.alerts.Alert;
 
 class CycleTimeConstants {
 

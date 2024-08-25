@@ -20,7 +20,7 @@ public class Limelight extends GBSubsystem {
 	public Limelight(String limelightName) {
         super(limelightName);
 		this.name = limelightName;
-		String robotPoseQuery =  "botpose_wpiblue";
+		String robotPoseQuery = "botpose_wpiblue";
 		robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry(robotPoseQuery);
 		tagPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("targetpose_cameraspace");
 		idEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("tid");

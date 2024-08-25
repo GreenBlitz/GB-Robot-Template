@@ -1,4 +1,4 @@
-package edu.greenblitz.robotName.subsystems.limelight;
+package frc.robot.poseestimator.limelight;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -52,7 +52,7 @@ public class MultiLimelight extends GBSubsystem {
 		int i = 0;
 		for (Optional<Pair<Pose2d, Double>> estimation : MultiLimelight.getInstance().getAll2DEstimates()) {
 			if (estimation.isPresent()) {
-				Logger.recordOutput("estimation " + i, estimation.get().getFirst());
+				Logger.recordOutput(super.getLogPath() + "estimation " + i, estimation.get().getFirst());
 			}
 		}
 	}

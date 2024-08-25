@@ -16,9 +16,6 @@ public class DigitalBeamBreaker implements IBeamBreaker {
 		debouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 	}
 
-	public void setIsObstructed(boolean isObstructed) {
-	}
-
 	@Override
 	public void updateInputs(BeamBreakerInputsAutoLogged inputs) {
 		inputs.isObstructed = debouncer.calculate(input.get());

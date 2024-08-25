@@ -33,10 +33,10 @@ public class PoseEstimator implements IPoseEstimator {
             SwerveDriveWheelPositions initialWheelPositions,
             Rotation2d initialGyroAngle
     ) {
-        odometryPose = new Pose2d();
-        estimatedPose = new Pose2d();
-        poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-        standardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
+        this.odometryPose = new Pose2d();
+        this.estimatedPose = new Pose2d();
+        this.poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+        this.standardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
         this.kinematics = kinematics;
         this.lastWheelPositions = initialWheelPositions;
         this.lastGyroAngle = initialGyroAngle;
@@ -85,9 +85,9 @@ public class PoseEstimator implements IPoseEstimator {
 
     @Override
     public void resetPose(Pose2d initialPose) {
-        estimatedPose = initialPose;
-        lastGyroAngle = initialPose.getRotation();
-        odometryPose = initialPose;
+        this.estimatedPose = initialPose;
+        this.lastGyroAngle = initialPose.getRotation();
+        this.odometryPose = initialPose;
         poseBuffer.clear();
     }
 
@@ -117,13 +117,13 @@ public class PoseEstimator implements IPoseEstimator {
     }
 
     @Override
-    public Optional<Pose2d> getOdometryPose() {
-        return Optional.of(odometryPose);
+    public Pose2d getOdometryPose() {
+        return odometryPose;
     }
 
     @Override
     public void updateVision(VisionObservation visionObservation) {
-        lastVisionObservation = visionObservation;
+        this.lastVisionObservation = visionObservation;
         if(!isObservationTooOld(visionObservation)) {
             addVisionObservation(visionObservation);
         }

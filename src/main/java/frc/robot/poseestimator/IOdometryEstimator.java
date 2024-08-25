@@ -16,7 +16,7 @@ public interface IOdometryEstimator {
 
     void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose);
 
-    Optional<Pose2d> getOdometryPose();
+    Pose2d getOdometryPose();
 
     void setStandardDeviations(Matrix<N3, N1> standardDeviations);
 

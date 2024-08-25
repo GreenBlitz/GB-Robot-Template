@@ -25,9 +25,8 @@ class BatteryLimiter extends Command {
 
 	public BatteryLimiter() {
 		this.voltageFilter = LinearFilter.movingAverage(NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE);
-		startVoltageFilter();
 
-		this.averageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
+		this.averageVoltage = BatteryUtils.getCurrentVoltage();
 
 		AlertManager.addAlert(
 			new PeriodicAlert(
@@ -56,6 +55,11 @@ class BatteryLimiter extends Command {
 		if (!lowBatteryEntry.get()) {
 			lowBatteryEntry.set(true);
 		}
+	}
+
+	@Override
+	public void initialize() {
+		startVoltageFilter();
 	}
 
 	@Override

@@ -25,10 +25,11 @@ public class Alert {
 	}
 
 	public void report() {
-		if (!DriverStationUtils.isMatch())
+		if (!DriverStationUtils.isMatch()) {
 			switch (type) {
 				case ERROR -> DriverStation.reportError(logPath, LOG_TRACE);
 			}
+		}
 		Logger.recordOutput(logPath, Timer.getFPGATimestamp());
 	}
 

@@ -8,18 +8,18 @@ import java.util.function.Supplier;
 
 public class SuppliedBeamBreaker implements IBeamBreaker {
 
-    private final Debouncer debouncer;
+	private final Debouncer debouncer;
 
-    private final Supplier<Boolean> isObstructedConsumer;
+	private final Supplier<Boolean> isObstructedConsumer;
 
-    public SuppliedBeamBreaker(Supplier<Boolean> isObstructedConsumer, double debounceTime, Debouncer.DebounceType DebounceType){
-        this.isObstructedConsumer=isObstructedConsumer;
-        this.debouncer = new Debouncer(debounceTime, DebounceType);
-    }
+	public SuppliedBeamBreaker(Supplier<Boolean> isObstructedConsumer, double debounceTime, Debouncer.DebounceType DebounceType) {
+		this.isObstructedConsumer = isObstructedConsumer;
+		this.debouncer = new Debouncer(debounceTime, DebounceType);
+	}
 
-    @Override
-    public void updateInputs(BeamBreakerInputsAutoLogged inputs) {
-        inputs.isObstructed = debouncer.calculate(isObstructedConsumer.get());
-    }
+	@Override
+	public void updateInputs(BeamBreakerInputsAutoLogged inputs) {
+		inputs.isObstructed = debouncer.calculate(isObstructedConsumer.get());
+	}
 
 }

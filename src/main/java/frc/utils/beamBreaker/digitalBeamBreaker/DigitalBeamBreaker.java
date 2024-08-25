@@ -9,7 +9,7 @@ public class DigitalBeamBreaker implements IBeamBreaker {
 
 	private final DigitalInput beambreaker;
 
-	private final  Debouncer debouncer;
+	private final Debouncer debouncer;
 
 	public DigitalBeamBreaker(int DigitalInputChannel, double debounceTime, Debouncer.DebounceType DebounceType) {
 		this.beambreaker = new DigitalInput(DigitalInputChannel);

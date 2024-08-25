@@ -12,11 +12,11 @@ public class TunerPicker {
         this.autoPIDTuner = new AutoPIDTuner();
     }
 
-    public PIDObject Tune(double ku) {
+    public PIDObject tune(double ku) {
         return autoPIDTuner.tunePController(ku);
     }
 
-    public PIDObject Tune(double ku, double pu) {
+    public PIDObject tune(double ku, double pu) {
         return controllerType==ControllerType.PI_CONTROLLER ?
                 autoPIDTuner.tunePIController(ku, pu)
                 : autoPIDTuner.tunePIDController(ku, pu);

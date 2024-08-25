@@ -4,15 +4,15 @@ import java.util.function.BooleanSupplier;
 
 public class PeriodicAlert extends Alert {
 
-	private final BooleanSupplier raiseSupplier;
+	private final BooleanSupplier reportSupplier;
 
-	public PeriodicAlert(AlertType type, String name, BooleanSupplier raiseSupplier) {
+	public PeriodicAlert(AlertType type, String name, BooleanSupplier reportSupplier) {
 		super(type, name);
-		this.raiseSupplier = raiseSupplier;
+		this.reportSupplier = reportSupplier;
 	}
 
 	protected void reportByCondition() {
-		if (raiseSupplier.getAsBoolean()) {
+		if (reportSupplier.getAsBoolean()) {
 			report();
 		}
 	}

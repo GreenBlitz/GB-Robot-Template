@@ -21,19 +21,22 @@ class BatteryLimiter extends Command {
 
 	private final BooleanEntry lowBatteryEntry;
 	private final LinearFilter voltageFilter;
-	private double currentAverageVoltage;
+	private double averageVoltage;
 
 	public BatteryLimiter() {
 		this.voltageFilter = LinearFilter.movingAverage(NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE);
 		startVoltageFilter();
-		this.currentAverageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
+
+		this.averageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
+
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				BatteryConstants.LOG_PATH + "LowVoltageAt",
-				() -> currentAverageVoltage <= BatteryUtils.MIN_VOLTAGE
+				() -> averageVoltage <= BatteryUtils.MIN_VOLTAGE
 			)
 		);
+
 		this.lowBatteryEntry = NetworkTableInstance.getDefault().getBooleanTopic(LOW_BATTERY_TOPIC_NAME).getEntry(false);
 		lowBatteryEntry.set(false);
 
@@ -57,8 +60,8 @@ class BatteryLimiter extends Command {
 
 	@Override
 	public void execute() {
-		this.currentAverageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
-		if (currentAverageVoltage <= BatteryUtils.MIN_VOLTAGE && !DriverStationUtils.isMatch()) {
+		this.averageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
+		if (averageVoltage <= BatteryUtils.MIN_VOLTAGE && !DriverStationUtils.isMatch()) {
 			showBatteryMessage();
 		} else if (lowBatteryEntry.get()) {
 			lowBatteryEntry.set(false);

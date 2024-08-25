@@ -45,12 +45,6 @@ class BatteryLimiter extends Command {
 		}
 	}
 
-	private void showBatteryMessage() {
-		if (!lowBatteryEntry.get()) {
-			lowBatteryEntry.set(true);
-		}
-	}
-
 	private void startVoltageFilter() {
 		// Fill linear filter with battery voltage values instead of 1/NUMBER_OF_VALUES_IN_AVERAGE
 		for (int i = 0; i < NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE; i++) {
@@ -58,9 +52,15 @@ class BatteryLimiter extends Command {
 		}
 	}
 
+	private void showBatteryMessage() {
+		if (!lowBatteryEntry.get()) {
+			lowBatteryEntry.set(true);
+		}
+	}
+
 	@Override
 	public void execute() {
-		this.averageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
+		averageVoltage = voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
 		if (averageVoltage <= BatteryUtils.MIN_VOLTAGE && !DriverStationUtils.isMatch()) {
 			showBatteryMessage();
 		} else if (lowBatteryEntry.get()) {

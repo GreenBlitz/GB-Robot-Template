@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
@@ -35,12 +36,16 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void disabledInit() {
-		BrakeStateManager.brake();
+		if (!DriverStationUtils.isMatch()){
+			BrakeStateManager.brake();
+		}
 	}
 
 	@Override
 	public void disabledExit() {
-		BrakeStateManager.coast();
+		if (!DriverStationUtils.isMatch()){
+			BrakeStateManager.coast();
+		}
 	}
 
 	@Override

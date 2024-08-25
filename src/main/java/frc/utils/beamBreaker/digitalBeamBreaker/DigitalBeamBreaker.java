@@ -11,12 +11,11 @@ public class DigitalBeamBreaker implements IBeamBreaker {
 
 	private Debouncer debouncer;
 
+	private boolean isObstructed = false;
+
 	public DigitalBeamBreaker() {
 		input = new DigitalInput(0);
 		debouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
-	}
-
-	public void setIsObstructed(boolean isObstructed) {
 	}
 
 	@Override

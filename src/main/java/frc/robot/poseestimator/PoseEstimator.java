@@ -19,11 +19,11 @@ import java.util.Optional;
 
 public class PoseEstimator implements IPoseEstimator {
 
+    private final TimeInterpolatableBuffer<Pose2d> poseBuffer;
+    private final SwerveDriveKinematics kinematics;
     private Pose2d odometryPose;
     private Pose2d estimatedPose;
-    private final TimeInterpolatableBuffer<Pose2d> poseBuffer;
     private Matrix<N3, N1> standardDeviations;
-    private final SwerveDriveKinematics kinematics;
     private SwerveDriveWheelPositions lastWheelPositions;
     private Rotation2d lastGyroAngle;
     private VisionObservation lastVisionObservation;
@@ -52,13 +52,13 @@ public class PoseEstimator implements IPoseEstimator {
     }
 
     public void addOdometryObservation(OdometryObservation observation) {
+        this.lastWheelPositions = observation.wheelPositions();
+        this.lastGyroAngle = observation.gyroAngle();
         Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
-        lastWheelPositions = observation.wheelPositions();
-        lastGyroAngle = observation.gyroAngle();
         twist = PoseEstimatorMath.addGyroToTwistCalculations(observation, twist, lastGyroAngle);
-        odometryPose = odometryPose.exp(twist);
+        this.odometryPose = odometryPose.exp(twist);
+        this.estimatedPose = estimatedPose.exp(twist);
         poseBuffer.addSample(observation.timestamp(), odometryPose);
-        estimatedPose = estimatedPose.exp(twist);
     }
 
     public void addVisionObservation(VisionObservation observation) {
@@ -78,7 +78,7 @@ public class PoseEstimator implements IPoseEstimator {
         try {
             return poseBuffer.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS > visionObservation.timestamp();
         }
-        catch (NoSuchElementException ex) {
+        catch (NoSuchElementException ignored) {
             return true;
         }
     }

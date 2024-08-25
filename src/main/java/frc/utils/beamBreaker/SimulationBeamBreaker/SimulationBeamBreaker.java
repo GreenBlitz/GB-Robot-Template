@@ -10,7 +10,7 @@ public class SimulationBeamBreaker implements IBeamBreaker {
 
 	private final Consumer<Boolean> isObstructedConsumer = obstructed -> setIsObstructed(obstructed);
 	private final SendableChooser<Boolean> isObstructedSendableChooser;
-	private final boolean isObstructed = false;
+	private boolean isObstructed = false;
 
 	public SimulationBeamBreaker() {
 		this.isObstructedSendableChooser = new SendableChooser<Boolean>();

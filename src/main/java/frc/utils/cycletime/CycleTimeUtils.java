@@ -29,17 +29,10 @@ public class CycleTimeUtils {
 		currentTime = Conversions.microSecondsToSeconds(HALUtil.getFPGATime());
 
 		logStatus();
-		reportAlerts();
 	}
 
 	private static void logStatus() {
 		Logger.recordOutput(CycleTimeConstants.LOG_PATH + "CycleTime", getCurrentCycleTime());
-	}
-
-	private static void reportAlerts() {
-		if (getCurrentCycleTime() > DEFAULT_CYCLE_TIME_SECONDS + CycleTimeConstants.TIME_STEP_TOLERANCE_SECONDS) {
-			Logger.recordOutput(CycleTimeConstants.ALERT_LOG_PATH + "CycleOverrunAt", currentTime);
-		}
 	}
 
 	public static double getCurrentCycleTime() {

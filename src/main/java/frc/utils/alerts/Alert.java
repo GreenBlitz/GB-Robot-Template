@@ -10,13 +10,12 @@ public class Alert {
 	public enum AlertType {
 
 		ERROR,
-		PLACEHOLDER,
 		WARNING;
 
 	}
 
 	private static final boolean LOG_TRACE = false;
-	public static final String ALERT_LOG_PATH = "Alerts/";
+	private static final String ALERT_LOG_PATH = "Alerts/";
 	private final AlertType type;
 	private final String logPath;
 
@@ -25,8 +24,8 @@ public class Alert {
 		this.logPath = ALERT_LOG_PATH + type.toString() + "/" + name;
 	}
 
-	public void reportAlert() {
-		if (!DriverStationUtils.isConnectedToFMS())
+	public void report() {
+		if (!DriverStationUtils.isMatch())
 			switch (type) {
 				case ERROR -> DriverStation.reportError(logPath, LOG_TRACE);
 			}

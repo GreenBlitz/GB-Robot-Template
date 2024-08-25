@@ -31,7 +31,7 @@ public class LoggerFactory {
 			startLoggerOnUSB();
 		} else {
 			startLoggerOnRoborio();
-			USBNotFound.reportAlert();
+			USBNotFound.report();
 		}
 	}
 

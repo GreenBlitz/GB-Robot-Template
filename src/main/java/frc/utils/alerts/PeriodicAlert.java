@@ -13,7 +13,7 @@ public class PeriodicAlert extends Alert {
 
 	protected void reportByCondition() {
 		if (raiseSupplier.getAsBoolean()) {
-			reportAlert();
+			report();
 		}
 	}
 

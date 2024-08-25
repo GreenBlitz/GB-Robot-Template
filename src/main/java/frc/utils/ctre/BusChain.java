@@ -20,21 +20,19 @@ public enum BusChain {
 	private static final String LOG_PATH_PREFIX = "Bus/";
 
 	private final String chainName;
-	private final String alertLogPath;
 	private final String logPath;
 	private CANBusStatus busStatus;
 
 	BusChain(String chainName) {
 		this.chainName = chainName;
 		this.logPath = LOG_PATH_PREFIX + this.chainName + "/";
-		this.alertLogPath = logPath + this.chainName + "/";
 		this.busStatus = CANBus.getStatus(this.chainName);
 
 		//@formatter:off
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				alertLogPath + "StatusErrorAt",
+				logPath + "StatusErrorAt",
 				() -> !busStatus.Status.isOK()
 			)
 		);
@@ -42,35 +40,35 @@ public enum BusChain {
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				alertLogPath + "FloodedAt",
+				logPath + "FloodedAt",
 				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
-				Alert.AlertType.ERROR,
-				alertLogPath + "DisconnectedAt",
-				() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
-			)
-		);
-		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.ERROR,
-				alertLogPath + "FullAt",
-				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
-			)
-		);
-		AlertManager.addAlert(
-			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				alertLogPath + "ReceiveErrorAt",
+				logPath + "ReceiveErrorAt",
 				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
-				alertLogPath + "TransmitErrorsAt",
+				logPath + "DisconnectedAt",
+				() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+			)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "FullAt",
+				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
+			)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "TransmitErrorsAt",
 				() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
 			)
 		);

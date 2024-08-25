@@ -54,8 +54,8 @@ public class RobotManager extends LoggedRobot {
 		CycleTimeUtils.updateCycleTime(); // Better to be first
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
-		AlertManager.reportAlerts();
 		BusChain.logChainsStatuses();
+		AlertManager.reportAlerts();
 	}
 
 	@Override

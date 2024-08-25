@@ -7,16 +7,15 @@ import java.util.function.Supplier;
 
 public class ConsumerBeamBreaker implements IBeamBreaker {
 
-	Supplier<Boolean> isObstructedConsumer;
+	Supplier<Boolean> isObstructedSupplier;
 
-	public ConsumerBeamBreaker(Supplier<Boolean> isObstructedConsumer) {
-		this.isObstructedConsumer = isObstructedConsumer;
+	public ConsumerBeamBreaker(Supplier<Boolean> isObstructedSupplier) {
+		this.isObstructedSupplier = isObstructedSupplier;
 	}
 
 	@Override
 	public void updateInputs(BeamBreakerInputsAutoLogged inputs) {
-		inputs.isObstructed = isObstructedConsumer.get();
+		inputs.isObstructed = isObstructedSupplier.get();
 	}
-
 
 }

@@ -7,20 +7,18 @@ import frc.utils.beamBreaker.IBeamBreaker;
 
 public class DigitalBeamBreaker implements IBeamBreaker {
 
-	private static DigitalInput input;
+	private final DigitalInput beambreaker;
 
-	private Debouncer debouncer;
+	private final  Debouncer debouncer;
 
-	private boolean isObstructed = false;
-
-	public DigitalBeamBreaker() {
-		input = new DigitalInput(0);
-		debouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
+	public DigitalBeamBreaker(int DigitalInputChannel, double debounceTime, Debouncer.DebounceType DebounceType) {
+		this.beambreaker = new DigitalInput(DigitalInputChannel);
+		this.debouncer = new Debouncer(debounceTime, DebounceType);
 	}
 
 	@Override
 	public void updateInputs(BeamBreakerInputsAutoLogged inputs) {
-		inputs.isObstructed = debouncer.calculate(input.get());
+		inputs.isObstructed = debouncer.calculate(beambreaker.get());
 	}
 
 }

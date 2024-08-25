@@ -61,19 +61,19 @@ public class PoseEstimatorMath {
 
     public static Transform2d useKalmanOnTransform(VisionObservation observation, Pose2d estimateAtTime, Matrix<N3, N1> standardDeviations) {
         double[] squaredVisionMatrix = PoseEstimatorMath.getSquaredVisionMatrix(observation);
-        Matrix<N3, N3> visionK = PoseEstimatorMath.kalmanFilterAlgorithm(squaredVisionMatrix, standardDeviations);
+        Matrix<N3, N3> visionCalculationMatrix = PoseEstimatorMath.kalmanFilterAlgorithm(squaredVisionMatrix, standardDeviations);
         Transform2d differenceFromOdometry = new Transform2d(estimateAtTime, observation.visionPose());
-        return scaleDifferenceFromKalman(differenceFromOdometry, visionK);
+        return scaleDifferenceFromKalman(differenceFromOdometry, visionCalculationMatrix);
     }
 
-    public static Transform2d scaleDifferenceFromKalman(Transform2d differenceFromOdometry, Matrix<N3, N3> visionK) {
-        Matrix<N3, N1> kTimesDifference = visionK.times(
+    public static Transform2d scaleDifferenceFromKalman(Transform2d differenceFromOdometry, Matrix<N3, N3> visionCalculationMatrix) {
+        Matrix<N3, N1> timesDifferences = visionCalculationMatrix.times(
                 VecBuilder.fill(differenceFromOdometry.getX(), differenceFromOdometry.getY(), differenceFromOdometry.getRotation().getRadians())
         );
         return new Transform2d(
-                kTimesDifference.get(0, 0),
-                kTimesDifference.get(1, 0),
-                Rotation2d.fromRadians(kTimesDifference.get(2, 0))
+                timesDifferences.get(0, 0),
+                timesDifferences.get(1, 0),
+                Rotation2d.fromRadians(timesDifferences.get(2, 0))
         );
     }
 

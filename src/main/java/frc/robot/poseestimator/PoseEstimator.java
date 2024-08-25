@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.poseestimator.observations.Observation;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import java.util.NoSuchElementException;
@@ -41,7 +40,7 @@ public class PoseEstimator implements IPoseEstimator {
         this.kinematics = kinematics;
         this.lastWheelPositions = initialWheelPositions;
         this.lastGyroAngle = initialGyroAngle;
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < standardDeviations.getNumRows(); ++i) {
             standardDeviations.set(
                     i,
                     0,
@@ -53,36 +52,31 @@ public class PoseEstimator implements IPoseEstimator {
     }
 
     public void addOdometryObservation(OdometryObservation observation) {
-        Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.getWheelPositions());
-        lastWheelPositions = observation.getWheelPositions();
-        lastGyroAngle = observation.getGyroAngle();
+        Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
+        lastWheelPositions = observation.wheelPositions();
+        lastGyroAngle = observation.gyroAngle();
         twist = PoseEstimatorMath.addGyroToTwistCalculations(observation, twist, lastGyroAngle);
         odometryPose = odometryPose.exp(twist);
-        poseBuffer.addSample(observation.getTimestamp(), odometryPose);
+        poseBuffer.addSample(observation.timestamp(), odometryPose);
         estimatedPose = estimatedPose.exp(twist);
     }
 
     public void addVisionObservation(VisionObservation observation) {
-        lastVisionObservation = observation;
-        if(isObservationTooOld(observation)) {
-            return;
+        Optional<Pose2d> sample = poseBuffer.getSample(observation.timestamp());
+        if (!sample.isEmpty()) {
+            estimatedPose = PoseEstimatorMath.combineVisionObservationAndOdometrySample(
+                    sample,
+                    observation,
+                    estimatedPose,
+                    odometryPose,
+                    standardDeviations
+            );
         }
-        Optional<Pose2d> sample = poseBuffer.getSample(observation.getTimestamp());
-        if (sample.isEmpty()) {
-            return;
-        }
-        estimatedPose = PoseEstimatorMath.combineVisionObservationAndOdometrySample(
-                sample,
-                observation,
-                estimatedPose,
-                odometryPose,
-                standardDeviations
-        );
     }
 
-    private boolean isObservationTooOld(Observation observation) {
+    private boolean isObservationTooOld(VisionObservation visionObservation) {
         try {
-            return poseBuffer.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS > observation.getTimestamp();
+            return poseBuffer.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS > visionObservation.timestamp();
         }
         catch (NoSuchElementException ex) {
             return true;
@@ -123,21 +117,21 @@ public class PoseEstimator implements IPoseEstimator {
     }
 
     @Override
-    public Pose2d getOdometryPose() {
-        return odometryPose;
+    public Optional<Pose2d> getOdometryPose() {
+        return Optional.of(odometryPose);
     }
 
     @Override
     public void updateVision(VisionObservation visionObservation) {
-        addVisionObservation(visionObservation);
+        lastVisionObservation = visionObservation;
+        if(!isObservationTooOld(visionObservation)) {
+            addVisionObservation(visionObservation);
+        }
     }
 
     @Override
-    public Pose2d getVisionPose() {
-        if(lastVisionObservation != null) {
-            return lastVisionObservation.getVisionPose();
-        }
-        return null;
+    public Optional<Pose2d> getVisionPose() {
+        return Optional.of(lastVisionObservation.visionPose());
     }
 
     @Override

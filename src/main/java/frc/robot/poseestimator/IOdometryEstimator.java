@@ -8,13 +8,15 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.observations.OdometryObservation;
 
+import java.util.Optional;
+
 public interface IOdometryEstimator {
 
     void updateOdometry(OdometryObservation odometryObservation);
 
     void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose);
 
-    Pose2d getOdometryPose();
+    Optional<Pose2d> getOdometryPose();
 
     void setStandardDeviations(Matrix<N3, N1> standardDeviations);
 

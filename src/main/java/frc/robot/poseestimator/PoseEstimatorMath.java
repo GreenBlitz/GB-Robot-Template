@@ -16,7 +16,7 @@ import java.util.Optional;
 public class PoseEstimatorMath {
 
     public static Twist2d addGyroToTwistCalculations(OdometryObservation observation, Twist2d twist, Rotation2d lastGyroAngle) {
-        boolean isGyroConnected = observation.getGyroAngle() != null;
+        boolean isGyroConnected = observation.gyroAngle() != null;
         if (isGyroConnected) {
             twist = updateDeltaTheta(twist, observation, lastGyroAngle);
         }
@@ -27,49 +27,53 @@ public class PoseEstimatorMath {
         return new Twist2d(
                 twist.dx,
                 twist.dy,
-                observation.getGyroAngle().minus(lastGyroAngle).getRadians()
+                observation.gyroAngle().minus(lastGyroAngle).getRadians()
         );
     }
 
     public static double[] getSquaredVisionMatrix(VisionObservation observation) {
-        int rows = observation.getStandardDeviations().getNumRows();
-        double[] r = new double[rows];
-        for (int row = 0; row < rows; ++row) {
-            double standardDeviationInRow = observation.getStandardDeviations().get(row, 0);
-            r[row] = Math.pow(standardDeviationInRow,PoseEstimatorConstants.KALMAN_EXPONENT);
+        int numRows = observation.standardDeviations().getNumRows();
+        double[] rows = new double[numRows];
+        for (int row = 0; row < numRows; ++row) {
+            double standardDeviationInRow = observation.standardDeviations().get(row, 0);
+            rows[row] = Math.pow(standardDeviationInRow,PoseEstimatorConstants.KALMAN_EXPONENT);
         }
-        return r;
+        return rows;
     }
 
     public static Matrix<N3, N3> kalmanFilterAlgorithm(double[] squaredVisionMatrix, Matrix<N3, N1> standardDeviations) {
         Matrix<N3, N3> visionK = new Matrix<>(Nat.N3(), Nat.N3());
         for (int row = 0; row < visionK.getNumRows(); ++row) {
-            double stdDev = standardDeviations.get(row, 0);
-            if (stdDev == 0.0) {
+            double standardDeviation = standardDeviations.get(row, 0);
+            if (standardDeviation == 0.0) {
                 visionK.set(row, row, 0.0);
             }
             else {
-                visionK.set(row, row, stdDev / (stdDev + Math.sqrt(stdDev * squaredVisionMatrix[row])));
+                visionK.set(row, row, kalmanFilterFunction(standardDeviation, squaredVisionMatrix[row]));
             }
         }
         return visionK;
     }
 
+    public static double kalmanFilterFunction(double standardDeviation, double squaredMatrixValue) {
+        return standardDeviation / (standardDeviation + Math.sqrt(standardDeviation * squaredMatrixValue));
+    }
+
     public static Transform2d useKalmanOnTransform(VisionObservation observation, Pose2d estimateAtTime, Matrix<N3, N1> standardDeviations) {
         double[] squaredVisionMatrix = PoseEstimatorMath.getSquaredVisionMatrix(observation);
         Matrix<N3, N3> visionK = PoseEstimatorMath.kalmanFilterAlgorithm(squaredVisionMatrix, standardDeviations);
-        Transform2d diffFromOdometry = new Transform2d(estimateAtTime, observation.getVisionPose());
-        return scaleDiffFromKalman(diffFromOdometry, visionK);
+        Transform2d differenceFromOdometry = new Transform2d(estimateAtTime, observation.visionPose());
+        return scaleDifferenceFromKalman(differenceFromOdometry, visionK);
     }
 
-    public static Transform2d scaleDiffFromKalman(Transform2d diffFromOdometry, Matrix<N3, N3> visionK) {
-        Matrix<N3, N1> kTimesDiff = visionK.times(
-                VecBuilder.fill(diffFromOdometry.getX(), diffFromOdometry.getY(), diffFromOdometry.getRotation().getRadians())
+    public static Transform2d scaleDifferenceFromKalman(Transform2d differenceFromOdometry, Matrix<N3, N3> visionK) {
+        Matrix<N3, N1> kTimesDifference = visionK.times(
+                VecBuilder.fill(differenceFromOdometry.getX(), differenceFromOdometry.getY(), differenceFromOdometry.getRotation().getRadians())
         );
         return new Transform2d(
-                kTimesDiff.get(0, 0),
-                kTimesDiff.get(1, 0),
-                Rotation2d.fromRadians(kTimesDiff.get(2, 0))
+                kTimesDifference.get(0, 0),
+                kTimesDifference.get(1, 0),
+                Rotation2d.fromRadians(kTimesDifference.get(2, 0))
         );
     }
 

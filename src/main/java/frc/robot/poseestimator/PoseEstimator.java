@@ -22,7 +22,7 @@ public class PoseEstimator implements IPoseEstimator {
     private final SwerveDriveKinematics kinematics;
     private Pose2d odometryPose;
     private Pose2d estimatedPose;
-    private Matrix<N3, N1> standardDeviations;
+    private Matrix<N3, N1> odometryStandardDeviations;
     private SwerveDriveWheelPositions lastWheelPositions;
     private Rotation2d lastGyroAngle;
     private VisionObservation lastVisionObservation;
@@ -38,7 +38,7 @@ public class PoseEstimator implements IPoseEstimator {
         this.kinematics = kinematics;
         this.lastWheelPositions = initialWheelPositions;
         this.lastGyroAngle = initialGyroAngle;
-        this.standardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
+        this.odometryStandardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
         setOdometryStandardDeviations(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS);
     }
 
@@ -60,7 +60,7 @@ public class PoseEstimator implements IPoseEstimator {
                     observation,
                     estimatedPose,
                     odometryPose,
-                    standardDeviations
+                    odometryStandardDeviations
             );
         }
     }
@@ -87,9 +87,10 @@ public class PoseEstimator implements IPoseEstimator {
         return estimatedPose;
     }
 
+    @Override
     public void setOdometryStandardDeviations(Vector<N3> newStandardDeviations) {
         for (int row = 0; row < newStandardDeviations.getNumRows(); row++) {
-            standardDeviations.set(row, 0, Math.pow(newStandardDeviations.get(row, 0), PoseEstimatorConstants.KALMAN_EXPONENT));
+            odometryStandardDeviations.set(row, 0, Math.pow(newStandardDeviations.get(row, 0), PoseEstimatorConstants.KALMAN_EXPONENT));
         }
     }
 
@@ -122,11 +123,6 @@ public class PoseEstimator implements IPoseEstimator {
     @Override
     public Optional<Pose2d> getVisionPose() {
         return Optional.of(lastVisionObservation.visionPose());
-    }
-
-    @Override
-    public void setStandardDeviations(Matrix<N3, N1> standardDeviations) {
-        this.standardDeviations = standardDeviations;
     }
 
 }

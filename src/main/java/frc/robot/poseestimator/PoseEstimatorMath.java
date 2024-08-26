@@ -34,39 +34,37 @@ public class PoseEstimatorMath {
     public static double[] getSquaredVisionMatrix(VisionObservation observation) {
         int numRows = observation.standardDeviations().getNumRows();
         double[] rows = new double[numRows];
-        for (int row = 0; row < numRows; ++row) {
+        for (int row = 0; row < numRows; row++) {
             double standardDeviationInRow = observation.standardDeviations().get(row, 0);
             rows[row] = Math.pow(standardDeviationInRow, PoseEstimatorConstants.KALMAN_EXPONENT);
         }
         return rows;
     }
 
-    public static Matrix<N3, N3> kalmanFilterAlgorithm(double[] squaredVisionMatrix, Matrix<N3, N1> standardDeviations) {
+    public static Matrix<N3, N3> kalmanFilterAlgorithm(double[] squaredVisionMatrix, Matrix<N3, N1> odometryStandardDeviations) {
         Matrix<N3, N3> visionCalculationMatrix = new Matrix<>(Nat.N3(), Nat.N3());
-        for (int row = 0; row < visionCalculationMatrix.getNumRows(); ++row) {
-            double standardDeviation = standardDeviations.get(row, 0);
+        for (int row = 0; row < visionCalculationMatrix.getNumRows(); row++) {
+            double odometryStandardDeviation = odometryStandardDeviations.get(row, 0);
             visionCalculationMatrix.set(
                     row,
                     row,
-                    kalmanFilterFunction(standardDeviation, squaredVisionMatrix[row])
+                    kalmanFilterFunction(odometryStandardDeviation, squaredVisionMatrix[row])
             );
         }
         return visionCalculationMatrix;
     }
 
-    public static double kalmanFilterFunction(double standardDeviation, double squaredMatrixValue) {
-        if(standardDeviation == 0) {
+    public static double kalmanFilterFunction(double odometryStandardDeviation, double squaredVisionMatrixValue) {
+        if(odometryStandardDeviation == 0) {
             return 0;
         }
-        else {
-            return standardDeviation / (standardDeviation + Math.sqrt(standardDeviation * squaredMatrixValue));
-        }
+        return odometryStandardDeviation / (odometryStandardDeviation + Math.sqrt(odometryStandardDeviation * squaredVisionMatrixValue));
     }
 
-    public static Transform2d useKalmanOnTransform(VisionObservation observation, Pose2d estimateAtTime, Matrix<N3, N1> standardDeviations) {
+    public static Transform2d useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, Matrix<N3, N1> odometryStandardDeviations) {
         double[] squaredVisionMatrix = PoseEstimatorMath.getSquaredVisionMatrix(observation);
-        Matrix<N3, N3> visionCalculationMatrix = PoseEstimatorMath.kalmanFilterAlgorithm(squaredVisionMatrix, standardDeviations);
-        Transform2d differenceFromOdometry = new Transform2d(estimateAtTime, observation.visionPose());
+        Matrix<N3, N3> visionCalculationMatrix = PoseEstimatorMath.kalmanFilterAlgorithm(squaredVisionMatrix, odometryStandardDeviations);
+        Transform2d differenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
         return scaleDifferenceFromKalman(differenceFromOdometry, visionCalculationMatrix);
     }
 
@@ -86,12 +84,12 @@ public class PoseEstimatorMath {
             VisionObservation observation,
             Pose2d estimatedPose,
             Pose2d odometryPose,
-            Matrix<N3, N1> standardDeviations
+            Matrix<N3, N1> odometryStandardDeviations
     ) {
         Transform2d sampleToOdometryTransform = new Transform2d(sample.get(), odometryPose);
         Transform2d odometryToSampleTransform = new Transform2d(odometryPose, sample.get());
         Pose2d currentPoseEstimation = estimatedPose.plus(odometryToSampleTransform);
-        currentPoseEstimation = currentPoseEstimation.plus(PoseEstimatorMath.useKalmanOnTransform(observation, currentPoseEstimation, standardDeviations));
+        currentPoseEstimation = currentPoseEstimation.plus(PoseEstimatorMath.useKalmanOnTransform(observation, currentPoseEstimation, odometryStandardDeviations));
         currentPoseEstimation = currentPoseEstimation.plus(sampleToOdometryTransform);
         return currentPoseEstimation;
     }

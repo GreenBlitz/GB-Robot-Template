@@ -56,10 +56,10 @@ public class PoseEstimatorMath {
 
     public static double kalmanFilterFunction(double standardDeviation, double squaredMatrixValue) {
         if(standardDeviation == 0) {
-            return standardDeviation / (standardDeviation + Math.sqrt(standardDeviation * squaredMatrixValue));
+            return 0;
         }
         else {
-            return 0;
+            return standardDeviation / (standardDeviation + Math.sqrt(standardDeviation * squaredMatrixValue));
         }
     }
 

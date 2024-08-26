@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +41,11 @@ public class PathPlannerUtils {
 
     private static void scheduleWarmup() {
         PathfindingCommand.warmupCommand().schedule();
+    }
+
+    public static void setupLogging(String logPath) {
+        PathPlannerLogging.setLogActivePathCallback(path -> Logger.recordOutput(logPath + "ActivePath", path.toArray(new Pose2d[0])));
+        PathPlannerLogging.setLogTargetPoseCallback(targetPose -> Logger.recordOutput(logPath + "TargetPose", targetPose));
     }
 
     public static void configurePathPlanner(

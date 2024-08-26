@@ -1,4 +1,4 @@
-package frc.utils.beambreaker;
+package frc.utils.beamBreaker;
 
 import org.littletonrobotics.junction.AutoLog;
 

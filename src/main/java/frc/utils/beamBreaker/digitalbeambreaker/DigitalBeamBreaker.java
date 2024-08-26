@@ -1,14 +1,13 @@
-package frc.utils.beambreaker.digitalbeambreaker;
+package frc.utils.beamBreaker.digitalbeambreaker;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.utils.beambreaker.BeamBreakerInputsAutoLogged;
-import frc.utils.beambreaker.IBeamBreaker;
+import frc.utils.beamBreaker.BeamBreakerInputsAutoLogged;
+import frc.utils.beamBreaker.IBeamBreaker;
 
 public class DigitalBeamBreaker implements IBeamBreaker {
 
 	private final DigitalInput beambreaker;
-
 	private final Debouncer debouncer;
 
 	public DigitalBeamBreaker(int channel, double debounceTime, Debouncer.DebounceType debounceType) {

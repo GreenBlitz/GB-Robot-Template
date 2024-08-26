@@ -44,8 +44,8 @@ public class PoseEstimator implements IPoseEstimator {
 
     private void addOdometryObservation(OdometryObservation observation) {
         Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
-        this.lastGyroAngle = observation.gyroAngle();
         twist = PoseEstimatorMath.addGyroToTwistCalculations(observation, twist, lastGyroAngle);
+        this.lastGyroAngle = observation.gyroAngle();
         this.lastWheelPositions = observation.wheelPositions();
         this.odometryPose = odometryPose.exp(twist);
         this.estimatedPose = estimatedPose.exp(twist);

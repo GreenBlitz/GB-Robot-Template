@@ -1,14 +1,15 @@
-package frc.utils.beamBreaker.suppliedbeambreaker;
+package frc.utils.beambreaker.suppliedbeambreaker;
 
 import edu.wpi.first.math.filter.Debouncer;
-import frc.utils.beamBreaker.BeamBreakerInputsAutoLogged;
-import frc.utils.beamBreaker.IBeamBreaker;
+import frc.utils.beambreaker.BeamBreakerInputsAutoLogged;
+import frc.utils.beambreaker.IBeamBreaker;
 
 import java.util.function.Supplier;
 
 public class SuppliedBeamBreaker implements IBeamBreaker {
 
 	private final Debouncer debouncer;
+
 	private final Supplier<Boolean> isObstructedConsumer;
 
 	public SuppliedBeamBreaker(Supplier<Boolean> isObstructedConsumer, double debounceTime, Debouncer.DebounceType debounceType) {

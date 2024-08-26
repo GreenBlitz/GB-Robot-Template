@@ -31,7 +31,7 @@ public class PoseEstimatorMath {
         );
     }
 
-    public static double[] getSquaredVisionMatrix(VisionObservation observation) {
+    public static double[] getSquaredVisionStandardDeviations(VisionObservation observation) {
         int numRows = observation.standardDeviations().getNumRows();
         double[] rows = new double[numRows];
         for (int row = 0; row < numRows; row++) {
@@ -62,8 +62,8 @@ public class PoseEstimatorMath {
     }
 
     public static Transform2d useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, Matrix<N3, N1> odometryStandardDeviations) {
-        double[] squaredVisionMatrix = PoseEstimatorMath.getSquaredVisionMatrix(observation);
-        Matrix<N3, N3> visionCalculationMatrix = PoseEstimatorMath.kalmanFilterAlgorithm(squaredVisionMatrix, odometryStandardDeviations);
+        double[] squaredVisionStandardDeviations = PoseEstimatorMath.getSquaredVisionStandardDeviations(observation);
+        Matrix<N3, N3> visionCalculationMatrix = PoseEstimatorMath.kalmanFilterAlgorithm(squaredVisionStandardDeviations, odometryStandardDeviations);
         Transform2d differenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
         return scaleDifferenceFromKalman(differenceFromOdometry, visionCalculationMatrix);
     }

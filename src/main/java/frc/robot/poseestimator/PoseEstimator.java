@@ -20,9 +20,9 @@ public class PoseEstimator implements IPoseEstimator {
 
     private final TimeInterpolatableBuffer<Pose2d> poseBuffer;
     private final SwerveDriveKinematics kinematics;
+    private final Matrix<N3, N1> odometryStandardDeviations;
     private Pose2d odometryPose;
     private Pose2d estimatedPose;
-    private Matrix<N3, N1> odometryStandardDeviations;
     private SwerveDriveWheelPositions lastWheelPositions;
     private Rotation2d lastGyroAngle;
     private VisionObservation lastVisionObservation;

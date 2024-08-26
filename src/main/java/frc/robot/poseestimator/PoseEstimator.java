@@ -2,7 +2,6 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -54,7 +53,7 @@ public class PoseEstimator implements IPoseEstimator {
 
     private void addVisionObservation(VisionObservation observation) {
         Optional<Pose2d> sample = poseBuffer.getSample(observation.timestamp());
-        if (!sample.isEmpty()) {
+        if (sample.isPresent()) {
             estimatedPose = PoseEstimatorMath.combineVisionObservationAndOdometrySample(
                     sample,
                     observation,
@@ -88,7 +87,7 @@ public class PoseEstimator implements IPoseEstimator {
     }
 
     @Override
-    public void setOdometryStandardDeviations(Vector<N3> newStandardDeviations) {
+    public void setOdometryStandardDeviations(Matrix<N3, N1> newStandardDeviations) {
         for (int row = 0; row < newStandardDeviations.getNumRows(); row++) {
             odometryStandardDeviations.set(row, 0, Math.pow(newStandardDeviations.get(row, 0), PoseEstimatorConstants.KALMAN_EXPONENT));
         }

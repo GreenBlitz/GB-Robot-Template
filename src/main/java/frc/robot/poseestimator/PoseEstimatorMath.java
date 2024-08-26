@@ -72,7 +72,7 @@ public class PoseEstimatorMath {
     }
 
     public static Transform2d scaleDifferenceFromKalman(Transform2d differenceFromOdometry, Matrix<N3, N3> visionCalculationMatrix) {
-        Matrix<N3, N1> timesDifferences = visionCalculationMatrix.times(
+        Matrix<N3, N1> visionMatrixTimesDifferences = visionCalculationMatrix.times(
                 VecBuilder.fill(differenceFromOdometry.getX(), differenceFromOdometry.getY(), differenceFromOdometry.getRotation().getRadians())
         );
         return new Transform2d(

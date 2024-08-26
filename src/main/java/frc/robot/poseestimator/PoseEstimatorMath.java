@@ -3,7 +3,6 @@ package frc.robot.poseestimator;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -37,7 +36,7 @@ public class PoseEstimatorMath {
         double[] rows = new double[numRows];
         for (int row = 0; row < numRows; ++row) {
             double standardDeviationInRow = observation.standardDeviations().get(row, 0);
-            rows[row] = Math.pow(standardDeviationInRow,PoseEstimatorConstants.KALMAN_EXPONENT);
+            rows[row] = Math.pow(standardDeviationInRow, PoseEstimatorConstants.KALMAN_EXPONENT);
         }
         return rows;
     }
@@ -76,9 +75,9 @@ public class PoseEstimatorMath {
                 VecBuilder.fill(differenceFromOdometry.getX(), differenceFromOdometry.getY(), differenceFromOdometry.getRotation().getRadians())
         );
         return new Transform2d(
-                timesDifferences.get(0, 0),
-                timesDifferences.get(1, 0),
-                Rotation2d.fromRadians(timesDifferences.get(2, 0))
+                visionMatrixTimesDifferences.get(0, 0),
+                visionMatrixTimesDifferences.get(1, 0),
+                Rotation2d.fromRadians(visionMatrixTimesDifferences.get(2, 0))
         );
     }
 
@@ -91,10 +90,10 @@ public class PoseEstimatorMath {
     ) {
         Transform2d sampleToOdometryTransform = new Transform2d(sample.get(), odometryPose);
         Transform2d odometryToSampleTransform = new Transform2d(odometryPose, sample.get());
-        Pose2d estimateAtTime = estimatedPose.plus(odometryToSampleTransform);
-        return estimateAtTime
-                .plus(PoseEstimatorMath.useKalmanOnTransform(observation, estimateAtTime, standardDeviations))
-                .plus(sampleToOdometryTransform);
+        Pose2d currentPoseEstimation = estimatedPose.plus(odometryToSampleTransform);
+        currentPoseEstimation = currentPoseEstimation.plus(PoseEstimatorMath.useKalmanOnTransform(observation, currentPoseEstimation, standardDeviations));
+        currentPoseEstimation = currentPoseEstimation.plus(sampleToOdometryTransform);
+        return currentPoseEstimation;
     }
 
 }

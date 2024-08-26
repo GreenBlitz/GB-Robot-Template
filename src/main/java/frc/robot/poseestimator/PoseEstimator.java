@@ -2,7 +2,6 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,32 +35,24 @@ public class PoseEstimator implements IPoseEstimator {
         this.odometryPose = new Pose2d();
         this.estimatedPose = new Pose2d();
         this.poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-        this.standardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
         this.kinematics = kinematics;
         this.lastWheelPositions = initialWheelPositions;
         this.lastGyroAngle = initialGyroAngle;
-        for (int i = 0; i < standardDeviations.getNumRows(); ++i) {
-            standardDeviations.set(
-                    i,
-                    0,
-                    Math.pow(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.get(i, 0),
-                            PoseEstimatorConstants.KALMAN_EXPONENT
-                    )
-            );
-        }
+        this.standardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
+        setOdometryStandardDeviations(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS);
     }
 
-    public void addOdometryObservation(OdometryObservation observation) {
+    private void addOdometryObservation(OdometryObservation observation) {
+        Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
         this.lastWheelPositions = observation.wheelPositions();
         this.lastGyroAngle = observation.gyroAngle();
-        Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
         twist = PoseEstimatorMath.addGyroToTwistCalculations(observation, twist, lastGyroAngle);
         this.odometryPose = odometryPose.exp(twist);
         this.estimatedPose = estimatedPose.exp(twist);
         poseBuffer.addSample(observation.timestamp(), odometryPose);
     }
 
-    public void addVisionObservation(VisionObservation observation) {
+    private void addVisionObservation(VisionObservation observation) {
         Optional<Pose2d> sample = poseBuffer.getSample(observation.timestamp());
         if (!sample.isEmpty()) {
             estimatedPose = PoseEstimatorMath.combineVisionObservationAndOdometrySample(
@@ -96,10 +87,9 @@ public class PoseEstimator implements IPoseEstimator {
         return estimatedPose;
     }
 
-    public void setOdometryStandardDeviations(double x, double y, double rotation) {
-        Vector<N3> newStandardDeviations = VecBuilder.fill(x, y, rotation);
-        for (int i = 0; i < newStandardDeviations.getNumRows(); ++i) {
-            standardDeviations.set(i, 0, Math.pow(newStandardDeviations.get(i, 0), PoseEstimatorConstants.KALMAN_EXPONENT));
+    public void setOdometryStandardDeviations(Vector<N3> newStandardDeviations) {
+        for (int row = 0; row < newStandardDeviations.getNumRows(); row++) {
+            standardDeviations.set(row, 0, Math.pow(newStandardDeviations.get(row, 0), PoseEstimatorConstants.KALMAN_EXPONENT));
         }
     }
 

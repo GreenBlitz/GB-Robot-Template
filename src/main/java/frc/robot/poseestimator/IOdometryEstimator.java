@@ -8,7 +8,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.observations.OdometryObservation;
 
-import java.util.Optional;
 
 public interface IOdometryEstimator {
 

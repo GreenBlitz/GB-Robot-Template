@@ -1,9 +1,9 @@
 package frc.utils.devicewrappers;
 
-import com.ctre.phoenix6.configs.*;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class SparkMaxConfiguration {
@@ -12,9 +12,17 @@ public class SparkMaxConfiguration {
     public Rotation2d forwardAngleLimit;
     public Rotation2d backwardAngleLimit;
     public boolean enableSoftLimit;
+    public Rotation2d startingPosition;
+    public SparkPIDController pidController;
+    public int currentLimit;
 
     public SparkMaxConfiguration(){
-
+        this.conversionFactor = 1;
+        this.forwardAngleLimit = Rotation2d.fromDegrees(0);
+        this.backwardAngleLimit = Rotation2d.fromDegrees(0);
+        this.enableSoftLimit = false;
+        this.startingPosition = Rotation2d.fromDegrees(0);
+        this.currentLimit = 0;
     }
 
     public SparkMaxConfiguration withConversionFactor(double newConversionFactor){
@@ -37,6 +45,19 @@ public class SparkMaxConfiguration {
         return this;
     }
 
+    public SparkMaxConfiguration withStartingPosition(Rotation2d newStartingPosition){
+        this.startingPosition = newStartingPosition;
+        return this;
+    }
 
+    public SparkMaxConfiguration withPIDController(SparkPIDController newPIDController){
+        this.pidController = newPIDController;
+        return this;
+    }
+
+    public SparkMaxConfiguration withCurrentLimit(int newLimit){
+        this.currentLimit = newLimit;
+        return this;
+    }
 
 }

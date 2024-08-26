@@ -16,8 +16,8 @@ import java.util.Optional;
 public class PoseEstimatorMath {
 
     public static Twist2d addGyroToTwistCalculations(OdometryObservation observation, Twist2d twist, Rotation2d lastGyroAngle) {
-        boolean isGyroConnected = observation.gyroAngle() != null;
-        if (isGyroConnected) {
+        boolean hasGyroUpdated = observation.gyroAngle() != null;
+        if (hasGyroUpdated) {
             twist = updateChangeInAngle(twist, observation, lastGyroAngle);
         }
         return twist;
@@ -79,7 +79,7 @@ public class PoseEstimatorMath {
         );
     }
 
-    public static Pose2d combineVisionObservationAndOdometrySample(
+    public static Pose2d combineVisionToOdometry(
             Optional<Pose2d> sample,
             VisionObservation observation,
             Pose2d estimatedPose,

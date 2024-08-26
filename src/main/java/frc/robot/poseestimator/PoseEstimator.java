@@ -54,7 +54,7 @@ public class PoseEstimator implements IPoseEstimator {
     private void addVisionObservation(VisionObservation observation) {
         Optional<Pose2d> sample = poseBuffer.getSample(observation.timestamp());
         if (sample.isPresent()) {
-            estimatedPose = PoseEstimatorMath.combineVisionObservationAndOdometrySample(
+            estimatedPose = PoseEstimatorMath.combineVisionToOdometry(
                     sample,
                     observation,
                     estimatedPose,

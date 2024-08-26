@@ -14,13 +14,13 @@ import java.util.function.BiFunction;
 public class SparkMaxMotor implements IMotor {
 
 	protected final CANSparkMax motor;
-	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
 	protected final SparkMaxConstants constants;
+	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
 
 	public SparkMaxMotor(CANSparkMax motor, SparkMaxConstants constants) {
 		this.motor = motor;
-		this.feedforward = constants.feedforward();
 		this.constants = constants;
+		this.feedforward = constants.feedforward();
 	}
 
 	@Override

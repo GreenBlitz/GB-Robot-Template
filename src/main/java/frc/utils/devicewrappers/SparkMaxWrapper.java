@@ -16,18 +16,12 @@ public class SparkMaxWrapper extends CANSparkMax {
 		this.getEncoder().setVelocityConversionFactor(configuration.conversionFactor);
 
 		this.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) configuration.forwardAngleLimit.getRotations());
-		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, configuration.enableSoftLimit);
+		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, configuration.enableForwardSoftLimit);
 
 		this.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) configuration.backwardAngleLimit.getRotations());
-		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, configuration.enableSoftLimit);
-
-		this.getPIDController().setP(configuration.pidController.getP());
-		this.getPIDController().setI(configuration.pidController.getI());
-		this.getPIDController().setD(configuration.pidController.getD());
+		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, configuration.enableForwardSoftLimit);
 
 		this.setSmartCurrentLimit(configuration.currentLimit);
-
-		this.getEncoder().setPosition(configuration.startingPosition.getRotations());
 
 		this.burnFlash();
 	}

@@ -1,6 +1,5 @@
 package frc.utils.devicewrappers;
 
-import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class SparkMaxConfiguration {
@@ -50,7 +49,7 @@ public class SparkMaxConfiguration {
 		return this;
 	}
 
-	public SparkMaxConfiguration withBackwardEnableSoftLimit(boolean backwardEnableSoftLimit){
+	public SparkMaxConfiguration withBackwardEnableSoftLimit(boolean backwardEnableSoftLimit) {
 		this.enableBackwardSoftLimit = backwardEnableSoftLimit;
 		return this;
 	}
@@ -60,22 +59,22 @@ public class SparkMaxConfiguration {
 		return this;
 	}
 
-	public SparkMaxConfiguration withSlot0(PIDSlot slot0){
+	public SparkMaxConfiguration withSlot0(PIDSlot slot0) {
 		this.slot0 = slot0;
 		return this;
 	}
 
-	public SparkMaxConfiguration withSlot1(PIDSlot slot1){
+	public SparkMaxConfiguration withSlot1(PIDSlot slot1) {
 		this.slot1 = slot1;
 		return this;
 	}
 
-	public SparkMaxConfiguration withSlot2(PIDSlot slot2){
+	public SparkMaxConfiguration withSlot2(PIDSlot slot2) {
 		this.slot2 = slot2;
 		return this;
 	}
 
-	public SparkMaxConfiguration withSlot3(PIDSlot slot3){
+	public SparkMaxConfiguration withSlot3(PIDSlot slot3) {
 		this.slot3 = slot3;
 		return this;
 	}

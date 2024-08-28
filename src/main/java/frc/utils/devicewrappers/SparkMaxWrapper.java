@@ -23,6 +23,11 @@ public class SparkMaxWrapper extends CANSparkMax {
 
 		this.setSmartCurrentLimit(configuration.currentLimit);
 
+		this.getPIDController().setP(configuration.slot0.getkP(), 0);
+		this.getPIDController().setI(configuration.slot0.getkI(), 0);
+		this.getPIDController().setD(configuration.slot0.getkD(), 0);
+		this.getPIDController().setDFilter(configuration.slot0.get(), 0);
+
 		this.burnFlash();
 	}
 

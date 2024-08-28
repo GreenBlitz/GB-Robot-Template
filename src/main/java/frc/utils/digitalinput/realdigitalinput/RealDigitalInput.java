@@ -18,8 +18,8 @@ public class RealDigitalInput implements IDigitalInput {
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.isObstructedWithDebouncer = debouncer.calculate(digitalInput.get());
-		inputs.isObstructedWithoutDebouncer = digitalInput.get();
+		inputs.isTrueWithDebouncer = debouncer.calculate(digitalInput.get());
+		inputs.isTrueWithoutDebouncer = digitalInput.get();
 	}
 
 }

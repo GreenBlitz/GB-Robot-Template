@@ -9,25 +9,25 @@ import java.util.function.Consumer;
 
 public class SimulationDigitalInput implements IDigitalInput {
 
-	Consumer<Boolean> isObstructedConsumer = this::setIsObstructed;
+	Consumer<Boolean> isTrueConsumer = this::setIsTrue;
 
-	private boolean isObstructed;
+	private boolean isTrue;
 
 	public SimulationDigitalInput() {
-		final SendableChooser<Boolean> isObstructedSendableChooser = new SendableChooser<>();
-		this.isObstructed = SimulationDigitalInputConstants.DEFAULT_STATE;
-		isObstructedSendableChooser.onChange(isObstructedConsumer);
+		final SendableChooser<Boolean> isTrueSendableChooser = new SendableChooser<>();
+		this.isTrue = SimulationDigitalInputConstants.DEFAULT_STATE;
+		isTrueSendableChooser.onChange(isTrueConsumer);
 	}
 
-	public void setIsObstructed(boolean isObstructed) {
-		this.isObstructed = isObstructed;
+	public void setIsTrue(boolean isTrue) {
+		this.isTrue = isTrue;
 	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		isObstructedConsumer.accept(SmartDashboard.getBoolean("is obstructed", SimulationDigitalInputConstants.DEFAULT_STATE));
-		inputs.isObstructedWithoutDebouncer = isObstructed;
-		inputs.isObstructedWithDebouncer = isObstructed;
+		isTrueConsumer.accept(SmartDashboard.getBoolean("is obstructed", SimulationDigitalInputConstants.DEFAULT_STATE));
+		inputs.isTrueWithDebouncer = isTrue;
+		inputs.isTrueWithoutDebouncer = isTrue;
 	}
 
 }

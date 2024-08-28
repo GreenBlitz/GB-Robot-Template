@@ -42,11 +42,11 @@ public enum BusChain {
 		);
 		//@formatter:on
 		AlertManager.addAlert(
-				new PeriodicAlert(
-						Alert.AlertType.WARNING,
-						logPath + "FloodedAt",
-						() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
-				)
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "FloodedAt",
+				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
+			)
 		);
 		//@formatter:off
 		AlertManager.addAlert(
@@ -58,25 +58,25 @@ public enum BusChain {
 				//@formatter:on
 		);
 		AlertManager.addAlert(
-				new PeriodicAlert(
-						Alert.AlertType.ERROR,
-						logPath + "DisconnectedAt",
-						() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
-				)
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "DisconnectedAt",
+				() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+			)
 		);
 		AlertManager.addAlert(
-				new PeriodicAlert(
-						Alert.AlertType.ERROR,
-						logPath + "FullAt",
-						() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
-				)
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "FullAt",
+				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
+			)
 		);
 		AlertManager.addAlert(
-				new PeriodicAlert(
-						Alert.AlertType.ERROR,
-						logPath + "TransmitErrorsAt",
-						() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
-				)
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "TransmitErrorsAt",
+				() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
+			)
 		);
 	}
 

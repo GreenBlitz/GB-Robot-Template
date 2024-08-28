@@ -36,6 +36,7 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void disabledInit() {
+		System.out.println(BrakeStateManager.subsystems);
 		if (!DriverStationUtils.isMatch()){
 			BrakeStateManager.coast();
 		}
@@ -43,6 +44,7 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void disabledExit() {
+		System.out.println(BrakeStateManager.subsystems);
 		if (!DriverStationUtils.isMatch()){
 			BrakeStateManager.brake();
 		}

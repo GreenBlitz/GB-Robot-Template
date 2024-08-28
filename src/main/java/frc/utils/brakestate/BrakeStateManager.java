@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class BrakeStateManager {
 
-	private static final ArrayList<GBSubsystem> subsystems = new ArrayList<>();
+	public static final ArrayList<GBSubsystem> subsystems = new ArrayList<>();
 
 	public static void addSubsystem(GBSubsystem subsystem) {
 		subsystems.add(subsystem);

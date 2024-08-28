@@ -29,6 +29,6 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	protected abstract void subsystemPeriodic();
 
-	public abstract void setBrake(boolean brake);
+	public void setBrake(boolean brake){}
 
 }

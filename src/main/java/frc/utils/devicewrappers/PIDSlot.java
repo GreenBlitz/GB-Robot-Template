@@ -8,6 +8,7 @@ public class PIDSlot {
 	private double kP;
 	private double kI;
 	private double kD;
+	private double dFilter;
 	private double FF;
 	private double iZone;
 	private double outputRangeMax;
@@ -23,7 +24,9 @@ public class PIDSlot {
 	private double positionPIDWrappingMinInput;
 	private double positionPIDWrappingMaxInput;
 
-	public PIDSlot() {}
+	public PIDSlot() {
+
+	}
 
 	public int getSlot() {
 		return slot;
@@ -55,6 +58,14 @@ public class PIDSlot {
 
 	public void setkD(double kD) {
 		this.kD = kD;
+	}
+
+	public double getDFilter(){
+		return dFilter;
+	}
+
+	public void setDFilter(double dFilter){
+		this.dFilter = dFilter;
 	}
 
 	public double getFF() {

@@ -7,6 +7,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,21 +28,24 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-    public static void startPathPlanner() {
-        makePathPlannerCompatibleWithAdvantageKit();
+    private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
+
+    public static void startPathfinder() {
+        setPathfinder();
         scheduleWarmup();
     }
 
-    public static void makePathPlannerCompatibleWithAdvantageKit() {
-        Pathfinding.setPathfinder(new LocalADStarAK());
+    private static void setPathfinder() {
+        Pathfinding.setPathfinder(new LocalADStar());
     }
 
-    public static void scheduleWarmup() {
+    private static void scheduleWarmup() {
         PathfindingCommand.warmupCommand().schedule();
     }
 
-    public static void setLoggingPathToPaths(Consumer<List<Pose2d>> logActivePath) {
-        PathPlannerLogging.setLogActivePathCallback(logActivePath);
+    public static void setupLogging(String logPath) {
+        PathPlannerLogging.setLogActivePathCallback(path -> Logger.recordOutput(logPath + "ActivePath", path.toArray(new Pose2d[0])));
+        PathPlannerLogging.setLogTargetPoseCallback(targetPose -> Logger.recordOutput(logPath + "TargetPose", targetPose));
     }
 
     public static void configurePathPlanner(
@@ -68,7 +73,13 @@ public class PathPlannerUtils {
     }
 
     public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+        dynamicObstacles = obstacles;
         Pathfinding.setDynamicObstacles(obstacles, currentRobotPose.getTranslation());
+    }
+
+    public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+        dynamicObstacles.addAll(obstacles);
+        setDynamicObstacles(dynamicObstacles, currentRobotPose);
     }
 
     public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {
@@ -79,9 +90,9 @@ public class PathPlannerUtils {
         PPHolonomicDriveController.setRotationTargetOverride(overrider);
     }
 
-    public static Command createOnTheFlyPathCommand(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
+    public static Command createOnTheFlyPathCommand(Pose2d currentBluePose, Pose2d targetPose, PathConstraints constraints) {
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                currentPose,
+                currentBluePose,
                 targetPose
         );
 

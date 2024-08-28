@@ -25,9 +25,9 @@ public class SimulationDigitalInput implements IDigitalInput {
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		isTrueConsumer.accept(SmartDashboard.getBoolean("is obstructed", SimulationDigitalInputConstants.DEFAULT_STATE));
-		inputs.isTrueWithDebouncer = isTrue;
-		inputs.isTrueWithoutDebouncer = isTrue;
+		isTrueConsumer.accept(SmartDashboard.getBoolean("is true", SimulationDigitalInputConstants.DEFAULT_STATE));
+		inputs.debouncedValue = isTrue;
+		inputs.notDebouncedValue = isTrue;
 	}
 
 }

@@ -19,8 +19,8 @@ public class SuppliedDigitalInput implements IDigitalInput {
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.isTrueWithDebouncer = debouncer.calculate(isTrueConsumer.get());
-		inputs.isTrueWithoutDebouncer = isTrueConsumer.get();
+		inputs.debouncedValue = debouncer.calculate(isTrueConsumer.get());
+		inputs.notDebouncedValue = isTrueConsumer.get();
 	}
 
 }

@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class DigitalInputInputs {
 
-	public boolean isTrueWithDebouncer = false;
-	public boolean isTrueWithoutDebouncer = false;
+	public boolean debouncedValue = false;
+	public boolean notDebouncedValue = false;
 
 }

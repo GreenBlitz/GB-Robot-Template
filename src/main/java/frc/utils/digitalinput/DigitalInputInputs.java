@@ -7,4 +7,5 @@ public class DigitalInputInputs {
 
 	public boolean isTrueWithDebouncer = false;
 	public boolean isTrueWithoutDebouncer = false;
+
 }

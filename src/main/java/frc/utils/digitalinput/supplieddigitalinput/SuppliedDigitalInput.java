@@ -12,11 +12,7 @@ public class SuppliedDigitalInput implements IDigitalInput {
 
 	private final Supplier<Boolean> isTrueConsumer;
 
-	public SuppliedDigitalInput(
-		Supplier<Boolean> isTrueConsumer,
-		double debounceTime,
-		Debouncer.DebounceType debounceType
-	) {
+	public SuppliedDigitalInput(Supplier<Boolean> isTrueConsumer, double debounceTime, Debouncer.DebounceType debounceType) {
 		this.isTrueConsumer = isTrueConsumer;
 		this.debouncer = new Debouncer(debounceTime, debounceType);
 	}

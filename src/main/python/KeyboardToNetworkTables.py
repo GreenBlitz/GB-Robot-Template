@@ -24,19 +24,20 @@ def key_type_checker(key: object) -> TypeVar:
 
 
 def get_update_table_function(table: NetworkTableInstance, is_pressed: bool) -> Callable:
-    # key type is changing in runtime + depends on platform. Checked for Xorg keyboard layout.
+    # Function to update the table based on the key type and its state (pressed or not).
     def update_table(key) -> None:
-        if key_type_checker(key) is UndefinedKey:
-            return
-        elif key_type_checker(key) is SpecialKey:
+        key_type = key_type_checker(key)  # Store the result to avoid repeated calls.
+        if key_type is UndefinedKey:
+            return  # Do nothing if the key type is undefined.
+        if key_type is SpecialKey:
             table.putBoolean(key.name, is_pressed)
-        elif key_type_checker(key) is ASCIIKey:
+            return
+        if key_type is ASCIIKey:
+            # Handle specific ASCII keys or general characters.
             if key.char == "/":
                 table.putBoolean("slash", is_pressed)
             else:
-                character: str = key.char
-                table.putBoolean(character.lower(), is_pressed)
-
+                table.putBoolean(key.char.lower(), is_pressed)
     return update_table
 
 
@@ -54,9 +55,7 @@ def listener_factory(keys_table: NetworkTable) -> keyboard.Listener:
     )
 
 
-def track_keyboard_until_client_disconnect(
-    keys_table: NetworkTable, keyboard_client: NetworkTableClient
-) -> None:
+def track_keyboard_until_client_disconnect(keys_table: NetworkTable, keyboard_client: NetworkTableClient) -> None:
     keyboard_listener = listener_factory(keys_table)
     keyboard_listener.start()
     wait_until_client_disconnect(keyboard_client)

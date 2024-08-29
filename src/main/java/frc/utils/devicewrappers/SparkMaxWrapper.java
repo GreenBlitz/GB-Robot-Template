@@ -2,6 +2,7 @@ package frc.utils.devicewrappers;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
+import frc.utils.PIDObject;
 
 public class SparkMaxWrapper extends CANSparkMax {
 
@@ -9,38 +10,44 @@ public class SparkMaxWrapper extends CANSparkMax {
 		super(deviceId, type);
 	}
 
-	public void applyConfiguration(SparkMaxConfiguration configuration) {
+	public void applyConfiguration(SparkMaxConfiguration config) {
 		this.restoreFactoryDefaults();
 
-		this.getEncoder().setPositionConversionFactor(configuration.conversionFactor);
-		this.getEncoder().setVelocityConversionFactor(configuration.conversionFactor);
+		if (config.enableSlot0){
+			configPID(config.slot0, 0);
+		}
+		if (config.enableSlot1){
+			configPID(config.slot1, 1);
+		}
+		if (config.enableSlot2){
+			configPID(config.slot2, 2);
+		}
+		if (config.enableSlot3){
+			configPID(config.slot3, 3);
+		}
 
-		this.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) configuration.forwardAngleLimit.getRotations());
-		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, configuration.enableForwardSoftLimit);
+		this.getEncoder().setPositionConversionFactor(config.positionConversionFactor);
+		this.getEncoder().setVelocityConversionFactor(config.velocityConversionFactor);
 
-		this.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) configuration.backwardAngleLimit.getRotations());
-		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, configuration.enableForwardSoftLimit);
+		this.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) config.forwardAngleLimit.getRotations());
+		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, config.enableForwardSoftLimit);
 
-		this.setSmartCurrentLimit(configuration.currentLimit);
+		this.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) config.backwardAngleLimit.getRotations());
+		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, config.enableForwardSoftLimit);
 
-		this.getPIDController().setP(configuration.slot0.getkP(), 0);
-		this.getPIDController().setI(configuration.slot0.getkI(), 0);
-		this.getPIDController().setD(configuration.slot0.getkD(), 0);
-		this.getPIDController().setDFilter(configuration.slot0.getDFilter(), 0);
-		this.getPIDController().setFF(configuration.slot0.getFF(), 0);
-		this.getPIDController().setIZone(configuration.slot0.getiZone(), 0);
-		this.getPIDController().setOutputRange(configuration.slot0.getOutputRangeMin(), configuration.slot0.getOutputRangeMax(), 0);
-		this.getPIDController().setSmartMotionMaxVelocity(configuration.slot0.getSmartMotionMaxVelocity(), 0);
-		this.getPIDController().setSmartMotionMaxAccel(configuration.slot0.getSmartMotionMaxAcceleration(), 0);
-		this.getPIDController().setSmartMotionMinOutputVelocity(configuration.slot0.getSmartMotionMinOutputVelocity(), 0);
-		this.getPIDController().setSmartMotionAllowedClosedLoopError(configuration.slot0.getSmartMotionAllowedClosedLoopError(), 0);
-		this.getPIDController().setSmartMotionAccelStrategy(configuration.slot0.getSmartMotionAccelStrategy(), 0);
-		this.getPIDController().setIMaxAccum(configuration.slot0.getiMaxAccumulator(), 0);
-		this.getPIDController().setIAccum(configuration.slot0.getiAccumulator());
-		this.getPIDController().setPositionPIDWrappingEnabled(configuration.slot0.isPositionPIDWrappingEnabled());
-		this.getPIDController().setPositionPIDWrappingMinInput(configuration.slot0.getPositionPIDWrappingMinInput());
-		this.getPIDController().setPositionPIDWrappingMaxInput(configuration.slot0.getPositionPIDWrappingMaxInput());
+		this.setSmartCurrentLimit(config.currentLimit);
 
 		this.burnFlash();
 	}
+
+	public void configPID(PIDObject pid, int slot){
+		super.getPIDController().setP(pid.getKp(), slot);
+		super.getPIDController().setI(pid.getKi(), slot);
+		super.getPIDController().setD(pid.getKd(), slot);
+		super.getPIDController().setFF(pid.getKff(), slot);
+		super.getPIDController().setDFilter(pid.getDFilter(), slot);
+		super.getPIDController().setIZone(pid.getIZone(), slot);
+		super.getPIDController().setOutputRange(-pid.getMaxPower(), pid.getMaxPower());
+	}
+
 }

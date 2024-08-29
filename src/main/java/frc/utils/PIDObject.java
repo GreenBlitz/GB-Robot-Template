@@ -12,31 +12,13 @@ public class PIDObject {
 
 	private double tolerance;
 
-//	private int inverted = 1;
-
 	private double maxPower;
 
 	public PIDObject() {
 		this(0);
 	}
 
-	public PIDObject(double kp, double ki, double kd, double kff, int inv) {
-		this(kp, ki, kd, kff, 0, inv, 0);
-	}
-
-	public PIDObject(double kp, double ki, double kd, double kff, double dFilter, int inv) {
-		this(kp, ki, kd, kff, dFilter, inv, 0);
-	}
-
-	public PIDObject(double kp, double ki, double kd, double kff, int inv, double iZone) {
-		this(kp, ki, kd, kff, 0, inv, iZone);
-	}
-
-	public PIDObject(double kp, double ki, double kd, double kff, double dFilter, int inv, double iZone) {
-		this(kp, ki, kd, kff, dFilter, iZone, 1);
-	}
-
-	public PIDObject(double kp, double ki, double kd, double kff, double dFilter /* int inv */, double iZone, double maxPower) {
+	public PIDObject(double kp, double ki, double kd, double kff, double dFilter, double iZone, double maxPower) {
 		this.kp = kp;
 		this.kd = kd;
 		this.ki = ki;
@@ -44,19 +26,18 @@ public class PIDObject {
 		this.dFilter = dFilter;
 		this.iZone = iZone;
 		this.maxPower = maxPower;
-//		setInverted(inv);
 	}
 
-	public PIDObject(PIDObject other) {
-		this.kp = other.kp;
-		this.kd = other.kd;
-		this.ki = other.ki;
-		this.ff = other.ff;
-		this.dFilter = other.dFilter;
-		this.iZone = other.iZone;
-		this.tolerance = other.tolerance;
-//		this.inverted = other.inverted;
-		this.maxPower = other.maxPower;
+	public PIDObject(double kp, double ki, double kd, double kff, double dFilter, double iZone) {
+		this(kp, ki, kd, kff, dFilter, iZone, 1);
+	}
+
+	public PIDObject(double kp, double ki, double kd, double kff, double iZone) {
+		this(kp, ki, kd, kff, 0, iZone);
+	}
+
+	public PIDObject(double kp, double ki, double kd, double kff) {
+		this(kp, ki, kd, kff, 0);
 	}
 
 	public PIDObject(double kp, double ki, double kd) {
@@ -71,40 +52,16 @@ public class PIDObject {
 		this(kp, 0.0);
 	}
 
-	public PIDObject(double kp, double ki, double kd, double kff) {
-		this(kp, ki, kd, kff, 1);
+	public PIDObject(PIDObject other) {
+		this.kp = other.kp;
+		this.kd = other.kd;
+		this.ki = other.ki;
+		this.ff = other.ff;
+		this.dFilter = other.dFilter;
+		this.iZone = other.iZone;
+		this.tolerance = other.tolerance;
+		this.maxPower = other.maxPower;
 	}
-
-//	public PIDObject(double kp, double ki, double kd, int inv) {
-//		this(kp, ki, kd, 0.0, inv);
-//	}
-
-//	public PIDObject(double kp, double ki, int inv) {
-//		this(kp, ki, 0.0, inv);
-//	}
-
-//	public PIDObject(double kp, int inv) {
-//		this(kp, 0.0, inv);
-//	}
-
-	@Override
-	public String toString() {
-		return "PIDObject{" + "kp=" + kp + ", kd=" + kd + ", ki=" + ki + ", kff=" + ff + ", dFilter= " + dFilter +
-//				", inv=" + inverted +
-			", iZone=" + iZone + ", tolerance= " + tolerance + ", maxPower= " + maxPower + "}";
-	}
-
-//	public void invert() {
-//		inverted *= -1;
-//	}
-//
-//	public int getInverted() {
-//		return inverted;
-//	}
-//
-//	public void setInverted(int value) {
-//		inverted = value >= 0 ? 1 : -1;
-//	}
 
 	public double getKp() {
 		return kp;

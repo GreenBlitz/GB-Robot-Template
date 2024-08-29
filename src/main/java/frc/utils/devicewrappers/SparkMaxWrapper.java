@@ -18,8 +18,8 @@ public class SparkMaxWrapper extends CANSparkMax {
 		configPID(config.slot2, 2);
 		configPID(config.slot3, 3);
 
-		super.getEncoder().setPositionConversionFactor(config.positionConversionFactor);
-		super.getEncoder().setVelocityConversionFactor(config.velocityConversionFactor);
+		super.getEncoder().setPositionConversionFactor(config.conversionFactor);
+		super.getEncoder().setVelocityConversionFactor(config.conversionFactor);
 
 		super.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) config.forwardAngleLimit.getRotations());
 		super.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, config.enableForwardSoftLimit);
@@ -33,13 +33,13 @@ public class SparkMaxWrapper extends CANSparkMax {
 	}
 
 	public void configPID(PIDObject pid, int slot) {
-		super.getPIDController().setP(pid.getKp(), slot);
-		super.getPIDController().setI(pid.getKi(), slot);
-		super.getPIDController().setD(pid.getKd(), slot);
-		super.getPIDController().setFF(pid.getKff(), slot);
+		super.getPIDController().setP(pid.getP(), slot);
+		super.getPIDController().setI(pid.getI(), slot);
+		super.getPIDController().setD(pid.getD(), slot);
+		super.getPIDController().setFF(pid.getFF(), slot);
 		super.getPIDController().setDFilter(pid.getDFilter(), slot);
 		super.getPIDController().setIZone(pid.getIZone(), slot);
-		super.getPIDController().setOutputRange(-pid.getMaxPower(), pid.getMaxPower());
+		super.getPIDController().setOutputRange(pid.getMinPower(), pid.getMaxPower());
 	}
 
 }

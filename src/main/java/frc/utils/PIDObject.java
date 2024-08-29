@@ -3,48 +3,52 @@ package frc.utils;
 
 public class PIDObject {
 
-	private double kp, ki, kd, ff;
+	private double P, I, D, FF;
 
-	private double dFilter;
+	private double derivativeFilter;
 
 	private double iZone;
 
 	private double maxPower;
 
+	private double minPower;
+
 	public PIDObject() {
-		this.kp = 0;
-		this.kd = 0;
-		this.ki = 0;
-		this.ff = 0;
-		this.dFilter = 0;
+		this.P = 0;
+		this.D = 0;
+		this.I = 0;
+		this.FF = 0;
+		this.derivativeFilter = 0;
 		this.iZone = 0;
 		this.maxPower = 1;
+		this.minPower = -1;
 	}
 
 	public PIDObject(PIDObject other) {
-		this.kp = other.kp;
-		this.kd = other.kd;
-		this.ki = other.ki;
-		this.ff = other.ff;
-		this.dFilter = other.dFilter;
+		this.P = other.P;
+		this.D = other.D;
+		this.I = other.I;
+		this.FF = other.FF;
+		this.derivativeFilter = other.derivativeFilter;
 		this.iZone = other.iZone;
 		this.maxPower = other.maxPower;
+		this.minPower = other.minPower;
 	}
 
-	public double getKp() {
-		return kp;
+	public double getP() {
+		return P;
 	}
 
-	public double getKd() {
-		return kd;
+	public double getD() {
+		return D;
 	}
 
-	public double getKi() {
-		return ki;
+	public double getI() {
+		return I;
 	}
 
-	public double getKff() {
-		return ff;
+	public double getFF() {
+		return FF;
 	}
 
 	public double getIZone() {
@@ -55,32 +59,36 @@ public class PIDObject {
 		return maxPower;
 	}
 
+	public double getMinPower(){
+		return minPower;
+	}
+
 	public double getDFilter() {
-		return dFilter;
+		return derivativeFilter;
 	}
 
-	public PIDObject withKp(double kp) {
-		this.kp = kp;
+	public PIDObject withP(double P) {
+		this.P = P;
 		return this;
 	}
 
-	public PIDObject withKi(double ki) {
-		this.ki = ki;
+	public PIDObject withI(double I) {
+		this.I = I;
 		return this;
 	}
 
-	public PIDObject withKd(double kd) {
-		this.kd = kd;
+	public PIDObject withD(double D) {
+		this.D = D;
 		return this;
 	}
 
-	public PIDObject withFF(double ff) {
-		this.ff = ff;
+	public PIDObject withFF(double FF) {
+		this.FF = FF;
 		return this;
 	}
 
 	public PIDObject withDFilter(double dFilter) {
-		this.dFilter = dFilter;
+		this.derivativeFilter = dFilter;
 		return this;
 	}
 
@@ -91,6 +99,11 @@ public class PIDObject {
 
 	public PIDObject withMaxPower(double maxPower) {
 		this.maxPower = maxPower;
+		return this;
+	}
+
+	public PIDObject withMinPower(double minPower){
+		this.minPower = minPower;
 		return this;
 	}
 

@@ -12,13 +12,9 @@ public class SparkMaxConfiguration {
 	public boolean enableForwardSoftLimit;
 	public boolean enableBackwardSoftLimit;
 	public PIDObject slot0;
-	public boolean enableSlot0;
 	public PIDObject slot1;
-	public boolean enableSlot1;
 	public PIDObject slot2;
-	public boolean enableSlot2;
 	public PIDObject slot3;
-	public boolean enableSlot3;
 	public int currentLimit;
 
 	public SparkMaxConfiguration() {
@@ -33,13 +29,9 @@ public class SparkMaxConfiguration {
 		this.currentLimit = 0;
 
 		this.slot0 = new PIDObject();
-		this.enableSlot0 = false;
 		this.slot1 = new PIDObject();
-		this.enableSlot1 = false;
 		this.slot2 = new PIDObject();
-		this.enableSlot2 = false;
 		this.slot3 = new PIDObject();
-		this.enableSlot3 = false;
 	}
 
 	public SparkMaxConfiguration withPositionConversionFactor(double conversionFactor) {

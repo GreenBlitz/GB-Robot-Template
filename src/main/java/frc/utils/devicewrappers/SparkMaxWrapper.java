@@ -13,16 +13,16 @@ public class SparkMaxWrapper extends CANSparkMax {
 	public void applyConfiguration(SparkMaxConfiguration config) {
 		this.restoreFactoryDefaults();
 
-		if (config.enableSlot0) {
+		if (!config.slot0.isEmpty()) {
 			configPID(config.slot0, 0);
 		}
-		if (config.enableSlot1) {
+		if (!config.slot1.isEmpty()) {
 			configPID(config.slot1, 1);
 		}
-		if (config.enableSlot2) {
+		if (!config.slot2.isEmpty()) {
 			configPID(config.slot2, 2);
 		}
-		if (config.enableSlot3) {
+		if (!config.slot3.isEmpty()) {
 			configPID(config.slot3, 3);
 		}
 

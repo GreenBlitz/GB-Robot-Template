@@ -13,16 +13,16 @@ public class SparkMaxWrapper extends CANSparkMax {
 	public void applyConfiguration(SparkMaxConfiguration config) {
 		this.restoreFactoryDefaults();
 
-		if (config.enableSlot0){
+		if (config.enableSlot0) {
 			configPID(config.slot0, 0);
 		}
-		if (config.enableSlot1){
+		if (config.enableSlot1) {
 			configPID(config.slot1, 1);
 		}
-		if (config.enableSlot2){
+		if (config.enableSlot2) {
 			configPID(config.slot2, 2);
 		}
-		if (config.enableSlot3){
+		if (config.enableSlot3) {
 			configPID(config.slot3, 3);
 		}
 
@@ -40,7 +40,7 @@ public class SparkMaxWrapper extends CANSparkMax {
 		this.burnFlash();
 	}
 
-	public void configPID(PIDObject pid, int slot){
+	public void configPID(PIDObject pid, int slot) {
 		super.getPIDController().setP(pid.getKp(), slot);
 		super.getPIDController().setI(pid.getKi(), slot);
 		super.getPIDController().setD(pid.getKd(), slot);

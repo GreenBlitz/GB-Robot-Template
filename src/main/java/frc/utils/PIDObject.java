@@ -28,15 +28,15 @@ public class PIDObject {
 		this(kp, ki, kd, kff, dFilter, inv, 0);
 	}
 
-	public PIDObject(double kp, double ki, double kd, double kff,  int inv, double iZone) {
+	public PIDObject(double kp, double ki, double kd, double kff, int inv, double iZone) {
 		this(kp, ki, kd, kff, 0, inv, iZone);
 	}
 
-	public PIDObject(double kp, double ki, double kd, double kff, double dFilter,  int inv, double iZone) {
+	public PIDObject(double kp, double ki, double kd, double kff, double dFilter, int inv, double iZone) {
 		this(kp, ki, kd, kff, dFilter, iZone, 1);
 	}
 
-	public PIDObject(double kp, double ki, double kd, double kff, double dFilter /*int inv*/, double iZone, double maxPower) {
+	public PIDObject(double kp, double ki, double kd, double kff, double dFilter /* int inv */, double iZone, double maxPower) {
 		this.kp = kp;
 		this.kd = kd;
 		this.ki = ki;
@@ -89,17 +89,9 @@ public class PIDObject {
 
 	@Override
 	public String toString() {
-		return "PIDObject{" +
-				"kp=" + kp +
-				", kd=" + kd +
-				", ki=" + ki +
-				", kff=" + ff +
-				", dFilter= " + dFilter +
+		return "PIDObject{" + "kp=" + kp + ", kd=" + kd + ", ki=" + ki + ", kff=" + ff + ", dFilter= " + dFilter +
 //				", inv=" + inverted +
-				", iZone=" + iZone +
-				", tolerance= " + tolerance +
-				", maxPower= " + maxPower +
-		"}";
+			", iZone=" + iZone + ", tolerance= " + tolerance + ", maxPower= " + maxPower + "}";
 	}
 
 //	public void invert() {
@@ -218,4 +210,5 @@ public class PIDObject {
 		pidController.setTolerance(this.tolerance);
 		return pidController;
 	}
+
 }

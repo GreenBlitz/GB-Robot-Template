@@ -47,7 +47,7 @@ public class SparkMaxConfiguration {
 		return this;
 	}
 
-	public SparkMaxConfiguration withVelocityConversionFactor(double conversionFactor){
+	public SparkMaxConfiguration withVelocityConversionFactor(double conversionFactor) {
 		this.velocityConversionFactor = conversionFactor;
 		return this;
 	}

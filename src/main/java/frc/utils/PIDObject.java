@@ -1,6 +1,5 @@
 package frc.utils;
 
-import edu.wpi.first.math.controller.PIDController;
 
 public class PIDObject {
 
@@ -9,8 +8,6 @@ public class PIDObject {
 	private double dFilter;
 
 	private double iZone;
-
-	private double tolerance;
 
 	private double maxPower;
 
@@ -59,7 +56,6 @@ public class PIDObject {
 		this.ff = other.ff;
 		this.dFilter = other.dFilter;
 		this.iZone = other.iZone;
-		this.tolerance = other.tolerance;
 		this.maxPower = other.maxPower;
 	}
 
@@ -103,14 +99,6 @@ public class PIDObject {
 		this.iZone = iZone;
 	}
 
-	public double getTolerance() {
-		return tolerance;
-	}
-
-	public void setTolerance(double tolerance) {
-		this.tolerance = tolerance;
-	}
-
 	public double getMaxPower() {
 		return maxPower;
 	}
@@ -152,20 +140,9 @@ public class PIDObject {
 		return this;
 	}
 
-	public PIDObject withTolerance(double tolerance) {
-		setTolerance(tolerance);
-		return this;
-	}
-
 	public PIDObject withMaxPower(double maxPower) {
 		setMaxPower(maxPower);
 		return this;
-	}
-
-	public PIDController getPIDController() {
-		PIDController pidController = new PIDController(this.kp, this.ki, this.kd);
-		pidController.setTolerance(this.tolerance);
-		return pidController;
 	}
 
 }

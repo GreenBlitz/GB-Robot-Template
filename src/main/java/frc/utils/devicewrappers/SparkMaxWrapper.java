@@ -11,25 +11,25 @@ public class SparkMaxWrapper extends CANSparkMax {
 	}
 
 	public void applyConfiguration(SparkMaxConfiguration config) {
-		this.restoreFactoryDefaults();
+		super.restoreFactoryDefaults();
 
 		configPID(config.slot0, 0);
 		configPID(config.slot1, 1);
 		configPID(config.slot2, 2);
 		configPID(config.slot3, 3);
 
-		this.getEncoder().setPositionConversionFactor(config.positionConversionFactor);
-		this.getEncoder().setVelocityConversionFactor(config.velocityConversionFactor);
+		super.getEncoder().setPositionConversionFactor(config.positionConversionFactor);
+		super.getEncoder().setVelocityConversionFactor(config.velocityConversionFactor);
 
-		this.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) config.forwardAngleLimit.getRotations());
-		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, config.enableForwardSoftLimit);
+		super.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) config.forwardAngleLimit.getRotations());
+		super.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, config.enableForwardSoftLimit);
 
-		this.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) config.backwardAngleLimit.getRotations());
-		this.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, config.enableForwardSoftLimit);
+		super.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) config.backwardAngleLimit.getRotations());
+		super.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, config.enableForwardSoftLimit);
 
-		this.setSmartCurrentLimit(config.currentLimit);
+		super.setSmartCurrentLimit(config.currentLimit);
 
-		this.burnFlash();
+		super.burnFlash();
 	}
 
 	public void configPID(PIDObject pid, int slot) {

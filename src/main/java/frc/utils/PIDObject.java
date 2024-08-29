@@ -14,18 +14,13 @@ public class PIDObject {
 	private boolean empty;
 
 	public PIDObject() {
-		this(0,0,0,0,0,0,0);
-		this.empty = true;
-	}
-
-	public PIDObject(double kp, double ki, double kd, double kff, double dFilter, double iZone, double maxPower) {
-		this.kp = kp;
-		this.kd = kd;
-		this.ki = ki;
-		this.ff = kff;
-		this.dFilter = dFilter;
-		this.iZone = iZone;
-		this.maxPower = maxPower;
+		this.kp = 0;
+		this.kd = 0;
+		this.ki = 0;
+		this.ff = 0;
+		this.dFilter = 0;
+		this.iZone = 0;
+		this.maxPower = 1;
 		this.empty = isEmpty();
 	}
 
@@ -39,15 +34,15 @@ public class PIDObject {
 		this.maxPower = other.maxPower;
 		this.empty = other.empty;
 	}
-	
-	public boolean isEmpty(){
-		if (kp != 0){
+
+	public boolean isEmpty() {
+		if (kp != 0) {
 			empty = false;
-		} else if (ki != 0){
+		} else if (ki != 0) {
 			empty = false;
 		} else if (kd != 0) {
 			empty = false;
-		} else if (ff != 0){
+		} else if (ff != 0) {
 			empty = false;
 		} else if (dFilter != 0) {
 			empty = false;
@@ -111,7 +106,7 @@ public class PIDObject {
 		return this;
 	}
 
-	public PIDObject withDFilter(double dFilter){
+	public PIDObject withDFilter(double dFilter) {
 		this.dFilter = dFilter;
 		isEmpty();
 		return this;

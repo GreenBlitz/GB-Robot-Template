@@ -7,7 +7,7 @@ public class PIDObject {
 
 	private double derivativeFilter;
 
-	private double iZone;
+	private double errorZoneForIToAccumulate;
 
 	private double maxPower;
 
@@ -19,7 +19,7 @@ public class PIDObject {
 		this.I = 0;
 		this.FF = 0;
 		this.derivativeFilter = 0;
-		this.iZone = 0;
+		this.errorZoneForIToAccumulate = 0;
 		this.maxPower = 1;
 		this.minPower = -1;
 	}
@@ -30,7 +30,7 @@ public class PIDObject {
 		this.I = other.I;
 		this.FF = other.FF;
 		this.derivativeFilter = other.derivativeFilter;
-		this.iZone = other.iZone;
+		this.errorZoneForIToAccumulate = other.errorZoneForIToAccumulate;
 		this.maxPower = other.maxPower;
 		this.minPower = other.minPower;
 	}
@@ -52,14 +52,14 @@ public class PIDObject {
 	}
 
 	public double getIZone() {
-		return iZone;
+		return errorZoneForIToAccumulate;
 	}
 
 	public double getMaxPower() {
 		return maxPower;
 	}
 
-	public double getMinPower(){
+	public double getMinPower() {
 		return minPower;
 	}
 
@@ -92,8 +92,8 @@ public class PIDObject {
 		return this;
 	}
 
-	public PIDObject withIZone(double iZone) {
-		this.iZone = iZone;
+	public PIDObject withIZone(double errorZoneForIToAccumulate) {
+		this.errorZoneForIToAccumulate = errorZoneForIToAccumulate;
 		return this;
 	}
 
@@ -102,7 +102,7 @@ public class PIDObject {
 		return this;
 	}
 
-	public PIDObject withMinPower(double minPower){
+	public PIDObject withMinPower(double minPower) {
 		this.minPower = minPower;
 		return this;
 	}

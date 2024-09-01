@@ -23,10 +23,4 @@ public class SimulationDigitalInput implements IDigitalInput {
 		this.isTrue = isTrue;
 	}
 
-	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		isTrueConsumer.accept(SmartDashboard.getBoolean("is true", SimulationDigitalInputConstants.DEFAULT_STATE));
-		inputs.debouncedValue = isTrue;
-		inputs.nonDebouncedValue = isTrue;
-	}
-
 }

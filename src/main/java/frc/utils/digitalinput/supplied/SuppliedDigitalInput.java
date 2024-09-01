@@ -1,4 +1,4 @@
-package frc.utils.digitalinput.supplieddigitalinput;
+package frc.utils.digitalinput.supplied;
 
 import edu.wpi.first.math.filter.Debouncer;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
@@ -17,6 +17,7 @@ public class SuppliedDigitalInput implements IDigitalInput {
 		this.debouncer = new Debouncer(debounceTime, debounceType);
 	}
 
+	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
 		inputs.debouncedValue = debouncer.calculate(isTrueConsumer.get());
 		inputs.nonDebouncedValue = isTrueConsumer.get();

@@ -1,4 +1,4 @@
-package frc.utils.digitalinput.simulationdigitalinput;
+package frc.utils.digitalinput.simulation;
 
 public class SimulationDigitalInputConstants {
 

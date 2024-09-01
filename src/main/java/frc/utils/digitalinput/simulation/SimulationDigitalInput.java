@@ -1,4 +1,4 @@
-package frc.utils.digitalinput.simulationdigitalinput;
+package frc.utils.digitalinput.simulation;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
@@ -23,6 +23,9 @@ public class SimulationDigitalInput implements IDigitalInput {
 	}
 
 	@Override
-	public void updateInputs(DigitalInputInputsAutoLogged inputs) {}
+	public void updateInputs(DigitalInputInputsAutoLogged inputs){
+		inputs.debouncedValue=isTrue;
+		inputs.nonDebouncedValue=isTrue;
 
+	}
 }

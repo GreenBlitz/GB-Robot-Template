@@ -1,4 +1,4 @@
-package frc.utils.digitalinput.realdigitalinput;
+package frc.utils.digitalinput.real;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -16,6 +16,7 @@ public class RealDigitalInput implements IDigitalInput {
 		this.debouncer = new Debouncer(debounceTime, debounceType);
 	}
 
+	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
 		inputs.debouncedValue = debouncer.calculate(digitalInput.get());
 		inputs.nonDebouncedValue = digitalInput.get();

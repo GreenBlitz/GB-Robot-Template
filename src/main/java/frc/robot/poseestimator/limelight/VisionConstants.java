@@ -39,7 +39,6 @@ public class VisionConstants {
     }
 
     public static int getValue(LIMELIGHT_ARRAY_VALUES value) {
-        int arrayValue = -1;
         switch (value) {
             case X_AXIS -> {
                 return 0;
@@ -63,6 +62,8 @@ public class VisionConstants {
                 return 6;
             }
         }
+
+        return -1;
     }
 
 

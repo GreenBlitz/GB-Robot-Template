@@ -15,8 +15,6 @@ import java.util.Optional;
 
 public class MultiLimelight extends GBSubsystem {
 
-    private static MultiLimelight instance;
-
     private List<Limelight> limelights;
 
     private MultiLimelight() {
@@ -25,17 +23,6 @@ public class MultiLimelight extends GBSubsystem {
         for (String limelightName : VisionConstants.LIMELIGHT_NAMES) {
             limelights.add(new Limelight(limelightName));
         }
-    }
-
-    public static void init() {
-        instance = new MultiLimelight();
-    }
-
-    public static MultiLimelight getInstance() {
-        if (instance == null) {
-            init();
-        }
-        return instance;
     }
 
     public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {
@@ -78,7 +65,7 @@ public class MultiLimelight extends GBSubsystem {
 
     public void recordEstimatedPositions() {
         int i = 0;
-        for (Optional<Pair<Pose2d, Double>> estimation : instance.getAll2DEstimates()) {
+        for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
             i++;
             if (estimation.isPresent()) {
                 Logger.recordOutput(super.getLogPath() + VisionConstants.EstimationLogPath + i, estimation.get().getFirst());

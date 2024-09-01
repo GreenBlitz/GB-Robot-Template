@@ -16,12 +16,12 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 
 	protected final CANSparkMax motor;
 	protected final SparkMaxConstants constants;
-    private Rotation2d lastVelocity;
+	private Rotation2d lastVelocity;
 
 	public SparkMaxMotor(CANSparkMax motor, SparkMaxConstants constants) {
 		this.motor = motor;
 		this.constants = constants;
-        this.lastVelocity = new Rotation2d();
+		this.lastVelocity = new Rotation2d();
 	}
 
 	@Override
@@ -133,8 +133,8 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 	public void updateInputs(PIDAbleInputsAutoLogged inputs) {
 		inputs.angle = Rotation2d.fromRotations(motor.getEncoder().getPosition());
 		inputs.velocity = Rotation2d.fromRotations(motor.getEncoder().getVelocity());
-        inputs.acceleration = Rotation2d.fromRotations(inputs.velocity.getRotations() - lastVelocity.getRotations());
-        lastVelocity = inputs.velocity;
+		inputs.acceleration = Rotation2d.fromRotations(inputs.velocity.getRotations() - lastVelocity.getRotations());
+		lastVelocity = inputs.velocity;
 	}
 
 }

@@ -5,11 +5,14 @@ public class PIDObject {
 
 	private int slot;
 
-	private double p, i, d, feedforward;
+	private double p;
+	private double i;
+	private double d;
+	private double feedforward;
 
 	private double derivativeFilter;
 
-	private double errorZoneForIToAccumulate;
+	private double iActivationErrorTolerance;
 
 	private double maxPower;
 
@@ -21,7 +24,7 @@ public class PIDObject {
 		this.i = 0;
 		this.feedforward = 0;
 		this.derivativeFilter = 0;
-		this.errorZoneForIToAccumulate = 0;
+		this.iActivationErrorTolerance = 0;
 		this.maxPower = 1;
 		this.minPower = -1;
 	}
@@ -33,7 +36,7 @@ public class PIDObject {
 		this.i = other.i;
 		this.feedforward = other.feedforward;
 		this.derivativeFilter = other.derivativeFilter;
-		this.errorZoneForIToAccumulate = other.errorZoneForIToAccumulate;
+		this.iActivationErrorTolerance = other.iActivationErrorTolerance;
 		this.maxPower = other.maxPower;
 		this.minPower = other.minPower;
 	}
@@ -58,8 +61,8 @@ public class PIDObject {
 		return feedforward;
 	}
 
-	public double getIZone() {
-		return errorZoneForIToAccumulate;
+	public double getIActivationErrorTolerance() {
+		return iActivationErrorTolerance;
 	}
 
 	public double getMaxPower() {
@@ -104,8 +107,8 @@ public class PIDObject {
 		return this;
 	}
 
-	public PIDObject withIZone(double errorZoneForIToAccumulate) {
-		this.errorZoneForIToAccumulate = errorZoneForIToAccumulate;
+	public PIDObject withIActivationErrorTolerance(double iActivationErrorTolerance) {
+		this.iActivationErrorTolerance = iActivationErrorTolerance;
 		return this;
 	}
 

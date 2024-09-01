@@ -38,7 +38,7 @@ public class SparkMaxWrapper extends CANSparkMax {
 		super.getPIDController().setD(pid.getD(), pid.getSlot());
 		super.getPIDController().setFF(pid.getFeedforward(), pid.getSlot());
 		super.getPIDController().setDFilter(pid.getDFilter(), pid.getSlot());
-		super.getPIDController().setIZone(pid.getIZone(), pid.getSlot());
+		super.getPIDController().setIZone(pid.getIActivationErrorTolerance(), pid.getSlot());
 		super.getPIDController().setOutputRange(pid.getMinPower(), pid.getMaxPower());
 	}
 

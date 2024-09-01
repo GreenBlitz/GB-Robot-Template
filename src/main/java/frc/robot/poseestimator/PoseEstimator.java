@@ -124,4 +124,10 @@ public class PoseEstimator implements IPoseEstimator {
         return Optional.of(lastVisionObservation.visionPose());
     }
 
+    @Override
+    public void updatePoseEstimator(OdometryObservation odometryObservation, VisionObservation visionObservation){
+        updateOdometry(odometryObservation);
+        updateVision(visionObservation);
+    }
+
 }

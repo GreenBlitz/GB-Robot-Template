@@ -10,12 +10,12 @@ import org.littletonrobotics.junction.Logger;
 import java.util.function.Consumer;
 
 
-public class PoseEstimator {
+public class poseEstimator {
 
 	private final PoseCalculator poseCalculator;
 	private final Consumer<Rotation2d> resetSwerveHeading;
 
-	public PoseEstimator(Consumer<Rotation2d> resetSwerveHeading) {
+	public poseEstimator(Consumer<Rotation2d> resetSwerveHeading) {
 		this.poseCalculator = new PoseCalculator(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS, SwerveConstants.KINEMATICS);
 		this.resetSwerveHeading = resetSwerveHeading;
 		resetPose(PoseEstimatorConstants.DEFAULT_POSE);

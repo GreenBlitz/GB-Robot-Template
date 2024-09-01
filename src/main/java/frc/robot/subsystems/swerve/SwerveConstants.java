@@ -8,6 +8,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.gyro.GyroConstants;
 
@@ -54,7 +56,8 @@ public record SwerveConstants(
 	}
 
 	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
-
+	public static final SwerveDriveWheelPositions INITIALWHEELPOSOTIONS = new SwerveDriveWheelPositions(new SwerveModulePosition[0]);
+	public static final Rotation2d INITIALGYROANGLE = new Rotation2d();
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
 	static final double DRIVE_NEUTRAL_DEADBAND = 0.05;

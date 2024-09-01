@@ -23,4 +23,7 @@ public class SimulationDigitalInput implements IDigitalInput {
 		this.isTrue = isTrue;
 	}
 
+	@Override
+	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
+	}
 }

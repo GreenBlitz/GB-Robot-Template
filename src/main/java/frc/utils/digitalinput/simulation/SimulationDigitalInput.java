@@ -1,4 +1,4 @@
-package frc.utils.digitalinput.simulationdigitalinput;
+package frc.utils.digitalinput.simulation;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

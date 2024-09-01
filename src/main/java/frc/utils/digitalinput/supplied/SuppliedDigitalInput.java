@@ -1,4 +1,4 @@
-package frc.utils.digitalinput.supplieddigitalinput;
+package frc.utils.digitalinput.supplied;
 
 import edu.wpi.first.math.filter.Debouncer;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;

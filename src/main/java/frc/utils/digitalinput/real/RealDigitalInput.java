@@ -1,4 +1,4 @@
-package frc.utils.digitalinput.realdigitalinput;
+package frc.utils.digitalinput.real;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;

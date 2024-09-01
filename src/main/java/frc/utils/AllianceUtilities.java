@@ -17,7 +17,7 @@ public class AllianceUtilities {
      */
     public static boolean isBlueAlliance() {
         final double timestamp = Timer.getFPGATimestamp();
-        if (timestamp - BLUE_ALLIANCE_CHECK_TIMESTAMP > 0.5) {
+        if (timestamp - BLUE_ALLIANCE_CHECK_TIMESTAMP > FieldConstants.MINIMUM_TIMESTAMP_ALLIANCE_CHECK) {
             ALLIANCE = DriverStation.getAlliance().orElse(DriverStation.Alliance.Red);
             BLUE_ALLIANCE_CHECK_TIMESTAMP = timestamp;
         }

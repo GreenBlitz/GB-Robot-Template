@@ -42,10 +42,8 @@ public class MultiLimelight extends GBSubsystem {
         ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
 
         for (Limelight limelight : limelights) {
-            if (limelight.hasTarget()) {
-                if (isLimelightedOutputInTolerance(limelight)) {
-                    estimates.add(limelight.getUpdatedPose2DEstimation());
-                }
+            if (isLimelightValid(limelight)) {
+                estimates.add(limelight.getUpdatedPose2DEstimation());
             }
         }
 
@@ -59,14 +57,20 @@ public class MultiLimelight extends GBSubsystem {
 
         Pose2d currentPosition = Robot.getPosEstimator.getOdometryPose();
 
-        if (limelight.getAprilTagConfidence())
-            if (limelight.getUpdatedPose2DEstimation().isPresent()) {
-                limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
-                transformDifference = limelightPosition.minus(currentPosition);
-                rotationDifference = limelightPosition.getRotation().minus(currentPosition.getRotation());
+        limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
+        transformDifference = limelightPosition.minus(currentPosition);
+        rotationDifference = limelightPosition.getRotation().minus(currentPosition.getRotation());
 
-                return transformDifference.getTranslation().getNorm() <= VisionConstants.POSITION_TOLERANCE
-                        && rotationDifference.getDegrees() <= VisionConstants.ROTATION_TOLERANCE.getDegrees();
+        return transformDifference.getTranslation().getNorm() <= VisionConstants.POSITION_TOLERANCE
+                && rotationDifference.getDegrees() <= VisionConstants.ROTATION_TOLERANCE.getDegrees();
+    }
+
+    public boolean isLimelightValid(Limelight limelight) {
+            if (limelight.hasTarget()) {
+                if (limelight.isAprilTagInProperHeight())
+                    if (limelight.getUpdatedPose2DEstimation().isPresent()) {
+                        return isLimelightedOutputInTolerance(limelight);
+                    }
             }
 
         return false;

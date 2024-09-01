@@ -3,6 +3,7 @@ package frc.robot.poseestimator.limelight;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class VisionConstants {
+
     public static final String[] LIMELIGHT_NAMES = new String[]{
             "limelight-front",
             "limelight-back",
@@ -41,27 +42,28 @@ public class VisionConstants {
         int arrayValue = -1;
         switch (value) {
             case X_AXIS -> {
-                arrayValue = 0;
+                return 0;
             }
             case Y_AXIS -> {
-                arrayValue = 1;
+                return 1;
             }
             case Z_AXIS -> {
-                arrayValue = 2;
+                return 2;
             }
             case ROLL_ANGLE -> {
-                arrayValue = 3;
+                return 3;
             }
             case YAW_ANGLE -> {
-                arrayValue = 4;
+                return 4;
             }
             case PITCH_ANGLE -> {
-                arrayValue = 5;
+                return 5;
             }
             case TOTAL_LATENCY -> {
-                arrayValue = 6;
+                return 6;
             }
         }
-        return arrayValue;
     }
+
+
 }

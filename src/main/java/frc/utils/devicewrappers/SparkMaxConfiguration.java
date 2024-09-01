@@ -6,8 +6,8 @@ import frc.utils.PIDObject;
 public class SparkMaxConfiguration {
 
 	public double conversionFactor;
-	public Rotation2d forwardAngleLimit;
-	public Rotation2d backwardAngleLimit;
+	public Rotation2d forwardAngleSoftLimit;
+	public Rotation2d backwardAngleSoftLimit;
 	public boolean enableForwardSoftLimit;
 	public boolean enableBackwardSoftLimit;
 	public PIDObject slot0;
@@ -19,8 +19,8 @@ public class SparkMaxConfiguration {
 	public SparkMaxConfiguration() {
 		this.conversionFactor = 1;
 
-		this.forwardAngleLimit = Rotation2d.fromDegrees(0);
-		this.backwardAngleLimit = Rotation2d.fromDegrees(0);
+		this.forwardAngleSoftLimit = Rotation2d.fromDegrees(0);
+		this.backwardAngleSoftLimit = Rotation2d.fromDegrees(0);
 		this.enableForwardSoftLimit = false;
 		this.enableBackwardSoftLimit = false;
 
@@ -38,12 +38,12 @@ public class SparkMaxConfiguration {
 	}
 
 	public SparkMaxConfiguration withForwardAngleLimit(Rotation2d forwardAngleLimit) {
-		this.forwardAngleLimit = forwardAngleLimit;
+		this.forwardAngleSoftLimit = forwardAngleLimit;
 		return this;
 	}
 
 	public SparkMaxConfiguration withBackwardAngleLimit(Rotation2d backwardAngleLimit) {
-		this.backwardAngleLimit = backwardAngleLimit;
+		this.backwardAngleSoftLimit = backwardAngleLimit;
 		return this;
 	}
 

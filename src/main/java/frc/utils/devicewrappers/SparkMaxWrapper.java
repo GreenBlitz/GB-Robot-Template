@@ -21,10 +21,10 @@ public class SparkMaxWrapper extends CANSparkMax {
 		super.getEncoder().setPositionConversionFactor(config.conversionFactor);
 		super.getEncoder().setVelocityConversionFactor(config.conversionFactor);
 
-		super.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) config.forwardAngleLimit.getRotations());
+		super.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) config.forwardAngleSoftLimit.getRotations());
 		super.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, config.enableForwardSoftLimit);
 
-		super.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) config.backwardAngleLimit.getRotations());
+		super.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) config.backwardAngleSoftLimit.getRotations());
 		super.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, config.enableForwardSoftLimit);
 
 		super.setSmartCurrentLimit(config.currentLimit);

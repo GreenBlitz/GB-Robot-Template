@@ -2,7 +2,6 @@ package frc.robot.hardware.motor;
 
 public interface IMotor {
 
-
 	void setBrake(boolean brake);
 
 	void stop();

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AllianceUtilities {
+
     private static DriverStation.Alliance ALLIANCE = DriverStation.Alliance.Blue;
 
     private static double BLUE_ALLIANCE_CHECK_TIMESTAMP = -1;
@@ -31,9 +32,7 @@ public class AllianceUtilities {
      * @return the converted pose
      */
     public static Pose2d toAlliancePose(Pose2d pose) {
-        if (isBlueAlliance())
-            return pose;
-        return switchAlliance(pose);
+        return isBlueAlliance() ? pose : switchAlliance(pose);
     }
 
     /**
@@ -43,9 +42,7 @@ public class AllianceUtilities {
      * @return the pose
      */
     public static Pose2d toMirroredAlliancePose(Pose2d pose) {
-        if (isBlueAlliance())
-            return pose;
-        return mirror(pose);
+        return isBlueAlliance() ? pose : mirror(pose);
     }
 
     /**
@@ -55,9 +52,7 @@ public class AllianceUtilities {
      * @return the rotation
      */
     public static Rotation2d toMirroredAllianceRotation(Rotation2d rotation) {
-        if (isBlueAlliance())
-            return rotation;
-        return new Rotation2d(Math.PI).minus(rotation);
+        return isBlueAlliance() ? rotation : FieldConstants.FULL_CYCLE.minus(rotation);
     }
 
     private static Pose2d mirror(Pose2d pose) {
@@ -72,11 +67,12 @@ public class AllianceUtilities {
         return new Pose2d(
                 FieldConstants.LENGTH_METERS - pose.getX(),
                 FieldConstants.WIDTH_METERS - pose.getY(),
-                pose.getRotation().minus(Rotation2d.fromRotations(0.5))
+                pose.getRotation().minus(FieldConstants.HALF_CYCLE)
         );
     }
 
     public static class AlliancePose2d {
+
         private final Pose2d blueAlliancePose;
         private final Pose2d alliancePose;
         private final Pose2d mirroredAlliancePose;
@@ -123,5 +119,9 @@ public class AllianceUtilities {
         public Pose2d toMirroredAlliancePose() {
             return mirroredAlliancePose;
         }
+
+
     }
+
+
 }

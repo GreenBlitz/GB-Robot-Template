@@ -30,13 +30,6 @@ public class RobotManager extends LoggedRobot {
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
-		sparkSubsystem elbow = new sparkSubsystem("elbow/", 5);
-		BrakeStateManager.addSubsystem(elbow);
-		talonSubsystem rightflywheel = new talonSubsystem("rightflywheel/", 16);
-		BrakeStateManager.addSubsystem(rightflywheel);
-		talonSubsystem leftflywheel = new talonSubsystem("leftflywheel/", 22);
-		sparkSubsystem roller = new sparkSubsystem("roller/", 22);
-		BrakeStateManager.addSubsystem(roller);
 
 		this.robot = new Robot();
 	}

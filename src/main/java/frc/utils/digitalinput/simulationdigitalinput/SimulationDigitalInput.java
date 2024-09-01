@@ -1,7 +1,6 @@
 package frc.utils.digitalinput.simulationdigitalinput;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
 
@@ -24,6 +23,6 @@ public class SimulationDigitalInput implements IDigitalInput {
 	}
 
 	@Override
-	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-	}
+	public void updateInputs(DigitalInputInputsAutoLogged inputs) {}
+
 }

@@ -37,7 +37,6 @@ public class Limelight extends GBSubsystem {
 
         Rotation2d angleOffset = AllianceUtilities.isBlueAlliance() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
 
-
         Pose2d robotPose = new Pose2d(
                 poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.X_AXIS)],
                 poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.Y_AXIS)],

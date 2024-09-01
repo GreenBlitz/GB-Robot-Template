@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AllianceUtilities {
-    private static boolean IS_BLUE_ALLIANCE = false;
+    private static DriverStation.Alliance ALLIANCE = DriverStation.Alliance.Blue;
 
     private static double BLUE_ALLIANCE_CHECK_TIMESTAMP = -1;
 
@@ -18,10 +18,10 @@ public class AllianceUtilities {
     public static boolean isBlueAlliance() {
         final double timestamp = Timer.getFPGATimestamp();
         if (timestamp - BLUE_ALLIANCE_CHECK_TIMESTAMP > 0.5) {
-            IS_BLUE_ALLIANCE = DriverStation.getAlliance().orElse(DriverStation.Alliance.Red).equals(DriverStation.Alliance.Blue);
+            ALLIANCE = DriverStation.getAlliance().orElse(DriverStation.Alliance.Red);
             BLUE_ALLIANCE_CHECK_TIMESTAMP = timestamp;
         }
-        return IS_BLUE_ALLIANCE;
+        return ALLIANCE == DriverStation.Alliance.Blue;
     }
 
     /**

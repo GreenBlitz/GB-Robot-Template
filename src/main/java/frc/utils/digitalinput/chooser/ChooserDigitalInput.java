@@ -1,4 +1,4 @@
-package frc.utils.digitalinput.simulation;
+package frc.utils.digitalinput.chooser;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
@@ -6,15 +6,18 @@ import frc.utils.digitalinput.IDigitalInput;
 
 import java.util.function.Consumer;
 
-public class SimulationDigitalInput implements IDigitalInput {
+public class ChooserDigitalInput implements IDigitalInput {
 
 	private final Consumer<Boolean> isTrueConsumer = this::setIsTrue;
 
 	private boolean isTrue;
 
-	public SimulationDigitalInput() {
+	public ChooserDigitalInput() {
 		SendableChooser<Boolean> isTrueSendableChooser = new SendableChooser<>();
-		this.isTrue = SimulationDigitalInputConstants.DEFAULT_STATE;
+		isTrueSendableChooser.addOption("true", true);
+		isTrueSendableChooser.addOption("false", false);
+
+		this.isTrue = ChooserDigitalInputConstants.DEFAULT_STATE;
 		isTrueSendableChooser.onChange(isTrueConsumer);
 	}
 
@@ -23,9 +26,9 @@ public class SimulationDigitalInput implements IDigitalInput {
 	}
 
 	@Override
-	public void updateInputs(DigitalInputInputsAutoLogged inputs){
-		inputs.debouncedValue=isTrue;
-		inputs.nonDebouncedValue=isTrue;
-
+	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
+		inputs.debouncedValue = isTrue;
+		inputs.nonDebouncedValue = isTrue;
 	}
+
 }

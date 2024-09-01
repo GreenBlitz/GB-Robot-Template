@@ -1,4 +1,4 @@
-package frc.robot.hardware.talonfx;
+package frc.robot.hardware.motor.talonfx;
 
 import com.ctre.phoenix6.StatusSignal;
 

@@ -1,4 +1,4 @@
-package frc.robot.hardware.cansparkmax;
+package frc.robot.hardware.motor.sparkmax;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;

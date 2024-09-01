@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.observations.OdometryObservation;
+import frc.robot.poseestimator.observations.VisionObservation;
 
 
 public interface IOdometryEstimator {
@@ -18,5 +19,7 @@ public interface IOdometryEstimator {
     Pose2d getOdometryPose();
 
     void setOdometryStandardDeviations(Matrix<N3, N1> standardDeviations);
+
+    OdometryObservation getOdometryObservation();
 
 }

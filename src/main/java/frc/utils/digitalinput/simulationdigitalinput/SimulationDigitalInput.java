@@ -9,12 +9,12 @@ import java.util.function.Consumer;
 
 public class SimulationDigitalInput implements IDigitalInput {
 
-	Consumer<Boolean> isTrueConsumer = this::setIsTrue;
+	private final Consumer<Boolean> isTrueConsumer = this::setIsTrue;
 
 	private boolean isTrue;
 
 	public SimulationDigitalInput() {
-		final SendableChooser<Boolean> isTrueSendableChooser = new SendableChooser<>();
+		SendableChooser<Boolean> isTrueSendableChooser = new SendableChooser<>();
 		this.isTrue = SimulationDigitalInputConstants.DEFAULT_STATE;
 		isTrueSendableChooser.onChange(isTrueConsumer);
 	}
@@ -23,11 +23,10 @@ public class SimulationDigitalInput implements IDigitalInput {
 		this.isTrue = isTrue;
 	}
 
-	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
 		isTrueConsumer.accept(SmartDashboard.getBoolean("is true", SimulationDigitalInputConstants.DEFAULT_STATE));
 		inputs.debouncedValue = isTrue;
-		inputs.notDebouncedValue = isTrue;
+		inputs.nonDebouncedValue = isTrue;
 	}
 
 }

@@ -16,10 +16,9 @@ public class RealDigitalInput implements IDigitalInput {
 		this.debouncer = new Debouncer(debounceTime, debounceType);
 	}
 
-	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
 		inputs.debouncedValue = debouncer.calculate(digitalInput.get());
-		inputs.notDebouncedValue = digitalInput.get();
+		inputs.nonDebouncedValue = digitalInput.get();
 	}
 
 }

@@ -6,6 +6,6 @@ import org.littletonrobotics.junction.AutoLog;
 public class DigitalInputInputs {
 
 	public boolean debouncedValue = false;
-	public boolean notDebouncedValue = false;
+	public boolean nonDebouncedValue = false;
 
 }

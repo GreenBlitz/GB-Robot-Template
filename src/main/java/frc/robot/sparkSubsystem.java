@@ -9,19 +9,15 @@ import frc.utils.brakestate.BrakeStateManager;
 public class sparkSubsystem extends GBSubsystem {
     private final CANSparkMax motor;
 
-    public sparkSubsystem(String logPath) {
+    public sparkSubsystem(String logPath, int id) {
         super(logPath);
-        motor = new CANSparkMax(5, MotorType.kBrushless);
-        BrakeStateManager.addSubsystem(this);
+        motor = new CANSparkMax(id, MotorType.kBrushless);
     }
 
     @Override
     public void setBrake(boolean brake) {
-        if (brake){
-            motor.setIdleMode(CANSparkBase.IdleMode.kBrake);
-        }
-        else motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
-
+        CANSparkBase.IdleMode x = brake ? CANSparkBase.IdleMode.kBrake : CANSparkBase.IdleMode.kCoast;
+        motor.setIdleMode(x);
     }
 
     @Override

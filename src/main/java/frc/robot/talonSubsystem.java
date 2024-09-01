@@ -1,6 +1,8 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.CANSparkBase;
 import frc.utils.GBSubsystem;
 import frc.utils.devicewrappers.TalonFXWrapper;
 import frc.utils.brakestate.BrakeStateManager;
@@ -9,18 +11,15 @@ public class talonSubsystem extends GBSubsystem {
 
     private final TalonFXWrapper motor;
 
-    public talonSubsystem(String logPath) {
+    public talonSubsystem(String logPath, int id) {
         super(logPath);
-        motor = new TalonFXWrapper(11);
-        BrakeStateManager.addSubsystem(this);
+        motor = new TalonFXWrapper(16);
     }
 
     @Override
     public void setBrake(boolean brake) {
-        if (brake) {
-            motor.setNeutralMode(NeutralModeValue.Brake);
-        }
-        else motor.setNeutralMode(NeutralModeValue.Coast);
+        NeutralModeValue x = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+        motor.setNeutralMode(x);
     }
 
     @Override

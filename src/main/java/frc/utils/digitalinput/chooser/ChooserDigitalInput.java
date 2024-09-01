@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
 
-import java.util.function.Consumer;
 
 public class ChooserDigitalInput implements IDigitalInput {
 

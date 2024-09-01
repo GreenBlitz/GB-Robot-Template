@@ -8,18 +8,24 @@ import frc.utils.digitalinput.IDigitalInput;
 public class ChanneledDigitalInput implements IDigitalInput {
 
 	private final DigitalInput digitalInput;
-
 	private final Debouncer debouncer;
+	private final boolean inverted;
 
-	public ChanneledDigitalInput(int channel, double debounceTime, Debouncer.DebounceType debounceType) {
+	public ChanneledDigitalInput(int channel, double debounceTime, boolean inverted) {
 		this.digitalInput = new DigitalInput(channel);
 		this.debouncer = new Debouncer(debounceTime);
+		this.inverted = inverted;
 	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.debouncedValue = debouncer.calculate(digitalInput.get());
-		inputs.nonDebouncedValue = digitalInput.get();
+		if (inverted) {
+			inputs.debouncedValue = !debouncer.calculate(digitalInput.get());
+			inputs.nonDebouncedValue = !digitalInput.get();
+		} else {
+			inputs.debouncedValue = debouncer.calculate(digitalInput.get());
+			inputs.nonDebouncedValue = digitalInput.get();
+		}
 	}
 
 }

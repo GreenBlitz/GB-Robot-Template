@@ -1,19 +1,19 @@
-package frc.utils.digitalinput.real;
+package frc.utils.digitalinput.channeled;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
 
-public class RealDigitalInput implements IDigitalInput {
+public class ChanneledDigitalInput implements IDigitalInput {
 
 	private final DigitalInput digitalInput;
 
 	private final Debouncer debouncer;
 
-	public RealDigitalInput(int channel, double debounceTime, Debouncer.DebounceType debounceType) {
+	public ChanneledDigitalInput(int channel, double debounceTime, Debouncer.DebounceType debounceType) {
 		this.digitalInput = new DigitalInput(channel);
-		this.debouncer = new Debouncer(debounceTime, debounceType);
+		this.debouncer = new Debouncer(debounceTime);
 	}
 
 	@Override

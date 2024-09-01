@@ -1,14 +1,13 @@
 package frc.utils.digitalinput.chooser;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
 
 import java.util.function.Consumer;
 
 public class ChooserDigitalInput implements IDigitalInput {
-
-	private final Consumer<Boolean> isTrueConsumer = this::setIsTrue;
 
 	private boolean isTrue;
 
@@ -18,7 +17,7 @@ public class ChooserDigitalInput implements IDigitalInput {
 		isTrueSendableChooser.addOption("false", false);
 
 		this.isTrue = ChooserDigitalInputConstants.DEFAULT_STATE;
-		isTrueSendableChooser.onChange(isTrueConsumer);
+		SmartDashboard.putData(isTrueSendableChooser);
 	}
 
 	public void setIsTrue(boolean isTrue) {

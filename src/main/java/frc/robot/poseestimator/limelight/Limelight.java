@@ -18,25 +18,25 @@ public class Limelight extends GBSubsystem {
     private String name;
 
     public Limelight(String limelightName) {
-        super("LimeLight " + limelightName + "\\");
+        super(VisionConstants.LimeLightLogPathBeginning + limelightName + "/");
         this.name = limelightName;
-        String robotPoseQuery = "botpose_wpiblue";
-        robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry(robotPoseQuery);
+        robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("botpose_wpiblue");
         tagPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("targetpose_cameraspace");
         idEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("tid");
     }
 
     public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
-        double[] poseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-        double processingLatencySeconds = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.TOTAL_LATENCY)] / 1000;
-        double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
         int id = (int) idEntry.getInteger(-1);
-
-        Rotation2d angleOffset = AllianceUtilities.isBlueAlliance() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
-
         if (id == -1) {
             return Optional.empty();
         }
+
+        double[] poseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+        double processingLatencySeconds = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.TOTAL_LATENCY)] / 1000;
+        double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
+
+        Rotation2d angleOffset = AllianceUtilities.isBlueAlliance() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
+
 
         Pose2d robotPose = new Pose2d(
                 poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.X_AXIS)],
@@ -53,8 +53,7 @@ public class Limelight extends GBSubsystem {
     }
 
     public boolean getAprilTagConfidence() {
-        boolean aprilTagHeightConfidence = getAprilTagHeight() < VisionConstants.APRIL_TAG_HEIGHT_METERS + VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS
-                || getAprilTagHeight() > VisionConstants.APRIL_TAG_HEIGHT_METERS - VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
+        boolean aprilTagHeightConfidence = Math.abs(getAprilTagHeight() - VisionConstants.APRIL_TAG_HEIGHT_METERS) < VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
         return aprilTagHeightConfidence;
     }
 

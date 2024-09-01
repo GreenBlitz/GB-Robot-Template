@@ -64,8 +64,8 @@ public class PoseEstimator implements IPoseEstimator{
     }
 
     @Override
-    public void setStandardDeviations(Matrix<N3, N1> stdDevs) {
-        poseEstimator.setVisionMeasurementStdDevs(stdDevs);
+    public void setStandardDeviations(Matrix<N3, N1> standardDeviations) {
+        poseEstimator.setVisionMeasurementStdDevs(standardDeviations);
     }
 
     @Override

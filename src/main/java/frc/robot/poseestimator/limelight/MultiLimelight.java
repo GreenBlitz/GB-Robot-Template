@@ -18,10 +18,9 @@ public class MultiLimelight extends GBSubsystem {
     private static MultiLimelight instance;
 
     private List<Limelight> limelights;
-    private Pose2d currentPosition;
 
     private MultiLimelight() {
-        super("MultiLimeLight/");
+        super(VisionConstants.MultiLimeLightLogPath);
         limelights = new ArrayList<>();
         for (String limelightName : VisionConstants.LIMELIGHT_NAMES) {
             limelights.add(new Limelight(limelightName));
@@ -43,9 +42,8 @@ public class MultiLimelight extends GBSubsystem {
         ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
 
         for (Limelight limelight : limelights) {
-            currentPosition = Robot.getPosEstimator.getOdometryPose();
             if (limelight.hasTarget()) {
-                if (getLimelightedOutputInTolerance(limelight)) {
+                if (isLimelightedOutputInTolerance(limelight)) {
                     estimates.add(limelight.getUpdatedPose2DEstimation());
                 }
             }
@@ -54,10 +52,12 @@ public class MultiLimelight extends GBSubsystem {
         return estimates;
     }
 
-    public boolean getLimelightedOutputInTolerance(Limelight limelight) {
+    public boolean isLimelightedOutputInTolerance(Limelight limelight) {
         Pose2d limelightPosition;
         Transform2d transformDifference;
         Rotation2d rotationDifference;
+
+        Pose2d currentPosition = Robot.getPosEstimator.getOdometryPose();
 
         if (limelight.getAprilTagConfidence())
             if (limelight.getUpdatedPose2DEstimation().isPresent()) {
@@ -65,24 +65,24 @@ public class MultiLimelight extends GBSubsystem {
                 transformDifference = limelightPosition.minus(currentPosition);
                 rotationDifference = limelightPosition.getRotation().minus(currentPosition.getRotation());
 
-                return transformDifference.getTranslation().getNorm() >= VisionConstants.POSITION_TOLERANCE
-                        && rotationDifference.getDegrees() >= VisionConstants.ROTATION_TOLERANCE.getDegrees();
+                return transformDifference.getTranslation().getNorm() <= VisionConstants.POSITION_TOLERANCE
+                        && rotationDifference.getDegrees() <= VisionConstants.ROTATION_TOLERANCE.getDegrees();
             }
 
         return false;
     }
 
-
     public void recordEstimatedPositions() {
         int i = 0;
-        for (Optional<Pair<Pose2d, Double>> estimation : MultiLimelight.getInstance().getAll2DEstimates()) {
+        for (Optional<Pair<Pose2d, Double>> estimation : instance.getAll2DEstimates()) {
+            i++;
             if (estimation.isPresent()) {
-                Logger.recordOutput(super.getLogPath() + "estimation " + i, estimation.get().getFirst());
+                Logger.recordOutput(super.getLogPath() + VisionConstants.EstimationLogPath + i, estimation.get().getFirst());
             }
         }
     }
 
-    public double getDynamicStdDevs(int limelightId) {
+    public double getDynamicStandardDeviations(int limelightId) {
         return limelights.get(limelightId).getDistanceFromAprilTag() / VisionConstants.VISION_TO_STANDARD_DEVIATION;
     }
 

@@ -44,12 +44,12 @@ public class PoseEstimatorMath {
     public static Matrix<N3, N3> kalmanFilterAlgorithm(double[] squaredVisionMatrix, Matrix<N3, N1> standardDeviations) {
         Matrix<N3, N3> visionK = new Matrix<>(Nat.N3(), Nat.N3());
         for (int row = 0; row < visionK.getNumRows(); ++row) {
-            double stdDev = standardDeviations.get(row, 0);
-            if (stdDev == 0.0) {
+            double standardDeviation = standardDeviations.get(row, 0);
+            if (standardDeviation == 0.0) {
                 visionK.set(row, row, 0.0);
             }
             else {
-                visionK.set(row, row, stdDev / (stdDev + Math.sqrt(stdDev * squaredVisionMatrix[row])));
+                visionK.set(row, row, standardDeviation / (standardDeviation + Math.sqrt(standardDeviation * squaredVisionMatrix[row])));
             }
         }
         return visionK;

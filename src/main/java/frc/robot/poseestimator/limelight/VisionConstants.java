@@ -9,6 +9,10 @@ public class VisionConstants {
             "limelight-gb"
     };
 
+    public static final String LimeLightLogPathBeginning = "Limelight ";
+    public static final String MultiLimeLightLogPath = "MultiLimeLight/";
+    public static final String EstimationLogPath = "estimation ";
+
     //! shall be calibrated
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(20);
 

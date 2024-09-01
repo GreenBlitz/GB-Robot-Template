@@ -18,7 +18,7 @@ public class MultiLimelight extends GBSubsystem {
     private List<Limelight> limelights;
 
     private MultiLimelight() {
-        super(VisionConstants.MultiLimeLightLogPath);
+        super(VisionConstants.MULTI_LIMELIGHT_LOGPATH);
         limelights = new ArrayList<>();
         for (String limelightName : VisionConstants.LIMELIGHT_NAMES) {
             limelights.add(new Limelight(limelightName));
@@ -53,23 +53,24 @@ public class MultiLimelight extends GBSubsystem {
     }
 
     public boolean isLimelightValid(Limelight limelight) {
-        if (limelight.hasTarget()) {
-            if (limelight.isAprilTagInProperHeight())
-                if (limelight.getUpdatedPose2DEstimation().isPresent()) {
-                    return isLimelightedOutputInTolerance(limelight);
-                }
+        if (
+                limelight.hasTarget()
+                && limelight.isAprilTagInProperHeight()
+                && limelight.getUpdatedPose2DEstimation().isPresent()
+        ) {
+            return isLimelightedOutputInTolerance(limelight);
         }
 
         return false;
     }
 
     public void recordEstimatedPositions() {
-        int i = 0;
+        int i = 1;
         for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
-            i++;
             if (estimation.isPresent()) {
-                Logger.recordOutput(super.getLogPath() + VisionConstants.EstimationLogPath + i, estimation.get().getFirst());
+                Logger.recordOutput(super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH + i, estimation.get().getFirst());
             }
+            i++;
         }
     }
 
@@ -82,9 +83,9 @@ public class MultiLimelight extends GBSubsystem {
     }
 
     public Optional<Pair<Pose2d, Double>> getFirstAvailableTarget() {
-        for (Optional<Pair<Pose2d, Double>> output : getAll2DEstimates()) {
-            if (output.isPresent()) {
-                return output;
+        for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
+            if (estimation.isPresent()) {
+                return estimation;
             }
         }
 

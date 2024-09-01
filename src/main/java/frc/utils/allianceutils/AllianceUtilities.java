@@ -1,4 +1,4 @@
-package frc.utils;
+package frc.utils.allianceutils;
 
 import frc.robot.constants.FieldConstants;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,7 +18,7 @@ public class AllianceUtilities {
      */
     public static boolean isBlueAlliance() {
         final double timestamp = Timer.getFPGATimestamp();
-        if (timestamp - BLUE_ALLIANCE_CHECK_TIMESTAMP > FieldConstants.MINIMUM_TIMESTAMP_ALLIANCE_CHECK) {
+        if (timestamp - BLUE_ALLIANCE_CHECK_TIMESTAMP > AllianceConstants.MINIMUM_TIMESTAMP_ALLIANCE_CHECK) {
             ALLIANCE = DriverStation.getAlliance().orElse(DriverStation.Alliance.Red);
             BLUE_ALLIANCE_CHECK_TIMESTAMP = timestamp;
         }
@@ -52,7 +52,7 @@ public class AllianceUtilities {
      * @return the rotation
      */
     public static Rotation2d toMirroredAllianceRotation(Rotation2d rotation) {
-        return isBlueAlliance() ? rotation : FieldConstants.FULL_CYCLE.minus(rotation);
+        return isBlueAlliance() ? rotation : AllianceConstants.FULL_CIRCLE.minus(rotation);
     }
 
     private static Pose2d mirror(Pose2d pose) {
@@ -67,7 +67,7 @@ public class AllianceUtilities {
         return new Pose2d(
                 FieldConstants.LENGTH_METERS - pose.getX(),
                 FieldConstants.WIDTH_METERS - pose.getY(),
-                pose.getRotation().minus(FieldConstants.HALF_CYCLE)
+                pose.getRotation().minus(AllianceConstants.HALF_CYCLE)
         );
     }
 

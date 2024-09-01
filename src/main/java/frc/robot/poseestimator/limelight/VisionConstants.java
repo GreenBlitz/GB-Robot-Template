@@ -10,9 +10,11 @@ public class VisionConstants {
             "limelight-gb"
     };
 
-    public static final String LimeLightLogPathBeginning = "Limelight ";
-    public static final String MultiLimeLightLogPath = "MultiLimeLight/";
-    public static final String EstimationLogPath = "estimation ";
+    public static final String LIMELIGHT_LOGPATH_PREFIX = "Limelight ";
+
+    public static final String MULTI_LIMELIGHT_LOGPATH = "MultiLimeLight/";
+
+    public static final String ESTIMATION_LOGPATH = "estimation ";
 
     //! shall be calibrated
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(20);
@@ -27,6 +29,12 @@ public class VisionConstants {
     public final static double APRIL_TAG_HEIGHT_METERS = 1.2397;
 
     public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 0.07;
+
+
+    public final static Rotation2d BLUE_ALLIANCE_POSE_OFFSET = Rotation2d.fromDegrees(0);
+
+    public final static Rotation2d RED_ALLIANCE_POSE_OFFSET = Rotation2d.fromDegrees(180);
+
 
     public enum LIMELIGHT_ARRAY_VALUES {
         X_AXIS,

@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
-import frc.utils.AllianceUtilities;
+import frc.utils.allianceutils.AllianceUtilities;
 import frc.utils.GBSubsystem;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class Limelight extends GBSubsystem {
     private String name;
 
     public Limelight(String limelightName) {
-        super(VisionConstants.LimeLightLogPathBeginning + limelightName + "/");
+        super(VisionConstants.LIMELIGHT_LOGPATH_PREFIX + limelightName + "/");
         this.name = limelightName;
         robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("botpose_wpiblue");
         tagPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("targetpose_cameraspace");
@@ -35,7 +35,7 @@ public class Limelight extends GBSubsystem {
         double processingLatencySeconds = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.TOTAL_LATENCY)] / 1000;
         double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
-        Rotation2d angleOffset = AllianceUtilities.isBlueAlliance() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
+        Rotation2d angleOffset = AllianceUtilities.isBlueAlliance() ? VisionConstants.BLUE_ALLIANCE_POSE_OFFSET : VisionConstants.RED_ALLIANCE_POSE_OFFSET;
 
         Pose2d robotPose = new Pose2d(
                 poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.X_AXIS)],

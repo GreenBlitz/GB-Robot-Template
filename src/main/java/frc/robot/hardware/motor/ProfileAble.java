@@ -16,5 +16,4 @@ public interface ProfileAble {
 
 	void updateInputs(PIDAbleInputsAutoLogged inputs);
 
-
 }

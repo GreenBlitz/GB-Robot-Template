@@ -66,12 +66,12 @@ public class MultiLimelight extends GBSubsystem {
     }
 
     public boolean isLimelightValid(Limelight limelight) {
-            if (limelight.hasTarget()) {
-                if (limelight.isAprilTagInProperHeight())
-                    if (limelight.getUpdatedPose2DEstimation().isPresent()) {
-                        return isLimelightedOutputInTolerance(limelight);
-                    }
-            }
+        if (limelight.hasTarget()) {
+            if (limelight.isAprilTagInProperHeight())
+                if (limelight.getUpdatedPose2DEstimation().isPresent()) {
+                    return isLimelightedOutputInTolerance(limelight);
+                }
+        }
 
         return false;
     }
@@ -100,6 +100,7 @@ public class MultiLimelight extends GBSubsystem {
                 return output;
             }
         }
+
         return Optional.empty();
     }
 

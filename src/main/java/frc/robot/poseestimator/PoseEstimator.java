@@ -1,15 +1,11 @@
 package frc.robot.poseestimator;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import java.util.NoSuchElementException;
@@ -19,7 +15,7 @@ public class PoseEstimator implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final SwerveDriveKinematics kinematics;
-	private final Matrix<N3, N1> odometryStandardDeviations;
+	private final double[] odometryStandardDeviations;
 	private Pose2d odometryPose;
 	private Pose2d estimatedPose;
 	private SwerveDriveWheelPositions lastWheelPositions;
@@ -37,7 +33,7 @@ public class PoseEstimator implements IPoseEstimator {
 		this.kinematics = kinematics;
 		this.lastWheelPositions = initialWheelPositions;
 		this.lastGyroAngle = initialGyroAngle;
-		this.odometryStandardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
+		this.odometryStandardDeviations = new double[3];
 		setOdometryStandardDeviations(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS);
 	}
 
@@ -82,10 +78,9 @@ public class PoseEstimator implements IPoseEstimator {
 	}
 
 	@Override
-	public void setOdometryStandardDeviations(Matrix<N3, N1> newStandardDeviations) {
-		for (int row = 0; row < newStandardDeviations.getNumRows(); row++) {
-			odometryStandardDeviations
-				.set(row, 0, Math.pow(newStandardDeviations.get(row, 0), PoseEstimatorConstants.KALMAN_EXPONENT));
+	public void setOdometryStandardDeviations(double[] newStandardDeviations) {
+		for (int row = 0; row < newStandardDeviations.length; row++) {
+			odometryStandardDeviations[row] = Math.pow(newStandardDeviations[row], PoseEstimatorConstants.KALMAN_EXPONENT);
 		}
 	}
 

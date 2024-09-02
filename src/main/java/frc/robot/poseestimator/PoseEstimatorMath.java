@@ -1,15 +1,10 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.observations.VisionObservation;
 
 public class PoseEstimatorMath {
@@ -28,14 +23,13 @@ public class PoseEstimatorMath {
 		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
 	}
 
-	public static Matrix<N3, N3>
-		combineStandardDeviationsMatrices(Matrix<N3, N1> visionStandardDeviations, Matrix<N3, N1> odometryStandardDeviations) {
-		Matrix<N3, N3> combinedStandardDeviations = new Matrix<>(Nat.N3(), Nat.N3());
-		for (int row = 0; row < combinedStandardDeviations.getNumRows(); row++) {
-			double odometryStandardDeviation = odometryStandardDeviations.get(row, 0);
-			double visionStandardDeviation = visionStandardDeviations.get(row, 0);
-			combinedStandardDeviations
-				.set(row, row, combineStandardDeviations(odometryStandardDeviation, visionStandardDeviation));
+	public static double[]
+		combineStandardDeviationsMatrices(double[] visionStandardDeviations, double[] odometryStandardDeviations) {
+		double[] combinedStandardDeviations = new double[3];
+		for (int row = 0; row < combinedStandardDeviations.length; row++) {
+			double odometryStandardDeviation = odometryStandardDeviations[row];
+			double visionStandardDeviation = visionStandardDeviations[row];
+			combinedStandardDeviations[row] = combineStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
 		}
 		return combinedStandardDeviations;
 	}
@@ -49,32 +43,37 @@ public class PoseEstimatorMath {
 			/ (odometryStandardDeviation + Math.sqrt(odometryStandardDeviation * squaredVisionStandardDeviation));
 	}
 
-	public static Transform2d useKalmanOnTransform(
-		VisionObservation observation,
-		Pose2d currentPoseEstimation,
-		Matrix<N3, N1> odometryStandardDeviations
-	) {
-		Matrix<N3, N3> combinedStandardDeviations = PoseEstimatorMath
+	public static Transform2d
+		useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, double[] odometryStandardDeviations) {
+		double[] combinedStandardDeviations = PoseEstimatorMath
 			.combineStandardDeviationsMatrices(observation.standardDeviations(), odometryStandardDeviations);
 		Transform2d visionDifferenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
 	public static Transform2d
-		scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, Matrix<N3, N3> combinedStandardDeviations) {
-		Matrix<
-			N3,
-			N1> visionDifferenceFromOdometryMatrix = VecBuilder.fill(
-				visionDifferenceFromOdometry.getX(),
-				visionDifferenceFromOdometry.getY(),
-				visionDifferenceFromOdometry.getRotation().getRadians()
-			);
-		Matrix<N3, N1> visionMatrixTimesDifferences = combinedStandardDeviations.times(visionDifferenceFromOdometryMatrix);
-		return new Transform2d(
-			visionMatrixTimesDifferences.get(0, 0),
-			visionMatrixTimesDifferences.get(1, 0),
-			Rotation2d.fromRadians(visionMatrixTimesDifferences.get(2, 0))
+		scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
+		double[] visionDifferenceFromOdometryMatrix = {
+			visionDifferenceFromOdometry.getX(),
+			visionDifferenceFromOdometry.getY(),
+			visionDifferenceFromOdometry.getRotation().getRadians()};
+		double[] standardDeviationsAppliedTransform = oneDimensionalHadamardProduct(
+			combinedStandardDeviations,
+			visionDifferenceFromOdometryMatrix
 		);
+		return new Transform2d(
+			standardDeviationsAppliedTransform[0],
+			standardDeviationsAppliedTransform[1],
+			Rotation2d.fromRadians(standardDeviationsAppliedTransform[2])
+		);
+	}
+
+	public static double[] oneDimensionalHadamardProduct(double[] array1, double[] array2) {
+		double[] result = new double[Math.min(array1.length, array2.length)];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = array1[i] * array2[i];
+		}
+		return result;
 	}
 
 	public static Pose2d combineVisionToOdometry(
@@ -82,7 +81,7 @@ public class PoseEstimatorMath {
 		VisionObservation observation,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
-		Matrix<N3, N1> odometryStandardDeviations
+		double[] odometryStandardDeviations
 	) {
 		Transform2d poseDifferenceFromSample = new Transform2d(odometryInterpolatedPoseSample, odometryPose);
 		Transform2d invertedPoseDifferenceFromSample = poseDifferenceFromSample.inverse();

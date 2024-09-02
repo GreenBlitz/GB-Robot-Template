@@ -4,8 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 
 public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
-    Pose2d getEstimatedPose();
+	Pose2d getEstimatedPose();
 
-    void resetPose(Pose2d newPose);
+	void resetPose(Pose2d newPose);
 
 }

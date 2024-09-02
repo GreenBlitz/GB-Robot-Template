@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface IVisionEstimator {
 
-    void updateVision(VisionObservation visionObservation);
+	void updateVision(VisionObservation visionObservation);
 
-    Optional<Pose2d> getVisionPose();
+	Optional<Pose2d> getVisionPose();
 
 }

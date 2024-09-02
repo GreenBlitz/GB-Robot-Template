@@ -11,12 +11,12 @@ import frc.robot.poseestimator.observations.OdometryObservation;
 
 public interface IOdometryEstimator {
 
-    void updateOdometry(OdometryObservation odometryObservation);
+	void updateOdometry(OdometryObservation odometryObservation);
 
-    void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose);
+	void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose);
 
-    Pose2d getOdometryPose();
+	Pose2d getOdometryPose();
 
-    void setOdometryStandardDeviations(Matrix<N3, N1> standardDeviations);
+	void setOdometryStandardDeviations(Matrix<N3, N1> standardDeviations);
 
 }

@@ -6,36 +6,74 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.utils.RobotTypeUtils;
+import frc.robot.poseestimation.poseEstimator;
+import frc.robot.poseestimator.PoseEstimator;
+import frc.robot.structures.SuperStructure;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+
+import java.util.Optional;
+
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link RobotManager}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
+ * (including subsystems, commands, and trigger mappings) should be declared here.
  */
 public class Robot {
 
-    public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.REAL);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-    public Robot() {
-        configureBindings();
-    }
+	private final Swerve swerve;
+	private final PoseEstimator PoseEstimator;
+	private final SuperStructure superStructure;
 
-    private void initializeSubsystems() {
+	public Robot() {
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveName.SWERVE),
+			ModulesFactory.create(SwerveName.SWERVE),
+			GyroFactory.create(SwerveName.SWERVE)
+		);
+		this.PoseEstimator = new PoseEstimator(SwerveConstants.KINEMATICS, SwerveConstants.INITIALWHEELPOSOTIONS, SwerveConstants.INITIALGYROANGLE );
 
-    }
+		swerve.setHeadingSupplier(() -> PoseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(PoseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
-    private void configureCommands() {
+		this.superStructure = new SuperStructure(swerve, PoseEstimator);
 
-    }
+		buildPathPlannerForAuto();
+		configureBindings();
+	}
 
-    private void configureBindings() {
-        JoysticksBindings.configureBindings();
-    }
+	private void buildPathPlannerForAuto() {
+		// Register commands...
+		swerve.configPathPlanner(PoseEstimator::getEstimatedPose, PoseEstimator::resetPose);
+	}
 
-    public Command getAutonomousCommand() {
-        return new InstantCommand();
-    }
+	private void configureBindings() {
+		JoysticksBindings.configureBindings(this);
+	}
+
+
+	public Command getAutonomousCommand() {
+		return new InstantCommand();
+	}
+
+	public SuperStructure getSuperStructure() {
+		return superStructure;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
+	}
+
+	public PoseEstimator getPoseEstimator() {
+		return PoseEstimator;
+	}
 
 }

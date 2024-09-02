@@ -1,6 +1,8 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.poseestimator.observations.OdometryObservation;
+import frc.robot.poseestimator.observations.VisionObservation;
 
 public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
@@ -8,4 +10,5 @@ public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
     void resetPose(Pose2d newPose);
 
+    void updatePoseEstimator();
 }

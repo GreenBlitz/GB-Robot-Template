@@ -4,22 +4,23 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
+import jdk.incubator.vector.VectorOperators;
 
 public class ChanneledDigitalInput implements IDigitalInput {
 
 	private final DigitalInput digitalInput;
 	private final Debouncer debouncer;
-	private final boolean inverted;
+	private final boolean normallyClosed;
 
-	public ChanneledDigitalInput(int channel, double debounceTime, boolean inverted) {
+	public ChanneledDigitalInput(int channel, double debounceTime, boolean normallyClosed) {
 		this.digitalInput = new DigitalInput(channel);
 		this.debouncer = new Debouncer(debounceTime);
-		this.inverted = inverted;
+		this.normallyClosed = normallyClosed;
 	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		if (inverted) {
+		if (normallyClosed) {
 			inputs.debouncedValue = !debouncer.calculate(digitalInput.get());
 			inputs.nonDebouncedValue = !digitalInput.get();
 		} else {

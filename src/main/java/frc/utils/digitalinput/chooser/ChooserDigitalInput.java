@@ -8,25 +8,22 @@ import frc.utils.digitalinput.IDigitalInput;
 
 public class ChooserDigitalInput implements IDigitalInput {
 
-	private boolean isTrue;
+	private final SendableChooser<Boolean> isTrueSendableChooser;
 
 	public ChooserDigitalInput() {
-		SendableChooser<Boolean> isTrueSendableChooser = new SendableChooser<>();
+		isTrueSendableChooser = new SendableChooser<>();
+		isTrueSendableChooser.setDefaultOption(ChooserDigitalInputConstants.DEFAULT_STATE_STRING, ChooserDigitalInputConstants.DEFAULT_STATE);
 		isTrueSendableChooser.addOption("true", true);
 		isTrueSendableChooser.addOption("false", false);
 
-		this.isTrue = ChooserDigitalInputConstants.DEFAULT_STATE;
 		SmartDashboard.putData(isTrueSendableChooser);
 	}
 
-	public void setIsTrue(boolean isTrue) {
-		this.isTrue = isTrue;
-	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.debouncedValue = isTrue;
-		inputs.nonDebouncedValue = isTrue;
+		inputs.debouncedValue = isTrueSendableChooser.getSelected();
+		inputs.nonDebouncedValue = isTrueSendableChooser.getSelected();
 	}
 
 }

@@ -6,5 +6,4 @@ public class ChooserDigitalInputConstants {
 	public static final String DEFAULT_STATE_STRING = "false";
 
 
-
 }

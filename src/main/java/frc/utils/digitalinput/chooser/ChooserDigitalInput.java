@@ -12,7 +12,8 @@ public class ChooserDigitalInput implements IDigitalInput {
 
 	public ChooserDigitalInput() {
 		isTrueSendableChooser = new SendableChooser<>();
-		isTrueSendableChooser.setDefaultOption(ChooserDigitalInputConstants.DEFAULT_STATE_STRING, ChooserDigitalInputConstants.DEFAULT_STATE);
+		isTrueSendableChooser
+			.setDefaultOption(ChooserDigitalInputConstants.DEFAULT_STATE_STRING, ChooserDigitalInputConstants.DEFAULT_STATE);
 		isTrueSendableChooser.addOption("true", true);
 		isTrueSendableChooser.addOption("false", false);
 

@@ -4,7 +4,6 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
-import jdk.incubator.vector.VectorOperators;
 
 public class ChanneledDigitalInput implements IDigitalInput {
 

@@ -44,7 +44,7 @@ public class Pigeon2ConfigObject {
 		return gyro;
 	}
 
-    protected StatusSignal<Double> getYawSignal() {
+	protected StatusSignal<Double> getYawSignal() {
 		return yawSignal;
 	}
 

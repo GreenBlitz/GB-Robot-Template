@@ -210,7 +210,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public ChassisSpeeds getRobotRelativeVelocity() {
-		return SwerveConstants.KINEMATICS.toChassisSpeeds(modules.getCurrentStates());
+		return constants.kinematics().toChassisSpeeds(modules.getCurrentStates());
 	}
 
 	public ChassisSpeeds getFieldRelativeVelocity() {
@@ -311,7 +311,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS
+		SwerveModuleState[] swerveModuleStates = constants.kinematics()
 			.toSwerveModuleStates(speeds, stateHelper.getRotationAxis(swerveState.getRotateAxis()));
 		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop);
 	}

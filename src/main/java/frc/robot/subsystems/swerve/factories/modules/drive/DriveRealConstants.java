@@ -18,39 +18,44 @@ class DriveRealConstants {
 
 	private static final double SLIP_CURRENT = 60;
 
-	private static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-		Volts.of(0.5).per(Seconds.of(1)),
-		Volts.of(2),
-		null,
-		state -> SignalLogger.writeString("state", state.toString())
-	);
+	private static SysIdRoutine.Config generateSysidConfig() {
+		return new SysIdRoutine.Config(
+			Volts.of(0.5).per(Seconds.of(1)),
+			Volts.of(2),
+			null,
+			state -> SignalLogger.writeString("state", state.toString())
+		);
+	}
 
-	private static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration();
-	static {
-		MOTOR_CONFIG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-		MOTOR_CONFIG.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-		MOTOR_CONFIG.Feedback.SensorToMechanismRatio = 6.12;
+	private static TalonFXConfiguration generateMotorConfiguration() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-		MOTOR_CONFIG.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
-		MOTOR_CONFIG.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;
-		MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
-		MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
+		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+		configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+		configuration.Feedback.SensorToMechanismRatio = 6.12;
 
-		MOTOR_CONFIG.Slot0.kS = 0.21549;
-		MOTOR_CONFIG.Slot0.kV = 0.72124;
-		MOTOR_CONFIG.Slot0.kA = 0.11218;
-		MOTOR_CONFIG.Slot0.kP = 1.5;
-		MOTOR_CONFIG.Slot0.kI = 0;
-		MOTOR_CONFIG.Slot0.kD = 0;
+		configuration.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
+		configuration.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;
+		configuration.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
+		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+
+		configuration.Slot0.kS = 0.21549;
+		configuration.Slot0.kV = 0.72124;
+		configuration.Slot0.kA = 0.11218;
+		configuration.Slot0.kP = 1.5;
+		configuration.Slot0.kI = 0;
+		configuration.Slot0.kD = 0;
+
+		return configuration;
 	}
 
 	protected static TalonFXDriveConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
 			false,
-			MOTOR_CONFIG,
+			generateMotorConfiguration(),
 			ENABLE_FOC,
-			SYSID_CONFIG,
+			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
 		);
 	}
@@ -59,9 +64,9 @@ class DriveRealConstants {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
 			true,
-			MOTOR_CONFIG,
+			generateMotorConfiguration(),
 			ENABLE_FOC,
-			SYSID_CONFIG,
+			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
 		);
 	}
@@ -70,9 +75,9 @@ class DriveRealConstants {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
 			false,
-			MOTOR_CONFIG,
+			generateMotorConfiguration(),
 			ENABLE_FOC,
-			SYSID_CONFIG,
+			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
 		);
 	}
@@ -81,9 +86,9 @@ class DriveRealConstants {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
 			false,
-			MOTOR_CONFIG,
+			generateMotorConfiguration(),
 			ENABLE_FOC,
-			SYSID_CONFIG,
+			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"
 		);
 	}

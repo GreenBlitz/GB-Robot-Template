@@ -14,18 +14,21 @@ class SteerSimulationConstants {
 
 	private static final boolean ENABLE_FOC = true;
 
-	private static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration();
-	static {
-		MOTOR_CONFIG.Slot0.kP = 72;
-		MOTOR_CONFIG.Slot0.kI = 0;
-		MOTOR_CONFIG.Slot0.kD = 0;
-		MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
+	private static TalonFXConfiguration generateMotorConfiguration() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
+
+		configuration.Slot0.kP = 72;
+		configuration.Slot0.kI = 0;
+		configuration.Slot0.kD = 0;
+		configuration.ClosedLoopGeneral.ContinuousWrap = true;
+
+		return configuration;
 	}
 
 	protected static SimulationSteerConstants getConstants() {
 		return new SimulationSteerConstants(
 			new DCMotorSim(DCMotor.getFalcon500Foc(1), GEAR_RATIO, MOMENT_OF_INERTIA),
-			MOTOR_CONFIG,
+			generateMotorConfiguration(),
 			ENABLE_FOC,
 			new SysIdRoutine.Config()
 		);

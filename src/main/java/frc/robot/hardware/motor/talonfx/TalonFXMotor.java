@@ -91,11 +91,11 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void updateInputs(PIDAbleInputsAutoLogged inputs) {
+	public void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs) {
 		BaseStatusSignal.refreshAll(signals.position(), signals.velocity(), signals.acceleration());
-		inputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
-		inputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
-		inputs.acceleration = Rotation2d.fromRotations(signals.acceleration().getValue());
+		pidAbleInputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
+		pidAbleInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
+		pidAbleInputs.acceleration = Rotation2d.fromRotations(signals.acceleration().getValue());
 	}
 
 

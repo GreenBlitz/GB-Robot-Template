@@ -14,6 +14,6 @@ public interface ProfileAble {
 
 	void setTargetProfiledAngle(IControlRequest controlRequest);
 
-	void updateInputs(PIDAbleInputsAutoLogged inputs);
+	void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs);
 
 }

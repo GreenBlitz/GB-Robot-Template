@@ -16,6 +16,6 @@ public interface PIDAble {
 
 	void setTargetAngle(IControlRequest controlRequest);
 
-	void updateInputs(PIDAbleInputsAutoLogged inputs);
+	void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs);
 
 }

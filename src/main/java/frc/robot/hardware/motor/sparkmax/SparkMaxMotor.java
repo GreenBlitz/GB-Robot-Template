@@ -135,11 +135,11 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void updateInputs(PIDAbleInputsAutoLogged inputs) {
-		inputs.angle = Rotation2d.fromRotations(motor.getEncoder().getPosition());
-		inputs.velocity = Rotation2d.fromRotations(motor.getEncoder().getVelocity());
-		inputs.acceleration = Rotation2d.fromRotations(inputs.velocity.getRotations() - lastVelocity.getRotations());
-		lastVelocity = inputs.velocity;
+	public void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs) {
+		pidAbleInputs.angle = Rotation2d.fromRotations(motor.getEncoder().getPosition());
+		pidAbleInputs.velocity = Rotation2d.fromRotations(motor.getEncoder().getVelocity());
+		pidAbleInputs.acceleration = Rotation2d.fromRotations(pidAbleInputs.velocity.getRotations() - lastVelocity.getRotations());
+		lastVelocity = pidAbleInputs.velocity;
 	}
 
 }

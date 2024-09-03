@@ -28,25 +28,25 @@ class DriveRealConstants {
 	}
 
 	private static TalonFXConfiguration generateMotorConfig() {
-		TalonFXConfiguration configuration = new TalonFXConfiguration();
+		TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
-		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-		configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-		configuration.Feedback.SensorToMechanismRatio = 6.12;
+		driveConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+		driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+		driveConfig.Feedback.SensorToMechanismRatio = 6.12;
 
-		configuration.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
-		configuration.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;
-		configuration.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
-		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+		driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
+		driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;
+		driveConfig.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
+		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		configuration.Slot0.kS = 0.21549;
-		configuration.Slot0.kV = 0.72124;
-		configuration.Slot0.kA = 0.11218;
-		configuration.Slot0.kP = 1.5;
-		configuration.Slot0.kI = 0;
-		configuration.Slot0.kD = 0;
+		driveConfig.Slot0.kS = 0.21549;
+		driveConfig.Slot0.kV = 0.72124;
+		driveConfig.Slot0.kA = 0.11218;
+		driveConfig.Slot0.kP = 1.5;
+		driveConfig.Slot0.kI = 0;
+		driveConfig.Slot0.kD = 0;
 
-		return configuration;
+		return driveConfig;
 	}
 
 	protected static TalonFXDriveConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {

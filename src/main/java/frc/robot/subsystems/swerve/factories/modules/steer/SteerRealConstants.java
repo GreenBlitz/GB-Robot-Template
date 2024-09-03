@@ -27,25 +27,25 @@ class SteerRealConstants {
 	}
 
 	private static TalonFXConfiguration generateMotorConfig() {
-		TalonFXConfiguration configuration = new TalonFXConfiguration();
+		TalonFXConfiguration steerConfig = new TalonFXConfiguration();
 
-		configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-		configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-		configuration.CurrentLimits.StatorCurrentLimit = 30;
-		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+		steerConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
+		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		configuration.Feedback.RotorToSensorRatio = 150.0 / 7.0;
-		configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		steerConfig.Feedback.RotorToSensorRatio = 150.0 / 7.0;
+		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
-		configuration.Slot0.kS = 0.19648;
-		configuration.Slot0.kV = 2.5763;
-		configuration.Slot0.kA = 0.50361;
-		configuration.Slot0.kP = 88;
-		configuration.Slot0.kI = 0;
-		configuration.Slot0.kD = 1.5;
-		configuration.ClosedLoopGeneral.ContinuousWrap = true;
+		steerConfig.Slot0.kS = 0.19648;
+		steerConfig.Slot0.kV = 2.5763;
+		steerConfig.Slot0.kA = 0.50361;
+		steerConfig.Slot0.kP = 88;
+		steerConfig.Slot0.kI = 0;
+		steerConfig.Slot0.kD = 1.5;
+		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
-		return configuration;
+		return steerConfig;
 	}
 
 	protected static TalonFXSteerConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {

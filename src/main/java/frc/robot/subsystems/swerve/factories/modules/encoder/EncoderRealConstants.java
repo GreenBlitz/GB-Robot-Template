@@ -7,12 +7,12 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 class EncoderRealConstants {
 
 	protected static CANcoderConfiguration generateEncoderConfig() {
-		CANcoderConfiguration configuration = new CANcoderConfiguration();
+		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
-		configuration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-		configuration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+		encoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
 
-		return configuration;
+		return encoderConfig;
 	}
 
 }

@@ -15,14 +15,14 @@ class SteerSimulationConstants {
 	private static final boolean ENABLE_FOC = true;
 
 	private static TalonFXConfiguration generateMotorConfig() {
-		TalonFXConfiguration configuration = new TalonFXConfiguration();
+		TalonFXConfiguration steerConfig = new TalonFXConfiguration();
 
-		configuration.Slot0.kP = 72;
-		configuration.Slot0.kI = 0;
-		configuration.Slot0.kD = 0;
-		configuration.ClosedLoopGeneral.ContinuousWrap = true;
+		steerConfig.Slot0.kP = 72;
+		steerConfig.Slot0.kI = 0;
+		steerConfig.Slot0.kD = 0;
+		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
-		return configuration;
+		return steerConfig;
 	}
 
 	protected static SimulationSteerConstants getConstants() {

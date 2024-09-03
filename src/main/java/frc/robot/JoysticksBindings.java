@@ -1,16 +1,21 @@
 package frc.robot;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
+
+import java.util.List;
 
 
 public class JoysticksBindings {
@@ -203,12 +208,12 @@ public class JoysticksBindings {
 				)
 		);
 		usedJoystick.POV_DOWN
-			.whileTrue(new InstantCommand(() -> PathPlannerUtils.removeAllDynamicObstacles(Robot.getPoseEstimator().getCurrentPose())));
+			.whileTrue(new InstantCommand(() -> PathPlannerUtils.removeAllDynamicObstacles(robot.getPoseEstimator().getCurrentPose())));
 		usedJoystick.POV_UP.whileTrue(
 			new InstantCommand(
 				() -> PathPlannerUtils.setDynamicObstacles(
 					List.of(Pair.of(new Translation2d(2.5, 7), new Translation2d(3.5, 5))),
-					Robot.poseEstimator.getCurrentPose()
+					robot.getPoseEstimator().getCurrentPose()
 				)
 			)
 		);
@@ -216,7 +221,7 @@ public class JoysticksBindings {
 			new InstantCommand(
 				() -> PathPlannerUtils.addDynamicObstacles(
 					List.of(Pair.of(new Translation2d(9, 7.5), new Translation2d(10, 6))),
-					Robot.poseEstimator.getCurrentPose()
+					robot.getPoseEstimator().getCurrentPose()
 				)
 			)
 		);

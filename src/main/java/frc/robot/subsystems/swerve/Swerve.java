@@ -21,8 +21,8 @@ import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.utils.GBSubsystem;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.cycletime.CycleTimeUtils;
-import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -97,7 +97,7 @@ public class Swerve extends GBSubsystem {
 			() -> !Field.isFieldConventionAlliance(),
 			this
 		);
-		PathPlannerUtils.setLoggingPathToPaths(pose -> Logger.recordOutput(getLogPath() + "CurrentPathToFollow", pose.toArray(new Pose2d[0])));
+		PathPlannerUtils.setupLogging(getLogPath());
 	}
 
 	public void setStateHelper(SwerveStateHelper swerveStateHelper) {

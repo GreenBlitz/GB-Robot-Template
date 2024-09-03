@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.SuperStructure;
@@ -13,6 +14,8 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.utils.auto.AutonomousChooser;
+import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;
 
@@ -50,7 +53,7 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.buildPathPlannerForAuto(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 		PathPlannerUtils.setTargetRotationOverride(() -> {
 			if (poseEstimator.getCurrentPose().getX() > 3)

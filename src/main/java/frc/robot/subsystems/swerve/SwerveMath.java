@@ -21,7 +21,10 @@ public class SwerveMath {
 	}
 
 	public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-		return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
+		return discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
+	}
+	public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds, double fudgeFactor) {
+		return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime() * fudgeFactor);
 	}
 
 	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, SwerveConstants constants) {

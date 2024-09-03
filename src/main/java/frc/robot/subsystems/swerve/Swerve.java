@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
@@ -22,6 +23,7 @@ import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.interpolator.DoubleInterpolator2D;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -46,6 +48,14 @@ public class Swerve extends GBSubsystem {
 	private SwerveState currentState;
 	private SwerveStateHelper stateHelper;
 	private Supplier<Rotation2d> headingSupplier;
+
+	private static DoubleInterpolator2D discritizationInterpolator = new DoubleInterpolator2D();
+	static {
+		discritizationInterpolator.put(new Translation2d(),0);
+		discritizationInterpolator.put(new Translation2d(4,0),5);
+		discritizationInterpolator.put(new Translation2d(0,2),3);
+		discritizationInterpolator.put(new Translation2d(0,5),3);
+	}
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro) {
@@ -286,7 +296,11 @@ public class Swerve extends GBSubsystem {
 		speeds = SwerveMath.applyDeadband(speeds);
 		speeds = handleHeadingControl(speeds, swerveState);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
-		speeds = SwerveMath.discretize(speeds);
+		double a  =discritizationInterpolator.get(
+				new Translation2d(SwerveMath.getDriveMagnitude(speeds), speeds.omegaRadiansPerSecond)
+		);
+		speeds = SwerveMath.discretize(speeds, a);
+		Logger.recordOutput("fudge factor", a);
 
 		applySpeeds(speeds, swerveState);
 	}

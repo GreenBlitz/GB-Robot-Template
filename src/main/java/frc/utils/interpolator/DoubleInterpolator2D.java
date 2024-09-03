@@ -3,8 +3,7 @@ package frc.utils.interpolator;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Translation2d;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 import static frc.utils.Translation2dUtils.getNegativeClosest;
 import static frc.utils.Translation2dUtils.getPositiveClosest;
@@ -29,9 +28,20 @@ public class DoubleInterpolator2D {
 			return dataMap.get(targetPoint);
 		}
 		Pair<Translation2d, Translation2d> closestTranslations = getTranslationPair(targetPoint, dataMap.keySet().toArray(new Translation2d[0]));
-		System.out.println(closestTranslations.getFirst());
+        System.out.println(closestTranslations.getFirst());
 		System.out.println(closestTranslations.getSecond());
 
+		if(Objects.isNull(closestTranslations.getFirst()) || Objects.isNull(closestTranslations.getSecond())){
+			if(Objects.isNull(closestTranslations.getFirst()) && !Objects.isNull(closestTranslations.getSecond())){
+				closestTranslations = new Pair<>(closestTranslations.getSecond(),closestTranslations.getSecond());
+			}
+			if(!Objects.isNull(closestTranslations.getFirst()) && Objects.isNull(closestTranslations.getSecond())){
+				closestTranslations = new Pair<>(closestTranslations.getFirst(),closestTranslations.getFirst());
+			}
+			if(Objects.isNull(closestTranslations.getFirst()) && Objects.isNull(closestTranslations.getSecond())){
+				return 0;
+			}
+		}
 		return InterpolationUtils.linearInterpolation2d(
 			closestTranslations.getFirst(),
 			dataMap.get(closestTranslations.getFirst()),
@@ -47,11 +57,11 @@ public class DoubleInterpolator2D {
 			return new Pair<>(knownPoint, knownPoint);
 		}
 		if (knownPoints.length == 2) {
-			Translation2d[] knownPointsArray = (Translation2d[]) Arrays.stream(knownPoints).toArray();
-			if (new Translation2d().getDistance(knownPointsArray[0]) < new Translation2d().getDistance(knownPointsArray[1])) {
-				return new Pair<>(knownPointsArray[0], knownPointsArray[1]);
+			List<Translation2d> knownPointsArray = Arrays.stream(knownPoints).toList();
+			if (new Translation2d().getDistance(knownPointsArray.get(0)) < new Translation2d().getDistance(knownPointsArray.get(1))) {
+				return new Pair<>(knownPointsArray.get(0), knownPointsArray.get(1));
 			} else {
-				return new Pair<>(knownPointsArray[1], knownPointsArray[0]);
+				return new Pair<>(knownPointsArray.get(1), knownPointsArray.get(0));
 			}
 		}
 		return new Pair<>(getNegativeClosest(target, knownPoints), getPositiveClosest(target, knownPoints));

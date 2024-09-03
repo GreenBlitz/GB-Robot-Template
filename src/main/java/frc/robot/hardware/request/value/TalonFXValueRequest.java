@@ -16,13 +16,13 @@ public class TalonFXValueRequest implements IValueRequest {
 		this.controlRequest = controlRequest;
 	}
 
-    public TalonFXValueRequest(VoltageOut voltageOut) {
-        this(voltageOut, voltageOut::withOutput);
-    }
+	public TalonFXValueRequest(VoltageOut voltageOut) {
+		this(voltageOut, voltageOut::withOutput);
+	}
 
-    public TalonFXValueRequest(TorqueCurrentFOC torqueCurrentFOC) {
-        this(torqueCurrentFOC, torqueCurrentFOC::withOutput);
-    }
+	public TalonFXValueRequest(TorqueCurrentFOC torqueCurrentFOC) {
+		this(torqueCurrentFOC, torqueCurrentFOC::withOutput);
+	}
 
 	@Override
 	public void withSetPoint(double setPoint) {

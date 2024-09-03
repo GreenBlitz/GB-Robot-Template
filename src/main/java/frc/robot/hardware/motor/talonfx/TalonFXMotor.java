@@ -10,7 +10,6 @@ import frc.robot.hardware.motor.PIDAble;
 import frc.robot.hardware.motor.PIDAbleInputsAutoLogged;
 import frc.robot.hardware.motor.ProfileAble;
 import frc.robot.hardware.request.angle.IAngleRequest;
-import frc.robot.hardware.request.angle.TalonFXAngleRequest;
 import frc.robot.hardware.request.value.IValueRequest;
 import frc.robot.hardware.request.value.TalonFXValueRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -97,6 +96,5 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		pidAbleInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
 		pidAbleInputs.acceleration = Rotation2d.fromRotations(signals.acceleration().getValue());
 	}
-
 
 }

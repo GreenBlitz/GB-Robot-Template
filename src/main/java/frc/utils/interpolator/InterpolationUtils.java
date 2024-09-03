@@ -28,5 +28,4 @@ public class InterpolationUtils {
 		double slope = (value2 - value1) / (totalDistance);
 		return value1 + slope * distanceTargetToNeighbor1;
 	}
-
 }

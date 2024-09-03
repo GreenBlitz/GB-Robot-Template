@@ -1,7 +1,7 @@
 package frc.robot.hardware.motor;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.request.IControlRequest;
+import frc.robot.hardware.request.angle.IAngleRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface ProfileAble {
@@ -10,9 +10,9 @@ public interface ProfileAble {
 
 	void resetAngle(Rotation2d angle);
 
-	void setTargetProfiledVelocity(IControlRequest controlRequest);
+	void setTargetProfiledVelocity(IAngleRequest profiledVelocityRequest);
 
-	void setTargetProfiledAngle(IControlRequest controlRequest);
+	void setTargetProfiledAngle(IAngleRequest profiledAngleRequest);
 
 	void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs);
 

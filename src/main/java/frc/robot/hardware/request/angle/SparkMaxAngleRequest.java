@@ -1,13 +1,13 @@
-package frc.robot.hardware.request;
+package frc.robot.hardware.request.angle;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class SparkMaxControlRequest implements IControlRequest {
+public class SparkMaxAngleRequest implements IAngleRequest {
 
 	private final int slot;
 	private Rotation2d setPoint;
 
-	public SparkMaxControlRequest(Rotation2d setPoint, int slot) {
+	public SparkMaxAngleRequest(Rotation2d setPoint, int slot) {
 		this.slot = slot;
 		this.setPoint = setPoint;
 	}

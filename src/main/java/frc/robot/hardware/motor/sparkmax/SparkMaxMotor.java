@@ -8,8 +8,10 @@ import frc.robot.hardware.motor.MotorInputsAutoLogged;
 import frc.robot.hardware.motor.PIDAble;
 import frc.robot.hardware.motor.PIDAbleInputsAutoLogged;
 import frc.robot.hardware.motor.ProfileAble;
-import frc.robot.hardware.request.IControlRequest;
-import frc.robot.hardware.request.SparkMaxControlRequest;
+import frc.robot.hardware.request.angle.IAngleRequest;
+import frc.robot.hardware.request.angle.SparkMaxAngleRequest;
+import frc.robot.hardware.request.value.IValueRequest;
+import frc.robot.hardware.request.value.SparkMaxValueRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
@@ -51,20 +53,22 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 		motor.set(power);
 	}
 
+
 	@Override
-	public void setVoltage(double voltage) {
-		motor.setVoltage(voltage);
+	public void setVoltage(IValueRequest voltageRequest) {
+		SparkMaxValueRequest sparkMaxVoltageRequest = (SparkMaxValueRequest) voltageRequest;
+		motor.getPIDController()
+			.setReference(sparkMaxVoltageRequest.getSetPoint(), CANSparkBase.ControlType.kVoltage, sparkMaxVoltageRequest.getSlot());
 	}
 
-
 	@Override
-	public void setTargetVelocity(IControlRequest request) {
-		SparkMaxControlRequest controlRequest = (SparkMaxControlRequest) request;
+	public void setTargetVelocity(IAngleRequest velocityRequest) {
+		SparkMaxAngleRequest sparkMaxVelocityRequest = (SparkMaxAngleRequest) velocityRequest;
 		motor.getPIDController()
 			.setReference(
-				controlRequest.getSetPoint().getRotations(),
+				sparkMaxVelocityRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kVelocity,
-				controlRequest.getSlot(),
+				sparkMaxVelocityRequest.getSlot(),
 				constants.feedforward()
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
@@ -75,13 +79,13 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void setTargetAngle(IControlRequest request) {
-		SparkMaxControlRequest controlRequest = (SparkMaxControlRequest) request;
+	public void setTargetAngle(IAngleRequest angleRequest) {
+		SparkMaxAngleRequest sparkMaxAngleRequest = (SparkMaxAngleRequest) angleRequest;
 		motor.getPIDController()
 			.setReference(
-				controlRequest.getSetPoint().getRotations(),
+				sparkMaxAngleRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kPosition,
-				controlRequest.getSlot(),
+				sparkMaxAngleRequest.getSlot(),
 				constants.feedforward()
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
@@ -93,13 +97,13 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 
 
 	@Override
-	public void setTargetProfiledVelocity(IControlRequest request) {
-		SparkMaxControlRequest controlRequest = (SparkMaxControlRequest) request;
+	public void setTargetProfiledVelocity(IAngleRequest profiledVelocityRequest) {
+		SparkMaxAngleRequest sparkMaxProfiledVelocityRequest = (SparkMaxAngleRequest) profiledVelocityRequest;
 		motor.getPIDController()
 			.setReference(
-				controlRequest.getSetPoint().getRotations(),
+				sparkMaxProfiledVelocityRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kSmartVelocity,
-				controlRequest.getSlot(),
+				sparkMaxProfiledVelocityRequest.getSlot(),
 				constants.feedforward()
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
@@ -110,13 +114,13 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void setTargetProfiledAngle(IControlRequest request) {
-		SparkMaxControlRequest controlRequest = (SparkMaxControlRequest) request;
+	public void setTargetProfiledAngle(IAngleRequest profiledAngleRequest) {
+		SparkMaxAngleRequest sparkMaxProfiledAngleRequest = (SparkMaxAngleRequest) profiledAngleRequest;
 		motor.getPIDController()
 			.setReference(
-				controlRequest.getSetPoint().getRotations(),
+				sparkMaxProfiledAngleRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kSmartMotion,
-				controlRequest.getSlot(),
+				sparkMaxProfiledAngleRequest.getSlot(),
 				constants.feedforward()
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
@@ -129,7 +133,7 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 
 	@Override
 	public void updateInputs(MotorInputsAutoLogged motorInputs) {
-		motorInputs.connected = true;
+		motorInputs.connected = true; // TODO: find a way to check it
 		motorInputs.current = motor.getOutputCurrent();
 		motorInputs.voltage = motor.getBusVoltage() * motor.getAppliedOutput();
 	}

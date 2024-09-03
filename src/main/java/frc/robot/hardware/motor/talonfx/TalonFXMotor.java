@@ -4,11 +4,15 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.hardware.motor.*;
 import frc.robot.hardware.motor.IMotor;
+import frc.robot.hardware.motor.MotorInputsAutoLogged;
 import frc.robot.hardware.motor.PIDAble;
-import frc.robot.hardware.request.IControlRequest;
-import frc.robot.hardware.request.TalonFXControlRequest;
+import frc.robot.hardware.motor.PIDAbleInputsAutoLogged;
+import frc.robot.hardware.motor.ProfileAble;
+import frc.robot.hardware.request.angle.IAngleRequest;
+import frc.robot.hardware.request.angle.TalonFXAngleRequest;
+import frc.robot.hardware.request.value.IValueRequest;
+import frc.robot.hardware.request.value.TalonFXValueRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
 
@@ -51,35 +55,31 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		motor.set(power);
 	}
 
+
 	@Override
-	public void setVoltage(double voltage) {
-		motor.setVoltage(voltage);
+	public void setVoltage(IValueRequest voltageRequest) {
+		motor.setControl(((TalonFXValueRequest) voltageRequest).getControlRequest());
+	}
+
+	@Override
+	public void setTargetVelocity(IAngleRequest velocityRequest) {
+		motor.setControl(((TalonFXValueRequest) velocityRequest).getControlRequest());
+	}
+
+	@Override
+	public void setTargetAngle(IAngleRequest angleRequest) {
+		motor.setControl(((TalonFXValueRequest) angleRequest).getControlRequest());
 	}
 
 
 	@Override
-	public void setTargetVelocity(IControlRequest controlRequest) {
-		TalonFXControlRequest talonFXRequest = (TalonFXControlRequest) controlRequest;
-		motor.setControl(talonFXRequest.getControlRequest());
+	public void setTargetProfiledVelocity(IAngleRequest profiledVelocityRequest) {
+		motor.setControl(((TalonFXValueRequest) profiledVelocityRequest).getControlRequest());
 	}
 
 	@Override
-	public void setTargetAngle(IControlRequest controlRequest) {
-		TalonFXControlRequest talonFXRequest = (TalonFXControlRequest) controlRequest;
-		motor.setControl(talonFXRequest.getControlRequest());
-	}
-
-
-	@Override
-	public void setTargetProfiledVelocity(IControlRequest controlRequest) {
-		TalonFXControlRequest talonFXRequest = (TalonFXControlRequest) controlRequest;
-		motor.setControl(talonFXRequest.getControlRequest());
-	}
-
-	@Override
-	public void setTargetProfiledAngle(IControlRequest controlRequest) {
-		TalonFXControlRequest talonFXRequest = (TalonFXControlRequest) controlRequest;
-		motor.setControl(talonFXRequest.getControlRequest());
+	public void setTargetProfiledAngle(IAngleRequest profiledAngleRequest) {
+		motor.setControl(((TalonFXValueRequest) profiledAngleRequest).getControlRequest());
 	}
 
 

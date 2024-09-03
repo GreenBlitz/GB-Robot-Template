@@ -1,7 +1,8 @@
 package frc.robot.hardware.motor;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.request.IControlRequest;
+import frc.robot.hardware.request.angle.IAngleRequest;
+import frc.robot.hardware.request.value.IValueRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface PIDAble {
@@ -10,11 +11,11 @@ public interface PIDAble {
 
 	void resetAngle(Rotation2d angle);
 
-	void setVoltage(double voltage);
+	void setVoltage(IValueRequest voltageRequest);
 
-	void setTargetVelocity(IControlRequest controlRequest);
+	void setTargetVelocity(IAngleRequest velocityRequest);
 
-	void setTargetAngle(IControlRequest controlRequest);
+	void setTargetAngle(IAngleRequest angleRequest);
 
 	void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs);
 

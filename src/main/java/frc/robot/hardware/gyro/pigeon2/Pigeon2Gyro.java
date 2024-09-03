@@ -19,8 +19,8 @@ public class Pigeon2Gyro implements IGyro {
 	}
 
 	@Override
-	public void setYaw(Rotation2d heading) {
-		gyro.setYaw(heading.getDegrees());
+	public void setYaw(Rotation2d yaw) {
+		gyro.setYaw(yaw.getDegrees());
 	}
 
 	@Override

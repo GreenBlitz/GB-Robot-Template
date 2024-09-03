@@ -40,7 +40,7 @@ public class PoseEstimator implements IPoseEstimator {
 	@Override
 	public void setOdometryStandardDeviations(double[] newStandardDeviations) {
 		for (int row = 0; row < newStandardDeviations.length; row++) {
-			odometryStandardDeviations[row] = Math.pow(newStandardDeviations[row], PoseEstimatorConstants.KALMAN_EXPONENT);
+			odometryStandardDeviations[row] = newStandardDeviations[row] * newStandardDeviations[row];
 		}
 	}
 
@@ -94,7 +94,7 @@ public class PoseEstimator implements IPoseEstimator {
 	private boolean isObservationTooOld(VisionObservation visionObservation) {
 		try {
 			return odometryPoseInterpolator.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS
-					> visionObservation.timestamp();
+				> visionObservation.timestamp();
 		} catch (NoSuchElementException ignored) {
 			return true;
 		}
@@ -103,8 +103,8 @@ public class PoseEstimator implements IPoseEstimator {
 	private void addVisionObservation(VisionObservation observation) {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(
-				pose2d -> estimatedPose = PoseEstimatorMath
-						.combineVisionToOdometry(pose2d, observation, estimatedPose, odometryPose, odometryStandardDeviations)
+			pose2d -> estimatedPose = PoseEstimatorMath
+				.combineVisionToOdometry(pose2d, observation, estimatedPose, odometryPose, odometryStandardDeviations)
 		);
 	}
 

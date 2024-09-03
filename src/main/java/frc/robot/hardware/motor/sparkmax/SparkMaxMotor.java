@@ -48,7 +48,12 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 
 	@Override
 	public void setPower(double power) {
-		motor.setVoltage(power);
+		motor.set(power);
+	}
+
+	@Override
+	public void setVoltage(double voltage) {
+		motor.setVoltage(voltage);
 	}
 
 

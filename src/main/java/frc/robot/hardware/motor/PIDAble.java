@@ -10,6 +10,8 @@ public interface PIDAble {
 
 	void resetAngle(Rotation2d angle);
 
+	void setVoltage(double voltage);
+
 	void setTargetVelocity(IControlRequest controlRequest);
 
 	void setTargetAngle(IControlRequest controlRequest);

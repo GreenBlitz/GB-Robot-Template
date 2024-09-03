@@ -63,7 +63,7 @@ public class SwerveCommandsBuilder {
 			pointWheelsInCircle(),
 			new WheelRadiusCharacterization(
 				swerve,
-				SwerveConstants.DRIVE_RADIUS_METERS,
+				swerve.getConstants().driveRadiusMeters(),
 				SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY,
 				swerve.getModules()::getDrivesAngles,
 				swerve::getAbsoluteHeading,

@@ -78,10 +78,10 @@ public class SwerveStateHelper {
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
 		return switch (rotationAxisState) {
 			case MIDDLE_OF_ROBOT -> new Translation2d();
-			case FRONT_LEFT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()];
-			case FRONT_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()];
-			case BACK_LEFT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()];
-			case BACK_RIGHT_MODULE -> swerveConstants.LOCATIONS[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()];
+			case FRONT_LEFT_MODULE -> swerveConstants.modulesLocations()[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()];
+			case FRONT_RIGHT_MODULE -> swerveConstants.modulesLocations()[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()];
+			case BACK_LEFT_MODULE -> swerveConstants.modulesLocations()[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()];
+			case BACK_RIGHT_MODULE -> swerveConstants.modulesLocations()[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()];
 		};
 	}
 

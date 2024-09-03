@@ -27,7 +27,7 @@ class DriveRealConstants {
 		);
 	}
 
-	private static TalonFXConfiguration generateMotorConfiguration() {
+	private static TalonFXConfiguration generateMotorConfig() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
 		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -53,7 +53,7 @@ class DriveRealConstants {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
 			false,
-			generateMotorConfiguration(),
+			generateMotorConfig(),
 			ENABLE_FOC,
 			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
@@ -64,7 +64,7 @@ class DriveRealConstants {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR,
 			true,
-			generateMotorConfiguration(),
+			generateMotorConfig(),
 			ENABLE_FOC,
 			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
@@ -75,7 +75,7 @@ class DriveRealConstants {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR,
 			false,
-			generateMotorConfiguration(),
+			generateMotorConfig(),
 			ENABLE_FOC,
 			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
@@ -86,7 +86,7 @@ class DriveRealConstants {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR,
 			false,
-			generateMotorConfiguration(),
+			generateMotorConfig(),
 			ENABLE_FOC,
 			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"

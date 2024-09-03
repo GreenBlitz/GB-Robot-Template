@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 
 class RealGyroConstants {
 
-	protected static Pigeon2Configuration generateGyroConfiguration() {
+	protected static Pigeon2Configuration generateGyroConfig() {
 		Pigeon2Configuration configuration = new Pigeon2Configuration();
 
 		configuration.MountPose.MountPoseRoll = 180;

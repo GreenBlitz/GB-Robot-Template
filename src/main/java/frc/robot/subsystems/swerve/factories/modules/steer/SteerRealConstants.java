@@ -26,7 +26,7 @@ class SteerRealConstants {
 		);
 	}
 
-	private static TalonFXConfiguration generateMotorConfiguration() {
+	private static TalonFXConfiguration generateMotorConfig() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
 		configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -53,7 +53,7 @@ class SteerRealConstants {
 			IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
 			true,
 			IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
-			generateMotorConfiguration(),
+			generateMotorConfig(),
 			ENABLE_FOC,
 			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
@@ -65,7 +65,7 @@ class SteerRealConstants {
 			IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
 			true,
 			IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
-			generateMotorConfiguration(),
+			generateMotorConfig(),
 			ENABLE_FOC,
 			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
@@ -77,7 +77,7 @@ class SteerRealConstants {
 			IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
 			false,
 			IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
-			generateMotorConfiguration(),
+			generateMotorConfig(),
 			ENABLE_FOC,
 			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
@@ -89,7 +89,7 @@ class SteerRealConstants {
 			IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
 			true,
 			IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
-			generateMotorConfiguration(),
+			generateMotorConfig(),
 			ENABLE_FOC,
 			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"

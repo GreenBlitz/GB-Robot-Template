@@ -16,7 +16,6 @@ public class Pigeon2ConfigObject {
 
 	private static final int APPLY_CONFIG_RETRIES = 10;
 
-
 	private final Pigeon2Wrapper gyro;
 	private final StatusSignal<Double> yawSignal;
 
@@ -27,6 +26,7 @@ public class Pigeon2ConfigObject {
 		configGyro(configuration, logPathPrefix + GyroConstants.LOG_PATH_ADDITION);
 		optimizeBusAndSignals();
 	}
+
 
 	private void configGyro(Pigeon2Configuration configuration, String logPath) {
 		if (!PhoenixProUtils.checkWithRetry(() -> gyro.getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES)) {

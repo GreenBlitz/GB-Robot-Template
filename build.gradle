@@ -1,8 +1,6 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
 import groovy.json.JsonSlurper
 import java.nio.file.Files
-import java.nio.file.NotLinkException
-import java.io.FileFilter
 
 plugins {
 	id "java"
@@ -146,15 +144,14 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 // Setup local git hooks
-
 def ensureSymlink(link, target) {
 	if (!Files.isSymbolicLink(link)) {
 		Files.deleteIfExists(link)
 
 		Files.createSymbolicLink(link, target)
 
-		def relative = { f -> rootDir.toPath().relativize(f) }
-		println("--- Installed symbolic link ${relative(link)} -> ${relative(target)} ---")
+		def shortname = { f -> rootDir.toPath().relativize(f) }
+		println("--- Installed symbolic link ${shortname(link)} -> ${shortname(target)} ---")
 	}
 }
 
@@ -170,10 +167,9 @@ tasks.register('installLocalGitHookSymlinks') {
 		def hooksSources = fileTree("$rootDir/.scripts/git-hooks/")
 		def hooksDest = file("$rootDir/.git/hooks/").toPath()
 
-		hooksSources.forEach { File target ->
-			def link = hooksDest.resolve(target.toPath().getFileName())
-
-			ensureSymlink(link, target.toPath())
+		hooksSources.forEach { File source ->
+			def link = hooksDest.resolve(source.getName())
+			ensureSymlink(link, source.toPath())
 		}
 
 		hooksDest.toFile().listFiles().each { link ->

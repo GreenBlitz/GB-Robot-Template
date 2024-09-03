@@ -118,6 +118,7 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 		SparkMaxAngleRequest sparkMaxProfiledPositionRequest = (SparkMaxAngleRequest) profiledPositionRequest;
 		motor.getPIDController()
 			.setReference(
+				// TODO: find out what to give to reference (radians or rotations)
 				sparkMaxProfiledPositionRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kSmartMotion,
 				sparkMaxProfiledPositionRequest.getSlot(),
@@ -126,7 +127,7 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
 						Rotation2d.fromRotations(motor.getEncoder().getVelocity())
 					)
-					.getRotations()
+					.getRotations() // TODO: find out what to give to ff (current or target setPoints)
 			);
 	}
 

@@ -9,13 +9,13 @@ public interface PIDAble {
 
 	SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
 
-	void resetAngle(Rotation2d angle);
+	void resetPosition(Rotation2d position);
 
 	void setVoltage(IValueRequest voltageRequest);
 
 	void setTargetVelocity(IAngleRequest velocityRequest);
 
-	void setTargetAngle(IAngleRequest angleRequest);
+	void setTargetPosition(IAngleRequest positionRequest);
 
 	void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs);
 

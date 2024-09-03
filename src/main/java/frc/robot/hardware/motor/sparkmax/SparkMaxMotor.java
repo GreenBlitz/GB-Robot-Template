@@ -38,8 +38,8 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void resetAngle(Rotation2d angle) {
-		motor.getEncoder().setPosition(angle.getRotations());
+	public void resetPosition(Rotation2d position) {
+		motor.getEncoder().setPosition(position.getRotations());
 	}
 
 
@@ -79,13 +79,13 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void setTargetAngle(IAngleRequest angleRequest) {
-		SparkMaxAngleRequest sparkMaxAngleRequest = (SparkMaxAngleRequest) angleRequest;
+	public void setTargetPosition(IAngleRequest positionRequest) {
+		SparkMaxAngleRequest sparkMaxPositionRequest = (SparkMaxAngleRequest) positionRequest;
 		motor.getPIDController()
 			.setReference(
-				sparkMaxAngleRequest.getSetPoint().getRotations(),
+				sparkMaxPositionRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kPosition,
-				sparkMaxAngleRequest.getSlot(),
+				sparkMaxPositionRequest.getSlot(),
 				constants.feedforward()
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
@@ -114,13 +114,13 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void setTargetProfiledAngle(IAngleRequest profiledAngleRequest) {
-		SparkMaxAngleRequest sparkMaxProfiledAngleRequest = (SparkMaxAngleRequest) profiledAngleRequest;
+	public void setTargetProfiledPosition(IAngleRequest profiledPositionRequest) {
+		SparkMaxAngleRequest sparkMaxProfiledPositionRequest = (SparkMaxAngleRequest) profiledPositionRequest;
 		motor.getPIDController()
 			.setReference(
-				sparkMaxProfiledAngleRequest.getSetPoint().getRotations(),
+				sparkMaxProfiledPositionRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kSmartMotion,
-				sparkMaxProfiledAngleRequest.getSlot(),
+				sparkMaxProfiledPositionRequest.getSlot(),
 				constants.feedforward()
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
@@ -140,7 +140,7 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 
 	@Override
 	public void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs) {
-		pidAbleInputs.angle = Rotation2d.fromRotations(motor.getEncoder().getPosition());
+		pidAbleInputs.position = Rotation2d.fromRotations(motor.getEncoder().getPosition());
 		pidAbleInputs.velocity = Rotation2d.fromRotations(motor.getEncoder().getVelocity());
 		pidAbleInputs.acceleration = Rotation2d.fromRotations(pidAbleInputs.velocity.getRotations() - lastVelocityPerSecond.getRotations());
 		lastVelocityPerSecond = pidAbleInputs.velocity;

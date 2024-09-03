@@ -8,11 +8,11 @@ public interface ProfileAble {
 
 	SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
 
-	void resetAngle(Rotation2d angle);
+	void resetPosition(Rotation2d position);
 
 	void setTargetProfiledVelocity(IAngleRequest profiledVelocityRequest);
 
-	void setTargetProfiledAngle(IAngleRequest profiledAngleRequest);
+	void setTargetProfiledPosition(IAngleRequest profiledPositionRequest);
 
 	void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs);
 

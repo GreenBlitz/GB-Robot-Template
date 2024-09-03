@@ -39,8 +39,8 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void resetAngle(Rotation2d angle) {
-		motor.setPosition(angle.getRotations());
+	public void resetPosition(Rotation2d position) {
+		motor.setPosition(position.getRotations());
 	}
 
 
@@ -66,8 +66,8 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void setTargetAngle(IAngleRequest angleRequest) {
-		motor.setControl(((TalonFXValueRequest) angleRequest).getControlRequest());
+	public void setTargetPosition(IAngleRequest positionRequest) {
+		motor.setControl(((TalonFXValueRequest) positionRequest).getControlRequest());
 	}
 
 
@@ -77,8 +77,8 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	@Override
-	public void setTargetProfiledAngle(IAngleRequest profiledAngleRequest) {
-		motor.setControl(((TalonFXValueRequest) profiledAngleRequest).getControlRequest());
+	public void setTargetProfiledPosition(IAngleRequest profiledPositionRequest) {
+		motor.setControl(((TalonFXValueRequest) profiledPositionRequest).getControlRequest());
 	}
 
 
@@ -92,7 +92,7 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 	@Override
 	public void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs) {
 		BaseStatusSignal.refreshAll(signals.position(), signals.velocity(), signals.acceleration());
-		pidAbleInputs.angle = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
+		pidAbleInputs.position = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
 		pidAbleInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
 		pidAbleInputs.acceleration = Rotation2d.fromRotations(signals.acceleration().getValue());
 	}

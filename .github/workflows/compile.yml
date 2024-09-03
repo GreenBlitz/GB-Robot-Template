@@ -9,7 +9,6 @@ on:
 
 jobs:
   compile:
-    name: Compile
     runs-on: ubuntu-latest
     container: wpilib/roborio-cross-ubuntu:2024-22.04
     steps:

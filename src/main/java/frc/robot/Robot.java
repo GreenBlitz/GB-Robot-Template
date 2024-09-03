@@ -4,59 +4,81 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.structures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.superstructers.poseestimator.PoseEstimatorSuperstructure;
-import frc.utils.RobotTypeUtils;
-import frc.utils.auto.AutonomousChooser;
-import frc.utils.auto.PathPlannerUtils;
+import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 
 import java.util.Optional;
 
 
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
+ * (including subsystems, commands, and trigger mappings) should be declared here.
+ */
 public class Robot {
 
-    public static final RobotTypeUtils.RobotType ROBOT_TYPE = RobotTypeUtils.determineRobotType(RobotTypeUtils.RobotType.SIMULATION);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	private static AutonomousChooser autonomousChooser;
+
+	private final Swerve swerve;
+	private final PoseEstimator poseEstimator;
+	private final SuperStructure superStructure;
+
+	public Robot() {
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveName.SWERVE),
+			ModulesFactory.create(SwerveName.SWERVE),
+			GyroFactory.create(SwerveName.SWERVE)
+		);
+		this.poseEstimator = new PoseEstimator(swerve::setHeading);
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+
+		this.superStructure = new SuperStructure(swerve, poseEstimator);
+
+		buildPathPlannerForAuto();
+		configureBindings();
+	}
+
+	private void buildPathPlannerForAuto() {
+		// Register commands...
+		swerve.buildPathPlannerForAuto(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+		PathPlannerUtils.setTargetRotationOverride(() -> {
+			if (poseEstimator.getCurrentPose().getX() > 3)
+				return Optional.of(Rotation2d.fromDegrees(45));
+			else
+				return Optional.empty();
+		});
+	}
+
+	private void configureBindings() {
+		JoysticksBindings.configureBindings(this);
+	}
 
 
-    public static final Swerve swerve = new Swerve();
-    public static final PoseEstimatorSuperstructure poseEstimator = new PoseEstimatorSuperstructure(swerve);
-    public static AutonomousChooser autonomousChooser;
+	public Command getAutonomousCommand() {
+		return autonomousChooser.getChosenValue();
+	}
 
-    public Robot() {
-        buildPathPlannerForAuto();
-        configureBindings();
-    }
+	public SuperStructure getSuperStructure() {
+		return superStructure;
+	}
 
-    private void initializeSubsystems() {
+	public Swerve getSwerve() {
+		return swerve;
+	}
 
-    }
-
-    private void configureCommands() {
-
-    }
-
-    private void buildPathPlannerForAuto() {
-        // Register commands...
-        swerve.buildPathPlannerForAuto(poseEstimator::getCurrentPose, poseEstimator::resetPose);
-        autonomousChooser = new AutonomousChooser("Autonomous Chooser");
-        PathPlannerUtils.setTargetRotationOverride(
-                () -> {
-                    if (poseEstimator.getCurrentPose().getX() > 3)
-                        return Optional.of(Rotation2d.fromDegrees(45));
-                    else
-                        return Optional.empty();
-                }
-        );
-    }
-
-    private void configureBindings() {
-        JoysticksBindings.configureBindings();
-    }
-
-    public Command getAutonomousCommand() {
-        return autonomousChooser.getChosenValue();
-    }
+	public PoseEstimator getPoseEstimator() {
+		return poseEstimator;
+	}
 
 }

@@ -5,175 +5,258 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.LogPaths;
 import frc.robot.subsystems.swerve.SwerveState;
-import frc.robot.subsystems.swerve.modules.inputs.ModuleInputsContainer;
+import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
+import frc.robot.subsystems.swerve.modules.drive.IDrive;
+import frc.robot.subsystems.swerve.modules.encoder.IEncoder;
+import frc.robot.subsystems.swerve.modules.steer.ISteer;
+import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
+import frc.utils.Conversions;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.Arrays;
 
 public class Module {
 
-    private final ModuleInputsContainer moduleInputsContainer;
-    private final ModuleUtils.ModuleName moduleName;
-    private final IModule module;
+	private final ModuleInputsContainer moduleInputsContainer;
+	private final ISteer iSteer;
+	private final IDrive iDrive;
+	private final IEncoder iEncoder;
+	private final ModuleConstants constants;
 
-    private boolean driveMotorClosedLoop;
-    private SwerveModuleState targetState;
+	private SwerveModuleState targetState;
+	private Rotation2d startingSteerAngle;
+	private boolean isClosedLoop;
 
-    public Module(ModuleUtils.ModuleName moduleName) {
-        this.moduleName = moduleName;
-        this.module = ModuleFactory.createModule(moduleName);
-        this.moduleInputsContainer = new ModuleInputsContainer();
-        this.targetState = new SwerveModuleState();
-        this.driveMotorClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
+	public Module(ModuleConstants constants, IEncoder iEncoder, ISteer iSteer, IDrive iDrive) {
+		this.constants = constants;
+		this.iEncoder = iEncoder;
+		this.iSteer = iSteer;
+		this.iDrive = iDrive;
+		this.moduleInputsContainer = new ModuleInputsContainer();
 
-        resetByEncoder();
-    }
+		this.targetState = new SwerveModuleState();
+		this.startingSteerAngle = new Rotation2d();
+		this.isClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
 
-    public void logStatus() {
-        updateInputs();
-        reportAlerts();
-    }
+		logStatus();
+		resetByEncoder();
+	}
 
-    private void updateInputs() {
-        module.updateInputs(moduleInputsContainer);
-        moduleInputsContainer.getModuleInputs().isAtTargetState = isAtTargetState();
-        moduleInputsContainer.processInputs(ModuleUtils.getLoggingPath(moduleName));
-    }
+	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
+		return iSteer.getSysIdConfigInfo();
+	}
 
-    private void reportAlerts() {
-        if (!moduleInputsContainer.getEncoderInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "encoder disconnect", Timer.getFPGATimestamp());
-        }
-        if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "steer motor disconnect", Timer.getFPGATimestamp());
-        }
-        if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
-            Logger.recordOutput(ModuleUtils.getAlertLoggingPath(moduleName) + "drive motor disconnect", Timer.getFPGATimestamp());
-        }
-    }
+	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {
+		return iDrive.getSysIdConfigInfo();
+	}
 
+	public double toDriveMeters(Rotation2d angle) {
+		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
+	}
 
-    public void setDriveMotorClosedLoop(boolean closedLoop) {
-        driveMotorClosedLoop = closedLoop;
-    }
+	public void logStatus() {
+		updateInputs();
+		reportAlerts();
+	}
 
-    public void stop() {
-        module.stop();
-    }
+	private void fixDriveInputsCoupling() {
+		SteerInputsAutoLogged steerInputs = moduleInputsContainer.getSteerMotorInputs();
+		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 
-    public void setBrake(boolean isBrake) {
-        module.setBrake(isBrake);
-    }
+		driveInputs.angle = ModuleUtils.getUncoupledAngle(driveInputs.angle, steerInputs.angle, constants.couplingRatio());
+		driveInputs.velocity = ModuleUtils.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
+		driveInputs.acceleration = ModuleUtils.getUncoupledAngle(driveInputs.acceleration, steerInputs.acceleration, constants.couplingRatio());
 
-    public void resetByEncoder() {
-        module.resetByEncoder();
-    }
+		for (int i = 0; i < driveInputs.angleOdometrySamples.length; i++) {
+			Rotation2d steerDelta = Rotation2d
+				.fromRotations(steerInputs.angleOdometrySamples[i].getRotations() - startingSteerAngle.getRotations());
+			driveInputs.angleOdometrySamples[i] = ModuleUtils
+				.getUncoupledAngle(driveInputs.angleOdometrySamples[i], steerDelta, constants.couplingRatio());
+		}
+	}
 
+	public void updateInputs() {
+		iEncoder.updateInputs(moduleInputsContainer.getEncoderInputs());
+		iSteer.updateInputs(moduleInputsContainer.getSteerMotorInputs());
+		iDrive.updateInputs(moduleInputsContainer.getDriveMotorInputs());
+		fixDriveInputsCoupling();
 
-    /**
-     * The odometry thread can update itself faster than the main code loop (which is 50 hertz).
-     * Instead of using the latest odometry update, the accumulated odometry positions since the last loop to get a more
-     * accurate position.
-     *
-     * @param odometryUpdateIndex the index of the odometry update
-     * @return the position of the module at the given odometry update index
-     */
-    public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
-        return new SwerveModulePosition(
-                moduleInputsContainer.getDriveMotorInputs().distanceMetersOdometrySamples[odometryUpdateIndex],
-                moduleInputsContainer.getSteerMotorInputs().angleOdometrySamples[odometryUpdateIndex]
-        );
-    }
+		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
+		driveInputs.distanceMeters = toDriveMeters(driveInputs.angle);
+		driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
+		driveInputs.distanceMetersOdometrySamples = Arrays.stream(driveInputs.angleOdometrySamples).mapToDouble(this::toDriveMeters).toArray();
 
-    public SwerveModuleState getTargetState() {
-        return targetState;
-    }
+		ModuleInputsAutoLogged moduleInputs = moduleInputsContainer.getModuleInputs();
+		moduleInputs.isAtTargetAngle = isAtTargetAngle();
+		moduleInputs.isAtTargetVelocity = isAtTargetVelocity();
+		moduleInputs.isClosedLoop = isClosedLoop;
+		moduleInputs.targetState = targetState;
 
-    public SwerveModuleState getCurrentState() {
-        return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
-    }
+		moduleInputsContainer.processInputs(constants.logPath());
+	}
 
-    public Rotation2d getDriveDistanceAngle() {
-        return moduleInputsContainer.getDriveMotorInputs().angle;
-    }
-
-    private double getDriveVelocityMetersPerSecond() {
-        return moduleInputsContainer.getDriveMotorInputs().velocityMeters;
-    }
-
-    private Rotation2d getCurrentAngle() {
-        return moduleInputsContainer.getSteerMotorInputs().angle;
-    }
+	public void reportAlerts() {
+		if (!moduleInputsContainer.getEncoderInputs().isConnected) {
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "EncoderDisconnectAt", Timer.getFPGATimestamp());
+		}
+		if (!moduleInputsContainer.getSteerMotorInputs().isConnected) {
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "SteerDisconnectAt", Timer.getFPGATimestamp());
+		}
+		if (!moduleInputsContainer.getDriveMotorInputs().isConnected) {
+			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.logPath() + "DriveDisconnectAt", Timer.getFPGATimestamp());
+		}
+	}
 
 
+	public void setClosedLoop(boolean closedLoop) {
+		isClosedLoop = closedLoop;
+	}
 
-    public boolean isAtTargetState() {
-        return isAtAngle(getTargetState().angle) && isAtVelocity(getTargetState().speedMetersPerSecond);
-    }
+	public void setBrake(boolean isBrake) {
+		iSteer.setBrake(isBrake);
+		iDrive.setBrake(isBrake);
+	}
 
-    public boolean isAtVelocity(double targetSpeedMetersPerSecond) {
-        return MathUtil.isNear(
-                targetSpeedMetersPerSecond,
-                getDriveVelocityMetersPerSecond(),
-                ModuleConstants.SPEED_TOLERANCE_METERS_PER_SECOND
-        );
-    }
-
-    public boolean isAtAngle(Rotation2d targetAngle) {
-        boolean isStopping = moduleInputsContainer.getSteerMotorInputs().velocity.getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
-        if (!isStopping){
-            return false;
-        }
-        boolean isAtAngle = MathUtil.isNear(
-                MathUtil.angleModulus(targetAngle.getRadians()),
-                MathUtil.angleModulus(getCurrentAngle().getRadians()),
-                ModuleConstants.ANGLE_TOLERANCE.getRadians()
-        );
-        return isAtAngle;
-    }
+	public void resetByEncoder() {
+		startingSteerAngle = moduleInputsContainer.getEncoderInputs().angle;
+		iSteer.resetToAngle(startingSteerAngle);
+	}
 
 
-    public void pointToAngle(Rotation2d angle, boolean optimize) {
-        SwerveModuleState moduleState = new SwerveModuleState(0, angle);
-        if (optimize) {
-            this.targetState = SwerveModuleState.optimize(moduleState, getCurrentAngle());
-        }
-        else {
-            this.targetState = moduleState;
-        }
-        module.setTargetAngle(targetState.angle);
-    }
+	/**
+	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest odometry update, the
+	 * accumulated odometry positions since the last loop to get a more accurate position.
+	 *
+	 * @param odometryUpdateIndex the index of the odometry update
+	 * @return the position of the module at the given odometry update index
+	 */
+	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
+		return new SwerveModulePosition(
+			moduleInputsContainer.getDriveMotorInputs().distanceMetersOdometrySamples[odometryUpdateIndex],
+			moduleInputsContainer.getSteerMotorInputs().angleOdometrySamples[odometryUpdateIndex]
+		);
+	}
 
-    public void runDriveMotorByVoltage(double voltage) {
-        module.runDriveMotorByVoltage(voltage);
-    }
+	public int getNumberOfOdometrySamples() {
+		return moduleInputsContainer.getDriveMotorInputs().distanceMetersOdometrySamples.length;
+	}
 
-    public void runSteerMotorByVoltage(double voltage) {
-        module.runSteerMotorByVoltage(voltage);
-    }
+	public SwerveModuleState getTargetState() {
+		return targetState;
+	}
 
-    public void setTargetState(SwerveModuleState targetState) {
-        this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
-        module.setTargetAngle(this.targetState.angle);
-        setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle);
-    }
+	public SwerveModuleState getCurrentState() {
+		return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
+	}
 
-    private void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle) {
-        targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
+	public Rotation2d getDriveAngle() {
+		return moduleInputsContainer.getDriveMotorInputs().angle;
+	}
 
-        if (driveMotorClosedLoop) {
-            setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
-        }
-        else {
-            setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
-        }
-    }
+	public double getDriveVelocityMetersPerSecond() {
+		return moduleInputsContainer.getDriveMotorInputs().velocityMeters;
+	}
 
-    public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
-        module.setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
-    }
+	public Rotation2d getCurrentAngle() {
+		return moduleInputsContainer.getSteerMotorInputs().angle;
+	}
 
-    public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
-        module.setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
-    }
+
+	//@formatter:off
+	public boolean isAtTargetVelocity() {
+		return MathUtil.isNear(
+			getTargetState().speedMetersPerSecond,
+			getDriveVelocityMetersPerSecond(),
+			ModuleConstants.SPEED_TOLERANCE_METERS_PER_SECOND
+		);
+	}
+	//@formatter:on
+
+	public boolean isAtTargetAngle() {
+		boolean isStopping = moduleInputsContainer.getSteerMotorInputs().velocity.getRadians()
+			<= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
+		if (!isStopping) {
+			return false;
+		}
+		boolean isAtAngle = MathUtil.isNear(
+			MathUtil.angleModulus(getTargetState().angle.getRadians()),
+			MathUtil.angleModulus(getCurrentAngle().getRadians()),
+			ModuleConstants.ANGLE_TOLERANCE.getRadians()
+		);
+		return isAtAngle;
+	}
+
+	public boolean isAtTargetState() {
+		return isAtTargetAngle() && isAtTargetVelocity();
+	}
+
+
+	public void stop() {
+		targetState = new SwerveModuleState(0, moduleInputsContainer.getSteerMotorInputs().angle);
+		iSteer.stop();
+		iDrive.stop();
+	}
+
+
+	public void setDriveVoltage(double voltage) {
+		setClosedLoop(false);
+		iDrive.setVoltage(voltage);
+	}
+
+	public void setSteerVoltage(double voltage) {
+		iSteer.setVoltage(voltage);
+	}
+
+
+	public void pointToAngle(Rotation2d angle, boolean optimize) {
+		SwerveModuleState moduleState = new SwerveModuleState(0, angle);
+		if (optimize) {
+			targetState.angle = SwerveModuleState.optimize(moduleState, getCurrentAngle()).angle;
+		} else {
+			targetState.angle = moduleState.angle;
+		}
+		iSteer.setTargetAngle(targetState.angle);
+	}
+
+
+	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
+		this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
+		iSteer.setTargetAngle(this.targetState.angle);
+		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
+	}
+
+	public void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, boolean isClosedLoop) {
+		targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerAngle, getCurrentAngle());
+
+		if (isClosedLoop) {
+			setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
+		} else {
+			setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
+		}
+	}
+
+	public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
+		setClosedLoop(true);
+		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
+		Rotation2d coupledVelocityPerSecond = ModuleUtils
+			.getCoupledAngle(targetVelocityPerSecond, moduleInputsContainer.getSteerMotorInputs().velocity, constants.couplingRatio());
+		iDrive.setTargetVelocity(coupledVelocityPerSecond);
+	}
+
+	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
+		setClosedLoop(false);
+		double voltage = ModuleUtils.velocityToOpenLoopVoltage(
+			targetVelocityMetersPerSecond,
+			moduleInputsContainer.getSteerMotorInputs().velocity,
+			constants.couplingRatio(),
+			constants.velocityAt12VoltsPerSecond(),
+			constants.wheelDiameterMeters(),
+			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
+		);
+		iDrive.setVoltage(voltage);
+	}
 
 }

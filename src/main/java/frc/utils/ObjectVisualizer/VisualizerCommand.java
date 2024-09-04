@@ -30,6 +30,7 @@ public class VisualizerCommand extends Command {
 
     @Override
     public void execute() {
+        visualizer.resetLocation();
         position = visualizer.currentPosition(timer.get());
         Logger.recordOutput(
                 "NoteVisualizer",

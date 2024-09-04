@@ -28,4 +28,7 @@ public class Visualizer {
         location.plus(acceleration.div(2/(time*time)));
         return new Pose3dGB(new Rotation3d(location),location.getData());
     }
+    public void resetLocation(){
+        this.location = VecBuilder.fill(0,0,0);
+    }
 }

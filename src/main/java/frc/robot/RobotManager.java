@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.ObjectVisualizer.VisualizerCommand;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
 import frc.utils.cycletime.CycleTimeUtils;
@@ -46,6 +48,12 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
+		new VisualizerCommand(
+				VecBuilder.fill(-2,-6,0),
+				VecBuilder.fill(10,30,0),
+				VecBuilder.fill(0,0,0)
+				).schedule();
+
 	}
 
 	@Override

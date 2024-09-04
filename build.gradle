@@ -143,6 +143,11 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+// Get a path as relative to the root directory of the project (usually for printing)
+def rootRelative(path) {
+	rootDir.toPath().relativize(path)
+}
+
 // Setup local git hooks
 def ensureSymlink(link, target) {
 	if (!Files.isSymbolicLink(link)) {
@@ -150,8 +155,7 @@ def ensureSymlink(link, target) {
 
 		Files.createSymbolicLink(link, target)
 
-		def shortname = { f -> rootDir.toPath().relativize(f) }
-		println("--- Installed symbolic link ${shortname(link)} -> ${shortname(target)} ---")
+		println("--- Installed symbolic link ${rootRelative(link)} -> ${rootRelative(target)} ---")
 	}
 }
 
@@ -175,7 +179,7 @@ tasks.register('installLocalGitHookSymlinks') {
 		hooksDest.toFile().listFiles().each { link ->
 			if (Files.isSymbolicLink(link.toPath()) && !Files.exists(Files.readSymbolicLink(link.toPath()))) {
 				link.delete()
-				println("--- Deleted stale link ${rootDir.toPath().relativize(link.toPath())} ---")
+				println("--- Deleted stale link ${rootRelative(link.toPath())} ---")
 			}
 		}
 	}

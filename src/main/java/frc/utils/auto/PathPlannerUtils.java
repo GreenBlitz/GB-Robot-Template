@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -71,8 +72,10 @@ public class PathPlannerUtils {
     }
 
     public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
-        dynamicObstacles.addAll(obstacles);
-        setDynamicObstacles(dynamicObstacles, currentRobotPose);
+        List<Pair<Translation2d, Translation2d>> allObstacles = new ArrayList<>();
+        allObstacles.addAll(dynamicObstacles);
+        allObstacles.addAll(obstacles);
+        setDynamicObstacles(allObstacles, currentRobotPose);
     }
 
     public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {

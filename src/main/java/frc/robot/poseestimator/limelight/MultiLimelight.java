@@ -68,7 +68,7 @@ public class MultiLimelight extends GBSubsystem {
         int i = 1;
         for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
             if (estimation.isPresent()) {
-                Logger.recordOutput(super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH + i, estimation.get().getFirst());
+                Logger.recordOutput(super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i, estimation.get().getFirst());
             }
             i++;
         }

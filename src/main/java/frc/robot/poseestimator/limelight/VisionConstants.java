@@ -14,7 +14,7 @@ public class VisionConstants {
 
     public static final String MULTI_LIMELIGHT_LOGPATH = "MultiLimeLight/";
 
-    public static final String ESTIMATION_LOGPATH = "estimation ";
+    public static final String ESTIMATION_LOGPATH_PREFIX = "estimation ";
 
     //! shall be calibrated
     public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(20);
@@ -36,7 +36,7 @@ public class VisionConstants {
     public final static Rotation2d RED_ALLIANCE_POSE_OFFSET = Rotation2d.fromDegrees(180);
 
 
-    public enum LIMELIGHT_ARRAY_VALUES {
+    public enum LIMELIGHT_ARRAY_VALUE {
         X_AXIS,
         Y_AXIS,
         Z_AXIS,
@@ -46,32 +46,30 @@ public class VisionConstants {
         TOTAL_LATENCY;
     }
 
-    public static int getValue(LIMELIGHT_ARRAY_VALUES value) {
-        switch (value) {
+    public static int getValue(LIMELIGHT_ARRAY_VALUE value) {
+        return switch (value) {
             case X_AXIS -> {
-                return 0;
+                ;0;
             }
             case Y_AXIS -> {
-                return 1;
+                1;
             }
             case Z_AXIS -> {
-                return 2;
+                2;
             }
             case ROLL_ANGLE -> {
-                return 3;
+                3;
             }
             case YAW_ANGLE -> {
-                return 4;
+                4;
             }
             case PITCH_ANGLE -> {
-                return 5;
+                5;
             }
             case TOTAL_LATENCY -> {
-                return 6;
+                6;
             }
-        }
-
-        return -1;
+        };
     }
 
 

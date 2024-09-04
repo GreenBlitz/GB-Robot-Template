@@ -32,15 +32,15 @@ public class Limelight extends GBSubsystem {
         }
 
         double[] poseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-        double processingLatencySeconds = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.TOTAL_LATENCY)] / 1000;
+        double processingLatencySeconds = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.TOTAL_LATENCY)] / 1000;
         double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
         Rotation2d angleOffset = AllianceUtilities.isBlueAlliance() ? VisionConstants.BLUE_ALLIANCE_POSE_OFFSET : VisionConstants.RED_ALLIANCE_POSE_OFFSET;
 
         Pose2d robotPose = new Pose2d(
-                poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.X_AXIS)],
-                poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.Y_AXIS)],
-                Rotation2d.fromDegrees(poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.PITCH_ANGLE)] - angleOffset.getDegrees())
+                poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.X_AXIS)],
+                poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.Y_AXIS)],
+                Rotation2d.fromDegrees(poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.PITCH_ANGLE)] - angleOffset.getDegrees())
         );
 
         return Optional.of(new Pair<>(robotPose, timestamp));
@@ -48,7 +48,7 @@ public class Limelight extends GBSubsystem {
 
     public double getAprilTagHeight() {
         double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-        return poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.Y_AXIS)];
+        return poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.Y_AXIS)];
     }
 
     public boolean isAprilTagInProperHeight() {
@@ -58,7 +58,7 @@ public class Limelight extends GBSubsystem {
 
     public double getDistanceFromAprilTag() {
         double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-        return poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUES.Z_AXIS)];
+        return poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.Z_AXIS)];
     }
 
     public boolean hasTarget() {

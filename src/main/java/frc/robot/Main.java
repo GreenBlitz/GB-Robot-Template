@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.utils.digitalinput.chooser.ChooserDigitalInputConstants;
+import jdk.incubator.vector.VectorOperators;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what you are doing, do not modify
@@ -19,6 +21,7 @@ public final class Main {
 	 */
 	public static void main(String... args) {
 		RobotBase.startRobot(RobotManager::new);
+		System.out.println(String.valueOf(ChooserDigitalInputConstants.DEFAULT_STATE));
 	}
 
 }

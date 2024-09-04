@@ -4,16 +4,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
-
+import jdk.incubator.vector.VectorOperators;
 
 public class ChooserDigitalInput implements IDigitalInput {
 
 	private final SendableChooser<Boolean> isTrueSendableChooser;
 
 	public ChooserDigitalInput() {
-		isTrueSendableChooser = new SendableChooser<>();
+		this.isTrueSendableChooser = new SendableChooser<>();
 		isTrueSendableChooser
-			.setDefaultOption(ChooserDigitalInputConstants.DEFAULT_STATE_STRING, ChooserDigitalInputConstants.DEFAULT_STATE);
+			.setDefaultOption(String.valueOf(ChooserDigitalInputConstants.DEFAULT_STATE), ChooserDigitalInputConstants.DEFAULT_STATE);
 		isTrueSendableChooser.addOption("true", true);
 		isTrueSendableChooser.addOption("false", false);
 

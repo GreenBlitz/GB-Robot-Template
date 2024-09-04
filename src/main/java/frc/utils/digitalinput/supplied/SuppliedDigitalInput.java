@@ -3,6 +3,7 @@ package frc.utils.digitalinput.supplied;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
+import jdk.incubator.vector.VectorOperators;
 
 import java.util.function.Supplier;
 

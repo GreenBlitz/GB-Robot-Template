@@ -10,17 +10,17 @@ public class SuppliedDigitalInput implements IDigitalInput {
 
 	private final Debouncer debouncer;
 
-	private final Supplier<Boolean> isTrueSupplier;
+	private final Supplier<Boolean> booleanSupplier;
 
 	public SuppliedDigitalInput(Supplier<Boolean> isTrueConsumer, double debounceTime, Debouncer.DebounceType debounceType) {
-		this.isTrueSupplier = isTrueConsumer;
+		this.booleanSupplier = isTrueConsumer;
 		this.debouncer = new Debouncer(debounceTime, debounceType);
 	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.debouncedValue = debouncer.calculate(isTrueSupplier.get());
-		inputs.nonDebouncedValue = isTrueSupplier.get();
+		inputs.debouncedValue = debouncer.calculate(booleanSupplier.get());
+		inputs.nonDebouncedValue = booleanSupplier.get();
 	}
 
 }

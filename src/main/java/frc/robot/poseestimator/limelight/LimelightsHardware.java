@@ -13,11 +13,11 @@ public class LimelightsHardware extends GBSubsystem {
     private List<Limelight> limelights;
 
 
-    public LimelightsHardware() {
-        super(VisionConstants.MULTI_LIMELIGHT_LOGPATH);
+    public LimelightsHardware(String[] limelightNames, String limelightManagerName) {
+        super(limelightManagerName + "Hardware/");
 
         limelights = new ArrayList<>();
-        for (String limelightName : VisionConstants.LIMELIGHT_NAMES) {
+        for (String limelightName : limelightNames) {
             limelights.add(new Limelight(limelightName));
         }
     }

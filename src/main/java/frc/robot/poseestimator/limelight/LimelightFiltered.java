@@ -17,9 +17,9 @@ public class LimelightFiltered extends GBSubsystem {
     private List<Limelight> limelights;
     private LimelightsHardware limelightHardware;
 
-    public LimelightFiltered() {
-        super(VisionConstants.LIMELIGHTS_FILTERED_LOGPATH);
-        this.limelightHardware = new LimelightsHardware();
+    public LimelightFiltered(String[] limelightNames, String limelightManagerName) {
+        super(limelightManagerName + "Filtered/");
+        this.limelightHardware = new LimelightsHardware(limelightNames, limelightManagerName);
         this.limelights = limelightHardware.getAllLimelights();
     }
 

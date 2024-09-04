@@ -15,6 +15,7 @@ import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -212,7 +213,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_UP.whileTrue(
 			new InstantCommand(
 				() -> PathPlannerUtils.setDynamicObstacles(
-					List.of(Pair.of(new Translation2d(2.5, 7), new Translation2d(3.5, 5))),
+					new ArrayList<>(List.of(Pair.of(new Translation2d(2.5, 7), new Translation2d(3.5, 5)))),
 					robot.getPoseEstimator().getCurrentPose()
 				)
 			)
@@ -220,7 +221,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_LEFT.whileTrue(
 			new InstantCommand(
 				() -> PathPlannerUtils.addDynamicObstacles(
-					List.of(Pair.of(new Translation2d(9, 7.5), new Translation2d(10, 6))),
+					new ArrayList<>(List.of(Pair.of(new Translation2d(9, 7.5), new Translation2d(10, 6)))),
 					robot.getPoseEstimator().getCurrentPose()
 				)
 			)

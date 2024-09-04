@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -28,7 +29,7 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
+	private static ArrayList<Pair<Translation2d, Translation2d>> dynamicObstacles = new ArrayList<>();
 
 	public static void startPathfinder() {
 		setPathfinder();
@@ -72,18 +73,18 @@ public class PathPlannerUtils {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
-	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+	public static void setDynamicObstacles(ArrayList<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
 		dynamicObstacles = obstacles;
 		Pathfinding.setDynamicObstacles(obstacles, currentRobotPose.getTranslation());
 	}
 
-	public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+	public static void addDynamicObstacles(ArrayList<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
 		dynamicObstacles.addAll(obstacles);
 		setDynamicObstacles(dynamicObstacles, currentRobotPose);
 	}
 
 	public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {
-		setDynamicObstacles(List.of(), currentRobotPose);
+		setDynamicObstacles(new ArrayList<>(), currentRobotPose);
 	}
 
 	public static void setTargetRotationOverride(Supplier<Optional<Rotation2d>> overrider) {

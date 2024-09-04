@@ -10,7 +10,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,7 +17,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,7 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-	private static ArrayList<Pair<Translation2d, Translation2d>> dynamicObstacles = new ArrayList<>();
+	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
 	public static void startPathfinder() {
 		setPathfinder();
@@ -42,11 +40,6 @@ public class PathPlannerUtils {
 
 	private static void scheduleWarmup() {
 		PathfindingCommand.warmupCommand().schedule();
-	}
-
-	public static void setupLogging(String logPath) {
-		PathPlannerLogging.setLogActivePathCallback(path -> Logger.recordOutput(logPath + "ActivePath", path.toArray(new Pose2d[0])));
-		PathPlannerLogging.setLogTargetPoseCallback(targetPose -> Logger.recordOutput(logPath + "TargetPose", targetPose));
 	}
 
 	public static void configurePathPlanner(
@@ -73,18 +66,20 @@ public class PathPlannerUtils {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
-	public static void setDynamicObstacles(ArrayList<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
 		dynamicObstacles = obstacles;
 		Pathfinding.setDynamicObstacles(obstacles, currentRobotPose.getTranslation());
 	}
 
-	public static void addDynamicObstacles(ArrayList<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
-		dynamicObstacles.addAll(obstacles);
-		setDynamicObstacles(dynamicObstacles, currentRobotPose);
+	public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+		List<Pair<Translation2d, Translation2d>> allObstacles = new ArrayList<>();
+		allObstacles.addAll(dynamicObstacles);
+		allObstacles.addAll(obstacles);
+		setDynamicObstacles(allObstacles, currentRobotPose);
 	}
 
 	public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {
-		setDynamicObstacles(new ArrayList<>(), currentRobotPose);
+		setDynamicObstacles(List.of(), currentRobotPose);
 	}
 
 	public static void setTargetRotationOverride(Supplier<Optional<Rotation2d>> overrider) {

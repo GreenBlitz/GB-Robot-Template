@@ -8,6 +8,7 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.Pair;
@@ -30,12 +31,12 @@ public class PathPlannerUtils {
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
 	public static void startPathfinder() {
-		setPathfinder();
+		setPathfinder(new LocalADStar());
 		scheduleWarmup();
 	}
 
-	private static void setPathfinder() {
-		Pathfinding.setPathfinder(new LocalADStar());
+	private static void setPathfinder(Pathfinder pathfinder) {
+		Pathfinding.setPathfinder(pathfinder);
 	}
 
 	private static void scheduleWarmup() {

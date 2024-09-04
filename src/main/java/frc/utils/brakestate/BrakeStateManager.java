@@ -1,6 +1,5 @@
 package frc.utils.brakestate;
 
-import frc.utils.MotorSubsystem;
 
 import java.util.ArrayList;
 

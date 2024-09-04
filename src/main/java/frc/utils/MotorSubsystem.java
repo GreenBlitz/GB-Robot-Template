@@ -1,10 +1,11 @@
 package frc.utils;
 
-public abstract class MotorSubsystem extends GBSubsystem{
-    public MotorSubsystem(String logPath) {
-        super(logPath);
-    }
+public abstract class MotorSubsystem extends GBSubsystem {
 
-    public void setBrake(boolean brake){}
+	public MotorSubsystem(String logPath) {
+		super(logPath);
+	}
+
+	public void setBrake(boolean brake) {}
 
 }

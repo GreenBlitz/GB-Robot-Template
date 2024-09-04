@@ -153,8 +153,10 @@ public class Swerve extends GBSubsystem {
 				updateGyroSimulation();
 			}
 			gyro.updateInputs(gyroInputs);
+			gyro.updateInputs(gyroThreadInputs);
 			reportGyroAlerts(gyroInputs);
 			Logger.processInputs(constants.gyroLogPath(), gyroInputs);
+			Logger.processInputs(constants.gyroLogPath(), gyroThreadInputs);
 
 			modules.logStatus();
 		}

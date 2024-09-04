@@ -6,41 +6,42 @@ import java.util.Objects;
 
 public class Translation2dUtils {
 
-	public static Translation2d getPositiveClosest(Translation2d comparePoint, Translation2d... knownPoints) {
-		Translation2d closestPositivePoint = null;
 
-		for (Translation2d knownPoint : knownPoints) {
-			if (isAfterTranslation(comparePoint, knownPoint)) {
-				if (Objects.isNull(closestPositivePoint)) {
-					closestPositivePoint = knownPoint;
-				}
-				if (comparePoint.getDistance(knownPoint) < comparePoint.getDistance(closestPositivePoint)) {
-					closestPositivePoint = knownPoint;
-				}
-			}
-		}
-		return closestPositivePoint;
-	}
+    public static Translation2d findClosestPointAfter(Translation2d target, Translation2d[] knownPoints) {
+        Translation2d closestPoint = null;
+        double minDistance = Double.MAX_VALUE;
 
-    public static Translation2d getNegativeClosest(Translation2d comparePoint, Translation2d... knownPoints) {
-        Translation2d closestNegativePoint = null;
-
-        for (Translation2d knownPoint : knownPoints) {
-            if (!isAfterTranslation(comparePoint, knownPoint)) {
-                if (Objects.isNull(closestNegativePoint)) {
-                    closestNegativePoint = knownPoint;
-                }
-                if (comparePoint.getDistance(knownPoint) < comparePoint.getDistance(closestNegativePoint)) {
-                    closestNegativePoint = knownPoint;
+        for (Translation2d point : knownPoints) {
+            if (isAfter(target, point)) {
+                double distance = point.getDistance(target);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPoint = point;
                 }
             }
         }
-        return closestNegativePoint;
+        System.out.println(closestPoint);
+        return closestPoint;
     }
 
+    public static Translation2d findClosestPointBefore(Translation2d target, Translation2d[] knownPoints) {
+        Translation2d closestPoint = null;
+        double minDistance = Double.MAX_VALUE;
 
+        for (Translation2d point : knownPoints) {
+            if (!isAfter(target, point)) {
+                double distance = point.getDistance(target);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPoint = point;
+                }
+            }
+        }
 
-	public static boolean isAfterTranslation(Translation2d comparisonPoint, Translation2d point) {
+        return closestPoint;
+    }
+
+	public static boolean isAfter(Translation2d comparisonPoint, Translation2d point) {
 		return comparisonPoint.getX() <= point.getX() && comparisonPoint.getY() <= point.getY();
 	}
 }

@@ -14,18 +14,15 @@ public class InterpolationUtils {
      *
      * @return the interpolated value of the interpolatingTargetPoint
      * */
-	public static double linearInterpolation2d(
-		Translation2d neighbor1,
-		double value1,
-		Translation2d neighbor2,
-		double value2,
-		Translation2d interpolatingTargetPoint
-	) {
-		double distanceTargetToNeighbor1 = interpolatingTargetPoint.getDistance(neighbor1);
-		double distanceTargetToNeighbor2 = interpolatingTargetPoint.getDistance(neighbor2);
 
-		double totalDistance = distanceTargetToNeighbor1 + distanceTargetToNeighbor2;
-		double slope = (value2 - value1) / (totalDistance);
-		return value1 + slope * distanceTargetToNeighbor1;
+	static double interpolate(Translation2d neighbor1, double value1, Translation2d neighbor2, double value2, Translation2d interpolatingTargetPoint) {
+		if (neighbor1.getX() == neighbor2.getX()) {
+			if (interpolatingTargetPoint.getX() != neighbor1.getX()){
+				throw new IllegalArgumentException("Target x-coordinate must be the same as x1 and x2.");
+			}
+			return value1 + (interpolatingTargetPoint.getY() - neighbor1.getY()) * (value2 - value1) / (neighbor2.getY() - neighbor1.getY());
+		}
+		double interpolationFactor = (interpolatingTargetPoint.getX() - neighbor1.getX()) / (neighbor2.getX() - neighbor1.getX());
+		return value1 + interpolationFactor * (value2 - value1);
 	}
 }

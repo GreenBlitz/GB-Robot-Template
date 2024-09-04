@@ -21,24 +21,24 @@ public class ChooserDigitalInput implements IDigitalInput {
 
 		SmartDashboard.putData(isTrueSendableChooser);
 
-		this.inverted=inverted;
+		this.inverted = inverted;
 	}
 
 	public ChooserDigitalInput() {
 		this.isTrueSendableChooser = new SendableChooser<>();
 		isTrueSendableChooser.setDefaultOption(
-				String.valueOf(ChooserDigitalInputConstants.DEFAULT_STATE),
-				ChooserDigitalInputConstants.DEFAULT_STATE
+			String.valueOf(ChooserDigitalInputConstants.DEFAULT_STATE),
+			ChooserDigitalInputConstants.DEFAULT_STATE
 		);
 		isTrueSendableChooser.addOption("true", true);
 		isTrueSendableChooser.addOption("false", false);
 
-		SmartDashboard.putData(isTrueSendableChooser);
+		SmartDashboard.putData(ChooserDigitalInputConstants.CHOOSER_NAME, isTrueSendableChooser);
 	}
 
 	@Override
-	public void setInverted(boolean inverted){
-		this.inverted=inverted;
+	public void setInverted(boolean inverted) {
+		this.inverted = inverted;
 	}
 
 	@Override

@@ -13,10 +13,15 @@ public class SuppliedDigitalInput implements IDigitalInput {
 
 	private final Supplier<Boolean> isTrueSupplier;
 
-	public SuppliedDigitalInput(Supplier<Boolean> isTrueConsumer, double debounceTime, Debouncer.DebounceType debounceType, boolean inverted) {
+	public SuppliedDigitalInput(
+		Supplier<Boolean> isTrueConsumer,
+		double debounceTime,
+		Debouncer.DebounceType debounceType,
+		boolean inverted
+	) {
 		this.isTrueSupplier = isTrueConsumer;
 		this.debouncer = new Debouncer(debounceTime, debounceType);
-		this.inverted=inverted;
+		this.inverted = inverted;
 	}
 
 	public SuppliedDigitalInput(Supplier<Boolean> isTrueConsumer, double debounceTime, Debouncer.DebounceType debounceType) {
@@ -25,8 +30,8 @@ public class SuppliedDigitalInput implements IDigitalInput {
 	}
 
 	@Override
-	public void setInverted(boolean inverted){
-		this.inverted=inverted;
+	public void setInverted(boolean inverted) {
+		this.inverted = inverted;
 	}
 
 	@Override
@@ -34,7 +39,6 @@ public class SuppliedDigitalInput implements IDigitalInput {
 		inputs.nonDebouncedValue = (inverted) ? !isTrueSupplier.get() : isTrueSupplier.get();
 		inputs.debouncedValue = debouncer.calculate(inputs.nonDebouncedValue);
 	}
-
 
 
 }

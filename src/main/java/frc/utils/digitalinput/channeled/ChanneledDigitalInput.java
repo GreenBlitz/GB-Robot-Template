@@ -23,8 +23,8 @@ public class ChanneledDigitalInput implements IDigitalInput {
 	}
 
 	@Override
-	public void setInverted(boolean inverted){
-		this.inverted=inverted;
+	public void setInverted(boolean inverted) {
+		this.inverted = inverted;
 	}
 
 	@Override

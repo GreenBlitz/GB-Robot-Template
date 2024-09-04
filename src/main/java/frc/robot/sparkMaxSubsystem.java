@@ -1,18 +1,17 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.GBSubsystem;
 import frc.utils.devicewrappers.SparkMaxConfiguration;
-import frc.utils.devicewrappers.SparkMaxWrapper;
+import frc.utils.devicewrappers.GBSparkMax;
 
-public class sparkmaxSubsystem extends GBSubsystem {
-    private final SparkMaxWrapper motor;
+public class sparkMaxSubsystem extends GBSubsystem {
+    private final GBSparkMax motor;
 
-    public sparkmaxSubsystem(String logPath) {
+    public sparkMaxSubsystem(String logPath) {
         super(logPath);
-        motor = new SparkMaxWrapper(4, CANSparkLowLevel.MotorType.kBrushless);
+        motor = new GBSparkMax(4, CANSparkLowLevel.MotorType.kBrushless);
         SparkMaxConfiguration config = new SparkMaxConfiguration();
         config.slot0.withP(1);
     }

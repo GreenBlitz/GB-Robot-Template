@@ -26,10 +26,10 @@ public class SparkMaxConfiguration {
 
 		this.currentLimit = 0;
 
-		this.slot0 = new PIDObject();
-		this.slot1 = new PIDObject();
-		this.slot2 = new PIDObject();
-		this.slot3 = new PIDObject();
+		this.slot0 = new PIDObject().withSlot(0);
+		this.slot1 = new PIDObject().withSlot(1);
+		this.slot2 = new PIDObject().withSlot(2);
+		this.slot3 = new PIDObject().withSlot(3);
 	}
 
 	public SparkMaxConfiguration withPositionConversionFactor(double conversionFactor) {
@@ -63,22 +63,22 @@ public class SparkMaxConfiguration {
 	}
 
 	public SparkMaxConfiguration withSlot0(PIDObject slot0) {
-		this.slot0 = new PIDObject(slot0);
+		this.slot0 = new PIDObject(slot0).withSlot(0);
 		return this;
 	}
 
 	public SparkMaxConfiguration withSlot1(PIDObject slot1) {
-		this.slot1 = new PIDObject(slot1);
+		this.slot1 = new PIDObject(slot1).withSlot(1);
 		return this;
 	}
 
 	public SparkMaxConfiguration withSlot2(PIDObject slot2) {
-		this.slot2 = new PIDObject(slot2);
+		this.slot2 = new PIDObject(slot2).withSlot(2);
 		return this;
 	}
 
 	public SparkMaxConfiguration withSlot3(PIDObject slot3) {
-		this.slot3 = new PIDObject(slot3);
+		this.slot3 = new PIDObject(slot3).withSlot(3);
 		return this;
 	}
 

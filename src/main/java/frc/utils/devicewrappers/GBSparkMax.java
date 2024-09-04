@@ -4,9 +4,9 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import frc.utils.PIDObject;
 
-public class SparkMaxWrapper extends CANSparkMax {
+public class GBSparkMax extends CANSparkMax {
 
-	public SparkMaxWrapper(int deviceId, MotorType type) {
+	public GBSparkMax(int deviceId, MotorType type) {
 		super(deviceId, type);
 	}
 
@@ -25,11 +25,9 @@ public class SparkMaxWrapper extends CANSparkMax {
 		super.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, config.enableForwardSoftLimit);
 
 		super.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) config.backwardAngleSoftLimit.getRotations());
-		super.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, config.enableForwardSoftLimit);
+		super.enableSoftLimit(SoftLimitDirection.kReverse, config.enableForwardSoftLimit);
 
 		super.setSmartCurrentLimit(config.currentLimit);
-
-		super.burnFlash();
 	}
 
 	public void configPID(PIDObject pid) {

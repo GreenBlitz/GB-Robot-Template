@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.LogPaths;
-import frc.robot.poseestimation.PoseEstimatorConstants;
+import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.utils.ctre.CTREDeviceID;
 import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.devicewrappers.TalonFXWrapper;

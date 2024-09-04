@@ -4,8 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.PoseEstimator;
-import frc.robot.poseestimator.observations.OdometryObservation;
-import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class SuperStructure {
@@ -44,7 +42,7 @@ public class SuperStructure {
 	public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vyMetersPerSecond,
-				PoseEstimator.getEstimatedPose().getY(),
+			PoseEstimator.getEstimatedPose().getY(),
 			targetYBlueAlliancePosition
 		);
 	}

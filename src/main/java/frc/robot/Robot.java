@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.poseestimation.poseEstimator;
 import frc.robot.poseestimator.PoseEstimator;
 import frc.robot.structures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
@@ -39,7 +38,11 @@ public class Robot {
 			ModulesFactory.create(SwerveName.SWERVE),
 			GyroFactory.create(SwerveName.SWERVE)
 		);
-		this.PoseEstimator = new PoseEstimator(SwerveConstants.KINEMATICS, SwerveConstants.INITIALWHEELPOSOTIONS, SwerveConstants.INITIALGYROANGLE );
+		this.PoseEstimator = new PoseEstimator(
+			SwerveConstants.KINEMATICS,
+			SwerveConstants.INITIALWHEELPOSOTIONS,
+			SwerveConstants.INITIALGYROANGLE
+		);
 
 		swerve.setHeadingSupplier(() -> PoseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(PoseEstimator.getEstimatedPose()), Optional::empty, swerve));

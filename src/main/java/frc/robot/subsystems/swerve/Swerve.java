@@ -198,11 +198,9 @@ public class Swerve extends GBSubsystem {
 		return odometryObservations;
 	}
 
-	public frc.robot.poseestimator.observations.OdometryObservation getLastOdometryObservation(){
+	public frc.robot.poseestimator.observations.OdometryObservation getLastOdometryObservation() {
 		return getAllOdometryObservations()[0];
 	}
-
-
 
 
 	public Rotation2d getAbsoluteHeading() {

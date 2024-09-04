@@ -6,8 +6,8 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.LogPaths;
-import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.gyro.IGyro;
 import frc.robot.subsystems.swerve.gyro.GyroConstants;
@@ -48,7 +48,7 @@ public class Pigeon2Gyro implements IGyro {
 	}
 
 	private void optimizeBusAndSignals() {
-		BaseStatusSignal.setUpdateFrequencyForAll(PoseEstimatorConstants.ODOMETRY_FREQUENCY_HERTZ, yawSignal);
+		BaseStatusSignal.setUpdateFrequencyForAll(GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, yawSignal);
 		gyro.optimizeBusUtilization();
 	}
 

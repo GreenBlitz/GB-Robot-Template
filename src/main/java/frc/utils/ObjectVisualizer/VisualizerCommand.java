@@ -30,12 +30,18 @@ public class VisualizerCommand extends Command {
 
     @Override
     public void execute() {
-        visualizer.resetLocation();
+//        visualizer.resetLocation();
         position = visualizer.currentPosition(timer.get());
         Logger.recordOutput(
                 "NoteVisualizer",
                 new Pose3d[]{position}
+
         );
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 
     @Override

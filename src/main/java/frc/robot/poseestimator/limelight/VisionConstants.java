@@ -33,11 +33,6 @@ public class VisionConstants {
     public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 0.07;
 
 
-    public final static Rotation2d BLUE_ALLIANCE_POSE_OFFSET = Rotation2d.fromDegrees(0);
-
-    public final static Rotation2d RED_ALLIANCE_POSE_OFFSET = Rotation2d.fromDegrees(180);
-
-
     public enum LIMELIGHT_ARRAY_VALUE {
         X_AXIS,
         Y_AXIS,

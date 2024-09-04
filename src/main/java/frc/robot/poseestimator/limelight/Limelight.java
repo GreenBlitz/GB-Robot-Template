@@ -35,12 +35,10 @@ public class Limelight extends GBSubsystem {
         double processingLatencySeconds = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.TOTAL_LATENCY)] / 1000;
         double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
-        Rotation2d angleOffset = DriverStationUtils.isBlueAlliance() ? VisionConstants.BLUE_ALLIANCE_POSE_OFFSET : VisionConstants.RED_ALLIANCE_POSE_OFFSET;
-
         Pose2d robotPose = new Pose2d(
                 poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.X_AXIS)],
                 poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.Y_AXIS)],
-                Rotation2d.fromDegrees(poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.PITCH_ANGLE)] - angleOffset.getDegrees())
+                Rotation2d.fromDegrees(poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.PITCH_ANGLE)])
         );
 
         return Optional.of(new Pair<>(robotPose, timestamp));

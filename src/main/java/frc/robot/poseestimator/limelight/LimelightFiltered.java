@@ -27,7 +27,7 @@ public class LimelightFiltered extends GBSubsystem {
         ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
 
         for (Limelight limelight : limelights) {
-            if (isLimelightValid(limelight)) {
+            if (limelightValidityFilter(limelight)) {
                 estimates.add(limelight.getUpdatedPose2DEstimation());
             }
         }
@@ -50,7 +50,7 @@ public class LimelightFiltered extends GBSubsystem {
                 && rotationDifference.getDegrees() <= VisionConstants.ROTATION_TOLERANCE.getDegrees();
     }
 
-    public boolean isLimelightValid(Limelight limelight) {
+    public boolean limelightValidityFilter(Limelight limelight) {
         if (
                 limelight.hasTarget()
                 && limelight.isAprilTagInProperHeight()

@@ -27,11 +27,7 @@ public class SuppliedDigitalInput implements IDigitalInput {
 	public SuppliedDigitalInput(Supplier<Boolean> isTrueConsumer, double debounceTime, Debouncer.DebounceType debounceType) {
 		this.isTrueSupplier = isTrueConsumer;
 		this.debouncer = new Debouncer(debounceTime, debounceType);
-	}
-
-	@Override
-	public void setInverted(boolean inverted) {
-		this.inverted = inverted;
+		this.inverted=false;
 	}
 
 	@Override

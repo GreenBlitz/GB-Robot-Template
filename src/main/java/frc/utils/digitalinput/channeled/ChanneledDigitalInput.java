@@ -9,7 +9,7 @@ public class ChanneledDigitalInput implements IDigitalInput {
 
 	private final DigitalInput digitalInput;
 	private final Debouncer debouncer;
-	private boolean inverted;
+	private final boolean inverted;
 
 	public ChanneledDigitalInput(int channel, double debounceTime, boolean inverted) {
 		this.digitalInput = new DigitalInput(channel);
@@ -20,11 +20,7 @@ public class ChanneledDigitalInput implements IDigitalInput {
 	public ChanneledDigitalInput(int channel, double debounceTime) {
 		this.digitalInput = new DigitalInput(channel);
 		this.debouncer = new Debouncer(debounceTime);
-	}
-
-	@Override
-	public void setInverted(boolean inverted) {
-		this.inverted = inverted;
+		this.inverted = false;
 	}
 
 	@Override

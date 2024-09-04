@@ -12,6 +12,7 @@ import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -54,6 +55,9 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+		robot.channeledDigitalInput.updateInputs(robot.inputs);
+		Logger.recordOutput("isTrue", robot.inputs.debouncedValue);
+		Logger.recordOutput("nnnnnn", robot.inputs.nonDebouncedValue);
 	}
 
 	@Override

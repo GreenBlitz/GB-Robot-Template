@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
+import frc.utils.digitalinput.channeled.ChanneledDigitalInput;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little
@@ -15,9 +17,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static ChanneledDigitalInput channeledDigitalInput;
+	public static DigitalInputInputsAutoLogged inputs;
 
 	public Robot() {
 		configureBindings();
+		this.channeledDigitalInput=new ChanneledDigitalInput(4, 0.01);
+		this.inputs =new DigitalInputInputsAutoLogged();
 	}
 
 	private void configureBindings() {

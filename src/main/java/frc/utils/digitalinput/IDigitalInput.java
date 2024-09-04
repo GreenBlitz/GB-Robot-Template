@@ -4,6 +4,4 @@ public interface IDigitalInput {
 
 	void updateInputs(DigitalInputInputsAutoLogged input);
 
-	void setInverted(boolean inverted);
-
 }

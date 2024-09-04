@@ -37,11 +37,6 @@ public class ChooserDigitalInput implements IDigitalInput {
 	}
 
 	@Override
-	public void setInverted(boolean inverted) {
-		this.inverted = inverted;
-	}
-
-	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
 		inputs.debouncedValue = isTrueSendableChooser.getSelected();
 		inputs.nonDebouncedValue = isTrueSendableChooser.getSelected();

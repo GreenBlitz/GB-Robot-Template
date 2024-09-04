@@ -70,7 +70,7 @@ public class Module {
 		driveInputs.velocity = ModuleUtils.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
 		driveInputs.acceleration = ModuleUtils.getUncoupledAngle(driveInputs.acceleration, steerInputs.acceleration, constants.couplingRatio());
 
-		for (int i = 0; i < driveInputs.angleOdometrySamples.length; i++) {
+		for (int i = 0; i < getNumberOfOdometrySamples(); i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerInputs.angleOdometrySamples[i].getRotations() - startingSteerAngle.getRotations());
 			driveInputs.angleOdometrySamples[i] = ModuleUtils

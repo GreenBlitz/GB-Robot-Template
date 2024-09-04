@@ -1,7 +1,6 @@
 package frc.utils.calibration.autoPIDtuner;
 
-import edu.greenblitz.robotName.utils.PIDObject;
-
+import frc.utils.calibration.autoPIDtuner.PIDObject;
 public class TunerPicker {
 
     private ControllerType controllerType;

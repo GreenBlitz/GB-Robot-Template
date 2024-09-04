@@ -1,7 +1,6 @@
 package frc.utils.calibration.autoPIDtuner;
 
-import edu.greenblitz.robotName.utils.PIDObject;
-
+import frc.utils.calibration.autoPIDtuner.PIDObject;
 public class AutoPIDTuner {
 
     public PIDObject tunePController(double ku) {
@@ -10,15 +9,13 @@ public class AutoPIDTuner {
 
     public PIDObject tunePIController(double ku, double pu) {
         return new PIDObject(ku / AutoPIDTunerConstants.PI_CONTROLLER.DIVIDE_KU_TO_GET_KP,
-                pu / AutoPIDTunerConstants.PI_CONTROLLER.DIVIDE_PU_TO_GET_KI,
-                0, 0, 0);
+                pu / AutoPIDTunerConstants.PI_CONTROLLER.DIVIDE_PU_TO_GET_KI);
     }
 
     public PIDObject tunePIDController(double ku, double pu) {
         return new PIDObject(ku / AutoPIDTunerConstants.PID_CONTROLLER.DIVIDE_KU_TO_GET_KP,
                 pu / AutoPIDTunerConstants.PID_CONTROLLER.DIVIDE_PU_TO_GET_KI,
-                pu / AutoPIDTunerConstants.PID_CONTROLLER.DIVIDE_PU_TO_GET_KD,
-                0, 0);
+                pu / AutoPIDTunerConstants.PID_CONTROLLER.DIVIDE_PU_TO_GET_KD);
     }
 
 }

@@ -26,6 +26,8 @@ class BatteryLimiter extends Command {
 	public BatteryLimiter() {
 		this.voltageFilter = LinearFilter.movingAverage(NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE);
 		this.averageVoltage = BatteryUtils.getCurrentVoltage();
+		this.lowBatteryEntry = NetworkTableInstance.getDefault().getBooleanTopic(LOW_BATTERY_TOPIC_NAME).getEntry(false);
+		lowBatteryEntry.set(false);
 
 		AlertManager.addAlert(
 			new PeriodicAlert(
@@ -34,9 +36,6 @@ class BatteryLimiter extends Command {
 				() -> averageVoltage <= BatteryUtils.MIN_VOLTAGE
 			)
 		);
-
-		this.lowBatteryEntry = NetworkTableInstance.getDefault().getBooleanTopic(LOW_BATTERY_TOPIC_NAME).getEntry(false);
-		lowBatteryEntry.set(false);
 
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPs.SIMULATION_IP);

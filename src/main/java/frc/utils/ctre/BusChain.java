@@ -40,15 +40,6 @@ public enum BusChain {
 				() -> !busStatus.Status.isOK()
 			)
 		);
-		//@formatter:on
-		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.WARNING,
-				logPath + "FloodedAt",
-				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
-			)
-		);
-		//@formatter:off
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
@@ -56,6 +47,13 @@ public enum BusChain {
 				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
 			)
 				//@formatter:on
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "FloodedAt",
+				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
+			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class BrakeStateManager {
 
-	private static ArrayList<MotorSubsystem> motorSubsystems;
+	private static final ArrayList<MotorSubsystem> motorSubsystems = new ArrayList<>();
 
 	public static void add(MotorSubsystem motorSubsystem) {
 		motorSubsystems.add(motorSubsystem);

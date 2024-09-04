@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
-import frc.utils.allianceutils.AllianceUtilities;
+import frc.utils.DriverStationUtils;
 import frc.utils.GBSubsystem;
 
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class Limelight extends GBSubsystem {
         double processingLatencySeconds = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.TOTAL_LATENCY)] / 1000;
         double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
-        Rotation2d angleOffset = AllianceUtilities.isBlueAlliance() ? VisionConstants.BLUE_ALLIANCE_POSE_OFFSET : VisionConstants.RED_ALLIANCE_POSE_OFFSET;
+        Rotation2d angleOffset = DriverStationUtils.isBlueAlliance() ? VisionConstants.BLUE_ALLIANCE_POSE_OFFSET : VisionConstants.RED_ALLIANCE_POSE_OFFSET;
 
         Pose2d robotPose = new Pose2d(
                 poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.X_AXIS)],

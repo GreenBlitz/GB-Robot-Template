@@ -1,5 +1,7 @@
 package frc.robot.LED;
 
+import com.ctre.phoenix.led.*;
+
 import java.awt.*;
 
 public class CANdle implements ILED, ILogicLED{

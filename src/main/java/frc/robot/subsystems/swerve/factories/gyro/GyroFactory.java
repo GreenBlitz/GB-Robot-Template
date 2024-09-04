@@ -10,14 +10,13 @@ import frc.robot.subsystems.swerve.gyro.pigeon2.Pigeon2ThreadedGyro;
 
 public class GyroFactory {
 
-	public static IThreadedGyro create(SwerveName swerveName) {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL ->
-				new Pigeon2ThreadedGyro(
-					new Pigeon2ConfigObject(IDs.PIGEON_2_DEVICE_ID, RealGyroConstants.PIGEON_2_CONFIGURATION, swerveName.getLogPath())
-				);
-			case SIMULATION -> new EmptyThreadedGyro();
-		};
-	}
+    public static IThreadedGyro create(SwerveName swerveName) {
+        return switch (Robot.ROBOT_TYPE) {
+            case REAL -> new Pigeon2ThreadedGyro(
+                    new Pigeon2ConfigObject(IDs.PIGEON_2_DEVICE_ID, RealGyroConstants.generateGyroConfig(), swerveName.getLogPath())
+            );
+            case SIMULATION -> new EmptyThreadedGyro();
+        };
+    }
 
 }

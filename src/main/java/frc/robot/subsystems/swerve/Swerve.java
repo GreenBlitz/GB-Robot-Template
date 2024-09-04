@@ -51,10 +51,10 @@ public class Swerve extends GBSubsystem {
 
 	private static DoubleInterpolator2D discritizationInterpolator = new DoubleInterpolator2D();
 	static {
-		discritizationInterpolator.put(new Translation2d(),0);
-		discritizationInterpolator.put(new Translation2d(4,0),5);
-		discritizationInterpolator.put(new Translation2d(0,2),3);
-		discritizationInterpolator.put(new Translation2d(0,5),3);
+		discritizationInterpolator.put(new Translation2d(),1);
+		discritizationInterpolator.put(new Translation2d(0.5,10), 3);
+		discritizationInterpolator.put(new Translation2d(5,5),3);
+		discritizationInterpolator.put(new Translation2d(10,10),5);
 	}
 
 
@@ -297,7 +297,7 @@ public class Swerve extends GBSubsystem {
 		speeds = handleHeadingControl(speeds, swerveState);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
 		double a  =discritizationInterpolator.get(
-				new Translation2d(SwerveMath.getDriveMagnitude(speeds), speeds.omegaRadiansPerSecond)
+				new Translation2d(SwerveMath.getDriveMagnitude(speeds), Math.abs(speeds.omegaRadiansPerSecond))
 		);
 		speeds = SwerveMath.discretize(speeds, a);
 		Logger.recordOutput("fudge factor", a);

@@ -22,17 +22,25 @@ public class InterpolationTests {
                 new Translation2d(1,1), 1
         );
         interpolator.put(
-                new Translation2d(-1,-1),2
+                new Translation2d(0.5,0.5),2
         );
     }
 
     @Test
     public void test1(){
-        assert interpolator.get(new Translation2d(0.9,0.9)) == 0.9;
+        assert interpolator.get(new Translation2d(0.25,0.25)) == 1;
     }
     @Test
     public void test2(){
-        assert interpolator.get(new Translation2d(-0.5,-0.5)) == 1;
+        assert interpolator.get(new Translation2d(0.5,0.5)) == 2;
+    }
+    @Test
+    public void test3(){
+        assert interpolator.get(new Translation2d(0.25,0.25)) == 1;
+    }
+    @Test
+    public void test4(){
+        assert interpolator.get(new Translation2d(0.75,0.75)) == 1.5;
     }
 
 }

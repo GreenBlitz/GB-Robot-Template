@@ -9,23 +9,18 @@ public class ChanneledDigitalInput implements IDigitalInput {
 
 	private final DigitalInput digitalInput;
 	private final Debouncer debouncer;
-	private final boolean normallyClosed;
+	private final boolean inverted;
 
-	public ChanneledDigitalInput(int channel, double debounceTime, boolean normallyClosed) {
+	public ChanneledDigitalInput(int channel, double debounceTime, boolean inverted) {
 		this.digitalInput = new DigitalInput(channel);
 		this.debouncer = new Debouncer(debounceTime);
-		this.normallyClosed = normallyClosed;
+		this.inverted = inverted;
 	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		if (normallyClosed) {
-			inputs.debouncedValue = !debouncer.calculate(digitalInput.get());
-			inputs.nonDebouncedValue = !digitalInput.get();
-		} else {
-			inputs.debouncedValue = debouncer.calculate(digitalInput.get());
-			inputs.nonDebouncedValue = digitalInput.get();
-		}
+		inputs.debouncedValue = (inverted) ? !debouncer.calculate(digitalInput.get()) :  debouncer.calculate(digitalInput.get());
+		inputs.nonDebouncedValue = (inverted) ? !digitalInput.get() : digitalInput.get();
 	}
 
 }

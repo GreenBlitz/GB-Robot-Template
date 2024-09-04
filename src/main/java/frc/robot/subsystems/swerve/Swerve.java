@@ -52,8 +52,8 @@ public class Swerve extends GBSubsystem {
 	private static DoubleInterpolator2D discritizationInterpolator = new DoubleInterpolator2D();
 	static {
 		discritizationInterpolator.put(new Translation2d(),1);
-		discritizationInterpolator.put(new Translation2d(0.5,10), 3);
-		discritizationInterpolator.put(new Translation2d(5,5),3);
+		discritizationInterpolator.put(new Translation2d(0.5,10), 2);
+//		discritizationInterpolator.put(new Translation2d(5,5),3);
 		discritizationInterpolator.put(new Translation2d(10,10),5);
 	}
 

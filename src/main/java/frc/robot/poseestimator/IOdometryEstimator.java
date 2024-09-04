@@ -20,6 +20,5 @@ public interface IOdometryEstimator {
 
     void setOdometryStandardDeviations(Matrix<N3, N1> standardDeviations);
 
-    OdometryObservation getOdometryObservation();
 
 }

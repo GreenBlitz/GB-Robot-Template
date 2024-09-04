@@ -10,10 +10,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.Robot;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.subsystems.swerve.Swerve;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -51,7 +49,7 @@ public class PoseEstimator implements IPoseEstimator {
         this.lastWheelPositions = observation.wheelPositions();
         this.odometryPose = odometryPose.exp(twist);
         this.estimatedPose = estimatedPose.exp(twist);
-        poseBuffer.addSample(lastOdometryTimestamp, odometryPose);
+        poseBuffer.addSample(observation.timestamp(), odometryPose);
     }
 
     private void addVisionObservation(VisionObservation observation) {
@@ -129,9 +127,9 @@ public class PoseEstimator implements IPoseEstimator {
 
 
     @Override
-    public void updatePoseEstimator(){
-        updateOdometry(getOdometryObservation());
-        updateVision(getVisionObservation());
+    public void updatePoseEstimator(OdometryObservation odometryObservation, VisionObservation visionObservation){
+        updateOdometry(odometryObservation);
+        updateVision(visionObservation);
     }
 
 }

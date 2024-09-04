@@ -12,7 +12,7 @@ import frc.robot.Robot;
 import frc.robot.constants.Field;
 import frc.robot.constants.LogPaths;
 import frc.robot.constants.MathConstants;
-import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.structures.SuperStructureConstants;
 import frc.robot.subsystems.swerve.gyro.GyroInputsAutoLogged;
 import frc.robot.subsystems.swerve.gyro.IGyro;
@@ -197,6 +197,12 @@ public class Swerve extends GBSubsystem {
 
 		return odometryObservations;
 	}
+
+	public frc.robot.poseestimator.observations.OdometryObservation getLastOdometryObservation(){
+		return getAllOdometryObservations()[0];
+	}
+
+
 
 
 	public Rotation2d getAbsoluteHeading() {

@@ -97,7 +97,6 @@ public class Swerve extends GBSubsystem {
 			() -> !Field.isFieldConventionAlliance(),
 			this
 		);
-		PathPlannerUtils.setupLogging(getLogPath());
 	}
 
 	public void setStateHelper(SwerveStateHelper swerveStateHelper) {

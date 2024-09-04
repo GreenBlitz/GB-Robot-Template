@@ -3,10 +3,7 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
@@ -198,8 +195,17 @@ public class Swerve extends GBSubsystem {
 		return odometryObservations;
 	}
 
-	public frc.robot.poseestimator.observations.OdometryObservation getLastOdometryObservation() {
-		return getAllOdometryObservations()[0];
+	public OdometryObservation getLastOdometryObservation() {
+		OdometryObservation[] allOdometryObservations = getAllOdometryObservations();
+		SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllWheelsPositionsSamples();
+		if (allOdometryObservations.length == 0){
+			return new OdometryObservation(swerveWheelPositions[0],new Rotation2d(),0);
+		}else{
+			OdometryObservation odometryObservation = allOdometryObservations[0];
+			return odometryObservation;
+
+		}
+
 	}
 
 

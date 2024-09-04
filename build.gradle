@@ -2,14 +2,14 @@ import edu.wpi.first.gradlerio.GradleRIOPlugin
 import groovy.json.JsonSlurper
 
 plugins {
-    id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.3.2"
-    id "com.diffplug.spotless" version "6.25.0"
+	id "java"
+	id "edu.wpi.first.GradleRIO" version "2024.3.2"
+	id "com.diffplug.spotless" version "6.25.0"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
@@ -22,36 +22,36 @@ def reachableIP
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
 deploy {
-    targets {
-        roborio(getTargetTypeClass('RoboRIO')) {
-            // Team number is loaded either from the .wpilib/wpilib_preferences.json
-            // or from command line. If not found an exception will be thrown.
-            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
-            // want to store a team number in this file.
-            team = project.frc.getTeamNumber()
-            debug = project.frc.getDebugOrDefault(false)
+	targets {
+		roborio(getTargetTypeClass('RoboRIO')) {
+			// Team number is loaded either from the .wpilib/wpilib_preferences.json
+			// or from command line. If not found an exception will be thrown.
+			// You can use getTeamOrDefault(team) instead of getTeamNumber if you
+			// want to store a team number in this file.
+			team = project.frc.getTeamNumber()
+			debug = project.frc.getDebugOrDefault(false)
 
-            artifacts {
-                // First part is artifact name, 2nd is artifact type
-                // getTargetTypeClass is a shortcut to get the class type using a string
+			artifacts {
+				// First part is artifact name, 2nd is artifact type
+				// getTargetTypeClass is a shortcut to get the class type using a string
 
-                frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
-                    jvmArgs.add('-Dcom.sun.management.jmxremote=true')
-                    jvmArgs.add('-Dcom.sun.management.jmxremote.port=1198')
-                    jvmArgs.add('-Dcom.sun.management.jmxremote.local.only=false')
-                    jvmArgs.add('-Dcom.sun.management.jmxremote.ssl=false')
-                    jvmArgs.add('-Dcom.sun.management.jmxremote.authenticate=false')
-                    jvmArgs.add("-Djava.rmi.server.hostname=${IPS[0]}")
-                }
+				frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
+					jvmArgs.add('-Dcom.sun.management.jmxremote=true')
+					jvmArgs.add('-Dcom.sun.management.jmxremote.port=1198')
+					jvmArgs.add('-Dcom.sun.management.jmxremote.local.only=false')
+					jvmArgs.add('-Dcom.sun.management.jmxremote.ssl=false')
+					jvmArgs.add('-Dcom.sun.management.jmxremote.authenticate=false')
+					jvmArgs.add("-Djava.rmi.server.hostname=${IPS[0]}")
+				}
 
-                // Static files artifact
-                frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
-                    files = project.fileTree('src/main/deploy')
-                    directory = '/home/lvuser/deploy'
-                }
-            }
-        }
-    }
+				// Static files artifact
+				frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
+					files = project.fileTree('src/main/deploy')
+					directory = '/home/lvuser/deploy'
+				}
+			}
+		}
+	}
 }
 
 def deployArtifact = deploy.targets.roborio.artifacts.frcJava
@@ -66,50 +66,50 @@ def includeDesktopSupport = true
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
-    implementation wpi.java.deps.wpilib()
-    implementation wpi.java.vendor.java()
+	implementation wpi.java.deps.wpilib()
+	implementation wpi.java.vendor.java()
 
-    roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
-    roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
+	roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
+	roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
 
-    roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
-    roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
+	roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
+	roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
 
-    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
-    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
-    simulationDebug wpi.sim.enableDebug()
+	nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+	nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+	simulationDebug wpi.sim.enableDebug()
 
-    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
-    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
-    simulationRelease wpi.sim.enableRelease()
+	nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+	nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+	simulationRelease wpi.sim.enableRelease()
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    def akitJson = new JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
-    annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
+	def akitJson = new JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
+	annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
 }
 
 
 repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
-        credentials {
-            username = "Mechanical-Advantage-Bot"
-            password = "\u0067\u0068\u0070\u005f\u006e\u0056\u0051\u006a\u0055\u004f\u004c\u0061\u0079\u0066\u006e\u0078\u006e\u0037\u0051\u0049\u0054\u0042\u0032\u004c\u004a\u006d\u0055\u0070\u0073\u0031\u006d\u0037\u004c\u005a\u0030\u0076\u0062\u0070\u0063\u0051"
-        }
-    }
-    mavenLocal()
+	maven {
+		url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
+		credentials {
+			username = "Mechanical-Advantage-Bot"
+			password = "\u0067\u0068\u0070\u005f\u006e\u0056\u0051\u006a\u0055\u004f\u004c\u0061\u0079\u0066\u006e\u0078\u006e\u0037\u0051\u0049\u0054\u0042\u0032\u004c\u004a\u006d\u0055\u0070\u0073\u0031\u006d\u0037\u004c\u005a\u0030\u0076\u0062\u0070\u0063\u0051"
+		}
+	}
+	mavenLocal()
 }
 
 
 configurations.configureEach {
-    exclude group: "edu.wpi.first.wpilibj"
+	exclude group: "edu.wpi.first.wpilibj"
 }
 
 test {
-    useJUnitPlatform()
-    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+	useJUnitPlatform()
+	systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
 }
 
 // Simulation configuration (e.g. environment variables).
@@ -121,14 +121,14 @@ wpi.sim.addDriverstation()
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from {
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-    from sourceSets.main.allSource
-    manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+	from {
+		configurations.runtimeClasspath.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	}
+	from sourceSets.main.allSource
+	manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 // Configure jar and deploy tasks
@@ -139,137 +139,98 @@ wpi.java.configureTestTasks(test)
 
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs.add '-XDstringConcat=inline'
+	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-
+tasks.named("build").configure { dependsOn('installLocalGitHookPostCheckout') }
 tasks.register('installLocalGitHookPostCheckout', Copy) {
-    group = 'git'
-    from new File(rootProject.rootDir, '.scripts/post-checkout')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    filePermissions {
-        unix(0775)
-    }
-    doLast {
-        println("---Added Post Checkout Git Hook Script---")
-    }
+	group = 'git'
+	from new File(rootProject.rootDir, '.scripts/post-checkout')
+	into { new File(rootProject.rootDir, '.git/hooks') }
+	filePermissions {
+		unix(0775)
+	}
+	doLast {
+		println("---Added Post Checkout Git Hook Script---")
+	}
 }
 
-tasks.register('installLocalGitHookPreCommit', Copy) {
-    group = 'git'
-    from new File(rootProject.rootDir, '.scripts/pre-commit')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    filePermissions {
-        unix(0775)
-    }
-    doLast {
-        println("---Added Pre Commit Git Hook Script---")
-    }
-}
-
+discoverroborio.finalizedBy('setReachableIP')
 tasks.register('setReachableIP') {
-    group = 'networkUtils'
-    doLast {
-        int PING_TIMEOUT_MILLISECONDS = 1000
-        boolean found = false
-        for (int i = 0; i < IPS.size() && !found; i++) {
-            if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
-                reachableIP = IPS[i]
-                println("Using " + IPS[i])
-                found = true
-            }
-        }
-        if (!found) {
-            println("No IP is reachable.")
-        }
-    }
+	group = 'networkUtils'
+	doLast {
+		int PING_TIMEOUT_MILLISECONDS = 1000
+		boolean found = false
+		for (int i = 0; i < IPS.size() && !found; i++) {
+			if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
+				reachableIP = IPS[i]
+				println("Using " + IPS[i])
+				found = true
+			}
+		}
+		if (!found) {
+			println("No IP is reachable.")
+		}
+	}
 }
 
+setReachableIP.finalizedBy('setVisualVMHost')
 tasks.register('setVisualVMHost') {
-    group = 'externalTools'
-    dependsOn('setReachableIP')
-    doLast {
-        if (reachableIP) {
-            deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=${reachableIP}")
-            println("Using reachable IP: ${reachableIP}")
-        } else {
-            println("No reachable IP to set as Host")
-        }
-    }
+	group = 'externalTools'
+	dependsOn('setReachableIP')
+	doLast {
+		if (reachableIP) {
+			deployArtifact.jvmArgs.add("-Djava.rmi.server.hostname=${reachableIP}")
+			println("Using reachable IP: ${reachableIP}")
+		} else {
+			println("No reachable IP to set as Host")
+		}
+	}
 }
-
-tasks.register('checkAkitInstall', JavaExec) {
-    group = 'execution'
-    dependsOn('classes')
-    mainClass = "org.littletonrobotics.junction.CheckInstall"
-    classpath = sourceSets.main.runtimeClasspath
-}
-
-tasks.register('runComputerPrograms', JavaExec) {
-    group = 'execution'
-    dependsOn('setReachableIP')
-    description = "Run the main class in ComputerMain"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = "frc.robot.ComputerMain"
-    doFirst {
-        if (reachableIP == null || reachableIP.isEmpty()) {
-            throw new GradleException("reachableIP is null or empty. Please set a valid IP address.")
-        }
-        args = ["${reachableIP}"]
-        println("Using reachable IP: ${reachableIP}")
-    }
-}
-
-tasks.register('deployWithComputerPrograms') {
-    group = 'deployutils'
-    dependsOn("deploy")
-    dependsOn("runComputerPrograms")
-    tasks.findByName("runComputerPrograms").mustRunAfter("deploy")
-}
-
 
 compileJava.finalizedBy('checkAkitInstall')
-build.dependsOn('installLocalGitHookPostCheckout', 'installLocalGitHookPreCommit')
-discoverroborio.finalizedBy('setReachableIP')
-setReachableIP.finalizedBy('setVisualVMHost')
+tasks.register('checkAkitInstall', JavaExec) {
+	group = 'execution'
+	dependsOn('classes')
+	mainClass = "org.littletonrobotics.junction.CheckInstall"
+	classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.named("deploy").configure { finalizedBy('runComputerPrograms') }
+tasks.register('runComputerPrograms', JavaExec) {
+	group = 'execution'
+	dependsOn('setReachableIP')
+	description = "Run the main class in ComputerMain"
+	classpath = sourceSets.main.runtimeClasspath
+	mainClass = "frc.robot.ComputerMain"
+	doFirst {
+		if (reachableIP == null || reachableIP.isEmpty()) {
+			throw new GradleException("reachableIP is null or empty. Please set a valid IP address.")
+		}
+		args = ["${reachableIP}"]
+		println("Using reachable IP: ${reachableIP}")
+	}
+}
 
 
-project.build.dependsOn(spotlessApply)
 spotless {
-    java {
-        target fileTree(".") {
-            include "src/main/java/frc/**/*.java"
-            exclude '**/build/**', '**/build-*/**'
-        }
-        indentWithSpaces(4)
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-    groovyGradle {
-        target fileTree(".") {
-            include "**/*.gradle"
-            exclude "**/build/**", "**/build-*/**"
-        }
-        greclipse()
-        indentWithSpaces(4)
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-    json {
-        target fileTree(".") {
-            include "**/*.json"
-            exclude "**/build/**", "**/build-*/**"
-        }
-        gson().indentWithSpaces(4)
-    }
-    format "misc", {
-        target fileTree(".") {
-            include "**/*.md", "**/.gitignore"
-            exclude "**/build/**", "**/build-*/**"
-        }
-        trimTrailingWhitespace()
-        indentWithSpaces(4)
-        endWithNewline()
-    }
+	java {
+		target fileTree(".") {
+			include "src/main/java/frc/**/*.java"
+			exclude '**/build/**', '**/build-*/**'
+		}
+		removeUnusedImports()
+		trimTrailingWhitespace()
+		eclipse().configFile("codestyle.xml")
+		formatAnnotations()
+	}
+	groovyGradle {
+		target fileTree(".") {
+			include "**/*.gradle"
+			exclude "**/build/**", "**/build-*/**"
+		}
+		greclipse()
+		indentWithTabs(4)
+		trimTrailingWhitespace()
+	}
 }

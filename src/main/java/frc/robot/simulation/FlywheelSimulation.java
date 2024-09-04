@@ -6,37 +6,37 @@ import frc.utils.cycletime.CycleTimeUtils;
 
 public class FlywheelSimulation extends MotorSimulation {
 
-    private final FlywheelSim flywheelSimulation;
+	private final FlywheelSim flywheelSimulation;
 
-    private double lastPositionRadians = 0;
+	private double lastPositionRadians = 0;
 
-    public FlywheelSimulation(FlywheelSim flywheelSimulation) {
-        this.flywheelSimulation = flywheelSimulation;
-    }
+	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
+		this.flywheelSimulation = flywheelSimulation;
+	}
 
-    public double getCurrent() {
-        return flywheelSimulation.getCurrentDrawAmps();
-    }
+	public double getCurrent() {
+		return flywheelSimulation.getCurrentDrawAmps();
+	}
 
-    @Override
-    public Rotation2d getPosition() {
-        return Rotation2d.fromRadians(lastPositionRadians);
-    }
+	@Override
+	public Rotation2d getPosition() {
+		return Rotation2d.fromRadians(lastPositionRadians);
+	}
 
-    @Override
-    public Rotation2d getVelocity() {
-        return Rotation2d.fromRadians(flywheelSimulation.getAngularVelocityRadPerSec());
-    }
+	@Override
+	public Rotation2d getVelocity() {
+		return Rotation2d.fromRadians(flywheelSimulation.getAngularVelocityRadPerSec());
+	}
 
-    @Override
-    protected void setInputVoltage(double voltage) {
-        flywheelSimulation.setInputVoltage(voltage);
-    }
+	@Override
+	protected void setInputVoltage(double voltage) {
+		flywheelSimulation.setInputVoltage(voltage);
+	}
 
-    @Override
-    protected void updateMotor() {
-        flywheelSimulation.update(CycleTimeUtils.getCurrentCycleTime());
-        lastPositionRadians += getVelocity().getRadians() * CycleTimeUtils.getCurrentCycleTime();
-    }
+	@Override
+	protected void updateMotor() {
+		flywheelSimulation.update(CycleTimeUtils.getCurrentCycleTime());
+		lastPositionRadians += getVelocity().getRadians() * CycleTimeUtils.getCurrentCycleTime();
+	}
 
 }

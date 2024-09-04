@@ -27,80 +27,73 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-    private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
+	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
-    public static void startPathfinder() {
-        setPathfinder();
-        scheduleWarmup();
-    }
+	public static void startPathfinder() {
+		setPathfinder();
+		scheduleWarmup();
+	}
 
-    private static void setPathfinder() {
-        Pathfinding.setPathfinder(new LocalADStar());
-    }
+	private static void setPathfinder() {
+		Pathfinding.setPathfinder(new LocalADStar());
+	}
 
-    private static void scheduleWarmup() {
-        PathfindingCommand.warmupCommand().schedule();
-    }
+	private static void scheduleWarmup() {
+		PathfindingCommand.warmupCommand().schedule();
+	}
 
-    public static void configurePathPlanner(
-            Supplier<Pose2d> poseSupplier,
-            Consumer<Pose2d> resetPose,
-            Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-            Consumer<ChassisSpeeds> robotRelativeOutput,
-            HolonomicPathFollowerConfig config,
-            BooleanSupplier shouldFlipPath,
-            Subsystem driveSubsystem
-    ) {
-        AutoBuilder.configureHolonomic(
-                poseSupplier,
-                resetPose,
-                robotRelativeSpeedsSupplier,
-                robotRelativeOutput,
-                config,
-                shouldFlipPath,
-                driveSubsystem
-        );
-    }
+	public static void configurePathPlanner(
+		Supplier<Pose2d> poseSupplier,
+		Consumer<Pose2d> resetPose,
+		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+		Consumer<ChassisSpeeds> robotRelativeOutput,
+		HolonomicPathFollowerConfig config,
+		BooleanSupplier shouldFlipPath,
+		Subsystem driveSubsystem
+	) {
+		AutoBuilder.configureHolonomic(
+			poseSupplier,
+			resetPose,
+			robotRelativeSpeedsSupplier,
+			robotRelativeOutput,
+			config,
+			shouldFlipPath,
+			driveSubsystem
+		);
+	}
 
-    public static void registerCommand(String commandName, Command command) {
-        NamedCommands.registerCommand(commandName, command);
-    }
+	public static void registerCommand(String commandName, Command command) {
+		NamedCommands.registerCommand(commandName, command);
+	}
 
-    public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
-        dynamicObstacles = obstacles;
-        Pathfinding.setDynamicObstacles(obstacles, currentRobotPose.getTranslation());
-    }
+	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+		dynamicObstacles = obstacles;
+		Pathfinding.setDynamicObstacles(obstacles, currentRobotPose.getTranslation());
+	}
 
-    public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
-        List<Pair<Translation2d, Translation2d>> allObstacles = new ArrayList<>();
-        allObstacles.addAll(dynamicObstacles);
-        allObstacles.addAll(obstacles);
-        setDynamicObstacles(allObstacles, currentRobotPose);
-    }
+	public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+		List<Pair<Translation2d, Translation2d>> allObstacles = new ArrayList<>();
+		allObstacles.addAll(dynamicObstacles);
+		allObstacles.addAll(obstacles);
+		setDynamicObstacles(allObstacles, currentRobotPose);
+	}
 
-    public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {
-        setDynamicObstacles(List.of(), currentRobotPose);
-    }
+	public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {
+		setDynamicObstacles(List.of(), currentRobotPose);
+	}
 
-    public static void setTargetRotationOverride(Supplier<Optional<Rotation2d>> overrider) {
-        PPHolonomicDriveController.setRotationTargetOverride(overrider);
-    }
+	public static void setTargetRotationOverride(Supplier<Optional<Rotation2d>> overrider) {
+		PPHolonomicDriveController.setRotationTargetOverride(overrider);
+	}
 
-    public static Command createOnTheFlyPathCommand(Pose2d currentBluePose, Pose2d targetPose, PathConstraints constraints) {
-        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                currentBluePose,
-                targetPose
-        );
+	public static Command createOnTheFlyPathCommand(Pose2d currentBluePose, Pose2d targetPose, PathConstraints constraints) {
+		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentBluePose, targetPose);
 
-        PathPlannerPath path = new PathPlannerPath(
-                bezierPoints,
-                constraints,
-                new GoalEndState(0, targetPose.getRotation())
-        );
+		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
 
-        path.preventFlipping = true;
+		path.preventFlipping = true;
 
-        return AutoBuilder.followPath(path);
-    }
+		return AutoBuilder.followPath(path);
+	}
 
 }

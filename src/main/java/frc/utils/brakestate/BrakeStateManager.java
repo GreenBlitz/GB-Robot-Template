@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public class BrakeStateManager {
 
-	public static final ArrayList<Runnable> coastRunnables = new ArrayList<>();
-	public static final ArrayList<Runnable> brakeRunnables = new ArrayList<>();
+	private static final ArrayList<Runnable> coastRunnables = new ArrayList<>();
+	private static final ArrayList<Runnable> brakeRunnables = new ArrayList<>();
 
 	public static void add(Runnable brake, Runnable coast) {
 		coastRunnables.add(coast);

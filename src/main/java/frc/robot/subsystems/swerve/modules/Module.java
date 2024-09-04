@@ -141,7 +141,10 @@ public class Module {
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return moduleInputsContainer.getDriveMotorInputs().distanceMetersOdometrySamples.length;
+		return Math.min(
+			moduleInputsContainer.getDriveMotorInputs().angleOdometrySamples.length,
+			moduleInputsContainer.getSteerMotorInputs().angleOdometrySamples.length
+		);
 	}
 
 	public SwerveModuleState getTargetState() {

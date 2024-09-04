@@ -12,7 +12,9 @@ public class VisionConstants {
 
     public static final String LIMELIGHT_LOGPATH_PREFIX = "Limelight ";
 
-    public static final String MULTI_LIMELIGHT_LOGPATH = "MultiLimeLight/";
+    public static final String MULTI_LIMELIGHT_LOGPATH = "LimelightsHardware/";
+
+    public static final String LIMELIGHTS_FILTERED_LOGPATH = "LimelightsFiltered/";
 
     public static final String ESTIMATION_LOGPATH_PREFIX = "estimation ";
 

@@ -4,7 +4,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import frc.robot.Robot;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -13,16 +12,15 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class MultiLimelight extends GBSubsystem {
+public class LimelightFiltered extends GBSubsystem {
 
     private List<Limelight> limelights;
+    private LimelightsHardware limelightHardware;
 
-    private MultiLimelight() {
-        super(VisionConstants.MULTI_LIMELIGHT_LOGPATH);
-        limelights = new ArrayList<>();
-        for (String limelightName : VisionConstants.LIMELIGHT_NAMES) {
-            limelights.add(new Limelight(limelightName));
-        }
+    public LimelightFiltered() {
+        super(VisionConstants.LIMELIGHTS_FILTERED_LOGPATH);
+        this.limelightHardware = new LimelightsHardware();
+        this.limelights = limelightHardware.getAllLimelights();
     }
 
     public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {
@@ -42,11 +40,11 @@ public class MultiLimelight extends GBSubsystem {
         Transform2d transformDifference;
         Rotation2d rotationDifference;
 
-        Pose2d currentPosition = Robot.getPosEstimator.getOdometryPose();
+        Pose2d currentPoseObservation = NetworkTable... ; // placeholder for pubsubs, when it'll be added.
 
         limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
-        transformDifference = limelightPosition.minus(currentPosition);
-        rotationDifference = limelightPosition.getRotation().minus(currentPosition.getRotation());
+        transformDifference = limelightPosition.minus(currentPoseObservation);
+        rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
 
         return transformDifference.getTranslation().getNorm() <= VisionConstants.POSITION_TOLERANCE
                 && rotationDifference.getDegrees() <= VisionConstants.ROTATION_TOLERANCE.getDegrees();

@@ -2,8 +2,6 @@ package frc.utils;
 
 import edu.wpi.first.math.geometry.Translation2d;
 
-import java.util.Objects;
-
 public class Translation2dUtils {
 
 
@@ -20,7 +18,6 @@ public class Translation2dUtils {
                 }
             }
         }
-        System.out.println(closestPoint);
         return closestPoint;
     }
 
@@ -42,6 +39,6 @@ public class Translation2dUtils {
     }
 
 	public static boolean isAfter(Translation2d comparisonPoint, Translation2d point) {
-		return comparisonPoint.getX() <= point.getX() && comparisonPoint.getY() <= point.getY();
-	}
+		return point.getX() >= comparisonPoint.getX() &&  point.getY() >= comparisonPoint.getY();
+    }
 }

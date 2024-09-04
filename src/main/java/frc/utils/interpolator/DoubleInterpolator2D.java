@@ -2,6 +2,7 @@ package frc.utils.interpolator;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.utils.Translation2dUtils;
 
 import java.util.*;
 
@@ -52,8 +53,7 @@ public class DoubleInterpolator2D {
 				return new Pair<>(knownPoints[1], knownPoints[0]);
 			}
 		}
-		return new Pair<>(null,null);
-//		return new Pair<>(etNegativeClosest(target, knownPoints), getPositiveClosest(target, knownPoints));
+		return new Pair<>(Translation2dUtils.findClosestPointBefore(target, knownPoints), Translation2dUtils.findClosestPointAfter(target, knownPoints));
 	}
 
 }

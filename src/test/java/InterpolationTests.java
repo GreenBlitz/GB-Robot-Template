@@ -9,42 +9,30 @@ import java.util.Objects;
 
 public class InterpolationTests {
 
+    private final DoubleInterpolator2D interpolator = new DoubleInterpolator2D();
+    @BeforeEach
+    public void restart(){
+        interpolator.empty();
+
+        interpolator.put(
+                new Translation2d(0,0), 0
+        );
+
+        interpolator.put(
+                new Translation2d(1,1), 1
+        );
+        interpolator.put(
+                new Translation2d(-1,-1),2
+        );
+    }
+
     @Test
-    public void closestAfterTest (){
-        assert Objects.equals(Translation2dUtils.findClosestPointAfter(
-                new Translation2d(0, 0),
-                new Translation2d[]{
-                        new Translation2d(1, 1),
-                        new Translation2d(1, 2),
-                        new Translation2d(2, 1),
-                        new Translation2d(0, 1),
-                        new Translation2d(-0.1,-0.1)
-                }
-        ), new Translation2d(0, 1));
+    public void test1(){
+        assert interpolator.get(new Translation2d(0.9,0.9)) == 0.9;
     }
     @Test
-    public void closestBeforeTest1 (){
-        assert Objects.equals(Translation2dUtils.findClosestPointBefore(
-                new Translation2d(0, 0),
-                new Translation2d[]{
-                        new Translation2d(1, 1),
-                        new Translation2d(1, 2),
-                        new Translation2d(2, 1),
-                        new Translation2d(0, 1),
-                }
-        ), null);
-    }
-    @Test
-    public void closestBeforeTest2 (){
-        assert Objects.equals(Translation2dUtils.findClosestPointBefore(
-                new Translation2d(0, 0),
-                new Translation2d[]{
-                        new Translation2d(1, 1),
-                        new Translation2d(1, 2),
-                        new Translation2d(2, 1),
-                        new Translation2d(0, -1),
-                }
-        ), new Translation2d(0, -1));
+    public void test2(){
+        assert interpolator.get(new Translation2d(-0.5,-0.5)) == 1;
     }
 
 }

@@ -1,91 +1,95 @@
 package frc.robot.poseestimator;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
-import java.util.Optional;
 
 public class PoseEstimatorMath {
 
-    public static Twist2d addGyroToTwistCalculations(OdometryObservation observation, Twist2d twist, Rotation2d lastGyroAngle) {
-        boolean isGyroConnected = observation.getGyroAngle() != null;
-        if (isGyroConnected) {
-            twist = updateDeltaTheta(twist, observation, lastGyroAngle);
-        }
-        return twist;
-    }
+	public static Twist2d addGyroToTwist(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
+		boolean hasGyroUpdated = currentGyroAngle != null;
+		if (hasGyroUpdated) {
+			return updateChangeInAngle(twist, currentGyroAngle, lastGyroAngle);
+		}
+		return twist;
+	}
 
-    public static Twist2d updateDeltaTheta(Twist2d twist, OdometryObservation observation, Rotation2d lastGyroAngle) {
-        return new Twist2d(
-                twist.dx,
-                twist.dy,
-                observation.getGyroAngle().minus(lastGyroAngle).getRadians()
-        );
-    }
+	public static Twist2d updateChangeInAngle(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
+		double rotationDifference = currentGyroAngle.getRadians() - lastGyroAngle.getRadians();
+		double wrappedRotationDifference = MathUtil.angleModulus(rotationDifference);
+		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
+	}
 
-    public static double[] getSquaredVisionMatrix(VisionObservation observation) {
-        int rows = observation.getStandardDeviations().getNumRows();
-        double[] r = new double[rows];
-        for (int row = 0; row < rows; ++row) {
-            double standardDeviationInRow = observation.getStandardDeviations().get(row, 0);
-            r[row] = Math.pow(standardDeviationInRow,PoseEstimatorConstants.KALMAN_EXPONENT);
-        }
-        return r;
-    }
+	public static double[] combineStandardDeviations(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
+		double[] combinedStandardDeviations = new double[3];
+		for (int row = 0; row < combinedStandardDeviations.length; row++) {
+			double odometryStandardDeviation = odometryStandardDeviations[row];
+			double visionStandardDeviation = visionStandardDeviations[row];
+			combinedStandardDeviations[row] = combineStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
+		}
+		return combinedStandardDeviations;
+	}
 
-    public static Matrix<N3, N3> kalmanFilterAlgorithm(double[] squaredVisionMatrix, Matrix<N3, N1> standardDeviations) {
-        Matrix<N3, N3> visionK = new Matrix<>(Nat.N3(), Nat.N3());
-        for (int row = 0; row < visionK.getNumRows(); ++row) {
-            double standardDeviation = standardDeviations.get(row, 0);
-            if (standardDeviation == 0.0) {
-                visionK.set(row, row, 0.0);
-            }
-            else {
-                visionK.set(row, row, standardDeviation / (standardDeviation + Math.sqrt(standardDeviation * squaredVisionMatrix[row])));
-            }
-        }
-        return visionK;
-    }
+	public static double combineStandardDeviations(double odometryStandardDeviation, double visionStandardDeviation) {
+		if (odometryStandardDeviation == 0) {
+			return 0;
+		}
+		double squaredVisionStandardDeviation = visionStandardDeviation * visionStandardDeviation;
+		return odometryStandardDeviation
+			/ (odometryStandardDeviation + Math.sqrt(odometryStandardDeviation * squaredVisionStandardDeviation));
+	}
 
-    public static Transform2d useKalmanOnTransform(VisionObservation observation, Pose2d estimateAtTime, Matrix<N3, N1> standardDeviations) {
-        double[] squaredVisionMatrix = PoseEstimatorMath.getSquaredVisionMatrix(observation);
-        Matrix<N3, N3> visionK = PoseEstimatorMath.kalmanFilterAlgorithm(squaredVisionMatrix, standardDeviations);
-        Transform2d diffFromOdometry = new Transform2d(estimateAtTime, observation.getVisionPose());
-        return scaleDiffFromKalman(diffFromOdometry, visionK);
-    }
+	public static double[] multiplyArrays(double[] array1, double[] array2) {
+		double[] result = new double[Math.min(array1.length, array2.length)];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = array1[i] * array2[i];
+		}
+		return result;
+	}
 
-    public static Transform2d scaleDiffFromKalman(Transform2d diffFromOdometry, Matrix<N3, N3> visionK) {
-        Matrix<N3, N1> kTimesDiff = visionK.times(
-                VecBuilder.fill(diffFromOdometry.getX(), diffFromOdometry.getY(), diffFromOdometry.getRotation().getRadians())
-        );
-        return new Transform2d(
-                kTimesDiff.get(0, 0),
-                kTimesDiff.get(1, 0),
-                Rotation2d.fromRadians(kTimesDiff.get(2, 0))
-        );
-    }
 
-    public static Pose2d combineVisionObservationAndOdometrySample(
-            Optional<Pose2d> sample,
-            VisionObservation observation,
-            Pose2d estimatedPose,
-            Pose2d odometryPose,
-            Matrix<N3, N1> standardDeviations
-    ) {
-        Transform2d sampleToOdometryTransform = new Transform2d(sample.get(), odometryPose);
-        Transform2d odometryToSampleTransform = new Transform2d(odometryPose, sample.get());
-        Pose2d estimateAtTime = estimatedPose.plus(odometryToSampleTransform);
-        return estimateAtTime
-                .plus(PoseEstimatorMath.useKalmanOnTransform(observation, estimateAtTime, standardDeviations))
-                .plus(sampleToOdometryTransform);
-    }
+	public static Transform2d
+		useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, double[] odometryStandardDeviations) {
+		double[] combinedStandardDeviations = PoseEstimatorMath
+			.combineStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
+		Transform2d visionDifferenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
+		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
+	}
+
+	public static Transform2d
+		scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
+		double[] visionDifferenceFromOdometryMatrix = {
+			visionDifferenceFromOdometry.getX(),
+			visionDifferenceFromOdometry.getY(),
+			visionDifferenceFromOdometry.getRotation().getRadians()};
+		double[] standardDeviationsAppliedTransform = multiplyArrays(
+			combinedStandardDeviations,
+			visionDifferenceFromOdometryMatrix
+		);
+		return new Transform2d(
+			standardDeviationsAppliedTransform[0],
+			standardDeviationsAppliedTransform[1],
+			Rotation2d.fromRadians(standardDeviationsAppliedTransform[2])
+		);
+	}
+
+	public static Pose2d combineVisionToOdometry(
+		Pose2d odometryInterpolatedPoseSample,
+		VisionObservation observation,
+		Pose2d estimatedPose,
+		Pose2d odometryPose,
+		double[] odometryStandardDeviations
+	) {
+		Transform2d poseDifferenceFromSample = new Transform2d(odometryInterpolatedPoseSample, odometryPose);
+		Transform2d invertedPoseDifferenceFromSample = poseDifferenceFromSample.inverse();
+		Pose2d currentPoseEstimation = estimatedPose.plus(invertedPoseDifferenceFromSample);
+		currentPoseEstimation = currentPoseEstimation
+			.plus(PoseEstimatorMath.useKalmanOnTransform(observation, currentPoseEstimation, odometryStandardDeviations));
+		currentPoseEstimation = currentPoseEstimation.plus(poseDifferenceFromSample);
+		return currentPoseEstimation;
+	}
 
 }

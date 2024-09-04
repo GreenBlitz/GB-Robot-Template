@@ -1,85 +1,121 @@
 package frc.robot.poseestimator;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.StringPublisher;
-import edu.wpi.first.networktables.StringTopic;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-public class PoseEstimator implements IPoseEstimator{
-    private SwerveDrivePoseEstimator poseEstimator;
-    private SwerveModulePosition[] wheelPositions;
-    private SwerveDriveKinematics kinematics;
-    private Rotation2d gyroAngle;
-    private Pose2d startPose;
-    private  StringPublisher posePublisher;
-    public PoseEstimator(SwerveDriveKinematics kinematics,
-            Rotation2d gyroAngle,
-            SwerveModulePosition[] wheelPositions,
-            Pose2d startPose,StringTopic poseTopic){
-        this.gyroAngle = gyroAngle;
-        this.kinematics = kinematics;
-        this.wheelPositions = wheelPositions;
-        this.startPose = startPose;
-        this.poseEstimator = new SwerveDrivePoseEstimator(
-                this.kinematics,
-                this.gyroAngle,
-                this.wheelPositions,
-                this.startPose
-        );
-        this.posePublisher = poseTopic.publish();
-    }
+public class PoseEstimator implements IPoseEstimator {
 
-    @Override
-    public void updateOdometry(OdometryObservation odometryObservation) {
-        poseEstimator.update(odometryObservation.getGyroAngle(),odometryObservation.getWheelPositions());
-    }
+	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
+	private final SwerveDriveKinematics kinematics;
+	private final double[] odometryStandardDeviations;
+	private Pose2d odometryPose;
+	private Pose2d estimatedPose;
+	private SwerveDriveWheelPositions lastWheelPositions;
+	private Rotation2d lastGyroAngle;
+	private VisionObservation lastVisionObservation;
 
-    @Override
-    public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose) {
+	public PoseEstimator(
+		SwerveDriveKinematics kinematics,
+		SwerveDriveWheelPositions initialWheelPositions,
+		Rotation2d initialGyroAngle
+	) {
+		this.odometryPose = new Pose2d();
+		this.estimatedPose = new Pose2d();
+		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.kinematics = kinematics;
+		this.lastWheelPositions = initialWheelPositions;
+		this.lastGyroAngle = initialGyroAngle;
+		this.odometryStandardDeviations = new double[3];
+		setOdometryStandardDeviations(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS);
+	}
 
-    }
+	@Override
+	public void setOdometryStandardDeviations(double[] newStandardDeviations) {
+		for (int row = 0; row < newStandardDeviations.length; row++) {
+			odometryStandardDeviations[row] = newStandardDeviations[row] * newStandardDeviations[row];
+		}
+	}
 
-    @Override
-    public Pose2d getOdometryPose() {
-        return null;
-    }
+	@Override
+	public void resetPose(Pose2d initialPose) {
+		this.estimatedPose = initialPose;
+		this.lastGyroAngle = initialPose.getRotation();
+		this.odometryPose = initialPose;
+		odometryPoseInterpolator.clear();
+	}
 
-    @Override
-    public void updateVision(VisionObservation visionObservation) {
-        poseEstimator.addVisionMeasurement(visionObservation.getVisionPose(),visionObservation.getTimestamp());
-    }
+	@Override
+	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose) {
+		this.lastWheelPositions = wheelPositions;
+		this.lastGyroAngle = gyroAngle;
+		this.odometryPose = pose;
+		odometryPoseInterpolator.clear();
+	}
 
-    @Override
-    public Pose2d getVisionPose() {
-        return null;
-    }
 
-    @Override
-    public void setStandardDeviations(Matrix<N3, N1> standardDeviations) {
-        poseEstimator.setVisionMeasurementStdDevs(standardDeviations);
-    }
+	@Override
+	public Pose2d getOdometryPose() {
+		return odometryPose;
+	}
 
-    @Override
-    public Pose2d getEstimatedPose() {
-        return poseEstimator.getEstimatedPosition();
-    }
+	@Override
+	public Optional<Pose2d> getVisionPose() {
+		return Optional.of(lastVisionObservation.visionPose());
+	}
 
-    @Override
-    public void resetPose(Pose2d newPose) {
-        poseEstimator.resetPosition(gyroAngle,wheelPositions,newPose);
-    }
+	@Override
+	public Pose2d getEstimatedPose() {
+		return estimatedPose;
+	}
 
-//    public void periodic(){
-//        posePublisher.set(JsonConverter.readFromObject(getEstimatedPose()));
-//    }
+
+	@Override
+	public void updateVision(VisionObservation visionObservation) {
+		this.lastVisionObservation = visionObservation;
+		if (!isObservationTooOld(visionObservation)) {
+			addVisionObservation(visionObservation);
+		}
+	}
+
+	@Override
+	public void updateOdometry(OdometryObservation odometryObservation) {
+		addOdometryObservation(odometryObservation);
+	}
+
+
+	private boolean isObservationTooOld(VisionObservation visionObservation) {
+		try {
+			return odometryPoseInterpolator.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS
+				> visionObservation.timestamp();
+		} catch (NoSuchElementException ignored) {
+			return true;
+		}
+	}
+
+	private void addVisionObservation(VisionObservation observation) {
+		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
+		odometryInterpolatedPoseSample.ifPresent(
+			pose2d -> estimatedPose = PoseEstimatorMath
+				.combineVisionToOdometry(pose2d, observation, estimatedPose, odometryPose, odometryStandardDeviations)
+		);
+	}
+
+	private void addOdometryObservation(OdometryObservation observation) {
+		Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
+		twist = PoseEstimatorMath.addGyroToTwist(twist, observation.gyroAngle(), lastGyroAngle);
+		this.lastGyroAngle = observation.gyroAngle();
+		this.lastWheelPositions = observation.wheelPositions();
+		this.odometryPose = odometryPose.exp(twist);
+		this.estimatedPose = estimatedPose.exp(twist);
+		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
+	}
 
 }

@@ -1,27 +1,27 @@
 package frc.utils.brakestate;
 
 
-import frc.utils.MotorSubsystem;
-
 import java.util.ArrayList;
 
 public class BrakeStateManager {
 
-	private static final ArrayList<MotorSubsystem> motorSubsystems = new ArrayList<>();
+	private static final ArrayList<Runnable> brakeRunnables = new ArrayList<>();
+	private static final ArrayList<Runnable> coastRunnables = new ArrayList<>();
 
-	public static void add(MotorSubsystem motorSubsystem) {
-		motorSubsystems.add(motorSubsystem);
+	public static void add(Runnable brake, Runnable coast) {
+		brakeRunnables.add(brake);
+		coastRunnables.add(coast);
 	}
 
 	public static void brake() {
-		for (MotorSubsystem motorSubsystem : motorSubsystems) {
-			motorSubsystem.setBrake(true);
+		for (Runnable brake : brakeRunnables) {
+			brake.run();
 		}
 	}
 
 	public static void coast() {
-		for (MotorSubsystem motorSubsystem : motorSubsystems) {
-			motorSubsystem.setBrake(false);
+		for (Runnable coast : coastRunnables) {
+			coast.run();
 		}
 	}
 

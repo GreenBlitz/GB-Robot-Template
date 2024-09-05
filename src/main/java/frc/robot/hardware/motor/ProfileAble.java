@@ -14,6 +14,4 @@ public interface ProfileAble {
 
 	void setTargetProfiledPosition(IAngleRequest profiledPositionRequest);
 
-	void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs);
-
 }

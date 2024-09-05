@@ -1,13 +1,10 @@
 package frc.robot.hardware.motor.talonfx;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.IMotor;
-import frc.robot.hardware.motor.MotorInputsAutoLogged;
 import frc.robot.hardware.motor.PIDAble;
-import frc.robot.hardware.motor.PIDAbleInputsAutoLogged;
 import frc.robot.hardware.motor.ProfileAble;
 import frc.robot.hardware.request.angle.IAngleRequest;
 import frc.robot.hardware.request.value.IValueRequest;
@@ -18,12 +15,10 @@ import frc.utils.devicewrappers.TalonFXWrapper;
 public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 
 	protected final TalonFXWrapper motor;
-	protected final TalonFXSignals signals;
 	protected final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
-	public TalonFXMotor(TalonFXWrapper motor, TalonFXSignals signals, SysIdRoutine.Config sysidConfig) {
+	public TalonFXMotor(TalonFXWrapper motor, SysIdRoutine.Config sysidConfig) {
 		this.motor = motor;
-		this.signals = signals;
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 	}
 
@@ -79,22 +74,6 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 	@Override
 	public void setTargetProfiledPosition(IAngleRequest profiledPositionRequest) {
 		motor.setControl(((TalonFXValueRequest) profiledPositionRequest).getControlRequest());
-	}
-
-
-	@Override
-	public void updateInputs(MotorInputsAutoLogged motorInputs) {
-		motorInputs.connected = BaseStatusSignal.refreshAll(signals.current(), signals.voltage()).isOK();
-		motorInputs.current = signals.current().getValue();
-		motorInputs.voltage = signals.voltage().getValue();
-	}
-
-	@Override
-	public void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs) {
-		BaseStatusSignal.refreshAll(signals.position(), signals.velocity(), signals.acceleration());
-		pidAbleInputs.position = Rotation2d.fromRotations(motor.getLatencyCompensatedPosition());
-		pidAbleInputs.velocity = Rotation2d.fromRotations(motor.getLatencyCompensatedVelocity());
-		pidAbleInputs.acceleration = Rotation2d.fromRotations(signals.acceleration().getValue());
 	}
 
 }

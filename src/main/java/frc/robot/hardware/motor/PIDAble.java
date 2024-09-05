@@ -17,6 +17,4 @@ public interface PIDAble {
 
 	void setTargetPosition(IAngleRequest positionRequest);
 
-	void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs);
-
 }

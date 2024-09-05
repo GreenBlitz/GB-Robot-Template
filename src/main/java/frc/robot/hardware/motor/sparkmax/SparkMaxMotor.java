@@ -4,9 +4,7 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.IMotor;
-import frc.robot.hardware.motor.MotorInputsAutoLogged;
 import frc.robot.hardware.motor.PIDAble;
-import frc.robot.hardware.motor.PIDAbleInputsAutoLogged;
 import frc.robot.hardware.motor.ProfileAble;
 import frc.robot.hardware.request.angle.IAngleRequest;
 import frc.robot.hardware.request.angle.SparkMaxAngleRequest;
@@ -129,22 +127,6 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 					)
 					.getRotations() // TODO: find out what to give to ff (current or target setPoints)
 			);
-	}
-
-
-	@Override
-	public void updateInputs(MotorInputsAutoLogged motorInputs) {
-		motorInputs.connected = true; // TODO: find a way to check it
-		motorInputs.current = motor.getOutputCurrent();
-		motorInputs.voltage = motor.getBusVoltage() * motor.getAppliedOutput();
-	}
-
-	@Override
-	public void updateInputs(PIDAbleInputsAutoLogged pidAbleInputs) {
-		pidAbleInputs.position = Rotation2d.fromRotations(motor.getEncoder().getPosition());
-		pidAbleInputs.velocity = Rotation2d.fromRotations(motor.getEncoder().getVelocity());
-		pidAbleInputs.acceleration = Rotation2d.fromRotations(pidAbleInputs.velocity.getRotations() - lastVelocityPerSecond.getRotations());
-		lastVelocityPerSecond = pidAbleInputs.velocity;
 	}
 
 }

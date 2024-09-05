@@ -8,6 +8,4 @@ public interface IMotor {
 
 	void setPower(double power);
 
-	void updateInputs(MotorInputsAutoLogged motorInputs);
-
 }

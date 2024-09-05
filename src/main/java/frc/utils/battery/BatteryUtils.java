@@ -3,9 +3,10 @@ package frc.utils.battery;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.IDs;
 import org.littletonrobotics.junction.Logger;
 
-import static frc.utils.battery.BatteryConstants.*;
+import static frc.robot.constants.IDs.*;
 
 public class BatteryUtils {
 

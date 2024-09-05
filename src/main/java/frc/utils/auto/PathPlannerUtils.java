@@ -79,8 +79,8 @@ public class PathPlannerUtils {
 		setDynamicObstacles(allObstacles, currentRobotPose);
 	}
 
-	public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {
-		setDynamicObstacles(List.of(), currentRobotPose);
+	public static void removeAllDynamicObstacles() {
+		setDynamicObstacles(List.of(), new Pose2d());
 	}
 
 	public static void setRotationTargetOverride(Supplier<Optional<Rotation2d>> overrider) {

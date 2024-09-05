@@ -2,32 +2,10 @@ package frc.utils.devicewrappers;
 
 import com.revrobotics.CANSparkLowLevel;
 
-public class SparkMaxDeviceID {
+public record SparkMaxDeviceID(int id, CANSparkLowLevel.MotorType type) {
 
-	private int id;
-	private CANSparkLowLevel.MotorType type;
-
-	public SparkMaxDeviceID(int id, CANSparkLowLevel.MotorType type) {
-		this.id = id;
-		this.type = type;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public CANSparkLowLevel.MotorType getType() {
-		return type;
-	}
-
-	public SparkMaxDeviceID withID(int id) {
-		this.id = id;
-		return this;
-	}
-
-	public SparkMaxDeviceID withType(CANSparkLowLevel.MotorType type) {
-		this.type = type;
-		return this;
+	public SparkMaxDeviceID(int id){
+		this(id, CANSparkLowLevel.MotorType.kBrushless);
 	}
 
 }

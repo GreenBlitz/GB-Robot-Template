@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -58,20 +59,25 @@ public class SwerveCommandsBuilder {
 		).withName("Drive Calibration");
 	}
 
+	//@formatter:off
 	public Command wheelRadiusCalibration() {
 		return new SequentialCommandGroup(
 			pointWheelsInCircle(),
 			new WheelRadiusCharacterization(
 				swerve,
 				swerve.getConstants().driveRadiusMeters(),
-				SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY,
+				SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND,
 				swerve.getModules()::getDrivesAngles,
 				swerve::getAbsoluteHeading,
-				swerve::runWheelRadiusCharacterization,
+				rotationsPerSecond -> swerve.driveByState(
+						new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()),
+						SwerveState.DEFAULT_DRIVE
+				),
 				swerve.getModules()::stop
 			)
 		).withName("Wheel Radius Calibration");
 	}
+	//@formatter:on
 
 
 	public Command pointWheelsInX() {

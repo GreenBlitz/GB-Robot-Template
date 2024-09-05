@@ -12,7 +12,5 @@ class BatteryConstants {
 		20,
 		PowerDistribution.ModuleType.kRev
 	);
-	protected static final int POWER_DISTRIBUTION_CAN_ID = 20;
-	protected static final PowerDistribution.ModuleType POWER_DISTRIBUTION_TYPE = PowerDistribution.ModuleType.kRev;
 
 }

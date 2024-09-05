@@ -87,8 +87,8 @@ public class PathPlannerUtils {
 		PPHolonomicDriveController.setRotationTargetOverride(overrider);
 	}
 
-	public static Command createPathOnTheFly(Pose2d currentBluePose, Pose2d targetPose, PathConstraints constraints) {
-		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentBluePose, targetPose);
+	public static Command createPathOnTheFly(Pose2d currentRobotPose, Pose2d targetPose, PathConstraints constraints) {
+		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentRobotPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
 		return AutoBuilder.followPath(path);

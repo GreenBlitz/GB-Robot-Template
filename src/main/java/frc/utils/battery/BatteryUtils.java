@@ -14,7 +14,7 @@ public class BatteryUtils {
 
 	private static final PowerDistribution powerDistribution = new PowerDistribution(
 		POWER_DISTRIBUTION_DEVICE_ID.getId(),
-			POWER_DISTRIBUTION_DEVICE_ID.getType()
+		POWER_DISTRIBUTION_DEVICE_ID.getType()
 	);
 	private static final Command limiter = new BatteryLimiter().ignoringDisable(true);
 

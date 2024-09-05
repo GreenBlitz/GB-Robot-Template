@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.gyro.pigeon2.Pigeon2Gyro;
 import frc.robot.subsystems.swerve.gyro.GyroThreadInputsAutoLogged;
 import frc.robot.subsystems.swerve.gyro.IThreadedGyro;
-import frc.robot.subsystems.swerve.phoenix6signalsthread.Phoenix6SignalsThread;
+import frc.utils.ctre.Phoenix6SignalsThread;
 
 import java.util.Queue;
 

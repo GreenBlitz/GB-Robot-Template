@@ -229,16 +229,6 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	/**
-	 * Runs swerve around itself for WheelRadiusCharacterization
-	 *
-	 * @param rotationsPerSecond - velocity to run the swerve
-	 */
-	protected void runWheelRadiusCharacterization(Rotation2d rotationsPerSecond) {
-		driveByState(new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()), SwerveState.DEFAULT_DRIVE);
-	}
-
-
 	protected void pidToPose(Pose2d currentPose, Pose2d targetPose) {
 		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
 		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());

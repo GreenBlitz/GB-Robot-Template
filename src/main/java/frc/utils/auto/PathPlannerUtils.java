@@ -35,20 +35,20 @@ public class PathPlannerUtils {
 		scheduleWarmup();
 	}
 
-	private static void setPathfinder(Pathfinder pathfinder) {
+	public static void setPathfinder(Pathfinder pathfinder) {
 		Pathfinding.setPathfinder(pathfinder);
 	}
 
-	private static void scheduleWarmup() {
+	public static void scheduleWarmup() {
 		PathfindingCommand.warmupCommand().schedule();
 	}
 
-	public static void configurePathPlanner(
+	public static void configPathPlanner(
 		Supplier<Pose2d> poseSupplier,
 		Consumer<Pose2d> resetPose,
 		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-		Consumer<ChassisSpeeds> robotRelativeOutput,
-		HolonomicPathFollowerConfig config,
+		Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
+		HolonomicPathFollowerConfig holonomicPathFollowerConfig,
 		BooleanSupplier shouldFlipPath,
 		Subsystem driveSubsystem
 	) {
@@ -56,8 +56,8 @@ public class PathPlannerUtils {
 			poseSupplier,
 			resetPose,
 			robotRelativeSpeedsSupplier,
-			robotRelativeOutput,
-			config,
+			robotRelativeSpeedsSetter,
+			holonomicPathFollowerConfig,
 			shouldFlipPath,
 			driveSubsystem
 		);
@@ -83,11 +83,11 @@ public class PathPlannerUtils {
 		setDynamicObstacles(List.of(), currentRobotPose);
 	}
 
-	public static void setTargetRotationOverride(Supplier<Optional<Rotation2d>> overrider) {
+	public static void setRotationTargetOverride(Supplier<Optional<Rotation2d>> overrider) {
 		PPHolonomicDriveController.setRotationTargetOverride(overrider);
 	}
 
-	public static Command createOnTheFlyPathCommand(Pose2d currentBluePose, Pose2d targetPose, PathConstraints constraints) {
+	public static Command createPathOnTheFly(Pose2d currentBluePose, Pose2d targetPose, PathConstraints constraints) {
 		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentBluePose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;

@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.littletonrobotics.junction.Logger;
 
-import static frc.utils.battery.BatteryConstants.POWER_DISTRIBUTION_CAN_ID;
-import static frc.utils.battery.BatteryConstants.POWER_DISTRIBUTION_TYPE;
+import static frc.utils.battery.BatteryConstants.*;
 
 public class BatteryUtils {
 
@@ -14,8 +13,8 @@ public class BatteryUtils {
 	public static final double MIN_VOLTAGE = 10.5;
 
 	private static final PowerDistribution powerDistribution = new PowerDistribution(
-		POWER_DISTRIBUTION_CAN_ID,
-		POWER_DISTRIBUTION_TYPE
+		POWER_DISTRIBUTION_DEVICE_ID.getId(),
+			POWER_DISTRIBUTION_DEVICE_ID.getType()
 	);
 	private static final Command limiter = new BatteryLimiter().ignoringDisable(true);
 

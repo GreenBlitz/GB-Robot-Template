@@ -38,9 +38,6 @@ public class ChooserDigitalInput implements IDigitalInput {
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.debouncedValue = isTrueSendableChooser.getSelected();
-		inputs.nonDebouncedValue = isTrueSendableChooser.getSelected();
-
 		inputs.nonDebouncedValue = (inverted) ? !isTrueSendableChooser.getSelected() : isTrueSendableChooser.getSelected();
 		inputs.debouncedValue = inputs.nonDebouncedValue;
 	}

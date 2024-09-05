@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 public class SuppliedDigitalInput implements IDigitalInput {
 
 	private final Debouncer debouncer;
-	private boolean inverted = false;
+	private boolean inverted;
 
 	private final Supplier<Boolean> isTrueSupplier;
 
@@ -27,7 +27,12 @@ public class SuppliedDigitalInput implements IDigitalInput {
 	public SuppliedDigitalInput(Supplier<Boolean> isTrueConsumer, double debounceTime, Debouncer.DebounceType debounceType) {
 		this.isTrueSupplier = isTrueConsumer;
 		this.debouncer = new Debouncer(debounceTime, debounceType);
-		this.inverted=false;
+		this.inverted = false;
+	}
+
+	@Override
+	public void setInverted(boolean inverted) {
+		this.inverted = inverted;
 	}
 
 	@Override

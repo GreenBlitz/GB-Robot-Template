@@ -14,8 +14,8 @@ public class BatteryUtils {
 	public static final double MIN_VOLTAGE = 10.5;
 
 	private static final PowerDistribution powerDistribution = new PowerDistribution(
-		POWER_DISTRIBUTION_DEVICE_ID.getId(),
-		POWER_DISTRIBUTION_DEVICE_ID.getType()
+		POWER_DISTRIBUTION_DEVICE_ID.id(),
+		POWER_DISTRIBUTION_DEVICE_ID.type()
 	);
 	private static final Command limiter = new BatteryLimiter().ignoringDisable(true);
 

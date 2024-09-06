@@ -38,7 +38,9 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 				allSignals.add(fxSignal.getStatusSignal());
 			} else if (signalInput instanceof FXSignalBuilder.FXLatencySignal fxLatencySignal) {
 				allSignals.add(fxLatencySignal.getStatusSignal());
-				allSignals.add(fxLatencySignal.getStatusSignalSlope());
+			} else if (signalInput instanceof FXSignalBuilder.FXLatencyBothSignal fxLatencyBothSignal) {
+				allSignals.add(fxLatencyBothSignal.getStatusSignalSlope());
+				allSignals.add(fxLatencyBothSignal.getStatusSignal());
 			}
 		}
 

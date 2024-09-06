@@ -10,12 +10,22 @@ import java.util.Queue;
 
 public class FXSignalBuilder {
 
+	public interface SignalGetter {
+
+		StatusSignal<Double> getStatusSignal();
+
+	}
+
 	public static FXSignal registerSignal(StatusSignal<Double> signal, String name) {
 		return new FXSignal(signal.clone(), name);
 	}
 
-	public static FXLatencySignal registerLatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
-		return new FXLatencySignal(signal.clone(), signalSlope.clone(), name);
+	public static FXLatencyBothSignal registerLatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
+		return new FXLatencyBothSignal(signal.clone(), signalSlope.clone(), name);
+	}
+
+	public static FXLatencySignal registerLatencySignal(StatusSignal<Double> signal, SignalGetter signalSlope, String name) {
+		return new FXLatencySignal(signal.clone(), signalSlope.getStatusSignal(), name);
 	}
 
 	public static FXThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, String name) {
@@ -28,7 +38,7 @@ public class FXSignalBuilder {
 	}
     //@formatter:on
 
-	public static class FXSignal extends SignalInput {
+	public static class FXSignal extends SignalInput implements SignalGetter {
 
 		private final StatusSignal<Double> statusSignal;
 		private final String name;
@@ -44,14 +54,15 @@ public class FXSignalBuilder {
 			table.put(name, statusSignal.getValueAsDouble());
 		}
 
-		public BaseStatusSignal getStatusSignal() {
+		@Override
+		public StatusSignal<Double> getStatusSignal() {
 			// For using refresh all with more signals...
 			return statusSignal;
 		}
 
 	}
 
-	public static class FXLatencySignal extends SignalInput {
+	public static class FXLatencySignal extends SignalInput implements SignalGetter {
 
 		private final StatusSignal<Double> statusSignal;
 		private final StatusSignal<Double> signalSlope;
@@ -69,12 +80,39 @@ public class FXSignalBuilder {
 			table.put(name, BaseStatusSignal.getLatencyCompensatedValue(statusSignal, signalSlope));
 		}
 
-		public BaseStatusSignal getStatusSignal() {
+		@Override
+		public StatusSignal<Double> getStatusSignal() {
 			// For using refresh all with more signals...
 			return statusSignal;
 		}
 
-		public BaseStatusSignal getStatusSignalSlope() {
+	}
+
+	public static class FXLatencyBothSignal extends SignalInput implements SignalGetter {
+
+		private final StatusSignal<Double> statusSignal;
+		private final StatusSignal<Double> signalSlope;
+		private final String name;
+
+		private FXLatencyBothSignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
+			this.statusSignal = signal;
+			this.signalSlope = signalSlope;
+			this.name = name;
+		}
+
+		@Override
+		public void toLog(LogTable table) {
+			// Must be refreshed before!!!
+			table.put(name, BaseStatusSignal.getLatencyCompensatedValue(statusSignal, signalSlope));
+		}
+
+		@Override
+		public StatusSignal<Double> getStatusSignal() {
+			// For using refresh all with more signals...
+			return statusSignal;
+		}
+
+		public StatusSignal<Double> getStatusSignalSlope() {
 			// For using refresh all with more signals...
 			return signalSlope;
 		}

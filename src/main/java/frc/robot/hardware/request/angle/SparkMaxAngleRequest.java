@@ -13,8 +13,9 @@ public class SparkMaxAngleRequest implements IAngleRequest {
 	}
 
 	@Override
-	public void withSetPoint(Rotation2d setPoint) {
+	public SparkMaxAngleRequest withSetPoint(Rotation2d setPoint) {
 		this.setPoint = setPoint;
+		return this;
 	}
 
 	public Rotation2d getSetPoint() {

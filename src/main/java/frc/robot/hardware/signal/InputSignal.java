@@ -3,7 +3,7 @@ package frc.robot.hardware.signal;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public abstract class SignalInput implements LoggableInputs {
+public abstract class InputSignal implements LoggableInputs {
 
 	private double[] latestValues = {};
 

@@ -10,8 +10,8 @@ import frc.robot.hardware.motor.ProfileAble;
 import frc.robot.hardware.request.angle.IAngleRequest;
 import frc.robot.hardware.request.value.IValueRequest;
 import frc.robot.hardware.request.value.TalonFXValueRequest;
-import frc.robot.hardware.signal.FXSignalBuilder;
-import frc.robot.hardware.signal.SignalInput;
+import frc.robot.hardware.signal.Phoenix6SignalBuilder;
+import frc.robot.hardware.signal.InputSignal;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
 import org.littletonrobotics.junction.AutoLog;
@@ -41,18 +41,18 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		motor.optimizeBusUtilization();
 	}
 
-	public void fetchSignals(SignalInput... signals) {
+	public void fetchSignals(InputSignal... signals) {
 		ArrayList<BaseStatusSignal> allSignals = new ArrayList<>(signals.length);
 
-		for (SignalInput signalInput : signals) {
-			if (signalInput instanceof FXSignalBuilder.FXSignal fxSignal) {
-				allSignals.add(fxSignal.getStatusSignal());
-			} else if (signalInput instanceof FXSignalBuilder.FXLatencyBothSignal fxLatencyBothSignal) {
+		for (InputSignal inputSignal : signals) {
+			if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6Signal phoenix6Signal) {
+				allSignals.add(phoenix6Signal.getStatusSignal());
+			} else if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6LatencyBothSignal fxLatencyBothSignal) {
 				// must be before FXLatencySignal because extends FXLatencySignal
 				allSignals.add(fxLatencyBothSignal.getStatusSignalSlope());
 				allSignals.add(fxLatencyBothSignal.getStatusSignal());
-			} else if (signalInput instanceof FXSignalBuilder.FXLatencySignal fxLatencySignal) {
-				allSignals.add(fxLatencySignal.getStatusSignal());
+			} else if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6LatencySignal phoenix6LatencySignal) {
+				allSignals.add(phoenix6LatencySignal.getStatusSignal());
 			}
 		}
 
@@ -60,8 +60,8 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		connectionInput.connected = BaseStatusSignal.refreshAll(combinedSignals).isOK();
 
 		Logger.processInputs(logPath, connectionInput);
-		for (SignalInput signalInput : signals) {
-			Logger.processInputs(logPath, signalInput);
+		for (InputSignal inputSignal : signals) {
+			Logger.processInputs(logPath, inputSignal);
 		}
 	}
 

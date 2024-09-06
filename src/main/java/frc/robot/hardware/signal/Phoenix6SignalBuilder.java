@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.LogTable;
 
 import java.util.Queue;
 
-public class FXSignalBuilder {
+public class Phoenix6SignalBuilder {
 
 	public interface SignalGetter {
 
@@ -17,34 +17,34 @@ public class FXSignalBuilder {
 
 	}
 
-	public static FXSignal registerSignal(StatusSignal<Double> signal, String name) {
-		return new FXSignal(signal.clone(), name);
+	public static Phoenix6Signal registerSignal(StatusSignal<Double> signal, String name) {
+		return new Phoenix6Signal(signal.clone(), name);
 	}
 
-	public static FXLatencyBothSignal registerLatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
-		return new FXLatencyBothSignal(signal.clone(), signalSlope.clone(), name);
+	public static Phoenix6LatencyBothSignal registerLatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
+		return new Phoenix6LatencyBothSignal(signal.clone(), signalSlope.clone(), name);
 	}
 
-	public static FXLatencySignal registerLatencySignal(StatusSignal<Double> signal, SignalGetter signalSlope, String name) {
-		return new FXLatencySignal(signal.clone(), signalSlope.getStatusSignal(), name);
+	public static Phoenix6LatencySignal registerLatencySignal(StatusSignal<Double> signal, SignalGetter signalSlope, String name) {
+		return new Phoenix6LatencySignal(signal.clone(), signalSlope.getStatusSignal(), name);
 	}
 
-	public static FXThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, String name) {
-		return new FXThreadSignal(Phoenix6SignalsThread.getInstance().registerRegularSignal(parentDevice, signal.clone()), name);
+	public static Phoenix6ThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, String name) {
+		return new Phoenix6ThreadSignal(Phoenix6SignalsThread.getInstance().registerRegularSignal(parentDevice, signal.clone()), name);
 	}
 
 	//@formatter:off
-    public static FXThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
-		return new FXThreadSignal(Phoenix6SignalsThread.getInstance().registerLatencySignal(parentDevice, signal.clone(), signalSlope.clone()), name);
+    public static Phoenix6ThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
+		return new Phoenix6ThreadSignal(Phoenix6SignalsThread.getInstance().registerLatencySignal(parentDevice, signal.clone(), signalSlope.clone()), name);
 	}
     //@formatter:on
 
-	public static class FXSignal extends SignalInput implements SignalGetter {
+	public static class Phoenix6Signal extends InputSignal implements SignalGetter {
 
 		private final StatusSignal<Double> statusSignal;
 		private final String name;
 
-		private FXSignal(StatusSignal<Double> signal, String name) {
+		private Phoenix6Signal(StatusSignal<Double> signal, String name) {
 			this.statusSignal = signal;
 			this.name = name;
 		}
@@ -65,13 +65,13 @@ public class FXSignalBuilder {
 
 	}
 
-	public static class FXLatencySignal extends SignalInput implements SignalGetter {
+	public static class Phoenix6LatencySignal extends InputSignal implements SignalGetter {
 
 		private final StatusSignal<Double> statusSignal;
 		protected final StatusSignal<Double> signalSlope;
 		private final String name;
 
-		private FXLatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
+		private Phoenix6LatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
 			this.statusSignal = signal;
 			this.signalSlope = signalSlope;
 			this.name = name;
@@ -93,9 +93,9 @@ public class FXSignalBuilder {
 
 	}
 
-	public static class FXLatencyBothSignal extends FXLatencySignal implements SignalGetter {
+	public static class Phoenix6LatencyBothSignal extends Phoenix6LatencySignal implements SignalGetter {
 
-		private FXLatencyBothSignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
+		private Phoenix6LatencyBothSignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
 			super(signal, signalSlope, name);
 		}
 
@@ -106,12 +106,12 @@ public class FXSignalBuilder {
 
 	}
 
-	public static class FXThreadSignal extends SignalInput {
+	public static class Phoenix6ThreadSignal extends InputSignal {
 
 		private final Queue<Double> signalQueue;
 		private final String name;
 
-		private FXThreadSignal(Queue<Double> signalQueue, String name) {
+		private Phoenix6ThreadSignal(Queue<Double> signalQueue, String name) {
 			this.signalQueue = signalQueue;
 			this.name = name;
 		}

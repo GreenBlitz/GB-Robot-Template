@@ -56,8 +56,9 @@ public class TalonFXAngleRequest implements IAngleRequest {
 	}
 
 	@Override
-	public void withSetPoint(Rotation2d setPoint) {
+	public TalonFXAngleRequest withSetPoint(Rotation2d setPoint) {
 		withSetPoint.accept(setPoint);
+		return this;
 	}
 
 	public ControlRequest getControlRequest() {

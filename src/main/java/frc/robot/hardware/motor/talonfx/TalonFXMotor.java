@@ -1,5 +1,6 @@
 package frc.robot.hardware.motor.talonfx;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -9,18 +10,46 @@ import frc.robot.hardware.motor.ProfileAble;
 import frc.robot.hardware.request.angle.IAngleRequest;
 import frc.robot.hardware.request.value.IValueRequest;
 import frc.robot.hardware.request.value.TalonFXValueRequest;
+import frc.robot.hardware.signal.FXSignalBuilder;
+import frc.robot.hardware.signal.SignalInput;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.ArrayList;
 
 public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 
 	protected final TalonFXWrapper motor;
 	protected final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
+	protected final String logPath;
 
-	public TalonFXMotor(TalonFXWrapper motor, SysIdRoutine.Config sysidConfig) {
+	public TalonFXMotor(TalonFXWrapper motor, SysIdRoutine.Config sysidConfig, String logPath) {
 		this.motor = motor;
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
+		this.logPath = logPath;
 	}
+
+	public void fetchSignals(SignalInput... signals) {
+		ArrayList<BaseStatusSignal> allSignals = new ArrayList<>(signals.length);
+
+		for (SignalInput signalInput : signals) {
+			if (signalInput instanceof FXSignalBuilder.FXSignal fxSignal) {
+				allSignals.add(fxSignal.getStatusSignal());
+			} else if (signalInput instanceof FXSignalBuilder.FXLatencySignal fxLatencySignal) {
+				allSignals.add(fxLatencySignal.getStatusSignal());
+				allSignals.add(fxLatencySignal.getStatusSignalSlope());
+			}
+		}
+
+		BaseStatusSignal[] combinedSignals = allSignals.toArray(new BaseStatusSignal[0]);
+		BaseStatusSignal.refreshAll(combinedSignals);
+
+		for (SignalInput signalInput : signals) {
+			Logger.processInputs(logPath, signalInput);
+		}
+	}
+
 
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {

@@ -64,7 +64,6 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		}
 	}
 
-
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
 		return sysidConfigInfo;

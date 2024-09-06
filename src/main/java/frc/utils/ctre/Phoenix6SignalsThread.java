@@ -40,7 +40,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Phoenix6SignalsThread extends Thread {
 
-
 	public static final Lock SIGNALS_LOCK = new ReentrantLock();
 
 	private static final int MAX_UPDATES_PER_RIO_CYCLE = 100;

@@ -3,7 +3,7 @@ package frc.robot.hardware.signal;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
-import frc.robot.subsystems.swerve.phoenix6signalsthread.Phoenix6SignalsThread;
+import frc.utils.ctre.Phoenix6SignalsThread;
 import org.littletonrobotics.junction.LogTable;
 
 import java.util.Queue;

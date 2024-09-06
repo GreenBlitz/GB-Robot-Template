@@ -38,6 +38,7 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		this.logPath = logPath;
 		this.connectionInput = new ConnectedInputAutoLogged();
+		motor.optimizeBusUtilization();
 	}
 
 	public void fetchSignals(SignalInput... signals) {

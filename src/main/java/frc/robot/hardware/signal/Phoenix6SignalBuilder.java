@@ -52,9 +52,9 @@ public class Phoenix6SignalBuilder {
 		@Override
 		public void toLog(LogTable table) {
 			// Must be refreshed before!!!
-			double currentValue = statusSignal.getValueAsDouble();
-			table.put(name, currentValue);
-			setNewValues(currentValue);
+			double latestValue = statusSignal.getValueAsDouble();
+			table.put(name, latestValue);
+			setNewValues(latestValue);
 		}
 
 		@Override
@@ -80,9 +80,9 @@ public class Phoenix6SignalBuilder {
 		@Override
 		public void toLog(LogTable table) {
 			// Must be refreshed before!!!
-			double currentValue = BaseStatusSignal.getLatencyCompensatedValue(statusSignal, signalSlope);
-			table.put(name, currentValue);
-			setNewValues(currentValue);
+			double latestValue = BaseStatusSignal.getLatencyCompensatedValue(statusSignal, signalSlope);
+			table.put(name, latestValue);
+			setNewValues(latestValue);
 		}
 
 		@Override
@@ -119,11 +119,12 @@ public class Phoenix6SignalBuilder {
 		@Override
 		public void toLog(LogTable table) {
 			Swerve.ODOMETRY_LOCK.lock();
-			double[] currentValues = signalQueue.stream().mapToDouble(Double::doubleValue).toArray();
-			table.put(name, currentValues);
+			double[] latestValues = signalQueue.stream().mapToDouble(Double::doubleValue).toArray();
 			signalQueue.clear();
-			setNewValues(currentValues);
 			Swerve.ODOMETRY_LOCK.unlock();
+
+			table.put(name, latestValues);
+			setNewValues(latestValues);
 		}
 
 	}

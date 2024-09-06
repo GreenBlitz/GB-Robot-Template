@@ -35,24 +35,23 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 	}
 
 	public void fetchSignals(InputSignal... signals) {
-		ArrayList<BaseStatusSignal> allSignals = new ArrayList<>(signals.length);
+		ArrayList<BaseStatusSignal> signalsToRefresh = new ArrayList<>(signals.length);
 
 		for (InputSignal inputSignal : signals) {
 			if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6Signal phoenix6Signal) {
-				allSignals.add(phoenix6Signal.getStatusSignal());
+				signalsToRefresh.add(phoenix6Signal.getStatusSignal());
 			} else if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6LatencyBothSignal fxLatencyBothSignal) {
 				// must be before FXLatencySignal because extends FXLatencySignal
-				allSignals.add(fxLatencyBothSignal.getStatusSignalSlope());
-				allSignals.add(fxLatencyBothSignal.getStatusSignal());
+				signalsToRefresh.add(fxLatencyBothSignal.getSlopeStatusSignal());
+				signalsToRefresh.add(fxLatencyBothSignal.getStatusSignal());
 			} else if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6LatencySignal phoenix6LatencySignal) {
-				allSignals.add(phoenix6LatencySignal.getStatusSignal());
+				signalsToRefresh.add(phoenix6LatencySignal.getStatusSignal());
 			}
 		}
 
-		BaseStatusSignal[] combinedSignals = allSignals.toArray(new BaseStatusSignal[0]);
-		connectionInput.connected = BaseStatusSignal.refreshAll(combinedSignals).isOK();
-
+		connectionInput.connected = BaseStatusSignal.refreshAll(signalsToRefresh.toArray(new BaseStatusSignal[0])).isOK();
 		Logger.processInputs(logPath, connectionInput);
+
 		for (InputSignal inputSignal : signals) {
 			Logger.processInputs(logPath, inputSignal);
 		}

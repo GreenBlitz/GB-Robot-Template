@@ -99,7 +99,7 @@ public class Phoenix6SignalBuilder {
 			super(signal, signalSlope, name);
 		}
 
-		public StatusSignal<Double> getStatusSignalSlope() {
+		public StatusSignal<Double> getSlopeStatusSignal() {
 			// For using refresh all with more signals...
 			return signalSlope;
 		}

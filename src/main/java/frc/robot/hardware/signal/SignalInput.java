@@ -12,7 +12,7 @@ public abstract class SignalInput implements LoggableInputs {
 	}
 
 	protected void setNewValues(double newValue) {
-		latestValues = new double[]{newValue};
+		latestValues = new double[] {newValue};
 	}
 
 	public double[] asArray() {

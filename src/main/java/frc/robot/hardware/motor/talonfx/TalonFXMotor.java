@@ -14,20 +14,30 @@ import frc.robot.hardware.signal.FXSignalBuilder;
 import frc.robot.hardware.signal.SignalInput;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 
 public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 
+	@AutoLog
+	static class ConnectedInput {
+
+		boolean connected = false;
+
+	}
+
 	protected final TalonFXWrapper motor;
 	protected final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 	protected final String logPath;
+	private final ConnectedInputAutoLogged connectionInput;
 
 	public TalonFXMotor(TalonFXWrapper motor, SysIdRoutine.Config sysidConfig, String logPath) {
 		this.motor = motor;
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		this.logPath = logPath;
+		this.connectionInput = new ConnectedInputAutoLogged();
 	}
 
 	public void fetchSignals(SignalInput... signals) {
@@ -46,8 +56,9 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		}
 
 		BaseStatusSignal[] combinedSignals = allSignals.toArray(new BaseStatusSignal[0]);
-		BaseStatusSignal.refreshAll(combinedSignals);
+		connectionInput.connected = BaseStatusSignal.refreshAll(combinedSignals).isOK();
 
+		Logger.processInputs(logPath, connectionInput);
 		for (SignalInput signalInput : signals) {
 			Logger.processInputs(logPath, signalInput);
 		}

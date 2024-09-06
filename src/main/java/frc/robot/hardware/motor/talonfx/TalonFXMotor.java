@@ -4,29 +4,22 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.motor.PIDAble;
 import frc.robot.hardware.motor.ProfileAble;
 import frc.robot.hardware.request.angle.IAngleRequest;
 import frc.robot.hardware.request.value.IValueRequest;
 import frc.robot.hardware.request.value.TalonFXValueRequest;
-import frc.robot.hardware.signal.Phoenix6SignalBuilder;
 import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.signal.Phoenix6SignalBuilder;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.devicewrappers.TalonFXWrapper;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 
 public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
-
-	@AutoLog
-	static class ConnectedInput {
-
-		boolean connected = false;
-
-	}
 
 	protected final TalonFXWrapper motor;
 	protected final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;

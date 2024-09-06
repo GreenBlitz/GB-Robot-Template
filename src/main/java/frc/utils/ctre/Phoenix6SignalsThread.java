@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.swerve.phoenix6signalsthread;
+package frc.utils.ctre;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -40,9 +40,14 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Phoenix6SignalsThread extends Thread {
 
+
 	public static final Lock SIGNALS_LOCK = new ReentrantLock();
+
+	private static final int MAX_UPDATES_PER_RIO_CYCLE = 100;
+	private static final double DELAY_STARTING_TIME_SECONDS = 5;
+
 	private final List<Queue<Double>> queues = new ArrayList<>();
-	private final Queue<Double> timestamps = new ArrayBlockingQueue<>(Phoenix6SignalsThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
+	private final Queue<Double> timestamps = new ArrayBlockingQueue<>(MAX_UPDATES_PER_RIO_CYCLE);
 	private final ArrayList<StatusSignal<Double>> signals = new ArrayList<>();
 	private final ArrayList<Boolean> isLatencySignals = new ArrayList<>();
 	private boolean isCANFD = false; // Assuming that all the devices using in odometry have same can network.
@@ -78,7 +83,7 @@ public class Phoenix6SignalsThread extends Thread {
 	}
 
 	private Queue<Double> registerSignals(boolean isLatencySignal, ParentDevice device, StatusSignal<Double>[] signals) {
-		Queue<Double> queue = new ArrayBlockingQueue<>(Phoenix6SignalsThreadConstants.MAX_UPDATES_PER_RIO_CYCLE);
+		Queue<Double> queue = new ArrayBlockingQueue<>(MAX_UPDATES_PER_RIO_CYCLE);
 		SIGNALS_LOCK.lock();
 		Swerve.ODOMETRY_LOCK.lock();
 		try {
@@ -114,7 +119,7 @@ public class Phoenix6SignalsThread extends Thread {
 
 	@Override
 	public void run() {
-		Timer.delay(Phoenix6SignalsThreadConstants.DELAY_STARTING_TIME_SECONDS);
+		Timer.delay(DELAY_STARTING_TIME_SECONDS);
 		while (true) {
 			waitForUpdatesFromSignals();
 			saveNewData();

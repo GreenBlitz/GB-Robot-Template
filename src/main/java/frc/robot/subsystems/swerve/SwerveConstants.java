@@ -21,6 +21,9 @@ public record SwerveConstants(
 	PIDController xMetersPIDController,
 	PIDController yMetersPIDController,
 	PIDController rotationDegreesPIDController,
+	Translation2d[] modulesLocations,
+	double driveRadiusMeters,
+	SwerveDriveKinematics kinematics,
 	HolonomicPathFollowerConfig holonomicPathFollowerConfig
 ) {
 
@@ -29,7 +32,9 @@ public record SwerveConstants(
 		double velocityAt12VoltsMetersPerSecond,
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
-		PIDConstants rotationDegreesPIDConstants
+		PIDConstants rotationDegreesPIDConstants,
+		Translation2d[] modulesLocations,
+		double driveRadiusMeters
 	) {
 		this(
 			swerveName.getLogPath(),
@@ -41,11 +46,14 @@ public record SwerveConstants(
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),
+			modulesLocations,
+			driveRadiusMeters,
+			new SwerveDriveKinematics(modulesLocations),
 			new HolonomicPathFollowerConfig(
 				translationMetersPIDConstants,
 				rotationDegreesPIDConstants,
 				velocityAt12VoltsMetersPerSecond,
-				DRIVE_RADIUS_METERS,
+				driveRadiusMeters,
 				REPLANNING_CONFIG
 			)
 		);
@@ -53,38 +61,12 @@ public record SwerveConstants(
 		this.rotationDegreesPIDController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
 	}
 
-	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
+	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND = Rotation2d.fromRotations(0.5);
 
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
 	static final double DRIVE_NEUTRAL_DEADBAND = 0.05;
 	static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.05);
-
-	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
-	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
-	static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
-	private static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
-		MODULE_X_DISTANCE_FROM_CENTER,
-		MODULE_Y_DISTANCE_FROM_CENTER
-	);
-	private static final Translation2d FRONT_RIGHT_TRANSLATION2D = new Translation2d(
-		MODULE_X_DISTANCE_FROM_CENTER,
-		-MODULE_Y_DISTANCE_FROM_CENTER
-	);
-	private static final Translation2d BACK_LEFT_TRANSLATION2D = new Translation2d(
-		-MODULE_X_DISTANCE_FROM_CENTER,
-		MODULE_Y_DISTANCE_FROM_CENTER
-	);
-	private static final Translation2d BACK_RIGHT_TRANSLATION2D = new Translation2d(
-		-MODULE_X_DISTANCE_FROM_CENTER,
-		-MODULE_Y_DISTANCE_FROM_CENTER
-	);
-	public static final Translation2d[] LOCATIONS = {
-		FRONT_LEFT_TRANSLATION2D,
-		FRONT_RIGHT_TRANSLATION2D,
-		BACK_LEFT_TRANSLATION2D,
-		BACK_RIGHT_TRANSLATION2D};
-	public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(LOCATIONS);
 
 	private static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
 	static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);

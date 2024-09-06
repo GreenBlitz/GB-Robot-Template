@@ -115,9 +115,9 @@ public class Module {
 		isClosedLoop = closedLoop;
 	}
 
-	public void setBrake(boolean isBrake) {
-		iSteer.setBrake(isBrake);
-		iDrive.setBrake(isBrake);
+	public void setBrake(boolean brake) {
+		iSteer.setBrake(brake);
+		iDrive.setBrake(brake);
 	}
 
 	public void resetByEncoder() {

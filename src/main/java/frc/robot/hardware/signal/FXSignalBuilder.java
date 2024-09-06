@@ -51,7 +51,9 @@ public class FXSignalBuilder {
 		@Override
 		public void toLog(LogTable table) {
 			// Must be refreshed before!!!
-			table.put(name, statusSignal.getValueAsDouble());
+			double currentValue = statusSignal.getValueAsDouble();
+			table.put(name, currentValue);
+			setNewValues(currentValue);
 		}
 
 		@Override
@@ -65,7 +67,7 @@ public class FXSignalBuilder {
 	public static class FXLatencySignal extends SignalInput implements SignalGetter {
 
 		private final StatusSignal<Double> statusSignal;
-		private final StatusSignal<Double> signalSlope;
+		protected final StatusSignal<Double> signalSlope;
 		private final String name;
 
 		private FXLatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
@@ -77,7 +79,9 @@ public class FXSignalBuilder {
 		@Override
 		public void toLog(LogTable table) {
 			// Must be refreshed before!!!
-			table.put(name, BaseStatusSignal.getLatencyCompensatedValue(statusSignal, signalSlope));
+			double currentValue = BaseStatusSignal.getLatencyCompensatedValue(statusSignal, signalSlope);
+			table.put(name, currentValue);
+			setNewValues(currentValue);
 		}
 
 		@Override
@@ -88,28 +92,10 @@ public class FXSignalBuilder {
 
 	}
 
-	public static class FXLatencyBothSignal extends SignalInput implements SignalGetter {
-
-		private final StatusSignal<Double> statusSignal;
-		private final StatusSignal<Double> signalSlope;
-		private final String name;
+	public static class FXLatencyBothSignal extends FXLatencySignal implements SignalGetter {
 
 		private FXLatencyBothSignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
-			this.statusSignal = signal;
-			this.signalSlope = signalSlope;
-			this.name = name;
-		}
-
-		@Override
-		public void toLog(LogTable table) {
-			// Must be refreshed before!!!
-			table.put(name, BaseStatusSignal.getLatencyCompensatedValue(statusSignal, signalSlope));
-		}
-
-		@Override
-		public StatusSignal<Double> getStatusSignal() {
-			// For using refresh all with more signals...
-			return statusSignal;
+			super(signal, signalSlope, name);
 		}
 
 		public StatusSignal<Double> getStatusSignalSlope() {
@@ -132,8 +118,10 @@ public class FXSignalBuilder {
 		@Override
 		public void toLog(LogTable table) {
 			Phoenix6SignalsThread.SIGNALS_LOCK.lock();
-			table.put(name, signalQueue.stream().mapToDouble(Double::doubleValue).toArray());
+			double[] currentValues = signalQueue.stream().mapToDouble(Double::doubleValue).toArray();
+			table.put(name, currentValues);
 			signalQueue.clear();
+			setNewValues(currentValues);
 			Phoenix6SignalsThread.SIGNALS_LOCK.unlock();
 		}
 

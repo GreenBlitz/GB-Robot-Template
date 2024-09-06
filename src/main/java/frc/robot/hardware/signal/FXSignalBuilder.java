@@ -10,20 +10,20 @@ import java.util.Queue;
 
 public class FXSignalBuilder {
 
-	public FXSignal registerSignal(StatusSignal<Double> signal, String name) {
+	public static FXSignal registerSignal(StatusSignal<Double> signal, String name) {
 		return new FXSignal(signal.clone(), name);
 	}
 
-	public FXLatencySignal registerLatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
+	public static FXLatencySignal registerLatencySignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
 		return new FXLatencySignal(signal.clone(), signalSlope.clone(), name);
 	}
 
-	public FXThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, String name) {
+	public static FXThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, String name) {
 		return new FXThreadSignal(Phoenix6SignalsThread.getInstance().registerRegularSignal(parentDevice, signal.clone()), name);
 	}
 
 	//@formatter:off
-    public FXThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
+    public static FXThreadSignal registerThreadSignal(ParentDevice parentDevice, StatusSignal<Double> signal, StatusSignal<Double> signalSlope, String name) {
 		return new FXThreadSignal(Phoenix6SignalsThread.getInstance().registerLatencySignal(parentDevice, signal.clone(), signalSlope.clone()), name);
 	}
     //@formatter:on

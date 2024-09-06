@@ -3,6 +3,7 @@ package frc.robot.hardware.signal;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
+import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.ctre.Phoenix6SignalsThread;
 import org.littletonrobotics.junction.LogTable;
 
@@ -117,12 +118,12 @@ public class FXSignalBuilder {
 
 		@Override
 		public void toLog(LogTable table) {
-			Phoenix6SignalsThread.SIGNALS_LOCK.lock();
+			Swerve.ODOMETRY_LOCK.lock();
 			double[] currentValues = signalQueue.stream().mapToDouble(Double::doubleValue).toArray();
 			table.put(name, currentValues);
 			signalQueue.clear();
 			setNewValues(currentValues);
-			Phoenix6SignalsThread.SIGNALS_LOCK.unlock();
+			Swerve.ODOMETRY_LOCK.unlock();
 		}
 
 	}

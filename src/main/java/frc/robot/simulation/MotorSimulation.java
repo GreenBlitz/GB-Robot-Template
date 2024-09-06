@@ -19,15 +19,11 @@ abstract class MotorSimulation {
 
 	private final TalonFXSimState motorSimulationState;
 
-	private final StatusSignal<Double> closedLoopReferenceSignal;
-
 	protected MotorSimulation() {
 		SimulationManager.addSimulation(this);
 		this.motor = SimulationManager.createNewMotorForSimulation();
 		this.motorSimulationState = motor.getSimState();
 		this.motorSimulationState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
-		this.closedLoopReferenceSignal = motor.getClosedLoopReference();
-		this.closedLoopReferenceSignal.setUpdateFrequency(1.0 / CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS);
 	}
 
 	protected void updateSimulation() {
@@ -55,10 +51,6 @@ abstract class MotorSimulation {
 
 	public double getVoltage() {
 		return motor.getMotorVoltage().getValue();
-	}
-
-	public Rotation2d getProfiledSetPoint() {
-		return Rotation2d.fromRotations(closedLoopReferenceSignal.refresh().getValue());
 	}
 
 	protected abstract void setInputVoltage(double voltage);

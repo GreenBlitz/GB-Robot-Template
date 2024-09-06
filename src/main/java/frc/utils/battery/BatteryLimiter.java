@@ -42,7 +42,7 @@ class BatteryLimiter extends Command {
 		}
 	}
 
-	private void startVoltageFilter() {
+	private void setVoltageFilterToCurrentVoltage() {
 		// Fills linear filter with battery voltage values instead of 1/NUMBER_OF_VALUES_IN_AVERAGE
 		for (int i = 0; i < NUMBER_OF_SAMPLES_TAKEN_IN_AVERAGE; i++) {
 			voltageFilter.calculate(BatteryUtils.getCurrentVoltage());
@@ -57,7 +57,7 @@ class BatteryLimiter extends Command {
 
 	@Override
 	public void initialize() {
-		startVoltageFilter();
+		setVoltageFilterToCurrentVoltage();
 	}
 
 	@Override

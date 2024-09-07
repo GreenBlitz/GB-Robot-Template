@@ -31,23 +31,6 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		sparkSubsystem elbow = new sparkSubsystem("elbow/", 5);
-		Runnable elbowBrake = () -> elbow.setBrake(true);
-		Runnable elbowCoast = () -> elbow.setBrake(false);
-		BrakeStateManager.add(elbowBrake, elbowCoast);
-
-		talonSubsystem rightFlyWheel = new talonSubsystem("rightFlyWheel/", 16);
-		Runnable rightFlyWheelBrake = () -> rightFlyWheel.setBrake(true);
-		Runnable rightFlyWheelCoast = () -> rightFlyWheel.setBrake(false);
-		BrakeStateManager.add(rightFlyWheelBrake, rightFlyWheelCoast);
-
-		talonSubsystem leftFlyWheel = new talonSubsystem("leftFlyWheel/", 22);
-
-		sparkSubsystem roller = new sparkSubsystem("roller/", 22);
-		Runnable rollerBrake = () -> roller.setBrake(true);
-		Runnable rollerCoast = () -> roller.setBrake(false);
-		BrakeStateManager.add(rollerBrake, rollerCoast);
-
 		this.robot = new Robot();
 	}
 

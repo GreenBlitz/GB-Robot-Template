@@ -8,6 +8,8 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface PIDAble {
 
+	void fetchSignals(InputSignal... signals);
+
 	SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
 
 	void resetPosition(Rotation2d position);
@@ -17,7 +19,5 @@ public interface PIDAble {
 	void setTargetVelocity(IAngleRequest velocityRequest);
 
 	void setTargetPosition(IAngleRequest positionRequest);
-
-	void fetchSignals(InputSignal... signals);
 
 }

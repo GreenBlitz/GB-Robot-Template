@@ -7,6 +7,8 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface ProfileAble {
 
+	void fetchSignals(InputSignal... signals);
+
 	SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
 
 	void resetPosition(Rotation2d position);
@@ -14,7 +16,5 @@ public interface ProfileAble {
 	void setTargetProfiledVelocity(IAngleRequest profiledVelocityRequest);
 
 	void setTargetProfiledPosition(IAngleRequest profiledPositionRequest);
-
-	void fetchSignals(InputSignal... signals);
 
 }

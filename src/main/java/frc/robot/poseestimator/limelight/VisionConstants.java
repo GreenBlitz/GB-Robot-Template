@@ -15,7 +15,7 @@ public class VisionConstants {
 
 	public static final String LIMELIGHT_LOGPATH_PREFIX = "Limelight ";
 
-	public static final String ESTIMATION_LOGPATH_PREFIX = "estimation ";
+	public static final String ESTIMATION_LOGPATH_PREFIX = "estimation_";
 
 
 	public static int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;

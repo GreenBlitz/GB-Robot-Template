@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 
 
@@ -70,15 +71,20 @@ public class SmartLimelights extends GBSubsystem {
 	}
 
 	public void recordEstimatedPositions() {
-		int i = 1;
-		for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
+		Optional<Pair<Pose2d, Double>> estimation;
+		int logpathSuffix;
+		ListIterator<Optional<Pair<Pose2d, Double>>> iterator = getAll2DEstimates().listIterator();
+
+		while (iterator.hasNext()) {
+			estimation = iterator.next();
+			logpathSuffix = iterator.nextIndex();
+
 			if (estimation.isPresent()) {
 				Logger.recordOutput(
-					super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i,
+					super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + logpathSuffix,
 					estimation.get().getFirst()
 				);
 			}
-			i++;
 		}
 	}
 

@@ -17,9 +17,9 @@ public class SmartLimelights extends GBSubsystem {
     private List<Limelight> limelights;
     private LimelightsHardware limelightHardware;
 
-    public SmartLimelights(String[] limelightNames, String limelightManagerName) {
-        super(limelightManagerName + "Filtered/");
-        this.limelightHardware = new LimelightsHardware(limelightNames, limelightManagerName);
+    public SmartLimelights(String[] limelightNames) {
+        super(VisionConstants.DEFAULT_CONFIG.Logpath());
+        this.limelightHardware = new LimelightsHardware(limelightNames, VisionConstants.DEFAULT_CONFIG.HardwareLogpath());
         this.limelights = limelightHardware.getAllLimelights();
     }
 
@@ -46,8 +46,8 @@ public class SmartLimelights extends GBSubsystem {
         transformDifference = limelightPosition.minus(currentPoseObservation);
         rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
 
-        return transformDifference.getTranslation().getNorm() <= VisionConstants.POSITION_TOLERANCE
-                && rotationDifference.getDegrees() <= VisionConstants.ROTATION_TOLERANCE.getDegrees();
+        return transformDifference.getTranslation().getNorm() <= VisionConstants.DEFAULT_CONFIG.PositionNormTolerance()
+                && rotationDifference.getDegrees() <= VisionConstants.DEFAULT_CONFIG.rotationTolerance().getDegrees();
     }
 
     public boolean limelightValidityFilter(Limelight limelight) {

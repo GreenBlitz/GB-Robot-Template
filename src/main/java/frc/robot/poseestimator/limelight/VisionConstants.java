@@ -10,19 +10,17 @@ public class VisionConstants {
             "limelight-gb"
     };
 
+    public static final SmartLimelightConfig DEFAULT_CONFIG = new SmartLimelightConfig(
+            "SmartLimelights/",
+            "LimelightsHardware/",
+            Rotation2d.fromDegrees(20), //! shall be calibrated
+            0.2 //! shall be calibrated
+            );
+
     public static final String LIMELIGHT_LOGPATH_PREFIX = "Limelight ";
-
-    public static final String MULTI_LIMELIGHT_LOGPATH = "LimelightsHardware/";
-
-    public static final String LIMELIGHTS_FILTERED_LOGPATH = "LimelightsFiltered/";
 
     public static final String ESTIMATION_LOGPATH_PREFIX = "estimation ";
 
-    //! shall be calibrated
-    public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(20);
-
-    //! shall be calibrated
-    public static final double POSITION_TOLERANCE = 0.2;
 
     public static int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 

@@ -15,6 +15,7 @@ public class Limelight extends GBSubsystem {
 	private NetworkTableEntry robotPoseEntry, idEntry, tagPoseEntry;
 
 	private String name;
+	private double[] poseArray;
 
 	public Limelight(String limelightName, String hardwareLogPath) {
 		super(hardwareLogPath + VisionConstants.LIMELIGHT_LOGPATH_PREFIX + limelightName + "/");
@@ -31,7 +32,8 @@ public class Limelight extends GBSubsystem {
 			return Optional.empty();
 		}
 
-		double[] poseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		poseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+
 		double processingLatencySeconds = poseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()] / 1000;
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
@@ -45,12 +47,10 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public double getAprilTagHeight() {
-		double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		return poseArray[LimelightEntryValue.Y_AXIS.getIndex()];
 	}
 
 	public double getDistanceFromAprilTag() {
-		double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		return poseArray[LimelightEntryValue.Z_AXIS.getIndex()];
 	}
 

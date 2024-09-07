@@ -28,6 +28,9 @@ public class Phoenix6SignalBuilder {
 		return new Phoenix6AngleSignal(signal.clone(), name, toAngle);
 	}
 
+	/**
+	 * Use only if not fetching the slope signal!!!
+	 */
 	public static Phoenix6LatencyBothSignal registerLatencySignal(
 			StatusSignal<Double> signal,
 			StatusSignal<Double> signalSlope,

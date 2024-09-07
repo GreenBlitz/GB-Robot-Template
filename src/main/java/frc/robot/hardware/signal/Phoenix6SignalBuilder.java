@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.ctre.Phoenix6SignalsThread;
+import frc.utils.ctre.PhoenixProUtils;
 import org.littletonrobotics.junction.LogTable;
 
 import java.util.Queue;
@@ -13,19 +14,27 @@ import java.util.function.DoubleFunction;
 
 public class Phoenix6SignalBuilder {
 
+	private static final int UPDATE_FREQUENCY_RETRIES = 5;
+
 	public interface SignalGetter {
 
 		StatusSignal<Double> getStatusSignal();
 
 	}
 
-	//@formatter:off
-	public static Phoenix6DoubleSignal registerSignal(StatusSignal<Double> signal, String name) {
-		return new Phoenix6DoubleSignal(signal.clone(), name);
+	private static StatusSignal<Double> cloneWithFrequency(StatusSignal<Double> signal, double frequency) {
+		StatusSignal<Double> signalClone = signal.clone();
+		PhoenixProUtils.checkWithRetry(() -> signalClone.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);
+		return signalClone;
 	}
 
-	public static Phoenix6AngleSignal registerSignal(StatusSignal<Double> signal, String name, DoubleFunction<Rotation2d> toAngle) {
-		return new Phoenix6AngleSignal(signal.clone(), name, toAngle);
+	//@formatter:off
+	public static Phoenix6DoubleSignal registerSignal(StatusSignal<Double> signal, String name, double frequency) {
+		return new Phoenix6DoubleSignal(cloneWithFrequency(signal, frequency), name);
+	}
+
+	public static Phoenix6AngleSignal registerSignal(StatusSignal<Double> signal, String name, double frequency, DoubleFunction<Rotation2d> toAngle) {
+		return new Phoenix6AngleSignal(cloneWithFrequency(signal, frequency), name, toAngle);
 	}
 
 	/**
@@ -35,27 +44,31 @@ public class Phoenix6SignalBuilder {
 			StatusSignal<Double> signal,
 			StatusSignal<Double> signalSlope,
 			String name,
+			double frequency,
 			DoubleFunction<Rotation2d> toAngle
 	) {
-		return new Phoenix6LatencyBothSignal(signal.clone(), signalSlope.clone(), name, toAngle);
+		return new Phoenix6LatencyBothSignal(cloneWithFrequency(signal, frequency), cloneWithFrequency(signalSlope, frequency), name, toAngle);
 	}
 
 	public static Phoenix6LatencySignal registerLatencySignal(
 			StatusSignal<Double> signal,
 			SignalGetter signalSlope,
 			String name,
+			double frequency,
 			DoubleFunction<Rotation2d> toAngle
 	) {
-		return new Phoenix6LatencySignal(signal.clone(), signalSlope.getStatusSignal(), name, toAngle);
+		return new Phoenix6LatencySignal(cloneWithFrequency(signal, frequency), signalSlope.getStatusSignal(), name, toAngle);
 	}
 
 	public static Phoenix6ThreadSignal registerThreadSignal(
 			ParentDevice parentDevice,
 			StatusSignal<Double> signal,
 			String name,
+			double frequency,
 			DoubleFunction<Rotation2d> toAngle
 	) {
-		return new Phoenix6ThreadSignal(Phoenix6SignalsThread.getInstance().registerRegularSignal(parentDevice, signal.clone()), name, toAngle);
+		StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
+		return new Phoenix6ThreadSignal(Phoenix6SignalsThread.getInstance().registerRegularSignal(parentDevice, signalClone), name, toAngle);
 	}
 
     public static Phoenix6ThreadSignal registerThreadSignal(
@@ -63,10 +76,13 @@ public class Phoenix6SignalBuilder {
 			StatusSignal<Double> signal,
 			StatusSignal<Double> signalSlope,
 			String name,
+			double frequency,
 			DoubleFunction<Rotation2d> toAngle
 	) {
+		StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
+		StatusSignal<Double> slopeSignalClone = cloneWithFrequency(signalSlope, frequency);
 		return new Phoenix6ThreadSignal(
-				Phoenix6SignalsThread.getInstance().registerLatencySignal(parentDevice, signal.clone(), signalSlope.clone()),
+				Phoenix6SignalsThread.getInstance().registerLatencySignal(parentDevice, signalClone, slopeSignalClone),
 				name,
 				toAngle
 		);

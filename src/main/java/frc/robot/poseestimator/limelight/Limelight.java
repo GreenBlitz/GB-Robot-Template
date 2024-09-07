@@ -48,19 +48,9 @@ public class Limelight extends GBSubsystem {
 		return poseArray[LimelightArrayValue.Y_AXIS.getValue()];
 	}
 
-	public boolean isAprilTagInProperHeight() {
-		boolean aprilTagHeightConfidence = Math.abs(getAprilTagHeight() - VisionConstants.APRIL_TAG_HEIGHT_METERS)
-			< VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
-		return aprilTagHeightConfidence;
-	}
-
 	public double getDistanceFromAprilTag() {
 		double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		return poseArray[LimelightArrayValue.Z_AXIS.getValue()];
-	}
-
-	public boolean hasTarget() {
-		return getUpdatedPose2DEstimation().isPresent();
 	}
 
 	@Override

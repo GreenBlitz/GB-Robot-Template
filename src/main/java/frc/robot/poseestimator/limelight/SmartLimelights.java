@@ -51,8 +51,18 @@ public class SmartLimelights extends GBSubsystem {
 			&& rotationDifference.getDegrees() <= VisionConstants.DEFAULT_CONFIG.rotationTolerance().getDegrees();
 	}
 
+	public boolean isAprilTagInProperHeight(Limelight limelight) {
+		boolean aprilTagHeightConfidence = Math.abs(limelight.getAprilTagHeight() - VisionConstants.APRIL_TAG_HEIGHT_METERS)
+				< VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
+		return aprilTagHeightConfidence;
+	}
+
+	public boolean hasTarget(Limelight limelight) {
+		return limelight.getUpdatedPose2DEstimation().isPresent();
+	}
+
 	public boolean limelightValidityFilter(Limelight limelight) {
-		if (limelight.hasTarget() && limelight.isAprilTagInProperHeight() && limelight.getUpdatedPose2DEstimation().isPresent()) {
+		if (hasTarget(limelight) && isAprilTagInProperHeight(limelight)) {
 			return isLimelightedOutputInTolerance(limelight);
 		}
 

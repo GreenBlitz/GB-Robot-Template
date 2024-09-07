@@ -13,7 +13,6 @@ public class TalonFXWrapper extends TalonFX {
 		this(new CTREDeviceID(deviceId));
 	}
 
-
 	public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
 		super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
 	}

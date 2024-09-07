@@ -38,8 +38,10 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		ArrayList<BaseStatusSignal> signalsToRefresh = new ArrayList<>(signals.length);
 
 		for (InputSignal inputSignal : signals) {
-			if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6Signal phoenix6Signal) {
-				signalsToRefresh.add(phoenix6Signal.getStatusSignal());
+			if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6DoubleSignal phoenix6DoubleSignal) {
+				signalsToRefresh.add(phoenix6DoubleSignal.getStatusSignal());
+			} else if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6AngleSignal phoenix6AngleSignal) {
+				signalsToRefresh.add(phoenix6AngleSignal.getStatusSignal());
 			} else if (inputSignal instanceof Phoenix6SignalBuilder.Phoenix6LatencyBothSignal fxLatencyBothSignal) {
 				// must be before FXLatencySignal because extends FXLatencySignal
 				signalsToRefresh.add(fxLatencyBothSignal.getSlopeStatusSignal());

@@ -93,7 +93,7 @@ public class SmartLimelights extends GBSubsystem {
 	}
 
 	public boolean hasTarget(int limelightId) {
-		return limelights.get(limelightId).hasTarget();
+		return hasTarget(limelights.get(limelightId));
 	}
 
 	public Optional<Pair<Pose2d, Double>> getFirstAvailableTarget() {
@@ -107,7 +107,7 @@ public class SmartLimelights extends GBSubsystem {
 	}
 
 	public boolean isConnected() {
-		return limelights.get(0).hasTarget();
+		return hasTarget(limelights.get(0));
 	}
 
 	@Override

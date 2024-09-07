@@ -41,8 +41,9 @@ public class SmartLimelights extends GBSubsystem {
 		Transform2d transformDifference;
 		Rotation2d rotationDifference;
 
-		Pose2d currentPoseObservation = NetworkTables...; // placeholder for pubsubs, when it'll be
-																						// added.
+		// TODO: placeholder for pubsubs, when it'll be added.
+		// ik we shouldn't have todos but it's notable enough when it throws compile errors
+		Pose2d currentPoseObservation = limelight.getUpdatedPose2DEstimation().get().getFirst();
 
 		limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
 		transformDifference = limelightPosition.minus(currentPoseObservation);
@@ -54,7 +55,7 @@ public class SmartLimelights extends GBSubsystem {
 
 	public boolean isAprilTagInProperHeight(Limelight limelight) {
 		boolean aprilTagHeightConfidence = Math.abs(limelight.getAprilTagHeight() - VisionConstants.APRIL_TAG_HEIGHT_METERS)
-				< VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
+			< VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
 		return aprilTagHeightConfidence;
 	}
 

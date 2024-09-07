@@ -25,10 +25,10 @@ public class PoseEstimatorMath {
 
 	public static double[] combineStandardDeviations(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
 		double[] combinedStandardDeviations = new double[3];
-		for (int row = 0; row < combinedStandardDeviations.length; row++) {
-			double odometryStandardDeviation = odometryStandardDeviations[row];
-			double visionStandardDeviation = visionStandardDeviations[row];
-			combinedStandardDeviations[row] = combineStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
+		for (int i = 0; i < combinedStandardDeviations.length; i++) {
+			double odometryStandardDeviation = odometryStandardDeviations[i];
+			double visionStandardDeviation = visionStandardDeviations[i];
+			combinedStandardDeviations[i] = combineStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
 		}
 		return combinedStandardDeviations;
 	}
@@ -50,17 +50,14 @@ public class PoseEstimatorMath {
 		return result;
 	}
 
-
-	public static Transform2d
-		useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, double[] odometryStandardDeviations) {
+	public static Transform2d useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, double[] odometryStandardDeviations) {
 		double[] combinedStandardDeviations = PoseEstimatorMath
 			.combineStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
 		Transform2d visionDifferenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
-	public static Transform2d
-		scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
+	public static Transform2d scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
 		double[] visionDifferenceFromOdometryMatrix = {
 			visionDifferenceFromOdometry.getX(),
 			visionDifferenceFromOdometry.getY(),

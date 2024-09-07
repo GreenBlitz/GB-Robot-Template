@@ -20,6 +20,7 @@ public class SmartLimelights extends GBSubsystem {
 
 	public SmartLimelights(String[] limelightNames) {
 		super(VisionConstants.DEFAULT_CONFIG.Logpath());
+
 		this.limelightHardware = new LimelightsHardware(limelightNames, VisionConstants.DEFAULT_CONFIG.HardwareLogpath());
 		this.limelights = limelightHardware.getAllLimelights();
 	}
@@ -105,5 +106,6 @@ public class SmartLimelights extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {}
+
 
 }

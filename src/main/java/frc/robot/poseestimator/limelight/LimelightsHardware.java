@@ -13,7 +13,7 @@ public class LimelightsHardware extends GBSubsystem {
 	public LimelightsHardware(String[] limelightNames, String limelightManagerName) {
 		super(limelightManagerName + "Hardware/");
 
-		limelights = new ArrayList<>();
+		this.limelights = new ArrayList<>();
 		for (String limelightName : limelightNames) {
 			limelights.add(new Limelight(limelightName));
 		}
@@ -25,5 +25,6 @@ public class LimelightsHardware extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {}
+
 
 }

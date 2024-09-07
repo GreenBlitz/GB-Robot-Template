@@ -1,6 +1,6 @@
 package frc.robot.poseestimator.limelight;
 
-public enum LimelightArrayValue {
+public enum LimelightEntryValue {
 
 	X_AXIS(0),
 	Y_AXIS(1),
@@ -13,11 +13,11 @@ public enum LimelightArrayValue {
 
 	private int limelightIndexValue;
 
-	private LimelightArrayValue(int limelightIndexValue) {
+	private LimelightEntryValue(int limelightIndexValue) {
 		this.limelightIndexValue = limelightIndexValue;
 	}
 
-	public int getValue() {
+	public int getIndex() {
 		return this.limelightIndexValue;
 	}
 

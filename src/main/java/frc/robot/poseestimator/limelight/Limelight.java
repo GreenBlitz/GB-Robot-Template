@@ -18,10 +18,11 @@ public class Limelight extends GBSubsystem {
 
 	public Limelight(String limelightName) {
 		super(VisionConstants.LIMELIGHT_LOGPATH_PREFIX + limelightName + "/");
+
 		this.name = limelightName;
-		robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("botpose_wpiblue");
-		tagPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("targetpose_cameraspace");
-		idEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("tid");
+		this.robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("botpose_wpiblue");
+		this.tagPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("targetpose_cameraspace");
+		this.idEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("tid");
 	}
 
 	public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
@@ -31,13 +32,13 @@ public class Limelight extends GBSubsystem {
 		}
 
 		double[] poseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		double processingLatencySeconds = poseArray[LimelightArrayValue.TOTAL_LATENCY.getValue()] / 1000;
+		double processingLatencySeconds = poseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()] / 1000;
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
 		Pose2d robotPose = new Pose2d(
-			poseArray[LimelightArrayValue.X_AXIS.getValue()],
-			poseArray[LimelightArrayValue.Y_AXIS.getValue()],
-			Rotation2d.fromDegrees(poseArray[LimelightArrayValue.PITCH_ANGLE.getValue()])
+			poseArray[LimelightEntryValue.X_AXIS.getIndex()],
+			poseArray[LimelightEntryValue.Y_AXIS.getIndex()],
+			Rotation2d.fromDegrees(poseArray[LimelightEntryValue.PITCH_ANGLE.getIndex()])
 		);
 
 		return Optional.of(new Pair<>(robotPose, timestamp));
@@ -45,15 +46,16 @@ public class Limelight extends GBSubsystem {
 
 	public double getAprilTagHeight() {
 		double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		return poseArray[LimelightArrayValue.Y_AXIS.getValue()];
+		return poseArray[LimelightEntryValue.Y_AXIS.getIndex()];
 	}
 
 	public double getDistanceFromAprilTag() {
 		double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		return poseArray[LimelightArrayValue.Z_AXIS.getValue()];
+		return poseArray[LimelightEntryValue.Z_AXIS.getIndex()];
 	}
 
 	@Override
 	protected void subsystemPeriodic() {}
+
 
 }

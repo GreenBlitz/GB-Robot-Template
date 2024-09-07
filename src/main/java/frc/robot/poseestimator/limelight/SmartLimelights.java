@@ -28,7 +28,7 @@ public class SmartLimelights extends GBSubsystem {
 		ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
 
 		for (Limelight limelight : limelights) {
-			if (limelightValidityFilter(limelight)) {
+			if (!filterOutLimelight(limelight)) {
 				estimates.add(limelight.getUpdatedPose2DEstimation());
 			}
 		}
@@ -63,12 +63,8 @@ public class SmartLimelights extends GBSubsystem {
 		return limelight.getUpdatedPose2DEstimation().isPresent();
 	}
 
-	public boolean limelightValidityFilter(Limelight limelight) {
-		if (hasTarget(limelight) && isAprilTagInProperHeight(limelight)) {
-			return isLimelightedOutputInTolerance(limelight);
-		}
-
-		return false;
+	public boolean filterOutLimelight(Limelight limelight) {
+		return !(hasTarget(limelight) && isAprilTagInProperHeight(limelight) && isLimelightedOutputInTolerance(limelight));
 	}
 
 	public void recordEstimatedPositions() {
@@ -91,10 +87,6 @@ public class SmartLimelights extends GBSubsystem {
 
 	public double getDynamicStandardDeviations(int limelightId) {
 		return limelights.get(limelightId).getDistanceFromAprilTag() / VisionConstants.VISION_TO_STANDARD_DEVIATION;
-	}
-
-	public boolean hasTarget(int limelightId) {
-		return hasTarget(limelights.get(limelightId));
 	}
 
 	public Optional<Pair<Pose2d, Double>> getFirstAvailableTarget() {

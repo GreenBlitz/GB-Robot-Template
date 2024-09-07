@@ -3,6 +3,7 @@ package frc.robot.hardware.motor.sparkmax;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.motor.MotorInputsAutoLogged;
 import frc.robot.hardware.motor.PIDAble;
@@ -14,21 +15,25 @@ import frc.robot.hardware.request.value.IValueRequest;
 import frc.robot.hardware.request.value.SparkMaxValueRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
+import java.util.function.BiFunction;
+
 public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 
 	protected final CANSparkMax motor;
-	protected final SparkMaxConstants constants;
+	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
+	protected final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
 	private Rotation2d lastVelocityPerSecond;
 
-	public SparkMaxMotor(CANSparkMax motor, SparkMaxConstants constants) {
+	public SparkMaxMotor(CANSparkMax motor, BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward, SysIdRoutine.Config sysidConfig) {
 		this.motor = motor;
-		this.constants = constants;
+		this.feedforward = feedforward;
+		this.sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, false);
 		this.lastVelocityPerSecond = new Rotation2d();
 	}
 
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
-		return constants.sysIdConfigInfo();
+		return sysIdConfigInfo;
 	}
 
 	@Override
@@ -69,7 +74,7 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 				sparkMaxVelocityRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kVelocity,
 				sparkMaxVelocityRequest.getSlot(),
-				constants.feedforward()
+				feedforward
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
 						Rotation2d.fromRotations(motor.getEncoder().getVelocity())
@@ -86,7 +91,7 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 				sparkMaxPositionRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kPosition,
 				sparkMaxPositionRequest.getSlot(),
-				constants.feedforward()
+				feedforward
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
 						Rotation2d.fromRotations(motor.getEncoder().getVelocity())
@@ -104,7 +109,7 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 				sparkMaxProfiledVelocityRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kSmartVelocity,
 				sparkMaxProfiledVelocityRequest.getSlot(),
-				constants.feedforward()
+				feedforward
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
 						Rotation2d.fromRotations(motor.getEncoder().getVelocity())
@@ -121,7 +126,7 @@ public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 				sparkMaxProfiledPositionRequest.getSetPoint().getRotations(),
 				CANSparkBase.ControlType.kSmartMotion,
 				sparkMaxProfiledPositionRequest.getSlot(),
-				constants.feedforward()
+				feedforward
 					.apply(
 						Rotation2d.fromRotations(motor.getEncoder().getPosition()),
 						Rotation2d.fromRotations(motor.getEncoder().getVelocity())

@@ -101,7 +101,10 @@ public class SmartLimelights extends GBSubsystem {
 	}
 
 	public boolean isConnected() {
-		return hasTarget(limelights.get(0));
+		if (!limelights.isEmpty()) {
+			return hasTarget(limelights.get(0));
+		}
+		return false;
 	}
 
 	@Override

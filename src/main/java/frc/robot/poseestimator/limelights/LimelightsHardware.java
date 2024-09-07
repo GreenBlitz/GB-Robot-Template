@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.limelight;
+package frc.robot.poseestimator.limelights;
 
 import frc.utils.GBSubsystem;
 

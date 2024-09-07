@@ -16,8 +16,8 @@ public class Limelight extends GBSubsystem {
 
 	private String name;
 
-	public Limelight(String limelightName) {
-		super(VisionConstants.LIMELIGHT_LOGPATH_PREFIX + limelightName + "/");
+	public Limelight(String limelightName, String hardwareLogPath) {
+		super(hardwareLogPath + VisionConstants.LIMELIGHT_LOGPATH_PREFIX + limelightName + "/");
 
 		this.name = limelightName;
 		this.robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("botpose_wpiblue");

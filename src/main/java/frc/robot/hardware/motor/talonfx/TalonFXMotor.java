@@ -34,6 +34,7 @@ public class TalonFXMotor implements IMotor, PIDAble, ProfileAble {
 		motor.optimizeBusUtilization();
 	}
 
+	@Override
 	public void fetchSignals(InputSignal... signals) {
 		ArrayList<BaseStatusSignal> signalsToRefresh = new ArrayList<>(signals.length);
 

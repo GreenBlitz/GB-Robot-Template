@@ -10,18 +10,22 @@ import frc.robot.hardware.request.angle.IAngleRequest;
 import frc.robot.hardware.request.angle.SparkMaxAngleRequest;
 import frc.robot.hardware.request.value.IValueRequest;
 import frc.robot.hardware.request.value.SparkMaxValueRequest;
+import frc.robot.hardware.signal.InputSignal;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class SparkMaxMotor implements IMotor, PIDAble, ProfileAble {
 
 	protected final CANSparkMax motor;
 	protected final SparkMaxConstants constants;
-	private Rotation2d lastVelocityPerSecond;
 
 	public SparkMaxMotor(CANSparkMax motor, SparkMaxConstants constants) {
 		this.motor = motor;
 		this.constants = constants;
-		this.lastVelocityPerSecond = new Rotation2d();
+	}
+
+	@Override
+	public void fetchSignals(InputSignal... signals) {
+		// To Be Continued...
 	}
 
 	@Override

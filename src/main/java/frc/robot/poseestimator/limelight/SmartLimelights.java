@@ -43,7 +43,7 @@ public class SmartLimelights extends GBSubsystem {
 
 		// TODO: placeholder for pubsubs, when it'll be added.
 		// ik we shouldn't have todos but it's notable enough when it throws compile errors
-		Pose2d currentPoseObservation = limelight.getUpdatedPose2DEstimation().get().getFirst();
+		Pose2d currentPoseObservation = NetworkTables...;
 
 		limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
 		transformDifference = limelightPosition.minus(currentPoseObservation);

@@ -33,27 +33,4 @@ public class VisionConstants {
     public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 0.07;
 
 
-    public enum LIMELIGHT_ARRAY_VALUE {
-        X_AXIS,
-        Y_AXIS,
-        Z_AXIS,
-        ROLL_ANGLE,
-        PITCH_ANGLE,
-        YAW_ANGLE,
-        TOTAL_LATENCY;
-    }
-
-    public static int getValue(LIMELIGHT_ARRAY_VALUE value) {
-        return switch (value) {
-            case X_AXIS -> 0;
-            case Y_AXIS -> 1;
-            case Z_AXIS -> 2;
-            case ROLL_ANGLE -> 3;
-            case YAW_ANGLE -> 4;
-            case PITCH_ANGLE -> 5;
-            case TOTAL_LATENCY -> 6;
-        };
-    }
-
-
 }

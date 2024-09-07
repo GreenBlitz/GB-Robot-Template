@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class LimelightFiltered extends GBSubsystem {
+public class SmartLimelights extends GBSubsystem {
 
     private List<Limelight> limelights;
     private LimelightsHardware limelightHardware;
 
-    public LimelightFiltered(String[] limelightNames, String limelightManagerName) {
+    public SmartLimelights(String[] limelightNames, String limelightManagerName) {
         super(limelightManagerName + "Filtered/");
         this.limelightHardware = new LimelightsHardware(limelightNames, limelightManagerName);
         this.limelights = limelightHardware.getAllLimelights();

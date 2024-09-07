@@ -32,13 +32,13 @@ public class Limelight extends GBSubsystem {
         }
 
         double[] poseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-        double processingLatencySeconds = poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.TOTAL_LATENCY)] / 1000;
+        double processingLatencySeconds = poseArray[LimelightArrayValue.TOTAL_LATENCY.getValue()] / 1000;
         double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
         Pose2d robotPose = new Pose2d(
-                poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.X_AXIS)],
-                poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.Y_AXIS)],
-                Rotation2d.fromDegrees(poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.PITCH_ANGLE)])
+                poseArray[LimelightArrayValue.X_AXIS.getValue()],
+                poseArray[LimelightArrayValue.Y_AXIS.getValue()],
+                Rotation2d.fromDegrees(poseArray[LimelightArrayValue.PITCH_ANGLE.getValue()])
         );
 
         return Optional.of(new Pair<>(robotPose, timestamp));
@@ -46,7 +46,7 @@ public class Limelight extends GBSubsystem {
 
     public double getAprilTagHeight() {
         double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-        return poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.Y_AXIS)];
+        return poseArray[LimelightArrayValue.Y_AXIS.getValue()];
     }
 
     public boolean isAprilTagInProperHeight() {
@@ -56,7 +56,7 @@ public class Limelight extends GBSubsystem {
 
     public double getDistanceFromAprilTag() {
         double[] poseArray = tagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-        return poseArray[VisionConstants.getValue(VisionConstants.LIMELIGHT_ARRAY_VALUE.Z_AXIS)];
+        return poseArray[LimelightArrayValue.Z_AXIS.getValue()];
     }
 
     public boolean hasTarget() {

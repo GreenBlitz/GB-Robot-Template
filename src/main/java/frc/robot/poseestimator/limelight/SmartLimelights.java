@@ -14,89 +14,87 @@ import java.util.Optional;
 
 public class SmartLimelights extends GBSubsystem {
 
-    private List<Limelight> limelights;
-    private LimelightsHardware limelightHardware;
+	private List<Limelight> limelights;
+	private LimelightsHardware limelightHardware;
 
-    public SmartLimelights(String[] limelightNames) {
-        super(VisionConstants.DEFAULT_CONFIG.Logpath());
-        this.limelightHardware = new LimelightsHardware(limelightNames, VisionConstants.DEFAULT_CONFIG.HardwareLogpath());
-        this.limelights = limelightHardware.getAllLimelights();
-    }
+	public SmartLimelights(String[] limelightNames) {
+		super(VisionConstants.DEFAULT_CONFIG.Logpath());
+		this.limelightHardware = new LimelightsHardware(limelightNames, VisionConstants.DEFAULT_CONFIG.HardwareLogpath());
+		this.limelights = limelightHardware.getAllLimelights();
+	}
 
-    public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {
-        ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
+	public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {
+		ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
 
-        for (Limelight limelight : limelights) {
-            if (limelightValidityFilter(limelight)) {
-                estimates.add(limelight.getUpdatedPose2DEstimation());
-            }
-        }
+		for (Limelight limelight : limelights) {
+			if (limelightValidityFilter(limelight)) {
+				estimates.add(limelight.getUpdatedPose2DEstimation());
+			}
+		}
 
-        return estimates;
-    }
+		return estimates;
+	}
 
-    public boolean isLimelightedOutputInTolerance(Limelight limelight) {
-        Pose2d limelightPosition;
-        Transform2d transformDifference;
-        Rotation2d rotationDifference;
+	public boolean isLimelightedOutputInTolerance(Limelight limelight) {
+		Pose2d limelightPosition;
+		Transform2d transformDifference;
+		Rotation2d rotationDifference;
 
-        Pose2d currentPoseObservation = NetworkTable... ; // placeholder for pubsubs, when it'll be added.
+		Pose2d currentPoseObservation = NetworkTables...; // placeholder for pubsubs, when it'll be
+																						// added.
 
-        limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
-        transformDifference = limelightPosition.minus(currentPoseObservation);
-        rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
+		limelightPosition = limelight.getUpdatedPose2DEstimation().get().getFirst();
+		transformDifference = limelightPosition.minus(currentPoseObservation);
+		rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
 
-        return transformDifference.getTranslation().getNorm() <= VisionConstants.DEFAULT_CONFIG.PositionNormTolerance()
-                && rotationDifference.getDegrees() <= VisionConstants.DEFAULT_CONFIG.rotationTolerance().getDegrees();
-    }
+		return transformDifference.getTranslation().getNorm() <= VisionConstants.DEFAULT_CONFIG.PositionNormTolerance()
+			&& rotationDifference.getDegrees() <= VisionConstants.DEFAULT_CONFIG.rotationTolerance().getDegrees();
+	}
 
-    public boolean limelightValidityFilter(Limelight limelight) {
-        if (
-                limelight.hasTarget()
-                && limelight.isAprilTagInProperHeight()
-                && limelight.getUpdatedPose2DEstimation().isPresent()
-        ) {
-            return isLimelightedOutputInTolerance(limelight);
-        }
+	public boolean limelightValidityFilter(Limelight limelight) {
+		if (limelight.hasTarget() && limelight.isAprilTagInProperHeight() && limelight.getUpdatedPose2DEstimation().isPresent()) {
+			return isLimelightedOutputInTolerance(limelight);
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public void recordEstimatedPositions() {
-        int i = 1;
-        for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
-            if (estimation.isPresent()) {
-                Logger.recordOutput(super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i, estimation.get().getFirst());
-            }
-            i++;
-        }
-    }
+	public void recordEstimatedPositions() {
+		int i = 1;
+		for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
+			if (estimation.isPresent()) {
+				Logger.recordOutput(
+					super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i,
+					estimation.get().getFirst()
+				);
+			}
+			i++;
+		}
+	}
 
-    public double getDynamicStandardDeviations(int limelightId) {
-        return limelights.get(limelightId).getDistanceFromAprilTag() / VisionConstants.VISION_TO_STANDARD_DEVIATION;
-    }
+	public double getDynamicStandardDeviations(int limelightId) {
+		return limelights.get(limelightId).getDistanceFromAprilTag() / VisionConstants.VISION_TO_STANDARD_DEVIATION;
+	}
 
-    public boolean hasTarget(int limelightId) {
-        return limelights.get(limelightId).hasTarget();
-    }
+	public boolean hasTarget(int limelightId) {
+		return limelights.get(limelightId).hasTarget();
+	}
 
-    public Optional<Pair<Pose2d, Double>> getFirstAvailableTarget() {
-        for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
-            if (estimation.isPresent()) {
-                return estimation;
-            }
-        }
+	public Optional<Pair<Pose2d, Double>> getFirstAvailableTarget() {
+		for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
+			if (estimation.isPresent()) {
+				return estimation;
+			}
+		}
 
-        return Optional.empty();
-    }
+		return Optional.empty();
+	}
 
-    public boolean isConnected() {
-        return limelights.get(0).hasTarget();
-    }
+	public boolean isConnected() {
+		return limelights.get(0).hasTarget();
+	}
 
-    @Override
-    protected void subsystemPeriodic() {
-
-    }
+	@Override
+	protected void subsystemPeriodic() {}
 
 }

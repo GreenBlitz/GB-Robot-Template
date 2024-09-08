@@ -25,7 +25,7 @@ public abstract class AngleSignal extends InputSignal<Rotation2d> {
 
 	}
 
-	private final AngleUnit angleUnit;
+	protected final AngleUnit angleUnit;
 
 	protected AngleSignal(AngleUnit angleUnit) {
 		super(new Rotation2d());

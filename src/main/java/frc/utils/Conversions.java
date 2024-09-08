@@ -86,9 +86,9 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a frequency from per 100 millieseconds to per second.
+	 * Converts a frequency from per 100 milliseconds to per second.
 	 *
-	 * @param frequency the frequency per 100 millieseconds
+	 * @param frequency the frequency per 100 milliseconds
 	 * @return the frequency per second
 	 */
 	public static double per100MillisecondsToPerSecond(double frequency) {

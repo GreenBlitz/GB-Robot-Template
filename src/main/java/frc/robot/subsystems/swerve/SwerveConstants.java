@@ -56,8 +56,8 @@ public record SwerveConstants(
 	}
 
 	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY = Rotation2d.fromRotations(0.5);
-	public static final SwerveDriveWheelPositions INITIALWHEELPOSOTIONS = new SwerveDriveWheelPositions(new SwerveModulePosition[0]);
-	public static final Rotation2d INITIALGYROANGLE = new Rotation2d();
+	public static final SwerveDriveWheelPositions INITIAL_WHEEL_POSITIONS = new SwerveDriveWheelPositions(new SwerveModulePosition[0]);
+	public static final Rotation2d INITIAL_GYRO_ANGLE = new Rotation2d();
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
 	static final double DRIVE_NEUTRAL_DEADBAND = 0.05;

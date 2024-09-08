@@ -40,8 +40,8 @@ public class Robot {
 		);
 		this.PoseEstimator = new PoseEstimator(
 			SwerveConstants.KINEMATICS,
-			SwerveConstants.INITIALWHEELPOSOTIONS,
-			SwerveConstants.INITIALGYROANGLE
+			SwerveConstants.INITIAL_WHEEL_POSITIONS,
+			SwerveConstants.INITIAL_GYRO_ANGLE
 		);
 
 		swerve.setHeadingSupplier(() -> PoseEstimator.getEstimatedPose().getRotation());

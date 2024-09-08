@@ -11,7 +11,6 @@ import java.util.function.DoubleFunction;
 
 public abstract class InputSignal<T> implements LoggableInputs {
 
-
 	public abstract static class DoubleSignal extends InputSignal<Double> {
 
 		protected DoubleSignal() {

@@ -5,6 +5,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.littletonrobotics.junction.Logger;
 
@@ -32,6 +33,7 @@ public class VisualizerCommand extends Command {
     public void execute() {
 //        visualizer.resetLocation();
         position = visualizer.currentPosition(timer.get());
+        SmartDashboard.putString("Position-Note", position.toString());
         Logger.recordOutput(
                 "NoteVisualizer",
                 new Pose3d[]{position}

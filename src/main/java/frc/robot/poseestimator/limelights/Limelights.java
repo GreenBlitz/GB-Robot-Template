@@ -10,11 +10,11 @@ public class Limelights extends GBSubsystem {
 	private List<Limelight> limelights;
 
 
-	public Limelights(String[] limelightNames, String hardwareLogPath) {
+	public Limelights(String[] name, String hardwareLogPath) {
 		super(hardwareLogPath);
 
 		this.limelights = new ArrayList<>();
-		for (String limelightName : limelightNames) {
+		for (String limelightName : name) {
 			limelights.add(new Limelight(limelightName, hardwareLogPath));
 		}
 	}

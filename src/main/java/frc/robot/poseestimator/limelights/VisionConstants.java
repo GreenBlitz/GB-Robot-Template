@@ -19,9 +19,7 @@ public class VisionConstants {
 
 	public static int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 
-	public final static double VISION_TO_STANDARD_DEVIATION = 10;
-
-	public final static double APRIL_TAG_HEIGHT_METERS = 1.2397;
+	public final static double APRIL_TAG_DiSTANCE_TO_STANDARD_DEVIATIONS_FACTOR = 10;
 
 	public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 0.07;
 

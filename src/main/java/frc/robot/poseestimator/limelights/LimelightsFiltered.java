@@ -4,6 +4,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import frc.robot.constants.Field;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -23,7 +24,7 @@ public class LimelightsFiltered extends GBSubsystem {
 		this.limelightHardware = new Limelights(limelightNames, VisionConstants.DEFAULT_CONFIG.hardwareLogPath());
 	}
 
-	public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {
+	public List<Optional<Pair<Pose2d, Double>>> getFiltered2DEstimates() {
 		ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
 
 		for (Limelight limelight : limelightHardware.getAllLimelights()) {
@@ -53,7 +54,7 @@ public class LimelightsFiltered extends GBSubsystem {
 	}
 
 	public boolean isAprilTagInProperHeight(Limelight limelight) {
-		boolean aprilTagHeightConfidence = Math.abs(limelight.getAprilTagHeight() - VisionConstants.APRIL_TAG_HEIGHT_METERS)
+		boolean aprilTagHeightConfidence = Math.abs(limelight.getAprilTagHeight() - Field.APRIL_TAG_HEIGHT_METERS)
 			< VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
 		return aprilTagHeightConfidence;
 	}
@@ -69,7 +70,7 @@ public class LimelightsFiltered extends GBSubsystem {
 	public void recordEstimatedPositions() {
 		Optional<Pair<Pose2d, Double>> estimation;
 		int logpathSuffix;
-		ListIterator<Optional<Pair<Pose2d, Double>>> iterator = getAll2DEstimates().listIterator();
+		ListIterator<Optional<Pair<Pose2d, Double>>> iterator = getFiltered2DEstimates().listIterator();
 
 		while (iterator.hasNext()) {
 			estimation = iterator.next();
@@ -84,25 +85,12 @@ public class LimelightsFiltered extends GBSubsystem {
 		}
 	}
 
-	public double getDynamicStandardDeviations(int limelightId) {
-		return limelightHardware.getAllLimelights().get(limelightId).getDistanceFromAprilTag() / VisionConstants.VISION_TO_STANDARD_DEVIATION;
+	public double getDynamicStandardDeviations(LimelightEntryValue limelightValue) {
+		return limelightHardware.getAllLimelights().get(limelightValue.getIndex()).getDistanceFromAprilTag() / VisionConstants.APRIL_TAG_DiSTANCE_TO_STANDARD_DEVIATIONS_FACTOR;
 	}
 
 	public Optional<Pair<Pose2d, Double>> getFirstAvailableTarget() {
-		for (Optional<Pair<Pose2d, Double>> estimation : getAll2DEstimates()) {
-			if (estimation.isPresent()) {
-				return estimation;
-			}
-		}
-
-		return Optional.empty();
-	}
-
-	public boolean isConnected() {
-		if (!limelightHardware.getAllLimelights().isEmpty()) {
-			return hasTarget(limelightHardware.getAllLimelights().get(0));
-		}
-		return false;
+		return getFiltered2DEstimates().get(0);
 	}
 
 	@Override

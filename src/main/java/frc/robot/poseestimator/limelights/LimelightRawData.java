@@ -13,11 +13,11 @@ public class LimelightRawData extends GBSubsystem {
 	private List<Limelight> limelights;
 
 
-	public LimelightRawData(String[] name, String hardwareLogPath) {
+	public LimelightRawData(String[] names, String hardwareLogPath) {
 		super(hardwareLogPath);
 
 		this.limelights = new ArrayList<>();
-		for (String limelightName : name) {
+		for (String limelightName : names) {
 			limelights.add(new Limelight(limelightName, hardwareLogPath));
 		}
 	}

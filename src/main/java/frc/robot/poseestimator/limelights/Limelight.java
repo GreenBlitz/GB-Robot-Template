@@ -16,10 +16,10 @@ public class Limelight extends GBSubsystem {
 	private String name;
 	private double[] poseArray;
 
-	public Limelight(String limelightName, String hardwareLogPath) {
-		super(hardwareLogPath + VisionConstants.LIMELIGHT_LOGPATH_PREFIX + limelightName + "/");
+	public Limelight(String name, String hardwareLogPath) {
+		super(hardwareLogPath + VisionConstants.LIMELIGHT_LOGPATH_PREFIX + name + "/");
 
-		this.name = limelightName;
+		this.name = name;
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.tagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.idEntry = getLimelightNetworkTableEntry("tid");

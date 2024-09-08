@@ -16,11 +16,13 @@ import java.util.ListIterator;
 public class LimelightsFiltered extends GBSubsystem {
 
 	private LimelightRawData limelightHardware;
+	private FilteredLimelightsConfig config;
 
-	public LimelightsFiltered(String[] limelightNames) {
-		super(VisionConstants.DEFAULT_CONFIG.logPath());
+	public LimelightsFiltered(FilteredLimelightsConfig config) {
+		super(config.logPath());
 
-		this.limelightHardware = new LimelightRawData(limelightNames, VisionConstants.DEFAULT_CONFIG.hardwareLogPath());
+		this.limelightHardware = new LimelightRawData(config.limelightsNames(), config.hardwareLogPath());
+		this.config = config;
 	}
 
 	public List<VisionObservation> getFiltered2DEstimates() {
@@ -40,20 +42,17 @@ public class LimelightsFiltered extends GBSubsystem {
 	}
 
 	public boolean isLimelightedOutputInTolerance(LimelightData limelightData) {
-		Pose2d limelightPosition;
-		Transform2d transformDifference;
-		Rotation2d rotationDifference;
 
 		// TODO: placeholder for pubsubs, when it'll be added.
-		// ik we shouldn't have todos but it's notable enough when it throws compile errors
+		// ik we shouldn't have todos but it's notable enough when it throws compile errors.
 		Pose2d currentPoseObservation = NetworkTables...;
 
-		limelightPosition = limelightData.EstimatedPosition();
-		transformDifference = limelightPosition.minus(currentPoseObservation);
-		rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
+		Pose2d limelightPosition = limelightData.EstimatedPosition();
+		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
+		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
 
-		return transformDifference.getTranslation().getNorm() <= VisionConstants.DEFAULT_CONFIG.positionNormTolerance()
-			&& rotationDifference.getDegrees() <= VisionConstants.DEFAULT_CONFIG.rotationTolerance().getDegrees();
+		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
+			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
 	}
 
 	public boolean isAprilTagInProperHeight(LimelightData limelightData) {

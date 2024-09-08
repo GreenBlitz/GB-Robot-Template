@@ -4,6 +4,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
+import org.littletonrobotics.junction.Logger;
 
 public class ChanneledDigitalInput implements IDigitalInput {
 

@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
@@ -185,18 +184,22 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return gyroThreadInputs.timestampOdometrySamples.length;
+		return Math.min(
+			Math.min(gyroThreadInputs.timestampOdometrySamples.length, gyroThreadInputs.yawOdometrySamples.length),
+			modules.getNumberOfOdometrySamples()
+		);
 	}
 
 	public OdometryObservation[] getAllOdometryObservations() {
 		int odometrySamples = getNumberOfOdometrySamples();
-		double[] timestamps = gyroThreadInputs.timestampOdometrySamples;
-		Rotation2d[] gyroYawSamples = gyroThreadInputs.yawOdometrySamples;
-		SwerveDriveWheelPositions[] swerveWheelPositionsSamples = modules.getAllWheelsPositionsSamples();
 
 		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
 		for (int i = 0; i < odometrySamples; i++) {
-			odometryObservations[i] = new OdometryObservation(swerveWheelPositionsSamples[i], gyroYawSamples[i], timestamps[i]);
+			odometryObservations[i] = new OdometryObservation(
+				modules.getWheelsPositions(i),
+				gyroThreadInputs.yawOdometrySamples[i],
+				gyroThreadInputs.timestampOdometrySamples[i]
+			);
 		}
 
 		return odometryObservations;

@@ -32,12 +32,8 @@ public abstract class AngleSignal extends InputSignal<Rotation2d> {
 		this.angleUnit = angleUnit;
 	}
 
-	protected void setNewValues(double[] newValues) {
+	protected void setNewValues(double... newValues) {
 		setNewValues(Arrays.stream(newValues).mapToObj(angleUnit::toAngle).toArray(Rotation2d[]::new));
-	}
-
-	protected void setNewValues(double newValue) {
-		setNewValues(angleUnit.toAngle(newValue));
 	}
 
 }

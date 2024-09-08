@@ -15,14 +15,8 @@ public abstract class InputSignal<T> implements LoggableInputs {
 		values.add(defaultValue);
 	}
 
-	protected void setNewValues(T[] newValues) {
+	protected void setNewValues(T... newValues) {
 		values = new ArrayList<>(Arrays.asList(newValues));
-	}
-
-	protected void setNewValues(T newValue) {
-		ArrayList<T> arrayList = new ArrayList<>();
-		arrayList.add(newValue);
-		values = arrayList;
 	}
 
 	public ArrayList<T> asArray() {

@@ -20,9 +20,9 @@ public class Limelight extends GBSubsystem {
 		super(hardwareLogPath + VisionConstants.LIMELIGHT_LOGPATH_PREFIX + limelightName + "/");
 
 		this.name = limelightName;
-		this.robotPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("botpose_wpiblue");
-		this.tagPoseEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("targetpose_cameraspace");
-		this.idEntry = NetworkTableInstance.getDefault().getTable(name).getEntry("tid");
+		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
+		this.tagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
+		this.idEntry = getLimelightNetworkTableEntry("tid");
 	}
 
 	public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
@@ -51,6 +51,10 @@ public class Limelight extends GBSubsystem {
 
 	public double getDistanceFromAprilTag() {
 		return poseArray[LimelightEntryValue.Z_AXIS.getIndex()];
+	}
+
+	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
+		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
 	}
 
 	@Override

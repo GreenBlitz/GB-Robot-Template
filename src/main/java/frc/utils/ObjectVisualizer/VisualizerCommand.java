@@ -21,7 +21,6 @@ public class VisualizerCommand extends Command {
                 new Vector<N3>(velocity),
                 new Vector<N3>(location)
         );
-        this.position = visualizer.currentPosition(0);
     }
 
     @Override
@@ -39,6 +38,7 @@ public class VisualizerCommand extends Command {
                 new Pose3d[]{position}
 
         );
+        System.out.println(position.toString());
     }
 
     @Override

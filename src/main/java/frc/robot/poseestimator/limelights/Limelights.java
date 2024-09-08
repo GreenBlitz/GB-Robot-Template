@@ -5,12 +5,12 @@ import frc.utils.GBSubsystem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LimelightsHardware extends GBSubsystem {
+public class Limelights extends GBSubsystem {
 
 	private List<Limelight> limelights;
 
 
-	public LimelightsHardware(String[] limelightNames, String hardwareLogPath) {
+	public Limelights(String[] limelightNames, String hardwareLogPath) {
 		super(hardwareLogPath);
 
 		this.limelights = new ArrayList<>();

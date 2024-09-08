@@ -13,14 +13,14 @@ import java.util.ListIterator;
 import java.util.Optional;
 
 
-public class SmartLimelights extends GBSubsystem {
+public class LimelightsFiltered extends GBSubsystem {
 
-	private LimelightsHardware limelightHardware;
+	private Limelights limelightHardware;
 
-	public SmartLimelights(String[] limelightNames) {
+	public LimelightsFiltered(String[] limelightNames) {
 		super(VisionConstants.DEFAULT_CONFIG.logPath());
 
-		this.limelightHardware = new LimelightsHardware(limelightNames, VisionConstants.DEFAULT_CONFIG.hardwareLogPath());
+		this.limelightHardware = new Limelights(limelightNames, VisionConstants.DEFAULT_CONFIG.hardwareLogPath());
 	}
 
 	public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {

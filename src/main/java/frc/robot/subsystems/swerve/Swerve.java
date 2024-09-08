@@ -196,16 +196,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public OdometryObservation getLastOdometryObservation() {
-		OdometryObservation[] allOdometryObservations = getAllOdometryObservations();
-		SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllWheelsPositionsSamples();
-		if (allOdometryObservations.length == 0){
-			return new OdometryObservation(swerveWheelPositions[0],new Rotation2d(),0);
-		}else{
-			OdometryObservation odometryObservation = allOdometryObservations[0];
-			return odometryObservation;
-
-		}
-
+		OdometryObservation odometryObservation = getAllOdometryObservations()[0];
+		return odometryObservation;
 	}
 
 

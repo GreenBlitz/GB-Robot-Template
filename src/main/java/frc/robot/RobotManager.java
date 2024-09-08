@@ -7,13 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
-import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
@@ -23,13 +22,14 @@ import org.littletonrobotics.junction.LoggedRobot;
 public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
+
 	private Robot robot;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
+		PathPlannerUtils.startPathfinder();
 
 		this.robot = new Robot();
 	}
@@ -53,7 +53,6 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		CycleTimeUtils.updateCycleTime(); // Better to be first
-		robot.getSuperStructure().periodic();
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();

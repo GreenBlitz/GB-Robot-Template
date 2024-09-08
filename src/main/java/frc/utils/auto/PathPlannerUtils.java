@@ -8,6 +8,7 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.Pair;
@@ -27,27 +28,29 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
+	private static final boolean DEFAULT_PREVENT_PATH_FLIPPING = true;
+
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
 	public static void startPathfinder() {
-		setPathfinder();
+		setPathfinder(new LocalADStar());
 		scheduleWarmup();
 	}
 
-	private static void setPathfinder() {
-		Pathfinding.setPathfinder(new LocalADStar());
+	public static void setPathfinder(Pathfinder pathfinder) {
+		Pathfinding.setPathfinder(pathfinder);
 	}
 
-	private static void scheduleWarmup() {
+	public static void scheduleWarmup() {
 		PathfindingCommand.warmupCommand().schedule();
 	}
 
-	public static void configurePathPlanner(
+	public static void configPathPlanner(
 		Supplier<Pose2d> poseSupplier,
 		Consumer<Pose2d> resetPose,
 		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-		Consumer<ChassisSpeeds> robotRelativeOutput,
-		HolonomicPathFollowerConfig config,
+		Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
+		HolonomicPathFollowerConfig holonomicPathFollowerConfig,
 		BooleanSupplier shouldFlipPath,
 		Subsystem driveSubsystem
 	) {
@@ -55,8 +58,8 @@ public class PathPlannerUtils {
 			poseSupplier,
 			resetPose,
 			robotRelativeSpeedsSupplier,
-			robotRelativeOutput,
-			config,
+			robotRelativeSpeedsSetter,
+			holonomicPathFollowerConfig,
 			shouldFlipPath,
 			driveSubsystem
 		);
@@ -82,18 +85,19 @@ public class PathPlannerUtils {
 		setDynamicObstacles(List.of(), currentRobotPose);
 	}
 
-	public static void setTargetRotationOverride(Supplier<Optional<Rotation2d>> overrider) {
+	public static void setRotationTargetOverride(Supplier<Optional<Rotation2d>> overrider) {
 		PPHolonomicDriveController.setRotationTargetOverride(overrider);
 	}
 
-	public static Command createOnTheFlyPathCommand(Pose2d currentBluePose, Pose2d targetPose, PathConstraints constraints) {
-		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentBluePose, targetPose);
-
+	public static Command createPathOnTheFly(Pose2d currentRobotPose, Pose2d targetPose, PathConstraints constraints, boolean preventFlipping) {
+		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentRobotPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
-
-		path.preventFlipping = true;
-
+		path.preventFlipping = preventFlipping;
 		return AutoBuilder.followPath(path);
+	}
+
+	public static Command createPathOnTheFly(Pose2d currentRobotPose, Pose2d targetPose, PathConstraints constraints) {
+		return createPathOnTheFly(currentRobotPose, targetPose, constraints, DEFAULT_PREVENT_PATH_FLIPPING);
 	}
 
 }

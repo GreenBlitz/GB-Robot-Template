@@ -15,20 +15,18 @@ import java.util.Optional;
 
 public class SmartLimelights extends GBSubsystem {
 
-	private List<Limelight> limelights;
 	private LimelightsHardware limelightHardware;
 
 	public SmartLimelights(String[] limelightNames) {
-		super(VisionConstants.DEFAULT_CONFIG.Logpath());
+		super(VisionConstants.DEFAULT_CONFIG.logPath());
 
-		this.limelightHardware = new LimelightsHardware(limelightNames, VisionConstants.DEFAULT_CONFIG.HardwareLogpath());
-		this.limelights = limelightHardware.getAllLimelights();
+		this.limelightHardware = new LimelightsHardware(limelightNames, VisionConstants.DEFAULT_CONFIG.hardwareLogPath());
 	}
 
 	public List<Optional<Pair<Pose2d, Double>>> getAll2DEstimates() {
 		ArrayList<Optional<Pair<Pose2d, Double>>> estimates = new ArrayList<>();
 
-		for (Limelight limelight : limelights) {
+		for (Limelight limelight : limelightHardware.getAllLimelights()) {
 			if (!filterOutLimelight(limelight)) {
 				estimates.add(limelight.getUpdatedPose2DEstimation());
 			}
@@ -50,7 +48,7 @@ public class SmartLimelights extends GBSubsystem {
 		transformDifference = limelightPosition.minus(currentPoseObservation);
 		rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
 
-		return transformDifference.getTranslation().getNorm() <= VisionConstants.DEFAULT_CONFIG.PositionNormTolerance()
+		return transformDifference.getTranslation().getNorm() <= VisionConstants.DEFAULT_CONFIG.positionNormTolerance()
 			&& rotationDifference.getDegrees() <= VisionConstants.DEFAULT_CONFIG.rotationTolerance().getDegrees();
 	}
 
@@ -87,7 +85,7 @@ public class SmartLimelights extends GBSubsystem {
 	}
 
 	public double getDynamicStandardDeviations(int limelightId) {
-		return limelights.get(limelightId).getDistanceFromAprilTag() / VisionConstants.VISION_TO_STANDARD_DEVIATION;
+		return limelightHardware.getAllLimelights().get(limelightId).getDistanceFromAprilTag() / VisionConstants.VISION_TO_STANDARD_DEVIATION;
 	}
 
 	public Optional<Pair<Pose2d, Double>> getFirstAvailableTarget() {
@@ -101,8 +99,8 @@ public class SmartLimelights extends GBSubsystem {
 	}
 
 	public boolean isConnected() {
-		if (!limelights.isEmpty()) {
-			return hasTarget(limelights.get(0));
+		if (!limelightHardware.getAllLimelights().isEmpty()) {
+			return hasTarget(limelightHardware.getAllLimelights().get(0));
 		}
 		return false;
 	}

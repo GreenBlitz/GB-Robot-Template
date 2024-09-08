@@ -4,14 +4,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class VisionConstants {
 
-	public static final String[] LIMELIGHT_NAMES = new String[] {"limelight-front", "limelight-back", "limelight-gb"};
-
 	public static final SmartLimelightsConfig DEFAULT_CONFIG = new SmartLimelightsConfig(
 		"SmartLimelights/",
 		"LimelightsHardware/",
 		Rotation2d.fromDegrees(20), // ! shall be calibrated
-		0.2 // ! shall be calibrated
-	);
+		0.2, // ! shall be calibrated
+		new String[] {"limelight-front", "limelight-back", "limelight-gb"}
+    );
 
 	public static final String LIMELIGHT_LOGPATH_PREFIX = "Limelight ";
 

@@ -3,8 +3,9 @@ package frc.robot.poseestimator.limelights;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public record SmartLimelightsConfig(
-	String Logpath,
-	String HardwareLogpath,
+	String logPath,
+	String hardwareLogPath,
 	Rotation2d rotationTolerance,
-	double PositionNormTolerance
+	double positionNormTolerance,
+	String[] limelightsNames
 ) {}

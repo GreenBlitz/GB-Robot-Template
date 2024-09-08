@@ -184,7 +184,10 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(gyroThreadInputs.timestampOdometrySamples.length, modules.getNumberOfOdometrySamples());
+		return Math.min(
+			Math.min(gyroThreadInputs.timestampOdometrySamples.length, gyroThreadInputs.yawOdometrySamples.length),
+			modules.getNumberOfOdometrySamples()
+		);
 	}
 
 	public OdometryObservation[] getAllOdometryObservations() {

@@ -11,13 +11,13 @@ public class PhoenixProUtils {
 		return refresh ? signal.refresh() : signal;
 	}
 
-	public static boolean checkWithRetry(Supplier<StatusCode> statusCodeSupplier, int numberOfTries) {
+	public static StatusCode checkWithRetry(Supplier<StatusCode> statusCodeSupplier, int numberOfTries) {
 		for (int i = 0; i < numberOfTries; i++) {
 			if (statusCodeSupplier.get().isOK()) {
-				return true;
+				return (statusCodeSupplier.get());
 			}
 		}
-		return false;
+		return statusCodeSupplier.get();
 	}
 
 }

@@ -34,18 +34,18 @@ public enum BusChain {
 	private void createAlerts() {
 		//@formatter:off
 		AlertManager.addAlert(
-				new PeriodicAlert(
-						Alert.AlertType.WARNING,
-						logPath + "StatusErrorAt",
-						() -> !busStatus.Status.isOK()
-				)
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "StatusErrorAt",
+				() -> !busStatus.Status.isOK()
+			)
 		);
 		AlertManager.addAlert(
-				new PeriodicAlert(
-						Alert.AlertType.WARNING,
-						logPath + "ReceiveErrorAt",
-						() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
-				)
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "ReceiveErrorAt",
+				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
+			)
         );
 		//@formatter:on
 		AlertManager.addAlert(

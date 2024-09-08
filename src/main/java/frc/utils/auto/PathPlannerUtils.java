@@ -28,6 +28,8 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
+	private static final boolean DEFAULT_PREVENT_PATH_FLIPPING = true;
+
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
 	public static void startPathfinder() {
@@ -87,11 +89,16 @@ public class PathPlannerUtils {
 		PPHolonomicDriveController.setRotationTargetOverride(overrider);
 	}
 
-	public static Command createPathOnTheFly(Pose2d currentRobotPose, Pose2d targetPose, PathConstraints constraints) {
+	public static Command
+		createPathOnTheFly(Pose2d currentRobotPose, Pose2d targetPose, PathConstraints constraints, boolean preventFlipping) {
 		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentRobotPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
-		path.preventFlipping = true;
+		path.preventFlipping = preventFlipping;
 		return AutoBuilder.followPath(path);
+	}
+
+	public static Command createPathOnTheFly(Pose2d currentRobotPose, Pose2d targetPose, PathConstraints constraints) {
+		return createPathOnTheFly(currentRobotPose, targetPose, constraints, DEFAULT_PREVENT_PATH_FLIPPING);
 	}
 
 }

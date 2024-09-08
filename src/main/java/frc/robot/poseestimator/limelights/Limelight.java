@@ -13,7 +13,6 @@ import java.util.Optional;
 public class Limelight extends GBSubsystem {
 
 	private NetworkTableEntry robotPoseEntry, idEntry, tagPoseEntry;
-
 	private String name;
 	private double[] poseArray;
 

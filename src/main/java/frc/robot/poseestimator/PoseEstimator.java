@@ -12,6 +12,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -32,19 +33,21 @@ public class PoseEstimator implements IPoseEstimator {
 		this.estimatedPose = new Pose2d();
 		this.poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.kinematics = kinematics;
-		this.lastWheelPositions = initialWheelPositions;
+		this.lastWheelPositions = null;
 		this.lastGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new Matrix<>(Nat.N3(), Nat.N1());
 		setOdometryStandardDeviations(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS);
 	}
 
 	private void addOdometryObservation(OdometryObservation observation) {
-		Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
-		twist = PoseEstimatorMath.addGyroToTwistCalculations(observation, twist, lastGyroAngle);
+		if(lastWheelPositions != null){
+			Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
+			twist = PoseEstimatorMath.addGyroToTwistCalculations(observation, twist, lastGyroAngle);
+			this.odometryPose = odometryPose.exp(twist);
+			this.estimatedPose = estimatedPose.exp(twist);
+		}
 		this.lastGyroAngle = observation.gyroAngle();
 		this.lastWheelPositions = observation.wheelPositions();
-		this.odometryPose = odometryPose.exp(twist);
-		this.estimatedPose = estimatedPose.exp(twist);
 		poseBuffer.addSample(observation.timestamp(), odometryPose);
 	}
 
@@ -89,9 +92,13 @@ public class PoseEstimator implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateOdometry(OdometryObservation odometryObservation) {
-		addOdometryObservation(odometryObservation);
+	public void updateOdometry(OdometryObservation[] odometryObservations) {
+		for (OdometryObservation odometryObservation : odometryObservations) {
+			addOdometryObservation(odometryObservation);
+			logCurrentOdometryPose();
+		}
 	}
+
 
 	@Override
 	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose) {
@@ -119,10 +126,19 @@ public class PoseEstimator implements IPoseEstimator {
 		return Optional.of(lastVisionObservation.visionPose());
 	}
 
+	private void logCurrentPose() {
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "EstimatedPose", getEstimatedPose());
+	}
+
+	private void logCurrentOdometryPose() {
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "OdometryPose", getOdometryPose());
+	}
+
+
 
 	@Override
-	public void updatePoseEstimator(OdometryObservation odometryObservation, VisionObservation visionObservation) {
-		updateOdometry(odometryObservation);
+	public void updatePoseEstimator(OdometryObservation[] odometryObservations, VisionObservation visionObservation) {
+		updateOdometry(odometryObservations);
 		updateVision(visionObservation);
 	}
 

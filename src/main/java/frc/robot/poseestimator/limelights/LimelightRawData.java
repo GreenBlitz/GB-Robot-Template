@@ -1,0 +1,48 @@
+package frc.robot.poseestimator.limelights;
+
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
+import frc.utils.GBSubsystem;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class LimelightRawData extends GBSubsystem {
+
+	private List<Limelight> limelights;
+
+
+	public LimelightRawData(String[] name, String hardwareLogPath) {
+		super(hardwareLogPath);
+
+		this.limelights = new ArrayList<>();
+		for (String limelightName : name) {
+			limelights.add(new Limelight(limelightName, hardwareLogPath));
+		}
+	}
+
+	public List<LimelightData> getAllAvlilableLimelightData() {
+		List<LimelightData> limelightsData = List.of();
+
+		for (Limelight limelight : limelights) {
+			Optional<Pair<Pose2d, Double>> observation = limelight.getUpdatedPose2DEstimation();
+			if (observation.isPresent()) {
+				LimelightData limelightData = new LimelightData(
+					observation.get().getFirst(),
+					limelight.getAprilTagHeight(),
+					limelight.getDistanceFromAprilTag(),
+					observation.get().getSecond()
+				);
+				limelightsData.add(limelightData);
+			}
+		}
+
+		return limelightsData;
+	}
+
+	@Override
+	protected void subsystemPeriodic() {}
+
+
+}

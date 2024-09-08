@@ -10,7 +10,7 @@ public class VisionConstants {
 		Rotation2d.fromDegrees(20), // ! shall be calibrated
 		0.2, // ! shall be calibrated
 		new String[] {"limelight-front", "limelight-back", "limelight-gb"}
-    );
+	);
 
 	public static final String LIMELIGHT_LOGPATH_PREFIX = "Limelight ";
 

@@ -5,7 +5,6 @@ import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 public class SuppliedDigitalInput implements IDigitalInput {
 
@@ -26,7 +25,7 @@ public class SuppliedDigitalInput implements IDigitalInput {
 	}
 
 	public SuppliedDigitalInput(BooleanSupplier booleanSupplier, double debounceTime, Debouncer.DebounceType debounceType) {
-	this(booleanSupplier, debounceTime, debounceType ,false);
+		this(booleanSupplier, debounceTime, debounceType, false);
 	}
 
 	@Override

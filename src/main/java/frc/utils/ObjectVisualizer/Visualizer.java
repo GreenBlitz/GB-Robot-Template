@@ -24,9 +24,10 @@ public class Visualizer {
         this.location = new Vector<N3>(location);
     }
     public Pose3d currentPosition(double time){
-        resetLocation();
+//        resetLocation();
         location.plus(velocity.div(1/time));
-        location.plus(acceleration.div(2/(time*time)));
+        velocity.plus(acceleration.div(2/(time*time)));
+        System.out.println(location.toString());
         return new Pose3d(location.get(0),location.get(1),location.get(2),
                new Rotation3d(location));
     }

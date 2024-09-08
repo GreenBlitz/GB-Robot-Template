@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.poseestimator.observations.OdometryObservation;
 
-
 public interface IOdometryEstimator {
 
 	void updateOdometry(OdometryObservation odometryObservation);

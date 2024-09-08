@@ -29,8 +29,8 @@ public class PoseEstimator implements IPoseEstimator {
 	private VisionObservation lastVisionObservation;
 
 	public PoseEstimator(SwerveDriveKinematics kinematics, SwerveDriveWheelPositions initialWheelPositions, Rotation2d initialGyroAngle) {
-		this.odometryPose = new Pose2d();
-		this.estimatedPose = new Pose2d();
+		this.odometryPose = PoseEstimatorConstants.INITIAL_ROOT_POSE;
+		this.estimatedPose = PoseEstimatorConstants.INITIAL_ROOT_POSE;
 		this.poseBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.kinematics = kinematics;
 		this.lastWheelPositions = null;

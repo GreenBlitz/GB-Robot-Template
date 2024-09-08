@@ -29,8 +29,6 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		talonSubsystem subsystem = new talonSubsystem("idk/", 16);
-
 		this.robot = new Robot();
 	}
 

@@ -4,6 +4,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
 import frc.utils.digitalinput.IDigitalInput;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class SuppliedDigitalInput implements IDigitalInput {
@@ -11,28 +12,26 @@ public class SuppliedDigitalInput implements IDigitalInput {
 	private final Debouncer debouncer;
 	private boolean inverted;
 
-	private final Supplier<Boolean> isTrueSupplier;
+	private final BooleanSupplier booleanSupplier;
 
 	public SuppliedDigitalInput(
-		Supplier<Boolean> isTrueConsumer,
+		BooleanSupplier booleanSupplier,
 		double debounceTime,
 		Debouncer.DebounceType debounceType,
 		boolean inverted
 	) {
-		this.isTrueSupplier = isTrueConsumer;
+		this.booleanSupplier = booleanSupplier;
 		this.debouncer = new Debouncer(debounceTime, debounceType);
 		this.inverted = inverted;
 	}
 
-	public SuppliedDigitalInput(Supplier<Boolean> isTrueConsumer, double debounceTime, Debouncer.DebounceType debounceType) {
-		this.isTrueSupplier = isTrueConsumer;
-		this.debouncer = new Debouncer(debounceTime, debounceType);
-		this.inverted = false;
+	public SuppliedDigitalInput(BooleanSupplier booleanSupplier, double debounceTime, Debouncer.DebounceType debounceType) {
+	this(booleanSupplier, debounceTime, debounceType ,false);
 	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.nonDebouncedValue = (inverted) ? !isTrueSupplier.get() : isTrueSupplier.get();
+		inputs.nonDebouncedValue = (inverted) ? !booleanSupplier.getAsBoolean() : booleanSupplier.getAsBoolean();
 		inputs.debouncedValue = debouncer.calculate(inputs.nonDebouncedValue);
 	}
 

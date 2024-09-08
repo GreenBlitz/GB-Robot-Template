@@ -7,38 +7,23 @@ import frc.utils.digitalinput.IDigitalInput;
 
 public class ChooserDigitalInput implements IDigitalInput {
 
-	private final SendableChooser<Boolean> isTrueSendableChooser;
-	private boolean inverted = false;
+	private SendableChooser<Boolean> sendableChooser;
 
-	public ChooserDigitalInput(boolean inverted) {
-		this.isTrueSendableChooser = new SendableChooser<>();
-		isTrueSendableChooser.setDefaultOption(
+	public ChooserDigitalInput(String chooserName) {
+		this.sendableChooser = new SendableChooser<>();
+		sendableChooser.setDefaultOption(
 			String.valueOf(ChooserDigitalInputConstants.DEFAULT_STATE),
 			ChooserDigitalInputConstants.DEFAULT_STATE
 		);
-		isTrueSendableChooser.addOption("true", true);
-		isTrueSendableChooser.addOption("false", false);
+		sendableChooser.addOption("true", true);
+		sendableChooser.addOption("false", false);
 
-		SmartDashboard.putData(isTrueSendableChooser);
-
-		this.inverted = inverted;
-	}
-
-	public ChooserDigitalInput() {
-		this.isTrueSendableChooser = new SendableChooser<>();
-		isTrueSendableChooser.setDefaultOption(
-			String.valueOf(ChooserDigitalInputConstants.DEFAULT_STATE),
-			ChooserDigitalInputConstants.DEFAULT_STATE
-		);
-		isTrueSendableChooser.addOption("true", true);
-		isTrueSendableChooser.addOption("false", false);
-
-		SmartDashboard.putData(ChooserDigitalInputConstants.CHOOSER_NAME, isTrueSendableChooser);
+		SmartDashboard.putData(chooserName, sendableChooser);
 	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.nonDebouncedValue = (inverted) ? !isTrueSendableChooser.getSelected() : isTrueSendableChooser.getSelected();
+		inputs.nonDebouncedValue = sendableChooser.getSelected();
 		inputs.debouncedValue = inputs.nonDebouncedValue;
 	}
 

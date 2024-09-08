@@ -48,12 +48,6 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		new VisualizerCommand(
-				VecBuilder.fill(-2,-6,0),
-				VecBuilder.fill(10,30,0),
-				VecBuilder.fill(0,0,0)
-				).schedule();
-
 	}
 
 	@Override

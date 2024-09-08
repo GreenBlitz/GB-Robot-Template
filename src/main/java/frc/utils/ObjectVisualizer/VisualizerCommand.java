@@ -17,9 +17,9 @@ public class VisualizerCommand extends Command {
     public VisualizerCommand(Vector<N3> acceleration, Vector<N3> velocity, Vector<N3> location) {
         this.timer = new Timer();
         this.visualizer = new Visualizer(
-                new Vector<N3>(acceleration),
-                new Vector<N3>(velocity),
-                new Vector<N3>(location)
+                new Vector<>(acceleration),
+                new Vector<>(velocity),
+                new Vector<>(location)
         );
     }
 
@@ -33,12 +33,14 @@ public class VisualizerCommand extends Command {
 //        visualizer.resetLocation();
         position = visualizer.currentPosition(timer.get());
         SmartDashboard.putString("Position-Note", position.toString());
+        Logger.recordOutput("Note Position ", position);
+        Logger.recordOutput("Note Position x", position.getX());
+        Logger.recordOutput("Note Position y", position.getY());
         Logger.recordOutput(
                 "NoteVisualizer",
                 new Pose3d[]{position}
 
         );
-        System.out.println(position.toString());
     }
 
     @Override

@@ -7,19 +7,37 @@ import java.util.function.DoubleFunction;
 
 public abstract class AngleSignal extends InputSignal<Rotation2d> {
 
-    private final DoubleFunction<Rotation2d> toAngle;
+	public enum AngleUnit {
 
-    protected AngleSignal(DoubleFunction<Rotation2d> toAngle) {
-        super(new Rotation2d());
-        this.toAngle = toAngle;
-    }
+		ROTATIONS(Rotation2d::fromRotations),
+		RADIANS(Rotation2d::fromRadians),
+		DEGREES(Rotation2d::fromDegrees);
 
-    protected void setNewValues(double[] newValues) {
-        setNewValues(Arrays.stream(newValues).mapToObj(toAngle).toArray(Rotation2d[]::new));
-    }
+		private final DoubleFunction<Rotation2d> toAngle;
 
-    protected void setNewValues(double newValue) {
-        setNewValues(toAngle.apply(newValue));
-    }
+		AngleUnit(DoubleFunction<Rotation2d> toAngle) {
+			this.toAngle = toAngle;
+		}
+
+		public Rotation2d toAngle(double value) {
+			return toAngle.apply(value);
+		}
+
+	}
+
+	private final AngleUnit angleUnit;
+
+	protected AngleSignal(AngleUnit angleUnit) {
+		super(new Rotation2d());
+		this.angleUnit = angleUnit;
+	}
+
+	protected void setNewValues(double[] newValues) {
+		setNewValues(Arrays.stream(newValues).mapToObj(angleUnit::toAngle).toArray(Rotation2d[]::new));
+	}
+
+	protected void setNewValues(double newValue) {
+		setNewValues(angleUnit.toAngle(newValue));
+	}
 
 }

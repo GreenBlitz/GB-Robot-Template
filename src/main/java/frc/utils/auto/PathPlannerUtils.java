@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-	private static final boolean DEFAULT_PREVENT_PATH_FLIPPING = true;
+	private static final boolean PREVENT_PATH_FLIPPING = true;
 
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
@@ -98,7 +98,7 @@ public class PathPlannerUtils {
 	}
 
 	public static Command createPathOnTheFly(Pose2d currentRobotPose, Pose2d targetPose, PathConstraints constraints) {
-		return createPathOnTheFly(currentRobotPose, targetPose, constraints, DEFAULT_PREVENT_PATH_FLIPPING);
+		return createPathOnTheFly(currentRobotPose, targetPose, constraints, PREVENT_PATH_FLIPPING);
 	}
 
 }

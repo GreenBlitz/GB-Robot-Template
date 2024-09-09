@@ -4,16 +4,9 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkLimitSwitch;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
-import frc.utils.digitalinput.chooser.ChooserDigitalInput;
-import frc.utils.digitalinput.supplied.SuppliedDigitalInput;
 
-import java.util.function.BooleanSupplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little

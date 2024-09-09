@@ -34,5 +34,4 @@ public class SuppliedDigitalInput implements IDigitalInput {
 		inputs.debouncedValue = debouncer.calculate(inputs.nonDebouncedValue);
 	}
 
-
 }

@@ -42,17 +42,17 @@ public class LimelightsFiltered extends GBSubsystem {
 	}
 
 	public boolean isLimelightedOutputInTolerance(LimelightData limelightData) {
-
+		return true;
 		// TODO: placeholder for pubsubs, when it'll be added.
 		// ik we shouldn't have todos but it's notable enough when it throws compile errors.
-		Pose2d currentPoseObservation = NetworkTables...;
+//		Pose2d currentPoseObservation = NetworkTables...;
 
-		Pose2d limelightPosition = limelightData.EstimatedPosition();
-		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
-		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
-
-		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
-			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
+//		Pose2d limelightPosition = limelightData.EstimatedPosition();
+//		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
+//		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
+//
+//		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
+//			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
 	}
 
 	public boolean isAprilTagInProperHeight(LimelightData limelightData) {
@@ -91,7 +91,9 @@ public class LimelightsFiltered extends GBSubsystem {
 	}
 
 	@Override
-	protected void subsystemPeriodic() {}
+	protected void subsystemPeriodic() {
+		recordEstimatedPositions();
+	}
 
 
 }

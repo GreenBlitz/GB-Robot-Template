@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class Limelight extends GBSubsystem {
 			poseArray[LimelightEntryValue.Y_AXIS.getIndex()],
 			Rotation2d.fromDegrees(poseArray[LimelightEntryValue.PITCH_ANGLE.getIndex()])
 		);
-
+		Logger.recordOutput(super.getLogPath() + "test", robotPose);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 

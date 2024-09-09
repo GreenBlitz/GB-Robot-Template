@@ -7,22 +7,22 @@ import frc.utils.digitalinput.IDigitalInput;
 
 public class ChooserDigitalInput implements IDigitalInput {
 
-	private SendableChooser<Boolean> sendableChooser;
+	private SendableChooser<Boolean> digitalInputValue;
 
 	public ChooserDigitalInput(String chooserName) {
-		this.sendableChooser = new SendableChooser<>();
-		sendableChooser.setDefaultOption(
+		this.digitalInputValue = new SendableChooser<>();
+		digitalInputValue.setDefaultOption(
 			String.valueOf(ChooserDigitalInputConstants.DEFAULT_STATE),
 			ChooserDigitalInputConstants.DEFAULT_STATE
 		);
-		sendableChooser
+		digitalInputValue
 			.addOption(String.valueOf(!ChooserDigitalInputConstants.DEFAULT_STATE), !ChooserDigitalInputConstants.DEFAULT_STATE);
-		SmartDashboard.putData(chooserName, sendableChooser);
+		SmartDashboard.putData(chooserName, digitalInputValue);
 	}
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.nonDebouncedValue = sendableChooser.getSelected();
+		inputs.nonDebouncedValue = digitalInputValue.getSelected();
 		inputs.debouncedValue = inputs.nonDebouncedValue;
 	}
 

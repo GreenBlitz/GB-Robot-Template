@@ -9,7 +9,7 @@ import java.util.function.BooleanSupplier;
 public class SuppliedDigitalInput implements IDigitalInput {
 
 	private final Debouncer debouncer;
-	private boolean inverted;
+	private final boolean inverted;
 
 	private final BooleanSupplier booleanSupplier;
 

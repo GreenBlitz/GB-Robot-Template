@@ -10,7 +10,6 @@ public class SuppliedDigitalInput implements IDigitalInput {
 
 	private final Debouncer debouncer;
 	private final boolean inverted;
-
 	private final BooleanSupplier booleanSupplier;
 
 	public SuppliedDigitalInput(

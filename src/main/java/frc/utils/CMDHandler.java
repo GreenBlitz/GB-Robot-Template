@@ -65,15 +65,15 @@ public class CMDHandler {
 		runJavaClass(pathOfClass, getSeparatedArguments(arguments));
 	}
 
-	public static void runPythonClass(Path pythonPath) {
-		runPythonClass(pythonPath, "");
+	public static void runPythonScript(Path pythonPath) {
+		runPythonScript(pythonPath, "");
 	}
 
 	/**
 	 * @param pythonPath The path from the java package to the class. example: "directory/example_class".
 	 * @param arguments  The arguments given to the python file.
 	 */
-	public static void runPythonClass(Path pythonPath, String... arguments) {
+	public static void runPythonScript(Path pythonPath, String... arguments) {
 		String pythonName = isWindows() ? "py " : "python ";
 		String command = pythonName + pythonPath + ".py " + getSeparatedArguments(arguments);
 		runCMDCommand(DirectoryPaths.PYTHON_DIRECTORY_PATH, command);

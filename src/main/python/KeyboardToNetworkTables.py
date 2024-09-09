@@ -10,7 +10,7 @@ SpecialKey = TypeVar("SpecialKey")
 ASCIIKey = TypeVar("ASCIIKey")
 UndefinedKey = TypeVar("UndefinedKey")
 
-KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS = 0.01
+KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS = 0.05
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
 CLIENT_NAME = "KeyboardToNetworkTables"
 

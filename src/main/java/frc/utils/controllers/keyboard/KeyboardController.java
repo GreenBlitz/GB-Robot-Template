@@ -31,7 +31,7 @@ public class KeyboardController {
 
 	public KeyboardController() {
 		if (RobotManager.isSimulation()) {
-			CMDHandler.runPythonClass(KEYBOARD_TO_NETWORK_TABLES_CLASS, IPs.SIMULATION_IP);
+			CMDHandler.runPythonScript(KEYBOARD_TO_NETWORK_TABLES_CLASS, IPs.SIMULATION_IP);
 		}
 
 		this.ESC = getNewKey("esc");

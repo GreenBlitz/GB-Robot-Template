@@ -26,7 +26,7 @@ public class Robot {
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 		if (KeyboardController.ENABLE_KEYBOARD) {
-			KeyboardBindings.configureBindings();
+			KeyboardBindings.configureBindings(this);
 		}
 	}
 

@@ -55,9 +55,6 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
-		robot.channeledDigitalInput.updateInputs(robot.inputs);
-		Logger.recordOutput("isTrue", robot.inputs.debouncedValue);
-		Logger.recordOutput("nnnnnn", robot.inputs.nonDebouncedValue);
 	}
 
 	@Override

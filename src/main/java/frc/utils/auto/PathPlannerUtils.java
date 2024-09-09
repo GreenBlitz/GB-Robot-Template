@@ -69,20 +69,20 @@ public class PathPlannerUtils {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
-	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
 		dynamicObstacles = obstacles;
-		Pathfinding.setDynamicObstacles(obstacles, currentRobotPose.getTranslation());
+		Pathfinding.setDynamicObstacles(obstacles, currentPose.getTranslation());
 	}
 
-	public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentRobotPose) {
+	public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
 		List<Pair<Translation2d, Translation2d>> allObstacles = new ArrayList<>();
 		allObstacles.addAll(dynamicObstacles);
 		allObstacles.addAll(obstacles);
-		setDynamicObstacles(allObstacles, currentRobotPose);
+		setDynamicObstacles(allObstacles, currentPose);
 	}
 
-	public static void removeAllDynamicObstacles(Pose2d currentRobotPose) {
-		setDynamicObstacles(List.of(), currentRobotPose);
+	public static void removeAllDynamicObstacles(Pose2d currentPose) {
+		setDynamicObstacles(List.of(), currentPose);
 	}
 
 	public static void setRotationTargetOverride(Supplier<Optional<Rotation2d>> overrider) {

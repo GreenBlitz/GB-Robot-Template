@@ -12,7 +12,7 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	public AngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
-        this.angleUnit = angleUnit;
+		this.angleUnit = angleUnit;
 		this.value = new Rotation2d();
 	}
 

@@ -24,6 +24,7 @@ public class Robot {
 		configureBindings();
 		this.channeledDigitalInput = new ChanneledDigitalInput(7, 0.01);
 		this.inputs = new DigitalInputInputsAutoLogged();
+		int x;
 	}
 
 	private void configureBindings() {

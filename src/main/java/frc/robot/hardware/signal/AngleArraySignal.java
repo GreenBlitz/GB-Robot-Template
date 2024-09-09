@@ -1,7 +1,7 @@
-package frc.robot.hardware.newsignal;
+package frc.robot.hardware.signal;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.AngleUnit;
+import frc.utils.AngleUnit;
 import org.littletonrobotics.junction.LogTable;
 
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 
     @Override
     public void fromLog(LogTable table) {
-        values = table.get(name, new Rotation2d[]{});
+        values = table.get(name, new Rotation2d[]{new Rotation2d()});
     }
 
     protected abstract double[] getNewValues();

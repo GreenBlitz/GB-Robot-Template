@@ -7,7 +7,7 @@ import frc.utils.digitalinput.IDigitalInput;
 
 public class ChooserDigitalInput implements IDigitalInput {
 
-	private SendableChooser<Boolean> digitalInputValue;
+	private final SendableChooser<Boolean> digitalInputValue;
 
 	public ChooserDigitalInput(String chooserName) {
 		this.digitalInputValue = new SendableChooser<>();

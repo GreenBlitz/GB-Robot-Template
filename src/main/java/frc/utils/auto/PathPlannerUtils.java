@@ -90,9 +90,9 @@ public class PathPlannerUtils {
 	}
 
 	// @formatter:off
-	public static Command createPathOnTheFly(Pose2d currentRobotPose, Pose2d targetPose, PathConstraints constraints, boolean preventFlipping) {
+	public static Command createPathOnTheFly(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints, boolean preventFlipping) {
 	// @formatter:on
-		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentRobotPose, targetPose);
+		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = preventFlipping;
 		return AutoBuilder.followPath(path);

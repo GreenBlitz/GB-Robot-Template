@@ -15,7 +15,8 @@ public class ChooserDigitalInput implements IDigitalInput {
 			String.valueOf(ChooserDigitalInputConstants.DEFAULT_STATE),
 			ChooserDigitalInputConstants.DEFAULT_STATE
 		);
-		sendableChooser.addOption(String.valueOf(!ChooserDigitalInputConstants.DEFAULT_STATE), !ChooserDigitalInputConstants.DEFAULT_STATE);
+		sendableChooser
+			.addOption(String.valueOf(!ChooserDigitalInputConstants.DEFAULT_STATE), !ChooserDigitalInputConstants.DEFAULT_STATE);
 		SmartDashboard.putData(chooserName, sendableChooser);
 	}
 

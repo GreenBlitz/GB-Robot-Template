@@ -8,16 +8,16 @@ import java.util.function.BooleanSupplier;
 
 public class SuppliedDigitalInput implements IDigitalInput {
 
+	private final BooleanSupplier booleanSupplier;
 	private final Debouncer debouncer;
 	private final boolean inverted;
-	private final BooleanSupplier booleanSupplier;
 
 	public SuppliedDigitalInput(
 		BooleanSupplier booleanSupplier,
-		double debounceTime,
 		Debouncer.DebounceType debounceType,
+		double debounceTime,
 		boolean inverted
-	) {
+		) {
 		this.booleanSupplier = booleanSupplier;
 		this.debouncer = new Debouncer(debounceTime, debounceType);
 		this.inverted = inverted;

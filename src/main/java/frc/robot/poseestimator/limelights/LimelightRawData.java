@@ -3,6 +3,7 @@ package frc.robot.poseestimator.limelights;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ public class LimelightRawData extends GBSubsystem {
 
 		this.limelights = new ArrayList<>();
 		for (String limelightName : names) {
+			Logger.recordOutput(limelightName + "Created");
+			System.out.println(limelightName + " created");
 			limelights.add(new Limelight(limelightName, hardwareLogPath));
 		}
 	}

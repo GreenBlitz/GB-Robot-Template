@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.poseestimator.limelights.LimelightEntryValue;
 import frc.robot.poseestimator.limelights.LimelightsFiltered;
 import frc.robot.poseestimator.limelights.VisionConstants;
 import frc.robot.simulation.SimulationManager;
@@ -25,13 +26,13 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 
 	private Robot robot;
+	private LimelightsFiltered test;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
-		LimelightsFiltered test = new LimelightsFiltered(VisionConstants.DEFAULT_CONFIG);
-
+		this.test = new LimelightsFiltered(VisionConstants.DEFAULT_CONFIG);
 
 		this.robot = new Robot();
 	}
@@ -58,11 +59,13 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+
 	}
 
 	@Override
 	public void simulationPeriodic() {
 		SimulationManager.updateRegisteredSimulations();
+		test.recordEstimatedPositions();
 	}
 
 }

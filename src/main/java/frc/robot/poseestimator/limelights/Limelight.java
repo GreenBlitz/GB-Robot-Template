@@ -24,6 +24,10 @@ public class Limelight extends GBSubsystem {
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.tagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.idEntry = getLimelightNetworkTableEntry("tid");
+
+
+		System.out.println(name + " exists");
+		Logger.recordOutput(name + "Exists");
 	}
 
 	public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
@@ -36,6 +40,8 @@ public class Limelight extends GBSubsystem {
 
 		double processingLatencySeconds = poseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()] / 1000;
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
+
+		Logger.recordOutput(super.getLogPath() + timestamp, poseArray);
 
 		Pose2d robotPose = new Pose2d(
 			poseArray[LimelightEntryValue.X_AXIS.getIndex()],

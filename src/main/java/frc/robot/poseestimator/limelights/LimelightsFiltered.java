@@ -21,6 +21,7 @@ public class LimelightsFiltered extends GBSubsystem {
 	public LimelightsFiltered(FilteredLimelightsConfig config) {
 		super(config.logPath());
 
+		System.out.println("filteredCreated");
 		this.limelightHardware = new LimelightRawData(config.limelightsNames(), config.hardwareLogPath());
 		this.config = config;
 	}
@@ -29,6 +30,8 @@ public class LimelightsFiltered extends GBSubsystem {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (LimelightData limelightData : limelightHardware.getAllAvlilableLimelightData()) {
+			System.out.println(limelightData.timeStamp() + " pose " + limelightData.EstimatedPosition());
+			Logger.recordOutput(super.getLogPath() + limelightData.timeStamp(), limelightData.AprilTagHeight());
 			if (!filterOutLimelight(limelightData)) {
 				double standardDeviation = getDynamicStandardDeviations(limelightData);
 				double[] standardDeviations = new double[] {standardDeviation};
@@ -91,9 +94,7 @@ public class LimelightsFiltered extends GBSubsystem {
 	}
 
 	@Override
-	protected void subsystemPeriodic() {
-		recordEstimatedPositions();
-	}
+	protected void subsystemPeriodic() {}
 
 
 }

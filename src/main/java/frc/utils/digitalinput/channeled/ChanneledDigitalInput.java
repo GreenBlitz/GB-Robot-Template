@@ -23,7 +23,7 @@ public class ChanneledDigitalInput implements IDigitalInput {
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.nonDebouncedValue = (inverted) ? !digitalInput.get() : digitalInput.get();
+		inputs.nonDebouncedValue = inverted ? !digitalInput.get() : digitalInput.get();
 		inputs.debouncedValue = debouncer.calculate(inputs.nonDebouncedValue);
 	}
 

@@ -10,14 +10,14 @@ public enum AngleUnit {
 	RADIANS(Rotation2d::fromRadians),
 	DEGREES(Rotation2d::fromDegrees);
 
-	private final DoubleFunction<Rotation2d> toAngle;
+	private final DoubleFunction<Rotation2d> toRotation2d;
 
-	AngleUnit(DoubleFunction<Rotation2d> toAngle) {
-		this.toAngle = toAngle;
+	AngleUnit(DoubleFunction<Rotation2d> toRotation2d) {
+		this.toRotation2d = toRotation2d;
 	}
 
 	public Rotation2d toAngle(double value) {
-		return toAngle.apply(value);
+		return toRotation2d.apply(value);
 	}
 
 }

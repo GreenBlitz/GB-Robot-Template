@@ -15,7 +15,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 	public AngleArraySignal(String name, AngleUnit angleUnit) {
 		this.name = name;
 		this.angleUnit = angleUnit;
-		this.values = new Rotation2d[] {};
+		this.values = new Rotation2d[] {new Rotation2d()};
 	}
 
 	@Override

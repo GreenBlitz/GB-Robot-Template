@@ -28,8 +28,6 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-	private static final boolean PREVENT_PATH_FLIPPING = true;
-
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
 	public static void startPathfinder() {
@@ -92,7 +90,7 @@ public class PathPlannerUtils {
 	public static Command createPathOnTheFly(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
 		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, new GoalEndState(0, targetPose.getRotation()));
-		path.preventFlipping = PREVENT_PATH_FLIPPING;
+		path.preventFlipping = true;
 		return AutoBuilder.followPath(path);
 	}
 

@@ -12,9 +12,6 @@ import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
-import frc.utils.devicewrappers.SparkMaxDeviceID;
-import frc.utils.devicewrappers.SparkMaxWrapper;
-import frc.utils.devicewrappers.TalonFXWrapper;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
@@ -34,10 +31,6 @@ public class RobotManager extends LoggedRobot {
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
-		SparkMaxDeviceID deviceID = new SparkMaxDeviceID(4);
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
-		sparkMaxWrapper.getEncoder();
-		TalonFXWrapper d = new TalonFXWrapper(4);
 
 		this.robot = new Robot();
 	}

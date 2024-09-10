@@ -28,36 +28,10 @@ public class Phoenix6AngleRequest implements IRequest<Rotation2d> {
 		this(positionVoltage, setPoint -> positionVoltage.withPosition(setPoint.getRotations()));
 	}
 
-	public Phoenix6AngleRequest(PositionTorqueCurrentFOC positionTorqueCurrentFOC) {
-		this(positionTorqueCurrentFOC, setPoint -> positionTorqueCurrentFOC.withPosition(setPoint.getRotations()));
-	}
-
-	public Phoenix6AngleRequest(MotionMagicExpoVoltage motionMagicExpoVoltage) {
-		this(motionMagicExpoVoltage, setPoint -> motionMagicExpoVoltage.withPosition(setPoint.getRotations()));
-	}
-
-	public Phoenix6AngleRequest(MotionMagicExpoTorqueCurrentFOC motionMagicExpoTorqueCurrentFOC) {
-		this(motionMagicExpoTorqueCurrentFOC, setPoint -> motionMagicExpoTorqueCurrentFOC.withPosition(setPoint.getRotations()));
-	}
-
 	public Phoenix6AngleRequest(VelocityVoltage velocityVoltage) {
 		this(velocityVoltage, setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()));
 	}
 
-	public Phoenix6AngleRequest(VelocityTorqueCurrentFOC velocityTorqueCurrentFOC) {
-		this(velocityTorqueCurrentFOC, setPoint -> velocityTorqueCurrentFOC.withVelocity(setPoint.getRotations()));
-	}
-
-	public Phoenix6AngleRequest(MotionMagicVelocityVoltage motionMagicVelocityVoltage) {
-		this(motionMagicVelocityVoltage, setPoint -> motionMagicVelocityVoltage.withVelocity(setPoint.getRotations()));
-	}
-
-	public Phoenix6AngleRequest(MotionMagicVelocityTorqueCurrentFOC motionMagicVelocityTorqueCurrentFOC) {
-		this(
-			motionMagicVelocityTorqueCurrentFOC,
-			setPoint -> motionMagicVelocityTorqueCurrentFOC.withVelocity(setPoint.getRotations())
-		);
-	}
 
 	public ControlRequest getControlRequest() {
 		return controlRequest;

@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
@@ -28,6 +29,7 @@ public class RobotManager extends LoggedRobot {
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
+		PathPlannerUtils.startPathfinder();
 
 		this.robot = new Robot();
 	}

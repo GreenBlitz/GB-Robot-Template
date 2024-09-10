@@ -15,10 +15,6 @@ public class SimpleMotorSimulation extends MotorSimulation {
 		this.motorSimulation = motorSimulation;
 	}
 
-	public double getCurrent() {
-		return motorSimulation.getCurrentDrawAmps();
-	}
-
 	@Override
 	public Rotation2d getPosition() {
 		return Rotation2d.fromRadians(motorSimulation.getAngularPositionRad());

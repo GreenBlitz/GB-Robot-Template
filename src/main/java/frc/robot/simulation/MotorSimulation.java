@@ -51,6 +51,10 @@ abstract class MotorSimulation {
 		return motor.getMotorVoltage().getValue();
 	}
 
+	public double getCurrent() {
+		return motor.getStatorCurrent().getValue();
+	}
+
 	protected abstract void setInputVoltage(double voltage);
 
 	protected abstract void updateMotor();

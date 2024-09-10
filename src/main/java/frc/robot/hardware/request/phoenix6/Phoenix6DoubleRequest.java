@@ -9,30 +9,30 @@ import java.util.function.Consumer;
 
 public class Phoenix6DoubleRequest implements IRequest<Double> {
 
-    private final Consumer<Double> withSetPoint;
-    private final ControlRequest controlRequest;
+	private final Consumer<Double> withSetPoint;
+	private final ControlRequest controlRequest;
 
-    private Phoenix6DoubleRequest(ControlRequest controlRequest, Consumer<Double> withSetPoint) {
-        this.withSetPoint = withSetPoint;
-        this.controlRequest = controlRequest;
-    }
+	private Phoenix6DoubleRequest(ControlRequest controlRequest, Consumer<Double> withSetPoint) {
+		this.withSetPoint = withSetPoint;
+		this.controlRequest = controlRequest;
+	}
 
-    public Phoenix6DoubleRequest(VoltageOut voltageOut) {
-        this(voltageOut, voltageOut::withOutput);
-    }
+	public Phoenix6DoubleRequest(VoltageOut voltageOut) {
+		this(voltageOut, voltageOut::withOutput);
+	}
 
-    public Phoenix6DoubleRequest(TorqueCurrentFOC torqueCurrentFOC) {
-        this(torqueCurrentFOC, torqueCurrentFOC::withOutput);
-    }
+	public Phoenix6DoubleRequest(TorqueCurrentFOC torqueCurrentFOC) {
+		this(torqueCurrentFOC, torqueCurrentFOC::withOutput);
+	}
 
-    @Override
-    public Phoenix6DoubleRequest withSetPoint(Double setPoint) {
-        withSetPoint.accept(setPoint);
-        return this;
-    }
+	@Override
+	public Phoenix6DoubleRequest withSetPoint(Double setPoint) {
+		withSetPoint.accept(setPoint);
+		return this;
+	}
 
-    public ControlRequest getControlRequest() {
-        return controlRequest;
-    }
+	public ControlRequest getControlRequest() {
+		return controlRequest;
+	}
 
 }

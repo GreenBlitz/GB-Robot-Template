@@ -1,13 +1,7 @@
 package frc.robot.hardware.request.phoenix6;
 
 import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.request.IRequest;
@@ -32,15 +26,14 @@ public class Phoenix6AngleRequest implements IRequest<Rotation2d> {
 		this(velocityVoltage, setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()));
 	}
 
-
-	public ControlRequest getControlRequest() {
-		return controlRequest;
-	}
-
 	@Override
 	public Phoenix6AngleRequest withSetPoint(Rotation2d setPoint) {
 		withSetPoint.accept(setPoint);
 		return this;
+	}
+
+	public ControlRequest getControlRequest() {
+		return controlRequest;
 	}
 
 }

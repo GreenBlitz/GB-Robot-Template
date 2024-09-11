@@ -10,34 +10,34 @@ import java.util.List;
 
 public class VisionObservationFiltered extends GBSubsystem {
 
-	private LimelightRawData limelightHardware;
+	private MultiLimelightsRawData limelightHardware;
 	private VisionObservationFilteredConfig config;
 
 	public VisionObservationFiltered(VisionObservationFilteredConfig config) {
 		super(config.logPath());
 
-		this.limelightHardware = new LimelightRawData(config.limelightsNames(), config.hardwareLogPath());
+		this.limelightHardware = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
 		this.config = config;
 	}
 
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (LimelightData limelightData : limelightHardware.getAllAvailableLimelightData()) {
-			Logger.recordOutput(super.getLogPath() + limelightData.timeStamp(), limelightData.AprilTagHeight());
-			if (!filterOutLimelightData(limelightData)) {
-				double standardDeviation = getDynamicStandardDeviations(limelightData);
+		for (LimelightRawData limelightRawData : limelightHardware.getAllAvailableLimelightData()) {
+			Logger.recordOutput(super.getLogPath() + limelightRawData.timeStamp(), limelightRawData.AprilTagHeight());
+			if (!filterOutLimelightData(limelightRawData)) {
+				double standardDeviation = getDynamicStandardDeviations(limelightRawData);
 				double[] standardDeviations = new double[] {standardDeviation};
 
 				estimates
-					.add(new VisionObservation(limelightData.EstimatedPosition(), standardDeviations, limelightData.timeStamp()));
+					.add(new VisionObservation(limelightRawData.EstimatedPosition(), standardDeviations, limelightRawData.timeStamp()));
 			}
 		}
 
 		return estimates;
 	}
 
-	private boolean isLimelightedOutputInTolerance(LimelightData limelightData) {
+	private boolean isLimelightedOutputInTolerance(LimelightRawData limelightRawData) {
 		// ! THIS SHOULDN'T BE COMMENTED OUT
 		// ! this is a placeholder since this filter is depended on the poseestimatorx
 		return true;
@@ -51,14 +51,14 @@ public class VisionObservationFiltered extends GBSubsystem {
 //			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
 	}
 
-	private boolean isAprilTagInProperHeight(LimelightData limelightData) {
-		boolean aprilTagHeightConfidence = Math.abs(limelightData.AprilTagHeight() - Field.APRIL_TAG_HEIGHT_METERS)
+	private boolean isAprilTagInProperHeight(LimelightRawData limelightRawData) {
+		boolean aprilTagHeightConfidence = Math.abs(limelightRawData.AprilTagHeight() - Field.APRIL_TAG_HEIGHT_METERS)
 			< VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
 		return aprilTagHeightConfidence;
 	}
 
-	private boolean filterOutLimelightData(LimelightData limelightData) {
-		return !(isAprilTagInProperHeight(limelightData) && isLimelightedOutputInTolerance(limelightData));
+	private boolean filterOutLimelightData(LimelightRawData limelightRawData) {
+		return !(isAprilTagInProperHeight(limelightRawData) && isLimelightedOutputInTolerance(limelightRawData));
 	}
 
 	public void logEstimatedPositions() {
@@ -72,8 +72,8 @@ public class VisionObservationFiltered extends GBSubsystem {
 		}
 	}
 
-	private double getDynamicStandardDeviations(LimelightData limelightData) {
-		return limelightData.DistanceFromAprilTag() / VisionConstants.APRIL_TAG_DiSTANCE_TO_STANDARD_DEVIATIONS_FACTOR;
+	private double getDynamicStandardDeviations(LimelightRawData limelightRawData) {
+		return limelightRawData.DistanceFromAprilTag() / VisionConstants.APRIL_TAG_DiSTANCE_TO_STANDARD_DEVIATIONS_FACTOR;
 	}
 
 	public VisionObservation getFirstAvailableTarget() {

@@ -35,7 +35,7 @@ public class Limelight extends GBSubsystem {
 		}
 
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		aprilTagPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 
 		double processingLatencySeconds = robotPoseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()] / 1000;
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;

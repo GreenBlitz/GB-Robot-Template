@@ -2,7 +2,6 @@ package frc.robot.poseestimator.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;

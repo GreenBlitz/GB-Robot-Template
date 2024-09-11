@@ -12,14 +12,11 @@ public class VisionConstants {
 		new String[] {"limelight-front", "limelight-back"}
 	);
 
-	public static final String LIMELIGHT_LOGPATH_PREFIX = "Limelight";
-
 	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation";
-
 
 	public static int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 
-	public final static double APRIL_TAG_DiSTANCE_TO_STANDARD_DEVIATIONS_FACTOR = 10;
+	public final static double APRIL_TAG_DISTANCE_TO_STANDARD_DEVIATIONS_FACTOR = 10;
 
 	public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 0.07;
 

@@ -20,7 +20,7 @@ public class Limelight extends GBSubsystem {
 	private double[] aprilTagPoseArray;
 
 	public Limelight(String name, String hardwareLogPath) {
-		super(hardwareLogPath + VisionConstants.LIMELIGHT_LOGPATH_PREFIX + name + "/");
+		super(hardwareLogPath + name + "/");
 
 		this.name = name;
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");

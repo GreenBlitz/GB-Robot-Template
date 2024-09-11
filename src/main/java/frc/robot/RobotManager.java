@@ -31,7 +31,6 @@ public class RobotManager extends LoggedRobot {
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
-		this.test = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG);
 
 		this.robot = new Robot();
 	}
@@ -58,9 +57,6 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
-		test.logEstimatedPositions();
-
-
 	}
 
 	@Override

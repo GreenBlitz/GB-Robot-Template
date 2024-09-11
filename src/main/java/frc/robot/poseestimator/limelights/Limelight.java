@@ -48,7 +48,6 @@ public class Limelight extends GBSubsystem {
 			poseArray[LimelightEntryValue.Y_AXIS.getIndex()],
 			Rotation2d.fromDegrees(poseArray[LimelightEntryValue.PITCH_ANGLE.getIndex()])
 		);
-		Logger.recordOutput(super.getLogPath() + "test", robotPose);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 

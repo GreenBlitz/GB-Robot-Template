@@ -42,8 +42,6 @@ public class VisionObservationFiltered extends GBSubsystem {
 
     private boolean isLimelightedOutputInTolerance(LimelightData limelightData) {
         return true;
-        // TODO: placeholder for pubsubs, when it'll be added.
-        // ik we shouldn't have todos but it's notable enough when it throws compile errors.
 //		Pose2d currentPoseObservation = NetworkTables...;
 
 //		Pose2d limelightPosition = limelightData.EstimatedPosition();

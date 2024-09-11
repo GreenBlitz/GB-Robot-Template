@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class VisionConstants {
 
-	public static final FilteredLimelightsConfig DEFAULT_CONFIG = new FilteredLimelightsConfig(
+	public static final VisionObservationFilteredConfig DEFAULT_CONFIG = new VisionObservationFilteredConfig(
 		"VisionObservationFiltered/",
 		"LimelightsHardware/",
 		Rotation2d.fromDegrees(20), // ! shall be calibrated

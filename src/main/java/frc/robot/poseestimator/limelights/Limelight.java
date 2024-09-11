@@ -7,13 +7,14 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import frc.utils.GBSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
 public class Limelight extends GBSubsystem {
 
-	private NetworkTableEntry robotPoseEntry, idEntry, tagPoseEntry;
+	private NetworkTableEntry robotPoseEntry;
+	private NetworkTableEntry tagIdEntry;
+	private NetworkTableEntry tagPoseEntry;
 	private String name;
 	private double[] poseArray;
 
@@ -23,15 +24,11 @@ public class Limelight extends GBSubsystem {
 		this.name = name;
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.tagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
-		this.idEntry = getLimelightNetworkTableEntry("tid");
-
-
-		System.out.println(name + " exists");
-		Logger.recordOutput(name + "Exists",0);
+		this.tagIdEntry = getLimelightNetworkTableEntry("tid");
 	}
 
 	public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
-		int id = (int) idEntry.getInteger(-1);
+		int id = (int) tagIdEntry.getInteger(-1);
 		if (id == -1) {
 			return Optional.empty();
 		}
@@ -40,8 +37,6 @@ public class Limelight extends GBSubsystem {
 
 		double processingLatencySeconds = poseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()] / 1000;
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
-
-		Logger.recordOutput(super.getLogPath() + timestamp, poseArray);
 
 		Pose2d robotPose = new Pose2d(
 			poseArray[LimelightEntryValue.X_AXIS.getIndex()],

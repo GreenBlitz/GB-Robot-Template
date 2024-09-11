@@ -7,17 +7,15 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class VisionObservationFiltered extends GBSubsystem {
 
     private LimelightRawData limelightHardware;
-    private FilteredLimelightsConfig config;
+    private VisionObservationFilteredConfig config;
 
-    public VisionObservationFiltered(FilteredLimelightsConfig config) {
+    public VisionObservationFiltered(VisionObservationFilteredConfig config) {
         super(config.logPath());
 
-        System.out.println("filteredCreated");
         this.limelightHardware = new LimelightRawData(config.limelightsNames(), config.hardwareLogPath());
         this.config = config;
     }
@@ -26,7 +24,6 @@ public class VisionObservationFiltered extends GBSubsystem {
         ArrayList<VisionObservation> estimates = new ArrayList<>();
 
         for (LimelightData limelightData : limelightHardware.getAllAvailableLimelightData()) {
-            System.out.println(super.getLogPath() + limelightData.timeStamp() + " pose " + limelightData.EstimatedPosition());
             Logger.recordOutput(super.getLogPath() + limelightData.timeStamp(), limelightData.AprilTagHeight());
             if (!filterOutLimelightData(limelightData)) {
                 double standardDeviation = getDynamicStandardDeviations(limelightData);
@@ -41,6 +38,8 @@ public class VisionObservationFiltered extends GBSubsystem {
     }
 
     private boolean isLimelightedOutputInTolerance(LimelightData limelightData) {
+        //! THIS SHOULDN'T BE COMMENTED OUT
+        //! this is a placeholder since this filter is depended on the poseestimatorx
         return true;
 //		Pose2d currentPoseObservation = NetworkTables...;
 
@@ -66,10 +65,8 @@ public class VisionObservationFiltered extends GBSubsystem {
         List<VisionObservation> observations = getFilteredVisionObservations();
 
         for (int i = 0; i < observations.size(); i++) {
-            System.out.println("est" + i);
-
             Logger.recordOutput(
-                    super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i,
+                    super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i + observations.get(i).timestamp(),
                     observations.get(i).visionPose()
             );
         }

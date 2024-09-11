@@ -18,8 +18,6 @@ public class LimelightRawData extends GBSubsystem {
 
 		this.limelights = new ArrayList<>();
 		for (String limelightName : names) {
-			Logger.recordOutput(limelightName + "Created");
-			System.out.println(limelightName + " created");
 			limelights.add(new Limelight(limelightName, hardwareLogPath));
 		}
 	}

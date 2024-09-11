@@ -68,7 +68,7 @@ public class Phoenix6SignalBuilder {
 
 		private final StatusSignal<Double> statusSignal;
 
-		public Phoenix6DoubleSignal(String name, StatusSignal<Double> statusSignal) {
+		private Phoenix6DoubleSignal(String name, StatusSignal<Double> statusSignal) {
 			super(name);
 			this.statusSignal = statusSignal;
 		}
@@ -90,7 +90,7 @@ public class Phoenix6SignalBuilder {
 
 		private final StatusSignal<Double> statusSignal;
 
-		public Phoenix6AngleSignal(String name, StatusSignal<Double> statusSignal, AngleUnit angleUnit) {
+		private Phoenix6AngleSignal(String name, StatusSignal<Double> statusSignal, AngleUnit angleUnit) {
 			super(name, angleUnit);
 			this.statusSignal = statusSignal;
 		}
@@ -113,7 +113,7 @@ public class Phoenix6SignalBuilder {
 		private final StatusSignal<Double> signal;
 		protected final StatusSignal<Double> slopeSignal;
 
-		public Phoenix6LatencySignal(
+		private Phoenix6LatencySignal(
 			String name,
 			StatusSignal<Double> signal,
 			StatusSignal<Double> slopeSignal,
@@ -139,7 +139,7 @@ public class Phoenix6SignalBuilder {
 
 	public static class Phoenix6BothLatencySignal extends Phoenix6LatencySignal {
 
-		public Phoenix6BothLatencySignal(
+		private Phoenix6BothLatencySignal(
 			String name,
 			StatusSignal<Double> signal,
 			StatusSignal<Double> slope,

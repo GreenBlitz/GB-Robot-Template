@@ -49,11 +49,11 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public double getAprilTagHeight() {
-		return robotPoseArray[LimelightEntryValue.Y_AXIS.getIndex()];
+		return aprilTagPoseArray[LimelightEntryValue.Y_AXIS.getIndex()];
 	}
 
 	public double getDistanceFromAprilTag() {
-		return robotPoseArray[LimelightEntryValue.Z_AXIS.getIndex()];
+		return aprilTagPoseArray[LimelightEntryValue.Z_AXIS.getIndex()];
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {

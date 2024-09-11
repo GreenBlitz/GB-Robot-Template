@@ -77,10 +77,6 @@ public class VisionObservationFiltered extends GBSubsystem {
 		return limelightRawData.DistanceFromAprilTag() / VisionConstants.APRIL_TAG_DiSTANCE_TO_STANDARD_DEVIATIONS_FACTOR;
 	}
 
-	public VisionObservation getFirstAvailableTarget() {
-		return getFilteredVisionObservations().get(0);
-	}
-
 	@Override
 	protected void subsystemPeriodic() {}
 

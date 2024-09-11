@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MultiLimelightsRawData extends GBSubsystem {
+public class MultiLimelightsRawData {
 
 	private List<Limelight> limelights;
+	private String logPath;
 
 	public MultiLimelightsRawData(String[] names, String hardwareLogPath) {
-		super(hardwareLogPath);
-
+		this.logPath = hardwareLogPath;
 		this.limelights = new ArrayList<>();
+
 		for (String limelightName : names) {
 			limelights.add(new Limelight(limelightName, hardwareLogPath));
 		}
@@ -41,8 +42,5 @@ public class MultiLimelightsRawData extends GBSubsystem {
 
 		return limelightsData;
 	}
-
-	@Override
-	protected void subsystemPeriodic() {}
 
 }

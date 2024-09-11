@@ -6,16 +6,18 @@ from pynput import keyboard
 
 from NetworkTableManager import NetworkTableInstance, NetworkTable, NetworkTableClient
 
-SpecialKey = TypeVar("SpecialKey")
-ASCIIKey = TypeVar("ASCIIKey")
-UndefinedKey = TypeVar("UndefinedKey")
+Key = TypeVar("Key")
+
+SpecialKey = TypeVar("SpecialKey", bound=Key)
+ASCIIKey = TypeVar("ASCIIKey", bound=Key)
+UndefinedKey = TypeVar("UndefinedKey", bound=Key)
 
 KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS = 0.05
 KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
 CLIENT_NAME = "KeyboardToNetworkTables"
 
 
-def key_type_checker(key: object) -> TypeVar:
+def key_type_checker(key: Key) -> TypeVar:
     if hasattr(key, "name"):
         return SpecialKey
     elif hasattr(key, "char"):
@@ -28,12 +30,14 @@ def get_update_table_function(table: NetworkTableInstance, is_pressed: bool) -> 
     def update_table(key) -> None:
         key_type = key_type_checker(key)  # Store the result to avoid repeated calls.
         if key_type is UndefinedKey:
-            return  # Do nothing if the key type is undefined.
+            # Do nothing if the key type is undefined.
+            return
         if key_type is SpecialKey:
+            # Handle special keys (e.g. ctrl, alt, home).
             table.putBoolean(key.name, is_pressed)
             return
         if key_type is ASCIIKey:
-            # Handle specific ASCII keys or general characters.
+            # Handle specific ASCII keys or general characters (e.g. 1, a, ;).
             if key.char == "/":
                 table.putBoolean("slash", is_pressed)
             else:

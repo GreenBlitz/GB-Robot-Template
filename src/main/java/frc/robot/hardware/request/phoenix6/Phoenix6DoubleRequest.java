@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 public class Phoenix6DoubleRequest implements IRequest<Double> {
 
-	private final Consumer<Double> withSetPoint;
 	private final ControlRequest controlRequest;
+	private final Consumer<Double> withSetPoint;
 
 	private Phoenix6DoubleRequest(ControlRequest controlRequest, Consumer<Double> withSetPoint) {
 		this.withSetPoint = withSetPoint;

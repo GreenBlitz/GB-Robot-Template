@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 
 public class Phoenix6AngleRequest implements IRequest<Rotation2d> {
 
-	private final Consumer<Rotation2d> withSetPoint;
 	private final ControlRequest controlRequest;
+	private final Consumer<Rotation2d> withSetPoint;
 
 	private Phoenix6AngleRequest(ControlRequest controlRequest, Consumer<Rotation2d> withSetPoint) {
 		this.withSetPoint = withSetPoint;

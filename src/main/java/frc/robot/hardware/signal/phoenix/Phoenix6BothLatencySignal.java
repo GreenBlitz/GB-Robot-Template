@@ -1,6 +1,5 @@
 package frc.robot.hardware.signal.phoenix;
 
-
 import com.ctre.phoenix6.StatusSignal;
 import frc.utils.AngleUnit;
 

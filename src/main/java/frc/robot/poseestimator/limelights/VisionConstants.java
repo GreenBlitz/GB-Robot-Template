@@ -23,5 +23,4 @@ public class VisionConstants {
 
 	public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 0.07;
 
-
 }

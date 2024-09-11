@@ -1,8 +1,5 @@
 package frc.robot.poseestimator.limelights;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.GBSubsystem;
@@ -13,12 +10,12 @@ import java.util.List;
 import java.util.ListIterator;
 
 
-public class LimelightsFiltered extends GBSubsystem {
+public class VisionObservationFiltered extends GBSubsystem {
 
 	private LimelightRawData limelightHardware;
 	private FilteredLimelightsConfig config;
 
-	public LimelightsFiltered(FilteredLimelightsConfig config) {
+	public VisionObservationFiltered(FilteredLimelightsConfig config) {
 		super(config.logPath());
 
 		System.out.println("filteredCreated");
@@ -26,13 +23,13 @@ public class LimelightsFiltered extends GBSubsystem {
 		this.config = config;
 	}
 
-	public List<VisionObservation> getFiltered2DEstimates() {
+	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (LimelightData limelightData : limelightHardware.getAllAvlilableLimelightData()) {
+		for (LimelightData limelightData : limelightHardware.getAllAvailableLimelightData()) {
 			System.out.println(limelightData.timeStamp() + " pose " + limelightData.EstimatedPosition());
 			Logger.recordOutput(super.getLogPath() + limelightData.timeStamp(), limelightData.AprilTagHeight());
-			if (!filterOutLimelight(limelightData)) {
+			if (!filterOutLimelightData(limelightData)) {
 				double standardDeviation = getDynamicStandardDeviations(limelightData);
 				double[] standardDeviations = new double[] {standardDeviation};
 
@@ -44,7 +41,7 @@ public class LimelightsFiltered extends GBSubsystem {
 		return estimates;
 	}
 
-	public boolean isLimelightedOutputInTolerance(LimelightData limelightData) {
+	private boolean isLimelightedOutputInTolerance(LimelightData limelightData) {
 		return true;
 		// TODO: placeholder for pubsubs, when it'll be added.
 		// ik we shouldn't have todos but it's notable enough when it throws compile errors.
@@ -58,25 +55,25 @@ public class LimelightsFiltered extends GBSubsystem {
 //			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
 	}
 
-	public boolean isAprilTagInProperHeight(LimelightData limelightData) {
+	private boolean isAprilTagInProperHeight(LimelightData limelightData) {
 		boolean aprilTagHeightConfidence = Math.abs(limelightData.AprilTagHeight() - Field.APRIL_TAG_HEIGHT_METERS)
 			< VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
 		return aprilTagHeightConfidence;
 	}
 
-	public boolean filterOutLimelight(LimelightData limelightData) {
+	private boolean filterOutLimelightData(LimelightData limelightData) {
 		return !(isAprilTagInProperHeight(limelightData) && isLimelightedOutputInTolerance(limelightData));
 	}
 
 	public void recordEstimatedPositions() {
 		VisionObservation estimation;
 		int logpathSuffix;
-		ListIterator<VisionObservation> iterator = getFiltered2DEstimates().listIterator();
+		ListIterator<VisionObservation> iterator = getFilteredVisionObservations().listIterator();
+		System.out.println("recording estimated positions");
 
 		while (iterator.hasNext()) {
 			estimation = iterator.next();
 			logpathSuffix = iterator.nextIndex();
-
 
 			Logger.recordOutput(
 				super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + logpathSuffix,
@@ -85,16 +82,15 @@ public class LimelightsFiltered extends GBSubsystem {
 		}
 	}
 
-	public double getDynamicStandardDeviations(LimelightData limelightData) {
+	private double getDynamicStandardDeviations(LimelightData limelightData) {
 		return limelightData.DistanceFromAprilTag() / VisionConstants.APRIL_TAG_DiSTANCE_TO_STANDARD_DEVIATIONS_FACTOR;
 	}
 
 	public VisionObservation getFirstAvailableTarget() {
-		return getFiltered2DEstimates().get(0);
+		return getFilteredVisionObservations().get(0);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {}
-
 
 }

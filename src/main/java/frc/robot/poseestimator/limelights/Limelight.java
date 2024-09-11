@@ -67,5 +67,4 @@ public class Limelight extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {}
 
-
 }

@@ -13,7 +13,6 @@ public class LimelightRawData extends GBSubsystem {
 
 	private List<Limelight> limelights;
 
-
 	public LimelightRawData(String[] names, String hardwareLogPath) {
 		super(hardwareLogPath);
 
@@ -25,7 +24,7 @@ public class LimelightRawData extends GBSubsystem {
 		}
 	}
 
-	public List<LimelightData> getAllAvlilableLimelightData() {
+	public List<LimelightData> getAllAvailableLimelightData() {
 		List<LimelightData> limelightsData = List.of();
 
 		for (Limelight limelight : limelights) {
@@ -46,6 +45,5 @@ public class LimelightRawData extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {}
-
 
 }

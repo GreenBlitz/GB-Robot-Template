@@ -27,7 +27,7 @@ public class Limelight extends GBSubsystem {
 
 
 		System.out.println(name + " exists");
-		Logger.recordOutput(name + "Exists");
+		Logger.recordOutput(name + "Exists",0);
 	}
 
 	public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {

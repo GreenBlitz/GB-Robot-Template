@@ -25,9 +25,10 @@ public class LimelightRawData extends GBSubsystem {
 	}
 
 	public List<LimelightData> getAllAvailableLimelightData() {
-		List<LimelightData> limelightsData = List.of();
+		List<LimelightData> limelightsData = new ArrayList<>();
 
 		for (Limelight limelight : limelights) {
+			Logger.recordOutput("ll/" + limelight.getName(), true);
 			Optional<Pair<Pose2d, Double>> observation = limelight.getUpdatedPose2DEstimation();
 			if (observation.isPresent()) {
 				LimelightData limelightData = new LimelightData(

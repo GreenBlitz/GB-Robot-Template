@@ -58,13 +58,14 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+		test.logEstimatedPositions();
+
 
 	}
 
 	@Override
 	public void simulationPeriodic() {
 		SimulationManager.updateRegisteredSimulations();
-		test.recordEstimatedPositions();
 	}
 
 }

@@ -29,8 +29,9 @@ public class VisionObservationFiltered extends GBSubsystem {
 				double standardDeviation = getDynamicStandardDeviations(limelightRawData);
 				double[] standardDeviations = new double[] {standardDeviation};
 
-				estimates
-					.add(new VisionObservation(limelightRawData.EstimatedPosition(), standardDeviations, limelightRawData.timeStamp()));
+				estimates.add(
+					new VisionObservation(limelightRawData.EstimatedPosition(), standardDeviations, limelightRawData.timeStamp())
+				);
 			}
 		}
 

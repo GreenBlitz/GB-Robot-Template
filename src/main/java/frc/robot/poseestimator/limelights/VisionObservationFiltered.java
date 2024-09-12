@@ -24,13 +24,12 @@ public class VisionObservationFiltered extends GBSubsystem {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (LimelightRawData limelightRawData : limelightHardware.getAllAvailableLimelightData()) {
-			Logger.recordOutput(super.getLogPath() + limelightRawData.timeStamp(), limelightRawData.aprilTagHeight());
 			if (keepLimelightData(limelightRawData)) {
 				double standardDeviation = getDynamicStandardDeviations(limelightRawData);
 				double[] standardDeviations = new double[] {standardDeviation, standardDeviation, standardDeviation};
 
 				estimates.add(
-					new VisionObservation(limelightRawData.estimatedPosition(), standardDeviations, limelightRawData.timeStamp())
+					new VisionObservation(limelightRawData.estimatedPose(), standardDeviations, limelightRawData.timestamp())
 				);
 			}
 		}

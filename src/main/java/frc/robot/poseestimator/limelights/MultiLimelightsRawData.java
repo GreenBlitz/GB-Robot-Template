@@ -26,7 +26,6 @@ public class MultiLimelightsRawData {
 		List<LimelightRawData> limelightsData = new ArrayList<>();
 
 		for (Limelight limelight : limelights) {
-			Logger.recordOutput("ll/" + limelight.getName(), true);
 			Optional<Pair<Pose2d, Double>> observation = limelight.getUpdatedPose2DEstimation();
 			if (observation.isPresent()) {
 				LimelightRawData limelightRawData = new LimelightRawData(

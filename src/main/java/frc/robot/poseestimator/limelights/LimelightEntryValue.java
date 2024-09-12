@@ -10,8 +10,7 @@ public enum LimelightEntryValue {
 	YAW_ANGLE(5),
 	TOTAL_LATENCY(6);
 
-
-	private int limelightIndexValue;
+	private final int limelightIndexValue;
 
 	private LimelightEntryValue(int limelightIndexValue) {
 		this.limelightIndexValue = limelightIndexValue;
@@ -20,6 +19,5 @@ public enum LimelightEntryValue {
 	public int getIndex() {
 		return this.limelightIndexValue;
 	}
-
 
 }

@@ -10,8 +10,8 @@ import java.util.List;
 
 public class VisionObservationFiltered extends GBSubsystem {
 
-	private MultiLimelightsRawData limelightHardware;
-	private VisionObservationFilteredConfig config;
+	private final MultiLimelightsRawData limelightHardware;
+	private final VisionObservationFilteredConfig config;
 
 	public VisionObservationFiltered(VisionObservationFilteredConfig config) {
 		super(config.logPath());

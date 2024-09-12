@@ -12,9 +12,9 @@ import java.util.Optional;
 
 public class Limelight extends GBSubsystem {
 
-	private NetworkTableEntry robotPoseEntry;
-	private NetworkTableEntry aprilTagIdEntry;
-	private NetworkTableEntry aprilTagPoseEntry;
+	private final NetworkTableEntry robotPoseEntry;
+	private final NetworkTableEntry aprilTagIdEntry;
+	private final NetworkTableEntry aprilTagPoseEntry;
 	private String name;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
@@ -54,6 +54,14 @@ public class Limelight extends GBSubsystem {
 
 	public double getDistanceFromAprilTag() {
 		return aprilTagPoseArray[LimelightEntryValue.Z_AXIS.getIndex()];
+	}
+
+	public double getAprilTagInformation(LimelightEntryValue entryValue) {
+		return aprilTagPoseArray[entryValue.getIndex()];
+	}
+
+	public double getPoseInformation(LimelightEntryValue entryValue) {
+		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {

@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public class MultiLimelightsRawData {
 
-	private List<Limelight> limelights;
-	private String logPath;
+	private final List<Limelight> limelights;
+	private final String logPath;
 
 	public MultiLimelightsRawData(String[] names, String hardwareLogPath) {
 		this.logPath = hardwareLogPath;

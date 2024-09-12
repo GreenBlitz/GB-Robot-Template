@@ -14,7 +14,7 @@ public class VisionConstants {
 
 	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation";
 
-	public static int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
+	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 
 	public final static double APRIL_TAG_DISTANCE_TO_STANDARD_DEVIATIONS_FACTOR = 10;
 

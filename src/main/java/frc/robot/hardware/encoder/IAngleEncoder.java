@@ -6,4 +6,6 @@ public interface IAngleEncoder {
 
 	void setPosition(Rotation2d position);
 
+	boolean isConnected();
+
 }

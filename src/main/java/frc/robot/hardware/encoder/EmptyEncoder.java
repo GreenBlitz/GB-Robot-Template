@@ -7,4 +7,9 @@ public class EmptyEncoder implements IAngleEncoder {
 	@Override
 	public void setPosition(Rotation2d position) {}
 
+	@Override
+	public boolean isConnected() {
+		return false;
+	}
+
 }

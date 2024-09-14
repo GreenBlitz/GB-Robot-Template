@@ -25,8 +25,11 @@ public class VisionObservationFiltered extends GBSubsystem {
 
 		for (LimelightRawData limelightRawData : limelightHardware.getAllAvailableLimelightData()) {
 			if (keepLimelightData(limelightRawData)) {
-				double standardDeviation = getDynamicStandardDeviations(limelightRawData);
-				double[] standardDeviations = new double[] {standardDeviation, standardDeviation, standardDeviation};
+				double standardTransformDeviation = getDynamicStandardTransformDeviations(limelightRawData);
+				double[] standardDeviations = new double[] {
+					standardTransformDeviation,
+					standardTransformDeviation,
+					VisionConstants.STANDARD_DEVIATION_VISION_ANGLE};
 
 				estimates.add(
 					new VisionObservation(limelightRawData.estimatedPose(), standardDeviations, limelightRawData.timestamp())
@@ -72,7 +75,7 @@ public class VisionObservationFiltered extends GBSubsystem {
 		}
 	}
 
-	private double getDynamicStandardDeviations(LimelightRawData limelightRawData) {
+	private double getDynamicStandardTransformDeviations(LimelightRawData limelightRawData) {
 		return limelightRawData.distanceFromAprilTag() / VisionConstants.APRIL_TAG_DISTANCE_TO_STANDARD_DEVIATIONS_FACTOR;
 	}
 

@@ -1,6 +1,7 @@
 package frc.robot.hardware.signal.phoenix;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.wpilibj.Timer;
 import frc.utils.ctre.PhoenixProUtils;
 import frc.utils.cycletime.CycleTimeUtils;
@@ -30,12 +31,14 @@ public class Phoenix6Thread extends Thread {
 	private static final double STARTING_DELAY_SECONDS = 5;
 
 	private final Queue<Double> timestamps;
-	private final ArrayList<BaseStatusSignal> signals;
+	private final ArrayList<StatusSignal<Double>> signals;
+	private final ArrayList<Boolean> isLatency;
 	private final ArrayList<Queue<Double>> queues;
 
 	private Phoenix6Thread() {
 		this.timestamps = new ArrayBlockingQueue<>(UPDATES_PER_ROBORIO_CYCLE);
 		this.signals = new ArrayList<>();
+		this.isLatency = new ArrayList<>();
 		this.queues = new ArrayList<>();
 
 		setName(Phoenix6Thread.class.getSimpleName());
@@ -47,13 +50,29 @@ public class Phoenix6Thread extends Thread {
 		return timestamps;
 	}
 
-	public Queue<Double> registerSignal(BaseStatusSignal signal) {
+	public Queue<Double> registerSignal(StatusSignal<Double> signal) {
 		Queue<Double> signalQueue = new ArrayBlockingQueue<>(UPDATES_PER_ROBORIO_CYCLE);
 		LOCK.lock();
 		{
 			queues.add(signalQueue);
 			signals.add(signal);
+			isLatency.add(false);
 			PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
+		}
+		LOCK.unlock();
+		return signalQueue;
+	}
+
+	public Queue<Double> registerSignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope) {
+		Queue<Double> signalQueue = new ArrayBlockingQueue<>(UPDATES_PER_ROBORIO_CYCLE);
+		LOCK.lock();
+		{
+			queues.add(signalQueue);
+			signals.add(signal);
+			signals.add(signalSlope);
+			isLatency.add(true);
+			PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
+			PhoenixProUtils.checkWithRetry(() -> signalSlope.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
 		}
 		LOCK.unlock();
 		return signalQueue;
@@ -79,8 +98,14 @@ public class Phoenix6Thread extends Thread {
 	private void updateQueues() {
 		double latencyCompensatedTimestamp = (Logger.getRealTimestamp() / 1.0e6) - signals.get(0).getTimestamp().getLatency();
 		timestamps.offer(latencyCompensatedTimestamp);
-		for (int i = 0; i < signals.size(); i++) {
-			queues.get(i).offer(signals.get(i).getValueAsDouble());
+		for (int signalsIndex = 0, queuesIndex = 0; signalsIndex < signals.size(); signalsIndex++, queuesIndex++) {
+			if (isLatency.get(queuesIndex)) {
+				double latencyCompensatedValue = BaseStatusSignal.getLatencyCompensatedValue(signals.get(signalsIndex), signals.get(signalsIndex + 1));
+				queues.get(queuesIndex).offer(latencyCompensatedValue);
+				signalsIndex++;
+			} else {
+				queues.get(queuesIndex).offer(signals.get(signalsIndex).getValueAsDouble());
+			}
 		}
 	}
 

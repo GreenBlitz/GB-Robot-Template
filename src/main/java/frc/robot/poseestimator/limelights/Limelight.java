@@ -15,7 +15,7 @@ public class Limelight extends GBSubsystem {
 	private final NetworkTableEntry robotPoseEntry;
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
-	private String name;
+	private final String name;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 
@@ -28,32 +28,34 @@ public class Limelight extends GBSubsystem {
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 	}
 
+	public void updateLimelight() {
+		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+	}
+
 	public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
 		int id = (int) aprilTagIdEntry.getInteger(-1);
 		if (id == -1) {
 			return Optional.empty();
 		}
 
-		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-
 		double processingLatencySeconds = robotPoseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()] / 1000;
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
 		Pose2d robotPose = new Pose2d(
-			robotPoseArray[LimelightEntryValue.X_AXIS.getIndex()],
-			robotPoseArray[LimelightEntryValue.Y_AXIS.getIndex()],
-			Rotation2d.fromDegrees(robotPoseArray[LimelightEntryValue.PITCH_ANGLE.getIndex()])
+			getPoseInformation(LimelightEntryValue.X_AXIS),
+			getPoseInformation(LimelightEntryValue.Y_AXIS),
+			Rotation2d.fromDegrees(getPoseInformation(LimelightEntryValue.PITCH_ANGLE))
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 
 	public double getAprilTagHeight() {
-		return aprilTagPoseArray[LimelightEntryValue.Y_AXIS.getIndex()];
+		return getAprilTagInformation(LimelightEntryValue.Y_AXIS);
 	}
 
 	public double getDistanceFromAprilTag() {
-		return aprilTagPoseArray[LimelightEntryValue.Z_AXIS.getIndex()];
+		return getAprilTagInformation(LimelightEntryValue.Z_AXIS);
 	}
 
 	public double getAprilTagInformation(LimelightEntryValue entryValue) {
@@ -61,7 +63,7 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public double getPoseInformation(LimelightEntryValue entryValue) {
-		return aprilTagPoseArray[entryValue.getIndex()];
+		return robotPoseArray[entryValue.getIndex()];
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {

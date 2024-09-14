@@ -50,9 +50,11 @@ public class Phoenix6Thread extends Thread {
 	public Queue<Double> registerSignal(BaseStatusSignal signal) {
 		Queue<Double> signalQueue = new ArrayBlockingQueue<>(UPDATES_PER_ROBORIO_CYCLE);
 		LOCK.lock();
-		queues.add(signalQueue);
-		signals.add(signal);
-		PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
+		{
+			queues.add(signalQueue);
+			signals.add(signal);
+			PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
+		}
 		LOCK.unlock();
 		return signalQueue;
 	}
@@ -62,8 +64,10 @@ public class Phoenix6Thread extends Thread {
 		Timer.delay(STARTING_DELAY_SECONDS);
 		while (true) {
 			LOCK.lock();
-			fetchSignals();
-			updateQueues();
+			{
+				fetchSignals();
+				updateQueues();
+			}
 			LOCK.unlock();
 		}
 	}

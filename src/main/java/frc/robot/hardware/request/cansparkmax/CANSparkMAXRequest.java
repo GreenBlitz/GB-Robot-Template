@@ -1,38 +1,50 @@
 package frc.robot.hardware.request.cansparkmax;
 
 import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.request.IRequest;
-
-import java.util.function.Consumer;
 
 public class CANSparkMAXRequest implements IRequest<Double> {
 
-    void AAA(){
-        CANSparkMax can = new CANSparkMax(1, CANSparkLowLevel.MotorType.kBrushed);
-        can.getPIDController().setReference(5, CANSparkBase.ControlType.kVoltage, 0);
-    }
+    private double withSetPoint;
+    private final CANSparkBase.ControlType withControlType;
+    private int withPidSlot;
 
-    private Consumer<Double> withSetPoint;
-    private CANSparkBase.ControlType controlType;
-    private int pidSlot;
-
-    private CANSparkMAXRequest(Consumer<Double> withSetPoint, CANSparkBase.ControlType controlType, int pidSlot){
+    private CANSparkMAXRequest(double withSetPoint, CANSparkBase.ControlType withControlType, int withPidSlot) {
         this.withSetPoint = withSetPoint;
-        this.controlType = controlType;
-        this.pidSlot = pidSlot;
+        this.withControlType = withControlType;
+        this.withPidSlot = withPidSlot;
     }
 
-//    public CANSparkMAXRequest(Double positionSetPoint, int pidSlot){
-//        this(positionSetPoint -> {}, CANSparkBase.ControlType.kPosition, pidSlot);
-//    }
-//
-//    @Override
-//    public CANSparkMAXRequest withSetPoint(Double setPoint) {
-//        return
-//    }
-    public  int f(){}
-    public  void f(){}
+    public CANSparkMAXRequest(double positionSetPoint, int withPidSlot) {
+        this(positionSetPoint, CANSparkBase.ControlType.kPosition, withPidSlot);
+    }
+
+    public CANSparkMAXRequest(Rotation2d velocitySetPoint, int withPidSlot) {
+        this(velocitySetPoint.getRotations(), CANSparkBase.ControlType.kVelocity, withPidSlot);
+    }
+
+    @Override
+    public CANSparkMAXRequest withSetPoint(Double setPoint) {
+        withSetPoint = setPoint;
+        return this;
+    }
+
+    public CANSparkMAXRequest withPidSlot(int pidSlot) {
+        withPidSlot = pidSlot;
+        return this;
+    }
+
+    public Double getSetPoint() {
+        return withSetPoint;
+    }
+
+    public CANSparkBase.ControlType getControlType() {
+        return withControlType;
+    }
+
+    public int getPidSlot() {
+        return withPidSlot;
+    }
 
 }

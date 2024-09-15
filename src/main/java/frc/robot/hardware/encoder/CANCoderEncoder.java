@@ -11,37 +11,34 @@ import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 
 public class CANCoderEncoder implements IAngleEncoder {
 
-	private final CANcoder encoder;
+    private final CANcoder encoder;
 
-	public CANCoderEncoder(CANcoder encoder) {
-		this.encoder = encoder;
-	}
+    public CANCoderEncoder(CANcoder encoder) {
+        this.encoder = encoder;
+    }
 
-	@Override
-	public void setPosition(Rotation2d position) {
-		encoder.setPosition(position.getRotations());
-	}
+    @Override
+    public void setPosition(Rotation2d position) {
+        encoder.setPosition(position.getRotations());
+    }
 
-	@Override
-	public boolean isOK() {
-		return BaseStatusSignal.isAllGood(encoder.getPosition());
-	}
+    @Override
+    public boolean isOK() {
+        return BaseStatusSignal.isAllGood(encoder.getPosition());
+    }
 
-	@Override
-	public void updateInputs(ConnectedInputAutoLogged inputs){
-		inputs.connected = isOK();
-	}
+    @Override
+    public void updateInputs(ConnectedInputAutoLogged inputs) {
+        inputs.connected = isOK();
+    }
 
-	@Override
-	public void updateSignals(InputSignal... signals) {
-		for (InputSignal signal1: signals) {
-			if (signal1 instanceof Phoenix6SignalBuilder.SignalGetter) {
-				BaseStatusSignal.refreshAll(((Phoenix6SignalBuilder.SignalGetter) signal1).getSignal());
-			}
-			else if (signal1 instanceof Phoenix6BothLatencySignal) {
-				BaseStatusSignal.refreshAll(((Phoenix6DoubleSignal) signal1).getSignal());
-			}
-		}
-	}
+    @Override
+    public void updateSignals(InputSignal... signals) {
+        for (InputSignal signal : signals) {
+            if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
+                BaseStatusSignal.refreshAll(((Phoenix6SignalBuilder.SignalGetter) signal).getSignal());
+            }
+        }
+    }
 
 }

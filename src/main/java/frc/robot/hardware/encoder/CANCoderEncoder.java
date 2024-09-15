@@ -3,6 +3,7 @@ package frc.robot.hardware.encoder;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.ConnectedInputAutoLogged;
 
 public class CANCoderEncoder implements IAngleEncoder {
 
@@ -20,6 +21,11 @@ public class CANCoderEncoder implements IAngleEncoder {
 	@Override
 	public boolean isConnected() {
 		return BaseStatusSignal.isAllGood(encoder.getPosition());
+	}
+
+	@Override
+	public void updateInputs(ConnectedInputAutoLogged inputs){
+		inputs.connected = isConnected();
 	}
 
 }

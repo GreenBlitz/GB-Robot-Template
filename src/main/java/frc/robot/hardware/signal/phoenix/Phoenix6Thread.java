@@ -52,12 +52,12 @@ public class Phoenix6Thread extends Thread {
 
 	public Queue<Double> registerSignal(StatusSignal<Double> signal) {
 		Queue<Double> signalQueue = new ArrayBlockingQueue<>(UPDATES_PER_ROBORIO_CYCLE);
+		PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
 		LOCK.lock();
 		{
 			queues.add(signalQueue);
 			signals.add(signal);
 			isLatency.add(false);
-			PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
 		}
 		LOCK.unlock();
 		return signalQueue;
@@ -65,14 +65,14 @@ public class Phoenix6Thread extends Thread {
 
 	public Queue<Double> registerSignal(StatusSignal<Double> signal, StatusSignal<Double> signalSlope) {
 		Queue<Double> signalQueue = new ArrayBlockingQueue<>(UPDATES_PER_ROBORIO_CYCLE);
+		PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
+		PhoenixProUtils.checkWithRetry(() -> signalSlope.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
 		LOCK.lock();
 		{
 			queues.add(signalQueue);
 			signals.add(signal);
 			signals.add(signalSlope);
 			isLatency.add(true);
-			PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
-			PhoenixProUtils.checkWithRetry(() -> signalSlope.setUpdateFrequency(FREQUENCY), FREQUENCY_SET_RETRIES);
 		}
 		LOCK.unlock();
 		return signalQueue;

@@ -82,12 +82,14 @@ public class Phoenix6Thread extends Thread {
 	public void run() {
 		Timer.delay(STARTING_DELAY_SECONDS);
 		while (true) {
-			LOCK.lock();
-			{
-				fetchSignals();
-				updateQueues();
+			if (!signals.isEmpty()) {
+				LOCK.lock();
+				{
+					fetchSignals();
+					updateQueues();
+				}
+				LOCK.unlock();
 			}
-			LOCK.unlock();
 		}
 	}
 

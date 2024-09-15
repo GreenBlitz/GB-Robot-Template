@@ -1,10 +1,19 @@
 package frc.robot.hardware.encoder;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ConnectedInputAutoLogged;
+import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class CANCoderEncoder implements IAngleEncoder {
 
@@ -30,8 +39,15 @@ public class CANCoderEncoder implements IAngleEncoder {
 	}
 
 	@Override
-	public void updateSignals(InputSignal... signal) {
-		signal instanceof  ? (() signal) : null;
+	public void updateSignals(InputSignal... signals) {
+		for (InputSignal signal1: signals) {
+			if (signal1 instanceof Phoenix6SignalBuilder.SignalGetter) {
+				BaseStatusSignal.refreshAll(((Phoenix6DoubleSignal) signal1).getSignal());
+			}
+			else if (signal1 instanceof Phoenix6BothLatencySignal) {
+				BaseStatusSignal.refreshAll(((Phoenix6DoubleSignal) signal1).getSignal());
+			}
+		}
 	}
 
 }

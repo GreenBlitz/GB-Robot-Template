@@ -22,6 +22,8 @@ import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -181,22 +183,22 @@ public class Swerve extends GBSubsystem {
 		return gyroInputs.timestampOdometrySamples.length;
 	}
 
-	public OdometryObservation[] getAllOdometryObservations() {
+	public List<OdometryObservation> getAllOdometryObservations() {
 		int odometrySamples = getNumberOfOdometrySamples();
 		double[] timestamps = gyroInputs.timestampOdometrySamples;
 		Rotation2d[] gyroHeadings = gyroInputs.yawOdometrySamples;
 		SwerveDriveWheelPositions[] swerveWheelPositions = modules.getAllWheelsPositionsSamples();
 
-		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
+		List<OdometryObservation> odometryObservations = new ArrayList<>();
 		for (int i = 0; i < odometrySamples; i++) {
-			odometryObservations[i] = new OdometryObservation(swerveWheelPositions[i], gyroHeadings[i], timestamps[i]);
+			odometryObservations.add(new OdometryObservation(swerveWheelPositions[i], gyroHeadings[i], timestamps[i]));
 		}
 
 		return odometryObservations;
 	}
 
 	public OdometryObservation getLastOdometryObservation() {
-		OdometryObservation odometryObservation = getAllOdometryObservations()[0];
+		OdometryObservation odometryObservation = getAllOdometryObservations().get(0);
 		return odometryObservation;
 	}
 

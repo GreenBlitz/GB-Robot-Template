@@ -18,7 +18,7 @@ public class VisionConstants {
 
 	public final static double APRIL_TAG_DISTANCE_TO_STANDARD_DEVIATIONS_FACTOR = 10;
 
-	public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 0.07;
+	public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 5;//0.07
 
 	public static final double STANDARD_DEVIATION_VISION_ANGLE = 0.6;
 

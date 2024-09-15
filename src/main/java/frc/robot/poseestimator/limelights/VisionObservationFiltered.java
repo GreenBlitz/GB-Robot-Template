@@ -47,15 +47,15 @@ public class VisionObservationFiltered extends GBSubsystem {
 	private boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData) {
 		// ! THIS SHOULDN'T BE COMMENTED OUT
 		// ! this is a placeholder since this filter is depended on the poseestimatorx
-//		return true;
-		Pose2d currentPoseObservation = poseEstimator.getEstimatedPose();
-
-		Pose2d limelightPosition = limelightRawData.estimatedPose();
-		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
-		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
-
-		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
-			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
+		return true;
+//		Pose2d currentPoseObservation = poseEstimator.getEstimatedPose();
+//
+//		Pose2d limelightPosition = limelightRawData.estimatedPose();
+//		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
+//		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
+//
+//		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
+//			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
 	}
 
 	private boolean isAprilTagInProperHeight(LimelightRawData limelightRawData) {

@@ -18,7 +18,7 @@ public class KeyboardController {
 
 	public static final boolean ENABLE_KEYBOARD = true;
 
-	private static final double KEY_PRESSED_VALUE = 0.5;
+	private static final double KEY_PRESSED_DEFAULT_VALUE = 0.5;
 	private static final Path KEYBOARD_TO_NETWORK_TABLES_CLASS = Path.of("KeyboardToNetworkTables");
 
 	private static final String KEYBOARD_TABLE = "Keyboard";
@@ -120,7 +120,7 @@ public class KeyboardController {
 	}
 
 	public double getValueByButtons(Trigger positiveButton, Trigger negativeButton) {
-		return getValueByButtons(positiveButton, negativeButton, KEY_PRESSED_VALUE);
+		return getValueByButtons(positiveButton, negativeButton, KEY_PRESSED_DEFAULT_VALUE);
 	}
 
 	public double getValueByButtons(Trigger positiveButton, Trigger negativeButton, double value) {

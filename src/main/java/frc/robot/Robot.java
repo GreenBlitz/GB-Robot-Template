@@ -49,7 +49,7 @@ public class Robot {
 			PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS
 		);
 
-		this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG);
+		this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG, poseEstimator);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));

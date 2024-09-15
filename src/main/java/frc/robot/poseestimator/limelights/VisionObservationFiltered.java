@@ -1,6 +1,10 @@
 package frc.robot.poseestimator.limelights;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import frc.robot.constants.Field;
+import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -12,12 +16,14 @@ public class VisionObservationFiltered extends GBSubsystem {
 
 	private final MultiLimelightsRawData limelightHardware;
 	private final VisionObservationFilteredConfig config;
+	private final GBPoseEstimator poseEstimator;
 
-	public VisionObservationFiltered(VisionObservationFilteredConfig config) {
+	public VisionObservationFiltered(VisionObservationFilteredConfig config, GBPoseEstimator poseEstimator) {
 		super(config.logPath());
 
 		this.limelightHardware = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
 		this.config = config;
+		this.poseEstimator = poseEstimator;
 	}
 
 	public List<VisionObservation> getFilteredVisionObservations() {
@@ -41,15 +47,15 @@ public class VisionObservationFiltered extends GBSubsystem {
 	private boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData) {
 		// ! THIS SHOULDN'T BE COMMENTED OUT
 		// ! this is a placeholder since this filter is depended on the poseestimatorx
-		return true;
-//		Pose2d currentPoseObservation = NetworkTables...;
+//		return true;
+		Pose2d currentPoseObservation = poseEstimator.getEstimatedPose();
 
-//		Pose2d limelightPosition = limelightData.EstimatedPosition();
-//		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
-//		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
-//
-//		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
-//			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
+		Pose2d limelightPosition = limelightRawData.estimatedPose();
+		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
+		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
+
+		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
+			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
 	}
 
 	private boolean isAprilTagInProperHeight(LimelightRawData limelightRawData) {

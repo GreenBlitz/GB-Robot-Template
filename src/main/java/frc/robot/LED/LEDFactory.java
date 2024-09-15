@@ -11,7 +11,6 @@ public class LEDFactory {
 
 			case SIMULATION -> new LEDSimulation();
 
-			default -> null;
 		};
 	}
 

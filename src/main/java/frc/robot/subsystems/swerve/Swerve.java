@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
@@ -49,13 +50,7 @@ public class Swerve extends GBSubsystem {
 	private SwerveStateHelper stateHelper;
 	private Supplier<Rotation2d> headingSupplier;
 
-	private static DoubleInterpolator2D discritizationInterpolator = new DoubleInterpolator2D();
-	static {
-		discritizationInterpolator.put(new Translation2d(),1);
-		discritizationInterpolator.put(new Translation2d(0.5,10), 2);
-//		discritizationInterpolator.put(new Translation2d(5,5),3);
-		discritizationInterpolator.put(new Translation2d(10,10),5);
-	}
+	private DiscritizationHelper discritizationHelper;
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro) {
@@ -72,6 +67,14 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
+		InterpolatingDoubleTreeMap linear = new InterpolatingDoubleTreeMap();
+		linear.put(0.0,1.0);
+		linear.put(5.0,2.5);
+		linear.put(6.0,2.5);
+
+		InterpolatingDoubleTreeMap angular = new InterpolatingDoubleTreeMap();
+		angular.put(0.0, 0.0);
+		angular.put(5.0, 0.0);
 		updateInputs();
 	}
 

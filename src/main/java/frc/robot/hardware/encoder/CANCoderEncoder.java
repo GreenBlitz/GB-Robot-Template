@@ -36,7 +36,7 @@ public class CANCoderEncoder implements IAngleEncoder {
 	public void updateSignals(InputSignal... signals) {
 		for (InputSignal signal1: signals) {
 			if (signal1 instanceof Phoenix6SignalBuilder.SignalGetter) {
-				BaseStatusSignal.refreshAll(((Phoenix6DoubleSignal) signal1).getSignal());
+				BaseStatusSignal.refreshAll(((Phoenix6SignalBuilder.SignalGetter) signal1).getSignal());
 			}
 			else if (signal1 instanceof Phoenix6BothLatencySignal) {
 				BaseStatusSignal.refreshAll(((Phoenix6DoubleSignal) signal1).getSignal());

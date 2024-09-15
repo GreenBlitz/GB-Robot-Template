@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -34,27 +35,28 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 
-	private Robot robot;
+	private CANcoder caNcoder;
+	private CANCoderEncoder canCoderEncoder;
+	private ConnectedInputAutoLogged connectedInputAutoLogged;
+	private Phoenix6AngleSignal angleSignal;
+	private Phoenix6DoubleSignal doubleSignal;
+
+//	private Robot robot;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		CANcoder caNcoder = new CANcoder(5);
-		CANCoderEncoder canCoderEncoder = new CANCoderEncoder(caNcoder);
-		System.out.println(canCoderEncoder.isOK());
-		ConnectedInputAutoLogged connectedInputAutoLogged = new ConnectedInputAutoLogged();
-		canCoderEncoder.updateInputs(connectedInputAutoLogged);
-		Logger.processInputs("connected", connectedInputAutoLogged);
+		caNcoder = new CANcoder(1);
+		canCoderEncoder  = new CANCoderEncoder(caNcoder);
+		connectedInputAutoLogged = new ConnectedInputAutoLogged();
+		angleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 50, AngleUnit.ROTATIONS);
+		doubleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 50);
 
-		Phoenix6AngleSignal angleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 60, AngleUnit.ROTATIONS);
-		Phoenix6DoubleSignal doubleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 60);
-		canCoderEncoder.updateSignals(angleSignal, doubleSignal);
-		Logger.processInputs("angleSignal", angleSignal);
-		Logger.processInputs("doubleSignal", doubleSignal);
 
-		this.robot = new Robot();
+
+//		this.robot = new Robot();
 	}
 
 	@Override
@@ -73,11 +75,11 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = robot.getAutonomousCommand();
-
-		if (autonomousCommand != null) {
-			autonomousCommand.schedule();
-		}
+//`		autonomousCommand = robot.getAutonomousCommand();
+//
+//		if (autonomousCommand != null) {
+//			autonomousCommand.schedule();
+//		}`
 	}
 
 	@Override
@@ -89,6 +91,17 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotPeriodic() {
+
+
+
+		canCoderEncoder.updateInputs(connectedInputAutoLogged);
+		canCoderEncoder.updateSignals(angleSignal, doubleSignal);
+		Logger.processInputs("angleSignal", angleSignal);
+		Logger.processInputs("doubleSignal", doubleSignal);
+		Logger.recordOutput("isok", canCoderEncoder.isOK());
+		Logger.processInputs("connected", connectedInputAutoLogged);
+		Logger.recordOutput("isoriginOk", BaseStatusSignal.isAllGood(caNcoder.getPosition()));
+
 		CycleTimeUtils.updateCycleTime(); // Better to be first
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();

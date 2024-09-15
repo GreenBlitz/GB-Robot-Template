@@ -4,21 +4,28 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.GBPoseEstimator;
+import frc.robot.poseestimator.limelights.VisionObservationFiltered;
+import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class SuperStructure {
 
 	private final Swerve swerve;
 	private final GBPoseEstimator poseEstimator;
+	private final VisionObservationFiltered visionObservationFiltered;
 
-	public SuperStructure(Swerve swerve, GBPoseEstimator poseEstimator) {
+	public SuperStructure(Swerve swerve, GBPoseEstimator poseEstimator, VisionObservationFiltered visionObservationFiltered) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
+		this.visionObservationFiltered = visionObservationFiltered;
 	}
 
 	public void periodic() {
 		swerve.wrapperPeriodic();
 		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
+		for (VisionObservation visionObservation : visionObservationFiltered.getFilteredVisionObservations()) {
+			poseEstimator.updateVision(visionObservation);
+		}
 	}
 
 

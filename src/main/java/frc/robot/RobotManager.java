@@ -12,7 +12,6 @@ import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.encoder.CANCoderEncoder;
 import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
-import frc.robot.hardware.signal.phoenix.Phoenix6LatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.AngleUnit;
@@ -48,7 +47,7 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		caNcoder = new CANcoder(1);
+		caNcoder = new CANcoder(1, "CANivore");
 		canCoderEncoder  = new CANCoderEncoder(caNcoder);
 		connectedInputAutoLogged = new ConnectedInputAutoLogged();
 		angleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 50, AngleUnit.ROTATIONS);

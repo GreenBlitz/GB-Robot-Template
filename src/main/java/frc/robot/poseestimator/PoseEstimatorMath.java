@@ -69,9 +69,9 @@ public class PoseEstimatorMath {
 			visionDifferenceFromOdometryMatrix
 		);
 		return new Transform2d(
-			standardDeviationsAppliedTransform[0],
-			standardDeviationsAppliedTransform[1],
-			Rotation2d.fromRadians(standardDeviationsAppliedTransform[2])
+			standardDeviationsAppliedTransform[PoseArrayEntryValue.X_VALUE.getEntryValue()],
+			standardDeviationsAppliedTransform[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+			Rotation2d.fromRadians(standardDeviationsAppliedTransform[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()])
 		);
 	}
 

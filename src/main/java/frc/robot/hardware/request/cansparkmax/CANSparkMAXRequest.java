@@ -6,45 +6,45 @@ import frc.robot.hardware.request.IRequest;
 
 public class CANSparkMAXRequest implements IRequest<Double> {
 
-    private double withSetPoint;
-    private final CANSparkBase.ControlType withControlType;
-    private int withPidSlot;
+    private double setPoint;
+    private final CANSparkBase.ControlType controlType;
+    private int pidSlot;
 
-    private CANSparkMAXRequest(double withSetPoint, CANSparkBase.ControlType withControlType, int withPidSlot) {
-        this.withSetPoint = withSetPoint;
-        this.withControlType = withControlType;
-        this.withPidSlot = withPidSlot;
+    public CANSparkMAXRequest(double setPoint, CANSparkBase.ControlType controlType, int pidSlot) {
+        this.setPoint = setPoint;
+        this.controlType = controlType;
+        this.pidSlot = pidSlot;
     }
 
-    public CANSparkMAXRequest(double positionSetPoint, int withPidSlot) {
-        this(positionSetPoint, CANSparkBase.ControlType.kPosition, withPidSlot);
+    public CANSparkMAXRequest(double positionSetPoint, int pidSlot) {
+        this(positionSetPoint, CANSparkBase.ControlType.kPosition, pidSlot);
     }
 
-    public CANSparkMAXRequest(Rotation2d velocitySetPoint, int withPidSlot) {
-        this(velocitySetPoint.getRotations(), CANSparkBase.ControlType.kVelocity, withPidSlot);
+    public CANSparkMAXRequest(Rotation2d velocitySetPoint, int pidSlot) {
+        this(velocitySetPoint.getRotations(), CANSparkBase.ControlType.kVelocity, pidSlot);
     }
 
     @Override
     public CANSparkMAXRequest withSetPoint(Double setPoint) {
-        withSetPoint = setPoint;
+        this.setPoint = setPoint;
         return this;
     }
 
     public CANSparkMAXRequest withPidSlot(int pidSlot) {
-        withPidSlot = pidSlot;
+        this.pidSlot = pidSlot;
         return this;
     }
 
-    public Double getSetPoint() {
-        return withSetPoint;
+    public double getSetPoint() {
+        return setPoint;
     }
 
     public CANSparkBase.ControlType getControlType() {
-        return withControlType;
+        return controlType;
     }
 
     public int getPidSlot() {
-        return withPidSlot;
+        return pidSlot;
     }
 
 }

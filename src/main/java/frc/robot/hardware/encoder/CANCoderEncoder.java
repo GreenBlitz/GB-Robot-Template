@@ -4,6 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ConnectedInputAutoLogged;
+import frc.robot.hardware.signal.InputSignal;
 
 public class CANCoderEncoder implements IAngleEncoder {
 
@@ -26,6 +27,11 @@ public class CANCoderEncoder implements IAngleEncoder {
 	@Override
 	public void updateInputs(ConnectedInputAutoLogged inputs){
 		inputs.connected = isConnected();
+	}
+
+	@Override
+	public void updateSignals(InputSignal... signal) {
+		signal instanceof  ? (() signal) : null;
 	}
 
 }

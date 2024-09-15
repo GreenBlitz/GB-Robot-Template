@@ -34,28 +34,14 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 
-	private CANcoder caNcoder;
-	private CANCoderEncoder canCoderEncoder;
-	private ConnectedInputAutoLogged connectedInputAutoLogged;
-	private Phoenix6AngleSignal angleSignal;
-	private Phoenix6DoubleSignal doubleSignal;
-
-//	private Robot robot;
+	private Robot robot;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		caNcoder = new CANcoder(1, "CANivore");
-		canCoderEncoder  = new CANCoderEncoder(caNcoder);
-		connectedInputAutoLogged = new ConnectedInputAutoLogged();
-		angleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 50, AngleUnit.ROTATIONS);
-		doubleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 50);
-
-
-
-//		this.robot = new Robot();
+		this.robot = new Robot();
 	}
 
 	@Override
@@ -74,11 +60,11 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-//`		autonomousCommand = robot.getAutonomousCommand();
-//
-//		if (autonomousCommand != null) {
-//			autonomousCommand.schedule();
-//		}`
+		autonomousCommand = robot.getAutonomousCommand();
+
+		if (autonomousCommand != null) {
+			autonomousCommand.schedule();
+		}
 	}
 
 	@Override
@@ -90,17 +76,6 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotPeriodic() {
-
-
-
-		canCoderEncoder.updateInputs(connectedInputAutoLogged);
-		canCoderEncoder.updateSignals(angleSignal, doubleSignal);
-		Logger.processInputs("angleSignal", angleSignal);
-		Logger.processInputs("doubleSignal", doubleSignal);
-		Logger.recordOutput("isok", canCoderEncoder.isOK());
-		Logger.processInputs("connected", connectedInputAutoLogged);
-		Logger.recordOutput("isoriginOk", BaseStatusSignal.isAllGood(caNcoder.getPosition()));
-
 		CycleTimeUtils.updateCycleTime(); // Better to be first
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();

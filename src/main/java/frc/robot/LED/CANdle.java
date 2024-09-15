@@ -1,61 +1,40 @@
 package frc.robot.LED;
 
-import com.ctre.phoenix.led.*;
-
 import java.awt.*;
 
-public class CANdle implements ILED, ILogicLED{
-    @Override
-    public void setColor(Color color) {
-    }
+public class CANdle implements ILED, ILogicLED {
 
-    @Override
-    public void turnOff() {
+	@Override
+	public void setColor(Color color) {}
 
-    }
+	@Override
+	public void turnOff() {}
 
-    @Override
-    public void ColorFlowAnimation() {
+	@Override
+	public void ColorFlowAnimation() {}
 
-    }
+	@Override
+	public void FireAnimation() {}
 
-    @Override
-    public void FireAnimation() {
+	@Override
+	public void LarsonAnimation() {}
 
-    }
+	@Override
+	public void RainbowAnimation() {}
 
-    @Override
-    public void LarsonAnimation() {
+	@Override
+	public void RGBFadeAnimation() {}
 
-    }
+	@Override
+	public void SingleFadeAnimation() {}
 
-    @Override
-    public void RainbowAnimation() {
+	@Override
+	public void StrobeAnimation() {}
 
-    }
+	@Override
+	public void TwinkleAnimation() {}
 
-    @Override
-    public void RGBFadeAnimation() {
+	@Override
+	public void TwinkleOffAnimation() {}
 
-    }
-
-    @Override
-    public void SingleFadeAnimation() {
-
-    }
-
-    @Override
-    public void StrobeAnimation() {
-
-    }
-
-    @Override
-    public void TwinkleAnimation() {
-
-    }
-
-    @Override
-    public void TwinkleOffAnimation() {
-
-    }
 }

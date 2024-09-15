@@ -45,7 +45,7 @@ public class Limelight extends GBSubsystem {
 		Pose2d robotPose = new Pose2d(
 			getPoseInformation(LimelightEntryValue.X_AXIS),
 			getPoseInformation(LimelightEntryValue.Y_AXIS),
-			Rotation2d.fromDegrees(getPoseInformation(LimelightEntryValue.PITCH_ANGLE))
+			Rotation2d.fromDegrees(getPoseInformation(LimelightEntryValue.YAW_ANGLE))
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}

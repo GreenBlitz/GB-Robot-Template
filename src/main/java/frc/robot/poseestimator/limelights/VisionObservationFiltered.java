@@ -55,9 +55,8 @@ public class VisionObservationFiltered extends GBSubsystem {
 	}
 
 	private boolean isAprilTagInProperHeight(LimelightRawData limelightRawData) {
-		boolean aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - Field.APRIL_TAG_HEIGHT_METERS)
-			<= VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
-		return aprilTagHeightConfidence;
+		double aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - Field.APRIL_TAG_HEIGHT_METERS);
+		return aprilTagHeightConfidence <= VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
 	}
 
 	private boolean keepLimelightData(LimelightRawData limelightRawData) {

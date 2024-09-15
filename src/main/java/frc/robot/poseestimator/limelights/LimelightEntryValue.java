@@ -12,7 +12,7 @@ public enum LimelightEntryValue {
 
 	private final int limelightIndexValue;
 
-	private LimelightEntryValue(int limelightIndexValue) {
+	LimelightEntryValue(int limelightIndexValue) {
 		this.limelightIndexValue = limelightIndexValue;
 	}
 

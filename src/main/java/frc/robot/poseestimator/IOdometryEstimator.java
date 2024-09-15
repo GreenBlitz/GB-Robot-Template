@@ -5,9 +5,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.poseestimator.observations.OdometryObservation;
 
+import java.util.List;
+
 public interface IOdometryEstimator {
 
-	void updateOdometry(OdometryObservation odometryObservation);
+	void updateOdometry(List<OdometryObservation> odometryObservation);
 
 	void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose);
 

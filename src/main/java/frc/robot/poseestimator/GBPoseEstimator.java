@@ -8,6 +8,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -79,17 +82,27 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 
 	@Override
-	public void updateVision(VisionObservation visionObservation) {
-		if (!isObservationTooOld(visionObservation)) {
-			addVisionObservation(visionObservation);
+	public void updateVision(List<VisionObservation> visionObservations) {
+		for (VisionObservation visionObservation : visionObservations) {
+			if (!isObservationTooOld(visionObservation)) {
+				addVisionObservation(visionObservation);
+			}
 		}
 	}
 
 	@Override
-	public void updateOdometry(OdometryObservation odometryObservation) {
-		addOdometryObservation(odometryObservation);
+	public void updateOdometry(List<OdometryObservation> odometryObservation) {
+		for (OdometryObservation observation : odometryObservation) {
+			addOdometryObservation(observation);
+			logEstimatedPose();
+		}
 	}
 
+	@Override
+	public void updatePoseEstimator(List<OdometryObservation> odometryObservation, List<VisionObservation> visionObservations) {
+		updateOdometry(odometryObservation);
+		updateVision(visionObservations);
+	}
 
 	private boolean isObservationTooOld(VisionObservation visionObservation) {
 		try {
@@ -117,6 +130,10 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.odometryPose = odometryPose.exp(twist);
 		this.estimatedPose = estimatedPose.exp(twist);
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
+	}
+
+	public void logEstimatedPose() {
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "EstimatedPose", getEstimatedPose());
 	}
 
 }

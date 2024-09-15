@@ -4,9 +4,17 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.hardware.ConnectedInputAutoLogged;
+import frc.robot.hardware.encoder.CANCoderEncoder;
+import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6LatencySignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.AngleUnit;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
@@ -15,6 +23,7 @@ import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -31,6 +40,19 @@ public class RobotManager extends LoggedRobot {
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
+
+		CANcoder caNcoder = new CANcoder(5);
+		CANCoderEncoder canCoderEncoder = new CANCoderEncoder(caNcoder);
+		System.out.println(canCoderEncoder.isOK());
+		ConnectedInputAutoLogged connectedInputAutoLogged = new ConnectedInputAutoLogged();
+		canCoderEncoder.updateInputs(connectedInputAutoLogged);
+		Logger.processInputs("connected", connectedInputAutoLogged);
+
+		Phoenix6AngleSignal angleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 60, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal doubleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(caNcoder.getPosition(), 60);
+		canCoderEncoder.updateSignals(angleSignal, doubleSignal);
+		Logger.processInputs("angleSignal", angleSignal);
+		Logger.processInputs("doubleSignal", doubleSignal);
 
 		this.robot = new Robot();
 	}

@@ -1,19 +1,13 @@
 package frc.robot.hardware.encoder;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ConnectedInputAutoLogged;
-import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.hardware.signal.InputSignal;
-import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class CANCoderEncoder implements IAngleEncoder {
 
@@ -29,13 +23,13 @@ public class CANCoderEncoder implements IAngleEncoder {
 	}
 
 	@Override
-	public boolean isConnected() {
+	public boolean isOK() {
 		return BaseStatusSignal.isAllGood(encoder.getPosition());
 	}
 
 	@Override
 	public void updateInputs(ConnectedInputAutoLogged inputs){
-		inputs.connected = isConnected();
+		inputs.connected = isOK();
 	}
 
 	@Override

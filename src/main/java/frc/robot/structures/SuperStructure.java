@@ -3,22 +3,22 @@ package frc.robot.structures;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimator.PoseEstimator;
+import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class SuperStructure {
 
 	private final Swerve swerve;
-	private final PoseEstimator PoseEstimator;
+	private final GBPoseEstimator poseEstimator;
 
-	public SuperStructure(Swerve swerve, PoseEstimator PoseEstimator) {
+	public SuperStructure(Swerve swerve, GBPoseEstimator poseEstimator) {
 		this.swerve = swerve;
-		this.PoseEstimator = PoseEstimator;
+		this.poseEstimator = poseEstimator;
 	}
 
 	public void periodic() {
 		swerve.wrapperPeriodic();
-		PoseEstimator.updateOdometry(swerve.getAllOdometryObservations());
+		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
 	}
 
 
@@ -34,7 +34,7 @@ public class SuperStructure {
 	public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vxMetersPerSecond,
-			PoseEstimator.getEstimatedPose().getX(),
+			poseEstimator.getEstimatedPose().getX(),
 			targetXBlueAlliancePosition
 		);
 	}
@@ -42,13 +42,13 @@ public class SuperStructure {
 	public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vyMetersPerSecond,
-			PoseEstimator.getEstimatedPose().getY(),
+			poseEstimator.getEstimatedPose().getY(),
 			targetYBlueAlliancePosition
 		);
 	}
 
 	public boolean isAtAngle(Rotation2d targetAngle) {
-		double angleDifferenceDeg = Math.abs(targetAngle.minus(PoseEstimator.getEstimatedPose().getRotation()).getDegrees());
+		double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getEstimatedPose().getRotation()).getDegrees());
 		boolean isAtAngle = angleDifferenceDeg < SuperStructureConstants.HEADING_TOLERANCE.getDegrees();
 
 		double currentRotationVelocityRadians = swerve.getRobotRelativeVelocity().omegaRadiansPerSecond;

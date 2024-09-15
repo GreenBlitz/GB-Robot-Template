@@ -6,7 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.poseestimator.PoseEstimator;
+import frc.robot.poseestimator.GBPoseEstimator;
+import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.structures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
@@ -29,7 +30,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
-	private final PoseEstimator PoseEstimator;
+	private final GBPoseEstimator poseEstimator;
 	private final SuperStructure superStructure;
 
 	public Robot() {
@@ -38,16 +39,17 @@ public class Robot {
 			ModulesFactory.create(SwerveName.SWERVE),
 			GyroFactory.create(SwerveName.SWERVE)
 		);
-		this.PoseEstimator = new PoseEstimator(
+		this.poseEstimator = new GBPoseEstimator(
 			SwerveConstants.KINEMATICS,
 			SwerveConstants.INITIAL_WHEEL_POSITIONS,
-			SwerveConstants.INITIAL_GYRO_ANGLE
+			SwerveConstants.INITIAL_GYRO_ANGLE,
+			PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS
 		);
 
-		swerve.setHeadingSupplier(() -> PoseEstimator.getEstimatedPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(PoseEstimator.getEstimatedPose()), Optional::empty, swerve));
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
-		this.superStructure = new SuperStructure(swerve, PoseEstimator);
+		this.superStructure = new SuperStructure(swerve, poseEstimator);
 
 		buildPathPlannerForAuto();
 		configureBindings();
@@ -55,7 +57,7 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(PoseEstimator::getEstimatedPose, PoseEstimator::resetPose);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 	}
 
 	private void configureBindings() {
@@ -75,8 +77,8 @@ public class Robot {
 		return swerve;
 	}
 
-	public PoseEstimator getPoseEstimator() {
-		return PoseEstimator;
+	public GBPoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 
 }

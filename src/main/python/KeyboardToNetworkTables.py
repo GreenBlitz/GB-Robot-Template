@@ -17,7 +17,7 @@ KEYBOARD_KEYS_TABLE = "Keyboard/Keys"
 CLIENT_NAME = "KeyboardToNetworkTables"
 
 
-def key_type_checker(key: Key) -> TypeVar:
+def get_key_type(key: Key) -> TypeVar:
     if hasattr(key, "name"):
         return SpecialKey
     elif hasattr(key, "char"):
@@ -28,16 +28,13 @@ def key_type_checker(key: Key) -> TypeVar:
 def get_update_table_function(table: NetworkTableInstance, is_pressed: bool) -> Callable:
     # Function to update the table based on the key type and its state (pressed or not).
     def update_table(key) -> None:
-        key_type = key_type_checker(key)  # Store the result to avoid repeated calls.
+        key_type = get_key_type(key)  # Store the result to avoid repeated calls.
         if key_type is UndefinedKey:
-            # Do nothing if the key type is undefined.
             return
         if key_type is SpecialKey:
-            # Handle special keys (e.g. ctrl, alt, home).
             table.putBoolean(key.name, is_pressed)
             return
         if key_type is ASCIIKey:
-            # Handle specific ASCII keys or general characters (e.g. 1, a, ;).
             if key.char == "/":
                 table.putBoolean("slash", is_pressed)
             else:
@@ -52,7 +49,7 @@ def wait_until_client_disconnect(keyboard_client: NetworkTableClient) -> None:
         time.sleep(KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS)
 
 
-def listener_factory(keys_table: NetworkTable) -> keyboard.Listener:
+def create__keyboard_listener(keys_table: NetworkTable) -> keyboard.Listener:
     return keyboard.Listener(
         on_press=get_update_table_function(keys_table, True),
         on_release=get_update_table_function(keys_table, False),
@@ -60,7 +57,7 @@ def listener_factory(keys_table: NetworkTable) -> keyboard.Listener:
 
 
 def track_keyboard_until_client_disconnect(keys_table: NetworkTable, keyboard_client: NetworkTableClient) -> None:
-    keyboard_listener = listener_factory(keys_table)
+    keyboard_listener = create__keyboard_listener(keys_table)
     keyboard_listener.start()
     wait_until_client_disconnect(keyboard_client)
     keyboard_listener.stop()

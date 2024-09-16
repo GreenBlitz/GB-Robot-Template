@@ -9,7 +9,7 @@ public class KeyboardBindings {
 
 	public static void configureBindings(Robot robot) {
 		KeyboardController usedKeyboard = KEYBOARD_CONTROLLER;
-		// bindings
+		// bindings...
 	}
 
 }

@@ -18,7 +18,9 @@ public class Phoenix6ThreadSignal extends AngleArraySignal {
     protected double[] getNewValues() {
         Phoenix6Thread.LOCK.lock();
         try {
-            return signalQueue.stream().mapToDouble(Double::doubleValue).toArray();
+            double[] values = signalQueue.stream().mapToDouble(Double::doubleValue).toArray();
+            signalQueue.clear();
+            return values;
         } finally {
             Phoenix6Thread.LOCK.unlock();
         }

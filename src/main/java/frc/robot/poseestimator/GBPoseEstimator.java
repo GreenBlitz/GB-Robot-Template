@@ -117,18 +117,18 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.lastVisionObservation = observation;
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(
-			pose2d -> estimatedPose = PoseEstimatorMath
-				.combineVisionToOdometry(pose2d, observation, estimatedPose, odometryPose, odometryStandardDeviations)
+			odometryPoseSample -> estimatedPose = PoseEstimatorMath
+				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations)
 		);
 	}
 
 	private void addOdometryObservation(OdometryObservation observation) {
 		Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelsPositions());
 		twist = PoseEstimatorMath.addGyroToTwist(twist, observation.gyroAngle(), lastGyroAngle);
-		this.lastGyroAngle = observation.gyroAngle();
-		this.lastWheelPositions = observation.wheelsPositions();
-		this.odometryPose = odometryPose.exp(twist);
-		this.estimatedPose = estimatedPose.exp(twist);
+		lastGyroAngle = observation.gyroAngle();
+		lastWheelPositions = observation.wheelsPositions();
+		odometryPose = odometryPose.exp(twist);
+		estimatedPose = estimatedPose.exp(twist);
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}
 

@@ -23,17 +23,17 @@ public class PoseEstimatorMath {
 		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
 	}
 
-	public static double[] combineStandardDeviations(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
+	public static double[] getCombinedStandardDeviations(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
 		double[] combinedStandardDeviations = new double[3];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
 			double visionStandardDeviation = visionStandardDeviations[i];
-			combinedStandardDeviations[i] = combineStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
+			combinedStandardDeviations[i] = getCombinedStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
 		}
 		return combinedStandardDeviations;
 	}
 
-	public static double combineStandardDeviations(double odometryStandardDeviation, double visionStandardDeviation) {
+	public static double getCombinedStandardDeviations(double odometryStandardDeviation, double visionStandardDeviation) {
 		if (odometryStandardDeviation == 0) {
 			return 0;
 		}
@@ -53,7 +53,7 @@ public class PoseEstimatorMath {
 	public static Transform2d
 		useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, double[] odometryStandardDeviations) {
 		double[] combinedStandardDeviations = PoseEstimatorMath
-			.combineStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
+			.getCombinedStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
 		Transform2d visionDifferenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
@@ -76,8 +76,8 @@ public class PoseEstimatorMath {
 	}
 
 	public static Pose2d combineVisionToOdometry(
-		Pose2d odometryInterpolatedPoseSample,
 		VisionObservation observation,
+		Pose2d odometryInterpolatedPoseSample,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
 		double[] odometryStandardDeviations

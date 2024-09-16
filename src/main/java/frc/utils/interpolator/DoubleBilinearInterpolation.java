@@ -4,20 +4,17 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Translation2d;
 
 import java.util.LinkedList;
-import java.util.stream.Stream;
+import java.util.List;
 
 public class DoubleBilinearInterpolation {
 
-    public static void main(String[] args) {
-        Pair<Translation2d,Double> p1 = new Pair<>(new Translation2d(0,0), 0.0);
-        Pair<Translation2d,Double> p2 = new Pair<>(new Translation2d(1,1), 3.0);
-        Pair<Translation2d,Double> p3 = new Pair<>(new Translation2d(1,0), 1.5);
-        Pair<Translation2d,Double> p4 = new Pair<>(new Translation2d(0,1), 1.5);
-        System.out.println(bilinearInterpolate(new Translation2d(0.5,0.5),p1, p2,p3,p4));
-    }
-    private final LinkedList<Pair<Translation2d, Double>> knowPoints;
+    private final List<Pair<Translation2d, Double>> knowPoints;
     public DoubleBilinearInterpolation(){
         this.knowPoints = new LinkedList<>();
+    }
+
+    public double getInterpolatedValue(Translation2d query){
+        return bilinearInterpolate(query, knowPoints.toArray(Pair[]::new));
     }
 
     @SafeVarargs

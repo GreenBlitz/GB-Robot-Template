@@ -1,8 +1,8 @@
 package frc.robot.LED;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-
 import edu.wpi.first.wpilibj.util.Color;
+
 public class LED implements ILED {
 
 	private Color color;
@@ -21,7 +21,5 @@ public class LED implements ILED {
 	public void turnOff(int index) {
 		setColor(new Color(0, 0, 0), index);
 	}
-
-
 
 }

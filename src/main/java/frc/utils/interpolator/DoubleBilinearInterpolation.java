@@ -17,6 +17,9 @@ public class DoubleBilinearInterpolation {
         return bilinearInterpolate(query, knowPoints.toArray(Pair[]::new));
     }
 
+    public void add (Pair<Translation2d, Double> point){
+        knowPoints.add(point);
+    }
     @SafeVarargs
     public static double bilinearInterpolate(Translation2d query, Pair<Translation2d, Double>... knownPoints) {
         if (knownPoints.length < 4) {

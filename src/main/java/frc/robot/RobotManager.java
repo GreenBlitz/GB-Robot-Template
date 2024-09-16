@@ -28,8 +28,6 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
-	private Phoenix6Thread thread = Phoenix6Thread.getInstance();
-
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();

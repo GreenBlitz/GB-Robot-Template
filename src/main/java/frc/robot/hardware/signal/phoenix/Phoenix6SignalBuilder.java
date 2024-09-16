@@ -6,29 +6,29 @@ import frc.utils.ctre.PhoenixProUtils;
 
 public class Phoenix6SignalBuilder {
 
-	private static final int UPDATE_FREQUENCY_RETRIES = 5;
+    private static final int UPDATE_FREQUENCY_RETRIES = 5;
 
-	private static void setFrequencyWithRetry(StatusSignal<Double> signal, double frequency) {
-		PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);
-	}
+    private static void setFrequencyWithRetry(StatusSignal<Double> signal, double frequency) {
+        PhoenixProUtils.checkWithRetry(() -> signal.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);
+    }
 
-	private static StatusSignal<Double> cloneWithFrequency(StatusSignal<Double> signal, double frequency) {
-		StatusSignal<Double> signalClone = signal.clone();
-		setFrequencyWithRetry(signalClone, frequency);
-		return signalClone;
-	}
+    private static StatusSignal<Double> cloneWithFrequency(StatusSignal<Double> signal, double frequency) {
+        StatusSignal<Double> signalClone = signal.clone();
+        setFrequencyWithRetry(signalClone, frequency);
+        return signalClone;
+    }
 
-	public static Phoenix6DoubleSignal generatePhoenix6Signal(StatusSignal<Double> signal, double frequency) {
-		StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
-		return new Phoenix6DoubleSignal(signalClone.getName(), signalClone);
-	}
+    public static Phoenix6DoubleSignal generatePhoenix6Signal(StatusSignal<Double> signal, double frequency) {
+        StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
+        return new Phoenix6DoubleSignal(signalClone.getName(), signalClone);
+    }
 
-	public static Phoenix6AngleSignal generatePhoenix6Signal(StatusSignal<Double> signal, double frequency, AngleUnit angleUnit) {
-		StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
-		return new Phoenix6AngleSignal(signalClone.getName(), signalClone, angleUnit);
-	}
+    public static Phoenix6AngleSignal generatePhoenix6Signal(StatusSignal<Double> signal, double frequency, AngleUnit angleUnit) {
+        StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
+        return new Phoenix6AngleSignal(signalClone.getName(), signalClone, angleUnit);
+    }
 
-	//@formatter:off
+    //@formatter:off
 	public static Phoenix6LatencySignal generatePhoenix6Signal(
             StatusSignal<Double> signal,
             SignalGetter signalSlope,
@@ -41,24 +41,45 @@ public class Phoenix6SignalBuilder {
 	}
 	//@formatter:on
 
-	/**
-	 * Use only if not fetching the slope signal!!!
-	 */
-	public static Phoenix6BothLatencySignal generatePhoenix6Signal(
-		StatusSignal<Double> signal,
-		StatusSignal<Double> signalSlope,
-		double frequency,
-		AngleUnit angleUnit
-	) {
-		StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
-		StatusSignal<Double> signalSlopeClone = cloneWithFrequency(signalSlope, frequency);
-		return new Phoenix6BothLatencySignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
-	}
+    /**
+     * Use only if not fetching the slope signal!!!
+     */
+    public static Phoenix6BothLatencySignal generatePhoenix6Signal(
+            StatusSignal<Double> signal,
+            StatusSignal<Double> signalSlope,
+            double frequency,
+            AngleUnit angleUnit
+    ) {
+        StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
+        StatusSignal<Double> signalSlopeClone = cloneWithFrequency(signalSlope, frequency);
+        return new Phoenix6BothLatencySignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
+    }
 
-	public interface SignalGetter {
+    public static Phoenix6ThreadSignal generatePhoenix6ThreadSignal(
+            StatusSignal<Double> signal,
+            AngleUnit angleUnit
+    ) {
+        return new Phoenix6ThreadSignal(
+                Phoenix6Thread.getInstance().registerSignal(signal.clone()), signal.getName(), angleUnit);
+    }
 
-		StatusSignal<Double> getSignal();
+    public static Phoenix6ThreadSignal generatePhoenix6ThreadSignal(
+            StatusSignal<Double> signal,
+            StatusSignal<Double> signalSlope,
+            AngleUnit angleUnit
+    ) {
+        return new Phoenix6ThreadSignal(
+                Phoenix6Thread.getInstance().registerSignal(signal.clone(), signalSlope.clone()),
+                signal.getName(),
+                angleUnit
+        );
+    }
 
-	}
+
+    public interface SignalGetter {
+
+        StatusSignal<Double> getSignal();
+
+    }
 
 }

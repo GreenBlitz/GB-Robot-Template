@@ -48,10 +48,10 @@ public class DoubleBilinearInterpolation {
 		Pair<Translation2d, Double> topLeft = boundingBox[2];
 		Pair<Translation2d, Double> topRight = boundingBox[3];
 
-		if (isAllPointsExists(bottomLeft,bottomRight,topLeft,topRight)) {
+		if (isAllPointsExists(bottomLeft, bottomRight, topLeft, topRight)) {
 			throw new IllegalStateException("Bounding rectangle is not properly formed by given points.");
 		}
-		return biLinearInterpolate(bottomLeft,bottomRight,topLeft,topRight,query);
+		return biLinearInterpolate(bottomLeft, bottomRight, topLeft, topRight, query);
 	}
 
 

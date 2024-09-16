@@ -103,17 +103,11 @@ public class JoysticksBindings {
 					)
 			);
 
-		robot.getSwerve()
-			.setDefaultCommand(
-				robot.getSwerve()
-					.getCommandsBuilder()
-					.drive(
-						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+		robot.getSwerve().setDefaultCommand(robot.getSwerve().getCommandsBuilder().drive(() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 //						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-							() -> 0,
-						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)
-					)
-			);
+			() -> 0,
+			() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)
+		));
 
 		usedJoystick.BACK.whileTrue(
 			robot.getSwerve()

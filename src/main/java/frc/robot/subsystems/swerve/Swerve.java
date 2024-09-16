@@ -1,11 +1,9 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
@@ -26,7 +24,6 @@ import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.interpolator.DoubleBilinearInterpolation;
-import frc.utils.interpolator.DoubleInterpolator2D;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -69,11 +66,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
-		discritizationHelper = new DoubleBilinearInterpolation();
-		discritizationHelper.add(new Pair<>(new Translation2d(0,0),1.0));
-		discritizationHelper.add(new Pair<>(new Translation2d(0,11),4.0));
-		discritizationHelper.add(new Pair<>(new Translation2d(6,0),2.5));
-		discritizationHelper.add(new Pair<>(new Translation2d(6,15),4.0));
+		discritizationHelper = new DoubleBilinearInterpolation(constants.discritizationPointsArray());
 
 		updateInputs();
 	}
@@ -299,7 +292,8 @@ public class Swerve extends GBSubsystem {
 		speeds = SwerveMath.applyDeadband(speeds);
 		speeds = handleHeadingControl(speeds, swerveState);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
-		double a = discritizationHelper.getInterpolatedValue(new Translation2d(SwerveMath.getDriveMagnitude(speeds), Math.abs(speeds.omegaRadiansPerSecond)));
+		double a = discritizationHelper
+			.getInterpolatedValue(new Translation2d(SwerveMath.getDriveMagnitude(speeds), Math.abs(speeds.omegaRadiansPerSecond)));
 		speeds = SwerveMath.discretize(speeds, a);
 		Logger.recordOutput("fudg factor", a);
 		applySpeeds(speeds, swerveState);

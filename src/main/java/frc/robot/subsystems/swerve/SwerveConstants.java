@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,7 +22,8 @@ public record SwerveConstants(
 	PIDController xMetersPIDController,
 	PIDController yMetersPIDController,
 	PIDController rotationDegreesPIDController,
-	HolonomicPathFollowerConfig holonomicPathFollowerConfig
+	HolonomicPathFollowerConfig holonomicPathFollowerConfig,
+	Pair<Translation2d, Double>[] discritizationPointsArray
 ) {
 
 	public SwerveConstants(
@@ -29,7 +31,8 @@ public record SwerveConstants(
 		double velocityAt12VoltsMetersPerSecond,
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
-		PIDConstants rotationDegreesPIDConstants
+		PIDConstants rotationDegreesPIDConstants,
+		Pair<Translation2d, Double>[] discritizationPointsArray
 	) {
 		this(
 			swerveName.getLogPath(),
@@ -47,7 +50,8 @@ public record SwerveConstants(
 				velocityAt12VoltsMetersPerSecond,
 				DRIVE_RADIUS_METERS,
 				REPLANNING_CONFIG
-			)
+			),
+			discritizationPointsArray
 		);
 
 		this.rotationDegreesPIDController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());

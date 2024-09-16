@@ -19,9 +19,10 @@ public class DoubleInterpolator2D {
 		dataMap.put(point, value);
 	}
 
-	public void empty(){
+	public void empty() {
 		dataMap.clear();
 	}
+
 	public double get(Translation2d targetPoint) {
 		if (dataMap.isEmpty()) {
 			return 0;
@@ -41,7 +42,7 @@ public class DoubleInterpolator2D {
 		);
 	}
 
-	public static Pair<Translation2d, Translation2d> getTranslationPair(Translation2d target,Translation2d[] knownPoints) {
+	public static Pair<Translation2d, Translation2d> getTranslationPair(Translation2d target, Translation2d[] knownPoints) {
 		if (knownPoints.length == 1) {
 			Translation2d knownPoint = knownPoints[0];
 			return new Pair<>(knownPoint, knownPoint);
@@ -53,7 +54,10 @@ public class DoubleInterpolator2D {
 				return new Pair<>(knownPoints[1], knownPoints[0]);
 			}
 		}
-		return new Pair<>(Translation2dUtils.findClosestPointBefore(target, knownPoints), Translation2dUtils.findClosestPointAfter(target, knownPoints));
+		return new Pair<>(
+			Translation2dUtils.findClosestPointBefore(target, knownPoints),
+			Translation2dUtils.findClosestPointAfter(target, knownPoints)
+		);
 	}
 
 }

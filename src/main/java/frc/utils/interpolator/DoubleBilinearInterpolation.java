@@ -83,11 +83,9 @@ public class DoubleBilinearInterpolation {
         double x = query.getX();
         double y = query.getY();
 
-        double result = (bottomLeftValue * (x2 - x) * (y2 - y) +
+        return (bottomLeftValue * (x2 - x) * (y2 - y) +
                 bottomRightValue * (x - x1) * (y2 - y) +
                 topLeftValue * (x2 - x) * (y - y1) +
                 topRightValue * (x - x1) * (y - y1)) / ((x2 - x1) * (y2 - y1));
-
-        return result;
     }
 }

@@ -49,7 +49,7 @@ def wait_until_client_disconnect(keyboard_client: NetworkTableClient) -> None:
         time.sleep(KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS)
 
 
-def create__keyboard_listener(keys_table: NetworkTable) -> keyboard.Listener:
+def create_keyboard_listener(keys_table: NetworkTable) -> keyboard.Listener:
     return keyboard.Listener(
         on_press=get_update_table_function(keys_table, True),
         on_release=get_update_table_function(keys_table, False),

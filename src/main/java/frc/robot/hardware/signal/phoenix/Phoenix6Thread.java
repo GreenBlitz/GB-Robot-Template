@@ -25,7 +25,7 @@ public class Phoenix6Thread extends Thread {
 		return instance;
 	}
 
-	private static final int UPDATES_PER_ROBORIO_CYCLE = 20;
+	private static final int UPDATES_PER_ROBORIO_CYCLE = 100;
 	private static final int FREQUENCY = 250;
 	private static final int FREQUENCY_SET_RETRIES = 5;
 	private static final double STARTING_DELAY_SECONDS = 5;
@@ -94,7 +94,7 @@ public class Phoenix6Thread extends Thread {
 	}
 
 	private void fetchSignals() {
-		BaseStatusSignal.waitForAll(CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS, signals.toArray(new BaseStatusSignal[0]));
+		BaseStatusSignal.waitForAll(CycleTimeUtils.DEFAULT_CYCLE_TIME_SECONDS, signals.toArray(StatusSignal[]::new));
 	}
 
 	private void updateQueues() {

@@ -6,15 +6,19 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.hardware.signal.phoenix.Phoenix6Thread;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusChain;
+import frc.utils.ctre.CTREDeviceID;
 import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.devicewrappers.TalonFXWrapper;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -27,11 +31,29 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
+	private TalonFXWrapper motor = new TalonFXWrapper(new CTREDeviceID(0, BusChain.CANIVORE));
+	private TalonFXWrapper motor1 = new TalonFXWrapper(new CTREDeviceID(1, BusChain.CANIVORE));
+	private TalonFXWrapper motor2 = new TalonFXWrapper(new CTREDeviceID(2, BusChain.CANIVORE));
+	private TalonFXWrapper motor3 = new TalonFXWrapper(new CTREDeviceID(3, BusChain.CANIVORE));
+	private TalonFXWrapper motor4 = new TalonFXWrapper(new CTREDeviceID(4, BusChain.CANIVORE));
+	private TalonFXWrapper motor5 = new TalonFXWrapper(new CTREDeviceID(5, BusChain.CANIVORE));
+	private TalonFXWrapper motor6 = new TalonFXWrapper(new CTREDeviceID(6, BusChain.CANIVORE));
+	private TalonFXWrapper motor7 = new TalonFXWrapper(new CTREDeviceID(7, BusChain.CANIVORE));
+
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
+		Phoenix6Thread.getInstance().registerSignal(motor.getPosition(), motor.getVelocity());
+		Phoenix6Thread.getInstance().registerSignal(motor1.getPosition());
+		Phoenix6Thread.getInstance().registerSignal(motor2.getPosition());
+		Phoenix6Thread.getInstance().registerSignal(motor3.getPosition());
+		Phoenix6Thread.getInstance().registerSignal(motor4.getPosition());
+		Phoenix6Thread.getInstance().registerSignal(motor5.getPosition());
+		Phoenix6Thread.getInstance().registerSignal(motor6.getPosition());
+		Phoenix6Thread.getInstance().registerSignal(motor7.getPosition());
+		motor.optimizeBusUtilization();
 		this.robot = new Robot();
 	}
 
@@ -72,6 +94,11 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+
+		Phoenix6Thread.LOCK.lock();
+		Logger.recordOutput("timestamps", Phoenix6Thread.getInstance().getTimestampsQueue().stream().mapToDouble(Double::doubleValue).toArray());
+		Phoenix6Thread.getInstance().getTimestampsQueue().clear();
+		Phoenix6Thread.LOCK.unlock();
 	}
 
 	@Override

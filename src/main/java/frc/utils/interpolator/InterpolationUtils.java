@@ -96,7 +96,6 @@ public class InterpolationUtils {
         double x1 = bottomLeft.getFirst().getX(), y1 = bottomLeft.getFirst().getY();
         double x2 = bottomRight.getFirst().getX(), y2 = topLeft.getFirst().getY();
 
-        // Perform bilinear interpolation
         double x = query.getX();
         double y = query.getY();
 

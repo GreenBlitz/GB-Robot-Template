@@ -5,15 +5,18 @@ import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.LinkedList;
 
 public class CTREDevice {
 
-    private final ConnectedInput connectedInput;
+    private final ConnectedInputAutoLogged connectedInput;
+    private final String logPath;
 
-    public CTREDevice() {
-        this.connectedInput = new ConnectedInput();
+    public CTREDevice(String logPath) {
+        this.connectedInput = new ConnectedInputAutoLogged();
+        this.logPath = logPath;
     }
 
     public boolean isConnected() {
@@ -32,6 +35,7 @@ public class CTREDevice {
         }
 
         connectedInput.connected = BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new)).isOK();
+        Logger.processInputs(logPath, connectedInput);
     }
 
 }

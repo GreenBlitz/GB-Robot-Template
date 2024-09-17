@@ -9,33 +9,33 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.LinkedList;
 
-public class CTREDevice {
+public class CTREDevice implements IDevice {
 
-    private final ConnectedInputAutoLogged connectedInput;
-    private final String logPath;
+	private final ConnectedInputAutoLogged connectedInput;
+	private final String logPath;
 
-    public CTREDevice(String logPath) {
-        this.connectedInput = new ConnectedInputAutoLogged();
-        this.logPath = logPath;
-    }
+	public CTREDevice(String logPath) {
+		this.connectedInput = new ConnectedInputAutoLogged();
+		this.logPath = logPath;
+	}
 
-    public boolean isConnected() {
-        return connectedInput.connected;
-    }
+	public boolean isConnected() {
+		return connectedInput.connected;
+	}
 
-    public void updateSignals(InputSignal... signals) {
-        LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
-        for (InputSignal signal : signals) {
-            if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
-                signalsSet.add(((Phoenix6SignalBuilder.SignalGetter) signal).getSignal());
-                if (signal instanceof Phoenix6BothLatencySignal) {
-                    signalsSet.add(((Phoenix6BothLatencySignal) signal).getSignalSlope());
-                }
-            }
-        }
+	public void updateSignals(InputSignal... signals) {
+		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
+		for (InputSignal signal : signals) {
+			if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
+				signalsSet.add(((Phoenix6SignalBuilder.SignalGetter) signal).getSignal());
+				if (signal instanceof Phoenix6BothLatencySignal) {
+					signalsSet.add(((Phoenix6BothLatencySignal) signal).getSignalSlope());
+				}
+			}
+		}
 
-        connectedInput.connected = BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new)).isOK();
-        Logger.processInputs(logPath, connectedInput);
-    }
+		connectedInput.connected = BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new)).isOK();
+		Logger.processInputs(logPath, connectedInput);
+	}
 
 }

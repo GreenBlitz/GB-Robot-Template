@@ -1,6 +1,5 @@
 package frc.robot.hardware.gyro.phoenix6;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.CTREDevice;
 import frc.robot.hardware.gyro.IGyro;

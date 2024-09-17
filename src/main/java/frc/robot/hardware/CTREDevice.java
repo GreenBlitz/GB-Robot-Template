@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.LinkedList;
 
-public class CTREDevice implements IDevice {
+public abstract class CTREDevice implements IDevice {
 
 	private final ConnectedInputAutoLogged connectedInput;
 	private final String logPath;

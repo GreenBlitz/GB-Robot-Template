@@ -1,6 +1,8 @@
 package frc.robot.hardware.request.cansparkmax;
 
 import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.request.IRequest;
 import java.util.function.BiFunction;
@@ -8,28 +10,33 @@ import java.util.function.BiFunction;
 public class CANSparkMAXRequest implements IRequest<Double> {
 
     private double setPoint;
-    private final CANSparkBase.ControlType controlType;
+    private CANSparkBase.ControlType controlType;
     private int pidSlot;
     private BiFunction<Double, Double, Double> feedforwardCalculator;
 
-    private CANSparkMAXRequest(double setPoint, CANSparkBase.ControlType controlType, int pidSlot, BiFunction<Double, Double, Double> feedforwardCalculator) {
+    public CANSparkMAXRequest(double setPoint, CANSparkBase.ControlType controlType, int pidSlot, BiFunction<Double, Double, Double> feedforwardCalculator) {
         this.setPoint = setPoint;
         this.controlType = controlType;
         this.pidSlot = pidSlot;
         this.feedforwardCalculator = feedforwardCalculator;
     }
 
-    public CANSparkMAXRequest(double positionSetPoint, int pidSlot, BiFunction<Double, Double, Double> feedforwardCalculator) {
-        this(positionSetPoint, CANSparkBase.ControlType.kPosition, pidSlot, feedforwardCalculator);
+    public CANSparkMAXRequest(Rotation2d positionSetPoint, int pidSlot, BiFunction<Double, Double, Double> feedforwardCalculator) {
+        this(positionSetPoint.getRotations(), CANSparkBase.ControlType.kPosition, pidSlot, feedforwardCalculator);
     }
 
-    public CANSparkMAXRequest(Rotation2d velocitySetPoint, int pidSlot, BiFunction<Double, Double, Double> feedforwardCalculator) {
-        this(velocitySetPoint.getRotations(), CANSparkBase.ControlType.kVelocity, pidSlot, feedforwardCalculator);
+    public CANSparkMAXRequest(double velocitySetPoint, int pidSlot, BiFunction<Double, Double, Double> feedforwardCalculator) {
+        this(velocitySetPoint, CANSparkBase.ControlType.kVelocity, pidSlot, feedforwardCalculator);
     }
 
     @Override
     public CANSparkMAXRequest withSetPoint(Double setPoint) {
         this.setPoint = setPoint;
+        return this;
+    }
+
+    public CANSparkMAXRequest withControlType(CANSparkBase.ControlType controlType) {
+        this.controlType = controlType;
         return this;
     }
 

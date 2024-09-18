@@ -1,25 +1,22 @@
 package frc.robot.hardware.encoder;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.IDevice;
+import frc.robot.hardware.Phoenix6Device;
 import frc.robot.hardware.signal.InputSignal;
-import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
-import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import org.littletonrobotics.junction.Logger;
 
-import java.util.LinkedList;
 
-public class CANCoderEncoder implements IAngleEncoder, IDevice {
+public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder, IDevice {
 
 	private final CANcoder encoder;
 	private final ConnectedInputAutoLogged connectedInput;
 	private final String logPath;
 
 	public CANCoderEncoder(CANcoder encoder, String logPath) {
+		super(logPath);
 		this.encoder = encoder;
 		this.connectedInput = new ConnectedInputAutoLogged();
 		this.logPath = logPath;
@@ -38,17 +35,7 @@ public class CANCoderEncoder implements IAngleEncoder, IDevice {
 
 	@Override
 	public void updateSignals(InputSignal... signals) {
-		LinkedList<StatusSignal<Double>> statusSignals = new LinkedList<>();
-		for (InputSignal signal : signals) {
-			if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
-				statusSignals.add(((Phoenix6SignalBuilder.SignalGetter) signal).getSignal());
-				if (signal instanceof Phoenix6BothLatencySignal) {
-					statusSignals.add(((Phoenix6BothLatencySignal) signal).getSignalSlope());
-				}
-			}
-		}
-		connectedInput.connected = BaseStatusSignal.refreshAll(statusSignals.toArray(StatusSignal[]::new)).isOK();
-		Logger.processInputs(logPath, connectedInput);
+		super.updateSignals(signals);
 	}
 
 }

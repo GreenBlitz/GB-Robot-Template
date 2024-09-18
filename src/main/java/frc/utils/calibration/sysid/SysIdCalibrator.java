@@ -9,11 +9,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.utils.GBSubsystem;
 import frc.utils.joysticks.SmartJoystick;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
 
-import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 public class SysIdCalibrator {
@@ -34,18 +32,18 @@ public class SysIdCalibrator {
 		this.isCTRE = sysIdConfigInfo.isCTRE;
 
 		SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
-				(Measure<Voltage> volts) -> voltageSetControl.accept(volts.in(Volts)),
-				null,
-				usedSubsystem,
-				usedSubsystem.getName()
+			(Measure<Voltage> volts) -> voltageSetControl.accept(volts.in(Volts)),
+			null,
+			usedSubsystem,
+			usedSubsystem.getName()
 		);
 
 		this.sysIdRoutine = new SysIdRoutine(sysIdConfigInfo.config, mechanism);
 	}
 
 	/**
-	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You must do
-	 * SignalLogger.stop() at the end of the calibration
+	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You
+	 * must do SignalLogger.stop() at the end of the calibration
 	 *
 	 * @param smartJoystick - the joystick to apply the buttons on
 	 */
@@ -79,6 +77,5 @@ public class SysIdCalibrator {
 	private Command getCTRECommand(Command sysIdCommand) {
 		return new SequentialCommandGroup(new InstantCommand(SignalLogger::start), sysIdCommand);
 	}
-
 
 }

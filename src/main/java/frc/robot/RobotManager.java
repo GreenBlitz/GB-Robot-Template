@@ -19,6 +19,7 @@ import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusChain;
+import frc.utils.ctre.CTREDeviceID;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -36,14 +37,14 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 	private Pigeon2Gyro gyro;
-	private Phoenix6AngleSignal yaw,pitch,roll;
+    private Phoenix6AngleSignal yaw,pitch,roll;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		Pigeon2Wrapper wrapper = new Pigeon2Wrapper(0);
+        Pigeon2Wrapper wrapper = new Pigeon2Wrapper(new CTREDeviceID(0, BusChain.ROBORIO));
 		gyro = new Pigeon2Gyro("gyro",wrapper);
 		this.robot = new Robot();
 		yaw = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getYaw(), 50,AngleUnit.DEGREES);

@@ -7,6 +7,7 @@ import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public abstract class CTREDevice implements IDevice {
@@ -36,6 +37,9 @@ public abstract class CTREDevice implements IDevice {
 
 		connectedInput.connected = BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new)).isOK();
 		Logger.processInputs(logPath, connectedInput);
+		for (InputSignal signal : signals){
+			Logger.processInputs(logPath, signal);
+		}
 	}
 
 }

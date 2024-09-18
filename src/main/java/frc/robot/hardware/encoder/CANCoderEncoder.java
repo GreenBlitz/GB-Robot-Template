@@ -12,31 +12,30 @@ import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.LinkedList;
-import java.util.Locale;
 
 public class CANCoderEncoder implements IAngleEncoder, IDevice {
-	
+
 	private final CANcoder encoder;
 	private final ConnectedInputAutoLogged connectedInput;
 	private final String logPath;
-	
+
 	public CANCoderEncoder(CANcoder encoder, String logPath) {
 		this.encoder = encoder;
 		this.connectedInput = new ConnectedInputAutoLogged();
 		this.logPath = logPath;
 	}
-	
+
 	@Override
 	public void setPosition(Rotation2d position) {
 		encoder.setPosition(position.getRotations());
 	}
-	
+
 	@Override
 	public boolean isConnected() {
 		connectedInput.connected = BaseStatusSignal.isAllGood(encoder.getPosition());
 		return connectedInput.connected;
 	}
-	
+
 	@Override
 	public void updateSignals(InputSignal... signals) {
 		LinkedList<StatusSignal<Double>> statusSignals = new LinkedList<>();
@@ -51,5 +50,5 @@ public class CANCoderEncoder implements IAngleEncoder, IDevice {
 		connectedInput.connected = BaseStatusSignal.refreshAll(statusSignals.toArray(StatusSignal[]::new)).isOK();
 		Logger.processInputs(logPath, connectedInput);
 	}
-	
+
 }

@@ -18,14 +18,4 @@ public class Pigeon2Gyro extends CTREDevice implements IGyro {
 		gyro.setYaw(yaw);
 	}
 
-	@Override
-	public void setPitch(Rotation2d pitch) {
-		gyro.setPitch(pitch);
-	}
-
-	@Override
-	public void setRoll(Rotation2d roll) {
-		gyro.setRoll(roll);
-	}
-
 }

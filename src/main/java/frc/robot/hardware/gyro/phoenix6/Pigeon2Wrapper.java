@@ -1,4 +1,4 @@
-package frc.utils.devicewrappers;
+package frc.robot.hardware.gyro.phoenix6;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;

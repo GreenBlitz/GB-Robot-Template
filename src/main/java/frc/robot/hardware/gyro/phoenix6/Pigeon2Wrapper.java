@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.ctre.CTREDeviceID;
+import frc.utils.ctre.PhoenixProUtils;
 
 public class Pigeon2Wrapper extends Pigeon2 {
 
@@ -104,8 +105,8 @@ public class Pigeon2Wrapper extends Pigeon2 {
 		this.pitchOffSetDegrees = 0;
 	}
 
-	public StatusCode applyConfiguration(Pigeon2Configuration configuration) {
-		return getConfigurator().apply(configuration);
+	public StatusCode applyConfiguration(Pigeon2Configuration configuration, int numberOfTries) {
+		return PhoenixProUtils.checkWithRetry(() -> getConfigurator().apply(configuration), numberOfTries);
 	}
 
 	public StatusCode setYaw(Rotation2d newYaw) {

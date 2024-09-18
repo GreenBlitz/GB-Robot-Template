@@ -99,18 +99,13 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	public Pigeon2Wrapper(CTREDeviceID deviceID) {
-		this(deviceID, new Pigeon2Configuration());
-	}
-
-	public Pigeon2Wrapper(CTREDeviceID deviceID, Pigeon2Configuration configuration) {
 		super(deviceID.ID(), deviceID.busChain().getChainName());
 		this.rollOffSetDegrees = 0;
 		this.pitchOffSetDegrees = 0;
-		applyConfiguration(configuration);
 	}
 
-	public void applyConfiguration(Pigeon2Configuration configuration) {
-		getConfigurator().apply(configuration);
+	public StatusCode applyConfiguration(Pigeon2Configuration configuration) {
+		return getConfigurator().apply(configuration);
 	}
 
 	public StatusCode setYaw(Rotation2d newYaw) {

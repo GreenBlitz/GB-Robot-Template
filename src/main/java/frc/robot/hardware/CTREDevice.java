@@ -9,12 +9,12 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.LinkedList;
 
-public abstract class CTREDevice implements IDevice {
+public abstract class Phoenix6Device implements IDevice {
 
 	private final ConnectedInputAutoLogged connectedInput;
 	private final String logPath;
 
-	public CTREDevice(String logPath) {
+	public Phoenix6Device(String logPath) {
 		this.connectedInput = new ConnectedInputAutoLogged();
 		this.logPath = logPath;
 	}

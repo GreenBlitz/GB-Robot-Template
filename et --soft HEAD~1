@@ -1,0 +1,6780 @@
+[33mcommit a193e337117a87432d6830dbf64f7964fab57c2d[m[33m ([m[1;36mHEAD -> [m[1;32mLED-implimenting[m[33m, [m[1;31morigin/LED-implimenting[m[33m, [m[1;31morigin/LED[m[33m, [m[1;32mLED[m[33m)[m
+Author: RJ <ranelj2008@gmail.com>
+Date:   Wed Sep 18 19:16:57 2024 +0300
+
+    Ran - merged
+
+[33mcommit 35ea9986d64ececb796df41db12f0632bcce9c28[m
+Merge: d8eccec3 3c730eef
+Author: RJ <ranelj2008@gmail.com>
+Date:   Wed Sep 18 19:16:23 2024 +0300
+
+    Merge remote-tracking branch 'origin/LED' into LED-implimenting
+    
+    # Conflicts:
+    #       src/main/java/frc/robot/LED/AddressableLED.java
+    #       src/main/java/frc/robot/LED/CANdle.java
+    #       src/main/java/frc/robot/LED/LEDConstants.java
+
+[33mcommit d8eccec3a59e571e406239b3d7e7ed2de70ea882[m
+Author: RJ <ranelj2008@gmail.com>
+Date:   Wed Sep 18 17:48:49 2024 +0300
+
+    Ran - basically added i++
+
+[33mcommit fbaf92b1a74962b9ba996ce312b968e877520628[m
+Author: RJ <ranelj2008@gmail.com>
+Date:   Wed Sep 18 17:48:12 2024 +0300
+
+    Ran - added colors and cool stuff
+
+[33mcommit 0d07498e83d742f775575a0f87db0c2d606a3fce[m
+Author: RJ <ranelj2008@gmail.com>
+Date:   Sun Sep 15 19:44:01 2024 +0300
+
+    Ran - deleted an empty class
+
+[33mcommit 9e5bee2c6baa5d5cc150956b0561f9177424f213[m
+Author: RJ <ranelj2008@gmail.com>
+Date:   Sun Sep 15 18:06:53 2024 +0300
+
+    Ran - done with Candle
+
+[33mcommit 3c730eefd0a54d9b2c315ec5f319bbb1f0aac198[m
+Author: Maya Romm <maya.romm0401@gmail.com>
+Date:   Sun Sep 15 17:21:25 2024 +0300
+
+    maya- work on factory
+
+[33mcommit b9f2f17efe7e16c00e6914e6e954de5ffa420c67[m
+Author: Maya Romm <maya.romm0401@gmail.com>
+Date:   Sun Sep 15 17:15:21 2024 +0300
+
+    maya- add
+
+[33mcommit d15c245874cec08bf12579e0fc3d0c3860469660[m
+Author: Maya Romm <maya.romm0401@gmail.com>
+Date:   Sun Sep 15 16:46:49 2024 +0300
+
+    maya- work on 'LEDFactory'
+
+[33mcommit 185846f13fe827434b85a9b6a823c7b7279c33af[m
+Author: RJ <ranelj2008@gmail.com>
+Date:   Wed Sep 11 19:12:02 2024 +0300
+
+    Ran - fixed the interface
+
+[33mcommit b4485977e2a9fe385c4cfea12ae09062e3cbd200[m
+Author: Noam Kam <noamkam@Noams-MacBook-Air.local>
+Date:   Wed Sep 4 16:29:45 2024 +0300
+
+    noam - import ctre led
+
+[33mcommit 4f9e0f4d2fb8123cbb2a5287a0f18cf4166b7dfa[m
+Author: Noam Kam <noamkam@Noams-MacBook-Air.local>
+Date:   Mon Aug 26 15:55:58 2024 +0300
+
+    noam - created blank classes and interfaces
+
+[33mcommit dbce6fb8000b4f5f277c0ac263ab7c7544c874b4[m
+Merge: d0c609a0 6c0f1507
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Aug 18 15:00:42 2024 +0300
+
+    Merge pull request #280 from GreenBlitz/battery-message
+    
+    Battery Message -> master
+
+[33mcommit 6c0f1507047ff739a5f7917d168d7f6d46a6f072[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Sun Aug 18 14:59:11 2024 +0300
+
+    time
+
+[33mcommit 300e833992a9df95c0aec060bf2e4a89e878a831[m
+Merge: a5a9bdbf d0c609a0
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Sun Aug 18 14:56:20 2024 +0300
+
+    conflicts
+
+[33mcommit d0c609a0e67e460d3f476995ff25e9d98250e04a[m
+Merge: 4fa6e50c 8badbcec
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Aug 18 14:55:05 2024 +0300
+
+    Merge pull request #303 from GreenBlitz/remov-rep
+    
+    Remove Replay
+
+[33mcommit 8badbcec0bc6dcddb4b3e29bf4b4d117bd1ae599[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Sun Aug 18 14:53:29 2024 +0300
+
+    naming
+
+[33mcommit 62ab731661cdf814170a60df87b22d3f08277fb0[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Sun Aug 18 13:29:04 2024 +0300
+
+    format
+
+[33mcommit 21763908fd4b6b3fd180adc6c58d88df156e295d[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Sun Aug 18 13:27:21 2024 +0300
+
+    remove tsuuf
+
+[33mcommit 2dc095b22c70d5218640375370f16dc24aa60015[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Sun Aug 18 13:21:01 2024 +0300
+
+    yoav: remove rep
+
+[33mcommit 4fa6e50c0433e411716062cb54b02deb66940eed[m
+Merge: e3f7bfeb 4cc604f6
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Aug 18 12:28:38 2024 +0300
+
+    Merge pull request #298 from GreenBlitz/fix-deploy
+    
+    Auto Computer Programs -> master
+
+[33mcommit 4cc604f67afc094c04d4b3af88c7fa55452737b6[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Sun Aug 18 12:14:48 2024 +0300
+
+    Yoni - spotless
+
+[33mcommit 1e2e13b3a869815c805e6025e51fa595e354f93b[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sun Aug 18 12:08:28 2024 +0300
+
+    remove testinm
+
+[33mcommit ce22fb816180bac31aab7dc600c20449b56938ed[m
+Merge: 72435fe3 e3f7bfeb
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Aug 18 12:06:31 2024 +0300
+
+    Merge branch 'master' into fix-deploy
+
+[33mcommit 72435fe35be58982074508be83427240c785d85b[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Thu Aug 15 17:29:50 2024 +0300
+
+    Yoni - computer log file
+
+[33mcommit 34cd2153b1f4d56b202b40730d7bc07f7eadb35d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Aug 15 11:09:42 2024 +0300
+
+    space
+
+[33mcommit 534536427f8d6c472106fa50ef6688b94a993dd8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Aug 15 10:54:54 2024 +0300
+
+    clean depencencies
+
+[33mcommit a5a9bdbf408388412ac662cd7d470f2ccdffc2e8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Aug 14 22:42:06 2024 +0300
+
+    foramt
+
+[33mcommit 957d4d97167dff25b726b94b5a848c7c0e10e8ae[m
+Merge: b481b14a e3f7bfeb
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Aug 14 22:40:51 2024 +0300
+
+    Merge branch 'master' into battery-message
+
+[33mcommit e3f7bfebc0e31a4d0281f752f54175e5f1e80f6c[m
+Merge: 84e35953 4a099abe
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Aug 14 22:39:12 2024 +0300
+
+    Merge pull request #296 from GreenBlitz/robot-type
+    
+    Robot Type -> master
+
+[33mcommit 4a099abef80b26bf06ff99d926b48d3c6aba6c6f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Aug 14 22:37:14 2024 +0300
+
+    on robot
+
+[33mcommit bc4dbb1a31a7778216537dc0ad0173767b25476c[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Wed Aug 14 18:56:25 2024 +0300
+
+    Yoni - start
+
+[33mcommit 84e359539f303a9ca53355a10e8b0634ff5448f0[m
+Merge: ff9c534c 8a2ef1df
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Aug 14 17:15:24 2024 +0300
+
+    Merge pull request #295 from GreenBlitz/delete-useless
+    
+    Delete LogTableBoolean -> master
+
+[33mcommit 8a2ef1dfc79221a90480daf89953fc0522c99729[m
+Author: greenblitz <greenblitz@gmail.com>
+Date:   Wed Aug 14 17:06:53 2024 +0300
+
+    Yoni - deleted
+
+[33mcommit b481b14a77424f991d44d1d9bff9ccd6d5a810e0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 12 20:13:32 2024 +0300
+
+    images
+
+[33mcommit 6157b6e59e82428843972880164ca8aeef8e7f2b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 12 20:08:13 2024 +0300
+
+    naming
+
+[33mcommit 0ae175ff94c26a398f99bfbdc25e07278592d906[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 12 19:34:11 2024 +0300
+
+    min volt
+
+[33mcommit ba56c935bc9e383940d4fb1eb3fb00a46c340bda[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 12 19:30:17 2024 +0300
+
+    pub sub wortk
+
+[33mcommit 5f3b8fa632c5d0b059d89bcbfb114aa7562c9bcc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 12 19:12:16 2024 +0300
+
+    pub sub
+
+[33mcommit 2362446e3afc6f91159d32fef0acd7c73690c148[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 12 18:05:14 2024 +0300
+
+    remove unsued stuff
+
+[33mcommit dc4be9e3a6de42c64d19c9cf063439b9eaff68dc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 12 18:00:02 2024 +0300
+
+    cancel thrwo
+
+[33mcommit 565a2b76562b9c76873c5819f22708f097735fe4[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sun Aug 11 19:11:21 2024 +0300
+
+    yoav: git push
+
+[33mcommit cbc7cf783a6a66f80d79a971bbd958f57c347c6a[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sun Aug 11 18:50:15 2024 +0300
+
+    Romy - added an import for rumtime exception
+
+[33mcommit cdbdcb478c6c91e3f773fdfcb8b442601831cd42[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sun Aug 11 18:46:35 2024 +0300
+
+    hhjb
+
+[33mcommit ec600c7f1749b8962f85611f25ffdee2a758f7ad[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Aug 8 01:45:20 2024 +0300
+
+    di
+
+[33mcommit 9e39273000eeafcc38270b72d6a7622c8e7a12ba[m
+Merge: 4d677e7b ff9c534c
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Aug 8 01:44:23 2024 +0300
+
+    conflicts
+
+[33mcommit ff9c534ca6967893db8105b0ec9413a1f26d2a9c[m[33m ([m[1;31morigin/limelight-fixed[m[33m)[m
+Merge: 72563f80 21e904a4
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Aug 7 23:37:26 2024 +0300
+
+    Merge pull request #287 from GreenBlitz/fix-master-utils
+    
+    FIX utils
+
+[33mcommit 21e904a46d980be0491f2f0c7ec285cbff3c2838[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Aug 7 23:35:04 2024 +0300
+
+    fix
+
+[33mcommit 72563f803919822ac092533f1436629a2af061d2[m
+Merge: 2ea2b5fe b9625a08
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Aug 7 23:22:34 2024 +0300
+
+    Merge pull request #286 from GreenBlitz/fix-master-robot
+    
+    Fix Robot
+
+[33mcommit b9625a08667be7cfe8b8a2a417b68940fd1a539b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Aug 7 23:20:15 2024 +0300
+
+    fix
+
+[33mcommit 2ea2b5fec38111bca33c181874473187ca3cd4c6[m
+Merge: 80878112 22564234
+Author: bossyshrimp68 <114258444+bossyshrimp68@users.noreply.github.com>
+Date:   Wed Aug 7 17:13:55 2024 +0300
+
+    Merge pull request #240 from GreenBlitz/log-table-bool
+    
+    Log table bool -> master
+
+[33mcommit 2256423408daab4fada763c3890f759f907002d5[m
+Author: greenblitz <greenblitz@gmail.com>
+Date:   Wed Aug 7 17:11:17 2024 +0300
+
+    Romy - spsps
+
+[33mcommit 4d677e7b49e50b67b007bbd3d6b94f79d5e4904d[m
+Merge: 0f461b3d c5d4fe97
+Author: greenblitz <greenblitz@gmail.com>
+Date:   Wed Aug 7 16:53:18 2024 +0300
+
+    Merge branch 'log-table-bool' into battery-message
+
+[33mcommit c5d4fe979fabbd16e10cb6847bafa3328c4fe8f1[m
+Author: greenblitz <greenblitz@gmail.com>
+Date:   Wed Aug 7 16:49:35 2024 +0300
+
+    Yoni - organized
+
+[33mcommit 1bb3b8999ae58a5ed67f7aca353382b614e898c1[m
+Author: greenblitz <greenblitz@gmail.com>
+Date:   Wed Aug 7 16:43:26 2024 +0300
+
+    hillel - for yoni
+
+[33mcommit 80878112230429df3f1574b5e20dd6bde5aeb8bb[m
+Merge: bcb81a72 7167f2d2
+Author: bossyshrimp68 <114258444+bossyshrimp68@users.noreply.github.com>
+Date:   Wed Aug 7 16:32:34 2024 +0300
+
+    Merge pull request #278 from GreenBlitz/format
+    
+    Format -> master
+
+[33mcommit 7167f2d208da65907b30197bba48fd968c48d96c[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Wed Aug 7 16:30:09 2024 +0300
+
+    format
+
+[33mcommit 94ecbaae294109481ae6432fda0a03c05d09ecaf[m
+Merge: 82b10d88 bcb81a72
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Wed Aug 7 16:26:50 2024 +0300
+
+    ypv: conflic
+
+[33mcommit 82b10d88796c71ee1c813ef5af712c0c1da370d3[m
+Merge: eec3721f 6ff9c4ee
+Author: bossyshrimp68 <114258444+bossyshrimp68@users.noreply.github.com>
+Date:   Wed Aug 7 16:17:47 2024 +0300
+
+    Merge pull request #281 from GreenBlitz/format-check
+    
+    Reformat -> format
+
+[33mcommit 0f461b3d2184830f843ef78811796a24c9d83ab3[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Wed Aug 7 16:16:54 2024 +0300
+
+    romy - bulbul
+
+[33mcommit eec3721fd293caa0a5ab6d4093e7e530fd015d61[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Wed Aug 7 16:14:55 2024 +0300
+
+    yoav: nam,ing
+
+[33mcommit bcb81a728940a384a6a2a1a0a4cbf0cf49aff833[m
+Merge: 2323a2a1 f5cda10f
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Aug 7 15:52:43 2024 +0300
+
+    Merge pull request #254 from GreenBlitz/configs-applier
+    
+    Configs Applier -> master
+
+[33mcommit 60189822769f49d72c0eec363c1368c66653394e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Aug 6 21:00:38 2024 +0300
+
+    computer main
+
+[33mcommit f5cda10f1c3934ebd3850a8c2e84dd9af944edc8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Aug 6 13:55:29 2024 +0300
+
+    remove config constructor
+
+[33mcommit 3ad5b52396dedf6789b7423193022b2a78a80b94[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Aug 6 11:01:14 2024 +0300
+
+    naming
+
+[33mcommit 26066bf35961e3d815cb2982704f480c8b7dd5cb[m
+Merge: aa870efa 2323a2a1
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Aug 6 11:00:24 2024 +0300
+
+    Merge branch 'master' into configs-applier
+
+[33mcommit a2ebb6f1e889709fd1b31274ec73122fbf3f719c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Aug 6 10:56:32 2024 +0300
+
+    added PYTHON_CYCLE_TIME_SECONDS, else {if {}} -> else if {}
+
+[33mcommit 3358b1711b202044fdc2204c2de046dc6107f6d2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Aug 6 09:39:40 2024 +0300
+
+    workflos naming
+
+[33mcommit 4d7f696e79198082b9188048d0657a1f52a3cd43[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Aug 6 09:38:58 2024 +0300
+
+    workflos naming
+
+[33mcommit 6ff9c4ee6652889ae5be8a400227366a818a53e7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 17:28:21 2024 +0300
+
+    reformat
+
+[33mcommit ab4576f9b15c4d011844b3c853f1c02a25d3e9e4[m
+Merge: bea80a32 2323a2a1
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 17:27:43 2024 +0300
+
+    Merge branch 'master' into format
+
+[33mcommit cd47730d24f189f71ace318a9bc0379573c1f7d2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 17:26:41 2024 +0300
+
+    clean by master
+
+[33mcommit 17d08ffe46d802e630ea7e260f9ef1e9f6b1eaef[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 16:42:53 2024 +0300
+
+    clean
+
+[33mcommit 5a2a44d2fa5e251647bbc641886523c38fa27637[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 16:12:58 2024 +0300
+
+    o
+
+[33mcommit 2632bac0df771e7bd5de3e1ee8e894bcef12e031[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 16:10:47 2024 +0300
+
+    yoav: working
+
+[33mcommit cba1255f3b37c739efc61962b77fd9409675d236[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 16:02:21 2024 +0300
+
+    clean battery
+
+[33mcommit 67cc537e458d8dc9111e3b5a500157a57265ca22[m
+Merge: ed6d1313 be9a4c1f
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 15:56:18 2024 +0300
+
+    merge log-table-bool
+
+[33mcommit be9a4c1f90e820185996186f06685a0278ddcba7[m
+Merge: 64fd3ac9 2323a2a1
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 15:53:32 2024 +0300
+
+    Merge branch 'master' into log-table-bool
+
+[33mcommit 2323a2a15aa92d174f6d4485d81f97ee5bb845e3[m
+Merge: d4eec94c 59794820
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Aug 5 15:53:13 2024 +0300
+
+    Merge pull request #279 from GreenBlitz/del
+    
+    del
+
+[33mcommit 597948201a0b73f77def6b83fdef5c075276e503[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 15:51:13 2024 +0300
+
+    del
+
+[33mcommit bea80a32383ffd57ab53eb19519583229e19847f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 15:45:34 2024 +0300
+
+    dependency
+
+[33mcommit f88c00209896d3f7daa5403f253d97c086de3fcc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Aug 5 15:41:15 2024 +0300
+
+    format
+
+[33mcommit d4eec94cb2eafc64b3d66aec8692b9c6969c8ac4[m
+Merge: 6175690f 5cfd2f7a
+Author: bossyshrimp68 <114258444+bossyshrimp68@users.noreply.github.com>
+Date:   Wed Jul 31 19:33:38 2024 +0300
+
+    Merge pull request #202 from GreenBlitz/nt-python
+    
+    Network Table Manager (python) -> master
+
+[33mcommit 5cfd2f7a68429ecfb08c9cd5213909ba1e370466[m
+Merge: 1711db38 6175690f
+Author: greenblitz <greenblitz@gmail.com>
+Date:   Wed Jul 31 19:28:01 2024 +0300
+
+    Merge branch 'master' into nt-python
+
+[33mcommit 1711db38184e6b5f67fc675aecafde8d3ba8f8d6[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Wed Jul 31 18:22:56 2024 +0300
+
+    Romy - fixed my own cr because Yoav is toomtoom
+
+[33mcommit 6175690fb3cc23df121373da0eba484c7c6ae138[m
+Merge: 613217c9 87b72c77
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Jul 29 18:44:08 2024 +0300
+
+    Merge pull request #264 from GreenBlitz/allaince
+    
+    IsFieldConventionAlliance -> master
+
+[33mcommit 87b72c77ab5b2ad890e14119092e137e0ef56a52[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 29 16:10:30 2024 +0300
+
+    isFieldConventionAlliance
+
+[33mcommit aa870efad40ee37caf3a788ee29c184ada418a9d[m[33m ([m[1;31morigin/configs-applier[m[33m)[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 29 00:24:12 2024 +0300
+
+    yoav: 1 space
+
+[33mcommit f4ca17292cfe136b224e462ab262289675510292[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Sun Jul 28 16:32:20 2024 +0300
+
+    Change the name of the var tries
+
+[33mcommit d9a777d3a1f2a0874e53b05fc06448a55bbc139a[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Sun Jul 28 16:20:34 2024 +0300
+
+    fixed wrong indented
+
+[33mcommit b8b8690961ce7eb8b282c5629d47a2af1661065a[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Sun Jul 28 16:18:27 2024 +0300
+
+    fix confusing name to a better one
+
+[33mcommit 2b1ae4963f0586151bad72fabecf9c813b4d720b[m[33m ([m[1;31morigin/nt-python[m[33m)[m
+Merge: eb08b4d6 613217c9
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 25 12:47:52 2024 +0300
+
+    Merge branch 'master' into nt-python
+
+[33mcommit eb08b4d6a3161ca66d3cfd53ff5ef7e18fe0206a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 25 12:45:47 2024 +0300
+
+    yoav: imports
+
+[33mcommit 6c8274040daa1dcdeaa8c1fa8a38fe15414055ba[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed Jul 24 18:40:23 2024 +0300
+
+    Aviv - Create a Config Applier
+
+[33mcommit d9512dc0a211d0f94b165e4d95387eafa95301c3[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Wed Jul 17 15:47:18 2024 +0300
+
+    Yoni - switched stuff
+
+[33mcommit 613217c99cf947b79a93292a5d3f39f62e73db23[m
+Merge: 92878163 326ffb87
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Jul 15 15:55:09 2024 +0300
+
+    Merge pull request #239 from GreenBlitz/fix-latency
+    
+    Latency -> master
+
+[33mcommit 326ffb871cf0e9bdd930ec447684daa2d634e9ea[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 15 10:24:40 2024 +0300
+
+    yoav: fixed
+
+[33mcommit 9fbf4899b56ed513d1f902ba4db157df657caba1[m
+Merge: 1e321735 92878163
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jul 14 22:24:24 2024 +0300
+
+    Merge branch 'master' into nt-python
+
+[33mcommit 9287816303c9968b6a0b52766c4cfb21915071f2[m
+Merge: f1f5a3d4 ffa4f989
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Jul 14 20:13:10 2024 +0300
+
+    Merge pull request #224 from GreenBlitz/chore/default-subsystem-logging-path
+    
+    Subsystems Log Path -> master
+
+[33mcommit ffa4f989664de53f077a9ba904121f79e8d3382d[m
+Merge: 4115fac4 f1f5a3d4
+Author: unknown <greenblitz@gmail.com>
+Date:   Sun Jul 14 19:59:41 2024 +0300
+
+    Merge branch 'master' into chore/default-subsystem-logging-path
+
+[33mcommit f1f5a3d438f1823bd7563da7a2a32b39efbdf0e0[m
+Merge: 7d13ef82 82ff21e8
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Jul 14 19:49:21 2024 +0300
+
+    Merge pull request #232 from GreenBlitz/ips
+    
+    IPs -> master
+
+[33mcommit 1e3217356f60667771ef7b3c30d550b54215233a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jul 14 13:24:53 2024 +0300
+
+    yoav: get table
+
+[33mcommit 4115fac4f6a58fa2134e23fe68bc3bfc1dcd318e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 19:46:59 2024 +0300
+
+    yoav: naming
+
+[33mcommit 64fd3ac96820d6d391171c24d21eec7cecaef9df[m[33m ([m[1;31morigin/log-table-bool[m[33m)[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 17:45:47 2024 +0300
+
+    yoav: organize
+
+[33mcommit 9a3cbb82bbf436c7a142ad319d95c58cc20369d7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 17:42:09 2024 +0300
+
+    yoav: log table bool
+
+[33mcommit bc67f9a05e58237bba8f47d83cacae7c8da5381b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 15:25:10 2024 +0300
+
+    yoav: removed subsys log path
+
+[33mcommit 82ff21e80f571176a4447a21a2f0543d682db6d9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 15:19:47 2024 +0300
+
+    yoav: added ips, rename classed
+
+[33mcommit 85c938651f5b73962e1a7a156a20aede589b2820[m
+Merge: dc8ae02a 7d13ef82
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 14:48:11 2024 +0300
+
+    Merge branch 'master' into nt-python
+
+[33mcommit dc8ae02ae681c8a8af7c3244ad6aab122a097f55[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 14:47:36 2024 +0300
+
+    yoav: reoganized
+
+[33mcommit cf79bbdd1d7066fe9db41d85ddb1e5559ff71e1f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 14:32:42 2024 +0300
+
+    yoav: class instead of static
+
+[33mcommit 0d89c1e425f1561e7875535313245202b54d647d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 13:53:36 2024 +0300
+
+    yoav: sys.exit -> raise TimeouError
+
+[33mcommit 7d13ef82cfa010e1eae60b863500747fbdaa1e74[m
+Merge: 3bb18ec6 ee513742
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Jul 13 13:45:25 2024 +0300
+
+    Merge pull request #198 from GreenBlitz/fix-sysid
+    
+    Fix SysId
+
+[33mcommit ee5137422b6b325ad1f8be58036cd95b81cf36b8[m
+Merge: fc7cd02e 3bb18ec6
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 13:44:00 2024 +0300
+
+    Merge branch 'master' into fix-sysid
+
+[33mcommit 3b39e4480aa2c0b3900ac45807b0be49d4b26c97[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 13:43:45 2024 +0300
+
+    yoav: None type hinting, import NetworkTableInstance
+
+[33mcommit 3bb18ec6feb07ae228733ec64718d59399d07bf1[m
+Merge: 6502d8c8 6c7667c8
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Jul 13 13:42:46 2024 +0300
+
+    Merge pull request #196 from GreenBlitz/gradle-improvement
+    
+    Gradle Improvement
+
+[33mcommit 6c7667c875eea99a3f84f6688459ccc47a62c2b7[m
+Merge: 11dfa464 6502d8c8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 13 13:30:55 2024 +0300
+
+    Merge branch 'master' into gradle-improvement
+
+[33mcommit 6502d8c827795408d9e0d98047468c11dde0be19[m
+Merge: cbc993d4 e3edaf4c
+Author: Noam Rosenberg <95913534+NoamRosenberg08@users.noreply.github.com>
+Date:   Fri Jul 12 18:00:30 2024 +0300
+
+    Merge pull request #225 from GreenBlitz/chore/can-chain-name
+    
+    noam - changed from CANBUS to ROBORIO for the RIO's bus
+
+[33mcommit e3edaf4ce2713d2ab526a7b0226ecad2ae248f98[m
+Author: NoamRosenberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Jul 12 17:58:27 2024 +0300
+
+    noam - changed from CANBUS to ROBORIO for the RIO's bus
+
+[33mcommit 75e32824b2b731029e518de9d93ffc2b750f0314[m
+Author: NoamRosenberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Jul 12 16:54:24 2024 +0300
+
+    noam - changed the way for entering logging path
+
+[33mcommit bd8e7fd3e9e342c765c32ff87455b8111a36fc42[m
+Author: NoamRosenberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Jul 12 16:48:19 2024 +0300
+
+    noam - fixed bug
+
+[33mcommit faba2bedadd149610b1c7134bacd219bf0d3518c[m
+Author: NoamRosenberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Jul 12 16:47:31 2024 +0300
+
+    noam - added logging path
+
+[33mcommit fc7cd02e597c297c76f1ca8d8d5a043e40eaafd5[m
+Merge: 86814d42 cbc993d4
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jul 12 15:23:28 2024 +0300
+
+    Merge branch 'master' into fix-sysid
+
+[33mcommit 26b0eb4a5526c0243ed80ea06ea7256f33d42794[m
+Merge: 6fc87257 cbc993d4
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jul 12 15:18:35 2024 +0300
+
+    yoav: merge master
+
+[33mcommit 11dfa464d06bc6e438663803e68a04a17d56579e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jul 12 15:16:59 2024 +0300
+
+    yoav: merge master, fix computer main
+
+[33mcommit 5477764c8b04ad3b1c222bd2cc96efec4bd935d2[m
+Merge: e9f9eacd cbc993d4
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jul 12 15:10:33 2024 +0300
+
+    Merge branch 'master' into gradle-improvement
+
+[33mcommit cbc993d4ac2796f3691d26ca9065156dcab3d7d2[m
+Merge: edbe73e1 d8586a5a
+Author: Raz Rishoni <razrishoni135@gmail.com>
+Date:   Fri Jul 12 11:59:47 2024 +0300
+
+    Merge pull request #222 from GreenBlitz/pre-master
+    
+    Pre master
+
+[33mcommit d8586a5acfbc290b714702dc9c97c08e7c3ba85b[m
+Merge: 71091615 bc65ee08
+Author: Raz Rishoni <razrishoni135@gmail.com>
+Date:   Fri Jul 12 11:55:26 2024 +0300
+
+    Merge pull request #193 from GreenBlitz/cr-java
+    
+    PR for all java frc code on master (BIG CR TO MASTER)!!!!
+
+[33mcommit bc65ee086c8ecfebd99c694ed55ab5d39bad700d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jul 12 01:10:00 2024 +0300
+
+    yoav: global constants
+
+[33mcommit 0611e3a6c0c5545d18724fd2eb2462d264225935[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jul 12 00:00:35 2024 +0300
+
+    yoav: gear ratio
+
+[33mcommit 136d7a2d5c048f5b014fe71bc4480117a9afa741[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 11 23:55:14 2024 +0300
+
+    yoav: naming prots -> ids
+
+[33mcommit 5c69bf8ed4b3b8c82efba2a4de0a3d259846330d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 11 23:46:50 2024 +0300
+
+    yoav: rot2d in conversions
+
+[33mcommit 418e259953c5e1ce3ea25f5918c321c7deb42aa1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 11 23:43:06 2024 +0300
+
+    yoav: reogrranized funcs
+
+[33mcommit e9817baf72865b76102933c576dd805d8add23a5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 11 23:39:35 2024 +0300
+
+    yoav: conversions clean
+
+[33mcommit 80fa3512c624ee78691f91b99bf3f430633b0f7f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 11 23:33:27 2024 +0300
+
+    yoav: logSaveSpot -> logSavePath
+
+[33mcommit 780a3a14b66a0918e0855f3716708b3a749494f4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 11 23:32:29 2024 +0300
+
+    yoav; robot funcs
+
+[33mcommit ed6d13132b9be56284cf54a0fbc3bc087983069a[m[33m ([m[1;31morigin/battery-message[m[33m)[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 9 20:46:50 2024 +0300
+
+    yoav: naming
+
+[33mcommit 130e2f4b4c5753c401a1fb5cad230f2b3871db6d[m
+Merge: c4d92d18 6eb01087
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 9 18:59:22 2024 +0300
+
+    Merge branch 'development' into battery-message
+
+[33mcommit 6eb0108742c19fd704dc09aa0caefaed5dcbae81[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 9 18:59:10 2024 +0300
+
+    yoav: comments
+
+[33mcommit c4d92d18dfbb107437440916a0e4e6c0e1960a71[m
+Merge: aff59751 1455ef75
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 9 18:51:12 2024 +0300
+
+    Merge branch 'development' into battery-message
+
+[33mcommit 1455ef7599448dd7d5bba1c26eb8d342e7f0d97e[m
+Merge: c22263b4 e7106bd2
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 9 18:50:58 2024 +0300
+
+    Merge branch 'cr-java' into development
+
+[33mcommit e7106bd2aedc324577361d3a47923986fc10026a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 9 18:50:42 2024 +0300
+
+    yoav s[accea
+
+[33mcommit 102d3b56f94ab58589882270ae3eca142623d05b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 9 18:49:34 2024 +0300
+
+    yoav: robot manager
+
+[33mcommit ffd0ba23c60b9104071a22564a318259e222daa5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 9 18:21:44 2024 +0300
+
+    yoav: this.
+
+[33mcommit 86814d428219546ac2d452b3660de10ca355dbc4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 8 23:55:34 2024 +0300
+
+    yoav: namiong
+
+[33mcommit f3d3a81b01a995aa25b6409bf80631cef5913ca2[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 8 17:45:19 2024 +0300
+
+    yoav: fix sysid
+
+[33mcommit 63f4e435677c2245be61b859cf10e14fab30652a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jul 6 18:55:49 2024 +0300
+
+    yoav: naming
+
+[33mcommit c22263b4221cfbaf1b4e71dac78998d71cfb0544[m
+Merge: 3a5c5af5 04584fa1
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Jul 5 01:50:51 2024 +0300
+
+    Merge branch 'cr-java' into development
+
+[33mcommit 04584fa147891c69887dc490d482aa4d30d4671d[m
+Merge: d7df9dcf e72010f9
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Jul 5 01:34:32 2024 +0300
+
+    Merge pull request #213 from GreenBlitz/process-builder
+    
+    Yoni - changed to process builder
+
+[33mcommit e72010f925ebe1b2ba1641c8dc76e4fbaea91643[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Jul 5 01:23:53 2024 +0300
+
+    Yoni - changed to process builder
+
+[33mcommit aff59751281157dfbbc8d1631d729223dc6d93d3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 14:21:50 2024 +0300
+
+    yoav: clean
+
+[33mcommit 47271103f01671fc1441dea9e7ba74e1a4c144b0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 14:15:27 2024 +0300
+
+    yoav: naming
+
+[33mcommit e76238d2e8a9ac6ad8b14699e26d539219e334e6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 14:09:17 2024 +0300
+
+    yoav: naming
+
+[33mcommit 7d372bdae88f5d3398fbc4f9dc69bd90b557a247[m
+Merge: 7abea62f 3a5c5af5
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 13:52:32 2024 +0300
+
+    yoav: merged dev
+
+[33mcommit 3a5c5af5e11db25f528b17fbb8b99ad7956b7a34[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 13:44:11 2024 +0300
+
+    yoav: ip's
+
+[33mcommit e2f9e7cb3de95ed6a147754f760f04fbb3606827[m
+Merge: 6c783f91 d7df9dcf
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 13:31:14 2024 +0300
+
+    Merge branch 'cr-java' into development
+
+[33mcommit 6c783f911f7fe24dfb54520e703c7365359efa8b[m
+Merge: 53685a1c e9f9eacd
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 13:31:00 2024 +0300
+
+    Merge branch 'gradle-improvement' into development
+
+[33mcommit e9f9eacd46f8b3662fad54cf7ae5b47389e07ad6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 13:29:38 2024 +0300
+
+    yoav: {}
+
+[33mcommit cf25906d5fef65dd1f039943c2181c9267f22768[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jul 4 13:24:36 2024 +0300
+
+    yoav: runComputerPrograms uses ip, added exception
+
+[33mcommit d7df9dcf633ef2db6f4714a59ff68df806741c2f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jul 3 22:58:38 2024 +0300
+
+    yoav: comments
+
+[33mcommit 53685a1c346924703f1e659cdc532bce6b30d6f7[m
+Merge: 13b5eb69 0bf0c539
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Wed Jul 3 22:32:00 2024 +0300
+
+    Merge branch 'gradle-improvement' into keyboard-dev
+
+[33mcommit 0bf0c539488723357a0e463055bd522f39e96d1d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jul 3 22:30:59 2024 +0300
+
+    yoav: fix
+
+[33mcommit 13b5eb69d11e85386f13bbf682c736a5e22018b3[m
+Merge: 740314e5 c7f5064c
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Wed Jul 3 22:29:47 2024 +0300
+
+    Merge branch 'gradle-improvement' into keyboard-dev
+
+[33mcommit c7f5064ca336466cb4890510c8b33e21c62e3558[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jul 3 22:15:56 2024 +0300
+
+    yoav: better
+
+[33mcommit 740314e52a69638f3b2e2d1ceb7ee25932ca25e0[m
+Merge: d79468c9 56fb47f9
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed Jul 3 19:37:27 2024 +0300
+
+    Merge branch 'gradle-improvement' into keyboard-dev
+
+[33mcommit d79468c9e1bfa9206b39e03b48f0871907a0573f[m
+Merge: 48803fcb 6fc87257
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed Jul 3 19:37:15 2024 +0300
+
+    Yoni - fixed conflict
+
+[33mcommit 48803fcbc83c86e60100a2c4d9a348268bd2ede6[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Wed Jul 3 18:59:53 2024 +0300
+
+    yoav: romy
+
+[33mcommit 0b8226f3b5882e7107ac97d23ada5b437c183e8b[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Wed Jul 3 17:35:30 2024 +0300
+
+    yoav: mirror utlis
+
+[33mcommit 078a89bd9a37bebdb1ee830d5978c1abe345eb7b[m
+Author: bossyshrimp68 <114258444+bossyshrimp68@users.noreply.github.com>
+Date:   Wed Jul 3 16:22:58 2024 +0300
+
+    Update src/main/java/frc/utils/calibration/sysid/SysIdCalibrator.java
+    
+    changed a comment
+
+[33mcommit 6fc8725711fa0fd364e83358566e43e10710d0f5[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Wed Jul 3 15:59:30 2024 +0300
+
+    Yoni - changed order
+
+[33mcommit c7ab1663846d62ab13b7fabe3a57a2239e344ca4[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Wed Jul 3 15:58:04 2024 +0300
+
+    Yoni - privates and returns
+
+[33mcommit 7abea62f850ad197a219f9eef0e4f0e1780677f0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jul 3 00:00:01 2024 +0300
+
+    yoav: clean a bit
+
+[33mcommit 56fb47f9ded652a1bad1408b168e9d9de71a52ab[m[33m ([m[1;31morigin/gradle-improvement[m[33m)[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 2 22:32:46 2024 +0300
+
+    yoav: groups
+
+[33mcommit 5c000efecaa62679e1d44d6b82f469509898220a[m[33m ([m[1;31morigin/cr-java[m[33m)[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 2 22:24:17 2024 +0300
+
+    yoav: naming
+
+[33mcommit 61c2ff032f79e1a91f65e321db1186132a6632db[m[33m ([m[1;31morigin/fix-sysid[m[33m)[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 2 21:25:57 2024 +0300
+
+    yoav: added buttons function
+
+[33mcommit fb780f47ceb643788e055d8cb63e522c45ca6302[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 2 21:14:53 2024 +0300
+
+    yoav: package naming
+
+[33mcommit 155f4520cd8ea73e72581747f6c9c1f201a7eafb[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 2 21:13:46 2024 +0300
+
+    yoav: package naming
+
+[33mcommit 16dc5d29d8e29bba717ed6f14f7544c9044b8178[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Jul 2 20:49:58 2024 +0300
+
+    yoav: joysticks ports
+
+[33mcommit 110334809f436fcdbbd58092e3d88d9af68bc3aa[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Jul 2 20:47:41 2024 +0300
+
+    yoav: rubmblr
+
+[33mcommit 5565bac5f62acb12efc0f89ccca6d339d56d553a[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Jul 2 20:39:33 2024 +0300
+
+    yoav: logger
+
+[33mcommit bbfb5ee570b8747dcd2f28eafb73f38fe05809b1[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Jul 2 20:07:04 2024 +0300
+
+    yoav: clean
+
+[33mcommit 693d6bf2b56fbc08af0e0546e07476037f52ed02[m
+Merge: f2d5d3ca f3bf319c
+Author: hillelv <140002343+hillelv@users.noreply.github.com>
+Date:   Tue Jul 2 19:13:39 2024 +0300
+
+    Merge pull request #201 from GreenBlitz/file-maker
+    
+    Computer Log File
+
+[33mcommit f3bf319c0d8dd2cbfec2094bfd0329f04f838234[m
+Merge: 9689ae70 f2d5d3ca
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Tue Jul 2 19:03:25 2024 +0300
+
+    Merge branch 'cr-java' into file-maker
+
+[33mcommit 9689ae7079b8fded6c629dfce8cd12a1871e1bb5[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Tue Jul 2 18:51:56 2024 +0300
+
+    Yoni - cleaned
+
+[33mcommit f2d5d3ca11589f4c2aa059c9bdcb59e44f776e66[m
+Merge: 772d6a2f 2a30eeb4
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 18:30:39 2024 +0300
+
+    Merge pull request #204 from GreenBlitz/better-ctre-utils
+    
+    CTREUtils
+
+[33mcommit cd32653028ff889e7d42788a34cfaaca7aef51e7[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 17:48:53 2024 +0300
+
+    Yoni - logging files logging path
+
+[33mcommit addc13a4f48286bb1e7d7b682ac6b4437ea61c88[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 17:43:54 2024 +0300
+
+    Yoni - ctre utils suck
+
+[33mcommit b1243dc718dd416343ace837cf8a54496f68fc0c[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 17:43:32 2024 +0300
+
+    Yoni - more logging
+
+[33mcommit 87cccf6de56f89a11b8282ad1865995e8c6c7ee5[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 17:40:42 2024 +0300
+
+    Yoni - paths
+
+[33mcommit acc0d2186ff2910132bc7114dcd68e2750d83125[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 17:38:59 2024 +0300
+
+    Yoni - changed names more
+
+[33mcommit 270ac82913a1eb1ed948d39bf5e80be76881224c[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 17:36:43 2024 +0300
+
+    Yoni - computer log files
+
+[33mcommit 53de7f8f47e194b771d3e7b6e0d19ff56d951511[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 17:19:19 2024 +0300
+
+    Yoni - sussy baka fuck you
+
+[33mcommit fa9de4d89809407e86e3358ca781f354fb10727d[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 16:04:22 2024 +0300
+
+    Yoni - changed files
+
+[33mcommit 5b9494221c872edbabc7248db8f1be694e59527d[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 15:52:44 2024 +0300
+
+    Yoni - spaces
+
+[33mcommit 2a30eeb473162f02a5e41d4353e228a1abc6b67f[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 15:41:44 2024 +0300
+
+    Yoni - better
+
+[33mcommit 25a7cd2b5252af9c02cec343f162531cdb7aa46a[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 15:35:12 2024 +0300
+
+    Yoni - types
+
+[33mcommit d32b9b879800f33471c8d05c30a2181290676c6e[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 15:32:14 2024 +0300
+
+    Yoni - .txt
+
+[33mcommit 699dddfcb6f7b8ce4267a76c55be1d27cd17e73a[m
+Merge: d7cbf65c 772d6a2f
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 15:08:49 2024 +0300
+
+    Yoni - fixed conflicts
+
+[33mcommit d7cbf65c01ada1658131eb4edcbd4a7e36fc0565[m
+Merge: aa87a5d3 edbe73e1
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 15:07:47 2024 +0300
+
+    Merge branch 'master' into file-maker
+
+[33mcommit aa87a5d36b9dc63fa31ac6ae6def209ceeb691bb[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 15:05:49 2024 +0300
+
+    Yoni - cleaned
+
+[33mcommit 9f5096fed2581f4698a63110b1607e3ab82e6c35[m
+Author: GreenBlitz <greenblitz4590@gmail.com>
+Date:   Tue Jul 2 15:02:30 2024 +0300
+
+    yoav: gradleworking
+
+[33mcommit 5253788bebf88e867cac52b9d33adec3549f9a1c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jul 2 11:55:14 2024 +0300
+
+    yoav: naming
+
+[33mcommit 2f18070b089c83431e4eab822900e70ba29e961c[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jul 2 03:15:54 2024 +0300
+
+    Yoni - bruh you dont have to make conversation on every function. just say use files man
+
+[33mcommit 772d6a2fec155b6e732d7787854a38e8e7762203[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 21:00:01 2024 +0300
+
+    yoav: naming convention
+
+[33mcommit 9261adcd8f3222ae70bda33db555142f6c0022c7[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 20:00:09 2024 +0300
+
+    Yoni - append
+
+[33mcommit 4b66b59bbea2364f3e8bc973e01babf1f88d0528[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 19:54:52 2024 +0300
+
+    Yoni - string builder
+
+[33mcommit bf7e3c2d1a8d8fd0f5938a5ac617f4df6f87088f[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 19:52:16 2024 +0300
+
+    Yoni - changed to files
+
+[33mcommit fea34d0fc85b0441ee2c66c5929b405e3e83287e[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 19:40:54 2024 +0300
+
+    Yoni - seperated arguments
+
+[33mcommit 663ac83657bbd330e932d1a977952ee07ddd7d2f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 19:40:12 2024 +0300
+
+    yoav: clean
+
+[33mcommit 76e78cf424b9fb1aedbc99a49cea59ef48f72ae8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 19:14:02 2024 +0300
+
+    yoav: battery design
+
+[33mcommit 156382b1442b72d92dac174933771857271d2406[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 18:47:55 2024 +0300
+
+    yoav: please work
+
+[33mcommit d76b92fa094c95dd750178ae0fa03890662bde8d[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 17:46:29 2024 +0300
+
+    Yoni - output files :)
+
+[33mcommit 8b2a00ef8484c26fcb916fcd02fe14dc6b429304[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 17:04:52 2024 +0300
+
+    yoav: naming
+
+[33mcommit caa4e52a1074e0fae25b6742be153a736ddae973[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 16:36:27 2024 +0300
+
+    yoav: logs simulation into project
+
+[33mcommit a774bfbbad6a0bd2988df945edaca524cf0896b7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 16:13:22 2024 +0300
+
+    yoav: redesign bus status
+
+[33mcommit f4da4216c6cd3be56b5f0ac6cd15ff36dfa390f6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 14:57:41 2024 +0300
+
+    yoav: package naming
+
+[33mcommit a290747f55064bcda8a16e5a53355ec12387100e[m
+Merge: ba4a0845 edbe73e1
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 14:30:03 2024 +0300
+
+    Merge branch 'master' into nt-python
+
+[33mcommit f97546c29181fd7d586c51b40e59d3824ed8318f[m
+Merge: 692bd7cb edbe73e1
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 14:29:40 2024 +0300
+
+    Merge branch 'master' into gradle-improvement
+
+[33mcommit edbe73e11a6c2302f6f8d7364c4ab0832228ebb8[m
+Merge: 57e6efee 9a761c7c
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Jul 1 14:28:58 2024 +0300
+
+    Merge pull request #203 from GreenBlitz/fix-workflow
+    
+    Workflows Triggers To Run
+
+[33mcommit 9a761c7c3f484075face44d8ea0efafc70d8ede0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 14:25:08 2024 +0300
+
+    yoav: changed workflows triggers
+
+[33mcommit 27bff0c60bd63fd22a187d21f803c52d19c0c8e7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 11:46:10 2024 +0300
+
+    yoav: clean spaces
+
+[33mcommit d4e0047b0e5b169bb1c257c0a15bd3b1e93cd7ba[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 04:21:45 2024 +0300
+
+    Yoni - desktop
+
+[33mcommit 95ea155fd28880de7089d02810d54a09d6ce1977[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 04:20:19 2024 +0300
+
+    Yoni - cleaned more
+
+[33mcommit ac6a06618f5202b80308a35895c9d303480004c1[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 04:18:45 2024 +0300
+
+    Yoni - cleaned
+
+[33mcommit 9cdd8c77f4ca03c735b1cf01b8405b1c0a43608d[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 04:16:17 2024 +0300
+
+    Yoni - output files work
+
+[33mcommit ba4a0845f8c2f7ac2c9bc0cb9755e44041fbbd2a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 01:20:49 2024 +0300
+
+    yoav: clean
+
+[33mcommit 8ff6b850032c76f78cae552078f2248b575ee612[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 01:02:43 2024 +0300
+
+    yoav: gi
+
+[33mcommit 4f8896ce9b82babcdf45cb25e9c55ed66a2db10a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 00:54:08 2024 +0300
+
+    yoav: clean
+
+[33mcommit fc66702df309756d51701da4371415073d2ad337[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 00:41:10 2024 +0300
+
+    Yoni - split enter
+
+[33mcommit 52af2a4f26d5bde45afcee9a78c3cde3cc442934[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 00:40:01 2024 +0300
+
+    Yoni - cleaned
+
+[33mcommit 1618bd461bb7fe25ecacb3db59407d755959f2d5[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 00:33:22 2024 +0300
+
+    Yoni - changed stuff
+
+[33mcommit 565fbdc61c81148aec0454d93117e6b130059d96[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 00:32:27 2024 +0300
+
+    yoav: funny
+
+[33mcommit e8e62fa59420885f17cfceac2c60afd994a2aff3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 00:32:06 2024 +0300
+
+    yoav: funny
+
+[33mcommit a044722be12951b9830594d888a08a7e439e4cbd[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 00:29:45 2024 +0300
+
+    yoav: gi
+
+[33mcommit 22b228672cba4568c91749379f57b6e0507951fb[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jul 1 00:28:22 2024 +0300
+
+    Yoni - added output file
+
+[33mcommit ea553dac662b39b8789084a6ea89ff60e4bde421[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jul 1 00:26:07 2024 +0300
+
+    yoav: kill me
+
+[33mcommit 0db80653ca31e15c4715340699ec8cf1b8800eb2[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 23:57:05 2024 +0300
+
+    Yoni - gitignore more
+
+[33mcommit 4e0bfc21e90b7378cb94d3c6e793f7fbbaf8ed71[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 23:53:13 2024 +0300
+
+    Yoni - fix sussy
+
+[33mcommit be18a2a0e4cb31f6a6f9352bc85dd0681ecd927b[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 23:49:52 2024 +0300
+
+    Yoni - ctrl alt l
+
+[33mcommit 85196bfd1c2df4d78865879d6c74ddaefaa5c495[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 23:43:03 2024 +0300
+
+    yoav: cr changes
+
+[33mcommit 3c58c7a4f814a12fb5d39721ac01e517ae2f263b[m
+Merge: 9d9980f8 1787cd2a
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 23:33:29 2024 +0300
+
+    yoav: klill me
+
+[33mcommit 9d9980f8a30275b70f7d6baa63a590de87177dc9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 23:29:17 2024 +0300
+
+    yoav: gitignore again
+
+[33mcommit 1787cd2a577a5f2a621a2b40a87b96b506e96255[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 23:29:17 2024 +0300
+
+    yoav: pycache to gitignore
+
+[33mcommit 53239eeb2d0e84c021b157f49362ca798b075e02[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 23:28:47 2024 +0300
+
+    yoav: pycache to gitignore
+
+[33mcommit 37865b652ed85e46361d2c97f2954e3aac0b7176[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 23:24:47 2024 +0300
+
+    yoav: nt manager python
+
+[33mcommit 4ea59af1877ff814a96f9f676978d3a884fb882a[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 23:21:49 2024 +0300
+
+    Yoni - fixed according to stupid CR
+
+[33mcommit 7b4145970797c0373ffd027418f264d3ca1cbd01[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 22:05:05 2024 +0300
+
+    yoav: I hate Python
+
+[33mcommit 5a67bd5e6acc81bdf7da8cdbeb06e3ce14519fd4[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 20:55:07 2024 +0300
+
+    Yoni - fixed according to CR
+
+[33mcommit 2c19e3cfdd580c5327a7975cb0e6b89221277ebf[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 19:37:15 2024 +0300
+
+    Yoni - added safe
+
+[33mcommit a8ede989b076f974203c021ea25b8ae9b8304009[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 19:35:26 2024 +0300
+
+    Yoni - changed naming
+
+[33mcommit 8d7e9bf2a97ea455a6c54218eb9e488b014e992e[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 19:32:30 2024 +0300
+
+    Yoni - removed
+
+[33mcommit bb37d70e0f197ae182ac0a55c7a28459b6e6813b[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 19:31:53 2024 +0300
+
+    Yoni - cleaned
+
+[33mcommit 320ac416dbbb47f4a9c9cd129237869c1bf25b8a[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 19:28:17 2024 +0300
+
+    Yoni - added more output files
+
+[33mcommit 697fbb50391232c187ae8b36bd05b2c8a122b8fc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 18:54:59 2024 +0300
+
+    yoav: added nt manager in oython
+
+[33mcommit 7aa5077268542e00484e33d1099908db31f47553[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 16:40:05 2024 +0300
+
+    Yoni - fixed issue
+
+[33mcommit 55fc37dde063c40e22ce5c568c07735a37ccb21f[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 16:32:18 2024 +0300
+
+    Yoni - removed test
+
+[33mcommit 1418eac4b689ce32970631b140aaec53e6c89880[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 16:30:36 2024 +0300
+
+    Yoni - added more functionality
+
+[33mcommit 01d6e4fc5cacc42c8147237cf0cffc32c856dc36[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 16:10:59 2024 +0300
+
+    Yoni - tested and it works
+
+[33mcommit 58881ce21df9030991d2e04ddb98fd1c57d81eab[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 16:08:35 2024 +0300
+
+    yoav: logger factory
+
+[33mcommit ac85aee3dc6105edd8dc7abb697c16676557ad8f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 15:53:11 2024 +0300
+
+    yoav: package naming, clean logger utils
+
+[33mcommit 1a82747d2496c0b639fb0517209734945dac81b3[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 30 15:47:34 2024 +0300
+
+    Yoni - added file creator
+
+[33mcommit fcc9a1091d72732b30401e137ebb95d773edc5da[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 12:14:16 2024 +0300
+
+    yoav: imports
+
+[33mcommit 04128d2186ed5f0463906f0ccb98b13d91561aa7[m
+Merge: b2c3884e 91f3f364
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Jun 30 12:13:29 2024 +0300
+
+    Merge pull request #200 from GreenBlitz/cmd-handler-improvement
+    
+    Better CMD
+
+[33mcommit 91f3f364d4ddd4d7effdbc18a5fd8f4463a519b2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 12:06:05 2024 +0300
+
+    yoav: added command print
+
+[33mcommit b2c3884e20f3a3bb7bb4d05574f9ce1d4c169407[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Jun 30 11:33:33 2024 +0300
+
+    yoav: fixed naming
+
+[33mcommit 6e0f6f135868cf2cf22bb7bf1097037ed729db9a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:52:47 2024 +0300
+
+    yoav: clean
+
+[33mcommit cd7990a280fb31439c1fa50daf2ab53e76858da5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:50:53 2024 +0300
+
+    yoav: clean
+
+[33mcommit 37c2966dfa9e0d297942cfcfb9ac85d5357916f5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:49:03 2024 +0300
+
+    yoav: bus chain as enum
+
+[33mcommit 3b4c8ef77aa6ca9f3e7cb48f13ef39ea4810503c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:37:54 2024 +0300
+
+    yoav: bus, talonfx wrapper, button id
+
+[33mcommit 45a65330d6f29b8abec025f4d0f81c378ee3ebc0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:22:01 2024 +0300
+
+    yoav: naming
+
+[33mcommit 8029c3228ab54d6a53a960786e2f4524d7a893ef[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:19:43 2024 +0300
+
+    yoav: const organize
+
+[33mcommit 3a4365714e54dc511344971466902f741d6ee9b5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:18:27 2024 +0300
+
+    yoav: const organize
+
+[33mcommit 100e07c280ccb170bfa00492c346c6bc7ee54476[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:14:46 2024 +0300
+
+    yoav: comment
+
+[33mcommit 043157efd8006fda32ed4aaeedbee1d361c8cba4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:13:24 2024 +0300
+
+    yoav: battery naming
+
+[33mcommit e0ad3fc077105f5ae2b1f08bed596fba2dcbced6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 23:03:05 2024 +0300
+
+    yoav: clean
+
+[33mcommit 0e2594c3cc622a1bcaeba48bb622b2d9c6c6d379[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 22:23:25 2024 +0300
+
+    yoav: organize
+
+[33mcommit 55142b80b7710a5ff39e7b11370dc1babdcd4662[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 22:18:17 2024 +0300
+
+    yoav: orginized batter
+
+[33mcommit 3dd6da7123bce00389d0a7c2c5cbc32a69c92ad2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 22:11:54 2024 +0300
+
+    yoav: removed git?
+
+[33mcommit 8cbe12af971e42efa3eb82dcfed7491e86868c7f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 22:06:39 2024 +0300
+
+    yoav: updated max receive and transmit erros
+
+[33mcommit 597c41e336ce8372573c419a830a216b5d532295[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 20:06:07 2024 +0300
+
+    yoav: cleaned smart joystick
+
+[33mcommit 877dade73052ab09925bf2bca5c71bc515d18af9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 19:23:14 2024 +0300
+
+    yoav: i'm stupid
+
+[33mcommit 6dfc0e96a9c5ef311c5468b1185cb59ca11fca3b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 18:58:02 2024 +0300
+
+    yoav: joysticks clean
+
+[33mcommit a44d2eedd58db11d81cc7b0b16f8ba79a9aa7d99[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 16:37:00 2024 +0300
+
+    yoav: reforamat
+
+[33mcommit 4f69d5d5e204a264587ea890a783cab5da856b3c[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sat Jun 29 16:19:55 2024 +0300
+
+    Yoni - added linux support
+
+[33mcommit 730b73559c653340bbd85b37f7ab892f708a32a1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 15:56:53 2024 +0300
+
+    yoav: clean
+
+[33mcommit dfaa96f7eaf3cf9af38bf1155406363370dc6121[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 15:45:34 2024 +0300
+
+    yoav: clean
+
+[33mcommit 797df96de0c5f48ed626e2a3653785c86c8ba322[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sat Jun 29 15:43:23 2024 +0300
+
+    Tested
+
+[33mcommit b5330ac9b80c91a3509c110272040df074c0287d[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sat Jun 29 15:15:01 2024 +0300
+
+    Yoni - switched to paths
+
+[33mcommit 3471aeb6ee06b3bf62e32115f10242e272e87607[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 12:50:21 2024 +0300
+
+    yoav: report & status naming
+
+[33mcommit fc1df2075eaf8d8d53b9cd8020310d670ccfc041[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 12:44:42 2024 +0300
+
+    yoav: button id clean
+
+[33mcommit 3a08ed1029ddaf993dad089270957d8ec55fbbce[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 12:36:54 2024 +0300
+
+    yoav: button id
+
+[33mcommit 608dc67019e157be0b4116d9e636b5d0791f2434[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 12:16:08 2024 +0300
+
+    yoav: motor simulation protected
+
+[33mcommit 80cd24c7f58487c3e65a9dc73b80362f6546d8e0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 12:14:59 2024 +0300
+
+    yoav: motor simulation protected
+
+[33mcommit 3b407a075f45946d2760c86f472ce60a1f997f92[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 12:13:08 2024 +0300
+
+    yoav: splited motor simulation to manager
+
+[33mcommit d40b610b71e8af240a63453ba7e217e8178efd2c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 12:04:22 2024 +0300
+
+    yoav: merged robot type functions
+
+[33mcommit 0b44559ec8f14fdc2dbeea915815139ed43670c2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 11:57:34 2024 +0300
+
+    yoav: wheel radius clean
+
+[33mcommit afd47f50690eceed98ad47873bf2bd61ed4fffb9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 11:33:34 2024 +0300
+
+    yoav: clean mirror utils
+
+[33mcommit ec8c4ed910db7c54e1746de1f6cd0ff76d7905df[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 11:20:19 2024 +0300
+
+    yoav: di in simulation
+
+[33mcommit cf7eb2c690641dd6a21e95b1cd7bd731f163f731[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 00:19:37 2024 +0300
+
+    yoav: optimize set false
+
+[33mcommit 08650985591c9281c6215e33175de210aec49d54[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 00:17:57 2024 +0300
+
+    yoav: fixed show function
+
+[33mcommit 7bfaaa54a35bec205ba369b5b34d05cd090dd0a7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 29 00:04:20 2024 +0300
+
+    yoav: cleaned const
+
+[33mcommit ca1c813e80b6d3175bf75c4cfba7dea9203d92cb[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 23:44:31 2024 +0300
+
+    yoav: cmd handler update
+
+[33mcommit 76a8f16f2a04ce39d971d724139cc37591741549[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 23:40:32 2024 +0300
+
+    yoav: cleaned tests
+
+[33mcommit 44ccad0d63203885637916d9ffccc788b94933e0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 23:33:32 2024 +0300
+
+    yoav: orginize
+
+[33mcommit c9ca8e1affe2ab7baf6e35fbf4c8b96222cafe91[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 23:10:47 2024 +0300
+
+    yoav: cleaned logic expression
+
+[33mcommit c5d5f6af788582a4ef0037f3910105059ac1b67b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 22:09:01 2024 +0300
+
+    yoav: removed todos in py
+
+[33mcommit 883115c252941eefed01e69e45dd8eb13e9ab986[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 21:15:42 2024 +0300
+
+    yoav: working
+
+[33mcommit 825e75ac4270b56d34a09c34b5da7944caf36f58[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 21:04:53 2024 +0300
+
+    yoav - reorginized
+
+[33mcommit 38438309cfcab03568ad0e918583865ebcb65400[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 21:02:58 2024 +0300
+
+    yoav: disable minimize
+
+[33mcommit 9b9b075104682c55f7c31241514a3435499ba5c1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 19:35:01 2024 +0300
+
+    yoav: clean
+
+[33mcommit fb49cd3e14d1c3f8558a37e270a5accff5db0141[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 19:01:13 2024 +0300
+
+    yoav: working
+
+[33mcommit d26563f612f058409fa27991797e018c816e3004[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 16:10:50 2024 +0300
+
+    yoav: naming
+
+[33mcommit a6ee368c4d7634af9835763ce3eec60dd6a54c40[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 15:58:22 2024 +0300
+
+    yoav: working
+
+[33mcommit 2ac1290bf9a862b943d4c53af79e647d7fc5db69[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 15:32:16 2024 +0300
+
+    yoav: fixed message logic in python
+
+[33mcommit 0c6811980dc47c0ac37be9cabe490fd4cf3f1060[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 15:29:05 2024 +0300
+
+    yoav: python working
+
+[33mcommit 5ed1248953a9259dfdc447f654e0198988e95ac0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 28 15:10:07 2024 +0300
+
+    yoav: args improvment
+
+[33mcommit 71a11225cc964ee13b9efea47abe8165e92bfd27[m
+Merge: caece35d 5cf34769
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Jun 28 13:40:01 2024 +0300
+
+    Merge pull request #195 from GreenBlitz/paths
+    
+    yoav: Paths To Logger
+
+[33mcommit 736f15380f36771267b01cb5ac3ff59d7b6ac7a6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 23:57:05 2024 +0300
+
+    yoav: removed stop logger
+
+[33mcommit 692bd7cb718335d6b2cebee431910d5253659b48[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 23:37:27 2024 +0300
+
+    yoav: naming
+
+[33mcommit 1649ee82b63a1ef2a82eeade80c2c8fe93fd794d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 23:29:47 2024 +0300
+
+    yoav: orginized tasks
+
+[33mcommit b639e5d10a54a7e4134b5c84af7c8036de8765f0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 23:21:36 2024 +0300
+
+    yoav: toString -> ''
+
+[33mcommit 5165528f120aed5a43475a9515588ec50351f905[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 23:14:58 2024 +0300
+
+    yoav: added setIp func
+
+[33mcommit eb9c57c7538be2ecf2858f0dbe0f34de03a117fe[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 22:44:48 2024 +0300
+
+    yoav: main -> mainClass
+
+[33mcommit e524ffabb7e18f76c307cc2beec3f633b85923be[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 22:37:33 2024 +0300
+
+    yoav: cooler named
+
+[33mcommit 0c0cfee47d034fb5c02cf05f66bcdff360014397[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 15:08:26 2024 +0300
+
+    yoav: naming
+
+[33mcommit b3e05ab16890ea8e4c8066a48372764cda8161c5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 27 14:57:14 2024 +0300
+
+    yoav: looks fine
+
+[33mcommit 5cf3476951ec51d151c4bee9f3b3ada393cac0ee[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 26 22:00:27 2024 +0300
+
+    yoav - spaces
+
+[33mcommit 551cbc2510160fea95fe3ffd13ab3ec07bc2b6ed[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 26 21:59:44 2024 +0300
+
+    yoav: cr changes
+
+[33mcommit 9b7d86682401bbeec907c8b576c43b77e92c8493[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 26 21:58:36 2024 +0300
+
+    yoav: cr changes
+
+[33mcommit a92da8f730d98a10cb6f45406aea8c9c59b68c05[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 26 13:10:56 2024 +0300
+
+    yoav: changed logger path to be path instead of string
+
+[33mcommit caece35d5e579de333e8a685d4f6bc4b61232c94[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 26 12:55:10 2024 +0300
+
+    yoav - naming
+
+[33mcommit 37ab56b3f0452cb5545ba692a581e123c1cd2935[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 26 00:18:45 2024 +0300
+
+    yoav: one line
+
+[33mcommit 57905202eb5fc2cc39f9adc9389a7e8dcd44db2d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 26 00:15:08 2024 +0300
+
+    yoav: naming
+
+[33mcommit d1e0dbcee91f9f126b5c5fb4751d4151df75c9a3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 26 00:06:41 2024 +0300
+
+    yoav - naming
+
+[33mcommit e9a9f87f4731a13e6db1d86b0ea60cde5c62e3f3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jun 25 16:42:07 2024 +0300
+
+    yoav: comment
+
+[33mcommit 503aa4606bcebca3641bc69331fc23e93ba806b2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jun 25 15:58:24 2024 +0300
+
+    yoav: cr changes
+
+[33mcommit 296f4f10e3d05cc3a5c252244d7636f3c5fd0514[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jun 25 14:43:10 2024 +0300
+
+    yoav - space
+
+[33mcommit 413f5195ddf23cf067d2ba26c8d7790b601b48b5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jun 25 14:32:46 2024 +0300
+
+    yoav - spaces and sim
+
+[33mcommit 0d0d741b18e3b91d25eeb34b3649852a7feeed82[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jun 24 23:31:26 2024 +0300
+
+    yoav- removed this.
+
+[33mcommit c33eca08b924b99484bf46fb73d6222b2318e035[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jun 24 23:27:07 2024 +0300
+
+    yoav- clean func
+
+[33mcommit f80069f45bd8d5ce5ff52ced2abdaad0d8986d60[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jun 24 23:05:52 2024 +0300
+
+    yoav: enum for log saving spot
+
+[33mcommit 1c7ab3fe918b358e2ba295f6fc853f7e5f111e65[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jun 24 22:48:58 2024 +0300
+
+    yoav - wheel radius
+
+[33mcommit 27d98143eff236b4de099917dd8ef37a048e4118[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Jun 24 21:57:34 2024 +0300
+
+    yoav - var
+
+[33mcommit c29b9c62ee08ae56d950c3d46719afc9dac1b74f[m
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Mon Jun 24 17:04:09 2024 +0300
+
+    yoav: added all java
+
+[33mcommit 71091615b9ee318ad07026f2bea52deebe7f0217[m[33m ([m[1;31morigin/pre-master[m[33m)[m
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Mon Jun 24 17:03:03 2024 +0300
+
+    yoav: remove all frc java coding
+
+[33mcommit 57e6efeecb6d4b2b90339b86424fb40fef9d7834[m
+Merge: 6c8e2ca6 7c088433
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Jun 22 23:38:30 2024 +0300
+
+    Merge pull request #191 from GreenBlitz/this
+    
+    yoav: ADD This.
+
+[33mcommit 7c088433d26b19e5d2140c97c5e2c98409e21ee5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 22 23:33:14 2024 +0300
+
+    yoav: this
+
+[33mcommit 6c8e2ca6354da835bc6ab7b0bf6dcacb3e33dde9[m
+Merge: b99f6d51 7631f3d6
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Thu Jun 20 16:29:26 2024 +0300
+
+    Merge pull request #190 from GreenBlitz/fix-docs
+    
+    yoav - fix docs
+
+[33mcommit 7631f3d6a4dea6a59a0042ec04e1a6fbaa51a695[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Thu Jun 20 16:26:30 2024 +0300
+
+    yoav -
+
+[33mcommit b99f6d5157e97c7cfc67cbd3e0a02cb8ab54e47d[m
+Merge: aa07cb4c ae86140d
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Wed Jun 19 09:22:39 2024 +0300
+
+    Merge pull request #188 from GreenBlitz/fix-statoc
+    
+    yoav
+
+[33mcommit ae86140d9c36494d144f41908f65bc5a9976927c[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed Jun 19 09:20:40 2024 +0300
+
+    yoav
+
+[33mcommit aa07cb4c7b04ea3c3bd33aa110284e84ce4efb83[m
+Merge: cc067bfb ac222720
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 18 11:25:00 2024 +0300
+
+    Merge pull request #186 from GreenBlitz/cmd-fix
+    
+    Cmd
+
+[33mcommit ac222720ccf72b43843a4d5005adca6ea09d679d[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 18 11:21:48 2024 +0300
+
+    Yoni - remoce print
+
+[33mcommit 639599461ac17c26014abd85ba504730f520b9c5[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 18 11:21:17 2024 +0300
+
+    Yoni - fixed directory
+
+[33mcommit 1b53db0eee2052e69744ab3e80540991fa38d6aa[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 18 11:20:19 2024 +0300
+
+    Yoni - fixed directory
+
+[33mcommit cc067bfbed392147940748b013fd0cac6c119ea6[m
+Merge: cb721e18 76c4eae9
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 18 10:58:57 2024 +0300
+
+    Merge pull request #184 from GreenBlitz/cmd
+    
+    Cmd
+
+[33mcommit 76c4eae95d4be63e76383d3825e8dbc254944202[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 18 10:56:58 2024 +0300
+
+    Yoni - cleaned and changed names
+
+[33mcommit e31980bca1fa43e2b487e71573daf91108387f29[m
+Merge: 71c61859 cb721e18
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 18 10:54:19 2024 +0300
+
+    Merge branch 'master' into cmd
+
+[33mcommit 71c618593f729aea1818a9425428681d6b098ad8[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 18 10:53:06 2024 +0300
+
+    Yoni - removed testing
+
+[33mcommit cb721e18bfe5c41bc961acf4886c000c8b11edf3[m
+Merge: e108885e df3407ed
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Tue Jun 18 10:21:04 2024 +0300
+
+    Merge pull request #185 from emilyyyylime/master
+    
+    Fix Gradle deprecation warning
+
+[33mcommit df3407edece3fb43f33773551791bc5d7fb93a5a[m
+Author: emilylime <emilyyyylime+git@gmail.com>
+Date:   Tue Jun 18 08:55:00 2024 +0300
+
+    Update build.gradle to be compatible with Gradle 9.0
+
+[33mcommit 2d8949fb1e73371be01d21ac87b364d63f4e95e1[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jun 17 16:35:45 2024 +0300
+
+    Yoni - fixed protected
+
+[33mcommit 74f32593c63e8102c8eed6cf12aab47bc94f6557[m
+Merge: f5a98f9c e108885e
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jun 17 16:22:32 2024 +0300
+
+    Merge branch 'master' into cmd
+
+[33mcommit f5a98f9c6a221ab02a8ed77e272e6b5c984017bc[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Mon Jun 17 15:17:58 2024 +0300
+
+    Yoni - fixed according to CR
+
+[33mcommit 3e1abdf11e3cf1e44ae3f56f2d939cdde0e643f5[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 16 17:06:37 2024 +0300
+
+    Yoni - fixed magic strings
+
+[33mcommit 11c791da58d6e3999335f80808e77db01701621d[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 16 17:03:23 2024 +0300
+
+    Yoni - added deploy
+
+[33mcommit dfe199b1f67ca0aa135fa5ecf096a035875b8919[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 16 16:44:14 2024 +0300
+
+    Yoni - changed name
+
+[33mcommit 6759315538b66015ea3f1a7be1b3eed6ec5149fe[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 16 16:43:24 2024 +0300
+
+    Yoni - removed duplicate
+
+[33mcommit 0e3b60b7b8d0595a08ff0b2fe5d7c5df74711cb9[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Jun 16 16:42:26 2024 +0300
+
+    Yoni - added cmdhandler and on deploy
+
+[33mcommit e1470b20e2bdc34b400a2e709acd7bf743ce6bd7[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Jun 14 13:34:54 2024 +0300
+
+    Yoni - testing
+
+[33mcommit 13e0662aec57c14e532b080fcc24a478893ecd34[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Jun 14 02:57:30 2024 +0300
+
+    Yoni - added handler
+
+[33mcommit e108885ed5bb1d0e78162cf356f3db7755ce1c10[m
+Merge: 4f80461a 3f4f62bd
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Jun 14 02:53:47 2024 +0300
+
+    Merge pull request #164 from GreenBlitz/canivore-status
+    
+    yoav - Bus Status (using ctre)
+
+[33mcommit 3f4f62bd2c76e8b116cfdf56d5326a3db99c0b21[m
+Merge: 690dea1d 4f80461a
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 12 12:58:07 2024 +0300
+
+    Merge branch 'master' into canivore-status
+
+[33mcommit 4f80461ac6ac17ecf290a7bda174de79c0925ee4[m
+Merge: 67df4768 d1f6c2fc
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Jun 12 12:50:01 2024 +0300
+
+    Merge pull request #181 from GreenBlitz/fix-modulu
+    
+    yoav - fix Modulu
+
+[33mcommit d1f6c2fc5b12edd40fe4b55a2d256c0edae7a1c0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Jun 12 12:48:09 2024 +0300
+
+    yopav - frx
+
+[33mcommit 690dea1db2c0deb395b901f5ab8c808c4744f6c8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Jun 11 23:53:04 2024 +0300
+
+    yoav - added the hal in conversions
+
+[33mcommit d3163f23c379c5f61321b3c740efd65cdcc11565[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 11 13:58:46 2024 +0300
+
+    yoav - deafualt -> current
+
+[33mcommit ea3b164c34883269cb526a14f322b91f0b283ba7[m
+Author: YoniKiriaty <YoniKiriaty@gmail.com>
+Date:   Tue Jun 11 13:58:00 2024 +0300
+
+    yoav - deafualt -> current
+
+[33mcommit 78c4ca949ceeaaf72b0d939a97a9b334872fbd22[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Jun 11 13:21:53 2024 +0300
+
+    yoav - finish
+
+[33mcommit d9a1ffe862aec83fe1548c7d5c5b1993ca43c6ba[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Jun 11 13:10:54 2024 +0300
+
+    yoav & noam - fxies
+
+[33mcommit eb34bd3c43e8e89a29be5634e0fb51037cc2b9bb[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 8 20:14:09 2024 +0300
+
+    yoav- moved to use hal util
+
+[33mcommit 67df4768fbb873654e7091ea5182fedc4e56c0e6[m
+Merge: 7e6508ca c45a69da
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sat Jun 8 14:39:08 2024 +0300
+
+    Merge pull request #175 from GreenBlitz/greenblitz
+    
+    GREENBLITZ
+
+[33mcommit c45a69da96d1697c8b145ca93d6a215cd615500a[m
+Merge: f79f3762 7e6508ca
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sat Jun 8 13:13:17 2024 +0300
+
+    Merge branch 'master' into greenblitz
+
+[33mcommit 7e6508ca24f6e9015d009ee0d6335bd459c44774[m
+Merge: 27e9c923 e97ea4cf
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Jun 8 13:01:53 2024 +0300
+
+    Merge pull request #176 from GreenBlitz/naming
+    
+    yoav - Naming
+
+[33mcommit e97ea4cf725d9b448c9c328dfa1cd94afd7bea19[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Jun 8 12:57:43 2024 +0300
+
+    yoav- change naming
+
+[33mcommit f79f37629dc4b1f484c126eca7f95621c6fa916a[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sat Jun 8 01:24:22 2024 +0300
+
+    Yoni - GREENBLITZ
+
+[33mcommit 27e9c923d99092404950587f1d9cb7e56cb271bf[m
+Merge: 1bf03e66 f7a34b31
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Jun 7 14:19:21 2024 +0300
+
+    Merge pull request #172 from GreenBlitz/ctredevice-improvment
+    
+    yoav - CTREDevice Improvment
+
+[33mcommit f7a34b31389697e54f7e545911aa19cdc077658f[m
+Merge: a72ecd18 1bf03e66
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:52:22 2024 +0300
+
+    Merge branch 'master' into ctredevice-improvment
+
+[33mcommit 1bf03e66c6421fec12ef2e61f6d3e23751f47e0d[m
+Merge: 52c6bb95 a40a789b
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Jun 7 11:50:02 2024 +0300
+
+    Merge pull request #174 from GreenBlitz/improve-scripts
+    
+    yoav - Design Scripts
+
+[33mcommit a40a789b0e6111d14f77c526a6e05fe8ff59f6ab[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:41:33 2024 +0300
+
+    yoav - check
+
+[33mcommit 9500ae3a0c54c57d1fda0cf00c94d0382fe25a12[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:39:15 2024 +0300
+
+    yoav - check
+
+[33mcommit 6c8d30957b4526c0b96bbbaf4b6a69804c843f42[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:38:31 2024 +0300
+
+    yoav - check
+
+[33mcommit a82b64edc70950a13837546d3f7334f3bd8df5c7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:36:41 2024 +0300
+
+    yoav - check
+
+[33mcommit 1758616e26984a2829dc46d9413135ee39ad46c2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:35:07 2024 +0300
+
+    yoav - check
+
+[33mcommit 675f0a8a18872f2e880fca3bdb1e3b756258bfaa[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:31:52 2024 +0300
+
+    yoav - check
+
+[33mcommit 238844496706ee735e2a873e8d285dbc1fdcbcba[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:29:50 2024 +0300
+
+    yoav - check
+
+[33mcommit 876a46174d4d96c1326054e34bba980630704703[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:29:06 2024 +0300
+
+    yoav - check
+
+[33mcommit 51e0a7a617eb56853456c42129b34b7c0ab5fbc2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:22:48 2024 +0300
+
+    yoav- added
+
+[33mcommit 8f665b2996f5607ae54b4661f61eda28e2735a92[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Jun 7 11:13:34 2024 +0300
+
+    yoav - comment
+
+[33mcommit 52c6bb95373325f82fbf4d4eef8ee28b2c99cbf3[m
+Merge: e0dec116 f8600aee
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Thu Jun 6 22:35:35 2024 +0300
+
+    Merge pull request #173 from GreenBlitz/fix-hooks
+    
+    yoav - Fix Hooks
+
+[33mcommit f8600aeea1445d9cb76981205aa12be0986ade12[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 6 22:32:39 2024 +0300
+
+    yoav - fixed
+
+[33mcommit a72ecd1819f19b9d7b3cf0fa494bd130d6a47fd6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 6 20:11:43 2024 +0300
+
+    yoav - naming
+
+[33mcommit af4b5a7c58f0721ee3a761a34a2e8f381cf797b0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 6 20:10:18 2024 +0300
+
+    yoav - made record
+
+[33mcommit 06c32baee6014b3905ca9435871d149f0fe51756[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Jun 6 18:48:01 2024 +0300
+
+    yoav - cleaned cycle time util
+
+[33mcommit 366fea7df32722568fa91b68365a106b220d148b[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Sun Jun 2 10:21:58 2024 +0300
+
+    yoa v- const hagne
+
+[33mcommit 75b7b76f69d2a5a40af58166a93a34e6597d23dd[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed May 29 20:33:45 2024 +0300
+
+    yoav - naming
+
+[33mcommit 428834d9e11d3ad245ba6a7615b018e392bb0f23[m
+Merge: ac65cc21 e0dec116
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed May 29 18:45:05 2024 +0300
+
+    yoav - rio -> cycle
+
+[33mcommit e0dec116ad2e0bebac823b97aa77365887dd1208[m
+Merge: 1df7049a 880fe364
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat May 25 14:44:37 2024 +0300
+
+    Merge pull request #167 from GreenBlitz/improve-roborio-utils
+    
+    yoav - Rio Utils Improvment
+
+[33mcommit 880fe364d2438106d1abc950620ef6cf093a56bf[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 25 14:29:57 2024 +0300
+
+    yoav - avergae
+
+[33mcommit ac65cc2127d895bcf493c064d33420556fe8fd70[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 15:35:59 2024 +0300
+
+    yoav - todo
+
+[33mcommit 5e6789cf15862151e97688fb29e17d243b31a098[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 15:27:27 2024 +0300
+
+    yoa v- added
+
+[33mcommit 1df7049ab4f9abac83d2331f87f3af1620717e0d[m
+Merge: a79668a3 ffba3aae
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 24 12:55:19 2024 +0300
+
+    Merge pull request #162 from GreenBlitz/fix-ctreDevice
+    
+    yoav - Clean CtreDeviceID
+
+[33mcommit ffba3aae5b5796a5c9519a64ab6f5882dcaad070[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 12:48:37 2024 +0300
+
+    ypoav - cleaN
+
+[33mcommit e22ce92e84f7058d80366d541039d8fdf54e4e22[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 12:47:06 2024 +0300
+
+    yuoav - orginized
+
+[33mcommit 45fa0b82abbfe543e147ccc7d49b306d55c07061[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 12:34:20 2024 +0300
+
+    yoav - clean
+
+[33mcommit a79668a35e2c823c2b760dd7bed18783734985d4[m
+Merge: ebd89538 c9960b52
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 24 12:15:14 2024 +0300
+
+    Merge pull request #161 from GreenBlitz/candevice
+    
+    yoav - Candevice
+
+[33mcommit c9960b522b4542f202cd0ce990c3beb5097dffa0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 12:10:22 2024 +0300
+
+    yoav naming
+
+[33mcommit e281d02215fc164b6969ad903b9f2a9c8af8c2fd[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 12:02:24 2024 +0300
+
+    yoav - added ctre device
+
+[33mcommit ebd895388fda55cf13047958566b0fae8891ee15[m
+Merge: 0599f40d e22c85f0
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 24 11:22:16 2024 +0300
+
+    Merge pull request #160 from GreenBlitz/fast-compile
+    
+    yoav - Fast Compile
+
+[33mcommit e22c85f0240046109acf51e950808ed9298d6eca[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 11:20:23 2024 +0300
+
+    yoav - clean
+
+[33mcommit c8d21e3a29bb5c0f10a1a8eb0537ff9789f6d98b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 11:10:20 2024 +0300
+
+    yoav - clean
+
+[33mcommit ba3cf3945e565288eb9345f43ef40d706e9c90d7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 11:02:59 2024 +0300
+
+    yoav - returned pigeon
+
+[33mcommit bb366b6a4aa1ae78b7bc91bcf0f88b875b295770[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 10:55:49 2024 +0300
+
+    yoav - cehcl prigeon
+
+[33mcommit 2653650657688663dfe118914a1582d9b9c7cec1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 10:52:20 2024 +0300
+
+    yoav - check
+
+[33mcommit 0599f40d6fe686c0ddfee4d5f0e7892f805eea49[m
+Merge: 2d5b2ba8 55c5a12d
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 24 10:06:25 2024 +0300
+
+    Merge pull request #159 from GreenBlitz/solve-warnings
+    
+    yoav - Solved Warnings In Compile
+
+[33mcommit 55c5a12d867813f76b5a6dad9ded6cce43b39d38[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 10:03:25 2024 +0300
+
+    yoav - solved warnings
+
+[33mcommit 2d5b2ba8de7f9c5c2f198894bc481ec4f7ae6480[m
+Merge: a87db7a7 f508ca73
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 24 09:26:24 2024 +0300
+
+    Merge pull request #157 from GreenBlitz/fix
+    
+    yoav - Fix
+
+[33mcommit f508ca73ecdd29c9356042253fdc8c3e0089b944[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 09:08:21 2024 +0300
+
+    yoav - edited
+
+[33mcommit 0b9a9cf7aa51642a0dc3b548fe0ef5066e84e7be[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 09:00:12 2024 +0300
+
+    yoav - fixed
+
+[33mcommit a87db7a75dc64d6e0dead0a37c41a231d5d0c367[m
+Merge: e738e4c7 e7157969
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 24 08:36:02 2024 +0300
+
+    Merge pull request #155 from GreenBlitz/mrge-conflict
+    
+    yoav - conflicts?
+
+[33mcommit e7157969c08514d95ce680eb54f3dc4944bf0fbe[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 24 08:33:19 2024 +0300
+
+    conflicts?
+
+[33mcommit e738e4c7f2b7a89afbba1208b128d54b5a709760[m
+Merge: ec733534 95e2a234
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Thu May 23 17:15:18 2024 +0300
+
+    Merge pull request #153 from GreenBlitz/visualvm
+    
+    yoav - Auto Set IP For VisualVM
+
+[33mcommit 95e2a2343a565ccb120cb201a308f66e878daf4f[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Thu May 23 17:09:26 2024 +0300
+
+    yoav - work on deplot
+
+[33mcommit fdd77e30ebd0235ba7085c7926b7a85b7a34808c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed May 22 17:20:04 2024 +0300
+
+    yhoav - need to check
+
+[33mcommit 31de8a304b6c0a6a3407883feda68cb400207176[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed May 22 17:14:29 2024 +0300
+
+    yoav - need to check on robot
+
+[33mcommit ec73353416539ca69f01f3c061ca9c3f3849cc86[m
+Merge: cbc8f635 eef02250
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed May 22 11:37:15 2024 +0300
+
+    Merge pull request #152 from GreenBlitz/visualvm
+    
+    yoav - Visual Vm
+
+[33mcommit eef022503f98ba43ad161a53729a0e4a8215478a[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Mon May 20 17:20:15 2024 +0300
+
+    yoav - const
+
+[33mcommit 89aef671e95ec4d14d83c2f13e070fc11b84e02f[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Mon May 20 17:06:11 2024 +0300
+
+    yoav - working on router nit usb
+
+[33mcommit 20c3529b9925a38a44af19e9e8af8b11a6b6e765[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Mon May 20 11:57:50 2024 +0300
+
+    yoav  working in usb
+
+[33mcommit e9b6bf7f8f535048b564115e6b0a187559e01856[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Mon May 20 11:11:13 2024 +0300
+
+    yoav -a dded
+
+[33mcommit cbc8f635a4ccfc1701ed6f4a7000b0cfd5e64347[m
+Merge: 70a8851e 18b8c6c7
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun May 19 17:44:09 2024 +0300
+
+    Merge pull request #150 from GreenBlitz/remove-toggle
+    
+    yoav - removed Toggle Constants
+
+[33mcommit 18b8c6c768956319b0623f482153a80784e2a5fb[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 19 17:41:15 2024 +0300
+
+    yoav - fixed
+
+[33mcommit 70a8851e006f5aac454e36e569e8cf9768524636[m
+Merge: 546f79f2 8564a265
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Sun May 19 13:09:25 2024 +0300
+
+    Merge pull request #148 from GreenBlitz/toggle-const
+    
+    yoav - Toggle Constants
+
+[33mcommit 8564a265b00253b0bd7646263700803984eba78a[m
+Merge: 56c321a9 546f79f2
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Sun May 19 13:07:04 2024 +0300
+
+    Merge branch 'master' into toggle-const
+
+[33mcommit 546f79f2e1673d35d9488d45094bf7f170eaf745[m
+Merge: 651f06b9 6985f001
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Sun May 19 12:59:05 2024 +0300
+
+    Merge pull request #108 from GreenBlitz/wheel-radius
+    
+    yoav -  Wheel Radius Characterization
+
+[33mcommit 6985f001944ac05bd91d9d8ba361d9391c4e02a6[m
+Merge: e6269782 651f06b9
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Sun May 19 12:53:22 2024 +0300
+
+    Merge branch 'master' into wheel-radius
+
+[33mcommit 56c321a9092b140a1bfc062432bcee3c2646389b[m
+Merge: f37f9635 651f06b9
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 18 21:42:09 2024 +0300
+
+    yoav - merged master
+
+[33mcommit 651f06b912e2ea1226456259da9f3025b2b075ab[m
+Merge: 96280510 520b8a18
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat May 18 21:34:45 2024 +0300
+
+    Merge pull request #149 from GreenBlitz/clean-master
+    
+    yoav - clean
+
+[33mcommit 520b8a18ea38fa4e5cfcf5b6acd469845db03c60[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 18 21:30:03 2024 +0300
+
+    yoav - clean
+
+[33mcommit e6269782728fe0df7d281769e72d15274be4f357[m
+Merge: 9799833d 96280510
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 18 16:55:51 2024 +0300
+
+    Merge branch 'master' into wheel-radius
+
+[33mcommit f37f9635df7902377e3df054d6110558777beba0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 18 00:38:13 2024 +0300
+
+    yoav - claen
+
+[33mcommit 72469ec8b544b5727608c558ce7fed90cedb303a[m
+Merge: 053cfd54 96280510
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 18 00:31:32 2024 +0300
+
+    Merge branch 'master' into toggle-const
+
+[33mcommit 053cfd5469c6ad05510a37eb17b5d371fb0e6b03[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 18 00:24:36 2024 +0300
+
+    yoav - clean
+
+[33mcommit 3a23d0cc544040a04ced48c0ad167f73ab64ef2f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 18 00:13:56 2024 +0300
+
+    yoav - clean
+
+[33mcommit 962805106b25b10c1ba52d6e4f13b0212bbddcb5[m
+Merge: bfc8c2db 24b91f7d
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 17 23:57:21 2024 +0300
+
+    Merge pull request #147 from GreenBlitz/clean
+    
+    yoav - clean
+
+[33mcommit 24b91f7da56861bf9dc8cab077f9e997aa1c702a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 17 23:54:48 2024 +0300
+
+    yoav - clean
+
+[33mcommit 36608dfdb9c15ba34c85c622eda51fd1b39d77e5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 17 23:47:40 2024 +0300
+
+    yoav check and active
+
+[33mcommit 65c6e314bd2047373e7c9d8f8f6abec4101d4cc3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 17 23:43:34 2024 +0300
+
+    yoav - toggle
+
+[33mcommit bfc8c2dbe6af04aebddb679dadd8cfae1efa78db[m
+Merge: 19db0ef6 f78b4bde
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Thu May 16 17:14:51 2024 +0300
+
+    Merge pull request #143 from GreenBlitz/logged-command
+    
+    yoav - Logged Dashboard Command
+
+[33mcommit f78b4bde730060577fa9ff076c6b9e3de37104ab[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed May 15 21:22:45 2024 +0300
+
+    yoav - logged dashboard command
+
+[33mcommit 19db0ef6aa426238c3e376a73b86e72a7ddda979[m
+Merge: 2640096a 940db5d4
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue May 14 19:44:43 2024 +0300
+
+    Merge pull request #141 from GreenBlitz/fix
+    
+    yoav - naming
+
+[33mcommit 940db5d49092f424b59b1c066f95961ab2d37756[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 19:40:52 2024 +0300
+
+    yoav - naming
+
+[33mcommit 2640096afc61aa7afd063624086d229676bcda78[m
+Merge: 84688d33 a0c68b8a
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue May 14 19:31:12 2024 +0300
+
+    Merge pull request #140 from GreenBlitz/joystick-funcs
+    
+    yoav - Joystick Functions
+
+[33mcommit a0c68b8a44613d52294ca4fb0d9a44cb8922a434[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 19:29:01 2024 +0300
+
+    yoav - const naming
+
+[33mcommit 09458d8629c004e061c049f34293ee0db16c417c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 19:26:55 2024 +0300
+
+    yoav - j f
+
+[33mcommit b1542d12f1b89abc98ecee411326f44a440e5669[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 19:12:24 2024 +0300
+
+    shever
+
+[33mcommit c202f62d4f5e104d1722e95080aca7356e4e1607[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 18:53:14 2024 +0300
+
+    yoav - added constants
+
+[33mcommit f8d3283b2fa9b2de32d16ecd061ef36ce6a95a9a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 17:21:43 2024 +0300
+
+    yoav - cecer
+
+[33mcommit 84688d33565cde832c06b72671b0ff31891641fc[m
+Merge: 63805999 5ca9c9c0
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue May 14 15:15:42 2024 +0300
+
+    Merge pull request #139 from GreenBlitz/subsys-improv
+    
+    Subsys improv
+
+[33mcommit 5ca9c9c0fdc49c6f7bf2581315d39623c4670f42[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 15:12:21 2024 +0300
+
+    y0oav - improved gb subsys
+
+[33mcommit 8a0b029267b744bce60bdce0d0ce396c074c1aa0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 15:11:51 2024 +0300
+
+    y0oav - improved gb subsys
+
+[33mcommit 5aa42964dcfb77640a2acfb6e772d2a4ff9b5c46[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 15:10:26 2024 +0300
+
+    y0oav - improved gb subsys
+
+[33mcommit 9799833df3a9c5c0cbd3d0ec8c2d0c8e782780ed[m
+Merge: 6f0a66d5 63805999
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 13:57:27 2024 +0300
+
+    Merge branch 'master' into wheel-radius
+
+[33mcommit 6380599937011d5a26ca273982f6c3a65b4a896f[m
+Merge: 31e55606 e5cb21cb
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue May 14 13:53:57 2024 +0300
+
+    Merge pull request #138 from GreenBlitz/pigeoon
+    
+    yoav - Added Pigeon
+
+[33mcommit e5cb21cb5de2158181c08a373ef27e1be032dca5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 13:49:41 2024 +0300
+
+    yoav - added pigeon
+
+[33mcommit 31e55606c64dec8e25b4a68172b5b3290bd31f3b[m
+Merge: 5c80d8d9 08c25566
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue May 14 01:21:17 2024 +0300
+
+    Merge pull request #134 from GreenBlitz/improve-master
+    
+    yoav - Improve and Clean master
+
+[33mcommit 08c2556690162aff37cf830787a963fd7b84d252[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue May 14 01:17:43 2024 +0300
+
+    yoav - clean
+
+[33mcommit 3c5413305a6716b6b30da48c096ea963380f9ebb[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon May 13 22:02:59 2024 +0300
+
+    yoav - examlpe subsystem, mirror tans3d
+
+[33mcommit 9e2908e1f40e29e716073b37b6e742cebd375f74[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon May 13 21:38:14 2024 +0300
+
+    yoav - current command
+
+[33mcommit 2295a2ba99649647aef9b796b68995cd8a508d25[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon May 13 21:34:36 2024 +0300
+
+    yoav - rio utils, gb subsys, log path const, battery
+
+[33mcommit 5c80d8d92cd18859c144062041cab1af5157e92f[m
+Merge: d94a20dd 045c0577
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon May 13 18:00:48 2024 +0300
+
+    Merge pull request #133 from GreenBlitz/mirror
+    
+    yoav - alliance -> mirrorable
+
+[33mcommit 045c0577b323698880e245517f48ad57fbdb53bb[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon May 13 17:48:38 2024 +0300
+
+    yoav - alliance -> mirrorable
+
+[33mcommit d94a20dd778cc676090fc1661f0108bb45590ccf[m
+Merge: a73830e7 e08e549b
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon May 13 17:21:29 2024 +0300
+
+    Merge pull request #132 from GreenBlitz/distance-alliance
+    
+    yoav - Alliance Distance
+
+[33mcommit e08e549b58b397e622ad182735148d1c0172fb57[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon May 13 17:06:16 2024 +0300
+
+    yoav- get distance
+
+[33mcommit a73830e7a98d17363cd21464c30d01b9359d8d96[m
+Merge: 88dfef6c 4bfeb332
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon May 13 15:10:00 2024 +0300
+
+    Merge pull request #131 from GreenBlitz/ph-pro-util
+    
+    yoav - PhoenixProUtils
+
+[33mcommit 4bfeb332180c20b4eaa23cc1f7fc2c373804eb97[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon May 13 15:07:28 2024 +0300
+
+    yoav- phoenixproUtils
+
+[33mcommit 6f0a66d5803a32b7c8ac5c23f7d177b8a13b1e94[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 12 23:09:10 2024 +0300
+
+    yoav - fixed
+
+[33mcommit d73d460a68db1e57cdae3292b8f3c98650f44ab1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 12 22:36:50 2024 +0300
+
+    yoav - without direction, more rot2d
+
+[33mcommit 88dfef6cdc7013336327b31ab0f5886998e5c441[m
+Merge: 94b01c1f b3f63d08
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 10 22:59:57 2024 +0300
+
+    Merge pull request #125 from GreenBlitz/alliance-posre
+    
+    yoav - Alliance Rotation and Translation
+
+[33mcommit e023ef2bc55d3f66f382f3e14f59e5078c630f3c[m
+Merge: 2785c7c7 94b01c1f
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 22:17:12 2024 +0300
+
+    Merge branch 'master' into wheel-radius
+
+[33mcommit b3f63d0836871a2e0ce6b8c0a798d1344670460f[m
+Merge: 6ece411b 94b01c1f
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 21:58:50 2024 +0300
+
+    Merge branch 'master' into alliance-posre
+
+[33mcommit 94b01c1fd04280cdbd1d8ea778c4187e2824845e[m
+Merge: a3192ec1 f79466fb
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 10 21:58:48 2024 +0300
+
+    Merge pull request #128 from GreenBlitz/clean
+    
+    yoav - Clean
+
+[33mcommit f79466fb4f2cc73498733583f7c4d0e05593c9b0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 21:55:34 2024 +0300
+
+    yoav - alert in logger
+
+[33mcommit 6cb71ef28005781e5548249fe800e8d5dc7be468[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 21:51:23 2024 +0300
+
+    yoav - naming
+
+[33mcommit 831b9ac15652076c7e425efddb314db299c2af7b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 21:49:48 2024 +0300
+
+    yoav- claend
+
+[33mcommit 6ece411bfd33c432bf267951635888c1575f155c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 20:17:00 2024 +0300
+
+    yoav - protected
+
+[33mcommit 34cd16ace77d3a840df9a72df9d128c97c2a87d5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 20:12:39 2024 +0300
+
+    yoav- clean
+
+[33mcommit 28b89bfc08dd8bf36053f0e63f30c0f585147d7d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 20:03:38 2024 +0300
+
+    yoav- aim assist angle calu
+
+[33mcommit 09f8123ab975e79bbe1686788a9df87024435094[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 19:53:58 2024 +0300
+
+    yoav- sim fix
+
+[33mcommit 0f032acd9e8b3febd8d981012cffcdc961ecb456[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 19:28:35 2024 +0300
+
+    yoav - fix
+
+[33mcommit 2785c7c7e1adc9fc7d71465ede246769492da196[m
+Merge: 7d5d2a72 a3192ec1
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 18:38:25 2024 +0300
+
+    Merge branch 'master' into wheel-radius
+
+[33mcommit e8a49f257d4ff49578c6a095c494fe90dd987fe0[m
+Merge: 2dbcc091 a3192ec1
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 10:39:51 2024 +0300
+
+    Merge branch 'master' into alliance-posre
+
+[33mcommit a3192ec123efc48244e4321f71a44c82860d7e48[m
+Merge: 7b1f718a f7bc1f93
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 10 10:39:34 2024 +0300
+
+    Merge pull request #126 from GreenBlitz/improve-spotlees
+    
+    yoav - Improve Spotless
+
+[33mcommit f7bc1f9372c20a58c9ad95efbcb3067f09a6085d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 10:11:29 2024 +0300
+
+    yoav- pre commit change all floes
+
+[33mcommit 2dbcc091342b5df782c92576f977be1dc51dacda[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 09:45:27 2024 +0300
+
+    yoav - looks working
+
+[33mcommit e8d6f8e917b50d1ffb587eb303f295a6666294fa[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 10 09:22:02 2024 +0300
+
+    yoav - added , need to check
+
+[33mcommit 7b1f718aa1c2152180a71f5a11f26c78be5503c5[m
+Merge: 0e86cfd3 25f1688f
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon May 6 22:15:08 2024 +0300
+
+    Merge pull request #123 from GreenBlitz/fix-precommit
+    
+    yoav - Fix Pre Commit
+
+[33mcommit 25f1688f65d78f277e6a6deac34538976aefcd94[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon May 6 22:12:37 2024 +0300
+
+    yoav- fixed
+
+[33mcommit 0e86cfd322e92a0cf3d1d74aeccd95a3433b79e8[m
+Merge: db670c34 e7cf9a4b
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun May 5 17:16:47 2024 +0300
+
+    Merge pull request #121 from GreenBlitz/battery
+    
+    yoav - Battery Status
+
+[33mcommit e7cf9a4b45446c063b907f85229f50b2d2ea7a87[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 17:14:47 2024 +0300
+
+    yoav - better docs
+
+[33mcommit e73734937cb1b31ae19b544663d9bc1c2e462af1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 17:08:57 2024 +0300
+
+    yoav - comment o rio utils
+
+[33mcommit d7468ed7e44526adcb7e372f1a641010039f310a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 17:03:52 2024 +0300
+
+    yoav - added status log to battery
+
+[33mcommit db670c3424b2a5ad7931ababbaa6af864b4dc35d[m
+Merge: 3ecb8baf 279c1dc0
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun May 5 16:50:41 2024 +0300
+
+    Merge pull request #116 from GreenBlitz/battery
+    
+    yoav - Battery Util
+
+[33mcommit 279c1dc0f8a60c7d83ecc05b66a3f660bf96079f[m
+Merge: 3df46674 3ecb8baf
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 01:03:02 2024 +0300
+
+    Merge branch 'master' into battery
+
+[33mcommit 3ecb8baf85e9f1e7907f0d30e110d1a3e9245d6c[m
+Merge: 08e7e069 273f2e18
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun May 5 01:02:40 2024 +0300
+
+    Merge pull request #120 from GreenBlitz/add-spotless
+    
+    yoav - Spotless
+
+[33mcommit 273f2e1865d1492ba1a21b9b2679b138bd33dc69[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 00:56:38 2024 +0300
+
+    yoav - wtf 4
+
+[33mcommit 0663abea3752b79495a25b48912584625db4f82e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 00:51:34 2024 +0300
+
+    yoav - wtf 2
+
+[33mcommit b7b51d0e670a71169b9faa638fccef5df86bd3f2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 00:51:09 2024 +0300
+
+    yoav - wtf
+
+[33mcommit 4ddda5d38256786b654ec046bb3c3eaa96a59f2c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 00:48:14 2024 +0300
+
+    yoav- check
+
+[33mcommit 59dc7149db1f38cf5cb8c324a89260d8d406870f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun May 5 00:17:33 2024 +0300
+
+    yoav - eaa
+
+[33mcommit 3df466744b9c5bbf866341d1df60651e66abb780[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 4 23:39:46 2024 +0300
+
+    yoav - comments
+
+[33mcommit 0ea36d1534c52d44c39c6ae866562cf54d7700b0[m
+Merge: ca7f589d 08e7e069
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 4 23:37:03 2024 +0300
+
+    yaov - merged mastr
+
+[33mcommit 08e7e069e09a0ca574b2430cb8e028225e396242[m
+Merge: 6c4e18c6 f65a14d0
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat May 4 23:34:23 2024 +0300
+
+    Merge pull request #118 from GreenBlitz/fix-not-run
+    
+    yoav - Fixed Master
+
+[33mcommit f65a14d0c485c5e7fb3a74539298c78b0f84890b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 4 23:32:17 2024 +0300
+
+    yoav - removed auto slelectro
+
+[33mcommit ca7f589deec299aaa05d45abe614f920a908eee9[m
+Merge: d7e4ca4a 6c4e18c6
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat May 4 19:41:13 2024 +0300
+
+    yoav merged masterr
+
+[33mcommit 6c4e18c6d422b63bde7e903d5cf79b77ce26d029[m
+Merge: 13edc130 d2e1a0fc
+Author: hillelv <140002343+hillelv@users.noreply.github.com>
+Date:   Sat May 4 18:22:28 2024 +0300
+
+    Merge pull request #111 from GreenBlitz/autonomous-chooser-return-of-the-programmer
+    
+    hillel - adding autonomous selector (3 files)
+
+[33mcommit d2e1a0fc8c7098f3568ee300859d79a13dace474[m
+Merge: 68076fd3 13edc130
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sat May 4 18:20:22 2024 +0300
+
+    Merge branch 'master' into autonomous-chooser-return-of-the-programmer
+
+[33mcommit 68076fd3a96a4d245b16ea96a48592c8719a7593[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sat May 4 12:57:27 2024 +0300
+
+    hillel - better static
+
+[33mcommit 26be17326271c4559d19c4858b82cde432bbe997[m
+Merge: 31d7555e f8b08c79
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sat May 4 12:48:21 2024 +0300
+
+    Merge branch 'master' into autonomous-chooser-return-of-the-programmer
+
+[33mcommit 13edc130197b20cc53e55f368fbbc84cf8c08988[m
+Merge: f8b08c79 18912265
+Author: hillelv <140002343+hillelv@users.noreply.github.com>
+Date:   Sat May 4 12:47:36 2024 +0300
+
+    Merge pull request #99 from GreenBlitz/implement-choreo
+    
+    Hillel - Implement choreo (3 files)
+
+[33mcommit 189122650ca73a8caa44055687e434420b9a5124[m
+Merge: 003af9fb f8b08c79
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sat May 4 12:45:56 2024 +0300
+
+    Merge branch 'master' into implement-choreo
+
+[33mcommit 7d5d2a72edce2be0acb46fcf887f5a2278e1b886[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 3 22:48:09 2024 +0300
+
+    yoav - protected
+
+[33mcommit 90ca04b749e08c5bef7e0e8dc654057f46cd5d60[m
+Merge: faa6fac2 f8b08c79
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 3 22:47:42 2024 +0300
+
+    Merge branch 'master' into wheel-radius
+
+[33mcommit f8b08c79c53b221259f9da3fd50fac124729fc06[m
+Merge: ba7cdbcb ca7f9767
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri May 3 22:46:37 2024 +0300
+
+    Merge pull request #117 from GreenBlitz/constants-protected
+    
+    yoav -  Constants Protected
+
+[33mcommit ca7f9767f018a05755f49b1b1f9b9d26bef330d1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 3 22:44:07 2024 +0300
+
+    yoav - made stuff protected
+
+[33mcommit d35c6887c6808764b4ea752aa74c78fc37494303[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 3 22:41:49 2024 +0300
+
+    yoav - made constants protected
+
+[33mcommit d7e4ca4a34aae9519a7b449d98dd0a2e8c43995f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 3 10:18:13 2024 +0300
+
+    yoav - fixed const
+
+[33mcommit 4a5233eb67aa078c067ce3965ebf08efe1481cc4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri May 3 10:14:59 2024 +0300
+
+    yoav - battery util
+
+[33mcommit ba7cdbcb3f38b42cfabb4c4f9b242bdfb2acc399[m
+Merge: 3f75cf0c 935f9806
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Wed May 1 13:15:08 2024 +0300
+
+    Merge pull request #100 from GreenBlitz/auto-calib-s
+    
+    yoav - Auto Static Characterization
+
+[33mcommit 935f98064e172fd61fff45397b10bace99a7da4d[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed May 1 13:12:39 2024 +0300
+
+    yoav - jne
+
+[33mcommit fceb50226d8764d7cdcff6984a0034b7f6bbae66[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed May 1 13:11:20 2024 +0300
+
+    yoav - clean
+
+[33mcommit 58c6e59708ef88783da361fbc66f6163cd8608d2[m
+Merge: 49e4ff6e 3f75cf0c
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed May 1 13:09:02 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 3f75cf0c630c3686ba7820c9a063bb6d4246fdac[m
+Merge: b699e962 f1b99123
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Wed May 1 13:07:48 2024 +0300
+
+    Merge pull request #45 from GreenBlitz/system-identification
+    
+    yoav - System Identification
+
+[33mcommit f1b99123b48aeb7c680ddcd69594aeb248716171[m
+Merge: 63482511 b699e962
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed May 1 13:04:03 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit b699e962994f4084e94007f66281c82017cdadc1[m
+Merge: ff70630d 2a4f5d37
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Wed May 1 13:03:16 2024 +0300
+
+    Merge pull request #96 from GreenBlitz/ctre-wrappers
+    
+    yoav - Pigeon2Wrapper
+
+[33mcommit 63482511e3649513e3cbeb12d402fe99785dbb46[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed May 1 13:02:04 2024 +0300
+
+    yoav - naming
+
+[33mcommit 7b3120a8bed9aeee0704f8d0f9c840ae58b06667[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed May 1 13:01:11 2024 +0300
+
+    yoav - fix logger
+
+[33mcommit 31d7555e0f47d2be20e13892971c24aa9cb55e63[m
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Wed May 1 12:35:24 2024 +0300
+
+    hillel - no errors
+
+[33mcommit 37559e784b223146ce59f6406941bcdc5d34fb99[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed May 1 11:06:31 2024 +0300
+
+    yoav - logger utils
+
+[33mcommit 30b4284527675656913108f346ed8b46639eb765[m
+Merge: 98a7a5f6 da4a0835
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Wed May 1 10:50:26 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 49e4ff6e819036f68faf7c0b0c93a94b5f910669[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 30 23:28:58 2024 +0300
+
+    yoav - naming
+
+[33mcommit 94b71e7c865662417851c1b1558332f7f4e47967[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Tue Apr 30 22:06:38 2024 +0300
+
+    hillel - fixed logic
+
+[33mcommit 61f077fe9caa9ba22c7ed924ed32bd4ed6e56bb0[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Tue Apr 30 21:28:38 2024 +0300
+
+    hillel - made the selector static
+
+[33mcommit b3c8a8755db9293e475366267205fdc4c44ea239[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Tue Apr 30 20:35:45 2024 +0300
+
+    hillel - added the autonomous selector for the third time this year
+
+[33mcommit 2a4f5d370adcea151d4585fe48531c67e1b3c0e3[m
+Merge: cf3a76ff ff70630d
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 30 20:26:04 2024 +0300
+
+    yoav - merged master
+
+[33mcommit 003af9fba83af8063678954f551f5c11eca1a54f[m
+Merge: 16fd88cb ff70630d
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Tue Apr 30 20:19:22 2024 +0300
+
+    Merge branch 'master' into implement-choreo
+
+[33mcommit 76d6daf3443fade3b68fb9839d78a15719f8adc1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 30 20:06:29 2024 +0300
+
+    yoav - delete todo
+
+[33mcommit 02e2a1e9a2b2dce5e90dcdb6543ebc17e82c0641[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 30 20:04:45 2024 +0300
+
+    yoav - rio utils added
+
+[33mcommit d939070c797df4359f75b6cd6e230a70317f195b[m
+Merge: 90a97c03 ff70630d
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 30 20:00:52 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit ff70630d3547ef4def27c66b4c045dd7a4bbfba8[m
+Merge: da4a0835 3ed5477d
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue Apr 30 20:00:12 2024 +0300
+
+    Merge pull request #85 from GreenBlitz/rio-utlis
+    
+    yoav - Roborio Utils
+
+[33mcommit 3ed5477d2cdcd5684ecc13c1a42e77f4ba3aa24c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 30 19:58:06 2024 +0300
+
+    yoav - format
+
+[33mcommit faa6fac2b0e6ccac39ae494909dd2809e4d647e8[m
+Merge: c0a9f509 da4a0835
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 16:58:01 2024 +0300
+
+    Merge branch 'master' into wheel-radius
+
+[33mcommit 24dd35e3e78006e86f765649e728189a82f1e771[m
+Merge: 3b7e3def da4a0835
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 16:06:58 2024 +0300
+
+    yoav - merged master
+
+[33mcommit da4a08358b75e9322d0dbf3eb7ecfdf2d4a3b16a[m
+Merge: 64dc3f6b d5507060
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Tue Apr 30 16:04:27 2024 +0300
+
+    Merge pull request #81 from GreenBlitz/logger
+    
+    yoav - Fixed and Improved Logger Utilization (5 files)
+
+[33mcommit d5507060eaa33c480c9331ab9ec6875366d9f143[m
+Merge: 56ea8e53 64dc3f6b
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 16:02:20 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 3b7e3def685e36cb82eca1ed43d1581ccfae1b61[m
+Merge: 77862a85 64dc3f6b
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 16:00:07 2024 +0300
+
+    Merge branch 'master' into rio-utlis
+
+[33mcommit 64dc3f6b08a97703e923c942a52518464eea7619[m
+Merge: 1027b142 a87fee6a
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Tue Apr 30 15:59:15 2024 +0300
+
+    Merge pull request #97 from GreenBlitz/dashboard-command
+    
+    yoav - Dashboard Command
+
+[33mcommit 90a97c03076939961e6b4c70927261c277e4b5f6[m
+Merge: 2dffc8cd 1027b142
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 15:57:38 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 2dffc8cd48f3200c9c058282a7887f51ccb381d9[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 15:54:12 2024 +0300
+
+    yoav - working
+
+[33mcommit a928307451a0c236eb68fde9e40fdce055987f8f[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 15:37:50 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 5fa255501b412aa79754477d3c4c106483e6d842[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 15:36:54 2024 +0300
+
+    yoav  - cleaned
+
+[33mcommit d204696e6199483447a91e9ec2b3ce274419ddb8[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 15:32:10 2024 +0300
+
+    yoav  - need to clean
+
+[33mcommit 98a7a5f60b99b18a10ae57eeeabd59053aaa95af[m
+Merge: 7ffaabb1 1027b142
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 14:29:56 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 77862a85234fe093c13596f21adbe55f4448561f[m
+Merge: dd829bee 1027b142
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 12:16:49 2024 +0300
+
+    Merge branch 'master' into rio-utlis
+
+[33mcommit a87fee6a74cfa426b89ec30d788252bad84df56c[m
+Merge: 8dc43e0e 1027b142
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 12:16:07 2024 +0300
+
+    Merge branch 'master' into dashboard-command
+
+[33mcommit dd829beeacf7c39ad2300079cf43c57e0c6e97cf[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 12:14:46 2024 +0300
+
+    yoav - working
+
+[33mcommit b4583b1c04702a0d9c091853ebe440695b55d9f4[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Tue Apr 30 12:03:28 2024 +0300
+
+    yoav - added normal logs
+
+[33mcommit 1027b1427602f63dc85cd3c5327a1df131af2167[m
+Merge: dfddb7b1 2f5ed9a9
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 29 21:59:30 2024 +0300
+
+    Merge pull request #109 from GreenBlitz/editor
+    
+    yoav - changed formater settings
+
+[33mcommit 2f5ed9a9a82e9983f83503ab187bcca07c2c7bc1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 21:57:36 2024 +0300
+
+    yoav - changed formater settings
+
+[33mcommit f667ccc916dc8dca5cae170763a2eed7b8b22d1a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 21:56:32 2024 +0300
+
+    yoav - changed formater settings
+
+[33mcommit c0a9f509123b3640e5d8ae150807834fa8b727b6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 19:22:47 2024 +0300
+
+    yoav - cr changes
+
+[33mcommit 8dc43e0e4488ec9e5db08deae4a3788633256571[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 18:39:39 2024 +0300
+
+    yoav - added constructur
+
+[33mcommit f2438d57a26c113be530a0a17a4556b84807e88d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 18:38:02 2024 +0300
+
+    cr change
+
+[33mcommit 7ffaabb14eaa62e4b75aa0e20ef1ebef6edeef15[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 18:35:18 2024 +0300
+
+    yoav - changed doc
+
+[33mcommit d9a3cb4620e3fddac4c8dbbd0edec75505f973e5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 18:31:10 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 35888135349c09d3722695da61fc879e21cb70ab[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 18:26:10 2024 +0300
+
+    yoav - cleanning
+
+[33mcommit cd2d4c098f97c6d756d7a208b4abe7453896adce[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 17:39:46 2024 +0300
+
+    added
+
+[33mcommit dfddb7b17d157fac2e52e6d3c9160f3a79c5c660[m
+Merge: 72eafe7d 54da13e9
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 29 00:45:24 2024 +0300
+
+    Merge pull request #107 from GreenBlitz/fix-labels
+    
+    Fix labels
+
+[33mcommit 54da13e9abe4c429f89c7f294e91e6eaa81c1f00[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 00:40:39 2024 +0300
+
+    yoav - fixed
+
+[33mcommit 8bc1101a08e3627e3936fc3bed9f3434856688fc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 00:37:22 2024 +0300
+
+    yoav -
+
+[33mcommit 6d8e598db38ce7c1f517da03efd5e4e1000408d0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 00:30:43 2024 +0300
+
+    yoav- checkl
+
+[33mcommit 4ef62c7a834c8692532b193543279a6fc15b8f48[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 00:19:35 2024 +0300
+
+    yoav -
+
+[33mcommit 986b15af796885fec01dba05191bd8309685cb5b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 00:13:40 2024 +0300
+
+    yoav - claened
+
+[33mcommit 2e1993f8e7fbc3ffb4208c90c4b96ec190445298[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 00:07:28 2024 +0300
+
+    yoav - ckeaned check stiff
+
+[33mcommit fc34a16aa8d36e6debb97379c2ad1810d9ebcc6a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 29 00:05:53 2024 +0300
+
+    yoav - working
+
+[33mcommit dc54314c840fbc004532ffc23de33bdb67798cf1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 23:31:13 2024 +0300
+
+    yoav - looks nice
+
+[33mcommit 4ed77766b1ebe5db0df3aeb945823ef6feed9d73[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 23:04:46 2024 +0300
+
+    yoav - mid work
+
+[33mcommit c20bc992abe3539fc302fb9ddcec9d4988aaed81[m
+Merge: 77d13d64 72eafe7d
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 22:05:02 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 77d13d643d2fc930ec77a12a4e49b22a008ecf28[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 22:04:48 2024 +0300
+
+    yoav - looks good
+
+[33mcommit 16fd88cb2d6a00b194351395ee2e14a63b99159a[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sun Apr 28 20:00:36 2024 +0300
+
+    hillel - deleted unused trajectories
+
+[33mcommit 74b1c91a0709aaf23691940ad160e8faafb97553[m
+Author: hillelv <hillel.vider@gmail.com>
+Date:   Sun Apr 28 19:54:58 2024 +0300
+
+    hillel - added and checked choreo
+
+[33mcommit 9fd6a7e1f39f3578cbbad6bbad28f83f207653ec[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 19:27:59 2024 +0300
+
+    yoav - wrote need to clean constants
+
+[33mcommit 2c00257ea7ef3acc9b45df3139736c722bdada0f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 18:27:43 2024 +0300
+
+    yoav merged master
+
+[33mcommit 565314a44a77a222bd2314858e3a91d5726e4f4f[m
+Merge: 81612d2f 013121d8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 18:26:56 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 72eafe7d5723890bf4834ae23e8056bef3ae9376[m
+Merge: 013121d8 9cba0e4c
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 28 17:50:36 2024 +0300
+
+    Merge pull request #98 from GreenBlitz/joystick-stuff
+    
+    yoav - DeadBand
+
+[33mcommit 9cba0e4c3f365e4052732cb69c06cc92a221f52d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 17:46:56 2024 +0300
+
+    yoav - changed deadzone
+
+[33mcommit cf3a76ffb716f78419aa8f85d4a24ec9711e1286[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 17:38:20 2024 +0300
+
+    mathutil
+
+[33mcommit b4678f117091f007a0c8e2c1fc3152aae83472c1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 17:03:29 2024 +0300
+
+    yoav - naming
+
+[33mcommit 437944342799d6cbdfb248055393ecf92c01741e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 16:36:09 2024 +0300
+
+    yoav - added dashboard coammd
+
+[33mcommit 0493883022b0abfbc058f1a01e6ad70d15651b16[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 16:20:08 2024 +0300
+
+    yoav - added docs
+
+[33mcommit f80f8956c087d67ca23e01be07bff8c02313594b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 15:58:42 2024 +0300
+
+    yoav - finished
+
+[33mcommit 072e8e40df0f012e90ab73446bb8806b2d9eb8a1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 15:43:51 2024 +0300
+
+    yoav - wrper
+
+[33mcommit f9901458fc0c1f84c966e5db845bb66312ab36d1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 15:20:16 2024 +0300
+
+    yoav - added pigeon wrapper
+
+[33mcommit 6ff93f9a070f5065c9151d2a601ce01b604a6cc4[m
+Merge: 0935b6e9 013121d8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 14:13:59 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 56ea8e53ca5525a2f02f5110526333c1afcd1a46[m
+Merge: ca13c9e6 013121d8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 14:13:09 2024 +0300
+
+    yoav - merged master
+
+[33mcommit a0a39935f846e1d4f4efc3f6e5b87c1208021231[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 13:53:59 2024 +0300
+
+    yoav - naming
+
+[33mcommit 7cc978c110664f569da0e5ea3bdc44160b8fd580[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 13:49:24 2024 +0300
+
+    yoav - megre master changed constants
+
+[33mcommit 97ebac85abea1a3300fb3a628c6871212097a128[m
+Merge: 4f72751d 013121d8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 13:44:07 2024 +0300
+
+    Merge branch 'master' into rio-utlis
+
+[33mcommit 013121d889e47f570499173a00db27022fc199cd[m
+Merge: 350ab0a5 2ee4b0c9
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 28 13:41:51 2024 +0300
+
+    Merge pull request #95 from GreenBlitz/label-imrpove
+    
+    Label imrpove
+
+[33mcommit 2ee4b0c982083238cfa1f53c2bff9c7659d36fd7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 13:39:08 2024 +0300
+
+    yoav - funny
+
+[33mcommit 72bff159e6ac90aedd46d454aa4c4e8e9724ce42[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 13:33:11 2024 +0300
+
+    yoav- imrpiove
+
+[33mcommit 350ab0a50b1738d393a638b7a9fa63a2f54b455f[m
+Merge: 6ccfe3e2 58002a68
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 28 13:21:48 2024 +0300
+
+    Merge pull request #92 from GreenBlitz/config-cons
+    
+    yoav - added cont
+
+[33mcommit 58002a685a33be55e2a0bb634247691ae60c5658[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 13:19:22 2024 +0300
+
+    yoav - added cont
+
+[33mcommit 6ccfe3e2c3fef11b7f60d3d0245344a59e21157c[m
+Merge: c3300aad d8447f77
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 28 12:41:01 2024 +0300
+
+    Merge pull request #91 from GreenBlitz/flywhhel-sim
+    
+    Flywhhel sim
+
+[33mcommit d8447f7758de67b38a39cff1e4267894d62da50b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 12:36:34 2024 +0300
+
+    yioav- clean
+
+[33mcommit 791443713a7f997b8430847594a05acf03a9a1b5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 12:20:45 2024 +0300
+
+    yoav - added flywhhel sim
+
+[33mcommit c3300aadc35bf156e060bc9b78d7e01875d23044[m
+Merge: 5a0c0f73 33f46811
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 28 11:57:20 2024 +0300
+
+    Merge pull request #90 from GreenBlitz/gyro-simulation
+    
+    Yoav - Gyro Sim
+
+[33mcommit 33f4681180f2976ff77482a5f8cfcf14bd92aa8a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 11:38:06 2024 +0300
+
+    yoav- extraact gyro sim
+
+[33mcommit 38d4363f8d77b78e71955f2f44fff31e67d79edb[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 11:31:54 2024 +0300
+
+    yoav - gyro sim
+
+[33mcommit 4f72751db520b883482f04605c4b42f36075ca20[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 11:27:11 2024 +0300
+
+    yoav - added alerts
+
+[33mcommit 5a0c0f73ab444da038f7ffe10636ef1416bf9161[m
+Merge: 874f6f8e 34a72bab
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 28 09:57:59 2024 +0300
+
+    Merge pull request #88 from GreenBlitz/arm-sim
+    
+    yoav - Arm Simulation
+
+[33mcommit 34a72babe40d768cc64042104760c355bc54e6bc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 09:54:44 2024 +0300
+
+    yoav - small improve
+
+[33mcommit 03567f010ee967bac3493fa31310d05e9bc06d14[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 28 09:30:50 2024 +0300
+
+    yoav - added arm sim
+
+[33mcommit 874f6f8eb0eb53051eb47ed648a872fa22df668c[m
+Merge: 1a0fd8f0 5e0c031c
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 28 01:45:51 2024 +0300
+
+    Merge pull request #87 from GreenBlitz/elevator-sim
+    
+    yoav - Elevator Simulation
+
+[33mcommit 5e0c031cda623e358569e70f2c2be5062a117a75[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 27 23:44:17 2024 +0300
+
+    yoav - removed math
+
+[33mcommit 58b756ddad8f243706065ab2663cede7f47e5b7e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 27 23:07:53 2024 +0300
+
+    yoav - added elevatorsimulation
+
+[33mcommit 5b4c3bc13ce1cc09847d8b18dd4b3a34adc5a414[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 27 22:01:02 2024 +0300
+
+    yoav - fixed run, added todo
+
+[33mcommit 1a0fd8f05d334db4345c4e245f16f1558e1d6f19[m
+Merge: 95c90fa1 9e6e53db
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Apr 27 21:55:29 2024 +0300
+
+    Merge pull request #86 from GreenBlitz/config-builder
+    
+    yoav - GBTalonFXPro Config Constructor
+
+[33mcommit 9e6e53dbb1b989991e606becb0997892636f7074[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 27 21:39:54 2024 +0300
+
+    yoav retunreed builder
+
+[33mcommit 2f94a0392ceed92887dcaca85c679d91342d618b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 27 21:37:17 2024 +0300
+
+    yoav - added config buuilder
+
+[33mcommit 25c07331f36796f6475ec8b99af51edcb860d23e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 27 21:33:42 2024 +0300
+
+    rio-utils
+
+[33mcommit 0935b6e9677d1e1db6e12f2d7660c4f6b4aefd6d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 27 21:19:28 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 8a1e4ff965b7d66506cb39ba2b516a3ad1adf0cc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 21 03:40:05 2024 +0300
+
+    yoav - claen
+
+[33mcommit 95c90fa10eef1240cf2e21cdb21b01c7ceaa5607[m
+Merge: 7f5c7c2f 8c148ea3
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 21 03:04:30 2024 +0300
+
+    Merge pull request #84 from GreenBlitz/clean-sim-const
+    
+    yoav- Sim Constants
+
+[33mcommit 8c148ea3cd5978e0aff2497275f85fbff70c0507[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 21 02:59:06 2024 +0300
+
+    yoav- sim constants
+
+[33mcommit 7f5c7c2f0bf59287b3c697ae569ef5198ce0128f[m
+Merge: c54f4803 7da9434e
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 21 01:51:11 2024 +0300
+
+    Merge pull request #83 from GreenBlitz/set-power-sim
+    
+    yoav - Set Power In Sim
+
+[33mcommit 7da9434e0747820d28ada0fe04126c31bae40690[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 21 01:44:33 2024 +0300
+
+    yoav- added setPower
+
+[33mcommit c54f48034fac5dd7954d42af80022364e70d8a45[m
+Merge: ff428296 270bbde6
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 21 01:18:58 2024 +0300
+
+    Merge pull request #80 from GreenBlitz/simulation-motor
+    
+    yoav - Simulation Motor (4 files)
+
+[33mcommit 270bbde6e3619f1e9b5a9b30c0174d857354a55b[m
+Merge: 67ef0b4b ff428296
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 21 01:13:01 2024 +0300
+
+    Merge branch 'master' into simulation-motor
+
+[33mcommit ff42829626b6eb17f8b0763bba8a5388bd9c182e[m
+Merge: 286a3bd8 c6a1fec4
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 21 01:12:16 2024 +0300
+
+    Merge pull request #75 from GreenBlitz/cleaned-gbsubsys
+    
+    yoav - Cleaned Utils (10 files)
+
+[33mcommit 67ef0b4b6a88994e8c078ce8504d1f0cb67918d3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 20 23:52:41 2024 +0300
+
+    yoav - maybe fix
+
+[33mcommit c6a1fec4a57181c82d4bbfdc9e491c31cd377ce9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 20 14:27:45 2024 +0300
+
+    yoav - improved func in gbsubsys
+
+[33mcommit ca13c9e60a02314f6abddc5d9249486b31de8676[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 22:06:37 2024 +0300
+
+    yoav - naming
+
+[33mcommit a97f41fab6290d9ee6febc662f8802039ba5ea7a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 21:44:26 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 91eae2b846a74ced6ea9691021067c4a95118803[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 21:32:13 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit db14a02bc0a635ed8b9a84a868eddad2905bd93e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 21:27:25 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 750a4f3537291f15ba2b71aa7a8b6c0b97d4246c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 21:23:38 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 6c0d4077edd2ca88749cb6dd170f6ef9696d2007[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 21:20:56 2024 +0300
+
+    yoav - added commadn and checked
+
+[33mcommit 1e39c53679be7175a52167fce12dd9820b4025e7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 20:37:37 2024 +0300
+
+    yoav - added simulation simple motor
+
+[33mcommit 809d7500a519fbfd329d6b1af8cd7676c099e105[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 09:27:07 2024 +0300
+
+    yoav - spiliting functions
+
+[33mcommit 7703080cd38f8bf0f9ce332e672691728479425d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 19 09:15:05 2024 +0300
+
+    yoav - added math constants
+
+[33mcommit 1bb1c4f171cca22b9bdfb8e46fcea6d81801e7cd[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Apr 18 23:31:34 2024 +0300
+
+    yoav - finals
+
+[33mcommit 81612d2f30316c976b8c38d9b3de4a1d2b1a35cb[m
+Merge: c51edc6c 286a3bd8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Apr 18 01:24:12 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 6135fc0eb7b9315978b1729e19b3439a5d80b88e[m
+Merge: 91e0b4a5 286a3bd8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Apr 18 01:23:36 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit a417151f05b654a6a58fe08a2f1544a7b72c1db5[m
+Merge: bb1c4eca 286a3bd8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Apr 18 01:20:31 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit d3edcc932a227d053d558dd57653cba12e7e31ea[m
+Merge: 1fdab757 286a3bd8
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Apr 18 01:19:44 2024 +0300
+
+    yoav - merged master
+
+[33mcommit 286a3bd8931e7f38b32b3b9f2ab3228d9b821dc6[m
+Merge: 96a4d167 7f6b5c43
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Thu Apr 18 01:17:08 2024 +0300
+
+    Merge pull request #79 from GreenBlitz/remove-auto-commit
+    
+    yoav - Remove Auto Commit
+
+[33mcommit 7f6b5c43b1c22ec330c212970b76d04128f4bff9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Thu Apr 18 01:13:09 2024 +0300
+
+    yoav - remove auto commit
+
+[33mcommit 96a4d167596f2a7045d29fe0871026cb47af5496[m
+Merge: fb699f81 c03d880a
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Thu Apr 18 00:01:30 2024 +0300
+
+    Merge pull request #78 from GreenBlitz/remove-post-commit
+    
+    yoav - Remove Post Pre Commit
+
+[33mcommit c03d880a14326333c4534950ba3bb62fc4153df4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:59:30 2024 +0300
+
+    yoav - check
+
+[33mcommit fb699f8120787571b81437027e096f9a8b30463a[m
+Merge: f2c5e60a 93a29c46
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 17 23:43:31 2024 +0300
+
+    Merge pull request #77 from GreenBlitz/no-need-test
+    
+    yoav - No Need Testing
+
+[33mcommit 93a29c46069663d3866cf150c8d53bf7a0fc958c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:42:15 2024 +0300
+
+    ypav - check
+
+[33mcommit a63d84ff9aa2029c2eb7b604e7c85ee3b2378c1a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:41:29 2024 +0300
+
+    ypav - check
+
+[33mcommit 4a87a21c0ce4b506c3dab2e42f605ee58563861d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:40:05 2024 +0300
+
+    ypav - check
+
+[33mcommit 439665677c7766d2b4465749881be24336aa3a14[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:31:11 2024 +0300
+
+    ypav - check
+
+[33mcommit ffc991da6d1983c2a439c703a24612d254994d55[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:30:20 2024 +0300
+
+    ypav - check
+
+[33mcommit 8cc27e4a2192592b8ee25fb23a912a1f85a33890[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:28:40 2024 +0300
+
+    ypav - check
+
+[33mcommit 3d6932466bd8ca5f76de048567bb32bf5dba988f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:24:35 2024 +0300
+
+    ypav - check
+
+[33mcommit 467a0b66d05192208c98296f4bb715dbec51ac74[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:21:31 2024 +0300
+
+    ypav - check
+
+[33mcommit 2ac97ebf1c9646a59d4acfce87252ab6c432aa0e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:19:27 2024 +0300
+
+    ypav - check
+
+[33mcommit aa2edcd17a9fcd57c2682153661febe1254e02d6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:17:35 2024 +0300
+
+    ypav - check
+
+[33mcommit 063b3b42935ce05d5243a6bc73044cc8381c8947[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:15:07 2024 +0300
+
+    ypav - check
+
+[33mcommit bd308566748dc6948acb3b59a2e725e0f932e9cf[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:12:38 2024 +0300
+
+    ypav - check
+
+[33mcommit 75816b6988055a6849a68a69610edb734b437451[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:04:17 2024 +0300
+
+    yoav - no need
+
+[33mcommit dcce35565499197248d35a804cb6ccaa89907ab5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 23:02:05 2024 +0300
+
+    yoav - no need
+
+[33mcommit 1fdab75746a353ab4cd733286fd97e6e73c15342[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 22:51:53 2024 +0300
+
+    yoav - finals
+
+[33mcommit 3ec006914f34e160e0a2f20a83e8d9623298dfc2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 22:46:11 2024 +0300
+
+    yoav - cr changes
+
+[33mcommit f2c5e60a833baa91516034ff2fbd770457a379bd[m
+Merge: 1db2e0c0 317ff688
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 17 20:42:34 2024 +0300
+
+    Merge pull request #76 from GreenBlitz/workflow-behavior
+    
+    yoav - Workflow Behavior Improvment
+
+[33mcommit 317ff6886d7ace5cd7bcae96e82cdb56194d00fa[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 20:34:44 2024 +0300
+
+    yoav - test run time
+
+[33mcommit a4a57d0c8854cdafe7916ad2ad8d57102ec29cee[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 20:23:59 2024 +0300
+
+    yoav - cleaned allianceutils
+
+[33mcommit 6760a289f7794bd26c54ea46b8bbac96aa82fe61[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 20:15:00 2024 +0300
+
+    yoav - claened gb command
+
+[33mcommit 8e97dd46476ba151851b2d57b9289bbb317ac8f5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 20:05:13 2024 +0300
+
+    yoav - cleaned gbtalon
+
+[33mcommit 316559486cdcddf305172b558d7b3aba75358b7b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 20:04:17 2024 +0300
+
+    yoav - cleaned joystick
+
+[33mcommit 58da26a92c7837267306bf22bdc65df5dcc5b8bd[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 19:52:18 2024 +0300
+
+    yoav - cleaned robotype-utils
+
+[33mcommit ff1b241e516f2ada8683d59bbb8532e1b4648885[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 19:45:51 2024 +0300
+
+    yoav - cleaned gb subsys
+
+[33mcommit c51edc6c50006f0d34efb1aa762973dead63d3d9[m
+Merge: edf4ed4e 1db2e0c0
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:46:12 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 91e0b4a5e75280eefc9bcdfb63583e896b416093[m
+Merge: 80fba82b 1db2e0c0
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:46:01 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit bb1c4ecafa5f819cf80bde37348b45f6e0906ea6[m
+Merge: 11202b8a 1db2e0c0
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:45:49 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 1db2e0c0bcfd4d202e357c1f18c7920d289c5937[m
+Merge: 04d70370 231090ea
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 17 13:45:27 2024 +0300
+
+    Merge pull request #74 from GreenBlitz/labels-after-push
+    
+    yoav - Labels After Push
+
+[33mcommit 231090ea1262066393df561fbb7d39cca43f1729[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:43:15 2024 +0300
+
+    yoav - naming
+
+[33mcommit 3d90c1a0d6944e32318243e31b493b2759d7ae34[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:38:45 2024 +0300
+
+    yoav - finished
+
+[33mcommit b68c4fc8c2e694cf37c87e03c0b50d56f383be4d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:36:46 2024 +0300
+
+    yoav - check
+
+[33mcommit 8def24bfe9edf3e7b8170de63b94f8e394af1c3d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:33:53 2024 +0300
+
+    yoav - check
+
+[33mcommit 5f24db4f513077a4477abf513543c513d72dce83[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:31:49 2024 +0300
+
+    yoav - check
+
+[33mcommit 476f6f2452312b739b07c3be5195eeccb6953b43[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:28:27 2024 +0300
+
+    yoav - omrpived behavir
+
+[33mcommit aaa060ea9a39af5afb412e97b629083598e377f2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:27:19 2024 +0300
+
+    yoav - omrpived behavir
+
+[33mcommit 162712ecafb9dd5ebffd2c08bd618c4f477a4881[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:24:20 2024 +0300
+
+    yoav - omrpived behavir
+
+[33mcommit fd83edbde3ae93697e8d08e44d835fcf911baa27[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:10:56 2024 +0300
+
+    yoav - omrpived behavir
+
+[33mcommit e831be142700b9b13d42ddb2fb7f283db42b081b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 17 13:05:13 2024 +0300
+
+    yoav - plesae work
+
+[33mcommit edf4ed4ee8590aed808e21cddaef7611da0267bf[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 22:13:33 2024 +0300
+
+    yoav cr changes
+
+[33mcommit d3369a1d2357c8853c37650c63875124a1c24ef9[m
+Merge: c5fe9cb8 04d70370
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 13:06:43 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 80fba82b221ef8cdf5e44a94d59935f587df337c[m
+Merge: 2fb005ee 04d70370
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 13:06:19 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 11202b8a7f9abdd968579bf6d2c6af3325ba2537[m
+Merge: 00394441 04d70370
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 13:06:02 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 04d70370bcaace277d27e6ab48752307c3679d84[m
+Merge: 4ad14035 92da52ef
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue Apr 16 13:04:48 2024 +0300
+
+    Merge pull request #73 from GreenBlitz/please-work
+    
+    yoav - Auto Label Tests
+
+[33mcommit 92da52ef6f1e3c848eff251b077df74f9e7ccc37[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 13:02:16 2024 +0300
+
+    yoav - not working life tough
+
+[33mcommit 2689dc3fec40959d2ff79e2fb26485b20faa8d98[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 12:58:31 2024 +0300
+
+    yoav -check mult
+
+[33mcommit 4ad14035fc13bd84db9c3cb52ed0fa953832325b[m
+Merge: 343b7c6c 835b30e2
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue Apr 16 12:56:54 2024 +0300
+
+    Merge pull request #71 from GreenBlitz/plaese-work
+    
+    yoav -check mult
+
+[33mcommit 835b30e2f079afbceadc56b9fcf4b1fc21542735[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 12:55:04 2024 +0300
+
+    yoav -check mult
+
+[33mcommit c6aafe7c09e0b9db17c24f2906e958e566480eec[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 12:47:40 2024 +0300
+
+    yoav -check mult
+
+[33mcommit 343b7c6cc58c7a2485025f264e50f6c6bfce26e0[m
+Merge: 83d3de65 d4823f91
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue Apr 16 12:46:51 2024 +0300
+
+    Merge pull request #70 from GreenBlitz/add-need-tests
+    
+    yoav - Auto Tests Labels
+
+[33mcommit d4823f914b7c95ddf7e0e0001dc4896245cecd33[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 12:45:28 2024 +0300
+
+    yoav -check mult
+
+[33mcommit 744698ab68b8aa8512db36a8f386d160a696faaf[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 12:44:35 2024 +0300
+
+    yoav -check mult
+
+[33mcommit b7e1c7a9afe677f13e50ee15efc8f326085bf1d9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 12:43:24 2024 +0300
+
+    yoav -check mult
+
+[33mcommit 39558fd60521c79bb8d0a43d2bc2abd233fab1dc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 12:41:42 2024 +0300
+
+    yoav -check mult
+
+[33mcommit 78ee7b02c6326b2f82ca4150983234b8a4b45ec3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 12:33:11 2024 +0300
+
+    yoav -check mult
+
+[33mcommit ea98b50478305eb6193ead05c87f7b656c8bb1ce[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:50:57 2024 +0300
+
+    yoav - check
+
+[33mcommit b4caa4411a87ecbdf18809c2979b1d09ed540842[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:50:02 2024 +0300
+
+    yoav - removing passed all tests
+
+[33mcommit b1f4ef494dd3ca6334d6906b853110d8bf9fecf7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:48:54 2024 +0300
+
+    yoav - removing passed all tests
+
+[33mcommit b9001c8158522ded6a556a11fe73abf379352425[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:46:01 2024 +0300
+
+    yoav - optimized behavior
+
+[33mcommit 08077eca30370b29b393c12b90a547885e61eb36[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:44:59 2024 +0300
+
+    yoav - optimized behavior
+
+[33mcommit f66e8a184e28c331ed7351fa2e1addba71450808[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:44:06 2024 +0300
+
+    yoav - optimized behavior
+
+[33mcommit c67d349c4614c77e5d7c8ddc4b5083a6f367441e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:42:39 2024 +0300
+
+    yoav - optimized behavior
+
+[33mcommit 83e0d762d00b0c8f794c42f7ebb00b00d0c2974b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:41:34 2024 +0300
+
+    yoav - optimized behavior
+
+[33mcommit a34c68f70c43b3fd88ac1a8c545b2a60bd888da0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:31:23 2024 +0300
+
+    yoav - format
+
+[33mcommit dd9f80f13fb333619118de08e52700fc8988b940[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:31:01 2024 +0300
+
+    yoav - format
+
+[33mcommit a980a0673fdd91d7422d8fdc544d0f3485403052[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:29:22 2024 +0300
+
+    yoav - added
+
+[33mcommit c5fe9cb8026f35768a02be9b35238199953d2af3[m
+Merge: 9ef1d0f2 83d3de65
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:23:37 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 2fb005ee66bcc80ee508fd12bbdaa033bdcc9735[m
+Merge: 0328aa1a 83d3de65
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:23:21 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 00394441e31e138ae446e7509972aa8aca29b2ce[m
+Merge: 82597015 83d3de65
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 11:22:41 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 83d3de65291744e6b3e3a059dfed5ac7bb777a84[m
+Merge: 795619a7 7e91400b
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue Apr 16 10:35:38 2024 +0300
+
+    Merge pull request #69 from GreenBlitz/auto-commit-naming
+    
+    yoav - Auto Commit Naming (field -> training)
+
+[33mcommit 7e91400b4a9fe1bdb3529eb35acd691c659325c4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:33:14 2024 +0300
+
+    yoav - field -> training
+
+[33mcommit 9ef1d0f21d74ced963cee89c0494694d7960681a[m
+Merge: 271cdaf9 795619a7
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:31:53 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 0328aa1a8e40a0982b0b05b9c4d120419faee797[m
+Merge: 97c95419 795619a7
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:31:40 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 82597015e0e7608d195ecb0211532a6e5e57841c[m
+Merge: 29c83697 795619a7
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:31:15 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 795619a78ad9a1fb8a6d63415c28ef720a6e3ecd[m
+Merge: 3eed3f95 c2162092
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Tue Apr 16 10:28:39 2024 +0300
+
+    Merge pull request #68 from GreenBlitz/auto-label
+    
+    yoav - Auto Size Label
+
+[33mcommit c2162092e7064208aedc6e8842894f4ed5ac9f46[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:25:19 2024 +0300
+
+    yoav - naming
+
+[33mcommit d06b1501741ebfd897ac6d32ce6440fee71e17c7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:24:33 2024 +0300
+
+    yoav - changed const
+
+[33mcommit 82fc0eaeee1316ebd58055a47ee64f0255f4f7fe[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:22:57 2024 +0300
+
+    yoav - improved api stuff
+
+[33mcommit 172fb36a8362fec63d5df24484d7ac4bd35c1522[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:14:57 2024 +0300
+
+    yoav - check
+
+[33mcommit 46850180c3c5aa33bfe8e9cfd7efb93d19a450c2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:13:15 2024 +0300
+
+    yoa v- running improvemetn
+
+[33mcommit f73565b196131d1633fdb4c87819533f57f630a9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 10:04:50 2024 +0300
+
+    yoav - splited logic
+
+[33mcommit bcdc9e4235d2802f341f6565d1ddb6d265441770[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 09:52:16 2024 +0300
+
+    yoav - improved logic
+
+[33mcommit 2474aed7c83e4aac084ff1dd4c6d335981835847[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 01:12:21 2024 +0300
+
+    yoav - check
+
+[33mcommit 7eea0e3f0a420743453bb432bd75d059cddc187c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 01:10:23 2024 +0300
+
+    yoav - spaces
+
+[33mcommit 39d0b3f57bcdeb4b8f20a58a14034b7165e67b7d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 01:09:04 2024 +0300
+
+    yoav - spaces
+
+[33mcommit 6ddba2359f2bf3571535aaa79114e74eda276b22[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 01:07:12 2024 +0300
+
+    yoav - check export
+
+[33mcommit e0155498c465c5c47677a007ae4524155ea01f6a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 01:04:45 2024 +0300
+
+    yoav - check export
+
+[33mcommit 32b6248fc4975517ae4dbf13c31a4d22e06ad531[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 01:03:32 2024 +0300
+
+    yoav - check export
+
+[33mcommit 972281de98932ad42a58c33d662c79317e671ccc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:58:23 2024 +0300
+
+    yoav debug agAIANasdaa
+
+[33mcommit 31fb28662f9de8c3ec68430fc1853ab6385f9adc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:56:15 2024 +0300
+
+    yoav debug agAIAN
+
+[33mcommit dbcdaa3759f32a09731f3bb8868968e1c8cf814c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:54:23 2024 +0300
+
+    yoav - last if
+
+[33mcommit 2f2d53c60445e0632cd37241a8890c47d9eda8bf[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:51:53 2024 +0300
+
+    yavo - debug
+
+[33mcommit 74cc5c7dbf33d57ccb136fdbe5e617f1dba66170[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:50:06 2024 +0300
+
+    yavo - debug
+
+[33mcommit 3f6ab464dcba47fd79abaa5316e6c075305610c9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:46:39 2024 +0300
+
+    yavo - check for end
+
+[33mcommit a80f298054f7e099881f1bb246d12a4993fa4cc9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:44:27 2024 +0300
+
+    yavo - tr
+
+[33mcommit fe257324a2473eea83c64d8933067a4feae2d56a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:41:57 2024 +0300
+
+    yoav - chat
+
+[33mcommit 16f9e1e8c19aaf8f321e175a7a47b3197ba6d041[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:39:17 2024 +0300
+
+    yoav - debug
+
+[33mcommit 7927263d0a4a008a2b2b2aa2f30467154ffd6758[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:37:56 2024 +0300
+
+    yoav - removed 20
+
+[33mcommit 251e36f8e90044b7d095a6c159b92c8c0a3679e8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:35:28 2024 +0300
+
+    yoav - tr \n -> space
+
+[33mcommit a00ca675541e3883653833f23072ac07c684fd4e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:33:54 2024 +0300
+
+    yoav - added env out
+
+[33mcommit 5d946fc786046d214913ba0d92188a9a331c306c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:19:36 2024 +0300
+
+    yoav - removed as suggest
+
+[33mcommit ad964b3fba0e969ac394f9929af5747e88997d05[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:16:45 2024 +0300
+
+    yoav - new chat
+
+[33mcommit e96972b2c8c94c31ca51556797e33bc51aeea08e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:15:30 2024 +0300
+
+    yoav - new chat
+
+[33mcommit cb49389bcd98ffd91e05e6e10f54edd17c926a7e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:12:13 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 6e5ff0d6c9eae656c0e2aae8eec46496cc656c82[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 16 00:10:17 2024 +0300
+
+    yoav - please work
+
+[33mcommit c6de0b20b2ec6dbcf736541e4e0658e6b699c2fd[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:42:15 2024 +0300
+
+    yoav - behavior improve
+
+[33mcommit 65e0a45ae80a2efd12cabde245583db4285f7e66[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:34:47 2024 +0300
+
+    yoav - finished
+
+[33mcommit 102d0e45458bb1588cbe5527529fc2c2868ebdb3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:30:30 2024 +0300
+
+    removed wrong labels
+
+[33mcommit d3e931cca74d58797722189dd4001d103bec7728[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:27:43 2024 +0300
+
+    removed dep
+
+[33mcommit 3f0825dca5320787120a91963640da9897cf0e94[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:26:47 2024 +0300
+
+    removed dep
+
+[33mcommit 41eead9b8be4a0f0e8502e644f575a509a16c6c6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:25:47 2024 +0300
+
+    yoav - by size
+
+[33mcommit 0cd8169d646c8819712b7abe1835b8465f5447e0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:23:36 2024 +0300
+
+    yoav - by size
+
+[33mcommit 65c634e7b12e7fc231974d5aef480f7b194252ed[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:22:13 2024 +0300
+
+    yoav - by size
+
+[33mcommit ef8d4f192bf3b994245688182bf250f04ac26796[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:19:45 2024 +0300
+
+    yoav - by size
+
+[33mcommit 77aa140cd8c5e2d550d088392fa491abde58fff2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:17:05 2024 +0300
+
+    yoav - by size
+
+[33mcommit 77c317aaa75e21656c33f232848c08ec471c9596[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:12:22 2024 +0300
+
+    yuoa v- auto add label
+
+[33mcommit e6c6a99ddefae7a6fb6a6588a0a5553d0978057e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 22:09:01 2024 +0300
+
+    yuoa v- auto add label
+
+[33mcommit 271cdaf9466ce2ed42ecb0d07af858c669891db8[m
+Merge: 19c445c8 3eed3f95
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:54:14 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 97c95419958b09d3e0d680e7a90f71c2f937bd9d[m
+Merge: f082fcf8 3eed3f95
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:53:58 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 29c83697f38aab65a158ab830a7f931b57cac2c9[m
+Merge: 92f5a37c 3eed3f95
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:53:46 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 3eed3f95e1d3200988428ad7a62eac28fd0e2919[m
+Merge: 54e3953a f1a7d91f
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 15 16:53:26 2024 +0300
+
+    Merge pull request #66 from GreenBlitz/lil-fix
+    
+    yoav - Auto Commit Before Build
+
+[33mcommit f1a7d91f2ae37abf15dd58f30d64afc9673f78c4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:51:32 2024 +0300
+
+    yoav - build -> compile
+
+[33mcommit 8210b181742a4207c9d371f52d5d1ef21bce427f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:50:25 2024 +0300
+
+    yoav - build -> compile
+
+[33mcommit 382fa2c74d115c25f010f3b8a04fcdb720bdf50b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:48:17 2024 +0300
+
+    yoav - auto commit -> before build
+
+[33mcommit 19c445c8545eabb81525ae03f5cae23fa50e6ae9[m
+Merge: c01e78cf 54e3953a
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:45:00 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit f082fcf88d60821d35eed6ace57ef26124961b29[m
+Merge: 69c0f8ee 54e3953a
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:44:45 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 92f5a37ca92c3a8b051271a9a5aeed3944871140[m
+Merge: 1c665fe0 54e3953a
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:44:29 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 54e3953ab5f88dc9fc119b936f5fec13734452f0[m
+Merge: f4786584 eb27f312
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 15 16:44:08 2024 +0300
+
+    Merge pull request #65 from GreenBlitz/improve-labels-cond
+    
+    yoav - More Labels Checks + improved Check Behavior
+
+[33mcommit eb27f31243ac7aad6008a7be05b18316f7060f02[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:42:44 2024 +0300
+
+    yoav - imprived behavoir
+
+[33mcommit 8f94999e48820ce6f65fedd153d2cb2ef5577739[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:38:18 2024 +0300
+
+    yoav - triggers
+
+[33mcommit d2deb3d14c11b8bf68f6fce6bc4e277e5ee4f816[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:35:51 2024 +0300
+
+    yoav - triggers
+
+[33mcommit ee721ab62a7b187e58112472273e8674a7452cb9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:33:44 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit 6d8c290abea44c1bbf96b361686a563ba9841f6b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:31:40 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit f0aa3f170e5823f0bd2715db48fde1b60e2de614[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:30:53 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit 465b0952088d3328d130fb81e4a95b91776093cb[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:28:43 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit e18f3b46bb985f424981aadcf8dcf90c3b760441[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:27:43 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit 53fab1b7fd6678216f3a35a8d8eda7def711a7c7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:26:18 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit 1d9d709d3e362021ef004936238cae8fdcd68cd2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:24:37 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit 0cb1cc75d1686587b81b473316308a44ff86811f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:23:41 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit b1a0ca0eae1d2390fa4a55b4f9e83be1ce5339fc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:22:40 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit c11afd08f9cdca8a687813c712889ba1125ea7b9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:19:38 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit 503eea863d9c8b169b2e92d1a9722e86f44eedd6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:17:02 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit 93f04409e19030591034d5a582c508d51f5e265d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:12:39 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit aa3a5956627fa7df58be21ec500b7518cd98866b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:06:01 2024 +0300
+
+    yoav - no waiting
+
+[33mcommit c01e78cfa34353009927e8060f23458d789735ea[m
+Merge: efc7d738 f4786584
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:00:49 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit 69c0f8eee9ae1ca7bd480c1214e481606bd3484f[m
+Merge: c1b1f38f f4786584
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 16:00:24 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 1c665fe04166a5e18b437874921968a45581d98a[m
+Merge: 71b32aa5 f4786584
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:59:32 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit f4786584f98bbf2a52e0ee04d376b1f3787e5360[m
+Merge: 0c9eb122 7a95749f
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 15 15:57:54 2024 +0300
+
+    Merge pull request #64 from GreenBlitz/lable-naming
+    
+    yoav - Label Check
+
+[33mcommit 7a95749f8bc101cd126c4d26d637348a2d310bca[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:48:21 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 57876ebd14f65e1c626021f62856bc2cb9fa84b6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:43:02 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit a41775a357e5a032e0bfe4dcb08a84e1b2779981[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:41:57 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 40a9bdc21cc7e13ac11b1665adc402a223f0c747[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:27:52 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit a31fae193898fb9306b082365251d6d8afb31f3f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:26:56 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit e03f8de8a42a87c4910a67161bfd5d9bf4ec8475[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:24:51 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 6f44eb72365ef7f48f5a485c82f44ccfd0494e03[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:21:23 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 0375eb402280aea6f860930366c495063762cf6b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:05:08 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 309eaf16027a383988bba3ea125a6ae8d9281b2e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:01:32 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 40249069cce3f1bf5f46a22860e1eda24f5db7ea[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 15:00:03 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 0436ae91f10d65b74aa9e7f44e9e0c9e69a5aee1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:59:16 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit dbe08ac49e2ad44f6dc8b7f44809e3cd6f8930a1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:55:20 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 2a5de2cf766f6f6311e53badd6d782a4546c9f2d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:53:44 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 9e8c0c5dbd509976bf589efacd108757a28668a7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:48:39 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit fb6af68b0eca23e9df1b4198fd55957290bdaa54[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:47:38 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 13c61ef31c439b5e1b868cf971bc63fb9162eb78[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:44:46 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 10c44871bda8ca740c962a297eea8bf2a38a77b6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:41:16 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 9a88452c88dd655d6588399567dd03722041d9b0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:37:41 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 864ac56109ed1ec513f02ffbcb8355bc91c93c1b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:21:53 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 44534aa25f90307bb8cad48e3c3a2d28ab5b42b2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:16:32 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 69177f12fd223b12799d295623e03afcc4c03b2e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:15:07 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit f4bccd0060143c208f5e4c6c287e33e3d368971c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:13:10 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 6ecadd13d365cc688d6dc68486367a95f2b8cfee[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:11:29 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit ca1fe144f815d42cd2b690c120741fc3481257a3[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 14:06:56 2024 +0300
+
+    yoav - removed dep
+
+[33mcommit 5f5561a3773832bf36482c2674e157006cc7de43[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:55:17 2024 +0300
+
+    yoav - new check chat
+
+[33mcommit b5814cc295fbfedf82fe0541a17c701b89690d10[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:54:36 2024 +0300
+
+    yoav - new check chat
+
+[33mcommit 2043ca799be0be61fc7b346d08c8f10c30c65d47[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:51:56 2024 +0300
+
+    yoav - new check chat
+
+[33mcommit 5cda55dc7f8be70f4e89b94d85da5cd9c38a246f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:46:58 2024 +0300
+
+    yoav - chat check
+
+[33mcommit 26da9dae0ac1e4eff6fd3b36b59d3533b62d4ea8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:44:40 2024 +0300
+
+    yoav - chat check
+
+[33mcommit 5b15af4aed2e33377e08c501b3a35aebade33fbe[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:43:04 2024 +0300
+
+    yoav - chat check
+
+[33mcommit 8326e44b41641833953b66828d447e319cbccf80[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:41:09 2024 +0300
+
+    yoav - chat check
+
+[33mcommit 6e7c5ff98617a095a059396cd409af3b2876a9a0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:35:48 2024 +0300
+
+    yoav - triggers
+
+[33mcommit 4e4ed7d2dcdc0977b8ae1f1ae26aa70d3706e70f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:34:56 2024 +0300
+
+    yoav - triggers
+
+[33mcommit 860b8760b710254c9c369efcf14c92c2abedbe72[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:32:09 2024 +0300
+
+    yoav - triggers
+
+[33mcommit 71b32aa5be53dd08d7c66b3efc2c09dd59ea6a0e[m
+Merge: 5c7328b4 0c9eb122
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:19:07 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit c1b1f38ff49d37badb63fed78d7acce4e0e3aca7[m
+Merge: a35b8232 0c9eb122
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:18:04 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit efc7d73807b01b1ee92096b01e04bbf97d0b8ef5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:14:46 2024 +0300
+
+    yoav - compiled
+
+[33mcommit 42062d9f0377f82e336f8774c0671f3ca6acd4ef[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 13:12:03 2024 +0300
+
+    yoav - naming
+
+[33mcommit 0c9eb122a2156b4571919a5639913a1eb91302ca[m
+Merge: e2be8003 598aeb56
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 15 12:56:10 2024 +0300
+
+    Merge pull request #61 from GreenBlitz/build-workflow
+    
+    yoav - Build Check
+
+[33mcommit 598aeb56f4d4444078c491f6193e993012d0a64f[m
+Merge: 0c48d907 e2be8003
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 15 12:47:42 2024 +0300
+
+    Merge branch 'master' into build-workflow
+
+[33mcommit e2be8003b4a77189c90f736371f6f3aa809743a4[m
+Merge: d062ebd0 38c3d520
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 15 12:44:41 2024 +0300
+
+    Merge pull request #63 from GreenBlitz/settings-change
+    
+    yoav - Deleted Settings
+
+[33mcommit 38c3d5207e0ccb6797853d72a7b1480afadd3c4c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 15 12:14:41 2024 +0300
+
+    yoav - settings doesnt update what i need so deleted
+
+[33mcommit 0c48d907e9b1297c382a308f81fbd336c4f0a86e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 23:50:00 2024 +0300
+
+    yoav - please work1
+
+[33mcommit 835596029627a6427d2f9e0cda9fae93fb6c7335[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 23:45:50 2024 +0300
+
+    yoav - please work
+
+[33mcommit d0dccc061f0575379b2f898d171c853c680afbd7[m
+Merge: 47d06aee d062ebd0
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 14 23:10:17 2024 +0300
+
+    Merge branch 'master' into auto-calib-s
+
+[33mcommit a35b8232e0f23338cbbee4ac1b4ba612a605318c[m
+Merge: a9cafe39 d062ebd0
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 14 23:09:38 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 5c7328b46815f39e87c99e94b66784819b685da9[m
+Merge: ae314b12 d062ebd0
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 23:08:33 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit d062ebd033aab7648e8a2b80492d7272b55692b4[m
+Merge: 092d7598 f0af85ff
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 14 19:12:25 2024 +0300
+
+    Merge pull request #54 from GreenBlitz/editor
+    
+    yoav - Editor Settings
+
+[33mcommit f0af85ff1de162f03e46f4fa3a5860113c6e0804[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 19:08:16 2024 +0300
+
+    yoav - editor configs
+
+[33mcommit 092d7598fa8d51182edb80948f69284c9488bfef[m
+Merge: 8a759f0d 6c8803f7
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 14 19:07:08 2024 +0300
+
+    Merge pull request #53 from GreenBlitz/add-pre-commit
+    
+    yoav - Pre Commit -> Git Add
+
+[33mcommit 8630fe11d1b391d06d84e255571985daf7450dcc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 19:06:20 2024 +0300
+
+    yoav - editor configs
+
+[33mcommit 1ed42e547cae1b637fc151855361b75087855b18[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 19:04:00 2024 +0300
+
+    yoav  - cleaned
+
+[33mcommit 6c8803f79547e469b8795bc94c9aee258d17ead1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 18:55:19 2024 +0300
+
+    yoav - added add
+
+[33mcommit 93a22d8a81d542c0732abcbd136ce57d19207533[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Sun Apr 14 18:54:29 2024 +0300
+
+    Yoni - tried settings repository
+
+[33mcommit 3ef82a9d599852470ea2b44293b1bca47e7ec648[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 18:47:51 2024 +0300
+
+    yoav - added
+
+[33mcommit e763f50491ce62b445366f000ba7f92eceaf5562[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 18:28:40 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 1179b2c3482f2423b9f95518ef714846daab1846[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 18:27:36 2024 +0300
+
+    yoav - added editor
+
+[33mcommit ae314b1267e3b80dd9736d30b1aebaf3990e05db[m
+Merge: 19033a22 8a759f0d
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 13:53:39 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 19033a225702022104d7ca36b92b298a6cb2b679[m
+Merge: b8316f10 656a9fd7
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 13:52:59 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit 8a759f0da5aab6e97a02f4d2a7272012f2a40b9a[m
+Merge: 656a9fd7 5649e1cc
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 14 13:17:12 2024 +0300
+
+    Merge pull request #52 from GreenBlitz/workflow
+    
+    yoav - Must Have "passed-all-tests"
+
+[33mcommit 5649e1cc9baffa72f1218eec88147ae91fa9b455[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 13:13:04 2024 +0300
+
+    yoav - if
+
+[33mcommit 5befc3c456e77e5e94389c73fe01959e13f2e034[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 13:11:07 2024 +0300
+
+    yoav - if
+
+[33mcommit e90b11ae7c22165f2560a76a42a09ed0f0b824df[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 13:09:34 2024 +0300
+
+    yoav - if
+
+[33mcommit 530a5f8e7bc93eccb70b92873b010d7f97da560e[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 13:04:04 2024 +0300
+
+    yoav - if
+
+[33mcommit 5733a4b06623409c591b3a372c9080be4236d030[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:59:51 2024 +0300
+
+    yoav - if
+
+[33mcommit 071d5b5bd12be1381937010ffe4264a6253e21ff[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:59:13 2024 +0300
+
+    yoav - if
+
+[33mcommit a8f7a260d750452c044d99f5f391cdab93d69d1c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:57:06 2024 +0300
+
+    yoav - if
+
+[33mcommit 34dfc277dcde5306d8fc9929ed67a556cc9126b6[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:56:28 2024 +0300
+
+    yoav - if
+
+[33mcommit 994794d380d9aaeaa2b2f6f29d22cdcb1f5dfd27[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:55:34 2024 +0300
+
+    yoav - if
+
+[33mcommit dc6470a9fb1fe91f4f40e9eec78e71ce459ce805[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:52:22 2024 +0300
+
+    yoav - if
+
+[33mcommit b6fcf782a50ef036c248336c3deab2a6cc232586[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:51:09 2024 +0300
+
+    yoav - if
+
+[33mcommit 670adafe074ce6f4c56adbcd1d8a6fe0bc39335f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:49:45 2024 +0300
+
+    yoav - if
+
+[33mcommit ee4b0f7200f2f9cef9152c0dd990bfbae3b41394[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:47:15 2024 +0300
+
+    yoav - if
+
+[33mcommit 98d7e5a6ebec1e276e54dc3e79c9eb91112daa71[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:46:10 2024 +0300
+
+    yoav - if
+
+[33mcommit b1ae3b2854d4690dc9cc392aff27733c048955b2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:44:28 2024 +0300
+
+    yoav - if
+
+[33mcommit 8b9a166a694a19e2bf705a5ccd0d0c4cc2162829[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:43:31 2024 +0300
+
+    yoav - if
+
+[33mcommit 8144833cdff5040766b3769945efeb4c9362be15[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:41:52 2024 +0300
+
+    yoav - if
+
+[33mcommit 0f42575f8e379ebd4cbfda85136e39059f2046d4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:40:49 2024 +0300
+
+    yoav - naming
+
+[33mcommit 93714c38e4bf1a4460570458e522b6fa30f87e53[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:39:13 2024 +0300
+
+    yoav - naming
+
+[33mcommit 934718cb64a1bebdd28b927776059caeffe867c2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:37:03 2024 +0300
+
+    yoav - naming
+
+[33mcommit c59b068e2904f7797071771b6214776974bdf617[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:34:12 2024 +0300
+
+    yoav - add check
+
+[33mcommit a412e9d735de633b7bc979d68a47a0001b83c25d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 12:29:30 2024 +0300
+
+    yoav - check
+
+[33mcommit 656a9fd7e5a0aebf38a4bd8c2da034857a0ba716[m
+Merge: 1abee32c e874c083
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Apr 14 00:45:57 2024 +0300
+
+    Merge pull request #49 from GreenBlitz/init-exe-command
+    
+    yoav - Init Execute and Execute End
+
+[33mcommit e874c08380d046a3bce35dd01e5b7e4440c471e0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 00:44:11 2024 +0300
+
+    yoav - added init and end commad
+
+[33mcommit 47d06aee68d8138ca1049a3e27fbf4c4d2ede7e5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 00:29:27 2024 +0300
+
+    yoav - find ks
+
+[33mcommit b8316f10133d4976893425f7ebf68aac817c9485[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 14 00:03:06 2024 +0300
+
+    yoav - finals
+
+[33mcommit b665ff14dfe7a56f8c01acc6c4f24cf88406cf50[m
+Merge: e35b57ca 1abee32c
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 23:50:16 2024 +0300
+
+    Merge branch 'master' into logger
+
+[33mcommit a9cafe39bdbe33596c83ad188800f8e8041c2070[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 23:48:57 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 51753fa9d0578a81971823db2613c38b653b2a85[m
+Merge: 39da9700 1abee32c
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 23:42:50 2024 +0300
+
+    Merge branch 'master' into system-identification
+
+[33mcommit 1abee32c3957250614fd9db59c95cff09dace566[m
+Merge: d5ca430c 149b560f
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Apr 13 23:33:46 2024 +0300
+
+    Merge pull request #46 from GreenBlitz/formater
+    
+    yoav - IntelIj Formater
+
+[33mcommit 149b560f5a93d473a29ca4ae0e9ea75010f301af[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 23:33:08 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 7300e91014216da0661c39979224bf2f81a522df[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 23:18:20 2024 +0300
+
+    yoav - looks good
+
+[33mcommit 3650b813d36e6814001e706fdc7cac13a3b6f4e9[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 22:55:22 2024 +0300
+
+    yoav - check format 3
+
+[33mcommit 5e69a691b90bdbc1b57f90de2db5a709f20d1234[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 22:52:32 2024 +0300
+
+    yoav - check format 2
+
+[33mcommit 096fe9d2a1cc96dc8ef18c21c6a7f6069c44c4bf[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 22:49:18 2024 +0300
+
+    yoav - check -format
+
+[33mcommit 39da97007e843e3d962810cca08fd4f7b226c696[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 22:24:04 2024 +0300
+
+    yoav - added sysid
+
+[33mcommit e35b57ca298f07667797241e63affcdbd0e98f8b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 21:59:40 2024 +0300
+
+    yoav - fixed and improved logger utils
+
+[33mcommit d5ca430cb8a786300e30e6595d89385e27f2a9e1[m
+Merge: 4102a796 417f4b70
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Apr 13 21:55:38 2024 +0300
+
+    Merge pull request #43 from GreenBlitz/logger
+    
+    yoav - Cleaned Device Wrappers
+
+[33mcommit 417f4b706b207fd95a99c3f8010dc332e3455821[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Apr 13 21:53:53 2024 +0300
+
+    yoav - cleaned devide wrappers
+
+[33mcommit 4102a796f6e18f85dba1e6ba5115cbcc1609c12f[m
+Merge: 61782ad8 adf1add9
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Apr 12 18:49:48 2024 +0300
+
+    Merge pull request #42 from GreenBlitz/removed-last-thing
+    
+    Yoav - deleted build
+
+[33mcommit adf1add906e9799b84afa31ab756791a33fbdb7b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 12 18:49:16 2024 +0300
+
+    Yoav - deleted build
+
+[33mcommit 61782ad85f5eb164ce1c8675fb72c26cb7b19f7d[m
+Merge: 9b50ff15 16cf3243
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Apr 12 18:44:12 2024 +0300
+
+    Merge pull request #41 from GreenBlitz/format-commit
+    
+    yoav - Auto Format
+
+[33mcommit 16cf324346d0809248a940756ee1eeac3d0c0eb8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 12 18:43:05 2024 +0300
+
+    yoav - checking
+
+[33mcommit 9b50ff15d433798b0a8de2e3293f528f58c0f290[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 12 18:37:55 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit a222d0ea484d1a7e5fe12633f77330cd58b07ad4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 12 18:03:30 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 7959fb358308892bd80859a8eb823332031233d5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 12 17:19:30 2024 +0300
+
+    yoav - ctrl - alt - l
+
+[33mcommit e541f9f65f955e6ecc00cdd208ab2078e3024fe3[m
+Merge: 1e6cfb70 f4ff1e51
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Apr 12 17:02:50 2024 +0300
+
+    Merge pull request #38 from GreenBlitz/gradle-stuff
+    
+    yoav - removed spotlees
+
+[33mcommit f4ff1e5143dcde99b2101dc249fb0eff2c8aa2e1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Apr 12 17:02:16 2024 +0300
+
+    yoav - removed spotlees
+
+[33mcommit 1e6cfb70436690b6a6773d916df5641cfe6438c4[m
+Merge: 97a48bde 635cc524
+Author: greenblitz4590 <94316058+greenblitz4590@users.noreply.github.com>
+Date:   Thu Apr 11 17:22:55 2024 +0300
+
+    Merge pull request #37 from GreenBlitz/auto-upstream
+    
+    yoav - Auto Set Upstream
+
+[33mcommit 635cc52461af4ce3964e5af5f6f13bcf533259d7[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Thu Apr 11 17:20:28 2024 +0300
+
+    yoav - check auto up stream
+
+[33mcommit 97a48bde226adabcca364273402802b742222f47[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 22:24:18 2024 +0300
+
+    yoav - dleted build const
+
+[33mcommit 0c4972e924105c3c280ea6a4e0edb171667b94b8[m
+Merge: 6a228d3a cc36f620
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 10 20:55:51 2024 +0300
+
+    Merge pull request #36 from GreenBlitz/auto-pull
+    
+    yoav - added auto pull
+
+[33mcommit cc36f62045b7a8d1e03e86ac11723bf8e2bb77cc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 20:54:36 2024 +0300
+
+    yoav - added auto pull
+
+[33mcommit 6a228d3ac94428dcce029deb9e73317a661a4a92[m
+Merge: 41bc9296 6fc3bef4
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 10 18:59:54 2024 +0300
+
+    Merge pull request #34 from GreenBlitz/pre-pre-commit
+    
+    yoav - pre commit
+
+[33mcommit 6fc3bef449d8b33e99026f7f4cec077c3db9e2ff[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:59:17 2024 +0300
+
+    yoa v- merghed master
+
+[33mcommit ae77405408cecd698c29553363422082efe14dd1[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:55:21 2024 +0300
+
+    yoa v- merghed master
+
+[33mcommit 19dad05c52e02470475844af56455d1034f97445[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:54:03 2024 +0300
+
+    yoav - git igonere
+
+[33mcommit d161762a746f1d6bce6618c1241bdb92a617e989[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:53:30 2024 +0300
+
+    yoav - git igonere
+
+[33mcommit d9b7001353d20e39d5c477ed4b401f348483db07[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:52:30 2024 +0300
+
+    yoav - git igonere
+
+[33mcommit 857e3065fe493ed17312158c20f19ecff20c8ee3[m
+Merge: 289aa21f 41bc9296
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:51:05 2024 +0300
+
+    yoa v- merghed master
+
+[33mcommit 289aa21f5b2774217b45e3246141b1b1e2409e26[m
+Merge: 1b1939d5 d0b3a435
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 10 18:47:44 2024 +0300
+
+    Merge pull request #31 from GreenBlitz/pre-commit
+    
+    yoav - Pre Commit (2 files)
+
+[33mcommit d0b3a43585095615c80cd0745c728092ce1382b2[m
+Merge: 470286fd 10cf49a4
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 10 18:46:06 2024 +0300
+
+    Merge pull request #32 from GreenBlitz/post-commit
+    
+    yoav - Post commit (2 files) (Don't merge)
+
+[33mcommit 10cf49a4dd51918e074e5cbd449287e74cb96258[m
+Merge: 2f6273d1 470286fd
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:44:57 2024 +0300
+
+    yoa v- lceaned
+
+[33mcommit 470286fd1aa4bbf936e8cf168939f3b4889d95dc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:43:35 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 41bc9296bdfa3f4d440a1c5d703096cd13147d51[m
+Merge: 1ea7c44a 08790e7e
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 10 18:39:32 2024 +0300
+
+    Merge pull request #28 from GreenBlitz/gversion
+    
+    yoav - Gversion (5 files)
+
+[33mcommit 1ea7c44a280ba0640ef44709e0dcabea1a2a645c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 18:25:50 2024 +0300
+
+    yoav - reformat all files
+
+[33mcommit 68e3abae566721d1e703b3d0da1f9902bb8028c4[m
+Merge: 1d3a42b7 ba27aaea
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 10 18:18:41 2024 +0300
+
+    Merge pull request #30 from GreenBlitz/auto-commit
+    
+    yoav - Auto Commit (1 file)
+
+[33mcommit 1d3a42b7c89b52f8e72b35652622c79d7691f714[m
+Merge: 703a552a 2c341a39
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 10 18:18:05 2024 +0300
+
+    Merge pull request #27 from GreenBlitz/spotless
+    
+    yoav - Spotless (4 files)
+
+[33mcommit 3a86b21459b50c2295c8dee943bfe33186da7625[m
+Merge: 21115a48 aaa50c14
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Apr 10 17:47:39 2024 +0300
+
+    Merge pull request #33 from GreenBlitz/improve-auto-commit
+    
+    yoav - changed auto commit format
+
+[33mcommit aaa50c14fc57c5bf56939ad9ca66bae9fae6d637[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 17:46:42 2024 +0300
+
+    yoa v- cleaned
+
+[33mcommit 9bb25e9772628130f0dc575388a57d1716689d9f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 17:42:56 2024 +0300
+
+    yoav - comments
+
+[33mcommit 5eb8c8bc3a365b3bb4d38daa139757a7abc10ff7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Apr 10 17:28:22 2024 +0300
+
+    yoav - changed task format
+
+[33mcommit 21115a48ccfaa0e9849442ad770543c351174e69[m
+Merge: a1b58b86 1b1939d5
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 18:09:32 2024 +0300
+
+    yoav - mrged pre pre here
+
+[33mcommit 2f6273d1f8b10f35edb6e08ab95fe7990cd29a7d[m
+Merge: 58ae2ea3 a1b58b86
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 18:05:36 2024 +0300
+
+    yoav - merged pre commit
+
+[33mcommit a1b58b86990eace260767c2539677d779c4a515a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 17:56:27 2024 +0300
+
+    yoav - naming
+
+[33mcommit 58ae2ea3f813bf514f62a81577f222e2c159a3cf[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 17:52:19 2024 +0300
+
+    yoav - commiting
+
+[33mcommit 379a1159ada9ab2b8b25ad4b480c7c8249c8df15[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 17:44:00 2024 +0300
+
+    yoav - added post commit push
+
+[33mcommit 28ca54328725861357330dae0d4457338179271f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 17:36:02 2024 +0300
+
+    yoav - cleaned
+
+[33mcommit 0c2b1c6235d1a03cb58ed2af9015946208873f6a[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 17:33:38 2024 +0300
+
+    yoav - updated script to pull
+
+[33mcommit b492ee9aebe063142483a3b8b8317de8b17a3cba[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 17:25:32 2024 +0300
+
+    yoav - auto commit finals
+
+[33mcommit 4c701cf17f1d3a59eba8fdb02b8d495d4086daad[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 16:41:49 2024 +0300
+
+    yoav - claened
+
+[33mcommit 4505759fc2476660cd0561a1fff9c9adf1737275[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 16:38:09 2024 +0300
+
+    yoav - working
+
+[33mcommit 1b1939d596827fd3565cd3cc37709feec3c83382[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 15:35:49 2024 +0300
+
+    yoav - added all grdle stuff
+
+[33mcommit f751f3ee4e86c4416ffb6114ddedac14a7744a1d[m
+Merge: d1bd4edc ba27aaea
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 15:35:07 2024 +0300
+
+    Merge branch 'auto-commit' into pre-pre-commit
+
+[33mcommit d1bd4edcf9174f7fddb53142b603074d1f733f7b[m
+Merge: 08790e7e 2c341a39
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Tue Apr 9 15:34:56 2024 +0300
+
+    Merge branch 'spotless' into pre-pre-commit
+
+[33mcommit ba27aaea9caf9d21d3fd475b84380b87ca353dbb[m
+Merge: 39dd9b4f ea217a96
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Mon Apr 8 18:33:31 2024 +0300
+
+    Merge pull request #29 from GreenBlitz/check-auto-commit
+    
+    yoav - Check auto commit
+
+[33mcommit ea217a96aecbfb4fa6be622b6272d384e43d03aa[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 8 18:32:45 2024 +0300
+
+    autoCommit - updated at 'Mon Apr 08 18:32:44 IDT 2024'
+
+[33mcommit 2f3a6a4b09d1c4d71ecfe012a92b51840cecbc40[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 8 18:30:59 2024 +0300
+
+    autoCommit - updated at '2024-04-08T18:30:59.585'
+
+[33mcommit fe613127a010f85a712387787f5ad09488cdaa42[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 8 18:28:03 2024 +0300
+
+    autoCommit - updated at 'Mon Apr 08 18:28:03 IDT 2024'
+
+[33mcommit 7e1f3719df7e2503cc590d26fd2f7a4dc98f5daa[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Mon Apr 8 17:53:36 2024 +0300
+
+    yoav - cleaned java v code
+
+[33mcommit 51503ede25523d7f99c6c19314f8777145b9bba1[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Mon Apr 8 15:40:37 2024 +0300
+
+    Updated at 'Mon Apr 08 15:40:37 IDT 2024'
+
+[33mcommit 2126e699fa7871f47736255dce641dc84ae987e6[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Mon Apr 8 13:34:26 2024 +0300
+
+    Gil - commit for herman
+
+[33mcommit 39dd9b4f08c7bcdefd4ec3f8a07e65aeb51a1602[m
+Author: itamaroryan <itamar.oryan@gmail.com>
+Date:   Mon Apr 8 13:26:26 2024 +0300
+
+    yoav - added auto cmmit
+
+[33mcommit 2c341a39d5a83e02ac56839801ea80903864e882[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 7 23:15:26 2024 +0300
+
+    yoav - auto ctrl+alt+l every build
+
+[33mcommit 08790e7e60a42352c8dc0841f8d692d4895995c8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 7 23:02:12 2024 +0300
+
+    yoav - git ignore
+
+[33mcommit 86e4251e01d7fce3d24f58b8fd67133865b4c090[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 7 22:56:18 2024 +0300
+
+    yoav - added gversion
+
+[33mcommit 27d6fece3aa1364623ded2c637c177899040f2c0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 7 22:45:07 2024 +0300
+
+    yoav - added build consts
+
+[33mcommit 2936ca1c6d4188d7b13632191b0f57001675079c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 7 21:37:46 2024 +0300
+
+    yoav - added spotless for imports and spaces
+
+[33mcommit 57ed23c2a6418f25caefcf8b25661af399fe4ed8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Apr 7 21:26:10 2024 +0300
+
+    yoav - fixed launch
+
+[33mcommit 703a552a5caaf791482521a59a0f23a4ccb1bbb1[m
+Merge: b31e8e1a fcdfd5ca
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Mar 31 17:12:12 2024 +0300
+
+    Merge pull request #19 from GreenBlitz/clean-joystick
+    
+    yoav - am
+
+[33mcommit fcdfd5ca7761fd40049f7d1b2721b08dea653b21[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Mar 31 17:11:36 2024 +0300
+
+    yoav - am
+
+[33mcommit b31e8e1a128b436c887f842f75289d8c0178cd3d[m
+Merge: fb0123ae ccefcce8
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sun Mar 31 15:58:43 2024 +0300
+
+    Merge pull request #18 from GreenBlitz/determine-mode-simpilfy
+    
+    yoav - Determine mode simpilfy
+
+[33mcommit ccefcce8c5d0dd45ba2879881beeea0f19ddb934[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Mar 31 15:57:31 2024 +0300
+
+    yoav - fix
+
+[33mcommit e7e475027b31670b32937eb9c446a7076b78813f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sun Mar 31 15:56:31 2024 +0300
+
+    yoav - simplified determine type
+
+[33mcommit fb0123aea0db0241ba7016d09d32372906fae3b8[m
+Merge: 4876abf0 94eeecf7
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Mar 30 15:55:48 2024 +0300
+
+    Merge pull request #17 from GreenBlitz/const-robot-type
+    
+    yoav - robot type as const
+
+[33mcommit 94eeecf7923db66b31869a41ef0135c862576565[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Mar 30 15:29:35 2024 +0300
+
+    yoav - cleaned determine robo type
+
+[33mcommit 4459ece5ec8e332effe5bc5ed90a0607c773a292[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Mar 30 13:41:50 2024 +0300
+
+    yoav - imports
+
+[33mcommit 6581b80e613871765bb7aea351b78fd8bc702ae8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Mar 30 13:38:30 2024 +0300
+
+    yoav - robto type as const
+
+[33mcommit 4876abf055db91a25453ace723eeade25fad8808[m
+Merge: 4650a901 06a7366e
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Wed Mar 27 21:42:11 2024 +0200
+
+    Merge pull request #15 from GreenBlitz/square-joystick
+    
+    yoav - Square joystick
+
+[33mcommit 06a7366e917f6c99acc91310e657b1d16544de56[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Mar 27 00:38:43 2024 +0200
+
+    yoav - imports
+
+[33mcommit 2a5085b54369c45a3f9358e8c302013726917e12[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Mar 27 00:36:27 2024 +0200
+
+    yoav - made docs prettier
+
+[33mcommit 334aec2c353d1c4b5ca277c785883f8fcfb75941[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Mar 27 00:35:26 2024 +0200
+
+    yoav - really good docs with very good author
+
+[33mcommit 0a2433da5bb6b04ec46d87fcbed8920558e34fe2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Wed Mar 27 00:33:16 2024 +0200
+
+    yoav - really good docs
+
+[33mcommit 4650a901141438bd712726ef5ec599a66ab5996e[m
+Merge: d9922487 b2b53174
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Mar 23 16:52:47 2024 +0200
+
+    Merge pull request #7 from GreenBlitz/gb-cancoder
+    
+    yoav - gb can coder
+
+[33mcommit b2b53174619e3e6001935a04e80a924d2fdfefff[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Sat Mar 23 13:18:43 2024 +0200
+
+    yoav - gb can coder
+
+[33mcommit d992248771091053f20f88786a2f797536a63b64[m
+Merge: af4c3841 a87704ff
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Mar 23 12:58:07 2024 +0200
+
+    Merge pull request #4 from GreenBlitz/robot-type
+    
+    yoav - Robot type utils
+
+[33mcommit af4c3841eda541ce25a686588033615dff46c638[m
+Merge: 1581cb70 d4f00e18
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Sat Mar 23 12:55:26 2024 +0200
+
+    Merge pull request #5 from GreenBlitz/gp-talon
+    
+    yoav - GB talonFX
+
+[33mcommit d4f00e180733b99e3fbaa1055714358e7596dfcf[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 23:40:02 2024 +0200
+
+    yoav - import
+
+[33mcommit 46ec27fcfaa116907542a64b805968a8e55dff6d[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 23:39:14 2024 +0200
+
+    yoav - added refresh and optimize
+
+[33mcommit 1581cb700869bdcd7c7ddacb43480e74f68855fa[m
+Merge: b1e84417 d3f8e8d2
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Mar 22 22:56:27 2024 +0200
+
+    Merge pull request #6 from GreenBlitz/naming
+    
+    yoav - naming
+
+[33mcommit d3f8e8d2894ed95360dba8ab3b0076ab4d62799b[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 22:55:34 2024 +0200
+
+    yoav - naming:
+
+[33mcommit 0d80e4d0b2555a450ed148167458d7fc83b88cf5[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 22:44:45 2024 +0200
+
+    yoav - added gb talonFx
+
+[33mcommit 4e7653803e6637d559a917b509fdb6ca244dccbe[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 22:44:17 2024 +0200
+
+    yoav - added gb talonFx
+
+[33mcommit a87704ffd3064e6f6adbc514a7cdc412ffbbef03[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 22:14:15 2024 +0200
+
+    yoav - impirt
+
+[33mcommit c01d7bfe2c66ee725b30b7b3b7efbf85b8bdb0dc[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 22:14:07 2024 +0200
+
+    yoav - impirt
+
+[33mcommit b363ea891309c28f8ddabd88517b0fa145e40c98[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 22:12:34 2024 +0200
+
+    yoav - final
+
+[33mcommit 38620b4b44c3a698b7bdc5de839858c2a2546dbe[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 22:11:51 2024 +0200
+
+    yoav - added robot type utils
+
+[33mcommit b1e8441718a2597bbbe1c9b7784fd1731ef548cb[m
+Merge: 759897bc 0c4646f4
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Mar 22 19:08:14 2024 +0200
+
+    Merge pull request #2 from GreenBlitz/clean
+    
+    yoav - naming
+
+[33mcommit 0c4646f45a3e13943c46fbe69e3fbeba864f90a7[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 19:07:56 2024 +0200
+
+    yoav - naming
+
+[33mcommit 759897bc2c70fdf7abd4c6c56ee0c6188853344b[m
+Merge: f525dc05 a8f53504
+Author: YHerm <140002259+YHerm@users.noreply.github.com>
+Date:   Fri Mar 22 19:04:05 2024 +0200
+
+    Merge pull request #1 from GreenBlitz/chore/add-utils
+    
+    utilities -> master
+
+[33mcommit a8f53504462789bbae712a3b661a8e4fc1d907b4[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 18:58:46 2024 +0200
+
+    yoav - added require to array
+
+[33mcommit daa361daa5908f3c58d02430c2d5f3783135b8ee[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 18:50:17 2024 +0200
+
+    yoav - ready look for imports
+
+[33mcommit b7c69f148395310f6c5d558f2bd81db7fa0619e8[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 18:43:55 2024 +0200
+
+    yoav - naming
+
+[33mcommit 3ec016141b393b2e907d961d0fe60919ae575446[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Mar 22 18:42:44 2024 +0200
+
+    Yoni - cleaned more
+
+[33mcommit c62c038bd65c7a3115369652827a36b46d79f45c[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 18:41:12 2024 +0200
+
+    yoav - added packages in hid
+
+[33mcommit a538cfdeafa27be69042f2803b6e3488d13c2955[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 18:37:55 2024 +0200
+
+    yoav - added logger utils
+
+[33mcommit 91ff72c1aeba07a37c278d27f4d23188a338f363[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Mar 22 18:22:26 2024 +0200
+
+    Yoni - cleaned
+
+[33mcommit 9f3bcb64c3cf6f2b851a501519a0f1da6a50e7c0[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 18:14:20 2024 +0200
+
+    yoav cleaned
+
+[33mcommit 52b6700012d89603e33cff908836200958569b8b[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Mar 22 18:06:32 2024 +0200
+
+    Yoni - fixed bug
+
+[33mcommit a6c8859388758bd489c6a7bfbb694a0610da65c5[m
+Author: Noam Rosenberg <95913534+NoamRosenberg08@users.noreply.github.com>
+Date:   Fri Mar 22 18:05:29 2024 +0200
+
+    Update src/main/java/frc/utils/Conversions.java
+    
+    Co-authored-by: YoniKiriaty <139997639+YoniKiriaty@users.noreply.github.com>
+
+[33mcommit fd6d4933fa70155905bd1e4e80c432331c9b549b[m
+Author: Noam Rosenberg <95913534+NoamRosenberg08@users.noreply.github.com>
+Date:   Fri Mar 22 18:04:58 2024 +0200
+
+    Update src/main/java/frc/utils/Conversions.java
+    
+    Co-authored-by: YoniKiriaty <139997639+YoniKiriaty@users.noreply.github.com>
+
+[33mcommit d283f03395182cc304a681ab4d4ddbc4a6f96c72[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 18:04:32 2024 +0200
+
+    crl alt l again
+
+[33mcommit 3c9129c5277aad95842212f6589d949208dca9cb[m
+Merge: 2d54c6a5 a5778c25
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 18:03:52 2024 +0200
+
+    Merge branch 'chore/add-utils' of https://github.com/GreenBlitz/Off-Season-2024 into chore/add-utils
+
+[33mcommit 2d54c6a51e314b29ef05267f8c0f65e6de08d010[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 18:03:46 2024 +0200
+
+    ctrl + alt + l
+
+[33mcommit a5778c2518416b89275cef2a45f54a4cb5aef052[m
+Author: Yoni Kiriaty <YoniKiriaty@gmail.com>
+Date:   Fri Mar 22 17:54:49 2024 +0200
+
+    Yoni - added GBCommand
+
+[33mcommit acc47cd0afc83ae9b532dee531be42bd7c493fdd[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 17:53:13 2024 +0200
+
+    yoav - orivate binfings
+
+[33mcommit 7ada6a7385ceb8dbc701c2ec9f682859017fbd0f[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 17:52:03 2024 +0200
+
+    yoav - acualty binding
+
+[33mcommit ef2be6fe214688a7512a215862724c24dc0e9567[m
+Merge: a62cd000 2e3764b4
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 17:50:27 2024 +0200
+
+    Merge branch 'chore/add-utils' of https://github.com/GreenBlitz/Off-Season-2024 into chore/add-utils
+
+[33mcommit a62cd000f6a495c2d7a30e63b6ac43832cfc5eca[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 17:50:18 2024 +0200
+
+    yoav - added new oi
+
+[33mcommit 2e3764b44d0299b4f121f54364aba10c674543e4[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 17:44:27 2024 +0200
+
+    added gbsubsystem
+
+[33mcommit 118b898921fdb20c8d839acff564217921fb2517[m
+Merge: 1b5ad801 a88167fd
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 17:36:10 2024 +0200
+
+    Merge branch 'chore/add-utils' of https://github.com/GreenBlitz/Off-Season-2024 into chore/add-utils
+
+[33mcommit 1b5ad8010c2275fb2018e01b04848c56420e6cd2[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 17:36:03 2024 +0200
+
+    added alliance utilils
+
+[33mcommit a88167fdac9569d74e777639bf0bc9dcfd9273a2[m
+Author: YHerm <0549405422.yh@gmail.com>
+Date:   Fri Mar 22 17:33:44 2024 +0200
+
+    yoav - driver station modes
+
+[33mcommit bfb3b076806e3b9a61816a202e44166ed63490da[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 17:28:34 2024 +0200
+
+    added basic DS utils
+
+[33mcommit 6e629e8680d4455d4814edd7c55b2bc37410540f[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 17:04:41 2024 +0200
+
+    added basic conversions
+
+[33mcommit 226d58a8a4c981ac11b7af4bea85ae2eb8c71dc2[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 17:00:38 2024 +0200
+
+    added joystick and axis buttons
+
+[33mcommit f525dc05a0abbc1d49520718217a3344255c54bb[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 16:30:45 2024 +0200
+
+    added phoenix6 & 5 to robot code
+
+[33mcommit 4b94c8a2b7e6163db9401b25fa2c9b4d2ceca11f[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 16:22:56 2024 +0200
+
+    added advantage kit
+
+[33mcommit 260eee2759e1c8a4535dc2abba5b22e6836203ef[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 15:28:07 2024 +0200
+
+    added REVLib
+
+[33mcommit 2a59c18b849fac33a3868557e03e684472412db8[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 15:16:55 2024 +0200
+
+    added path planner lib vendordep
+
+[33mcommit fb13ec5f06ce6d18cac9b84af832a74c50f0d4fe[m
+Author: NoamRosnberg08 <noamrosenberg097@gmail.com>
+Date:   Fri Mar 22 14:57:51 2024 +0200
+
+    initial commit

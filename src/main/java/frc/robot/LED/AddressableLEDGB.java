@@ -32,7 +32,7 @@ public class AddressableLEDGB implements ILED {
         addressableLED.setData(addressableLEDBuffer);
     }
     private void setColorForAllLEDs(Color color){
-        for (int i = 0; i<this.addressableLEDBuffer.getLength()){
+        for (int i = 0; i<this.addressableLEDBuffer.getLength(); i++){
             setColorForASingleLed(i,color);
         }
     }

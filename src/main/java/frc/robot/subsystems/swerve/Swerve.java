@@ -274,6 +274,7 @@ public class Swerve extends GBSubsystem {
 		this.currentState = swerveState;
 
 		speeds = stateHelper.applyAimAssistOnChassisSpeeds(speeds, swerveState);
+		speeds = handleHeadingControl(speeds, swerveState);
 		if (SwerveMath.isStill(speeds)) {
 			modules.stop();
 			return;
@@ -281,7 +282,6 @@ public class Swerve extends GBSubsystem {
 
 		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
 		speeds = SwerveMath.applyDeadband(speeds);
-		speeds = handleHeadingControl(speeds, swerveState);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
 		speeds = SwerveMath.discretize(speeds);
 

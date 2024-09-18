@@ -36,6 +36,10 @@ public abstract class Phoenix6Device implements IDevice {
 
 		connectedInput.connected = BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new)).isOK();
 		Logger.processInputs(logPath, connectedInput);
+
+		for (InputSignal signal : signals){
+			Logger.processInputs(logPath, signal);
+		}
 	}
 
 }

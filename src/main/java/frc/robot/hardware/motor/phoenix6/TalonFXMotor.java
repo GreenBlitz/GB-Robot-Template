@@ -9,7 +9,6 @@ import frc.robot.hardware.motor.ControlAble;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
-import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class TalonFXMotor extends CTREDevice implements IMotor, ControlAble {
 

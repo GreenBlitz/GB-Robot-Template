@@ -91,6 +91,8 @@ public class Pigeon2Wrapper extends Pigeon2 {
      */
     //@formatter:on
 
+	private static final int DEFAULT_CONFIG_NUMBER_OF_TRIES = 1;
+
 	private double rollOffSetDegrees;
 
 	private double pitchOffSetDegrees;
@@ -107,6 +109,10 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
 	public StatusCode applyConfiguration(Pigeon2Configuration configuration, int numberOfTries) {
 		return PhoenixProUtils.checkWithRetry(() -> getConfigurator().apply(configuration), numberOfTries);
+	}
+
+	public StatusCode applyConfiguration(Pigeon2Configuration configuration) {
+		return applyConfiguration(configuration, DEFAULT_CONFIG_NUMBER_OF_TRIES);
 	}
 
 	public StatusCode setYaw(Rotation2d newYaw) {

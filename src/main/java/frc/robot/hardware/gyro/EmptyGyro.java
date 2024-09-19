@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.IDevice;
 import frc.robot.hardware.signal.InputSignal;
 
-public class EmptyGyro implements IGyro, IDevice {
+public class EmptyGyro implements IGyro {
 
 	@Override
 	public boolean isConnected() {

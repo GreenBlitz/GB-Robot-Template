@@ -28,7 +28,7 @@ public abstract class Phoenix6Device implements IDevice {
 		return connectedInput.connected;
 	}
 
-	public void updateSignals(InputSignal... signals) {
+	public void fetchSignals(InputSignal... signals) {
 		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
 		for (InputSignal signal : signals) {
 			if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {

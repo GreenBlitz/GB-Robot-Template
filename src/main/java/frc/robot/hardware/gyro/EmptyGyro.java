@@ -1,17 +1,13 @@
 package frc.robot.hardware.gyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.EmptyDevice;
 
-public class EmptyGyro implements IGyro {
+public class EmptyGyro extends EmptyDevice implements IGyro {
 
-	@Override
-	public boolean isConnected() {
-		return false;
+	public EmptyGyro(String logPath) {
+		super(logPath);
 	}
-
-	@Override
-	public void fetchSignals(InputSignal... signals) {}
 
 	@Override
 	public void setYaw(Rotation2d yaw) {}

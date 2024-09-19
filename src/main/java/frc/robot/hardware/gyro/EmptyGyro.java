@@ -9,10 +9,10 @@ public class EmptyGyro implements IGyro {
 	public boolean isConnected() {
 		return false;
 	}
-	
+
 	@Override
 	public void fetchSignals(InputSignal... signals) {}
-	
+
 	@Override
 	public void setYaw(Rotation2d yaw) {}
 

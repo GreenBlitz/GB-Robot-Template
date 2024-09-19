@@ -15,10 +15,13 @@ public class RealSwerveConstants {
 	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(6, 0, 0);
 	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(6, 0, 0);
 	private static final Pair<Translation2d, Double>[] DISCRITIZATION_POINTS = new Pair[] {
-		new Pair<>(new Translation2d(0, 0), 1.0),
-		new Pair<>(new Translation2d(0, 11), 4.0),
-		new Pair<>(new Translation2d(6, 0), 2.5),
-		new Pair<>(new Translation2d(6, 15), 4.0)};
+			new Pair<>(new Translation2d(0, 0), 1.0),
+			new Pair<>(new Translation2d(0, 15), 3.2),
+			new Pair<>(new Translation2d(6, 0), 2.5),
+			new Pair<>(new Translation2d(5, 15), 3.2),
+			new Pair<>(new Translation2d(6.5, 15), 4.0),
+			new Pair<>(new Translation2d(6.5, 11), 4.0)
+	};
 
 	protected static SwerveConstants getSwerveConstants(SwerveName swerveName) {
 		return new SwerveConstants(

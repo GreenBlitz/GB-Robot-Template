@@ -297,8 +297,6 @@ public class Swerve extends GBSubsystem {
 		if (Double.isNaN(fudgeFactor) || fudgeFactor < 1) {
 			fudgeFactor = 1;
 		}
-		System.out.println(SwerveMath.getDriveMagnitude(speeds));
-		System.out.println(speeds.omegaRadiansPerSecond);
 		speeds = SwerveMath.discretize(speeds, fudgeFactor);
 		applySpeeds(speeds, swerveState);
 	}

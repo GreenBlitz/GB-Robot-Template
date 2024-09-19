@@ -114,7 +114,6 @@ public class InterpolationUtils {
 		}
 
 		if (!isQueryPointInBoundingBox(query, knownPoints)) {
-			System.out.println(query);
 			throw new IllegalArgumentException("Query point is outside the bounding rectangle of the given points.");
 		}
 
@@ -125,10 +124,6 @@ public class InterpolationUtils {
 		Pair<Translation2d, Double> topRight = boundingBox[3];
 
 		if (!isAllPointsExists(bottomLeft, bottomRight, topLeft, topRight)) {
-			System.out.println("TL " + topLeft.getFirst());
-			System.out.println("TR " + topRight.getFirst());
-			System.out.println("BL " + bottomLeft.getFirst());
-			System.out.println("BR " + bottomRight.getFirst());
 			throw new IllegalStateException("Bounding rectangle is not properly formed by given points.");
 		}
 		return biLinearInterpolate(bottomLeft, bottomRight, topLeft, topRight, query);

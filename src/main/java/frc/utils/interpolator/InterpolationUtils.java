@@ -108,7 +108,7 @@ public class InterpolationUtils {
 	}
 
 	@SafeVarargs
-	public static double bilinearInterpolate(Translation2d query, Pair<Translation2d, Double>... knownPoints) {
+	public static double bilinearInterpolate(Translation2d query, Pair<Translation2d, Double>... knownPoints) throws Exception{
 		if (knownPoints.length < 4) {
 			throw new IllegalArgumentException("At least 4 points and values are required.");
 		}

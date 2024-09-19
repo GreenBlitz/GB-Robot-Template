@@ -23,6 +23,7 @@ import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.interpolator.DiscritizationInterpolator;
 import frc.utils.interpolator.DoubleBilinearInterpolation;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
@@ -49,7 +50,7 @@ public class Swerve extends GBSubsystem {
 	private SwerveStateHelper stateHelper;
 	private Supplier<Rotation2d> headingSupplier;
 
-	private DoubleBilinearInterpolation discritizationHelper;
+	private DiscritizationInterpolator discritizationHelper;
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro) {
@@ -66,7 +67,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
-		discritizationHelper = new DoubleBilinearInterpolation(constants.discritizationPointsArray());
+		discritizationHelper = new DiscritizationInterpolator(constants.discritizationPointsArray());
 
 		updateInputs();
 	}

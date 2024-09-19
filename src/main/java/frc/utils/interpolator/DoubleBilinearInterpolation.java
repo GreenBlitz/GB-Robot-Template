@@ -22,7 +22,7 @@ public class DoubleBilinearInterpolation {
 		}
 	}
 
-	public double getInterpolatedValue(Translation2d query) {
+	public double getInterpolatedValue(Translation2d query) throws Exception {
 		return InterpolationUtils.bilinearInterpolate(query, knownPoints.toArray(Pair[]::new));
 	}
 

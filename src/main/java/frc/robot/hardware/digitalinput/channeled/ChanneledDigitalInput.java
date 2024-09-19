@@ -1,9 +1,9 @@
-package frc.utils.digitalinput.channeled;
+package frc.robot.hardware.digitalinput.channeled;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
-import frc.utils.digitalinput.IDigitalInput;
 
 public class ChanneledDigitalInput implements IDigitalInput {
 

@@ -25,9 +25,9 @@ def get_key_type(key: Key) -> TypeVar:
     return UndefinedKey
 
 
-def get_update_table_function(table: NetworkTableInstance, is_pressed: bool) -> Callable:
+def get_key_network_table_updator(table: NetworkTableInstance, is_pressed: bool) -> Callable:
     # Function to update the table based on the key type and its state (pressed or not).
-    def update_table(key) -> None:
+    def update_network_table_key_state(key) -> None:
         key_type = get_key_type(key)  # Store the result to avoid repeated calls.
         if key_type is UndefinedKey:
             return
@@ -39,7 +39,8 @@ def get_update_table_function(table: NetworkTableInstance, is_pressed: bool) -> 
                 table.putBoolean("slash", is_pressed)
             else:
                 table.putBoolean(key.char.lower(), is_pressed)
-    return update_table
+
+    return update_network_table_key_state
 
 
 def wait_until_client_disconnect(keyboard_client: NetworkTableClient) -> None:
@@ -51,8 +52,8 @@ def wait_until_client_disconnect(keyboard_client: NetworkTableClient) -> None:
 
 def create_keyboard_listener(keys_table: NetworkTable) -> keyboard.Listener:
     return keyboard.Listener(
-        on_press=get_update_table_function(keys_table, True),
-        on_release=get_update_table_function(keys_table, False),
+        on_press=get_key_network_table_updator(keys_table, True),
+        on_release=get_key_network_table_updator(keys_table, False),
     )
 
 

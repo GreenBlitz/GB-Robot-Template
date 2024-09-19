@@ -19,7 +19,9 @@ public class SimulationSwerveConstants {
 		new Pair<>(new Translation2d(0, 11), 3.2),
 		new Pair<>(new Translation2d(6, 0), 2.5),
 		new Pair<>(new Translation2d(5, 15), 3.2),
-		new Pair<>(new Translation2d(6, 15), 4.0)};
+		new Pair<>(new Translation2d(6, 15), 4.0),
+		new Pair<>(new Translation2d(6, 11), 4.0)
+	};
 
 	protected static SwerveConstants getSwerveConstants(SwerveName swerveName) {
 		return new SwerveConstants(

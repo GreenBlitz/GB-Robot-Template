@@ -32,27 +32,5 @@ public class DoubleBilinearInterpolation {
 		knowPoints.add(point);
 	}
 
-	@SafeVarargs
-	public static double bilinearInterpolate(Translation2d query, Pair<Translation2d, Double>... knownPoints) {
-		if (knownPoints.length < 4) {
-			throw new IllegalArgumentException("At least 4 points and values are required.");
-		}
-
-		if (!isQueryPointInBoundingBox(query, knownPoints)) {
-			throw new IllegalArgumentException("Query point is outside the bounding rectangle of the given points.");
-		}
-
-		Pair<Translation2d, Double>[] boundingBox = createBoundingBox(query, knownPoints);
-		Pair<Translation2d, Double> bottomLeft = boundingBox[0];
-		Pair<Translation2d, Double> bottomRight = boundingBox[1];
-		Pair<Translation2d, Double> topLeft = boundingBox[2];
-		Pair<Translation2d, Double> topRight = boundingBox[3];
-
-		if (isAllPointsExists(bottomLeft, bottomRight, topLeft, topRight)) {
-			throw new IllegalStateException("Bounding rectangle is not properly formed by given points.");
-		}
-		return biLinearInterpolate(bottomLeft, bottomRight, topLeft, topRight, query);
-	}
-
 
 }

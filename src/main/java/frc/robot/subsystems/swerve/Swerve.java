@@ -294,11 +294,10 @@ public class Swerve extends GBSubsystem {
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
 		double fudgeFactor = discritizationHelper
 			.getInterpolatedValue(new Translation2d(SwerveMath.getDriveMagnitude(speeds), Math.abs(speeds.omegaRadiansPerSecond)));
-		if (fudgeFactor == Double.NaN || fudgeFactor < 1) {
+		if (Double.isNaN(fudgeFactor) || fudgeFactor < 1) {
 			fudgeFactor = 1;
 		}
 		speeds = SwerveMath.discretize(speeds, fudgeFactor);
-		Logger.recordOutput("fudg factor", fudgeFactor);
 		applySpeeds(speeds, swerveState);
 	}
 

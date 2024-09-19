@@ -2,6 +2,7 @@ package frc.utils.interpolator;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.utils.Translation2dUtils;
 
 public class InterpolationUtils {
 
@@ -35,13 +36,14 @@ public class InterpolationUtils {
 	@SafeVarargs
 	public static boolean isAllPointsExists(Pair<Translation2d, Double>... points) {
 		for (Pair<Translation2d, Double> point : points) {
-			if (point == null || isAllPointsExists(point.getFirst())) {
+			if (point == null || !isAllPointsExists(point.getFirst())) {
 				return false;
 			}
 		}
 		return true;
 	}
 
+	@SafeVarargs
 	public static boolean isQueryPointInBoundingBox(Translation2d query, Pair<Translation2d, Double>... knownPoints) {
 		double xMin = Double.MAX_VALUE, xMax = -Double.MAX_VALUE;
 		double yMin = Double.MAX_VALUE, yMax = -Double.MAX_VALUE;
@@ -52,7 +54,7 @@ public class InterpolationUtils {
 			yMin = Math.min(yMin, point.getFirst().getY());
 			yMax = Math.max(yMax, point.getFirst().getY());
 		}
-		return query.getX() > xMin || query.getX() < xMax || query.getY() > yMin || query.getY() < yMax;
+		return query.getX() >= xMin && query.getX() <= xMax && query.getY() >= yMin && query.getY() <= yMax;
 	}
 
 	@SafeVarargs
@@ -63,22 +65,26 @@ public class InterpolationUtils {
 			double x = point.getFirst().getX();
 			double y = point.getFirst().getY();
 			if (x <= query.getX() && y <= query.getY()) {
-				if (bottomLeft == null || x > bottomLeft.getFirst().getX() || y > bottomLeft.getFirst().getY()) {
+				if (bottomLeft == null || (x > bottomLeft.getFirst().getX() || y > bottomLeft.getFirst().getY())
+                        && Translation2dUtils.isClosestPointFromPoints(query,point.getFirst(), new Translation2d[]{bottomLeft.getFirst(), point.getFirst()})) {
 					bottomLeft = point;
 				}
 			}
 			if (x >= query.getX() && y <= query.getY()) {
-				if (bottomRight == null || x < bottomRight.getFirst().getX() || y > bottomRight.getFirst().getY()) {
+				if (bottomRight == null || x < bottomRight.getFirst().getX() || y > bottomRight.getFirst().getY()
+                        && Translation2dUtils.isClosestPointFromPoints(query,point.getFirst(), new Translation2d[]{bottomRight.getFirst(), point.getFirst()})) {
 					bottomRight = point;
 				}
 			}
 			if (x <= query.getX() && y >= query.getY()) {
-				if (topLeft == null || x > topLeft.getFirst().getX() || y < topLeft.getFirst().getY()) {
+				if (topLeft == null || x > topLeft.getFirst().getX() || y < topLeft.getFirst().getY()
+                        && Translation2dUtils.isClosestPointFromPoints(query,point.getFirst(), new Translation2d[]{topLeft.getFirst(), point.getFirst()})) {
 					topLeft = point;
 				}
 			}
 			if (x >= query.getX() && y >= query.getY()) {
-				if (topRight == null || x < topRight.getFirst().getX() || y < topRight.getFirst().getY()) {
+				if (topRight == null || x < topRight.getFirst().getX() || y < topRight.getFirst().getY()
+                        && Translation2dUtils.isClosestPointFromPoints(query,point.getFirst(), new Translation2d[]{topRight.getFirst(), point.getFirst()})) {
 					topRight = point;
 				}
 			}
@@ -103,6 +109,28 @@ public class InterpolationUtils {
 			+ bottomRight.getSecond() * (x - x1) * (y2 - y)
 			+ topLeft.getSecond() * (x2 - x) * (y - y1)
 			+ topRight.getSecond() * (x - x1) * (y - y1)) / ((x2 - x1) * (y2 - y1));
+	}
+
+	@SafeVarargs
+	public static double bilinearInterpolate(Translation2d query, Pair<Translation2d, Double>... knownPoints) {
+		if (knownPoints.length < 4) {
+			throw new IllegalArgumentException("At least 4 points and values are required.");
+		}
+
+		if (!isQueryPointInBoundingBox(query, knownPoints)) {
+			throw new IllegalArgumentException("Query point is outside the bounding rectangle of the given points.");
+		}
+
+		Pair<Translation2d, Double>[] boundingBox = createBoundingBox(query, knownPoints);
+		Pair<Translation2d, Double> bottomLeft = boundingBox[0];
+		Pair<Translation2d, Double> bottomRight = boundingBox[1];
+		Pair<Translation2d, Double> topLeft = boundingBox[2];
+		Pair<Translation2d, Double> topRight = boundingBox[3];
+
+		if (isAllPointsExists(bottomLeft, bottomRight, topLeft, topRight)) {
+			throw new IllegalStateException("Bounding rectangle is not properly formed by given points.");
+		}
+		return biLinearInterpolate(bottomLeft, bottomRight, topLeft, topRight, query);
 	}
 
 }

@@ -21,7 +21,7 @@ public abstract class Phoenix6Device implements IDevice {
 		this.logPath = logPath;
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, logPath, () -> !isConnected()));
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
 	public boolean isConnected() {

@@ -20,6 +20,7 @@ public class TalonFXMotor extends Phoenix6Device implements IMotor, ControlAble 
 		super(logPath);
 		this.motor = motor;
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
+		motor.optimizeBusUtilization();
 	}
 
 	@Override

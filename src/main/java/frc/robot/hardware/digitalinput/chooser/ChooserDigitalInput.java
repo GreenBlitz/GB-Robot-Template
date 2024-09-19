@@ -1,9 +1,9 @@
-package frc.utils.digitalinput.chooser;
+package frc.robot.hardware.digitalinput.chooser;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
-import frc.utils.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 
 public class ChooserDigitalInput implements IDigitalInput {
 

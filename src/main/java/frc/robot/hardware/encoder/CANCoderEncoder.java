@@ -9,7 +9,7 @@ import frc.robot.hardware.Phoenix6Device;
 import frc.robot.hardware.signal.InputSignal;
 
 
-public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder, IDevice {
+public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder {
 
 	private final CANcoder encoder;
 	private final ConnectedInputAutoLogged connectedInput;

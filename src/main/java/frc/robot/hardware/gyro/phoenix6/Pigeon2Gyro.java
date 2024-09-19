@@ -11,6 +11,7 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 	public Pigeon2Gyro(String logPath, Pigeon2Wrapper gyro) {
 		super(logPath);
 		this.gyro = gyro;
+		gyro.optimizeBusUtilization();
 	}
 
 	@Override

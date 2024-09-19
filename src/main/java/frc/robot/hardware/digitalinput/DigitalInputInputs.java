@@ -1,4 +1,4 @@
-package frc.utils.digitalinput;
+package frc.robot.hardware.digitalinput;
 
 import org.littletonrobotics.junction.AutoLog;
 

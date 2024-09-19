@@ -19,14 +19,4 @@ public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder {
 		encoder.setPosition(position.getRotations());
 	}
 
-	@Override
-	public boolean isConnected() {
-		return super.isConnected();
-	}
-
-	@Override
-	public void updateSignals(InputSignal... signals) {
-		super.updateSignals(signals);
-	}
-
 }

@@ -15,19 +15,15 @@ public class InterpolationUtils {
 	 * @return the interpolated value of the interpolatingTargetPoint
 	 */
 
-	static double interpolate(
-			Translation2d neighbor1,
-			double value1,
-			Translation2d neighbor2,
-			double value2,
-			Translation2d interpolatingTargetPoint
-	) {
+	static double
+		interpolate(Translation2d neighbor1, double value1, Translation2d neighbor2, double value2, Translation2d interpolatingTargetPoint) {
 		if (neighbor1.getX() == neighbor2.getX()) {
 			return value1 + (interpolatingTargetPoint.getY() - neighbor1.getY()) * (value2 - value1) / (neighbor2.getY() - neighbor1.getY());
 		}
 		double interpolationFactor = (interpolatingTargetPoint.getX() - neighbor1.getX()) / (neighbor2.getX() - neighbor1.getX());
 		return value1 + interpolationFactor * (value2 - value1);
 	}
+
 	@SafeVarargs
 	public static boolean isAllPointsExists(Pair<Translation2d, Double>... points) {
 		int i = 0;
@@ -61,26 +57,48 @@ public class InterpolationUtils {
 			double x = point.getFirst().getX();
 			double y = point.getFirst().getY();
 			if (x <= query.getX() && y <= query.getY()) {
-				if (bottomLeft == null || (x >= bottomLeft.getFirst().getX() || y >= bottomLeft.getFirst().getY())
-                        && Translation2dUtils.isClosestPointFromPoints(query,point.getFirst(), new Translation2d[]{bottomLeft.getFirst(), point.getFirst()})) {
+				if (
+					bottomLeft == null
+						|| (x >= bottomLeft.getFirst().getX() || y >= bottomLeft.getFirst().getY())
+							&& Translation2dUtils
+								.isClosestPointFromPoints(query, point.getFirst(), new Translation2d[] {bottomLeft.getFirst(), point.getFirst()})
+				) {
 					bottomLeft = point;
 				}
 			}
 			if (x >= query.getX() && y <= query.getY()) {
-				if (bottomRight == null || x >= bottomRight.getFirst().getX() || y <= bottomRight.getFirst().getY()
-                        && Translation2dUtils.isClosestPointFromPoints(query,point.getFirst(), new Translation2d[]{bottomRight.getFirst(), point.getFirst()})) {
+				if (
+					bottomRight == null
+						|| x >= bottomRight.getFirst().getX()
+						|| y <= bottomRight.getFirst().getY()
+							&& Translation2dUtils.isClosestPointFromPoints(
+								query,
+								point.getFirst(),
+								new Translation2d[] {bottomRight.getFirst(), point.getFirst()}
+							)
+				) {
 					bottomRight = point;
 				}
 			}
 			if (x <= query.getX() && y >= query.getY()) {
-				if (topLeft == null || x >= topLeft.getFirst().getX() || y <= topLeft.getFirst().getY()
-                        && Translation2dUtils.isClosestPointFromPoints(query,point.getFirst(), new Translation2d[]{topLeft.getFirst(), point.getFirst()})) {
+				if (
+					topLeft == null
+						|| x >= topLeft.getFirst().getX()
+						|| y <= topLeft.getFirst().getY()
+							&& Translation2dUtils
+								.isClosestPointFromPoints(query, point.getFirst(), new Translation2d[] {topLeft.getFirst(), point.getFirst()})
+				) {
 					topLeft = point;
 				}
 			}
 			if (x >= query.getX() && y >= query.getY()) {
-				if (topRight == null || x <= topRight.getFirst().getX() || y <= topRight.getFirst().getY()
-                        && Translation2dUtils.isClosestPointFromPoints(query,point.getFirst(), new Translation2d[]{topRight.getFirst(), point.getFirst()})) {
+				if (
+					topRight == null
+						|| x <= topRight.getFirst().getX()
+						|| y <= topRight.getFirst().getY()
+							&& Translation2dUtils
+								.isClosestPointFromPoints(query, point.getFirst(), new Translation2d[] {topRight.getFirst(), point.getFirst()})
+				) {
 					topRight = point;
 				}
 			}
@@ -108,7 +126,7 @@ public class InterpolationUtils {
 	}
 
 	@SafeVarargs
-	public static double bilinearInterpolate(Translation2d query, Pair<Translation2d, Double>... knownPoints) throws Exception{
+	public static double bilinearInterpolate(Translation2d query, Pair<Translation2d, Double>... knownPoints) throws Exception {
 		if (knownPoints.length < 4) {
 			throw new IllegalArgumentException("At least 4 points and values are required.");
 		}

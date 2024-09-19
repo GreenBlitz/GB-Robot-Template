@@ -8,10 +8,4 @@ public interface IAngleEncoder extends IDevice {
 
 	void setPosition(Rotation2d position);
 
-	@Override
-	boolean isConnected();
-
-	@Override
-	void updateSignals(InputSignal... signals);
-
 }

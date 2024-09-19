@@ -6,19 +6,15 @@ import frc.robot.hardware.signal.InputSignal;
 
 public class EmptyGyro implements IGyro, IDevice {
 
-    @Override
-    public boolean isConnected() {
-        return false;
-    }
+	@Override
+	public boolean isConnected() {
+		return false;
+	}
 
-    @Override
-    public void updateSignals(InputSignal... signals) {
+	@Override
+	public void updateSignals(InputSignal... signals) {}
 
-    }
-
-    @Override
-    public void setYaw(Rotation2d yaw) {
-
-    }
+	@Override
+	public void setYaw(Rotation2d yaw) {}
 
 }

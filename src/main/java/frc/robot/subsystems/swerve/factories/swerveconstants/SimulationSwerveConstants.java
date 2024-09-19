@@ -22,6 +22,31 @@ public class SimulationSwerveConstants {
 		new Pair<>(new Translation2d(6.5, 15), 4.0),
 		new Pair<>(new Translation2d(6.5, 11), 4.0)};
 
+	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
+	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
+	private static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
+	private static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
+		MODULE_X_DISTANCE_FROM_CENTER,
+		MODULE_Y_DISTANCE_FROM_CENTER
+	);
+	private static final Translation2d FRONT_RIGHT_TRANSLATION2D = new Translation2d(
+		MODULE_X_DISTANCE_FROM_CENTER,
+		-MODULE_Y_DISTANCE_FROM_CENTER
+	);
+	private static final Translation2d BACK_LEFT_TRANSLATION2D = new Translation2d(
+		-MODULE_X_DISTANCE_FROM_CENTER,
+		MODULE_Y_DISTANCE_FROM_CENTER
+	);
+	private static final Translation2d BACK_RIGHT_TRANSLATION2D = new Translation2d(
+		-MODULE_X_DISTANCE_FROM_CENTER,
+		-MODULE_Y_DISTANCE_FROM_CENTER
+	);
+	private static final Translation2d[] LOCATIONS = {
+		FRONT_LEFT_TRANSLATION2D,
+		FRONT_RIGHT_TRANSLATION2D,
+		BACK_LEFT_TRANSLATION2D,
+		BACK_RIGHT_TRANSLATION2D};
+
 	protected static SwerveConstants getSwerveConstants(SwerveName swerveName) {
 		return new SwerveConstants(
 			swerveName,
@@ -29,7 +54,9 @@ public class SimulationSwerveConstants {
 			MAX_ROTATION_VELOCITY,
 			TRANSLATION_METERS_PID_CONSTANTS,
 			ROTATION_DEGREES_PID_CONSTANTS,
-			DISCRITIZATION_POINTS
+			DISCRITIZATION_POINTS,
+			LOCATIONS,
+			DRIVE_RADIUS_METERS
 		);
 	}
 

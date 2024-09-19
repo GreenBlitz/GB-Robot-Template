@@ -6,10 +6,13 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 class EncoderRealConstants {
 
-	protected static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration();
-	static {
-		ENCODER_CONFIG.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-		ENCODER_CONFIG.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+	protected static CANcoderConfiguration generateEncoderConfig() {
+		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
+
+		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+		encoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+
+		return encoderConfig;
 	}
 
 }

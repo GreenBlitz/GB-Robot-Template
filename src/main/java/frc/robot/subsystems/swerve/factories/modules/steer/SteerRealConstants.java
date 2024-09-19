@@ -17,30 +17,35 @@ class SteerRealConstants {
 
 	private static final boolean ENABLE_FOC = true;
 
-	private static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-		Volts.of(0.5).per(Seconds.of(1)),
-		Volts.of(1),
-		null,
-		state -> SignalLogger.writeString("state", state.toString())
-	);
+	private static SysIdRoutine.Config generateSysidConfig() {
+		return new SysIdRoutine.Config(
+			Volts.of(0.5).per(Seconds.of(1)),
+			Volts.of(1),
+			null,
+			state -> SignalLogger.writeString("state", state.toString())
+		);
+	}
 
-	private static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration();
-	static {
-		MOTOR_CONFIG.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-		MOTOR_CONFIG.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-		MOTOR_CONFIG.CurrentLimits.StatorCurrentLimit = 30;
-		MOTOR_CONFIG.CurrentLimits.StatorCurrentLimitEnable = true;
+	private static TalonFXConfiguration generateMotorConfig() {
+		TalonFXConfiguration steerConfig = new TalonFXConfiguration();
 
-		MOTOR_CONFIG.Feedback.RotorToSensorRatio = 150.0 / 7.0;
-		MOTOR_CONFIG.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		steerConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
+		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		MOTOR_CONFIG.Slot0.kS = 0.19648;
-		MOTOR_CONFIG.Slot0.kV = 2.5763;
-		MOTOR_CONFIG.Slot0.kA = 0.50361;
-		MOTOR_CONFIG.Slot0.kP = 88;
-		MOTOR_CONFIG.Slot0.kI = 0;
-		MOTOR_CONFIG.Slot0.kD = 1.5;
-		MOTOR_CONFIG.ClosedLoopGeneral.ContinuousWrap = true;
+		steerConfig.Feedback.RotorToSensorRatio = 150.0 / 7.0;
+		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+
+		steerConfig.Slot0.kS = 0.19648;
+		steerConfig.Slot0.kV = 2.5763;
+		steerConfig.Slot0.kA = 0.50361;
+		steerConfig.Slot0.kP = 88;
+		steerConfig.Slot0.kI = 0;
+		steerConfig.Slot0.kD = 1.5;
+		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
+
+		return steerConfig;
 	}
 
 	protected static TalonFXSteerConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
@@ -48,9 +53,9 @@ class SteerRealConstants {
 			IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
 			true,
 			IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
-			MOTOR_CONFIG,
+			generateMotorConfig(),
 			ENABLE_FOC,
-			SYSID_CONFIG,
+			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
 		);
 	}
@@ -60,9 +65,9 @@ class SteerRealConstants {
 			IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
 			true,
 			IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
-			MOTOR_CONFIG,
+			generateMotorConfig(),
 			ENABLE_FOC,
-			SYSID_CONFIG,
+			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
 		);
 	}
@@ -72,9 +77,9 @@ class SteerRealConstants {
 			IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
 			false,
 			IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
-			MOTOR_CONFIG,
+			generateMotorConfig(),
 			ENABLE_FOC,
-			SYSID_CONFIG,
+			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
 		);
 	}
@@ -84,9 +89,9 @@ class SteerRealConstants {
 			IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
 			true,
 			IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
-			MOTOR_CONFIG,
+			generateMotorConfig(),
 			ENABLE_FOC,
-			SYSID_CONFIG,
+			generateSysidConfig(),
 			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"
 		);
 	}

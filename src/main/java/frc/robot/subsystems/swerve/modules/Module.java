@@ -70,7 +70,7 @@ public class Module {
 		driveInputs.velocity = ModuleUtils.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
 		driveInputs.acceleration = ModuleUtils.getUncoupledAngle(driveInputs.acceleration, steerInputs.acceleration, constants.couplingRatio());
 
-		for (int i = 0; i < driveInputs.angleOdometrySamples.length; i++) {
+		for (int i = 0; i < getNumberOfOdometrySamples(); i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerInputs.angleOdometrySamples[i].getRotations() - startingSteerAngle.getRotations());
 			driveInputs.angleOdometrySamples[i] = ModuleUtils
@@ -115,9 +115,9 @@ public class Module {
 		isClosedLoop = closedLoop;
 	}
 
-	public void setBrake(boolean isBrake) {
-		iSteer.setBrake(isBrake);
-		iDrive.setBrake(isBrake);
+	public void setBrake(boolean brake) {
+		iSteer.setBrake(brake);
+		iDrive.setBrake(brake);
 	}
 
 	public void resetByEncoder() {
@@ -141,7 +141,10 @@ public class Module {
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return moduleInputsContainer.getDriveMotorInputs().distanceMetersOdometrySamples.length;
+		return Math.min(
+			moduleInputsContainer.getDriveMotorInputs().angleOdometrySamples.length,
+			moduleInputsContainer.getSteerMotorInputs().angleOdometrySamples.length
+		);
 	}
 
 	public SwerveModuleState getTargetState() {

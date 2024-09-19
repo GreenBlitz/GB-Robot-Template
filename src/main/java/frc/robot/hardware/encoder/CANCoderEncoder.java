@@ -3,7 +3,6 @@ package frc.robot.hardware.encoder;
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ConnectedInputAutoLogged;
-import frc.robot.hardware.IDevice;
 import frc.robot.hardware.Phoenix6Device;
 import frc.robot.hardware.signal.InputSignal;
 

@@ -9,7 +9,7 @@ import frc.utils.AngleUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class SparkMaxAngleSignal extends AngleSignal {
+public class SparkMaxAngleSignal extends AngleSignal implements SpakrMaxSignal {
 
     Supplier<Double> angleSignalSupplier;
 

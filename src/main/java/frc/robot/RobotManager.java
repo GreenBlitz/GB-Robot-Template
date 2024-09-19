@@ -6,12 +6,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.AngleUnit;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.devicewrappers.SparkMaxDeviceID;
+import frc.utils.devicewrappers.SparkMaxWrapper;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
@@ -26,12 +30,20 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 
 	private Robot robot;
+	private SparkMAX motor;
+	private SparkMaxAngleSignal position;
+	private SparkMaxAngleSignal velocity;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
+		SparkMaxWrapper wrapper = new SparkMaxWrapper(new SparkMaxDeviceID(11));
+		position = new SparkMaxAngleSignal("position", () -> wrapper.getEncoder().getPosition(), AngleUnit.RADIANS);
+		velocity = new SparkMaxAngleSignal("velocity", () -> wrapper.getEncoder().getVelocity(), AngleUnit.RADIANS);
+
+		motor = new SparkMAX("test motor", wrapper);
 		this.robot = new Robot();
 	}
 
@@ -72,6 +84,8 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+
+		motor.updateSignals(position, velocity);
 	}
 
 	@Override

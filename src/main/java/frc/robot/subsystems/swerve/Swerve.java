@@ -45,12 +45,11 @@ public class Swerve extends GBSubsystem {
 	private final GyroThreadInputsAutoLogged gyroThreadInputs;
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
-
+	private final DiscritizationInterpolator discritizationHelper;
 	private SwerveState currentState;
 	private SwerveStateHelper stateHelper;
 	private Supplier<Rotation2d> headingSupplier;
 
-	private DiscritizationInterpolator discritizationHelper;
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IThreadedGyro gyro) {
@@ -68,7 +67,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
-		discritizationHelper = new DiscritizationInterpolator(constants.discritizationPointsArray());
+		this.discritizationHelper = new DiscritizationInterpolator(constants.discritizationPointsArray());
 
 		updateInputs();
 	}

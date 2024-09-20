@@ -18,16 +18,14 @@ public class DiscritizationInterpolator extends DoubleBilinearInterpolation {
 	@SuppressWarnings("finally")
 	@Override
 	public double getInterpolatedValue(Translation2d query) {
-		double returnValue = 0;
+		double returnValue = Double.NaN;
 		try {
 			returnValue = super.getInterpolatedValue(query);
 		} catch (Exception e) {
+			returnValue = Double.NaN;
 			System.out.println(e);
-		}finally {
-			if(returnValue == 0 || Double.isNaN(returnValue) || returnValue < 1) {
-				return DEFAULT_FUDGE_FACTOR;
-			}
-			return returnValue;
+		} finally {
+			return Double.isNaN(returnValue) ? DEFAULT_FUDGE_FACTOR : Math.max(returnValue,DEFAULT_FUDGE_FACTOR);
 		}
 
 	}

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class DiscritizationInterpolator extends DoubleBilinearInterpolation {
 
+	public static final double DEFAULT_FUDGE_FACTOR = 1;
 	public DiscritizationInterpolator() {
 		super();
 	}
@@ -17,14 +18,14 @@ public class DiscritizationInterpolator extends DoubleBilinearInterpolation {
 	@SuppressWarnings("finally")
 	@Override
 	public double getInterpolatedValue(Translation2d query) {
-		double returnValue = 1;
+		double returnValue = 0;
 		try {
 			returnValue = super.getInterpolatedValue(query);
 		} catch (Exception e) {
 			System.out.println(e);
 		}finally {
 			if(returnValue == 0 || Double.isNaN(returnValue) || returnValue < 1) {
-				return 1;
+				return DEFAULT_FUDGE_FACTOR;
 			}
 			return returnValue;
 		}

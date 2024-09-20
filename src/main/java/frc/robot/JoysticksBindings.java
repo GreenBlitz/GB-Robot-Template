@@ -109,8 +109,7 @@ public class JoysticksBindings {
 					.getCommandsBuilder()
 					.drive(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-//						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-							() -> 0,
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)
 					)
 			);

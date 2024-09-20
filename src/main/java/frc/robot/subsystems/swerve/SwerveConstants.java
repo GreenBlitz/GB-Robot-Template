@@ -28,6 +28,7 @@ public record SwerveConstants(
 	SwerveDriveKinematics kinematics,
 	HolonomicPathFollowerConfig holonomicPathFollowerConfig
 ) {
+
 	public SwerveConstants(
 		SwerveName swerveName,
 		double velocityAt12VoltsMetersPerSecond,

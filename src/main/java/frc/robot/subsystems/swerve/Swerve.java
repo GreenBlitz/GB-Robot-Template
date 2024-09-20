@@ -51,7 +51,6 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 
 
-
 	public Swerve(SwerveConstants constants, Modules modules, IThreadedGyro gyro) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
@@ -288,12 +287,8 @@ public class Swerve extends GBSubsystem {
 		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
 		speeds = SwerveMath.applyDeadband(speeds);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
-		double discretizationFactor = discretizationHelper.getInterpolatedValue(
-					new Translation2d(
-							SwerveMath.getDriveMagnitude(speeds),
-							Math.abs(speeds.omegaRadiansPerSecond)
-					)
-		);
+		double discretizationFactor = discretizationHelper
+			.getInterpolatedValue(new Translation2d(SwerveMath.getDriveMagnitude(speeds), Math.abs(speeds.omegaRadiansPerSecond)));
 		speeds = SwerveMath.discretize(speeds, discretizationFactor);
 		applySpeeds(speeds, swerveState);
 	}

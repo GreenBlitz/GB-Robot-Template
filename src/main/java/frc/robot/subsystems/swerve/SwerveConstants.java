@@ -34,7 +34,7 @@ public record SwerveConstants(
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
 		PIDConstants rotationDegreesPIDConstants,
-		Pair<Translation2d, Double>[] discretizationPointsArray,
+		Pair<Translation2d, Double>[] discretizationPoints,
 		Translation2d[] modulesLocations,
 		double driveRadiusMeters
 	) {
@@ -48,7 +48,7 @@ public record SwerveConstants(
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),
-			discretizationPointsArray,
+			discretizationPoints,
 			modulesLocations,
 			driveRadiusMeters,
 			new SwerveDriveKinematics(modulesLocations),

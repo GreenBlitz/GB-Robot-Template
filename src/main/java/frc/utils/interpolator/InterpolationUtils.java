@@ -26,7 +26,6 @@ public class InterpolationUtils {
 
 	@SafeVarargs
 	public static boolean isAllPointsExists(Pair<Translation2d, Double>... points) {
-		int i = 0;
 		for (Pair<Translation2d, Double> point : points) {
 			if (point == null || point.getFirst() == null) {
 				return false;

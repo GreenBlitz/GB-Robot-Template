@@ -14,18 +14,21 @@ public class DiscritizationInterpolator extends DoubleBilinearInterpolation {
 		super(knownPoints);
 	}
 
+	@SuppressWarnings("finally")
 	@Override
 	public double getInterpolatedValue(Translation2d query) {
-		double returnValue;
+		double returnValue = 1;
 		try {
 			returnValue = super.getInterpolatedValue(query);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			System.out.println(e);
+		}finally {
+			if(returnValue == 0 || Double.isNaN(returnValue) || returnValue < 1) {
+				return 1;
+			}
+			return returnValue;
 		}
-		if (returnValue == 0 || Double.isNaN(returnValue) || returnValue < 1) {
-			return 1;
-		}
-		return returnValue;
+
 	}
 
 

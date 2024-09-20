@@ -288,11 +288,12 @@ public class Swerve extends GBSubsystem {
 		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
 		speeds = SwerveMath.applyDeadband(speeds);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
-		double fudgeFactor = discritizationHelper
-			.getInterpolatedValue(new Translation2d(SwerveMath.getDriveMagnitude(speeds), Math.abs(speeds.omegaRadiansPerSecond)));
-		if (Double.isNaN(fudgeFactor) || fudgeFactor < 1) {
-			fudgeFactor = 1;
-		}
+		double fudgeFactor = discritizationHelper.getInterpolatedValue(
+					new Translation2d(
+							SwerveMath.getDriveMagnitude(speeds),
+							Math.abs(speeds.omegaRadiansPerSecond)
+					)
+		);
 		speeds = SwerveMath.discretize(speeds, fudgeFactor);
 		applySpeeds(speeds, swerveState);
 	}

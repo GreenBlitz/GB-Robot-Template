@@ -28,15 +28,6 @@ public record SwerveConstants(
 	SwerveDriveKinematics kinematics,
 	HolonomicPathFollowerConfig holonomicPathFollowerConfig
 ) {
-
-	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
-	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND = Rotation2d.fromRotations(0.5);
-	static final double DRIVE_NEUTRAL_DEADBAND = 0.05;
-	static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.05);
-	static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
-	static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
-	private static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
-
 	public SwerveConstants(
 		SwerveName swerveName,
 		double velocityAt12VoltsMetersPerSecond,
@@ -72,5 +63,14 @@ public record SwerveConstants(
 
 		this.rotationDegreesPIDController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
 	}
+
+	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
+	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND = Rotation2d.fromRotations(0.5);
+	static final double DRIVE_NEUTRAL_DEADBAND = 0.05;
+	static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.05);
+	static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
+	static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
+	private static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
+
 
 }

@@ -3,15 +3,15 @@ package frc.utils.interpolator;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Translation2d;
 
-public class DiscritizationInterpolator extends DoubleBilinearInterpolation {
+public class DiscretizationInterpolator extends DoubleBilinearInterpolation {
 
 	public static final double DEFAULT_FUDGE_FACTOR = 1;
-	public DiscritizationInterpolator() {
+	public DiscretizationInterpolator() {
 		super();
 	}
 
 	@SafeVarargs
-	public DiscritizationInterpolator(Pair<Translation2d, Double>... knownPoints) {
+	public DiscretizationInterpolator(Pair<Translation2d, Double>... knownPoints) {
 		super(knownPoints);
 	}
 

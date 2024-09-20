@@ -23,7 +23,7 @@ import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.GBSubsystem;
 import frc.utils.cycletime.CycleTimeUtils;
-import frc.utils.interpolator.DiscritizationInterpolator;
+import frc.utils.interpolator.DiscretizationInterpolator;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -45,7 +45,7 @@ public class Swerve extends GBSubsystem {
 	private final GyroThreadInputsAutoLogged gyroThreadInputs;
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
-	private final DiscritizationInterpolator discritizationHelper;
+	private final DiscretizationInterpolator discretizationHelper;
 	private SwerveState currentState;
 	private SwerveStateHelper stateHelper;
 	private Supplier<Rotation2d> headingSupplier;
@@ -67,7 +67,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
-		this.discritizationHelper = new DiscritizationInterpolator(constants.discritizationPointsArray());
+		this.discretizationHelper = new DiscretizationInterpolator(constants.discretizationPointsArray());
 
 		updateInputs();
 	}
@@ -288,13 +288,13 @@ public class Swerve extends GBSubsystem {
 		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
 		speeds = SwerveMath.applyDeadband(speeds);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
-		double fudgeFactor = discritizationHelper.getInterpolatedValue(
+		double discretizationFactor = discretizationHelper.getInterpolatedValue(
 					new Translation2d(
 							SwerveMath.getDriveMagnitude(speeds),
 							Math.abs(speeds.omegaRadiansPerSecond)
 					)
 		);
-		speeds = SwerveMath.discretize(speeds, fudgeFactor);
+		speeds = SwerveMath.discretize(speeds, discretizationFactor);
 		applySpeeds(speeds, swerveState);
 	}
 

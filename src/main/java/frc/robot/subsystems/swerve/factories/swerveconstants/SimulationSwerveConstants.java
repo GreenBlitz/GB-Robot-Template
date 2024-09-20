@@ -14,7 +14,7 @@ public class SimulationSwerveConstants {
 
     private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(7, 0, 0);
     private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(7.5, 0, 0);
-    private static final Pair<Translation2d, Double>[] DISCRITIZATION_POINTS = new Pair[]{
+    private static final Pair<Translation2d, Double>[] DISCRETIZATION_POINTS = new Pair[]{
             new Pair<>(new Translation2d(0, 0), 1.0),
             new Pair<>(new Translation2d(0, 15), 3.2),
             new Pair<>(new Translation2d(6.5, 0), 2.5),
@@ -57,7 +57,7 @@ public class SimulationSwerveConstants {
                 MAX_ROTATION_VELOCITY,
                 TRANSLATION_METERS_PID_CONSTANTS,
                 ROTATION_DEGREES_PID_CONSTANTS,
-                DISCRITIZATION_POINTS,
+                DISCRETIZATION_POINTS,
                 LOCATIONS,
                 DRIVE_RADIUS_METERS
         );

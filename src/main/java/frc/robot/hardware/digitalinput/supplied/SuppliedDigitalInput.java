@@ -1,8 +1,8 @@
-package frc.utils.digitalinput.supplied;
+package frc.robot.hardware.digitalinput.supplied;
 
 import edu.wpi.first.math.filter.Debouncer;
-import frc.utils.digitalinput.DigitalInputInputsAutoLogged;
-import frc.utils.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 
 import java.util.function.BooleanSupplier;
 

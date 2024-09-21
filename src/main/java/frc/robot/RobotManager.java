@@ -10,7 +10,7 @@ import frc.robot.simulation.SimulationManager;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.ctre.BusChain;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;

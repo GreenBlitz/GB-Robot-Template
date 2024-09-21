@@ -1,6 +1,7 @@
 package frc.robot.hardware;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
@@ -21,14 +22,14 @@ public abstract class Phoenix6Device implements IDevice {
 		this.logPath = logPath;
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, logPath, () -> !isConnected()));
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
 	public boolean isConnected() {
 		return connectedInput.connected;
 	}
 
-	public void fetchSignals(InputSignal... signals) {
+	private StatusCode refreshSignals(InputSignal... signals) {
 		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
 		for (InputSignal signal : signals) {
 			if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
@@ -39,12 +40,19 @@ public abstract class Phoenix6Device implements IDevice {
 			}
 		}
 
-		connectedInput.connected = BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new)).isOK();
-		Logger.processInputs(logPath, connectedInput);
+		return BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new));
+	}
 
+	private void logSignals(InputSignal... signals) {
 		for (InputSignal signal : signals) {
 			Logger.processInputs(logPath, signal);
 		}
+	}
+
+	public void updateSignals(InputSignal... signals) {
+		connectedInput.connected = refreshSignals(signals).isOK();
+		Logger.processInputs(logPath, connectedInput);
+		logSignals(signals);
 	}
 
 }

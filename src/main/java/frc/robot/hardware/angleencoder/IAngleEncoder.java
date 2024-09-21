@@ -1,4 +1,4 @@
-package frc.robot.hardware.encoder;
+package frc.robot.hardware.angleencoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.IDevice;

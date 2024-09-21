@@ -1,17 +1,17 @@
-package frc.robot.hardware.encoder;
+package frc.robot.hardware.angleencoder;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.Phoenix6Device;
-import frc.robot.hardware.signal.InputSignal;
 
 public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder {
 
 	private final CANcoder encoder;
 
-	public CANCoderEncoder(CANcoder encoder, String logPath) {
+	public CANCoderEncoder(String logPath, CANcoder encoder) {
 		super(logPath);
 		this.encoder = encoder;
+		encoder.optimizeBusUtilization();
 	}
 
 	@Override

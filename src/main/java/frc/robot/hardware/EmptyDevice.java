@@ -20,6 +20,6 @@ public abstract class EmptyDevice implements IDevice {
 	}
 
 	@Override
-	public void fetchSignals(InputSignal... signals) {}
+	public void updateSignals(InputSignal... signals) {}
 
 }

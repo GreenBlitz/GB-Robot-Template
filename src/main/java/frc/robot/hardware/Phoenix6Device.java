@@ -49,7 +49,7 @@ public abstract class Phoenix6Device implements IDevice {
 		}
 	}
 
-	public void fetchSignals(InputSignal... signals) {
+	public void updateSignals(InputSignal... signals) {
 		connectedInput.connected = refreshSignals(signals).isOK();
 		Logger.processInputs(logPath, connectedInput);
 		logSignals(signals);

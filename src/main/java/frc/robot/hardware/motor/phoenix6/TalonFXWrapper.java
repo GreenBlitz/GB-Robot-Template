@@ -3,18 +3,18 @@ package frc.robot.hardware.motor.phoenix6;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import frc.utils.ctre.CTREDeviceID;
-import frc.utils.ctre.PhoenixProUtils;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.PhoenixProUtils;
 
 public class TalonFXWrapper extends TalonFX {
 
 	private static final int DEFAULT_CONFIG_NUMBER_OF_TRIES = 1;
 
 	public TalonFXWrapper(int deviceId) {
-		this(new CTREDeviceID(deviceId));
+		this(new Phoenix6DeviceID(deviceId));
 	}
 
-	public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
+	public TalonFXWrapper(Phoenix6DeviceID ctreDeviceID) {
 		super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
 	}
 

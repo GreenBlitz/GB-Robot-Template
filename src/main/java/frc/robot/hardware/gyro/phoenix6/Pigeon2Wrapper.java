@@ -5,8 +5,8 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.ctre.CTREDeviceID;
-import frc.utils.ctre.PhoenixProUtils;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.PhoenixProUtils;
 
 public class Pigeon2Wrapper extends Pigeon2 {
 
@@ -99,10 +99,10 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	private double pitchOffSetDegrees;
 
 	public Pigeon2Wrapper(int id) {
-		this(new CTREDeviceID(id));
+		this(new Phoenix6DeviceID(id));
 	}
 
-	public Pigeon2Wrapper(CTREDeviceID deviceID) {
+	public Pigeon2Wrapper(Phoenix6DeviceID deviceID) {
 		super(deviceID.ID(), deviceID.busChain().getChainName());
 		this.rollOffSetDegrees = 0;
 		this.pitchOffSetDegrees = 0;

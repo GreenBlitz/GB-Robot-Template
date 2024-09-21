@@ -35,10 +35,12 @@ public class GBPhotonCamera extends GBSubsystem {
 		}
 
 		Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTarget, fieldInTag.get(), cameraToRobot);
+		double latency = pipelineResult.getLatencyMillis();
+		double ambiguity = bestTarget.getPoseAmbiguity();
 
 		double timestamp = pipelineResult.getTimestampSeconds();
 
-		return Optional.of(new PhotonTargetData(robotPose, target, timestamp));
+		return Optional.of(new PhotonTargetData(robotPose, target, timestamp, ambiguity, latency));
 	}
 
 	@Override

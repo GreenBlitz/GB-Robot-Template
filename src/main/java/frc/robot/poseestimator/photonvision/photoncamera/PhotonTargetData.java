@@ -7,5 +7,7 @@ import frc.robot.poseestimator.photonvision.PhotonTarget;
 public record PhotonTargetData(
 	Pose3d robotPose,
 	PhotonTarget target,
-	double timestamp
+	double timestamp,
+	double ambiguity,
+	double latency
 ) {}

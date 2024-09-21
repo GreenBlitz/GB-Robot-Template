@@ -5,7 +5,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import frc.utils.ctre.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 
 public class TalonFXWrapper extends TalonFX {
 

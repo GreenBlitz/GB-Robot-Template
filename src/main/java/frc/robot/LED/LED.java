@@ -11,7 +11,6 @@ public class LED implements ILED {
 
 	private AddressableLEDBuffer addressableLEDBuffer;
 
-
 	@Override
 	public void setColor(Color color, int index) {
 		this.addressableLEDBuffer.setLED(index, color);
@@ -23,3 +22,4 @@ public class LED implements ILED {
 	}
 
 }
+

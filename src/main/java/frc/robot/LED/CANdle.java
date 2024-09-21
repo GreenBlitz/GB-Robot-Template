@@ -1,7 +1,6 @@
 package frc.robot.LED;
 
 import edu.wpi.first.wpilibj.util.Color;
-import java.awt.*;
 
 public class CANdle implements ILED, ILogicLED {
 

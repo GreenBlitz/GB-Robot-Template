@@ -14,7 +14,7 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 public class TalonFXMotor extends Phoenix6Device implements IMotor, ControlAble {
 
 	private final TalonFXWrapper motor;
-    private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
+	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
 	public TalonFXMotor(String logPath, TalonFXWrapper motor, SysIdRoutine.Config sysidConfig) {
 		super(logPath);

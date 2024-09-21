@@ -1,8 +1,10 @@
-package frc.robot.hardware;
+package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import frc.robot.hardware.ConnectedInputAutoLogged;
+import frc.robot.hardware.IDevice;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;

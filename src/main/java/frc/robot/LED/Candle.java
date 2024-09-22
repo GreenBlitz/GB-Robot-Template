@@ -5,7 +5,7 @@ import com.ctre.phoenix.led.CANdle;
 
 import java.awt.*;
 
-public class Candle implements ILED, ILogicLED{
+public class Candle implements ILED, ILogicLED {
     private static Candle instance;
     private CANdle caNdle;
     private ColorFlowAnimation colorFlowAnimation;
@@ -19,31 +19,33 @@ public class Candle implements ILED, ILogicLED{
     private TwinkleOffAnimation twinkleOffAnimation;
 
 
-    private Candle(){
+    private Candle() {
         this.caNdle = new CANdle(LEDConstatns.Candle.ID_PORT);
         this.caNdle.configLEDType(CANdle.LEDStripType.RGB);
-        this.colorFlowAnimation = new ColorFlowAnimation(0,255,255);
+        this.colorFlowAnimation = new ColorFlowAnimation(0, 255, 255);
         this.fireAnimation = new FireAnimation();
-        this.larsonAnimation = new LarsonAnimation(0,255,255);
-        this.rgbFadeAnimation = new RgbFadeAnimation(0,255,255);
-        this.singleFadeAnimation = new SingleFadeAnimation(0,255,255);
-        this.twinkleAnimation = new TwinkleAnimation(0,255,255);
-        this.twinkleOffAnimation = new TwinkleOffAnimation(0,255,255);
+        this.larsonAnimation = new LarsonAnimation(0, 255, 255);
+        this.rgbFadeAnimation = new RgbFadeAnimation(0, 255, 255);
+        this.singleFadeAnimation = new SingleFadeAnimation(0, 255, 255);
+        this.twinkleAnimation = new TwinkleAnimation(0, 255, 255);
+        this.twinkleOffAnimation = new TwinkleOffAnimation(0, 255, 255);
     }
-    public static Candle getInstance(){
-        if (instance==null){
+
+    public static Candle getInstance() {
+        if (instance == null) {
             instance = new Candle();
         }
         return instance;
     }
+
     @Override
     public void setColor(Color color) {
-        this.caNdle.setLEDs(color.getRed(),color.getGreen(),color.getBlue());
+        this.caNdle.setLEDs(color.getRed(), color.getGreen(), color.getBlue());
     }
 
     @Override
     public void turnOff() {
-        this.caNdle.setLEDs(0,0,0);
+        this.caNdle.setLEDs(0, 0, 0);
     }
 
     @Override
@@ -90,10 +92,25 @@ public class Candle implements ILED, ILogicLED{
     public void TwinkleOffAnimation() {
         this.caNdle.animate(this.twinkleOffAnimation);
     }
-    public void setColorAccordingToState(RobotStates robotStates){
-        switch (robotStates){
-            case STATE1->this.rainbowAnimation();
 
+    public void setColorAccordingToState(RobotStates robotStates) {
+        switch (robotStates) {
+            case STATE1: {
+                this.RainbowAnimation();
+                break;
+            }
+            case STATE2:{
+                this.ColorFlowAnimation();
+                break;
+            }
+            case STATE3:{
+                this.FireAnimation();
+                break;
+            }
+            default:{
+                this.turnOff();
+                break;
+            }
         }
     }
 }

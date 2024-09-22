@@ -19,15 +19,20 @@ public class GBPhotonCamera extends GBSubsystem {
 	private final Transform3d cameraToRobot;
 	private final PhotonTarget target;
 
-	public GBPhotonCamera(Transform3d cameraToRobot, String cameraName, PhotonTarget target) {
-		super(cameraName + "/");
+	public GBPhotonCamera(String logPath, String cameraName, Transform3d cameraToRobot, PhotonTarget target) {
+		super(logPath + cameraName + "/");
 		this.camera = new PhotonCamera(cameraName);
 		this.cameraToRobot = cameraToRobot;
 		this.target = target;
 	}
 
 	public GBPhotonCamera(CameraConfiguration cameraConfiguration) {
-		this(cameraConfiguration.cameraToRobot(), cameraConfiguration.name(), cameraConfiguration.targetType());
+		this(
+			cameraConfiguration.logPath(),
+			cameraConfiguration.name(),
+			cameraConfiguration.cameraToRobot(),
+			cameraConfiguration.targetType()
+		);
 	}
 
 	public Optional<PhotonTargetData> getBestTargetData() {

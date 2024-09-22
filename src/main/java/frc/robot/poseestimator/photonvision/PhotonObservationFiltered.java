@@ -14,7 +14,7 @@ public class PhotonObservationFiltered {
 
 	private final ArrayList<GBPhotonCamera> cameras;
 
-	public PhotonObservationFiltered(String logPath, CameraConfiguration[] cameraConfigurations) {
+	public PhotonObservationFiltered(CameraConfiguration[] cameraConfigurations) {
 		cameras = new ArrayList<>();
 		for (CameraConfiguration cameraConfiguration : cameraConfigurations) {
 			cameras.add(new GBPhotonCamera(cameraConfiguration));

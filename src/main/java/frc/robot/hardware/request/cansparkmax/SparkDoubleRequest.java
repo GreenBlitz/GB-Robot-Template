@@ -11,8 +11,7 @@ public class SparkDoubleRequest implements IRequest<Double> {
 	public enum SparkDoubleRequestType {
 
 		CURRENT(CANSparkBase.ControlType.kCurrent),
-		VOLTAGE(CANSparkBase.ControlType.kVoltage),
-		POSITION(CANSparkBase.ControlType.kPosition);
+		VOLTAGE(CANSparkBase.ControlType.kVoltage);
 
 		private final CANSparkBase.ControlType type;
 

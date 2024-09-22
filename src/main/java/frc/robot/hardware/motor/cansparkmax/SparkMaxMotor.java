@@ -19,7 +19,7 @@ public abstract class SparkMaxMotor implements IMotor {
 
 	public SparkMaxMotor(CANSparkMax motor, String logPath) {
 		this.motor = motor;
-        this.logPath = logPath;
+		this.logPath = logPath;
 
 		connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
@@ -45,14 +45,15 @@ public abstract class SparkMaxMotor implements IMotor {
 
 	@Override
 	public void updateSignals(InputSignal... signals) {
-		for (InputSignal signal : signals){
+		for (InputSignal signal : signals) {
 			Logger.processInputs(logPath, signal);
 		}
 		connectedInput.connected = motor.getBusVoltage() > 0;
 	}
 
 	@Override
-	public boolean isConnected(){
+	public boolean isConnected() {
 		return connectedInput.connected;
 	}
+
 }

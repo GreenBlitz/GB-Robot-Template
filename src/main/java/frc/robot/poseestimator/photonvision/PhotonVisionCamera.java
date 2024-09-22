@@ -1,11 +1,7 @@
-package frc.robot.poseestimator.photonvision.photoncamera;
+package frc.robot.poseestimator.photonvision;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import frc.robot.poseestimator.photonvision.CameraConfiguration;
-import frc.robot.poseestimator.photonvision.PhotonConstants;
-import frc.robot.poseestimator.photonvision.PhotonPoseData;
-import frc.robot.poseestimator.photonvision.PhotonTarget;
 import frc.utils.GBSubsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
@@ -14,22 +10,22 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.Optional;
 
-public class GBPhotonCamera extends GBSubsystem {
+public class PhotonVisionCamera extends GBSubsystem {
 
 	private final PhotonCamera camera;
 	private final Transform3d cameraToRobot;
-	private final PhotonTarget target;
+	private final PhotonVisionTarget target;
 
-	public GBPhotonCamera(String logPath, String cameraName, Transform3d cameraToRobot, PhotonTarget target) {
+	public PhotonVisionCamera(String logPath, String cameraName, Transform3d cameraToRobot, PhotonVisionTarget target) {
 		super(logPath + cameraName + "/");
 		this.camera = new PhotonCamera(cameraName);
 		this.cameraToRobot = cameraToRobot;
 		this.target = target;
 	}
 
-	public GBPhotonCamera(CameraConfiguration cameraConfiguration) {
+	public PhotonVisionCamera(CameraConfiguration cameraConfiguration) {
 		this(
-			cameraConfiguration.logPath(),
+			cameraConfiguration.logPathPrefix(),
 			cameraConfiguration.name(),
 			cameraConfiguration.cameraToRobot(),
 			cameraConfiguration.targetType()
@@ -49,23 +45,23 @@ public class GBPhotonCamera extends GBSubsystem {
 		return Optional.of(new PhotonPoseData(targetPose.get(), target, timestamp, ambiguity, latency));
 	}
 
-	private Optional<Pose3d> calculateTargetPose(PhotonTrackedTarget bestTarget, PhotonTarget target) {
+	private Optional<Pose3d> calculateTargetPose(PhotonTrackedTarget bestTarget, PhotonVisionTarget target) {
 		return switch (target) {
 			case APRIL_TAG -> calculateRobotPoseToField(bestTarget);
-			case NOTE -> calculateNotePoseToRobot(bestTarget);
+			case GAME_OBJECT -> calculateGameObjectPoseToRobot(bestTarget);
 		};
 	}
 
-	private Optional<Pose3d> calculateNotePoseToRobot(PhotonTrackedTarget bestTarget) {
-		Transform3d noteToCamera = bestTarget.getBestCameraToTarget().inverse();
-		Transform3d noteToRobot = noteToCamera.plus(cameraToRobot);
-		Pose3d notePose = new Pose3d(noteToRobot.getX(), noteToRobot.getY(), noteToRobot.getZ(), noteToRobot.getRotation());
+	private Optional<Pose3d> calculateGameObjectPoseToRobot(PhotonTrackedTarget bestTarget) {
+		Transform3d gameObjectToCamera = bestTarget.getBestCameraToTarget().inverse();
+		Transform3d gameObjectToRobot = gameObjectToCamera.plus(cameraToRobot);
+		Pose3d notePose = new Pose3d(gameObjectToRobot.getTranslation(), gameObjectToRobot.getRotation());
 		return Optional.of(notePose);
 	}
 
 	private Optional<Pose3d> calculateRobotPoseToField(PhotonTrackedTarget bestTarget) {
 		Transform3d cameraToTarget = bestTarget.getBestCameraToTarget();
-		Optional<Pose3d> tagPoseInField = PhotonConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(bestTarget.getFiducialId());
+		Optional<Pose3d> tagPoseInField = PhotonVisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(bestTarget.getFiducialId());
 		if (tagPoseInField.isEmpty()) {
 			return Optional.empty();
 		}

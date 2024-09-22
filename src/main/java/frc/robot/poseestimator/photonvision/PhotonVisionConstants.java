@@ -4,13 +4,13 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Transform3d;
 
-public class PhotonConstants {
+public class PhotonVisionConstants {
 
-	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
 	public static final CameraConfiguration[] CAMERAS_CONFIGURATION = {
-		new CameraConfiguration("VisionObservationFiltered/", "camera1", PhotonTarget.APRIL_TAG, new Transform3d()),
-		new CameraConfiguration("VisionObservationFiltered/", "camera2", PhotonTarget.APRIL_TAG, new Transform3d())};
+		new CameraConfiguration("VisionObservationFiltered/", "camera1", PhotonVisionTarget.APRIL_TAG, new Transform3d()),
+		new CameraConfiguration("VisionObservationFiltered/", "camera2", PhotonVisionTarget.APRIL_TAG, new Transform3d())};
 
 	public static final double MAXIMUM_ALLOWED_LATENCY = 0.2;
 

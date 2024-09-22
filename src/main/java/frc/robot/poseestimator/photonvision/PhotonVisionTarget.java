@@ -1,7 +1,7 @@
 package frc.robot.poseestimator.photonvision;
 
-public enum PhotonTarget {
+public enum PhotonVisionTarget {
 	APRIL_TAG,
-	NOTE;
+	GAME_OBJECT;
 
 }

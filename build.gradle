@@ -234,4 +234,3 @@ spotless {
 		trimTrailingWhitespace()
 	}
 }
-

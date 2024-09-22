@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.poseestimator.photonvision.photoncamera.GBPhotonCamera;
-import frc.robot.poseestimator.photonvision.photoncamera.PhotonTargetData;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -21,22 +20,22 @@ public class PhotonObservationFiltered {
 		}
 	}
 
-	private boolean isDataTooAmbiguous(PhotonTargetData targetData) {
+	private boolean isDataTooAmbiguous(PhotonPoseData targetData) {
 		return targetData.ambiguity() >= PhotonConstants.MAXIMUM_ALLOWED_AMBIGUITY;
 	}
 
-	private boolean isDataLatencyTooHigh(PhotonTargetData targetData) {
+	private boolean isDataLatencyTooHigh(PhotonPoseData targetData) {
 		return targetData.latency() >= PhotonConstants.MAXIMUM_ALLOWED_LATENCY;
 	}
 
-	private boolean keepLimelightData(PhotonTargetData targetData) {
+	private boolean keepPhotonVisionData(PhotonPoseData targetData) {
 		return !isDataTooAmbiguous(targetData) && !isDataLatencyTooHigh(targetData);
 	}
 
-	private ArrayList<PhotonTargetData> getAllTargetData() {
-		ArrayList<PhotonTargetData> output = new ArrayList<>();
+	private ArrayList<PhotonPoseData> getAllTargetData() {
+		ArrayList<PhotonPoseData> output = new ArrayList<>();
 		for (GBPhotonCamera camera : cameras) {
-			Optional<PhotonTargetData> bestTarget = camera.getBestTargetData();
+			Optional<PhotonPoseData> bestTarget = camera.getBestTargetData();
 			bestTarget.ifPresent(output::add);
 		}
 		return output;
@@ -44,25 +43,25 @@ public class PhotonObservationFiltered {
 
 	public ArrayList<VisionObservation> getAllFilteredObservations() {
 		ArrayList<VisionObservation> output = new ArrayList<>();
-		for (PhotonTargetData targetData : getAllTargetData()) {
-			if (keepLimelightData(targetData)) {
-				output.add(calculateObservationFromTargetData(targetData));
+		for (PhotonPoseData targetData : getAllTargetData()) {
+			if (keepPhotonVisionData(targetData)) {
+				output.add(calculateObservationFromPoseData(targetData));
 			}
 		}
 		return output;
 	}
 
-	private VisionObservation calculateObservationFromTargetData(PhotonTargetData targetData) {
-		Pose3d robot3DPose = targetData.robotPose();
+	private VisionObservation calculateObservationFromPoseData(PhotonPoseData poseData) {
+		Pose3d robot3DPose = poseData.robotPose();
 		Pose2d robot2DPose = new Pose2d(
 			robot3DPose.getX(),
 			robot3DPose.getY(),
 			Rotation2d.fromRadians(robot3DPose.getRotation().getZ())
 		);
-		return new VisionObservation(robot2DPose, getStandardDeviations(targetData), targetData.timestamp());
+		return new VisionObservation(robot2DPose, getStandardDeviations(poseData), poseData.timestamp());
 	}
 
-	public double[] getStandardDeviations(PhotonTargetData targetData) {
+	public double[] getStandardDeviations(PhotonPoseData targetData) {
 		double ambiguity = targetData.ambiguity();
 		return new double[] {
 			ambiguity / PhotonConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR,

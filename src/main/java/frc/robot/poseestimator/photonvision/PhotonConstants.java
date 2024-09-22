@@ -9,8 +9,8 @@ public class PhotonConstants {
 	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
 	public static final CameraConfiguration[] CAMERAS_CONFIGURATION = {
-		new CameraConfiguration("VisionObservationFiltered/", "camera1", PhotonTarget.AprilTag, new Transform3d()),
-		new CameraConfiguration("VisionObservationFiltered/", "camera2", PhotonTarget.AprilTag, new Transform3d())};
+		new CameraConfiguration("VisionObservationFiltered/", "camera1", PhotonTarget.APRIL_TAG, new Transform3d()),
+		new CameraConfiguration("VisionObservationFiltered/", "camera2", PhotonTarget.APRIL_TAG, new Transform3d())};
 
 	public static final double MAXIMUM_ALLOWED_LATENCY = 0.2;
 

@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.observations.VisionObservation;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -64,6 +65,15 @@ public class PhotonObservationFiltered {
 			ambiguity / PhotonVisionConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR,
 			ambiguity / PhotonVisionConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR,
 			ambiguity / PhotonVisionConstants.AMBIGUITY_TO_ROTATION_STANDARD_DEVIATIONS_FACTOR};
+	}
+	
+	public void logAll() {
+		for (VisionObservation observation : getAllFilteredObservations()) {
+			Logger.recordOutput(
+					String.valueOf(observation.timestamp()),
+					observation.visionPose()
+			);
+		}
 	}
 
 }

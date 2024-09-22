@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.LED.RobotStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static RobotStates ROBOT_STATE = RobotStates.DEFAULT_STATE;
 
 	public Robot() {
 		configureBindings();

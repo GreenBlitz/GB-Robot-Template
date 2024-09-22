@@ -38,6 +38,17 @@ public class SparkDoubleRequest implements IRequest<Double> {
 		this.pidSlot = pidSlot;
 		this.feedforwardCalculator = feedforwardCalculator;
 	}
+	
+	public SparkDoubleRequest(
+			double setPoint,
+			SparkDoubleRequestType controlType,
+			int pidSlot
+	) {
+		this.setPoint = setPoint;
+		this.controlType = controlType;
+		this.pidSlot = pidSlot;
+		this.feedforwardCalculator = (position, velocity) -> {return 0.0;};
+	}
 
 	@Override
 	public SparkDoubleRequest withSetPoint(Double setPoint) {

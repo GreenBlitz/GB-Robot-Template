@@ -27,28 +27,21 @@ public class GBPhotonCamera extends GBSubsystem {
 	}
 
 	public GBPhotonCamera(CameraConfiguration cameraConfiguration) {
-		this(
-			cameraConfiguration.cameraToRobot(),
-			cameraConfiguration.name(),
-			cameraConfiguration.targetType()
-		)
+		this(cameraConfiguration.cameraToRobot(), cameraConfiguration.name(), cameraConfiguration.targetType());
 	}
 
 	public Optional<PhotonTargetData> getBestTargetData() {
 		PhotonPipelineResult pipelineResult = camera.getLatestResult();
 		PhotonTrackedTarget bestTarget = pipelineResult.getBestTarget();
 		Transform3d cameraToTarget = bestTarget.getBestCameraToTarget();
-		Optional<Pose3d> fieldInTag = PhotonConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(bestTarget.getFiducialId());
-		if (!fieldInTag.isPresent()) {
+		Optional<Pose3d> tagPoseInField = PhotonConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(bestTarget.getFiducialId());
+		if (tagPoseInField.isEmpty()) {
 			return Optional.empty();
 		}
-
-		Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTarget, fieldInTag.get(), cameraToRobot);
+		Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTarget, tagPoseInField.get(), cameraToRobot);
 		double latency = pipelineResult.getLatencyMillis();
 		double ambiguity = bestTarget.getPoseAmbiguity();
-
 		double timestamp = pipelineResult.getTimestampSeconds();
-
 		return Optional.of(new PhotonTargetData(robotPose, target, timestamp, ambiguity, latency));
 	}
 

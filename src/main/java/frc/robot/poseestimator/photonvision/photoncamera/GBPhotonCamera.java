@@ -2,6 +2,7 @@ package frc.robot.poseestimator.photonvision.photoncamera;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import frc.robot.poseestimator.photonvision.CameraConfiguration;
 import frc.robot.poseestimator.photonvision.PhotonConstants;
 import frc.robot.poseestimator.photonvision.PhotonTarget;
 import frc.utils.GBSubsystem;
@@ -23,6 +24,14 @@ public class GBPhotonCamera extends GBSubsystem {
 		this.camera = new PhotonCamera(cameraName);
 		this.cameraToRobot = cameraToRobot;
 		this.target = target;
+	}
+
+	public GBPhotonCamera(CameraConfiguration cameraConfiguration) {
+		this(
+			cameraConfiguration.cameraToRobot(),
+			cameraConfiguration.name(),
+			cameraConfiguration.targetType()
+		)
 	}
 
 	public Optional<PhotonTargetData> getBestTargetData() {

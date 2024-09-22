@@ -22,11 +22,7 @@ public class SparkMaxDoubleRequest implements IRequest<Double> {
 	private final int pidSlot;
 	private double setPoint;
 
-	public SparkMaxDoubleRequest(
-		double setPoint,
-		SparkDoubleRequestType controlType,
-		int pidSlot
-	) {
+	public SparkMaxDoubleRequest(double setPoint, SparkDoubleRequestType controlType, int pidSlot) {
 		this.setPoint = setPoint;
 		this.controlType = controlType;
 		this.pidSlot = pidSlot;

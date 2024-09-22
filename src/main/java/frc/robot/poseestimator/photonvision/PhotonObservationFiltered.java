@@ -13,10 +13,14 @@ import java.util.Optional;
 public class PhotonObservationFiltered extends GBSubsystem {
 
 	private final ArrayList<PhotonVisionCamera> cameras;
+	private final PhotonVisionTarget target;
 
-	public PhotonObservationFiltered(CameraConfiguration[] cameraConfigurations, String logPath) {
+	public PhotonObservationFiltered(CameraConfiguration[] cameraConfigurations, PhotonVisionTarget target, String logPath) {
 		super(logPath);
+
 		this.cameras = new ArrayList<>();
+		this.target = target;
+
 		for (CameraConfiguration cameraConfiguration : cameraConfigurations) {
 			this.cameras.add(new PhotonVisionCamera(cameraConfiguration));
 		}
@@ -38,7 +42,7 @@ public class PhotonObservationFiltered extends GBSubsystem {
 		ArrayList<PhotonPoseData> output = new ArrayList<>();
 		for (PhotonVisionCamera camera : cameras) {
 			Optional<PhotonPoseData> bestTarget = camera.getBestTargetData();
-			if (bestTarget.isPresent() && bestTarget.get().target() == PhotonVisionTarget.APRIL_TAG) {
+			if (bestTarget.isPresent() && bestTarget.get().target() == target) {
 				output.add(bestTarget.get());
 			}
 		}

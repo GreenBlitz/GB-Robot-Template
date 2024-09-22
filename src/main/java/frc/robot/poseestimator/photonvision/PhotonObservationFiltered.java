@@ -13,9 +13,9 @@ public class PhotonObservationFiltered {
 	private final ArrayList<PhotonVisionCamera> cameras;
 
 	public PhotonObservationFiltered(CameraConfiguration[] cameraConfigurations) {
-		cameras = new ArrayList<>();
+		this.cameras = new ArrayList<>();
 		for (CameraConfiguration cameraConfiguration : cameraConfigurations) {
-			cameras.add(new PhotonVisionCamera(cameraConfiguration));
+			this.cameras.add(new PhotonVisionCamera(cameraConfiguration));
 		}
 	}
 
@@ -53,13 +53,9 @@ public class PhotonObservationFiltered {
 	}
 
 	private VisionObservation calculateObservationFromPoseData(PhotonPoseData poseData) {
-		Pose3d robot3DPose = poseData.robotPose();
-		Pose2d robot2DPose = new Pose2d(
-			robot3DPose.getX(),
-			robot3DPose.getY(),
-			Rotation2d.fromRadians(robot3DPose.getRotation().getZ())
-		);
-		return new VisionObservation(robot2DPose, getStandardDeviations(poseData), poseData.timestamp());
+		Pose3d robotPose3d = poseData.robotPose();
+		Pose2d robotPose2d = new Pose2d(robotPose3d.getX(), robotPose3d.getY(), new Rotation2d(robotPose3d.getRotation().getZ()));
+		return new VisionObservation(robotPose2d, getStandardDeviations(poseData), poseData.timestamp());
 	}
 
 	public double[] getStandardDeviations(PhotonPoseData targetData) {

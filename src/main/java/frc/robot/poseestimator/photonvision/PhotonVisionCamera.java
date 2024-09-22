@@ -18,6 +18,7 @@ public class PhotonVisionCamera extends GBSubsystem {
 
 	public PhotonVisionCamera(String logPath, String cameraName, Transform3d cameraToRobot, PhotonVisionTarget target) {
 		super(logPath + cameraName + "/");
+		super.setName("photonVisionCamera " + cameraName);
 		this.camera = new PhotonCamera(cameraName);
 		this.cameraToRobot = cameraToRobot;
 		this.target = target;
@@ -55,8 +56,8 @@ public class PhotonVisionCamera extends GBSubsystem {
 	private Optional<Pose3d> calculateGameObjectPoseToRobot(PhotonTrackedTarget bestTarget) {
 		Transform3d gameObjectToCamera = bestTarget.getBestCameraToTarget().inverse();
 		Transform3d gameObjectToRobot = gameObjectToCamera.plus(cameraToRobot);
-		Pose3d notePose = new Pose3d(gameObjectToRobot.getTranslation(), gameObjectToRobot.getRotation());
-		return Optional.of(notePose);
+		Pose3d gameObjectPose = new Pose3d(gameObjectToRobot.getTranslation(), gameObjectToRobot.getRotation());
+		return Optional.of(gameObjectPose);
 	}
 
 	private Optional<Pose3d> calculateRobotPoseToField(PhotonTrackedTarget bestTarget) {

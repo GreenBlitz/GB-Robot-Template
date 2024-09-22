@@ -40,7 +40,7 @@ public class SparkMaxAngleRequest implements IRequest<Rotation2d> {
 	}
 
 	public SparkMaxAngleRequest(Rotation2d setPoint, SparkAngleRequestType controlType, int pidSlot) {
-		this(setPoint, controlType, pidSlot, spark -> { return 0.0; });
+		this(setPoint, controlType, pidSlot, CANSparkMAX -> { return 0.0; });
 	}
 
 	@Override

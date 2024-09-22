@@ -31,22 +31,12 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 
 	private Robot robot;
-	private SparkMAX motor;
-	private SparkMaxAngleSignal position;
-	private SparkMaxAngleSignal velocity;
-	private SparkMaxDoubleSignal voltage;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		SparkMaxWrapper wrapper = new SparkMaxWrapper(new SparkMaxDeviceID(11));
-		position = new SparkMaxAngleSignal("position", () -> wrapper.getEncoder().getPosition(), AngleUnit.RADIANS);
-		velocity = new SparkMaxAngleSignal("velocity", () -> wrapper.getEncoder().getVelocity(), AngleUnit.RADIANS);
-		voltage = new SparkMaxDoubleSignal("voltage", () -> wrapper.getBusVoltage());
-
-		motor = new SparkMAX("test motor", wrapper);
 		this.robot = new Robot();
 	}
 
@@ -87,8 +77,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-
-		motor.updateSignals(voltage, position, velocity);
 	}
 
 	@Override

@@ -35,11 +35,9 @@ public class PhotonObservationFiltered {
 		ArrayList<PhotonPoseData> output = new ArrayList<>();
 		for (PhotonVisionCamera camera : cameras) {
 			Optional<PhotonPoseData> bestTarget = camera.getBestTargetData();
-			bestTarget.ifPresent(bestTargetData -> {
-				if (bestTargetData.target() == PhotonVisionTarget.APRIL_TAG) {
-					output.add(bestTargetData);
-				}
-			});
+			if (bestTarget.isPresent() && bestTarget.get().target() == PhotonVisionTarget.APRIL_TAG) {
+				output.add(bestTarget.get());
+			}
 		}
 		return output;
 	}

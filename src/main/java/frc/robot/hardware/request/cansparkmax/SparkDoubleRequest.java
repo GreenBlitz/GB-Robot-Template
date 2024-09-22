@@ -1,10 +1,10 @@
 package frc.robot.hardware.request.cansparkmax;
 
 import com.revrobotics.CANSparkBase;
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.revrobotics.CANSparkMax;
 import frc.robot.hardware.request.IRequest;
 
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class SparkDoubleRequest implements IRequest<Double> {
 
@@ -23,27 +23,23 @@ public class SparkDoubleRequest implements IRequest<Double> {
 
 	private final SparkDoubleRequestType controlType;
 	private final int pidSlot;
-	private final BiFunction<Rotation2d, Rotation2d, Double> feedforwardCalculator;
+	private final Function<CANSparkMax, Double> feedforwardCalculator;
 	private double setPoint;
 
 	public SparkDoubleRequest(
 		double setPoint,
 		SparkDoubleRequestType controlType,
 		int pidSlot,
-		BiFunction<Rotation2d, Rotation2d, Double> feedforwardCalculator
+		Function<CANSparkMax, Double> feedforwardCalculator
 	) {
 		this.setPoint = setPoint;
 		this.controlType = controlType;
 		this.pidSlot = pidSlot;
 		this.feedforwardCalculator = feedforwardCalculator;
 	}
-	
-	public SparkDoubleRequest(
-			double setPoint,
-			SparkDoubleRequestType controlType,
-			int pidSlot
-	) {
-		this(setPoint, controlType, pidSlot, (position, velocity) -> {return 0.0;});
+
+	public SparkDoubleRequest(double setPoint, SparkDoubleRequestType controlType, int pidSlot) {
+		this(setPoint, controlType, pidSlot, spark -> { return 0.0; });
 	}
 
 	@Override
@@ -64,7 +60,7 @@ public class SparkDoubleRequest implements IRequest<Double> {
 		return pidSlot;
 	}
 
-	public BiFunction<Rotation2d, Rotation2d, Double> getFeedforwardCalculator() {
+	public Function<CANSparkMax, Double> getFeedforwardCalculator() {
 		return feedforwardCalculator;
 	}
 

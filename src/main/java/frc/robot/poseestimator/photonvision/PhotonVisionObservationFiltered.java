@@ -6,11 +6,9 @@ import java.util.ArrayList;
 
 public class PhotonVisionObservationFiltered {
 
-    private ArrayList<PhotonTargetData> cameras;
+	private ArrayList<PhotonTargetData> cameras;
 
-    public PhotonVisionObservationFiltered(String logPath) {
-
-    }
+	public PhotonVisionObservationFiltered(String logPath) {}
 
 
 }

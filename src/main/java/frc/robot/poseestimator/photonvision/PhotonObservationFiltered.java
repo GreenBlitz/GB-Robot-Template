@@ -32,20 +32,24 @@ public class PhotonObservationFiltered {
 		return !isDataTooAmbiguous(targetData) && !isDataLatencyTooHigh(targetData);
 	}
 
-	private ArrayList<PhotonPoseData> getAllTargetData() {
+	private ArrayList<PhotonPoseData> getAllPoseData() {
 		ArrayList<PhotonPoseData> output = new ArrayList<>();
 		for (GBPhotonCamera camera : cameras) {
 			Optional<PhotonPoseData> bestTarget = camera.getBestTargetData();
-			bestTarget.ifPresent(output::add);
+			bestTarget.ifPresent(bestTargetData -> {
+				if (bestTargetData.target() == PhotonTarget.APRIL_TAG) {
+					output.add(bestTargetData);
+				}
+			});
 		}
 		return output;
 	}
 
 	public ArrayList<VisionObservation> getAllFilteredObservations() {
 		ArrayList<VisionObservation> output = new ArrayList<>();
-		for (PhotonPoseData targetData : getAllTargetData()) {
-			if (keepPhotonVisionData(targetData)) {
-				output.add(calculateObservationFromPoseData(targetData));
+		for (PhotonPoseData poseData : getAllPoseData()) {
+			if (keepPhotonVisionData(poseData)) {
+				output.add(calculateObservationFromPoseData(poseData));
 			}
 		}
 		return output;

@@ -12,7 +12,4 @@ public class LED implements ILED{
     public void turnOff() {
 
     }
-    public void setColorForASingleLed(int index, Color color){
-
-    }
 }

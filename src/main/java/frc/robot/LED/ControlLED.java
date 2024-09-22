@@ -5,17 +5,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class ControlLED extends Command {
-    Candle candle = Candle.getInstance();
-    public ControlLED(){}
+    private Candle candle;
+    public ControlLED(){
+        this.candle = Candle.getInstance();
+    }
 
     @Override
     public void execute() {
         candle.setColorAccordingToState(Robot.ROBOT_STATE);
-    }
-
-    @Override
-    public boolean isFinished() {
-        return Robot.ROBOT_STATE.equals(RobotStates.DEFAULT_STATE);
     }
 
     @Override

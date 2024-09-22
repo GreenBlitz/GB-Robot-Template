@@ -1,12 +1,9 @@
 package frc.robot.hardware.request.cansparkmax;
 
 import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
 import frc.robot.hardware.request.IRequest;
 
-import java.util.function.Function;
-
-public class SparkDoubleRequest implements IRequest<Double> {
+public class SparkMaxDoubleRequest implements IRequest<Double> {
 
 	public enum SparkDoubleRequestType {
 
@@ -25,7 +22,7 @@ public class SparkDoubleRequest implements IRequest<Double> {
 	private final int pidSlot;
 	private double setPoint;
 
-	public SparkDoubleRequest(
+	public SparkMaxDoubleRequest(
 		double setPoint,
 		SparkDoubleRequestType controlType,
 		int pidSlot
@@ -36,7 +33,7 @@ public class SparkDoubleRequest implements IRequest<Double> {
 	}
 
 	@Override
-	public SparkDoubleRequest withSetPoint(Double setPoint) {
+	public SparkMaxDoubleRequest withSetPoint(Double setPoint) {
 		this.setPoint = setPoint;
 		return this;
 	}

@@ -7,7 +7,7 @@ import frc.robot.hardware.request.IRequest;
 
 import java.util.function.Function;
 
-public class SparkAngleRequest implements IRequest<Rotation2d> {
+public class SparkMaxAngleRequest implements IRequest<Rotation2d> {
 
 	public enum SparkAngleRequestType {
 
@@ -27,7 +27,7 @@ public class SparkAngleRequest implements IRequest<Rotation2d> {
 	private final Function<CANSparkMax, Double> feedforwardCalculator;
 	private Rotation2d setPoint;
 
-	public SparkAngleRequest(
+	public SparkMaxAngleRequest(
 		Rotation2d setPoint,
 		SparkAngleRequestType controlType,
 		int pidSlot,
@@ -39,12 +39,12 @@ public class SparkAngleRequest implements IRequest<Rotation2d> {
 		this.feedforwardCalculator = feedforwardCalculator;
 	}
 
-	public SparkAngleRequest(Rotation2d setPoint, SparkAngleRequestType controlType, int pidSlot) {
+	public SparkMaxAngleRequest(Rotation2d setPoint, SparkAngleRequestType controlType, int pidSlot) {
 		this(setPoint, controlType, pidSlot, spark -> { return 0.0; });
 	}
 
 	@Override
-	public SparkAngleRequest withSetPoint(Rotation2d setPoint) {
+	public SparkMaxAngleRequest withSetPoint(Rotation2d setPoint) {
 		this.setPoint = setPoint;
 		return this;
 	}

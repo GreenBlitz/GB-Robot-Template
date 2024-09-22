@@ -2,7 +2,7 @@ package frc.robot.hardware.angleencoder;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.Phoenix6Device;
+import frc.robot.hardware.phoenix6.Phoenix6Device;
 
 public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder {
 

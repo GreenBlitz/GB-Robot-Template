@@ -18,4 +18,8 @@ public class PhotonConstants {
 	
 	public static final double MAXIMUM_AMBIGUOUS = 0.2;
 
+	public static final double AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR = 2; //! Shall be calibrated
+
+	public static final double AMBIGUITY_TO_ROTATION_STANDARD_DEVIATIONS_FACTOR = 2; //! Shall be calibrated
+
 }

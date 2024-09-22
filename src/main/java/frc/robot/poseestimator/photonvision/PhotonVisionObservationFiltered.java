@@ -64,7 +64,11 @@ public class PhotonVisionObservationFiltered {
 
     public double[] getStandardDeviations(PhotonTargetData targetData) {
         double ambiguity = targetData.ambiguity();
-        return new double[] {ambiguity, ambiguity, ambiguity};
+        return new double[] {
+                ambiguity / PhotonConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR,
+                ambiguity / PhotonConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR,
+                ambiguity / PhotonConstants.AMBIGUITY_TO_ROTATION_STANDARD_DEVIATIONS_FACTOR
+        };
     }
 
 

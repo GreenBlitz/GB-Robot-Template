@@ -23,23 +23,16 @@ public class SparkDoubleRequest implements IRequest<Double> {
 
 	private final SparkDoubleRequestType controlType;
 	private final int pidSlot;
-	private final Function<CANSparkMax, Double> feedforwardCalculator;
 	private double setPoint;
 
 	public SparkDoubleRequest(
 		double setPoint,
 		SparkDoubleRequestType controlType,
-		int pidSlot,
-		Function<CANSparkMax, Double> feedforwardCalculator
+		int pidSlot
 	) {
 		this.setPoint = setPoint;
 		this.controlType = controlType;
 		this.pidSlot = pidSlot;
-		this.feedforwardCalculator = feedforwardCalculator;
-	}
-
-	public SparkDoubleRequest(double setPoint, SparkDoubleRequestType controlType, int pidSlot) {
-		this(setPoint, controlType, pidSlot, spark -> { return 0.0; });
 	}
 
 	@Override
@@ -58,10 +51,6 @@ public class SparkDoubleRequest implements IRequest<Double> {
 
 	public int getPidSlot() {
 		return pidSlot;
-	}
-
-	public Function<CANSparkMax, Double> getFeedforwardCalculator() {
-		return feedforwardCalculator;
 	}
 
 }

@@ -6,6 +6,7 @@ import com.ctre.phoenix.led.CANdle;
 import java.awt.*;
 
 public class Candle implements ILED, ILogicLED{
+    private static Candle instance;
     private CANdle caNdle;
     private ColorFlowAnimation colorFlowAnimation;
     private FireAnimation fireAnimation;
@@ -18,7 +19,7 @@ public class Candle implements ILED, ILogicLED{
     private TwinkleOffAnimation twinkleOffAnimation;
 
 
-    public Candle(){
+    private Candle(){
         this.caNdle = new CANdle(LEDConstatns.Candle.ID_PORT);
         this.caNdle.configLEDType(CANdle.LEDStripType.RGB);
         this.colorFlowAnimation = new ColorFlowAnimation(0,255,255);
@@ -28,6 +29,12 @@ public class Candle implements ILED, ILogicLED{
         this.singleFadeAnimation = new SingleFadeAnimation(0,255,255);
         this.twinkleAnimation = new TwinkleAnimation(0,255,255);
         this.twinkleOffAnimation = new TwinkleOffAnimation(0,255,255);
+    }
+    public static Candle getInstance(){
+        if (instance==null){
+            instance = new Candle();
+        }
+        return instance;
     }
     @Override
     public void setColor(Color color) {
@@ -82,5 +89,11 @@ public class Candle implements ILED, ILogicLED{
     @Override
     public void TwinkleOffAnimation() {
         this.caNdle.animate(this.twinkleOffAnimation);
+    }
+    public void setColorAccordingToState(RobotStates robotStates){
+        switch (robotStates){
+            case STATE1->this.rainbowAnimation();
+
+        }
     }
 }

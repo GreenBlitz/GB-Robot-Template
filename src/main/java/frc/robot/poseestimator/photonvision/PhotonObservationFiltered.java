@@ -75,7 +75,7 @@ public class PhotonObservationFiltered extends GBSubsystem {
 
 	public void logAll() {
 		for (VisionObservation observation : getAllFilteredObservations()) {
-			Logger.recordOutput(super.getLogPath() + String.valueOf(observation.timestamp()), observation.visionPose());
+			Logger.recordOutput(super.getLogPath() + observation.timestamp(), observation.visionPose());
 		}
 	}
 

@@ -1,11 +1,12 @@
-package frc.utils.devicewrappers;
+package frc.robot.hardware.gyro.phoenix6;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.ctre.CTREDeviceID;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.PhoenixProUtils;
 
 public class Pigeon2Wrapper extends Pigeon2 {
 
@@ -90,27 +91,29 @@ public class Pigeon2Wrapper extends Pigeon2 {
      */
     //@formatter:on
 
+	private static final int DEFAULT_CONFIG_NUMBER_OF_TRIES = 1;
+
+
 	private double rollOffSetDegrees;
 
 	private double pitchOffSetDegrees;
 
 	public Pigeon2Wrapper(int id) {
-		this(new CTREDeviceID(id));
+		this(new Phoenix6DeviceID(id));
 	}
 
-	public Pigeon2Wrapper(CTREDeviceID deviceID) {
-		this(deviceID, new Pigeon2Configuration());
-	}
-
-	public Pigeon2Wrapper(CTREDeviceID deviceID, Pigeon2Configuration configuration) {
+	public Pigeon2Wrapper(Phoenix6DeviceID deviceID) {
 		super(deviceID.ID(), deviceID.busChain().getChainName());
 		this.rollOffSetDegrees = 0;
 		this.pitchOffSetDegrees = 0;
-		applyConfiguration(configuration);
 	}
 
-	public void applyConfiguration(Pigeon2Configuration configuration) {
-		getConfigurator().apply(configuration);
+	public StatusCode applyConfiguration(Pigeon2Configuration configuration, int numberOfTries) {
+		return PhoenixProUtils.checkWithRetry(() -> getConfigurator().apply(configuration), numberOfTries);
+	}
+
+	public StatusCode applyConfiguration(Pigeon2Configuration configuration) {
+		return applyConfiguration(configuration, DEFAULT_CONFIG_NUMBER_OF_TRIES);
 	}
 
 	public StatusCode setYaw(Rotation2d newYaw) {

@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.IDevice;
 import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.signal.cansparkmax.ISparkMaxSignal;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
 import frc.utils.devicewrappers.SparkMaxWrapper;
 import org.littletonrobotics.junction.Logger;
@@ -27,7 +28,7 @@ public class SparkMAX implements IDevice {
     @Override
     public void updateSignals(InputSignal... signals) {
         for (InputSignal signal : signals){
-            if(signal instanceof SparkMaxAngleSignal){
+            if(signal instanceof ISparkMaxSignal){
                 Logger.processInputs(logPath, signal);
             }
         }

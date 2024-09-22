@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
+import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.AlertManager;
@@ -33,6 +34,7 @@ public class RobotManager extends LoggedRobot {
 	private SparkMAX motor;
 	private SparkMaxAngleSignal position;
 	private SparkMaxAngleSignal velocity;
+	private SparkMaxDoubleSignal voltage;
 
 	@Override
 	public void robotInit() {
@@ -42,6 +44,7 @@ public class RobotManager extends LoggedRobot {
 		SparkMaxWrapper wrapper = new SparkMaxWrapper(new SparkMaxDeviceID(11));
 		position = new SparkMaxAngleSignal("position", () -> wrapper.getEncoder().getPosition(), AngleUnit.RADIANS);
 		velocity = new SparkMaxAngleSignal("velocity", () -> wrapper.getEncoder().getVelocity(), AngleUnit.RADIANS);
+		voltage = new SparkMaxDoubleSignal("voltage", () -> wrapper.getBusVoltage());
 
 		motor = new SparkMAX("test motor", wrapper);
 		this.robot = new Robot();
@@ -85,7 +88,7 @@ public class RobotManager extends LoggedRobot {
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
 
-		motor.updateSignals(position, velocity);
+		motor.updateSignals(voltage, position, velocity);
 	}
 
 	@Override

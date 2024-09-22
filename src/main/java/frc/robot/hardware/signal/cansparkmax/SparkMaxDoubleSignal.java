@@ -4,7 +4,7 @@ import frc.robot.hardware.signal.DoubleSignal;
 
 import java.util.function.Supplier;
 
-public class SparkMaxDoubleSignal extends DoubleSignal {
+public class SparkMaxDoubleSignal extends DoubleSignal implements ISparkMaxSignal {
     Supplier<Double> doubleSignalSupplier;
     public SparkMaxDoubleSignal(String name, Supplier<Double> doubleSignalSupplier){
         super(name);

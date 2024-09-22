@@ -43,10 +43,7 @@ public class SparkAngleRequest implements IRequest<Rotation2d> {
 			SparkAngleRequestType controlType,
 			int pidSlot
 	) {
-		this.setPoint = setPoint;
-		this.controlType = controlType;
-		this.pidSlot = pidSlot;
-		this.feedforwardCalculator = (position, velocity) -> {return 0.0;};
+		this(setPoint, controlType, pidSlot, (position, velocity) -> {return 0.0;});
 	}
 
 	@Override

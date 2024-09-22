@@ -10,7 +10,7 @@ public class ControlLED extends Command {
 
     @Override
     public void execute() {
-
+        candle.setColorAccordingToState(Robot.ROBOT_STATE);
     }
 
     @Override

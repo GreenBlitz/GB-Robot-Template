@@ -6,6 +6,6 @@ public interface IDevice {
 
 	boolean isConnected();
 
-	void fetchSignals(InputSignal... signals);
+	void updateSignals(InputSignal... signals);
 
 }

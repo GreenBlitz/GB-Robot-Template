@@ -5,11 +5,11 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.phoenix6.TalonFXWrapper;
 import frc.robot.subsystems.swerve.modules.steer.ISteer;
 import frc.robot.subsystems.swerve.modules.steer.SteerInputsAutoLogged;
-import frc.utils.ctre.Phoenix6SignalsThread;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.devicewrappers.TalonFXWrapper;
+
 
 import java.util.Queue;
 
@@ -32,7 +32,7 @@ public class TalonFXSteer implements ISteer {
 		this.positionVoltageRequest = new PositionVoltage(0).withEnableFOC(constants.getEnableFOC());
 		this.voltageRequest = new VoltageOut(0).withEnableFOC(constants.getEnableFOC());
 
-		this.positionQueue = Phoenix6SignalsThread.getInstance()
+		this.positionQueue = Phoenix6SignalsThread.getInstance() //TODO
 			.registerLatencySignal(motor, signals.positionSignal(), signals.velocitySignal());
 	}
 

@@ -2,10 +2,10 @@ package frc.robot.subsystems.swerve.modules.steer.talonfx;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.TalonFXWrapper;
 import frc.robot.subsystems.swerve.modules.steer.SteerConstants;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.ctre.CTREDeviceID;
-import frc.utils.devicewrappers.TalonFXWrapper;
 
 public class TalonFXSteerConstants {
 
@@ -18,7 +18,7 @@ public class TalonFXSteerConstants {
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
 
 	public TalonFXSteerConstants(
-		CTREDeviceID steerMotorID,
+		Phoenix6DeviceID steerMotorID,
 		boolean inverted,
 		TalonFXConfiguration configuration,
 		boolean enableFOC,
@@ -29,7 +29,7 @@ public class TalonFXSteerConstants {
 	}
 
 	public TalonFXSteerConstants(
-		CTREDeviceID steerMotorID,
+		Phoenix6DeviceID steerMotorID,
 		boolean inverted,
 		int encoderID,
 		TalonFXConfiguration configuration,

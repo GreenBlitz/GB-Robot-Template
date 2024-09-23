@@ -9,18 +9,20 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
-import frc.robot.constants.LogPaths;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.GyroInputsAutoLogged;
+import frc.robot.hardware.gyro.IGyro;
+import frc.robot.hardware.signal.InputSignal;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.structures.SuperStructureConstants;
-import frc.robot.subsystems.swerve.gyro.GyroThreadInputsAutoLogged;
-import frc.robot.subsystems.swerve.gyro.IThreadedGyro;
 import frc.robot.subsystems.swerve.modules.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.GBSubsystem;
+import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
@@ -38,9 +40,8 @@ public class Swerve extends GBSubsystem {
 
 	private final SwerveConstants constants;
 	private final Modules modules;
-	private final IThreadedGyro gyro;
-	private final GyroInputsAutoLogged gyroInputs;
-	private final GyroThreadInputsAutoLogged gyroThreadInputs;
+	private final IGyro gyro;
+	private final InputSignal<Rotation2d> gyroYawSignal;
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
 
@@ -49,15 +50,14 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 
 
-	public Swerve(SwerveConstants constants, Modules modules, IThreadedGyro gyro) {
+	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, InputSignal<Rotation2d> gyroYawSignal) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
 		this.modules = modules;
 		this.gyro = gyro;
-		this.gyroInputs = new GyroInputsAutoLogged();
-		this.gyroThreadInputs = new GyroThreadInputsAutoLogged();
+		this.gyroYawSignal = gyroYawSignal;
 
 		this.headingSupplier = this::getAbsoluteHeading;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
@@ -65,6 +65,12 @@ public class Swerve extends GBSubsystem {
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		updateInputs();
+
+		AlertManager.addAlert(new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				constants.gyroLogPath() + "GyroDisconnectedAt",
+				() -> !gyro.isConnected()
+		));
 	}
 
 	protected Modules getModules() {
@@ -111,7 +117,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyroInputs.yaw = heading;
+		gyro.updateSignals(gyroYawSignal);
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -132,17 +138,13 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void updateGyroSimulation() {
-		final double yawChangeRadians = getRobotRelativeVelocity().omegaRadiansPerSecond * CycleTimeUtils.getCurrentCycleTime();
-		gyroInputs.yaw = Rotation2d.fromRadians(gyroInputs.yaw.getRadians() + yawChangeRadians);
-		gyroThreadInputs.yawOdometrySamples = new Rotation2d[] {gyroInputs.yaw};
-		gyroThreadInputs.timestampOdometrySamples = new double[] {Timer.getFPGATimestamp()};
+//		final double yawChangeRadians = getRobotRelativeVelocity().omegaRadiansPerSecond * CycleTimeUtils.getCurrentCycleTime();
+//		gyroInputs.yaw = Rotation2d.fromRadians(gyroInputs.yaw.getRadians() + yawChangeRadians);
+//		gyroThreadInputs.yawOdometrySamples = new Rotation2d[] {gyroInputs.yaw};
+//		gyroThreadInputs.timestampOdometrySamples = new double[] {Timer.getFPGATimestamp()};
+		//TODO
 	}
 
-	private void reportGyroAlerts(GyroInputsAutoLogged gyroInputs) {
-		if (!gyroInputs.connected) {
-			Logger.recordOutput(LogPaths.ALERT_LOG_PATH + constants.gyroLogPath() + "GyroDisconnectedAt", Timer.getFPGATimestamp());
-		}
-	}
 
 	private void updateInputs() {
 		ODOMETRY_LOCK.lock();
@@ -150,12 +152,7 @@ public class Swerve extends GBSubsystem {
 			if (Robot.ROBOT_TYPE.isSimulation()) {
 				updateGyroSimulation();
 			}
-			gyro.updateInputs(gyroInputs);
-			gyro.updateInputs(gyroThreadInputs);
-			reportGyroAlerts(gyroInputs);
-			Logger.processInputs(constants.gyroLogPath(), gyroInputs);
-			Logger.processInputs(constants.gyroLogPath(), gyroThreadInputs);
-
+			gyro.updateSignals(gyroYawSignal);
 			modules.logStatus();
 		}
 		ODOMETRY_LOCK.unlock();
@@ -184,10 +181,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(
-			Math.min(gyroThreadInputs.timestampOdometrySamples.length, gyroThreadInputs.yawOdometrySamples.length),
-			modules.getNumberOfOdometrySamples()
-		);
+		return Math.min(gyroYawSignal.asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryObservation[] getAllOdometryObservations() {
@@ -197,8 +191,8 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelsPositions(i),
-				gyroThreadInputs.yawOdometrySamples[i],
-				gyroThreadInputs.timestampOdometrySamples[i]
+				gyroYawSignal.asArray()[i],
+				Timer.getFPGATimestamp() //TODO
 			);
 		}
 
@@ -207,7 +201,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(gyroInputs.yaw.getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroYawSignal.getLatestValue().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 

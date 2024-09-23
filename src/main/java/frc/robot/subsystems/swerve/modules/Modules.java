@@ -26,7 +26,7 @@ public class Modules {
 
 	public void logStatus() {
 		for (Module currentModule : modules) {
-			currentModule.logStatus();
+			currentModule.updateInputs();
 		}
 		Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
 		Logger.recordOutput(logPath + "TargetStates", getTargetStates());

@@ -24,31 +24,31 @@ public class PhotonObservationFiltered extends GBSubsystem {
 		}
 	}
 
-	private boolean isDataTooAmbiguous(PhotonPoseData targetData) {
+	private boolean isDataTooAmbiguous(PhotonTargetRawData targetData) {
 		return targetData.ambiguity() >= PhotonVisionConstants.MAXIMUM_ALLOWED_AMBIGUITY;
 	}
 
-	private boolean isDataLatencyTooHigh(PhotonPoseData targetData) {
+	private boolean isDataLatencyTooHigh(PhotonTargetRawData targetData) {
 		return targetData.latency() >= PhotonVisionConstants.MAXIMUM_ALLOWED_LATENCY;
 	}
 
-	private boolean isAprilTagWithinRange(PhotonPoseData targetData) {
+	private boolean isAprilTagWithinRange(PhotonTargetRawData targetData) {
 		double height = targetData.robotPose().getZ();
 		return PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT <= height &&
 				PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT >= height;
 	}
 
-	private boolean keepPhotonVisionData(PhotonPoseData targetData) {
+	private boolean keepPhotonVisionData(PhotonTargetRawData targetData) {
 		if (target == PhotonVisionTarget.APRIL_TAG && !isAprilTagWithinRange(targetData)) {
 			return false;
 		}
 		return !isDataTooAmbiguous(targetData) && !isDataLatencyTooHigh(targetData);
 	}
 
-	private ArrayList<PhotonPoseData> getAllTargetData() {
-		ArrayList<PhotonPoseData> output = new ArrayList<>();
+	private ArrayList<PhotonTargetRawData> getAllTargetData() {
+		ArrayList<PhotonTargetRawData> output = new ArrayList<>();
 		for (PhotonVisionCamera camera : cameras) {
-			Optional<PhotonPoseData> bestTarget = camera.getBestTargetData();
+			Optional<PhotonTargetRawData> bestTarget = camera.getBestTargetData();
 			if (bestTarget.isPresent() && bestTarget.get().target() == target) {
 				output.add(bestTarget.get());
 			}
@@ -58,7 +58,7 @@ public class PhotonObservationFiltered extends GBSubsystem {
 
 	public ArrayList<VisionObservation> getAllFilteredTargetObservations() {
 		ArrayList<VisionObservation> output = new ArrayList<>();
-		for (PhotonPoseData poseData : getAllTargetData()) {
+		for (PhotonTargetRawData poseData : getAllTargetData()) {
 			if (keepPhotonVisionData(poseData)) {
 				output.add(getObservationFromPhotonPose(poseData));
 			}
@@ -66,13 +66,13 @@ public class PhotonObservationFiltered extends GBSubsystem {
 		return output;
 	}
 
-	private VisionObservation getObservationFromPhotonPose(PhotonPoseData poseData) {
+	private VisionObservation getObservationFromPhotonPose(PhotonTargetRawData poseData) {
 		Pose3d robotPose3d = poseData.robotPose();
 		Pose2d robotPose2d = new Pose2d(robotPose3d.getX(), robotPose3d.getY(), new Rotation2d(robotPose3d.getRotation().getZ()));
 		return new VisionObservation(robotPose2d, getStandardDeviations(poseData), poseData.timestamp());
 	}
 
-	public double[] getStandardDeviations(PhotonPoseData targetData) {
+	public double[] getStandardDeviations(PhotonTargetRawData targetData) {
 		double ambiguity = targetData.ambiguity();
 		return new double[] {
 			ambiguity / PhotonVisionConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR,

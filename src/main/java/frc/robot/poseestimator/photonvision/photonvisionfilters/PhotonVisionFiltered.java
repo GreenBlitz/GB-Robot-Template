@@ -17,20 +17,20 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 		}
 	}
 
-	protected boolean isDataTooAmbiguous(PhotonTargetRawData targetData) {
+	protected boolean isDataTooAmbiguous(PhotonVisionTargetRawData targetData) {
 		return targetData.ambiguity() >= PhotonVisionConstants.MAXIMUM_ALLOWED_AMBIGUITY;
 	}
 
-	protected boolean isDataLatencyTooHigh(PhotonTargetRawData targetData) {
+	protected boolean isDataLatencyTooHigh(PhotonVisionTargetRawData targetData) {
 		return targetData.latency() >= PhotonVisionConstants.MAXIMUM_ALLOWED_LATENCY;
 	}
 
-	protected abstract boolean keepPhotonVisionData(PhotonTargetRawData targetData);
+	protected abstract boolean keepPhotonVisionData(PhotonVisionTargetRawData targetData);
 
-	protected ArrayList<PhotonTargetRawData> getAllTargetData() {
-		ArrayList<PhotonTargetRawData> output = new ArrayList<>();
+	protected ArrayList<PhotonVisionTargetRawData> getAllTargetData() {
+		ArrayList<PhotonVisionTargetRawData> output = new ArrayList<>();
 		for (PhotonVisionCamera camera : cameras) {
-			Optional<PhotonTargetRawData> bestTarget = camera.getBestTargetData();
+			Optional<PhotonVisionTargetRawData> bestTarget = camera.getBestTargetData();
 			bestTarget.ifPresent(output::add);
 		}
 		return output;

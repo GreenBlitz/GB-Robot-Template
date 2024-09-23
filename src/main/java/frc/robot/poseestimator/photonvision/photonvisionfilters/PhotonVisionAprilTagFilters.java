@@ -42,7 +42,7 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 	private boolean isAprilTagWithinRange(PhotonVisionTargetRawData targetData) {
 		double height = targetData.targetPose().getZ();
 		return PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT <= height
-			&& PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT >= height;
+			&& PhotonVisionConstants.APRIL_TAG_MAXIMUM_HEIGHT >= height;
 	}
 
 	private static double[] getStandardDeviations(PhotonVisionTargetRawData targetData) {

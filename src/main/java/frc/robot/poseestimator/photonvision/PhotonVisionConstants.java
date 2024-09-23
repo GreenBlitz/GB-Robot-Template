@@ -22,6 +22,6 @@ public class PhotonVisionConstants {
 
 	public static final double APRIL_TAG_MINIMUM_HEIGHT = 1; // ! Shall be calibrated
 
-	public static final double APRIL_TAG_MAXIMUM_RANGE = 3; // ! Shall be calibrated
+	public static final double APRIL_TAG_MAXIMUM_HEIGHT = 3; // ! Shall be calibrated
 
 }

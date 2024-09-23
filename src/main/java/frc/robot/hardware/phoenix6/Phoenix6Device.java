@@ -1,10 +1,16 @@
-package frc.robot.hardware;
+package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import frc.robot.hardware.ConnectedInputAutoLogged;
+import frc.robot.hardware.IDevice;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.LinkedList;
@@ -15,15 +21,17 @@ public abstract class Phoenix6Device implements IDevice {
 	private final String logPath;
 
 	public Phoenix6Device(String logPath) {
-		this.connectedInput = new ConnectedInputAutoLogged();
 		this.logPath = logPath;
+		this.connectedInput = new ConnectedInputAutoLogged();
+		connectedInput.connected = true;
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
 	public boolean isConnected() {
 		return connectedInput.connected;
 	}
 
-	public void updateSignals(InputSignal... signals) {
+	private StatusCode refreshSignals(InputSignal... signals) {
 		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
 		for (InputSignal signal : signals) {
 			if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
@@ -34,12 +42,19 @@ public abstract class Phoenix6Device implements IDevice {
 			}
 		}
 
-		connectedInput.connected = BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new)).isOK();
-		Logger.processInputs(logPath, connectedInput);
+		return BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new));
+	}
 
+	private void logSignals(InputSignal... signals) {
 		for (InputSignal signal : signals) {
 			Logger.processInputs(logPath, signal);
 		}
+	}
+
+	public void updateSignals(InputSignal... signals) {
+		connectedInput.connected = refreshSignals(signals).isOK();
+		Logger.processInputs(logPath, connectedInput);
+		logSignals(signals);
 	}
 
 }

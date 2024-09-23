@@ -1,4 +1,4 @@
-package frc.utils.ctre;
+package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
@@ -11,13 +11,13 @@ public class PhoenixProUtils {
 		return refresh ? signal.refresh() : signal;
 	}
 
-	public static boolean checkWithRetry(Supplier<StatusCode> statusCodeSupplier, int numberOfTries) {
-		for (int i = 0; i < numberOfTries; i++) {
+	public static StatusCode checkWithRetry(Supplier<StatusCode> statusCodeSupplier, int numberOfTries) {
+		for (int i = 0; i < numberOfTries - 1; i++) {
 			if (statusCodeSupplier.get().isOK()) {
-				return true;
+				return StatusCode.OK;
 			}
 		}
-		return false;
+		return statusCodeSupplier.get();
 	}
 
 }

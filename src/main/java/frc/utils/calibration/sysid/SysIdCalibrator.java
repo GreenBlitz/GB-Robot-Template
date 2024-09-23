@@ -31,7 +31,8 @@ public class SysIdCalibrator {
 		this.usedSubsystem = subsystem;
 		this.isCTRE = sysIdConfigInfo.isCTRE;
 
-		final SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
+
+		SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
 			(Measure<Voltage> volts) -> voltageSetControl.accept(volts.in(Volts)),
 			null,
 			usedSubsystem,

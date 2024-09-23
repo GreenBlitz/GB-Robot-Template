@@ -44,6 +44,13 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 			&& PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT >= height;
 	}
 
+	private static double[] getStandardDeviations(PhotonTargetRawData targetData) {
+		double ambiguity = targetData.ambiguity();
+		double positionStandardDeviation = ambiguity / PhotonVisionConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR;
+		double rotationStandardDeviation = ambiguity / PhotonVisionConstants.AMBIGUITY_TO_ROTATION_STANDARD_DEVIATIONS_FACTOR;
+		return new double[] {positionStandardDeviation, positionStandardDeviation, rotationStandardDeviation};
+	}
+
 	@Override
 	protected void subsystemPeriodic() {}
 

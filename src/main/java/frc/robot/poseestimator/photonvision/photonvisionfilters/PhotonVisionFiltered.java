@@ -36,12 +36,4 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 		return output;
 	}
 
-	public double[] getStandardDeviations(PhotonTargetRawData targetData) {
-		double ambiguity = targetData.ambiguity();
-		return new double[] {
-			ambiguity / PhotonVisionConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR,
-			ambiguity / PhotonVisionConstants.AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR,
-			ambiguity / PhotonVisionConstants.AMBIGUITY_TO_ROTATION_STANDARD_DEVIATIONS_FACTOR};
-	}
-
 }

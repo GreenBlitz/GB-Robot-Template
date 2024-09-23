@@ -40,30 +40,14 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 
-	// private Robot robot;
-	public EncoderedMotor falcon;
-	public Phoenix6AngleSignal position;
-	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
+	 private Robot robot;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		TalonFXWrapper mo = new TalonFXWrapper(1);
-		falcon = new TalonFXMotor("test motor", mo, new SysIdRoutine.Config());
-		position = Phoenix6SignalBuilder.generatePhoenix6Signal(mo.getPosition(), 20, AngleUnit.ROTATIONS);
-
-
-		MAIN_JOYSTICK.A.onTrue(new InstantCommand(() -> falcon.resetPosition(Rotation2d.fromDegrees(90))));
-		MAIN_JOYSTICK.B
-			.onTrue(new InstantCommand(() -> falcon.applyAngleRequest(new Phoenix6AngleRequest(new PositionVoltage(3)))));
-		MAIN_JOYSTICK.X
-			.onTrue(new InstantCommand(() -> falcon.applyAngleRequest(new Phoenix6AngleRequest(new PositionVoltage(10)))));
-		MAIN_JOYSTICK.Y
-			.onTrue(new InstantCommand(() -> falcon.applyDoubleRequest(new Phoenix6DoubleRequest(new VoltageOut(10)))));
-
-//		this.robot = new Robot();
+		this.robot = new Robot();
 	}
 
 	@Override
@@ -82,18 +66,18 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-//		autonomousCommand = robot.getAutonomousCommand();
-//
-//		if (autonomousCommand != null) {
-//			autonomousCommand.schedule();
-//		}
+		autonomousCommand = robot.getAutonomousCommand();
+
+		if (autonomousCommand != null) {
+			autonomousCommand.schedule();
+		}
 	}
 
 	@Override
 	public void teleopInit() {
-//		if (autonomousCommand != null) {
-//			autonomousCommand.cancel();
-//		}
+		if (autonomousCommand != null) {
+			autonomousCommand.cancel();
+		}
 	}
 
 	@Override
@@ -103,8 +87,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-
-		falcon.updateSignals(position);
 	}
 
 	@Override

@@ -48,8 +48,8 @@ public class PhotonVisionCamera extends GBSubsystem {
 
 	private Optional<Pose3d> calculateTargetPose(PhotonTrackedTarget bestTarget) {
 		return switch (target) {
-			case APRIL_TAG -> calculateRobotPoseToField(bestTarget);
 			case GAME_OBJECT -> calculateGameObjectPoseToRobot(bestTarget);
+			case APRIL_TAG -> calculateRobotPoseToField(bestTarget);
 		};
 	}
 

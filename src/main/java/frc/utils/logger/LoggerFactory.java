@@ -12,8 +12,6 @@ import java.nio.file.Path;
 public class LoggerFactory {
 
 	private static final String LOG_PATH = "Logger/";
-	private static final Alert USBNotFound = new Alert(Alert.AlertType.WARNING, LOG_PATH + "Didn't find USB");
-
 	public static void initializeLogger() {
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> startRealLogger();
@@ -27,8 +25,8 @@ public class LoggerFactory {
 		if (LogSavePath.USB.isWritable()) {
 			startLoggerOnUSB();
 		} else {
+			new Alert(Alert.AlertType.WARNING, LOG_PATH + "Didn't find USB").report();
 			startLoggerOnRoborio();
-			USBNotFound.report();
 		}
 	}
 

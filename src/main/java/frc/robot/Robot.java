@@ -35,7 +35,8 @@ public class Robot {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveName.SWERVE),
 			ModulesFactory.create(SwerveName.SWERVE),
-			GyroFactory.create(SwerveName.SWERVE)
+			GyroFactory.create(SwerveName.SWERVE),
+			GyroFactory.createYawSignal()
 		);
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
 

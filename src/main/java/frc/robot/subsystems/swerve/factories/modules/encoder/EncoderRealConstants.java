@@ -27,10 +27,11 @@ class EncoderRealConstants {
 	}
 
 	public static class EncoderCreator {
+
 		private final CANcoder cancoder;
 		private final Phoenix6AngleSignal positionSignal;
 
-		public EncoderCreator(Phoenix6DeviceID encoderDeviceID) {
+		private EncoderCreator(Phoenix6DeviceID encoderDeviceID) {
 			this.cancoder = new CANcoder(encoderDeviceID.ID(), encoderDeviceID.busChain().getChainName());
 			this.positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(cancoder.getPosition(), 50, AngleUnit.ROTATIONS);
 		}
@@ -56,6 +57,5 @@ class EncoderRealConstants {
 	protected static final EncoderCreator FRONT_RIGHT = new EncoderCreator(IDs.CANCodersIDs.FRONT_RIGHT_ENCODER);
 	protected static final EncoderCreator BACK_LEFT = new EncoderCreator(IDs.CANCodersIDs.BACK_LEFT_ENCODER);
 	protected static final EncoderCreator BACK_RIGHT = new EncoderCreator(IDs.CANCodersIDs.BACK_RIGHT_ENCODER);
-
 
 }

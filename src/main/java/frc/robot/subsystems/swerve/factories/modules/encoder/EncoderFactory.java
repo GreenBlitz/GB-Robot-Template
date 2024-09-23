@@ -45,7 +45,7 @@ public class EncoderFactory {
 				case BACK_LEFT -> EncoderRealConstants.BACK_LEFT.getPositionSignal();
 				case BACK_RIGHT -> EncoderRealConstants.BACK_RIGHT.getPositionSignal();
 			};
-			case SIMULATION -> null; //TODO
+			case SIMULATION -> null; // TODO
 		};
 	}
 

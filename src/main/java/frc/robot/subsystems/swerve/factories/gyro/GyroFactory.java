@@ -11,16 +11,17 @@ import frc.robot.subsystems.swerve.SwerveName;
 public class GyroFactory {
 
 	public static IGyro create(SwerveName swerveName) {
+		String logPath = swerveName.getLogPath() + "Gyro";
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> new Pigeon2Gyro(swerveName.getLogPath() + "Gyro", RealGyroConstants.getPigeon2Wrapper());
-			case SIMULATION -> new EmptyGyro(swerveName.getLogPath() + "Gyro");
+			case REAL -> new Pigeon2Gyro(logPath, RealGyroConstants.GYRO.getPigeon2WrapperWithConfig(logPath));
+			case SIMULATION -> new EmptyGyro(logPath);
 		};
 	}
 
 	public static InputSignal<Rotation2d> createYawSignal() {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealGyroConstants.getYawSignal();
-			case SIMULATION -> null;
+			case REAL -> RealGyroConstants.GYRO.getYawSignal();
+			case SIMULATION -> null;// TODO
 		};
 	}
 

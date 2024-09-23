@@ -4,6 +4,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.Controllable;
+import frc.robot.hardware.motor.EncoderedMotor;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.request.IRequest;
@@ -11,7 +12,7 @@ import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
-public class TalonFXMotor extends Phoenix6Device implements IMotor, Controllable {
+public class TalonFXMotor extends Phoenix6Device implements IMotor, Controllable, EncoderedMotor {
 
 	private final TalonFXWrapper motor;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;

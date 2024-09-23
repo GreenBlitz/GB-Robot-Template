@@ -4,6 +4,8 @@ import frc.robot.poseestimator.observations.GameObjectPoseObservation;
 import frc.robot.poseestimator.photonvision.CameraConfiguration;
 import frc.robot.poseestimator.photonvision.PhotonVisionTargetRawData;
 import frc.robot.poseestimator.photonvision.PhotonVisionTarget;
+import org.littletonrobotics.junction.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,15 @@ public class PhotonVisionGameObjectFilters extends PhotonVisionFiltered {
 		return !isDataLatencyTooHigh(targetData) && !isDataTooAmbiguous(targetData);
 	}
 
+	public void logAllGameObjectPoses() {
+		for (GameObjectPoseObservation observation : getAllGameObjectPoses()) {
+			Logger.recordOutput(String.valueOf(observation.timestamp()), observation.pose());
+		}
+	}
+
 	@Override
-	protected void subsystemPeriodic() {}
+	protected void subsystemPeriodic() {
+		logAllGameObjectPoses();
+	}
 
 }

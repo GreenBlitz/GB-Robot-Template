@@ -1,5 +1,6 @@
 package frc.robot.poseestimator.photonvision.photonvisionfilters;
 
+import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.poseestimator.photonvision.*;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -29,6 +30,16 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 
 	protected abstract boolean keepPhotonVisionData(PhotonVisionTargetRawData targetData);
 
+	public ArrayList<PhotonVisionTargetRawData> getAllFilteredData() {
+		ArrayList<PhotonVisionTargetRawData> output = new ArrayList<>();
+		for (PhotonVisionTargetRawData targetData : getAllTargetData()) {
+			if (keepPhotonVisionData(targetData)) {
+				output.add(targetData);
+			}
+		}
+		return output;
+	}
+
 	protected ArrayList<PhotonVisionTargetRawData> getAllTargetData() {
 		ArrayList<PhotonVisionTargetRawData> output = new ArrayList<>();
 		for (PhotonVisionCamera camera : cameras) {
@@ -39,9 +50,9 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 	}
 
 	protected void logAllData() {
-		for (PhotonVisionTargetRawData targetData : getAllTargetData()) {
+		for (PhotonVisionTargetRawData targetData : getAllFilteredData()) {
 			Logger.recordOutput(
-				super.getLogPath() + targetData.cameraName() + "dataName" + targetData.timestamp(),
+				super.getLogPath() + targetData.cameraName() + "Time" + targetData.timestamp(),
 				targetData.targetPose()
 			);
 		}

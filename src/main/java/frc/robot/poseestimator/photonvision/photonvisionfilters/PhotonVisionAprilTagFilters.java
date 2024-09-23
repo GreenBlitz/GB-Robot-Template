@@ -30,10 +30,8 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 
 	public ArrayList<VisionObservation> getAllFilteredVisionObservations() {
 		ArrayList<VisionObservation> output = new ArrayList<>();
-		for (PhotonVisionTargetRawData poseData : getAllTargetData()) {
-			if (keepPhotonVisionData(poseData)) {
-				output.add(getObservationFromPhotonPose(poseData));
-			}
+		for (PhotonVisionTargetRawData poseData : getAllFilteredData()) {
+			output.add(getObservationFromPhotonPose(poseData));
 		}
 		return output;
 	}

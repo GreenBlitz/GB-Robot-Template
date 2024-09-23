@@ -16,8 +16,8 @@ public class PhotonVisionCamera extends GBSubsystem {
 	private final Transform3d cameraToRobot;
 	private final PhotonVisionTarget target;
 
-	public PhotonVisionCamera(String logPath, String cameraName, Transform3d cameraToRobot, PhotonVisionTarget target) {
-		super(logPath + cameraName + "/");
+	public PhotonVisionCamera(String cameraName, Transform3d cameraToRobot, PhotonVisionTarget target) {
+		super(PhotonVisionConstants.camerasLogPathPrefix + cameraName + "/");
 		super.setName("photonVisionCamera " + cameraName);
 		this.camera = new PhotonCamera(cameraName);
 		this.cameraToRobot = cameraToRobot;
@@ -26,7 +26,6 @@ public class PhotonVisionCamera extends GBSubsystem {
 
 	public PhotonVisionCamera(CameraConfiguration cameraConfiguration) {
 		this(
-			cameraConfiguration.logPathPrefix(),
 			cameraConfiguration.name(),
 			cameraConfiguration.cameraToRobot(),
 			cameraConfiguration.targetType()

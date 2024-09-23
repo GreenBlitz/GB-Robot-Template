@@ -9,8 +9,10 @@ public class PhotonVisionConstants {
 	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
 	public static final CameraConfiguration[] CAMERAS_CONFIGURATION = {
-		new CameraConfiguration("PhotonCameras/", "camera1", PhotonVisionTarget.APRIL_TAG, new Transform3d()),
-		new CameraConfiguration("PhotonCameras/", "camera2", PhotonVisionTarget.APRIL_TAG, new Transform3d())};
+		new CameraConfiguration("camera1", PhotonVisionTarget.APRIL_TAG, new Transform3d()),
+		new CameraConfiguration("camera2", PhotonVisionTarget.APRIL_TAG, new Transform3d())};
+
+	public static final String camerasLogPathPrefix = "PhotonCameras/";
 
 	public static final double MAXIMUM_ALLOWED_LATENCY = 0.2;
 

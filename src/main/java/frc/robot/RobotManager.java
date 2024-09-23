@@ -4,30 +4,15 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.hardware.motor.EncoderedMotor;
-import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
-import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
-import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
-import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
-import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
-import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.simulation.SimulationManager;
-import frc.utils.AngleUnit;
 import frc.utils.DriverStationUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
-import frc.utils.joysticks.JoystickPorts;
-import frc.utils.joysticks.SmartJoystick;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 
@@ -40,7 +25,7 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 
-	 private Robot robot;
+	private Robot robot;
 
 	@Override
 	public void robotInit() {

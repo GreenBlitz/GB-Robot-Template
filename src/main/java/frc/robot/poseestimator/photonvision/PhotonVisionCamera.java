@@ -25,11 +25,7 @@ public class PhotonVisionCamera extends GBSubsystem {
 	}
 
 	public PhotonVisionCamera(CameraConfiguration cameraConfiguration) {
-		this(
-			cameraConfiguration.name(),
-			cameraConfiguration.cameraToRobot(),
-			cameraConfiguration.targetType()
-		);
+		this(cameraConfiguration.name(), cameraConfiguration.cameraToRobot(), cameraConfiguration.targetType());
 	}
 
 	public Optional<PhotonVisionTargetRawData> getBestTargetData() {

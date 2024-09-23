@@ -7,14 +7,13 @@ import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.poseestimator.photonvision.CameraConfiguration;
 import frc.robot.poseestimator.photonvision.PhotonVisionTargetRawData;
 import frc.robot.poseestimator.photonvision.PhotonVisionConstants;
-import frc.robot.poseestimator.photonvision.PhotonVisionTarget;
 
 import java.util.ArrayList;
 
 public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 
-	public PhotonVisionAprilTagFilters(CameraConfiguration[] cameraConfigurations, PhotonVisionTarget target, String logPath) {
-		super(cameraConfigurations, target, logPath);
+	public PhotonVisionAprilTagFilters(CameraConfiguration[] cameraConfigurations, String logPath) {
+		super(cameraConfigurations, logPath);
 	}
 
 	@Override
@@ -48,8 +47,5 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 		double rotationStandardDeviation = ambiguity / PhotonVisionConstants.AMBIGUITY_TO_ROTATION_STANDARD_DEVIATIONS_FACTOR;
 		return new double[] {positionStandardDeviation, positionStandardDeviation, rotationStandardDeviation};
 	}
-
-	@Override
-	protected void subsystemPeriodic() {}
 
 }

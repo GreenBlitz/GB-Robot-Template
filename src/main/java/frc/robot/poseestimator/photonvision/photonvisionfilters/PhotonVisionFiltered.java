@@ -11,7 +11,7 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 
 	private final ArrayList<PhotonVisionCamera> cameras;
 
-	public PhotonVisionFiltered(CameraConfiguration[] cameraConfigurations, PhotonVisionTarget target, String logPath) {
+	public PhotonVisionFiltered(CameraConfiguration[] cameraConfigurations, String logPath) {
 		super(logPath);
 		this.cameras = new ArrayList<>();
 		for (CameraConfiguration cameraConfiguration : cameraConfigurations) {
@@ -48,13 +48,18 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 		return output;
 	}
 
-	protected void logAllData() {
+	private void logAllData() {
 		for (PhotonVisionTargetRawData targetData : getAllFilteredData()) {
 			Logger.recordOutput(
 				super.getLogPath() + targetData.cameraName() + "Time" + targetData.timestamp(),
 				targetData.targetPose()
 			);
 		}
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		logAllData();
 	}
 
 }

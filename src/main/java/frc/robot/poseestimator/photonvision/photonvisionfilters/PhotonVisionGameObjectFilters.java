@@ -3,16 +3,14 @@ package frc.robot.poseestimator.photonvision.photonvisionfilters;
 import frc.robot.poseestimator.observations.GameObjectPoseObservation;
 import frc.robot.poseestimator.photonvision.CameraConfiguration;
 import frc.robot.poseestimator.photonvision.PhotonVisionTargetRawData;
-import frc.robot.poseestimator.photonvision.PhotonVisionTarget;
 import org.littletonrobotics.junction.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class PhotonVisionGameObjectFilters extends PhotonVisionFiltered {
 
-	public PhotonVisionGameObjectFilters(CameraConfiguration[] cameraConfigurations, PhotonVisionTarget target, String logPath) {
-		super(cameraConfigurations, target, logPath);
+	public PhotonVisionGameObjectFilters(CameraConfiguration[] cameraConfigurations, String logPath) {
+		super(cameraConfigurations, logPath);
 	}
 
 	public GameObjectPoseObservation getObservationFromRawData(PhotonVisionTargetRawData gameObjectData) {

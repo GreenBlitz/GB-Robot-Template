@@ -31,10 +31,10 @@ def get_key_network_table_updator(table: NetworkTableInstance, is_pressed: bool)
         key_type = get_key_type(key)  # Store the result to avoid repeated calls.
         if key_type is UndefinedKey:
             return
-        if key_type is SpecialKey:
+        elif key_type is SpecialKey:
             table.putBoolean(key.name, is_pressed)
             return
-        if key_type is ASCIIKey:
+        elif key_type is ASCIIKey:
             if key.char == "/":
                 table.putBoolean("slash", is_pressed)
             else:

@@ -2,6 +2,7 @@ package frc.robot.hardware.signal.phoenix;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import edu.wpi.first.math.Pair;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.utils.AngleUnit;
 
@@ -22,8 +23,8 @@ public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6Signal
 	}
 
 	@Override
-	protected double getNewValue() {
-		return BaseStatusSignal.getLatencyCompensatedValue(signal, slopeSignal);
+	protected Pair<Double, Double> getNewValue() {
+		return new Pair<>(BaseStatusSignal.getLatencyCompensatedValue(signal, slopeSignal), signal.getTimestamp().getTime());
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package frc.robot.hardware.signal.phoenix;
 
 import com.ctre.phoenix6.StatusSignal;
+import edu.wpi.first.math.Pair;
 import frc.robot.hardware.signal.DoubleSignal;
 
 public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6SignalBuilder.SignalGetter {
@@ -13,8 +14,8 @@ public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6Signal
 	}
 
 	@Override
-	protected Double getNewValue() {
-		return statusSignal.getValue();
+	protected Pair<Double, Double> getNewValue() {
+		return new Pair<>(statusSignal.getValue(), statusSignal.getTimestamp().getTime());
 	}
 
 	@Override

@@ -32,7 +32,13 @@ public class Module {
 	private Rotation2d startingSteerAngle;
 	private boolean isClosedLoop;
 
-	public Module(ModuleConstants constants, IAngleEncoder angleEncoder, InputSignal<Rotation2d> encoderPositionSignal, ISteer iSteer, IDrive iDrive) {
+	public Module(
+		ModuleConstants constants,
+		IAngleEncoder angleEncoder,
+		InputSignal<Rotation2d> encoderPositionSignal,
+		ISteer iSteer,
+		IDrive iDrive
+	) {
 		this.constants = constants;
 		this.angleEncoder = angleEncoder;
 		this.encoderPositionSignal = encoderPositionSignal;
@@ -47,20 +53,22 @@ public class Module {
 		updateInputs();
 		resetByEncoder();
 
-		AlertManager.addAlert(new PeriodicAlert(
-				Alert.AlertType.WARNING,
-				constants.logPath() + "EncoderDisconnectAt",
-				() -> !angleEncoder.isConnected())
+		AlertManager.addAlert(
+			new PeriodicAlert(Alert.AlertType.WARNING, constants.logPath() + "EncoderDisconnectAt", () -> !angleEncoder.isConnected())
 		);
-		AlertManager.addAlert(new PeriodicAlert(
+		AlertManager.addAlert(
+			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				constants.logPath() + "SteerDisconnectAt",
-				() -> !moduleInputsContainer.getSteerMotorInputs().isConnected)
+				() -> !moduleInputsContainer.getSteerMotorInputs().isConnected
+			)
 		);
-		AlertManager.addAlert(new PeriodicAlert(
+		AlertManager.addAlert(
+			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				constants.logPath() + "DriveDisconnectAt",
-				() -> !moduleInputsContainer.getDriveMotorInputs().isConnected)
+				() -> !moduleInputsContainer.getDriveMotorInputs().isConnected
+			)
 		);
 	}
 
@@ -83,8 +91,7 @@ public class Module {
 
 		driveInputs.angle = ModuleUtils.getUncoupledAngle(driveInputs.angle, steerInputs.angle, constants.couplingRatio());
 		driveInputs.velocity = ModuleUtils.getUncoupledAngle(driveInputs.velocity, steerInputs.velocity, constants.couplingRatio());
-		driveInputs.acceleration = ModuleUtils.getUncoupledAngle(driveInputs.acceleration, steerInputs.acceleration,
-				constants.couplingRatio());
+		driveInputs.acceleration = ModuleUtils.getUncoupledAngle(driveInputs.acceleration, steerInputs.acceleration, constants.couplingRatio());
 
 		for (int i = 0; i < getNumberOfOdometrySamples(); i++) {
 			Rotation2d steerDelta = Rotation2d
@@ -103,8 +110,7 @@ public class Module {
 		DriveInputsAutoLogged driveInputs = moduleInputsContainer.getDriveMotorInputs();
 		driveInputs.distanceMeters = toDriveMeters(driveInputs.angle);
 		driveInputs.velocityMeters = toDriveMeters(driveInputs.velocity);
-		driveInputs.distanceMetersOdometrySamples =
-				Arrays.stream(driveInputs.angleOdometrySamples).mapToDouble(this::toDriveMeters).toArray();
+		driveInputs.distanceMetersOdometrySamples = Arrays.stream(driveInputs.angleOdometrySamples).mapToDouble(this::toDriveMeters).toArray();
 
 		ModuleInputsAutoLogged moduleInputs = moduleInputsContainer.getModuleInputs();
 		moduleInputs.isAtTargetAngle = isAtTargetAngle();
@@ -132,13 +138,12 @@ public class Module {
 
 
 	/**
-     * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest
-	 * odometry update, the
-     * accumulated odometry positions since the last loop to get a more accurate position.
-     *
-     * @param odometryUpdateIndex the index of the odometry update
-     * @return the position of the module at the given odometry update index
-     */
+	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest odometry update, the
+	 * accumulated odometry positions since the last loop to get a more accurate position.
+	 *
+	 * @param odometryUpdateIndex the index of the odometry update
+	 * @return the position of the module at the given odometry update index
+	 */
 	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
 		return new SwerveModulePosition(
 			moduleInputsContainer.getDriveMotorInputs().distanceMetersOdometrySamples[odometryUpdateIndex],

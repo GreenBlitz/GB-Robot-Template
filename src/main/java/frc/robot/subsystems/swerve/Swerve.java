@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
-import frc.robot.hardware.gyro.GyroInputsAutoLogged;
 import frc.robot.hardware.gyro.IGyro;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.poseestimation.observations.OdometryObservation;
@@ -23,7 +22,6 @@ import frc.utils.GBSubsystem;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
-import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -66,11 +64,8 @@ public class Swerve extends GBSubsystem {
 
 		updateInputs();
 
-		AlertManager.addAlert(new PeriodicAlert(
-				Alert.AlertType.WARNING,
-				constants.gyroLogPath() + "GyroDisconnectedAt",
-				() -> !gyro.isConnected()
-		));
+		AlertManager
+			.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.gyroLogPath() + "GyroDisconnectedAt", () -> !gyro.isConnected()));
 	}
 
 	protected Modules getModules() {
@@ -142,7 +137,7 @@ public class Swerve extends GBSubsystem {
 //		gyroInputs.yaw = Rotation2d.fromRadians(gyroInputs.yaw.getRadians() + yawChangeRadians);
 //		gyroThreadInputs.yawOdometrySamples = new Rotation2d[] {gyroInputs.yaw};
 //		gyroThreadInputs.timestampOdometrySamples = new double[] {Timer.getFPGATimestamp()};
-		//TODO
+		// TODO
 	}
 
 
@@ -192,7 +187,7 @@ public class Swerve extends GBSubsystem {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelsPositions(i),
 				gyroYawSignal.asArray()[i],
-				Timer.getFPGATimestamp() //TODO
+				Timer.getFPGATimestamp() // TODO
 			);
 		}
 

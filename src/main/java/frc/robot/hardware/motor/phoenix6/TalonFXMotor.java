@@ -12,7 +12,7 @@ import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
-public class TalonFXMotor extends Phoenix6Device implements IMotor, Controllable, ControllableMotor {
+public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	private final TalonFXWrapper motor;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;

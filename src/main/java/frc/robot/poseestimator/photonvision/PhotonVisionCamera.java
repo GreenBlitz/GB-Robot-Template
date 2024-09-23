@@ -43,7 +43,7 @@ public class PhotonVisionCamera extends GBSubsystem {
 		double latency = pipelineResult.getLatencyMillis();
 		double ambiguity = bestTarget.getPoseAmbiguity();
 		double timestamp = pipelineResult.getTimestampSeconds();
-		return Optional.of(new PhotonTargetRawData(targetPose.get(), target, timestamp, ambiguity, latency));
+		return Optional.of(new PhotonTargetRawData(targetPose.get(), timestamp, ambiguity, latency));
 	}
 
 	private Optional<Pose3d> calculateTargetPose(PhotonTrackedTarget bestTarget) {

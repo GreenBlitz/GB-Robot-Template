@@ -21,10 +21,8 @@ public class PhotonVisionGameObjectFilters extends PhotonVisionFiltered {
 
 	public List<GameObjectPoseObservation> getAllGameObjectPoses() {
 		List<GameObjectPoseObservation> output = new ArrayList<>();
-		for (PhotonVisionTargetRawData gameObjectData : getAllTargetData()) {
-			if (keepPhotonVisionData(gameObjectData)) {
-				output.add(getObservationFromRawData(gameObjectData));
-			}
+		for (PhotonVisionTargetRawData gameObjectData : getAllFilteredData()) {
+			output.add(getObservationFromRawData(gameObjectData));
 		}
 		return output;
 	}

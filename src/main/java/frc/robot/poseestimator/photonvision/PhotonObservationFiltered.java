@@ -34,8 +34,8 @@ public class PhotonObservationFiltered extends GBSubsystem {
 
 	private boolean isAprilTagWithinRange(PhotonTargetRawData targetData) {
 		double height = targetData.robotPose().getZ();
-		return PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT <= height &&
-				PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT >= height;
+		return PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT <= height
+			&& PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT >= height;
 	}
 
 	private boolean keepPhotonVisionData(PhotonTargetRawData targetData) {

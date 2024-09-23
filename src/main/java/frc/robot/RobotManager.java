@@ -4,9 +4,19 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.hardware.motor.Controllable;
+import frc.robot.hardware.motor.cansparkmax.BrushlessSparkMAXMotor;
+import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
+import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.AngleUnit;
 import frc.utils.DriverStationUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.battery.BatteryUtils;
@@ -25,14 +35,19 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 
-	private Robot robot;
+//	private Robot robot;
+	private Controllable zbark;
+	private AngleSignal position;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		this.robot = new Robot();
+		CANSparkMax bldcmotor = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
+		zbark = new BrushlessSparkMAXMotor(bldcmotor,(a,b) -> {return Rotation2d.fromRadians(0)},new SysIdRoutine.Config(), "test motor");
+
+//		this.robot = new Robot();
 	}
 
 	@Override
@@ -51,18 +66,19 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = robot.getAutonomousCommand();
-
-		if (autonomousCommand != null) {
-			autonomousCommand.schedule();
-		}
+//		autonomousCommand = robot.getAutonomousCommand();
+//
+//		if (autonomousCommand != null) {
+//			autonomousCommand.schedule();
+//		}
 	}
 
 	@Override
 	public void teleopInit() {
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
-		}
+//		if (autonomousCommand != null) {
+//			autonomousCommand.cancel();
+//		}
+		zbark.resetPosition(Rotation2d.fromRotations(10));
 	}
 
 	@Override
@@ -72,6 +88,10 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+
+		//todo - on run, comment out one of the below and run, and than run the other and comment out the other one
+		zbark.applyDoubleRequest(new SparkMaxDoubleRequest(10, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,0));
+//		zbark.applyAngleRequest(new SparkMaxAngleRequest(Rotation2d.fromRotations(5), SparkMaxAngleRequest.SparkAngleRequestType.POSITION,0));
 	}
 
 	@Override

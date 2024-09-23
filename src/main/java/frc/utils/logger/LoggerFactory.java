@@ -12,6 +12,7 @@ import java.nio.file.Path;
 public class LoggerFactory {
 
 	private static final String LOG_PATH = "Logger/";
+
 	public static void initializeLogger() {
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> startRealLogger();

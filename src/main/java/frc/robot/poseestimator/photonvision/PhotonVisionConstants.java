@@ -20,4 +20,8 @@ public class PhotonVisionConstants {
 
 	public static final double AMBIGUITY_TO_ROTATION_STANDARD_DEVIATIONS_FACTOR = 2; // ! Shall be calibrated
 
+	public static final double APRIL_TAG_MINIMUM_HEIGHT = 1; // ! Shall be calibrated
+
+	public static final double APRIL_TAG_MAXIMUM_RANGE = 3; // ! Shall be calibrated
+
 }

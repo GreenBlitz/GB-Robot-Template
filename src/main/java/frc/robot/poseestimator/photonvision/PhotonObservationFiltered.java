@@ -17,10 +17,8 @@ public class PhotonObservationFiltered extends GBSubsystem {
 
 	public PhotonObservationFiltered(CameraConfiguration[] cameraConfigurations, PhotonVisionTarget target, String logPath) {
 		super(logPath);
-
 		this.cameras = new ArrayList<>();
 		this.target = target;
-
 		for (CameraConfiguration cameraConfiguration : cameraConfigurations) {
 			this.cameras.add(new PhotonVisionCamera(cameraConfiguration));
 		}
@@ -34,11 +32,20 @@ public class PhotonObservationFiltered extends GBSubsystem {
 		return targetData.latency() >= PhotonVisionConstants.MAXIMUM_ALLOWED_LATENCY;
 	}
 
+	private boolean isAprilTagWithinRange(PhotonPoseData targetData) {
+		double height = targetData.robotPose().getZ();
+		return PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT <= height &&
+				PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT >= height;
+	}
+
 	private boolean keepPhotonVisionData(PhotonPoseData targetData) {
+		if (target == PhotonVisionTarget.APRIL_TAG && !isAprilTagWithinRange(targetData)) {
+			return false;
+		}
 		return !isDataTooAmbiguous(targetData) && !isDataLatencyTooHigh(targetData);
 	}
 
-	private ArrayList<PhotonPoseData> getAllPoseData() {
+	private ArrayList<PhotonPoseData> getAllTargetData() {
 		ArrayList<PhotonPoseData> output = new ArrayList<>();
 		for (PhotonVisionCamera camera : cameras) {
 			Optional<PhotonPoseData> bestTarget = camera.getBestTargetData();
@@ -49,17 +56,17 @@ public class PhotonObservationFiltered extends GBSubsystem {
 		return output;
 	}
 
-	public ArrayList<VisionObservation> getAllFilteredObservations() {
+	public ArrayList<VisionObservation> getAllFilteredTargetObservations() {
 		ArrayList<VisionObservation> output = new ArrayList<>();
-		for (PhotonPoseData poseData : getAllPoseData()) {
+		for (PhotonPoseData poseData : getAllTargetData()) {
 			if (keepPhotonVisionData(poseData)) {
-				output.add(calculateObservationFromPoseData(poseData));
+				output.add(getObservationFromPhotonPose(poseData));
 			}
 		}
 		return output;
 	}
 
-	private VisionObservation calculateObservationFromPoseData(PhotonPoseData poseData) {
+	private VisionObservation getObservationFromPhotonPose(PhotonPoseData poseData) {
 		Pose3d robotPose3d = poseData.robotPose();
 		Pose2d robotPose2d = new Pose2d(robotPose3d.getX(), robotPose3d.getY(), new Rotation2d(robotPose3d.getRotation().getZ()));
 		return new VisionObservation(robotPose2d, getStandardDeviations(poseData), poseData.timestamp());
@@ -74,7 +81,7 @@ public class PhotonObservationFiltered extends GBSubsystem {
 	}
 
 	public void logAll() {
-		for (VisionObservation observation : getAllFilteredObservations()) {
+		for (VisionObservation observation : getAllFilteredTargetObservations()) {
 			Logger.recordOutput(super.getLogPath() + observation.timestamp(), observation.visionPose());
 		}
 	}

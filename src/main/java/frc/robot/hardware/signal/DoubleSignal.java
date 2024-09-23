@@ -1,6 +1,5 @@
 package frc.robot.hardware.signal;
 
-import edu.wpi.first.math.Pair;
 import org.littletonrobotics.junction.LogTable;
 
 public abstract class DoubleSignal implements InputSignal<Double> {
@@ -36,9 +35,9 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 
 	@Override
 	public void toLog(LogTable table) {
-		Pair<Double, Double> timedValue = getNewValue();
-		value = timedValue.getFirst();
-		timestamp = timedValue.getSecond();
+		TimedValue<Double> timedValue = getNewValue();
+		value = timedValue.value();
+		timestamp = timedValue.timestamp();
 		table.put(name, value);
 	}
 
@@ -47,6 +46,6 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 		value = table.get(name, 0);
 	}
 
-	protected abstract Pair<Double, Double> getNewValue();
+	protected abstract TimedValue<Double> getNewValue();
 
 }

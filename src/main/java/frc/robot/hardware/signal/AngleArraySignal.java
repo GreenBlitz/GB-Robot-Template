@@ -1,6 +1,5 @@
 package frc.robot.hardware.signal;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.AngleUnit;
 import org.littletonrobotics.junction.LogTable;
@@ -42,9 +41,9 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public void toLog(LogTable table) {
-		Pair<Double, Double>[] timedValues = getNewValues();
-		values = Arrays.stream(timedValues).map(pair -> angleUnit.toAngle(pair.getFirst())).toArray(Rotation2d[]::new);
-		timestamps = Arrays.stream(timedValues).mapToDouble(Pair::getSecond).toArray();
+		TimedValue<Double>[] timedValues = getNewValues();
+		values = Arrays.stream(timedValues).map(timedValue -> angleUnit.toAngle(timedValue.value())).toArray(Rotation2d[]::new);
+		timestamps = Arrays.stream(timedValues).mapToDouble(TimedValue::timestamp).toArray();
 		table.put(name, values);
 	}
 
@@ -53,6 +52,6 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 		values = table.get(name, new Rotation2d[] {new Rotation2d()});
 	}
 
-	protected abstract Pair<Double, Double>[] getNewValues();
+	protected abstract TimedValue<Double>[] getNewValues();
 
 }

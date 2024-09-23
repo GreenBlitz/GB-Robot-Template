@@ -2,6 +2,8 @@ package frc.robot.poseestimator.photonvision.photonvisionfilters;
 
 import frc.robot.poseestimator.photonvision.*;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -34,6 +36,15 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 			bestTarget.ifPresent(output::add);
 		}
 		return output;
+	}
+
+	protected void logAllData() {
+		for (PhotonVisionTargetRawData targetData : getAllTargetData()) {
+			Logger.recordOutput(
+				super.getLogPath() + targetData.cameraName() + "dataName" + targetData.timestamp(),
+				targetData.targetPose()
+			);
+		}
 	}
 
 }

@@ -8,7 +8,6 @@ import frc.robot.poseestimator.photonvision.CameraConfiguration;
 import frc.robot.poseestimator.photonvision.PhotonVisionTargetRawData;
 import frc.robot.poseestimator.photonvision.PhotonVisionConstants;
 import frc.robot.poseestimator.photonvision.PhotonVisionTarget;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 
@@ -52,15 +51,7 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 		return new double[] {positionStandardDeviation, positionStandardDeviation, rotationStandardDeviation};
 	}
 
-	public void logAllPoseObservations() {
-		for (VisionObservation observation : getAllFilteredVisionObservations()) {
-			Logger.recordOutput(String.valueOf(observation.timestamp()), observation.visionPose());
-		}
-	}
-
 	@Override
-	protected void subsystemPeriodic() {
-		logAllPoseObservations();
-	}
+	protected void subsystemPeriodic() {}
 
 }

@@ -187,7 +187,7 @@ public class Swerve extends GBSubsystem {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelsPositions(i),
 				gyroStuff.yawSignal().asArray()[i],
-				Timer.getFPGATimestamp() // TODO
+				Timer.getFPGATimestamp() // TODO gyroStuff.yawSignal().getTimestamps[i];
 			);
 		}
 

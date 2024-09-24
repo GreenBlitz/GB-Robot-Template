@@ -48,7 +48,7 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 		return output;
 	}
 
-	private void logAllData() {
+	private void logAllFilteredData() {
 		for (PhotonVisionTargetRawData targetData : getAllFilteredData()) {
 			Logger.recordOutput(
 				super.getLogPath() + targetData.cameraName() + "Time" + targetData.timestamp(),
@@ -57,9 +57,18 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 		}
 	}
 
+	private void logAllTargetData() {
+		for (PhotonVisionTargetRawData targetData : getAllTargetData()) {
+			Logger.recordOutput(
+					super.getLogPath() + targetData.cameraName() + "Time" + targetData.timestamp(),
+					targetData.targetPose()
+			);
+		}
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
-		logAllData();
+		logAllTargetData();
 	}
 
 }

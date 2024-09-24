@@ -31,6 +31,9 @@ public class PhotonVisionCamera extends GBSubsystem {
 	public Optional<PhotonVisionTargetRawData> getBestTargetData() {
 		PhotonPipelineResult pipelineResult = camera.getLatestResult();
 		PhotonTrackedTarget bestTarget = pipelineResult.getBestTarget();
+		if (bestTarget == null) {
+			return Optional.empty();
+		}
 		Optional<Pose3d> targetPose = calculateTargetPose(bestTarget);
 		if (targetPose.isEmpty()) {
 			return Optional.empty();

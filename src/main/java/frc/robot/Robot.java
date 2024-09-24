@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.poseestimator.photonvision.PhotonVisionConstants;
+import frc.robot.poseestimator.photonvision.photonvisionfilters.PhotonVisionAprilTagFilters;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little
@@ -16,7 +18,14 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private PhotonVisionAprilTagFilters photonVisionAprilTagFilters;
+
 	public Robot() {
+		this.photonVisionAprilTagFilters = new PhotonVisionAprilTagFilters(
+			PhotonVisionConstants.CAMERAS_CONFIGURATION,
+			"aprilTagsLogPath"
+		);
+
 		configureBindings();
 	}
 

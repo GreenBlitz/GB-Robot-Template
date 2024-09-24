@@ -9,8 +9,8 @@ public class PhotonVisionConstants {
 	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
 	public static final CameraConfiguration[] CAMERAS_CONFIGURATION = {
-		new CameraConfiguration("camera1", PhotonVisionTarget.APRIL_TAG, new Transform3d()),
-		new CameraConfiguration("camera2", PhotonVisionTarget.APRIL_TAG, new Transform3d())};
+		new CameraConfiguration("camera1", PhotonVisionTarget.APRIL_TAG, new Transform3d()), // Arducam_OV9281_USB_Camera (1)
+		};
 
 	public static final String camerasLogPathPrefix = "PhotonCameras/";
 

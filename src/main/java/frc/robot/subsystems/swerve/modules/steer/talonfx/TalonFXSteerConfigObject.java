@@ -5,7 +5,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.PhoenixProUtils;
-import frc.robot.hardware.phoenix6.TalonFXWrapper;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.utils.alerts.Alert;
 

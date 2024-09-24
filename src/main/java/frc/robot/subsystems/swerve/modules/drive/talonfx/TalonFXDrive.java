@@ -6,7 +6,6 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.phoenix6.Phoenix6SignalsThread;
-import frc.robot.hardware.phoenix6.TalonFXWrapper;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.modules.drive.IDrive;
 import frc.utils.calibration.sysid.SysIdCalibrator;

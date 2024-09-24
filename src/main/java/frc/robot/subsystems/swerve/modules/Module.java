@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.angleencoder.IAngleEncoder;
+import frc.robot.hardware.motor.ControllableMotor;
+import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.modules.drive.DriveInputsAutoLogged;
@@ -22,8 +24,12 @@ import java.util.Arrays;
 public class Module {
 
 	private final ModuleInputsContainer moduleInputsContainer;
-	private final ISteer iSteer;
-	private final IDrive iDrive;
+	private final ControllableMotor iSteer;
+	private final IRequest<Rotation2d> steerPositionRequest;
+	private final IRequest<Double> steerVoltageRequest;
+	private final ControllableMotor iDrive;
+	private final IRequest<Rotation2d> driveVelocityRequest;
+	private final IRequest<Double> driveVoltageRequest;
 	private final IAngleEncoder angleEncoder;
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ModuleConstants constants;
@@ -36,8 +42,8 @@ public class Module {
 		ModuleConstants constants,
 		IAngleEncoder angleEncoder,
 		InputSignal<Rotation2d> encoderPositionSignal,
-		ISteer iSteer,
-		IDrive iDrive
+		ControllableMotor iSteer,
+		ControllableMotor iDrive
 	) {
 		this.constants = constants;
 		this.angleEncoder = angleEncoder;
@@ -133,7 +139,7 @@ public class Module {
 
 	public void resetByEncoder() {
 		startingSteerAngle = encoderPositionSignal.getLatestValue();
-		iSteer.resetToAngle(startingSteerAngle);
+		iSteer.resetPosition(startingSteerAngle);
 	}
 
 
@@ -217,11 +223,11 @@ public class Module {
 
 	public void setDriveVoltage(double voltage) {
 		setClosedLoop(false);
-		iDrive.setVoltage(voltage);
+		iDrive.applyDoubleRequest(driveVoltageRequest.withSetPoint(voltage));
 	}
 
 	public void setSteerVoltage(double voltage) {
-		iSteer.setVoltage(voltage);
+		iSteer.applyDoubleRequest(steerVoltageRequest.withSetPoint(voltage));
 	}
 
 
@@ -232,13 +238,13 @@ public class Module {
 		} else {
 			targetState.angle = moduleState.angle;
 		}
-		iSteer.setTargetAngle(targetState.angle);
+		iSteer.applyAngleRequest(steerPositionRequest.withSetPoint(targetState.angle));
 	}
 
 
 	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
 		this.targetState = SwerveModuleState.optimize(targetState, getCurrentAngle());
-		iSteer.setTargetAngle(this.targetState.angle);
+		iSteer.applyAngleRequest(steerPositionRequest.withSetPoint(this.targetState.angle));
 		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
 	}
 
@@ -257,7 +263,7 @@ public class Module {
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtils
 			.getCoupledAngle(targetVelocityPerSecond, moduleInputsContainer.getSteerMotorInputs().velocity, constants.couplingRatio());
-		iDrive.setTargetVelocity(coupledVelocityPerSecond);
+		iDrive.applyAngleRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
 	}
 
 	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
@@ -270,7 +276,7 @@ public class Module {
 			constants.wheelDiameterMeters(),
 			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
 		);
-		iDrive.setVoltage(voltage);
+		iDrive.applyDoubleRequest(driveVoltageRequest.withSetPoint(voltage));
 	}
 
 }

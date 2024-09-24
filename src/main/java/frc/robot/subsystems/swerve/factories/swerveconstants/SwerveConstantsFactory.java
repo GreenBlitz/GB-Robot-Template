@@ -6,16 +6,16 @@ import frc.robot.subsystems.swerve.SwerveName;
 
 public class SwerveConstantsFactory {
 
-	public static SwerveConstants create(SwerveName swerveName) {
-		return switch (swerveName) {
-			case SWERVE -> createSwerveConstants();
-		};
-	}
-
 	private static SwerveConstants createSwerveConstants() {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealSwerveConstants.getSwerveConstants(SwerveName.SWERVE);
 			case SIMULATION -> SimulationSwerveConstants.getSwerveConstants(SwerveName.SWERVE);
+		};
+	}
+
+	public static SwerveConstants create(SwerveName swerveName) {
+		return switch (swerveName) {
+			case SWERVE -> createSwerveConstants();
 		};
 	}
 

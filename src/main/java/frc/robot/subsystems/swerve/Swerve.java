@@ -39,7 +39,8 @@ public class Swerve extends GBSubsystem {
 	private final SwerveConstants constants;
 	private final Modules modules;
 	private final IGyro gyro;
-	private final InputSignal<Rotation2d> gyroYawSignal;
+	private final GyroStuff gyroStuff;
+
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
 
@@ -48,14 +49,14 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 
 
-	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, InputSignal<Rotation2d> gyroYawSignal) {
+	public Swerve(SwerveConstants constants, Modules modules, GyroStuff gyroStuff) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
 		this.modules = modules;
-		this.gyro = gyro;
-		this.gyroYawSignal = gyroYawSignal;
+		this.gyro = gyroStuff.gyro();
+		this.gyroStuff = gyroStuff;
 
 		this.headingSupplier = this::getAbsoluteHeading;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
@@ -64,8 +65,7 @@ public class Swerve extends GBSubsystem {
 
 		updateInputs();
 
-		AlertManager
-			.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.gyroLogPath() + "GyroDisconnectedAt", () -> !gyro.isConnected()));
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.gyroLogPath() + "GyroDisconnectedAt", () -> !gyro.isConnected()));
 	}
 
 	protected Modules getModules() {
@@ -112,7 +112,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateSignals(gyroYawSignal);
+		gyro.updateSignals(gyroStuff.yawSignal());
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -147,7 +147,7 @@ public class Swerve extends GBSubsystem {
 			if (Robot.ROBOT_TYPE.isSimulation()) {
 				updateGyroSimulation();
 			}
-			gyro.updateSignals(gyroYawSignal);
+			gyro.updateSignals(gyroStuff.yawSignal());
 			modules.logStatus();
 		}
 		ODOMETRY_LOCK.unlock();
@@ -176,7 +176,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(gyroYawSignal.asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(gyroStuff.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryObservation[] getAllOdometryObservations() {
@@ -186,7 +186,7 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelsPositions(i),
-				gyroYawSignal.asArray()[i],
+					gyroStuff.yawSignal().asArray()[i],
 				Timer.getFPGATimestamp() // TODO
 			);
 		}
@@ -196,7 +196,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(gyroYawSignal.getLatestValue().getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 
@@ -226,7 +226,8 @@ public class Swerve extends GBSubsystem {
 		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
 		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
 		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
-			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
+			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(),
+					targetPose.getRotation().getDegrees())
 		);
 
 		ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(

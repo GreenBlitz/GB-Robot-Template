@@ -5,11 +5,17 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
+import frc.robot.hardware.angleencoder.CANCoderEncoder;
+import frc.robot.hardware.gyro.phoenix6.Pigeon2Gyro;
+import frc.robot.hardware.gyro.phoenix6.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.PhoenixProUtils;
 import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+import frc.robot.subsystems.swerve.GyroStuff;
+import frc.robot.subsystems.swerve.modules.stuffs.EncoderStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
@@ -17,7 +23,7 @@ class EncoderRealConstants {
 
 	private static final int APPLY_CONFIG_RETRIES = 10;
 
-	protected static CANcoderConfiguration generateEncoderConfig() {
+	private static CANcoderConfiguration generateEncoderConfig() {
 		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
 		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
@@ -26,36 +32,20 @@ class EncoderRealConstants {
 		return encoderConfig;
 	}
 
-	public static class EncoderCreator {
-
-		private final CANcoder cancoder;
-		private final Phoenix6AngleSignal positionSignal;
-
-		private EncoderCreator(Phoenix6DeviceID encoderDeviceID) {
-			this.cancoder = new CANcoder(encoderDeviceID.ID(), encoderDeviceID.busChain().getChainName());
-			this.positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(cancoder.getPosition(), 50, AngleUnit.ROTATIONS);
+	protected static EncoderStuff generateEncoderStuff(String logPath, Phoenix6DeviceID encoderDeviceID) {
+		CANcoder cancoder = new CANcoder(encoderDeviceID.ID(), encoderDeviceID.busChain().getChainName());
+		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+		cancoder.getConfigurator().refresh(magnetSensorConfigs);
+		CANcoderConfiguration caNcoderConfiguration = generateEncoderConfig();
+		caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
+		if (!PhoenixProUtils.checkWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
 		}
 
-		public CANcoder getCANcoderWithConfig(String logPath) {
-			MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
-			cancoder.getConfigurator().refresh(magnetSensorConfigs);
-			CANcoderConfiguration caNcoderConfiguration = generateEncoderConfig();
-			caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-			if (!PhoenixProUtils.checkWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
-				new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
-			}
-			return cancoder;
-		}
+		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(cancoder.getPosition(),
+				GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
-		public Phoenix6AngleSignal getPositionSignal() {
-			return positionSignal;
-		}
-
+		return new EncoderStuff(new CANCoderEncoder(logPath, cancoder), positionSignal);
 	}
-
-	protected static final EncoderCreator FRONT_LEFT = new EncoderCreator(IDs.CANCodersIDs.FRONT_LEFT_ENCODER);
-	protected static final EncoderCreator FRONT_RIGHT = new EncoderCreator(IDs.CANCodersIDs.FRONT_RIGHT_ENCODER);
-	protected static final EncoderCreator BACK_LEFT = new EncoderCreator(IDs.CANCodersIDs.BACK_LEFT_ENCODER);
-	protected static final EncoderCreator BACK_RIGHT = new EncoderCreator(IDs.CANCodersIDs.BACK_RIGHT_ENCODER);
 
 }

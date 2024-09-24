@@ -6,6 +6,7 @@ import frc.robot.hardware.gyro.EmptyGyro;
 import frc.robot.hardware.gyro.IGyro;
 import frc.robot.hardware.gyro.phoenix6.Pigeon2Gyro;
 import frc.robot.hardware.signal.InputSignal;
+import frc.robot.subsystems.swerve.GyroStuff;
 import frc.robot.subsystems.swerve.SwerveName;
 
 public class GyroFactory {
@@ -23,6 +24,14 @@ public class GyroFactory {
 			case REAL -> RealGyroConstants.GYRO.getYawSignal();
 			case SIMULATION -> null;// TODO
 		};
+	}
+
+	public static GyroStuff create(SwerveName swerveName){
+		String logPath = swerveName.getLogPath() + "Gyro";
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> ;
+			case SIMULATION -> new GyroStuff(new EmptyGyro(logPath), new )
+		}
 	}
 
 }

@@ -8,7 +8,7 @@ public class VisionConstants {
 		"VisionObservationFiltered/",
 		"LimelightsHardware/",
 		Rotation2d.fromDegrees(20), // ! shall be calibrated
-		0.2, // ! shall be calibrated
+		1.2, // ! shall be calibrated
 		new String[] {"limelight-front", "limelight-back"}
 	);
 

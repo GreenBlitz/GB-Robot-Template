@@ -22,7 +22,8 @@ public class SuperStructure {
 
 	public void periodic() {
 		swerve.wrapperPeriodic();
-		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations(),visionObservationFiltered.getFilteredVisionObservations());
+//		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations(),visionObservationFiltered.getFilteredVisionObservations());
+		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
 	}
 
 

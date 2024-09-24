@@ -11,7 +11,6 @@ import frc.robot.Robot;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
-import frc.robot.hardware.signal.InputSignal;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.structures.SuperStructureConstants;
 import frc.robot.subsystems.swerve.modules.Modules;
@@ -65,7 +64,8 @@ public class Swerve extends GBSubsystem {
 
 		updateInputs();
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.gyroLogPath() + "GyroDisconnectedAt", () -> !gyro.isConnected()));
+		AlertManager
+			.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.gyroLogPath() + "GyroDisconnectedAt", () -> !gyro.isConnected()));
 	}
 
 	protected Modules getModules() {
@@ -186,7 +186,7 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelsPositions(i),
-					gyroStuff.yawSignal().asArray()[i],
+				gyroStuff.yawSignal().asArray()[i],
 				Timer.getFPGATimestamp() // TODO
 			);
 		}
@@ -226,8 +226,7 @@ public class Swerve extends GBSubsystem {
 		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
 		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
 		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
-			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(),
-					targetPose.getRotation().getDegrees())
+			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
 		);
 
 		ChassisSpeeds targetFieldRelativeSpeeds = new ChassisSpeeds(

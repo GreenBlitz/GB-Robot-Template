@@ -72,7 +72,8 @@ public class Module {
 		updateInputs();
 		resetByEncoder();
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.logPath() + "EncoderDisconnectAt", () -> !encoder.isConnected()));
+		AlertManager
+			.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.logPath() + "EncoderDisconnectAt", () -> !encoder.isConnected()));
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.logPath() + "SteerDisconnectAt", () -> !steer.isConnected()));
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.logPath() + "DriveDisconnectAt", () -> !drive.isConnected()));
 	}
@@ -255,7 +256,7 @@ public class Module {
 		setClosedLoop(true);
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtils
-				.getCoupledAngle(targetVelocityPerSecond, steerStuff.velocitySignal().getLatestValue(), constants.couplingRatio());
+			.getCoupledAngle(targetVelocityPerSecond, steerStuff.velocitySignal().getLatestValue(), constants.couplingRatio());
 		drive.applyAngleRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
 	}
 

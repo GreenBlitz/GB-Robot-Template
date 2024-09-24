@@ -1,4 +1,3 @@
-
 package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.CANBus;

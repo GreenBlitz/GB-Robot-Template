@@ -8,6 +8,7 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public class PhotonVisionCamera extends GBSubsystem {
@@ -30,16 +31,16 @@ public class PhotonVisionCamera extends GBSubsystem {
 
 	public Optional<PhotonVisionTargetRawData> getBestTargetData() {
 		PhotonPipelineResult pipelineResult = camera.getLatestResult();
-		PhotonTrackedTarget bestTarget = pipelineResult.getBestTarget();
-		if (bestTarget == null) {
+		Optional<PhotonTrackedTarget> bestTarget = Optional.of(pipelineResult.getBestTarget());
+		if (bestTarget.isEmpty()) {
 			return Optional.empty();
 		}
-		Optional<Pose3d> targetPose = calculateTargetPose(bestTarget);
+		Optional<Pose3d> targetPose = calculateTargetPose(bestTarget.get());
 		if (targetPose.isEmpty()) {
 			return Optional.empty();
 		}
 		double latency = pipelineResult.getLatencyMillis();
-		double ambiguity = bestTarget.getPoseAmbiguity();
+		double ambiguity = bestTarget.get().getPoseAmbiguity();
 		double timestamp = pipelineResult.getTimestampSeconds();
 		return Optional.of(new PhotonVisionTargetRawData(camera.getName(), targetPose.get(), timestamp, ambiguity, latency));
 	}

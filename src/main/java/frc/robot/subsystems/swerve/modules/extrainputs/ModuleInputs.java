@@ -10,6 +10,5 @@ public class ModuleInputs {
 	public boolean isAtTargetVelocity = true;
 	public boolean isClosedLoop = true;
 	public SwerveModuleState targetState = new SwerveModuleState();
-	public double[] driveDistanceMeters = new double[0];
 
 }

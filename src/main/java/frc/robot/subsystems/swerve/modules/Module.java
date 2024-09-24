@@ -66,24 +66,24 @@ public class Module {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				constants.logPath() + "SteerDisconnectAt",
-				() -> !moduleInputsContainer.getSteerMotorInputs().isConnected
+				() -> !iSteer.isConnected()
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				constants.logPath() + "DriveDisconnectAt",
-				() -> !moduleInputsContainer.getDriveMotorInputs().isConnected
+				() -> !iDrive.isConnected()
 			)
 		);
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
-		return iSteer.getSysIdConfigInfo();
+		return iSteer.getSysidConfigInfo();
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {
-		return iDrive.getSysIdConfigInfo();
+		return iDrive.getSysidConfigInfo();
 	}
 
 	public double toDriveMeters(Rotation2d angle) {

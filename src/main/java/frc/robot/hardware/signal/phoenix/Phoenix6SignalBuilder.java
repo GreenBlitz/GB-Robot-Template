@@ -30,10 +30,10 @@ public class Phoenix6SignalBuilder {
 
 	//@formatter:off
 	public static Phoenix6LatencySignal generatePhoenix6Signal(
-            StatusSignal<Double> signal,
-            SignalGetter signalSlope,
-            double frequency,
-            AngleUnit angleUnit
+		StatusSignal<Double> signal,
+		SignalGetter signalSlope,
+		double frequency,
+		AngleUnit angleUnit
     ) {
 		StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
 		setFrequencyWithRetry(signalSlope.getSignal(), frequency);
@@ -44,10 +44,10 @@ public class Phoenix6SignalBuilder {
 	 * Use only if not fetching the slope signal!!!
 	 */
 	public static Phoenix6BothLatencySignal generatePhoenix6Signal(
-			StatusSignal<Double> signal,
-			StatusSignal<Double> signalSlope,
-			double frequency,
-			AngleUnit angleUnit
+		StatusSignal<Double> signal,
+		StatusSignal<Double> signalSlope,
+		double frequency,
+		AngleUnit angleUnit
 	) {
 		StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
 		StatusSignal<Double> signalSlopeClone = cloneWithFrequency(signalSlope, frequency);

@@ -55,24 +55,24 @@ public enum BusChain {
 			)
 		);
 		AlertManager.addAlert(
-				new PeriodicAlert(
-						Alert.AlertType.WARNING,
-						logPath + "TransmitErrorsAt",
-						() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
-				)
-		);
-		AlertManager.addAlert(
 			new PeriodicAlert(
-					Alert.AlertType.ERROR,
-					logPath + "DisconnectedAt",
-					() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+				Alert.AlertType.WARNING,
+				logPath + "TransmitErrorsAt",
+				() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
-					Alert.AlertType.ERROR,
-					logPath + "FullAt",
-					() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
+				Alert.AlertType.ERROR,
+				logPath + "DisconnectedAt",
+				() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+			)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "FullAt",
+				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
 			)
 		);
 		//@formatter:on

@@ -3,6 +3,7 @@ package frc.robot.poseestimator.photonvision.photonvisionfilters;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.poseestimator.photonvision.CameraConfiguration;
 import frc.robot.poseestimator.photonvision.PhotonVisionTargetRawData;
@@ -37,8 +38,7 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 
 	private boolean isAprilTagWithinRange(PhotonVisionTargetRawData targetData) {
 		double height = targetData.targetPose().getZ();
-		return PhotonVisionConstants.APRIL_TAG_MINIMUM_HEIGHT <= height
-			&& PhotonVisionConstants.APRIL_TAG_MAXIMUM_HEIGHT >= height;
+		return Math.abs(Field.APRIL_TAG_HEIGHT_METERS - height) <= PhotonVisionConstants.APRIL_TAG_HEIGHT_TOLERANCE;
 	}
 
 	private static double[] getStandardDeviations(PhotonVisionTargetRawData targetData) {

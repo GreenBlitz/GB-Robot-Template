@@ -23,8 +23,7 @@ public class TalonFXWrapper extends TalonFX {
 
 
 	/**
-	 * Performs latency compensation on signal using the signalSlope and signal's latency to determine the magnitude of
-	 * compensation.
+	 * Performs latency compensation on signal using the signalSlope and signal's latency to determine the magnitude of compensation.
 	 */
 	private double getLatencyCompensatedValue(StatusSignal<Double> value, StatusSignal<Double> valueSlope) {
 		return BaseStatusSignal.getLatencyCompensatedValue(value, valueSlope);

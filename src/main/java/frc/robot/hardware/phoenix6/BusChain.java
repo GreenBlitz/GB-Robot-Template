@@ -47,7 +47,6 @@ public enum BusChain {
 				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
 			)
         );
-		//@formatter:on
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
@@ -55,14 +54,28 @@ public enum BusChain {
 				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
 			)
 		);
-		AlertManager
-			.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, logPath + "TransmitErrorsAt", () -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS));
 		AlertManager.addAlert(
-			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT)
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "TransmitErrorsAt",
+						() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
+				)
 		);
 		AlertManager.addAlert(
-			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "FullAt", () -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT)
+			new PeriodicAlert(
+					Alert.AlertType.ERROR,
+					logPath + "DisconnectedAt",
+					() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+			)
 		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+					Alert.AlertType.ERROR,
+					logPath + "FullAt",
+					() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
+			)
+		);
+		//@formatter:on
 	}
 
 	public String getChainName() {

@@ -4,9 +4,7 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.hardware.motor.Controllable;
 import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
@@ -16,9 +14,9 @@ import java.util.function.BiFunction;
 
 public class BrushlessSparkMAXMotor extends SparkMaxMotor implements ControllableMotor {
 
-	protected final CANSparkMax motor;
-	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
-	protected final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
+	private final CANSparkMax motor;
+	private final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
+	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
 
 	public BrushlessSparkMAXMotor(
 		CANSparkMax motor,
@@ -26,7 +24,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 		SysIdRoutine.Config sysidConfig,
 		String logPath
 	) {
-		super(motor, logPath);
+		super(logPath, motor);
 		if (motor.getMotorType() != CANSparkLowLevel.MotorType.kBrushless) {
 			throw new IllegalArgumentException("inserted brushed sparkmax motor to brushless!");
 		}

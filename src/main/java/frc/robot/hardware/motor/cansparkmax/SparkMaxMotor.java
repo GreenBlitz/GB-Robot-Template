@@ -11,18 +11,17 @@ import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 
-
 public abstract class SparkMaxMotor implements IMotor {
 
-	protected final CANSparkMax motor;
-	protected final String logPath;
+	private final CANSparkMax motor;
+	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
 
-	public SparkMaxMotor(CANSparkMax motor, String logPath) {
-		this.motor = motor;
+	public SparkMaxMotor(String logPath, CANSparkMax motor) {
 		this.logPath = logPath;
+		this.motor = motor;
 
-		connectedInput = new ConnectedInputAutoLogged();
+		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, logPath + "disconnectedAt", () -> !isConnected()));
@@ -47,11 +46,12 @@ public abstract class SparkMaxMotor implements IMotor {
 	@Override
 	public void updateSignals(InputSignal... signals) {
 		for (InputSignal signal : signals) {
-			if(signal instanceof ISparkMaxSignal){
+			if (signal instanceof ISparkMaxSignal) {
 				Logger.processInputs(logPath, signal);
 			}
 		}
 		connectedInput.connected = motor.getBusVoltage() > 0;
+		Logger.processInputs(logPath, connectedInput);
 	}
 
 	@Override

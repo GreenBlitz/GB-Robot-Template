@@ -4,20 +4,10 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.motor.cansparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
-import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
 import frc.robot.simulation.SimulationManager;
-import frc.utils.AngleUnit;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
@@ -27,9 +17,9 @@ import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
- * TimedRobot documentation. If you change the name of this class or the package after creating this project, you must also update
- * the build.gradle file in the project.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after creating this project, you must also update the build.gradle file in
+ * the project.
  */
 public class RobotManager extends LoggedRobot {
 

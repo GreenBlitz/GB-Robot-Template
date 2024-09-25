@@ -38,7 +38,6 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		motor.setPosition(position.getRotations());
 	}
 
-
 	@Override
 	public void stop() {
 		motor.stopMotor();
@@ -48,7 +47,6 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	public void setPower(double power) {
 		motor.set(power);
 	}
-
 
 	@Override
 	public void applyDoubleRequest(IRequest<Double> request) {

@@ -42,10 +42,10 @@ class DriveRealConstants {
 		);
 	}
 
-	private static TalonFXConfiguration generateMotorConfig() {
+	private static TalonFXConfiguration generateMotorConfig(boolean inverted) {
 		TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
-		driveConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+		driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;;
 		driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 		driveConfig.Feedback.SensorToMechanismRatio = 6.12;
 
@@ -64,12 +64,12 @@ class DriveRealConstants {
 		return driveConfig;
 	}
 
-	protected static DriveStuff generateDriveStuff(String logPath, Phoenix6DeviceID deviceID) {
+	protected static DriveStuff generateDriveStuff(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
 		Phoenix6AngleRequest velocityRequest = new Phoenix6AngleRequest(new VelocityVoltage(0).withEnableFOC(true));
 		Phoenix6DoubleRequest voltageRequest = new Phoenix6DoubleRequest(new VoltageOut(0).withEnableFOC(true));
 
 		TalonFXWrapper motor = new TalonFXWrapper(deviceID);
-		if (!motor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
+		if (!motor.applyConfiguration(generateMotorConfig(inverted), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
 		}
 

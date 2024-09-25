@@ -42,8 +42,8 @@ public class SysIdCalibrator {
 	}
 
 	/**
-	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You
-	 * must do SignalLogger.stop() at the end of the calibration
+	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You must do
+	 * SignalLogger.stop() at the end of the calibration
 	 *
 	 * @param smartJoystick - the joystick to apply the buttons on
 	 */

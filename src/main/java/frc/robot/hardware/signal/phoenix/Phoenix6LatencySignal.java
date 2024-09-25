@@ -11,12 +11,7 @@ public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6Signal
 	private final StatusSignal<Double> signal;
 	protected final StatusSignal<Double> slopeSignal;
 
-	protected Phoenix6LatencySignal(
-		String name,
-		StatusSignal<Double> signal,
-		StatusSignal<Double> slopeSignal,
-		AngleUnit angleUnit
-	) {
+	protected Phoenix6LatencySignal(String name, StatusSignal<Double> signal, StatusSignal<Double> slopeSignal, AngleUnit angleUnit) {
 		super(name, angleUnit);
 		this.signal = signal;
 		this.slopeSignal = slopeSignal;

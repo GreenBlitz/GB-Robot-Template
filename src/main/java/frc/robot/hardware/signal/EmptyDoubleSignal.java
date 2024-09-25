@@ -5,11 +5,11 @@ import org.littletonrobotics.junction.LogTable;
 public class EmptyDoubleSignal implements InputSignal<Double> {
 
 	private final String name;
-    private double defaultValue;
+	private double defaultValue;
 
-    public EmptyDoubleSignal(String name, Double defaultValue) {
-        this.name = name;
-        this.defaultValue = defaultValue;
+	public EmptyDoubleSignal(String name, Double defaultValue) {
+		this.name = name;
+		this.defaultValue = defaultValue;
 	}
 
 	@Override
@@ -34,12 +34,12 @@ public class EmptyDoubleSignal implements InputSignal<Double> {
 
 	@Override
 	public void toLog(LogTable table) {
-        table.put(name, defaultValue);
-    }
+		table.put(name, defaultValue);
+	}
 
 	@Override
 	public void fromLog(LogTable table) {
-        defaultValue = table.get(name, defaultValue);
-    }
+		defaultValue = table.get(name, defaultValue);
+	}
 
 }

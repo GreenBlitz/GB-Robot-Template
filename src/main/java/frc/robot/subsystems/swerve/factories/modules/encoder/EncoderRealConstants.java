@@ -6,15 +6,11 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.constants.GlobalConstants;
-import frc.robot.constants.IDs;
 import frc.robot.hardware.angleencoder.CANCoderEncoder;
-import frc.robot.hardware.gyro.phoenix6.Pigeon2Gyro;
-import frc.robot.hardware.gyro.phoenix6.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.PhoenixProUtils;
 import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import frc.robot.subsystems.swerve.GyroStuff;
 import frc.robot.subsystems.swerve.modules.stuffs.EncoderStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
@@ -42,8 +38,8 @@ class EncoderRealConstants {
 			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
 		}
 
-		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(cancoder.getPosition(),
-				GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
+			.generatePhoenix6Signal(cancoder.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
 		return new EncoderStuff(new CANCoderEncoder(logPath, cancoder), positionSignal);
 	}

@@ -9,14 +9,14 @@ import frc.robot.subsystems.swerve.SwerveName;
 
 public class GyroFactory {
 
-	private static GyroStuff createSwerveGyroStuff(String logPath){
+	private static GyroStuff createSwerveGyroStuff(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealGyroConstants.generateGyroStuff(logPath);
 			case SIMULATION -> new GyroStuff(new EmptyGyro(logPath), new EmptyAngleSignal("yaw", new Rotation2d()));
 		};
 	}
 
-	public static GyroStuff create(SwerveName swerveName){
+	public static GyroStuff create(SwerveName swerveName) {
 		return switch (swerveName) {
 			case SWERVE -> createSwerveGyroStuff(swerveName.getLogPath() + "Gyro/");
 		};

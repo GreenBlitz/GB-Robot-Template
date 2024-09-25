@@ -22,7 +22,7 @@ public class SteerFactory {
 	}
 
 	public static SteerStuff create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
-		String logPath = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Steer";
+		String logPath = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Steer/";
 		return switch (swerveName) {
 			case SWERVE -> createSwerveSteer(logPath, modulePosition);
 		};

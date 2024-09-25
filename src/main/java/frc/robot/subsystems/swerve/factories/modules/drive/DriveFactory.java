@@ -1,31 +1,30 @@
 package frc.robot.subsystems.swerve.factories.modules.drive;
 
 import frc.robot.Robot;
+import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.drive.IDrive;
-import frc.robot.subsystems.swerve.modules.drive.simulation.SimulationDrive;
-import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDrive;
+import frc.robot.subsystems.swerve.modules.stuffs.DriveStuff;
 
 public class DriveFactory {
 
-	public static IDrive create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
-		return switch (swerveName) {
-			case SWERVE -> createSwerveDrive(modulePosition);
+	private static DriveStuff createSwerveDrive(String logPath, ModuleUtils.ModulePosition modulePosition) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> switch (modulePosition) {
+				case FRONT_LEFT -> DriveRealConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR);
+				case FRONT_RIGHT -> DriveRealConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR);
+				case BACK_LEFT -> DriveRealConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR);
+				case BACK_RIGHT -> DriveRealConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR);
+			};
+			case SIMULATION -> new SimulationDrive(DriveSimulationConstants.getDriveConstants());//TODO
 		};
 	}
 
-	private static IDrive createSwerveDrive(ModuleUtils.ModulePosition modulePosition) {
-		String logPathPrefix = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT -> new TalonFXDrive(DriveRealConstants.FRONT_LEFT_CONSTANTS(logPathPrefix));
-				case FRONT_RIGHT -> new TalonFXDrive(DriveRealConstants.FRONT_RIGHT_CONSTANTS(logPathPrefix));
-				case BACK_LEFT -> new TalonFXDrive(DriveRealConstants.BACK_LEFT_CONSTANTS(logPathPrefix));
-				case BACK_RIGHT -> new TalonFXDrive(DriveRealConstants.BACK_RIGHT_CONSTANTS(logPathPrefix));
-			};
-			case SIMULATION -> new SimulationDrive(DriveSimulationConstants.getDriveConstants());
+	public static DriveStuff create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
+		String logPath = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Drive/";
+		return switch (swerveName) {
+			case SWERVE -> createSwerveDrive(logPath, modulePosition);
 		};
 	}
 

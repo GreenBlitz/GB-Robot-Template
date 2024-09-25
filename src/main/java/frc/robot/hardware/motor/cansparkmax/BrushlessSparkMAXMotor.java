@@ -10,26 +10,18 @@ import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
-import java.util.function.BiFunction;
 
 public class BrushlessSparkMAXMotor extends SparkMaxMotor implements ControllableMotor {
 
 	private final CANSparkMax motor;
-	private final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
 
-	public BrushlessSparkMAXMotor(
-		CANSparkMax motor,
-		BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward,
-		SysIdRoutine.Config sysidConfig,
-		String logPath
-	) {
+	public BrushlessSparkMAXMotor(CANSparkMax motor, SysIdRoutine.Config sysidConfig, String logPath) {
 		super(logPath, motor);
 		if (motor.getMotorType() != CANSparkLowLevel.MotorType.kBrushless) {
-			throw new IllegalArgumentException("inserted brushed sparkmax motor to brushless!");
+			throw new IllegalArgumentException("\"inserted BrushedSparkMAXMotor to BrushlessSparkMAXMotor!\"");
 		}
 		this.motor = motor;
-		this.feedforward = feedforward;
 		this.sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, false);
 	}
 

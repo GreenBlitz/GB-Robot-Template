@@ -24,7 +24,18 @@ public abstract class SparkMaxMotor implements IMotor {
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, logPath + "disconnectedAt", () -> !isConnected()));
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
+	}
+
+	@Override
+	public void updateSignals(InputSignal... signals) {
+		for (InputSignal signal : signals) {
+			if (signal instanceof ISparkMaxSignal) {
+				Logger.processInputs(logPath, signal);
+			}
+		}
+		connectedInput.connected = motor.getBusVoltage() > 0;
+		Logger.processInputs(logPath, connectedInput);
 	}
 
 	@Override
@@ -41,17 +52,6 @@ public abstract class SparkMaxMotor implements IMotor {
 	@Override
 	public void setPower(double power) {
 		motor.set(power);
-	}
-
-	@Override
-	public void updateSignals(InputSignal... signals) {
-		for (InputSignal signal : signals) {
-			if (signal instanceof ISparkMaxSignal) {
-				Logger.processInputs(logPath, signal);
-			}
-		}
-		connectedInput.connected = motor.getBusVoltage() > 0;
-		Logger.processInputs(logPath, connectedInput);
 	}
 
 	@Override

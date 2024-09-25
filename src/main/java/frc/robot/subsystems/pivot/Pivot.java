@@ -13,11 +13,9 @@ public class Pivot extends GBSubsystem {
     private final InputSignal[] inputSignals;
     private final IRequest<Rotation2d> positionRequest;
     private final InputSignal<Rotation2d> positionSignal;
-    private final String logPath;
 
     public Pivot(
             String logPath,
-            String name,
             ControllableMotor motor,
             IRequest<Rotation2d> positionRequest,
             InputSignal<Rotation2d> positionSignal,
@@ -26,7 +24,6 @@ public class Pivot extends GBSubsystem {
         super(logPath);
         this.positionSignal = positionSignal;
 
-        this.logPath = logPath;
         this.motor = motor;
         this.inputSignals = inputSignals;
         this.positionRequest = positionRequest;

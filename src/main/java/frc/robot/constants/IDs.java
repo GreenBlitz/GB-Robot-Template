@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
@@ -10,4 +12,8 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
+	public static class TalonFXs{
+		public static final Phoenix6DeviceID RIGHT_FLYWHEEL = new Phoenix6DeviceID(1, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID LEFT_FLYWHEEL = new Phoenix6DeviceID(1, BusChain.ROBORIO);
+	}
 }

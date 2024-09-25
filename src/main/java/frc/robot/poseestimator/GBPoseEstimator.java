@@ -143,12 +143,14 @@ public class GBPoseEstimator implements IPoseEstimator {
 		double rotationDeviationSum = 0;
 
 		for (VisionObservation observation : observations) {
-			positionDeviationSum += observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()];
-			rotationDeviationSum += observation.standardDeviations()[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()];
+			double positionWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
+			double rotationWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
+			positionDeviationSum += positionWeight;
+			rotationDeviationSum += rotationWeight;
 			output = new Pose2d(
-					output.getX() + observation.visionPose().getX(),
-					output.getY() + observation.visionPose().getY(),
-					output.getRotation().plus(observation.visionPose().getRotation())
+					output.getX() + observation.visionPose().getX() * positionWeight,
+					output.getY() + observation.visionPose().getY() * positionWeight,
+					output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
 			);
 		}
 

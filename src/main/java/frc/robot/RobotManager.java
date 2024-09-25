@@ -14,6 +14,7 @@ import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.motor.cansparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.AngleUnit;
@@ -35,19 +36,11 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 
 	private Robot robot;
-	private ControllableMotor sparkmax;
-	private SparkMaxAngleSignal position;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
-
-		CANSparkMax motor = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
-		position = new SparkMaxAngleSignal("positoin", () -> motor.getEncoder().getPosition(), AngleUnit.RADIANS);
-		sparkmax = new BrushlessSparkMAXMotor(motor,(a,b) -> {return Rotation2d.fromRotations(0);},new SysIdRoutine.Config(), "loggg");
-
-		motor.getPIDController().setP(2);
 
 		this.robot = new Robot();
 	}
@@ -80,8 +73,6 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		sparkmax.resetPosition(new Rotation2d());
-		sparkmax.setBrake(true);
 	}
 
 	@Override
@@ -91,9 +82,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-
-		sparkmax.applyAngleRequest(new SparkMaxAngleRequest(Rotation2d.fromRotations(10), SparkMaxAngleRequest.SparkAngleRequestType.POSITION,0));
-		sparkmax.updateSignals(position);
 	}
 
 	@Override

@@ -73,8 +73,8 @@ public class VisionObservationFiltered extends GBSubsystem {
 		return aprilTagHeightConfidence <= VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
 	}
 
-	private boolean isRobotFlying(LimelightRawData limelightRawData) {
-		return limelightRawData.estimatedPose().getY() <= VisionConstants.ROBOT_FLYING_TOLERANCE;
+	private boolean isRobotOnGround(LimelightRawData limelightRawData) {
+		return limelightRawData.estimatedPose().getY() <= VisionConstants.ROBOT_TO_GROUND_TOLERANCE;
 	}
 
 	private boolean keepLimelightData(LimelightRawData limelightRawData) {
@@ -82,7 +82,7 @@ public class VisionObservationFiltered extends GBSubsystem {
 			&& isLimelightOutputInTolerance(limelightRawData)
 			&& isRollZero(limelightRawData)
 			&& isPitchZero(limelightRawData)
-			&& !isRobotFlying(limelightRawData);
+			&& isRobotOnGround(limelightRawData);
 	}
 
 	public void logEstimatedPositions() {

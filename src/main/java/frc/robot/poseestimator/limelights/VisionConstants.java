@@ -21,7 +21,7 @@ public class VisionConstants {
 
 	public static final Rotation2d ROLL_TOLERANCE = Rotation2d.fromDegrees(10); // ! Shall be calibrated
 
-	public static final double ROBOT_FLYING_TOLERANCE = 0.2; // ! Shall be calibrated
+	public static final double ROBOT_TO_GROUND_TOLERANCE = 0.2; // ! Shall be calibrated
 
 	public final static double APRIL_TAG_DISTANCE_TO_STANDARD_DEVIATIONS_FACTOR = 10;
 

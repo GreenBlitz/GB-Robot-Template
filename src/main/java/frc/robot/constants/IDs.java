@@ -10,4 +10,8 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
+	public static class CANSparkMaxes{
+		public static final int FUNNEL_ID = 1;
+	}
+
 }

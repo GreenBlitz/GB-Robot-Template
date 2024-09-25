@@ -2,20 +2,32 @@ package frc.robot.subsystems.swerve.factories.modules.steer;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.IDs;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.steer.talonfx.TalonFXSteerConstants;
+import frc.robot.constants.GlobalConstants;
+import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
+import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
+import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6LatencySignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+import frc.robot.subsystems.swerve.modules.stuffs.SteerStuff;
+import frc.utils.AngleUnit;
+import frc.utils.alerts.Alert;
 
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 class SteerRealConstants {
 
-	private static final boolean ENABLE_FOC = true;
+	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -48,52 +60,24 @@ class SteerRealConstants {
 		return steerConfig;
 	}
 
-	protected static TalonFXSteerConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
-		return new TalonFXSteerConstants(
-			IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR,
-			true,
-			IDs.CANCodersIDs.FRONT_LEFT_ENCODER.ID(),
-			generateMotorConfig(),
-			ENABLE_FOC,
-			generateSysidConfig(),
-			logPathPrefix + ModuleUtils.ModulePosition.FRONT_LEFT + "/"
-		);
-	}
+	protected static SteerStuff generateSteerStuff(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID) {
+		Phoenix6AngleRequest positionRequest = new Phoenix6AngleRequest(new PositionVoltage(0).withEnableFOC(true));
+		Phoenix6DoubleRequest voltageRequest = new Phoenix6DoubleRequest(new VoltageOut(0).withEnableFOC(true));
 
-	protected static TalonFXSteerConstants FRONT_RIGHT_CONSTANTS(String logPathPrefix) {
-		return new TalonFXSteerConstants(
-			IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR,
-			true,
-			IDs.CANCodersIDs.FRONT_RIGHT_ENCODER.ID(),
-			generateMotorConfig(),
-			ENABLE_FOC,
-			generateSysidConfig(),
-			logPathPrefix + ModuleUtils.ModulePosition.FRONT_RIGHT + "/"
-		);
-	}
+		TalonFXWrapper motor = new TalonFXWrapper(deviceID);
+		TalonFXConfiguration configuration = generateMotorConfig();
+		configuration.Feedback.FeedbackRemoteSensorID = encoderID.ID();
+		if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
+		}
 
-	protected static TalonFXSteerConstants BACK_LEFT_CONSTANTS(String logPathPrefix) {
-		return new TalonFXSteerConstants(
-			IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR,
-			false,
-			IDs.CANCodersIDs.BACK_LEFT_ENCODER.ID(),
-			generateMotorConfig(),
-			ENABLE_FOC,
-			generateSysidConfig(),
-			logPathPrefix + ModuleUtils.ModulePosition.BACK_LEFT + "/"
-		);
-	}
+		TalonFXMotor steer = new TalonFXMotor(logPath, motor, generateSysidConfig());
+		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getPosition(), velocitySignal, GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
-	protected static TalonFXSteerConstants BACK_RIGHT_CONSTANTS(String logPathPrefix) {
-		return new TalonFXSteerConstants(
-			IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR,
-			true,
-			IDs.CANCodersIDs.BACK_RIGHT_ENCODER.ID(),
-			generateMotorConfig(),
-			ENABLE_FOC,
-			generateSysidConfig(),
-			logPathPrefix + ModuleUtils.ModulePosition.BACK_RIGHT + "/"
-		);
+		return new SteerStuff(steer, positionRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 
 }

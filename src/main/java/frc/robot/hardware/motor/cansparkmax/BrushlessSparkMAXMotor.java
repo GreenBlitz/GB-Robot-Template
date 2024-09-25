@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.Controllable;
+import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
@@ -13,7 +14,7 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 import java.util.function.BiFunction;
 
-public class BrushlessSparkMAXMotor extends SparkMaxMotor implements IMotor, Controllable {
+public class BrushlessSparkMAXMotor extends SparkMaxMotor implements ControllableMotor {
 
 	protected final CANSparkMax motor;
 	protected final BiFunction<Rotation2d, Rotation2d, Rotation2d> feedforward;

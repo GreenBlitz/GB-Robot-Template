@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.signal.cansparkmax.ISparkMaxSignal;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -46,7 +47,9 @@ public abstract class SparkMaxMotor implements IMotor {
 	@Override
 	public void updateSignals(InputSignal... signals) {
 		for (InputSignal signal : signals) {
-			Logger.processInputs(logPath, signal);
+			if(signal instanceof ISparkMaxSignal){
+				Logger.processInputs(logPath, signal);
+			}
 		}
 		connectedInput.connected = motor.getBusVoltage() > 0;
 	}

@@ -10,44 +10,46 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.hardware.motor.Controllable;
+import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.motor.cansparkmax.BrushlessSparkMAXMotor;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
-import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
-import frc.robot.hardware.signal.AngleSignal;
+import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.AngleUnit;
-import frc.utils.DriverStationUtils;
 import frc.utils.alerts.AlertManager;
+import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.brakestate.BrakeStateManager;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after creating this project, you must also update the build.gradle file in
- * the project.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
+ * TimedRobot documentation. If you change the name of this class or the package after creating this project, you must also update
+ * the build.gradle file in the project.
  */
 public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 
-//	private Robot robot;
-	private Controllable zbark;
-	private AngleSignal position;
+	private Robot robot;
+	private ControllableMotor sparkmax;
+	private SparkMaxAngleSignal position;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
 
-		CANSparkMax bldcmotor = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
-		zbark = new BrushlessSparkMAXMotor(bldcmotor,(a,b) -> {return Rotation2d.fromRadians(0)},new SysIdRoutine.Config(), "test motor");
+		CANSparkMax motor = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
+		position = new SparkMaxAngleSignal("positoin", () -> motor.getEncoder().getPosition(), AngleUnit.RADIANS);
+		sparkmax = new BrushlessSparkMAXMotor(motor,(a,b) -> {return Rotation2d.fromRotations(0);},new SysIdRoutine.Config(), "loggg");
 
-//		this.robot = new Robot();
+		motor.getPIDController().setP(2);
+
+		this.robot = new Robot();
 	}
 
 	@Override
@@ -66,19 +68,20 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-//		autonomousCommand = robot.getAutonomousCommand();
-//
-//		if (autonomousCommand != null) {
-//			autonomousCommand.schedule();
-//		}
+		autonomousCommand = robot.getAutonomousCommand();
+
+		if (autonomousCommand != null) {
+			autonomousCommand.schedule();
+		}
 	}
 
 	@Override
 	public void teleopInit() {
-//		if (autonomousCommand != null) {
-//			autonomousCommand.cancel();
-//		}
-		zbark.resetPosition(Rotation2d.fromRotations(10));
+		if (autonomousCommand != null) {
+			autonomousCommand.cancel();
+		}
+		sparkmax.resetPosition(new Rotation2d());
+		sparkmax.setBrake(true);
 	}
 
 	@Override
@@ -89,9 +92,8 @@ public class RobotManager extends LoggedRobot {
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
 
-		//todo - on run, comment out one of the below and run, and than run the other and comment out the other one
-		zbark.applyDoubleRequest(new SparkMaxDoubleRequest(10, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,0));
-//		zbark.applyAngleRequest(new SparkMaxAngleRequest(Rotation2d.fromRotations(5), SparkMaxAngleRequest.SparkAngleRequestType.POSITION,0));
+		sparkmax.applyAngleRequest(new SparkMaxAngleRequest(Rotation2d.fromRotations(10), SparkMaxAngleRequest.SparkAngleRequestType.POSITION,0));
+		sparkmax.updateSignals(position);
 	}
 
 	@Override

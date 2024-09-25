@@ -25,19 +25,24 @@ public class VisionObservationFiltered extends GBSubsystem {
 
 		for (LimelightRawData limelightRawData : limelightHardware.getAllAvailableLimelightData()) {
 			if (keepLimelightData(limelightRawData)) {
-				double standardTransformDeviation = getDynamicStandardTransformDeviations(limelightRawData);
-				double[] standardDeviations = new double[] {
-					standardTransformDeviation,
-					standardTransformDeviation,
-					VisionConstants.STANDARD_DEVIATION_VISION_ANGLE};
 
 				estimates.add(
-					new VisionObservation(limelightRawData.estimatedPose(), standardDeviations, limelightRawData.timestamp())
+					rawDataToObservation(limelightRawData)
 				);
 			}
 		}
 
 		return estimates;
+	}
+
+	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
+		double standardTransformDeviation = getDynamicStandardTransformDeviations(limelightRawData);
+		double[] standardDeviations = new double[] {
+				standardTransformDeviation,
+				standardTransformDeviation,
+				VisionConstants.STANDARD_DEVIATION_VISION_ANGLE};
+
+		return new VisionObservation(limelightRawData.estimatedPose().toPose2d(), standardDeviations, limelightRawData.timestamp());
 	}
 
 	private boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData) {

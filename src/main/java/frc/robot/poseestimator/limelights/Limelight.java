@@ -2,7 +2,9 @@ package frc.robot.poseestimator.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
@@ -33,7 +35,7 @@ public class Limelight extends GBSubsystem {
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 	}
 
-	public Optional<Pair<Pose2d, Double>> getUpdatedPose2DEstimation() {
+	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
 		int id = (int) aprilTagIdEntry.getInteger(-1);
 		if (id == -1) {
 			return Optional.empty();
@@ -42,10 +44,15 @@ public class Limelight extends GBSubsystem {
 		double processingLatencySeconds = robotPoseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()] / 1000;
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
-		Pose2d robotPose = new Pose2d(
+		Pose3d robotPose = new Pose3d(
 			getPoseInformation(LimelightEntryValue.X_AXIS),
 			getPoseInformation(LimelightEntryValue.Y_AXIS),
-			Rotation2d.fromDegrees(getPoseInformation(LimelightEntryValue.YAW_ANGLE))
+			getPoseInformation(LimelightEntryValue.Z_AXIS),
+			new Rotation3d(
+					getPoseInformation(LimelightEntryValue.ROLL_ANGLE),
+					getPoseInformation(LimelightEntryValue.PITCH_ANGLE),
+					getPoseInformation(LimelightEntryValue.YAW_ANGLE)
+			)
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}

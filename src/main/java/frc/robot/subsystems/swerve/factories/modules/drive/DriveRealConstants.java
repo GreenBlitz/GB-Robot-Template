@@ -18,8 +18,6 @@ import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6LatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.drive.talonfx.TalonFXDriveConstants;
 import frc.robot.subsystems.swerve.modules.stuffs.DriveStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;

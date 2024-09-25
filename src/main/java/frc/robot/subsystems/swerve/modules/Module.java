@@ -98,7 +98,7 @@ public class Module {
 			constants.couplingRatio()
 		);
 
-		driveInputs.uncoupledPositions = new Rotation2d[getNumberOfOdometrySamples()];
+		driveInputs.uncoupledPositions = new Rotation2d[driveStuff.positionSignal().asArray().length];
 		for (int i = 0; i < driveInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerStuff.positionSignal().asArray()[i].getRotations() - startingSteerAngle.getRotations());

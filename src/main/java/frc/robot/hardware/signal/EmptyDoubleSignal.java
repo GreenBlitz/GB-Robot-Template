@@ -23,6 +23,16 @@ public class EmptyDoubleSignal implements InputSignal<Double> {
 	}
 
 	@Override
+	public double getTimestamp() {
+		return 0;
+	}
+
+	@Override
+	public double[] getTimestamps() {
+		return new double[0];
+	}
+
+	@Override
 	public void toLog(LogTable table) {
         table.put(name, defaultValue);
     }

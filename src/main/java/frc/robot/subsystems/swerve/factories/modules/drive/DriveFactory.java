@@ -17,7 +17,7 @@ public class DriveFactory {
 				case BACK_LEFT -> DriveRealConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR, false);
 				case BACK_RIGHT -> DriveRealConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR, false);
 			};
-			case SIMULATION -> new SimulationDrive(DriveSimulationConstants.getDriveConstants());//TODO
+			case SIMULATION -> null;//TODO
 		};
 	}
 

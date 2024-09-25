@@ -25,10 +25,7 @@ public class VisionObservationFiltered extends GBSubsystem {
 
 		for (LimelightRawData limelightRawData : limelightHardware.getAllAvailableLimelightData()) {
 			if (keepLimelightData(limelightRawData)) {
-
-				estimates.add(
-					rawDataToObservation(limelightRawData)
-				);
+				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}
 
@@ -38,11 +35,15 @@ public class VisionObservationFiltered extends GBSubsystem {
 	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
 		double standardTransformDeviation = getDynamicStandardTransformDeviations(limelightRawData);
 		double[] standardDeviations = new double[] {
-				standardTransformDeviation,
-				standardTransformDeviation,
-				VisionConstants.STANDARD_DEVIATION_VISION_ANGLE};
+			standardTransformDeviation,
+			standardTransformDeviation,
+			VisionConstants.STANDARD_DEVIATION_VISION_ANGLE};
 
-		return new VisionObservation(limelightRawData.estimatedPose().toPose2d(), standardDeviations, limelightRawData.timestamp());
+		return new VisionObservation(
+			limelightRawData.estimatedPose().toPose2d(),
+			standardDeviations,
+			limelightRawData.timestamp()
+		);
 	}
 
 	private boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData) {
@@ -73,7 +74,10 @@ public class VisionObservationFiltered extends GBSubsystem {
 	}
 
 	private boolean keepLimelightData(LimelightRawData limelightRawData) {
-		return isAprilTagInProperHeight(limelightRawData) && isLimelightOutputInTolerance(limelightRawData) && isRollZero(limelightRawData) && isPitchZero(limelightRawData);
+		return isAprilTagInProperHeight(limelightRawData)
+			&& isLimelightOutputInTolerance(limelightRawData)
+			&& isRollZero(limelightRawData)
+			&& isPitchZero(limelightRawData);
 	}
 
 	public void logEstimatedPositions() {

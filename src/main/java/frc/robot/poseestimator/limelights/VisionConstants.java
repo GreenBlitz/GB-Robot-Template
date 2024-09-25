@@ -12,6 +12,10 @@ public class VisionConstants {
 		new String[] {"limelight-front", "limelight-back"}
 	);
 
+	public static final Rotation2d PITCH_TOLERANCE = Rotation2d.fromDegrees(10); // ! Shall be calibrated
+
+	public static final Rotation2d ROLL_TOLERANCE = Rotation2d.fromDegrees(10); // ! Shall be calibrated
+
 	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation";
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;

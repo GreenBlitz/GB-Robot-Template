@@ -55,7 +55,6 @@ public class Elbow extends GBSubsystem {
 	}
 
 	protected void setVoltage(double voltage) {
-		Logger.recordOutput("voltage", voltage);
 		motor.applyDoubleRequest(voltageRequest.withSetPoint(voltage));
 	}
 

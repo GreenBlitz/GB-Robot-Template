@@ -42,7 +42,6 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 				doubleRequest.getControlType(),
 				doubleRequest.getPidSlot()
 		);
-		Logger.recordOutput("targetttt" ,doubleRequest.getSetPoint());
 	}
 
 	@Override

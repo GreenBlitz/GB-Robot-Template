@@ -8,7 +8,8 @@ public class SingleJointedArmSimulation extends MotorSimulation {
 
 	private final SingleJointedArmSim armSimulation;
 
-	public SingleJointedArmSimulation(SingleJointedArmSim armSimulation) {
+	public SingleJointedArmSimulation(String logPath, SingleJointedArmSim armSimulation) {
+		super(logPath);
 		this.armSimulation = armSimulation;
 	}
 

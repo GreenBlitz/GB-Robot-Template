@@ -11,7 +11,8 @@ public class SimpleMotorSimulation extends MotorSimulation {
 
 	private final DCMotorSim motorSimulation;
 
-	public SimpleMotorSimulation(DCMotorSim motorSimulation) {
+	public SimpleMotorSimulation(String logPath, DCMotorSim motorSimulation) {
+		super(logPath);
 		this.motorSimulation = motorSimulation;
 	}
 

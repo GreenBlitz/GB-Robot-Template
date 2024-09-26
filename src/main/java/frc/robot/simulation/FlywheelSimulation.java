@@ -10,7 +10,8 @@ public class FlywheelSimulation extends MotorSimulation {
 
 	private double lastPositionRadians = 0;
 
-	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
+	public FlywheelSimulation(String logPath, FlywheelSim flywheelSimulation) {
+		super(logPath);
 		this.flywheelSimulation = flywheelSimulation;
 	}
 

@@ -11,7 +11,8 @@ public class ElevatorSimulation extends MotorSimulation {
 
 	private final double diameterMeters;
 
-	public ElevatorSimulation(ElevatorSim elevatorSimulation, double drumRadiusMeters) {
+	public ElevatorSimulation(String logPath, ElevatorSim elevatorSimulation, double drumRadiusMeters) {
+		super(logPath);
 		this.elevatorSimulation = elevatorSimulation;
 		this.diameterMeters = 2 * drumRadiusMeters;
 	}

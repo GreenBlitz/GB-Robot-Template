@@ -11,6 +11,6 @@ public record ElbowStuff(
 	IRequest<Double> voltageRequest,
 	InputSignal<Rotation2d> positionSignal,
 	InputSignal<Rotation2d> velocitySignal,
-	InputSignal<Rotation2d> currentSignal,
-	InputSignal<Rotation2d> voltageSignal
+	InputSignal<Double> currentSignal,
+	InputSignal<Double> voltageSignal
 ) {}

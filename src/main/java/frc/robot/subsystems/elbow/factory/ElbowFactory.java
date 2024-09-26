@@ -7,7 +7,7 @@ public class ElbowFactory {
 	
 	public static ElbowStuff create() {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL ->
+			case REAL -> RealElbowConstants.generateElbowStuff("Elbow/");
 			case SIMULATION -> null;
 		};
 	}

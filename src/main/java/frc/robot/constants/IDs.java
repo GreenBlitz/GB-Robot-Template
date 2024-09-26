@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
+import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
@@ -12,7 +14,7 @@ public class IDs {
 	
 	public static class CANSparkMAXIDs {
 		
-		public static final Device
+		public static final SparkMaxDeviceID ELBOW_MOTOR = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 		
 	}
 

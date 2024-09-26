@@ -27,11 +27,12 @@ public class PivotRealConstants {
 		SLOT_0_CONFIGS.kP = 0.5;
 
 		FeedbackConfigs FEED_BACK_CONFIGS = new FeedbackConfigs();
-		FEED_BACK_CONFIGS.RotorToSensorRatio = 15 * (72 / 14.0) * 2;
+		FEED_BACK_CONFIGS.SensorToMechanismRatio = (15 * (72 / 14.0) * 2);
 
 
 		TALON_FX_CONFIGURATION.withSlot0(SLOT_0_CONFIGS);
 		TALON_FX_CONFIGURATION.withFeedback(FEED_BACK_CONFIGS);
+		TALON_FX_CONFIGURATION.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
 	}
 

@@ -26,13 +26,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-
-		robot.flywheel.setDefaultCommand(
-				robot.flywheel.getCommandsBuilder().setPowersBySuppliers(
-						() -> Rotation2d.fromRotations(usedJoystick.getAxisValue(Axis.RIGHT_Y) * 3000),
-						() -> Rotation2d.fromRotations(usedJoystick.getAxisValue(Axis.LEFT_Y) * 3000)
-				)
-		);
 		// bindings
 	}
 

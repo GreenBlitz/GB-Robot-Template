@@ -19,8 +19,6 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 
-	public Flywheel flywheel = FlywheelFactory.generateFlywheel(ROBOT_TYPE, "flywheel");
-
 	public Robot() {
 		configureBindings();
 	}

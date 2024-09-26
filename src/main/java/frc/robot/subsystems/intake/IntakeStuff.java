@@ -5,7 +5,6 @@ import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;
 
 public record IntakeStuff(
-		String logPath,
 		IMotor motor,
 		InputSignal<Double> inputSignal,
 		IDigitalInput digitalInput

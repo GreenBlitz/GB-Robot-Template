@@ -13,15 +13,16 @@ public class Intake extends GBSubsystem {
 	private final IDigitalInput digitalInput;
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final InputSignal<Double> voltageSignal;
+	private final IntakeCommandBuilder commandBuilder;
 	
-	public Intake(IntakeStuff intakeStuff) {
-		super(intakeStuff.logPath());
-		
+	public Intake(String logPath, IntakeStuff intakeStuff) {
+		super(logPath);
 		this.motor = intakeStuff.motor();
 		this.digitalInput = intakeStuff.digitalInput();
 		this.voltageSignal = intakeStuff.inputSignal();
+		this.commandBuilder = new IntakeCommandBuilder(this);
 		
-		digitalInputsInputs = new DigitalInputInputsAutoLogged();
+		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 	}
 	
 	public void setPower(double power) {
@@ -34,11 +35,13 @@ public class Intake extends GBSubsystem {
 	
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
+		motor.updateSignals(voltageSignal);
 	}
 	
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.processInputs(getLogPath() + "digital inputs", digitalInputsInputs);
+		Logger.processInputs(getLogPath() + "digitalInputs", digitalInputsInputs);
 	}
+	
 }

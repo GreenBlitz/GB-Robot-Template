@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import com.google.flatbuffers.Constants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.factory.IntakeFactory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -15,8 +19,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	
+	private final Intake intake;
 
 	public Robot() {
+		this.intake = new Intake(IntakeConstants.LOG_PATH, IntakeFactory.create());
 		configureBindings();
 	}
 

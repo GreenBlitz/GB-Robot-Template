@@ -8,13 +8,13 @@ import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
-import frc.robot.subsystems.intake.Constants;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeStuff;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-public class RealConstants {
+public class RealIntakeConstants {
 	
 	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
 	
@@ -25,7 +25,7 @@ public class RealConstants {
 	public static IntakeStuff generateIntake() {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxIDs.INTAKE_ID);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();//config!
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(Constants.LOG_PATH, sparkMaxWrapper, config);
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(IntakeConstants.LOG_PATH, sparkMaxWrapper, config);
 		
 		Supplier<Double> voltage = () -> (sparkMaxWrapper.getBusVoltage() * sparkMaxWrapper.getAppliedOutput());
 		SparkMaxDoubleSignal signal = new SparkMaxDoubleSignal(SIGNAL_NAME, voltage);
@@ -33,7 +33,7 @@ public class RealConstants {
 		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);//maybe forward
 		
-		return new IntakeStuff(Constants.LOG_PATH, motor, signal, beamBreaker);
+		return new IntakeStuff(motor, signal, beamBreaker);
 	}
 	
 }

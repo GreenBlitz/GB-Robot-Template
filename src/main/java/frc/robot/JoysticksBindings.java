@@ -25,12 +25,17 @@ public class JoysticksBindings {
 
     private static void mainJoystickButtons(Robot robot) {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
+
+        robot.pivot.setDefaultCommand(
+                robot.pivot.getPivotCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_X))
+        );
+
         usedJoystick.A.whileTrue(
                 robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(17))
         );
 
         usedJoystick.B.whileTrue(
-                robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(30))
+                robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(50))
         );
         // bindings
     }

@@ -24,7 +24,7 @@ public class PivotRealConstants {
 	protected static final TalonFXConfiguration TALON_FX_CONFIGURATION = new TalonFXConfiguration();
 	static {
 		Slot0Configs SLOT_0_CONFIGS = new Slot0Configs();
-		SLOT_0_CONFIGS.kP = 0.5;
+		SLOT_0_CONFIGS.kP = 100;
 
 		FeedbackConfigs FEED_BACK_CONFIGS = new FeedbackConfigs();
 		FEED_BACK_CONFIGS.SensorToMechanismRatio = (15 * (72 / 14.0) * 2);

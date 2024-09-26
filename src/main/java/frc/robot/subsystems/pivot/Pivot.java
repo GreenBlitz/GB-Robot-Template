@@ -5,6 +5,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
 import frc.robot.hardware.signal.InputSignal;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -49,7 +50,6 @@ public class Pivot extends GBSubsystem {
 		if(PivotRealConstants.BACKWARD_ANGLE_LIMIT.getRotations() > resetFilter.calculate(positionSignal.getLatestValue().getRotations())){
 			motor.resetPosition(PivotRealConstants.BACKWARD_ANGLE_LIMIT);
 		}
-		Logger.recordOutput("deg pos", positionSignal.getLatestValue().getDegrees());
 	}
 
 	public PivotCommandsBuilder getPivotCommandsBuilder(){

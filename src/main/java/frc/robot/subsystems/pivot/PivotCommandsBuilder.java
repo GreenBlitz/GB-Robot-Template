@@ -19,7 +19,7 @@ public class PivotCommandsBuilder {
 
 	public Command setPower(double power) {
 		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power), (interrupted) -> pivot.stop(), () -> false, pivot)
-			.withName("Set Power to: " + power);
+			.withName("Set power to: " + power);
 	}
 
 	public Command setPower(DoubleSupplier power) {

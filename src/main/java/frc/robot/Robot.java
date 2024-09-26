@@ -6,16 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.poseestimation.PoseEstimator;
-import frc.robot.structures.SuperStructure;
-import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveName;
-import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
-import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-
-import java.util.Optional;
 
 
 /**
@@ -27,30 +17,8 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
-	private final SuperStructure superStructure;
-
 	public Robot() {
-		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(SwerveName.SWERVE),
-			ModulesFactory.create(SwerveName.SWERVE),
-			GyroFactory.create(SwerveName.SWERVE)
-		);
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
-
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
-
-		this.superStructure = new SuperStructure(swerve, poseEstimator);
-
-		buildPathPlannerForAuto();
 		configureBindings();
-	}
-
-	private void buildPathPlannerForAuto() {
-		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
 	}
 
 	private void configureBindings() {
@@ -60,18 +28,6 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
-	}
-
-	public SuperStructure getSuperStructure() {
-		return superStructure;
-	}
-
-	public Swerve getSwerve() {
-		return swerve;
-	}
-
-	public PoseEstimator getPoseEstimator() {
-		return poseEstimator;
 	}
 
 }

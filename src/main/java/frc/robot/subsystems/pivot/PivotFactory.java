@@ -1,6 +1,7 @@
 package frc.robot.subsystems.pivot;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
+import frc.robot.Robot;
 import frc.robot.RobotType;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
@@ -11,8 +12,8 @@ import frc.utils.AngleUnit;
 
 public class PivotFactory {
 
-	public static Pivot generatePivot(RobotType robotType, String logPath) {
-		return switch (robotType) {
+	public static Pivot generatePivot(String logPath) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> getRealPivot(logPath);
 			default -> null;
 		};

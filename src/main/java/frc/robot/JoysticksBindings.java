@@ -30,13 +30,10 @@ public class JoysticksBindings {
                 robot.pivot.getPivotCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_X))
         );
 
-        usedJoystick.A.whileTrue(
-                robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(17))
-        );
+        usedJoystick.A.whileTrue(robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(20)));
+        usedJoystick.B.whileTrue(robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(50)));
 
-        usedJoystick.B.whileTrue(
-                robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(50))
-        );
+
         // bindings
     }
 

@@ -24,7 +24,7 @@ public class PivotCommandsBuilder {
 
 	public Command setPower(DoubleSupplier power) {
 		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power.getAsDouble()), (interrupted) -> pivot.stop(), () -> false, pivot)
-			.withName("Set Supplied Power");
+			.withName("Set power by supplier");
 	}
 
 	public Command moveToPosition(Rotation2d position) {

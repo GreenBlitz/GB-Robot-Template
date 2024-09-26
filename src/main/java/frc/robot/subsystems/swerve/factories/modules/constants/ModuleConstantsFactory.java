@@ -10,7 +10,7 @@ public class ModuleConstantsFactory {
 	private static ModuleConstants createSwerveModuleConstants(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealModuleConstants.getModuleConstants(swerveName, modulePosition);
-			case SIMULATION -> SimulationModuleConstants.getModuleConstants(swerveName, modulePosition);
+			case SIMULATION -> null;// TODO
 		};
 	}
 

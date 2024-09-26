@@ -22,12 +22,13 @@ public class ElbowCommandsBuilder {
 			() -> elbow.setTargetAngle(angle),
 			() -> {},
 			interrupted -> elbow.stayInPlace(),
-			() -> elbow.isAtAngle(angle, tolerance)
+			() -> elbow.isAtAngle(angle, tolerance),
+			elbow
 		).withName("Move to Angle: " + angle);
 	}
 
 	public Command stayInPlace() {
-		return new InstantCommand(elbow::stayInPlace).withName("StayInPlace");
+		return new InstantCommand(elbow::stayInPlace, elbow).withName("StayInPlace");
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
@@ -35,7 +36,8 @@ public class ElbowCommandsBuilder {
 			() -> {},
 			() -> elbow.setPower(powerSupplier.getAsDouble()),
 			interrupted -> elbow.stayInPlace(),
-			() -> false
+			() -> false,
+			elbow
 		).withName("Set Power");
 	}
 

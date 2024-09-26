@@ -54,7 +54,7 @@ public class PivotCommandsBuilder {
 			(interrupted) -> pivot.stop(),
 			() -> false,
 			pivot
-		).withName("Move to Supplier Position");
+		).withName("Move to supplier position");
 	}
 
 	public Command stop() {

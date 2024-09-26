@@ -1,4 +1,4 @@
-package frc.utils.devicewrappers;
+package frc.robot.hardware.motor.sparkmax;
 
 import com.revrobotics.CANSparkLowLevel;
 

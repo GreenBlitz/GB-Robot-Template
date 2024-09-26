@@ -59,7 +59,7 @@ abstract class MotorSimulation extends Phoenix6Device implements ControllableMot
 
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
-		return new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(),false);
+		return new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), false);
 	}
 
 	@Override

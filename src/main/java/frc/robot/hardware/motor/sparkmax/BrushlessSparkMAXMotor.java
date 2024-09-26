@@ -13,15 +13,13 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class BrushlessSparkMAXMotor extends SparkMaxMotor implements ControllableMotor {
 
-	private final CANSparkMax motor;
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
 
 	public BrushlessSparkMAXMotor(CANSparkMax motor, SysIdRoutine.Config sysidConfig, String logPath) {
 		super(logPath, motor);
 		if (motor.getMotorType() != CANSparkLowLevel.MotorType.kBrushless) {
-			throw new IllegalArgumentException("\"inserted BrushedSparkMAXMotor to BrushlessSparkMAXMotor!\"");
+			throw new IllegalArgumentException("inserted BrushedSparkMAXMotor to BrushlessSparkMAXMotor!");
 		}
-		this.motor = motor;
 		this.sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, false);
 	}
 

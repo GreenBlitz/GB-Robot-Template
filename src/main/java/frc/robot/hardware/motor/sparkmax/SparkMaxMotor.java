@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.Logger;
 
 public abstract class SparkMaxMotor implements IMotor {
 
-	private final CANSparkMax motor;
+	protected final CANSparkMax motor;
 	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
 

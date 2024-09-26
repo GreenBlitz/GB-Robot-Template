@@ -5,30 +5,21 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.hardware.signal.InputSignal;
 import frc.utils.GBSubsystem;
 
 public class Pivot extends GBSubsystem {
 
 	private final ControllableMotor motor;
-	private final InputSignal[] inputSignals;
 	private final IRequest<Rotation2d> positionRequest;
-	private final InputSignal<Rotation2d> positionSignal;
+	private final PivotStuff pivotStuff;
 	private final PivotCommandsBuilder pivotCommandsBuilder;
 	private final MedianFilter resetFilter;
 
-	public Pivot(
-		String logPath,
-		ControllableMotor motor,
-		IRequest<Rotation2d> positionRequest,
-		InputSignal<Rotation2d> positionSignal,
-		InputSignal... inputSignals
-	) {
+	public Pivot(String logPath, PivotStuff pivotStuff) {
 		super(logPath);
-		this.motor = motor;
-		this.positionSignal = positionSignal;
-		this.positionRequest = positionRequest;
-		this.inputSignals = inputSignals;
+		this.motor = pivotStuff.motor();
+		this.positionRequest = pivotStuff.positionRequest();
+		this.pivotStuff = pivotStuff;
 		this.pivotCommandsBuilder = new PivotCommandsBuilder(this);
 		this.resetFilter = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
 
@@ -40,15 +31,23 @@ public class Pivot extends GBSubsystem {
 		return pivotCommandsBuilder;
 	}
 
+	@Override
+	public String getLogPath() {
+		return PivotConstants.LOG_PATH;
+	}
+
 	private void updateSignals() {
-		motor.updateSignals(positionSignal);
-		motor.updateSignals(inputSignals);
+		motor.updateSignals(pivotStuff.positionSignal());
+		motor.updateSignals(pivotStuff.inputSignals());
 	}
 
 	@Override
 	public void subsystemPeriodic() {
 		updateSignals();
-		if (PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations() > resetFilter.calculate(positionSignal.getLatestValue().getRotations())) {
+		if (
+			PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations()
+				> resetFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
+		) {
 			motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 		}
 	}
@@ -69,8 +68,13 @@ public class Pivot extends GBSubsystem {
 		motor.applyAngleRequest(positionRequest.withSetPoint(targetPosition));
 	}
 
+	public void stayInPlace() {
+		setTargetPosition(pivotStuff.positionSignal().getLatestValue());
+	}
+
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d angleTolerance) {
-		return MathUtil.isNear(targetPosition.getRotations(), positionSignal.getLatestValue().getRotations(), angleTolerance.getRotations());
+		return MathUtil
+			.isNear(targetPosition.getRotations(), pivotStuff.positionSignal().getLatestValue().getRotations(), angleTolerance.getRotations());
 	}
 
 }

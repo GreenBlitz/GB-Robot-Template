@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class PivotConstants {
 
+	public static final String LOG_PATH = "Subsystems/Pivot";
+
 	public static final Rotation2d FORWARD_ANGLE_LIMIT = Rotation2d.fromDegrees(67);
 	public static final Rotation2d BACKWARD_ANGLE_LIMIT = Rotation2d.fromDegrees(25);
 

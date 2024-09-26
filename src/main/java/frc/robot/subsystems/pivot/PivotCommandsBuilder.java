@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.pivot.factories.PivotFactory;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -37,12 +36,12 @@ public class PivotCommandsBuilder {
 	}
 	//@formatter:on
 
-	public Command moveToPosition(Rotation2d position) {
+	public Command moveToPosition(Rotation2d position, Rotation2d tolerance) {
 		return new FunctionalCommand(
-			() -> {},
 			() -> pivot.setTargetPosition(position),
-			(interrupted) -> {},
-			() -> pivot.isAtPosition(position, PivotFactory.getTolerance()),
+			() -> {},
+			(interrupted) -> pivot.stayInPlace(),
+			() -> pivot.isAtPosition(position, tolerance),
 			pivot
 		).withName("Move to position: " + position);
 	}
@@ -51,7 +50,7 @@ public class PivotCommandsBuilder {
 		return new FunctionalCommand(
 			() -> {},
 			() -> pivot.setTargetPosition(positionSupplier.get()),
-			(interrupted) -> pivot.stop(),
+			(interrupted) -> pivot.stayInPlace(),
 			() -> false,
 			pivot
 		).withName("Move to supplier position");

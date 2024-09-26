@@ -21,18 +21,12 @@ public abstract class GBSubsystem extends SubsystemBase {
 		return logPath;
 	}
 
-	/**
-	 * DON'T CALL THIS FUNCTION
-	 */
 	@Override
-	@Deprecated
-	public final void periodic() {}
-
-	public final void wrapperPeriodic() {
+	public final void periodic() {
 		Logger.recordOutput(getLogPath() + "CurrentCommand", getCurrentCommandName());
 		subsystemPeriodic();
 	}
 
-	protected abstract void subsystemPeriodic();
+	protected void subsystemPeriodic() {}
 
 }

@@ -123,8 +123,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	@Override
-	public void subsystemPeriodic() {
+	public void updateState() {
 		updateInputs();
 		logState();
 		logFieldRelativeVelocities();

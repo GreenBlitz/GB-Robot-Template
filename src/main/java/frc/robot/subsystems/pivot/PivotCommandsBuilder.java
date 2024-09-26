@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.pivot.factories.PivotFactory;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -17,27 +18,37 @@ public class PivotCommandsBuilder {
 	}
 
 	public Command setPower(double power) {
-		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power), (interrupted) -> pivot.stop(), () -> false, pivot);
-	}
-	public Command setPower(DoubleSupplier power) {
-		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power.getAsDouble()), (interrupted) -> pivot.stop(), () -> false, pivot);
+		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power), (interrupted) -> pivot.stop(), () -> false, pivot)
+			.withName("Set Power to: " + power);
 	}
 
-	public Command setPosition(Rotation2d position) {
-		return new FunctionalCommand(
-				() -> {},
-				() -> pivot.setTargetPosition(position),
-				(interrupted) -> {},
-				() -> pivot.isAtPosition(position, PivotFactory.getTolerance()),
-				pivot
-		).withName("set position to" + position.getDegrees());
+	public Command setPower(DoubleSupplier power) {
+		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power.getAsDouble()), (interrupted) -> pivot.stop(), () -> false, pivot)
+			.withName("Set Supplied Power");
 	}
-	public Command setPosition (Supplier<Rotation2d> positionSupplier){
-		return new FunctionalCommand(() -> {}, () -> pivot.setTargetPosition(positionSupplier.get()), (interrupted) -> pivot.stop(), () -> false, pivot);
+
+	public Command moveToPosition(Rotation2d position) {
+		return new FunctionalCommand(
+			() -> {},
+			() -> pivot.setTargetPosition(position),
+			(interrupted) -> {},
+			() -> pivot.isAtPosition(position, PivotFactory.getTolerance()),
+			pivot
+		).withName("Move to: " + position);
+	}
+
+	public Command moveToPosition(Supplier<Rotation2d> positionSupplier) {
+		return new FunctionalCommand(
+			() -> {},
+			() -> pivot.setTargetPosition(positionSupplier.get()),
+			(interrupted) -> pivot.stop(),
+			() -> false,
+			pivot
+		).withName("Move to Supplier Position");
 	}
 
 	public Command stop() {
-		return new InstantCommand(() -> pivot.stop(), pivot);
+		return new InstantCommand(pivot::stop, pivot).withName("Stop");
 	}
 
 }

@@ -7,8 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.pivot.Pivot;
-import frc.robot.subsystems.pivot.PivotCommandsBuilder;
-import frc.robot.subsystems.pivot.PivotFactory;
+import frc.robot.subsystems.pivot.factories.PivotFactory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -20,6 +19,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	public Pivot pivot = PivotFactory.generatePivot("pivot");
+
 	public Robot() {
 		configureBindings();
 	}

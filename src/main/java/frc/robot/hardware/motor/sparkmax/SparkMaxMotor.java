@@ -16,9 +16,9 @@ public abstract class SparkMaxMotor implements IMotor {
 	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
 
-	public SparkMaxMotor(String logPath, SparkMaxWrapper sparkMaxWrapper) {
+	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
 		this.logPath = logPath;
-		this.motor = sparkMaxWrapper;
+		this.motor = motor;
 
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;

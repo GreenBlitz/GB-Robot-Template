@@ -6,6 +6,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Elbow extends GBSubsystem {
 

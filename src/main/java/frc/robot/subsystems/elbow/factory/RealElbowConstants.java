@@ -45,7 +45,7 @@ public class RealElbowConstants {
 	}
 	
 	private static void configMotor(CANSparkMax motor) {
-		motor.setInverted(false);
+		motor.setInverted(true);
 		motor.setIdleMode(CANSparkBase.IdleMode.kBrake);
 		motor.setSoftLimit(
 				CANSparkBase.SoftLimitDirection.kForward,
@@ -66,7 +66,7 @@ public class RealElbowConstants {
 		configMotor(motor);
 		
 		SparkMaxAngleSignal positionSignal = new SparkMaxAngleSignal("position", () -> motor.getEncoder().getPosition(), AngleUnit.ROTATIONS);
-		SparkMaxAngleSignal velocitySignal = new SparkMaxAngleSignal("position", () -> motor.getEncoder().getVelocity(), AngleUnit.ROTATIONS);
+		SparkMaxAngleSignal velocitySignal = new SparkMaxAngleSignal("velocity", () -> motor.getEncoder().getVelocity(), AngleUnit.ROTATIONS);
 		SparkMaxDoubleSignal currentSignal = new SparkMaxDoubleSignal("output current", motor::getOutputCurrent);
 		SparkMaxDoubleSignal voltageSignal = new SparkMaxDoubleSignal("voltage", () -> motor.getAppliedOutput() * motor.getBusVoltage());
 		

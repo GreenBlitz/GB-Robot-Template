@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.elbow.Elbow;
 import frc.robot.subsystems.elbow.ElbowConstants;
 import frc.robot.subsystems.elbow.factory.ElbowFactory;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -23,6 +24,7 @@ public class Robot {
 
 	public Robot() {
 		this.elbow = new Elbow(ElbowConstants.LOG_PATH, ElbowFactory.create());
+		BrakeStateManager.add(() -> elbow.setBrake(true), () -> elbow.setBrake(false));
 		configureBindings();
 	}
 

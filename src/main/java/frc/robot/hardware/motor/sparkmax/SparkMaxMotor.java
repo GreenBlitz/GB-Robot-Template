@@ -26,7 +26,12 @@ public abstract class SparkMaxMotor implements IMotor {
 
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
-
+	
+	@Override
+	public boolean isConnected() {
+		return connectedInput.connected;
+	}
+	
 	@Override
 	public void updateSignals(InputSignal... signals) {
 		for (InputSignal signal : signals) {
@@ -52,11 +57,6 @@ public abstract class SparkMaxMotor implements IMotor {
 	@Override
 	public void setPower(double power) {
 		motor.set(power);
-	}
-
-	@Override
-	public boolean isConnected() {
-		return connectedInput.connected;
 	}
 
 }

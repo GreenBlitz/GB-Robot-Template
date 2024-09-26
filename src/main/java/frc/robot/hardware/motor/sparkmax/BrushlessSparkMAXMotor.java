@@ -10,7 +10,6 @@ import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
-
 public class BrushlessSparkMAXMotor extends SparkMaxMotor implements ControllableMotor {
 
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;

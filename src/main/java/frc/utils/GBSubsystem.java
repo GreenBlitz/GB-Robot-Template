@@ -27,6 +27,6 @@ public abstract class GBSubsystem extends SubsystemBase {
 		subsystemPeriodic();
 	}
 
-	protected abstract void subsystemPeriodic();
+	protected void subsystemPeriodic() {}
 
 }

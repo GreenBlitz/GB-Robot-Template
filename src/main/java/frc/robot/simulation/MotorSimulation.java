@@ -41,24 +41,24 @@ abstract class MotorSimulation extends Phoenix6Device implements ControllableMot
 		motorSimulationState.setRotorVelocity(getVelocity().getRotations());
 	}
 
-	@Override
-	public void updateSignals(InputSignal... signals) {
-		super.updateSignals(signals);
+	public void applyConfiguration(TalonFXConfiguration config) {
+		motor.applyConfiguration(config);
 	}
 
 	@Override
-	public boolean isConnected() {
-		return super.isConnected();
-	}
-
-	@Override
-	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
-		return new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(),false);
+	public void setBrake(boolean brake) {
+		NeutralModeValue modeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+		motor.setNeutralMode(modeValue);
 	}
 
 	@Override
 	public void resetPosition(Rotation2d position) {
 		motor.setPosition(position.getRotations());
+	}
+
+	@Override
+	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
+		return new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(),false);
 	}
 
 	@Override
@@ -73,16 +73,6 @@ abstract class MotorSimulation extends Phoenix6Device implements ControllableMot
 		if (request instanceof Phoenix6AngleRequest) {
 			motor.setControl(((Phoenix6AngleRequest) request).getControlRequest());
 		}
-	}
-
-	@Override
-	public void setBrake(boolean brake) {
-		NeutralModeValue modeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-		motor.setNeutralMode(modeValue);
-	}
-
-	public void applyConfiguration(TalonFXConfiguration config) {
-		motor.applyConfiguration(config);
 	}
 
 	public void setPower(double power) {

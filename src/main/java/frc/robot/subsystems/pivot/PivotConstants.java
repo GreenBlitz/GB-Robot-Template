@@ -6,6 +6,8 @@ public class PivotConstants {
 
 	public static final String LOG_PATH = "Subsystems/Pivot";
 
+	public static final double GEAR_RATIO = 15.0 * (72.0 / 14.0) * 2.0;
+
 	public static final Rotation2d FORWARD_ANGLE_LIMIT = Rotation2d.fromDegrees(67);
 	public static final Rotation2d BACKWARD_ANGLE_LIMIT = Rotation2d.fromDegrees(25);
 

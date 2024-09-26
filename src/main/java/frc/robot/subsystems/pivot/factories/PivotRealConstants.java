@@ -31,7 +31,7 @@ public class PivotRealConstants {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
 		configuration.Slot0.kP = 100;
-		configuration.Feedback.SensorToMechanismRatio = (15 * (72 / 14.0) * 2);
+		configuration.Feedback.SensorToMechanismRatio = PivotConstants.GEAR_RATIO;
 
 		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 		configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = PivotConstants.FORWARD_ANGLE_LIMIT.getRotations();

@@ -11,7 +11,6 @@ import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
-import frc.robot.hardware.signal.InputSignal;
 import frc.utils.battery.BatteryUtils;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -58,7 +57,7 @@ abstract class MotorSimulation extends Phoenix6Device implements ControllableMot
 
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
-		return new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(),false);
+		return new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), false);
 	}
 
 	@Override

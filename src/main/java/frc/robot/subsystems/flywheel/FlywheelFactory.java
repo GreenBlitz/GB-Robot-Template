@@ -14,12 +14,12 @@ import static frc.robot.subsystems.flywheel.FlywheelConstants.*;
 
 public class FlywheelFactory {
 
-	public static Flywheel getRealFlywheel(String logPath) {
+	private static Flywheel getRealFlywheel(String logPath) {
 		TalonFXWrapper rightMotorWrapper = new TalonFXWrapper(IDs.TalonFXs.RIGHT_FLYWHEEL);
 		rightMotorWrapper.applyConfiguration(CONFIGURATION);
 
 		TalonFXWrapper leftMotorWrapper = new TalonFXWrapper(IDs.TalonFXs.LEFT_FLYWHEEL);
-		rightMotorWrapper.applyConfiguration(CONFIGURATION);
+		leftMotorWrapper.applyConfiguration(CONFIGURATION);
 
 		return new Flywheel(
 			logPath,

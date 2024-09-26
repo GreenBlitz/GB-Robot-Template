@@ -2,12 +2,16 @@ package frc.robot.simulation;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6BothLatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
@@ -46,52 +50,57 @@ public class SimulationMotor extends MotorSimulation implements ControllableMoto
             }
         }
 
-        connectedInput.connected = BaseStatusSignal.isAllGood(signalsSet.toArray(StatusSignal[]::new));
-        BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new));
+        connectedInput.connected = BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new)).isOK();
     }
 
     @Override
     public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
-        return null;
+        return new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(),false);
     }
 
     @Override
     public void resetPosition(Rotation2d position) {
-
+        motor.setPosition(position.getRotations());
     }
 
     @Override
     public void applyDoubleRequest(IRequest<Double> request) {
-
+        if (request instanceof Phoenix6DoubleRequest) {
+            motor.setControl(((Phoenix6DoubleRequest) request).getControlRequest());
+        }
     }
 
     @Override
     public void applyAngleRequest(IRequest<Rotation2d> request) {
-
+        if (request instanceof Phoenix6AngleRequest) {
+            motor.setControl(((Phoenix6AngleRequest) request).getControlRequest());
+        }
     }
 
     @Override
     public void setBrake(boolean brake) {
-
+        NeutralModeValue modeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+        motor.setNeutralMode(modeValue);
     }
 
     @Override
     protected void setInputVoltage(double voltage) {
-
+        motor.setVoltage(voltage);
     }
 
     @Override
     protected void updateMotor() {
-
+        super.updateSimulation();
     }
 
     @Override
     public Rotation2d getPosition() {
-        return null;
+        return Rotation2d.fromRotations(motor.getPosition().getValue());
     }
 
     @Override
     public Rotation2d getVelocity() {
-        return null;
+        return Rotation2d.fromRotations(motor.getVelocity().getValue());
     }
+
 }

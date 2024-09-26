@@ -44,7 +44,7 @@ public class PivotCommandsBuilder {
 			(interrupted) -> {},
 			() -> pivot.isAtPosition(position, PivotFactory.getTolerance()),
 			pivot
-		).withName("Move to: " + position);
+		).withName("Move to position: " + position);
 	}
 
 	public Command moveToPosition(Supplier<Rotation2d> positionSupplier) {

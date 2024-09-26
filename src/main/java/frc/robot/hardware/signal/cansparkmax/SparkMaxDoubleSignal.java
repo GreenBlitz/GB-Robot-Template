@@ -1,5 +1,6 @@
 package frc.robot.hardware.signal.cansparkmax;
 
+import edu.wpi.first.hal.HALUtil;
 import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.hardware.signal.TimedValue;
 
@@ -16,7 +17,7 @@ public class SparkMaxDoubleSignal extends DoubleSignal implements ISparkMaxSigna
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(valueSupplier.get(), System.currentTimeMillis());
+		return new TimedValue<>(valueSupplier.get(), HALUtil.getHALRuntimeType());
 	}
 
 }

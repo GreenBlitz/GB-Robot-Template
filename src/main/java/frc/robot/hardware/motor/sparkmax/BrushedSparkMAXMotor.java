@@ -1,4 +1,4 @@
-package frc.robot.hardware.motor.cansparkmax;
+package frc.robot.hardware.motor.sparkmax;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;

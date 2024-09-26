@@ -1,5 +1,6 @@
 package frc.robot.hardware.signal.cansparkmax;
 
+import edu.wpi.first.hal.HALUtil;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.TimedValue;
 import frc.utils.AngleUnit;
@@ -17,7 +18,7 @@ public class SparkMaxAngleSignal extends AngleSignal implements ISparkMaxSignal 
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(valueSupplier.get(), System.currentTimeMillis());
+		return new TimedValue<>(valueSupplier.get(), HALUtil.getHALRuntimeType());
 	}
 
 }

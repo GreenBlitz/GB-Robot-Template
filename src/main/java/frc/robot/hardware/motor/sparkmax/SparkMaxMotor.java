@@ -39,8 +39,6 @@ public abstract class SparkMaxMotor implements IMotor {
 				Logger.processInputs(logPath, signal);
 			}
 		}
-		connectedInput.connected = motor.getBusVoltage() > 0;
-		Logger.processInputs(logPath, connectedInput);
 	}
 
 	@Override

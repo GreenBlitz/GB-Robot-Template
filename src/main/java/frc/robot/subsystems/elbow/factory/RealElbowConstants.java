@@ -23,38 +23,30 @@ public class RealElbowConstants {
 	private static final double KS = 0.15;
 	private static final double KG = 0.2;
 	private static final ArmFeedforward FEEDFORWARD = new ArmFeedforward(KS, KG, 0);
-	
+
 	private static final int POSITION_PID_SLOT = 0;
-	
+
 	private static SparkMaxAngleRequest generatePositionRequest() {
-		Function<CANSparkMax, Double> feedforwardCalculation = canSparkMax -> FEEDFORWARD.calculate(
-				canSparkMax.getEncoder().getPosition(),
-				canSparkMax.getEncoder().getVelocity()
-		);
+		Function<CANSparkMax, Double> feedforwardCalculation = canSparkMax -> FEEDFORWARD
+			.calculate(canSparkMax.getEncoder().getPosition(), canSparkMax.getEncoder().getVelocity());
 		return new SparkMaxAngleRequest(
-				new Rotation2d(),
-				SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-				POSITION_PID_SLOT,
-				feedforwardCalculation
+			new Rotation2d(),
+			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
+			POSITION_PID_SLOT,
+			feedforwardCalculation
 		);
 	}
-	
+
 	private static SparkMaxDoubleRequest generateVoltageRequest() {
 		return new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
 	}
-	
+
 	private static void configMotor(CANSparkMax motor) {
 		motor.setInverted(true);
 		motor.setIdleMode(CANSparkBase.IdleMode.kBrake);
-		motor.setSoftLimit(
-				CANSparkBase.SoftLimitDirection.kForward,
-				(float) ElbowConstants.FORWARD_LIMIT.getRotations()
-		);
+		motor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) ElbowConstants.FORWARD_LIMIT.getRotations());
 		motor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
-		motor.setSoftLimit(
-				CANSparkBase.SoftLimitDirection.kReverse,
-				(float) ElbowConstants.BACKWARD_LIMIT.getRotations()
-		);
+		motor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) ElbowConstants.BACKWARD_LIMIT.getRotations());
 		motor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 		motor.setSmartCurrentLimit(40);
 		motor.getPIDController().setP(5.5, POSITION_PID_SLOT);
@@ -62,18 +54,26 @@ public class RealElbowConstants {
 		motor.getEncoder().setPositionConversionFactor(ElbowConstants.GEAR_RATIO);
 		motor.getEncoder().setPositionConversionFactor(ElbowConstants.GEAR_RATIO);
 	}
-	
- 	protected static ElbowStuff generateElbowStuff(String logPath) {
+
+	protected static ElbowStuff generateElbowStuff(String logPath) {
 		SparkMaxWrapper motor = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELBOW_MOTOR);
 		configMotor(motor);
-		
+
 		SparkMaxAngleSignal positionSignal = new SparkMaxAngleSignal("position", () -> motor.getEncoder().getPosition(), AngleUnit.ROTATIONS);
 		SparkMaxAngleSignal velocitySignal = new SparkMaxAngleSignal("velocity", () -> motor.getEncoder().getVelocity(), AngleUnit.ROTATIONS);
 		SparkMaxDoubleSignal currentSignal = new SparkMaxDoubleSignal("output current", motor::getOutputCurrent);
 		SparkMaxDoubleSignal voltageSignal = new SparkMaxDoubleSignal("voltage", () -> motor.getAppliedOutput() * motor.getBusVoltage());
-		
+
 		BrushlessSparkMAXMotor elbow = new BrushlessSparkMAXMotor(logPath, motor, new SysIdRoutine.Config());
-		return new ElbowStuff(elbow, generatePositionRequest(), generateVoltageRequest(), positionSignal, velocitySignal, currentSignal, voltageSignal);
- 	}
+		return new ElbowStuff(
+			elbow,
+			generatePositionRequest(),
+			generateVoltageRequest(),
+			positionSignal,
+			velocitySignal,
+			currentSignal,
+			voltageSignal
+		);
+	}
 
 }

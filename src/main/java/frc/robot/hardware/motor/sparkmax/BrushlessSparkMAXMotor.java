@@ -9,7 +9,6 @@ import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import org.littletonrobotics.junction.Logger;
 
 public class BrushlessSparkMAXMotor extends SparkMaxMotor implements ControllableMotor {
 

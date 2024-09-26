@@ -2,11 +2,9 @@ package frc.robot.subsystems.elbow;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Robot;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.utils.GBSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class Elbow extends GBSubsystem {
 
@@ -15,8 +13,6 @@ public class Elbow extends GBSubsystem {
 	private final IRequest<Double> voltageRequest;
 	private final ElbowStuff elbowStuff;
 	private final ElbowCommandsBuilder commandsBuilder;
-	
-	private Rotation2d minAngle;
 
 	public Elbow(String logPath, ElbowStuff elbowStuff) {
 		super(logPath);
@@ -25,7 +21,7 @@ public class Elbow extends GBSubsystem {
 		this.voltageRequest = elbowStuff.voltageRequest();
 		this.elbowStuff = elbowStuff;
 		this.commandsBuilder = new ElbowCommandsBuilder(this);
-		
+
 		motor.resetPosition(ElbowConstants.MIN_ACHIEVABLE_POSITION);
 		updateSignals();
 	}
@@ -41,7 +37,7 @@ public class Elbow extends GBSubsystem {
 			motor.resetPosition(ElbowConstants.MIN_ACHIEVABLE_POSITION);
 		}
 	}
-	
+
 	private void updateSignals() {
 		motor.updateSignals(elbowStuff.positionSignal(), elbowStuff.velocitySignal(), elbowStuff.currentSignal(), elbowStuff.voltageSignal());
 	}

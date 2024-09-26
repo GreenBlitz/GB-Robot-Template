@@ -19,7 +19,7 @@ import frc.utils.brakestate.BrakeStateManager;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	
+
 	private final Elbow elbow;
 
 	public Robot() {
@@ -35,9 +35,9 @@ public class Robot {
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
 	}
-	
+
 	public Elbow getElbow() {
 		return elbow;
 	}
-	
+
 }

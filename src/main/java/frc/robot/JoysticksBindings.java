@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -34,6 +35,9 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings
+		
+		usedJoystick.A.whileTrue(robot.getElbow().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
+		usedJoystick.B.whileTrue(robot.getElbow().getCommandsBuilder().voltageControlByDashboard("Calib Arm"));
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

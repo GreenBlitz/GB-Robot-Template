@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.elbow.Elbow;
+import frc.robot.subsystems.elbow.ElbowConstants;
+import frc.robot.subsystems.elbow.factory.ElbowFactory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -15,8 +18,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	
+	private final Elbow elbow;
 
 	public Robot() {
+		this.elbow = new Elbow(ElbowConstants.LOG_PATH, ElbowFactory.create());
 		configureBindings();
 	}
 
@@ -27,5 +33,9 @@ public class Robot {
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
 	}
-
+	
+	public Elbow getElbow() {
+		return elbow;
+	}
+	
 }

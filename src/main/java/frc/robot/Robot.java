@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.google.flatbuffers.Constants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.intake.Intake;
@@ -18,21 +17,25 @@ import frc.robot.subsystems.intake.factory.IntakeFactory;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	
-	private final Intake intake;
+    public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	public Robot() {
-		this.intake = new Intake(IntakeConstants.LOG_PATH, IntakeFactory.create());
-		configureBindings();
-	}
+    private final Intake intake;
 
-	private void configureBindings() {
-		JoysticksBindings.configureBindings(this);
-	}
+    public Robot() {
+        this.intake = new Intake(IntakeConstants.LOG_PATH, IntakeFactory.create());
+        configureBindings();
+    }
 
-	public Command getAutonomousCommand() {
-		return new InstantCommand();
-	}
+    private void configureBindings() {
+        JoysticksBindings.configureBindings(this);
+    }
+
+    public Command getAutonomousCommand() {
+        return new InstantCommand();
+    }
+
+    public Intake getIntake() {
+        return intake;
+    }
 
 }

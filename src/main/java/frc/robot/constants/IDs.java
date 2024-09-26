@@ -13,11 +13,7 @@ public class IDs {
     );
 
     public static class CANSparkMaxIDs {
-        public static final SparkMaxDeviceID INTAKE_ID = new SparkMaxDeviceID(0); //find
-    }
-
-    public static class Phoenix6DevicesIDs {
-		public static final Phoenix6DeviceID INTAKE_ID = new Phoenix6DeviceID(0);
+        public static final SparkMaxDeviceID INTAKE_ID = new SparkMaxDeviceID(3); //find
     }
 
 }

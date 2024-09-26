@@ -21,11 +21,11 @@ public class RealIntakeConstants {
 	private static final String SIGNAL_NAME = "voltage";
 	
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kRising;//idk
-	
+
 	public static IntakeStuff generateIntake() {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxIDs.INTAKE_ID);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();//config!
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(IntakeConstants.LOG_PATH, sparkMaxWrapper, config);
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(IntakeConstants.MOTOR_LOG_PATH, sparkMaxWrapper, config);
 		
 		Supplier<Double> voltage = () -> (sparkMaxWrapper.getBusVoltage() * sparkMaxWrapper.getAppliedOutput());
 		SparkMaxDoubleSignal signal = new SparkMaxDoubleSignal(SIGNAL_NAME, voltage);

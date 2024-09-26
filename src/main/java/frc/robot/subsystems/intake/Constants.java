@@ -19,27 +19,10 @@ import javax.print.DocFlavor;
 
 public class Constants {
 
-    private static final String LOG_PATH = "";
-
-    private static final int MOTOR_ID = 0;
+    protected static final String LOG_PATH = "";
 
     private static int DIGITAL_INPUT_CHANNEL = 0;
 
-    public static IntakeStuff sparkMax() {
-        CANSparkMax motor = new CANSparkMax(MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
 
-    }
-
-    public static IntakeStuff talonFX() {
-        TalonFXWrapper talonFXWrapper = new TalonFXWrapper(MOTOR_ID);
-        SysIdRoutine.Config config = new SysIdRoutine.Config();//enter stuff
-        TalonFXMotor motor = new TalonFXMotor(LOG_PATH, talonFXWrapper, config);
-
-    }
-
-    public static IDigitalInput beamBreaker(){
-        DigitalInput beamBreaker = new DigitalInput(DIGITAL_INPUT_CHANNEL);
-        return beamBreaker;
-    }
 
 }

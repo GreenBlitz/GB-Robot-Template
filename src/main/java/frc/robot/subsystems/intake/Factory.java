@@ -11,15 +11,10 @@ import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
 public class Factory {
 
     public static Intake create(){
-        IntakeStuff intakeStuff;
-        switch (Robot.ROBOT_TYPE){
-            case REAL:
-
-            case SIMULATION:
-//                motor = Constants.
-//                signal =
+        return switch (Robot.ROBOT_TYPE){
+            case REAL -> new Intake(Constants.LOG_PATH, SparkMax.getMotor(), SparkMax.getSignal(), SparkMax.getBeamBreaker());
+            case SIMULATION -> null;
         }
-//        return new Intake(Constants.LOG_PATH, motor, digitalInput, signal);
     }
 
 }

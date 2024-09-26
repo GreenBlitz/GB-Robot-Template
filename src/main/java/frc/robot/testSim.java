@@ -10,4 +10,13 @@ public class testSim extends SingleJointedArmSimulation{
         super(logPath, armSimulation);
     }
 
+    @Override
+    protected void updateMotor() {
+        super.updateMotor();
+    }
+
+    @Override
+    protected void updateSimulation() {
+        super.updateSimulation();
+    }
 }

@@ -60,23 +60,7 @@ public class RobotManager extends LoggedRobot {
 
 		SmartJoystick smartJoystick =new SmartJoystick(JoystickPorts.MAIN);
 
-		smartJoystick.A.onTrue(new Command() {
-			@Override
-			public void initialize() {
-				PositionVoltage positionVoltage = new PositionVoltage(Rotation2d.fromDegrees(45).getRotations());
-				testSim.setControl(positionVoltage);
-			}
-
-			@Override
-			public void end(boolean interrupted) {
-				testSim.stop();
-			}
-
-			@Override
-			public boolean isFinished() {
-				return testSim.getPosition().getDegrees() == 3;
-			}
-		});
+		smartJoystick.A.onTrue(new testSimCom(testSim, Rotation2d.fromDegrees(90)));
 
 		this.robot = new Robot();
 	}
@@ -122,8 +106,6 @@ public class RobotManager extends LoggedRobot {
 		testSim.updateMotor();
 		testSim.updateSimulation();
 
-
-		testSim.updateSimulation();
 		Logger.recordOutput("testSim/vol", testSim.getVoltage());
 		Logger.recordOutput("testSim/spee", testSim.getVelocity());
 		Logger.recordOutput("testSim/curr", testSim.getCurrent());

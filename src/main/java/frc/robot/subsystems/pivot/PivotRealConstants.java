@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
@@ -53,4 +54,6 @@ public class PivotRealConstants {
                 SYS_ID_CONFIG
         );
     }
+
+    protected static Rotation2d TOLERANCE = Rotation2d.fromDegrees(1);
 }

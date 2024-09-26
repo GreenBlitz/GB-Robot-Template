@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 public class PivotCommandsBuilder {
 
-	private Pivot pivot;
+	private final Pivot pivot;
 
 	public PivotCommandsBuilder(Pivot pivot) {
 		this.pivot = pivot;
@@ -27,8 +27,8 @@ public class PivotCommandsBuilder {
 		return new FunctionalCommand(
 				() -> {},
 				() -> pivot.setTargetPosition(position),
-				(interrupted) -> pivot.stop(),
-				() -> false,
+				(interrupted) -> {},
+				() -> pivot.isAtPosition(position, PivotFactory.getTolerance()),
 				pivot
 		).withName("set position to" + position.getDegrees());
 	}

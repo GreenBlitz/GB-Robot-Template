@@ -130,21 +130,9 @@ public class Swerve extends GBSubsystem {
 		logNumberOfOdometrySamples();
 	}
 
-	private void updateGyroSimulation() {
-//		final double yawChangeRadians = getRobotRelativeVelocity().omegaRadiansPerSecond * CycleTimeUtils.getCurrentCycleTime();
-//		gyroInputs.yaw = Rotation2d.fromRadians(gyroInputs.yaw.getRadians() + yawChangeRadians);
-//		gyroThreadInputs.yawOdometrySamples = new Rotation2d[] {gyroInputs.yaw};
-//		gyroThreadInputs.timestampOdometrySamples = new double[] {Timer.getFPGATimestamp()};
-		// TODO
-	}
-
-
 	private void updateInputs() {
 		ODOMETRY_LOCK.lock();
 		{
-			if (Robot.ROBOT_TYPE.isSimulation()) {
-				updateGyroSimulation();
-			}
 			gyro.updateSignals(gyroStuff.yawSignal());
 			modules.logStatus();
 		}

@@ -18,8 +18,9 @@ public class PivotFactory {
 		};
 	}
 
-	public static Pivot getRealPivot(String logPath) {
+	private static Pivot getRealPivot(String logPath) {
 		TalonFXWrapper motorWrapper = new TalonFXWrapper(IDs.TalonFXs.PIVOT_MOTOR_ID);
+		motorWrapper.applyConfiguration(PivotRealConstants.TALON_FX_CONFIGURATION);
 
 		return new Pivot(
 			logPath,

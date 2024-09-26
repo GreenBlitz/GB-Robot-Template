@@ -25,18 +25,28 @@ public class Pivot extends GBSubsystem {
 		super(logPath);
 
 		this.motor = motor;
+		motor.resetPosition(PivotRealConstants.BACKWARD_ANGLE_LIMIT);
 		this.positionSignal = positionSignal;
 
 		this.positionRequest = positionRequest;
 		this.inputSignals = inputSignals;
 
 		this.pivotCommandsBuilder = new PivotCommandsBuilder(this);
+		motor.updateSignals(positionSignal);
 	}
 
 	@Override
 	public void subsystemPeriodic() {
 		motor.updateSignals(positionSignal);
 		motor.updateSignals(inputSignals);
+
+		if(PivotRealConstants.BACKWARD_ANGLE_LIMIT.getRotations() > positionSignal.getLatestValue().getRotations()){
+			motor.resetPosition(PivotRealConstants.BACKWARD_ANGLE_LIMIT);
+		}
+	}
+
+	public PivotCommandsBuilder getPivotCommandsBuilder(){
+		return pivotCommandsBuilder;
 	}
 
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d angleTolerance) {

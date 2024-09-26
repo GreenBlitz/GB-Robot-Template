@@ -23,7 +23,6 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 abstract class MotorSimulation extends Phoenix6Device implements ControllableMotor {
 
 	private final TalonFXWrapper motor;
-	private DCMotorSim motorSim =
 
 	private final TalonFXSimState motorSimulationState;
 

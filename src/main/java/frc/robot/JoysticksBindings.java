@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -25,18 +23,6 @@ public class JoysticksBindings {
 
     private static void mainJoystickButtons(Robot robot) {
         SmartJoystick usedJoystick = MAIN_JOYSTICK;
-
-        robot.pivot.setDefaultCommand(
-                robot.pivot.getPivotCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_X))
-        );
-
-        usedJoystick.A.whileTrue(
-                robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(17))
-        );
-
-        usedJoystick.B.whileTrue(
-                robot.pivot.getPivotCommandsBuilder().setPosition(Rotation2d.fromDegrees(50))
-        );
         // bindings
     }
 

@@ -18,7 +18,7 @@ import frc.robot.subsystems.pivot.PivotFactory;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	public Pivot pivot = PivotFactory.generatePivot(ROBOT_TYPE, "pivot");
+
 	public Robot() {
 		configureBindings();
 	}

@@ -46,6 +46,7 @@ public class SimulationMotor extends MotorSimulation implements ControllableMoto
             }
         }
 
+        connectedInput.connected = BaseStatusSignal.isAllGood(signalsSet.toArray(StatusSignal[]::new));
         BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new));
     }
 

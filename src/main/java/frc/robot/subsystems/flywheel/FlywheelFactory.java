@@ -34,11 +34,11 @@ public class FlywheelFactory {
 		);
 	}
 
-    public static Flywheel generateFlywheel(RobotType type, String logPath){
-        return switch (type){
-            case REAL -> getRealFlywheel(logPath);
-            default -> null;
-        };
-    }
+	public static Flywheel generateFlywheel(RobotType type, String logPath) {
+		return switch (type) {
+			case REAL -> getRealFlywheel(logPath);
+			default -> null;
+		};
+	}
 
 }

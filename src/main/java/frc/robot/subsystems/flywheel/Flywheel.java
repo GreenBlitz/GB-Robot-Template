@@ -39,14 +39,14 @@ public class Flywheel extends GBSubsystem {
 		this.leftMotor = leftFlywheel;
 
 
-        this.rightVelocitySignal = rightVelocitySignal;
-        this.leftVelocitySignal = leftVelocitySignal;
+		this.rightVelocitySignal = rightVelocitySignal;
+		this.leftVelocitySignal = leftVelocitySignal;
 
-        this.rightFlywheelVelocityRequest = rightFlywheelRequest;
-        this.leftFlywheelVelocityRequest = leftFlywheelRequest;
+		this.rightFlywheelVelocityRequest = rightFlywheelRequest;
+		this.leftFlywheelVelocityRequest = leftFlywheelRequest;
 
-        this.rightSignals = rightSignals;
-        this.leftSignals = leftSignals;
+		this.rightSignals = rightSignals;
+		this.leftSignals = leftSignals;
 
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
 	}

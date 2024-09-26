@@ -5,13 +5,13 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
-import frc.robot.hardware.signal.InputSignal;
 import frc.utils.battery.BatteryUtils;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -23,6 +23,7 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 abstract class MotorSimulation extends Phoenix6Device implements ControllableMotor {
 
 	private final TalonFXWrapper motor;
+	private DCMotorSim motorSim =
 
 	private final TalonFXSimState motorSimulationState;
 

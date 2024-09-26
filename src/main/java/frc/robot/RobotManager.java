@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.controls.PositionVoltage;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
@@ -13,8 +18,11 @@ import frc.utils.battery.BatteryUtils;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.joysticks.JoystickPorts;
+import frc.utils.joysticks.SmartJoystick;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
@@ -27,10 +35,48 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
+	private testSim testSim;
+
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
 		BatteryUtils.scheduleLimiter();
+
+		SingleJointedArmSim armSim = new SingleJointedArmSim(
+				DCMotor.getFalcon500(1),
+				28.0 * (60.0 / 16.0),
+				SingleJointedArmSim.estimateMOI(
+						0.44,
+						0.44
+				),
+				0.44,
+				Rotation2d.fromDegrees(-81).getRadians(),
+				Rotation2d.fromDegrees(90).getRadians(),
+				false,
+				Rotation2d.fromDegrees(0).getRadians()
+		);
+
+		testSim = new testSim("testSim",armSim);
+
+		SmartJoystick smartJoystick =new SmartJoystick(JoystickPorts.MAIN);
+
+		smartJoystick.A.onTrue(new Command() {
+			@Override
+			public void initialize() {
+				PositionVoltage positionVoltage = new PositionVoltage(Rotation2d.fromDegrees(45).getRotations());
+				testSim.setControl(positionVoltage);
+			}
+
+			@Override
+			public void end(boolean interrupted) {
+				testSim.stop();
+			}
+
+			@Override
+			public boolean isFinished() {
+				return testSim.getPosition().getDegrees() == 3;
+			}
+		});
 
 		this.robot = new Robot();
 	}
@@ -72,6 +118,16 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+
+		testSim.updateMotor();
+		testSim.updateSimulation();
+
+
+		testSim.updateSimulation();
+		Logger.recordOutput("testSim/vol", testSim.getVoltage());
+		Logger.recordOutput("testSim/spee", testSim.getVelocity());
+		Logger.recordOutput("testSim/curr", testSim.getCurrent());
+		Logger.recordOutput("testSim/pos", testSim.getPosition());
 	}
 
 	@Override

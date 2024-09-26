@@ -25,53 +25,52 @@ public class Pivot extends GBSubsystem {
 		InputSignal... inputSignals
 	) {
 		super(logPath);
-
 		this.motor = motor;
-
 		this.positionSignal = positionSignal;
-
 		this.positionRequest = positionRequest;
 		this.inputSignals = inputSignals;
-
 		this.pivotCommandsBuilder = new PivotCommandsBuilder(this);
-
 		this.resetFilter = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
+
 		motor.resetPosition(PivotConstants.BACKWARD_ANGLE_LIMIT);
-		motor.updateSignals(positionSignal);
-	}
-
-	@Override
-	public void subsystemPeriodic() {
-		motor.updateSignals(positionSignal);
-		motor.updateSignals(inputSignals);
-
-		if (PivotConstants.BACKWARD_ANGLE_LIMIT.getRotations() > resetFilter.calculate(positionSignal.getLatestValue().getRotations())) {
-			motor.resetPosition(PivotConstants.BACKWARD_ANGLE_LIMIT);
-		}
+		updateSignals();
 	}
 
 	public PivotCommandsBuilder getPivotCommandsBuilder() {
 		return pivotCommandsBuilder;
 	}
 
-	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d angleTolerance) {
-		return MathUtil.isNear(targetPosition.getRotations(), positionSignal.getLatestValue().getRotations(), angleTolerance.getRotations());
+	private void updateSignals() {
+		motor.updateSignals(positionSignal);
+		motor.updateSignals(inputSignals);
 	}
 
-	public void setTargetPosition(Rotation2d targetPosition) {
-		motor.applyAngleRequest(positionRequest.withSetPoint(targetPosition));
+	@Override
+	public void subsystemPeriodic() {
+		updateSignals();
+		if (PivotConstants.BACKWARD_ANGLE_LIMIT.getRotations() > resetFilter.calculate(positionSignal.getLatestValue().getRotations())) {
+			motor.resetPosition(PivotConstants.BACKWARD_ANGLE_LIMIT);
+		}
 	}
 
 	public void setBrake(boolean brake) {
 		motor.setBrake(brake);
 	}
 
+	public void stop() {
+		motor.stop();
+	}
+
 	public void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	public void stop() {
-		motor.stop();
+	public void setTargetPosition(Rotation2d targetPosition) {
+		motor.applyAngleRequest(positionRequest.withSetPoint(targetPosition));
+	}
+
+	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d angleTolerance) {
+		return MathUtil.isNear(targetPosition.getRotations(), positionSignal.getLatestValue().getRotations(), angleTolerance.getRotations());
 	}
 
 }

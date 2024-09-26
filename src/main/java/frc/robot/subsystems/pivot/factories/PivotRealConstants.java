@@ -14,7 +14,6 @@ import frc.robot.subsystems.pivot.PivotConstants;
 
 public class PivotRealConstants {
 
-
 	protected static final SysIdRoutine.Config SYS_ID_CONFIG = new SysIdRoutine.Config(
 		Units.Volts.of(1.0).per(Units.Seconds.of(1.0)),
 		Units.Volts.of(7.0),

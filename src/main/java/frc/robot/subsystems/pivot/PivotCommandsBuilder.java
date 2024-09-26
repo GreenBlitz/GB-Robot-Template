@@ -17,15 +17,25 @@ public class PivotCommandsBuilder {
 		this.pivot = pivot;
 	}
 
+	//@formatter:off
 	public Command setPower(double power) {
-		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power), (interrupted) -> pivot.stop(), () -> false, pivot)
-			.withName("Set Power to: " + power);
+		return new FunctionalCommand(
+				() -> {},
+				() -> pivot.setPower(power),
+				(interrupted) -> pivot.stop(),
+				() -> false, pivot
+		).withName("Set Power to: " + power);
 	}
 
 	public Command setPower(DoubleSupplier power) {
-		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power.getAsDouble()), (interrupted) -> pivot.stop(), () -> false, pivot)
-			.withName("Set Supplied Power");
+		return new FunctionalCommand(
+				() -> {},
+				() -> pivot.setPower(power.getAsDouble()),
+				(interrupted) -> pivot.stop(),
+				() -> false, pivot
+		).withName("Set Supplied Power");
 	}
+	//@formatter:on
 
 	public Command moveToPosition(Rotation2d position) {
 		return new FunctionalCommand(

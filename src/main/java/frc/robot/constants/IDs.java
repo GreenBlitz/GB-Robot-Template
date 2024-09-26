@@ -12,8 +12,10 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static class TalonFXs{
-		public static final Phoenix6DeviceID PIVOT_MOTOR_ID = new Phoenix6DeviceID(1, BusChain.CANIVORE);
+	public static class TalonFXs {
+
+		public static final Phoenix6DeviceID PIVOT_MOTOR_ID = new Phoenix6DeviceID(11, BusChain.CANIVORE);
+
 	}
 
 }

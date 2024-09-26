@@ -9,57 +9,54 @@ import frc.utils.GBSubsystem;
 
 public class Pivot extends GBSubsystem {
 
-    private final ControllableMotor motor;
-    private final InputSignal[] inputSignals;
-    private final IRequest<Rotation2d> positionRequest;
-    private final InputSignal<Rotation2d> positionSignal;
+	private final ControllableMotor motor;
+	private final InputSignal[] inputSignals;
+	private final IRequest<Rotation2d> positionRequest;
+	private final InputSignal<Rotation2d> positionSignal;
+	private final PivotCommandsBuilder pivotCommandsBuilder;
 
-    public Pivot(
-            String logPath,
-            ControllableMotor motor,
-            IRequest<Rotation2d> positionRequest,
-            InputSignal<Rotation2d> positionSignal,
-            InputSignal... inputSignals
-    ) {
-        super(logPath);
-        this.positionSignal = positionSignal;
+	public Pivot(
+		String logPath,
+		ControllableMotor motor,
+		IRequest<Rotation2d> positionRequest,
+		InputSignal<Rotation2d> positionSignal,
+		InputSignal... inputSignals
+	) {
+		super(logPath);
 
-        this.motor = motor;
-        this.inputSignals = inputSignals;
-        this.positionRequest = positionRequest;
-    }
+		this.motor = motor;
+		this.positionSignal = positionSignal;
 
-    @Override
-    public void subsystemPeriodic() {
-        motor.updateSignals(positionSignal);
-        motor.updateSignals(inputSignals);
-    }
+		this.positionRequest = positionRequest;
+		this.inputSignals = inputSignals;
 
-    public boolean isAtPosition(Rotation2d targetPosition, Rotation2d angleTolerance) {
-        return MathUtil.isNear(targetPosition.getRotations(), positionSignal.getLatestValue().getRotations(), angleTolerance.getRotations());
-    }
+		this.pivotCommandsBuilder = new PivotCommandsBuilder(this);
+	}
 
-    public void setTargetPosition(Rotation2d targetPosition) {
-        motor.applyAngleRequest(positionRequest.withSetPoint(targetPosition));
-    }
+	@Override
+	public void subsystemPeriodic() {
+		motor.updateSignals(positionSignal);
+		motor.updateSignals(inputSignals);
+	}
 
-    public void applyAngleRequest(IRequest<Rotation2d> request) {
-        motor.applyAngleRequest(request);
-    }
+	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d angleTolerance) {
+		return MathUtil.isNear(targetPosition.getRotations(), positionSignal.getLatestValue().getRotations(), angleTolerance.getRotations());
+	}
 
-    public void applyDoubleRequest(IRequest<Double> request) {
-        motor.applyDoubleRequest(request);
-    }
+	public void setTargetPosition(Rotation2d targetPosition) {
+		motor.applyAngleRequest(positionRequest.withSetPoint(targetPosition));
+	}
 
-    public void setBrake(boolean brake) {
-        motor.setBrake(brake);
-    }
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
+	}
 
-    public void setPower(double power){
-        motor.setPower(power);
-    }
-    public void stop() {
-        motor.stop();
-    }
+	public void setPower(double power) {
+		motor.setPower(power);
+	}
+
+	public void stop() {
+		motor.stop();
+	}
 
 }

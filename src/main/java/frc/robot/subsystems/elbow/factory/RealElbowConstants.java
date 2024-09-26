@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
-import frc.robot.hardware.motor.sparkmax.SparkMaxMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
@@ -21,8 +20,8 @@ import java.util.function.Function;
 
 public class RealElbowConstants {
 
-	private static final double KS = 0;
-	private static final double KG = 0;
+	private static final double KS = 0.15;
+	private static final double KG = 0.2;
 	private static final ArmFeedforward FEEDFORWARD = new ArmFeedforward(KS, KG, 0);
 	
 	private static final int POSITION_PID_SLOT = 0;
@@ -51,12 +50,15 @@ public class RealElbowConstants {
 				CANSparkBase.SoftLimitDirection.kForward,
 				(float) ElbowConstants.FORWARD_LIMIT.getRotations()
 		);
+		motor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 		motor.setSoftLimit(
 				CANSparkBase.SoftLimitDirection.kReverse,
 				(float) ElbowConstants.BACKWARD_LIMIT.getRotations()
 		);
+		motor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 		motor.setSmartCurrentLimit(40);
-		motor.getPIDController().setP(0, POSITION_PID_SLOT);
+		motor.getPIDController().setP(5.5, POSITION_PID_SLOT);
+		motor.getPIDController().setD(0.5, POSITION_PID_SLOT);
 		motor.getEncoder().setPositionConversionFactor(ElbowConstants.GEAR_RATIO);
 		motor.getEncoder().setPositionConversionFactor(ElbowConstants.GEAR_RATIO);
 	}

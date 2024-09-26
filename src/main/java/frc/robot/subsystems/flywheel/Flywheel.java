@@ -1,6 +1,5 @@
 package frc.robot.subsystems.flywheel;
 
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
@@ -49,6 +48,9 @@ public class Flywheel extends GBSubsystem {
 		this.leftSignals = leftSignals;
 
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
+
+		rightMotor.updateSignals(rightSignals);
+		leftMotor.updateSignals(leftSignals);
 	}
 
 
@@ -58,15 +60,20 @@ public class Flywheel extends GBSubsystem {
 		leftMotor.updateSignals(leftSignals);
 	}
 
+	public FlywheelCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
+	}
+
 	public void setTargetVelocities(Rotation2d rightFlywheelVelocity, Rotation2d leftFlywheelVelocity) {
 		rightMotor.applyAngleRequest(rightFlywheelVelocityRequest.withSetPoint(rightFlywheelVelocity));
 		leftMotor.applyAngleRequest(leftFlywheelVelocityRequest.withSetPoint(leftFlywheelVelocity));
 	}
 
-	public boolean
-		isAtVelocities(Rotation2d rightFlywheelExpectedVelocity, Rotation2d leftFlywheelExpectedVelocity, Rotation2d velocityTolerance) {
+	//@formatter:off
+	public boolean isAtVelocities(Rotation2d rightFlywheelExpectedVelocity, Rotation2d leftFlywheelExpectedVelocity, Rotation2d velocityTolerance) {
 		return isAtVelocities(rightFlywheelExpectedVelocity, leftFlywheelExpectedVelocity, velocityTolerance, velocityTolerance);
 	}
+	//@formatter:on
 
 	public void setPowers(double rightPower, double leftPower) {
 		rightMotor.setPower(rightPower);
@@ -87,10 +94,6 @@ public class Flywheel extends GBSubsystem {
 			.isNear(rightFlywheelExpectedVelocity.getRotations(), rightVelocityTolerance.getRotations(), rightVelocityTolerance.getRotations())
 			&& MathUtil
 				.isNear(leftFlywheelExpectedVelocity.getRotations(), leftVelocityTolerance.getRotations(), leftVelocityTolerance.getRotations());
-	}
-
-	public FlywheelCommandsBuilder getCommandsBuilder() {
-		return commandsBuilder;
 	}
 
 }

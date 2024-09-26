@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public class FlywheelCommandsBuilder {
 
-	private Flywheel flywheel;
+	private final Flywheel flywheel;
 
 	public FlywheelCommandsBuilder(Flywheel flywheel) {
 		this.flywheel = flywheel;
@@ -29,8 +29,8 @@ public class FlywheelCommandsBuilder {
 		return new FunctionalCommand(
 			() -> {},
 			() -> flywheel.setTargetVelocities(rightVelocity, leftVelocity),
-			(interrupted) -> flywheel.stop(),
-			() -> false,
+			(interrupted) -> {},
+			() -> flywheel.isAtVelocities(rightVelocity, leftVelocity, FlywheelFactory.getTolerance()),
 			flywheel
 		);
 	}
@@ -40,7 +40,7 @@ public class FlywheelCommandsBuilder {
 			() -> {},
 			() -> flywheel.setTargetVelocities(rightVelocity.get(), leftVelocity.get()),
 			(interrupted) -> {},
-			() -> flywheel.isAtVelocities(rightVelocity.get(), leftVelocity.get(), FlywheelConstants.TOLERANCE),
+			() -> flywheel.isAtVelocities(rightVelocity.get(), leftVelocity.get(), FlywheelFactory.getTolerance()),
 			flywheel
 		);
 	}

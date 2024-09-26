@@ -4,6 +4,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
@@ -17,6 +18,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 public class FlywheelConstants {
+    public static final Rotation2d TOLERANCE = Rotation2d.fromRotations(0.5);
 
     private static final TalonFXConfiguration CONFIGURATION = new TalonFXConfiguration();
     private static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(

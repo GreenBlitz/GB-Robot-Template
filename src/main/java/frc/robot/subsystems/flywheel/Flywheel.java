@@ -15,8 +15,8 @@ public class Flywheel extends GBSubsystem {
     private final InputSignal[] rightSignals;
     private final InputSignal[] leftSignals;
 
-    private final InputSignal rightVelocitySignal;
-    private final InputSignal leftVelocitySignal;
+    private final InputSignal<Rotation2d> rightVelocitySignal;
+    private final InputSignal<Rotation2d> leftVelocitySignal;
     private final IRequest<Rotation2d> rightFlywheelVelocityRequest;
     private final IRequest<Rotation2d> leftFlywheelVelocityRequest;
 
@@ -24,8 +24,8 @@ public class Flywheel extends GBSubsystem {
             String logPath,
             ControllableMotor rightFlywheel,
             ControllableMotor leftFlywheel,
-            InputSignal rightVelocitySignal,
-            InputSignal leftVelocitySignal,
+            InputSignal<Rotation2d> rightVelocitySignal,
+            InputSignal<Rotation2d> leftVelocitySignal,
             IRequest<Rotation2d> rightFlywheelRequest,
             IRequest<Rotation2d> leftFlywheelRequest,
             InputSignal[] rightSignals,

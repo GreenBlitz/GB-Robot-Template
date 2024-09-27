@@ -42,7 +42,7 @@ public class Robot {
 	}
 
 	public Flywheel getFlywheel() {
-			return flywheel;
+		return flywheel;
 	}
 
 	public Pivot getPivot() {

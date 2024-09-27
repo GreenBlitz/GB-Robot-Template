@@ -27,11 +27,11 @@ public class FlywheelCommandsBuilder {
 
 	public Command setPowers(Supplier<Double> rightPower, Supplier<Double> leftPower) {
 		return new FunctionalCommand(
-				() -> {},
-				() -> flywheel.setPowers(rightPower.get(), leftPower.get()),
-				(interrupted) -> {},
-				() -> false,
-				flywheel
+			() -> {},
+			() -> flywheel.setPowers(rightPower.get(), leftPower.get()),
+			(interrupted) -> {},
+			() -> false,
+			flywheel
 		).withName("Set power by supplier");
 	}
 

@@ -25,16 +25,16 @@ public class Robot {
 		configureBindings();
 	}
 
-	public Flywheel getFlywheel() {
-		return flywheel;
-	}
-
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Flywheel getFlywheel() {
+		return flywheel;
 	}
 
 }

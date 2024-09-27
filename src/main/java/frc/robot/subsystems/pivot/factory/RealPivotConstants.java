@@ -26,10 +26,10 @@ public class RealPivotConstants {
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
-				Units.Volts.of(1.0).per(Units.Seconds.of(1.0)),
-				Units.Volts.of(7.0),
-				Units.Seconds.of(10.0),
-				(state) -> SignalLogger.writeString("state", state.toString())
+			Units.Volts.of(1.0).per(Units.Seconds.of(1.0)),
+			Units.Volts.of(7.0),
+			Units.Seconds.of(10.0),
+			(state) -> SignalLogger.writeString("state", state.toString())
 		);
 	}
 

@@ -1,11 +1,9 @@
 package frc.robot.subsystems.pivot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.superstructure.Tolerances;
 
 public class PivotStateHandler {
-
-	private static final Rotation2d TOLERANCE = Rotation2d.fromDegrees(1);
 
 	private final Pivot pivot;
 
@@ -14,7 +12,7 @@ public class PivotStateHandler {
 	}
 
 	public Command setState(PivotState pivotState) {
-		return pivot.getCommandsBuilder().moveToPosition(pivotState.getTargetPosition(), TOLERANCE);
+		return pivot.getCommandsBuilder().moveToPosition(pivotState.getTargetPosition(), Tolerances.PIVOT_POSITION_TOLERANCE);
 	}
 
 }

@@ -30,7 +30,8 @@ public class IntakeCommandsBuilder {
 				() -> {},
 				() -> intake.setPower(power.getAsDouble()),
 				interrupted -> intake.stop(),
-				() -> false, intake
+				() -> false,
+				intake
 		).withName("Move by power supplier");
 	}
 	//@formatter:on

@@ -50,7 +50,7 @@ public class Swerve extends GBSubsystem {
 	public Swerve(SwerveConstants constants, Modules modules, GyroStuff gyroStuff) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
-
+		this.savedState = currentState;
 		this.constants = constants;
 		this.modules = modules;
 		this.gyro = gyroStuff.gyro();
@@ -126,6 +126,10 @@ public class Swerve extends GBSubsystem {
 		constants.rotationDegreesPIDController().reset();
 	}
 
+	@Override
+	protected void subsystemPeriodic() {
+		updateState();
+	}
 
 	public void updateState() {
 		updateInputs();

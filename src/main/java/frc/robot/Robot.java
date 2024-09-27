@@ -106,12 +106,13 @@ public class Robot {
 		return pivot;
 	}
 
+	public Roller getRoller() {
+		return roller;
+	}
+
 	public Supersturctrue getSupersturctrue() {
 		return supersturctrue;
 	}
 
-	public Roller getRoller() {
-		return roller;
-	}
 
 }

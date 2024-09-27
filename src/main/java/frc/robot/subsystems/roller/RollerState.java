@@ -2,11 +2,11 @@ package frc.robot.subsystems.roller;
 
 public enum RollerState {
 
-	INTAKE(0.3),
-	OUTTAKE(-0.3),
+	INTAKE(0.4),
+	OUTTAKE(-0.4),
 	STOP(0);
 
-	private double power;
+	private final double power;
 
 	RollerState(double power) {
 		this.power = power;

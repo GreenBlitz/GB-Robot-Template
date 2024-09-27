@@ -1,6 +1,5 @@
 package frc.robot.subsystems.funnel;
 
-import frc.robot.hardware.digitalinput.DigitalInputInputs;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.IMotor;
@@ -15,13 +14,15 @@ public class Funnel extends GBSubsystem {
     private final DigitalInputInputsAutoLogged digitalInputsInputs;
     private final InputSignal<Double> voltageSignal;
     private final FunnelCommandBuilder commandBuilder;
+    private final String logPath;
 
-    public Funnel(String logPath, IntakeStuff intakeStuff) {
-        super(logPath);
-        this.motor = intakeStuff.motor();
-        this.digitalInput = intakeStuff.digitalInput();
-        this.voltageSignal = intakeStuff.inputSignal();
-        this.commandBuilder = new IntakeCommandBuilder(this);
+    public Funnel(FunnelStuff funnelStuff) {
+        super(funnelStuff.logPath());
+        this.logPath = funnelStuff.logPath();
+        this.motor = funnelStuff.motor();
+        this.digitalInput = funnelStuff.digitalInput();
+        this.voltageSignal = funnelStuff.inputSignal();
+        this.commandBuilder = new FunnelCommandBuilder(this);
 
         this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
     }
@@ -39,7 +40,7 @@ public class Funnel extends GBSubsystem {
         motor.updateSignals(voltageSignal);
     }
 
-    public IntakeCommandBuilder getCommandBuilder() {
+    public FunnelCommandBuilder getCommandBuilder() {
         return commandBuilder;
     }
 

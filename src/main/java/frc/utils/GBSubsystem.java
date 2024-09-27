@@ -9,7 +9,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 	private final String logPath;
 
 	public GBSubsystem(String logPath) {
-		this.logPath = "Subsystems/" + logPath;
+		this.logPath = logPath;
 	}
 
 	private String getCurrentCommandName() {

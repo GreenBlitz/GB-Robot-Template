@@ -22,7 +22,7 @@ public class RealFunnelConstants {
 
     private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kRising;// idk
 
-    public static FunnelStuff generateIntakeStuff(String logPath) {
+    public static FunnelStuff generateFunnelStuff(String logPath) {
         SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxes.FUNNEL);
         SysIdRoutine.Config config = new SysIdRoutine.Config();// config!
         BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
@@ -36,7 +36,7 @@ public class RealFunnelConstants {
 
         SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);// maybe forward
 
-        return new FunnelStuff(motor, signal, beamBreaker);
+        return new FunnelStuff(logPath, motor, signal, beamBreaker);
     }
 
 }

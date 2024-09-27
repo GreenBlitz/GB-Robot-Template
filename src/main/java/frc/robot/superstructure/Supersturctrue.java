@@ -52,10 +52,10 @@ public class Supersturctrue {
             case PRE_AMP -> preAMP();
             case TRANSFER_SHOOTER_ARM -> null;
             case TRANSFER_ARM_SHOOTER -> null;
-            case INTAKE -> null;
-            case SPEAKER -> null;
+            case INTAKE -> intake();
+            case SPEAKER -> speaker();
             case AMP -> null;
-            case OUTTAKE -> null;
+            case SHOOTER_OUTTAKE -> shooterOuttake();
         };
     }
 
@@ -83,6 +83,8 @@ public class Supersturctrue {
 
     private Command preAMP() {
         return new ParallelCommandGroup(
+                funnelStateHandler.setState(FunnelState.STOP),
+                intakeStateHandler.setState(IntakeState.STOP),
                 pivotStateHandler.setState(PivotState.IDLE),
                 flywheelStateHandler.setState(FlywheelState.DEFAULT),
                 new SequentialCommandGroup(
@@ -97,6 +99,43 @@ public class Supersturctrue {
                 )
         );
     }
+
+    private Command intake() {
+        return new SequentialCommandGroup(
+                flywheelStateHandler.setState(FlywheelState.DEFAULT),
+                pivotStateHandler.setState(PivotState.IDLE),
+                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
+                elbowStateHandler.setState(ElbowState.INTAKE),
+                intakeStateHandler.setState(IntakeState.INTAKE).until(() -> robot.getIntake().isObjectIn()),
+                new ParallelCommandGroup(
+                        intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
+                        funnelStateHandler.setState(FunnelState.INTAKE)
+                ).until(() -> robot.getFunnel().isObjectIn())
+        );
+    }
+
+    private Command shooterOuttake() {
+        return new SequentialCommandGroup(
+                elbowStateHandler.setState(ElbowState.MANUAL),
+                intakeStateHandler.setState(IntakeState.OUTTAKE),
+                funnelStateHandler.setState(FunnelState.OUTTAKE),
+                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+                flywheelStateHandler.setState(FlywheelState.DEFAULT),
+                pivotStateHandler.setState(PivotState.INTAKE)
+        );
+    }
+
+    private Command speaker() {
+        return new ParallelCommandGroup(
+                funnelStateHandler.setState(FunnelState.SHOOT),
+                intakeStateHandler.setState(IntakeState.STOP),
+                pivotStateHandler.setState(PivotState.PRE_SPEAKER),
+                flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
+                elbowStateHandler.setState(ElbowState.IDLE),
+                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
+        );
+    }
+
 
     private Command transferShooterArm() {
         return new SequentialCommandGroup(

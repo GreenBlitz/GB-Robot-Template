@@ -3,7 +3,8 @@ package frc.robot.subsystems.intake;
 
 public enum IntakeState {
 
-	INTAKE(0.3),
+	INTAKE(0.8),
+	INTAKE_WITH_FUNNEL(0.4),
 	OUTTAKE(-0.3),
 	STOP(0);
 

@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.factory.IntakeFactory;
 import frc.robot.subsystems.elbow.Elbow;
 import frc.robot.subsystems.elbow.ElbowConstants;
 import frc.robot.subsystems.elbow.factory.ElbowFactory;
@@ -26,11 +29,13 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Intake intake;
 	private final Elbow elbow;
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 
 	public Robot() {
+		this.intake = new Intake(IntakeFactory.create(IntakeConstants.LOG_PATH));
 		this.flywheel = new Flywheel(FlywheelFactory.create(FlyWheelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
@@ -46,6 +51,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Intake getIntake() {
+		return intake;
 	}
 
 	public Elbow getElbow() {

@@ -16,7 +16,7 @@ public class Funnel extends GBSubsystem {
     private final InputSignal[] motorSignals;
     private final String logPath;
 
-    public Funnel(String logPath,IDigitalInput beamBreaker, IMotor motor, InputSignal... motorSignals) {
+    public Funnel(String logPath, IDigitalInput beamBreaker, IMotor motor, InputSignal... motorSignals) {
         super(logPath);
         this.logPath = logPath;
         this.beamBreaker = beamBreaker;

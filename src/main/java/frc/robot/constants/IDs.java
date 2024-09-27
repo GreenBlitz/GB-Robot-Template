@@ -2,6 +2,7 @@ package frc.robot.constants;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.utils.battery.PowerDistributionDeviceID;
+import frc.utils.devicewrappers.SparkMaxDeviceID;
 
 public class IDs {
 
@@ -10,8 +11,10 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static class CANSparkMaxes{
-		public static final int FUNNEL_ID = 1;
+	public static class CANSparkMaxes {
+
+		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1);
+
 	}
 
 }

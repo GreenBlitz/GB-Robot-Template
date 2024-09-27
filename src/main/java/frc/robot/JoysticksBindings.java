@@ -23,8 +23,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.whileTrue(robot.getIntake().getCommandBuilder().moveByPower(0.3));
-		usedJoystick.B.whileTrue(robot.getIntake().getCommandBuilder().moveByPower(-0.3));
+		// bindings
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

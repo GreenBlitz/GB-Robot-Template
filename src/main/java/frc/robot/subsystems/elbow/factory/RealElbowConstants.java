@@ -56,7 +56,7 @@ public class RealElbowConstants {
 	}
 
 	protected static ElbowStuff generateElbowStuff(String logPath) {
-		SparkMaxWrapper motor = new SparkMaxWrapper(IDs.CANSparkMaxs.ELBOW);
+		SparkMaxWrapper motor = new SparkMaxWrapper(IDs.CANSparkMAXs.ELBOW);
 		configMotor(motor);
 
 		SparkMaxAngleSignal positionSignal = new SparkMaxAngleSignal("position", () -> motor.getEncoder().getPosition(), AngleUnit.ROTATIONS);

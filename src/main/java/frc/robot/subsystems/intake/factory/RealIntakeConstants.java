@@ -22,7 +22,7 @@ public class RealIntakeConstants {
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
 	public static IntakeStuff generateIntakeStuff(String logPath) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxs.INTAKE);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.INTAKE);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 

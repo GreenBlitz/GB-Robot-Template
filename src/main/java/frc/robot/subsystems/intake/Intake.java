@@ -30,6 +30,11 @@ public class Intake extends GBSubsystem {
 		return commandBuilder;
 	}
 
+	@Override
+	public String getLogPath() {
+		return intakeStuff.logPath();
+	}
+
 	public boolean isObjectIn() {
 		return digitalInputsInputs.debouncedValue;
 	}

@@ -1,7 +1,6 @@
 package frc.robot.hardware.motor.sparkmax;
 
 import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.ControllableMotor;
@@ -14,7 +13,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
 
-	public BrushlessSparkMAXMotor(String logPath, CANSparkMax motor, SysIdRoutine.Config sysidConfig) {
+	public BrushlessSparkMAXMotor(String logPath, SparkMaxWrapper motor, SysIdRoutine.Config sysidConfig) {
 		super(logPath, motor);
 		if (motor.getMotorType() != CANSparkLowLevel.MotorType.kBrushless) {
 			throw new IllegalArgumentException("inserted BrushedSparkMAXMotor to BrushlessSparkMAXMotor!");

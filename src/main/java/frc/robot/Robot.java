@@ -24,7 +24,13 @@ import frc.robot.subsystems.pivot.factory.PivotFactory;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.roller.RollerConstants;
 import frc.robot.subsystems.roller.factory.RollerFactory;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.utils.brakestate.BrakeStateManager;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -35,6 +41,7 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Swerve swerve;
 	private final Funnel funnel;
 	private final Intake intake;
 	private final Elbow elbow;
@@ -43,6 +50,11 @@ public class Robot {
 	private final Roller roller;
 
 	public Robot() {
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveName.SWERVE),
+			ModulesFactory.create(SwerveName.SWERVE),
+			GyroFactory.create(SwerveName.SWERVE)
+		);
 		this.intake = new Intake(IntakeFactory.create(IntakeConstants.LOG_PATH));
 		this.flywheel = new Flywheel(FlywheelFactory.create(FlyWheelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
@@ -59,8 +71,13 @@ public class Robot {
 		JoysticksBindings.configureBindings(this);
 	}
 
+
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
 	}
 
 	public Funnel getFunnel() {

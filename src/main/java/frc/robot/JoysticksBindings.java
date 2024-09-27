@@ -23,34 +23,32 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.whileTrue(robot.getRoller().getCommandsBuilder().moveByPower(0.2));
-		usedJoystick.B.whileTrue(robot.getRoller().getCommandsBuilder().moveByPower(-0.2));
-		// bindings
+		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 }

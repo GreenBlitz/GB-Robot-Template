@@ -1,5 +1,6 @@
 package frc.robot.superstructure;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
@@ -16,6 +17,7 @@ import frc.robot.subsystems.pivot.PivotStateHandler;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+import org.littletonrobotics.junction.Logger;
 
 public class Supersturctrue {
 
@@ -39,6 +41,11 @@ public class Supersturctrue {
 		this.intakeStateHandler = new IntakeStateHandler(robot.getIntake());
 		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
 	}
+
+    public void logStatus() {
+        Logger.recordOutput("CurrentState", currentState);
+        Logger.recordOutput("isReadyToShoot", isReadyToShoot());
+    }
 
 	public RobotState getCurrentState() {
 		return currentState;
@@ -87,15 +94,16 @@ public class Supersturctrue {
 			pivotStateHandler.setState(PivotState.IDLE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			new SequentialCommandGroup(
-				funnelStateHandler.setState(FunnelState.STOP),
 				new ParallelDeadlineGroup(
+					new RunCommand(() -> {}).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
-					new RunCommand(() -> {}).until(() -> swerve.isAtHeading(Field.getAngleToAmp()))
+					funnelStateHandler.setState(FunnelState.STOP)
 				),
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.RELEASE_FOR_ARM),
-					elbowStateHandler.setState(ElbowState.PRE_AMP)
-				)
+				new ParallelDeadlineGroup(
+                        elbowStateHandler.setState(ElbowState.PRE_AMP),
+                        funnelStateHandler.setState(FunnelState.RELEASE_FOR_ARM)
+				),
+                funnelStateHandler.setState(FunnelState.STOP)
 			)
 		);
 	}
@@ -127,9 +135,27 @@ public class Supersturctrue {
 		);
 	}
 
+	private boolean isReadyToShoot() {
+		boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.PRE_SPEAKER.getTargetPosition(), Rotation2d.fromDegrees(4));
+
+		boolean isFlywheelReady = robot.getFlywheel()
+			.isAtVelocities(
+				FlywheelState.PRE_SPEAKER.getRightVelocity(),
+				FlywheelState.PRE_SPEAKER.getLeftVelocity(),
+				Rotation2d.fromRotations(4)
+			);
+        Logger.recordOutput("isPivotReady", isPivotReady);
+        Logger.recordOutput("isFlywheelReady", isFlywheelReady);
+		return isFlywheelReady && isPivotReady;
+	}
+
 	private Command speaker() {
 		return new ParallelCommandGroup(
-			funnelStateHandler.setState(FunnelState.SHOOT),
+			new SequentialCommandGroup(
+                funnelStateHandler.setState(FunnelState.STOP).until(() -> true),
+                new RunCommand(() -> {}, robot.getFunnel()).until(this::isReadyToShoot),
+                funnelStateHandler.setState(FunnelState.SHOOT)
+            ),
 			intakeStateHandler.setState(IntakeState.STOP),
 			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),

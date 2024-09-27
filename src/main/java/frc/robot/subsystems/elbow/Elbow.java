@@ -14,8 +14,8 @@ public class Elbow extends GBSubsystem {
 	private final ElbowStuff elbowStuff;
 	private final ElbowCommandsBuilder commandsBuilder;
 
-	public Elbow(String logPath, ElbowStuff elbowStuff) {
-		super(logPath);
+	public Elbow(ElbowStuff elbowStuff) {
+		super(elbowStuff.logPath());
 		this.motor = elbowStuff.elbow();
 		this.positionRequest = elbowStuff.positionRequest();
 		this.voltageRequest = elbowStuff.voltageRequest();

@@ -6,6 +6,7 @@ import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 
 public record ElbowStuff(
+	String logPath,
 	ControllableMotor elbow,
 	IRequest<Rotation2d> positionRequest,
 	IRequest<Double> voltageRequest,

@@ -66,6 +66,7 @@ public class RealElbowConstants {
 
 		BrushlessSparkMAXMotor elbow = new BrushlessSparkMAXMotor(logPath, motor, new SysIdRoutine.Config());
 		return new ElbowStuff(
+			logPath,
 			elbow,
 			generatePositionRequest(),
 			generateVoltageRequest(),

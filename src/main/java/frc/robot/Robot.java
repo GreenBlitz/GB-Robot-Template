@@ -23,7 +23,7 @@ public class Robot {
 	private final Elbow elbow;
 
 	public Robot() {
-		this.elbow = new Elbow(ElbowConstants.LOG_PATH, ElbowFactory.create());
+		this.elbow = new Elbow(ElbowFactory.create(ElbowConstants.LOG_PATH));
 		BrakeStateManager.add(() -> elbow.setBrake(true), () -> elbow.setBrake(false));
 		configureBindings();
 	}

@@ -6,9 +6,9 @@ import frc.robot.subsystems.elbow.ElbowStuff;
 
 public class ElbowFactory {
 
-	public static ElbowStuff create() {
+	public static ElbowStuff create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealElbowConstants.generateElbowStuff(ElbowConstants.LOG_PATH);
+			case REAL -> RealElbowConstants.generateElbowStuff(logPath);
 			case SIMULATION -> null;
 		};
 	}

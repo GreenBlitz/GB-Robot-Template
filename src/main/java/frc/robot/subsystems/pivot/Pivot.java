@@ -27,7 +27,7 @@ public class Pivot extends GBSubsystem {
 		updateSignals();
 	}
 
-	public PivotCommandsBuilder getPivotCommandsBuilder() {
+	public PivotCommandsBuilder getCommandsBuilder() {
 		return pivotCommandsBuilder;
 	}
 

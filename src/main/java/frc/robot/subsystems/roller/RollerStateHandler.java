@@ -2,21 +2,20 @@ package frc.robot.subsystems.roller;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import javax.print.DocFlavor;
 
 public class RollerStateHandler {
 
-    private Roller roller;
+	private Roller roller;
 
-    public RollerStateHandler(Roller roller){
-        this.roller = roller;
-    }
+	public RollerStateHandler(Roller roller) {
+		this.roller = roller;
+	}
 
-    public Command setState(RollerState rollerState) {
-        if (rollerState == RollerState.INTAKE) {
-            return roller.getCommandsBuilder().rotateByRotations(RollerConstants.INTAKE_ROTATIONS, rollerState.getPower());
-        }
-        return roller.getCommandsBuilder().moveByPower(rollerState.getPower());
-    }
+	public Command setState(RollerState rollerState) {
+		if (rollerState == RollerState.INTAKE) {
+			return roller.getCommandsBuilder().rotateByRotations(RollerConstants.INTAKE_ROTATIONS, rollerState.getPower());
+		}
+		return roller.getCommandsBuilder().moveByPower(rollerState.getPower());
+	}
 
 }

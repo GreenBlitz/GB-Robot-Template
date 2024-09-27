@@ -38,8 +38,8 @@ public class RealRollerConstants {
 		Supplier<Double> position = () -> sparkMaxWrapper.getEncoder().getPosition();
 		SparkMaxAngleSignal angleSignal = new SparkMaxAngleSignal("position", position, AngleUnit.ROTATIONS);
 
-		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
-		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
+		BooleanSupplier isPressed = () -> sparkMaxWrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		sparkMaxWrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 

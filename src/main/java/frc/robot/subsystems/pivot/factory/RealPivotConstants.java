@@ -63,7 +63,7 @@ public class RealPivotConstants {
 
 		TalonFXWrapper motor = new TalonFXWrapper(IDs.TalonFXs.PIVOT_MOTOR_ID);
 		if (!motor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFail").report();
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFail").report();
 		}
 
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder

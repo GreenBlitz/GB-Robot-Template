@@ -15,8 +15,8 @@ public class Pivot extends GBSubsystem {
 	private final PivotCommandsBuilder pivotCommandsBuilder;
 	private final MedianFilter resetFilter;
 
-	public Pivot(String logPath, PivotStuff pivotStuff) {
-		super(logPath);
+	public Pivot(PivotStuff pivotStuff) {
+		super("logPath");
 		this.motor = pivotStuff.motor();
 		this.positionRequest = pivotStuff.positionRequest();
 		this.pivotStuff = pivotStuff;

@@ -23,7 +23,7 @@ public class Robot {
 	private final Pivot pivot;
 
 	public Robot() {
-		this.pivot = new Pivot(PivotConstants.LOG_PATH, PivotFactory.create(PivotConstants.LOG_PATH));
+		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		configureBindings();
 	}

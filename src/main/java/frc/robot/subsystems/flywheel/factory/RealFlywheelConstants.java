@@ -89,6 +89,7 @@ public class RealFlywheelConstants {
 		TalonFXMotor leftFlywheel = new TalonFXMotor(leftLogPath, leftMotor, generateSysidConfig());
 
 		return new FlywheelStuff(
+			logPath,
 			rightFlywheel,
 			leftFlywheel,
 			rightVelocityRequest,

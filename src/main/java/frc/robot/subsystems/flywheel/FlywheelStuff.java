@@ -6,6 +6,7 @@ import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 
 public record FlywheelStuff(
+	String logPath,
 	ControllableMotor rightFlywheel,
 	ControllableMotor leftFlywheel,
 	IRequest<Rotation2d> rightFlywheelVelocityRequest,

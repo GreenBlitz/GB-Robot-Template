@@ -17,7 +17,7 @@ public class Flywheel extends GBSubsystem {
 	private final FlywheelCommandsBuilder commandsBuilder;
 
 	public Flywheel(FlywheelStuff flywheelStuff) {
-		super("logPath");
+		super(flywheelStuff.logPath());
 		this.rightMotor = flywheelStuff.rightFlywheel();
 		this.leftMotor = flywheelStuff.leftFlywheel();
 		this.rightFlywheelVelocityRequest = flywheelStuff.rightFlywheelVelocityRequest();

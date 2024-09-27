@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.funnel.FunnelConstants;
+import frc.robot.subsystems.funnel.factory.FunnelFactory;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.factory.IntakeFactory;
@@ -29,6 +32,7 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Funnel funnel;
 	private final Intake intake;
 	private final Elbow elbow;
 	private final Flywheel flywheel;
@@ -41,7 +45,7 @@ public class Robot {
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		this.elbow = new Elbow(ElbowFactory.create(ElbowConstants.LOG_PATH));
 		BrakeStateManager.add(() -> elbow.setBrake(true), () -> elbow.setBrake(false));
-
+		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		configureBindings();
 	}
 
@@ -51,6 +55,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Funnel getFunnel() {
+		return funnel;
 	}
 
 	public Intake getIntake() {

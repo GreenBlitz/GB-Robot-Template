@@ -22,7 +22,8 @@ public class PivotCommandsBuilder {
 				() -> {},
 				() -> pivot.setPower(power),
 				(interrupted) -> pivot.stop(),
-				() -> false, pivot
+				() -> false,
+				pivot
 		).withName("Set power to: " + power);
 	}
 
@@ -31,7 +32,8 @@ public class PivotCommandsBuilder {
 				() -> {},
 				() -> pivot.setPower(power.getAsDouble()),
 				(interrupted) -> pivot.stop(),
-				() -> false, pivot
+				() -> false,
+				pivot
 		).withName("Set power by supplier");
 	}
 

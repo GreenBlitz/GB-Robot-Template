@@ -1,5 +1,6 @@
 package frc.robot.subsystems.roller;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,13 +35,13 @@ public class RollerCommandsBuilder {
 		).withName("Move by power supplier");
 	}
 
-	public Command rotateByRotations(double rotations, double power) {
+	public Command rollRotations(Rotation2d rotationsToAdd, double power) {
 		return new FunctionalCommand(
-				()-> roller.setTargetPosition(rotations),
+				()-> roller.setTargetPositionWithAddition(rotationsToAdd),
 				()-> roller.setPower(power),
 				interrupted -> roller.stop(),
-				roller::isPastPosition
-		).withName("Rotate by rotations: " + rotations);
+				roller::isPastTargetPosition
+		).withName("Roll rotations: " + rotationsToAdd);
 	}
 	//@formatter:on
 

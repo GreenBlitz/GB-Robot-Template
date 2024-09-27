@@ -16,7 +16,7 @@ public class RollerStateHandler {
 		if (rollerState == RollerState.INTAKE) {
 			return new SequentialCommandGroup(
 				roller.getCommandsBuilder().moveByPower(rollerState.getPower()).until(roller::isObjectIn),
-				roller.getCommandsBuilder().rotateByRotations(RollerConstants.INTAKE_ROTATIONS, rollerState.getPower())
+				roller.getCommandsBuilder().rollRotations(RollerConstants.INTAKE_ROTATIONS, rollerState.getPower())
 			);
 		}
 		return roller.getCommandsBuilder().moveByPower(rollerState.getPower());

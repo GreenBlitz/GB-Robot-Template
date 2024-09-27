@@ -1,10 +1,12 @@
 package frc.robot.subsystems.roller;
 
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public class RollerConstants {
 
 	public static final String LOG_PATH = "Subsystems/Roller/";
 
-	public static final int INTAKE_ROTATIONS = 1;
+	public static final Rotation2d INTAKE_ROTATIONS = Rotation2d.fromRotations(1);
 
 }

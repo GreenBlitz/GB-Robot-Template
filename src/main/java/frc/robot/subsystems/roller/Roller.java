@@ -58,11 +58,11 @@ public class Roller extends GBSubsystem {
 		return rollerStuff.positionSignal().getLatestValue();
 	}
 
-	protected void setTargetPosition(double rotations) {
-		this.targetPosition = Rotation2d.fromRotations(getPosition().getRotations() + rotations);
+	protected void setTargetPositionWithAddition(Rotation2d rotationsToAdd) {
+		this.targetPosition = Rotation2d.fromRotations(getPosition().getRotations() + rotationsToAdd.getRotations());
 	}
 
-	protected boolean isPastPosition() {
+	protected boolean isPastTargetPosition() {
 		return getPosition().getRotations() > targetPosition.getRotations();
 	}
 

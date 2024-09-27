@@ -23,11 +23,11 @@ public class ElbowCommandsBuilder {
 			interrupted -> elbow.stayInPlace(),
 			() -> elbow.isAtAngle(angle, tolerance),
 			elbow
-		).withName("Move to Angle: " + angle);
+		).withName("Move to angle: " + angle);
 	}
 
 	public Command stayInPlace() {
-		return new InstantCommand(elbow::stayInPlace, elbow).withName("StayInPlace");
+		return new InstantCommand(elbow::stayInPlace, elbow).withName("Stay in place");
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
@@ -37,11 +37,11 @@ public class ElbowCommandsBuilder {
 			interrupted -> elbow.stayInPlace(),
 			() -> false,
 			elbow
-		).withName("Set Power");
+		).withName("Set power");
 	}
 
 	public Command voltageControlByDashboard(String widgetName) {
-		return new LoggedDashboardCommand(widgetName, elbow::setVoltage, elbow).withName("Voltage By Dashboard");
+		return new LoggedDashboardCommand(widgetName, elbow::setVoltage, elbow).withName("Voltage by dashboard");
 	}
 
 }

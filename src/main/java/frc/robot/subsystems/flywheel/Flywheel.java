@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.utils.GBSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class Flywheel extends GBSubsystem {
 
@@ -74,14 +73,14 @@ public class Flywheel extends GBSubsystem {
 		Rotation2d leftVelocityTolerance
 	) {
 		boolean rightFlyWheelAtVelocity = MathUtil.isNear(
-				rightFlywheelExpectedVelocity.getRotations(),
-				flywheelStuff.rightVelocitySignal().getLatestValue().getRotations(),
-				rightVelocityTolerance.getRotations()
+			rightFlywheelExpectedVelocity.getRotations(),
+			flywheelStuff.rightVelocitySignal().getLatestValue().getRotations(),
+			rightVelocityTolerance.getRotations()
 		);
 		boolean leftFlyWheelAtVelocity = MathUtil.isNear(
-					leftFlywheelExpectedVelocity.getRotations(),
-					flywheelStuff.leftVelocitySignal().getLatestValue().getRotations(),
-				leftVelocityTolerance.getRotations()
+			leftFlywheelExpectedVelocity.getRotations(),
+			flywheelStuff.leftVelocitySignal().getLatestValue().getRotations(),
+			leftVelocityTolerance.getRotations()
 		);
 		return rightFlyWheelAtVelocity && leftFlyWheelAtVelocity;
 	}

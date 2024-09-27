@@ -68,11 +68,12 @@ public class Supersturcture {
 	private boolean isReadyToShoot() {
 		boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.PRE_SPEAKER.getTargetPosition(), Tolerances.PIVOT_POSITION_TOLERANCE);
 
-		boolean isFlywheelReady = robot.getFlywheel().isAtVelocities(
+		boolean isFlywheelReady = robot.getFlywheel()
+			.isAtVelocities(
 				FlywheelState.PRE_SPEAKER.getRightVelocity(),
 				FlywheelState.PRE_SPEAKER.getLeftVelocity(),
 				Tolerances.FLYWHEEL_VELOCITY_PER_SECOND_TOLERANCE
-		);
+			);
 
 		return isFlywheelReady && isPivotReady;
 	}

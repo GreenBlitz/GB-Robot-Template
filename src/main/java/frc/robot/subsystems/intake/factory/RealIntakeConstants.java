@@ -15,18 +15,24 @@ import java.util.function.Supplier;
 
 public class RealIntakeConstants {
 
+	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
+
+	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
+
+	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
+
 	public static IntakeStuff generateIntakeStuff(String logPath) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxIDs.INTAKE_MOTOR);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxs.INTAKE);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 
 		Supplier<Double> voltage = () -> (sparkMaxWrapper.getBusVoltage() * sparkMaxWrapper.getAppliedOutput());
 		SparkMaxDoubleSignal signal = new SparkMaxDoubleSignal("voltage", voltage);
 
-		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
-		sparkMaxWrapper.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
+		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 
-		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, Debouncer.DebounceType.kBoth, 0.05);
+		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
 		return new IntakeStuff(logPath, motor, signal, beamBreaker);
 	}

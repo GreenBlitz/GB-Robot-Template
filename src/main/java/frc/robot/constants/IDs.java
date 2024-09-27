@@ -14,11 +14,11 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static class CANSparkMaxIDs {
+	public static class CANSparkMaxs {
 
-		public static final SparkMaxDeviceID INTAKE_MOTOR = new SparkMaxDeviceID(3, CANSparkLowLevel.MotorType.kBrushless);
+		public static final SparkMaxDeviceID INTAKE = new SparkMaxDeviceID(3, CANSparkLowLevel.MotorType.kBrushless);
 
-		public static final SparkMaxDeviceID ELBOW_MOTOR = new SparkMaxDeviceID(5, CANSparkLowLevel.MotorType.kBrushless);
+		public static final SparkMaxDeviceID ELBOW = new SparkMaxDeviceID(5, CANSparkLowLevel.MotorType.kBrushless);
 
 	}
 

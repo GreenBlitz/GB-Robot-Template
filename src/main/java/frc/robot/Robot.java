@@ -47,9 +47,9 @@ public class Robot {
 
 	public Robot() {
 		this.swerve = new Swerve(
-				SwerveConstantsFactory.create(SwerveName.SWERVE),
-				ModulesFactory.create(SwerveName.SWERVE),
-				GyroFactory.create(SwerveName.SWERVE)
+			SwerveConstantsFactory.create(SwerveName.SWERVE),
+			ModulesFactory.create(SwerveName.SWERVE),
+			GyroFactory.create(SwerveName.SWERVE)
 		);
 		this.intake = new Intake(IntakeFactory.create(IntakeConstants.LOG_PATH));
 		this.flywheel = new Flywheel(FlywheelFactory.create(FlyWheelConstants.LOG_PATH));

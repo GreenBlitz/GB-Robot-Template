@@ -36,11 +36,6 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings
-
-		usedJoystick.A.whileTrue(robot.getElbow().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
-		usedJoystick.B.whileTrue(robot.getElbow().getCommandsBuilder().voltageControlByDashboard("Calib Arm"));
-		usedJoystick.Y.whileTrue(robot.getElbow().getCommandsBuilder().moveToAngle(Rotation2d.fromDegrees(45), Rotation2d.fromDegrees(3)));
-		usedJoystick.X.whileTrue(robot.getElbow().getCommandsBuilder().moveToAngle(Rotation2d.fromDegrees(-45), Rotation2d.fromDegrees(3)));
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

@@ -10,21 +10,8 @@ import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 
 public class FunnelConstants {
 
-    public static final String LOG_PATH = "funnel/";
-
-    public static final String MOTOR_LOG_PATH = "Subsystems/" + LOG_PATH;
+    public static final String LOG_PATH = "Subsystems/funnel/";
 
     public static final boolean ENABLE_FORWARD_LIMIT_SWITCH = false;
-
-//    public static  getBeamBreaker(CANSparkMax host) {
-//        return new SuppliedDigitalInput(
-//                () -> host.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed(),
-//                Debouncer.DebounceType.kRising,
-//                0.5
-//        );
-//        CANSparkMax motor = new CANSparkMax(IDs.CANSparkMaxes.FUNNEL_ID, CANSparkLowLevel.MotorType.kBrushless);
-//
-//        return new Funnel(logPath, getBeamBreaker(motor));
-//    }
 
 }

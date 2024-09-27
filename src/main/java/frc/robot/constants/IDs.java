@@ -1,8 +1,8 @@
 package frc.robot.constants;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
-import frc.utils.devicewrappers.SparkMaxDeviceID;
 
 public class IDs {
 

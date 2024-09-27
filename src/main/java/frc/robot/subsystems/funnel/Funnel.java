@@ -10,38 +10,43 @@ import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends GBSubsystem {
 
-    private final IDigitalInput beamBreaker;
-    private final DigitalInputInputsAutoLogged beamBreakerInputs;
     private final IMotor motor;
-    private final InputSignal[] motorSignals;
-    private final String logPath;
+    private final IDigitalInput digitalInput;
+    private final DigitalInputInputsAutoLogged digitalInputsInputs;
+    private final InputSignal<Double> voltageSignal;
+    private final FunnelCommandBuilder commandBuilder;
 
-    public Funnel(String logPath, IDigitalInput beamBreaker, IMotor motor, InputSignal... motorSignals) {
+    public Funnel(String logPath, IntakeStuff intakeStuff) {
         super(logPath);
-        this.logPath = logPath;
-        this.beamBreaker = beamBreaker;
-        this.beamBreakerInputs = new DigitalInputInputsAutoLogged();
-        this.motor = motor;
-        this.motorSignals = motorSignals;
+        this.motor = intakeStuff.motor();
+        this.digitalInput = intakeStuff.digitalInput();
+        this.voltageSignal = intakeStuff.inputSignal();
+        this.commandBuilder = new IntakeCommandBuilder(this);
+
+        this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
+    }
+
+    public void setPower(double power) {
+        motor.setPower(power);
+    }
+
+    public void stop() {
+        motor.stop();
+    }
+
+    public void updateInputs() {
+        digitalInput.updateInputs(digitalInputsInputs);
+        motor.updateSignals(voltageSignal);
+    }
+
+    public IntakeCommandBuilder getCommandBuilder() {
+        return commandBuilder;
     }
 
     @Override
     protected void subsystemPeriodic() {
-        motor.updateSignals(motorSignals);
-        beamBreaker.updateInputs(beamBreakerInputs);
-
-        Logger.processInputs(logPath, beamBreakerInputs);
+        updateInputs();
+        Logger.processInputs(getLogPath() + "digitalInputs", digitalInputsInputs);
     }
 
-    public void setBrake(boolean brake){
-        motor.setBrake(brake);
-    }
-
-    public void setPower(double power){
-        motor.setPower(power);
-    }
-
-    public void stop(){
-        motor.stop();
-    }
 }

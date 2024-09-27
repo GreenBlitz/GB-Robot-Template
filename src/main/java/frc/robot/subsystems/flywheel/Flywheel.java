@@ -46,7 +46,8 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	protected void stop() {
-		setPowers(0, 0);
+		rightMotor.stop();
+		leftMotor.stop();
 	}
 
 	protected void setPowers(double rightPower, double leftPower) {

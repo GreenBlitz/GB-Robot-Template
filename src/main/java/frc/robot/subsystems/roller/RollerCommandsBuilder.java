@@ -17,8 +17,8 @@ public class RollerCommandsBuilder {
 	//@formatter:off
 	public Command moveByPower(double power) {
 		return new FunctionalCommand(
-				() -> roller.setPower(power),
 				() -> {},
+				() -> roller.setPower(power),
 				interrupted -> roller.stop(),
 				() -> false,
 				roller
@@ -39,7 +39,7 @@ public class RollerCommandsBuilder {
 				()-> roller.setTargetPosition(rotations),
 				()-> roller.setPower(power),
 				interrupted -> roller.stop(),
-				()-> roller.isPastPosition()
+				roller::isPastPosition
 		).withName("Rotate by rotations: " + rotations);
 	}
 	//@formatter:on

@@ -108,8 +108,8 @@ public class Supersturctrue {
 					funnelStateHandler.setState(FunnelState.STOP)
 				),
 				new ParallelDeadlineGroup(
-                        elbowStateHandler.setState(ElbowState.PRE_AMP),
-                        funnelStateHandler.setState(FunnelState.RELEASE_FOR_ARM)
+					elbowStateHandler.setState(ElbowState.PRE_AMP),
+					funnelStateHandler.setState(FunnelState.RELEASE_FOR_ARM)
 				),
                 funnelStateHandler.setState(FunnelState.STOP)
 			)
@@ -122,12 +122,15 @@ public class Supersturctrue {
 			pivotStateHandler.setState(PivotState.IDLE),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
 			elbowStateHandler.setState(ElbowState.INTAKE),
-			rollerStateHandler.setState(RollerState.OUTTAKE),
 			new SequentialCommandGroup(
-				intakeStateHandler.setState(IntakeState.INTAKE).until(() -> robot.getIntake().isObjectIn()),
+				new ParallelDeadlineGroup(
+					intakeStateHandler.setState(IntakeState.INTAKE).until(() -> robot.getIntake().isObjectIn()),
+					rollerStateHandler.setState(RollerState.IN)
+				),
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
-					funnelStateHandler.setState(FunnelState.INTAKE)
+					funnelStateHandler.setState(FunnelState.INTAKE),
+					rollerStateHandler.setState(RollerState.IN)
 				).until(() -> robot.getFunnel().isObjectIn())
 			)
 		);
@@ -135,7 +138,7 @@ public class Supersturctrue {
 
 	private Command shooterOuttake() {
 		return new ParallelCommandGroup(
-			rollerStateHandler.setState(RollerState.INTAKE),
+			rollerStateHandler.setState(RollerState.OUT),
 			elbowStateHandler.setState(ElbowState.MANUAL),
 			intakeStateHandler.setState(IntakeState.OUTTAKE),
 			funnelStateHandler.setState(FunnelState.OUTTAKE),

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class RealRollerConstants {
 
-	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
+	private final static double DEBOUNCE_TIME_SECONDS = 0.1;
 
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 
@@ -29,6 +29,9 @@ public class RealRollerConstants {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.ROLLER);
 		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
+		sparkMaxWrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
+		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
+
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 
@@ -38,9 +41,7 @@ public class RealRollerConstants {
 		Supplier<Double> position = () -> sparkMaxWrapper.getEncoder().getPosition();
 		SparkMaxAngleSignal angleSignal = new SparkMaxAngleSignal("position", position, AngleUnit.ROTATIONS);
 
-		BooleanSupplier isPressed = () -> sparkMaxWrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
-		sparkMaxWrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
-
+		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
 		return new RollerStuff(logPath, motor, voltageSignal, angleSignal, beamBreaker);

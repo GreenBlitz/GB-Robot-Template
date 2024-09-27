@@ -14,6 +14,9 @@ public class FlywheelStateHandler {
 	}
 
 	public Command setState(FlywheelState flywheelState) {
+		if (flywheelState.getRightVelocity().getRotations() == 0){
+			return flywheel.getCommandsBuilder().stop();
+		}
 		return flywheel.getCommandsBuilder().setVelocities(flywheelState.getRightVelocity(), flywheelState.getLeftVelocity(), TOLERANCE);
 	}
 

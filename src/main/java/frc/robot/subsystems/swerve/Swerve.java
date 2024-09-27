@@ -19,7 +19,7 @@ import frc.utils.GBSubsystem;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
-import frc.utils.pathplannerutils.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -89,7 +89,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
-		PathPlannerUtils.configurePathPlanner(
+		PathPlannerUtils.configPathPlanner(
 			currentPoseSupplier,
 			resetPoseConsumer,
 			this::getRobotRelativeVelocity,

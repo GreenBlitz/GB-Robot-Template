@@ -15,7 +15,7 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.pathplannerutils.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
@@ -158,7 +158,7 @@ public class SwerveCommandsBuilder {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 		if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils.createOnTheFlyPathCommand(currentPose, targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
 		} else {
 			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
 		}

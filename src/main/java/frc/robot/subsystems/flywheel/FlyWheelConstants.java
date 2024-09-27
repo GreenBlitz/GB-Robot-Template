@@ -6,5 +6,4 @@ public class FlyWheelConstants {
 
 	public static final double GEAR_RATIO = 40.0 / 36.0;
 
-
 }

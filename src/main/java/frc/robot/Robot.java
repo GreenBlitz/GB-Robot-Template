@@ -18,6 +18,7 @@ import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+
 	private final Flywheel flywheel;
 
 	public Robot() {

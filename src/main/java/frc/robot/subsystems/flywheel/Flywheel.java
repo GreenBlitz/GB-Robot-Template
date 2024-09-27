@@ -33,11 +33,6 @@ public class Flywheel extends GBSubsystem {
 		return commandsBuilder;
 	}
 
-	@Override
-	public String getLogPath() {
-		return FlyWheelConstants.LOG_PATH;
-	}
-
 	private void updateSignals() {
 		rightMotor.updateSignals(flywheelStuff.rightSignals());
 		rightMotor.updateSignals(flywheelStuff.rightVelocitySignal());

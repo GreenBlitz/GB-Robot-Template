@@ -18,10 +18,11 @@ public class IDs {
 
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
+		public static final SparkMaxDeviceID INTAKE = new SparkMaxDeviceID(3, CANSparkLowLevel.MotorType.kBrushless);
+
 		public static final SparkMaxDeviceID ELBOW = new SparkMaxDeviceID(5, CANSparkLowLevel.MotorType.kBrushless);
 
 	}
-
 
 	public static class TalonFXs {
 

@@ -15,6 +15,7 @@ public class FlywheelCommandsBuilder {
 		this.flywheel = flywheel;
 	}
 
+	//@formatter:off
 	public Command setPowers(double rightPower, double leftPower) {
 		return new FunctionalCommand(
 			() -> {},
@@ -44,6 +45,7 @@ public class FlywheelCommandsBuilder {
 			flywheel
 		).withName("Set velocities - right: " + rightVelocity + ", left: " + leftVelocity);
 	}
+	//@formatter:on
 
 	public Command stop() {
 		return new InstantCommand(flywheel::stop, flywheel).withName("Stop");

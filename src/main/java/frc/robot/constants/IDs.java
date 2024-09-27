@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
+import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
@@ -11,6 +13,12 @@ public class IDs {
 		20,
 		PowerDistribution.ModuleType.kRev
 	);
+
+	public static class CANSparkMAXIDs {
+
+		public static final SparkMaxDeviceID ELBOW_MOTOR = new SparkMaxDeviceID(5, CANSparkLowLevel.MotorType.kBrushless);
+
+	}
 
 	public static class TalonFXs {
 

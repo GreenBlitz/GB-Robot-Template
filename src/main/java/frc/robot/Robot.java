@@ -17,25 +17,25 @@ import frc.robot.subsystems.intake.factory.IntakeFactory;
  */
 public class Robot {
 
-    public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-    private final Intake intake;
+	private final Intake intake;
 
-    public Robot() {
-        this.intake = new Intake(IntakeConstants.LOG_PATH, IntakeFactory.create());
-        configureBindings();
-    }
+	public Robot() {
+		this.intake = new Intake(IntakeConstants.LOG_PATH, IntakeFactory.create());
+		configureBindings();
+	}
 
-    private void configureBindings() {
-        JoysticksBindings.configureBindings(this);
-    }
+	private void configureBindings() {
+		JoysticksBindings.configureBindings(this);
+	}
 
-    public Command getAutonomousCommand() {
-        return new InstantCommand();
-    }
+	public Command getAutonomousCommand() {
+		return new InstantCommand();
+	}
 
-    public Intake getIntake() {
-        return intake;
-    }
+	public Intake getIntake() {
+		return intake;
+	}
 
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.pivot.factories;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -24,7 +25,12 @@ public class RealPivotConstants {
 	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
-		return new SysIdRoutine.Config(Units.Volts.of(1.0).per(Units.Seconds.of(1.0)), Units.Volts.of(7.0), Units.Seconds.of(10.0));
+		return new SysIdRoutine.Config(
+				Units.Volts.of(1.0).per(Units.Seconds.of(1.0)),
+				Units.Volts.of(7.0),
+				Units.Seconds.of(10.0),
+				(state) -> SignalLogger.writeString("state", state.toString())
+		);
 	}
 
 	private static TalonFXConfiguration generateMotorConfig() {

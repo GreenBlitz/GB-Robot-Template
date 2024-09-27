@@ -27,8 +27,8 @@ public class FlywheelCommandsBuilder {
 
 	public Command setVelocities(Rotation2d rightVelocity, Rotation2d leftVelocity, Rotation2d tolerance) {
 		return new FunctionalCommand(
-			() -> {},
 			() -> flywheel.setTargetVelocities(rightVelocity, leftVelocity),
+			() -> {},
 			(interrupted) -> {},
 			() -> flywheel.isAtVelocities(rightVelocity, leftVelocity, tolerance),
 			flywheel

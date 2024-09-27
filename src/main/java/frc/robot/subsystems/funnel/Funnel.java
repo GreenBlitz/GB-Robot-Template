@@ -9,49 +9,49 @@ import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends GBSubsystem {
 
-    private final IMotor motor;
-    private final IDigitalInput digitalInput;
-    private final DigitalInputInputsAutoLogged digitalInputsInputs;
-    private final InputSignal<Double> voltageSignal;
-    private final FunnelCommandsBuilder commandBuilder;
-    private final String logPath;
+	private final IMotor motor;
+	private final IDigitalInput digitalInput;
+	private final DigitalInputInputsAutoLogged digitalInputsInputs;
+	private final InputSignal<Double> voltageSignal;
+	private final FunnelCommandsBuilder commandBuilder;
+	private final String logPath;
 
-    public Funnel(FunnelStuff funnelStuff) {
-        super(funnelStuff.logPath());
-        this.logPath = funnelStuff.logPath();
-        this.motor = funnelStuff.motor();
-        this.digitalInput = funnelStuff.digitalInput();
-        this.voltageSignal = funnelStuff.inputSignal();
-        this.commandBuilder = new FunnelCommandsBuilder(this);
+	public Funnel(FunnelStuff funnelStuff) {
+		super(funnelStuff.logPath());
+		this.logPath = funnelStuff.logPath();
+		this.motor = funnelStuff.motor();
+		this.digitalInput = funnelStuff.digitalInput();
+		this.voltageSignal = funnelStuff.inputSignal();
+		this.commandBuilder = new FunnelCommandsBuilder(this);
 
-        this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
-    }
+		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
+	}
 
-    public void setPower(double power) {
-        motor.setPower(power);
-    }
+	public void setPower(double power) {
+		motor.setPower(power);
+	}
 
-    public void stop() {
-        motor.stop();
-    }
+	public void stop() {
+		motor.stop();
+	}
 
-    public void setBrake(boolean brake) {
-        motor.setBrake(brake);
-    }
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
+	}
 
-    public void updateInputs() {
-        digitalInput.updateInputs(digitalInputsInputs);
-        motor.updateSignals(voltageSignal);
-    }
+	public void updateInputs() {
+		digitalInput.updateInputs(digitalInputsInputs);
+		motor.updateSignals(voltageSignal);
+	}
 
-    public FunnelCommandsBuilder getCommandBuilder() {
-        return commandBuilder;
-    }
+	public FunnelCommandsBuilder getCommandBuilder() {
+		return commandBuilder;
+	}
 
-    @Override
-    protected void subsystemPeriodic() {
-        updateInputs();
-        Logger.processInputs(getLogPath() + "digitalInputs", digitalInputsInputs);
-    }
+	@Override
+	protected void subsystemPeriodic() {
+		updateInputs();
+		Logger.processInputs(getLogPath() + "digitalInputs", digitalInputsInputs);
+	}
 
 }

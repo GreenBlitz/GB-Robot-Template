@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class FunnelCommandsBuilder {
 
-    private final Funnel funnel;
+	private final Funnel funnel;
 
-    public FunnelCommandsBuilder(Funnel funnel) {
-        this.funnel = funnel;
-    }
+	public FunnelCommandsBuilder(Funnel funnel) {
+		this.funnel = funnel;
+	}
 
-    //@formatter:off
+	//@formatter:off
     public Command setPower(double power) {
         return new FunctionalCommand(
                 () -> {},
@@ -24,8 +24,8 @@ public class FunnelCommandsBuilder {
     }
     //@formatter:on
 
-    public Command stop() {
-        return new InstantCommand(funnel::stop, funnel).withName("Stop");
-    }
+	public Command stop() {
+		return new InstantCommand(funnel::stop, funnel).withName("Stop");
+	}
 
 }

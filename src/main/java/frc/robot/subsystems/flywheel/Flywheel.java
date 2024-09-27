@@ -49,19 +49,30 @@ public class Flywheel extends GBSubsystem {
 
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
 
-		rightMotor.updateSignals(rightSignals);
-		leftMotor.updateSignals(leftSignals);
-	}
-
-
-	@Override
-	protected void subsystemPeriodic() {
-		rightMotor.updateSignals(rightSignals);
-		leftMotor.updateSignals(leftSignals);
+		updateSignals();
 	}
 
 	public FlywheelCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
+	}
+
+	private void updateSignals() {
+		rightMotor.updateSignals(rightSignals);
+		leftMotor.updateSignals(leftSignals);
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		updateSignals();
+	}
+
+	public void stop() {
+		setPowers(0, 0);
+	}
+
+	public void setPowers(double rightPower, double leftPower) {
+		rightMotor.setPower(rightPower);
+		leftMotor.setPower(leftPower);
 	}
 
 	public void setTargetVelocities(Rotation2d rightFlywheelVelocity, Rotation2d leftFlywheelVelocity) {
@@ -75,25 +86,15 @@ public class Flywheel extends GBSubsystem {
 	}
 	//@formatter:on
 
-	public void setPowers(double rightPower, double leftPower) {
-		rightMotor.setPower(rightPower);
-		leftMotor.setPower(leftPower);
-	}
-
-	public void stop() {
-		setPowers(0, 0);
-	}
-
 	public boolean isAtVelocities(
 		Rotation2d rightFlywheelExpectedVelocity,
 		Rotation2d leftFlywheelExpectedVelocity,
 		Rotation2d rightVelocityTolerance,
 		Rotation2d leftVelocityTolerance
 	) {
-		return MathUtil
-			.isNear(rightFlywheelExpectedVelocity.getRotations(), rightVelocityTolerance.getRotations(), rightVelocityTolerance.getRotations())
-			&& MathUtil
-				.isNear(leftFlywheelExpectedVelocity.getRotations(), leftVelocityTolerance.getRotations(), leftVelocityTolerance.getRotations());
+		boolean rightFlyWheelAtVelocity = MathUtil.isNear(rightFlywheelExpectedVelocity.getRotations(), rightVelocityTolerance.getRotations(), rightVelocityTolerance.getRotations());
+		boolean leftFlyWheelAtVelocity = MathUtil.isNear(leftFlywheelExpectedVelocity.getRotations(), leftVelocityTolerance.getRotations(), leftVelocityTolerance.getRotations());
+		return rightFlyWheelAtVelocity && leftFlyWheelAtVelocity;
 	}
 
 }

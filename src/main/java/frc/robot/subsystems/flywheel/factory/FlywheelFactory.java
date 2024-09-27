@@ -1,4 +1,4 @@
-package frc.robot.subsystems.flywheel;
+package frc.robot.subsystems.flywheel.factory;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,8 +9,9 @@ import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+import frc.robot.subsystems.flywheel.Flywheel;
 
-import static frc.robot.subsystems.flywheel.FlywheelRealConstants.*;
+import static frc.robot.subsystems.flywheel.factory.RealFlywheelConstants.*;
 
 public class FlywheelFactory {
 
@@ -23,10 +24,10 @@ public class FlywheelFactory {
 
 		return new Flywheel(
 			logPath,
-			FlywheelRealConstants.getTalonFXMotor(logPath + "right/", rightMotorWrapper),
-			FlywheelRealConstants.getTalonFXMotor(logPath + "left/", leftMotorWrapper),
-			FlywheelRealConstants.generateSignal(rightMotorWrapper.getVelocity()),
-			FlywheelRealConstants.generateSignal(leftMotorWrapper.getVelocity()),
+			RealFlywheelConstants.getTalonFXMotor(logPath + "right/", rightMotorWrapper),
+			RealFlywheelConstants.getTalonFXMotor(logPath + "left/", leftMotorWrapper),
+			RealFlywheelConstants.generateSignal(rightMotorWrapper.getVelocity()),
+			RealFlywheelConstants.generateSignal(leftMotorWrapper.getVelocity()),
 			new Phoenix6AngleRequest(new VelocityVoltage(0)),
 			new Phoenix6AngleRequest(new VelocityVoltage(0)),
 			new InputSignal[] {
@@ -48,13 +49,6 @@ public class FlywheelFactory {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> getRealFlywheel(logPath);
 			default -> null;
-		};
-	}
-
-	public static Rotation2d getTolerance() {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> TOLERANCE;
-			default -> new Rotation2d();
 		};
 	}
 

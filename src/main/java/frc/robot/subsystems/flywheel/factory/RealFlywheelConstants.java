@@ -1,4 +1,4 @@
-package frc.robot.subsystems.flywheel;
+package frc.robot.subsystems.flywheel.factory;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusSignal;
@@ -16,9 +16,7 @@ import frc.utils.AngleUnit;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-public class FlywheelRealConstants {
-
-	protected static final Rotation2d TOLERANCE = Rotation2d.fromRotations(0.5);
+public class RealFlywheelConstants {
 
 	protected static final TalonFXConfiguration CONFIGURATION = new TalonFXConfiguration();
 	protected static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
@@ -27,6 +25,8 @@ public class FlywheelRealConstants {
 		Seconds.of(10),
 		(state) -> SignalLogger.writeString("state", state.toString())
 	);
+
+	private static SysIdRoutine.Config
 
 	static {
 		Slot0Configs PID_SLOT_0 = new Slot0Configs();

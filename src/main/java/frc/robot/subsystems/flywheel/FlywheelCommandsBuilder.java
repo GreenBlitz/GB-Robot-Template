@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 
 import java.util.function.Supplier;
 
@@ -22,7 +23,7 @@ public class FlywheelCommandsBuilder {
 			(interrupted) -> flywheel.stop(),
 			() -> false,
 			flywheel
-		);
+		).withName("Set powers - right: " + rightPower + ", left: " + leftPower);
 	}
 
 	public Command setVelocities(Rotation2d rightVelocity, Rotation2d leftVelocity) {
@@ -32,21 +33,21 @@ public class FlywheelCommandsBuilder {
 			(interrupted) -> {},
 			() -> flywheel.isAtVelocities(rightVelocity, leftVelocity, FlywheelFactory.getTolerance()),
 			flywheel
-		);
+		).withName("Set velocities - right: " + rightVelocity + ", left: " + leftVelocity);
 	}
 
-	public Command setPowersBySuppliers(Supplier<Rotation2d> rightVelocity, Supplier<Rotation2d> leftVelocity) {
+	public Command setPowersBySuppliers(Supplier<Double> rightPower, Supplier<Double> leftPower) {
 		return new FunctionalCommand(
 			() -> {},
-			() -> flywheel.setTargetVelocities(rightVelocity.get(), leftVelocity.get()),
+			() -> flywheel.setPowers(rightPower.get(), leftPower.get()),
 			(interrupted) -> {},
-			() -> flywheel.isAtVelocities(rightVelocity.get(), leftVelocity.get(), FlywheelFactory.getTolerance()),
+			() -> false,
 			flywheel
-		);
+		).withName("Manual power");
 	}
 
 	public Command stop() {
-		return new InstantCommand(() -> flywheel.stop(), flywheel);
+		return new InstantCommand(flywheel::stop, flywheel).withName("Stop");
 	}
 
 }

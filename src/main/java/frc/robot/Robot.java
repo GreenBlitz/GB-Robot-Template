@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
  * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
@@ -23,6 +24,7 @@ public class Robot {
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}
+
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();

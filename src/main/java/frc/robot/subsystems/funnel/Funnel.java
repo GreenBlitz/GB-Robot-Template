@@ -13,7 +13,7 @@ public class Funnel extends GBSubsystem {
     private final IDigitalInput digitalInput;
     private final DigitalInputInputsAutoLogged digitalInputsInputs;
     private final InputSignal<Double> voltageSignal;
-    private final FunnelCommandBuilder commandBuilder;
+    private final FunnelCommandsBuilder commandBuilder;
     private final String logPath;
 
     public Funnel(FunnelStuff funnelStuff) {
@@ -22,7 +22,7 @@ public class Funnel extends GBSubsystem {
         this.motor = funnelStuff.motor();
         this.digitalInput = funnelStuff.digitalInput();
         this.voltageSignal = funnelStuff.inputSignal();
-        this.commandBuilder = new FunnelCommandBuilder(this);
+        this.commandBuilder = new FunnelCommandsBuilder(this);
 
         this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
     }
@@ -35,12 +35,16 @@ public class Funnel extends GBSubsystem {
         motor.stop();
     }
 
+    public void setBrake(boolean brake) {
+        motor.setBrake(brake);
+    }
+
     public void updateInputs() {
         digitalInput.updateInputs(digitalInputsInputs);
         motor.updateSignals(voltageSignal);
     }
 
-    public FunnelCommandBuilder getCommandBuilder() {
+    public FunnelCommandsBuilder getCommandBuilder() {
         return commandBuilder;
     }
 

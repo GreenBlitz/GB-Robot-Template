@@ -65,7 +65,7 @@ public class RealFlywheelConstants {
 
 		TalonFXWrapper rightMotor = new TalonFXWrapper(IDs.TalonFXs.RIGHT_FLYWHEEL);
 		if (!rightMotor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.WARNING, rightLogPath + "ConfigurationFail").report();
+			new Alert(Alert.AlertType.ERROR, rightLogPath + "ConfigurationFail").report();
 		}
 
 		Phoenix6AngleSignal rightVelocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(rightMotor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
@@ -76,7 +76,7 @@ public class RealFlywheelConstants {
 
 		TalonFXWrapper leftMotor = new TalonFXWrapper(IDs.TalonFXs.LEFT_FLYWHEEL);
 		if (!leftMotor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.WARNING, leftLogPath + "ConfigurationFail").report();
+			new Alert(Alert.AlertType.ERROR, leftLogPath + "ConfigurationFail").report();
 		}
 
 		Phoenix6AngleSignal leftVelocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(leftMotor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);

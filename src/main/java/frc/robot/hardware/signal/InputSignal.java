@@ -8,4 +8,8 @@ public interface InputSignal<T> extends LoggableInputs {
 
 	T[] asArray();
 
+	double getTimestamp();
+
+	double[] getTimestamps();
+
 }

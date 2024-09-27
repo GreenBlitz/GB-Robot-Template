@@ -5,7 +5,7 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.devicewrappers.TalonFXWrapper;
+import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 
 
 /**
@@ -49,6 +49,10 @@ abstract class MotorSimulation {
 
 	public double getVoltage() {
 		return motor.getMotorVoltage().getValue();
+	}
+
+	public double getCurrent() {
+		return motor.getStatorCurrent().getValue();
 	}
 
 	protected abstract void setInputVoltage(double voltage);

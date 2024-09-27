@@ -6,25 +6,26 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.auto.PathPlannerUtils;
+import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
 
+
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
- * TimedRobot documentation. If you change the name of this class or the package after creating this project, you must also update
- * the build.gradle file in the project.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after creating this project, you must also update the build.gradle file in
+ * the project.
  */
 public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
-
 	private Robot robot;
 
 	@Override
@@ -72,6 +73,7 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+		AlertManager.reportAlerts();
 	}
 
 	@Override

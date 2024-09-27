@@ -20,7 +20,7 @@ public class RealFunnelConstants {
 
 	private static final String SIGNAL_NAME = "voltage";
 
-	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kRising;// idk
+	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 
 	public static FunnelStuff generateFunnelStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxes.FUNNEL);
@@ -30,7 +30,7 @@ public class RealFunnelConstants {
 		Supplier<Double> voltage = () -> (sparkMaxWrapper.getBusVoltage() * sparkMaxWrapper.getAppliedOutput());
 		SparkMaxDoubleSignal signal = new SparkMaxDoubleSignal(SIGNAL_NAME, voltage);
 
-		BooleanSupplier isPressed = () -> sparkMaxWrapper.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
 		sparkMaxWrapper.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen)
 			.enableLimitSwitch(FunnelConstants.ENABLE_FORWARD_LIMIT_SWITCH);
 

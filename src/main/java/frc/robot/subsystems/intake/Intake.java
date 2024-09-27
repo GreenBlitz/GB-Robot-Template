@@ -43,7 +43,7 @@ public class Intake extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		updateInputs();
 		Logger.processInputs(intakeStuff.digitalInputLogPath(), digitalInputsInputs);
-		Logger.recordOutput("ISObjectIn", isObjectIn());
+		Logger.recordOutput(intakeStuff.logPath() + "IsObjectIn", isObjectIn());
 	}
 
 	protected void setPower(double power) {

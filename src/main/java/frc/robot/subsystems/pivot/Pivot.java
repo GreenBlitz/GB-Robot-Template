@@ -16,7 +16,7 @@ public class Pivot extends GBSubsystem {
 	private final MedianFilter resetFilter;
 
 	public Pivot(PivotStuff pivotStuff) {
-		super("logPath");
+		super(pivotStuff.logPath());
 		this.motor = pivotStuff.motor();
 		this.positionRequest = pivotStuff.positionRequest();
 		this.pivotStuff = pivotStuff;
@@ -29,11 +29,6 @@ public class Pivot extends GBSubsystem {
 
 	public PivotCommandsBuilder getCommandsBuilder() {
 		return pivotCommandsBuilder;
-	}
-
-	@Override
-	public String getLogPath() {
-		return PivotConstants.LOG_PATH;
 	}
 
 	private void updateSignals() {

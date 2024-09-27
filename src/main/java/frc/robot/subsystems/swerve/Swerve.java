@@ -116,7 +116,7 @@ public class Swerve extends GBSubsystem {
 		headingStabilizer.setTargetHeading(heading);
 	}
 
-	public void setState(SwerveState state) {
+	public void saveState(SwerveState state) {
 		savedState = state;
 	}
 

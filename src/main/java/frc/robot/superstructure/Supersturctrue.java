@@ -1,9 +1,8 @@
 package frc.robot.superstructure;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
+import frc.robot.constants.Field;
 import frc.robot.subsystems.elbow.ElbowState;
 import frc.robot.subsystems.elbow.ElbowStateHandler;
 import frc.robot.subsystems.flywheel.FlywheelState;
@@ -15,8 +14,8 @@ import frc.robot.subsystems.intake.IntakeStateHandler;
 import frc.robot.subsystems.pivot.PivotState;
 import frc.robot.subsystems.pivot.PivotStateHandler;
 import frc.robot.subsystems.swerve.Swerve;
-
-import javax.print.DocFlavor;
+import frc.robot.subsystems.swerve.SwerveState;
+import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 
 public class Supersturctrue {
 
@@ -41,6 +40,10 @@ public class Supersturctrue {
         this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
     }
 
+    public RobotState getCurrentState() {
+        return currentState;
+    }
+
     public Command setState(RobotState state) {
         this.currentState = state;
         return switch (state) {
@@ -52,24 +55,29 @@ public class Supersturctrue {
             case INTAKE -> null;
             case SPEAKER -> null;
             case AMP -> null;
+            case OUTTAKE -> null;
         };
     }
 
     private Command idle() {
         return new ParallelCommandGroup(
-                pivotStateHandler.setState(PivotState.IDLE),
-                flywheelStateHandler.setState(FlywheelState.DEFAULT),
-                elbowStateHandler.setState(ElbowState.IDLE),
-                intakeStateHandler.setState(IntakeState.STOP),
-                funnelStateHandler.setState(FunnelState.STOP)
+            pivotStateHandler.setState(PivotState.IDLE),
+            flywheelStateHandler.setState(FlywheelState.DEFAULT),
+            elbowStateHandler.setState(ElbowState.IDLE),
+            intakeStateHandler.setState(IntakeState.STOP),
+            funnelStateHandler.setState(FunnelState.STOP),
+            swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
         );
     }
 
     private Command preSpeaker() {
         return new ParallelCommandGroup(
-                pivotStateHandler.setState(PivotState.PRE_SPEAKER),
-                flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
-                elbowStateHandler.setState(ElbowState.IDLE)
+            funnelStateHandler.setState(FunnelState.STOP),
+            intakeStateHandler.setState(IntakeState.STOP),
+            pivotStateHandler.setState(PivotState.PRE_SPEAKER),
+            flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
+            elbowStateHandler.setState(ElbowState.IDLE),
+            swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
         );
     }
 
@@ -78,8 +86,14 @@ public class Supersturctrue {
                 pivotStateHandler.setState(PivotState.IDLE),
                 flywheelStateHandler.setState(FlywheelState.DEFAULT),
                 new SequentialCommandGroup(
-                        // add swerve turn
-                        elbowStateHandler.setState(ElbowState.PRE_AMP)
+                        new ParallelDeadlineGroup(
+                            swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
+                            new RunCommand(() -> {}).until(() -> swerve.isAtHeading(Field.getAngleToAmp()))
+                        ),
+                        new ParallelCommandGroup(
+                            funnelStateHandler.setState(FunnelState.RELEASE_FOR_ARM),
+                            elbowStateHandler.setState(ElbowState.PRE_AMP)
+                        )
                 )
         );
     }

@@ -151,6 +151,10 @@ public class SwerveCommandsBuilder {
 		).withName("Drive with saved state");
 	}
 
+	public Command saveState(SwerveState state) {
+		return new InstantCommand(() -> swerve.saveState(state));
+	}
+
 
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, Function<Pose2d, Boolean> isAtPose) {
 		return new DeferredCommand(

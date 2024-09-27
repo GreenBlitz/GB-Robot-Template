@@ -83,11 +83,11 @@ public class Supersturctrue {
 
     private Command preAMP() {
         return new ParallelCommandGroup(
-                funnelStateHandler.setState(FunnelState.STOP),
                 intakeStateHandler.setState(IntakeState.STOP),
                 pivotStateHandler.setState(PivotState.IDLE),
                 flywheelStateHandler.setState(FlywheelState.DEFAULT),
                 new SequentialCommandGroup(
+                        funnelStateHandler.setState(FunnelState.STOP),
                         new ParallelDeadlineGroup(
                             swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
                             new RunCommand(() -> {}).until(() -> swerve.isAtHeading(Field.getAngleToAmp()))

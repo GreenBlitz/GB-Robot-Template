@@ -27,6 +27,14 @@ public class Funnel extends GBSubsystem {
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 	}
 
+	public FunnelCommandsBuilder getCommandBuilder() {
+		return commandBuilder;
+	}
+
+	public boolean isObjectIn() {
+		return digitalInputsInputs.debouncedValue;
+	}
+
 	public void setPower(double power) {
 		motor.setPower(power);
 	}
@@ -42,10 +50,6 @@ public class Funnel extends GBSubsystem {
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
 		motor.updateSignals(voltageSignal);
-	}
-
-	public FunnelCommandsBuilder getCommandBuilder() {
-		return commandBuilder;
 	}
 
 	@Override

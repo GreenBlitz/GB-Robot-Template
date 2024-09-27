@@ -9,6 +9,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
+import frc.robot.subsystems.elbow.Elbow;
+import frc.robot.subsystems.elbow.ElbowConstants;
+import frc.robot.subsystems.elbow.factory.ElbowFactory;
+import frc.robot.subsystems.flywheel.FlyWheelConstants;
+import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
+import frc.robot.subsystems.pivot.Pivot;
+import frc.robot.subsystems.pivot.PivotConstants;
+import frc.robot.subsystems.pivot.factory.PivotFactory;
 import frc.utils.brakestate.BrakeStateManager;
 
 /**
@@ -21,10 +30,17 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Funnel funnel;
+	private final Elbow elbow;
+	private final Flywheel flywheel;
+	private final Pivot pivot;
 
 	public Robot() {
+		this.flywheel = new Flywheel(FlywheelFactory.create(FlyWheelConstants.LOG_PATH));
+		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
+		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
+		this.elbow = new Elbow(ElbowFactory.create(ElbowConstants.LOG_PATH));
+		BrakeStateManager.add(() -> elbow.setBrake(true), () -> elbow.setBrake(false));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
-		BrakeStateManager.add(() -> funnel.setBrake(true), () -> funnel.setBrake(false));
 		configureBindings();
 	}
 
@@ -36,8 +52,20 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-	public Funnel getPivot() {
+	public Funnel getFunnel() {
 		return funnel;
+	}
+
+	public Elbow getElbow() {
+		return elbow;
+	}
+
+	public Flywheel getFlywheel() {
+		return flywheel;
+	}
+
+	public Pivot getPivot() {
+		return pivot;
 	}
 
 }

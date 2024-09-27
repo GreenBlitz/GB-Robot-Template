@@ -56,19 +56,19 @@ public class Pivot extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	public void stop() {
+	protected void stop() {
 		motor.stop();
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	public void setTargetPosition(Rotation2d targetPosition) {
+	protected void setTargetPosition(Rotation2d targetPosition) {
 		motor.applyAngleRequest(positionRequest.withSetPoint(targetPosition));
 	}
 
-	public void stayInPlace() {
+	protected void stayInPlace() {
 		setTargetPosition(pivotStuff.positionSignal().getLatestValue());
 	}
 

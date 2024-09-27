@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.factory.IntakeFactory;
+import frc.robot.subsystems.elbow.Elbow;
+import frc.robot.subsystems.elbow.ElbowConstants;
+import frc.robot.subsystems.elbow.factory.ElbowFactory;
 import frc.robot.subsystems.flywheel.FlyWheelConstants;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
@@ -27,6 +30,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Intake intake;
+	private final Elbow elbow;
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 
@@ -35,6 +39,9 @@ public class Robot {
 		this.flywheel = new Flywheel(FlywheelFactory.create(FlyWheelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
+		this.elbow = new Elbow(ElbowFactory.create(ElbowConstants.LOG_PATH));
+		BrakeStateManager.add(() -> elbow.setBrake(true), () -> elbow.setBrake(false));
+
 		configureBindings();
 	}
 
@@ -48,6 +55,10 @@ public class Robot {
 
 	public Intake getIntake() {
 		return intake;
+	}
+
+	public Elbow getElbow() {
+		return elbow;
 	}
 
 	public Flywheel getFlywheel() {

@@ -13,7 +13,4 @@ public class Tolerances {
 	public static final Rotation2d PIVOT_POSITION_TOLERANCE = Rotation2d.fromDegrees(3);
 	public static final Rotation2d FLYWHEEL_VELOCITY_PER_SECOND_TOLERANCE = Rotation2d.fromRotations(4);
 
-
-
-
 }

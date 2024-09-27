@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.superstructure.RobotState;
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -25,12 +26,14 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.A.whileTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
-		usedJoystick.B.whileTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
-		usedJoystick.X.whileTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));
-		usedJoystick.Y.whileTrue(robot.getSupersturctrue().setState(RobotState.SPEAKER));
-		usedJoystick.POV_UP.whileTrue(robot.getSupersturctrue().setState(RobotState.INTAKE));
-		usedJoystick.POV_DOWN.whileTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
+		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
+		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
+		usedJoystick.X.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));
+		usedJoystick.Y.onTrue(robot.getSupersturctrue().setState(RobotState.SPEAKER));
+		usedJoystick.POV_UP.onTrue(robot.getSupersturctrue().setState(RobotState.INTAKE));
+		usedJoystick.POV_DOWN.onTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
+
+		robot.getSwerve().setDefaultCommand(robot.getSwerve().getCommandsBuilder().drive(() -> usedJoystick.getAxisValue(Axis.LEFT_Y), () -> usedJoystick.getAxisValue(Axis.LEFT_X), () -> usedJoystick.getAxisValue(Axis.RIGHT_X)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

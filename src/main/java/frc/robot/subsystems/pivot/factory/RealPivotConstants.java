@@ -61,7 +61,7 @@ public class RealPivotConstants {
 	protected static PivotStuff generatePivotStuff(String logPath) {
 		Phoenix6AngleRequest positionRequest = new Phoenix6AngleRequest(new PositionVoltage(0).withEnableFOC(true));
 
-		TalonFXWrapper motor = new TalonFXWrapper(IDs.TalonFXs.PIVOT);
+		TalonFXWrapper motor = new TalonFXWrapper(IDs.TalonFXIDs.PIVOT);
 		if (!motor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFail").report();
 		}

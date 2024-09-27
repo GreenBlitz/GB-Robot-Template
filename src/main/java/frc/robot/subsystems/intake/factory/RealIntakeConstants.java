@@ -23,7 +23,7 @@ public class RealIntakeConstants {
 		Supplier<Double> voltage = () -> (sparkMaxWrapper.getBusVoltage() * sparkMaxWrapper.getAppliedOutput());
 		SparkMaxDoubleSignal signal = new SparkMaxDoubleSignal("voltage", voltage);
 
-		BooleanSupplier isPressed = () -> sparkMaxWrapper.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
 		sparkMaxWrapper.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
 
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, Debouncer.DebounceType.kBoth, 0.05);

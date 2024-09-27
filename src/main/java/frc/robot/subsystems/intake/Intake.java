@@ -45,11 +45,11 @@ public class Intake extends GBSubsystem {
 		Logger.processInputs(intakeStuff.digitalInputLogPath(), digitalInputsInputs);
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	public void stop() {
+	protected void stop() {
 		motor.stop();
 	}
 

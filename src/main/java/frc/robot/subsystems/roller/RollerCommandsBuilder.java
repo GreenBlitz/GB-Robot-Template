@@ -14,20 +14,38 @@ public class RollerCommandsBuilder {
 		this.roller = roller;
 	}
 
-	//@formatter:on
+	//@formatter:off
 	public Command moveByPower(double power) {
-		return new FunctionalCommand(() -> roller.setPower(power), () -> {}, interrupted -> roller.stop(), () -> false, roller)
-			.withName("Move by power: " + power);
+		return new FunctionalCommand(
+				() -> roller.setPower(power),
+				() -> {},
+				interrupted -> roller.stop(),
+				() -> false,
+				roller
+		).withName("Move by power: " + power);
 	}
 
 	public Command moveByPower(DoubleSupplier power) {
-		return new FunctionalCommand(() -> {}, () -> roller.setPower(power.getAsDouble()), interrupted -> roller.stop(), () -> false, roller)
-			.withName("Move by power supplier");
+		return new FunctionalCommand(
+				() -> {},
+				() -> roller.setPower(power.getAsDouble()),
+				interrupted -> roller.stop(),
+				() -> false, roller
+		).withName("Move by power supplier");
 	}
-	//@formatter:off
 
-    public Command stop() {
-        return new InstantCommand(roller::stop, roller).withName("Stop");
-    }
+	public Command rotateByRotations(double rotations, double power) {
+		return new FunctionalCommand(
+				()-> roller.setTargetPosition(rotations),
+				()-> roller.setPower(power),
+				interrupted -> roller.stop(),
+				()-> roller.isPastPosition()
+		).withName("Rotate by rotations: " + rotations);
+	}
+	//@formatter:on
+
+	public Command stop() {
+		return new InstantCommand(roller::stop, roller).withName("Stop");
+	}
 
 }

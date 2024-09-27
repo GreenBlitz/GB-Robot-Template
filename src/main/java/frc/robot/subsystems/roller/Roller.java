@@ -1,5 +1,6 @@
 package frc.robot.subsystems.roller;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.IMotor;
@@ -14,6 +15,7 @@ public class Roller extends GBSubsystem {
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final RollerStuff rollerStuff;
 	private final RollerCommandsBuilder commandBuilder;
+	private Rotation2d targetPosition;
 
 	public Roller(RollerStuff rollerStuff) {
 		super(rollerStuff.logPath());
@@ -23,6 +25,7 @@ public class Roller extends GBSubsystem {
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 
 		this.commandBuilder = new RollerCommandsBuilder(this);
+		this.targetPosition = new Rotation2d();
 		updateInputs();
 	}
 
@@ -36,7 +39,7 @@ public class Roller extends GBSubsystem {
 
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
-		motor.updateSignals(rollerStuff.voltageSignal());
+		motor.updateSignals(rollerStuff.voltageSignal(), rollerStuff.positionSignal());
 	}
 
 	protected void setPower(double power) {
@@ -49,6 +52,18 @@ public class Roller extends GBSubsystem {
 
 	public void setBrake(boolean brake) {
 		motor.setBrake(brake);
+	}
+
+	public Rotation2d getPosition() {
+		return rollerStuff.positionSignal().getLatestValue();
+	}
+
+	protected void setTargetPosition(double rotations) {
+		this.targetPosition = Rotation2d.fromRotations(getPosition().getRotations() + rotations);
+	}
+
+	protected boolean isPastPosition() {
+		return getPosition().getRotations() > targetPosition.getRotations();
 	}
 
 	@Override

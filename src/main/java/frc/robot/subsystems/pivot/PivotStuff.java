@@ -6,6 +6,7 @@ import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 
 public record PivotStuff(
+	String logPath,
 	ControllableMotor motor,
 	IRequest<Rotation2d> positionRequest,
 	InputSignal<Rotation2d> positionSignal,

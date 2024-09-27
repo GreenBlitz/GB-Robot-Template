@@ -76,7 +76,7 @@ public class RealPivotConstants {
 			.generatePhoenix6Signal(motor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		TalonFXMotor pivot = new TalonFXMotor(logPath, motor, generateSysidConfig());
-		return new PivotStuff(pivot, positionRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
+		return new PivotStuff(logPath, pivot, positionRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 
 }

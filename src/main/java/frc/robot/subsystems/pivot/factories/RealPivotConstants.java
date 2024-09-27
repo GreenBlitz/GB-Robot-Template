@@ -19,7 +19,7 @@ import frc.robot.subsystems.pivot.PivotStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
-public class PivotRealConstants {
+public class RealPivotConstants {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
 
@@ -30,13 +30,20 @@ public class PivotRealConstants {
 	private static TalonFXConfiguration generateMotorConfig() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-		configuration.Slot0.kP = 100;
+		configuration.Slot0.kP = 198;
+		configuration.Slot0.kD = 3.6;
+		configuration.Slot0.kV = 18.57;
+		configuration.Slot0.kS = 0.26;
+		configuration.Slot0.kA = 0.7702;
 		configuration.Feedback.SensorToMechanismRatio = PivotConstants.GEAR_RATIO;
 
 		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 		configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = PivotConstants.FORWARD_ANGLE_LIMIT.getRotations();
 		configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = PivotConstants.BACKWARD_ANGLE_LIMIT.getRotations();
+
+		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+		configuration.CurrentLimits.StatorCurrentLimit = 40;
 
 		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 

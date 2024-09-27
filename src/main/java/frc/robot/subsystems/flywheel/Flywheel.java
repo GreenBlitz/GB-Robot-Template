@@ -50,16 +50,16 @@ public class Flywheel extends GBSubsystem {
 		updateSignals();
 	}
 
-	public void stop() {
+	protected void stop() {
 		setPowers(0, 0);
 	}
 
-	public void setPowers(double rightPower, double leftPower) {
+	protected void setPowers(double rightPower, double leftPower) {
 		rightMotor.setPower(rightPower);
 		leftMotor.setPower(leftPower);
 	}
 
-	public void setTargetVelocities(Rotation2d rightFlywheelVelocity, Rotation2d leftFlywheelVelocity) {
+	protected void setTargetVelocities(Rotation2d rightFlywheelVelocity, Rotation2d leftFlywheelVelocity) {
 		rightMotor.applyAngleRequest(rightFlywheelVelocityRequest.withSetPoint(rightFlywheelVelocity));
 		leftMotor.applyAngleRequest(leftFlywheelVelocityRequest.withSetPoint(leftFlywheelVelocity));
 	}

@@ -21,6 +21,9 @@ import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotConstants;
 import frc.robot.subsystems.pivot.factory.PivotFactory;
+import frc.robot.subsystems.roller.Roller;
+import frc.robot.subsystems.roller.RollerConstants;
+import frc.robot.subsystems.roller.factory.RollerFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -45,6 +48,7 @@ public class Robot {
 	private final Elbow elbow;
 	private final Flywheel flywheel;
 	private final Pivot pivot;
+	private final Roller roller;
 
 	private final Supersturctrue supersturctrue;
 
@@ -61,6 +65,8 @@ public class Robot {
 		this.elbow = new Elbow(ElbowFactory.create(ElbowConstants.LOG_PATH));
 		BrakeStateManager.add(() -> elbow.setBrake(true), () -> elbow.setBrake(false));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.roller = new Roller(RollerFactory.create(RollerConstants.LOG_PATH));
+		BrakeStateManager.add(() -> roller.setBrake(true), () -> roller.setBrake(false));
 
 		this.supersturctrue = new Supersturctrue(this);
 
@@ -102,6 +108,10 @@ public class Robot {
 
 	public Supersturctrue getSupersturctrue() {
 		return supersturctrue;
+	}
+
+	public Roller getRoller() {
+		return roller;
 	}
 
 }

@@ -35,11 +35,11 @@ public class Funnel extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	public void stop() {
+	protected void stop() {
 		motor.stop();
 	}
 

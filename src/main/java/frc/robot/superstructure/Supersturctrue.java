@@ -59,6 +59,7 @@ public class Supersturctrue {
 		};
 	}
 
+	//@formatter:off
 	private Command idle() {
 		return new ParallelCommandGroup(
 			pivotStateHandler.setState(PivotState.IDLE),
@@ -141,10 +142,25 @@ public class Supersturctrue {
 
 	private Command transferShooterArm() {
 		return new SequentialCommandGroup(
-			new ParallelCommandGroup(pivotStateHandler.setState(PivotState.TRANSFER), elbowStateHandler.setState(ElbowState.TRANSFER)),
+			new ParallelCommandGroup(
+					pivotStateHandler.setState(PivotState.TRANSFER),
+					elbowStateHandler.setState(ElbowState.TRANSFER)
+			),
 			funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
 			// add roller
 		);
 	}
+
+	private Command transferArmShooter() {
+		return new SequentialCommandGroup(
+				new ParallelCommandGroup(
+						pivotStateHandler.setState(PivotState.TRANSFER),
+						elbowStateHandler.setState(ElbowState.TRANSFER)
+				),
+				funnelStateHandler.setState(FunnelState.TRANSFER_TO_SHOOTER)
+				// add roller
+		);
+	}
+	//@formatter:on
 
 }

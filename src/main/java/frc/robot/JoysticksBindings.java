@@ -33,7 +33,16 @@ public class JoysticksBindings {
 		usedJoystick.POV_UP.onTrue(robot.getSupersturctrue().setState(RobotState.INTAKE));
 		usedJoystick.POV_DOWN.onTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
 
-		robot.getSwerve().setDefaultCommand(robot.getSwerve().getCommandsBuilder().drive(() -> usedJoystick.getAxisValue(Axis.LEFT_Y), () -> usedJoystick.getAxisValue(Axis.LEFT_X), () -> usedJoystick.getAxisValue(Axis.RIGHT_X)));
+		robot.getSwerve()
+			.setDefaultCommand(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.drive(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+					)
+			);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

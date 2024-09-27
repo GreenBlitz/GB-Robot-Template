@@ -24,6 +24,8 @@ public class IDs {
 
 		public static final SparkMaxDeviceID ELBOW = new SparkMaxDeviceID(5, CANSparkLowLevel.MotorType.kBrushless);
 
+		public static final SparkMaxDeviceID ROLLER = new SparkMaxDeviceID(22, CANSparkLowLevel.MotorType.kBrushless);
+
 	}
 
 	public static class TalonFXIDs {

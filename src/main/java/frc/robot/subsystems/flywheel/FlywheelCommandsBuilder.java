@@ -26,12 +26,12 @@ public class FlywheelCommandsBuilder {
 		).withName("Set powers - right: " + rightPower + ", left: " + leftPower);
 	}
 
-	public Command setVelocities(Rotation2d rightVelocity, Rotation2d leftVelocity) {
+	public Command setVelocities(Rotation2d rightVelocity, Rotation2d leftVelocity, Rotation2d tolerance) {
 		return new FunctionalCommand(
 			() -> {},
 			() -> flywheel.setTargetVelocities(rightVelocity, leftVelocity),
 			(interrupted) -> {},
-			() -> flywheel.isAtVelocities(rightVelocity, leftVelocity, FlywheelFactory.getTolerance()),
+			() -> flywheel.isAtVelocities(rightVelocity, leftVelocity, tolerance),
 			flywheel
 		).withName("Set velocities - right: " + rightVelocity + ", left: " + leftVelocity);
 	}

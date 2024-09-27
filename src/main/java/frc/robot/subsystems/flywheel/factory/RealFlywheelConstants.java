@@ -4,20 +4,29 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
+import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
+import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.subsystems.flywheel.FlyWheelConstants;
+import frc.robot.subsystems.flywheel.FlywheelStuff;
 import frc.utils.AngleUnit;
+import frc.utils.alerts.Alert;
 
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 public class RealFlywheelConstants {
+
+	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -47,12 +56,45 @@ public class RealFlywheelConstants {
 	}
 
 
-	public static TalonFXMotor getTalonFXMotor(String logPath, TalonFXWrapper motorWrapper) {
-		return new TalonFXMotor(logPath, motorWrapper, SYSID_CONFIG);
-	}
+	public static FlywheelStuff generateFlywheelStuff(String logPath) {
+		String rightLogPath = logPath + "right/";
+		String leftLogPath = logPath + "left/";
 
-	public static Phoenix6AngleSignal generateSignal(StatusSignal<Double> statusSignal) {
-		return Phoenix6SignalBuilder.generatePhoenix6Signal(statusSignal, GlobalConstants.ROBORIO_CANBUS_UPDATE_FREQUENCY, AngleUnit.ROTATIONS);
+		Phoenix6AngleRequest rightVelocityRequest = new Phoenix6AngleRequest(new VelocityVoltage(0).withEnableFOC(true));
+		Phoenix6AngleRequest leftVelocityRequest = new Phoenix6AngleRequest(new VelocityVoltage(0).withEnableFOC(true));
+
+		TalonFXWrapper rightMotor = new TalonFXWrapper(IDs.TalonFXs.RIGHT_FLYWHEEL);
+		if (!rightMotor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.WARNING, rightLogPath + "ConfigurationFail").report();
+		}
+
+		Phoenix6AngleSignal rightVelocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(rightMotor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal rightCurrentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(rightMotor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6DoubleSignal rightVoltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(rightMotor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+
+		TalonFXMotor rightFlywheel = new TalonFXMotor(rightLogPath, rightMotor, generateSysidConfig());
+
+		TalonFXWrapper leftMotor = new TalonFXWrapper(IDs.TalonFXs.LEFT_FLYWHEEL);
+		if (!leftMotor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.WARNING, leftLogPath + "ConfigurationFail").report();
+		}
+
+		Phoenix6AngleSignal leftVelocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(leftMotor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal leftCurrentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(leftMotor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6DoubleSignal leftVoltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(leftMotor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+
+		TalonFXMotor leftFlywheel = new TalonFXMotor(leftLogPath, leftMotor, generateSysidConfig());
+
+		return new FlywheelStuff(
+				rightFlywheel,
+				leftFlywheel,
+				rightVelocityRequest,
+				leftVelocityRequest,
+				rightVelocitySignal,
+				leftVelocitySignal,
+				new InputSignal[]{rightCurrentSignal, rightVoltageSignal},
+				new InputSignal[]{leftCurrentSignal, leftVoltageSignal}
+		);
 	}
 
 }

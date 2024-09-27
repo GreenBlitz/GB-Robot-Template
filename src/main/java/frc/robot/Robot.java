@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.flywheel.FlyWheelConstants;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 
@@ -17,10 +18,15 @@ import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	private Flywheel flywheel = FlywheelFactory.generateFlywheel("Flywheel/");
+	private final Flywheel flywheel;
 
 	public Robot() {
+		this.flywheel = new Flywheel(FlywheelFactory.create(FlyWheelConstants.LOG_PATH));
 		configureBindings();
+	}
+
+	public Flywheel getFlywheel() {
+		return flywheel;
 	}
 
 	private void configureBindings() {

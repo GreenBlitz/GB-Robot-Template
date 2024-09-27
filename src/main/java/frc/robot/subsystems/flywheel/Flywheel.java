@@ -11,41 +11,21 @@ public class Flywheel extends GBSubsystem {
 
 	private final ControllableMotor rightMotor;
 	private final ControllableMotor leftMotor;
-	private final InputSignal[] rightSignals;
-	private final InputSignal[] leftSignals;
-
-	private final InputSignal<Rotation2d> rightVelocitySignal;
-	private final InputSignal<Rotation2d> leftVelocitySignal;
 	private final IRequest<Rotation2d> rightFlywheelVelocityRequest;
 	private final IRequest<Rotation2d> leftFlywheelVelocityRequest;
+	private final FlywheelStuff flywheelStuff;
 
 	private final FlywheelCommandsBuilder commandsBuilder;
 
 	public Flywheel(
-		String logPath,
-		ControllableMotor rightFlywheel,
-		ControllableMotor leftFlywheel,
-		InputSignal<Rotation2d> rightVelocitySignal,
-		InputSignal<Rotation2d> leftVelocitySignal,
-		IRequest<Rotation2d> rightFlywheelRequest,
-		IRequest<Rotation2d> leftFlywheelRequest,
-		InputSignal[] rightSignals,
-		InputSignal[] leftSignals
+		FlywheelStuff flywheelStuff
 	) {
-		super(logPath);
-
-		this.rightMotor = rightFlywheel;
-		this.leftMotor = leftFlywheel;
-
-
-		this.rightVelocitySignal = rightVelocitySignal;
-		this.leftVelocitySignal = leftVelocitySignal;
-
-		this.rightFlywheelVelocityRequest = rightFlywheelRequest;
-		this.leftFlywheelVelocityRequest = leftFlywheelRequest;
-
-		this.rightSignals = rightSignals;
-		this.leftSignals = leftSignals;
+		super("logPath");
+		this.rightMotor = flywheelStuff.rightFlywheel();
+		this.leftMotor = flywheelStuff.leftFlywheel();
+		this.rightFlywheelVelocityRequest = flywheelStuff.rightFlywheelVelocityRequest();
+		this.leftFlywheelVelocityRequest = flywheelStuff.leftFlywheelVelocityRequest();
+		this.flywheelStuff = flywheelStuff;
 
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
 
@@ -56,9 +36,16 @@ public class Flywheel extends GBSubsystem {
 		return commandsBuilder;
 	}
 
+	@Override
+	public String getLogPath() {
+		return FlyWheelConstants.LOG_PATH;
+	}
+
 	private void updateSignals() {
-		rightMotor.updateSignals(rightSignals);
-		leftMotor.updateSignals(leftSignals);
+		rightMotor.updateSignals(flywheelStuff.rightSignals());
+		rightMotor.updateSignals(flywheelStuff.rightVelocitySignal());
+		rightMotor.updateSignals(flywheelStuff.leftSignals());
+		rightMotor.updateSignals(flywheelStuff.leftVelocitySignal());
 	}
 
 	@Override

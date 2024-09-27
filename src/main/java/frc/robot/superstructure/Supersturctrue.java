@@ -150,18 +150,18 @@ public class Supersturctrue {
 	}
 
 	private Command speaker() {
-		return new ParallelCommandGroup(
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
                 funnelStateHandler.setState(FunnelState.STOP).until(() -> true),
                 new RunCommand(() -> {}, robot.getFunnel()).until(this::isReadyToShoot),
-                funnelStateHandler.setState(FunnelState.SHOOT)
+                funnelStateHandler.setState(FunnelState.SHOOT).until(() -> !robot.getFunnel().isObjectIn())
             ),
 			intakeStateHandler.setState(IntakeState.STOP),
 			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.IDLE),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
-		);
+		).andThen(idle());
 	}
 
 

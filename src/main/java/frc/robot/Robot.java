@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.flywheel.FlyWheelConstants;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
+import frc.robot.subsystems.pivot.Pivot;
+import frc.robot.subsystems.pivot.PivotConstants;
+import frc.robot.subsystems.pivot.factory.PivotFactory;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -20,9 +24,12 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Flywheel flywheel;
+	private final Pivot pivot;
 
 	public Robot() {
 		this.flywheel = new Flywheel(FlywheelFactory.create(FlyWheelConstants.LOG_PATH));
+		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
+		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		configureBindings();
 	}
 
@@ -35,7 +42,11 @@ public class Robot {
 	}
 
 	public Flywheel getFlywheel() {
-		return flywheel;
+			return flywheel;
+	}
+
+	public Pivot getPivot() {
+		return pivot;
 	}
 
 }

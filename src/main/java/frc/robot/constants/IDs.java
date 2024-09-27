@@ -14,9 +14,13 @@ public class IDs {
 
 	public static class TalonFXs {
 
+<<<<<<< HEAD
 		public static final Phoenix6DeviceID RIGHT_FLYWHEEL = new Phoenix6DeviceID(16, BusChain.ROBORIO);
 
 		public static final Phoenix6DeviceID LEFT_FLYWHEEL = new Phoenix6DeviceID(22, BusChain.ROBORIO);
+=======
+		public static final Phoenix6DeviceID PIVOT_MOTOR_ID = new Phoenix6DeviceID(11, BusChain.CANIVORE);
+>>>>>>> @{-1}
 
 	}
 

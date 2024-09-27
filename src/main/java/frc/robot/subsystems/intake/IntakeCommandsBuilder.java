@@ -20,7 +20,7 @@ public class IntakeCommandsBuilder {
 
 	public Command moveByPower(DoubleSupplier power) {
 		return new FunctionalCommand(() -> {}, () -> intake.setPower(power.getAsDouble()), interrupted -> intake.stop(), () -> false, intake)
-			.withName("Move power supplier");
+			.withName("Move by power supplier");
 	}
 
 }

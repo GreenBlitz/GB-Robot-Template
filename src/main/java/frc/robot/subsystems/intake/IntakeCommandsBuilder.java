@@ -17,9 +17,10 @@ public class IntakeCommandsBuilder {
 		return new FunctionalCommand(() -> intake.setPower(power), () -> {}, interrupted -> intake.stop(), () -> false, intake)
 			.withName("Move by power: " + power);
 	}
+
 	public Command moveByPower(DoubleSupplier power) {
 		return new FunctionalCommand(() -> {}, () -> intake.setPower(power.getAsDouble()), interrupted -> intake.stop(), () -> false, intake)
-				.withName("Move power supplier");
+			.withName("Move power supplier");
 	}
 
 }

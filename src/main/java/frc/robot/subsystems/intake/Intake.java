@@ -13,7 +13,7 @@ public class Intake extends GBSubsystem {
 	private final IDigitalInput digitalInput;
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final IntakeStuff intakeStuff;
-	private final IntakeCommandBuilder commandBuilder;
+	private final IntakeCommandsBuilder commandBuilder;
 
 	public Intake(IntakeStuff intakeStuff) {
 		super(intakeStuff.logPath());
@@ -22,11 +22,11 @@ public class Intake extends GBSubsystem {
 		this.intakeStuff = intakeStuff;
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 
-		this.commandBuilder = new IntakeCommandBuilder(this);
+		this.commandBuilder = new IntakeCommandsBuilder(this);
 		updateInputs();
 	}
 
-	public IntakeCommandBuilder getCommandBuilder() {
+	public IntakeCommandsBuilder getCommandsBuilder() {
 		return commandBuilder;
 	}
 

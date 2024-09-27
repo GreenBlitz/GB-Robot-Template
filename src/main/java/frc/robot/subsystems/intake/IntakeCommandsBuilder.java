@@ -3,11 +3,11 @@ package frc.robot.subsystems.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 
-public class IntakeCommandBuilder {
+public class IntakeCommandsBuilder {
 
 	private final Intake intake;
 
-	public IntakeCommandBuilder(Intake intake) {
+	public IntakeCommandsBuilder(Intake intake) {
 		this.intake = intake;
 	}
 

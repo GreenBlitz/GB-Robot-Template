@@ -61,11 +61,11 @@ public class Supersturctrue {
 			case IDLE -> idle();
 			case PRE_SPEAKER -> preSpeaker();
 			case PRE_AMP -> preAMP();
-			case TRANSFER_SHOOTER_ARM -> null;
-			case TRANSFER_ARM_SHOOTER -> null;
+			case TRANSFER_SHOOTER_ARM -> transferShooterArm();
+			case TRANSFER_ARM_SHOOTER -> transferArmShooter();
 			case INTAKE -> intake();
 			case SPEAKER -> speaker();
-			case AMP -> null;
+			case AMP -> amp();
 			case SHOOTER_OUTTAKE -> shooterOuttake();
 		};
 	}
@@ -178,15 +178,44 @@ public class Supersturctrue {
 		).andThen(idle());
 	}
 
+	private boolean isReadyToAmp() {
+		return robot.getElbow().isAtAngle(ElbowState.PRE_AMP.getTargetPosition(), Rotation2d.fromDegrees(5));
+	}
+
+	private Command amp() {
+		return new ParallelCommandGroup(
+				rollerStateHandler.setState(RollerState.STOP),
+				intakeStateHandler.setState(IntakeState.STOP),
+				pivotStateHandler.setState(PivotState.IDLE),
+				flywheelStateHandler.setState(FlywheelState.DEFAULT),
+				new SequentialCommandGroup(
+						new ParallelDeadlineGroup(
+								new RunCommand(() -> {}).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
+								swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
+								funnelStateHandler.setState(FunnelState.STOP)
+						),
+						new ParallelDeadlineGroup(
+								elbowStateHandler.setState(ElbowState.PRE_AMP),
+								funnelStateHandler.setState(FunnelState.RELEASE_FOR_ARM)
+						),
+						new ParallelCommandGroup(
+							funnelStateHandler.setState(FunnelState.STOP),
+							rollerStateHandler.setState(RollerState.OUT)
+						).until(() -> !robot.getRoller().isObjectIn())
+				)
+		);
+	}
 
 	private Command transferShooterArm() {
 		return new SequentialCommandGroup(
 			new ParallelCommandGroup(
-					pivotStateHandler.setState(PivotState.TRANSFER),
-					elbowStateHandler.setState(ElbowState.TRANSFER)
+				pivotStateHandler.setState(PivotState.TRANSFER),
+				elbowStateHandler.setState(ElbowState.TRANSFER)
 			),
-			funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
-			// add roller
+			new ParallelDeadlineGroup(
+				rollerStateHandler.setState(RollerState.INTAKE),
+				funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
+			)
 		);
 	}
 
@@ -196,10 +225,14 @@ public class Supersturctrue {
 						pivotStateHandler.setState(PivotState.TRANSFER),
 						elbowStateHandler.setState(ElbowState.TRANSFER)
 				),
-				funnelStateHandler.setState(FunnelState.TRANSFER_TO_SHOOTER)
-				// add roller
+				new ParallelDeadlineGroup(
+					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM).until(() -> robot.getFunnel().isObjectIn()),
+					rollerStateHandler.setState(RollerState.OUT)
+				)
 		);
 	}
 	//@formatter:on
+
+
 
 }

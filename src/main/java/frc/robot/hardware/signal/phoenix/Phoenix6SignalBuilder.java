@@ -34,7 +34,7 @@ public class Phoenix6SignalBuilder {
 		SignalGetter signalSlope,
 		double frequency,
 		AngleUnit angleUnit
-    ) {
+	) {
 		StatusSignal<Double> signalClone = cloneWithFrequency(signal, frequency);
 		setFrequencyWithRetry(signalSlope.getSignal(), frequency);
 		return new Phoenix6LatencySignal(signalClone.getName(), signalClone, signalSlope.getSignal(), angleUnit);

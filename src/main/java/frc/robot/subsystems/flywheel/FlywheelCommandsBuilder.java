@@ -25,6 +25,16 @@ public class FlywheelCommandsBuilder {
 		).withName("Set powers - right: " + rightPower + ", left: " + leftPower);
 	}
 
+	public Command setPowers(Supplier<Double> rightPower, Supplier<Double> leftPower) {
+		return new FunctionalCommand(
+				() -> {},
+				() -> flywheel.setPowers(rightPower.get(), leftPower.get()),
+				(interrupted) -> {},
+				() -> false,
+				flywheel
+		).withName("Set power by supplier");
+	}
+
 	public Command setVelocities(Rotation2d rightVelocity, Rotation2d leftVelocity, Rotation2d tolerance) {
 		return new FunctionalCommand(
 			() -> flywheel.setTargetVelocities(rightVelocity, leftVelocity),
@@ -33,16 +43,6 @@ public class FlywheelCommandsBuilder {
 			() -> flywheel.isAtVelocities(rightVelocity, leftVelocity, tolerance),
 			flywheel
 		).withName("Set velocities - right: " + rightVelocity + ", left: " + leftVelocity);
-	}
-
-	public Command setPowersBySuppliers(Supplier<Double> rightPower, Supplier<Double> leftPower) {
-		return new FunctionalCommand(
-			() -> {},
-			() -> flywheel.setPowers(rightPower.get(), leftPower.get()),
-			(interrupted) -> {},
-			() -> false,
-			flywheel
-		).withName("Manual power");
 	}
 
 	public Command stop() {

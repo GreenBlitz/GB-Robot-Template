@@ -6,12 +6,12 @@ import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 
 public record FlywheelStuff(
-        ControllableMotor rightFlywheel,
-        ControllableMotor leftFlywheel,
-        IRequest<Rotation2d> rightFlywheelVelocityRequest,
-        IRequest<Rotation2d> leftFlywheelVelocityRequest,
-        InputSignal<Rotation2d> rightVelocitySignal,
-        InputSignal<Rotation2d> leftVelocitySignal,
-        InputSignal[] rightSignals,
-        InputSignal[] leftSignals
+	ControllableMotor rightFlywheel,
+	ControllableMotor leftFlywheel,
+	IRequest<Rotation2d> rightFlywheelVelocityRequest,
+	IRequest<Rotation2d> leftFlywheelVelocityRequest,
+	InputSignal<Rotation2d> rightVelocitySignal,
+	InputSignal<Rotation2d> leftVelocitySignal,
+	InputSignal[] rightSignals,
+	InputSignal[] leftSignals
 ) {}

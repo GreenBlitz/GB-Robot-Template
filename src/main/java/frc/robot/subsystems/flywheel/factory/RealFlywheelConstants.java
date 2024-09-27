@@ -1,11 +1,8 @@
 package frc.robot.subsystems.flywheel.factory;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
@@ -30,10 +27,10 @@ public class RealFlywheelConstants {
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
-				Volts.of(1).per(Seconds.of(1)),
-				Volts.of(7),
-				Seconds.of(10),
-				(state) -> SignalLogger.writeString("state", state.toString())
+			Volts.of(1).per(Seconds.of(1)),
+			Volts.of(7),
+			Seconds.of(10),
+			(state) -> SignalLogger.writeString("state", state.toString())
 		);
 	}
 
@@ -68,9 +65,12 @@ public class RealFlywheelConstants {
 			new Alert(Alert.AlertType.ERROR, rightLogPath + "ConfigurationFail").report();
 		}
 
-		Phoenix6AngleSignal rightVelocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(rightMotor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		Phoenix6DoubleSignal rightCurrentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(rightMotor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
-		Phoenix6DoubleSignal rightVoltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(rightMotor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6AngleSignal rightVelocitySignal = Phoenix6SignalBuilder
+			.generatePhoenix6Signal(rightMotor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal rightCurrentSignal = Phoenix6SignalBuilder
+			.generatePhoenix6Signal(rightMotor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6DoubleSignal rightVoltageSignal = Phoenix6SignalBuilder
+			.generatePhoenix6Signal(rightMotor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		TalonFXMotor rightFlywheel = new TalonFXMotor(rightLogPath, rightMotor, generateSysidConfig());
 
@@ -79,21 +79,24 @@ public class RealFlywheelConstants {
 			new Alert(Alert.AlertType.ERROR, leftLogPath + "ConfigurationFail").report();
 		}
 
-		Phoenix6AngleSignal leftVelocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(leftMotor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		Phoenix6DoubleSignal leftCurrentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(leftMotor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
-		Phoenix6DoubleSignal leftVoltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(leftMotor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6AngleSignal leftVelocitySignal = Phoenix6SignalBuilder
+			.generatePhoenix6Signal(leftMotor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal leftCurrentSignal = Phoenix6SignalBuilder
+			.generatePhoenix6Signal(leftMotor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6DoubleSignal leftVoltageSignal = Phoenix6SignalBuilder
+			.generatePhoenix6Signal(leftMotor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		TalonFXMotor leftFlywheel = new TalonFXMotor(leftLogPath, leftMotor, generateSysidConfig());
 
 		return new FlywheelStuff(
-				rightFlywheel,
-				leftFlywheel,
-				rightVelocityRequest,
-				leftVelocityRequest,
-				rightVelocitySignal,
-				leftVelocitySignal,
-				new InputSignal[]{rightCurrentSignal, rightVoltageSignal},
-				new InputSignal[]{leftCurrentSignal, leftVoltageSignal}
+			rightFlywheel,
+			leftFlywheel,
+			rightVelocityRequest,
+			leftVelocityRequest,
+			rightVelocitySignal,
+			leftVelocitySignal,
+			new InputSignal[] {rightCurrentSignal, rightVoltageSignal},
+			new InputSignal[] {leftCurrentSignal, leftVoltageSignal}
 		);
 	}
 

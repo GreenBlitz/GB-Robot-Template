@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.hardware.signal.InputSignal;
 import frc.utils.GBSubsystem;
 
 public class Flywheel extends GBSubsystem {
@@ -17,9 +16,7 @@ public class Flywheel extends GBSubsystem {
 
 	private final FlywheelCommandsBuilder commandsBuilder;
 
-	public Flywheel(
-		FlywheelStuff flywheelStuff
-	) {
+	public Flywheel(FlywheelStuff flywheelStuff) {
 		super("logPath");
 		this.rightMotor = flywheelStuff.rightFlywheel();
 		this.leftMotor = flywheelStuff.leftFlywheel();
@@ -79,8 +76,10 @@ public class Flywheel extends GBSubsystem {
 		Rotation2d rightVelocityTolerance,
 		Rotation2d leftVelocityTolerance
 	) {
-		boolean rightFlyWheelAtVelocity = MathUtil.isNear(rightFlywheelExpectedVelocity.getRotations(), rightVelocityTolerance.getRotations(), rightVelocityTolerance.getRotations());
-		boolean leftFlyWheelAtVelocity = MathUtil.isNear(leftFlywheelExpectedVelocity.getRotations(), leftVelocityTolerance.getRotations(), leftVelocityTolerance.getRotations());
+		boolean rightFlyWheelAtVelocity = MathUtil
+			.isNear(rightFlywheelExpectedVelocity.getRotations(), rightVelocityTolerance.getRotations(), rightVelocityTolerance.getRotations());
+		boolean leftFlyWheelAtVelocity = MathUtil
+			.isNear(leftFlywheelExpectedVelocity.getRotations(), leftVelocityTolerance.getRotations(), leftVelocityTolerance.getRotations());
 		return rightFlyWheelAtVelocity && leftFlyWheelAtVelocity;
 	}
 

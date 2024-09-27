@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot.factories;
+package frc.robot.subsystems.pivot.factory;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -49,7 +49,9 @@ public class RealPivotConstants {
 		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = PivotConstants.BACKWARD_ANGLE_LIMIT.getRotations();
 
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+		configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
 		configuration.CurrentLimits.StatorCurrentLimit = 40;
+		configuration.CurrentLimits.SupplyCurrentLimit = 40;
 
 		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 

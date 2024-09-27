@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot.factories;
+package frc.robot.subsystems.pivot.factory;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.pivot.PivotStuff;

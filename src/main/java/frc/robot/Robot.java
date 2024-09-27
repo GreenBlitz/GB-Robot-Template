@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotConstants;
-import frc.robot.subsystems.pivot.factories.PivotFactory;
+import frc.robot.subsystems.pivot.factory.PivotFactory;
 import frc.utils.brakestate.BrakeStateManager;
 
 /**

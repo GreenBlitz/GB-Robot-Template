@@ -86,9 +86,12 @@ public class Supersturctrue {
 
     private Command transferShooterArm() {
         return new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                    pivotStateHandler.
-            )
+                new ParallelCommandGroup(
+                        pivotStateHandler.setState(PivotState.TRANSFER),
+                        elbowStateHandler.setState(ElbowState.TRANSFER)
+                ),
+                funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
+                //add roller
         );
     }
 

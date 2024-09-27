@@ -1,7 +1,6 @@
 package frc.robot.hardware.motor.sparkmax;
 
 import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;
@@ -13,11 +12,11 @@ import org.littletonrobotics.junction.Logger;
 
 public abstract class SparkMaxMotor implements IMotor {
 
-	protected final CANSparkMax motor;
+	protected final SparkMaxWrapper motor;
 	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
 
-	public SparkMaxMotor(String logPath, CANSparkMax motor) {
+	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
 		this.logPath = logPath;
 		this.motor = motor;
 

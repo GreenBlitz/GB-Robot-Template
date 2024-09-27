@@ -60,7 +60,7 @@ public class RealFlywheelConstants {
 		Phoenix6AngleRequest rightVelocityRequest = new Phoenix6AngleRequest(new VelocityVoltage(0).withEnableFOC(true));
 		Phoenix6AngleRequest leftVelocityRequest = new Phoenix6AngleRequest(new VelocityVoltage(0).withEnableFOC(true));
 
-		TalonFXWrapper rightMotor = new TalonFXWrapper(IDs.TalonFXs.RIGHT_FLYWHEEL);
+		TalonFXWrapper rightMotor = new TalonFXWrapper(IDs.TalonFXIDs.RIGHT_FLYWHEEL);
 		if (!rightMotor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, rightLogPath + "ConfigurationFail").report();
 		}
@@ -74,7 +74,7 @@ public class RealFlywheelConstants {
 
 		TalonFXMotor rightFlywheel = new TalonFXMotor(rightLogPath, rightMotor, generateSysidConfig());
 
-		TalonFXWrapper leftMotor = new TalonFXWrapper(IDs.TalonFXs.LEFT_FLYWHEEL);
+		TalonFXWrapper leftMotor = new TalonFXWrapper(IDs.TalonFXIDs.LEFT_FLYWHEEL);
 		if (!leftMotor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, leftLogPath + "ConfigurationFail").report();
 		}

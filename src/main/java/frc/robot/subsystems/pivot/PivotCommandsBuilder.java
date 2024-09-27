@@ -1,0 +1,63 @@
+package frc.robot.subsystems.pivot;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
+public class PivotCommandsBuilder {
+
+	private final Pivot pivot;
+
+	public PivotCommandsBuilder(Pivot pivot) {
+		this.pivot = pivot;
+	}
+
+	//@formatter:off
+	public Command setPower(double power) {
+		return new FunctionalCommand(
+				() -> {},
+				() -> pivot.setPower(power),
+				(interrupted) -> pivot.stop(),
+				() -> false, pivot
+		).withName("Set power to: " + power);
+	}
+
+	public Command setPower(DoubleSupplier power) {
+		return new FunctionalCommand(
+				() -> {},
+				() -> pivot.setPower(power.getAsDouble()),
+				(interrupted) -> pivot.stop(),
+				() -> false, pivot
+		).withName("Set power by supplier");
+	}
+	//@formatter:on
+
+	public Command moveToPosition(Rotation2d position, Rotation2d tolerance) {
+		return new FunctionalCommand(
+			() -> pivot.setTargetPosition(position),
+			() -> {},
+			(interrupted) -> pivot.stayInPlace(),
+			() -> pivot.isAtPosition(position, tolerance),
+			pivot
+		).withName("Move to position: " + position);
+	}
+
+	public Command moveToPosition(Supplier<Rotation2d> positionSupplier) {
+		return new FunctionalCommand(
+			() -> {},
+			() -> pivot.setTargetPosition(positionSupplier.get()),
+			(interrupted) -> pivot.stayInPlace(),
+			() -> false,
+			pivot
+		).withName("Move to supplier position");
+	}
+
+	public Command stop() {
+		return new InstantCommand(pivot::stop, pivot).withName("Stop");
+	}
+
+}

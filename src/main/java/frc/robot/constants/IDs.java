@@ -14,7 +14,7 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static class CANSparkMaxes {
+	public static class CANSparkMAXs {
 
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 

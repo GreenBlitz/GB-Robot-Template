@@ -23,7 +23,7 @@ public class RealFunnelConstants {
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
 	public static FunnelStuff generateFunnelStuff(String logPath) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxes.FUNNEL);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.FUNNEL);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();// config!
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 
@@ -31,8 +31,7 @@ public class RealFunnelConstants {
 		SparkMaxDoubleSignal signal = new SparkMaxDoubleSignal("voltage", voltage);
 
 		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
-		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE)
-			.enableLimitSwitch(FunnelConstants.ENABLE_FORWARD_LIMIT_SWITCH);
+		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(FunnelConstants.ENABLE_FORWARD_LIMIT_SWITCH);
 
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 

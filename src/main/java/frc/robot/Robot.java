@@ -22,7 +22,7 @@ public class Robot {
 	private final Intake intake;
 
 	public Robot() {
-		this.intake = new Intake(IntakeConstants.LOG_PATH, IntakeFactory.create());
+		this.intake = new Intake(IntakeFactory.create(IntakeConstants.LOG_PATH));
 		configureBindings();
 	}
 

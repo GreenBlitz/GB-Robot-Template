@@ -13,7 +13,7 @@ public class IntakeCommandBuilder {
 
 	public Command moveByPower(double power) {
 		return new FunctionalCommand(() -> intake.setPower(power), () -> {}, interrupted -> intake.stop(), () -> false, intake)
-			.withName("Move By Power: " + power);
+			.withName("Move by power: " + power);
 	}
 
 }

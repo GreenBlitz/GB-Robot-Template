@@ -5,9 +5,9 @@ import frc.robot.subsystems.intake.IntakeStuff;
 
 public class IntakeFactory {
 
-	public static IntakeStuff create() {
+	public static IntakeStuff create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealIntakeConstants.generateIntake();
+			case REAL -> RealIntakeConstants.generateIntakeStuff(logPath);
 			case SIMULATION -> null;
 		};
 	}

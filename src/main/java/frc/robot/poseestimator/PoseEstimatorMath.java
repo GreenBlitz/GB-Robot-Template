@@ -37,7 +37,7 @@ public class PoseEstimatorMath {
 		if (odometryStandardDeviation == 0) {
 			return 0;
 		}
-		double squaredVisionStandardDeviation = visionStandardDeviation * visionStandardDeviation;
+		double squaredVisionStandardDeviation = Math.pow(visionStandardDeviation, 2);
 		return odometryStandardDeviation
 			/ (odometryStandardDeviation + Math.sqrt(odometryStandardDeviation * squaredVisionStandardDeviation));
 	}
@@ -83,8 +83,8 @@ public class PoseEstimatorMath {
 		double[] odometryStandardDeviations
 	) {
 		Transform2d poseDifferenceFromSample = new Transform2d(odometryInterpolatedPoseSample, odometryPose);
-		Transform2d invertedPoseDifferenceFromSample = poseDifferenceFromSample.inverse();
-		Pose2d currentPoseEstimation = estimatedPose.plus(invertedPoseDifferenceFromSample);
+		Transform2d sampleDifferenceFromPose = poseDifferenceFromSample.inverse();
+		Pose2d currentPoseEstimation = estimatedPose.plus(sampleDifferenceFromPose);
 		currentPoseEstimation = currentPoseEstimation
 			.plus(PoseEstimatorMath.useKalmanOnTransform(observation, currentPoseEstimation, odometryStandardDeviations));
 		currentPoseEstimation = currentPoseEstimation.plus(poseDifferenceFromSample);

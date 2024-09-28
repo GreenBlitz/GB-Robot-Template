@@ -28,13 +28,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
-		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
-		usedJoystick.X.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));
-		usedJoystick.Y.onTrue(robot.getSupersturctrue().setState(RobotState.SPEAKER));
-		usedJoystick.POV_UP.onTrue(robot.getSupersturctrue().setState(RobotState.INTAKE));
-		usedJoystick.POV_DOWN.onTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
-
+		
 		usedJoystick.START.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
 		robot.getSwerve()
 			.setDefaultCommand(
@@ -51,6 +45,20 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+		
+		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
+		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
+		usedJoystick.X.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));
+		usedJoystick.Y.onTrue(robot.getSupersturctrue().setState(RobotState.SPEAKER));
+		usedJoystick.POV_UP.onTrue(robot.getSupersturctrue().setState(RobotState.INTAKE));
+		usedJoystick.POV_DOWN.onTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
+		usedJoystick.POV_LEFT.onTrue(robot.getSupersturctrue().setState(RobotState.AMP));
+		usedJoystick.POV_RIGHT.onTrue(robot.getSupersturctrue().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
+		
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(
+				robot.getRoller().getCommandsBuilder().moveByPower(usedJoystick.getAxisValue(Axis.LEFT_Y) * 0.7));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(
+				robot.getFunnel().getCommandsBuilder().setPower(usedJoystick.getAxisValue(Axis.RIGHT_Y) * 0.7));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

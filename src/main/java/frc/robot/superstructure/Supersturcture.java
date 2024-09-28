@@ -21,9 +21,9 @@ import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import org.littletonrobotics.junction.Logger;
 
 public class Supersturcture {
-
+	
 	private final Robot robot;
-
+	
 	private final Swerve swerve;
 	private final ElbowStateHandler elbowStateHandler;
 	private final FlywheelStateHandler flywheelStateHandler;
@@ -31,9 +31,9 @@ public class Supersturcture {
 	private final IntakeStateHandler intakeStateHandler;
 	private final PivotStateHandler pivotStateHandler;
 	private final RollerStateHandler rollerStateHandler;
-
+	
 	private RobotState currentState;
-
+	
 	public Supersturcture(Robot robot) {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
@@ -44,41 +44,41 @@ public class Supersturcture {
 		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
 		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
 	}
-
+	
 	public RobotState getCurrentState() {
 		return currentState;
 	}
-
+	
 	public void logStatus() {
 		Logger.recordOutput("CurrentState", currentState);
 	}
-
+	
 	private boolean isObjectInRoller() {
 		return robot.getRoller().isObjectIn();
 	}
-
+	
 	private boolean isObjectInIntake() {
 		return robot.getIntake().isObjectIn();
 	}
-
+	
 	private boolean isObjectInFunnel() {
 		return robot.getFunnel().isObjectIn();
 	}
-
+	
 	private boolean isReadyToShoot() {
 		boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.PRE_SPEAKER.getTargetPosition(), Tolerances.PIVOT_POSITION_TOLERANCE);
-
+		
 		boolean isFlywheelReady = robot.getFlywheel()
-			.isAtVelocities(
-				FlywheelState.PRE_SPEAKER.getRightVelocity(),
-				FlywheelState.PRE_SPEAKER.getLeftVelocity(),
-				Tolerances.FLYWHEEL_VELOCITY_PER_SECOND_TOLERANCE
-			);
-
+				.isAtVelocities(
+						FlywheelState.PRE_SPEAKER.getRightVelocity(),
+						FlywheelState.PRE_SPEAKER.getLeftVelocity(),
+						Tolerances.FLYWHEEL_VELOCITY_PER_SECOND_TOLERANCE
+				);
+		
 		return isFlywheelReady && isPivotReady;
 	}
-
-
+	
+	
 	public Command setState(RobotState state) {
 		this.currentState = state;
 		return switch (state) {
@@ -91,15 +91,16 @@ public class Supersturcture {
 			case SHOOTER_OUTTAKE -> shooterOuttake();
 			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
+			case INTAKE_OUTTAKE -> null;
 		};
 	}
-
+	
 	//@formatter:off
 	private Command idle() {
 		return new ParallelCommandGroup(
-			rollerStateHandler.setState(RollerState.STOP),
+			rollerStateHandler.setState(RollerState.MANUAL),
 			intakeStateHandler.setState(IntakeState.STOP),
-			funnelStateHandler.setState(FunnelState.STOP),
+			funnelStateHandler.setState(FunnelState.MANUAL),
 			pivotStateHandler.setState(PivotState.IDLE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elbowStateHandler.setState(ElbowState.IDLE),
@@ -114,11 +115,16 @@ public class Supersturcture {
 					intakeStateHandler.setState(IntakeState.INTAKE),
 					rollerStateHandler.setState(RollerState.ROLL_IN)
 				).until(this::isObjectInIntake),
-				new ParallelCommandGroup(
+				new ParallelDeadlineGroup(
+					new WaitCommand(0.475),
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
 					funnelStateHandler.setState(FunnelState.INTAKE),
 					rollerStateHandler.setState(RollerState.ROLL_IN)
-				).until(this::isObjectInFunnel)
+				)
+//						new ParallelDeadlineGroup(
+//								new WaitCommand(0.5),
+//								funnelStateHandler.setState(Fun)
+//						)
 			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			pivotStateHandler.setState(PivotState.IDLE),
@@ -179,7 +185,8 @@ public class Supersturcture {
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
-					funnelStateHandler.setState(FunnelState.STOP)
+					funnelStateHandler.setState(FunnelState.STOP),
+					rollerStateHandler.setState(RollerState.STOP)
 				).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
 				new ParallelDeadlineGroup(
 					elbowStateHandler.setState(ElbowState.PRE_AMP),
@@ -190,7 +197,6 @@ public class Supersturcture {
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
 				).withTimeout(3)//.until(() -> !isObjectInRoller())
 			),
-			rollerStateHandler.setState(RollerState.STOP),
 			intakeStateHandler.setState(IntakeState.STOP),
 			pivotStateHandler.setState(PivotState.IDLE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT)
@@ -231,9 +237,9 @@ public class Supersturcture {
 			new ParallelCommandGroup(
 				funnelStateHandler.setState(FunnelState.TRANSFER_TO_SHOOTER),
 				rollerStateHandler.setState(RollerState.ROLL_OUT)
-			).withTimeout(5)//.until(this::isObjectInFunnel)
+			).withTimeout(0.7)//.until(this::isObjectInFunnel)
 		);
 	}
 	//@formatter:on
-
+	
 }

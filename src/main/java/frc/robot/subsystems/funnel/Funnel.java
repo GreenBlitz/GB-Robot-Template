@@ -27,7 +27,7 @@ public class Funnel extends GBSubsystem {
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 	}
 
-	public FunnelCommandsBuilder getCommandBuilder() {
+	public FunnelCommandsBuilder getCommandsBuilder() {
 		return commandBuilder;
 	}
 

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.funnel;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class FunnelStateHandler {
 
@@ -11,7 +12,10 @@ public class FunnelStateHandler {
 	}
 
 	public Command setState(FunnelState funnelState) {
-		return funnel.getCommandBuilder().setPower(funnelState.getPower());
+		if (funnelState == FunnelState.MANUAL) {
+			return new InstantCommand();
+		}
+		return funnel.getCommandsBuilder().setPower(funnelState.getPower());
 	}
 
 }

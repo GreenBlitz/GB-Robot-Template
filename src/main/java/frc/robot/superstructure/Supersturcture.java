@@ -143,7 +143,7 @@ public class Supersturcture {
 		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
-				funnelStateHandler.setState(FunnelState.SHOOT).until(() -> !isObjectInFunnel())
+				funnelStateHandler.setState(FunnelState.SHOOT).withTimeout(3)//.until(() -> !isObjectInFunnel())
 			),
 			intakeStateHandler.setState(IntakeState.STOP),
 			rollerStateHandler.setState(RollerState.STOP),
@@ -188,7 +188,7 @@ public class Supersturcture {
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
-				).until(() -> !isObjectInRoller())
+				).withTimeout(3)//.until(() -> !isObjectInRoller())
 			),
 			rollerStateHandler.setState(RollerState.STOP),
 			intakeStateHandler.setState(IntakeState.STOP),
@@ -231,7 +231,7 @@ public class Supersturcture {
 			new ParallelCommandGroup(
 				funnelStateHandler.setState(FunnelState.TRANSFER_TO_SHOOTER),
 				rollerStateHandler.setState(RollerState.ROLL_OUT)
-			).until(this::isObjectInFunnel)
+			).withTimeout(5)//.until(this::isObjectInFunnel)
 		);
 	}
 	//@formatter:on

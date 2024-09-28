@@ -29,6 +29,7 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		
+		
 		usedJoystick.START.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
 		robot.getSwerve()
 			.setDefaultCommand(
@@ -55,10 +56,10 @@ public class JoysticksBindings {
 		usedJoystick.POV_LEFT.onTrue(robot.getSupersturctrue().setState(RobotState.AMP));
 		usedJoystick.POV_RIGHT.onTrue(robot.getSupersturctrue().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 		
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(
-				robot.getRoller().getCommandsBuilder().moveByPower(usedJoystick.getAxisValue(Axis.LEFT_Y) * 0.7));
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(
-				robot.getFunnel().getCommandsBuilder().setPower(usedJoystick.getAxisValue(Axis.RIGHT_Y) * 0.7));
+		usedJoystick.L1.whileTrue(
+				robot.getRoller().getCommandsBuilder().moveByPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y) * 0.7));
+		usedJoystick.R1.whileTrue(
+				robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_Y) * 0.7));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

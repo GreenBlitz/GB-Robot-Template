@@ -50,16 +50,19 @@ public class PoseEstimatorMath {
 		return result;
 	}
 
-	public static Transform2d
-		useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, double[] odometryStandardDeviations) {
+	public static Transform2d applyStandardDeviationsOnCurrentPose(
+		VisionObservation observation,
+		Pose2d currentPoseEstimation,
+		double[] odometryStandardDeviations
+	) {
 		double[] combinedStandardDeviations = PoseEstimatorMath
 			.getCombinedStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
 		Transform2d visionDifferenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
-		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
+		return applyStandardDeviationsOnTransform(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
 	public static Transform2d
-		scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
+		applyStandardDeviationsOnTransform(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
 		double[] visionDifferenceFromOdometryMatrix = {
 			visionDifferenceFromOdometry.getX(),
 			visionDifferenceFromOdometry.getY(),
@@ -85,8 +88,9 @@ public class PoseEstimatorMath {
 		Transform2d poseDifferenceFromSample = new Transform2d(odometryInterpolatedPoseSample, odometryPose);
 		Transform2d invertedPoseDifferenceFromSample = poseDifferenceFromSample.inverse();
 		Pose2d currentPoseEstimation = estimatedPose.plus(invertedPoseDifferenceFromSample);
-		currentPoseEstimation = currentPoseEstimation
-			.plus(PoseEstimatorMath.useKalmanOnTransform(observation, currentPoseEstimation, odometryStandardDeviations));
+		currentPoseEstimation = currentPoseEstimation.plus(
+			PoseEstimatorMath.applyStandardDeviationsOnCurrentPose(observation, currentPoseEstimation, odometryStandardDeviations)
+		);
 		currentPoseEstimation = currentPoseEstimation.plus(poseDifferenceFromSample);
 		return currentPoseEstimation;
 	}

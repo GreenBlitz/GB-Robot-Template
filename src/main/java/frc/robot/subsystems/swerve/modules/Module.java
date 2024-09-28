@@ -71,11 +71,6 @@ public class Module {
 
 		updateInputs();
 		resetByEncoder();
-
-		AlertManager
-			.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.logPath() + "EncoderDisconnectAt", () -> !encoder.isConnected()));
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.logPath() + "SteerDisconnectAt", () -> !steer.isConnected()));
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.logPath() + "DriveDisconnectAt", () -> !drive.isConnected()));
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {

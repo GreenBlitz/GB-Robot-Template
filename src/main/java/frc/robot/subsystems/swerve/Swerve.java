@@ -62,9 +62,6 @@ public class Swerve extends GBSubsystem {
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		updateInputs();
-
-		AlertManager
-			.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.gyroLogPath() + "GyroDisconnectedAt", () -> !gyro.isConnected()));
 	}
 
 	protected Modules getModules() {

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
+import frc.robot.simulation.SingleJointedArmSimulation;
 import frc.utils.DriverStationUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.battery.BatteryUtils;
@@ -35,7 +36,7 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
-	private testSim testSim;
+	private SingleJointedArmSimulation testSim;
 
 	@Override
 	public void robotInit() {
@@ -56,7 +57,7 @@ public class RobotManager extends LoggedRobot {
 				Rotation2d.fromDegrees(0).getRadians()
 		);
 
-		testSim = new testSim("testSim",armSim);
+		testSim = new SingleJointedArmSimulation("sim/", armSim);
 
 		SmartJoystick smartJoystick =new SmartJoystick(JoystickPorts.MAIN);
 
@@ -103,8 +104,7 @@ public class RobotManager extends LoggedRobot {
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
 
-		testSim.updateMotor();
-		testSim.updateSimulation();
+		testSim.updateSignals();
 
 		Logger.recordOutput("testSim/vol", testSim.getVoltage());
 		Logger.recordOutput("testSim/spee", testSim.getVelocity());

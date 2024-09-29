@@ -3,14 +3,15 @@ package frc.robot;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.simulation.SingleJointedArmSimulation;
 
 public class testSimCom extends Command {
 
-    private final testSim sim;
+    private final SingleJointedArmSimulation sim;
 
     private Rotation2d target;
 
-    public testSimCom(testSim sim, Rotation2d target) {
+    public testSimCom(SingleJointedArmSimulation sim, Rotation2d target) {
         this.sim = sim;
         this.target = target;
     }

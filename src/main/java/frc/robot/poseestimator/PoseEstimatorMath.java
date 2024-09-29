@@ -51,10 +51,10 @@ public class PoseEstimatorMath {
 	}
 
 	public static Transform2d
-		useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, double[] odometryStandardDeviations) {
+		useKalmanOnTransform(VisionObservation observation, Pose2d appliedVisionObservation, double[] odometryStandardDeviations) {
 		double[] combinedStandardDeviations = PoseEstimatorMath
 			.getCombinedStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
-		Transform2d visionDifferenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
+		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.visionPose());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
@@ -84,11 +84,11 @@ public class PoseEstimatorMath {
 	) {
 		Transform2d poseDifferenceFromSample = new Transform2d(odometryInterpolatedPoseSample, odometryPose);
 		Transform2d sampleDifferenceFromPose = poseDifferenceFromSample.inverse();
-		Pose2d currentPoseEstimation = estimatedPose.plus(sampleDifferenceFromPose);
-		currentPoseEstimation = currentPoseEstimation
-			.plus(PoseEstimatorMath.useKalmanOnTransform(observation, currentPoseEstimation, odometryStandardDeviations));
-		currentPoseEstimation = currentPoseEstimation.plus(poseDifferenceFromSample);
-		return currentPoseEstimation;
+		Pose2d appliedVisionObservation = estimatedPose.plus(sampleDifferenceFromPose);
+		appliedVisionObservation = appliedVisionObservation
+			.plus(PoseEstimatorMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
+		appliedVisionObservation = appliedVisionObservation.plus(poseDifferenceFromSample);
+		return appliedVisionObservation;
 	}
 
 }

@@ -10,9 +10,9 @@ import frc.robot.hardware.request.IRequest;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
-import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
-import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
-import frc.robot.subsystems.swerve.module.stuffs.SteerStuff;
+import frc.robot.subsystems.swerve.module.components.DriveComponents;
+import frc.robot.subsystems.swerve.module.components.EncoderComponents;
+import frc.robot.subsystems.swerve.module.components.SteerComponents;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
@@ -24,17 +24,17 @@ public class Module {
 	private final ModuleConstants constants;
 
 	private final IAngleEncoder encoder;
-	private final EncoderStuff encoderStuff;
+	private final EncoderComponents encoderComponents;
 
 	private final ControllableMotor steer;
 	private final IRequest<Rotation2d> steerPositionRequest;
 	private final IRequest<Double> steerVoltageRequest;
-	private final SteerStuff steerStuff;
+	private final SteerComponents steerComponents;
 
 	private final ControllableMotor drive;
 	private final IRequest<Rotation2d> driveVelocityRequest;
 	private final IRequest<Double> driveVoltageRequest;
-	private final DriveStuff driveStuff;
+	private final DriveComponents driveComponents;
 
 	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
@@ -43,25 +43,25 @@ public class Module {
 	private Rotation2d startingSteerAngle;
 	private boolean isClosedLoop;
 
-	public Module(ModuleConstants constants, EncoderStuff encoderStuff, SteerStuff steerStuff, DriveStuff driveStuff) {
+	public Module(ModuleConstants constants, EncoderComponents encoderComponents, SteerComponents steerComponents, DriveComponents driveComponents) {
 		this.constants = constants;
 
-		this.encoder = encoderStuff.encoder();
-		this.encoderStuff = encoderStuff;
+		this.encoder = encoderComponents.encoder();
+		this.encoderComponents = encoderComponents;
 
-		this.steer = steerStuff.steer();
-		this.steerVoltageRequest = steerStuff.voltageRequest();
-		this.steerPositionRequest = steerStuff.positionRequest();
-		this.steerStuff = steerStuff;
+		this.steer = steerComponents.steer();
+		this.steerVoltageRequest = steerComponents.voltageRequest();
+		this.steerPositionRequest = steerComponents.positionRequest();
+		this.steerComponents = steerComponents;
 
-		this.drive = driveStuff.drive();
-		this.driveVoltageRequest = steerStuff.voltageRequest();
-		this.driveVelocityRequest = driveStuff.velocityRequest();
-		this.driveStuff = driveStuff;
+		this.drive = driveComponents.drive();
+		this.driveVoltageRequest = steerComponents.voltageRequest();
+		this.driveVelocityRequest = driveComponents.velocityRequest();
+		this.driveComponents = driveComponents;
 
 		this.targetState = new SwerveModuleState();
 		this.startingSteerAngle = new Rotation2d();
-		this.isClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
+		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
 
 		this.moduleInputs = new ModuleInputsAutoLogged();
 		this.driveInputs = new DriveInputsAutoLogged();
@@ -85,24 +85,24 @@ public class Module {
 
 	private void fixDriveInputsCoupling() {
 		driveInputs.uncoupledVelocityPerSecond = ModuleUtils.getUncoupledAngle(
-			driveStuff.velocitySignal().getLatestValue(),
-			steerStuff.velocitySignal().getLatestValue(),
+			driveComponents.velocitySignal().getLatestValue(),
+			steerComponents.velocitySignal().getLatestValue(),
 			constants.couplingRatio()
 		);
 
-		driveInputs.uncoupledPositions = new Rotation2d[driveStuff.positionSignal().asArray().length];
+		driveInputs.uncoupledPositions = new Rotation2d[driveComponents.positionSignal().asArray().length];
 		for (int i = 0; i < driveInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
-				.fromRotations(steerStuff.positionSignal().asArray()[i].getRotations() - startingSteerAngle.getRotations());
+				.fromRotations(steerComponents.positionSignal().asArray()[i].getRotations() - startingSteerAngle.getRotations());
 			driveInputs.uncoupledPositions[i] = ModuleUtils
-				.getUncoupledAngle(driveStuff.positionSignal().asArray()[i], steerDelta, constants.couplingRatio());
+				.getUncoupledAngle(driveComponents.positionSignal().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
 
 	public void updateInputs() {
-		encoder.updateSignals(encoderStuff.positionSignal());
-		steer.updateSignals(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
-		drive.updateSignals(driveStuff.positionSignal(), driveStuff.velocitySignal(), driveStuff.currentSignal(), driveStuff.voltageSignal());
+		encoder.updateSignals(encoderComponents.positionSignal());
+		steer.updateSignals(steerComponents.positionSignal(), steerComponents.velocitySignal(), steerComponents.currentSignal(), steerComponents.voltageSignal());
+		drive.updateSignals(driveComponents.positionSignal(), driveComponents.velocitySignal(), driveComponents.currentSignal(), driveComponents.voltageSignal());
 		fixDriveInputsCoupling();
 
 		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityPerSecond);
@@ -128,7 +128,7 @@ public class Module {
 	}
 
 	public void resetByEncoder() {
-		startingSteerAngle = encoderStuff.positionSignal().getLatestValue();
+		startingSteerAngle = encoderComponents.positionSignal().getLatestValue();
 		steer.resetPosition(startingSteerAngle);
 	}
 
@@ -143,12 +143,12 @@ public class Module {
 	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
 		return new SwerveModulePosition(
 			driveInputs.positionsMeters[odometryUpdateIndex],
-			steerStuff.positionSignal().asArray()[odometryUpdateIndex]
+			steerComponents.positionSignal().asArray()[odometryUpdateIndex]
 		);
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(driveInputs.positionsMeters.length, steerStuff.positionSignal().asArray().length);
+		return Math.min(driveInputs.positionsMeters.length, steerComponents.positionSignal().asArray().length);
 	}
 
 	public SwerveModuleState getTargetState() {
@@ -168,7 +168,7 @@ public class Module {
 	}
 
 	public Rotation2d getCurrentAngle() {
-		return steerStuff.positionSignal().getLatestValue();
+		return steerComponents.positionSignal().getLatestValue();
 	}
 
 
@@ -183,7 +183,7 @@ public class Module {
 	//@formatter:on
 
 	public boolean isAtTargetAngle() {
-		boolean isStopping = steerStuff.velocitySignal().getLatestValue().getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
+		boolean isStopping = steerComponents.velocitySignal().getLatestValue().getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
 		if (!isStopping) {
 			return false;
 		}
@@ -201,7 +201,7 @@ public class Module {
 
 
 	public void stop() {
-		targetState = new SwerveModuleState(0, steerStuff.positionSignal().getLatestValue());
+		targetState = new SwerveModuleState(0, steerComponents.positionSignal().getLatestValue());
 		steer.stop();
 		drive.stop();
 	}
@@ -248,14 +248,14 @@ public class Module {
 		setClosedLoop(true);
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtils
-			.getCoupledAngle(targetVelocityPerSecond, steerStuff.velocitySignal().getLatestValue(), constants.couplingRatio());
+			.getCoupledAngle(targetVelocityPerSecond, steerComponents.velocitySignal().getLatestValue(), constants.couplingRatio());
 		drive.applyAngleRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
 	}
 
 	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
 		double voltage = ModuleUtils.velocityToOpenLoopVoltage(
 			targetVelocityMetersPerSecond,
-			steerStuff.velocitySignal().getLatestValue(),
+			steerComponents.velocitySignal().getLatestValue(),
 			constants.couplingRatio(),
 			constants.velocityAt12VoltsPerSecond(),
 			constants.wheelDiameterMeters(),

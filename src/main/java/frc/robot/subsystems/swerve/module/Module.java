@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.angleencoder.IAngleEncoder;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.components.DriveComponents;
@@ -43,7 +42,12 @@ public class Module {
 	private Rotation2d startingSteerAngle;
 	private boolean isClosedLoop;
 
-	public Module(ModuleConstants constants, EncoderComponents encoderComponents, SteerComponents steerComponents, DriveComponents driveComponents) {
+	public Module(
+		ModuleConstants constants,
+		EncoderComponents encoderComponents,
+		SteerComponents steerComponents,
+		DriveComponents driveComponents
+	) {
 		this.constants = constants;
 
 		this.encoder = encoderComponents.encoder();
@@ -101,8 +105,18 @@ public class Module {
 
 	public void updateInputs() {
 		encoder.updateSignals(encoderComponents.positionSignal());
-		steer.updateSignals(steerComponents.positionSignal(), steerComponents.velocitySignal(), steerComponents.currentSignal(), steerComponents.voltageSignal());
-		drive.updateSignals(driveComponents.positionSignal(), driveComponents.velocitySignal(), driveComponents.currentSignal(), driveComponents.voltageSignal());
+		steer.updateSignals(
+			steerComponents.positionSignal(),
+			steerComponents.velocitySignal(),
+			steerComponents.currentSignal(),
+			steerComponents.voltageSignal()
+		);
+		drive.updateSignals(
+			driveComponents.positionSignal(),
+			driveComponents.velocitySignal(),
+			driveComponents.currentSignal(),
+			driveComponents.voltageSignal()
+		);
 		fixDriveInputsCoupling();
 
 		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityPerSecond);
@@ -183,7 +197,8 @@ public class Module {
 	//@formatter:on
 
 	public boolean isAtTargetAngle() {
-		boolean isStopping = steerComponents.velocitySignal().getLatestValue().getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
+		boolean isStopping = steerComponents.velocitySignal().getLatestValue().getRadians()
+			<= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
 		if (!isStopping) {
 			return false;
 		}

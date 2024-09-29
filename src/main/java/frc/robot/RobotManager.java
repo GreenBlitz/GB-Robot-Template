@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
+import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.simulation.SimulationManager;
 import frc.robot.simulation.SingleJointedArmSimulation;
+import frc.utils.AngleUnit;
 import frc.utils.DriverStationUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.battery.BatteryUtils;
@@ -56,6 +59,8 @@ public class RobotManager extends LoggedRobot {
 				false,
 				Rotation2d.fromDegrees(0).getRadians()
 		);
+
+		Phoenix6AngleSignal angleSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(testSim.getPosition(), 50, AngleUnit.DEGREES);
 
 		testSim = new SingleJointedArmSimulation("sim/", armSim);
 

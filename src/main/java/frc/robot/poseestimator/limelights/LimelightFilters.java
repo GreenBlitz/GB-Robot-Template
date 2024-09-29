@@ -1,5 +1,8 @@
 package frc.robot.poseestimator.limelights;
 
+//import edu.wpi.first.math.geometry.Pose3d;
+//import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.constants.Field;
 
 public class LimelightFilters {
@@ -8,14 +11,14 @@ public class LimelightFilters {
 		// ! THIS SHOULDN'T BE COMMENTED OUT
 		// ! this is a placeholder since this filter is depended on the poseestimatorx
 		return true;
-//		Pose2d currentPoseObservation = NetworkTables...;
-
-//		Pose2d limelightPosition = limelightData.EstimatedPosition();
-//		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
-//		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
+//		Pose3d currentPoseObservation = NetworkTables...;
 //
-//		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
-//			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
+//		Pose3d limelightPosition = limelightRawData.estimatedPose();
+//		Transform3d transformDifference = limelightPosition.minus(currentPoseObservation);
+//		Rotation2d rotationDifference = Rotation2d.fromRadians(limelightPosition.getRotation().getZ() - currentPoseObservation.getRotation().getZ());
+//
+//		return transformDifference.getTranslation().getNorm() <= VisionConstants.positionNormTolerance
+//			&& rotationDifference.getDegrees() <= VisionConstants.rotationTolerance.getDegrees();
 	}
 
 	protected static boolean isPitchZero(LimelightRawData limelightRawData) {

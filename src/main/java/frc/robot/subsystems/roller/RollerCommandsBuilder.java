@@ -30,7 +30,8 @@ public class RollerCommandsBuilder {
 				() -> {},
 				() -> roller.setPower(power.getAsDouble()),
 				interrupted -> roller.stop(),
-				() -> false, roller
+				() -> false,
+				roller
 		).withName("Move by power supplier");
 	}
 
@@ -39,7 +40,8 @@ public class RollerCommandsBuilder {
 				()-> roller.setTargetPosition(rotations),
 				()-> roller.setPower(power),
 				interrupted -> roller.stop(),
-				()-> roller.isPastPosition()
+				roller::isPastPosition,
+				roller
 		).withName("Rotate by rotations: " + rotations);
 	}
 	//@formatter:on

@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import java.util.function.DoubleSupplier;
 
-public class SolenoidCommandBuilder {
+public class SolenoidCommandsBuilder {
 
 	private final Solenoid solenoid;
 
-	public SolenoidCommandBuilder(Solenoid solenoid) {
+	public SolenoidCommandsBuilder(Solenoid solenoid) {
 		this.solenoid = solenoid;
 	}
 

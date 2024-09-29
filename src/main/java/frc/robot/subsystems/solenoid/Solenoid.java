@@ -8,12 +8,17 @@ public class Solenoid extends GBSubsystem {
 
 	private final IMotor motor;
 	private final InputSignal<Double> voltageSignal;
+	private final SolenoidCommandsBuilder commandsBuilder;
 
 	public Solenoid(SolenoidComponents solenoidComponents) {
 		super(solenoidComponents.logPath());
 		this.motor = solenoidComponents.solenoid();
-		;
 		this.voltageSignal = solenoidComponents.voltageSignal();
+		this.commandsBuilder = new SolenoidCommandsBuilder(this);
+	}
+
+	public SolenoidCommandsBuilder getCommandsBuilder() {
+			return commandsBuilder;
 	}
 
 	@Override

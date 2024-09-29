@@ -46,7 +46,7 @@ public class SwerveCommandsBuilder {
 
 
 	public Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-		return steerCalibrator.getSysIdCommand(isQuasistatic, direction).withName("Steer Calibration");
+		return steerCalibrator.getSysIdCommand(isQuasistatic, direction).withName("Steer calibration");
 	}
 
 	public Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
@@ -56,7 +56,7 @@ public class SwerveCommandsBuilder {
 		return new SequentialCommandGroup(
 			pointWheels(new Rotation2d(), false),
 			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false).repeatedly())
-		).withName("Drive Calibration");
+		).withName("Drive calibration");
 	}
 
 	//@formatter:off
@@ -75,7 +75,7 @@ public class SwerveCommandsBuilder {
 				),
 				swerve.getModules()::stop
 			)
-		).withName("Wheel Radius Calibration");
+		).withName("Wheel radius calibration");
 	}
 	//@formatter:on
 
@@ -87,7 +87,7 @@ public class SwerveCommandsBuilder {
 			interrupted -> {},
 			swerve.getModules()::isAtTargetStates,
 			swerve
-		).withName("Point Wheels In X");
+		).withName("Point wheels in X");
 	}
 
 	public Command pointWheelsInCircle() {
@@ -97,7 +97,7 @@ public class SwerveCommandsBuilder {
 			interrupted -> {},
 			swerve.getModules()::isAtTargetAngles,
 			swerve
-		).withName("Point Wheels In Circle");
+		).withName("Point wheels in circle");
 	}
 
 	public Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
@@ -107,7 +107,7 @@ public class SwerveCommandsBuilder {
 			interrupted -> {},
 			swerve.getModules()::isAtTargetAngles,
 			swerve
-		).withName("Point Wheels");
+		).withName("Point wheels");
 	}
 
 
@@ -122,17 +122,17 @@ public class SwerveCommandsBuilder {
 			interrupted -> {},
 			() -> swerve.isAtHeading(targetHeading),
 			swerve
-		).withName("Rotate Around " + rotateAxis.name() + " To " + targetHeading.getDegrees() + " Degrees");
+		).withName("Rotate around " + rotateAxis.name() + " to " + targetHeading.getDegrees() + " degrees");
 	}
 
 
 	public Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
-		return driveState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE).withName("Default Drive");
+		return driveState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE).withName("Default drive");
 	}
 
 	public Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, Supplier<SwerveState> state) {
 		return new DeferredCommand(() -> driveState(xSupplier, ySupplier, rotationSupplier, state.get()), Set.of(swerve))
-			.withName("Drive With Supplier State");
+			.withName("Drive with supplier state");
 	}
 
 	public Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, SwerveState state) {
@@ -140,7 +140,15 @@ public class SwerveCommandsBuilder {
 			swerve::resetPIDControllers,
 			() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), state),
 			swerve
-		).withName("Drive With State");
+		).withName("Drive with state");
+	}
+
+	public Command driveBySavedState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
+		return new InitExecuteCommand(
+			swerve::resetPIDControllers,
+			() -> swerve.driveBySavedState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble()),
+			swerve
+		).withName("Drive with saved state");
 	}
 
 
@@ -151,7 +159,7 @@ public class SwerveCommandsBuilder {
 				pidToPose(currentPose, targetPose.get(), isAtPose)
 			),
 			Set.of(swerve)
-		).withName("Drive to Pose");
+		).withName("Drive to pose");
 	}
 
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
@@ -164,7 +172,7 @@ public class SwerveCommandsBuilder {
 		}
 
 		return new SequentialCommandGroup(new InstantCommand(swerve::resetPIDControllers), pathFollowingCommand)
-			.withName("Path to Pose: " + targetPose);
+			.withName("Path to pose: " + targetPose);
 	}
 
 	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose, Function<Pose2d, Boolean> isAtPose) {
@@ -174,7 +182,7 @@ public class SwerveCommandsBuilder {
 			interrupted -> {},
 			() -> isAtPose.apply(targetPose),
 			swerve
-		).withName("PID to Pose: " + targetPose);
+		).withName("PID to pose: " + targetPose);
 	}
 
 }

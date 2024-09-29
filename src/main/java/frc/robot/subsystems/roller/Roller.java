@@ -7,7 +7,6 @@ import frc.robot.hardware.motor.IMotor;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-
 public class Roller extends GBSubsystem {
 
 	private final IMotor motor;
@@ -56,14 +55,6 @@ public class Roller extends GBSubsystem {
 
 	public Rotation2d getPosition() {
 		return rollerStuff.positionSignal().getLatestValue();
-	}
-
-	protected void setTargetPosition(double rotations) {
-		this.targetPosition = Rotation2d.fromRotations(getPosition().getRotations() + rotations);
-	}
-
-	protected boolean isPastPosition() {
-		return getPosition().getRotations() > targetPosition.getRotations();
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.roller;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,34 +16,35 @@ public class RollerCommandsBuilder {
 	}
 
 	//@formatter:off
-	public Command moveByPower(double power) {
+	public Command setPower(double power) {
 		return new FunctionalCommand(
 				() -> roller.setPower(power),
 				() -> {},
 				interrupted -> roller.stop(),
 				() -> false,
 				roller
-		).withName("Move by power: " + power);
+		).withName("Set power: " + power);
 	}
 
-	public Command moveByPower(DoubleSupplier power) {
+	public Command setPower(DoubleSupplier power) {
 		return new FunctionalCommand(
 				() -> {},
 				() -> roller.setPower(power.getAsDouble()),
 				interrupted -> roller.stop(),
 				() -> false,
 				roller
-		).withName("Move by power supplier");
+		).withName("Set power by supplier");
 	}
 
-	public Command rotateByRotations(double rotations, double power) {
+	public Command rotateRotations(Rotation2d rotations, double power) {
+		Rotation2d startingPosition = roller.getPosition();
 		return new FunctionalCommand(
-				()-> roller.setTargetPosition(rotations),
+				()-> {},
 				()-> roller.setPower(power),
 				interrupted -> roller.stop(),
-				roller::isPastPosition,
+				() -> Math.abs(roller.getPosition().getRotations() - startingPosition.getRotations()) > rotations.getRotations(),
 				roller
-		).withName("Rotate by rotations: " + rotations);
+		).withName("Rotate rotations: " + rotations);
 	}
 	//@formatter:on
 

@@ -23,7 +23,7 @@ public class RealRollerConstants {
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
-	private final static double GEAR_RATIO = 1 / 6.0;
+	private final static double GEAR_RATIO = 1.0 / 6.0;
 
 	public static RollerStuff generateIntakeStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.ROLLER);
@@ -38,10 +38,10 @@ public class RealRollerConstants {
 		Supplier<Double> position = () -> sparkMaxWrapper.getEncoder().getPosition();
 		SparkMaxAngleSignal angleSignal = new SparkMaxAngleSignal("position", position, AngleUnit.ROTATIONS);
 
-		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		BooleanSupplier isBeamBroke = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 
-		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
+		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroke, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
 		return new RollerStuff(logPath, motor, voltageSignal, angleSignal, beamBreaker);
 	}

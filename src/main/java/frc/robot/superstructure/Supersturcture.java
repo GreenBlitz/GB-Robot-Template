@@ -216,7 +216,8 @@ public class Supersturcture {
 	}
 
 	private Command transferShooterToArm() {
-		return new SequentialCommandGroup(
+		return new ParallelCommandGroup(
+				new SequentialCommandGroup(
 			new ParallelCommandGroup(
 				pivotStateHandler.setState(PivotState.TRANSFER),
 				elbowStateHandler.setState(ElbowState.TRANSFER)
@@ -225,6 +226,10 @@ public class Supersturcture {
 				rollerStateHandler.setState(RollerState.INTAKE),
 				funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
 			)
+		),
+				flywheelStateHandler.setState(FlywheelState.DEFAULT),
+				intakeStateHandler.setState(IntakeState.STOP),
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);
 	}
 

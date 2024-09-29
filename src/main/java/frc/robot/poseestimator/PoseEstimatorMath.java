@@ -50,8 +50,11 @@ public class PoseEstimatorMath {
 		return result;
 	}
 
-	public static Transform2d
-		useKalmanOnTransform(VisionObservation observation, Pose2d appliedVisionObservation, double[] odometryStandardDeviations) {
+	public static Transform2d useKalmanOnTransform(
+		VisionObservation observation,
+		Pose2d appliedVisionObservation,
+		double[] odometryStandardDeviations
+	) {
 		double[] combinedStandardDeviations = PoseEstimatorMath
 			.getCombinedStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
 		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.visionPose());

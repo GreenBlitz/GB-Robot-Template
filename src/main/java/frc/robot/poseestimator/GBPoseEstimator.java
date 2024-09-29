@@ -148,9 +148,9 @@ public class GBPoseEstimator implements IPoseEstimator {
 			positionDeviationSum += positionWeight;
 			rotationDeviationSum += rotationWeight;
 			output = new Pose2d(
-					output.getX() + observation.visionPose().getX() * positionWeight,
-					output.getY() + observation.visionPose().getY() * positionWeight,
-					output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
+				output.getX() + observation.visionPose().getX() * positionWeight,
+				output.getY() + observation.visionPose().getY() * positionWeight,
+				output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
 			);
 		}
 
@@ -166,7 +166,10 @@ public class GBPoseEstimator implements IPoseEstimator {
 		Pose2d estimatedVisionPose = weightedObservationMean(visionObservationFiltered.getFilteredVisionObservations());
 
 		for (FieldStartingPositions fieldStartingPositions : FieldStartingPositions.values()) {
-			double translationNorm = fieldStartingPositions.getStartingPose().minus(estimatedVisionPose).getTranslation().getNorm();
+			double translationNorm = fieldStartingPositions.getStartingPose()
+				.minus(estimatedVisionPose)
+				.getTranslation()
+				.getNorm();
 			double rotationDelta = fieldStartingPositions.getStartingPose().minus(estimatedVisionPose).getRotation().getDegrees();
 			double tolerance = Math.pow(translationNorm, 2) + Math.pow(rotationDelta, 2);
 

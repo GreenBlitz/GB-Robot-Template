@@ -29,4 +29,6 @@ public class PhotonVisionConstants {
 
 	public static final double APRIL_TAG_HEIGHT_TOLERANCE = 1; // ! Shall be calibrated
 
+	public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
 }

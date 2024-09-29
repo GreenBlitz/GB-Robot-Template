@@ -18,7 +18,7 @@ public class Solenoid extends GBSubsystem {
 	}
 
 	public SolenoidCommandsBuilder getCommandsBuilder() {
-			return commandsBuilder;
+		return commandsBuilder;
 	}
 
 	@Override

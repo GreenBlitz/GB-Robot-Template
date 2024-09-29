@@ -13,10 +13,8 @@ import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
-import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
@@ -26,12 +24,12 @@ import frc.utils.brakestate.BrakeStateManager;
 public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
+
 	private Robot robot;
 
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		PathPlannerUtils.startPathPlanner();
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();

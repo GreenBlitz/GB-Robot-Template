@@ -78,11 +78,11 @@ public class Robot {
 	public Swerve getSwerve() {
 		return swerve;
 	}
-	
+
 	public Solenoid getSolenoid() {
 		return solenoid;
 	}
-	
+
 	public Funnel getFunnel() {
 		return funnel;
 	}

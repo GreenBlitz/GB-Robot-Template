@@ -18,6 +18,9 @@ import frc.robot.subsystems.elbow.factory.ElbowFactory;
 import frc.robot.subsystems.flywheel.FlyWheelConstants;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
+import frc.robot.subsystems.lifter.Lifter;
+import frc.robot.subsystems.lifter.LifterConstants;
+import frc.robot.subsystems.lifter.factory.LifterFactory;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotConstants;
 import frc.robot.subsystems.pivot.factory.PivotFactory;
@@ -44,6 +47,7 @@ public class Robot {
 	private final Elbow elbow;
 	private final Flywheel flywheel;
 	private final Pivot pivot;
+	private final Lifter lifter;
 
 	public Robot() {
 		this.swerve = new Swerve(
@@ -58,6 +62,7 @@ public class Robot {
 		this.elbow = new Elbow(ElbowFactory.create(ElbowConstants.LOG_PATH));
 		BrakeStateManager.add(() -> elbow.setBrake(true), () -> elbow.setBrake(false));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.lifter = new Lifter(LifterFactory.create(LifterConstants.LOG_PATH));
 		configureBindings();
 	}
 
@@ -92,6 +97,10 @@ public class Robot {
 
 	public Pivot getPivot() {
 		return pivot;
+	}
+
+	public Lifter getLifter() {
+		return lifter;
 	}
 
 }

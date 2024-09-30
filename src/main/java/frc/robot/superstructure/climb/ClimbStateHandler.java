@@ -9,24 +9,26 @@ import frc.robot.subsystems.solenoid.SolenoidStateHandler;
 
 public class ClimbStateHandler {
 
-    private final LifterStateHandler lifterStateHandler;
-    private final SolenoidStateHandler solenoidStateHandler;
+	private final LifterStateHandler lifterStateHandler;
+	private final SolenoidStateHandler solenoidStateHandler;
 
-    public ClimbStateHandler(LifterStateHandler lifterStateHandler, SolenoidStateHandler solenoidStateHandler) {
-        this.lifterStateHandler = lifterStateHandler;
-        this.solenoidStateHandler = solenoidStateHandler;
-    }
+	public ClimbStateHandler(LifterStateHandler lifterStateHandler, SolenoidStateHandler solenoidStateHandler) {
+		this.lifterStateHandler = lifterStateHandler;
+		this.solenoidStateHandler = solenoidStateHandler;
+	}
 
-    public Command setState(ClimbState state) {
-
-        return switch (state){
-            case STOP -> lifterStateHandler.setState(LifterState.STOP).alongWith(solenoidStateHandler.setState(SolenoidState.OFF));
-            case EXTEND -> lifterStateHandler.setState(LifterState.BACKWARD).raceWith(new WaitCommand(ClimbConstants.SOLENOID_RELEASE_TIME))
-                    .andThen(solenoidStateHandler.setState(SolenoidState.RETRACT)).andThen(new WaitCommand(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME))
-                    .andThen(lifterStateHandler.setState(LifterState.EXTENDED));
-            case RETRACT -> lifterStateHandler.setState(LifterState.BACKWARD).alongWith(solenoidStateHandler.setState(SolenoidState.OFF));
-        };
-    }
+	public Command setState(ClimbState state) {
+		return switch (state) {
+			case STOP -> lifterStateHandler.setState(LifterState.STOP).alongWith(solenoidStateHandler.setState(SolenoidState.OFF));
+			case EXTEND ->
+				lifterStateHandler.setState(LifterState.BACKWARD)
+					.raceWith(new WaitCommand(ClimbConstants.SOLENOID_RELEASE_TIME))
+					.andThen(solenoidStateHandler.setState(SolenoidState.RETRACT))
+					.andThen(new WaitCommand(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME))
+					.andThen(lifterStateHandler.setState(LifterState.EXTENDED));
+			case RETRACT -> lifterStateHandler.setState(LifterState.BACKWARD).alongWith(solenoidStateHandler.setState(SolenoidState.OFF));
+		};
+	}
 
 
 }

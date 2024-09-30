@@ -14,7 +14,6 @@ public class Roller extends GBSubsystem {
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final RollerStuff rollerStuff;
 	private final RollerCommandsBuilder commandBuilder;
-	private Rotation2d targetPosition;
 
 	public Roller(RollerStuff rollerStuff) {
 		super(rollerStuff.logPath());
@@ -22,9 +21,8 @@ public class Roller extends GBSubsystem {
 		this.digitalInput = rollerStuff.digitalInput();
 		this.rollerStuff = rollerStuff;
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
-
 		this.commandBuilder = new RollerCommandsBuilder(this);
-		this.targetPosition = new Rotation2d();
+
 		updateInputs();
 	}
 

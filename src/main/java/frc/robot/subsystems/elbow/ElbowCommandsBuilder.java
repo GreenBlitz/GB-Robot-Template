@@ -16,6 +16,7 @@ public class ElbowCommandsBuilder {
 		this.elbow = elbow;
 	}
 
+	//@formatter:off
 	public Command moveToAngle(Rotation2d angle, Rotation2d tolerance) {
 		return new FunctionalCommand(
 			() -> elbow.setTargetAngle(angle),
@@ -26,10 +27,6 @@ public class ElbowCommandsBuilder {
 		).withName("Move to angle: " + angle);
 	}
 
-	public Command stayInPlace() {
-		return new InstantCommand(elbow::stayInPlace, elbow).withName("Stay in place");
-	}
-
 	public Command setPower(DoubleSupplier powerSupplier) {
 		return new FunctionalCommand(
 			() -> {},
@@ -37,11 +34,16 @@ public class ElbowCommandsBuilder {
 			interrupted -> elbow.stayInPlace(),
 			() -> false,
 			elbow
-		).withName("Set power");
+		).withName("Set power by supplier");
+	}
+
+	public Command stayInPlace() {
+		return new InstantCommand(elbow::stayInPlace, elbow).withName("Stay in place");
 	}
 
 	public Command voltageControlByDashboard(String widgetName) {
 		return new LoggedDashboardCommand(widgetName, elbow::setVoltage, elbow).withName("Voltage by dashboard");
 	}
+	//@formatter:on
 
 }

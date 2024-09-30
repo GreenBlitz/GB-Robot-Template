@@ -12,14 +12,14 @@ public class Roller extends GBSubsystem {
 	private final IMotor motor;
 	private final IDigitalInput digitalInput;
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
-	private final RollerStuff rollerStuff;
+	private final RollerComponents rollerComponents;
 	private final RollerCommandsBuilder commandBuilder;
 
-	public Roller(RollerStuff rollerStuff) {
-		super(rollerStuff.logPath());
-		this.motor = rollerStuff.motor();
-		this.digitalInput = rollerStuff.digitalInput();
-		this.rollerStuff = rollerStuff;
+	public Roller(RollerComponents rollerComponents) {
+		super(rollerComponents.logPath());
+		this.motor = rollerComponents.motor();
+		this.digitalInput = rollerComponents.digitalInput();
+		this.rollerComponents = rollerComponents;
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.commandBuilder = new RollerCommandsBuilder(this);
 
@@ -35,19 +35,19 @@ public class Roller extends GBSubsystem {
 	}
 
 	public Rotation2d getPosition() {
-		return rollerStuff.positionSignal().getLatestValue();
+		return rollerComponents.positionSignal().getLatestValue();
 	}
 
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
-		motor.updateSignals(rollerStuff.voltageSignal(), rollerStuff.positionSignal());
+		motor.updateSignals(rollerComponents.voltageSignal(), rollerComponents.positionSignal());
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.processInputs(rollerStuff.digitalInputLogPath(), digitalInputsInputs);
-		Logger.recordOutput(rollerStuff.logPath() + "IsObjectIn", isObjectIn());
+		Logger.processInputs(rollerComponents.digitalInputLogPath(), digitalInputsInputs);
+		Logger.recordOutput(rollerComponents.logPath() + "IsObjectIn", isObjectIn());
 	}
 
 	protected void setPower(double power) {

@@ -5,7 +5,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;
 
-public record RollerStuff(
+public record RollerComponents(
 	String logPath,
 	String digitalInputLogPath,
 	IMotor motor,
@@ -14,7 +14,7 @@ public record RollerStuff(
 	IDigitalInput digitalInput
 ) {
 
-	public RollerStuff(
+	public RollerComponents(
 		String logPath,
 		IMotor motor,
 		InputSignal<Double> voltageSignal,

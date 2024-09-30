@@ -6,8 +6,11 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import frc.robot.poseestimator.limelights.VisionConstants;
+import frc.robot.poseestimator.limelights.VisionObservationFiltered;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.utils.FieldStartingPositions;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
@@ -24,6 +27,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private SwerveDriveWheelPositions lastWheelPositions;
 	private Rotation2d lastGyroAngle;
 	private VisionObservation lastVisionObservation;
+	private VisionObservationFiltered visionObservationFiltered;
 
 	public GBPoseEstimator(
 		SwerveDriveKinematics kinematics,
@@ -38,6 +42,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.lastWheelPositions = null;
 		this.lastGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[3];
+		this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG, this);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
 
@@ -81,7 +86,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 	@Override
 	public void updateVision(List<VisionObservation> visionObservations) {
-		for(VisionObservation visionObservation : visionObservations) {
+		for (VisionObservation visionObservation : visionObservations) {
 			if (!isObservationTooOld(visionObservation)) {
 				addVisionObservation(visionObservation);
 			}
@@ -115,13 +120,55 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.lastVisionObservation = observation;
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(
-			pose2d -> estimatedPose = PoseEstimatorMath
-				.combineVisionToOdometry(pose2d, observation, estimatedPose, odometryPose, odometryStandardDeviations)
+			odometryPoseSample -> estimatedPose = PoseEstimatorMath
+				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations)
 		);
 	}
 
+	private FieldStartingPositions snapToStartingPosition() {
+		FieldStartingPositions bestPosition = null;
+		double bestTolerance = Double.POSITIVE_INFINITY;
+
+		Pose2d estimatedVisionPose = weightedObservationMean(visionObservationFiltered.getFilteredVisionObservations());
+
+		for (FieldStartingPositions fieldStartingPositions : FieldStartingPositions.values()) {
+			double translationNorm = fieldStartingPositions.getStartingPose().minus(estimatedVisionPose).getTranslation().getNorm();
+			double rotationDelta = fieldStartingPositions.getStartingPose().minus(estimatedVisionPose).getRotation().getDegrees();
+			double tolerance = Math.pow(translationNorm, 2) + Math.pow(rotationDelta, 2);
+
+			if (tolerance <= bestTolerance) {
+				bestTolerance = tolerance;
+				bestPosition = fieldStartingPositions;
+			}
+		}
+
+		return bestPosition;
+	}
+
+	private Pose2d weightedObservationMean(List<VisionObservation> observations) {
+		Pose2d output = new Pose2d();
+		double positionDeviationSum = 0;
+		double rotationDeviationSum = 0;
+
+		for (VisionObservation observation : observations) {
+			double positionWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
+			double rotationWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
+			positionDeviationSum += positionWeight;
+			rotationDeviationSum += rotationWeight;
+			output = new Pose2d(
+				output.getX() + observation.visionPose().getX() * positionWeight,
+				output.getY() + observation.visionPose().getY() * positionWeight,
+				output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
+			);
+		}
+
+		output = new Pose2d(output.getTranslation().div(positionDeviationSum), output.getRotation().div(rotationDeviationSum));
+
+		return output;
+	}
+
 	private void addOdometryObservation(OdometryObservation observation) {
-		if(lastWheelPositions != null) {
+		if (lastWheelPositions != null) {
 			Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelsPositions());
 			twist = PoseEstimatorMath.addGyroToTwist(twist, observation.gyroAngle(), lastGyroAngle);
 			this.odometryPose = odometryPose.exp(twist);
@@ -133,8 +180,8 @@ public class GBPoseEstimator implements IPoseEstimator {
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}
 
-	public void logEstimatedPose(){
-		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH +"EstimatedPose",getEstimatedPose());
+	public void logEstimatedPose() {
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "EstimatedPose", getEstimatedPose());
 	}
 
 }

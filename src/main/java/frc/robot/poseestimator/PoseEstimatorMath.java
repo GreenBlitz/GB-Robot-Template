@@ -23,17 +23,17 @@ public class PoseEstimatorMath {
 		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
 	}
 
-	public static double[] combineStandardDeviations(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
+	public static double[] getCombinedStandardDeviations(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
 		double[] combinedStandardDeviations = new double[3];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
 			double visionStandardDeviation = visionStandardDeviations[i];
-			combinedStandardDeviations[i] = combineStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
+			combinedStandardDeviations[i] = getCombinedStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
 		}
 		return combinedStandardDeviations;
 	}
 
-	public static double combineStandardDeviations(double odometryStandardDeviation, double visionStandardDeviation) {
+	public static double getCombinedStandardDeviations(double odometryStandardDeviation, double visionStandardDeviation) {
 		if (odometryStandardDeviation == 0) {
 			return 0;
 		}
@@ -50,10 +50,10 @@ public class PoseEstimatorMath {
 	}
 
 	public static Transform2d
-		useKalmanOnTransform(VisionObservation observation, Pose2d currentPoseEstimation, double[] odometryStandardDeviations) {
+		useKalmanOnTransform(VisionObservation observation, Pose2d appliedVisionObservation, double[] odometryStandardDeviations) {
 		double[] combinedStandardDeviations = PoseEstimatorMath
-			.combineStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
-		Transform2d visionDifferenceFromOdometry = new Transform2d(currentPoseEstimation, observation.visionPose());
+			.getCombinedStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
+		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.visionPose());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
@@ -64,26 +64,26 @@ public class PoseEstimatorMath {
 			visionDifferenceFromOdometry.getRotation().getRadians()};
 		double[] standardDeviationsAppliedTransform = multiplyArrays(combinedStandardDeviations, visionDifferenceFromOdometryMatrix);
 		return new Transform2d(
-			standardDeviationsAppliedTransform[0],
-			standardDeviationsAppliedTransform[1],
-			Rotation2d.fromRadians(standardDeviationsAppliedTransform[2])
+			standardDeviationsAppliedTransform[PoseArrayEntryValue.X_VALUE.getEntryValue()],
+			standardDeviationsAppliedTransform[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+			Rotation2d.fromRadians(standardDeviationsAppliedTransform[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()])
 		);
 	}
 
 	public static Pose2d combineVisionToOdometry(
-		Pose2d odometryInterpolatedPoseSample,
 		VisionObservation observation,
+		Pose2d odometryInterpolatedPoseSample,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
 		double[] odometryStandardDeviations
 	) {
 		Transform2d poseDifferenceFromSample = new Transform2d(odometryInterpolatedPoseSample, odometryPose);
-		Transform2d invertedPoseDifferenceFromSample = poseDifferenceFromSample.inverse();
-		Pose2d currentPoseEstimation = estimatedPose.plus(invertedPoseDifferenceFromSample);
-		currentPoseEstimation = currentPoseEstimation
-			.plus(PoseEstimatorMath.useKalmanOnTransform(observation, currentPoseEstimation, odometryStandardDeviations));
-		currentPoseEstimation = currentPoseEstimation.plus(poseDifferenceFromSample);
-		return currentPoseEstimation;
+		Transform2d sampleDifferenceFromPose = poseDifferenceFromSample.inverse();
+		Pose2d appliedVisionObservation = estimatedPose.plus(sampleDifferenceFromPose);
+		appliedVisionObservation = appliedVisionObservation
+			.plus(PoseEstimatorMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
+		appliedVisionObservation = appliedVisionObservation.plus(poseDifferenceFromSample);
+		return appliedVisionObservation;
 	}
 
 }

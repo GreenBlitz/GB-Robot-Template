@@ -1,14 +1,9 @@
 package frc.robot.poseestimator.limelights;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import frc.robot.constants.Field;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,40 +26,29 @@ public class VisionObservationFiltered extends GBSubsystem {
 
 		for (LimelightRawData limelightRawData : limelightHardware.getAllAvailableLimelightData()) {
 			if (keepLimelightData(limelightRawData)) {
-				double standardTransformDeviation = getDynamicStandardTransformDeviations(limelightRawData);
-				double[] standardDeviations = new double[] {
-					standardTransformDeviation,
-					standardTransformDeviation,
-					VisionConstants.STANDARD_DEVIATION_VISION_ANGLE};
-
-				estimates.add(new VisionObservation(limelightRawData.estimatedPose(), standardDeviations, limelightRawData.timestamp()));
+				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}
 
 		return estimates;
 	}
 
-	private boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData) {
-		// ! THIS SHOULDN'T BE COMMENTED OUT
-		// ! this is a placeholder since this filter is depended on the poseestimatorx
-//		return true;
-		Pose2d currentPoseObservation = poseEstimator.getEstimatedPose();
+	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
+		double standardTransformDeviation = getDynamicStandardTransformDeviations(limelightRawData);
+		double[] standardDeviations = new double[] {
+			standardTransformDeviation,
+			standardTransformDeviation,
+			VisionConstants.STANDARD_DEVIATION_VISION_ANGLE};
 
-		Pose2d limelightPosition = limelightRawData.estimatedPose();
-		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
-		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
-
-		return transformDifference.getTranslation().getNorm() <= config.positionNormTolerance()
-			&& rotationDifference.getDegrees() <= config.rotationTolerance().getDegrees();
-	}
-
-	private boolean isAprilTagInProperHeight(LimelightRawData limelightRawData) {
-		double aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - Field.APRIL_TAG_HEIGHT_METERS);
-		return aprilTagHeightConfidence <= VisionConstants.APRIL_TAG_HEIGHT_TOLERANCE_METERS;
+		return new VisionObservation(limelightRawData.estimatedPose().toPose2d(), standardDeviations, limelightRawData.timestamp());
 	}
 
 	private boolean keepLimelightData(LimelightRawData limelightRawData) {
-		return isAprilTagInProperHeight(limelightRawData) && isLimelightOutputInTolerance(limelightRawData);
+		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
+			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData)
+			&& LimelightFilters.isRollZero(limelightRawData)
+			&& LimelightFilters.isPitchZero(limelightRawData)
+			&& LimelightFilters.isRobotOnGround(limelightRawData);
 	}
 
 	public void logEstimatedPositions() {

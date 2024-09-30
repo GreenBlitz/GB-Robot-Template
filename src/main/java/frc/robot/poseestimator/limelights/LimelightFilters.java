@@ -3,22 +3,24 @@ package frc.robot.poseestimator.limelights;
 //import edu.wpi.first.math.geometry.Pose3d;
 //import edu.wpi.first.math.geometry.Rotation2d;
 //import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
+import frc.robot.poseestimator.IPoseEstimator;
 
 public class LimelightFilters {
 
-	protected static boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData) {
+	protected static boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData, IPoseEstimator poseEstimator) {
 		// ! THIS SHOULDN'T BE COMMENTED OUT
 		// ! this is a placeholder since this filter is depended on the poseestimatorx
-		return true;
-//		Pose3d currentPoseObservation = NetworkTables...;
-//
-//		Pose3d limelightPosition = limelightRawData.estimatedPose();
-//		Transform3d transformDifference = limelightPosition.minus(currentPoseObservation);
-//		Rotation2d rotationDifference = Rotation2d.fromRadians(limelightPosition.getRotation().getZ() - currentPoseObservation.getRotation().getZ());
-//
-//		return transformDifference.getTranslation().getNorm() <= VisionConstants.positionNormTolerance
-//			&& rotationDifference.getDegrees() <= VisionConstants.rotationTolerance.getDegrees();
+//		return true;
+
+		Pose2d currentPoseObservation = poseEstimator.getEstimatedPose();
+		Pose2d limelightPosition = limelightRawData.estimatedPose().toPose2d();
+		Transform2d transformDifference = limelightPosition.minus(currentPoseObservation);
+		Rotation2d rotationDifference = limelightPosition.getRotation().minus(currentPoseObservation.getRotation());
+		return transformDifference.getTranslation().getNorm() <= VisionConstants.POSITION_NORM_TOLERANCE
+			&& rotationDifference.getDegrees() <= VisionConstants.ROTATION_TOLERANCE.getDegrees();
+//		return true;
 	}
 
 	protected static boolean isPitchZero(LimelightRawData limelightRawData) {
@@ -35,7 +37,7 @@ public class LimelightFilters {
 	}
 
 	protected static boolean isRobotOnGround(LimelightRawData limelightRawData) {
-		return limelightRawData.estimatedPose().getY() <= VisionConstants.ROBOT_TO_GROUND_TOLERANCE;
+		return limelightRawData.estimatedPose().getZ() <= VisionConstants.ROBOT_TO_GROUND_TOLERANCE;
 	}
 
 }

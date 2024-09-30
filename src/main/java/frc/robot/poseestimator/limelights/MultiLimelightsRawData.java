@@ -21,6 +21,12 @@ public class MultiLimelightsRawData {
 		}
 	}
 
+	public void updateGyroAngles(double yaw, double yawRate, double pitch, double pitchRate, double roll, double rollRate) {
+		for (Limelight limelight : limelights) {
+			limelight.updateGyroAngles(yaw, yawRate, pitch, pitchRate, roll, rollRate);
+		}
+	}
+
 	public List<LimelightRawData> getAllAvailableLimelightData() {
 		List<LimelightRawData> limelightsData = new ArrayList<>();
 

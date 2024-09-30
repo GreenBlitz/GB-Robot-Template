@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
-import frc.robot.poseestimator.limelights.VisionConstants;
 import frc.robot.poseestimator.limelights.VisionObservationFiltered;
 import frc.robot.structures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
@@ -49,8 +48,8 @@ public class Robot {
 			PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS
 		);
 
-		this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG, poseEstimator);
-
+//		this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG, poseEstimator);
+		this.visionObservationFiltered = poseEstimator.getVisionObservationFiltered();
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 

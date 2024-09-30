@@ -21,6 +21,10 @@ public class VisionObservationFiltered extends GBSubsystem {
 		this.poseEstimator = poseEstimator;
 	}
 
+	public void updateGyroAngles(double yaw, double yawRate, double pitch, double pitchRate, double roll, double rollRate) {
+		limelightHardware.updateGyroAngles(yaw, yawRate, pitch, pitchRate, roll, rollRate);
+	}
+
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
@@ -28,6 +32,16 @@ public class VisionObservationFiltered extends GBSubsystem {
 			if (keepLimelightData(limelightRawData)) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
+		}
+
+		return estimates;
+	}
+
+	public List<VisionObservation> getAllAvailableLimelightData() {
+		ArrayList<VisionObservation> estimates = new ArrayList<>();
+
+		for (LimelightRawData limelightRawData : limelightHardware.getAllAvailableLimelightData()) {
+			estimates.add(rawDataToObservation(limelightRawData));
 		}
 
 		return estimates;
@@ -44,8 +58,12 @@ public class VisionObservationFiltered extends GBSubsystem {
 	}
 
 	private boolean keepLimelightData(LimelightRawData limelightRawData) {
-		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
-			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData)
+//		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
+//			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData, poseEstimator)
+//			&& LimelightFilters.isRollZero(limelightRawData)
+//			&& LimelightFilters.isPitchZero(limelightRawData)
+//			&& LimelightFilters.isRobotOnGround(limelightRawData);
+		return LimelightFilters.isLimelightOutputInTolerance(limelightRawData, poseEstimator)
 			&& LimelightFilters.isRollZero(limelightRawData)
 			&& LimelightFilters.isPitchZero(limelightRawData)
 			&& LimelightFilters.isRobotOnGround(limelightRawData);
@@ -63,7 +81,7 @@ public class VisionObservationFiltered extends GBSubsystem {
 	}
 
 	private double getDynamicStandardTransformDeviations(LimelightRawData limelightRawData) {
-		return 1;
+		return limelightRawData.distanceFromAprilTag() / VisionConstants.APRIL_TAG_DISTANCE_TO_STANDARD_DEVIATIONS_FACTOR;
 	}
 
 	@Override

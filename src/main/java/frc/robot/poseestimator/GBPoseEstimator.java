@@ -46,6 +46,47 @@ public class GBPoseEstimator implements IPoseEstimator {
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
 
+	public VisionObservationFiltered getVisionObservationFiltered() {
+		return visionObservationFiltered;
+	}
+
+	public void resetByLimelight() {
+		List<VisionObservation> rawData = visionObservationFiltered.getAllAvailableLimelightData();
+		boolean stop = false;
+		while (rawData.size() < 45 && !stop) {
+			List<VisionObservation> rawData2 = visionObservationFiltered.getAllAvailableLimelightData();
+			if (rawData2.isEmpty()) {
+				stop = true;
+			}
+			if (!rawData2.isEmpty() && !rawData2.get(0).equals(rawData.get(0))) {
+				rawData.addAll(rawData2);
+			}
+		}
+
+		Pose2d pose2d = weightedObservationMean(rawData);
+
+		resetPose(new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation()));
+
+//		double x = 0;
+//		double y = 0;
+//		double angle = 0;
+//
+//		for(LimelightRawData rawData1 : rawData) {
+//			x += rawData1.estimatedPose().getX();
+//			y += rawData1.estimatedPose().getY();
+//			angle += rawData1.estimatedPose().getRotation().getZ();
+//		}
+//		x/= rawData.size();
+//		y/= rawData.size();
+//		angle/= rawData.size();
+//
+//		resetPose(new Pose2d(x, y, new Rotation2d(angle)));
+
+//		if(!rawData.isEmpty()) {
+//			resetPose(rawData.get(0).estimatedPose().toPose2d());
+//		}
+	}
+
 	@Override
 	public void setOdometryStandardDeviations(double[] newStandardDeviations) {
 		for (int i = 0; i < newStandardDeviations.length; i++) {

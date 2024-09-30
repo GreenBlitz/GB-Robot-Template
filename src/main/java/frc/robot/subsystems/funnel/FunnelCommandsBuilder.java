@@ -24,7 +24,7 @@ public class FunnelCommandsBuilder {
                 funnel
         ).withName("Set power to: " + power);
     }
-	
+
 	public Command setPower(DoubleSupplier power) {
 		return new FunctionalCommand(
 				() -> {},

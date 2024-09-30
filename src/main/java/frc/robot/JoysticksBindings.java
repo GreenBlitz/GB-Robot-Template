@@ -28,8 +28,8 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		
-		
+
+
 		usedJoystick.START.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
 		robot.getSwerve()
 			.setDefaultCommand(
@@ -46,7 +46,7 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
-		
+
 		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
 		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
 		usedJoystick.X.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));
@@ -55,11 +55,9 @@ public class JoysticksBindings {
 		usedJoystick.POV_DOWN.onTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
 		usedJoystick.POV_LEFT.onTrue(robot.getSupersturctrue().setState(RobotState.AMP));
 		usedJoystick.POV_RIGHT.onTrue(robot.getSupersturctrue().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
-		
-		usedJoystick.L1.whileTrue(
-				robot.getRoller().getCommandsBuilder().moveByPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y) * 0.7));
-		usedJoystick.R1.whileTrue(
-				robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_Y) * 0.7));
+
+		usedJoystick.L1.whileTrue(robot.getRoller().getCommandsBuilder().moveByPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y) * 0.7));
+		usedJoystick.R1.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_Y) * 0.7));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

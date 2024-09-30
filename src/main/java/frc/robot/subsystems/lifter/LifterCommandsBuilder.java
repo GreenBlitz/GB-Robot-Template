@@ -32,7 +32,7 @@ public class LifterCommandsBuilder {
 		return new FunctionalCommand(
 			() -> {},
 			() -> lifter.setPower(lifter.getLifterStuff().extendingPower()),
-			(interrupted) -> {},
+			(interrupted) -> lifter.stop(),
 			() -> lifter.isAfter(targetPosition),
 			lifter
 		).withName("extend to position " + targetPosition);
@@ -42,7 +42,7 @@ public class LifterCommandsBuilder {
 		return new FunctionalCommand(
 			() -> {},
 			() -> lifter.setPower(lifter.getLifterStuff().retractingPower()),
-			(interrupted) -> {},
+			(interrupted) -> lifter.stop(),
 			() -> lifter.isBefore(targetPosition),
 			lifter
 		).withName("retract to position " + targetPosition);

@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.utils.Conversions;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Lifter extends GBSubsystem {
 
@@ -16,6 +17,8 @@ public class Lifter extends GBSubsystem {
 		this.motor = lifterStuff.motor();
 		this.lifterStuff = lifterStuff;
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
+
+		motor.resetPosition(new Rotation2d());
 	}
 
 	public void setPower(double power) {
@@ -31,7 +34,7 @@ public class Lifter extends GBSubsystem {
 	}
 
 	public boolean isAfter(double expectedPosition) {
-		return expectedPosition > convertToMeters(lifterStuff.positionSignal().getLatestValue());
+		return expectedPosition < convertToMeters(lifterStuff.positionSignal().getLatestValue());
 	}
 
 	public boolean isBefore(double expectedPosition) {
@@ -50,6 +53,8 @@ public class Lifter extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		motor.updateSignals(lifterStuff.positionSignal());
 		motor.updateSignals(lifterStuff.otherSignals());
+
+		Logger.recordOutput("lifter position", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
 	}
 
 	public double convertToMeters(Rotation2d motorPosition) {

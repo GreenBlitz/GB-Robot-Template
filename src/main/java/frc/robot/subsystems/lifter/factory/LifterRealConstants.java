@@ -23,12 +23,12 @@ public class LifterRealConstants {
 
     private static final double DRUM_RADIUS = inchesToMeters(0.96);
     private static final double EXTENDING_POWER = 0.9;
-    private static final double RETRACTING_POWER = 0.9;
+    private static final double RETRACTING_POWER = -0.9;
     private static final TalonFXConfiguration CONFIGURATION = new TalonFXConfiguration();
 
     static {
         FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs();
-        FEEDBACK_CONFIGS.SensorToMechanismRatio = 9 * (60.0 / 14.0);
+        FEEDBACK_CONFIGS.SensorToMechanismRatio = 7 * (60.0 / 14.0);
 
 		CONFIGURATION.withFeedback(FEEDBACK_CONFIGS);
     }

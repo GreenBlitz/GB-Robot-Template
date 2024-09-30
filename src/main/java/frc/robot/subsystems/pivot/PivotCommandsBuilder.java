@@ -56,10 +56,10 @@ public class PivotCommandsBuilder {
 			pivot
 		).withName("Move to supplier position");
 	}
-	//@formatter:on
 
 	public Command stop() {
 		return new InstantCommand(pivot::stop, pivot).withName("Stop");
 	}
+	//@formatter:on
 
 }

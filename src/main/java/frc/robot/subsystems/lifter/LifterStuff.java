@@ -9,5 +9,6 @@ public record LifterStuff (
         ControllableMotor motor,
         InputSignal<Double> positionSignal,
         IRequest<Double> positionRequest,
+        double positionTolerance,
         InputSignal... otherSignals
 ){}

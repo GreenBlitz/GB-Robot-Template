@@ -10,15 +10,20 @@ public class Lifter extends GBSubsystem {
 
     private final ControllableMotor motor;
     private final LifterStuff lifterStuff;
+    private final LifterCommandsBuilder lifterCommandsBuilder;
 
     public Lifter(LifterStuff lifterStuff){
         super(lifterStuff.logPath());
         this.motor = lifterStuff.motor();
         this.lifterStuff = lifterStuff;
+        this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
     }
 
     public void setPower(double power){
         motor.setPower(power);
+    }
+    public void stop(){
+        motor.stop();
     }
 
     public void setBrake(boolean brake){
@@ -35,6 +40,14 @@ public class Lifter extends GBSubsystem {
                 lifterStuff.positionSignal().getLatestValue(),
                 positionTolerance
         );
+    }
+
+    public LifterStuff getLifterStuff() {
+        return lifterStuff;
+    }
+
+    public LifterCommandsBuilder getLifterCommandsBuilder() {
+        return lifterCommandsBuilder;
     }
 
     @Override

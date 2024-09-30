@@ -46,10 +46,10 @@ public class RollerCommandsBuilder {
 				roller
 		).withName("Rotate rotations: " + rotations);
 	}
-	//@formatter:on
 
 	public Command stop() {
 		return new InstantCommand(roller::stop, roller).withName("Stop");
 	}
+	//@formatter:on
 
 }

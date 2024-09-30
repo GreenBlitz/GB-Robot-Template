@@ -28,7 +28,7 @@ public class LifterRealConstants {
 
     static {
         FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs();
-        FEEDBACK_CONFIGS.SensorToMechanismRatio = 7 * (60.0 / 14.0);
+        FEEDBACK_CONFIGS.SensorToMechanismRatio = 7 * (60.0 / 24.0);
 
 		CONFIGURATION.withFeedback(FEEDBACK_CONFIGS);
     }

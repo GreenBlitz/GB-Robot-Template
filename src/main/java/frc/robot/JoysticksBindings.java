@@ -27,7 +27,7 @@ public class JoysticksBindings {
 
 		usedJoystick.A.whileTrue(robot.getLifter().getLifterCommandsBuilder().setPower(0.3));
 		usedJoystick.B.whileTrue(robot.getLifter().getLifterCommandsBuilder().setPower(-0.3));
-		usedJoystick.X.whileTrue(robot.getLifter().getLifterCommandsBuilder().extend(0.67));
+		usedJoystick.X.whileTrue(robot.getLifter().getLifterCommandsBuilder().extend(0.40));
 		usedJoystick.Y.whileTrue(robot.getLifter().getLifterCommandsBuilder().retract(0.1));
 	}
 

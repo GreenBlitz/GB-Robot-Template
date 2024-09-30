@@ -34,10 +34,10 @@ public class IntakeCommandsBuilder {
 				intake
 		).withName("Set power by supplier");
 	}
-	//@formatter:on
 
 	public Command stop() {
 		return new InstantCommand(intake::stop, intake).withName("Stop");
 	}
+	//@formatter:on
 
 }

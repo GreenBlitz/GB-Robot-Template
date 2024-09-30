@@ -36,7 +36,6 @@ public class ElbowCommandsBuilder {
 			elbow
 		).withName("Set power by supplier");
 	}
-	//@formatter:on
 
 	public Command stayInPlace() {
 		return new InstantCommand(elbow::stayInPlace, elbow).withName("Stay in place");
@@ -45,5 +44,6 @@ public class ElbowCommandsBuilder {
 	public Command voltageControlByDashboard(String widgetName) {
 		return new LoggedDashboardCommand(widgetName, elbow::setVoltage, elbow).withName("Voltage by dashboard");
 	}
+	//@formatter:on
 
 }

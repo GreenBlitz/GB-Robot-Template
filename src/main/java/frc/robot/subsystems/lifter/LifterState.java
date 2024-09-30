@@ -2,7 +2,7 @@ package frc.robot.subsystems.lifter;
 
 public enum LifterState {
 
-	HOLD,
+	STOP,
 	FORWARD,
 	BACKWARD,
 	RETRACTED,

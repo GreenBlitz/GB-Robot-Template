@@ -45,10 +45,10 @@ public class FlywheelCommandsBuilder {
 			flywheel
 		).withName("Set velocities - right: " + rightVelocity + ", left: " + leftVelocity);
 	}
-	//@formatter:on
 
 	public Command stop() {
 		return new InitExecuteCommand(() -> {}, flywheel::stop, flywheel).withName("Stop");
 	}
+	//@formatter:on
 
 }

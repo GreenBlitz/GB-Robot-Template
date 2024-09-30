@@ -29,7 +29,6 @@ public class RealRollerConstants {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.ROLLER);
 		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
-
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 

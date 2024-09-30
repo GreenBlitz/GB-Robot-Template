@@ -98,7 +98,6 @@ public class Superstructure {
 			case SHOOTER_OUTTAKE -> shooterOuttake();
 			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
-			case INTAKE_OUTTAKE -> null;
 		};
 	}
 

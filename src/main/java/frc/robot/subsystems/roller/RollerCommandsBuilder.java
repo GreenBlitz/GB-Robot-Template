@@ -36,7 +36,6 @@ public class RollerCommandsBuilder {
 		).withName("Set power by supplier");
 	}
 
-
 	public Command rollRotations(Rotation2d rotations, double power) {
 		Rotation2d startingPosition = roller.getPosition();
 		return new FunctionalCommand(

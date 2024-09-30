@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Robot;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
@@ -17,9 +16,6 @@ import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.GBSubsystem;
-import frc.utils.alerts.Alert;
-import frc.utils.alerts.AlertManager;
-import frc.utils.alerts.PeriodicAlert;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 

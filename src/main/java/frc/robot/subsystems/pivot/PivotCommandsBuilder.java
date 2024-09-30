@@ -34,7 +34,6 @@ public class PivotCommandsBuilder {
 				() -> false, pivot
 		).withName("Set power by supplier");
 	}
-	//@formatter:on
 
 	public Command moveToPosition(Rotation2d position, Rotation2d tolerance) {
 		return new FunctionalCommand(
@@ -59,5 +58,6 @@ public class PivotCommandsBuilder {
 	public Command stop() {
 		return new InstantCommand(pivot::stop, pivot).withName("Stop");
 	}
+	//@formatter:on
 
 }

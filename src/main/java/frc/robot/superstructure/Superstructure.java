@@ -160,10 +160,10 @@ public class Superstructure {
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 					funnelStateHandler.setState(FunnelState.STOP)
 				).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
-				new ParallelDeadlineGroup(
+				new ParallelCommandGroup(
 					elbowStateHandler.setState(ElbowState.PRE_AMP),
 					funnelStateHandler.setState(FunnelState.RELEASE_FOR_ARM)
-				),
+				).until(() -> robot.getElbow().isAtAngle(ElbowState.PRE_AMP.getTargetPosition(), Tolerances.ELBOW_POSITION_TOLERANCE)),
 				funnelStateHandler.setState(FunnelState.STOP)
 			),
 			rollerStateHandler.setState(RollerState.STOP),

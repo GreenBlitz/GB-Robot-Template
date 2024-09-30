@@ -1,4 +1,4 @@
-package frc.robot.hardware.signal.cansparkmax;
+package frc.robot.hardware.signal.supplied;
 
 import edu.wpi.first.hal.HALUtil;
 import frc.robot.hardware.signal.DoubleSignal;
@@ -7,11 +7,11 @@ import frc.utils.Conversions;
 
 import java.util.function.Supplier;
 
-public class SparkMaxDoubleSignal extends DoubleSignal implements ISparkMaxSignal {
+public class SuppliedDoubleSignal extends DoubleSignal {
 
 	private final Supplier<Double> doubleSupplier;
 
-	public SparkMaxDoubleSignal(String name, Supplier<Double> doubleSupplier) {
+	public SuppliedDoubleSignal(String name, Supplier<Double> doubleSupplier) {
 		super(name);
 		this.doubleSupplier = doubleSupplier;
 	}

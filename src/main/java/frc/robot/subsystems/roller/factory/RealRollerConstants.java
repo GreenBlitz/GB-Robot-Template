@@ -9,7 +9,7 @@ import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
-import frc.robot.subsystems.roller.RollerComponents;
+import frc.robot.subsystems.roller.RollerStuff;
 import frc.utils.AngleUnit;
 
 import java.util.function.BooleanSupplier;
@@ -25,7 +25,7 @@ public class RealRollerConstants {
 
 	private final static double GEAR_RATIO = 1.0 / 6.0;
 
-	public static RollerComponents generateIntakeStuff(String logPath) {
+	public static RollerStuff generateRollerStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.ROLLER);
 		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
@@ -42,7 +42,7 @@ public class RealRollerConstants {
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		return new RollerComponents(logPath, motor, voltageSignal, angleSignal, beamBreaker);
+		return new RollerStuff(logPath, motor, voltageSignal, angleSignal, beamBreaker);
 	}
 
 }

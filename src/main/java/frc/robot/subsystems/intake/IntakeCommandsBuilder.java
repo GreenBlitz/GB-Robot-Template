@@ -22,7 +22,7 @@ public class IntakeCommandsBuilder {
 				interrupted -> intake.stop(),
 				() -> false,
 				intake
-		).withName("Set power: " + power);
+		).withName("Set power to: " + power);
 	}
 
 	public Command setPower(DoubleSupplier power) {

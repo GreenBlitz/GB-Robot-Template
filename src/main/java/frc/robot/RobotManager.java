@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.objectDetection.ObjectDetection;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -73,7 +74,7 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-		SmartDashboard.putNumber("here data", ObjectDetection.get());
+		SmartDashboard.putNumber("X data", ObjectDetection.getXAngle());
 	}
 
 	@Override

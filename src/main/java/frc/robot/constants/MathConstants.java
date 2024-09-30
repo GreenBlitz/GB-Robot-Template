@@ -10,4 +10,6 @@ public class MathConstants {
 
 	public static final Rotation2d EIGHTH_CIRCLE = Rotation2d.fromRotations(0.125);
 
+	public static final double MINUTES_TO_SECONDS_CONVERSION_FACTOR = 1.0 / 60.0;
+
 }

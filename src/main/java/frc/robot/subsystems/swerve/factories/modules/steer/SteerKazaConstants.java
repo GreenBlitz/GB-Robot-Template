@@ -3,12 +3,16 @@ package frc.robot.subsystems.swerve.factories.modules.steer;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.MathConstants;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
+import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
+import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
 import frc.robot.subsystems.swerve.modules.stuffs.SteerStuff;
+import frc.utils.AngleUnit;
 
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
@@ -33,7 +37,20 @@ public class SteerKazaConstants {
 		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
 
 		SparkMaxWrapper motor = new SparkMaxWrapper(deviceID);
+		motor.setInverted(inverted);
+
 		BrushlessSparkMAXMotor steer = new BrushlessSparkMAXMotor(logPath, motor, generateSysidConfig());
+
+		SparkMaxDoubleSignal voltageSignal = new SparkMaxDoubleSignal("voltage", () -> motor.getAppliedOutput() * motor.getBusVoltage());
+		SparkMaxDoubleSignal currentSignal = new SparkMaxDoubleSignal("current", motor::getOutputCurrent);
+		SparkMaxAngleSignal positionSignal = new SparkMaxAngleSignal("position", () -> motor.getEncoder().getPosition(), AngleUnit.ROTATIONS);
+		SparkMaxAngleSignal velocitySignal = new SparkMaxAngleSignal(
+			"velocity",
+			() -> motor.getEncoder().getVelocity() * MathConstants.MINUTES_TO_SECONDS_CONVERSION_FACTOR,
+			AngleUnit.ROTATIONS
+		);
+
+		return new SteerStuff(steer, positionRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 
 }

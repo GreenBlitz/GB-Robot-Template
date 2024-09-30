@@ -34,7 +34,7 @@ public class ElbowCommandsBuilder {
 			interrupted -> elbow.stayInPlace(),
 			() -> false,
 			elbow
-		).withName("Set power");
+		).withName("Set power by supplier");
 	}
 	//@formatter:on
 

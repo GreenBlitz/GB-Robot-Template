@@ -25,7 +25,7 @@ public class RealRollerConstants {
 
 	private final static double GEAR_RATIO = 1.0 / 6.0;
 
-	public static RollerStuff generateIntakeStuff(String logPath) {
+	public static RollerStuff generateRollerStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.ROLLER);
 		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);

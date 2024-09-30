@@ -23,7 +23,7 @@ public class RollerCommandsBuilder {
 				interrupted -> roller.stop(),
 				() -> false,
 				roller
-		).withName("Set power: " + power);
+		).withName("Set power to: " + power);
 	}
 
 	public Command setPower(DoubleSupplier power) {

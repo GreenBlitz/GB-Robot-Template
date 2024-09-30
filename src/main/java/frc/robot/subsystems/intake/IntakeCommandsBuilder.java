@@ -15,24 +15,24 @@ public class IntakeCommandsBuilder {
 	}
 
 	//@formatter:off
-	public Command moveByPower(double power) {
+	public Command setPower(double power) {
 		return new FunctionalCommand(
 				() -> {},
 				() -> intake.setPower(power),
 				interrupted -> intake.stop(),
 				() -> false,
 				intake
-		).withName("Move by power: " + power);
+		).withName("Set power: " + power);
 	}
 
-	public Command moveByPower(DoubleSupplier power) {
+	public Command setPower(DoubleSupplier power) {
 		return new FunctionalCommand(
 				() -> {},
 				() -> intake.setPower(power.getAsDouble()),
 				interrupted -> intake.stop(),
 				() -> false,
 				intake
-		).withName("Move by power supplier");
+		).withName("Set power by supplier");
 	}
 	//@formatter:on
 

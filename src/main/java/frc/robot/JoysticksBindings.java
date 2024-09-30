@@ -47,16 +47,16 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 
-		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
-		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
-		usedJoystick.X.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));
-		usedJoystick.Y.onTrue(robot.getSupersturctrue().setState(RobotState.SPEAKER));
-		usedJoystick.POV_UP.onTrue(robot.getSupersturctrue().setState(RobotState.INTAKE));
-		usedJoystick.POV_DOWN.onTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
-		usedJoystick.POV_LEFT.onTrue(robot.getSupersturctrue().setState(RobotState.AMP));
-		usedJoystick.POV_RIGHT.onTrue(robot.getSupersturctrue().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
+		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
+		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.SHOOTER_OUTTAKE));
+		usedJoystick.POV_LEFT.onTrue(robot.getSuperstructure().setState(RobotState.AMP));
+		usedJoystick.POV_RIGHT.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 
-		usedJoystick.L1.whileTrue(robot.getRoller().getCommandsBuilder().moveByPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y) * 0.7));
+		usedJoystick.L1.whileTrue(robot.getRoller().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y) * 0.7));
 		usedJoystick.R1.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_Y) * 0.7));
 	}
 

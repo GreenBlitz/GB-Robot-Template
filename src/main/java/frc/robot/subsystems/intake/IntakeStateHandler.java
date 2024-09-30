@@ -11,7 +11,7 @@ public class IntakeStateHandler {
 	}
 
 	public Command setState(IntakeState intakeState) {
-		return intake.getCommandsBuilder().moveByPower(intakeState.getPower());
+		return intake.getCommandsBuilder().setPower(intakeState.getPower());
 	}
 
 }

@@ -110,7 +110,7 @@ public class Robot {
 		return roller;
 	}
 
-	public Superstructure getSupersturctrue() {
+	public Superstructure getSuperstructure() {
 		return superstructure;
 	}
 

@@ -20,7 +20,7 @@ public class RollerStateHandler {
 		if (rollerState == RollerState.MANUAL) {
 			return new InstantCommand();
 		}
-		return roller.getCommandsBuilder().moveByPower(rollerState.getPower());
+		return roller.getCommandsBuilder().setPower(rollerState.getPower());
 	}
 
 }

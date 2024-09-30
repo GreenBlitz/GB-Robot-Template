@@ -16,32 +16,36 @@ public class RollerCommandsBuilder {
 	}
 
 	//@formatter:off
-	public Command moveByPower(double power) {
+	public Command setPower(double power) {
 		return new FunctionalCommand(
 				() -> {},
 				() -> roller.setPower(power),
 				interrupted -> roller.stop(),
 				() -> false,
 				roller
-		).withName("Move by power: " + power);
+		).withName("Set power: " + power);
 	}
 
-	public Command moveByPower(DoubleSupplier power) {
+	public Command setPower(DoubleSupplier power) {
 		return new FunctionalCommand(
 				() -> {},
 				() -> roller.setPower(power.getAsDouble()),
 				interrupted -> roller.stop(),
-				() -> false, roller
-		).withName("Move by power supplier");
+				() -> false,
+				roller
+		).withName("Set power by supplier");
 	}
 
-	public Command rollRotations(Rotation2d rotationsToAdd, double power) {
+
+	public Command rollRotations(Rotation2d rotations, double power) {
+		Rotation2d startingPosition = roller.getPosition();
 		return new FunctionalCommand(
-				()-> roller.setTargetPositionWithAddition(rotationsToAdd),
+				()-> {},
 				()-> roller.setPower(power),
 				interrupted -> roller.stop(),
-				roller::isPastTargetPosition
-		).withName("Roll rotations: " + rotationsToAdd);
+				() -> Math.abs(roller.getPosition().getRotations() - startingPosition.getRotations()) > rotations.getRotations(),
+				roller
+		).withName("Rotate rotations: " + rotations);
 	}
 	//@formatter:on
 

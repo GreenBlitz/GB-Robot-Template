@@ -7,7 +7,6 @@ import frc.robot.hardware.motor.IMotor;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-
 public class Roller extends GBSubsystem {
 
 	private final IMotor motor;
@@ -15,7 +14,6 @@ public class Roller extends GBSubsystem {
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final RollerStuff rollerStuff;
 	private final RollerCommandsBuilder commandBuilder;
-	private Rotation2d targetPosition;
 
 	public Roller(RollerStuff rollerStuff) {
 		super(rollerStuff.logPath());
@@ -23,9 +21,8 @@ public class Roller extends GBSubsystem {
 		this.digitalInput = rollerStuff.digitalInput();
 		this.rollerStuff = rollerStuff;
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
-
 		this.commandBuilder = new RollerCommandsBuilder(this);
-		this.targetPosition = new Rotation2d();
+
 		updateInputs();
 	}
 
@@ -37,9 +34,20 @@ public class Roller extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
+	public Rotation2d getPosition() {
+		return rollerStuff.positionSignal().getLatestValue();
+	}
+
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
 		motor.updateSignals(rollerStuff.voltageSignal(), rollerStuff.positionSignal());
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		updateInputs();
+		Logger.processInputs(rollerStuff.digitalInputLogPath(), digitalInputsInputs);
+		Logger.recordOutput(rollerStuff.logPath() + "IsObjectIn", isObjectIn());
 	}
 
 	protected void setPower(double power) {
@@ -52,25 +60,6 @@ public class Roller extends GBSubsystem {
 
 	public void setBrake(boolean brake) {
 		motor.setBrake(brake);
-	}
-
-	public Rotation2d getPosition() {
-		return rollerStuff.positionSignal().getLatestValue();
-	}
-
-	protected void setTargetPositionWithAddition(Rotation2d rotationsToAdd) {
-		this.targetPosition = Rotation2d.fromRotations(getPosition().getRotations() + rotationsToAdd.getRotations());
-	}
-
-	protected boolean isPastTargetPosition() {
-		return getPosition().getRotations() > targetPosition.getRotations();
-	}
-
-	@Override
-	protected void subsystemPeriodic() {
-		updateInputs();
-		Logger.processInputs(rollerStuff.digitalInputLogPath(), digitalInputsInputs);
-		Logger.recordOutput(rollerStuff.logPath() + "IsObjectIn", isObjectIn());
 	}
 
 }

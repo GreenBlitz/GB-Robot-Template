@@ -24,6 +24,9 @@ import frc.robot.subsystems.pivot.factory.PivotFactory;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.roller.RollerConstants;
 import frc.robot.subsystems.roller.factory.RollerFactory;
+import frc.robot.subsystems.solenoid.Solenoid;
+import frc.robot.subsystems.solenoid.SolenoidConstants;
+import frc.robot.subsystems.solenoid.factory.SolenoidFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -43,6 +46,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
+	private final Solenoid solenoid;
 	private final Funnel funnel;
 	private final Intake intake;
 	private final Elbow elbow;
@@ -58,6 +62,7 @@ public class Robot {
 			ModulesFactory.create(SwerveName.SWERVE),
 			GyroFactory.create(SwerveName.SWERVE)
 		);
+		this.solenoid = new Solenoid(SolenoidFactory.create(SolenoidConstants.LOG_PATH));
 		this.intake = new Intake(IntakeFactory.create(IntakeConstants.LOG_PATH));
 		this.flywheel = new Flywheel(FlywheelFactory.create(FlyWheelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
@@ -84,6 +89,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public Solenoid getSolenoid() {
+		return solenoid;
 	}
 
 	public Funnel getFunnel() {

@@ -220,7 +220,7 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					rollerStateHandler.setState(RollerState.INTAKE),
 					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
-				).until(this::isObjectInRoller),
+				).withTimeout(0.6),//.until(this::isObjectInRoller),
 				new ParallelDeadlineGroup(
 					rollerStateHandler.setState(RollerState.AFTER_INTAKE),
 					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)

@@ -37,12 +37,12 @@ public class PivotCommandsBuilder {
 		).withName("Set power by supplier");
 	}
 
-	public Command moveToPosition(Rotation2d position, Rotation2d tolerance) {
+	public Command moveToPosition(Rotation2d position) {
 		return new FunctionalCommand(
 			() -> pivot.setTargetPosition(position),
 			() -> {},
 			(interrupted) -> pivot.stayInPlace(),
-			() -> pivot.isAtPosition(position, tolerance),
+			() -> false,
 			pivot
 		).withName("Move to position: " + position);
 	}

@@ -3,7 +3,7 @@ package frc.robot.subsystems.roller;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -49,7 +49,11 @@ public class RollerCommandsBuilder {
 	}
 
 	public Command stop() {
-		return new InstantCommand(roller::stop, roller).withName("Stop");
+		return new InitExecuteCommand(
+				() -> {},
+				roller::stop,
+				roller
+		).withName("Stop");
 	}
 	//@formatter:on
 

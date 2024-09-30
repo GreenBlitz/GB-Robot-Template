@@ -3,6 +3,8 @@ package frc.robot.subsystems.lifter.factory;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
@@ -11,20 +13,22 @@ import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.subsystems.lifter.LifterStuff;
 import frc.utils.AngleUnit;
+import frc.utils.Conversions;
 
+import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 public class LifterRealConstants {
 
-    private static final double DRUM_RADIUS = 0.05;
+    private static final double DRUM_RADIUS = inchesToMeters(0.96);
     private static final double EXTENDING_POWER = 0.9;
     private static final double RETRACTING_POWER = 0.9;
     private static final TalonFXConfiguration CONFIGURATION = new TalonFXConfiguration();
 
     static {
         FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs();
-        FEEDBACK_CONFIGS.SensorToMechanismRatio = 9 * 60.0 / 14.0;
+        FEEDBACK_CONFIGS.SensorToMechanismRatio = 9 * (60.0 / 14.0);
 
 		CONFIGURATION.withFeedback(FEEDBACK_CONFIGS);
     }

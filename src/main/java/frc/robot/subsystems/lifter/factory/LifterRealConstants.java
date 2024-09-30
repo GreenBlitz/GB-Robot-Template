@@ -9,6 +9,7 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+import frc.robot.subsystems.lifter.LifterConstants;
 import frc.robot.subsystems.lifter.LifterStuff;
 import frc.utils.AngleUnit;
 
@@ -19,8 +20,6 @@ import static edu.wpi.first.units.Units.Volts;
 public class LifterRealConstants {
 
 	private static final double DRUM_RADIUS = inchesToMeters(0.96);
-	private static final double EXTENDING_POWER = 0.9;
-	private static final double RETRACTING_POWER = -0.9;
 	private static final TalonFXConfiguration CONFIGURATION = new TalonFXConfiguration();
 
 	static {
@@ -49,8 +48,8 @@ public class LifterRealConstants {
 			DRUM_RADIUS,
 			Phoenix6SignalBuilder
 				.generatePhoenix6Signal(talonFXWrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-			EXTENDING_POWER,
-			RETRACTING_POWER
+			LifterConstants.EXTENDING_POWER,
+			LifterConstants.RETRACTING_POWER
 		);
 	}
 

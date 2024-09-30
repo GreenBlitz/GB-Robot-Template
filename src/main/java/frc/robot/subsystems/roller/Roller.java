@@ -34,9 +34,20 @@ public class Roller extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
+	public Rotation2d getPosition() {
+		return rollerStuff.positionSignal().getLatestValue();
+	}
+
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
 		motor.updateSignals(rollerStuff.voltageSignal(), rollerStuff.positionSignal());
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		updateInputs();
+		Logger.processInputs(rollerStuff.digitalInputLogPath(), digitalInputsInputs);
+		Logger.recordOutput(rollerStuff.logPath() + "IsObjectIn", isObjectIn());
 	}
 
 	protected void setPower(double power) {
@@ -49,17 +60,6 @@ public class Roller extends GBSubsystem {
 
 	public void setBrake(boolean brake) {
 		motor.setBrake(brake);
-	}
-
-	public Rotation2d getPosition() {
-		return rollerStuff.positionSignal().getLatestValue();
-	}
-
-	@Override
-	protected void subsystemPeriodic() {
-		updateInputs();
-		Logger.processInputs(rollerStuff.digitalInputLogPath(), digitalInputsInputs);
-		Logger.recordOutput(rollerStuff.logPath() + "IsObjectIn", isObjectIn());
 	}
 
 }

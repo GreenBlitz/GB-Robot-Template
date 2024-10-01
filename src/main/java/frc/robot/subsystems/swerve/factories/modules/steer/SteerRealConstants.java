@@ -42,7 +42,7 @@ class SteerRealConstants {
 		TalonFXConfiguration steerConfig = new TalonFXConfiguration();
 
 		steerConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-		;
+
 		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -69,7 +69,7 @@ class SteerRealConstants {
 		TalonFXConfiguration configuration = generateMotorConfig(inverted);
 		configuration.Feedback.FeedbackRemoteSensorID = encoderID.ID();
 		if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 
 		TalonFXMotor steer = new TalonFXMotor(logPath, motor, generateSysidConfig());

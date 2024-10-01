@@ -7,8 +7,8 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.roller.RollerStuff;
 import frc.utils.AngleUnit;
 
@@ -32,11 +32,11 @@ public class RealRollerConstants {
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 
-		Supplier<Double> voltage = () -> (sparkMaxWrapper.getBusVoltage() * sparkMaxWrapper.getAppliedOutput());
-		SparkMaxDoubleSignal voltageSignal = new SparkMaxDoubleSignal("voltage", voltage);
+		Supplier<Double> voltage = sparkMaxWrapper::getVoltage;
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", voltage);
 
 		Supplier<Double> position = () -> sparkMaxWrapper.getEncoder().getPosition();
-		SparkMaxAngleSignal angleSignal = new SparkMaxAngleSignal("position", position, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal angleSignal = new SuppliedAngleSignal("position", position, AngleUnit.ROTATIONS);
 
 		BooleanSupplier isBeamBroken = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);

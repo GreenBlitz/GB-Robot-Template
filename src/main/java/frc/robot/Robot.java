@@ -28,7 +28,7 @@ import frc.robot.subsystems.solenoid.Solenoid;
 import frc.robot.subsystems.solenoid.SolenoidConstants;
 import frc.robot.subsystems.solenoid.factory.SolenoidFactory;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
@@ -54,9 +54,9 @@ public class Robot {
 
 	public Robot() {
 		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(SwerveName.SWERVE),
-			ModulesFactory.create(SwerveName.SWERVE),
-			GyroFactory.create(SwerveName.SWERVE)
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			GyroFactory.create(SwerveType.SWERVE)
 		);
 		this.solenoid = new Solenoid(SolenoidFactory.create(SolenoidConstants.LOG_PATH));
 		this.intake = new Intake(IntakeFactory.create(IntakeConstants.LOG_PATH));

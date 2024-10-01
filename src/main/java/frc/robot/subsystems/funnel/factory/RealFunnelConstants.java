@@ -9,6 +9,8 @@ import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.funnel.FunnelStuff;
 import frc.utils.AngleUnit;
 
@@ -30,10 +32,10 @@ public class RealFunnelConstants {
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, wrapper, config);
 
 		Supplier<Double> voltage = () -> wrapper.getBusVoltage() * wrapper.getAppliedOutput();
-		SparkMaxDoubleSignal voltageSignal = new SparkMaxDoubleSignal("voltage", voltage);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", voltage);
 
 		Supplier<Double> position = () -> wrapper.getEncoder().getPosition();
-		SparkMaxAngleSignal positionSignal = new SparkMaxAngleSignal("position", position, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", position, AngleUnit.ROTATIONS);
 
 		BooleanSupplier isShooterBeamBroke = () -> wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);

@@ -1,5 +1,9 @@
 package frc.robot;
 
+import frc.robot.subsystems.lifter.LifterStateHandler;
+import frc.robot.subsystems.solenoid.SolenoidStateHandler;
+import frc.robot.superstructure.climb.ClimbState;
+import frc.robot.superstructure.climb.ClimbStateHandler;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -23,6 +27,16 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+
+
+		ClimbStateHandler climbStateHandler = new ClimbStateHandler(
+				new LifterStateHandler(robot.getLifter()),
+				new SolenoidStateHandler(robot.getSolenoid())
+		);
+
+		usedJoystick.B.whileTrue(climbStateHandler.setState(ClimbState.STOP));
+		usedJoystick.X.whileTrue(climbStateHandler.setState(ClimbState.EXTEND));
+		usedJoystick.A.whileTrue(climbStateHandler.setState(ClimbState.RETRACT));
 		// bindings...
 	}
 

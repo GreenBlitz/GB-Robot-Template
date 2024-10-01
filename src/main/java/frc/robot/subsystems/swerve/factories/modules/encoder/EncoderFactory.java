@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.factories.modules.encoder;
 
 import frc.robot.Robot;
 import frc.robot.constants.IDs;
-import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.modules.ModuleConstants;
 import frc.robot.subsystems.swerve.modules.ModuleUtils;
 import frc.robot.subsystems.swerve.modules.stuffs.EncoderStuff;
@@ -21,9 +21,9 @@ public class EncoderFactory {
 		};
 	}
 
-	public static EncoderStuff create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
-		String logPath = swerveName.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Encoder/";
-		return switch (swerveName) {
+	public static EncoderStuff create(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
+		String logPath = swerveType.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Encoder/";
+		return switch (swerveType) {
 			case SWERVE -> createSwerveEncoder(logPath, modulePosition);
 		};
 	}

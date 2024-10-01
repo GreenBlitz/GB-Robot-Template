@@ -68,7 +68,7 @@ class DriveRealConstants {
 
 		TalonFXWrapper motor = new TalonFXWrapper(deviceID);
 		if (!motor.applyConfiguration(generateMotorConfig(inverted), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder

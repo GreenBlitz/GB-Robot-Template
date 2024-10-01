@@ -9,8 +9,8 @@ import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.swerve.modules.stuffs.SteerStuff;
 import frc.utils.AngleUnit;
 
@@ -41,14 +41,12 @@ public class SteerKazaConstants {
 
 		BrushlessSparkMAXMotor steer = new BrushlessSparkMAXMotor(logPath, motor, generateSysidConfig());
 
-		SparkMaxDoubleSignal voltageSignal = new SparkMaxDoubleSignal("voltage", () -> motor.getAppliedOutput() * motor.getBusVoltage());
-		SparkMaxDoubleSignal currentSignal = new SparkMaxDoubleSignal("current", motor::getOutputCurrent);
-		SparkMaxAngleSignal positionSignal = new SparkMaxAngleSignal("position", () -> motor.getEncoder().getPosition(), AngleUnit.ROTATIONS);
-		SparkMaxAngleSignal velocitySignal = new SparkMaxAngleSignal(
-			"velocity",
-			() -> motor.getEncoder().getVelocity() * MathConstants.MINUTES_TO_SECONDS_CONVERSION_FACTOR,
-			AngleUnit.ROTATIONS
-		);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", () -> motor.getAppliedOutput() * motor.getBusVoltage());
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", motor::getOutputCurrent);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", () -> motor.getEncoder().getPosition(), AngleUnit.ROTATIONS);
+		//@formatter:off
+		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", () -> motor.getEncoder().getVelocity() * MathConstants.MINUTES_TO_SECONDS_CONVERSION_FACTOR, AngleUnit.ROTATIONS);
+		//@formatter:on
 
 		return new SteerStuff(steer, positionRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

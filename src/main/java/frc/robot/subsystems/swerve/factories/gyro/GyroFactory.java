@@ -15,7 +15,7 @@ public class GyroFactory {
 
 	public static GyroStuff create(SwerveName swerveName) {
 		return switch (swerveName) {
-			case SWERVE -> createSwerveGyroStuff(swerveName.getLogPath() + "Gyro/");
+			case SWERVE, KAZA -> createSwerveGyroStuff(swerveName.getLogPath() + "Gyro/");
 		};
 	}
 

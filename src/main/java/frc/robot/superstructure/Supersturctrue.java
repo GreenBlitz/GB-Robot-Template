@@ -12,11 +12,15 @@ import frc.robot.subsystems.funnel.FunnelState;
 import frc.robot.subsystems.funnel.FunnelStateHandler;
 import frc.robot.subsystems.intake.IntakeState;
 import frc.robot.subsystems.intake.IntakeStateHandler;
+import frc.robot.subsystems.lifter.LifterStateHandler;
 import frc.robot.subsystems.pivot.PivotState;
 import frc.robot.subsystems.pivot.PivotStateHandler;
+import frc.robot.subsystems.solenoid.SolenoidStateHandler;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+import frc.robot.superstructure.climb.ClimbState;
+import frc.robot.superstructure.climb.ClimbStateHandler;
 import org.littletonrobotics.junction.Logger;
 
 public class Supersturctrue {
@@ -29,6 +33,7 @@ public class Supersturctrue {
 	private final FunnelStateHandler funnelStateHandler;
 	private final IntakeStateHandler intakeStateHandler;
 	private final PivotStateHandler pivotStateHandler;
+	private final ClimbStateHandler climbStateHandler;
 
 	private RobotState currentState;
 
@@ -40,6 +45,10 @@ public class Supersturctrue {
 		this.funnelStateHandler = new FunnelStateHandler(robot.getFunnel());
 		this.intakeStateHandler = new IntakeStateHandler(robot.getIntake());
 		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
+		this.climbStateHandler = new ClimbStateHandler(
+				new LifterStateHandler(robot.getLifter()),
+				new SolenoidStateHandler(robot.getSolenoid())
+		);
 	}
 
 	public void logStatus() {
@@ -63,6 +72,8 @@ public class Supersturctrue {
 			case SPEAKER -> speaker();
 			case AMP -> null;
 			case SHOOTER_OUTTAKE -> shooterOuttake();
+			case PRE_CLIMB -> preClimb();
+			case CLIMB -> climb();
 		};
 	}
 
@@ -164,6 +175,14 @@ public class Supersturctrue {
 		).andThen(idle());
 	}
 
+	private Command preClimb(){
+		return climbStateHandler.setState(ClimbState.EXTEND)
+				.alongWith(elbowStateHandler.setState(ElbowState.PRE_CLIMB));
+	}
+
+	private Command climb(){
+		return elbowStateHandler.setState(ElbowState.CLIMB).andThen(climbStateHandler.setState(ClimbState.RETRACT));
+	}
 
 	private Command transferShooterArm() {
 		return new SequentialCommandGroup(

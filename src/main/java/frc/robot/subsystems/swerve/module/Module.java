@@ -42,12 +42,7 @@ public class Module {
 	private Rotation2d startingSteerAngle;
 	private boolean isClosedLoop;
 
-	public Module(
-		ModuleConstants constants,
-		EncoderStuff encoderStuff,
-		SteerStuff steerStuff,
-		DriveStuff driveStuff
-	) {
+	public Module(ModuleConstants constants, EncoderStuff encoderStuff, SteerStuff steerStuff, DriveStuff driveStuff) {
 		this.constants = constants;
 
 		this.encoder = encoderStuff.encoder();
@@ -66,7 +61,6 @@ public class Module {
 		this.targetState = new SwerveModuleState();
 		this.startingSteerAngle = new Rotation2d();
 		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
-
 		this.moduleInputs = new ModuleInputsAutoLogged();
 		this.driveInputs = new DriveInputsAutoLogged();
 
@@ -105,18 +99,8 @@ public class Module {
 
 	public void updateInputs() {
 		encoder.updateSignals(encoderStuff.positionSignal());
-		steer.updateSignals(
-			steerStuff.positionSignal(),
-			steerStuff.velocitySignal(),
-			steerStuff.currentSignal(),
-			steerStuff.voltageSignal()
-		);
-		drive.updateSignals(
-			driveStuff.positionSignal(),
-			driveStuff.velocitySignal(),
-			driveStuff.currentSignal(),
-			driveStuff.voltageSignal()
-		);
+		steer.updateSignals(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
+		drive.updateSignals(driveStuff.positionSignal(), driveStuff.velocitySignal(), driveStuff.currentSignal(), driveStuff.voltageSignal());
 		fixDriveInputsCoupling();
 
 		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityPerSecond);
@@ -197,8 +181,7 @@ public class Module {
 	//@formatter:on
 
 	public boolean isAtTargetAngle() {
-		boolean isStopping = steerStuff.velocitySignal().getLatestValue().getRadians()
-			<= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
+		boolean isStopping = steerStuff.velocitySignal().getLatestValue().getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
 		if (!isStopping) {
 			return false;
 		}

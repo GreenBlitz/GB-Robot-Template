@@ -2,9 +2,9 @@ package frc.robot.poseestimation;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.poseestimation.posecalculation.PoseCalculator;
-import frc.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
@@ -15,8 +15,8 @@ public class PoseEstimator {
 	private final PoseCalculator poseCalculator;
 	private final Consumer<Rotation2d> resetSwerveHeading;
 
-	public PoseEstimator(Consumer<Rotation2d> resetSwerveHeading) {
-		this.poseCalculator = new PoseCalculator(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS, SwerveConstants.KINEMATICS);
+	public PoseEstimator(Consumer<Rotation2d> resetSwerveHeading, SwerveDriveKinematics kinematics) {
+		this.poseCalculator = new PoseCalculator(PoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS, kinematics);
 		this.resetSwerveHeading = resetSwerveHeading;
 		resetPose(PoseEstimatorConstants.DEFAULT_POSE);
 	}

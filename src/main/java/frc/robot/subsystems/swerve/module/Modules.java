@@ -1,11 +1,11 @@
-package frc.robot.subsystems.swerve.modules;
+package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.SwerveType;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -15,9 +15,9 @@ public class Modules {
 	private final Module[] modules;
 	private final String logPath;
 
-	public Modules(SwerveName swerveName, Module[] modules) {
+	public Modules(SwerveType swerveType, Module[] modules) {
 		this.modules = modules;
-		this.logPath = swerveName.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
+		this.logPath = swerveType.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
 	}
 
 	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
@@ -26,7 +26,7 @@ public class Modules {
 
 	public void logStatus() {
 		for (Module currentModule : modules) {
-			currentModule.logStatus();
+			currentModule.updateInputs();
 		}
 		Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
 		Logger.recordOutput(logPath + "TargetStates", getTargetStates());
@@ -142,21 +142,20 @@ public class Modules {
 		return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
 	}
 
+	public int getNumberOfOdometrySamples() {
+		int numberOfOdometrySamples = modules[0].getNumberOfOdometrySamples();
+		for (int i = 1; i < modules.length; i++) {
+			numberOfOdometrySamples = Math.min(numberOfOdometrySamples, modules[i].getNumberOfOdometrySamples());
+		}
+		return numberOfOdometrySamples;
+	}
+
 	public SwerveDriveWheelPositions getWheelsPositions(int odometrySampleIndex) {
 		SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
 		for (int i = 0; i < modules.length; i++) {
 			swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
 		}
 		return new SwerveDriveWheelPositions(swerveModulePositions);
-	}
-
-	public SwerveDriveWheelPositions[] getAllWheelsPositionsSamples() {
-		int numberOfOdometrySamples = modules[0].getNumberOfOdometrySamples();
-		SwerveDriveWheelPositions[] swerveWheelPositions = new SwerveDriveWheelPositions[numberOfOdometrySamples];
-		for (int i = 0; i < numberOfOdometrySamples; i++) {
-			swerveWheelPositions[i] = getWheelsPositions(i);
-		}
-		return swerveWheelPositions;
 	}
 
 }

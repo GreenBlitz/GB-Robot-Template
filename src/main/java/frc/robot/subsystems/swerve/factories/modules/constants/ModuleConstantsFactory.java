@@ -1,22 +1,22 @@
 package frc.robot.subsystems.swerve.factories.modules.constants;
 
 import frc.robot.Robot;
-import frc.robot.subsystems.swerve.SwerveName;
-import frc.robot.subsystems.swerve.modules.ModuleConstants;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
 
 public class ModuleConstantsFactory {
 
-	public static ModuleConstants create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
-		return switch (swerveName) {
-			case SWERVE -> createSwerveModuleConstants(swerveName, modulePosition);
+	private static ModuleConstants createSwerveModuleConstants(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> RealModuleConstants.getModuleConstants(swerveType, modulePosition);
+			case SIMULATION -> null;// TODO
 		};
 	}
 
-	private static ModuleConstants createSwerveModuleConstants(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealModuleConstants.getModuleConstants(swerveName, modulePosition);
-			case SIMULATION -> SimulationModuleConstants.getModuleConstants(swerveName, modulePosition);
+	public static ModuleConstants create(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
+		return switch (swerveType) {
+			case SWERVE -> createSwerveModuleConstants(swerveType, modulePosition);
 		};
 	}
 

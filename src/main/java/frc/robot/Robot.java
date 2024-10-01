@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
  */
 public class Robot {
 
+
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	public Robot() {

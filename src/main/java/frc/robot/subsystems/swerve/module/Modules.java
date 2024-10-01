@@ -1,11 +1,11 @@
-package frc.robot.subsystems.swerve.modules;
+package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.SwerveType;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -15,9 +15,9 @@ public class Modules {
 	private final Module[] modules;
 	private final String logPath;
 
-	public Modules(SwerveName swerveName, Module[] modules) {
+	public Modules(SwerveType swerveType, Module[] modules) {
 		this.modules = modules;
-		this.logPath = swerveName.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
+		this.logPath = swerveType.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
 	}
 
 	public Module getModule(ModuleUtils.ModulePosition modulePosition) {

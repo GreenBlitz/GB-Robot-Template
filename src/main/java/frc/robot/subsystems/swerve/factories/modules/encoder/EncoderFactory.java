@@ -3,9 +3,9 @@ package frc.robot.subsystems.swerve.factories.modules.encoder;
 import frc.robot.Robot;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.swerve.SwerveType;
-import frc.robot.subsystems.swerve.modules.ModuleConstants;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.stuffs.EncoderStuff;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
 
 public class EncoderFactory {
 

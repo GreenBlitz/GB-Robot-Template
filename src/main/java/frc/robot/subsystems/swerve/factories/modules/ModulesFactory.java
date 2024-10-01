@@ -5,9 +5,9 @@ import frc.robot.subsystems.swerve.factories.modules.constants.ModuleConstantsFa
 import frc.robot.subsystems.swerve.factories.modules.drive.DriveFactory;
 import frc.robot.subsystems.swerve.factories.modules.encoder.EncoderFactory;
 import frc.robot.subsystems.swerve.factories.modules.steer.SteerFactory;
-import frc.robot.subsystems.swerve.modules.Module;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.Modules;
+import frc.robot.subsystems.swerve.module.Module;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.Modules;
 
 
 public class ModulesFactory {

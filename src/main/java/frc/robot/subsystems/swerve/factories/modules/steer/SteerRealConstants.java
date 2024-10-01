@@ -18,7 +18,7 @@ import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6LatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import frc.robot.subsystems.swerve.modules.stuffs.SteerStuff;
+import frc.robot.subsystems.swerve.module.stuffs.SteerStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 

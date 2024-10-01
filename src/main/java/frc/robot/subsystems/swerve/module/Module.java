@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules;
+package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,11 +8,11 @@ import frc.robot.hardware.angleencoder.IAngleEncoder;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.subsystems.swerve.SwerveState;
-import frc.robot.subsystems.swerve.modules.extrainputs.DriveInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.extrainputs.ModuleInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.stuffs.DriveStuff;
-import frc.robot.subsystems.swerve.modules.stuffs.EncoderStuff;
-import frc.robot.subsystems.swerve.modules.stuffs.SteerStuff;
+import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
+import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
+import frc.robot.subsystems.swerve.module.stuffs.SteerStuff;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;

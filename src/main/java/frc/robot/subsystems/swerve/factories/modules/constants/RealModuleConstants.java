@@ -2,8 +2,8 @@ package frc.robot.subsystems.swerve.factories.modules.constants;
 
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.swerveconstants.RealSwerveConstants;
-import frc.robot.subsystems.swerve.modules.ModuleConstants;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
 
 public class RealModuleConstants {
 

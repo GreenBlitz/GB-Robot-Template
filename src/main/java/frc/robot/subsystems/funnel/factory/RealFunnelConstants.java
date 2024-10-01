@@ -7,8 +7,6 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.funnel.FunnelStuff;

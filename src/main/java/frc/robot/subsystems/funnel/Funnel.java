@@ -1,6 +1,5 @@
 package frc.robot.subsystems.funnel;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.IMotor;
@@ -30,7 +29,7 @@ public class Funnel extends GBSubsystem {
 		updateInputs();
 	}
 
-	public FunnelCommandsBuilder getCommandsBuilder(){
+	public FunnelCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 

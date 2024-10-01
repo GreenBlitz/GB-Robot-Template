@@ -44,7 +44,7 @@ public class IDs {
 
 		public static final SparkMaxDeviceID BACK_LEFT_STEER_MOTOR = new SparkMaxDeviceID(2);
 
-		public static final SparkMaxDeviceID BACK_RIGHT_STEER_MOTOR = new SparkMaxDeviceID(3);
+		public static final SparkMaxDeviceID BACK_RIGHT_STEER_MOTOR = new SparkMaxDeviceID(3); // todo real ids
 
 	}
 

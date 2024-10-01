@@ -43,7 +43,7 @@ class DriveRealConstants {
 		TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
 		driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-		;
+
 		driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 		driveConfig.Feedback.SensorToMechanismRatio = 6.12;
 

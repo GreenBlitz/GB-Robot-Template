@@ -23,10 +23,19 @@ public class RealFunnelConstants {
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 	private final static SparkLimitSwitch.Type FORWARD_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
+	private final static int CURRENT_LIMIT = 30;
+	private final static double GEAR_RATIO = 1;
+
 
 	public static FunnelStuff generateFunnelStuff(String logPath) {
 		SparkMaxWrapper sparkMAXWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.FUNNEL);
+
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
+
+		sparkMAXWrapper.setSmartCurrentLimit(CURRENT_LIMIT);
+		sparkMAXWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
+		sparkMAXWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
+
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMAXWrapper::getVoltage);

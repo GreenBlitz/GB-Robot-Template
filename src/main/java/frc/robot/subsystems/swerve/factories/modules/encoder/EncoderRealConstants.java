@@ -11,7 +11,7 @@ import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.PhoenixProUtils;
 import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import frc.robot.subsystems.swerve.modules.stuffs.EncoderStuff;
+import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 

@@ -2,10 +2,10 @@ package frc.robot.subsystems.swerve.factories.modules.drive;
 
 import frc.robot.Robot;
 import frc.robot.constants.IDs;
-import frc.robot.subsystems.swerve.SwerveName;
-import frc.robot.subsystems.swerve.modules.ModuleConstants;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.stuffs.DriveStuff;
+import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
 
 public class DriveFactory {
 
@@ -21,9 +21,9 @@ public class DriveFactory {
 		};
 	}
 
-	public static DriveStuff create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
-		String logPath = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Drive/";
-		return switch (swerveName) {
+	public static DriveStuff create(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
+		String logPath = SwerveType.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Drive/";
+		return switch (swerveType) {
 			case SWERVE -> createSwerveDrive(logPath, modulePosition);
 		};
 	}

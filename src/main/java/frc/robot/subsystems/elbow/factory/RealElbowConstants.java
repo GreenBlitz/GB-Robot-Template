@@ -10,8 +10,8 @@ import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.elbow.ElbowConstants;
 import frc.robot.subsystems.elbow.ElbowStuff;
 import frc.utils.AngleUnit;
@@ -59,10 +59,10 @@ public class RealElbowConstants {
 		SparkMaxWrapper motor = new SparkMaxWrapper(IDs.CANSparkMAXs.ELBOW);
 		configMotor(motor);
 
-		SparkMaxAngleSignal positionSignal = new SparkMaxAngleSignal("position", () -> motor.getEncoder().getPosition(), AngleUnit.ROTATIONS);
-		SparkMaxAngleSignal velocitySignal = new SparkMaxAngleSignal("velocity", () -> motor.getEncoder().getVelocity(), AngleUnit.ROTATIONS);
-		SparkMaxDoubleSignal currentSignal = new SparkMaxDoubleSignal("output current", motor::getOutputCurrent);
-		SparkMaxDoubleSignal voltageSignal = new SparkMaxDoubleSignal("voltage", () -> motor.getAppliedOutput() * motor.getBusVoltage());
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", () -> motor.getEncoder().getPosition(), AngleUnit.ROTATIONS);
+		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", () -> motor.getEncoder().getVelocity(), AngleUnit.ROTATIONS);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("output current", motor::getOutputCurrent);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", motor::getVoltage);
 
 		BrushlessSparkMAXMotor elbow = new BrushlessSparkMAXMotor(logPath, motor, new SysIdRoutine.Config());
 		return new ElbowStuff(

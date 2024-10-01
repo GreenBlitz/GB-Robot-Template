@@ -27,7 +27,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private SwerveDriveWheelPositions lastWheelPositions;
 	private Rotation2d lastGyroAngle;
 	private VisionObservation lastVisionObservation;
-	private VisionObservationFiltered visionObservationFiltered;
+	private final VisionObservationFiltered visionObservationFiltered;
 
 	public GBPoseEstimator(
 		SwerveDriveKinematics kinematics,
@@ -42,8 +42,27 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.lastWheelPositions = initialWheelPositions;
 		this.lastGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[3];
-		this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG);
+		this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG, this);
 		setOdometryStandardDeviations(odometryStandardDeviations);
+	}
+
+	public VisionObservationFiltered getVisionObservationFiltered() {
+		return visionObservationFiltered;
+	}
+
+	public void resetPoseByLimelight() {
+		List<VisionObservation> stackedRawData = visionObservationFiltered.getAllAvailableLimelightData();
+		List<VisionObservation> rawData;
+		while (
+			stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION
+				&& !(rawData = visionObservationFiltered.getAllAvailableLimelightData()).isEmpty()
+		) {
+			if (!stackedRawData.contains(rawData.get(0))) {
+				stackedRawData.addAll(rawData);
+			}
+		}
+		Pose2d pose2d = weightedObservationMean(stackedRawData);
+		resetPose(new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation()));
 	}
 
 	@Override

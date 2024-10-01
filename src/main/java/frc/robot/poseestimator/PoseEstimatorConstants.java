@@ -8,6 +8,8 @@ public class PoseEstimatorConstants {
 
 	protected static final String LOG_PATH = "PoseEstimator/";
 
+	protected static final int OBSERVATION_COUNT_FOR_POSE_CALIBRATION = 45;
+
 	public static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 
 	public static final int ODOMETRY_FREQUENCY_HERTZ = 250;

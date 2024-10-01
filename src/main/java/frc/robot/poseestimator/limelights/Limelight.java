@@ -15,20 +15,29 @@ public class Limelight extends GBSubsystem {
 	private final NetworkTableEntry robotPoseEntry;
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
+	private final NetworkTableEntry robotOrientationEntry;
 	private final String name;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
+	private double[] gyroAngleValues;
 
 	public Limelight(String name, String hardwareLogPath) {
 		super(hardwareLogPath + name + "/");
 
 		this.name = name;
-		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
+		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
+		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
+		this.gyroAngleValues = new double[] {0, 0, 0, 0, 0, 0};
+	}
+
+	public void updateGyroAngleValues(double[] gyroAngleValues) {
+		this.gyroAngleValues = gyroAngleValues;
 	}
 
 	public void updateLimelight() {
+		robotOrientationEntry.setDoubleArray(gyroAngleValues);
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 	}
@@ -47,9 +56,9 @@ public class Limelight extends GBSubsystem {
 			getPoseInformation(LimelightEntryValue.Y_AXIS),
 			getPoseInformation(LimelightEntryValue.Z_AXIS),
 			new Rotation3d(
-				getPoseInformation(LimelightEntryValue.ROLL_ANGLE),
-				getPoseInformation(LimelightEntryValue.PITCH_ANGLE),
-				getPoseInformation(LimelightEntryValue.YAW_ANGLE)
+				Math.toRadians(getPoseInformation(LimelightEntryValue.ROLL_ANGLE)),
+				Math.toRadians(getPoseInformation(LimelightEntryValue.PITCH_ANGLE)),
+				Math.toRadians(getPoseInformation(LimelightEntryValue.YAW_ANGLE))
 			)
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));

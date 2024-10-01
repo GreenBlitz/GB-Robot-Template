@@ -1,5 +1,6 @@
 package frc.robot.poseestimator.limelights;
 
+import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -11,12 +12,18 @@ public class VisionObservationFiltered extends GBSubsystem {
 
 	private final MultiLimelightsRawData limelightHardware;
 	private final VisionObservationFilteredConfig config;
+	private final IPoseEstimator poseEstimator;
 
-	public VisionObservationFiltered(VisionObservationFilteredConfig config) {
+	public VisionObservationFiltered(VisionObservationFilteredConfig config, IPoseEstimator poseEstimator) {
 		super(config.logPath());
 
 		this.limelightHardware = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
 		this.config = config;
+		this.poseEstimator = poseEstimator;
+	}
+
+	public void updateGyroAngles(double[] gyroAnglesValues) {
+		limelightHardware.updateGyroAngles(gyroAnglesValues);
 	}
 
 	public List<VisionObservation> getFilteredVisionObservations() {
@@ -26,6 +33,16 @@ public class VisionObservationFiltered extends GBSubsystem {
 			if (keepLimelightData(limelightRawData)) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
+		}
+
+		return estimates;
+	}
+
+	public List<VisionObservation> getAllAvailableLimelightData() {
+		ArrayList<VisionObservation> estimates = new ArrayList<>();
+
+		for (LimelightRawData limelightRawData : limelightHardware.getAllAvailableLimelightData()) {
+			estimates.add(rawDataToObservation(limelightRawData));
 		}
 
 		return estimates;
@@ -47,7 +64,7 @@ public class VisionObservationFiltered extends GBSubsystem {
 
 	private boolean keepLimelightData(LimelightRawData limelightRawData) {
 		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
-			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData)
+			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData, poseEstimator.getEstimatedPose())
 			&& LimelightFilters.isRollZero(limelightRawData)
 			&& LimelightFilters.isPitchZero(limelightRawData)
 			&& LimelightFilters.isRobotOnGround(limelightRawData);

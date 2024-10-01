@@ -25,8 +25,8 @@ public class ClimbStateHandler {
 					.raceWith(new WaitCommand(ClimbConstants.SOLENOID_RELEASE_TIME)))
 					.andThen((solenoidStateHandler.setState(SolenoidState.RETRACT))
 					.raceWith(new WaitCommand(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME)))
-					.andThen(lifterStateHandler.setState(LifterState.EXTENDED));
-			case RETRACT -> lifterStateHandler.setState(LifterState.BACKWARD).alongWith(solenoidStateHandler.setState(SolenoidState.OFF));
+					.andThen(lifterStateHandler.setState(LifterState.EXTENDED).alongWith(solenoidStateHandler.setState(SolenoidState.HOLD)));
+			case RETRACT -> lifterStateHandler.setState(LifterState.RETRACTED).alongWith(solenoidStateHandler.setState(SolenoidState.OFF));
 		};
 	}
 

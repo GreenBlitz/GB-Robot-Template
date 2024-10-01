@@ -34,9 +34,9 @@ public class JoysticksBindings {
 				new SolenoidStateHandler(robot.getSolenoid())
 		);
 
-		usedJoystick.B.whileTrue(climbStateHandler.setState(ClimbState.STOP));
-		usedJoystick.X.whileTrue(climbStateHandler.setState(ClimbState.EXTEND));
-		usedJoystick.A.whileTrue(climbStateHandler.setState(ClimbState.RETRACT));
+		usedJoystick.B.onTrue(climbStateHandler.setState(ClimbState.STOP));
+		usedJoystick.X.onTrue(climbStateHandler.setState(ClimbState.EXTEND));
+		usedJoystick.A.onTrue(climbStateHandler.setState(ClimbState.RETRACT));
 		// bindings...
 	}
 

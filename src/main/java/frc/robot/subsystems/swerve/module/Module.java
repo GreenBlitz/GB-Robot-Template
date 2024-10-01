@@ -112,7 +112,7 @@ public class Module {
 		moduleInputs.targetState = targetState;
 
 		Logger.processInputs(constants.logPath(), moduleInputs);
-		Logger.processInputs(constants.logPath() + "Drive", driveInputs);
+		Logger.processInputs(driveStuff.logPath(), driveInputs);
 	}
 
 

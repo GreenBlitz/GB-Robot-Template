@@ -6,6 +6,7 @@ import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 
 public record DriveStuff(
+	String logPath,
 	ControllableMotor drive,
 	IRequest<Rotation2d> velocityRequest,
 	IRequest<Double> voltageRequest,

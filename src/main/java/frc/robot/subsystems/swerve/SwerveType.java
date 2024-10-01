@@ -1,12 +1,13 @@
+
 package frc.robot.subsystems.swerve;
 
-public enum SwerveName {
+public enum SwerveType {
 
 	SWERVE("");
 
 	private final String swerveName;
 
-	SwerveName(String swerveName) {
+	SwerveType(String swerveName) {
 		this.swerveName = swerveName;
 	}
 

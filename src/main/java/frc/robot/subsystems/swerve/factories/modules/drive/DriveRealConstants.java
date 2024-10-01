@@ -17,7 +17,7 @@ import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6LatencySignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import frc.robot.subsystems.swerve.modules.stuffs.DriveStuff;
+import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
@@ -43,7 +43,7 @@ class DriveRealConstants {
 		TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
 		driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-		;
+
 		driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 		driveConfig.Feedback.SensorToMechanismRatio = 6.12;
 
@@ -68,7 +68,7 @@ class DriveRealConstants {
 
 		TalonFXWrapper motor = new TalonFXWrapper(deviceID);
 		if (!motor.applyConfiguration(generateMotorConfig(inverted), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
@@ -81,7 +81,7 @@ class DriveRealConstants {
 			.generatePhoenix6Signal(motor.getPosition(), velocitySignal, GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
 		TalonFXMotor drive = new TalonFXMotor(logPath, motor, generateSysidConfig());
-		return new DriveStuff(drive, velocityRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
+		return new DriveStuff(logPath, drive, velocityRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 
 }

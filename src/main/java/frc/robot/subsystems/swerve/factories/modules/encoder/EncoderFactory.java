@@ -21,10 +21,18 @@ public class EncoderFactory {
 		};
 	}
 
+	private static EncoderStuff createKazaEncoder(String logPath) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> EncoderEmptyConstants.generateEncoderStuff(logPath);
+			case SIMULATION -> null;// TODO
+		};
+	}
+
 	public static EncoderStuff create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
 		String logPath = swerveName.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Encoder/";
 		return switch (swerveName) {
 			case SWERVE -> createSwerveEncoder(logPath, modulePosition);
+			case KAZA -> createKazaEncoder(logPath);
 		};
 	}
 

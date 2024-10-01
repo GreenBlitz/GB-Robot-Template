@@ -2,7 +2,8 @@ package frc.robot.subsystems.swerve;
 
 public enum SwerveName {
 
-	SWERVE("");
+	SWERVE(""),
+	KAZA("Kaza");
 
 	private final String swerveName;
 

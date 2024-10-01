@@ -29,10 +29,23 @@ public class SteerFactory {
 		};
 	}
 
+	private static SteerStuff createKazaSwerveSteer(String logPath, ModuleUtils.ModulePosition modulePosition) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> switch (modulePosition) {
+				case FRONT_LEFT -> SteerKazaConstants.generateSteerStuff(logPath, IDs.SparkMaxIDs.FRONT_LEFT_STEER_MOTOR, true);
+				case FRONT_RIGHT -> SteerKazaConstants.generateSteerStuff(logPath, IDs.SparkMaxIDs.FRONT_RIGHT_STEER_MOTOR, true);
+				case BACK_LEFT -> SteerKazaConstants.generateSteerStuff(logPath, IDs.SparkMaxIDs.BACK_LEFT_STEER_MOTOR, false);
+				case BACK_RIGHT -> SteerKazaConstants.generateSteerStuff(logPath, IDs.SparkMaxIDs.BACK_RIGHT_STEER_MOTOR, true);
+			};
+			case SIMULATION -> null;
+		};
+	}
+
 	public static SteerStuff create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
 		String logPath = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Steer/";
 		return switch (swerveName) {
 			case SWERVE -> createSwerveSteer(logPath, modulePosition);
+			case KAZA -> createKazaSwerveSteer(logPath, modulePosition);
 		};
 	}
 

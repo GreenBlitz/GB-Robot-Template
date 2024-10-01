@@ -2,6 +2,7 @@ package frc.robot.constants;
 
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
@@ -32,6 +33,18 @@ public class IDs {
 		public static final Phoenix6DeviceID BACK_RIGHT_STEER_MOTOR = new Phoenix6DeviceID(6, BusChain.CANIVORE);
 
 		public static final Phoenix6DeviceID BACK_RIGHT_DRIVE_MOTOR = new Phoenix6DeviceID(7, BusChain.CANIVORE);
+
+	}
+
+	public static class SparkMaxIDs {
+
+		public static final SparkMaxDeviceID FRONT_LEFT_STEER_MOTOR = new SparkMaxDeviceID(0);
+
+		public static final SparkMaxDeviceID FRONT_RIGHT_STEER_MOTOR = new SparkMaxDeviceID(1);
+
+		public static final SparkMaxDeviceID BACK_LEFT_STEER_MOTOR = new SparkMaxDeviceID(2);
+
+		public static final SparkMaxDeviceID BACK_RIGHT_STEER_MOTOR = new SparkMaxDeviceID(3);
 
 	}
 

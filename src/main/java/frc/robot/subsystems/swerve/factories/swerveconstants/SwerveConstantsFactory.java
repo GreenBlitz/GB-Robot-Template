@@ -13,9 +13,17 @@ public class SwerveConstantsFactory {
 		};
 	}
 
+	private static SwerveConstants createKazaSwerveConstants() {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> KazaSwerveConstants.getKazaSwerveConstants();
+			case SIMULATION -> null;
+		};
+	}
+
 	public static SwerveConstants create(SwerveName swerveName) {
 		return switch (swerveName) {
 			case SWERVE -> createSwerveConstants();
+			case KAZA -> createKazaSwerveConstants();
 		};
 	}
 

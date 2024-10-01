@@ -14,9 +14,17 @@ public class ModuleConstantsFactory {
 		};
 	}
 
+	private static ModuleConstants createKazaSwerveModuleConstants(ModuleUtils.ModulePosition modulePosition) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> KazaModuleConstants.getModuleConstants(modulePosition);
+			case SIMULATION -> null;
+		};
+	}
+
 	public static ModuleConstants create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
 		return switch (swerveName) {
 			case SWERVE -> createSwerveModuleConstants(swerveName, modulePosition);
+			case KAZA -> createKazaSwerveModuleConstants(modulePosition);
 		};
 	}
 

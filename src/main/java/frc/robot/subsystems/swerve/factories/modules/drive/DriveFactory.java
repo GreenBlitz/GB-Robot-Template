@@ -21,10 +21,23 @@ public class DriveFactory {
 		};
 	}
 
+	private static DriveStuff createKazaSwerveDrive(String logPath, ModuleUtils.ModulePosition modulePosition) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> switch (modulePosition) {
+				case FRONT_LEFT -> KazaDriveConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR, false);
+				case FRONT_RIGHT -> KazaDriveConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR, true);
+				case BACK_LEFT -> KazaDriveConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR, false);
+				case BACK_RIGHT -> KazaDriveConstants.generateDriveStuff(logPath, IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR, false);
+			};
+			case SIMULATION -> null;
+		};
+	}
+
 	public static DriveStuff create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
 		String logPath = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Drive/";
 		return switch (swerveName) {
 			case SWERVE -> createSwerveDrive(logPath, modulePosition);
+			case KAZA -> createKazaSwerveDrive(logPath, modulePosition);
 		};
 	}
 

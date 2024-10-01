@@ -17,7 +17,6 @@ import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
 
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
  * documentation. If you change the name of this class or the package after creating this project, you must also update the build.gradle file in
@@ -26,6 +25,7 @@ import frc.utils.brakestate.BrakeStateManager;
 public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
+
 	private Robot robot;
 
 	@Override

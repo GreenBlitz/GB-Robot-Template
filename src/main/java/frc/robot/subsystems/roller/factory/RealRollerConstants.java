@@ -32,16 +32,16 @@ public class RealRollerConstants {
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 
-		SuppliedDoubleSignal voltage = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
-		Supplier<Double> position = () -> sparkMaxWrapper.getEncoder().getPosition();
-		SuppliedAngleSignal angleSignal = new SuppliedAngleSignal("position", position, AngleUnit.ROTATIONS);
+		Supplier<Double> positionSupplier = () -> sparkMaxWrapper.getEncoder().getPosition();
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", positionSupplier, AngleUnit.ROTATIONS);
 
 		BooleanSupplier isBeamBroken = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		return new RollerStuff(logPath, motor, voltage, angleSignal, beamBreaker);
+		return new RollerStuff(logPath, motor, voltageSignal, positionSignal, beamBreaker);
 	}
 
 }

@@ -28,14 +28,13 @@ public class RealFunnelConstants {
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 
-		SuppliedDoubleSignal signal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
 		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
-
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		return new FunnelStuff(logPath, motor, signal, beamBreaker);
+		return new FunnelStuff(logPath, motor, voltageSignal, beamBreaker);
 	}
 
 }

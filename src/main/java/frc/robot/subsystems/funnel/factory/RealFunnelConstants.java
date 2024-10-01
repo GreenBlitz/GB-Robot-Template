@@ -35,13 +35,13 @@ public class RealFunnelConstants {
 		Supplier<Double> position = () -> wrapper.getEncoder().getPosition();
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", position, AngleUnit.ROTATIONS);
 
-		BooleanSupplier isShooterBeamBroke = () -> wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		BooleanSupplier isShooterBeamBroken = () -> wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
-		SuppliedDigitalInput shooterBeamBreaker = new SuppliedDigitalInput(isShooterBeamBroke, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
+		SuppliedDigitalInput shooterBeamBreaker = new SuppliedDigitalInput(isShooterBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		BooleanSupplier isAmpBeamBroke = () -> wrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		BooleanSupplier isAmpBeamBroken = () -> wrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		wrapper.getForwardLimitSwitch(FORWARD_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
-		SuppliedDigitalInput ampBeamBreaker = new SuppliedDigitalInput(isAmpBeamBroke, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
+		SuppliedDigitalInput ampBeamBreaker = new SuppliedDigitalInput(isAmpBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
 		return new FunnelStuff(logPath, motor, voltageSignal, positionSignal, shooterBeamBreaker, ampBeamBreaker);
 	}

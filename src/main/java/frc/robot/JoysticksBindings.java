@@ -1,9 +1,9 @@
 package frc.robot;
 
-import frc.robot.subsystems.lifter.LifterStateHandler;
-import frc.robot.subsystems.solenoid.SolenoidStateHandler;
-import frc.robot.superstructure.climb.ClimbState;
-import frc.robot.superstructure.climb.ClimbStateHandler;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.superstructure.RobotState;
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -27,17 +27,25 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-
-
-		ClimbStateHandler climbStateHandler = new ClimbStateHandler(
-				new LifterStateHandler(robot.getLifter()),
-				new SolenoidStateHandler(robot.getSolenoid())
-		);
-
-		usedJoystick.B.onTrue(climbStateHandler.setState(ClimbState.STOP));
-		usedJoystick.X.onTrue(climbStateHandler.setState(ClimbState.EXTEND));
-		usedJoystick.A.onTrue(climbStateHandler.setState(ClimbState.RETRACT));
 		// bindings...
+		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
+		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
+		usedJoystick.X.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));
+		usedJoystick.Y.onTrue(robot.getSupersturctrue().setState(RobotState.SPEAKER));
+		usedJoystick.POV_UP.onTrue(robot.getSupersturctrue().setState(RobotState.INTAKE));
+		usedJoystick.POV_DOWN.onTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
+
+		usedJoystick.START.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
+		robot.getSwerve()
+			.setDefaultCommand(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveBySavedState(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+					)
+			);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

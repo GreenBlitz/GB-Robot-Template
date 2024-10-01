@@ -72,10 +72,16 @@ public class Flywheel extends GBSubsystem {
 		Rotation2d rightVelocityTolerance,
 		Rotation2d leftVelocityTolerance
 	) {
-		boolean rightFlyWheelAtVelocity = MathUtil
-			.isNear(rightFlywheelExpectedVelocity.getRotations(), rightVelocityTolerance.getRotations(), rightVelocityTolerance.getRotations());
-		boolean leftFlyWheelAtVelocity = MathUtil
-			.isNear(leftFlywheelExpectedVelocity.getRotations(), leftVelocityTolerance.getRotations(), leftVelocityTolerance.getRotations());
+		boolean rightFlyWheelAtVelocity = MathUtil.isNear(
+			rightFlywheelExpectedVelocity.getRotations(),
+			flywheelStuff.rightVelocitySignal().getLatestValue().getRotations(),
+			rightVelocityTolerance.getRotations()
+		);
+		boolean leftFlyWheelAtVelocity = MathUtil.isNear(
+			leftFlywheelExpectedVelocity.getRotations(),
+			flywheelStuff.leftVelocitySignal().getLatestValue().getRotations(),
+			leftVelocityTolerance.getRotations()
+		);
 		return rightFlyWheelAtVelocity && leftFlyWheelAtVelocity;
 	}
 

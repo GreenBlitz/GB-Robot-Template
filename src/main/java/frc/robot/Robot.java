@@ -35,6 +35,7 @@ import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.superstructure.Supersturctrue;
 import frc.utils.brakestate.BrakeStateManager;
 
 
@@ -57,6 +58,8 @@ public class Robot {
 	private final Lifter lifter;
 	private final Roller roller;
 
+	private final Supersturctrue supersturctrue;
+
 	public Robot() {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveName.SWERVE),
@@ -74,6 +77,8 @@ public class Robot {
 		this.lifter = new Lifter(LifterFactory.create(LifterConstants.LOG_PATH));
 		this.roller = new Roller(RollerFactory.create(RollerConstants.LOG_PATH));
 		BrakeStateManager.add(() -> roller.setBrake(true), () -> roller.setBrake(false));
+
+		this.supersturctrue = new Supersturctrue(this);
 
 		configureBindings();
 	}
@@ -121,6 +126,10 @@ public class Robot {
 
 	public Roller getRoller() {
 		return roller;
+	}
+
+	public Supersturctrue getSupersturctrue() {
+		return supersturctrue;
 	}
 
 }

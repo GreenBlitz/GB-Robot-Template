@@ -29,8 +29,7 @@ public class RealFunnelConstants {
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 
-		Supplier<Double> voltage = sparkMAXWrapper::getVoltage;
-		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", voltage);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMAXWrapper::getVoltage);
 
 		Supplier<Double> position = () -> sparkMAXWrapper.getEncoder().getPosition();
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", position, AngleUnit.ROTATIONS);

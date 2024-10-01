@@ -24,6 +24,7 @@ public class Robot {
 		JoysticksBindings.configureBindings(this);
 	}
 
+
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
 	}

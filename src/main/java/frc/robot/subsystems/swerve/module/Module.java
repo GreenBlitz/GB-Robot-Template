@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules;
+package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,12 +7,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.angleencoder.IAngleEncoder;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.subsystems.swerve.SwerveState;
-import frc.robot.subsystems.swerve.modules.extrainputs.DriveInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.extrainputs.ModuleInputsAutoLogged;
-import frc.robot.subsystems.swerve.modules.stuffs.DriveStuff;
-import frc.robot.subsystems.swerve.modules.stuffs.EncoderStuff;
-import frc.robot.subsystems.swerve.modules.stuffs.SteerStuff;
+import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
+import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
+import frc.robot.subsystems.swerve.module.stuffs.SteerStuff;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
@@ -61,8 +60,7 @@ public class Module {
 
 		this.targetState = new SwerveModuleState();
 		this.startingSteerAngle = new Rotation2d();
-		this.isClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
-
+		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
 		this.moduleInputs = new ModuleInputsAutoLogged();
 		this.driveInputs = new DriveInputsAutoLogged();
 

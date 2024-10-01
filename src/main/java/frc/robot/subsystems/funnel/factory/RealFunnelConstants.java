@@ -25,22 +25,22 @@ public class RealFunnelConstants {
 
 
 	public static FunnelStuff generateFunnelStuff(String logPath) {
-		SparkMaxWrapper wrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.FUNNEL);
+		SparkMaxWrapper sparkMAXWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.FUNNEL);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, wrapper, config);
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 
-		Supplier<Double> voltage = () -> wrapper.getBusVoltage() * wrapper.getAppliedOutput();
+		Supplier<Double> voltage = sparkMAXWrapper::getVoltage;
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", voltage);
 
-		Supplier<Double> position = () -> wrapper.getEncoder().getPosition();
+		Supplier<Double> position = () -> sparkMAXWrapper.getEncoder().getPosition();
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", position, AngleUnit.ROTATIONS);
 
-		BooleanSupplier isShooterBeamBroken = () -> wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
-		wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
+		BooleanSupplier isShooterBeamBroken = () -> sparkMAXWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		sparkMAXWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 		SuppliedDigitalInput shooterBeamBreaker = new SuppliedDigitalInput(isShooterBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		BooleanSupplier isAmpBeamBroken = () -> wrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
-		wrapper.getForwardLimitSwitch(FORWARD_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
+		BooleanSupplier isAmpBeamBroken = () -> sparkMAXWrapper.getForwardLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		sparkMAXWrapper.getForwardLimitSwitch(FORWARD_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 		SuppliedDigitalInput ampBeamBreaker = new SuppliedDigitalInput(isAmpBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
 		return new FunnelStuff(logPath, motor, voltageSignal, positionSignal, shooterBeamBreaker, ampBeamBreaker);

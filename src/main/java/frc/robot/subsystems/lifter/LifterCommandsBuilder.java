@@ -28,25 +28,4 @@ public class LifterCommandsBuilder {
 		).withName("set power by supplier");
 	}
 
-	public Command extend(double targetPosition) {
-		return new FunctionalCommand(
-			() -> {},
-			() -> lifter.setPower(lifter.getLifterStuff().extendingPower()),
-			(interrupted) -> lifter.stop(),
-			() -> lifter.isAfter(targetPosition),
-			lifter
-		).withName("extend to position " + targetPosition);
-	}
-
-	public Command retract(double targetPosition) {
-		return new FunctionalCommand(
-			() -> {},
-			() -> lifter.setPower(lifter.getLifterStuff().retractingPower()),
-			(interrupted) -> lifter.stop(),
-			() -> lifter.isBefore(targetPosition),
-			lifter
-		).withName("retract to position " + targetPosition);
-	}
-
-
 }

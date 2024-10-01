@@ -19,16 +19,18 @@ import static edu.wpi.first.units.Units.Volts;
 public class LifterRealConstants {
 
 	private static final double DRUM_RADIUS = inchesToMeters(0.96);
-	private static final double EXTENDING_POWER = 0.9;
-	private static final double RETRACTING_POWER = -0.9;
-	private static final TalonFXConfiguration CONFIGURATION = new TalonFXConfiguration();
 
-	static {
-		FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs();
-		FEEDBACK_CONFIGS.SensorToMechanismRatio = 7 * (60.0 / 24.0);
+	private static TalonFXConfiguration getConfiguration() {
+		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
 
-		CONFIGURATION.withFeedback(FEEDBACK_CONFIGS);
+		FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+		feedbackConfigs.SensorToMechanismRatio = 7 * (60.0 / 24.0);
+
+		talonFXConfiguration.withFeedback(feedbackConfigs);
+
+		return talonFXConfiguration;
 	}
+
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -41,16 +43,14 @@ public class LifterRealConstants {
 
 	public static LifterStuff generateLifterStuff(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
-		talonFXWrapper.applyConfiguration(CONFIGURATION);
+		talonFXWrapper.applyConfiguration(getConfiguration());
 
 		return new LifterStuff(
 			logPath,
 			new TalonFXMotor(logPath, talonFXWrapper, generateSysidConfig()),
 			DRUM_RADIUS,
 			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(talonFXWrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-			EXTENDING_POWER,
-			RETRACTING_POWER
+				.generatePhoenix6Signal(talonFXWrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
 		);
 	}
 

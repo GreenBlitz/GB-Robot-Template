@@ -33,12 +33,12 @@ public class Lifter extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	public boolean isAfter(double expectedPosition) {
+	public boolean isHigher(double expectedPosition) {
 		return expectedPosition < convertToMeters(lifterStuff.positionSignal().getLatestValue());
 	}
 
-	public boolean isBefore(double expectedPosition) {
-		return !isAfter(expectedPosition);
+	public boolean isLower(double expectedPosition) {
+		return !isHigher(expectedPosition);
 	}
 
 	public LifterStuff getLifterStuff() {

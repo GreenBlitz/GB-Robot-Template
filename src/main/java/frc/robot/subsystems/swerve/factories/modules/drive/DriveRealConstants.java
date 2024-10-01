@@ -81,7 +81,7 @@ class DriveRealConstants {
 			.generatePhoenix6Signal(motor.getPosition(), velocitySignal, GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
 		TalonFXMotor drive = new TalonFXMotor(logPath, motor, generateSysidConfig());
-		return new DriveStuff(drive, velocityRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
+		return new DriveStuff(logPath, drive, velocityRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 
 }

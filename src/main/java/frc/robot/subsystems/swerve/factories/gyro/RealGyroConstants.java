@@ -34,7 +34,7 @@ class RealGyroConstants {
 		Phoenix6AngleSignal yawSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(pigeon2Wrapper.getYaw(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES);
 
-		return new GyroStuff(new Pigeon2Gyro(logPath, pigeon2Wrapper), yawSignal);
+		return new GyroStuff(logPath, new Pigeon2Gyro(logPath, pigeon2Wrapper), yawSignal);
 	}
 
 }

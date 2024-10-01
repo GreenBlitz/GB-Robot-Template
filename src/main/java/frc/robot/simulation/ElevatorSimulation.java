@@ -16,10 +16,6 @@ public class ElevatorSimulation extends MotorSimulation {
 		this.diameterMeters = 2 * drumRadiusMeters;
 	}
 
-	public double getCurrent() {
-		return elevatorSimulation.getCurrentDrawAmps();
-	}
-
 	/**
 	 * Returns in Rotation2D the position of the drum.
 	 */

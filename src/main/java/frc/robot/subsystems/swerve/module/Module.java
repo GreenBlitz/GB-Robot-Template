@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.angleencoder.IAngleEncoder;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
@@ -61,8 +60,7 @@ public class Module {
 
 		this.targetState = new SwerveModuleState();
 		this.startingSteerAngle = new Rotation2d();
-		this.isClosedLoop = SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop;
-
+		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
 		this.moduleInputs = new ModuleInputsAutoLogged();
 		this.driveInputs = new DriveInputsAutoLogged();
 

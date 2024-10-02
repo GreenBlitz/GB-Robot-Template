@@ -2,7 +2,6 @@ package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,10 +9,8 @@ import java.util.Optional;
 public class MultiLimelightsRawData {
 
 	private final List<Limelight> limelights;
-	private final String logPath;
 
 	public MultiLimelightsRawData(String[] names, String hardwareLogPath) {
-		this.logPath = hardwareLogPath;
 		this.limelights = new ArrayList<>();
 
 		for (String limelightName : names) {

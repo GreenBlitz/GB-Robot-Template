@@ -10,14 +10,12 @@ import java.util.List;
 public class LimelightFilterer extends GBSubsystem {
 
 	private final MultiLimelightsRawData multiLimelightsRawData;
-	private final LimelightFiltererConfig config;
 	private final IPoseEstimator poseEstimator;
 
 	public LimelightFilterer(LimelightFiltererConfig config, IPoseEstimator poseEstimator) {
 		super(config.logPath());
 
 		this.multiLimelightsRawData = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
-		this.config = config;
 		this.poseEstimator = poseEstimator;
 	}
 

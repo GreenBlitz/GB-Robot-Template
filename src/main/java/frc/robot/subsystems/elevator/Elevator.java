@@ -71,6 +71,7 @@ public class Elevator extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		updateInputs();
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
+		Logger.recordOutput(this.getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
 	}
 
 }

@@ -24,8 +24,8 @@ public record FunnelStuff(
 	) {
 		this(
 			logPath,
-			logPath + "shooterDigitalInput",
-			logPath + "ampDigitalInput",
+			logPath + "shooterDigitalInput/",
+			logPath + "elevatorDigitalInput/",
 			motor,
 			voltageSignal,
 			shooterDigitalInput,

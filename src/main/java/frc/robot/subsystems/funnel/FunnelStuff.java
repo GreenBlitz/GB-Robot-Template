@@ -22,7 +22,15 @@ public record FunnelStuff(
 		IDigitalInput shooterDigitalInput,
 		IDigitalInput elevatorDigitalInput
 	) {
-		this(logPath, logPath + "shooterDigitalInput", logPath + "ampDigitalInput", motor, voltageSignal, shooterDigitalInput, elevatorDigitalInput);
+		this(
+			logPath,
+			logPath + "shooterDigitalInput",
+			logPath + "ampDigitalInput",
+			motor,
+			voltageSignal,
+			shooterDigitalInput,
+			elevatorDigitalInput
+		);
 	}
 
 }

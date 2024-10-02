@@ -6,6 +6,7 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 
 	private final String name;
 	private double value;
+	private double timestamp;
 
 	public DoubleSignal(String name) {
 		this.name = name;
@@ -23,8 +24,20 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	}
 
 	@Override
+	public double getTimestamp() {
+		return timestamp;
+	}
+
+	@Override
+	public double[] getTimestamps() {
+		return new double[] {timestamp};
+	}
+
+	@Override
 	public void toLog(LogTable table) {
-		value = getNewValue();
+		TimedValue<Double> timedValue = getNewValue();
+		value = timedValue.value();
+		timestamp = timedValue.timestamp();
 		table.put(name, value);
 	}
 
@@ -33,6 +46,6 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 		value = table.get(name, 0);
 	}
 
-	protected abstract Double getNewValue();
+	protected abstract TimedValue<Double> getNewValue();
 
 }

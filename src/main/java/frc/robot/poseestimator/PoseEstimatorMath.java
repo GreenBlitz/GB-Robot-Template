@@ -23,12 +23,16 @@ public class PoseEstimatorMath {
 		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
 	}
 
-	public static double[] getKalmanRatioFromStandardDeviation(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
+	public static double[]
+		getKalmanRatioFromStandardDeviation(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
 		double[] combinedStandardDeviations = new double[3];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
 			double visionStandardDeviation = visionStandardDeviations[i];
-			combinedStandardDeviations[i] = getKalmanRatioFromStandardDeviation(odometryStandardDeviation, visionStandardDeviation);
+			combinedStandardDeviations[i] = getKalmanRatioFromStandardDeviation(
+				odometryStandardDeviation,
+				visionStandardDeviation
+			);
 		}
 		return combinedStandardDeviations;
 	}

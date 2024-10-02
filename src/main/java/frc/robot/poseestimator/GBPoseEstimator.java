@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.LimeLightConstants;
 import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -159,7 +160,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 	private void updateGyroAnglesInLimeLight(Rotation2d gyroAngles) {
 		if (gyroAngles != null) {
-			limelightFilterer.updateGyroAngles(new double[] {gyroAngles.getDegrees(), 0, 0, 0, 0, 0});
+			limelightFilterer.updateGyroAngles(new GyroAngleValues(gyroAngles.getDegrees(), 0, 0, 0, 0, 0));
 		}
 	}
 

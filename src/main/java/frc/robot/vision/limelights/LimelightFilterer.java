@@ -21,7 +21,7 @@ public class LimelightFilterer extends GBSubsystem {
 		this.poseEstimator = poseEstimator;
 	}
 
-	public void updateGyroAngles(double[] gyroAnglesValues) {
+	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
 		multiLimelightsRawData.updateGyroAngles(gyroAnglesValues);
 	}
 

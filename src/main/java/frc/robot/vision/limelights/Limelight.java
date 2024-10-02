@@ -19,7 +19,7 @@ public class Limelight extends GBSubsystem {
 	private final String name;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
-	private double[] gyroAngleValues;
+	private GyroAngleValues gyroAngleValues;
 
 	public Limelight(String name, String hardwareLogPath) {
 		super(hardwareLogPath + name + "/");
@@ -29,15 +29,15 @@ public class Limelight extends GBSubsystem {
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
-		this.gyroAngleValues = new double[] {0, 0, 0, 0, 0, 0};
+		this.gyroAngleValues = new GyroAngleValues(0, 0, 0, 0, 0, 0);
 	}
 
-	public void updateGyroAngleValues(double[] gyroAngleValues) {
+	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
 		this.gyroAngleValues = gyroAngleValues;
 	}
 
 	public void updateLimelight() {
-		robotOrientationEntry.setDoubleArray(gyroAngleValues);
+		robotOrientationEntry.setDoubleArray(gyroAngleValues.getAsArray());
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 	}

@@ -11,9 +11,7 @@ import frc.robot.vision.limelights.LimeLightConstants;
 import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.utils.FieldStartingPositions;
 import org.littletonrobotics.junction.Logger;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -62,7 +60,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 				stackedRawData.addAll(rawData);
 			}
 		}
-		Pose2d pose2d = weightedObservationMean(stackedRawData);
+		Pose2d pose2d = weightedPoseMean(stackedRawData);
 		resetPose(new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation()));
 	}
 
@@ -164,7 +162,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 		}
 	}
 
-	private Pose2d weightedObservationMean(List<VisionObservation> observations) {
+	private Pose2d weightedPoseMean(List<VisionObservation> observations) {
 		Pose2d output = new Pose2d();
 		double positionDeviationSum = 0;
 		double rotationDeviationSum = 0;
@@ -184,29 +182,6 @@ public class GBPoseEstimator implements IPoseEstimator {
 		output = new Pose2d(output.getTranslation().div(positionDeviationSum), output.getRotation().div(rotationDeviationSum));
 
 		return output;
-	}
-
-	private FieldStartingPositions snapToStartingPosition() {
-		FieldStartingPositions bestPosition = null;
-		double bestTolerance = Double.POSITIVE_INFINITY;
-
-		Pose2d estimatedVisionPose = weightedObservationMean(limelightFilterer.getFilteredVisionObservations());
-
-		for (FieldStartingPositions fieldStartingPositions : FieldStartingPositions.values()) {
-			double translationNorm = fieldStartingPositions.getStartingPose()
-				.minus(estimatedVisionPose)
-				.getTranslation()
-				.getNorm();
-			double rotationDelta = fieldStartingPositions.getStartingPose().minus(estimatedVisionPose).getRotation().getDegrees();
-			double tolerance = Math.pow(translationNorm, 2) + Math.pow(rotationDelta, 2);
-
-			if (tolerance <= bestTolerance) {
-				bestTolerance = tolerance;
-				bestPosition = fieldStartingPositions;
-			}
-		}
-
-		return bestPosition;
 	}
 
 	public void logEstimatedPose() {

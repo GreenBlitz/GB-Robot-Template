@@ -33,13 +33,6 @@ public class Elevator extends GBSubsystem {
 		this.angleRequest = elevatorStuff.angleRequest();
 	}
 
-	public static double ElevatorFeedforward(CANSparkMax motor) {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(motor.getEncoder().getVelocity());
-			case SIMULATION -> 0.0;
-		};
-	}
-
 	public ElevatorCommandBuilder getCommandBuilder() {
 		return commandBuilder;
 	}

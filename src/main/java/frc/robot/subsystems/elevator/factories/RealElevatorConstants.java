@@ -1,6 +1,7 @@
 package frc.robot.subsystems.elevator.factories;
 
 import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,7 +16,6 @@ import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
-import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorStuff;
 import frc.utils.AngleUnit;
@@ -37,6 +37,10 @@ public class RealElevatorConstants {
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
 	public static ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
+
+	public static double FEED_FORWARD_FUNCTION(CANSparkMax motor) {
+		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(motor.getEncoder().getVelocity());
+	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
 		SparkMaxWrapper mainSparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR);
@@ -65,7 +69,7 @@ public class RealElevatorConstants {
 				Rotation2d.fromRotations(0),
 				SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
 				ElevatorConstants.ELEVATOR_PID_SLOT,
-				Elevator::ElevatorFeedforward
+                RealElevatorConstants::FEED_FORWARD_FUNCTION
 		);
 
 		return new ElevatorStuff(

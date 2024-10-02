@@ -1,9 +1,9 @@
-package frc.robot.poseestimation.poseestimator;
+package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimator.observations.OdometryObservation;
 
 import java.util.List;
 

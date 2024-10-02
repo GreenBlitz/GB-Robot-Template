@@ -1,4 +1,4 @@
-package frc.robot.poseestimation.poseestimator;
+package frc.robot.poseestimator;
 
 public enum PoseArrayEntryValue {
 

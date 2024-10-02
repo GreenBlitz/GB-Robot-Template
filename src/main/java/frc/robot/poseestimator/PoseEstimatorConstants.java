@@ -1,4 +1,4 @@
-package frc.robot.poseestimation.poseestimator;
+package frc.robot.poseestimator;
 
 
 import edu.wpi.first.math.geometry.Pose2d;

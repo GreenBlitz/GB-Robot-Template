@@ -15,7 +15,7 @@ public class LimeLightConstants {
 		new String[] {"limelight-front", "limelight-back"}
 	);
 
-	public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(20); // ! shall be calibrated
+	public static final double ROTATION_NORM_TOLERANCE = 0.2; // ! shall be calibrated
 
 	public static final double POSITION_NORM_TOLERANCE = 0.2; // ! shall be calibrated
 

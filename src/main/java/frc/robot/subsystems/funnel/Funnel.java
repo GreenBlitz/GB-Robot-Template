@@ -61,8 +61,8 @@ public class Funnel extends GBSubsystem {
 		updateInputs();
 		Logger.processInputs(funnelStuff.shooterDigitalInputLogPath(), shooterDigitalInputInputs);
 		Logger.processInputs(funnelStuff.elevatorDigitalInputLogPath(), elevatorDigitalInputInputs);
-		Logger.recordOutput(isNoteInElevator() + "isNoteInElevator", elevatorDigitalInputInputs.debouncedValue);
-		Logger.recordOutput(isNoteInShooter() + "isNoteInShooter", shooterDigitalInputInputs.debouncedValue);
+		Logger.recordOutput(funnelStuff.elevatorDigitalInputLogPath() + "isNoteInElevator", isNoteInElevator());
+		Logger.recordOutput(funnelStuff.shooterDigitalInputLogPath() + "isNoteInShooter", isNoteInShooter());
 	}
 
 }

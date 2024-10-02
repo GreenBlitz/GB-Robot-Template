@@ -61,27 +61,27 @@ public class RealFlywheelConstants {
 
 		Supplier<Double> bottomMotorVoltageSupplier = () -> bottomSparkMaxWrapper.getBusVoltage() * bottomSparkMaxWrapper.getAppliedOutput();
 		SparkMaxDoubleSignal bottomMotorVoltageSignal = new SparkMaxDoubleSignal(
-				"Bottom flywheel motor voltage Signal",
-				bottomMotorVoltageSupplier
+			"Bottom flywheel motor voltage Signal",
+			bottomMotorVoltageSupplier
 		);
 
 
 		Supplier<Double> bottomMotorVelocitySupplier = () -> bottomSparkMaxWrapper.getEncoder().getVelocity();
 		SparkMaxAngleSignal bottomMotorVelocitySignal = new SparkMaxAngleSignal(
-				"Bottom flywheel motor velocity Signal",
-				bottomMotorVelocitySupplier,
-				AngleUnit.ROTATIONS
+			"Bottom flywheel motor velocity Signal",
+			bottomMotorVelocitySupplier,
+			AngleUnit.ROTATIONS
 		);
 
 		Phoenix6AngleRequest bottomMotorVelocityRequest = new Phoenix6AngleRequest(new VelocityVoltage(0));
 
 		return new BottomFlywheelComponents(
-				logpath,
-				bottomMotor,
-				isMotorInverted,
-				bottomMotorVoltageSignal,
-				bottomMotorVelocitySignal,
-				bottomMotorVelocityRequest
+			logpath,
+			bottomMotor,
+			isMotorInverted,
+			bottomMotorVoltageSignal,
+			bottomMotorVelocitySignal,
+			bottomMotorVelocityRequest
 		);
 	}
 

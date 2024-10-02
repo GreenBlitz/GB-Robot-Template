@@ -6,11 +6,11 @@ import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 
 public record TopFlywheelComponents(
-        String logPath,
-        ControllableMotor motor,
-        boolean isMotorInverted,
-        InputSignal<Double> motorVoltageSignal,
-        InputSignal<Rotation2d> motorVelocitySignal,
-        IRequest<Rotation2d> motorVelocityRequest
+	String logPath,
+	ControllableMotor motor,
+	boolean isMotorInverted,
+	InputSignal<Double> motorVoltageSignal,
+	InputSignal<Rotation2d> motorVelocitySignal,
+	IRequest<Rotation2d> motorVelocityRequest
 
 ) {}

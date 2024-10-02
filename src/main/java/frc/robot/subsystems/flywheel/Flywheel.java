@@ -35,14 +35,14 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	protected void setTargetVelocity(Rotation2d targetVelocity) {
-		topMotor.applyAngleRequest(topFlywheelComponents.VelocityRequest().withSetPoint(targetVelocity));
-		bottomMotor.applyAngleRequest(bottomFlywheelComponents.VelocityRequest().withSetPoint(targetVelocity));
+		topMotor.applyAngleRequest(topFlywheelComponents.velocityRequest().withSetPoint(targetVelocity));
+		bottomMotor.applyAngleRequest(bottomFlywheelComponents.velocityRequest().withSetPoint(targetVelocity));
 	}
 
 	protected boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
 		return MathUtil.isNear(
 			targetVelocity.getRotations(),
-			topFlywheelComponents.VelocitySignal().getLatestValue().getRotations(),
+			topFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
 			velocityTolerance.getRotations()
 		);
 	}

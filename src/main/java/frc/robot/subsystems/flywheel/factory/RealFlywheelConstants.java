@@ -23,18 +23,18 @@ public class RealFlywheelConstants {
 
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 
-		SuppliedDoubleSignal VoltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
 
-		SuppliedAngleSignal VelocitySignal = new SuppliedAngleSignal("velocity", sparkMaxWrapper.getEncoder()::getVelocity, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", sparkMaxWrapper.getEncoder()::getVelocity, AngleUnit.ROTATIONS);
 
-		SparkMaxAngleRequest VelocityRequest = new SparkMaxAngleRequest(
+		SparkMaxAngleRequest velocityRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(60),
 			SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
 			0
 		);
 
-		return new FlywheelComponents(logPath, motor, isInverted, VoltageSignal, VelocitySignal, VelocityRequest);
+		return new FlywheelComponents(logPath, motor, isInverted, voltageSignal, velocitySignal, velocityRequest);
 	}
 
 }

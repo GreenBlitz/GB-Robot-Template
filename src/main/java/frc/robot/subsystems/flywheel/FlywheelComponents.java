@@ -9,8 +9,8 @@ import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 public record FlywheelComponents(
 	String logPath,
 	ControllableMotor motor,
-	boolean isMotorInverted,
-	InputSignal<Double> VoltageSignal,
-	SuppliedAngleSignal VelocitySignal,
-	IRequest<Rotation2d> VelocityRequest
+	boolean isInverted,
+	InputSignal<Double> voltageSignal,
+	SuppliedAngleSignal velocitySignal,
+	IRequest<Rotation2d> velocityRequest
 ) {}

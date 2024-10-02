@@ -6,8 +6,8 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
-import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.flywheel.BottomFlywheelComponents;
 import frc.robot.subsystems.flywheel.TopFlywheelComponents;
 import frc.utils.AngleUnit;
@@ -26,11 +26,11 @@ public class RealFlywheelConstants {
 		BrushlessSparkMAXMotor topMotor = new BrushlessSparkMAXMotor(logpath, topSparkMaxWrapper, topConfig);
 
 		Supplier<Double> topMotorVoltageSupplier = () -> topSparkMaxWrapper.getBusVoltage() * topSparkMaxWrapper.getAppliedOutput();
-		SparkMaxDoubleSignal topMotorVoltageSignal = new SparkMaxDoubleSignal("Top flywheel motor voltage Signal", topMotorVoltageSupplier);
+		SuppliedDoubleSignal topMotorVoltageSignal = new SuppliedDoubleSignal("Top flywheel motor voltage Signal", topMotorVoltageSupplier);
 
 
 		Supplier<Double> topMotorVelocitySupplier = () -> topSparkMaxWrapper.getEncoder().getVelocity();
-		SparkMaxAngleSignal topMotorVelocitySignal = new SparkMaxAngleSignal(
+		SuppliedAngleSignal topMotorVelocitySignal = new SuppliedAngleSignal(
 			"Top flywheel motor velocity Signal",
 			topMotorVelocitySupplier,
 			AngleUnit.ROTATIONS
@@ -60,14 +60,14 @@ public class RealFlywheelConstants {
 
 
 		Supplier<Double> bottomMotorVoltageSupplier = () -> bottomSparkMaxWrapper.getBusVoltage() * bottomSparkMaxWrapper.getAppliedOutput();
-		SparkMaxDoubleSignal bottomMotorVoltageSignal = new SparkMaxDoubleSignal(
+		SuppliedDoubleSignal bottomMotorVoltageSignal = new SuppliedDoubleSignal(
 			"Bottom flywheel motor voltage Signal",
 			bottomMotorVoltageSupplier
 		);
 
 
 		Supplier<Double> bottomMotorVelocitySupplier = () -> bottomSparkMaxWrapper.getEncoder().getVelocity();
-		SparkMaxAngleSignal bottomMotorVelocitySignal = new SparkMaxAngleSignal(
+		SuppliedAngleSignal bottomMotorVelocitySignal = new SuppliedAngleSignal(
 			"Bottom flywheel motor velocity Signal",
 			bottomMotorVelocitySupplier,
 			AngleUnit.ROTATIONS

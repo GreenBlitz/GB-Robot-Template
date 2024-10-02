@@ -123,9 +123,9 @@ public class PoseEstimationMath {
 			positionDeviationSum += positionWeight;
 			rotationDeviationSum += rotationWeight;
 			output = new Pose2d(
-					output.getX() + observation.visionPose().getX() * positionWeight,
-					output.getY() + observation.visionPose().getY() * positionWeight,
-					output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
+				output.getX() + observation.visionPose().getX() * positionWeight,
+				output.getY() + observation.visionPose().getY() * positionWeight,
+				output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
 			);
 		}
 

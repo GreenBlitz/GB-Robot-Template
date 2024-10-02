@@ -52,7 +52,7 @@ public class RealElevatorConstants {
 		SuppliedAngleSignal mainMotorPositionSignal = new SuppliedAngleSignal("main motor angle", mainMotorPosition, AngleUnit.ROTATIONS);
 		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.GEAR_RATIO);
-		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.VELOCITY_RATIO);
+		mainSparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
 
 		secondarySparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 

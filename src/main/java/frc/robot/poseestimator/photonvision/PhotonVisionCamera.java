@@ -30,7 +30,8 @@ public class PhotonVisionCamera extends GBSubsystem {
 		this(cameraConfiguration.name(), cameraConfiguration.cameraToRobot(), cameraConfiguration.targetType());
 	}
 
-	public Optional<PhotonVisionTargetRawData> tackedTargetToTargetRawdata(PhotonTrackedTarget trackedTarget, PhotonPipelineResult pipelineResult) {
+	public Optional<PhotonVisionTargetRawData>
+		tackedTargetToTargetRawdata(PhotonTrackedTarget trackedTarget, PhotonPipelineResult pipelineResult) {
 		double latency = pipelineResult.getLatencyMillis();
 		double ambiguity = trackedTarget.getPoseAmbiguity();
 		double timestamp = pipelineResult.getTimestampSeconds();
@@ -57,7 +58,7 @@ public class PhotonVisionCamera extends GBSubsystem {
 			return Optional.empty();
 		}
 
-		for (PhotonTrackedTarget target: targets.get()) {
+		for (PhotonTrackedTarget target : targets.get()) {
 			output.add(tackedTargetToTargetRawdata(target, pipelineResult));
 		}
 

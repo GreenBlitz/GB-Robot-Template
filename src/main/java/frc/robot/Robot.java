@@ -22,10 +22,12 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Flywheel flywheel;
-	public Robot() {
 
-		FlywheelComponents topFlywheelComponents = FlywheelFactory.create(FlywheelConstants.LOG_PATH+"TopMotor", true, IDs.CANSparkMaxIDs.TOP_FLYWHEEL_MOTOR);
-		FlywheelComponents bottomFlywheelComponents = FlywheelFactory.create(FlywheelConstants.LOG_PATH+"Flywheel/BottomMotor", false, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL_MOTOR);
+	public Robot() {
+		FlywheelComponents topFlywheelComponents = FlywheelFactory
+			.create(FlywheelConstants.LOG_PATH + "TopMotor", true, IDs.CANSparkMaxIDs.TOP_FLYWHEEL_MOTOR);
+		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
+			.create(FlywheelConstants.LOG_PATH + "Flywheel/BottomMotor", false, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL_MOTOR);
 		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH);
 
 		configureBindings();

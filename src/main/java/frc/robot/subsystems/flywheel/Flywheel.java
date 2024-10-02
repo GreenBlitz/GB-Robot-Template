@@ -7,14 +7,13 @@ import frc.utils.GBSubsystem;
 
 public class Flywheel extends GBSubsystem {
 
-	private final TopFlywheelComponents topFlywheelComponents;
-	private final BottomFlywheelComponents bottomFlywheelComponents;
-
+	private final FlywheelComponents topFlywheelComponents;
+	private final FlywheelComponents bottomFlywheelComponents;
 	private final ControllableMotor topMotor;
 	private final ControllableMotor bottomMotor;
 	private final FlywheelCommandsBuilder commandsBuilder;
 
-	public Flywheel(TopFlywheelComponents topFlywheelComponents, BottomFlywheelComponents bottomFlywheelComponents) {
+	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents) {
 		super(FlywheelConstants.LOG_PATH);
 
 		this.topFlywheelComponents = topFlywheelComponents;
@@ -24,14 +23,6 @@ public class Flywheel extends GBSubsystem {
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
 
 		updateInputs();
-	}
-
-	public double getTopMotorVoltage() {
-		return topFlywheelComponents.motorVoltageSignal().getLatestValue();
-	}
-
-	public double getBottomMotorVoltage() {
-		return bottomFlywheelComponents.motorVoltageSignal().getLatestValue();
 	}
 
 	public FlywheelCommandsBuilder getCommandsBuilder() {

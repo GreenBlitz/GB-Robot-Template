@@ -1,88 +1,44 @@
 package frc.robot.subsystems.flywheel.factory;
 
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
+import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
-import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
-import frc.robot.subsystems.flywheel.BottomFlywheelComponents;
-import frc.robot.subsystems.flywheel.TopFlywheelComponents;
+import frc.robot.subsystems.flywheel.FlywheelComponents;
 import frc.utils.AngleUnit;
-
-import java.util.function.Supplier;
 
 public class RealFlywheelConstants {
 
-	public static TopFlywheelComponents generateTopFlywheelComponents(String logpath, boolean isMotorInverted) {
-		SparkMaxWrapper topSparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxIDs.TOP_FLYWHEEL_MOTOR);
+	public static FlywheelComponents generateTopFlywheelComponents(String logPath, boolean isMotorInverted, SparkMaxDeviceID ID) {
+		SparkMaxWrapper SparkMaxWrapper = new SparkMaxWrapper(ID);
 
-		topSparkMaxWrapper.getEncoder().setInverted(isMotorInverted);
+		SparkMaxWrapper.getEncoder().setInverted(isMotorInverted);
+		SparkMaxWrapper.setSmartCurrentLimit(40);
 
-		SysIdRoutine.Config topConfig = new SysIdRoutine.Config();
+		SysIdRoutine.Config Config = new SysIdRoutine.Config();
 
-		BrushlessSparkMAXMotor topMotor = new BrushlessSparkMAXMotor(logpath, topSparkMaxWrapper, topConfig);
+		BrushlessSparkMAXMotor Motor = new BrushlessSparkMAXMotor(logPath, SparkMaxWrapper, Config);
 
-		Supplier<Double> topMotorVoltageSupplier = () -> topSparkMaxWrapper.getBusVoltage() * topSparkMaxWrapper.getAppliedOutput();
-		SuppliedDoubleSignal topMotorVoltageSignal = new SuppliedDoubleSignal("Top flywheel motor voltage Signal", topMotorVoltageSupplier);
+		SuppliedDoubleSignal MotorVoltageSignal = new SuppliedDoubleSignal("voltage", SparkMaxWrapper::getVoltage);
 
 
-		Supplier<Double> topMotorVelocitySupplier = () -> topSparkMaxWrapper.getEncoder().getVelocity();
-		SuppliedAngleSignal topMotorVelocitySignal = new SuppliedAngleSignal(
-			"Top flywheel motor velocity Signal",
-			topMotorVelocitySupplier,
+		SuppliedAngleSignal MotorVelocitySignal = new SuppliedAngleSignal(
+			"velocity",
+			SparkMaxWrapper.getEncoder()::getVelocity,
 			AngleUnit.ROTATIONS
 		);
 
-		Phoenix6AngleRequest topMotorVelocityRequest = new Phoenix6AngleRequest(new VelocityVoltage(0));
-
-		return new TopFlywheelComponents(
-			logpath,
-			topMotor,
-			isMotorInverted,
-			topMotorVoltageSignal,
-			topMotorVelocitySignal,
-			topMotorVelocityRequest
-		);
-	}
-
-
-	public static BottomFlywheelComponents generateBottomFlywheelComponents(String logpath, boolean isMotorInverted) {
-		SparkMaxWrapper bottomSparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL_MOTOR);
-
-		bottomSparkMaxWrapper.getEncoder().setInverted(isMotorInverted);
-
-		SysIdRoutine.Config bottomConfig = new SysIdRoutine.Config();
-
-		BrushlessSparkMAXMotor bottomMotor = new BrushlessSparkMAXMotor(logpath, bottomSparkMaxWrapper, bottomConfig);
-
-
-		Supplier<Double> bottomMotorVoltageSupplier = () -> bottomSparkMaxWrapper.getBusVoltage() * bottomSparkMaxWrapper.getAppliedOutput();
-		SuppliedDoubleSignal bottomMotorVoltageSignal = new SuppliedDoubleSignal(
-			"Bottom flywheel motor voltage Signal",
-			bottomMotorVoltageSupplier
+		SparkMaxAngleRequest MotorVelocityRequest = new SparkMaxAngleRequest(
+			Rotation2d.fromRotations(60),
+			SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
+			0
 		);
 
-
-		Supplier<Double> bottomMotorVelocitySupplier = () -> bottomSparkMaxWrapper.getEncoder().getVelocity();
-		SuppliedAngleSignal bottomMotorVelocitySignal = new SuppliedAngleSignal(
-			"Bottom flywheel motor velocity Signal",
-			bottomMotorVelocitySupplier,
-			AngleUnit.ROTATIONS
-		);
-
-		Phoenix6AngleRequest bottomMotorVelocityRequest = new Phoenix6AngleRequest(new VelocityVoltage(0));
-
-		return new BottomFlywheelComponents(
-			logpath,
-			bottomMotor,
-			isMotorInverted,
-			bottomMotorVoltageSignal,
-			bottomMotorVelocitySignal,
-			bottomMotorVelocityRequest
-		);
+		return new FlywheelComponents(logPath, Motor, isMotorInverted, MotorVoltageSignal, MotorVelocitySignal, MotorVelocityRequest);
 	}
 
 }

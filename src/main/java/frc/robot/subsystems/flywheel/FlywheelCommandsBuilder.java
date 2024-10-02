@@ -15,7 +15,6 @@ public class FlywheelCommandsBuilder {
 	}
 
 	//@formatter:off
-
 	public Command setPower(double power) {
 		return new FunctionalCommand(
 				() -> {},
@@ -23,7 +22,7 @@ public class FlywheelCommandsBuilder {
 				interrupted -> flywheel.stop(),
 				() -> false,
 				flywheel
-		).withName("Set Flywheel power to " + power);
+		).withName("Set power to " + power);
 	}
 
 	public Command setVelocity(Rotation2d targetVelocity) {
@@ -31,13 +30,12 @@ public class FlywheelCommandsBuilder {
 				() -> flywheel.setTargetVelocity(targetVelocity),
 				() -> {},
 				flywheel
-		).withName("Set flywheel velocity set point to " + targetVelocity);
+		).withName("Set velocity set point to " + targetVelocity);
 	}
-
-	//@formatter:on
 
 	public Command stop() {
-		return new RunCommand(flywheel::stop, flywheel).withName("Stop flywheel");
+		return new RunCommand(flywheel::stop, flywheel).withName("Stop");
 	}
+	//@formatter:on
 
 }

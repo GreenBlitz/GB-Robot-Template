@@ -11,9 +11,6 @@ import frc.robot.constants.Field;
 public class LimelightFilters {
 
 	protected static boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData, Pose2d estimatedPose) {
-		// ! THIS SHOULDN'T BE COMMENTED OUT
-		// ! this is a placeholder since this filter is depended on the poseestimator
-
 		Pose2d limelightPosition = limelightRawData.estimatedPose().toPose2d();
 		Transform2d transformDifference = limelightPosition.minus(estimatedPose);
 		Rotation2d rotationDifference = limelightPosition.getRotation().minus(estimatedPose.getRotation());

@@ -23,17 +23,17 @@ public class PoseEstimatorMath {
 		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
 	}
 
-	public static double[] getCombinedStandardDeviations(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
+	public static double[] getKalmanRatioFromStandardDeviation(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
 		double[] combinedStandardDeviations = new double[3];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
 			double visionStandardDeviation = visionStandardDeviations[i];
-			combinedStandardDeviations[i] = getCombinedStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
+			combinedStandardDeviations[i] = getKalmanRatioFromStandardDeviation(odometryStandardDeviation, visionStandardDeviation);
 		}
 		return combinedStandardDeviations;
 	}
 
-	public static double getCombinedStandardDeviations(double odometryStandardDeviation, double visionStandardDeviation) {
+	public static double getKalmanRatioFromStandardDeviation(double odometryStandardDeviation, double visionStandardDeviation) {
 		if (odometryStandardDeviation == 0) {
 			return 0;
 		}
@@ -56,7 +56,7 @@ public class PoseEstimatorMath {
 		double[] odometryStandardDeviations
 	) {
 		double[] combinedStandardDeviations = PoseEstimatorMath
-			.getCombinedStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
+			.getKalmanRatioFromStandardDeviation(observation.standardDeviations(), odometryStandardDeviations);
 		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.visionPose());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}

@@ -49,6 +49,10 @@ public class ElevatorCommandBuilder {
                 elevator
         );
     }
+
+    public Command stop() {
+        return new InstantCommand(elevator::stop);
+    }
     //@formatter:on
 
 }

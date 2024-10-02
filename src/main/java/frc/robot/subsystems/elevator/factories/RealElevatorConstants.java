@@ -10,7 +10,6 @@ import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
@@ -33,7 +32,7 @@ public class RealElevatorConstants {
 	private final static CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
 
 	// TODO: check this later
-	private final static float REVERSE_SOFT_LIMIT_VALUE = (float) 0.2;
+	private final static Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
 	// TODO: check this later
 	private final static double GEAR_RATIO = 0.3;
@@ -43,29 +42,27 @@ public class RealElevatorConstants {
 	public static ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
-		SparkMaxWrapper mainSparkMaxWrapper = new SparkMaxWrapper(IDs.ELEVATOR_FIRST_MOTOR);
-		SparkMaxWrapper secondarySparkMaxWrapper = new SparkMaxWrapper(IDs.ELEVATOR_SECOND_MOTOR);
+		SparkMaxWrapper mainSparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR);
+		SparkMaxWrapper secondarySparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR);
 
 		ControllableMotor mainMotor = new BrushlessSparkMAXMotor(logPath, mainSparkMaxWrapper, new SysIdRoutine.Config());
 
-		IMotor secondaryMotor = new BrushlessSparkMAXMotor(logPath, secondarySparkMaxWrapper, new SysIdRoutine.Config());
-
 		Supplier<Double> mainMotorPosition = () -> mainSparkMaxWrapper.getEncoder().getPosition();
-		SuppliedAngleSignal mainMotorPositionSignal = new SuppliedAngleSignal("main motor position", mainMotorPosition, AngleUnit.ROTATIONS);
-		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, REVERSE_SOFT_LIMIT_VALUE);
+		SuppliedAngleSignal mainMotorPositionSignal = new SuppliedAngleSignal("main motor angle", mainMotorPosition, AngleUnit.ROTATIONS);
+		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 
-		secondarySparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, REVERSE_SOFT_LIMIT_VALUE);
+		secondarySparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		secondarySparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 
-		Supplier<Double> motorsVoltage = () -> (mainSparkMaxWrapper.getBusVoltage() * mainSparkMaxWrapper.getAppliedOutput());
+		Supplier<Double> motorsVoltage = mainSparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal motorsVoltageSignal = new SuppliedDoubleSignal("main motor voltage", motorsVoltage);
 
 		secondarySparkMaxWrapper.follow(mainSparkMaxWrapper);
 
-		BooleanSupplier inLimitSwitch = () -> mainSparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		BooleanSupplier atLimitSwitch = () -> mainSparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		mainSparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);
-		IDigitalInput limitSwitchDigitalInputs = new SuppliedDigitalInput(inLimitSwitch, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
+		IDigitalInput limitSwitch = new SuppliedDigitalInput(atLimitSwitch, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
 		SparkMaxAngleRequest angleRequest = new SparkMaxAngleRequest(
 				Rotation2d.fromRotations(0),
@@ -80,7 +77,7 @@ public class RealElevatorConstants {
 			motorsVoltageSignal,
 			mainMotorPositionSignal,
 			angleRequest,
-			limitSwitchDigitalInputs
+			limitSwitch
 		);
 	}
 

@@ -27,16 +27,16 @@ public class Robot {
 		configureBindings();
 	}
 
-	public Elevator getElevator() {
-		return elevator;
-	}
-
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Elevator getElevator() {
+		return elevator;
 	}
 
 }

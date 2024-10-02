@@ -27,7 +27,7 @@ public class Robot {
 		FlywheelComponents topFlywheelComponents = FlywheelFactory
 			.create(FlywheelConstants.LOG_PATH + "TopMotor", true, IDs.CANSparkMaxIDs.TOP_FLYWHEEL_MOTOR);
 		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
-			.create(FlywheelConstants.LOG_PATH + "Flywheel/BottomMotor", false, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL_MOTOR);
+			.create(FlywheelConstants.LOG_PATH + "BottomMotor", false, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL_MOTOR);
 		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH);
 
 		configureBindings();

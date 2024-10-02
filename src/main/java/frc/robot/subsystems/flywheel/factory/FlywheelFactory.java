@@ -6,9 +6,9 @@ import frc.robot.subsystems.flywheel.FlywheelComponents;
 
 public class FlywheelFactory {
 
-	public static FlywheelComponents create(String logPath, boolean isMotorInverted, SparkMaxDeviceID ID) {
+	public static FlywheelComponents create(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealFlywheelConstants.generateTopFlywheelComponents(logPath, isMotorInverted, ID);
+			case REAL -> RealFlywheelConstants.generateTopFlywheelComponents(logPath, isInverted, deviceID);
 			case SIMULATION -> null;
 		};
 	}

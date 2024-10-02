@@ -13,32 +13,28 @@ import frc.utils.AngleUnit;
 
 public class RealFlywheelConstants {
 
-	public static FlywheelComponents generateTopFlywheelComponents(String logPath, boolean isMotorInverted, SparkMaxDeviceID ID) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(ID);
+	public static FlywheelComponents generateTopFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
-		sparkMaxWrapper.getEncoder().setInverted(isMotorInverted);
+		sparkMaxWrapper.getEncoder().setInverted(isInverted);
 		sparkMaxWrapper.setSmartCurrentLimit(40);
 
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 
-		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+		SuppliedDoubleSignal VoltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
 
-		SuppliedAngleSignal motorVelocitySignal = new SuppliedAngleSignal(
-			"velocity",
-			sparkMaxWrapper.getEncoder()::getVelocity,
-			AngleUnit.ROTATIONS
-		);
+		SuppliedAngleSignal VelocitySignal = new SuppliedAngleSignal("velocity", sparkMaxWrapper.getEncoder()::getVelocity, AngleUnit.ROTATIONS);
 
-		SparkMaxAngleRequest motorVelocityRequest = new SparkMaxAngleRequest(
+		SparkMaxAngleRequest VelocityRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(60),
 			SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
 			0
 		);
 
-		return new FlywheelComponents(logPath, motor, isMotorInverted, motorVoltageSignal, motorVelocitySignal, motorVelocityRequest);
+		return new FlywheelComponents(logPath, motor, isInverted, VoltageSignal, VelocitySignal, VelocityRequest);
 	}
 
 }

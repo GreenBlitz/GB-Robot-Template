@@ -10,7 +10,7 @@ public record FlywheelComponents(
 	String logPath,
 	ControllableMotor motor,
 	boolean isMotorInverted,
-	InputSignal<Double> motorVoltageSignal,
-	SuppliedAngleSignal motorVelocitySignal,
-	IRequest<Rotation2d> motorVelocityRequest
+	InputSignal<Double> VoltageSignal,
+	SuppliedAngleSignal VelocitySignal,
+	IRequest<Rotation2d> VelocityRequest
 ) {}

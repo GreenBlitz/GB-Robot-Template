@@ -35,7 +35,10 @@ public class RealElevatorConstants {
 	private final static Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
 	// TODO: check this later
-	private final static double GEAR_RATIO = 0.3;
+	private final static double GEAR_RATIO = 0;
+
+	// TODO: check this later
+	private final static double VELOCITY_RATIO = 0;
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
@@ -51,9 +54,9 @@ public class RealElevatorConstants {
 		SuppliedAngleSignal mainMotorPositionSignal = new SuppliedAngleSignal("main motor angle", mainMotorPosition, AngleUnit.ROTATIONS);
 		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
+		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(VELOCITY_RATIO);
 
 		secondarySparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
-		secondarySparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 
 		Supplier<Double> motorsVoltage = mainSparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal motorsVoltageSignal = new SuppliedDoubleSignal("main motor voltage", motorsVoltage);

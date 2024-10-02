@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 
 public class ElevatorConstants {
 

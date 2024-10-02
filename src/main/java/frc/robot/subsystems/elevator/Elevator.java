@@ -1,14 +1,10 @@
 package frc.robot.subsystems.elevator;
 
-import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
-import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 

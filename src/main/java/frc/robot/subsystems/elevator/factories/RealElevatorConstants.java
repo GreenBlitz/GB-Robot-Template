@@ -66,20 +66,13 @@ public class RealElevatorConstants {
 		IDigitalInput limitSwitch = new SuppliedDigitalInput(atLimitSwitch, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
 		SparkMaxAngleRequest angleRequest = new SparkMaxAngleRequest(
-				Rotation2d.fromRotations(0),
-				SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-				ElevatorConstants.ELEVATOR_PID_SLOT,
-                RealElevatorConstants::FEED_FORWARD_FUNCTION
+			Rotation2d.fromRotations(0),
+			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
+			ElevatorConstants.ELEVATOR_PID_SLOT,
+			RealElevatorConstants::FEED_FORWARD_FUNCTION
 		);
 
-		return new ElevatorStuff(
-			logPath,
-			mainMotor,
-			motorsVoltageSignal,
-			mainMotorPositionSignal,
-			angleRequest,
-			limitSwitch
-		);
+		return new ElevatorStuff(logPath, mainMotor, motorsVoltageSignal, mainMotorPositionSignal, angleRequest, limitSwitch);
 	}
 
 }

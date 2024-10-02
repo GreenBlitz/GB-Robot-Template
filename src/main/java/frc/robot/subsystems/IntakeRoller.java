@@ -6,6 +6,7 @@ import frc.robot.hardware.motor.IMotor;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+
 public class IntakeRoller extends GBSubsystem {
 
 	private final IMotor motor;
@@ -20,13 +21,16 @@ public class IntakeRoller extends GBSubsystem {
 		this.digitalInput = intakeRollerStuff.digitalInput();
 		this.intakeRollerStuff = intakeRollerStuff;
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
-
 		this.intakeRollercommandBuilder = new IntakeRollerCommandsBuilder(this);
 		updateInputs();
 	}
 
 	public IntakeRollerCommandsBuilder getCommandsBuilder() {
 		return intakeRollercommandBuilder;
+	}
+
+	protected void setPower(double power) {
+		motor.setPower(power);
 	}
 
 	public boolean isObjectIn() {
@@ -38,19 +42,15 @@ public class IntakeRoller extends GBSubsystem {
 		motor.updateSignals(intakeRollerStuff.voltageSignal());
 	}
 
+	protected void stop() {
+		motor.stop();
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
 		Logger.processInputs(intakeRollerStuff.digitalInputLogPath(), digitalInputsInputs);
 		Logger.recordOutput(intakeRollerStuff.logPath() + "IsObjectIn", isObjectIn());
-	}
-
-	protected void setPower(double power) {
-		motor.setPower(power);
-	}
-
-	protected void stop() {
-		motor.stop();
 	}
 
 }

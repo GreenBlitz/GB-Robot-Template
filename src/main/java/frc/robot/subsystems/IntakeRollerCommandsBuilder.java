@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import java.util.function.DoubleSupplier;
-
 
 public class IntakeRollerCommandsBuilder {
 
@@ -13,19 +11,9 @@ public class IntakeRollerCommandsBuilder {
 		this.intakeRoller = intake;
 	}
 
-	public Command moveByPower(double power) {
-		return new FunctionalCommand(() -> intakeRoller.setPower(power), () -> {}, interrupted -> intakeRoller.stop(), () -> false, intakeRoller)
-			.withName("" + power);
-	}
-
-	public Command moveByPower(DoubleSupplier power) {
-		return new FunctionalCommand(
-			() -> {},
-			() -> intakeRoller.setPower(power.getAsDouble()),
-			interrupted -> intakeRoller.stop(),
-			() -> false,
-			intakeRoller
-		).withName("");
+	public Command setPower(double tagetPower) {
+		return new FunctionalCommand(() -> intakeRoller.setPower(tagetPower), () -> {}, interrupted -> intakeRoller.stop(), () -> false, intakeRoller)
+			.withName("set power- " + tagetPower);
 	}
 
 }

@@ -19,6 +19,7 @@ import java.util.Optional;
 public class GBPoseEstimator implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
+	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
 	private Pose2d odometryPose;
@@ -37,6 +38,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.odometryPose = new Pose2d();
 		this.estimatedPose = new Pose2d();
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.kinematics = kinematics;
 		this.lastWheelPositions = initialWheelPositions;
 		this.lastGyroAngle = initialGyroAngle;
@@ -103,6 +105,11 @@ public class GBPoseEstimator implements IPoseEstimator {
 		return estimatedPose;
 	}
 
+	@Override
+	public Optional<Pose2d> getEstimatedPoseAtTimeStamp(double timeStamp) {
+		return estimatedPoseInterpolator.getSample(timeStamp);
+	}
+
 
 	@Override
 	public void updateVision(List<VisionObservation> visionObservations) {
@@ -139,16 +146,22 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private void addVisionObservation(VisionObservation observation) {
 		this.lastVisionObservation = observation;
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
-		odometryInterpolatedPoseSample.ifPresent(
-			odometryPoseSample -> estimatedPose = PoseEstimatorMath
-				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations)
-		);
+		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
+			estimatedPose = PoseEstimationMath.combineVisionToOdometry(
+				observation,
+				odometryPoseSample,
+				estimatedPose,
+				odometryPose,
+				odometryStandardDeviations
+			);
+			estimatedPoseInterpolator.addSample(observation.timestamp(), estimatedPose);
+		});
 	}
 
 	private void addOdometryObservation(OdometryObservation observation) {
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
 		Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelsPositions());
-		twist = PoseEstimatorMath.addGyroToTwist(twist, observation.gyroAngle(), lastGyroAngle);
+		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastGyroAngle);
 		lastGyroAngle = observation.gyroAngle();
 		lastWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);

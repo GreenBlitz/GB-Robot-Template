@@ -1,6 +1,8 @@
 package frc.robot.vision.limelights;
 
 import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.PoseArrayEntryValue;
+import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -46,10 +48,11 @@ public class LimelightFilterer extends GBSubsystem {
 	}
 
 	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
-		double standardTransformDeviation = getDynamicStandardTransformDeviations(limelightRawData);
+		double[] standardTransformDeviations = PoseEstimationMath
+			.calculateStandardDeviationOfPose(limelightRawData, poseEstimator.getEstimatedPose());
 		double[] standardDeviations = new double[] {
-			standardTransformDeviation,
-			standardTransformDeviation,
+			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
+			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
 			LimeLightConstants.STANDARD_DEVIATION_VISION_ANGLE};
 
 		return new VisionObservation(
@@ -76,10 +79,6 @@ public class LimelightFilterer extends GBSubsystem {
 				observations.get(i).visionPose()
 			);
 		}
-	}
-
-	private double getDynamicStandardTransformDeviations(LimelightRawData limelightRawData) {
-		return limelightRawData.distanceFromAprilTag() / LimeLightConstants.APRIL_TAG_DISTANCE_TO_STANDARD_DEVIATIONS_FACTOR;
 	}
 
 	@Override

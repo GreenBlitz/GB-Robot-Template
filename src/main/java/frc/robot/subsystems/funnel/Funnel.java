@@ -57,7 +57,7 @@ public class Funnel extends GBSubsystem {
 	public void updateInputs() {
 		shooterDigitalInput.updateInputs(shooterDigitalInputInputs);
 		elevatorDigitalInput.updateInputs(elevatorDigitalInputInputs);
-		motor.updateSignals(funnelStuff.voltageSignal(), funnelStuff.positionSignal());
+		motor.updateSignals(funnelStuff.voltageSignal());
 	}
 
 	@Override

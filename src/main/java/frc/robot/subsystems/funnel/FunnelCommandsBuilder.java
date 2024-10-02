@@ -15,7 +15,7 @@ public class FunnelCommandsBuilder {
 	}
 
 	//@formatter:off
-    public Command setFunnelPower(double power) {
+    public Command setPower(double power) {
         return new FunctionalCommand(
                 () -> {},
                 () -> funnel.setPower(power),
@@ -25,7 +25,7 @@ public class FunnelCommandsBuilder {
         ).withName("Set power: " + power);
     }
 
-    public Command setFunnelPower(DoubleSupplier power) {
+    public Command setPower(DoubleSupplier power) {
         return new FunctionalCommand(
                 () -> {},
                 () -> funnel.setPower(power.getAsDouble()),
@@ -34,10 +34,10 @@ public class FunnelCommandsBuilder {
                 funnel
         ).withName("Set power by supplier");
     }
-    //@formatter:on
 
-	public Command stopFunnel() {
+	public Command stop() {
 		return new RunCommand(funnel::stop, funnel).withName("Stop");
 	}
+    //@formatter:on
 
 }

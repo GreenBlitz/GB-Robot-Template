@@ -23,7 +23,7 @@ public record ElevatorStuff(
 		ControllableMotor mainMotor,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Rotation2d> mainMotorPositionSignal,
-		SparkMaxAngleRequest angleRequest,
+		IRequest<Rotation2d> angleRequest,
 		IDigitalInput digitalInput
 	) {
 		this(logPath, logPath + "limitSwitch", mainMotor, voltageSignal, mainMotorPositionSignal, angleRequest, digitalInput);

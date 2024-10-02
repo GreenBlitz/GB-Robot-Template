@@ -29,11 +29,8 @@ def get_key_network_table_updater(table: NetworkTableInstance, is_pressed: bool)
     # Function to update the table based on the key type and its state (pressed or not).
     def update_network_table_key_state(key) -> None:
         key_type = get_key_type(key)  # Store the result to avoid repeated calls.
-        if key_type is UndefinedKey:
-            return
-        elif key_type is SpecialKey:
+        if key_type is SpecialKey:
             table.putBoolean(key.name, is_pressed)
-            return
         elif key_type is ASCIIKey:
             if key.char == "/":
                 table.putBoolean("slash", is_pressed)

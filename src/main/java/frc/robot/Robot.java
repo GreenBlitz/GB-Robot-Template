@@ -27,6 +27,10 @@ public class Robot {
 		configureBindings();
 	}
 
+	public Funnel getFunnel() {
+		return funnel;
+	}
+
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}

@@ -20,7 +20,7 @@ public class Funnel extends GBSubsystem {
 		super(funnelStuff.logPath());
 		this.motor = funnelStuff.motor();
 		this.shooterDigitalInput = funnelStuff.shooterDigitalInput();
-		this.elevatorDigitalInput = funnelStuff.ampDigitalInput();
+		this.elevatorDigitalInput = funnelStuff.elevatorDigitalInput();
 		this.funnelStuff = funnelStuff;
 		this.shooterDigitalInputInputs = new DigitalInputInputsAutoLogged();
 		this.elevatorDigitalInputInputs = new DigitalInputInputsAutoLogged();
@@ -42,10 +42,6 @@ public class Funnel extends GBSubsystem {
 		return elevatorDigitalInputInputs.debouncedValue;
 	}
 
-	public void setBrake(boolean brake) {
-		motor.setBrake(brake);
-	}
-
 	public void stop() {
 		motor.stop();
 	}
@@ -64,7 +60,7 @@ public class Funnel extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		updateInputs();
 		Logger.processInputs(funnelStuff.shooterDigitalInputLogPath(), shooterDigitalInputInputs);
-		Logger.processInputs(funnelStuff.ampDigitalInputLogPath(), elevatorDigitalInputInputs);
+		Logger.processInputs(funnelStuff.elevatorDigitalInputLogPath(), elevatorDigitalInputInputs);
 		Logger.recordOutput("isNoteInElevator", elevatorDigitalInputInputs.debouncedValue);
 		Logger.recordOutput("isNoteInShooter", shooterDigitalInputInputs.debouncedValue);
 	}

@@ -24,10 +24,10 @@ public class KeyboardController {
 	private static final String KEYBOARD_TABLE = "Keyboard";
 	private static final String KEYS_TAB = "Keys/";
 
-	public final Trigger ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, DELETE, BACKTICK, ONE, TWO, THREE, FOUR, FIVE,
-		SIX, SEVEN, EIGHT, NINE, ZERO, MINUS, EQUALS, SPACE, BACKSPACE, TAB, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R,
-		S, T, U, V, W, X, Y, Z, SEMICOLON, APOSTROPHE, LEFT_SHIFT, COMMA, PERIOD, SLASH, RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT,
-		RIGHT_CONTROL, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW;
+	public final Trigger ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, DELETE, BACKTICK, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN,
+		EIGHT, NINE, ZERO, MINUS, EQUALS, SPACE, BACKSPACE, TAB, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+		SEMICOLON, APOSTROPHE, LEFT_SHIFT, COMMA, PERIOD, SLASH, RIGHT_SHIFT, LEFT_CONTROL, LEFT_ALT, RIGHT_CONTROL, LEFT_ARROW, RIGHT_ARROW,
+		UP_ARROW, DOWN_ARROW;
 
 	public KeyboardController() {
 		if (RobotManager.isSimulation()) {
@@ -114,9 +114,7 @@ public class KeyboardController {
 	}
 
 	private Trigger getNewKey(String name) {
-		return new Trigger(
-			NetworkTableInstance.getDefault().getTable(KEYBOARD_TABLE).getBooleanTopic(KEYS_TAB + name).subscribe(false)::get
-		);
+		return new Trigger(NetworkTableInstance.getDefault().getTable(KEYBOARD_TABLE).getBooleanTopic(KEYS_TAB + name).subscribe(false)::get);
 	}
 
 	public double getValueByButtons(Trigger positiveButton, Trigger negativeButton) {

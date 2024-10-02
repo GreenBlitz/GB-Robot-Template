@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.elevatorRoller.ElevatorRoller;
+import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerConstants;
+import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerFactory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -16,7 +19,11 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final ElevatorRoller elevatorRoller;
+
 	public Robot() {
+		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
+
 		configureBindings();
 	}
 
@@ -27,6 +34,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public ElevatorRoller getElevatorRoller() {
+		return elevatorRoller;
 	}
 
 }

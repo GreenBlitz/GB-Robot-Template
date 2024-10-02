@@ -53,8 +53,8 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	protected void updateInputs() {
-		topMotor.updateSignals(topFlywheelComponents.VoltageSignal(), topFlywheelComponents.VelocitySignal());
-		bottomMotor.updateSignals(bottomFlywheelComponents.VoltageSignal(), bottomFlywheelComponents.VelocitySignal());
+		topMotor.updateSignals(topFlywheelComponents.voltageSignal(), topFlywheelComponents.velocitySignal());
+		bottomMotor.updateSignals(bottomFlywheelComponents.voltageSignal(), bottomFlywheelComponents.velocitySignal());
 	}
 
 	@Override

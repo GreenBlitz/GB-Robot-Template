@@ -27,8 +27,8 @@ public class FlywheelCommandsBuilder {
 
 	public Command setVelocity(Rotation2d targetVelocity) {
 		return new InitExecuteCommand(
-				() -> flywheel.setTargetVelocity(targetVelocity),
 				() -> {},
+				() -> flywheel.setTargetVelocity(targetVelocity),
 				flywheel
 		).withName("Set velocity set point to " + targetVelocity);
 	}

@@ -13,8 +13,8 @@ public class Flywheel extends GBSubsystem {
 	private final ControllableMotor bottomMotor;
 	private final FlywheelCommandsBuilder commandsBuilder;
 
-	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents) {
-		super(FlywheelConstants.LOG_PATH);
+	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents, String logPath) {
+		super(logPath);
 
 		this.topFlywheelComponents = topFlywheelComponents;
 		this.bottomFlywheelComponents = bottomFlywheelComponents;

@@ -62,7 +62,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 				stackedRawData.addAll(rawData);
 			}
 		}
-		Pose2d pose2d = weightedPoseMean(stackedRawData);
+		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
 		resetPose(new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation()));
 	}
 
@@ -174,28 +174,6 @@ public class GBPoseEstimator implements IPoseEstimator {
 		if (gyroAngles != null) {
 			limelightFilterer.updateGyroAngles(new GyroAngleValues(gyroAngles.getDegrees(), 0, 0, 0, 0, 0));
 		}
-	}
-
-	private Pose2d weightedPoseMean(List<VisionObservation> observations) {
-		Pose2d output = new Pose2d();
-		double positionDeviationSum = 0;
-		double rotationDeviationSum = 0;
-
-		for (VisionObservation observation : observations) {
-			double positionWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
-			double rotationWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
-			positionDeviationSum += positionWeight;
-			rotationDeviationSum += rotationWeight;
-			output = new Pose2d(
-				output.getX() + observation.visionPose().getX() * positionWeight,
-				output.getY() + observation.visionPose().getY() * positionWeight,
-				output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
-			);
-		}
-
-		output = new Pose2d(output.getTranslation().div(positionDeviationSum), output.getRotation().div(rotationDeviationSum));
-
-		return output;
 	}
 
 	public void logEstimatedPose() {

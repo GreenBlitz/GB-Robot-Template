@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Twist2d;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.limelights.LimelightRawData;
 
+import java.util.List;
+
 public class PoseEstimationMath {
 
 	public static Twist2d addGyroToTwist(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
@@ -108,6 +110,28 @@ public class PoseEstimationMath {
 	private static double calculateStandardDeviationFromDifference(double estimatedValue, double currentValue) {
 		double mean = (estimatedValue + currentValue) / 2;
 		return Math.sqrt((Math.pow(estimatedValue - mean, 2) + Math.pow(currentValue - mean, 2)) / 2);
+	}
+
+	public static Pose2d weightedPoseMean(List<VisionObservation> observations) {
+		Pose2d output = new Pose2d();
+		double positionDeviationSum = 0;
+		double rotationDeviationSum = 0;
+
+		for (VisionObservation observation : observations) {
+			double positionWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
+			double rotationWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
+			positionDeviationSum += positionWeight;
+			rotationDeviationSum += rotationWeight;
+			output = new Pose2d(
+					output.getX() + observation.visionPose().getX() * positionWeight,
+					output.getY() + observation.visionPose().getY() * positionWeight,
+					output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
+			);
+		}
+
+		output = new Pose2d(output.getTranslation().div(positionDeviationSum), output.getRotation().div(rotationDeviationSum));
+
+		return output;
 	}
 
 }

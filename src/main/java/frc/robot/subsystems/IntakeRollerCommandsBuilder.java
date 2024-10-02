@@ -12,8 +12,13 @@ public class IntakeRollerCommandsBuilder {
 	}
 
 	public Command setPower(double tagetPower) {
-		return new FunctionalCommand(() -> intakeRoller.setPower(tagetPower), () -> {}, interrupted -> intakeRoller.stop(), () -> false, intakeRoller)
-			.withName("set power- " + tagetPower);
+		return new FunctionalCommand(
+			() -> intakeRoller.setPower(tagetPower),
+			() -> {},
+			interrupted -> intakeRoller.stop(),
+			() -> false,
+			intakeRoller
+		).withName("set power- " + tagetPower);
 	}
 
 }

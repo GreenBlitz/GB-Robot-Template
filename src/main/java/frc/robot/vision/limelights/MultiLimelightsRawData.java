@@ -1,8 +1,7 @@
-package frc.robot.poseestimator.limelights;
+package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Pose2d;
-
+import edu.wpi.first.math.geometry.Pose3d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,14 +9,18 @@ import java.util.Optional;
 public class MultiLimelightsRawData {
 
 	private final List<Limelight> limelights;
-	private final String logPath;
 
 	public MultiLimelightsRawData(String[] names, String hardwareLogPath) {
-		this.logPath = hardwareLogPath;
 		this.limelights = new ArrayList<>();
 
 		for (String limelightName : names) {
 			limelights.add(new Limelight(limelightName, hardwareLogPath));
+		}
+	}
+
+	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
+		for (Limelight limelight : limelights) {
+			limelight.updateGyroAngleValues(gyroAnglesValues);
 		}
 	}
 
@@ -26,7 +29,7 @@ public class MultiLimelightsRawData {
 
 		for (Limelight limelight : limelights) {
 			limelight.updateLimelight();
-			Optional<Pair<Pose2d, Double>> observation = limelight.getUpdatedPose2DEstimation();
+			Optional<Pair<Pose3d, Double>> observation = limelight.getUpdatedPose3DEstimation();
 
 			if (observation.isPresent()) {
 				LimelightRawData limelightRawData = new LimelightRawData(

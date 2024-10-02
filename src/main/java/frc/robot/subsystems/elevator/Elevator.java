@@ -6,6 +6,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
+import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
 import frc.utils.GBSubsystem;
@@ -15,7 +16,7 @@ public class Elevator extends GBSubsystem {
 
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final ElevatorCommandBuilder commandBuilder;
-	private final SparkMaxAngleRequest angleRequest;
+	private final IRequest<Rotation2d> angleRequest;
 
 	private final ElevatorStuff elevatorStuff;
 	private final ControllableMotor mainMotor;

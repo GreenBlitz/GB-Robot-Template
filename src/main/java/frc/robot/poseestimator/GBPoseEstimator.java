@@ -154,7 +154,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 				odometryPose,
 				odometryStandardDeviations
 			);
-			estimatedPoseInterpolator.addSample(observation.timestamp(), estimatedPose);
+			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, estimatedPose);
 		});
 	}
 

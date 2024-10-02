@@ -1,5 +1,6 @@
 package frc.robot.vision.limelights;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
@@ -8,6 +9,7 @@ import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class LimelightFilterer extends GBSubsystem {
 
@@ -48,8 +50,13 @@ public class LimelightFilterer extends GBSubsystem {
 	}
 
 	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
-		double[] standardTransformDeviations = PoseEstimationMath
-			.calculateStandardDeviationOfPose(limelightRawData, poseEstimator.getEstimatedPose());
+		Optional<Pose2d> estimatedPoseAtTimeStamp = poseEstimator.getEstimatedPoseAtTimeStamp(limelightRawData.timestamp());
+		double[] standardTransformDeviations;
+		standardTransformDeviations = estimatedPoseAtTimeStamp
+			.map(pose2d -> PoseEstimationMath.calculateStandardDeviationOfPose(limelightRawData, pose2d))
+			.orElseGet(
+				() -> PoseEstimationMath.calculateStandardDeviationOfPose(limelightRawData, poseEstimator.getEstimatedPose())
+			);
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],

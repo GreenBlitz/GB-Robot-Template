@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.limelights;
+package frc.robot.poseestimation.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -38,8 +38,8 @@ public class Limelight extends GBSubsystem {
 
 	public void updateLimelight() {
 		robotOrientationEntry.setDoubleArray(gyroAngleValues);
-		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {

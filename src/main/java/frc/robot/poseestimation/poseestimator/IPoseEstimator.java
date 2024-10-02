@@ -1,8 +1,8 @@
-package frc.robot.poseestimator;
+package frc.robot.poseestimation.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.poseestimator.observations.OdometryObservation;
-import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimation.observations.VisionObservation;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.limelights;
+package frc.robot.poseestimation.limelights;
 
 public enum LimelightEntryValue {
 

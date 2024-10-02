@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.observations;
+package frc.robot.poseestimation.observations;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;

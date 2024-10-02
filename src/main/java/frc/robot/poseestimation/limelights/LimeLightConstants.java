@@ -1,15 +1,15 @@
-package frc.robot.poseestimator.limelights;
+package frc.robot.poseestimation.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class VisionConstants {
+public class LimeLightConstants {
 
 	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation";
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 
 
-	public static final VisionObservationFilteredConfig DEFAULT_CONFIG = new VisionObservationFilteredConfig(
+	public static final LimelightFiltererConfig DEFAULT_CONFIG = new LimelightFiltererConfig(
 		"VisionObservationFiltered/",
 		"LimelightsHardware/",
 		new String[] {"limelight-front", "limelight-back"}

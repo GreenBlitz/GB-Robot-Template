@@ -1,4 +1,4 @@
-package frc.robot.poseestimator;
+package frc.robot.poseestimation.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -6,10 +6,10 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import frc.robot.poseestimator.limelights.VisionConstants;
-import frc.robot.poseestimator.limelights.VisionObservationFiltered;
-import frc.robot.poseestimator.observations.OdometryObservation;
-import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.poseestimation.limelights.LimeLightConstants;
+import frc.robot.poseestimation.limelights.LimelightFilterer;
+import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimation.observations.VisionObservation;
 import frc.utils.FieldStartingPositions;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,7 +27,7 @@ public class GBPoseEstimator implements IPoseEstimator {
     private SwerveDriveWheelPositions lastWheelPositions;
     private Rotation2d lastGyroAngle;
     private VisionObservation lastVisionObservation;
-    private final VisionObservationFiltered visionObservationFiltered;
+    private final LimelightFilterer limelightFilterer;
 
     public GBPoseEstimator(
             SwerveDriveKinematics kinematics,
@@ -42,20 +42,20 @@ public class GBPoseEstimator implements IPoseEstimator {
         this.lastWheelPositions = initialWheelPositions;
         this.lastGyroAngle = initialGyroAngle;
         this.odometryStandardDeviations = new double[3];
-        this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG, this);
+        this.limelightFilterer = new LimelightFilterer(LimeLightConstants.DEFAULT_CONFIG, this);
         setOdometryStandardDeviations(odometryStandardDeviations);
     }
 
-    public VisionObservationFiltered getVisionObservationFiltered() {
-        return visionObservationFiltered;
+    public LimelightFilterer getLimelightFilterer() {
+        return limelightFilterer;
     }
 
     public void resetPoseByLimelight() {
-        List<VisionObservation> stackedRawData = visionObservationFiltered.getAllAvailableLimelightData();
+        List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightData();
         List<VisionObservation> rawData;
         while (
                 stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION
-                        && !(rawData = visionObservationFiltered.getAllAvailableLimelightData()).isEmpty()
+                        && !(rawData = limelightFilterer.getAllAvailableLimelightData()).isEmpty()
         ) {
             if (!stackedRawData.contains(rawData.get(0))) {
                 stackedRawData.addAll(rawData);
@@ -159,7 +159,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 
     private void updateGyroAnglesInLimeLight(Rotation2d gyroAngles) {
         if(gyroAngles != null) {
-            visionObservationFiltered.updateGyroAngles(new double[]{
+            limelightFilterer.updateGyroAngles(new double[]{
                     gyroAngles.getDegrees(), 0, 0, 0, 0, 0
             });
         }
@@ -191,7 +191,7 @@ public class GBPoseEstimator implements IPoseEstimator {
         FieldStartingPositions bestPosition = null;
         double bestTolerance = Double.POSITIVE_INFINITY;
 
-        Pose2d estimatedVisionPose = weightedObservationMean(visionObservationFiltered.getFilteredVisionObservations());
+        Pose2d estimatedVisionPose = weightedObservationMean(limelightFilterer.getFilteredVisionObservations());
 
         for (FieldStartingPositions fieldStartingPositions : FieldStartingPositions.values()) {
             double translationNorm = fieldStartingPositions.getStartingPose()

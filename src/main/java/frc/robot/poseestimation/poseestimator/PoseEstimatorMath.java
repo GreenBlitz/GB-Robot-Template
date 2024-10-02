@@ -1,11 +1,11 @@
-package frc.robot.poseestimator;
+package frc.robot.poseestimation.poseestimator;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.poseestimation.observations.VisionObservation;
 
 public class PoseEstimatorMath {
 

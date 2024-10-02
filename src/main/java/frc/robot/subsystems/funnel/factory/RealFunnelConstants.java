@@ -1,5 +1,6 @@
 package frc.robot.subsystems.funnel.factory;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -28,6 +29,7 @@ public class RealFunnelConstants {
 		SparkMaxWrapper sparkMAXWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.FUNNEL);
 
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
+		sparkMAXWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
 
 		sparkMAXWrapper.setSmartCurrentLimit(30);
 		sparkMAXWrapper.getEncoder().setPositionConversionFactor(1);

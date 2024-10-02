@@ -12,18 +12,18 @@ public class Funnel extends GBSubsystem {
 	private final FunnelStuff funnelStuff;
 	private final FunnelCommandsBuilder commandsBuilder;
 	private final IDigitalInput shooterDigitalInput;
-	private final IDigitalInput ampDigitalInput;
+	private final IDigitalInput elevatorDigitalInput;
 	private final DigitalInputInputsAutoLogged shooterDigitalInputInputs;
-	private final DigitalInputInputsAutoLogged ampDigitalInputInputs;
+	private final DigitalInputInputsAutoLogged elevatorDigitalInputInputs;
 
 	public Funnel(FunnelStuff funnelStuff) {
 		super(funnelStuff.logPath());
 		this.motor = funnelStuff.motor();
 		this.shooterDigitalInput = funnelStuff.shooterDigitalInput();
-		this.ampDigitalInput = funnelStuff.ampDigitalInput();
+		this.elevatorDigitalInput = funnelStuff.ampDigitalInput();
 		this.funnelStuff = funnelStuff;
 		this.shooterDigitalInputInputs = new DigitalInputInputsAutoLogged();
-		this.ampDigitalInputInputs = new DigitalInputInputsAutoLogged();
+		this.elevatorDigitalInputInputs = new DigitalInputInputsAutoLogged();
 
 		this.commandsBuilder = new FunnelCommandsBuilder(this);
 
@@ -38,8 +38,8 @@ public class Funnel extends GBSubsystem {
 		return shooterDigitalInputInputs.debouncedValue;
 	}
 
-	public boolean isNoteInAmp() {
-		return ampDigitalInputInputs.debouncedValue;
+	public boolean isNoteInElevator() {
+		return elevatorDigitalInputInputs.debouncedValue;
 	}
 
 	public void setBrake(boolean brake) {
@@ -56,7 +56,7 @@ public class Funnel extends GBSubsystem {
 
 	public void updateInputs() {
 		shooterDigitalInput.updateInputs(shooterDigitalInputInputs);
-		ampDigitalInput.updateInputs(ampDigitalInputInputs);
+		elevatorDigitalInput.updateInputs(elevatorDigitalInputInputs);
 		motor.updateSignals(funnelStuff.voltageSignal(), funnelStuff.positionSignal());
 	}
 
@@ -64,7 +64,9 @@ public class Funnel extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		updateInputs();
 		Logger.processInputs(funnelStuff.shooterDigitalInputLogPath(), shooterDigitalInputInputs);
-		Logger.processInputs(funnelStuff.ampDigitalInputLogPath(), ampDigitalInputInputs);
+		Logger.processInputs(funnelStuff.ampDigitalInputLogPath(), elevatorDigitalInputInputs);
+		Logger.recordOutput("isNoteInElevator", elevatorDigitalInputInputs.debouncedValue);
+		Logger.recordOutput("isNoteInShooter", shooterDigitalInputInputs.debouncedValue);
 	}
 
 }

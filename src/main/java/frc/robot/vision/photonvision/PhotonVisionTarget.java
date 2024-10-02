@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.photonvision;
+package frc.robot.vision.photonvision;
 
 public enum PhotonVisionTarget {
 	APRIL_TAG,

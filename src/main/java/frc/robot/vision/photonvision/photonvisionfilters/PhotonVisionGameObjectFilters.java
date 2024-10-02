@@ -1,8 +1,8 @@
-package frc.robot.poseestimator.photonvision.photonvisionfilters;
+package frc.robot.vision.photonvision.photonvisionfilters;
 
 import frc.robot.poseestimator.observations.GameObjectPoseObservation;
-import frc.robot.poseestimator.photonvision.CameraConfiguration;
-import frc.robot.poseestimator.photonvision.PhotonVisionTargetRawData;
+import frc.robot.vision.photonvision.CameraConfiguration;
+import frc.robot.vision.photonvision.PhotonVisionTargetRawData;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
 import java.util.List;

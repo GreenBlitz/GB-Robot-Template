@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.photonvision;
+package frc.robot.vision.photonvision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;

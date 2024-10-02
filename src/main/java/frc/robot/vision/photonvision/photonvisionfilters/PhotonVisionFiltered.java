@@ -1,6 +1,6 @@
-package frc.robot.poseestimator.photonvision.photonvisionfilters;
+package frc.robot.vision.photonvision.photonvisionfilters;
 
-import frc.robot.poseestimator.photonvision.*;
+import frc.robot.vision.photonvision.*;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 

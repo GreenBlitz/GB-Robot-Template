@@ -36,15 +36,21 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 				output.add(targetData);
 			}
 		}
+
 		return output;
 	}
 
 	protected ArrayList<PhotonVisionTargetRawData> getAllTargetData() {
 		ArrayList<PhotonVisionTargetRawData> output = new ArrayList<>();
 		for (PhotonVisionCamera camera : cameras) {
-			Optional<PhotonVisionTargetRawData> bestTarget = camera.getBestTargetData();
-			bestTarget.ifPresent(output::add);
+			Optional<ArrayList<Optional<PhotonVisionTargetRawData>>> targets = camera.getTargetsData();
+			if (targets.isPresent()) {
+				for (Optional<PhotonVisionTargetRawData> targetRawData : targets.get()) {
+					targetRawData.ifPresent(output::add);
+				}
+			}
 		}
+
 		return output;
 	}
 

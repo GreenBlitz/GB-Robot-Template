@@ -8,24 +8,35 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PhotonVisionCamera extends GBSubsystem {
 
 	private final PhotonCamera camera;
 	private final Transform3d cameraToRobot;
-	private final PhotonVisionTarget target;
+	private final PhotonVisionTarget targetType;
 
 	public PhotonVisionCamera(String cameraName, Transform3d cameraToRobot, PhotonVisionTarget target) {
 		super(PhotonVisionConstants.camerasLogPathPrefix + cameraName + "/");
 		super.setName("PhotonVisionCamera " + cameraName);
 		this.camera = new PhotonCamera(cameraName);
 		this.cameraToRobot = cameraToRobot;
-		this.target = target;
+		this.targetType = target;
 	}
 
 	public PhotonVisionCamera(CameraConfiguration cameraConfiguration) {
 		this(cameraConfiguration.name(), cameraConfiguration.cameraToRobot(), cameraConfiguration.targetType());
+	}
+
+	public Optional<PhotonVisionTargetRawData> tackedTargetToTargetRawdata(PhotonTrackedTarget trackedTarget, PhotonPipelineResult pipelineResult) {
+		double latency = pipelineResult.getLatencyMillis();
+		double ambiguity = trackedTarget.getPoseAmbiguity();
+		double timestamp = pipelineResult.getTimestampSeconds();
+
+		Optional<Pose3d> targetPose = calculateTargetPose(trackedTarget);
+		return targetPose.map(pose3d -> new PhotonVisionTargetRawData(camera.getName(), pose3d, timestamp, ambiguity, latency));
 	}
 
 	public Optional<PhotonVisionTargetRawData> getBestTargetData() {
@@ -34,18 +45,27 @@ public class PhotonVisionCamera extends GBSubsystem {
 		if (bestTarget.isEmpty()) {
 			return Optional.empty();
 		}
-		Optional<Pose3d> targetPose = calculateTargetPose(bestTarget.get());
-		if (targetPose.isEmpty()) {
+		return tackedTargetToTargetRawdata(bestTarget.get(), pipelineResult);
+	}
+
+	public Optional<ArrayList<Optional<PhotonVisionTargetRawData>>> getTargetsData() {
+		PhotonPipelineResult pipelineResult = camera.getLatestResult();
+		Optional<List<PhotonTrackedTarget>> targets = Optional.of(pipelineResult.getTargets());
+		ArrayList<Optional<PhotonVisionTargetRawData>> output = new ArrayList<>();
+
+		if (targets.isEmpty()) {
 			return Optional.empty();
 		}
-		double latency = pipelineResult.getLatencyMillis();
-		double ambiguity = bestTarget.get().getPoseAmbiguity();
-		double timestamp = pipelineResult.getTimestampSeconds();
-		return Optional.of(new PhotonVisionTargetRawData(camera.getName(), targetPose.get(), timestamp, ambiguity, latency));
+
+		for (PhotonTrackedTarget target: targets.get()) {
+			output.add(tackedTargetToTargetRawdata(target, pipelineResult));
+		}
+
+		return Optional.of(output);
 	}
 
 	private Optional<Pose3d> calculateTargetPose(PhotonTrackedTarget bestTarget) {
-		return switch (target) {
+		return switch (targetType) {
 			case GAME_OBJECT -> calculateGameObjectPoseToRobot(bestTarget);
 			case APRIL_TAG -> calculateRobotPoseToField(bestTarget);
 		};

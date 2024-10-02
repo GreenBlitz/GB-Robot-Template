@@ -2,6 +2,7 @@ package frc.robot.subsystems.funnel;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
@@ -19,7 +20,7 @@ public class FunnelCommandsBuilder {
         return new FunctionalCommand(
                 () -> {},
                 () -> funnel.setPower(power),
-                (interrupted) -> funnel.stop(),
+                interrupted -> funnel.stop(),
                 () -> false,
                 funnel
         ).withName("Set power to: " + power);
@@ -29,7 +30,7 @@ public class FunnelCommandsBuilder {
 		return new FunctionalCommand(
 				() -> {},
 				() -> funnel.setPower(power.getAsDouble()),
-				(interrupted) -> funnel.stop(),
+				interrupted -> funnel.stop(),
 				() -> false,
 				funnel
 		).withName("Set power by supplier");
@@ -37,7 +38,7 @@ public class FunnelCommandsBuilder {
     //@formatter:on
 
 	public Command stop() {
-		return new InitExecuteCommand(() -> {}, funnel::stop, funnel).withName("Stop");
+		return new RunCommand(funnel::stop, funnel).withName("Stop");
 	}
 
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
@@ -36,7 +37,7 @@ public class IntakeCommandsBuilder {
 	}
 
 	public Command stop() {
-		return new InitExecuteCommand(() -> {}, intake::stop, intake).withName("Stop");
+		return new RunCommand(intake::stop, intake).withName("Stop");
 	}
 	//@formatter:on
 

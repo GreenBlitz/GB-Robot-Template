@@ -2,10 +2,12 @@ package frc.robot.subsystems.elevator;
 
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -28,17 +30,14 @@ public class Elevator extends GBSubsystem {
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.elevatorStuff = elevatorStuff;
 		this.commandBuilder = new ElevatorCommandBuilder(this);
-
-		this.angleRequest = new SparkMaxAngleRequest(
-			Rotation2d.fromRotations(0),
-			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-			ElevatorConstants.ELEVATOR_PID_SLOT,
-			Elevator::ElevatorFeedforward
-		);
+		this.angleRequest = elevatorStuff.angleRequest();
 	}
 
 	public static double ElevatorFeedforward(CANSparkMax motor) {
-		return ElevatorConstants.FEEDFORwARD_CALCULATOR.calculate(motor.getEncoder().getVelocity());
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(motor.getEncoder().getVelocity());
+			case SIMULATION -> 0.0;
+		};
 	}
 
 	public ElevatorCommandBuilder getCommandBuilder() {
@@ -58,17 +57,20 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void setTargetAngle(Rotation2d angle) {
-		angleRequest.withSetPoint(angle);
-		elevatorStuff.mainMotor().applyAngleRequest(angleRequest);
+		mainMotor.applyAngleRequest(angleRequest.withSetPoint(angle));
 	}
 
-	public boolean isPhysicallyStopped() {
+	public boolean isAtBackwardLimit() {
 		return digitalInputsInputs.debouncedValue;
+	}
+
+	public void stayInPlace() {
+		mainMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.mainMotorPositionSignal().getLatestValue()));
 	}
 
 	public void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
-		mainMotor.updateSignals();
+		mainMotor.updateSignals(elevatorStuff.mainMotorPositionSignal(), elevatorStuff.voltageSignal());
 	}
 
 	@Override

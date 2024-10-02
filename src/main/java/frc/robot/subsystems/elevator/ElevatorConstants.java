@@ -8,6 +8,4 @@ public class ElevatorConstants {
 
 	public static final int ELEVATOR_PID_SLOT = 0;
 
-	public static ElevatorFeedforward FEEDFORwARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
-
 }

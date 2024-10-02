@@ -18,8 +18,8 @@ public class ElevatorCommandBuilder {
 	//@formatter:off
     public Command setPower(double power) {
         return new FunctionalCommand(
-                () -> elevator.setPower(power),
                 () -> {},
+                () -> elevator.setPower(power),
                 interrupted -> elevator.stop(),
                 () -> false,
                 elevator
@@ -28,16 +28,26 @@ public class ElevatorCommandBuilder {
 
     public Command setPower(DoubleSupplier power) {
         return new FunctionalCommand(
-                () -> elevator.setPower(power.getAsDouble()),
                 () -> {},
+                () -> elevator.setPower(power.getAsDouble()),
                 interrupted -> elevator.stop(),
                 () -> false,
                 elevator
         ).withName("Set power: " + power);
     }
 
-    public Command setPosition(Rotation2d angle) {
+    public Command setTargetPosition(Rotation2d angle) {
         return new InstantCommand(() -> elevator.setTargetAngle(angle));
+    }
+
+    public Command stayInPlace() {
+        return new FunctionalCommand(
+                () -> {},
+                elevator::stayInPlace,
+                interrupted -> elevator.stop(),
+                () -> false,
+                elevator
+        );
     }
     //@formatter:on
 

@@ -23,7 +23,6 @@ public class Robot {
 
 	public Robot() {
 		this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
-		// configure components here
 
 		configureBindings();
 	}

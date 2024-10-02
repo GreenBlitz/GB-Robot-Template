@@ -11,12 +11,11 @@ public class LimelightFilters {
 	protected static boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData, Pose2d estimatedPose) {
 		Pose3d limelightPosition = limelightRawData.estimatedPose();
 		Pose3d estimatedPose3d = new Pose3d(
-				estimatedPose.getX(),
-				estimatedPose.getY(),
-				0,
-				new Rotation3d(
-						0, 0, estimatedPose.getRotation().getRadians()
-				));
+			estimatedPose.getX(),
+			estimatedPose.getY(),
+			0,
+			new Rotation3d(0, 0, estimatedPose.getRotation().getRadians())
+		);
 		Transform3d transformDifference = limelightPosition.minus(estimatedPose3d);
 		Rotation3d rotationDifference = limelightPosition.getRotation().minus(estimatedPose3d.getRotation());
 		return transformDifference.getTranslation().getNorm() <= LimeLightConstants.POSITION_NORM_TOLERANCE

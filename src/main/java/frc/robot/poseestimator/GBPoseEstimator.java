@@ -22,12 +22,12 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
+	private final LimelightFilterer limelightFilterer;
 	private Pose2d odometryPose;
 	private Pose2d estimatedPose;
 	private SwerveDriveWheelPositions lastWheelPositions;
 	private Rotation2d lastGyroAngle;
 	private VisionObservation lastVisionObservation;
-	private final LimelightFilterer limelightFilterer;
 
 	public GBPoseEstimator(
 		SwerveDriveKinematics kinematics,

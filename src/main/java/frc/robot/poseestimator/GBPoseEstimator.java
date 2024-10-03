@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import frc.robot.poseestimator.linearfilters.VisionObservationLinearFilterWrapper;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.LimeLightConstants;
 import frc.robot.vision.limelights.LimelightFilterer;
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class GBPoseEstimator implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
+	private final TimeInterpolatableBuffer<Pose2d> visionPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
 	private final LimelightFilterer limelightFilterer;
+	private final VisionObservationLinearFilterWrapper visionMovingAverageFilter;
 	private Pose2d odometryPose;
 	private Pose2d estimatedPose;
 	private SwerveDriveWheelPositions lastWheelPositions;
@@ -38,12 +41,18 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.odometryPose = new Pose2d();
 		this.estimatedPose = new Pose2d();
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.visionPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.kinematics = kinematics;
 		this.lastWheelPositions = initialWheelPositions;
 		this.lastGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[3];
 		this.limelightFilterer = new LimelightFilterer(LimeLightConstants.DEFAULT_CONFIG, this);
+		this.visionMovingAverageFilter = new VisionObservationLinearFilterWrapper(
+			PoseEstimatorConstants.LOG_PATH + PoseEstimatorConstants.VISION_LINEAR_FILTER.LOG_PATH,
+			PoseEstimatorConstants.VISION_LINEAR_FILTER.FILTER_TYPE,
+				PoseEstimatorConstants.VISION_LINEAR_FILTER.SAMPLE_COUNT
+		);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
 
@@ -115,7 +124,15 @@ public class GBPoseEstimator implements IPoseEstimator {
 	public void updateVision(List<VisionObservation> visionObservations) {
 		for (VisionObservation visionObservation : visionObservations) {
 			if (!isObservationTooOld(visionObservation)) {
+				double currentTimeStamp = Logger.getRealTimestamp() / 1.0e6;
+				visionPoseInterpolator.addSample(currentTimeStamp, visionObservation.visionPose());
 				addVisionObservation(visionObservation);
+				visionMovingAverageFilter.addFixedData(
+						visionObservation.visionPose(),
+						visionObservation.timestamp(),
+						currentTimeStamp,
+						odometryPoseInterpolator
+				);
 			}
 		}
 	}

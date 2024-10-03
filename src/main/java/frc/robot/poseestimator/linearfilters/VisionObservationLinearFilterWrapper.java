@@ -23,7 +23,7 @@ public class VisionObservationLinearFilterWrapper {
 	 * @param modifier:   modify the behavior of the filter. In case of FIR filters, this would be the sample count (casted to an
 	 *                    integer), and for IIR filters the time constant (the period is always the RobotRIO cycle time).
 	 */
-	public VisionObservationLinearFilterWrapper(String logPath, LinearFilterType filterType, int modifier) {
+	public VisionObservationLinearFilterWrapper(String logPath, LinearFilterType filterType, double modifier) {
 		xFilter = LinearFilterFactory.create(filterType, logPath, modifier);
 		yFilter = LinearFilterFactory.create(filterType, logPath, modifier);
 		angleFilter = LinearFilterFactory.create(filterType, logPath, modifier);
@@ -42,17 +42,17 @@ public class VisionObservationLinearFilterWrapper {
 	 *                                       odometry data
 	 */
 	public void addFixedData(
-		VisionObservation visionObservation,
+		Pose2d visionObservation,
 		double newOdometryStartingTimestamps,
 		double newOdometrySEndingTimestamps,
 		TimeInterpolatableBuffer<Pose2d> odometryObservationsOverTime
 	) {
-		Optional<Pose2d> odometryStartingPose = odometryObservationsOverTime.getSample(newOdometrySEndingTimestamps);
+		Optional<Pose2d> odometryStartingPose = odometryObservationsOverTime.getSample(newOdometryStartingTimestamps);
 		Optional<Pose2d> odometryEndingPose = odometryObservationsOverTime.getSample(newOdometrySEndingTimestamps);
 
 		if (odometryStartingPose.isPresent() && odometryEndingPose.isPresent()) {
 			updatedObservations
-				.add(fixVisionPose(visionObservation.visionPose(), odometryStartingPose.get(), odometryEndingPose.get()));
+				.add(fixVisionPose(visionObservation, odometryStartingPose.get(), odometryEndingPose.get()));
 		}
 	}
 

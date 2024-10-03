@@ -14,8 +14,8 @@ public class IDs {
 
 	public static final class CANSparkMaxIDs {
 
-		public static final SparkMaxDeviceID TOP_FLYWHEEL_MOTOR = new SparkMaxDeviceID(11);
-		public static final SparkMaxDeviceID BOTTOM_FLYWHEEL_MOTOR = new SparkMaxDeviceID(12);
+		public static final SparkMaxDeviceID TOP_FLYWHEEL = new SparkMaxDeviceID(11);
+		public static final SparkMaxDeviceID BOTTOM_FLYWHEEL = new SparkMaxDeviceID(12);
 
 	}
 

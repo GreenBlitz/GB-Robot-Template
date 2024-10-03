@@ -112,7 +112,7 @@ public class Modules {
 	}
 
 	public boolean isAtTargetStates() {
-		return isAtTargetAngles() && isAtTargetAngles();
+		return isAtTargetAngles() && isAtTargetVelocities();
 	}
 
 

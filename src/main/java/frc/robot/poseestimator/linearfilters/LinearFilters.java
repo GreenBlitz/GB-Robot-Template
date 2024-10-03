@@ -4,7 +4,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 
 public class LinearFilters {
 
-	static class HighPassIIR extends ILinearFilter {
+	static class HighPassIIR extends GBLinearFilter {
 
 		private LinearFilter filter;
 
@@ -19,7 +19,7 @@ public class LinearFilters {
 
 	}
 
-	static class SinglePoleIIR extends ILinearFilter {
+	static class SinglePoleIIR extends GBLinearFilter {
 
 		private LinearFilter filter;
 
@@ -34,7 +34,7 @@ public class LinearFilters {
 
 	}
 
-	static class MovingAverageFIR extends ILinearFilter {
+	static class MovingAverageFIR extends GBLinearFilter {
 
 		private LinearFilter filter;
 

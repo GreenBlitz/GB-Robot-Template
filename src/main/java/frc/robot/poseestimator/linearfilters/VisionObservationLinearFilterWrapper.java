@@ -10,9 +10,9 @@ import java.util.*;
 
 public class VisionObservationLinearFilterWrapper {
 
-	private final ILinearFilter xFilter;
-	private final ILinearFilter yFilter;
-	private final ILinearFilter angleFilter;
+	private final GBLinearFilter xFilter;
+	private final GBLinearFilter yFilter;
+	private final GBLinearFilter angleFilter;
 	private final Stack<Pose2d> updatedObservations;
 
 	/**

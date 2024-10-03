@@ -29,7 +29,7 @@ public class Flywheel extends GBSubsystem {
 		this.topSysIdCalibrator = new SysIdCalibrator(
 			topMotor.getSysidConfigInfo(),
 			this,
-				voltage -> topFlywheelComponents.voltageRequest().withSetPoint(voltage)
+			voltage -> topFlywheelComponents.voltageRequest().withSetPoint(voltage)
 		);
 		this.bottomSysIdCalibrator = new SysIdCalibrator(
 			bottomMotor.getSysidConfigInfo(),
@@ -45,8 +45,12 @@ public class Flywheel extends GBSubsystem {
 		return commandsBuilder;
 	}
 
-	public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+	public Command getTopSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
 		return topSysIdCalibrator.getSysIdCommand(isQuasistatic, direction);
+	}
+
+	public Command getBottomSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+		return bottomSysIdCalibrator.getSysIdCommand(isQuasistatic, direction);
 	}
 
 	protected void setPower(double power) {

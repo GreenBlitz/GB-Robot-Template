@@ -6,14 +6,14 @@ import frc.robot.Robot;
 
 public class FlywheelStateHandler {
 
-    private final Flywheel flywheel;
+	private final Flywheel flywheel;
 
-    public FlywheelStateHandler(Robot robot) {
-        this.flywheel = robot.getFlywheel();
-    }
+	public FlywheelStateHandler(Robot robot) {
+		this.flywheel = robot.getFlywheel();
+	}
 
-    public Command setState(FlywheelState state) {
-        return flywheel.getCommandsBuilder().setPower(state.getPower());
-    }
+	public Command setState(FlywheelState state) {
+		return flywheel.getCommandsBuilder().setPower(state.getPower());
+	}
 
 }

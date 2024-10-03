@@ -20,7 +20,6 @@ public class Funnel extends GBSubsystem {
 		this.shooterDigitalInput = funnelStuff.shooterDigitalInput();
 		this.funnelStuff = funnelStuff;
 		this.shooterDigitalInputInputs = new DigitalInputInputsAutoLogged();
-
 		this.commandsBuilder = new FunnelCommandsBuilder(this);
 
 		updateInputs();
@@ -34,11 +33,11 @@ public class Funnel extends GBSubsystem {
 		return shooterDigitalInputInputs.debouncedValue;
 	}
 
-	public void stop() {
+	protected void stop() {
 		motor.stop();
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		motor.setPower(power);
 	}
 

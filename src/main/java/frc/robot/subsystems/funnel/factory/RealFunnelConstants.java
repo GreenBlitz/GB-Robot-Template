@@ -18,19 +18,19 @@ public class RealFunnelConstants {
 
 	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
-
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
+
+	protected static void configMotor(SparkMaxWrapper motor){
+		motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+		motor.setSmartCurrentLimit(30);
+		motor.getEncoder().setPositionConversionFactor(FunnelConstants.GEAR_RATIO);
+		motor.getEncoder().setVelocityConversionFactor(FunnelConstants.GEAR_RATIO);
+	}
 
 	public static FunnelStuff generateFunnelStuff(String logPath) {
 		SparkMaxWrapper sparkMAXWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.FUNNEL);
-
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
-		sparkMAXWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
-
-		sparkMAXWrapper.setSmartCurrentLimit(30);
-		sparkMAXWrapper.getEncoder().setPositionConversionFactor(FunnelConstants.GEAR_RATIO);
-		sparkMAXWrapper.getEncoder().setVelocityConversionFactor(FunnelConstants.GEAR_RATIO);
-
+		configMotor(sparkMAXWrapper);
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMAXWrapper::getVoltage);

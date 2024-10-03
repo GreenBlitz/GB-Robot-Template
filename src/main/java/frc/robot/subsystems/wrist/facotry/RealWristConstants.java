@@ -1,6 +1,8 @@
 package frc.robot.subsystems.wrist.facotry;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.IDs;
@@ -16,6 +18,7 @@ public class RealWristConstants {
 	
 	protected static WristStuff generateWristStuff(String logPath){
 		TalonSRX motor = new TalonSRX(IDs.TalonSRXs.WRIST);
+		motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 		
 		return new WristStuff(
 				logPath,

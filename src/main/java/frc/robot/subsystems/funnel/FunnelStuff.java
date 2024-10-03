@@ -13,19 +13,8 @@ public record FunnelStuff(
 
 ) {
 
-	public FunnelStuff(
-		String logPath,
-		IMotor motor,
-		InputSignal<Double> voltageSignal,
-		IDigitalInput shooterDigitalInput
-	) {
-		this(
-			logPath,
-			logPath + "shooterDigitalInput/",
-			motor,
-			voltageSignal,
-			shooterDigitalInput
-		);
+	public FunnelStuff(String logPath, IMotor motor, InputSignal<Double> voltageSignal, IDigitalInput shooterDigitalInput) {
+		this(logPath, logPath + "shooterDigitalInput/", motor, voltageSignal, shooterDigitalInput);
 	}
 
 }

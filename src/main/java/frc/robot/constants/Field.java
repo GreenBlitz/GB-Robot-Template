@@ -71,17 +71,17 @@ public class Field {
 	private final static Translation2d BLUE_AMP_CLIMB_TRANSLATION = new Translation2d(4.34175, 5);
 	public static Translation2d getAMPClimbTranslation() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-			return BLUE_MID_CLIMB_TRANSLATION;
+			return BLUE_AMP_CLIMB_TRANSLATION;
 		}
-		return new Translation2d(MirrorMath.getMirroredX(BLUE_MID_CLIMB_TRANSLATION.getX()), BLUE_MID_CLIMB_TRANSLATION.getY());
+		return new Translation2d(MirrorMath.getMirroredX(BLUE_AMP_CLIMB_TRANSLATION.getX()), BLUE_AMP_CLIMB_TRANSLATION.getY());
 	}
 
 	private final static Translation2d BLUE_SOURCE_CLIMB_TRANSLATION = new Translation2d(4.34175, 3.2);
 	public static Translation2d getSourceClimbTranslation() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-			return BLUE_MID_CLIMB_TRANSLATION;
+			return BLUE_SOURCE_CLIMB_TRANSLATION;
 		}
-		return new Translation2d(MirrorMath.getMirroredX(BLUE_MID_CLIMB_TRANSLATION.getX()), BLUE_MID_CLIMB_TRANSLATION.getY());
+		return new Translation2d(MirrorMath.getMirroredX(BLUE_SOURCE_CLIMB_TRANSLATION.getX()), BLUE_SOURCE_CLIMB_TRANSLATION.getY());
 	}
 
 }

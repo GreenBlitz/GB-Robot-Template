@@ -17,8 +17,6 @@ import java.util.function.Function;
 
 public class RealFlywheelConstants {
 
-	public static Boolean isTopMotorInverted = true;
-
 	private static double kS = 3;
 	private static double kV = 3;
 	private static SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
@@ -37,7 +35,6 @@ public class RealFlywheelConstants {
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
-
 		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", sparkMaxWrapper.getEncoder()::getVelocity, AngleUnit.ROTATIONS);
 
 		sparkMaxWrapper.getPIDController().setP(5);
@@ -49,7 +46,6 @@ public class RealFlywheelConstants {
 			SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
 			0,
 			feedForwardCalculator
-
 		);
 
 		return new FlywheelComponents(logPath, motor, isInverted, voltageSignal, velocitySignal, velocityRequest);

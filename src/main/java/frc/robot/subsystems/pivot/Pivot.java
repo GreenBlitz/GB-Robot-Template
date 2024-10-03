@@ -5,7 +5,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 
 public class Pivot extends GBSubsystem {
 

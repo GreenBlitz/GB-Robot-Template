@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 
 public class Flywheel extends GBSubsystem {
 

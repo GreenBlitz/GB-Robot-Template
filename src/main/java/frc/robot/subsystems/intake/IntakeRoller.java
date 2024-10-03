@@ -12,7 +12,7 @@ public class IntakeRoller extends GBSubsystem {
 	private final IDigitalInput digitalInput;
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final IntakeRollerStuff intakeRollerStuff;
-	private final IntakeRollerCommandsBuilder intakeRollercommandBuilder;
+	private final IntakeRollerCommandsBuilder intakeRollercommandsBuilder;
 
 	public IntakeRoller(IntakeRollerStuff intakeRollerStuff) {
 		super(intakeRollerStuff.logPath());
@@ -20,12 +20,12 @@ public class IntakeRoller extends GBSubsystem {
 		this.digitalInput = intakeRollerStuff.digitalInput();
 		this.intakeRollerStuff = intakeRollerStuff;
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
-		this.intakeRollercommandBuilder = new IntakeRollerCommandsBuilder(this);
+		this.intakeRollercommandsBuilder = new IntakeRollerCommandsBuilder(this);
 		updateInputs();
 	}
 
 	public IntakeRollerCommandsBuilder getCommandsBuilder() {
-		return intakeRollercommandBuilder;
+		return intakeRollercommandsBuilder;
 	}
 
 	public boolean isNoteIn() {
@@ -44,12 +44,12 @@ public class IntakeRoller extends GBSubsystem {
 		digitalInput.updateInputs(digitalInputsInputs);
 		motor.updateSignals(intakeRollerStuff.voltageSignal());
 		Logger.processInputs(intakeRollerStuff.digitalInputLogPath(), digitalInputsInputs);
+		Logger.recordOutput(intakeRollerStuff.logPath() + "IsObjectIn", isNoteIn());
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.recordOutput(intakeRollerStuff.logPath() + "IsObjectIn", isNoteIn());
 	}
 
 }

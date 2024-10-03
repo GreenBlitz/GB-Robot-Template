@@ -12,7 +12,11 @@ public class IDs {
 		20,
 		PowerDistribution.ModuleType.kRev
 	);
-	public static final SparkMaxDeviceID INTAKE_ROLLER = new SparkMaxDeviceID(5, CANSparkLowLevel.MotorType.kBrushless);
 
+	public static final class CANSparkMaxIDs {
+
+		public static final SparkMaxDeviceID INTAKE_ROLLER = new SparkMaxDeviceID(5, CANSparkLowLevel.MotorType.kBrushless);
+
+	}
 
 }

@@ -14,19 +14,19 @@ public class IntakeRollerCommandsBuilder {
 		this.intakeRoller = intake;
 	}
 
-	public Command setPower(double Power) {
-		return new FunctionalCommand(() -> {}, () -> intakeRoller.setPower(Power), interrupted -> intakeRoller.stop(), () -> false, intakeRoller)
-			.withName("set power: " + Power);
+	public Command setPower(double power) {
+		return new FunctionalCommand(() -> {}, () -> intakeRoller.setPower(power), interrupted -> intakeRoller.stop(), () -> false, intakeRoller)
+			.withName("set power: " + power);
 	}
 
-	public Command setPower(DoubleSupplier Power) {
+	public Command setPower(DoubleSupplier power) {
 		return new FunctionalCommand(
 			() -> {},
-			() -> intakeRoller.setPower(Power.getAsDouble()),
+			() -> intakeRoller.setPower(power.getAsDouble()),
 			interrupted -> intakeRoller.stop(),
 			() -> false,
 			intakeRoller
-		).withName("set power: " + Power);
+		).withName("set power by supplier: " + power);
 	}
 
 	public Command stop() {

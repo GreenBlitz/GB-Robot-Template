@@ -5,10 +5,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.poseestimator.linearfilters.LinearFilterType;
 
 public class PoseEstimatorConstants {
 
 	protected static final String LOG_PATH = "PoseEstimator/";
+
+	static class VISION_LINEAR_FILTER {
+
+		protected static final String LOG_PATH = "VisionLinearFilter/";
+
+		protected static final LinearFilterType FILTER_TYPE = LinearFilterType.movingAverageFIR;
+
+		protected static final int SAMPLE_COUNT = 10;
+
+	}
 
 	protected static final int OBSERVATION_COUNT_FOR_POSE_CALIBRATION = 45;
 

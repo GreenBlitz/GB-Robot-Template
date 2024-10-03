@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.modules.extrainputs;
+package frc.robot.subsystems.swerve.module.extrainputs;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.AutoLog;

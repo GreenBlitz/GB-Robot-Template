@@ -2,7 +2,7 @@ package frc.robot.subsystems.solenoid;
 
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 
 public class Solenoid extends GBSubsystem {
 

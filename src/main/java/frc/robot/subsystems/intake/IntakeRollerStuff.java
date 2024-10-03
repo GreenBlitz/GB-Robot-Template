@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.intake;
 
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.IMotor;

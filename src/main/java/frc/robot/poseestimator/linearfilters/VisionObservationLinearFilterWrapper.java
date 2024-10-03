@@ -8,15 +8,16 @@ import java.util.*;
 
 public class VisionObservationLinearFilterWrapper {
 
-	private final ILinearFilter linearFilter;
-	private final ArrayList<Pose2d> updatedObservations;
+	private final ILinearFilter<Pose2d> linearFilter;
+	private final Stack<Pose2d> updatedObservations;
 
 	public VisionObservationLinearFilterWrapper(LinearFilterType filterType) {
 		linearFilter = switch (filterType) {
-			case FIR -> new FIRFilter();
-			case IIR -> new IIRFilter();
+			case highPassIIR -> new HighPassIIR();
+            case singlePoleIIR -> new SigSinglePoseIIR();
+			case movingAverageFIR -> new MovingAverageFIR();
 		};
-		this.updatedObservations = new ArrayList<>();
+		this.updatedObservations = new Stack<>();
 	}
 
 	/**
@@ -36,14 +37,22 @@ public class VisionObservationLinearFilterWrapper {
 		double newOdometrySEndingTimestamps,
 		NavigableMap<Double, Pose2d> odometryObservationsOverTime
 	) {
-		updatedObservations.add(
-			fixVisionPose(
-				visionObservation.visionPose(),
-				(Pose2d[]) odometryObservationsOverTime.subMap(newOdometryStartingTimestamps, newOdometrySEndingTimestamps)
-					.values()
-					.toArray()
-			)
-		);
+		try {
+			updatedObservations.add(
+					fixVisionPose(
+							visionObservation.visionPose(),
+							(Pose2d[]) odometryObservationsOverTime.subMap(newOdometryStartingTimestamps, newOdometrySEndingTimestamps)
+									.values()
+									.toArray()
+					)
+			);
+		} catch (ClassCastException e) {
+			return;
+		}
+	}
+
+	public void addRawData(VisionObservation data) {
+		updatedObservations.add(data.visionPose());
 	}
 
 	private Pose2d fixVisionPose(Pose2d visionPose, Pose2d[] newOdometryData) {
@@ -58,6 +67,10 @@ public class VisionObservationLinearFilterWrapper {
 		}
 
 		return output;
+	}
+
+	public Pose2d calculateFilteredPose() {
+		return linearFilter.calculateNewData(updatedObservations.getLast());
 	}
 
 }

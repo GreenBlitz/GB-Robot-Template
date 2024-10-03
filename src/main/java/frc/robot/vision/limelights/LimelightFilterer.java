@@ -64,11 +64,11 @@ public class LimelightFilterer extends GBSubsystem {
 	}
 
 	private boolean keepLimelightData(LimelightRawData limelightRawData) {
-		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
-			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData, poseEstimator.getEstimatedPose())
-			&& LimelightFilters.isRollZero(limelightRawData)
-			&& LimelightFilters.isPitchZero(limelightRawData)
-			&& LimelightFilters.isRobotOnGround(limelightRawData);
+//		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
+		return LimelightFilters.isLimelightOutputInTolerance(limelightRawData, poseEstimator.getEstimatedPose());
+//			&& LimelightFilters.isRollZero(limelightRawData)
+//			&& LimelightFilters.isPitchZero(limelightRawData)
+//			&& LimelightFilters.isRobotOnGround(limelightRawData);
 	}
 
 	public void logEstimatedPositions() {

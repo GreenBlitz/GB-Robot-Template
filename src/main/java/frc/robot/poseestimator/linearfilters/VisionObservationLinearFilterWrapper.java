@@ -70,4 +70,8 @@ public class VisionObservationLinearFilterWrapper {
 		);
 	}
 
+	public boolean isThereLastObservedPose() {
+		return lastObservedPose != null;
+	}
+
 }

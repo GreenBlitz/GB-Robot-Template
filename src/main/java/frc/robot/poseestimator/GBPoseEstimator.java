@@ -130,14 +130,16 @@ public class GBPoseEstimator implements IPoseEstimator {
 				double currentTimeStamp = Logger.getRealTimestamp() / 1.0e6;
 				visionPoseInterpolator.addSample(currentTimeStamp, visionObservation.visionPose());
 				visionMovingAverageFilter
-					.addFixedData(visionObservation.visionPose(), visionObservation.timestamp(), currentTimeStamp, odometryPoseInterpolator);
-				addVisionObservation(
-					new VisionObservation(
-						visionMovingAverageFilter.calculateFilteredPose(),
-						visionObservation.standardDeviations(),
-						visionObservation.timestamp()
-					)
-				);
+					.addFixedData(visionObservation.visionPose(), visionObservation.timestamp(), currentTimeStamp, estimatedPoseInterpolator);
+				if (visionMovingAverageFilter.isThereLastObservedPose()) {
+					addVisionObservation(
+						new VisionObservation(
+							visionMovingAverageFilter.calculateFilteredPose(),
+							visionObservation.standardDeviations(),
+							visionObservation.timestamp()
+						)
+					);
+				}
 			}
 		}
 		valueEntered = entered;

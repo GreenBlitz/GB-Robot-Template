@@ -27,8 +27,7 @@ public class RealElbowConstants {
 	private static final int POSITION_PID_SLOT = 0;
 
 	private static SparkMaxAngleRequest generatePositionRequest() {
-		Function<CANSparkMax, Double> feedforwardCalculation = canSparkMax -> FEEDFORWARD
-			.calculate(canSparkMax.getEncoder().getPosition(), canSparkMax.getEncoder().getVelocity());
+		Function<Rotation2d, Double> feedforwardCalculation = setPoint -> FEEDFORWARD.calculate(setPoint.getRadians(), 0);
 		return new SparkMaxAngleRequest(
 			new Rotation2d(),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,

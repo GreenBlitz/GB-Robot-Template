@@ -4,16 +4,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum FlywheelState {
 
-	IDLE(Rotation2d.fromRotations(40)),
+	DEFAULT(Rotation2d.fromRotations(40)),
 	SHOOTING(Rotation2d.fromRotations(60));
 
-	Rotation2d velocity;
+	private final Rotation2d velocity;
 
 	FlywheelState(Rotation2d velocity) {
 		this.velocity = velocity;
 	}
 
-	public Rotation2d getPower() {
+	public Rotation2d getVelocity() {
 		return velocity;
 	}
 

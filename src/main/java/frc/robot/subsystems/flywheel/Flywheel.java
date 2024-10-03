@@ -23,17 +23,16 @@ public class Flywheel extends GBSubsystem {
 		this.rightFlywheelVelocityRequest = flywheelStuff.rightFlywheelVelocityRequest();
 		this.leftFlywheelVelocityRequest = flywheelStuff.leftFlywheelVelocityRequest();
 		this.flywheelStuff = flywheelStuff;
-
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
 
-		updateSignals();
+		updateInputs();
 	}
 
 	public FlywheelCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 
-	private void updateSignals() {
+	private void updateInputs() {
 		rightMotor.updateSignals(flywheelStuff.rightSignals());
 		rightMotor.updateSignals(flywheelStuff.rightVelocitySignal());
 		leftMotor.updateSignals(flywheelStuff.leftSignals());
@@ -42,7 +41,7 @@ public class Flywheel extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		updateSignals();
+		updateInputs();
 	}
 
 	protected void stop() {

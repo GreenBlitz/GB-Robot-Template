@@ -20,25 +20,25 @@ public class Pivot extends GBSubsystem {
 		this.motor = pivotStuff.motor();
 		this.positionRequest = pivotStuff.positionRequest();
 		this.pivotStuff = pivotStuff;
-		this.pivotCommandsBuilder = new PivotCommandsBuilder(this);
 		this.resetFilter = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
+		this.pivotCommandsBuilder = new PivotCommandsBuilder(this);
 
 		motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
-		updateSignals();
+		updateInputs();
 	}
 
 	public PivotCommandsBuilder getCommandsBuilder() {
 		return pivotCommandsBuilder;
 	}
 
-	private void updateSignals() {
+	private void updateInputs() {
 		motor.updateSignals(pivotStuff.positionSignal());
 		motor.updateSignals(pivotStuff.inputSignals());
 	}
 
 	@Override
 	public void subsystemPeriodic() {
-		updateSignals();
+		updateInputs();
 		if (
 			PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations()
 				> resetFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())

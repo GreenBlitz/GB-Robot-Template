@@ -1,5 +1,6 @@
 package frc.robot.subsystems.flywheel.factory;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
@@ -11,10 +12,18 @@ import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.flywheel.FlywheelComponents;
 import frc.utils.AngleUnit;
 
+import java.util.function.Function;
+
 
 public class RealFlywheelConstants {
 
 	public static Boolean isTopMotorInverted = true;
+
+	private static double kS = 3;
+	private static double kV = 3;
+	private static SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
+
+	private static Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
 
 	public static FlywheelComponents generateFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
@@ -38,7 +47,9 @@ public class RealFlywheelConstants {
 		SparkMaxAngleRequest velocityRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(0),
 			SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
-			0
+			0,
+			feedForwardCalculator
+
 		);
 
 		return new FlywheelComponents(logPath, motor, isInverted, voltageSignal, velocitySignal, velocityRequest);

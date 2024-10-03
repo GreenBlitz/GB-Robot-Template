@@ -3,7 +3,7 @@ package frc.robot.subsystems.funnel;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.IMotor;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends GBSubsystem {

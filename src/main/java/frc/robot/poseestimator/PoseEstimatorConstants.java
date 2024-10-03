@@ -17,7 +17,7 @@ public class PoseEstimatorConstants {
 
 		protected static final LinearFilterType FILTER_TYPE = LinearFilterType.movingAverageFIR;
 
-		protected static final int SAMPLE_COUNT = 10;
+		protected static final int SAMPLE_COUNT = 20;
 
 	}
 

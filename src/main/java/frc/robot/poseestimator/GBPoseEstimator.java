@@ -31,6 +31,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private SwerveDriveWheelPositions lastWheelPositions;
 	private Rotation2d lastGyroAngle;
 	private VisionObservation lastVisionObservation;
+	private boolean valueEntered;
 
 	public GBPoseEstimator(
 		SwerveDriveKinematics kinematics,
@@ -53,6 +54,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 			PoseEstimatorConstants.VISION_LINEAR_FILTER.FILTER_TYPE,
 			PoseEstimatorConstants.VISION_LINEAR_FILTER.SAMPLE_COUNT
 		);
+		this.valueEntered = false;
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
 
@@ -121,7 +123,9 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 	@Override
 	public void updateVision(List<VisionObservation> visionObservations) {
+		boolean entered = false;
 		for (VisionObservation visionObservation : visionObservations) {
+			entered |= !isObservationTooOld(visionObservation);
 			if (!isObservationTooOld(visionObservation)) {
 				double currentTimeStamp = Logger.getRealTimestamp() / 1.0e6;
 				visionPoseInterpolator.addSample(currentTimeStamp, visionObservation.visionPose());
@@ -136,6 +140,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 				);
 			}
 		}
+		valueEntered = entered;
 	}
 
 	@Override
@@ -170,7 +175,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 			Pose2d appliedVisionObservation = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
 			appliedVisionObservation = appliedVisionObservation
 				.plus(PoseEstimationMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
-			estimatedPose = appliedVisionObservation;
+			estimatedPose = new Pose2d(appliedVisionObservation.getTranslation(), odometryPoseSample.getRotation());
 			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, appliedVisionObservation);
 		});
 	}
@@ -199,6 +204,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 	public void logEstimatedPose() {
 		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "EstimatedPose", getEstimatedPose());
+		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "IsLimelightValueEntered", valueEntered);
 	}
 
 }

@@ -83,6 +83,8 @@ public class LimelightFilterer extends GBSubsystem {
 	}
 
 	@Override
-	protected void subsystemPeriodic() {}
+	protected void subsystemPeriodic() {
+		logEstimatedPositions();
+	}
 
 }

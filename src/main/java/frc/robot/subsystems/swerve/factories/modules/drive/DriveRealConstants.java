@@ -47,7 +47,7 @@ class DriveRealConstants {
 	protected static TalonFXDriveConstants FRONT_LEFT_CONSTANTS(String logPathPrefix) {
 		return new TalonFXDriveConstants(
 			IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR,
-			false,
+			true,
 			MOTOR_CONFIG,
 			ENABLE_FOC,
 			SYSID_CONFIG,

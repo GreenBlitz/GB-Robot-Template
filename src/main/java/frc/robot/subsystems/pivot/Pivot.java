@@ -25,10 +25,10 @@ public class Pivot extends GBSubsystem {
 
 		motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 		updateSignals();
-		resetRestFilter();
+		resetResetFilter();
 	}
 
-	private void resetRestFilter() {
+	private void resetResetFilter() {
 		for (int i = 0; i < PivotConstants.MEDIAN_FILTER_SIZE; i++) {
 			resetFilterRotations.calculate(pivotStuff.positionSignal().getLatestValue().getRotations());
 		}
@@ -64,10 +64,6 @@ public class Pivot extends GBSubsystem {
 
 	protected void setPower(double power) {
 		motor.setPower(power);
-	}
-
-	public void resetAngle(Rotation2d position){
-		motor.resetPosition(position);
 	}
 
 	protected void setTargetPosition(Rotation2d targetPosition) {

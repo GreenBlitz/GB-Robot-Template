@@ -1,8 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.pivot.PivotConstants;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -27,9 +24,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPivot().resetAngle(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE)));
-		usedJoystick.X.onTrue(robot.getPivot().getCommandsBuilder().moveToPosition(Rotation2d.fromDegrees(30), Rotation2d.fromDegrees(1)));
-		usedJoystick.Y.onTrue(robot.getPivot().getCommandsBuilder().stop());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

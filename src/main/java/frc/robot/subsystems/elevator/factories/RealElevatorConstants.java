@@ -38,7 +38,7 @@ public class RealElevatorConstants {
 
 	public static ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
 
-	public static double FEED_FORWARD_FUNCTION(CANSparkMax motor) {
+	public static double feedforwardCalculation(CANSparkMax motor) {
 		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(motor.getEncoder().getVelocity());
 	}
 
@@ -54,6 +54,9 @@ public class RealElevatorConstants {
 		mainSparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
 		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.GEAR_RATIO);
 		mainSparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
+		mainSparkMaxWrapper.getPIDController().setP(1);
+		mainSparkMaxWrapper.getPIDController().setI(0);
+		mainSparkMaxWrapper.getPIDController().setD(0);
 
 		secondarySparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		secondarySparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
@@ -71,7 +74,7 @@ public class RealElevatorConstants {
 			Rotation2d.fromRotations(0),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
 			ElevatorConstants.ELEVATOR_PID_SLOT,
-			RealElevatorConstants::FEED_FORWARD_FUNCTION
+			RealElevatorConstants::feedforwardCalculation
 		);
 
 		return new ElevatorStuff(logPath, mainMotor, motorsVoltageSignal, mainMotorPositionSignal, angleRequest, limitSwitch);

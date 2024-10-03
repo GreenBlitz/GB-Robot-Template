@@ -43,9 +43,7 @@ public class LifterRealConstants {
 
 	protected static LifterStuff generateLifterStuff(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
-		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
-			Logger.recordMetadata("lifter motor was not configured.", String.valueOf(Timer.getFPGATimestamp()));
-		}
+		talonFXWrapper.applyConfiguration(generateMotorConfiguration());
 
 		return new LifterStuff(
 			logPath,

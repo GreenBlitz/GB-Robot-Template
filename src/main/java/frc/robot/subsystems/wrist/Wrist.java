@@ -28,6 +28,9 @@ public class Wrist extends GBSubsystem {
 	public void setPower(double power){
 		motor.setPower(power);
 	}
+	public void stop(){
+		motor.stop();
+	}
 	
 	public void setBrake(boolean brake){
 		motor.setBrake(brake);

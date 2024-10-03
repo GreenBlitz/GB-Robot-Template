@@ -13,7 +13,7 @@ public class FlywheelStateHandler {
 	}
 
 	public Command setState(FlywheelState state) {
-		return flywheel.getCommandsBuilder().setPower(state.getPower());
+		return flywheel.getCommandsBuilder().setVelocity(state.getPower());
 	}
 
 }

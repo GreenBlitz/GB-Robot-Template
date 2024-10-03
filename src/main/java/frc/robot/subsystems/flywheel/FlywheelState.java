@@ -1,18 +1,20 @@
 package frc.robot.subsystems.flywheel;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public enum FlywheelState {
 
-	IDLE(0.8),
-	SHOOTING(0.8);
+	IDLE(Rotation2d.fromRotations(40)),
+	SHOOTING(Rotation2d.fromRotations(60));
 
-	double power;
+	Rotation2d velocity;
 
-	FlywheelState(double power) {
-		this.power = power;
+	FlywheelState(Rotation2d velocity) {
+		this.velocity = velocity;
 	}
 
-	public double getPower() {
-		return power;
+	public Rotation2d getPower() {
+		return velocity;
 	}
 
 }

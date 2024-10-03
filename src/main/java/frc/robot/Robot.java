@@ -28,9 +28,9 @@ public class Robot {
 
 	public Robot() {
 		this.swerve = new Swerve(
-				SwerveConstantsFactory.create(SwerveType.SWERVE),
-				ModulesFactory.create(SwerveType.SWERVE),
-				GyroFactory.create(SwerveType.SWERVE)
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			GyroFactory.create(SwerveType.SWERVE)
 		);
 
 		this.superstructure = new Superstructure(this);

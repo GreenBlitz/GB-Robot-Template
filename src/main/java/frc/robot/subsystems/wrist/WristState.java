@@ -12,4 +12,8 @@ public enum WristState {
 	WristState(Rotation2d position) {
 		this.position = position;
 	}
+	
+	public Rotation2d getPosition() {
+		return position;
+	}
 }

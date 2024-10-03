@@ -12,6 +12,7 @@ public class Wrist extends GBSubsystem {
 	private final IRequest<Rotation2d> positionRequest;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final WristStuff wristStuff;
+	private final WristCommandsBuilder commandsBuilder;
 	
 	public Wrist(WristStuff wristStuff) {
 		super(wristStuff.logPath());
@@ -19,6 +20,7 @@ public class Wrist extends GBSubsystem {
 		this.positionRequest = wristStuff.positionRequest();
 		this.positionSignal = wristStuff.positionSignal();
 		this.wristStuff = wristStuff;
+		this.commandsBuilder = new WristCommandsBuilder(this);
 	}
 	
 	public void setTargetPosition (Rotation2d position){
@@ -38,6 +40,10 @@ public class Wrist extends GBSubsystem {
 	
 	public void resetPosition(Rotation2d position){
 		motor.resetPosition(position);
+	}
+	
+	public WristCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 	
 	private void updateInputs(){

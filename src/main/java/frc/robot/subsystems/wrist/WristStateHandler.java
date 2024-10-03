@@ -11,7 +11,7 @@ public class WristStateHandler {
 	}
 	
 	public Command setState(WristState state){
-		return
+		return wrist.getCommandsBuilder().setPosition(state.getPosition());
 	}
 	
 }

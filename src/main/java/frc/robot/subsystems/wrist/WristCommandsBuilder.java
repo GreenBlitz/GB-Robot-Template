@@ -14,23 +14,23 @@ public class WristCommandsBuilder {
 		this.wrist = wrist;
 	}
 	
-	public Command setPower(DoubleSupplier power){
+	public Command setPower(DoubleSupplier power) {
 		return new FunctionalCommand(
 				() -> {},
 				() -> wrist.setPower(power.getAsDouble()),
 				(interrupted) -> wrist.stop(),
 				() -> false,
 				wrist
-		);
+		).withName("set power to: " + power);
 	}
 	
-	public Command setPosition(Rotation2d position){
+	public Command setPosition(Rotation2d position) {
 		return new FunctionalCommand(
 				() -> {},
 				() -> wrist.setTargetPosition(position),
 				(interrupted) -> wrist.stop(),
 				() -> false,
 				wrist
-		);
+		).withName("set position to: " + position.getDegrees());
 	}
 }

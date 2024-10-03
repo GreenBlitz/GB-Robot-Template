@@ -7,14 +7,14 @@ public enum SolenoidState {
 	HOLD(0.2);
 
 
-	private final double appliedPower;
+	private final double power;
 
-	SolenoidState(double appliedPower) {
-		this.appliedPower = appliedPower;
+	SolenoidState(double power) {
+		this.power = power;
 	}
 
-	public double getAppliedPower() {
-		return appliedPower;
+	public double getPower() {
+		return power;
 	}
 
 }

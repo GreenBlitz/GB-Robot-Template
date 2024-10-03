@@ -11,8 +11,7 @@ public class SolenoidStateHandler {
 	}
 
 	public Command setState(SolenoidState state) {
-		return solenoid.getCommandsBuilder().setPower(state.getAppliedPower());
+		return solenoid.getCommandsBuilder().setPower(state.getPower());
 	}
-
 
 }

@@ -7,11 +7,14 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.intake.pivot.PivotConstants;
 import frc.robot.subsystems.intake.pivot.PivotStuff;
 import frc.utils.AngleUnit;
+
+import java.util.function.Function;
 
 public class RealPivotConstants {
 
@@ -19,9 +22,10 @@ public class RealPivotConstants {
 
 	private static final SimpleMotorFeedforward FEEDFORWARD_CALCULATOR = new SimpleMotorFeedforward(0, 0, 0);
 
-	private static Double FEEDFORWARD_FUNCTION(SparkMaxWrapper motor) {
-		return FEEDFORWARD_CALCULATOR.calculate(motor.getAbsoluteEncoder().getVelocity());
-	}
+	//@formatter:off
+	private static final Function<CANSparkMax, Double> FEEDFORWARD_FUNCTION =
+			canSparkMax -> FEEDFORWARD_CALCULATOR.calculate(canSparkMax.getAbsoluteEncoder().getVelocity());
+	//@formatter:on
 
 	public static PivotStuff generatePivotStuff() {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.PIVOT_MOTOR_ID);
@@ -42,7 +46,13 @@ public class RealPivotConstants {
 			positionSignal.getLatestValue(),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
 			PivotConstants.PID_SLOT,
-			aaa
+			FEEDFORWARD_FUNCTION
+		);
+
+		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(
+			voltageSignal.getLatestValue(),
+			SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,
+			PivotConstants.PID_SLOT
 		);
 
 		return new PivotStuff(
@@ -50,6 +60,7 @@ public class RealPivotConstants {
 			motor,
 			voltageSignal,
 			positionSignal,
+			voltageRequest,
 			positionRequest,
 			sparkMaxWrapper.getAbsoluteEncoder()
 		);

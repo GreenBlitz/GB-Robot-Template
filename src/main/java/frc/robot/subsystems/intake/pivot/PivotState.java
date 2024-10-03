@@ -2,17 +2,17 @@ package frc.robot.subsystems.intake.pivot;
 
 public enum PivotState {
 
-    DOWN(0),
-    UP(1);
+	DOWN(0),
+	UP(1);
 
-    private double degrees;
+	private double degrees;
 
-    PivotState(double degrees) {
-        this.degrees = degrees;
-    }
+	PivotState(double degrees) {
+		this.degrees = degrees;
+	}
 
-    public double getDegrees() {
-        return degrees;
-    }
+	public double getDegrees() {
+		return degrees;
+	}
 
 }

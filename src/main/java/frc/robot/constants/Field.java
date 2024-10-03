@@ -22,6 +22,7 @@ public class Field {
 
 
 	private static final Translation3d SPEAKER = new Translation3d(0.23, WIDTH_METERS - 2.55, 2.045);
+
 	public static Translation3d getSpeaker() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return SPEAKER;
@@ -31,6 +32,7 @@ public class Field {
 
 
 	private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
+
 	public static Rotation2d getAngleToAmp() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return ANGLE_TO_AMP;
@@ -40,6 +42,7 @@ public class Field {
 
 
 	private final static Pose2d BLUE_MID_CLIMB = new Pose2d(5.94175, 4, Rotation2d.fromDegrees(180));
+
 	public static Pose2d getMidClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return BLUE_MID_CLIMB;
@@ -48,6 +51,7 @@ public class Field {
 	}
 
 	private final static Pose2d BLUE_AMP_CLIMB = new Pose2d(4.34175, 5, Rotation2d.fromDegrees(-60));
+
 	public static Pose2d getAMPClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return BLUE_AMP_CLIMB;
@@ -56,6 +60,7 @@ public class Field {
 	}
 
 	private final static Pose2d BLUE_SOURCE_CLIMB = new Pose2d(4.34175, 3.2, Rotation2d.fromDegrees(60));
+
 	public static Pose2d getSourceClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return BLUE_SOURCE_CLIMB;

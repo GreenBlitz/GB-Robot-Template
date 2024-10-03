@@ -15,5 +15,4 @@ public record FlywheelComponents(
 	IRequest<Rotation2d> velocityRequest,
 	IRequest<Double> voltageRequest
 
-
 ) {}

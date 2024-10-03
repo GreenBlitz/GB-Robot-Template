@@ -15,8 +15,7 @@ public class Flywheel extends GBSubsystem {
 	private final ControllableMotor topMotor;
 	private final ControllableMotor bottomMotor;
 	private final FlywheelCommandsBuilder commandsBuilder;
-	private final SysIdCalibrator topSysIdCalibrator;
-	private final SysIdCalibrator bottomSysIdCalibrator;
+	private final SysIdCalibrator sysIdCalibrator;
 
 	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents, String logPath) {
 		super(logPath);
@@ -26,36 +25,31 @@ public class Flywheel extends GBSubsystem {
 		this.topMotor = topFlywheelComponents.motor();
 		this.bottomMotor = bottomFlywheelComponents.motor();
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
-		this.topSysIdCalibrator = new SysIdCalibrator(
-			topMotor.getSysidConfigInfo(),
-			this,
-			voltage -> topFlywheelComponents.voltageRequest().withSetPoint(voltage)
-		);
-		this.bottomSysIdCalibrator = new SysIdCalibrator(
+		this.sysIdCalibrator = new SysIdCalibrator(
 			bottomMotor.getSysidConfigInfo(),
 			this,
-			voltage -> bottomFlywheelComponents.voltageRequest().withSetPoint(voltage)
+				this::setVoltage
 		);
 
 		updateInputs();
 	}
 
-
 	public FlywheelCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 
-	public Command getTopSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-		return topSysIdCalibrator.getSysIdCommand(isQuasistatic, direction);
-	}
-
-	public Command getBottomSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-		return bottomSysIdCalibrator.getSysIdCommand(isQuasistatic, direction);
+	public SysIdCalibrator getSysIdCalibrator() {
+		return sysIdCalibrator;
 	}
 
 	protected void setPower(double power) {
 		topMotor.setPower(power);
 		bottomMotor.setPower(power);
+	}
+
+	protected void setVoltage(double voltage){
+		topFlywheelComponents.voltageRequest().withSetPoint(voltage);
+		bottomFlywheelComponents.voltageRequest().withSetPoint(voltage);
 	}
 
 	protected void setTargetVelocity(Rotation2d targetVelocity) {

@@ -12,11 +12,17 @@ public class LifterStateHandler {
 
 	public Command setState(LifterState state) {
 		return switch (state) {
-			case HOLD -> lifter.getLifterCommandsBuilder().stop();
-			case FORWARD -> lifter.getLifterCommandsBuilder().setPower(LifterConstants.FORWARD_POWER);
-			case BACKWARD -> lifter.getLifterCommandsBuilder().setPower(LifterConstants.BACKWARD_POWER);
-			case EXTENDED -> lifter.getLifterCommandsBuilder().extend(LifterConstants.EXTENDED_POSITION);
-			case RETRACTED -> lifter.getLifterCommandsBuilder().extend(LifterConstants.RETRACTED_POSITION);
+			case HOLD -> lifter.getCommandsBuilder().stop();
+			case FORWARD -> lifter.getCommandsBuilder().setPower(LifterConstants.FORWARD_POWER);
+			case BACKWARD -> lifter.getCommandsBuilder().setPower(LifterConstants.BACKWARD_POWER);
+			case EXTENDED ->
+				lifter.getCommandsBuilder()
+					.setPower(LifterConstants.EXTENDING_POWER)
+					.until(() -> lifter.isHigher(LifterConstants.EXTENDED_POSITION));
+			case RETRACTED ->
+				lifter.getCommandsBuilder()
+					.setPower(LifterConstants.RETRACTING_POWER)
+					.until(() -> lifter.isLower(LifterConstants.RETRACTED_POSITION));
 		};
 	}
 

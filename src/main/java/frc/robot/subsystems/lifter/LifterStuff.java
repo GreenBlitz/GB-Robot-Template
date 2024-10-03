@@ -9,7 +9,5 @@ public record LifterStuff(
 	ControllableMotor motor,
 	double drumRadius,
 	InputSignal<Rotation2d> positionSignal,
-	double extendingPower,
-	double retractingPower,
 	InputSignal... otherSignals
 ) {}

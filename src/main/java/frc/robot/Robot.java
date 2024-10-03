@@ -27,7 +27,7 @@ public class Robot {
 		FlywheelComponents topFlywheelComponents = FlywheelFactory
 			.create(FlywheelConstants.LOG_PATH + "TopMotor", FlywheelConstants.IS_TOP_MOTOR_INVERTED, IDs.CANSparkMaxIDs.TOP_FLYWHEEL);
 		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
-			.create(FlywheelConstants.LOG_PATH + "BottomMotor", !FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL);
+			.create(FlywheelConstants.LOG_PATH + "BottomMotor", FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL);
 		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH);
 
 		configureBindings();

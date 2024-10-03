@@ -12,5 +12,7 @@ public record FlywheelComponents(
 	boolean isInverted,
 	InputSignal<Double> voltageSignal,
 	SuppliedAngleSignal velocitySignal,
-	IRequest<Rotation2d> velocityRequest
+	IRequest<Rotation2d> velocityRequest,
+	IRequest<Double> voltageRequest
+
 ) {}

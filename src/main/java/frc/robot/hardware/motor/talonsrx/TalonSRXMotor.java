@@ -4,10 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.srx.AngleSRXRequest;
 import frc.robot.hardware.request.srx.DoubleSRXRequest;
@@ -20,9 +18,9 @@ public class TalonSRXMotor implements ControllableMotor {
 
 	private final String logPath;
 	private final TalonSRX motor;
-	private final Rotation2d gearRatio;
+	private final double gearRatio;
 
-	public TalonSRXMotor(String logPath, TalonSRX talonSRX, Rotation2d gearRatio) {
+	public TalonSRXMotor(String logPath, TalonSRX talonSRX, double gearRatio) {
 		this.logPath = logPath;
 		this.motor = talonSRX;
 		this.gearRatio = gearRatio;
@@ -39,15 +37,15 @@ public class TalonSRXMotor implements ControllableMotor {
 			Logger.processInputs(logPath, signal);
 		}
 	}
-	
+
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
 		return null;
 	}
-	
+
 	@Override
 	public void resetPosition(Rotation2d position) {
-		motor.setSelectedSensorPosition(Conversions.angleToMagTicks(position, gearRatio.getRotations()));
+		motor.setSelectedSensorPosition(Conversions.angleToMagTicks(position, gearRatio));
 	}
 
 	@Override
@@ -65,19 +63,19 @@ public class TalonSRXMotor implements ControllableMotor {
 	public void setPower(double power) {
 		motor.set(TalonSRXControlMode.PercentOutput, power);
 	}
-	
-	
+
+
 	@Override
 	public void applyDoubleRequest(IRequest<Double> request) {
 		DoubleSRXRequest srxRequest = (DoubleSRXRequest) request;
 		motor.set(srxRequest.getControlMode(), srxRequest.getSetPoint());
 	}
-	
+
 	@Override
 	public void applyAngleRequest(IRequest<Rotation2d> request) {
 		AngleSRXRequest srxRequest = (AngleSRXRequest) request;
 		motor.selectProfileSlot(srxRequest.getPidSlot(), 0);
-		motor.set(srxRequest.getControlMode(), Conversions.angleToMagTicks(srxRequest.getSetPoint(), gearRatio.getRotations()));
+		motor.set(srxRequest.getControlMode(), Conversions.angleToMagTicks(srxRequest.getSetPoint(), gearRatio));
 	}
-	
+
 }

@@ -35,6 +35,7 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristConstants;
 import frc.robot.subsystems.wrist.facotry.WristFactory;
+import frc.robot.superstructure.Superstructure;
 import frc.utils.brakestate.BrakeStateManager;
 
 /**
@@ -55,7 +56,10 @@ public class Robot {
 	private final Pivot pivot;
 	private final Roller roller;
 	private final Wrist wrist;
-	
+
+
+	private final Superstructure superstructure;
+
 	public Robot() {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
@@ -73,6 +77,9 @@ public class Robot {
 		this.roller = new Roller(RollerFactory.create(RollerConstants.LOG_PATH));
 		BrakeStateManager.add(() -> roller.setBrake(true), () -> roller.setBrake(false));
 		this.wrist = new Wrist(WristFactory.generateWristStuff(WristConstants.LOG_PATH));
+		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
+
+		this.superstructure = new Superstructure(this);
 
 		configureBindings();
 	}
@@ -117,8 +124,13 @@ public class Robot {
 	public Roller getRoller() {
 		return roller;
 	}
-	
+
 	public Wrist getWrist() {
 		return wrist;
 	}
+
+	public Superstructure getSuperstructure() {
+		return superstructure;
+	}
+
 }

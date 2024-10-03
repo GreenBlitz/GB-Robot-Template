@@ -15,15 +15,21 @@ public class Solenoid extends GBSubsystem {
 		this.motor = solenoidComponents.solenoid();
 		this.voltageSignal = solenoidComponents.voltageSignal();
 		this.commandsBuilder = new SolenoidCommandsBuilder(this);
+
+		updateInputs();
 	}
 
 	public SolenoidCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 
+	public void updateInputs() {
+		motor.updateSignals(voltageSignal);
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
-		motor.updateSignals(voltageSignal);
+		updateInputs();
 	}
 
 	protected void stop() {

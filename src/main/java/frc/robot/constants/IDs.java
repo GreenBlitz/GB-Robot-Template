@@ -19,7 +19,7 @@ public class IDs {
 	public static class TalonSRXs {
 
 		public static final int SOLENOID = 55;
-		
+
 		public static final int WRIST = 11;
 
 	}

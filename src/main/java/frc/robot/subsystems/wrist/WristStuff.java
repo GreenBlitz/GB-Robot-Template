@@ -5,10 +5,10 @@ import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 
-public record WristStuff (
-		String logPath,
-		ControllableMotor motor,
-		IRequest<Rotation2d> positionRequest,
-		InputSignal<Rotation2d> positionSignal,
-		InputSignal... otherSignals
-){}
+public record WristStuff(
+	String logPath,
+	ControllableMotor motor,
+	IRequest<Rotation2d> positionRequest,
+	InputSignal<Rotation2d> positionSignal,
+	InputSignal... otherSignals
+) {}

@@ -2,10 +2,8 @@ package frc.robot.subsystems.flywheel;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.ControllableMotor;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class Flywheel extends GBSubsystem {
@@ -25,11 +23,7 @@ public class Flywheel extends GBSubsystem {
 		this.topMotor = topFlywheelComponents.motor();
 		this.bottomMotor = bottomFlywheelComponents.motor();
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(
-			bottomMotor.getSysidConfigInfo(),
-			this,
-				this::setVoltage
-		);
+		this.sysIdCalibrator = new SysIdCalibrator(bottomMotor.getSysidConfigInfo(), this, this::setVoltage);
 
 		updateInputs();
 	}
@@ -47,7 +41,7 @@ public class Flywheel extends GBSubsystem {
 		bottomMotor.setPower(power);
 	}
 
-	protected void setVoltage(double voltage){
+	protected void setVoltage(double voltage) {
 		topFlywheelComponents.voltageRequest().withSetPoint(voltage);
 		bottomFlywheelComponents.voltageRequest().withSetPoint(voltage);
 	}

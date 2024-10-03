@@ -17,19 +17,19 @@ public class ElevatorRollerCommandsBuilder {
 	//@formatter:off
 	public Command setPower(double power){
 		return new FunctionalCommand(
-				()->{},
-				()->elevatorRoller.setPower(power),
-				interrupted->elevatorRoller.stop(),
-				()->false
+				()-> {},
+				()-> elevatorRoller.setPower(power),
+				interrupted-> elevatorRoller.stop(),
+				()-> false
 		).withName("Set power to "+power);
 	}
 
 	public Command setPower(DoubleSupplier power){
 		return new FunctionalCommand(
-				()->{},
-				()->elevatorRoller.setPower(power.getAsDouble()),
-				interrupted->elevatorRoller.stop(),
-				()->false
+				()-> {},
+				()-> elevatorRoller.setPower(power.getAsDouble()),
+				interrupted-> elevatorRoller.stop(),
+				()-> false
 		).withName("Set power by supplier");
 	}
 	//@formatter:on

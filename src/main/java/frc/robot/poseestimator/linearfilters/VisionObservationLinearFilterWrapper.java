@@ -3,8 +3,10 @@ package frc.robot.poseestimator.linearfilters;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.robot.poseestimator.observations.VisionObservation;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 public class VisionObservationLinearFilterWrapper {
@@ -29,45 +31,36 @@ public class VisionObservationLinearFilterWrapper {
 	 * @param visionObservation:             the observation that needs to be fixed and added
 	 * @param newOdometryStartingTimestamps: the starting of the new odometry data
 	 * @param newOdometrySEndingTimestamps:  the ending of the new odometry data
-	 * @param odometryObservationsOverTime:  navigable map contains the data from the starting to the ending of the new odometry
-	 *                                       data
+	 * @param odometryObservationsOverTime:  interpolated buffer contains the data from the starting to the ending of the new odometry data
 	 */
 	public void addFixedData(
 		VisionObservation visionObservation,
 		double newOdometryStartingTimestamps,
 		double newOdometrySEndingTimestamps,
-		NavigableMap<Double, Pose2d> odometryObservationsOverTime
+		TimeInterpolatableBuffer<Pose2d> odometryObservationsOverTime
 	) {
-		try {
+		Optional<Pose2d> odometryStartingPose = odometryObservationsOverTime.getSample(newOdometrySEndingTimestamps);
+		Optional<Pose2d> odometryEndingPose = odometryObservationsOverTime.getSample(newOdometrySEndingTimestamps);
+
+		if (odometryStartingPose.isPresent() && odometryEndingPose.isPresent()) {
 			updatedObservations.add(
 					fixVisionPose(
 							visionObservation.visionPose(),
-							(Pose2d[]) odometryObservationsOverTime.subMap(newOdometryStartingTimestamps, newOdometrySEndingTimestamps)
-									.values()
-									.toArray()
-					)
+							odometryStartingPose.get(),
+							odometryEndingPose.get()
+							)
 			);
-		} catch (ClassCastException e) {
-			return;
 		}
+
 	}
 
 	public void addRawData(VisionObservation data) {
 		updatedObservations.add(data.visionPose());
 	}
 
-	private Pose2d fixVisionPose(Pose2d visionPose, Pose2d[] newOdometryData) {
-		Pose2d output = visionPose;
-		for (int i = 0; i <= newOdometryData.length - 1; i++) {
-			Pose2d odometryPose = newOdometryData[i];
-			Pose2d nextOdometryPose = newOdometryData[i + 1];
-
-			Transform2d poseDifferenceFromSample = new Transform2d(odometryPose, nextOdometryPose);
-			Transform2d sampleDifferenceFromPose = poseDifferenceFromSample.inverse();
-			output = output.plus(sampleDifferenceFromPose);
-		}
-
-		return output;
+	private Pose2d fixVisionPose(Pose2d visionPose, Pose2d odometryStartingPose, Pose2d odometryEndingPose) {
+		Transform2d changeInPosition = odometryEndingPose.minus(odometryEndingPose);
+		return visionPose.plus(changeInPosition);
 	}
 
 	public Pose2d calculateFilteredPose() {

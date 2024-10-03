@@ -3,12 +3,15 @@ package frc.robot.subsystems.flywheel.factory;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
@@ -36,6 +39,8 @@ public class RealFlywheelConstants {
 
 	private static TalonFXConfiguration generateMotorConfig() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
+
+		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
 		configuration.CurrentLimits.StatorCurrentLimit = 40;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -88,12 +93,17 @@ public class RealFlywheelConstants {
 
 		TalonFXMotor leftFlywheel = new TalonFXMotor(leftLogPath, leftMotor, generateSysidConfig());
 
+		Phoenix6DoubleRequest leftVoltageRequest = new Phoenix6DoubleRequest(new VoltageOut(0).withEnableFOC(true));
+		Phoenix6DoubleRequest rightVoltageRequest = new Phoenix6DoubleRequest(new VoltageOut(0).withEnableFOC(true));
+
 		return new FlywheelStuff(
 			logPath,
 			rightFlywheel,
 			leftFlywheel,
 			rightVelocityRequest,
 			leftVelocityRequest,
+			rightVoltageRequest,
+			leftVoltageRequest,
 			rightVelocitySignal,
 			leftVelocitySignal,
 			new InputSignal[] {rightCurrentSignal, rightVoltageSignal},

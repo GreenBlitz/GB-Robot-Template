@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class Flywheel extends GBSubsystem {
 
@@ -15,6 +16,8 @@ public class Flywheel extends GBSubsystem {
 	private final FlywheelStuff flywheelStuff;
 
 	private final FlywheelCommandsBuilder commandsBuilder;
+	private final SysIdCalibrator rightSysidCalibrator;
+	private final SysIdCalibrator leftSysidCalibrator;
 
 	public Flywheel(FlywheelStuff flywheelStuff) {
 		super(flywheelStuff.logPath());
@@ -24,12 +27,30 @@ public class Flywheel extends GBSubsystem {
 		this.leftFlywheelVelocityRequest = flywheelStuff.leftFlywheelVelocityRequest();
 		this.flywheelStuff = flywheelStuff;
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
+		this.rightSysidCalibrator = new SysIdCalibrator(
+				rightMotor.getSysidConfigInfo(),
+				this,
+				voltage -> setVoltages(voltage, 0)
+		);
+		this.leftSysidCalibrator = new SysIdCalibrator(
+				leftMotor.getSysidConfigInfo(),
+				this,
+				voltage -> setVoltages(0, voltage)
+		);
 
 		updateInputs();
 	}
 
 	public FlywheelCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
+	}
+
+	public SysIdCalibrator getRightSysidCalibrator() {
+		return rightSysidCalibrator;
+	}
+
+	public SysIdCalibrator getLeftSysidCalibrator() {
+		return leftSysidCalibrator;
 	}
 
 	private void updateInputs() {
@@ -52,6 +73,11 @@ public class Flywheel extends GBSubsystem {
 	protected void setPowers(double rightPower, double leftPower) {
 		rightMotor.setPower(rightPower);
 		leftMotor.setPower(leftPower);
+	}
+
+	protected void setVoltages(double rightVoltage, double leftVoltage) {
+		rightMotor.applyDoubleRequest(flywheelStuff.rightVoltageRequest().withSetPoint(rightVoltage));
+		leftMotor.applyDoubleRequest(flywheelStuff.leftVoltageRequest().withSetPoint(leftVoltage));
 	}
 
 	protected void setTargetVelocities(Rotation2d rightFlywheelVelocity, Rotation2d leftFlywheelVelocity) {

@@ -13,16 +13,16 @@ public class LifterStateHandler {
 	public Command setState(LifterState state) {
 		return switch (state) {
 			case HOLD -> lifter.getCommandsBuilder().stop();
-			case FORWARD -> lifter.getCommandsBuilder().setPower(LifterConstants.FORWARD_POWER);
-			case BACKWARD -> lifter.getCommandsBuilder().setPower(LifterConstants.BACKWARD_POWER);
+			case FORWARD -> lifter.getCommandsBuilder().setPower(state.getPower());
+			case BACKWARD -> lifter.getCommandsBuilder().setPower(state.getPower());
 			case EXTENDED ->
 				lifter.getCommandsBuilder()
-					.setPower(LifterConstants.EXTENDING_POWER)
-					.until(() -> lifter.isHigher(LifterConstants.EXTENDED_POSITION));
+					.setPower(state.getPower())
+					.until(() -> lifter.isHigher(state.getTargetPosition()));
 			case RETRACTED ->
 				lifter.getCommandsBuilder()
-					.setPower(LifterConstants.RETRACTING_POWER)
-					.until(() -> lifter.isLower(LifterConstants.RETRACTED_POSITION));
+					.setPower(state.getPower())
+					.until(() -> lifter.isLower(state.getTargetPosition()));
 		};
 	}
 

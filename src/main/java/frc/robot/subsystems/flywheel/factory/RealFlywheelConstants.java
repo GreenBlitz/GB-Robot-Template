@@ -93,8 +93,8 @@ public class RealFlywheelConstants {
 
 		TalonFXMotor leftFlywheel = new TalonFXMotor(leftLogPath, leftMotor, generateSysidConfig());
 
-		Phoenix6DoubleRequest leftVoltageRequest = new Phoenix6DoubleRequest(new VoltageOut(0).withEnableFOC(true));
 		Phoenix6DoubleRequest rightVoltageRequest = new Phoenix6DoubleRequest(new VoltageOut(0).withEnableFOC(true));
+		Phoenix6DoubleRequest leftVoltageRequest = new Phoenix6DoubleRequest(new VoltageOut(0).withEnableFOC(true));
 
 		return new FlywheelStuff(
 			logPath,

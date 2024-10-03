@@ -20,8 +20,8 @@ public class VisionObservationLinearFilterWrapper {
 	 *
 	 * @param logPath:    like, the log path
 	 * @param filterType: the type of the linear filter that would be applied
-	 * @param modifier:   modify the behavior of the filter. In case of FIR filters, this would be the sample count, and for IIR
-	 *                    filters the time constant (the period is always the RobotRIO cycle time).
+	 * @param modifier:   modify the behavior of the filter. In case of FIR filters, this would be the sample count (casted to an
+	 *                    integer), and for IIR filters the time constant (the period is always the RobotRIO cycle time).
 	 */
 	public VisionObservationLinearFilterWrapper(String logPath, LinearFilterType filterType, int modifier) {
 		xFilter = LinearFilterFactory.create(filterType, logPath, modifier);
@@ -32,7 +32,7 @@ public class VisionObservationLinearFilterWrapper {
 
 	/**
 	 *
-	 * adds new data to the filter, exponented by the new odometry data from the within a time period. That way, the old vision
+	 * adds new data to the filter, transformed by the new odometry data from the within a time period. That way, the old vision
 	 * observation would be updated to its new approximated position
 	 *
 	 * @param visionObservation:             the observation that needs to be fixed and added

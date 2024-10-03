@@ -2,7 +2,6 @@ package frc.robot.constants;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtils;
@@ -21,7 +20,6 @@ public class Field {
 
 
 	private static final Translation3d SPEAKER = new Translation3d(0.23, WIDTH_METERS - 2.55, 2.045);
-
 	public static Translation3d getSpeaker() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return SPEAKER;
@@ -29,8 +27,8 @@ public class Field {
 		return new Translation3d(MirrorMath.getMirroredX(SPEAKER.getX()), SPEAKER.getY(), SPEAKER.getZ());
 	}
 
-	private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
 
+	private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
 	public static Rotation2d getAngleToAmp() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return ANGLE_TO_AMP;
@@ -39,49 +37,28 @@ public class Field {
 	}
 
 
-	public static Rotation2d getMidClimbAngle() {
+	private final static Pose2d BLUE_MID_CLIMB = new Pose2d(5.94175, 4, Rotation2d.fromDegrees(180));
+	public static Pose2d getMidClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-			return Rotation2d.fromDegrees(180);
+			return BLUE_MID_CLIMB;
 		}
-		return Rotation2d.fromDegrees(0);
+		return new Pose2d(MirrorMath.getMirroredX(BLUE_MID_CLIMB.getX()), BLUE_MID_CLIMB.getY(), Rotation2d.fromDegrees(0));
 	}
 
-	public static Rotation2d getAMPClimbAngle() {
+	private final static Pose2d BLUE_AMP_CLIMB = new Pose2d(4.34175, 5, Rotation2d.fromDegrees(-60));
+	public static Pose2d getAMPClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-			return Rotation2d.fromDegrees(-60);
+			return BLUE_AMP_CLIMB;
 		}
-		return Rotation2d.fromDegrees(-120);
+		return new Pose2d(MirrorMath.getMirroredX(BLUE_AMP_CLIMB.getX()), BLUE_AMP_CLIMB.getY(), Rotation2d.fromDegrees(-120));
 	}
 
-	public static Rotation2d getSourceClimbAngle() {
+	private final static Pose2d BLUE_SOURCE_CLIMB = new Pose2d(4.34175, 3.2, Rotation2d.fromDegrees(60));
+	public static Pose2d getSourceClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-			return Rotation2d.fromDegrees(60);
+			return BLUE_SOURCE_CLIMB;
 		}
-		return Rotation2d.fromDegrees(120);
-	}
-
-	private final static Translation2d BLUE_MID_CLIMB_TRANSLATION = new Translation2d(5.94175, 4);
-	public static Translation2d getMidClimbTranslation() {
-		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-			return BLUE_MID_CLIMB_TRANSLATION;
-		}
-		return new Translation2d(MirrorMath.getMirroredX(BLUE_MID_CLIMB_TRANSLATION.getX()), BLUE_MID_CLIMB_TRANSLATION.getY());
-	}
-
-	private final static Translation2d BLUE_AMP_CLIMB_TRANSLATION = new Translation2d(4.34175, 5);
-	public static Translation2d getAMPClimbTranslation() {
-		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-			return BLUE_AMP_CLIMB_TRANSLATION;
-		}
-		return new Translation2d(MirrorMath.getMirroredX(BLUE_AMP_CLIMB_TRANSLATION.getX()), BLUE_AMP_CLIMB_TRANSLATION.getY());
-	}
-
-	private final static Translation2d BLUE_SOURCE_CLIMB_TRANSLATION = new Translation2d(4.34175, 3.2);
-	public static Translation2d getSourceClimbTranslation() {
-		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
-			return BLUE_SOURCE_CLIMB_TRANSLATION;
-		}
-		return new Translation2d(MirrorMath.getMirroredX(BLUE_SOURCE_CLIMB_TRANSLATION.getX()), BLUE_SOURCE_CLIMB_TRANSLATION.getY());
+		return new Pose2d(MirrorMath.getMirroredX(BLUE_SOURCE_CLIMB.getX()), BLUE_SOURCE_CLIMB.getY(), Rotation2d.fromDegrees(120));
 	}
 
 }

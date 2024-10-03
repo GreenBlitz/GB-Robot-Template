@@ -12,7 +12,7 @@ public class ElevatorRoller extends GBSubsystem {
 	private final IDigitalInput elevatorRollerDigitalInput;
 	private final DigitalInputInputsAutoLogged elevatorRollerDigitalInputInputs;
 	private final ElevatorRollerAvatiach elevatorRollerAvatiach;
-	private final ElevatorRollerCommandBuilder commandBuilder;
+	private final ElevatorRollerCommandsBuilder commandsBuilder;
 
 	public ElevatorRoller(ElevatorRollerAvatiach elevatorRollerAvatiach) {
 		super(elevatorRollerAvatiach.logPath());
@@ -21,16 +21,18 @@ public class ElevatorRoller extends GBSubsystem {
 		this.elevatorRollerAvatiach = elevatorRollerAvatiach;
 		this.elevatorRollerDigitalInputInputs = new DigitalInputInputsAutoLogged();
 
-		this.commandBuilder = new ElevatorRollerCommandBuilder(this);
+
+		this.commandsBuilder = new ElevatorRollerCommandsBuilder(this);
 		updateInputs();
 	}
 
-	public ElevatorRollerCommandBuilder getCommandBuilder() {
-		return commandBuilder;
+	public ElevatorRollerCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	public void updateInputs() {
 		elevatorRollerDigitalInput.updateInputs(elevatorRollerDigitalInputInputs);
+		motor.updateSignals(elevatorRollerAvatiach.motorVoltage());
 	}
 
 	public boolean isNoteIn() {

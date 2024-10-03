@@ -5,6 +5,7 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.sparkmax.BrushedSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerAvatiach;
 import com.revrobotics.SparkLimitSwitch;
 
@@ -25,7 +26,9 @@ public class RealElevatorRollerConstants {
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		return new ElevatorRollerAvatiach(logPath, brushedSparkMAXMotor, beamBreaker);
+		SuppliedDoubleSignal motorVoltage = new SuppliedDoubleSignal("motorVoltage", sparkMaxWrapper::getVoltage);
+
+		return new ElevatorRollerAvatiach(logPath, brushedSparkMAXMotor, beamBreaker, motorVoltage);
 	}
 
 }

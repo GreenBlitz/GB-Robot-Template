@@ -27,7 +27,7 @@ public record SwerveConstants(
 ) {
 
 	public SwerveConstants(
-		SwerveName swerveName,
+		SwerveType swerveType,
 		double velocityAt12VoltsMetersPerSecond,
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
@@ -36,10 +36,10 @@ public record SwerveConstants(
 		double driveRadiusMeters
 	) {
 		this(
-			swerveName.getLogPath(),
-			swerveName.getLogPath() + "State/",
-			swerveName.getLogPath() + "Velocity/",
-			swerveName.getLogPath() + "Gyro/",
+			swerveType.getLogPath(),
+			swerveType.getLogPath() + "State/",
+			swerveType.getLogPath() + "Velocity/",
+			swerveType.getLogPath() + "Gyro/",
 			velocityAt12VoltsMetersPerSecond,
 			maxRotationalVelocityPerSecond,
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),

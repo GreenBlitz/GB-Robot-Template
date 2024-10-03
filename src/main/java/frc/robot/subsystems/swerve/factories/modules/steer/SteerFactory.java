@@ -2,10 +2,10 @@ package frc.robot.subsystems.swerve.factories.modules.steer;
 
 import frc.robot.Robot;
 import frc.robot.constants.IDs;
-import frc.robot.subsystems.swerve.SwerveName;
-import frc.robot.subsystems.swerve.modules.ModuleConstants;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.stuffs.SteerStuff;
+import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.stuffs.SteerStuff;
 
 public class SteerFactory {
 
@@ -29,9 +29,9 @@ public class SteerFactory {
 		};
 	}
 
-	public static SteerStuff create(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
-		String logPath = SwerveName.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Steer/";
-		return switch (swerveName) {
+	public static SteerStuff create(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
+		String logPath = SwerveType.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Steer/";
+		return switch (swerveType) {
 			case SWERVE -> createSwerveSteer(logPath, modulePosition);
 		};
 	}

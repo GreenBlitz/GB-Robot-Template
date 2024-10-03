@@ -10,15 +10,12 @@ import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
 import frc.robot.poseestimation.OdometryObservation;
-import frc.robot.subsystems.swerve.modules.Modules;
+import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.superstructure.Tolerances;
 import frc.utils.GBSubsystem;
-import frc.utils.alerts.Alert;
-import frc.utils.alerts.AlertManager;
-import frc.utils.alerts.PeriodicAlert;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -49,7 +46,8 @@ public class Swerve extends GBSubsystem {
 
 	public Swerve(SwerveConstants constants, Modules modules, GyroStuff gyroStuff) {
 		super(constants.logPath());
-		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
+		this.savedState = new SwerveState(SwerveState.DEFAULT_DRIVE);
+		this.currentState = new SwerveState(savedState);
 
 		this.constants = constants;
 		this.modules = modules;
@@ -62,9 +60,6 @@ public class Swerve extends GBSubsystem {
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		updateInputs();
-
-		AlertManager
-			.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, constants.gyroLogPath() + "GyroDisconnectedAt", () -> !gyro.isConnected()));
 	}
 
 	protected Modules getModules() {
@@ -124,6 +119,10 @@ public class Swerve extends GBSubsystem {
 		constants.xMetersPIDController().reset();
 		constants.yMetersPIDController().reset();
 		constants.rotationDegreesPIDController().reset();
+	}
+
+	public void saveState(SwerveState state) {
+		this.savedState = state;
 	}
 
 

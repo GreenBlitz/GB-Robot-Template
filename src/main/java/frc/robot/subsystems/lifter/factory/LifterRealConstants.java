@@ -1,7 +1,6 @@
 package frc.robot.subsystems.lifter.factory;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
@@ -9,7 +8,6 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import frc.robot.subsystems.lifter.LifterConstants;
 import frc.robot.subsystems.lifter.LifterStuff;
 import frc.utils.AngleUnit;
 
@@ -20,14 +18,17 @@ import static edu.wpi.first.units.Units.Volts;
 public class LifterRealConstants {
 
 	private static final double DRUM_RADIUS = inchesToMeters(0.96);
-	private static final TalonFXConfiguration CONFIGURATION = new TalonFXConfiguration();
+	public static final int MOTOR_CONFIGURATION_TRIES = 5;
 
-	static {
-		FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs();
-		FEEDBACK_CONFIGS.SensorToMechanismRatio = 7 * (60.0 / 24.0);
+	private static TalonFXConfiguration generateMotorConfiguration() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-		CONFIGURATION.withFeedback(FEEDBACK_CONFIGS);
+		configuration.Feedback.SensorToMechanismRatio = 7 * (60.0 / 24.0);
+
+
+		return configuration;
 	}
+
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -38,18 +39,16 @@ public class LifterRealConstants {
 		);
 	}
 
-	public static LifterStuff generateLifterStuff(String logPath) {
+	protected static LifterStuff generateLifterStuff(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
-		talonFXWrapper.applyConfiguration(CONFIGURATION);
+		talonFXWrapper.applyConfiguration(generateMotorConfiguration());
 
 		return new LifterStuff(
 			logPath,
 			new TalonFXMotor(logPath, talonFXWrapper, generateSysidConfig()),
 			DRUM_RADIUS,
 			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(talonFXWrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-			LifterConstants.EXTENDING_POWER,
-			LifterConstants.RETRACTING_POWER
+				.generatePhoenix6Signal(talonFXWrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
 		);
 	}
 

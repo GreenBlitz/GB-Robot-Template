@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.factories.gyro;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.GyroStuff;
-import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.SwerveType;
 
 public class GyroFactory {
 
@@ -13,9 +13,9 @@ public class GyroFactory {
 		};
 	}
 
-	public static GyroStuff create(SwerveName swerveName) {
-		return switch (swerveName) {
-			case SWERVE -> createSwerveGyroStuff(swerveName.getLogPath() + "Gyro/");
+	public static GyroStuff create(SwerveType swerveType) {
+		return switch (swerveType) {
+			case SWERVE -> createSwerveGyroStuff(swerveType.getLogPath() + "Gyro/");
 		};
 	}
 

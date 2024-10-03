@@ -11,7 +11,6 @@ import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelComponents;
 import frc.robot.subsystems.flywheel.FlywheelConstants;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
-import frc.robot.subsystems.flywheel.factory.RealFlywheelConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -26,9 +25,9 @@ public class Robot {
 
 	public Robot() {
 		FlywheelComponents topFlywheelComponents = FlywheelFactory
-			.create(FlywheelConstants.LOG_PATH + "TopMotor", RealFlywheelConstants.isTopMotorInverted, IDs.CANSparkMaxIDs.TOP_FLYWHEEL);
+			.create(FlywheelConstants.LOG_PATH + "TopMotor", FlywheelConstants.IS_TOP_MOTOR_INVERTED, IDs.CANSparkMaxIDs.TOP_FLYWHEEL);
 		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
-			.create(FlywheelConstants.LOG_PATH + "BottomMotor", !RealFlywheelConstants.isTopMotorInverted, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL);
+			.create(FlywheelConstants.LOG_PATH + "BottomMotor", !FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL);
 		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH);
 
 		configureBindings();

@@ -39,16 +39,6 @@ public class Field {
 	}
 
 
-
-	public static Pose2d mirrorPositionToOtherSide(Pose2d pose) {
-		return new Pose2d(
-				LENGTH_METERS - pose.getX(),
-				pose.getY(),
-				Rotation2d.fromRadians(Math.PI).minus(pose.getRotation())
-		);
-	}
-
-
 	public static Rotation2d getMidClimbAngle() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return Rotation2d.fromDegrees(180);

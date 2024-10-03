@@ -67,17 +67,17 @@ public class AimAssistMath {
 			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
-	public static double[] getClosetCutPoint(double x, double y, double R){
-		double m = y / x;
+	public static Translation2d getClosestCutPoint(Translation2d robot, Translation2d speaker, double ShootingZoneRadius){
+		double m = robot.getY() / robot.getX();
 		double cutPointX = Math.sqrt(
-				Math.pow(R,2)
+				Math.pow(ShootingZoneRadius,2)
 				/ (Math.pow(m,2) + 1)
 		);
-		if (x < 0) {
+		if (robot.getX() < 0) {
 			cutPointX *= -1;
 		}
 		double cutPointY = m * cutPointX;
-        return new double[]{cutPointX, cutPointY};
+		return new Translation2d(cutPointX + speaker.getX(), cutPointY + speaker.getY());
 	}
 
 }

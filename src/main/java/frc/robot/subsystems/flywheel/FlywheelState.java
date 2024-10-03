@@ -7,20 +7,20 @@ public enum FlywheelState {
 	DEFAULT(Rotation2d.fromRotations(0), 0.7),
 	PRE_SPEAKER(Rotation2d.fromRotations(55), 0.7);
 
-	private final Rotation2d shootingVelocity;
+	private final Rotation2d velocity;
 	private final double differentialRatio;
 
-	FlywheelState(Rotation2d shootingVelocity, double differentialRatio) {
-		this.shootingVelocity = shootingVelocity;
+	FlywheelState(Rotation2d velocity, double differentialRatio) {
+		this.velocity = velocity;
 		this.differentialRatio = differentialRatio;
 	}
 
 	public Rotation2d getRightVelocity() {
-		return shootingVelocity;
+		return velocity;
 	}
 
 	public Rotation2d getLeftVelocity() {
-		return shootingVelocity.times(differentialRatio);
+		return velocity.times(differentialRatio);
 	}
 
 }

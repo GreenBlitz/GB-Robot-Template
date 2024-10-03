@@ -34,10 +34,10 @@ public class FunnelCommandsBuilder {
 				funnel
 		).withName("Set power by supplier");
 	}
-    //@formatter:on
 
 	public Command stop() {
 		return new RunCommand(funnel::stop, funnel).withName("Stop");
 	}
+	//@formatter:on
 
 }

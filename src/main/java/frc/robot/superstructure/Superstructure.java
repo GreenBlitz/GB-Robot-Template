@@ -10,90 +10,91 @@ import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
 
-    private final Robot robot;
-    private RobotState currentState;
-    private final Swerve swerve;
+	private final Robot robot;
+	private RobotState currentState;
+	private final Swerve swerve;
 
-    public Superstructure(Robot robot) {
-        this.robot = robot;
-        this.swerve = robot.getSwerve();
-    }
+	public Superstructure(Robot robot) {
+		this.robot = robot;
+		this.swerve = robot.getSwerve();
+	}
 
-    public RobotState getCurrentState() {
-        return currentState;
-    }
+	public RobotState getCurrentState() {
+		return currentState;
+	}
 
-    public void logStatus() {
-        Logger.recordOutput("CurrentState", currentState);
-    }
+	public void logStatus() {
+		Logger.recordOutput("CurrentState", currentState);
+	}
 
-    public Command setState(RobotState state) {
-        return switch (state) {
-            case IDLE -> idle();
-            case INTAKE -> intake();
-            case PRE_SPEAKER -> preSpeaker();
-            case SPEAKER -> speaker();
-            case PRE_AMP -> preAmp();
-            case AMP -> amp();
-            case TRANSFER_SHOOTER_ELEVATOR -> transferShooterElevator();
-            case TRANSFER_ELEVATOR_SHOOTER -> transferElevatorShooter();
-            case SHOOTER_OUTTAKE -> shooterOuttake();
-        };
-    }
+	public Command setState(RobotState state) {
+		return switch (state) {
+			case IDLE -> idle();
+			case INTAKE -> intake();
+			case PRE_SPEAKER -> preSpeaker();
+			case SPEAKER -> speaker();
+			case PRE_AMP -> preAmp();
+			case AMP -> amp();
+			case TRANSFER_SHOOTER_ELEVATOR -> transferShooterElevator();
+			case TRANSFER_ELEVATOR_SHOOTER -> transferElevatorShooter();
+			case SHOOTER_OUTTAKE -> shooterOuttake();
+		};
+	}
 
-    public Command idle(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-        );
-    }
+	//@formatter:off
+	public Command idle() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		);
+	}
 
-    public Command intake(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
-        );
-    }
+	public Command intake() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
+		);
+	}
 
-    public Command preSpeaker(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
-        );
-    }
+	public Command preSpeaker() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
+		);
+	}
 
-    public Command speaker(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
-        );
-    }
+	public Command speaker() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
+		);
+	}
 
-    public Command preAmp(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
-        );
-    }
+	public Command preAmp() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
+		);
+	}
 
-    public Command amp(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
-        );
-    }
+	public Command amp() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
+		);
+	}
 
-    public Command transferShooterElevator(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-        );
-    }
+	public Command transferShooterElevator() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		);
+	}
 
-    public Command transferElevatorShooter(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-        );
-    }
+	public Command transferElevatorShooter() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		);
+	}
 
-    public Command shooterOuttake(){
-        return new ParallelCommandGroup(
-                swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-        );
-    }
-    //@formatter:on
+	public Command shooterOuttake() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		);
+	}
+	//@formatter:on
 
 }

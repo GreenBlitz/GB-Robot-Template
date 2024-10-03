@@ -8,7 +8,7 @@ import frc.utils.utilcommands.InitExecuteCommand;
 
 public class FlywheelCommandsBuilder {
 
-	private Flywheel flywheel;
+	private final Flywheel flywheel;
 
 	public FlywheelCommandsBuilder(Flywheel flywheel) {
 		this.flywheel = flywheel;

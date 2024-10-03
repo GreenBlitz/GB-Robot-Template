@@ -33,7 +33,6 @@ public class ElevatorRoller extends GBSubsystem {
 		elevatorRollerDigitalInput.updateInputs(elevatorRollerDigitalInputInputs);
 		motor.updateSignals(elevatorRollerStuff.motorVoltage());
 		Logger.processInputs(elevatorRollerStuff.digitalInputLogPath(), elevatorRollerDigitalInputInputs);
-		Logger.recordOutput(elevatorRollerStuff.logPath() + "IsNoteInElevatorRoller", isNoteIn());
 	}
 
 	public boolean isNoteIn() {
@@ -43,6 +42,7 @@ public class ElevatorRoller extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
+		Logger.recordOutput(elevatorRollerStuff.logPath() + "IsNoteInElevatorRoller", isNoteIn());
 	}
 
 	protected void setPower(double power) {

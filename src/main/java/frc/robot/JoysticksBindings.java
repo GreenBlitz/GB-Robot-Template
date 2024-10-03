@@ -37,7 +37,7 @@ public class JoysticksBindings {
 
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
 
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetByLimelight()));
+		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPoseByLimelight()));
 
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheelsInX());
 		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true));

@@ -4,16 +4,17 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.GBPoseEstimator;
-import frc.robot.poseestimator.limelights.VisionObservationFiltered;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.vision.limelights.GyroAngleValues;
+import frc.robot.vision.limelights.LimelightFilterer;
 
 public class SuperStructure {
 
 	private final Swerve swerve;
 	private final GBPoseEstimator poseEstimator;
-	private final VisionObservationFiltered visionObservationFiltered;
+	private final LimelightFilterer visionObservationFiltered;
 
-	public SuperStructure(Swerve swerve, GBPoseEstimator poseEstimator, VisionObservationFiltered visionObservationFiltered) {
+	public SuperStructure(Swerve swerve, GBPoseEstimator poseEstimator, LimelightFilterer visionObservationFiltered) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
 		this.visionObservationFiltered = visionObservationFiltered;
@@ -21,7 +22,8 @@ public class SuperStructure {
 
 	public void periodic() {
 		swerve.wrapperPeriodic();
-		visionObservationFiltered.updateGyroAngles(swerve.getAbsoluteHeading().getDegrees(), 0.01, 0, 0.01, 0, 0.01);
+//		visionObservationFiltered.updateGyroAngles(swerve.getAbsoluteHeading().getDegrees(), 0.01, 0, 0.01, 0, 0.01);
+		visionObservationFiltered.updateGyroAngles(new GyroAngleValues(swerve.getAbsoluteHeading().getDegrees(), 0.01, 0, 0.01, 0, 0.01));
 		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations(), visionObservationFiltered.getFilteredVisionObservations());
 //		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
 	}

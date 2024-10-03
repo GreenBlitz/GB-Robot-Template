@@ -6,8 +6,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.vision.limelights.LimelightRawData;
 
-public class PoseEstimatorMath {
+public class PoseEstimationMath {
 
 	public static Twist2d addGyroToTwist(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
 		boolean hasGyroUpdated = currentGyroAngle != null;
@@ -23,17 +24,17 @@ public class PoseEstimatorMath {
 		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
 	}
 
-	public static double[] getCombinedStandardDeviations(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
+	public static double[] getKalmanRatioFromStandardDeviation(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
 		double[] combinedStandardDeviations = new double[3];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
 			double visionStandardDeviation = visionStandardDeviations[i];
-			combinedStandardDeviations[i] = getCombinedStandardDeviations(odometryStandardDeviation, visionStandardDeviation);
+			combinedStandardDeviations[i] = getKalmanRatioFromStandardDeviation(odometryStandardDeviation, visionStandardDeviation);
 		}
 		return combinedStandardDeviations;
 	}
 
-	public static double getCombinedStandardDeviations(double odometryStandardDeviation, double visionStandardDeviation) {
+	public static double getKalmanRatioFromStandardDeviation(double odometryStandardDeviation, double visionStandardDeviation) {
 		if (odometryStandardDeviation == 0) {
 			return 0;
 		}
@@ -51,8 +52,8 @@ public class PoseEstimatorMath {
 
 	public static Transform2d
 		useKalmanOnTransform(VisionObservation observation, Pose2d appliedVisionObservation, double[] odometryStandardDeviations) {
-		double[] combinedStandardDeviations = PoseEstimatorMath
-			.getCombinedStandardDeviations(observation.standardDeviations(), odometryStandardDeviations);
+		double[] combinedStandardDeviations = PoseEstimationMath
+			.getKalmanRatioFromStandardDeviation(observation.standardDeviations(), odometryStandardDeviations);
 		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.visionPose());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
@@ -81,9 +82,20 @@ public class PoseEstimatorMath {
 		Transform2d sampleDifferenceFromPose = poseDifferenceFromSample.inverse();
 		Pose2d appliedVisionObservation = estimatedPose.plus(sampleDifferenceFromPose);
 		appliedVisionObservation = appliedVisionObservation
-			.plus(PoseEstimatorMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
+			.plus(PoseEstimationMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
 		appliedVisionObservation = appliedVisionObservation.plus(poseDifferenceFromSample);
 		return appliedVisionObservation;
+	}
+
+	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
+		return new double[] {
+			calculateStandardDeviationFromDifference(limelightRawData.estimatedPose().getX(), currentEstimatedPose.getX()),
+			calculateStandardDeviationFromDifference(limelightRawData.estimatedPose().getY(), currentEstimatedPose.getY())};
+	}
+
+	private static double calculateStandardDeviationFromDifference(double estimatedValue, double currentValue) {
+		double mean = (estimatedValue + currentValue) / 2;
+		return Math.sqrt((Math.pow(estimatedValue - mean, 2) + Math.pow(currentValue - mean, 2)) / 2);
 	}
 
 }

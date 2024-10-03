@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.limelights;
+package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -19,7 +19,7 @@ public class Limelight extends GBSubsystem {
 	private final String name;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
-	private double[] gyroAngleValues;
+	private GyroAngleValues gyroAngleValues;
 
 	public Limelight(String name, String hardwareLogPath) {
 		super(hardwareLogPath + name + "/");
@@ -29,18 +29,17 @@ public class Limelight extends GBSubsystem {
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
+		this.gyroAngleValues = new GyroAngleValues(0, 0, 0, 0, 0, 0);
 	}
 
-	public void updateGyroAngles(double yaw, double yawRate, double pitch, double pitchRate, double roll, double rollRate) {
-		this.gyroAngleValues = new double[] {yaw, yawRate, pitch, pitchRate, roll, rollRate};
+	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
+		this.gyroAngleValues = gyroAngleValues;
 	}
 
 	public void updateLimelight() {
-		if (gyroAngleValues != null) {
-			robotOrientationEntry.setDoubleArray(gyroAngleValues);
-		}
-		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		robotOrientationEntry.setDoubleArray(gyroAngleValues.getAsArray());
+		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
@@ -57,9 +56,9 @@ public class Limelight extends GBSubsystem {
 			getPoseInformation(LimelightEntryValue.Y_AXIS),
 			getPoseInformation(LimelightEntryValue.Z_AXIS),
 			new Rotation3d(
-				getPoseInformation(LimelightEntryValue.ROLL_ANGLE) * Math.PI / 180,
-				getPoseInformation(LimelightEntryValue.PITCH_ANGLE) * Math.PI / 180,
-				getPoseInformation(LimelightEntryValue.YAW_ANGLE) * Math.PI / 180
+				Math.toRadians(getPoseInformation(LimelightEntryValue.ROLL_ANGLE)),
+				Math.toRadians(getPoseInformation(LimelightEntryValue.PITCH_ANGLE)),
+				Math.toRadians(getPoseInformation(LimelightEntryValue.YAW_ANGLE))
 			)
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));

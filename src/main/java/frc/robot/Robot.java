@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
-import frc.robot.poseestimator.limelights.VisionObservationFiltered;
 import frc.robot.structures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
@@ -17,6 +16,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.limelights.LimelightFilterer;
 
 import java.util.Optional;
 
@@ -32,7 +32,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final GBPoseEstimator poseEstimator;
-	private final VisionObservationFiltered visionObservationFiltered;
+	private final LimelightFilterer visionObservationFiltered;
 	private final SuperStructure superStructure;
 
 	public Robot() {
@@ -49,7 +49,7 @@ public class Robot {
 		);
 
 //		this.visionObservationFiltered = new VisionObservationFiltered(VisionConstants.DEFAULT_CONFIG, poseEstimator);
-		this.visionObservationFiltered = poseEstimator.getVisionObservationFiltered();
+		this.visionObservationFiltered = poseEstimator.getLimelightFilterer();
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 

@@ -1,25 +1,23 @@
-package frc.robot.poseestimator.limelights;
+package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class VisionConstants {
+public class LimeLightConstants {
 
 	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation";
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 
 
-	public static final VisionObservationFilteredConfig DEFAULT_CONFIG = new VisionObservationFilteredConfig(
+	public static final LimelightFiltererConfig DEFAULT_CONFIG = new LimelightFiltererConfig(
 		"VisionObservationFiltered/",
 		"LimelightsHardware/",
 		new String[] {"limelight-front", "limelight-back"}
 	);
 
-	// ! shall be calibrated
-	public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(20);
+	public static final double ROTATION_NORM_TOLERANCE = 0.2; // ! shall be calibrated
 
-	// ! shall be calibrated
-	public static final double POSITION_NORM_TOLERANCE = 0.2;
+	public static final double POSITION_NORM_TOLERANCE = 0.2; // ! shall be calibrated
 
 	public static final Rotation2d PITCH_TOLERANCE = Rotation2d.fromDegrees(10); // ! Shall be calibrated
 

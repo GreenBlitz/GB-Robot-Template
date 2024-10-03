@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class RealRollerConstants {
 
-	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
+	private final static double DEBOUNCE_TIME_SECONDS = 0.1;
 
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 

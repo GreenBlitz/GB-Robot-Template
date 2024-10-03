@@ -23,7 +23,7 @@ public class Elbow extends GBSubsystem {
 		this.commandsBuilder = new ElbowCommandsBuilder(this);
 
 		motor.resetPosition(ElbowConstants.MINIMUM_ACHIEVABLE_POSITION);
-		updateSignals();
+		updateInputs();
 	}
 
 	public ElbowCommandsBuilder getCommandsBuilder() {
@@ -32,13 +32,13 @@ public class Elbow extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		updateSignals();
+		updateInputs();
 		if (ElbowConstants.MINIMUM_ACHIEVABLE_POSITION.getRotations() > elbowStuff.positionSignal().getLatestValue().getRotations()) {
 			motor.resetPosition(ElbowConstants.MINIMUM_ACHIEVABLE_POSITION);
 		}
 	}
 
-	private void updateSignals() {
+	private void updateInputs() {
 		motor.updateSignals(elbowStuff.positionSignal(), elbowStuff.velocitySignal(), elbowStuff.currentSignal(), elbowStuff.voltageSignal());
 	}
 

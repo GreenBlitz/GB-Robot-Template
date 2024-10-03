@@ -111,9 +111,6 @@ public class Swerve extends GBSubsystem {
 		headingStabilizer.setTargetHeading(heading);
 	}
 
-	public void setState(SwerveState state) {
-		savedState = state;
-	}
 
 	protected void resetPIDControllers() {
 		constants.xMetersPIDController().reset();
@@ -121,10 +118,15 @@ public class Swerve extends GBSubsystem {
 		constants.rotationDegreesPIDController().reset();
 	}
 
+
 	public void saveState(SwerveState state) {
-		this.savedState = state;
+		savedState = state;
 	}
 
+	@Override
+	protected void subsystemPeriodic() {
+		updateState();
+	}
 
 	public void updateState() {
 		updateInputs();

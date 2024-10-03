@@ -14,7 +14,9 @@ import frc.utils.AngleUnit;
 
 public class RealFlywheelConstants {
 
-	public static FlywheelComponents generateTopFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
+	public static Boolean isTopMotorInverted = true;
+
+	public static FlywheelComponents generateFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
 		sparkMaxWrapper.setInverted(isInverted);

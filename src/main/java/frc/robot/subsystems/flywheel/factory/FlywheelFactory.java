@@ -8,7 +8,7 @@ public class FlywheelFactory {
 
 	public static FlywheelComponents create(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealFlywheelConstants.generateTopFlywheelComponents(logPath, isInverted, deviceID);
+			case REAL -> RealFlywheelConstants.generateFlywheelComponents(logPath, isInverted, deviceID);
 			case SIMULATION -> null;
 		};
 	}

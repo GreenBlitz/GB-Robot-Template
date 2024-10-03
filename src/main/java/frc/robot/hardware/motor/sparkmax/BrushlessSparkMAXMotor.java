@@ -49,7 +49,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 				angleRequest.getSetPoint().getRotations(),
 				angleRequest.getControlType(),
 				angleRequest.getPidSlot(),
-				angleRequest.getFeedforwardCalculator().apply(motor)
+				angleRequest.getFeedforwardCalculation()
 		);
 	}
 	//@formatter:on

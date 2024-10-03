@@ -1,6 +1,7 @@
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.intake.factory;
 
 import frc.robot.Robot;
+import frc.robot.subsystems.intake.IntakeRollerStuff;
 
 public class IntakeRollerFactory {
 

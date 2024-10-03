@@ -44,7 +44,7 @@ public class IntakeRoller extends GBSubsystem {
 		digitalInput.updateInputs(digitalInputsInputs);
 		motor.updateSignals(intakeRollerStuff.voltageSignal());
 		Logger.processInputs(intakeRollerStuff.digitalInputLogPath(), digitalInputsInputs);
-		Logger.recordOutput(intakeRollerStuff.logPath() + "IsObjectIn", isNoteIn());
+		Logger.recordOutput(intakeRollerStuff.logPath() + "IsNoteIn", isNoteIn());
 	}
 
 	@Override

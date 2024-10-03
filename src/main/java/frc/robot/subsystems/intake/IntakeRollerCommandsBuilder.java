@@ -14,24 +14,33 @@ public class IntakeRollerCommandsBuilder {
 		this.intakeRoller = intake;
 	}
 
-	public Command setPower(double power) {
-		return new FunctionalCommand(() -> {}, () -> intakeRoller.setPower(power), interrupted -> intakeRoller.stop(), () -> false, intakeRoller)
-			.withName("set power: " + power);
-	}
+	//@formatter:off
+    public Command setPower(double power) {
+        return new FunctionalCommand(
+                () -> {
+                },
+                () -> intakeRoller.setPower(power),
+                interrupted -> intakeRoller.stop(),
+                () -> false,
+                intakeRoller
+        ).withName("set power: " + power);
+    }
 
-	public Command setPower(DoubleSupplier power) {
-		return new FunctionalCommand(
-			() -> {},
-			() -> intakeRoller.setPower(power.getAsDouble()),
-			interrupted -> intakeRoller.stop(),
-			() -> false,
-			intakeRoller
-		).withName("set power by supplier: " + power);
-	}
+    public Command setPower(DoubleSupplier power) {
+        return new FunctionalCommand(
+                () -> {
+                },
+                () -> intakeRoller.setPower(power.getAsDouble()),
+                interrupted -> intakeRoller.stop(),
+                () -> false,
+                intakeRoller
+        ).withName("set power by supplier: " + power);
+    }
 
-	public Command stop() {
-		return new InstantCommand(intakeRoller::stop, intakeRoller).withName("stop");
-	}
+    public Command stop() {
+        return new InstantCommand(intakeRoller::stop, intakeRoller).withName("stop");
+    }
+	//@formatter:on
 
 }
 

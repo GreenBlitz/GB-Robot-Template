@@ -17,21 +17,21 @@ public class FunnelCommandsBuilder {
 	//@formatter:off
     public Command setPower(double power) {
         return new FunctionalCommand(
-                () -> {},
-                () -> funnel.setPower(power),
-                interrupted -> funnel.stop(),
-                () -> false,
-                funnel
+            () -> {},
+            () -> funnel.setPower(power),
+            interrupted -> funnel.stop(),
+            () -> false,
+            funnel
         ).withName("Set power: " + power);
     }
 
     public Command setPower(DoubleSupplier power) {
         return new FunctionalCommand(
-                () -> {},
-                () -> funnel.setPower(power.getAsDouble()),
-                interrupted -> funnel.stop(),
-                () -> false,
-                funnel
+            () -> {},
+            () -> funnel.setPower(power.getAsDouble()),
+            interrupted -> funnel.stop(),
+            () -> false,
+            funnel
         ).withName("Set power by supplier");
     }
 

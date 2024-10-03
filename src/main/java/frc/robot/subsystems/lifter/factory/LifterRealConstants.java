@@ -1,8 +1,8 @@
 package frc.robot.subsystems.lifter.factory;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
@@ -11,6 +11,7 @@ import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.subsystems.lifter.LifterStuff;
 import frc.utils.AngleUnit;
+import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static edu.wpi.first.units.Units.Seconds;
@@ -19,16 +20,15 @@ import static edu.wpi.first.units.Units.Volts;
 public class LifterRealConstants {
 
 	private static final double DRUM_RADIUS = inchesToMeters(0.96);
+	public static final int MOTOR_CONFIGURATION_TRIES = 5;
 
-	private static TalonFXConfiguration getConfiguration() {
-		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
+	private static TalonFXConfiguration generateMotorConfiguration() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-		FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
-		feedbackConfigs.SensorToMechanismRatio = 7 * (60.0 / 24.0);
+		configuration.Feedback.SensorToMechanismRatio = 7 * (60.0 / 24.0);
 
-		talonFXConfiguration.withFeedback(feedbackConfigs);
 
-		return talonFXConfiguration;
+		return configuration;
 	}
 
 
@@ -41,9 +41,11 @@ public class LifterRealConstants {
 		);
 	}
 
-	public static LifterStuff generateLifterStuff(String logPath) {
+	protected static LifterStuff generateLifterStuff(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
-		talonFXWrapper.applyConfiguration(getConfiguration());
+		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
+			Logger.recordMetadata("lifter motor was not configured.", String.valueOf(Timer.getFPGATimestamp()));
+		}
 
 		return new LifterStuff(
 			logPath,

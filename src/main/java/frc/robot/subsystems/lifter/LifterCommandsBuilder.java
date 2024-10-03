@@ -9,13 +9,19 @@ public class LifterCommandsBuilder {
 
 	private final Lifter lifter;
 
+
+	//@formatter:off
 	public LifterCommandsBuilder(Lifter lifter) {
 		this.lifter = lifter;
 	}
 
 	public Command setPower(double power) {
-		return new FunctionalCommand(() -> {}, () -> lifter.setPower(power), (interrupted) -> lifter.stop(), () -> false, lifter)
-			.withName("set power " + power);
+		return new FunctionalCommand(
+				() -> {},
+				() -> lifter.setPower(power),
+				(interrupted) -> lifter.stop(),
+				() -> false, lifter
+		).withName("set power " + power);
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
@@ -27,5 +33,6 @@ public class LifterCommandsBuilder {
 			lifter
 		).withName("set power by supplier");
 	}
+	//@formatter:on
 
 }

@@ -11,11 +11,11 @@ import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.structures.SuperStructureConstants;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-import frc.utils.GBSubsystem;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -76,11 +76,6 @@ public class Swerve extends GBSubsystem {
 
 	public SwerveStateHelper getStateHelper() {
 		return stateHelper;
-	}
-
-	@Override
-	public String getLogPath() {
-		return constants.logPath();
 	}
 
 

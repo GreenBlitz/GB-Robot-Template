@@ -21,11 +21,9 @@ public class IntakeRoller extends GBSubsystem {
 		this.intakeRollerStuff = intakeRollerStuff;
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.intakeRollercommandsBuilder = new IntakeRollerCommandsBuilder(this);
-		//@formatter:off
 
 		updateInputs();
 	}
-	//@formatter:on
 
 	public IntakeRollerCommandsBuilder getCommandsBuilder() {
 		return intakeRollercommandsBuilder;

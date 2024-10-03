@@ -63,6 +63,20 @@ public class GBPoseEstimator implements IPoseEstimator {
 			}
 		}
 		Pose2d pose2d = weightedPoseMean(stackedRawData);
+
+//		double x = 0;
+//		double y = 0;
+//
+//		for(VisionObservation v : stackedRawData) {
+//			x += v.visionPose().getX();
+//			y += v.visionPose().getY();
+//		}
+//
+//		x/= stackedRawData.size();
+//		y/= stackedRawData.size();
+//
+//		resetPose(new Pose2d(x, y, odometryPose.getRotation()));
+
 		resetPose(new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation()));
 	}
 
@@ -161,6 +175,9 @@ public class GBPoseEstimator implements IPoseEstimator {
 			this.odometryPose = odometryPose.exp(twist);
 			this.estimatedPose = estimatedPose.exp(twist);
 		}
+//		else {
+//			this.estimatedPose = odometryPose;
+//		}
 		lastGyroAngle = observation.gyroAngle();
 		lastWheelPositions = observation.wheelsPositions();
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);

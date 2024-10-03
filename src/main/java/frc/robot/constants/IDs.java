@@ -13,7 +13,10 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static final SparkMaxDeviceID ELEVATOR_ROLLER = new SparkMaxDeviceID(0); // ! TODO replace with real ID
+	public static class SparkMaxIDs {
 
+		public static final SparkMaxDeviceID ELEVATOR_ROLLER = new SparkMaxDeviceID(10);
+
+	}
 
 }

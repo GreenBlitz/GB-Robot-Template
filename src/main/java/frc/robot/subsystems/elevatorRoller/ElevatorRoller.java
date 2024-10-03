@@ -11,16 +11,15 @@ public class ElevatorRoller extends GBSubsystem {
 	private final IMotor motor;
 	private final IDigitalInput elevatorRollerDigitalInput;
 	private final DigitalInputInputsAutoLogged elevatorRollerDigitalInputInputs;
-	private final ElevatorRollerAvatiach elevatorRollerAvatiach;
+	private final ElevatorRollerStuff elevatorRollerStuff;
 	private final ElevatorRollerCommandsBuilder commandsBuilder;
 
-	public ElevatorRoller(ElevatorRollerAvatiach elevatorRollerAvatiach) {
-		super(elevatorRollerAvatiach.logPath());
-		this.motor = elevatorRollerAvatiach.motor();
-		this.elevatorRollerDigitalInput = elevatorRollerAvatiach.digitalInput();
-		this.elevatorRollerAvatiach = elevatorRollerAvatiach;
+	public ElevatorRoller(ElevatorRollerStuff elevatorRollerStuff) {
+		super(elevatorRollerStuff.logPath());
+		this.motor = elevatorRollerStuff.motor();
+		this.elevatorRollerDigitalInput = elevatorRollerStuff.digitalInput();
+		this.elevatorRollerStuff = elevatorRollerStuff;
 		this.elevatorRollerDigitalInputInputs = new DigitalInputInputsAutoLogged();
-
 
 		this.commandsBuilder = new ElevatorRollerCommandsBuilder(this);
 		updateInputs();
@@ -32,7 +31,9 @@ public class ElevatorRoller extends GBSubsystem {
 
 	public void updateInputs() {
 		elevatorRollerDigitalInput.updateInputs(elevatorRollerDigitalInputInputs);
-		motor.updateSignals(elevatorRollerAvatiach.motorVoltage());
+		motor.updateSignals(elevatorRollerStuff.motorVoltage());
+		Logger.processInputs(elevatorRollerStuff.digitalInputLogPath(), elevatorRollerDigitalInputInputs);
+		Logger.recordOutput(elevatorRollerStuff.logPath() + "IsNoteInElevatorRoller", isNoteIn());
 	}
 
 	public boolean isNoteIn() {
@@ -42,8 +43,6 @@ public class ElevatorRoller extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.processInputs(elevatorRollerAvatiach.digitalInputLogPath(), elevatorRollerDigitalInputInputs);
-		Logger.recordOutput(elevatorRollerAvatiach.logPath() + "IsNoteInElevatorRoller", isNoteIn());
 	}
 
 	protected void setPower(double power) {

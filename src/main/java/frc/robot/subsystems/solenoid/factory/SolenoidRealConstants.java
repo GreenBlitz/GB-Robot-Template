@@ -12,7 +12,7 @@ public class SolenoidRealConstants {
 	protected static SolenoidComponents generateSolenoidComponents(String logPath) {
 		TalonSRX motor = new TalonSRX(IDs.TalonSRXs.SOLENOID);
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", motor::getMotorOutputVoltage);
-		TalonSRXMotor solenoid = new TalonSRXMotor(logPath, motor, Rotation2d.fromRotations(1));
+		TalonSRXMotor solenoid = new TalonSRXMotor(logPath, motor, 1);
 		return new SolenoidComponents(logPath, solenoid, voltageSignal);
 	}
 

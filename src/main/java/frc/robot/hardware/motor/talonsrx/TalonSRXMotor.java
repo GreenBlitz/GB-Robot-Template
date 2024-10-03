@@ -20,9 +20,9 @@ public class TalonSRXMotor implements ControllableMotor {
 
 	private final String logPath;
 	private final TalonSRX motor;
-	private final Rotation2d gearRatio;
+	private final double gearRatio;
 
-	public TalonSRXMotor(String logPath, TalonSRX talonSRX, Rotation2d gearRatio) {
+	public TalonSRXMotor(String logPath, TalonSRX talonSRX, double gearRatio) {
 		this.logPath = logPath;
 		this.motor = talonSRX;
 		this.gearRatio = gearRatio;
@@ -47,7 +47,7 @@ public class TalonSRXMotor implements ControllableMotor {
 	
 	@Override
 	public void resetPosition(Rotation2d position) {
-		motor.setSelectedSensorPosition(Conversions.angleToMagTicks(position, gearRatio.getRotations()));
+		motor.setSelectedSensorPosition(Conversions.angleToMagTicks(position, gearRatio));
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class TalonSRXMotor implements ControllableMotor {
 	public void applyAngleRequest(IRequest<Rotation2d> request) {
 		AngleSRXRequest srxRequest = (AngleSRXRequest) request;
 		motor.selectProfileSlot(srxRequest.getPidSlot(), 0);
-		motor.set(srxRequest.getControlMode(), Conversions.angleToMagTicks(srxRequest.getSetPoint(), gearRatio.getRotations()));
+		motor.set(srxRequest.getControlMode(), Conversions.angleToMagTicks(srxRequest.getSetPoint(), gearRatio));
 	}
 	
 }

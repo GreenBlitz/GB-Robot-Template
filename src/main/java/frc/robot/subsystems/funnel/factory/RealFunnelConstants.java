@@ -34,7 +34,7 @@ public class RealFunnelConstants {
 		return new FunnelStuff(logPath, motor, voltageSignal, shooterBeamBreaker);
 	}
 
-	protected static void configMotor(SparkMaxWrapper motor){
+	protected static void configMotor(SparkMaxWrapper motor) {
 		motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
 		motor.setSmartCurrentLimit(30);
 		motor.getEncoder().setPositionConversionFactor(FunnelConstants.GEAR_RATIO);

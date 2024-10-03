@@ -51,8 +51,7 @@ public class VisionObservationLinearFilterWrapper {
 		Optional<Pose2d> odometryEndingPose = odometryObservationsOverTime.getSample(newOdometrySEndingTimestamps);
 
 		if (odometryStartingPose.isPresent() && odometryEndingPose.isPresent()) {
-			updatedObservations
-				.add(fixVisionPose(visionObservation, odometryStartingPose.get(), odometryEndingPose.get()));
+			updatedObservations.add(fixVisionPose(visionObservation, odometryStartingPose.get(), odometryEndingPose.get()));
 		}
 	}
 

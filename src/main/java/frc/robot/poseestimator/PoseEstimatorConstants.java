@@ -16,6 +16,7 @@ public class PoseEstimatorConstants {
 		protected static final LinearFilterType FILTER_TYPE = LinearFilterType.movingAverageFIR;
 
 		protected static final int SAMPLE_COUNT = 10;
+
 	}
 
 	protected static final int OBSERVATION_COUNT_FOR_POSE_CALIBRATION = 45;

@@ -51,7 +51,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.visionMovingAverageFilter = new VisionObservationLinearFilterWrapper(
 			PoseEstimatorConstants.LOG_PATH + PoseEstimatorConstants.VISION_LINEAR_FILTER.LOG_PATH,
 			PoseEstimatorConstants.VISION_LINEAR_FILTER.FILTER_TYPE,
-				PoseEstimatorConstants.VISION_LINEAR_FILTER.SAMPLE_COUNT
+			PoseEstimatorConstants.VISION_LINEAR_FILTER.SAMPLE_COUNT
 		);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
@@ -127,14 +127,18 @@ public class GBPoseEstimator implements IPoseEstimator {
 				double currentTimeStamp = Logger.getRealTimestamp() / 1.0e6;
 				visionPoseInterpolator.addSample(currentTimeStamp, visionObservation.visionPose());
 				visionMovingAverageFilter.addFixedData(
-						visionObservation.visionPose(),
-						visionObservation.timestamp(),
-						currentTimeStamp,
-						odometryPoseInterpolator
+					visionObservation.visionPose(),
+					visionObservation.timestamp(),
+					currentTimeStamp,
+					odometryPoseInterpolator
 				);
-				addVisionObservation(new VisionObservation(
-					visionMovingAverageFilter.calculateFilteredPose(), visionObservation.standardDeviations(), visionObservation.timestamp()
-				));
+				addVisionObservation(
+					new VisionObservation(
+						visionMovingAverageFilter.calculateFilteredPose(),
+						visionObservation.standardDeviations(),
+						visionObservation.timestamp()
+					)
+				);
 			}
 		}
 	}
@@ -174,7 +178,8 @@ public class GBPoseEstimator implements IPoseEstimator {
 				odometryStandardDeviations
 			);
 			Pose2d appliedVisionObservation = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-			appliedVisionObservation = appliedVisionObservation.plus(PoseEstimationMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
+			appliedVisionObservation = appliedVisionObservation
+				.plus(PoseEstimationMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
 			estimatedPose = appliedVisionObservation;
 			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, appliedVisionObservation);
 		});

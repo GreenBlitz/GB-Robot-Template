@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtils;
 import frc.utils.mirror.MirrorMath;
 
+import java.util.List;
+
 public class Field {
 
 	public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
@@ -59,6 +61,10 @@ public class Field {
 			return BLUE_SOURCE_CLIMB;
 		}
 		return new Pose2d(MirrorMath.getMirroredX(BLUE_SOURCE_CLIMB.getX()), BLUE_SOURCE_CLIMB.getY(), Rotation2d.fromDegrees(120));
+	}
+
+	public static Pose2d getClosetClimb(Pose2d robot) {
+		return robot.nearest(List.of(getMidClimb(), getAMPClimb(), getSourceClimb()));
 	}
 
 }

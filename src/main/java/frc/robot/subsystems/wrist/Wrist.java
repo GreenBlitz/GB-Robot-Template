@@ -23,18 +23,11 @@ public class Wrist extends GBSubsystem {
 		this.commandsBuilder = new WristCommandsBuilder(this);
 
 		motor.resetPosition(new Rotation2d());
+		updateInputs();
 	}
 
-	public void setTargetPosition(Rotation2d position) {
-		motor.applyAngleRequest(positionRequest.withSetPoint(position));
-	}
-
-	public void setPower(double power) {
-		motor.setPower(power);
-	}
-
-	public void stop() {
-		motor.stop();
+	public WristCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	public void setBrake(boolean brake) {
@@ -45,18 +38,26 @@ public class Wrist extends GBSubsystem {
 		motor.resetPosition(position);
 	}
 
-	public WristCommandsBuilder getCommandsBuilder() {
-		return commandsBuilder;
-	}
-
 	private void updateInputs() {
-		motor.updateSignals(wristStuff.positionSignal());
+		motor.updateSignals(positionSignal);
 		motor.updateSignals(wristStuff.otherSignals());
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
+	}
+
+	public void stop() {
+		motor.stop();
+	}
+
+	public void setPower(double power) {
+		motor.setPower(power);
+	}
+
+	public void setTargetPosition(Rotation2d position) {
+		motor.applyAngleRequest(positionRequest.withSetPoint(position));
 	}
 
 }

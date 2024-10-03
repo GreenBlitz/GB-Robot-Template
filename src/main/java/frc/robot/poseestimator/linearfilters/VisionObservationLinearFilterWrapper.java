@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.robot.poseestimator.observations.VisionObservation;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 public class VisionObservationLinearFilterWrapper {
@@ -16,6 +15,14 @@ public class VisionObservationLinearFilterWrapper {
 	private final ILinearFilter angleFilter;
 	private final Stack<Pose2d> updatedObservations;
 
+	/**
+	 * A wrapper for {@code ILinearFilter} using odometry and vision
+	 *
+	 * @param logPath:    like, the log path
+	 * @param filterType: the type of the linear filter that would be applied
+	 * @param modifier:   modify the behavior of the filter. In case of FIR filters, this would be the sample count, and for IIR
+	 *                    filters the time constant (the period is always the RobotRIO cycle time).
+	 */
 	public VisionObservationLinearFilterWrapper(String logPath, LinearFilterType filterType, int modifier) {
 		xFilter = LinearFilterFactory.create(filterType, logPath, modifier);
 		yFilter = LinearFilterFactory.create(filterType, logPath, modifier);
@@ -31,7 +38,8 @@ public class VisionObservationLinearFilterWrapper {
 	 * @param visionObservation:             the observation that needs to be fixed and added
 	 * @param newOdometryStartingTimestamps: the starting of the new odometry data
 	 * @param newOdometrySEndingTimestamps:  the ending of the new odometry data
-	 * @param odometryObservationsOverTime:  interpolated buffer contains the data from the starting to the ending of the new odometry data
+	 * @param odometryObservationsOverTime:  interpolated buffer contains the data from the starting to the ending of the new
+	 *                                       odometry data
 	 */
 	public void addFixedData(
 		VisionObservation visionObservation,
@@ -43,15 +51,9 @@ public class VisionObservationLinearFilterWrapper {
 		Optional<Pose2d> odometryEndingPose = odometryObservationsOverTime.getSample(newOdometrySEndingTimestamps);
 
 		if (odometryStartingPose.isPresent() && odometryEndingPose.isPresent()) {
-			updatedObservations.add(
-					fixVisionPose(
-							visionObservation.visionPose(),
-							odometryStartingPose.get(),
-							odometryEndingPose.get()
-							)
-			);
+			updatedObservations
+				.add(fixVisionPose(visionObservation.visionPose(), odometryStartingPose.get(), odometryEndingPose.get()));
 		}
-
 	}
 
 	public void addRawData(VisionObservation data) {
@@ -65,9 +67,9 @@ public class VisionObservationLinearFilterWrapper {
 
 	public Pose2d calculateFilteredPose() {
 		return new Pose2d(
-				xFilter.calculateNewData(updatedObservations.getLast().getX()),
-				yFilter.calculateNewData(updatedObservations.getLast().getY()),
-				Rotation2d.fromRotations(angleFilter.calculateNewData(updatedObservations.getLast().getRotation().getRotations()))
+			xFilter.calculateNewData(updatedObservations.getLast().getX()),
+			yFilter.calculateNewData(updatedObservations.getLast().getY()),
+			Rotation2d.fromRotations(angleFilter.calculateNewData(updatedObservations.getLast().getRotation().getRotations()))
 		);
 	}
 

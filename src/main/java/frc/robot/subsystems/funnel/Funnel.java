@@ -22,12 +22,13 @@ public class Funnel extends GBSubsystem {
 		this.motor = funnelStuff.motor();
 		this.digitalInput = funnelStuff.digitalInput();
 		this.voltageSignal = funnelStuff.inputSignal();
+		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.commandBuilder = new FunnelCommandsBuilder(this);
 
-		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
+		updateInputs();
 	}
 
-	public FunnelCommandsBuilder getCommandBuilder() {
+	public FunnelCommandsBuilder getCommandsBuilder() {
 		return commandBuilder;
 	}
 
@@ -50,13 +51,13 @@ public class Funnel extends GBSubsystem {
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
 		motor.updateSignals(voltageSignal);
+		Logger.processInputs(funnelStuff.digitalInputLogPath(), digitalInputsInputs);
+		Logger.recordOutput(funnelStuff.logPath() + "IsObjectIn", isObjectIn());
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.processInputs(funnelStuff.digitalInputLogPath(), digitalInputsInputs);
-		Logger.recordOutput(funnelStuff.logPath() + "IsObjectIn", isObjectIn());
 	}
 
 }

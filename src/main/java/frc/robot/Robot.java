@@ -6,6 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.superstructure.Superstructure;
 
 /**
@@ -19,15 +25,22 @@ public class Robot {
 
 	private final Superstructure superstructure;
 
+	private final Swerve swerve;
+
 	public Robot() {
 		this.superstructure = new Superstructure(this);
 		configureBindings();
+
+		this.swerve = new Swerve(
+				SwerveConstantsFactory.create(SwerveType.SWERVE),
+				ModulesFactory.create(SwerveType.SWERVE),
+				GyroFactory.create(SwerveType.SWERVE)
+		);
 	}
 
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}
-
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
@@ -37,4 +50,7 @@ public class Robot {
 		return superstructure;
 	}
 
+	public Swerve getSwerve() {
+		return swerve;
+	}
 }

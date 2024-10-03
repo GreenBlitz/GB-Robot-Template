@@ -17,7 +17,7 @@ public class RealFlywheelConstants {
 	public static FlywheelComponents generateTopFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
-		sparkMaxWrapper.getEncoder().setInverted(isInverted);
+		sparkMaxWrapper.setInverted(isInverted);
 		sparkMaxWrapper.setSmartCurrentLimit(40);
 
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
@@ -34,7 +34,7 @@ public class RealFlywheelConstants {
 		sparkMaxWrapper.getPIDController().setD(0);
 
 		SparkMaxAngleRequest velocityRequest = new SparkMaxAngleRequest(
-			Rotation2d.fromRotations(60),
+			Rotation2d.fromRotations(0),
 			SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
 			0
 		);

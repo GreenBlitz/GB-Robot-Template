@@ -9,7 +9,6 @@ public class LifterCommandsBuilder {
 
 	private final Lifter lifter;
 
-
 	//@formatter:off
 	public LifterCommandsBuilder(Lifter lifter) {
 		this.lifter = lifter;

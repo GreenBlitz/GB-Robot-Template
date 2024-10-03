@@ -1,5 +1,8 @@
 package frc.robot.subsystems.flywheel.factory;
 
+import com.revrobotics.CANSparkMax;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
@@ -10,6 +13,7 @@ import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.flywheel.FlywheelComponents;
 import frc.utils.AngleUnit;
+
 
 public class RealFlywheelConstants {
 
@@ -27,6 +31,10 @@ public class RealFlywheelConstants {
 
 
 		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", sparkMaxWrapper.getEncoder()::getVelocity, AngleUnit.ROTATIONS);
+
+		sparkMaxWrapper.getPIDController().setP(5);
+		sparkMaxWrapper.getPIDController().setI(0);
+		sparkMaxWrapper.getPIDController().setD(0);
 
 		SparkMaxAngleRequest velocityRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(60),

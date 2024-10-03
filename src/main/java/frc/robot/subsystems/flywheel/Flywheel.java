@@ -27,16 +27,8 @@ public class Flywheel extends GBSubsystem {
 		this.leftFlywheelVelocityRequest = flywheelStuff.leftFlywheelVelocityRequest();
 		this.flywheelStuff = flywheelStuff;
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
-		this.rightSysidCalibrator = new SysIdCalibrator(
-				rightMotor.getSysidConfigInfo(),
-				this,
-				voltage -> setVoltages(voltage, 0)
-		);
-		this.leftSysidCalibrator = new SysIdCalibrator(
-				leftMotor.getSysidConfigInfo(),
-				this,
-				voltage -> setVoltages(0, voltage)
-		);
+		this.rightSysidCalibrator = new SysIdCalibrator(rightMotor.getSysidConfigInfo(), this, voltage -> setVoltages(voltage, 0));
+		this.leftSysidCalibrator = new SysIdCalibrator(leftMotor.getSysidConfigInfo(), this, voltage -> setVoltages(0, voltage));
 
 		updateInputs();
 	}

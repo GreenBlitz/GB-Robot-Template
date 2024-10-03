@@ -2,8 +2,11 @@ package frc.robot.subsystems.flywheel;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.utils.GBSubsystem;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class Flywheel extends GBSubsystem {
 
@@ -12,6 +15,8 @@ public class Flywheel extends GBSubsystem {
 	private final ControllableMotor topMotor;
 	private final ControllableMotor bottomMotor;
 	private final FlywheelCommandsBuilder commandsBuilder;
+	private final SysIdCalibrator topSysIdCalibrator;
+	private final SysIdCalibrator bottomSysIdCalibrator;
 
 	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents, String logPath) {
 		super(logPath);
@@ -21,12 +26,27 @@ public class Flywheel extends GBSubsystem {
 		this.topMotor = topFlywheelComponents.motor();
 		this.bottomMotor = bottomFlywheelComponents.motor();
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
+		this.topSysIdCalibrator = new SysIdCalibrator(
+			topMotor.getSysidConfigInfo(),
+			this,
+			FlywheelComponents -> topFlywheelComponents.voltageSignal().getLatestValue()
+		);
+		this.bottomSysIdCalibrator = new SysIdCalibrator(
+			bottomMotor.getSysidConfigInfo(),
+			this,
+			FlywheelComponents -> bottomFlywheelComponents.voltageSignal().getLatestValue()
+		);
 
 		updateInputs();
 	}
 
+
 	public FlywheelCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
+	}
+
+	public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
+		return topSysIdCalibrator.getSysIdCommand(isQuasistatic, direction);
 	}
 
 	protected void setPower(double power) {

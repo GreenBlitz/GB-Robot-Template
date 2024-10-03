@@ -6,6 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.constants.IDs;
+import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.FlywheelComponents;
+import frc.robot.subsystems.flywheel.FlywheelConstants;
+import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -16,7 +21,15 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Flywheel flywheel;
+
 	public Robot() {
+		FlywheelComponents topFlywheelComponents = FlywheelFactory
+			.create(FlywheelConstants.LOG_PATH + "TopMotor", FlywheelConstants.IS_TOP_MOTOR_INVERTED, IDs.CANSparkMaxIDs.TOP_FLYWHEEL);
+		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
+			.create(FlywheelConstants.LOG_PATH + "BottomMotor", FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL);
+		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH);
+
 		configureBindings();
 	}
 
@@ -24,9 +37,12 @@ public class Robot {
 		JoysticksBindings.configureBindings(this);
 	}
 
-
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Flywheel getFlywheel() {
+		return flywheel;
 	}
 
 }

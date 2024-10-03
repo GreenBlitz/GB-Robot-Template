@@ -67,4 +67,17 @@ public class AimAssistMath {
 			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
+	public static double[] getClosetCutPoint(double x, double y, double R){
+		double m = y / x;
+		double cutPointX = Math.sqrt(
+				Math.pow(R,2)
+				/ (Math.pow(m,2) + 1)
+		);
+		if (x < 0) {
+			cutPointX *= -1;
+		}
+		double cutPointY = m * cutPointX;
+        return new double[]{cutPointX, cutPointY};
+	}
+
 }

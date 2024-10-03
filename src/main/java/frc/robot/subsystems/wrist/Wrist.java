@@ -21,6 +21,8 @@ public class Wrist extends GBSubsystem {
 		this.positionSignal = wristStuff.positionSignal();
 		this.wristStuff = wristStuff;
 		this.commandsBuilder = new WristCommandsBuilder(this);
+		
+		motor.resetPosition(new Rotation2d());
 	}
 	
 	public void setTargetPosition (Rotation2d position){

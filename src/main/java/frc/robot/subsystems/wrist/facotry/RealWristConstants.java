@@ -11,6 +11,7 @@ import frc.robot.hardware.request.srx.AngleSRXRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.subsystems.wrist.WristStuff;
 import frc.utils.AngleUnit;
+import frc.utils.Conversions;
 
 public class RealWristConstants {
 	
@@ -19,12 +20,13 @@ public class RealWristConstants {
 	protected static WristStuff generateWristStuff(String logPath){
 		TalonSRX motor = new TalonSRX(IDs.TalonSRXs.WRIST);
 		motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+		motor.config_kP(0,1);
 		
 		return new WristStuff(
 				logPath,
 				new TalonSRXMotor(logPath, motor, Rotation2d.fromRotations(2)),
 				new AngleSRXRequest(ControlMode.Position,0),
-				new SuppliedAngleSignal("position", () -> motor.getSelectedSensorPosition(), AngleUnit.ROTATIONS)
+				new SuppliedAngleSignal("position", () -> Conversions.magTicksToAngle(motor.getSelectedSensorPosition(), 2).getRotations(), AngleUnit.ROTATIONS)
 		);
 		
 	}

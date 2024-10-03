@@ -7,11 +7,9 @@ import frc.robot.hardware.signal.InputSignal;
 public record FunnelStuff(
 	String logPath,
 	String shooterDigitalInputLogPath,
-	String elevatorDigitalInputLogPath,
 	IMotor motor,
 	InputSignal<Double> voltageSignal,
-	IDigitalInput shooterDigitalInput,
-	IDigitalInput elevatorDigitalInput
+	IDigitalInput shooterDigitalInput
 
 ) {
 
@@ -19,17 +17,14 @@ public record FunnelStuff(
 		String logPath,
 		IMotor motor,
 		InputSignal<Double> voltageSignal,
-		IDigitalInput shooterDigitalInput,
-		IDigitalInput elevatorDigitalInput
+		IDigitalInput shooterDigitalInput
 	) {
 		this(
 			logPath,
 			logPath + "shooterDigitalInput/",
-			logPath + "elevatorDigitalInput/",
 			motor,
 			voltageSignal,
-			shooterDigitalInput,
-			elevatorDigitalInput
+			shooterDigitalInput
 		);
 	}
 

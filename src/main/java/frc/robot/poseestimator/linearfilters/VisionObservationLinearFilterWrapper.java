@@ -66,8 +66,8 @@ public class VisionObservationLinearFilterWrapper {
 
 	public Pose2d calculateFilteredPose() {
 		return new Pose2d(
-			xFilter.calculateNewData(updatedObservations.getLast().getX()),
-			yFilter.calculateNewData(updatedObservations.getLast().getY()),
+			xFilter.calculateNewData(updatedObservations.peek().getX()),
+			yFilter.calculateNewData(updatedObservations.peek().getY()),
 			Rotation2d.fromRotations(angleFilter.calculateNewData(updatedObservations.getLast().getRotation().getRotations()))
 		);
 	}

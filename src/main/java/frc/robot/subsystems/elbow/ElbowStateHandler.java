@@ -18,7 +18,14 @@ public class ElbowStateHandler {
 		if (elbowState == ElbowState.MANUAL) {
 			return new InstantCommand();
 		}
-		return elbow.getCommandsBuilder().moveToAngle(elbowState.getTargetPosition(), TOLERANCE);
+		if(elbowState == ElbowState.FREE){
+			return new InstantCommand(() -> elbow.setPower(0), elbow);
+		}
+		if(elbowState == ElbowState.CLIMB){
+			return elbow.getCommandsBuilder().moveToAngle(elbowState.getTargetPosition(), TOLERANCE)
+					.alongWith(new InstantCommand(() -> elbow.setBrake(false)));
+		}
+		return elbow.getCommandsBuilder().moveToAngle(elbowState.getTargetPosition(), TOLERANCE).alongWith(new InstantCommand(() -> elbow.setBrake(true)));
 	}
 
 }

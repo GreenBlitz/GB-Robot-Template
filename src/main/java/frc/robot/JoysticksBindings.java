@@ -49,8 +49,12 @@ public class JoysticksBindings {
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SECOND_JOYSTICK;
+		SmartJoystick usedJoystick
+				= SECOND_JOYSTICK;
 		// bindings...
+
+		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_CLIMB));
+		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.CLIMB));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

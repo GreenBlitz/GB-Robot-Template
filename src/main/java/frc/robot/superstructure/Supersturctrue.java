@@ -181,7 +181,7 @@ public class Supersturctrue {
 	}
 
 	private Command climb(){
-		return elbowStateHandler.setState(ElbowState.CLIMB).andThen(climbStateHandler.setState(ClimbState.RETRACT));
+		return elbowStateHandler.setState(ElbowState.CLIMB).andThen(elbowStateHandler.setState(ElbowState.FREE)).andThen(climbStateHandler.setState(ClimbState.RETRACT));
 	}
 
 	private Command transferShooterArm() {

@@ -13,18 +13,25 @@ public class Pivot extends GBSubsystem {
 	private final IRequest<Rotation2d> positionRequest;
 	private final PivotStuff pivotStuff;
 	private final PivotCommandsBuilder pivotCommandsBuilder;
-	private final MedianFilter resetFilter;
+	private final MedianFilter resetFilterRotations;
 
 	public Pivot(PivotStuff pivotStuff) {
 		super(pivotStuff.logPath());
 		this.motor = pivotStuff.motor();
 		this.positionRequest = pivotStuff.positionRequest();
 		this.pivotStuff = pivotStuff;
-		this.resetFilter = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
 		this.pivotCommandsBuilder = new PivotCommandsBuilder(this);
+		this.resetFilterRotations = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
 
 		motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 		updateInputs();
+		resetResetFilter();
+	}
+
+	private void resetResetFilter() {
+		for (int i = 0; i < PivotConstants.MEDIAN_FILTER_SIZE; i++) {
+			resetFilterRotations.calculate(pivotStuff.positionSignal().getLatestValue().getRotations());
+		}
 	}
 
 	public PivotCommandsBuilder getCommandsBuilder() {
@@ -41,7 +48,7 @@ public class Pivot extends GBSubsystem {
 		updateInputs();
 		if (
 			PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations()
-				> resetFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
+				> resetFilterRotations.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
 		) {
 			motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 		}

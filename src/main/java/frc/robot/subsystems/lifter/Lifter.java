@@ -47,7 +47,7 @@ public class Lifter extends GBSubsystem {
 		return lifterStuff;
 	}
 
-	public LifterCommandsBuilder getLifterCommandsBuilder() {
+	public LifterCommandsBuilder getCommandsBuilder() {
 		return lifterCommandsBuilder;
 	}
 

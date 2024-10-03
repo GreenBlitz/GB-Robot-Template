@@ -1,7 +1,17 @@
 package frc.robot.poseestimator.linearfilters;
 
-public interface ILinearFilter<dataType> {
+import edu.wpi.first.math.filter.LinearFilter;
 
-	dataType calculateNewData(dataType input);
+public abstract class ILinearFilter {
+
+	double calculateNewData(double newData) {
+		return getFilter().calculate(newData);
+	};
+
+	double getLatestCalculation(double input) {
+		return getFilter().lastValue();
+	};
+
+	abstract LinearFilter getFilter();
 
 }

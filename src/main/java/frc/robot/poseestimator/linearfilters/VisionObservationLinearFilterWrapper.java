@@ -1,6 +1,7 @@
 package frc.robot.poseestimator.linearfilters;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import frc.robot.poseestimator.observations.VisionObservation;
 
@@ -8,15 +9,15 @@ import java.util.*;
 
 public class VisionObservationLinearFilterWrapper {
 
-	private final ILinearFilter<Pose2d> linearFilter;
+	private final ILinearFilter xFilter;
+	private final ILinearFilter yFilter;
+	private final ILinearFilter angleFilter;
 	private final Stack<Pose2d> updatedObservations;
 
-	public VisionObservationLinearFilterWrapper(LinearFilterType filterType) {
-		linearFilter = switch (filterType) {
-			case highPassIIR -> new HighPassIIR();
-            case singlePoleIIR -> new SigSinglePoseIIR();
-			case movingAverageFIR -> new MovingAverageFIR();
-		};
+	public VisionObservationLinearFilterWrapper(String logPath, LinearFilterType filterType, int modifier) {
+		xFilter = LinearFilterFactory.create(filterType, logPath, modifier);
+		yFilter = LinearFilterFactory.create(filterType, logPath, modifier);
+		angleFilter = LinearFilterFactory.create(filterType, logPath, modifier);
 		this.updatedObservations = new Stack<>();
 	}
 
@@ -70,7 +71,11 @@ public class VisionObservationLinearFilterWrapper {
 	}
 
 	public Pose2d calculateFilteredPose() {
-		return linearFilter.calculateNewData(updatedObservations.getLast());
+		return new Pose2d(
+				xFilter.calculateNewData(updatedObservations.getLast().getX()),
+				yFilter.calculateNewData(updatedObservations.getLast().getY()),
+				Rotation2d.fromRotations(angleFilter.calculateNewData(updatedObservations.getLast().getRotation().getRotations()))
+		);
 	}
 
 }

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -122,7 +122,7 @@ public class SwerveCommandsBuilder {
 			interrupted -> {},
 			() -> swerve.isAtHeading(targetHeading),
 			swerve
-		).withName("Rotate around " + rotateAxis.name() + " to " + targetHeading.getDegrees() + " degrees");
+		).withName("Rotate around " + rotateAxis.name() + " to " + targetHeading);
 	}
 
 

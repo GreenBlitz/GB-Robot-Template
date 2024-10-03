@@ -9,4 +9,8 @@ public class SparkMaxWrapper extends CANSparkMax {
 		super.restoreFactoryDefaults();
 	}
 
+	public double getVoltage() {
+		return getAppliedOutput() * getBusVoltage();
+	}
+
 }

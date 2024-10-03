@@ -126,13 +126,15 @@ public class GBPoseEstimator implements IPoseEstimator {
 			if (!isObservationTooOld(visionObservation)) {
 				double currentTimeStamp = Logger.getRealTimestamp() / 1.0e6;
 				visionPoseInterpolator.addSample(currentTimeStamp, visionObservation.visionPose());
-				addVisionObservation(visionObservation);
 				visionMovingAverageFilter.addFixedData(
 						visionObservation.visionPose(),
 						visionObservation.timestamp(),
 						currentTimeStamp,
 						odometryPoseInterpolator
 				);
+				addVisionObservation(new VisionObservation(
+					visionMovingAverageFilter.calculateFilteredPose(), visionObservation.standardDeviations(), visionObservation.timestamp()
+				));
 			}
 		}
 	}
@@ -171,8 +173,10 @@ public class GBPoseEstimator implements IPoseEstimator {
 				odometryPose,
 				odometryStandardDeviations
 			);
-			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, estimatedPose);
+			Pose2d appliedVisionObservation = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
+			appliedVisionObservation = appliedVisionObservation.plus(PoseEstimationMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
+			estimatedPose = appliedVisionObservation;
+			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, appliedVisionObservation);
 		});
 	}
 

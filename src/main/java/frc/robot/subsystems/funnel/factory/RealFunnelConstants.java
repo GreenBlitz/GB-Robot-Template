@@ -9,6 +9,7 @@ import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.FunnelStuff;
 
 import java.util.function.BooleanSupplier;
@@ -27,6 +28,8 @@ public class RealFunnelConstants {
 		sparkMAXWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
 
 		sparkMAXWrapper.setSmartCurrentLimit(30);
+		sparkMAXWrapper.getEncoder().setPositionConversionFactor(FunnelConstants.GEAR_RATIO);
+		sparkMAXWrapper.getEncoder().setVelocityConversionFactor(FunnelConstants.GEAR_RATIO);
 
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 

@@ -46,12 +46,12 @@ public class Funnel extends GBSubsystem {
 		shooterDigitalInput.updateInputs(shooterDigitalInputInputs);
 		motor.updateSignals(funnelStuff.voltageSignal());
 		Logger.processInputs(funnelStuff.shooterDigitalInputLogPath(), shooterDigitalInputInputs);
+		Logger.recordOutput(funnelStuff.shooterDigitalInputLogPath() + "isNoteInShooter", isNoteInShooter());
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.recordOutput(funnelStuff.shooterDigitalInputLogPath() + "isNoteInShooter", isNoteInShooter());
 	}
 
 }

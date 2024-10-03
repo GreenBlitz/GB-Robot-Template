@@ -29,12 +29,12 @@ public class Flywheel extends GBSubsystem {
 		this.topSysIdCalibrator = new SysIdCalibrator(
 			topMotor.getSysidConfigInfo(),
 			this,
-			FlywheelComponents -> topFlywheelComponents.voltageSignal().getLatestValue()
+				voltage -> topFlywheelComponents.voltageRequest().withSetPoint(voltage)
 		);
 		this.bottomSysIdCalibrator = new SysIdCalibrator(
 			bottomMotor.getSysidConfigInfo(),
 			this,
-			FlywheelComponents -> bottomFlywheelComponents.voltageSignal().getLatestValue()
+			voltage -> bottomFlywheelComponents.voltageRequest().withSetPoint(voltage)
 		);
 
 		updateInputs();

@@ -38,12 +38,12 @@ public class Robot {
 		JoysticksBindings.configureBindings(this);
 	}
 
-	public Flywheel getFlywheel() {
-		return flywheel;
-	}
-
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+	
+	public Flywheel getFlywheel() {
+		return flywheel;
 	}
 
 }

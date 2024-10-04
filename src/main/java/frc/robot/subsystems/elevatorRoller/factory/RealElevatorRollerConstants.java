@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevatorRoller.factory;
 
+import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
@@ -17,12 +18,16 @@ public class RealElevatorRollerConstants {
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
 
+	private static void configMotor(SparkMaxWrapper motor) {
+		motor.getEncoder().setPositionConversionFactor(ElevatorRollerConstants.GEAR_RATIO);
+		motor.getEncoder().setVelocityConversionFactor(ElevatorRollerConstants.GEAR_RATIO);
+		motor.setSmartCurrentLimit(40);
+		motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+	}
+
 	public static ElevatorRollerStuff generateRollerStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMaxIDs.ELEVATOR_ROLLER);
-		sparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorRollerConstants.GEAR_RATIO);
-		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorRollerConstants.GEAR_RATIO);
-		sparkMaxWrapper.setSmartCurrentLimit(40);
-
+		configMotor(sparkMaxWrapper);
 		BrushedSparkMAXMotor brushedSparkMAXMotor = new BrushedSparkMAXMotor(logPath, sparkMaxWrapper);
 
 		BooleanSupplier isBeamBroken = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();

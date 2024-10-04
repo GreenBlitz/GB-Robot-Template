@@ -32,10 +32,10 @@ public class ElevatorRollerCommandsBuilder {
 				()-> false
 		).withName("Set power by supplier");
 	}
-	//@formatter:on
 
 	public Command stop() {
 		return new RunCommand(elevatorRoller::stop, elevatorRoller).withName("Stop");
 	}
+	//@formatter:on
 
 }

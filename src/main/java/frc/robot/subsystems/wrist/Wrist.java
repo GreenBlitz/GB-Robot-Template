@@ -48,16 +48,20 @@ public class Wrist extends GBSubsystem {
 		updateInputs();
 	}
 
-	public void stop() {
+	protected void stop() {
 		motor.stop();
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	public void setTargetPosition(Rotation2d position) {
+	protected void setTargetPosition(Rotation2d position) {
 		motor.applyAngleRequest(positionRequest.withSetPoint(position));
+	}
+
+	protected void stayInPlace() {
+		motor.applyAngleRequest(positionRequest.withSetPoint(positionSignal.getLatestValue()));
 	}
 
 }

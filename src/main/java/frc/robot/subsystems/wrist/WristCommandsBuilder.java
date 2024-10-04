@@ -29,7 +29,7 @@ public class WristCommandsBuilder {
 		return new FunctionalCommand(
 				() -> {},
 				() -> wrist.setTargetPosition(position),
-				interrupted -> wrist.stop(),
+				interrupted -> wrist.stayInPlace(),
 				() -> false,
 				wrist
 		).withName("Move to position: " + position);

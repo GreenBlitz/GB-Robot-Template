@@ -18,6 +18,8 @@ import frc.robot.subsystems.roller.RollerStateHandler;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+import frc.robot.subsystems.wrist.WristState;
+import frc.robot.subsystems.wrist.WristStateHandler;
 import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
@@ -31,6 +33,7 @@ public class Superstructure {
 	private final IntakeStateHandler intakeStateHandler;
 	private final PivotStateHandler pivotStateHandler;
 	private final RollerStateHandler rollerStateHandler;
+	private final WristStateHandler wristStateHandler;
 
 	private RobotState currentState;
 
@@ -43,6 +46,7 @@ public class Superstructure {
 		this.intakeStateHandler = new IntakeStateHandler(robot.getIntake());
 		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
 		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
+		this.wristStateHandler = new WristStateHandler(robot.getWrist());
 	}
 
 	public RobotState getCurrentState() {
@@ -110,6 +114,7 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.IDLE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elbowStateHandler.setState(ElbowState.IDLE),
+			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);
 	}
@@ -131,6 +136,7 @@ public class Superstructure {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			pivotStateHandler.setState(PivotState.IDLE),
 			elbowStateHandler.setState(ElbowState.INTAKE),
+			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
 		);
 	}
@@ -143,6 +149,7 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.IDLE),
+			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		);
 	}
@@ -168,7 +175,8 @@ public class Superstructure {
 			rollerStateHandler.setState(RollerState.STOP),
 			intakeStateHandler.setState(IntakeState.STOP),
 			pivotStateHandler.setState(PivotState.IDLE),
-			flywheelStateHandler.setState(FlywheelState.DEFAULT)
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			wristStateHandler.setState(WristState.IN_ARM)
 		);
 	}
 
@@ -191,7 +199,8 @@ public class Superstructure {
 			),
 			intakeStateHandler.setState(IntakeState.STOP),
 			pivotStateHandler.setState(PivotState.IDLE),
-			flywheelStateHandler.setState(FlywheelState.DEFAULT)
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			wristStateHandler.setState(WristState.IN_ARM)
 		);
 	}
 
@@ -203,6 +212,7 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.INTAKE),
 			elbowStateHandler.setState(ElbowState.MANUAL),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);
 	}
@@ -227,6 +237,7 @@ public class Superstructure {
 			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			intakeStateHandler.setState(IntakeState.STOP),
+			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);
 	}
@@ -245,6 +256,7 @@ public class Superstructure {
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
 				).withTimeout(0.7)//.until(this::isObjectInFunnel)
 			),
+			wristStateHandler.setState(WristState.IN_ARM),
 			intakeStateHandler.setState(IntakeState.STOP),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)

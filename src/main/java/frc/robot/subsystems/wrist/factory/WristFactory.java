@@ -1,4 +1,4 @@
-package frc.robot.subsystems.wrist.facotry;
+package frc.robot.subsystems.wrist.factory;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.wrist.WristStuff;

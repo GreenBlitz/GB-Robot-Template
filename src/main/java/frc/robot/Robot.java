@@ -34,7 +34,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristConstants;
-import frc.robot.subsystems.wrist.facotry.WristFactory;
+import frc.robot.subsystems.wrist.factory.WristFactory;
 import frc.robot.superstructure.Superstructure;
 import frc.utils.brakestate.BrakeStateManager;
 

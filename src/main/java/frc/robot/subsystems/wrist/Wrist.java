@@ -1,5 +1,6 @@
 package frc.robot.subsystems.wrist;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
@@ -62,6 +63,10 @@ public class Wrist extends GBSubsystem {
 
 	protected void stayInPlace() {
 		motor.applyAngleRequest(positionRequest.withSetPoint(positionSignal.getLatestValue()));
+	}
+
+	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
+		return MathUtil.isNear(targetPosition.getRadians(), positionSignal.getLatestValue().getRadians(), tolerance.getRadians());
 	}
 
 }

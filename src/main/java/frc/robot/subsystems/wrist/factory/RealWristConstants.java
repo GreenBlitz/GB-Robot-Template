@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.talonsrx.TalonSRXMotor;
 import frc.robot.hardware.request.srx.AngleSRXRequest;
@@ -34,8 +33,8 @@ public class RealWristConstants {
 		TalonSRX motor = new TalonSRX(IDs.TalonSRXs.WRIST);
 		configMotor(motor);
 
-		Supplier<Double> positionSupplier =
-				() -> Conversions.magTicksToAngle(motor.getSelectedSensorPosition(), WristConstants.GEAR_RATIO).getRotations();
+		Supplier<Double> positionSupplier = () -> Conversions.magTicksToAngle(motor.getSelectedSensorPosition(), WristConstants.GEAR_RATIO)
+			.getRotations();
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", positionSupplier, AngleUnit.ROTATIONS);
 
 		return new WristStuff(

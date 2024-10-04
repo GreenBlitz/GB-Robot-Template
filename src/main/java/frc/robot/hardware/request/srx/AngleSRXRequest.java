@@ -26,12 +26,12 @@ public class AngleSRXRequest implements IRequest<Rotation2d> {
 		return controlMode;
 	}
 
-	public Rotation2d getSetPoint() {
-		return setPoint;
-	}
-
 	public int getPidSlot() {
 		return pidSlot;
+	}
+
+	public Rotation2d getSetPoint() {
+		return setPoint;
 	}
 
 }

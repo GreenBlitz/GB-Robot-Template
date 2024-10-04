@@ -26,7 +26,6 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private Pose2d estimatedPose;
 	private SwerveDriveWheelPositions lastWheelPositions;
 	private Rotation2d lastGyroAngle;
-	private VisionObservation lastVisionObservation;
 	private final LimelightFilterer limelightFilterer;
 
 	public GBPoseEstimator(
@@ -52,18 +51,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 	}
 
 	public void resetPoseByLimelight() {
-		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightData();
-		List<VisionObservation> rawData;
-		while (
-			stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION
-				&& !(rawData = limelightFilterer.getAllAvailableLimelightData()).isEmpty()
-		) {
-			if (!stackedRawData.contains(rawData.get(0))) {
-				stackedRawData.addAll(rawData);
-			}
-		}
-		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
-		resetPose(new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation()));
+		getVisionPose().ifPresent(this::resetPose);
 	}
 
 	@Override
@@ -97,7 +85,19 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		return Optional.of(lastVisionObservation.visionPose());
+		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightData();
+		List<VisionObservation> rawData;
+		while (
+			stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION
+				&& !(rawData = limelightFilterer.getAllAvailableLimelightData()).isEmpty()
+		) {
+			if (!stackedRawData.contains(rawData.get(0))) {
+				stackedRawData.addAll(rawData);
+			}
+		}
+		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
+		Pose2d visionPose = new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation());
+		return Optional.of(visionPose);
 	}
 
 	@Override
@@ -144,7 +144,6 @@ public class GBPoseEstimator implements IPoseEstimator {
 	}
 
 	private void addVisionObservation(VisionObservation observation) {
-		this.lastVisionObservation = observation;
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			Pose2d currentEstimation = PoseEstimationMath.combineVisionToOdometry(

@@ -31,4 +31,6 @@ public class LimeLightConstants {
 
 	public static final double STANDARD_DEVIATION_VISION_ANGLE = 0.6;
 
+	public static final double TIME_TO_FIX_POSE_ESTIMATION = 1;
+
 }

@@ -15,12 +15,14 @@ public class LimelightFilterer extends GBSubsystem {
 
 	private final MultiLimelightsRawData multiLimelightsRawData;
 	private final IPoseEstimator poseEstimator;
+	private double lastSuccessfulObservationTime;
 
 	public LimelightFilterer(LimelightFiltererConfig config, IPoseEstimator poseEstimator) {
 		super(config.logPath());
 
 		this.multiLimelightsRawData = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
 		this.poseEstimator = poseEstimator;
+		this.lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
 	}
 
 	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
@@ -35,7 +37,9 @@ public class LimelightFilterer extends GBSubsystem {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}
-
+		if (!estimates.isEmpty()) {
+			lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
+		}
 		return estimates;
 	}
 
@@ -88,7 +92,20 @@ public class LimelightFilterer extends GBSubsystem {
 		}
 	}
 
+	private void correctPoseEstimation() {
+		boolean hasTooMuchTimePassed = Logger.getRealTimestamp() / 1.0e6 - lastSuccessfulObservationTime
+			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION;
+		List<VisionObservation> estimates = getFilteredVisionObservations();
+		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
+			Optional<Pose2d> visionPose = poseEstimator.getVisionPose();
+			visionPose.ifPresent(poseEstimator::resetPose);
+		}
+		lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
+	}
+
 	@Override
-	protected void subsystemPeriodic() {}
+	protected void subsystemPeriodic() {
+		correctPoseEstimation();
+	}
 
 }

@@ -56,6 +56,10 @@ public class Robot {
 		return funnel;
 	}
 
+	public Flywheel getFlywheel() {
+		return flywheel;
+	}
+
 	public Superstructure getSuperstructure() {
 		return superstructure;
 	}

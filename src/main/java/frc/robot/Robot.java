@@ -21,7 +21,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Funnel funnel;
-	
+
 	private final Superstructure superstructure;
 
 	public Robot() {

@@ -155,6 +155,7 @@ public class Superstructure {
 	private Command speaker() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
+				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
 				funnelStateHandler.setState(FunnelState.SHOOT).withTimeout(3),// .until(() -> !isObjectInFunnel())
 				funnelStateHandler.setState(FunnelState.STOP)
 			),

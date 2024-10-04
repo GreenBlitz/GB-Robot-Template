@@ -26,6 +26,7 @@ public class Robot {
 
 	public Robot() {
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+
 		this.superstructure = new Superstructure(this);
 		configureBindings();
 	}
@@ -37,6 +38,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Funnel getFunnel() {
+		return funnel;
 	}
 
 	public Superstructure getSuperstructure() {

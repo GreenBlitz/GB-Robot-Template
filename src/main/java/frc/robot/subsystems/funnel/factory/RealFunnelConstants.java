@@ -1,5 +1,6 @@
 package frc.robot.subsystems.funnel.factory;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -8,6 +9,7 @@ import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.FunnelStuff;
 
 import java.util.function.BooleanSupplier;
@@ -20,13 +22,19 @@ public class RealFunnelConstants {
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
-	private final static boolean IS_INVERTED = true;
+	public static void configMotor(SparkMaxWrapper motor) {
+		motor.setInverted(true);
+		motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+		motor.setSmartCurrentLimit(30);
+		motor.getEncoder().setPositionConversionFactor(FunnelConstants.GEAR_RATIO);
+		motor.getEncoder().setVelocityConversionFactor(FunnelConstants.GEAR_RATIO);
+	}
 
 	public static FunnelStuff generateFunnelStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.FUNNEL);
-		sparkMaxWrapper.setInverted(IS_INVERTED);
-		SysIdRoutine.Config config = new SysIdRoutine.Config();
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
+		configMotor(sparkMaxWrapper);
+
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 

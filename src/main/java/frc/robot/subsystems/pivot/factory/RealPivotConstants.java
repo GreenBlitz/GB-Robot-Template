@@ -52,7 +52,6 @@ public class RealPivotConstants {
 		configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
 		configuration.CurrentLimits.StatorCurrentLimit = 40;
 		configuration.CurrentLimits.SupplyCurrentLimit = 40;
-
 		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
 		return configuration;

@@ -2,7 +2,6 @@ package frc.robot.subsystems.roller;
 
 public enum RollerState {
 
-	INTAKE(0.4),
 	AFTER_INTAKE(0.4),
 	ROLL_IN(0.4),
 	ROLL_OUT(-0.4),

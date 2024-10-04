@@ -217,7 +217,7 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.STOP)
 				).until(this::isReadyToTransfer),
 				new ParallelCommandGroup(
-					rollerStateHandler.setState(RollerState.INTAKE),
+					rollerStateHandler.setState(RollerState.ROLL_IN),
 					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
 				).withTimeout(0.6),//.until(this::isObjectInRoller),
 				new ParallelDeadlineGroup(
@@ -238,14 +238,15 @@ public class Superstructure {
 					pivotStateHandler.setState(PivotState.TRANSFER),
 					elbowStateHandler.setState(ElbowState.TRANSFER),
 					rollerStateHandler.setState(RollerState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP),
 					funnelStateHandler.setState(FunnelState.STOP)
 				).until(this::isReadyToTransfer),
 				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.TRANSFER_TO_SHOOTER),
+					funnelStateHandler.setState(FunnelState.INTAKE),
+					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
 				).withTimeout(0.7)//.until(this::isObjectInFunnel)
 			),
-			intakeStateHandler.setState(IntakeState.STOP),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);

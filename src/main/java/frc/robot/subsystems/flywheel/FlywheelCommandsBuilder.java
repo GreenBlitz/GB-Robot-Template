@@ -28,13 +28,12 @@ public class FlywheelCommandsBuilder {
 		return new RunCommand(
 				() -> flywheel.setTargetVelocity(targetVelocity),
 				flywheel
-		).withName("Set velocity set point to " + targetVelocity);
+		).withName("Set target velocity to " + targetVelocity);
 	}
 
 	public Command stop() {
 		return new RunCommand(flywheel::stop, flywheel).withName("Stop");
 	}
-
 	//@formatter:on
 
 }

@@ -13,25 +13,25 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static final Phoenix6DeviceID PIGEON_2_DEVICE_ID = new Phoenix6DeviceID(0, BusChain.CANIVORE);
+	public static final Phoenix6DeviceID PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 
 	public static class TalonFXIDs {
 
-		public static final Phoenix6DeviceID FRONT_LEFT_STEER_MOTOR = new Phoenix6DeviceID(0, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID FRONT_LEFT_STEER = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID FRONT_LEFT_DRIVE_MOTOR = new Phoenix6DeviceID(1, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID FRONT_LEFT_DRIVE = new Phoenix6DeviceID(1, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID FRONT_RIGHT_STEER_MOTOR = new Phoenix6DeviceID(2, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID FRONT_RIGHT_STEER = new Phoenix6DeviceID(2, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID FRONT_RIGHT_DRIVE_MOTOR = new Phoenix6DeviceID(3, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID FRONT_RIGHT_DRIVE = new Phoenix6DeviceID(3, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID BACK_LEFT_STEER_MOTOR = new Phoenix6DeviceID(4, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID BACK_LEFT_STEER = new Phoenix6DeviceID(4, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID BACK_LEFT_DRIVE_MOTOR = new Phoenix6DeviceID(5, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID BACK_LEFT_DRIVE = new Phoenix6DeviceID(5, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID BACK_RIGHT_STEER_MOTOR = new Phoenix6DeviceID(6, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID BACK_RIGHT_STEER = new Phoenix6DeviceID(6, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID BACK_RIGHT_DRIVE_MOTOR = new Phoenix6DeviceID(7, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID BACK_RIGHT_DRIVE = new Phoenix6DeviceID(7, BusChain.CANIVORE);
 
 	}
 

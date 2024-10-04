@@ -26,7 +26,7 @@ class RealGyroConstants {
 	}
 
 	protected static GyroStuff generateGyroStuff(String logPath) {
-		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.PIGEON_2_DEVICE_ID);
+		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.PIGEON_2);
 		if (!pigeon2Wrapper.applyConfiguration(generateGyroConfig(), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}

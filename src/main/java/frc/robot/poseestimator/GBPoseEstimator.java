@@ -11,6 +11,7 @@ import frc.robot.vision.limelights.LimeLightConstants;
 import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -152,7 +153,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 				odometryStandardDeviations
 			);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, estimatedPose);
+			estimatedPoseInterpolator.addSample(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()), estimatedPose);
 		});
 	}
 

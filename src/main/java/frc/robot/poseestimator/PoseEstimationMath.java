@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Twist2d;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.limelights.LimelightRawData;
-import frc.utils.MathUtils;
 
 import java.util.List;
 
@@ -60,16 +59,13 @@ public class PoseEstimationMath {
 
 	public static Transform2d
 		scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
-		double[] visionDifferenceFromOdometryMatrix = {
-			visionDifferenceFromOdometry.getX(),
-			visionDifferenceFromOdometry.getY(),
-			visionDifferenceFromOdometry.getRotation().getRadians()};
-		double[] standardDeviationsAppliedTransform = MathUtils
-			.multiplyArrays(combinedStandardDeviations, visionDifferenceFromOdometryMatrix);
 		return new Transform2d(
-			standardDeviationsAppliedTransform[PoseArrayEntryValue.X_VALUE.getEntryValue()],
-			standardDeviationsAppliedTransform[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			Rotation2d.fromRadians(standardDeviationsAppliedTransform[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()])
+			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
+			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+			Rotation2d.fromRadians(
+				visionDifferenceFromOdometry.getRotation().getRadians()
+					* combinedStandardDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()]
+			)
 		);
 	}
 

@@ -40,7 +40,6 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-
 	public Funnel getFunnel() {
 		return funnel;
 	}

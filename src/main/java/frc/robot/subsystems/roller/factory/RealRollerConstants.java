@@ -1,5 +1,6 @@
 package frc.robot.subsystems.roller.factory;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -9,6 +10,7 @@ import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.robot.subsystems.roller.RollerConstants;
 import frc.robot.subsystems.roller.RollerStuff;
 import frc.utils.AngleUnit;
 
@@ -23,14 +25,19 @@ public class RealRollerConstants {
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
-	private final static double GEAR_RATIO = 1.0 / 6.0;
+	private static void configMotor(SparkMaxWrapper motor) {
+		motor.setInverted(false);
+		motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+		motor.setSmartCurrentLimit(30);
+		motor.getEncoder().setPositionConversionFactor(RollerConstants.GEAR_RATIO);
+		motor.getEncoder().setVelocityConversionFactor(RollerConstants.GEAR_RATIO);
+	}
 
 	public static RollerStuff generateRollerStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXs.ROLLER);
-		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
-		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
-		SysIdRoutine.Config config = new SysIdRoutine.Config();
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
+		configMotor(sparkMaxWrapper);
+
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper,  new SysIdRoutine.Config());
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 

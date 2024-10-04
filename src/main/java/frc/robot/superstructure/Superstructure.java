@@ -2,7 +2,9 @@ package frc.robot.superstructure;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+import frc.robot.constants.Field;
 import frc.robot.subsystems.funnel.FunnelState;
 import frc.robot.subsystems.funnel.FunnelStateHandler;
 import frc.robot.subsystems.swerve.Swerve;
@@ -32,6 +34,10 @@ public class Superstructure {
 		Logger.recordOutput("CurrentState", currentState);
 	}
 
+	private boolean isNoteInShooter() {
+		return robot.getFunnel().isNoteInShooter();
+	}
+
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case IDLE -> idle();
@@ -51,34 +57,54 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 				funnelStateHandler.setState(FunnelState.STOP)
+				//other subsystems
 		);
 	}
 
 	public Command intake() {
-		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
-				funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
+		return new SequentialCommandGroup(
+				new ParallelCommandGroup(
+						swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
+						//intake do stuff
+						funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
+				).until(this::isNoteInShooter)
+				//other subsystems
 		);
 	}
 
 	public Command preSpeaker() {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
+				//flywheel do stuff
 				funnelStateHandler.setState(FunnelState.STOP)
+				//other subsystems
 		);
 	}
 
 	public Command speaker() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
-				funnelStateHandler.setState(FunnelState.SPEAKER)
+				new SequentialCommandGroup(
+						funnelStateHandler.setState(FunnelState.STOP).withTimeout(3), // .until(() -> isReadyToShoot())
+						funnelStateHandler.setState(FunnelState.SPEAKER).until(this::isNoteInShooter),
+						funnelStateHandler.setState(FunnelState.STOP)
+				),
+				//other subsystems
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		);
 	}
 
 	public Command preAmp() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
-				funnelStateHandler.setState(FunnelState.STOP)
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(
+								swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
+								funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR)
+						).until(() -> swerve.isAtHeading(Field.getAngleToAmp()) /* && () -> isNoteInElevator */),
+						new ParallelCommandGroup(
+								//elevator stuff
+						).withTimeout(3) // readyToAmp
+				)
+				//other subsystems
 		);
 	}
 

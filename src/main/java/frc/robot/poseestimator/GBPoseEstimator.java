@@ -86,14 +86,12 @@ public class GBPoseEstimator implements IPoseEstimator {
 	@Override
 	public Optional<Pose2d> getVisionPose() {
 		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightData();
-		List<VisionObservation> rawData;
-		while (
-			stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION
-				&& !(rawData = limelightFilterer.getAllAvailableLimelightData()).isEmpty()
-		) {
+		List<VisionObservation> rawData = limelightFilterer.getAllAvailableLimelightData();
+		while (stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION && !rawData.isEmpty()) {
 			if (!stackedRawData.contains(rawData.get(0))) {
 				stackedRawData.addAll(rawData);
 			}
+			rawData = limelightFilterer.getAllAvailableLimelightData();
 		}
 		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
 		Pose2d visionPose = new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation());

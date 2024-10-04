@@ -26,6 +26,8 @@ public class RealFlywheelConstants {
 	private static final double kV = 3;
 	private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
 	private static final Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
+	private static final double CONVERSION_FACTOR = 1 / 1;
+
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -50,7 +52,7 @@ public class RealFlywheelConstants {
 	public static FlywheelComponents generateFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
-		configMotor(sparkMaxWrapper, isInverted, 1 / 1);
+		configMotor(sparkMaxWrapper, isInverted, CONVERSION_FACTOR);
 
 		SysIdRoutine.Config config = generateSysidConfig();
 
@@ -69,7 +71,7 @@ public class RealFlywheelConstants {
 
 		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
 
-		return new FlywheelComponents(logPath, motor, isInverted, voltageSignal, velocitySignal, velocityRequest, voltageRequest);
+		return new FlywheelComponents(logPath, motor, isInverted, voltageSignal, velocitySignal, voltageRequest, velocityRequest);
 	}
 
 }

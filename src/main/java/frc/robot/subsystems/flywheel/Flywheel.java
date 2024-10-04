@@ -67,6 +67,11 @@ public class Flywheel extends GBSubsystem {
 	protected void updateInputs() {
 		topMotor.updateSignals(topFlywheelComponents.voltageSignal(), topFlywheelComponents.velocitySignal());
 		bottomMotor.updateSignals(bottomFlywheelComponents.voltageSignal(), bottomFlywheelComponents.velocitySignal());
+
+		topMotor.applyDoubleRequest(topFlywheelComponents.voltageRequest());
+		bottomMotor.applyDoubleRequest(bottomFlywheelComponents.voltageRequest());
+		topMotor.applyAngleRequest(topFlywheelComponents.velocityRequest());
+		bottomMotor.applyAngleRequest(bottomFlywheelComponents.velocityRequest());
 	}
 
 	@Override

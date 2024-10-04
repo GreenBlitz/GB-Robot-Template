@@ -22,7 +22,7 @@ public class LimelightFilters {
 			&& getRotationNorm(rotationDifference) <= LimeLightConstants.ROTATION_NORM_TOLERANCE;
 	}
 
-	private static double getRotationNorm(Rotation3d angle) {
+	public static double getRotationNorm(Rotation3d angle) {
 		return Math.pow(Math.pow(angle.getX(), 2) + Math.pow(angle.getY(), 2) + Math.pow(angle.getZ(), 2), 0.5);
 	}
 

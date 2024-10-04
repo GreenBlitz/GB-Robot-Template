@@ -1,6 +1,11 @@
 package frc.robot.vision.limelights;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
@@ -15,12 +20,18 @@ public class LimelightFilterer extends GBSubsystem {
 
 	private final MultiLimelightsRawData multiLimelightsRawData;
 	private final IPoseEstimator poseEstimator;
+	private final LinearFilter linearFilterX;
+	private final LinearFilter linearFilterY;
+//	private final TimeInterpolatableBuffer<Pose2d> limelightPoseInterpolator;
 
 	public LimelightFilterer(LimelightFiltererConfig config, IPoseEstimator poseEstimator) {
 		super(config.logPath());
 
 		this.multiLimelightsRawData = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
 		this.poseEstimator = poseEstimator;
+		this.linearFilterX = LinearFilter.movingAverage(20);
+		this.linearFilterY = LinearFilter.movingAverage(20);
+//		this.limelightPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 	}
 
 	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
@@ -83,6 +94,35 @@ public class LimelightFilterer extends GBSubsystem {
 	}
 
 	@Override
-	protected void subsystemPeriodic() {}
+	protected void subsystemPeriodic() {
+		for (VisionObservation observation : getFilteredVisionObservations()) {
+			linearFilterX.calculate(observation.visionPose().getX());
+			linearFilterY.calculate(observation.visionPose().getY());
+		}
+		Pose2d visionPose = new Pose2d(linearFilterX.lastValue(), linearFilterY.lastValue(), poseEstimator.getEstimatedPose().getRotation());
+		Pose2d estimatedPose = poseEstimator.getEstimatedPose();
+		Pose3d limelightPosition = new Pose3d(
+			visionPose.getX(),
+			visionPose.getY(),
+			0,
+			new Rotation3d(0, 0, visionPose.getRotation().getRadians())
+		);
+		Pose3d estimatedPose3d = new Pose3d(
+			estimatedPose.getX(),
+			estimatedPose.getY(),
+			0,
+			new Rotation3d(0, 0, estimatedPose.getRotation().getRadians())
+		);
+		Transform3d transformDifference = limelightPosition.minus(estimatedPose3d);
+		Rotation3d rotationDifference = limelightPosition.getRotation().minus(estimatedPose3d.getRotation());
+		boolean is = transformDifference.getTranslation().getNorm() <= LimeLightConstants.POSITION_NORM_TOLERANCE
+			&& LimelightFilters.getRotationNorm(rotationDifference) <= LimeLightConstants.ROTATION_NORM_TOLERANCE;
+
+		if (!is) {
+			((GBPoseEstimator) poseEstimator).resetPoseByLimelight();
+			linearFilterX.reset();
+			linearFilterY.reset();
+		}
+	}
 
 }

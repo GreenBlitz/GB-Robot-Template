@@ -1,7 +1,6 @@
 package frc.robot.subsystems.flywheel.factory;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -37,7 +36,7 @@ public class RealFlywheelConstants {
 		);
 	}
 
-	private static void configMotor(SparkMaxWrapper sparkMax, boolean isInverted, double convertioFactor){
+	private static void configMotor(SparkMaxWrapper sparkMax, boolean isInverted, double convertioFactor) {
 		sparkMax.setInverted(isInverted);
 		sparkMax.setSmartCurrentLimit(40);
 		sparkMax.getEncoder().setPositionConversionFactor(convertioFactor);
@@ -51,7 +50,7 @@ public class RealFlywheelConstants {
 	public static FlywheelComponents generateFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
-		configMotor(sparkMaxWrapper, isInverted, 1/1);
+		configMotor(sparkMaxWrapper, isInverted, 1 / 1);
 
 		SysIdRoutine.Config config = generateSysidConfig();
 

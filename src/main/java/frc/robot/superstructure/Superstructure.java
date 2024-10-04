@@ -103,6 +103,7 @@ public class Superstructure {
 			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
 			case SHOOTER_OUTTAKE -> shooterOuttake();
+			case ARM_OUTTAKE -> armOuttake();
 		};
 	}
 
@@ -286,6 +287,19 @@ public class Superstructure {
 			funnelStateHandler.setState(FunnelState.OUTTAKE),
 			pivotStateHandler.setState(PivotState.INTAKE),
 			elbowStateHandler.setState(ElbowState.MANUAL),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			wristStateHandler.setState(WristState.IN_ARM),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		);
+	}
+
+	private Command armOuttake() {
+		return new ParallelCommandGroup(
+			rollerStateHandler.setState(RollerState.ROLL_IN),
+			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
+			intakeStateHandler.setState(IntakeState.OUTTAKE),
+			funnelStateHandler.setState(FunnelState.STOP),
+			pivotStateHandler.setState(PivotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)

@@ -21,7 +21,7 @@ public class ElevatorRollerCommandsBuilder {
 				()-> elevatorRoller.setPower(power),
 				interrupted-> elevatorRoller.stop(),
 				()-> false
-		).withName("Set power to "+power);
+		).withName("Set power to " + power);
 	}
 
 	public Command setPower(DoubleSupplier power){

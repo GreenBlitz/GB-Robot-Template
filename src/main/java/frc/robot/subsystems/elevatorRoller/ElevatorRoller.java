@@ -20,8 +20,8 @@ public class ElevatorRoller extends GBSubsystem {
 		this.elevatorRollerDigitalInput = elevatorRollerStuff.digitalInput();
 		this.elevatorRollerStuff = elevatorRollerStuff;
 		this.elevatorRollerDigitalInputInputs = new DigitalInputInputsAutoLogged();
-
 		this.commandsBuilder = new ElevatorRollerCommandsBuilder(this);
+
 		updateInputs();
 	}
 

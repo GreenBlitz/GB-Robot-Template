@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 public class FlywheelCommandsBuilder {
 
@@ -24,8 +25,9 @@ public class FlywheelCommandsBuilder {
 		).withName("Set power to " + power);
 	}
 
-	public Command setVelocity(Rotation2d targetVelocity) {
-		return new RunCommand(
+	public Command init(Rotation2d targetVelocity) {
+		return new InitExecuteCommand(
+				() ->{},
 				() -> flywheel.setTargetVelocity(targetVelocity),
 				flywheel
 		).withName("Set target velocity to " + targetVelocity);

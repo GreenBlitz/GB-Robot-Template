@@ -11,8 +11,9 @@ import org.littletonrobotics.junction.Logger;
 public class Superstructure {
 
 	private final Robot robot;
-	private RobotState currentState;
 	private final Swerve swerve;
+
+	private RobotState currentState;
 
 	public Superstructure(Robot robot) {
 		this.robot = robot;

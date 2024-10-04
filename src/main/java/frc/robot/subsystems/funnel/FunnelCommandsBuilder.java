@@ -14,30 +14,30 @@ public class FunnelCommandsBuilder {
 		this.funnel = funnel;
 	}
 
-	//@formatter:off
-    public Command setPower(double power) {
-        return new FunctionalCommand(
-                () -> {},
-                () -> funnel.setPower(power),
-                interrupted -> funnel.stop(),
-                () -> false,
-                funnel
-        ).withName("Set power: " + power);
-    }
+	// @formatter:off
+	public Command setPower(double power) {
+		return new FunctionalCommand(
+			() -> {},
+			() -> funnel.setPower(power),
+			interrupted -> funnel.stop(),
+			() -> false,
+			funnel
+		).withName("Set power: " + power);
+	}
 
-    public Command setPower(DoubleSupplier power) {
-        return new FunctionalCommand(
-                () -> {},
-                () -> funnel.setPower(power.getAsDouble()),
-                interrupted -> funnel.stop(),
-                () -> false,
-                funnel
-        ).withName("Set power by supplier");
-    }
+	public Command setPower(DoubleSupplier power) {
+		return new FunctionalCommand(
+				() -> {},
+				() -> funnel.setPower(power.getAsDouble()),
+				interrupted -> funnel.stop(),
+				() -> false,
+				funnel
+		).withName("Set power by supplier");
+	}
 
 	public Command stop() {
 		return new RunCommand(funnel::stop, funnel).withName("Stop");
 	}
-    //@formatter:on
+	// @formatter:on
 
 }

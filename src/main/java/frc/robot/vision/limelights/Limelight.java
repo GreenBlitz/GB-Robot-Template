@@ -43,8 +43,8 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
-		int id = (int) aprilTagIdEntry.getInteger(-1);
-		if (id == -1) {
+		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NULL_APRILTAG_ID);
+		if (id == LimeLightConstants.NULL_APRILTAG_ID) {
 			return Optional.empty();
 		}
 

@@ -55,8 +55,7 @@ public class LimelightFilterer extends GBSubsystem {
 
 	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
 		Optional<Pose2d> estimatedPoseAtTimeStamp = poseEstimator.getEstimatedPoseAtTimeStamp(limelightRawData.timestamp());
-		double[] standardTransformDeviations;
-		standardTransformDeviations = estimatedPoseAtTimeStamp
+		double[] standardTransformDeviations = estimatedPoseAtTimeStamp
 			.map(pose2d -> PoseEstimationMath.calculateStandardDeviationOfPose(limelightRawData, pose2d))
 			.orElseGet(
 				() -> PoseEstimationMath.calculateStandardDeviationOfPose(limelightRawData, poseEstimator.getEstimatedPose())

@@ -8,6 +8,7 @@ public class LimeLightConstants {
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 
+	public static final int NULL_APRILTAG_ID = -1;
 
 	public static final LimelightFiltererConfig DEFAULT_CONFIG = new LimelightFiltererConfig(
 		"VisionObservationFiltered/",

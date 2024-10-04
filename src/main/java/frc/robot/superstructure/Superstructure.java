@@ -49,7 +49,8 @@ public class Superstructure {
 	//@formatter:off
 	public Command idle() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+				funnelStateHandler.setState(FunnelState.STOP)
 		);
 	}
 

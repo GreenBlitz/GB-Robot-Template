@@ -7,8 +7,8 @@ public class FlywheelStateHandler {
 
 	private final Flywheel flywheel;
 
-	public FlywheelStateHandler(Robot robot) {
-		this.flywheel = robot.getFlywheel();
+	public FlywheelStateHandler(Flywheel flywheel) {
+		this.flywheel = flywheel;
 	}
 
 	public Command setState(FlywheelState state) {

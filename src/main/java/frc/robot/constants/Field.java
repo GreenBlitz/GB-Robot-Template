@@ -40,31 +40,31 @@ public class Field {
 	}
 
 
-	private final static Pose2d BLUE_MID_CLIMB = new Pose2d(5.94175, 4, Rotation2d.fromDegrees(180));
+	private final static Pose2d BLUE_MID_CLIMB = new Pose2d(5.94175, 4, Rotation2d.fromDegrees(0));
 
 	public static Pose2d getMidClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return BLUE_MID_CLIMB;
 		}
-		return new Pose2d(MirrorMath.getMirroredX(BLUE_MID_CLIMB.getX()), BLUE_MID_CLIMB.getY(), Rotation2d.fromDegrees(0));
+		return new Pose2d(MirrorMath.getMirroredX(BLUE_MID_CLIMB.getX()), BLUE_MID_CLIMB.getY(), Rotation2d.fromDegrees(180));
 	}
 
-	private final static Pose2d BLUE_AMP_CLIMB = new Pose2d(4.34175, 5, Rotation2d.fromDegrees(-60));
+	private final static Pose2d BLUE_AMP_CLIMB = new Pose2d(4.34175, 5, Rotation2d.fromDegrees(120));
 
 	public static Pose2d getAMPClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return BLUE_AMP_CLIMB;
 		}
-		return new Pose2d(MirrorMath.getMirroredX(BLUE_AMP_CLIMB.getX()), BLUE_AMP_CLIMB.getY(), Rotation2d.fromDegrees(-120));
+		return new Pose2d(MirrorMath.getMirroredX(BLUE_AMP_CLIMB.getX()), BLUE_AMP_CLIMB.getY(), Rotation2d.fromDegrees(60));
 	}
 
-	private final static Pose2d BLUE_SOURCE_CLIMB = new Pose2d(4.34175, 3.2, Rotation2d.fromDegrees(60));
+	private final static Pose2d BLUE_SOURCE_CLIMB = new Pose2d(4.34175, 3.2, Rotation2d.fromDegrees(-120));
 
 	public static Pose2d getSourceClimb() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return BLUE_SOURCE_CLIMB;
 		}
-		return new Pose2d(MirrorMath.getMirroredX(BLUE_SOURCE_CLIMB.getX()), BLUE_SOURCE_CLIMB.getY(), Rotation2d.fromDegrees(120));
+		return new Pose2d(MirrorMath.getMirroredX(BLUE_SOURCE_CLIMB.getX()), BLUE_SOURCE_CLIMB.getY(), Rotation2d.fromDegrees(-60));
 	}
 
 	public static Pose2d getClosetClimb(Pose2d robot) {

@@ -41,7 +41,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.kinematics = kinematics;
 		this.lastWheelPositions = initialWheelPositions;
 		this.lastGyroAngle = initialGyroAngle;
-		this.odometryStandardDeviations = new double[3];
+		this.odometryStandardDeviations = new double[PoseArrayEntryValue.getPoseArrayLength()];
 		this.limelightFilterer = new LimelightFilterer(LimeLightConstants.DEFAULT_CONFIG, this);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}

@@ -29,7 +29,7 @@ public class PoseEstimationMath {
 
 	public static double[]
 		getKalmanRatioFromStandardDeviation(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
-		double[] combinedStandardDeviations = new double[3];
+		double[] combinedStandardDeviations = new double[PoseArrayEntryValue.getPoseArrayLength()];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
 			double visionStandardDeviation = visionStandardDeviations[i];

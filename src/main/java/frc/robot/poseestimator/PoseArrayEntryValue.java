@@ -16,4 +16,8 @@ public enum PoseArrayEntryValue {
 		return entryValue;
 	}
 
+	public static int getPoseArrayLength() {
+		return 3;
+	}
+
 }

@@ -17,7 +17,7 @@ public class LimeLightConstants {
 
 	public static final double ROTATION_NORM_TOLERANCE = 0.2; // ! shall be calibrated
 
-	public static final double POSITION_NORM_TOLERANCE = 0.2; // ! shall be calibrated
+	public static final double POSITION_NORM_TOLERANCE = 0.1; // ! shall be calibrated
 
 	public static final Rotation2d PITCH_TOLERANCE = Rotation2d.fromDegrees(10); // ! Shall be calibrated
 

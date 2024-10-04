@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
+import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.limelights.LimelightRawData;
 
@@ -102,9 +103,13 @@ public class PoseEstimationMath {
 	}
 
 	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
+		double normalizedLimelightX = limelightRawData.estimatedPose().getX() / Field.LENGTH_METERS;
+		double normalizedLimelightY = limelightRawData.estimatedPose().getY() / Field.WIDTH_METERS;
+		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
+		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
 		return new double[] {
-			calculateStandardDeviationFromDifference(limelightRawData.estimatedPose().getX(), currentEstimatedPose.getX()),
-			calculateStandardDeviationFromDifference(limelightRawData.estimatedPose().getY(), currentEstimatedPose.getY())};
+			calculateStandardDeviationFromDifference(normalizedLimelightX, normalizedEstimatedX),
+			calculateStandardDeviationFromDifference(normalizedLimelightY, normalizedEstimatedY)};
 	}
 
 	private static double calculateStandardDeviationFromDifference(double estimatedValue, double currentValue) {

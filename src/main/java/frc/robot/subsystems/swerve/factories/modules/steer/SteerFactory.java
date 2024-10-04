@@ -13,17 +13,13 @@ public class SteerFactory {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
 				case FRONT_LEFT ->
-					SteerRealConstants
-						.generateSteerStuff(logPath, IDs.TalonFXIDs.FRONT_LEFT_STEER, IDs.CANCodersIDs.FRONT_LEFT_ENCODER, true);
+					SteerRealConstants.generateSteerStuff(logPath, IDs.TalonFXIDs.FRONT_LEFT_STEER, IDs.CANCodersIDs.FRONT_LEFT_ENCODER, true);
 				case FRONT_RIGHT ->
-					SteerRealConstants
-						.generateSteerStuff(logPath, IDs.TalonFXIDs.FRONT_RIGHT_STEER, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, true);
+					SteerRealConstants.generateSteerStuff(logPath, IDs.TalonFXIDs.FRONT_RIGHT_STEER, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, true);
 				case BACK_LEFT ->
-					SteerRealConstants
-						.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_LEFT_STEER, IDs.CANCodersIDs.BACK_LEFT_ENCODER, false);
+					SteerRealConstants.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_LEFT_STEER, IDs.CANCodersIDs.BACK_LEFT_ENCODER, false);
 				case BACK_RIGHT ->
-					SteerRealConstants
-						.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_RIGHT_STEER, IDs.CANCodersIDs.BACK_RIGHT_ENCODER, true);
+					SteerRealConstants.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_RIGHT_STEER, IDs.CANCodersIDs.BACK_RIGHT_ENCODER, true);
 			};
 			case SIMULATION -> null;// TODO
 		};

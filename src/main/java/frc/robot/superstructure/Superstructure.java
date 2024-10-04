@@ -57,27 +57,48 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 				funnelStateHandler.setState(FunnelState.STOP)
-				//other subsystems
+				//elevatorRoller.STOP
+				//intakeRoller.STOP
+				//flywheel.DEFAULT
+				//intakePivot.UP
+				//elevator.IDLE
 		);
 	}
 
 	public Command intake() {
-		return new SequentialCommandGroup(
-				new ParallelCommandGroup(
-						swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
-						//intake do stuff
-						funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
-				).until(this::isNoteInShooter)
-				//other subsystems
+		return new ParallelCommandGroup(
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(
+								//intakePivot.INTAKE
+								//intakeRoller.INTAKE
+								funnelStateHandler.setState(FunnelState.STOP)
+						).withTimeout(3), // .until(() -> isNoteInFunnel
+						new ParallelCommandGroup(
+								funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
+								//intakePivot.UP
+								//intakeRoller.NOTE_TO_SHOOTER
+						).until(this::isNoteInShooter),
+						new ParallelCommandGroup(
+								//intakeRoller.STOP
+								funnelStateHandler.setState(FunnelState.STOP)
+						)
+				),
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
+				//flywheel.DEFAULT
+				//elevator.IDLE
+				//elevatorRoller.IDLE
 		);
 	}
 
 	public Command preSpeaker() {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
-				//flywheel do stuff
+				//flywheel.ACCELERATE/SHOOT
 				funnelStateHandler.setState(FunnelState.STOP)
-				//other subsystems
+				//intakeRoller.STOP
+				//elevator.IDLE
+				//intakePivot.UP
+				//elevatorRoller.STOP
 		);
 	}
 
@@ -85,10 +106,14 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 				new SequentialCommandGroup(
 						funnelStateHandler.setState(FunnelState.STOP).withTimeout(3), // .until(() -> isReadyToShoot())
-						funnelStateHandler.setState(FunnelState.SPEAKER).until(this::isNoteInShooter),
+						//flywheel.SHOOT (?)
+						funnelStateHandler.setState(FunnelState.SPEAKER).until(() -> !isNoteInShooter()),
 						funnelStateHandler.setState(FunnelState.STOP)
 				),
-				//other subsystems
+				//intakeRoller.STOP
+				//elevator.IDLE
+				//intakePivot.UP
+				//elevatorRoller.STOP
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		);
 	}
@@ -98,20 +123,31 @@ public class Superstructure {
 				new SequentialCommandGroup(
 						new ParallelCommandGroup(
 								swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
-								funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR)
-						).until(() -> swerve.isAtHeading(Field.getAngleToAmp()) /* && () -> isNoteInElevator */),
+								funnelStateHandler.setState(FunnelState.STOP)
+						).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
 						new ParallelCommandGroup(
-								//elevator stuff
-						).withTimeout(3) // readyToAmp
+								//elevator.PRE_SCORE
+						).withTimeout(3) // .until(() -> isReadyToAmp())
 				)
-				//other subsystems
+				//intakeRoller.STOP
+				//intakePivot.STOP
+				//flywheel.DEFAULT
 		);
 	}
 
 	public Command amp() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
-				funnelStateHandler.setState(FunnelState.AMP)
+				new SequentialCommandGroup(
+						swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
+								.until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
+						funnelStateHandler.setState(FunnelState.AMP), // .until(() -> isNoteInElevator())
+						funnelStateHandler.setState(FunnelState.STOP)
+						//elevator.SCORE.until(() -> isReadyToAmp())
+						//elevatorRoller.SCORE.until(() -> !isNoteInElevator)
+				)
+				//intakeRoller.STOP
+				//intakePivot.UP
+				//flywheel.DEFAULT
 		);
 	}
 
@@ -119,6 +155,11 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 				funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR)
+				//intakeRoller.SHOOTER_TO_ELEVATOR
+				//flywheel.DEFAULT
+				//intakePivot.UP
+				//elevator.IDLE
+				//elevatorRoller.STOP
 		);
 	}
 
@@ -126,6 +167,11 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 				funnelStateHandler.setState(FunnelState.ELEVATOR_TO_SHOOTER)
+				//intakeRoller.ELEVATOR_TO_SHOOTER
+				//flywheel.DEFAULT
+				//intakePivot.UP
+				//elevator.IDLE
+				//elevatorRoller.STOP
 		);
 	}
 
@@ -133,6 +179,11 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 				funnelStateHandler.setState(FunnelState.OUTTAKE)
+				//intakeRoller.OUTTAKE
+				//intakePivot.DOWN  (?) (still don't understand if we outtake from intake or from shooter)
+				//flywheel.DEFAULT
+				//elevator.IDLE
+				//elevatorRoller.STOP
 		);
 	}
 	//@formatter:on

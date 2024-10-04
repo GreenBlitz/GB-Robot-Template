@@ -7,8 +7,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.DriverStationUtils;
+import frc.utils.alerts.AlertManager;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.ctre.BusChain;
+import frc.utils.brakestate.BrakeStateManager;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -33,6 +36,20 @@ public class RobotManager extends LoggedRobot {
 	}
 
 	@Override
+	public void disabledInit() {
+		if (!DriverStationUtils.isMatch()) {
+			BrakeStateManager.coast();
+		}
+	}
+
+	@Override
+	public void disabledExit() {
+		if (!DriverStationUtils.isMatch()) {
+			BrakeStateManager.brake();
+		}
+	}
+
+	@Override
 	public void autonomousInit() {
 		autonomousCommand = robot.getAutonomousCommand();
 
@@ -54,6 +71,7 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+		AlertManager.reportAlerts();
 	}
 
 	@Override

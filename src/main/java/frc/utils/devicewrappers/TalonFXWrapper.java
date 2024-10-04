@@ -5,17 +5,16 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import frc.utils.ctre.CTREDeviceID;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 
 public class TalonFXWrapper extends TalonFX {
 
 	public TalonFXWrapper(int deviceId) {
-		this(new CTREDeviceID(deviceId));
+		this(new Phoenix6DeviceID(deviceId));
 	}
 
-
-	public TalonFXWrapper(CTREDeviceID ctreDeviceID) {
-		super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
+	public TalonFXWrapper(Phoenix6DeviceID phoenix6DeviceID) {
+		super(phoenix6DeviceID.ID(), phoenix6DeviceID.busChain().getChainName());
 	}
 
 	public StatusCode applyConfiguration(TalonFXConfiguration configuration) {

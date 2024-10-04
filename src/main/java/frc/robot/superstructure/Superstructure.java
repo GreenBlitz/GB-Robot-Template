@@ -175,8 +175,8 @@ public class Superstructure {
 			rollerStateHandler.setState(RollerState.STOP),
 			intakeStateHandler.setState(IntakeState.STOP),
 			pivotStateHandler.setState(PivotState.IDLE),
-			flywheelStateHandler.setState(FlywheelState.DEFAULT),
-			wristStateHandler.setState(WristState.IN_ARM)
+			wristStateHandler.setState(WristState.IN_ARM),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT)
 		);
 	}
 
@@ -199,8 +199,8 @@ public class Superstructure {
 			),
 			intakeStateHandler.setState(IntakeState.STOP),
 			pivotStateHandler.setState(PivotState.IDLE),
-			flywheelStateHandler.setState(FlywheelState.DEFAULT),
-			wristStateHandler.setState(WristState.IN_ARM)
+			wristStateHandler.setState(WristState.IN_ARM),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT)
 		);
 	}
 

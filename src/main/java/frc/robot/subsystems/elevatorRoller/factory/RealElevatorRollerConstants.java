@@ -25,7 +25,7 @@ public class RealElevatorRollerConstants {
 		motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
 	}
 
-	public static ElevatorRollerStuff generateRollerStuff(String logPath) {
+	public static ElevatorRollerStuff generateRollerElevatorStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMaxIDs.ELEVATOR_ROLLER);
 		configMotor(sparkMaxWrapper);
 		BrushedSparkMAXMotor brushedSparkMAXMotor = new BrushedSparkMAXMotor(logPath, sparkMaxWrapper);

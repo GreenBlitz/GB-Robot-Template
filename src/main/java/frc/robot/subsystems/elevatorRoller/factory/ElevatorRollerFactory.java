@@ -7,7 +7,7 @@ public class ElevatorRollerFactory {
 
 	public static ElevatorRollerStuff create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealElevatorRollerConstants.generateRollerStuff(logPath);
+			case REAL -> RealElevatorRollerConstants.generateRollerElevatorStuff(logPath);
 			case SIMULATION -> null;
 		};
 	}

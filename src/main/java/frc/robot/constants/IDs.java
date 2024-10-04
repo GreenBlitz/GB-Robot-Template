@@ -3,7 +3,6 @@ package frc.robot.constants;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.utils.battery.PowerDistributionDeviceID;
-import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 
 
 public class IDs {
@@ -13,9 +12,9 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static class SparkMaxIDs {
+	public static class TalonSRXIDs {
 
-		public static final SparkMaxDeviceID ELEVATOR_ROLLER = new SparkMaxDeviceID(10);
+		public static final int ELEVATOR_ROLLER = 9;
 
 	}
 

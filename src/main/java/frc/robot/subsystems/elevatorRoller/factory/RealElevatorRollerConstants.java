@@ -1,11 +1,11 @@
 package frc.robot.subsystems.elevatorRoller.factory;
 
-import com.revrobotics.CANSparkBase;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
-import frc.robot.hardware.motor.sparkmax.BrushedSparkMAXMotor;
-import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
+import frc.robot.hardware.motor.talonsrx.TalonSRXMotor;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerStuff;
 import com.revrobotics.SparkLimitSwitch;
@@ -17,26 +17,28 @@ public class RealElevatorRollerConstants {
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
+	private final static int CURRENT_LIMIT = 40;
 
-	private static void configMotor(SparkMaxWrapper motor) {
-		motor.getEncoder().setPositionConversionFactor(ElevatorRollerConstants.GEAR_RATIO);
-		motor.getEncoder().setVelocityConversionFactor(ElevatorRollerConstants.GEAR_RATIO);
-		motor.setSmartCurrentLimit(40);
-		motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+	private static void configMotor(TalonSRX motor) {
+		motor.configContinuousCurrentLimit(CURRENT_LIMIT);
+		motor.configPeakCurrentLimit(CURRENT_LIMIT);
+		motor.enableCurrentLimit(true);
+		motor.setNeutralMode(NeutralMode.Coast);
 	}
 
 	public static ElevatorRollerStuff generateRollerElevatorStuff(String logPath) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMaxIDs.ELEVATOR_ROLLER);
-		configMotor(sparkMaxWrapper);
-		BrushedSparkMAXMotor brushedSparkMAXMotor = new BrushedSparkMAXMotor(logPath, sparkMaxWrapper);
+		TalonSRX talonSRX = new TalonSRX(IDs.TalonSRXIDs.ELEVATOR_ROLLER);
+		configMotor(talonSRX);
 
-		BooleanSupplier isBeamBroken = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
-		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
+		TalonSRXMotor talonSRXMotor = new TalonSRXMotor(logPath + "srxMotor/", talonSRX, ElevatorRollerConstants.GEAR_RATIO);
+
+		BooleanSupplier isBeamBroken = () -> talonSRX.getSensorCollection().isRevLimitSwitchClosed();
+		talonSRX.overrideLimitSwitchesEnable(false);
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		SuppliedDoubleSignal voltage = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+		SuppliedDoubleSignal voltage = new SuppliedDoubleSignal("voltage", talonSRX::getMotorOutputVoltage);
 
-		return new ElevatorRollerStuff(logPath, brushedSparkMAXMotor, beamBreaker, voltage);
+		return new ElevatorRollerStuff(logPath, talonSRXMotor, beamBreaker, voltage);
 	}
 
 }

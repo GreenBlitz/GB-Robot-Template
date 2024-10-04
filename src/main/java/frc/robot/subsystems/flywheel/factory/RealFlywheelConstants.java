@@ -22,10 +22,10 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class RealFlywheelConstants {
 
-	private static double kS = 3;
-	private static double kV = 3;
-	private static SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
-	private static Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
+	private static final double kS = 3;
+	private static final double kV = 3;
+	private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
+	private static final Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(

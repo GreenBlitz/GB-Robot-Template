@@ -95,9 +95,9 @@ public class Superstructure {
 			case SPEAKER -> speaker();
 			case PRE_AMP -> preAMP();
 			case AMP -> amp();
-			case SHOOTER_OUTTAKE -> shooterOuttake();
 			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
+			case SHOOTER_OUTTAKE -> shooterOuttake();
 		};
 	}
 
@@ -195,18 +195,6 @@ public class Superstructure {
 		);
 	}
 
-	private Command shooterOuttake() {
-		return new ParallelCommandGroup(
-			rollerStateHandler.setState(RollerState.ROLL_OUT),
-			intakeStateHandler.setState(IntakeState.OUTTAKE),
-			funnelStateHandler.setState(FunnelState.OUTTAKE),
-			pivotStateHandler.setState(PivotState.INTAKE),
-			elbowStateHandler.setState(ElbowState.MANUAL),
-			flywheelStateHandler.setState(FlywheelState.DEFAULT),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-		);
-	}
-
 	private Command transferShooterToArm() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
@@ -247,6 +235,18 @@ public class Superstructure {
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
 				).withTimeout(0.7)//.until(this::isObjectInFunnel)
 			),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		);
+	}
+
+	private Command shooterOuttake() {
+		return new ParallelCommandGroup(
+			rollerStateHandler.setState(RollerState.ROLL_OUT),
+			intakeStateHandler.setState(IntakeState.OUTTAKE),
+			funnelStateHandler.setState(FunnelState.OUTTAKE),
+			pivotStateHandler.setState(PivotState.INTAKE),
+			elbowStateHandler.setState(ElbowState.MANUAL),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);

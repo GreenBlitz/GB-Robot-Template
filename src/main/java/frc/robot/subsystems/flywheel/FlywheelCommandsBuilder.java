@@ -36,10 +36,6 @@ public class FlywheelCommandsBuilder {
 		return new RunCommand(flywheel::stop, flywheel).withName("Stop");
 	}
 
-	public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-		return flywheel.getSysIdCalibrator().getSysIdCommand(isQuasistatic, direction);
-	}
-
 	//@formatter:on
 
 }

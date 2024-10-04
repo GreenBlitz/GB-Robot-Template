@@ -11,6 +11,10 @@ import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelComponents;
 import frc.robot.subsystems.flywheel.FlywheelConstants;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.funnel.FunnelConstants;
+import frc.robot.subsystems.funnel.factory.FunnelFactory;
+import frc.robot.superstructure.Superstructure;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -23,12 +27,19 @@ public class Robot {
 
 	private final Flywheel flywheel;
 
+	private final Funnel funnel;
+
+	private final Superstructure superstructure;
+
 	public Robot() {
 		FlywheelComponents topFlywheelComponents = FlywheelFactory
-			.create(FlywheelConstants.LOG_PATH + "TopMotor/", FlywheelConstants.IS_TOP_MOTOR_INVERTED, IDs.CANSparkMaxIDs.TOP_FLYWHEEL);
+			.create(FlywheelConstants.LOG_PATH + "TopMotor/", FlywheelConstants.IS_TOP_MOTOR_INVERTED, IDs.CANSparkMAXIDs.TOP_FLYWHEEL);
 		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
-			.create(FlywheelConstants.LOG_PATH + "BottomMotor/", FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL);
+			.create(FlywheelConstants.LOG_PATH + "BottomMotor/", FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL);
 		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH);
+
+		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.superstructure = new Superstructure(this);
 
 		configureBindings();
 	}
@@ -41,8 +52,12 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-	public Flywheel getFlywheel() {
-		return flywheel;
+	public Funnel getFunnel() {
+		return funnel;
+	}
+
+	public Superstructure getSuperstructure() {
+		return superstructure;
 	}
 
 }

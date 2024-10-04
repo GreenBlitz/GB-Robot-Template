@@ -194,7 +194,6 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					rollerStateHandler.setState(RollerState.STOP),
-					elbowStateHandler.setState(ElbowState.IDLE),
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
 				).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
 				new ParallelCommandGroup(

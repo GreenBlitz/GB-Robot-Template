@@ -12,6 +12,9 @@ public class FunnelStateHandler {
 	}
 
 	public Command setState(FunnelState state) {
+		if (state == FunnelState.STOP) {
+			return funnel.getCommandsBuilder().stop();
+		}
 		return funnel.getCommandsBuilder().setPower(state.getPower());
 	}
 

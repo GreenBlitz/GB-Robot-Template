@@ -2,11 +2,12 @@ package frc.robot.subsystems.funnel;
 
 public enum FunnelState {
 
-	NOTE_TO_SHOOTER(0.5),
-	SPEAKER(0.6),
-	SHOOTER_TO_ELEVATOR(-0.5),
-	AMP(-0.6),
-	ELEVATOR_TO_SHOOTER(0.5);
+	NOTE_TO_SHOOTER(0.1),
+	SPEAKER(0.2),
+	SHOOTER_TO_ELEVATOR(-0.1),
+	AMP(-0.2),
+	ELEVATOR_TO_SHOOTER(0.3),
+	STOP(0);
 
 	private final double power;
 

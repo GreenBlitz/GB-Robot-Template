@@ -4,6 +4,7 @@ public enum IntakeState {
 
 	INTAKE(0.8),
 	INTAKE_WITH_FUNNEL(0.4),
+	INTAKE_WITH_ARM(0.4),
 	OUTTAKE(-0.3),
 	STOP(0);
 

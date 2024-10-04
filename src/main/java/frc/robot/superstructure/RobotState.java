@@ -3,7 +3,8 @@ package frc.robot.superstructure;
 public enum RobotState {
 
 	IDLE,
-	INTAKE,
+	SHOOTER_INTAKE,
+	ARM_INTAKE,
 	PRE_SPEAKER,
 	SPEAKER,
 	PRE_AMP,
@@ -11,5 +12,6 @@ public enum RobotState {
 	TRANSFER_SHOOTER_TO_ARM,
 	TRANSFER_ARM_TO_SHOOTER,
 	SHOOTER_OUTTAKE,
+	ARM_OUTTAKE,
 
 }

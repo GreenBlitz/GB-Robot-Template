@@ -165,6 +165,11 @@ public class Superstructure {
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_ARM),
 					rollerStateHandler.setState(RollerState.STOP),
 					wristStateHandler.setState(WristState.IN_ARM)
+				).until(() -> robot.getWrist().isAtPosition(WristState.IN_ARM.getPosition(), Tolerances.WRIST_POSITION_TOLERANCE)),
+				new ParallelCommandGroup(
+					intakeStateHandler.setState(IntakeState.STOP),
+					rollerStateHandler.setState(RollerState.STOP),
+					wristStateHandler.setState(WristState.IN_ARM)
 				)
 			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),

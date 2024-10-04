@@ -11,7 +11,7 @@ public record FlywheelComponents(
 	ControllableMotor motor,
 	boolean isInverted,
 	InputSignal<Double> voltageSignal,
-	SuppliedAngleSignal velocitySignal,
-	IRequest<Rotation2d> velocityRequest,
-	IRequest<Double> voltageRequest
+	InputSignal<Rotation2d> velocitySignal,
+	IRequest<Double> voltageRequest,
+	IRequest<Rotation2d> velocityRequest
 ) {}

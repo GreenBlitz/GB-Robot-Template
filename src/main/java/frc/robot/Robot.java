@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
+import frc.robot.superstructure.Superstructure;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -20,10 +21,12 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Funnel funnel;
+	
+	private final Superstructure superstructure;
 
 	public Robot() {
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
-
+		this.superstructure = new Superstructure(this);
 		configureBindings();
 	}
 
@@ -36,8 +39,8 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-	public Funnel getFunnel() {
-		return funnel;
+	public Superstructure getSuperstructure() {
+		return superstructure;
 	}
 
 }

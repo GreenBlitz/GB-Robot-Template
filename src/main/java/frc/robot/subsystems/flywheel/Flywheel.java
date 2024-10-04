@@ -51,7 +51,7 @@ public class Flywheel extends GBSubsystem {
 		bottomMotor.applyAngleRequest(bottomFlywheelComponents.velocityRequest().withSetPoint(targetVelocity));
 	}
 
-	protected boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
+	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
 		return MathUtil.isNear(
 			targetVelocity.getRotations(),
 			topFlywheelComponents.velocitySignal().getLatestValue().getRotations(),

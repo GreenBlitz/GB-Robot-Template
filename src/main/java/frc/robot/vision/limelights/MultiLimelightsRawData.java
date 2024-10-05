@@ -18,9 +18,9 @@ public class MultiLimelightsRawData {
 		}
 	}
 
-	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
+	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
 		for (Limelight limelight : limelights) {
-			limelight.updateGyroAngleValues(gyroAnglesValues);
+			limelight.updateGyroAngleValues(gyroAngleValues);
 		}
 	}
 

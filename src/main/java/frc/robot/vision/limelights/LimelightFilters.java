@@ -8,6 +8,14 @@ import frc.robot.constants.Field;
 
 public class LimelightFilters {
 
+	protected static boolean keepLimelightData(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
+		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
+			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData, currentEstimatedPose)
+			&& LimelightFilters.isRollInTolerance(limelightRawData)
+			&& LimelightFilters.isPitchInTolerance(limelightRawData)
+			&& LimelightFilters.isRobotOnGround(limelightRawData);
+	}
+
 	protected static boolean isLimelightOutputInTolerance(LimelightRawData limelightRawData, Pose2d estimatedPose) {
 		Pose3d limelightPosition = limelightRawData.estimatedPose();
 		Pose3d estimatedPose3d = new Pose3d(
@@ -26,11 +34,11 @@ public class LimelightFilters {
 		return Math.sqrt(Math.pow(angle.getX(), 2) + Math.pow(angle.getY(), 2) + Math.pow(angle.getZ(), 2));
 	}
 
-	protected static boolean isPitchZero(LimelightRawData limelightRawData) {
+	protected static boolean isPitchInTolerance(LimelightRawData limelightRawData) {
 		return Math.abs(limelightRawData.estimatedPose().getRotation().getY()) <= LimeLightConstants.PITCH_TOLERANCE.getRadians();
 	}
 
-	protected static boolean isRollZero(LimelightRawData limelightRawData) {
+	protected static boolean isRollInTolerance(LimelightRawData limelightRawData) {
 		return Math.abs(limelightRawData.estimatedPose().getRotation().getX()) <= LimeLightConstants.ROLL_TOLERANCE.getRadians();
 	}
 

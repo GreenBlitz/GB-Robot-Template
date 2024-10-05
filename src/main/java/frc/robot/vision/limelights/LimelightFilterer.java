@@ -26,15 +26,15 @@ public class LimelightFilterer extends GBSubsystem {
 		this.lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
 	}
 
-	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
-		multiLimelightsRawData.updateGyroAngles(gyroAnglesValues);
+	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
+		multiLimelightsRawData.updateGyroAngles(gyroAngleValues);
 	}
 
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (LimelightRawData limelightRawData : multiLimelightsRawData.getAllAvailableLimelightData()) {
-			if (keepLimelightData(limelightRawData)) {
+			if (LimelightFilters.keepLimelightData(limelightRawData, poseEstimator.getEstimatedPose())) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}
@@ -65,14 +65,6 @@ public class LimelightFilterer extends GBSubsystem {
 			LimeLightConstants.STANDARD_DEVIATION_VISION_DEGREES};
 
 		return new VisionObservation(limelightRawData.estimatedPose().toPose2d(), standardDeviations, limelightRawData.timestamp());
-	}
-
-	private boolean keepLimelightData(LimelightRawData limelightRawData) {
-		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
-			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData, poseEstimator.getEstimatedPose())
-			&& LimelightFilters.isRollZero(limelightRawData)
-			&& LimelightFilters.isPitchZero(limelightRawData)
-			&& LimelightFilters.isRobotOnGround(limelightRawData);
 	}
 
 	public void logEstimatedPositions() {

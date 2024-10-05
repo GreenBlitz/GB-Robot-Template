@@ -17,8 +17,9 @@ public class Lifter extends GBSubsystem {
 		this.motor = lifterStuff.motor();
 		this.lifterStuff = lifterStuff;
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
-
 		motor.resetPosition(new Rotation2d());
+
+		updateInputs();
 	}
 
 	public void setPower(double power) {
@@ -33,32 +34,37 @@ public class Lifter extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	public boolean isAfter(double expectedPosition) {
-		return expectedPosition < convertToMeters(lifterStuff.positionSignal().getLatestValue());
+	public boolean isHigher(double expectedPositionMeters) {
+		return expectedPositionMeters < convertToMeters(lifterStuff.positionSignal().getLatestValue());
 	}
 
-	public boolean isBefore(double expectedPosition) {
-		return !isAfter(expectedPosition);
+	public boolean isLower(double expectedPositionMeters) {
+		return !isHigher(expectedPositionMeters);
 	}
 
 	public LifterStuff getLifterStuff() {
 		return lifterStuff;
 	}
 
-	public LifterCommandsBuilder getLifterCommandsBuilder() {
+	public LifterCommandsBuilder getCommandsBuilder() {
 		return lifterCommandsBuilder;
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
+		updateInputs();
+	}
+
+	private void updateInputs() {
 		motor.updateSignals(lifterStuff.positionSignal());
 		motor.updateSignals(lifterStuff.otherSignals());
-
+		
 		Logger.recordOutput("lifter position", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
+		
 	}
 
-	public double convertToMeters(Rotation2d motorPosition) {
+	private double convertToMeters(Rotation2d motorPosition) {
 		return Conversions.angleToDistance(motorPosition, lifterStuff.drumRadius());
 	}
-
 }
+

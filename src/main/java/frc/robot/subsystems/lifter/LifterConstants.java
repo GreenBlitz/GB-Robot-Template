@@ -2,7 +2,7 @@ package frc.robot.subsystems.lifter;
 
 public class LifterConstants {
 
-	public static final String LOG_PATH = "lifter/";
+	public static final String LOG_PATH = "Subsystems/Lifter/";
 
 	public static final double EXTENDING_POWER = 0.9;
 	public static final double RETRACTING_POWER = -0.9;

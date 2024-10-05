@@ -1,4 +1,4 @@
-package frc.robot.hardware.signal.cansparkmax;
+package frc.robot.hardware.signal.supplied;
 
 import edu.wpi.first.hal.HALUtil;
 import frc.robot.hardware.signal.AngleSignal;
@@ -8,11 +8,11 @@ import frc.utils.Conversions;
 
 import java.util.function.Supplier;
 
-public class SparkMaxAngleSignal extends AngleSignal implements ISparkMaxSignal {
+public class SuppliedAngleSignal extends AngleSignal {
 
 	private final Supplier<Double> angleSupplier;
 
-	public SparkMaxAngleSignal(String name, Supplier<Double> angleSupplier, AngleUnit angleUnit) {
+	public SuppliedAngleSignal(String name, Supplier<Double> angleSupplier, AngleUnit angleUnit) {
 		super(name, angleUnit);
 		this.angleSupplier = angleSupplier;
 	}

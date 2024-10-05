@@ -38,7 +38,6 @@ public class IntakeRollerCommandsBuilder {
     public Command stop() {
         return new RunCommand(intakeRoller::stop, intakeRoller).withName("stop");
     }
-	//@formatter:on
 
 }
 

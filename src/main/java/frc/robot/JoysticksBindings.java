@@ -1,6 +1,5 @@
 package frc.robot;
 
-import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 

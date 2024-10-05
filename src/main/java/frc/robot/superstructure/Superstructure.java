@@ -173,7 +173,7 @@ public class Superstructure {
 				)
 			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
-			pivotStateHandler.setState(PivotState.IDLE),
+			pivotStateHandler.setState(PivotState.ARM_INTAKE),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
 			funnelStateHandler.setState(FunnelState.STOP),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))

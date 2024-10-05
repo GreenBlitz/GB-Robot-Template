@@ -8,15 +8,13 @@ public record IntakeRollerStuff(
 	String logPath,
 	String digitalInputLogPath,
 	IMotor motor,
-	InputSignal voltageSignal,
+	InputSignal<Double> voltageSignal,
 	IDigitalInput digitalInput
 ) {
 
-	//@formatter:off
 	public IntakeRollerStuff(String logPath, IMotor motor, InputSignal<Double> voltageSignal, IDigitalInput digitalInput) {
 		this(logPath, logPath + "digitalInput", motor, voltageSignal, digitalInput);
 	}
-	//@formatter:on
 
 }
 

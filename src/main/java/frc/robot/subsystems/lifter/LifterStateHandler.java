@@ -15,14 +15,8 @@ public class LifterStateHandler {
 			case HOLD -> lifter.getCommandsBuilder().stop();
 			case FORWARD -> lifter.getCommandsBuilder().setPower(state.getPower());
 			case BACKWARD -> lifter.getCommandsBuilder().setPower(state.getPower());
-			case EXTENDED ->
-				lifter.getCommandsBuilder()
-					.setPower(state.getPower())
-					.until(() -> lifter.isHigher(state.getTargetPosition()));
-			case RETRACTED ->
-				lifter.getCommandsBuilder()
-					.setPower(state.getPower())
-					.until(() -> lifter.isLower(state.getTargetPosition()));
+			case EXTENDED -> lifter.getCommandsBuilder().setPower(state.getPower()).until(() -> lifter.isHigher(state.getTargetPosition()));
+			case RETRACTED -> lifter.getCommandsBuilder().setPower(state.getPower()).until(() -> lifter.isLower(state.getTargetPosition()));
 		};
 	}
 

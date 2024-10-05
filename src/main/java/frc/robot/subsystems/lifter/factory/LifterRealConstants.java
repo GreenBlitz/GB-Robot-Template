@@ -2,7 +2,6 @@ package frc.robot.subsystems.lifter.factory;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
@@ -11,7 +10,7 @@ import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.subsystems.lifter.LifterStuff;
 import frc.utils.AngleUnit;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.alerts.Alert;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static edu.wpi.first.units.Units.Seconds;
@@ -43,7 +42,10 @@ public class LifterRealConstants {
 
 	protected static LifterStuff generateLifterStuff(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
-		talonFXWrapper.applyConfiguration(generateMotorConfiguration());
+
+		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
+			new Alert(Alert.AlertType.ERROR, "lifter motor was not configured").report();
+		}
 
 		return new LifterStuff(
 			logPath,
@@ -53,6 +55,5 @@ public class LifterRealConstants {
 				.generatePhoenix6Signal(talonFXWrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
 		);
 	}
-
 
 }

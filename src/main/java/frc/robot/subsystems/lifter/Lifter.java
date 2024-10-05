@@ -17,7 +17,6 @@ public class Lifter extends GBSubsystem {
 		this.motor = lifterStuff.motor();
 		this.lifterStuff = lifterStuff;
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
-
 		motor.resetPosition(new Rotation2d());
 
 		updateInputs();
@@ -35,12 +34,12 @@ public class Lifter extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	public boolean isHigher(double expectedPosition) {
-		return expectedPosition < convertToMeters(lifterStuff.positionSignal().getLatestValue());
+	public boolean isHigher(double expectedPositionMeters) {
+		return expectedPositionMeters < convertToMeters(lifterStuff.positionSignal().getLatestValue());
 	}
 
-	public boolean isLower(double expectedPosition) {
-		return !isHigher(expectedPosition);
+	public boolean isLower(double expectedPositionMeters) {
+		return !isHigher(expectedPositionMeters);
 	}
 
 	public LifterStuff getLifterStuff() {
@@ -54,12 +53,13 @@ public class Lifter extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.recordOutput("lifter position", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
 	}
 
 	private void updateInputs() {
 		motor.updateSignals(lifterStuff.positionSignal());
 		motor.updateSignals(lifterStuff.otherSignals());
+
+		Logger.recordOutput("lifter position", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
 	}
 
 	private double convertToMeters(Rotation2d motorPosition) {
@@ -67,3 +67,4 @@ public class Lifter extends GBSubsystem {
 	}
 
 }
+

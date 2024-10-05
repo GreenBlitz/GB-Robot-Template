@@ -1,6 +1,7 @@
 package frc.robot.subsystems.wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.superstructure.Tolerances;
 
 public class WristStateHandler {
 

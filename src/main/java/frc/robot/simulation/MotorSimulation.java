@@ -5,7 +5,7 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.devicewrappers.TalonFXWrapper;
+import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 
 
 /**

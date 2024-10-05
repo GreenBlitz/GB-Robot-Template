@@ -46,8 +46,7 @@ public enum BusChain {
 				logPath + "ReceiveErrorAt",
 				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
 			)
-        );
-		//@formatter:on
+		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
@@ -76,6 +75,7 @@ public enum BusChain {
 				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
 			)
 		);
+		//@formatter:on
 	}
 
 	public String getChainName() {

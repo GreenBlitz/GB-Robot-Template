@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.joysticks.SmartJoystick;
 
 import java.util.function.Consumer;
@@ -42,8 +42,8 @@ public class SysIdCalibrator {
 	}
 
 	/**
-	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You
-	 * must do SignalLogger.stop() at the end of the calibration
+	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You must do
+	 * SignalLogger.stop() at the end of the calibration
 	 *
 	 * @param smartJoystick - the joystick to apply the buttons on
 	 */

@@ -2,6 +2,7 @@ package frc.robot.hardware.signal.phoenix;
 
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.signal.AngleSignal;
+import frc.robot.hardware.signal.TimedValue;
 import frc.utils.AngleUnit;
 
 public class Phoenix6AngleSignal extends AngleSignal implements Phoenix6SignalBuilder.SignalGetter {
@@ -14,8 +15,8 @@ public class Phoenix6AngleSignal extends AngleSignal implements Phoenix6SignalBu
 	}
 
 	@Override
-	protected double getNewValue() {
-		return statusSignal.getValue();
+	protected TimedValue<Double> getNewValue() {
+		return new TimedValue<>(statusSignal.getValue(), statusSignal.getTimestamp().getTime());
 	}
 
 	@Override

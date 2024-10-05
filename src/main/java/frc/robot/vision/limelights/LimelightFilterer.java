@@ -95,7 +95,7 @@ public class LimelightFilterer extends GBSubsystem {
 	private void correctPoseEstimation() {
 		boolean hasTooMuchTimePassed = Logger.getRealTimestamp() / 1.0e6 - lastSuccessfulObservationTime
 			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION;
-		List<VisionObservation> estimates = getFilteredVisionObservations();
+		List<VisionObservation> estimates = getAllAvailableLimelightData();
 		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
 			Optional<Pose2d> visionPose = poseEstimator.getVisionPose();
 			visionPose.ifPresent(poseEstimator::resetPose);

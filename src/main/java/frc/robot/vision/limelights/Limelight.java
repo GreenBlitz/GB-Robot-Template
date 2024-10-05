@@ -49,7 +49,8 @@ public class Limelight extends GBSubsystem {
 			return Optional.empty();
 		}
 
-		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()]);
+		double processingLatencySeconds = Conversions
+			.milliSecondsToSeconds(robotPoseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()]);
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
 		Pose3d robotPose = new Pose3d(

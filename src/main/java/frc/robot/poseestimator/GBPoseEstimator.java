@@ -11,6 +11,7 @@ import frc.robot.vision.limelights.LimeLightConstants;
 import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -41,7 +42,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.kinematics = kinematics;
 		this.lastWheelPositions = initialWheelPositions;
 		this.lastGyroAngle = initialGyroAngle;
-		this.odometryStandardDeviations = new double[3];
+		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer = new LimelightFilterer(LimeLightConstants.DEFAULT_CONFIG, this);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
@@ -86,14 +87,12 @@ public class GBPoseEstimator implements IPoseEstimator {
 	@Override
 	public Optional<Pose2d> getVisionPose() {
 		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightData();
-		List<VisionObservation> rawData;
-		while (
-			stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION
-				&& !(rawData = limelightFilterer.getAllAvailableLimelightData()).isEmpty()
-		) {
+		List<VisionObservation> rawData = limelightFilterer.getAllAvailableLimelightData();
+		while (stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION && !rawData.isEmpty()) {
 			if (!stackedRawData.contains(rawData.get(0))) {
 				stackedRawData.addAll(rawData);
 			}
+			rawData = limelightFilterer.getAllAvailableLimelightData();
 		}
 		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
 		Pose2d visionPose = new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation());
@@ -154,7 +153,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 				odometryStandardDeviations
 			);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, estimatedPose);
+			estimatedPoseInterpolator.addSample(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()), estimatedPose);
 		});
 	}
 

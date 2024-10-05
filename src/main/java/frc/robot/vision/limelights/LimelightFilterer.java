@@ -5,6 +5,7 @@ import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.utils.Conversions;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class LimelightFilterer extends GBSubsystem {
 			}
 		}
 		if (!estimates.isEmpty()) {
-			lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
+			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
 		}
 		return estimates;
 	}
@@ -55,8 +56,7 @@ public class LimelightFilterer extends GBSubsystem {
 
 	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
 		Optional<Pose2d> estimatedPoseAtTimeStamp = poseEstimator.getEstimatedPoseAtTimeStamp(limelightRawData.timestamp());
-		double[] standardTransformDeviations;
-		standardTransformDeviations = estimatedPoseAtTimeStamp
+		double[] standardTransformDeviations = estimatedPoseAtTimeStamp
 			.map(pose2d -> PoseEstimationMath.calculateStandardDeviationOfPose(limelightRawData, pose2d))
 			.orElseGet(
 				() -> PoseEstimationMath.calculateStandardDeviationOfPose(limelightRawData, poseEstimator.getEstimatedPose())

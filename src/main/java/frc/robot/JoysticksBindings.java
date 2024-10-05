@@ -25,13 +25,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		
-		WristStateHandler a = new WristStateHandler(robot.getWrist());
-		usedJoystick.B.onTrue(a.setState(WristState.IN_ARM));
-		usedJoystick.X.onTrue(a.setState(WristState.TRAP));
-		usedJoystick.Y.onTrue(a.setState(WristState.PRE_TRAP));
-		
-		
 		// bindings...
 	}
 

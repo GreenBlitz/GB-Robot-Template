@@ -3,13 +3,13 @@ package frc.robot.subsystems.lifter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import java.util.function.DoubleSupplier;
 
 public class LifterCommandsBuilder {
 
 	private final Lifter lifter;
-
 
 	//@formatter:off
 	public LifterCommandsBuilder(Lifter lifter) {
@@ -26,7 +26,7 @@ public class LifterCommandsBuilder {
 	}
 
 	public Command stop() {
-		return new InstantCommand(lifter::stop, lifter).withName("stop");
+		return new RunCommand(lifter::stop, lifter).withName("stop");
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {

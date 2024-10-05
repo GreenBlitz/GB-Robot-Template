@@ -28,6 +28,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+
 		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
 		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
 		usedJoystick.X.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));

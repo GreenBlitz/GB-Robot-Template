@@ -160,7 +160,7 @@ public class Superstructure {
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_ARM),
 					rollerStateHandler.setState(RollerState.ROLL_IN),
 					wristStateHandler.setState(WristState.ARM_INTAKE)
-				).withTimeout(0.3),////.until(this::isObjectInRoller)
+				).withTimeout(0.5),////.until(this::isObjectInRoller)
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_ARM),
 					rollerStateHandler.setState(RollerState.STOP),

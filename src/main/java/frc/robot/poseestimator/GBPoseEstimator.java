@@ -46,7 +46,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.latestWheelPositions = initialWheelPositions;
 		this.latestGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
-		this.limelightFilterer = new LimelightFilterer(LimeLightConstants.DEFAULT_CONFIG, this);
+		this.limelightFilterer = new LimelightFilterer(LimeLightConstants.DEFAULT_CONFIG, this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
 
@@ -108,8 +108,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public Optional<Pose2d> getEstimatedPoseAtTimeStamp(double timeStamp) {
-		return estimatedPoseInterpolator.getSample(timeStamp);
+	public Pose2d getEstimatedPoseAtTimeStamp(double timeStamp) {
+		Optional<Pose2d> estimatedPoseAtTimestamp = estimatedPoseInterpolator.getSample(timeStamp);
+		return estimatedPoseAtTimestamp.orElseGet(() -> estimatedPose);
 	}
 
 
@@ -174,6 +175,14 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public void logEstimatedPose() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose", getEstimatedPose());
+	}
+
+	@Override
+	public void subsystemPeriodic() {
+		limelightFilterer.logEstimatedPositions();
+		if (limelightFilterer.correctPoseEstimation()) {
+			resetPoseByLimelight();
+		}
 	}
 
 }

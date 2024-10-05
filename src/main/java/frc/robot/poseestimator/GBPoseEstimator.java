@@ -132,10 +132,11 @@ public class GBPoseEstimator implements IPoseEstimator {
 					currentTimeStamp,
 					odometryPoseInterpolator
 				);
+				Pose2d filteredPose = visionMovingAverageFilter.calculateFilteredPose()
 				addVisionObservation(
 					new VisionObservation(
-						visionMovingAverageFilter.calculateFilteredPose(),
-						visionObservation.standardDeviations(),
+						filteredPose,
+						Limelight,
 						visionObservation.timestamp()
 					)
 				);
@@ -170,18 +171,14 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.lastVisionObservation = observation;
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
-			Pose2d currentEstimation = PoseEstimationMath.combineVisionToOdometry(
+			estimatedPose = PoseEstimationMath.combineVisionToOdometry(
 				observation,
 				odometryPoseSample,
 				estimatedPose,
 				odometryPose,
 				odometryStandardDeviations
 			);
-			Pose2d appliedVisionObservation = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-			appliedVisionObservation = appliedVisionObservation
-				.plus(PoseEstimationMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
-			estimatedPose = appliedVisionObservation;
-			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, appliedVisionObservation);
+			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, estimatedPose);
 		});
 	}
 

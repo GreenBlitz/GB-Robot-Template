@@ -109,7 +109,9 @@ public class Superstructure {
 
 	public Command intakeOuttake() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+				flywheel.getCommandsBuilder().init(FlywheelState.DEFAULT.getVelocity())
+
 		);
 	}
 

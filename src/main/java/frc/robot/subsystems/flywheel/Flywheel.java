@@ -13,6 +13,7 @@ public class Flywheel extends GBSubsystem {
 	private final ControllableMotor topMotor;
 	private final ControllableMotor bottomMotor;
 	private final FlywheelCommandsBuilder commandsBuilder;
+	private final FlywheelState state;
 	private final SysIdCalibrator sysIdCalibrator;
 
 	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents, String logPath) {
@@ -23,6 +24,7 @@ public class Flywheel extends GBSubsystem {
 		this.topMotor = topFlywheelComponents.motor();
 		this.bottomMotor = bottomFlywheelComponents.motor();
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
+		this.state = FlywheelState.DEFAULT;
 		this.sysIdCalibrator = new SysIdCalibrator(bottomMotor.getSysidConfigInfo(), this, this::setVoltage);
 
 		updateInputs();
@@ -34,6 +36,10 @@ public class Flywheel extends GBSubsystem {
 
 	public SysIdCalibrator getSysIdCalibrator() {
 		return sysIdCalibrator;
+	}
+
+	protected FlywheelState getState(){
+		return state;
 	}
 
 	protected void setPower(double power) {

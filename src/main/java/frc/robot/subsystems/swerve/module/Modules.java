@@ -23,7 +23,7 @@ public class Modules {
 		return modules[modulePosition.getIndex()];
 	}
 
-	public void logStatus() {
+	public void updateInputs() {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}

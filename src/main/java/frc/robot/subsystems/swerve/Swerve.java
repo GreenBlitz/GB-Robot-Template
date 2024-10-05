@@ -28,8 +28,6 @@ import java.util.function.Supplier;
 
 public class Swerve extends GBSubsystem {
 
-	public static final Lock ODOMETRY_LOCK = new ReentrantLock();
-
 	private final SwerveConstants constants;
 	private final Modules modules;
 	private final IGyro gyro;
@@ -125,12 +123,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		ODOMETRY_LOCK.lock();
-		{
-			gyro.updateSignals(gyroStuff.yawSignal());
-			modules.logStatus();
-		}
-		ODOMETRY_LOCK.unlock();
+		gyro.updateSignals(gyroStuff.yawSignal());
+		modules.updateInputs();
 	}
 
 	private void logState() {

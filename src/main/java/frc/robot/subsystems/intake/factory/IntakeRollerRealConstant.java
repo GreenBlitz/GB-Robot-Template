@@ -25,7 +25,7 @@ public class IntakeRollerRealConstant {
 	private final static int CURRENT_LIMIT = 30;
 
 	public static IntakeRollerStuff generateIntakeRollerStuff(String logPath) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxIDs.INTAKE_ROLLER);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.INTAKE_ROLLER);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);

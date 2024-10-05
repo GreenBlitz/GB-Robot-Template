@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
@@ -22,6 +24,7 @@ public class LifterRealConstants {
 
     private static final double DRUM_RADIUS = inchesToMeters(0.96);
     private static final int MOTOR_CONFIGURATION_TRIES = 5;
+    private static final double DEBOUNCE_TIME = 0.05;
 
     private static TalonFXConfiguration generateMotorConfiguration() {
         TalonFXConfiguration configuration = new TalonFXConfiguration();
@@ -42,6 +45,14 @@ public class LifterRealConstants {
         );
     }
 
+    protected static IDigitalInput generateLimitSwitch(String logPath) {
+        return new ChanneledDigitalInput(
+                IDs.DigitalInputsIDs.LIFTER_LIMIT_SWITCH,
+                DEBOUNCE_TIME,
+                true
+        );
+    }
+
     protected static LifterStuff generateLifterStuff(String logPath) {
         TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
         if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
@@ -55,6 +66,7 @@ public class LifterRealConstants {
                         talonFXWrapper,
                         generateSysidConfig()
                 ),
+                generateLimitSwitch(logPath + "limitSwitch/"),
                 DRUM_RADIUS,
                 Phoenix6SignalBuilder.generatePhoenix6Signal(
                         talonFXWrapper.getPosition(),

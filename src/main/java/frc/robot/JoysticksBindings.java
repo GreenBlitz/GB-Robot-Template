@@ -1,7 +1,5 @@
 package frc.robot;
 
-import frc.robot.subsystems.wrist.WristState;
-import frc.robot.subsystems.wrist.WristStateHandler;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 

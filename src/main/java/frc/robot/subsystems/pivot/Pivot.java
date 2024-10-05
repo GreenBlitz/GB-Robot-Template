@@ -5,7 +5,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 
 public class Pivot extends GBSubsystem {
 
@@ -13,7 +13,7 @@ public class Pivot extends GBSubsystem {
 	private final IRequest<Rotation2d> positionRequest;
 	private final PivotStuff pivotStuff;
 	private final PivotCommandsBuilder pivotCommandsBuilder;
-	private final MedianFilter resetFilter;
+	private final MedianFilter resetFilterRotations;
 
 	public Pivot(PivotStuff pivotStuff) {
 		super(pivotStuff.logPath());
@@ -21,27 +21,34 @@ public class Pivot extends GBSubsystem {
 		this.positionRequest = pivotStuff.positionRequest();
 		this.pivotStuff = pivotStuff;
 		this.pivotCommandsBuilder = new PivotCommandsBuilder(this);
-		this.resetFilter = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
+		this.resetFilterRotations = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
 
 		motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
-		updateSignals();
+		updateInputs();
+		resetResetFilter();
+	}
+
+	private void resetResetFilter() {
+		for (int i = 0; i < PivotConstants.MEDIAN_FILTER_SIZE; i++) {
+			resetFilterRotations.calculate(pivotStuff.positionSignal().getLatestValue().getRotations());
+		}
 	}
 
 	public PivotCommandsBuilder getCommandsBuilder() {
 		return pivotCommandsBuilder;
 	}
 
-	private void updateSignals() {
+	private void updateInputs() {
 		motor.updateSignals(pivotStuff.positionSignal());
 		motor.updateSignals(pivotStuff.inputSignals());
 	}
 
 	@Override
 	public void subsystemPeriodic() {
-		updateSignals();
+		updateInputs();
 		if (
 			PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations()
-				> resetFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
+				> resetFilterRotations.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
 		) {
 			motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 		}

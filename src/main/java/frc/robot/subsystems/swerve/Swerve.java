@@ -10,12 +10,12 @@ import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
 import frc.robot.poseestimation.OdometryObservation;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.superstructure.Tolerances;
-import frc.utils.GBSubsystem;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -78,11 +78,6 @@ public class Swerve extends GBSubsystem {
 		return stateHelper;
 	}
 
-	@Override
-	public String getLogPath() {
-		return constants.logPath();
-	}
-
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
 		PathPlannerUtils.configurePathPlanner(
@@ -111,9 +106,6 @@ public class Swerve extends GBSubsystem {
 		headingStabilizer.setTargetHeading(heading);
 	}
 
-	public void setState(SwerveState state) {
-		savedState = state;
-	}
 
 	protected void resetPIDControllers() {
 		constants.xMetersPIDController().reset();
@@ -121,10 +113,15 @@ public class Swerve extends GBSubsystem {
 		constants.rotationDegreesPIDController().reset();
 	}
 
+
 	public void saveState(SwerveState state) {
-		this.savedState = state;
+		savedState = state;
 	}
 
+	@Override
+	protected void subsystemPeriodic() {
+		updateState();
+	}
 
 	public void updateState() {
 		updateInputs();

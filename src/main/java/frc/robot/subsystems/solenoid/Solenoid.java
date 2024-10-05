@@ -2,7 +2,7 @@ package frc.robot.subsystems.solenoid;
 
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 
 public class Solenoid extends GBSubsystem {
 
@@ -15,15 +15,21 @@ public class Solenoid extends GBSubsystem {
 		this.motor = solenoidComponents.solenoid();
 		this.voltageSignal = solenoidComponents.voltageSignal();
 		this.commandsBuilder = new SolenoidCommandsBuilder(this);
+
+		updateInputs();
 	}
 
 	public SolenoidCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 
+	public void updateInputs() {
+		motor.updateSignals(voltageSignal);
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
-		motor.updateSignals(voltageSignal);
+		updateInputs();
 	}
 
 	protected void stop() {

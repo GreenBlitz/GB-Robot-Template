@@ -38,8 +38,8 @@ public class RealElevatorConstants {
 
 	public static ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
 
-	public static double feedforwardCalculation(CANSparkMax motor) {
-		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(motor.getEncoder().getVelocity());
+	public static double feedforwardCalculation(Rotation2d velocity) {
+		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {

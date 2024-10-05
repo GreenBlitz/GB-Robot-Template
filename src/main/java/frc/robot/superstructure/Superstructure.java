@@ -171,6 +171,7 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.IDLE),
+			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		);
 	}
@@ -278,6 +279,7 @@ public class Superstructure {
 					elbowStateHandler.setState(ElbowState.IDLE)
 				)
 			),
+			wristStateHandler.setState(WristState.IN_ARM),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);

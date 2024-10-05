@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.LimeLightConstants;
 import frc.robot.vision.limelights.LimelightFilterer;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class GBPoseEstimator implements IPoseEstimator {
+public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
@@ -30,11 +31,13 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private final LimelightFilterer limelightFilterer;
 
 	public GBPoseEstimator(
+		String logPath,
 		SwerveDriveKinematics kinematics,
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
 		double[] odometryStandardDeviations
 	) {
+		super(logPath);
 		this.odometryPose = new Pose2d();
 		this.estimatedPose = new Pose2d();
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
@@ -170,7 +173,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 	}
 
 	public void logEstimatedPose() {
-		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "EstimatedPose", getEstimatedPose());
+		Logger.recordOutput(super.getLogPath() + "EstimatedPose", getEstimatedPose());
 	}
 
 }

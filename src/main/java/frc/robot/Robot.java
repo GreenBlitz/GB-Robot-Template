@@ -39,7 +39,6 @@ public class Robot {
 	private final Superstructure superstructure;
 
 	public Robot() {
-
 		FlywheelComponents topFlywheelComponents = FlywheelFactory
 			.create(FlywheelConstants.LOG_PATH + "TopMotor/", FlywheelConstants.IS_TOP_MOTOR_INVERTED, IDs.CANSparkMAXIDs.TOP_FLYWHEEL);
 		FlywheelComponents bottomFlywheelComponents = FlywheelFactory

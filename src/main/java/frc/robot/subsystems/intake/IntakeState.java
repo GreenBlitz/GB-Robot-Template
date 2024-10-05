@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake;
 
-
 public enum IntakeState {
 
 	INTAKE(0.8),

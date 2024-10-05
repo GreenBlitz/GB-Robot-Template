@@ -4,7 +4,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class Flywheel extends GBSubsystem {
 
@@ -15,6 +16,8 @@ public class Flywheel extends GBSubsystem {
 	private final FlywheelStuff flywheelStuff;
 
 	private final FlywheelCommandsBuilder commandsBuilder;
+	private final SysIdCalibrator rightSysidCalibrator;
+	private final SysIdCalibrator leftSysidCalibrator;
 
 	public Flywheel(FlywheelStuff flywheelStuff) {
 		super(flywheelStuff.logPath());
@@ -23,17 +26,26 @@ public class Flywheel extends GBSubsystem {
 		this.rightFlywheelVelocityRequest = flywheelStuff.rightFlywheelVelocityRequest();
 		this.leftFlywheelVelocityRequest = flywheelStuff.leftFlywheelVelocityRequest();
 		this.flywheelStuff = flywheelStuff;
-
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
+		this.rightSysidCalibrator = new SysIdCalibrator(rightMotor.getSysidConfigInfo(), this, voltage -> setVoltages(voltage, 0));
+		this.leftSysidCalibrator = new SysIdCalibrator(leftMotor.getSysidConfigInfo(), this, voltage -> setVoltages(0, voltage));
 
-		updateSignals();
+		updateInputs();
 	}
 
 	public FlywheelCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 
-	private void updateSignals() {
+	public SysIdCalibrator getRightSysidCalibrator() {
+		return rightSysidCalibrator;
+	}
+
+	public SysIdCalibrator getLeftSysidCalibrator() {
+		return leftSysidCalibrator;
+	}
+
+	private void updateInputs() {
 		rightMotor.updateSignals(flywheelStuff.rightSignals());
 		rightMotor.updateSignals(flywheelStuff.rightVelocitySignal());
 		leftMotor.updateSignals(flywheelStuff.leftSignals());
@@ -42,7 +54,7 @@ public class Flywheel extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		updateSignals();
+		updateInputs();
 	}
 
 	protected void stop() {
@@ -55,32 +67,37 @@ public class Flywheel extends GBSubsystem {
 		leftMotor.setPower(leftPower);
 	}
 
+	protected void setVoltages(double rightVoltage, double leftVoltage) {
+		rightMotor.applyDoubleRequest(flywheelStuff.rightVoltageRequest().withSetPoint(rightVoltage));
+		leftMotor.applyDoubleRequest(flywheelStuff.leftVoltageRequest().withSetPoint(leftVoltage));
+	}
+
 	protected void setTargetVelocities(Rotation2d rightFlywheelVelocity, Rotation2d leftFlywheelVelocity) {
 		rightMotor.applyAngleRequest(rightFlywheelVelocityRequest.withSetPoint(rightFlywheelVelocity));
 		leftMotor.applyAngleRequest(leftFlywheelVelocityRequest.withSetPoint(leftFlywheelVelocity));
 	}
 
 	//@formatter:off
-	public boolean isAtVelocities(Rotation2d rightFlywheelExpectedVelocity, Rotation2d leftFlywheelExpectedVelocity, Rotation2d velocityTolerance) {
-		return isAtVelocities(rightFlywheelExpectedVelocity, leftFlywheelExpectedVelocity, velocityTolerance, velocityTolerance);
+	public boolean isAtVelocities(Rotation2d rightFlywheelTargetVelocity, Rotation2d leftFlywheelTargetVelocity, Rotation2d velocityPerSecondTolerance) {
+		return isAtVelocities(rightFlywheelTargetVelocity, leftFlywheelTargetVelocity, velocityPerSecondTolerance, velocityPerSecondTolerance);
 	}
 	//@formatter:on
 
 	public boolean isAtVelocities(
-		Rotation2d rightFlywheelExpectedVelocity,
-		Rotation2d leftFlywheelExpectedVelocity,
-		Rotation2d rightVelocityTolerance,
-		Rotation2d leftVelocityTolerance
+		Rotation2d rightFlywheelTargetVelocity,
+		Rotation2d leftFlywheelTargetVelocity,
+		Rotation2d rightVelocityPerSecondTolerance,
+		Rotation2d leftVelocityPerSecondTolerance
 	) {
 		boolean rightFlyWheelAtVelocity = MathUtil.isNear(
-			rightFlywheelExpectedVelocity.getRotations(),
+			rightFlywheelTargetVelocity.getRotations(),
 			flywheelStuff.rightVelocitySignal().getLatestValue().getRotations(),
-			rightVelocityTolerance.getRotations()
+			rightVelocityPerSecondTolerance.getRotations()
 		);
 		boolean leftFlyWheelAtVelocity = MathUtil.isNear(
-			leftFlywheelExpectedVelocity.getRotations(),
+			leftFlywheelTargetVelocity.getRotations(),
 			flywheelStuff.leftVelocitySignal().getLatestValue().getRotations(),
-			leftVelocityTolerance.getRotations()
+			leftVelocityPerSecondTolerance.getRotations()
 		);
 		return rightFlyWheelAtVelocity && leftFlyWheelAtVelocity;
 	}

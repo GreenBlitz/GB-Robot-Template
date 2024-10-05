@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -27,35 +25,24 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		// bindings...
-
-		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.IDLE));
-		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_SPEAKER));
-		usedJoystick.X.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_AMP));
-		usedJoystick.Y.onTrue(robot.getSupersturctrue().setState(RobotState.SPEAKER));
-		usedJoystick.POV_UP.onTrue(robot.getSupersturctrue().setState(RobotState.INTAKE));
-		usedJoystick.POV_DOWN.onTrue(robot.getSupersturctrue().setState(RobotState.SHOOTER_OUTTAKE));
-
-		usedJoystick.START.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
-		robot.getSwerve()
-			.setDefaultCommand(
-				robot.getSwerve()
-					.getCommandsBuilder()
-					.driveBySavedState(
-						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+		robot.getSwerve().setDefaultCommand(
+				robot.getSwerve().getCommandsBuilder().driveBySavedState(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-					)
-			);
+				)
+		);
+		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick
-				= SECOND_JOYSTICK;
+		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
-
-		usedJoystick.B.onTrue(robot.getSupersturctrue().setState(RobotState.PRE_CLIMB));
-		usedJoystick.A.onTrue(robot.getSupersturctrue().setState(RobotState.CLIMB));
+		
+		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_CLIMB));
+		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB));
+		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.TRAP));
+		
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

@@ -6,18 +6,18 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.elbow.Elbow;
-import frc.robot.subsystems.elbow.ElbowConstants;
-import frc.robot.subsystems.elbow.factory.ElbowFactory;
-import frc.robot.subsystems.flywheel.FlyWheelConstants;
-import frc.robot.subsystems.flywheel.Flywheel;
-import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.factory.IntakeFactory;
+import frc.robot.subsystems.elbow.Elbow;
+import frc.robot.subsystems.elbow.ElbowConstants;
+import frc.robot.subsystems.elbow.factory.ElbowFactory;
+import frc.robot.subsystems.flywheel.FlyWheelConstants;
+import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.lifter.Lifter;
 import frc.robot.subsystems.lifter.LifterConstants;
 import frc.robot.subsystems.lifter.factory.LifterFactory;
@@ -35,7 +35,10 @@ import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
-import frc.robot.superstructure.Supersturctrue;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristConstants;
+import frc.robot.subsystems.wrist.factory.WristFactory;
+import frc.robot.superstructure.Superstructure;
 import frc.utils.brakestate.BrakeStateManager;
 
 /**
@@ -56,9 +59,11 @@ public class Robot {
 	private final Pivot pivot;
 	private final Lifter lifter;
 	private final Roller roller;
+	private final Wrist wrist;
 
-	private final Supersturctrue supersturctrue;
 
+	private final Superstructure superstructure;
+	
 	public Robot() {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
@@ -76,8 +81,10 @@ public class Robot {
 		this.lifter = new Lifter(LifterFactory.create(LifterConstants.LOG_PATH));
 		this.roller = new Roller(RollerFactory.create(RollerConstants.LOG_PATH));
 		BrakeStateManager.add(() -> roller.setBrake(true), () -> roller.setBrake(false));
+		this.wrist = new Wrist(WristFactory.generateWristStuff(WristConstants.LOG_PATH));
+		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
-		this.supersturctrue = new Supersturctrue(this);
+		this.superstructure = new Superstructure(this);
 
 		configureBindings();
 	}
@@ -127,8 +134,12 @@ public class Robot {
 		return roller;
 	}
 
-	public Supersturctrue getSupersturctrue() {
-		return supersturctrue;
+	public Wrist getWrist() {
+		return wrist;
+	}
+
+	public Superstructure getSuperstructure() {
+		return superstructure;
 	}
 
 }

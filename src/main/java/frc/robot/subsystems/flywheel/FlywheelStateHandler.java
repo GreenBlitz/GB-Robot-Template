@@ -1,11 +1,8 @@
 package frc.robot.subsystems.flywheel;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class FlywheelStateHandler {
-
-	private static final Rotation2d TOLERANCE = Rotation2d.fromRotations(1);
 
 	private final Flywheel flywheel;
 
@@ -14,7 +11,10 @@ public class FlywheelStateHandler {
 	}
 
 	public Command setState(FlywheelState flywheelState) {
-		return flywheel.getCommandsBuilder().setVelocities(flywheelState.getRightVelocity(), flywheelState.getLeftVelocity(), TOLERANCE);
+		if (flywheelState.getRightVelocity().getRotations() == 0) {
+			return flywheel.getCommandsBuilder().stop();
+		}
+		return flywheel.getCommandsBuilder().setVelocities(flywheelState.getRightVelocity(), flywheelState.getLeftVelocity());
 	}
 
 }

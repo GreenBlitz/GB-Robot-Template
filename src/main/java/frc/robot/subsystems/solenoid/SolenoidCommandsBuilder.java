@@ -2,7 +2,7 @@ package frc.robot.subsystems.solenoid;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.utils.utilcommands.InitExecuteCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -36,7 +36,7 @@ public class SolenoidCommandsBuilder {
 	}
 
 	public Command stop() {
-		return new InitExecuteCommand(() -> {}, solenoid::stop, solenoid);
+		return new RunCommand(solenoid::stop, solenoid);
 	}
 	//@formatter:on
 

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.elbow;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.superstructure.RobotState;
 
 public enum ElbowState {
 
@@ -8,11 +9,10 @@ public enum ElbowState {
 	MANUAL(new Rotation2d()),
 	INTAKE(Rotation2d.fromDegrees(-78)),
 	PRE_AMP(Rotation2d.fromDegrees(50)),
-	TRANSFER(Rotation2d.fromDegrees(0)),
-	PRE_CLIMB(Rotation2d.fromDegrees(1)),
-	CLIMB(Rotation2d.fromDegrees(60)),
+	TRANSFER(Rotation2d.fromDegrees(-78)),
+	CLIMB(Rotation2d.fromDegrees(45)),
 	FREE(new Rotation2d());
-
+	
 	private final Rotation2d targetPosition;
 
 	ElbowState(Rotation2d targetPosition) {

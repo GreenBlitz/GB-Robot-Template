@@ -5,8 +5,8 @@ import frc.robot.hardware.digitalinput.DigitalInputInputs;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
-import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class Lifter extends GBSubsystem {

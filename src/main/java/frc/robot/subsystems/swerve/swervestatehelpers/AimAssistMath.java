@@ -68,14 +68,9 @@ public class AimAssistMath {
 	}
 
 	public static Translation2d getClosetPointInCircle(Translation2d robot, Translation2d centerOfCircle, double radius){
-		double slope = robot.getY() / robot.getX();
-		double cutPointX = Math.sqrt(
-				Math.pow(radius,2)
-				/ (Math.pow(slope,2) + 1)
-		);
-		if (robot.getX() < 0) {
-			cutPointX *= -1;
-		}
+		double slope = (robot.getY()-centerOfCircle.getY()) / (robot.getX()-centerOfCircle.getX());
+		double cutPointX = Math.sqrt(Math.pow(radius,2) / (Math.pow(slope,2) + 1));
+		cutPointX *= Math.signum(robot.getX());
 		double cutPointY = slope * cutPointX;
 		return new Translation2d(cutPointX + centerOfCircle.getX(), cutPointY + centerOfCircle.getY());
 	}

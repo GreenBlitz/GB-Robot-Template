@@ -136,9 +136,9 @@ public class Superstructure {
 				new SequentialCommandGroup(
 						swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
 								.until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
-						funnelStateHandler.setState(FunnelState.AMP), // .until(() -> isNoteInElevator())
-						funnelStateHandler.setState(FunnelState.STOP)
+						funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR), // .until(() -> isNoteInElevator())
 						//elevator.SCORE.until(() -> isReadyToAmp())
+						funnelStateHandler.setState(FunnelState.AMP)
 						//elevatorRoller.SCORE.until(() -> !isNoteInElevator)
 				)
 				//intakeRoller.STOP
@@ -173,17 +173,23 @@ public class Superstructure {
 
 	public Command intakeOuttake() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+				funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE)
+				//intakeRoller.OUTTAKE
+				//intakePivot.INTAKE
+				//flywheel.DEFAULT
+				//elevator.IDLE
+				//elevatorRoller.STOP
 		);
 	}
 
 	public Command shooterOuttake() {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				funnelStateHandler.setState(FunnelState.OUTTAKE)
-				//intakeRoller.OUTTAKE
-				//intakePivot.DOWN  (?) (still don't understand if we outtake from intake or from shooter)
-				//flywheel.DEFAULT
+				funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE)
+				//intakeRoller.STOP
+				//intakePivot.IDLE
+				//flywheel.OUTTAKE
 				//elevator.IDLE
 				//elevatorRoller.STOP
 		);

@@ -222,8 +222,11 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.RELEASE_FOR_ARM),
 					intakeStateHandler.setState(IntakeState.RELEASE_FOR_ARM)
 				).until(() -> robot.getElbow().isAtAngle(ElbowState.PRE_AMP.getTargetPosition(), Tolerances.ELBOW_POSITION)),
-				intakeStateHandler.setState(IntakeState.STOP),
-				funnelStateHandler.setState(FunnelState.STOP)
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.STOP),
+					rollerStateHandler.setState(RollerState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP)
+				)
 			),
 			rollerStateHandler.setState(RollerState.STOP),
 			pivotStateHandler.setState(PivotState.IDLE),
@@ -247,6 +250,7 @@ public class Superstructure {
 				).until(() -> robot.getElbow().isAtAngle(ElbowState.PRE_AMP.getTargetPosition(), Tolerances.ELBOW_POSITION)),
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP),
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
 				).withTimeout(3),//.until(() -> !isObjectInRoller())
 				new ParallelCommandGroup(

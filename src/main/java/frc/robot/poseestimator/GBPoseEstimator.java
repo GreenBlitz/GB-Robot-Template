@@ -25,8 +25,8 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private final double[] odometryStandardDeviations;
 	private Pose2d odometryPose;
 	private Pose2d estimatedPose;
-	private SwerveDriveWheelPositions lastWheelPositions;
-	private Rotation2d lastGyroAngle;
+	private SwerveDriveWheelPositions latestWheelPositions;
+	private Rotation2d latestGyroAngle;
 	private final LimelightFilterer limelightFilterer;
 
 	public GBPoseEstimator(
@@ -40,8 +40,8 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.kinematics = kinematics;
-		this.lastWheelPositions = initialWheelPositions;
-		this.lastGyroAngle = initialGyroAngle;
+		this.latestWheelPositions = initialWheelPositions;
+		this.latestGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer = new LimelightFilterer(LimeLightConstants.DEFAULT_CONFIG, this);
 		setOdometryStandardDeviations(odometryStandardDeviations);
@@ -65,16 +65,16 @@ public class GBPoseEstimator implements IPoseEstimator {
 	@Override
 	public void resetPose(Pose2d initialPose) {
 		this.estimatedPose = initialPose;
-		this.lastGyroAngle = initialPose.getRotation();
+		this.latestGyroAngle = initialPose.getRotation();
 		this.odometryPose = initialPose;
 		odometryPoseInterpolator.clear();
 	}
 
 	@Override
-	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d pose) {
-		this.lastWheelPositions = wheelPositions;
-		this.lastGyroAngle = gyroAngle;
-		this.odometryPose = pose;
+	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
+		this.latestWheelPositions = wheelPositions;
+		this.latestGyroAngle = gyroAngle;
+		this.odometryPose = robotPose;
 		odometryPoseInterpolator.clear();
 	}
 
@@ -94,8 +94,8 @@ public class GBPoseEstimator implements IPoseEstimator {
 			}
 			rawData = limelightFilterer.getAllAvailableLimelightData();
 		}
-		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
-		Pose2d visionPose = new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation());
+		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedRawData);
+		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), odometryPose.getRotation());
 		return Optional.of(visionPose);
 	}
 
@@ -123,8 +123,8 @@ public class GBPoseEstimator implements IPoseEstimator {
 	public void updateOdometry(List<OdometryObservation> odometryObservation) {
 		for (OdometryObservation observation : odometryObservation) {
 			addOdometryObservation(observation);
-			logEstimatedPose();
 		}
+		logEstimatedPose();
 	}
 
 	@Override
@@ -159,18 +159,18 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 	private void addOdometryObservation(OdometryObservation observation) {
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
-		Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelsPositions());
-		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastGyroAngle);
-		lastGyroAngle = observation.gyroAngle();
-		lastWheelPositions = observation.wheelsPositions();
+		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
+		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
+		latestGyroAngle = observation.gyroAngle();
+		latestWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);
 		estimatedPose = estimatedPose.exp(twist);
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}
 
-	private void updateGyroAnglesInLimeLight(Rotation2d gyroAngles) {
-		if (gyroAngles != null) {
-			limelightFilterer.updateGyroAngles(new GyroAngleValues(gyroAngles.getDegrees(), 0, 0, 0, 0, 0));
+	private void updateGyroAnglesInLimeLight(Rotation2d gyroAngle) {
+		if (gyroAngle != null) {
+			limelightFilterer.updateGyroAngles(new GyroAngleValues(gyroAngle.getDegrees(), 0, 0, 0, 0, 0));
 		}
 	}
 

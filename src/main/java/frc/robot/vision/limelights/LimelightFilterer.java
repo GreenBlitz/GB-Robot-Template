@@ -64,7 +64,7 @@ public class LimelightFilterer extends GBSubsystem {
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			LimeLightConstants.STANDARD_DEVIATION_VISION_ANGLE};
+			LimeLightConstants.STANDARD_DEVIATION_VISION_DEGREES};
 
 		return new VisionObservation(
 			limelightRawData.estimatedPose().toPose2d(),
@@ -87,14 +87,14 @@ public class LimelightFilterer extends GBSubsystem {
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(
 				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
-				observations.get(i).visionPose()
+				observations.get(i).robotPose()
 			);
 		}
 	}
 
 	private void correctPoseEstimation() {
 		boolean hasTooMuchTimePassed = Logger.getRealTimestamp() / 1.0e6 - lastSuccessfulObservationTime
-			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION;
+			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION_SECONDS;
 		List<VisionObservation> estimates = getAllAvailableLimelightData();
 		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
 			Optional<Pose2d> visionPose = poseEstimator.getVisionPose();

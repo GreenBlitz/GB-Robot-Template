@@ -14,7 +14,7 @@ public class PoseEstimatorConstants {
 
 	public static final int ODOMETRY_FREQUENCY_HERTZ = 250;
 
-	public static final Pose2d INITIAL_ROOT_POSE = new Pose2d(2, 5, new Rotation2d());
+	public static final Pose2d INITIAL_POSE = new Pose2d(2, 5, new Rotation2d());
 
 	public static final double[] ODOMETRY_STANDARD_DEVIATIONS = {0.003, 0.003, 0.0002};
 

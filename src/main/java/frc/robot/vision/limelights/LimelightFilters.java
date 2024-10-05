@@ -40,7 +40,7 @@ public class LimelightFilters {
 	}
 
 	protected static boolean isRobotOnGround(LimelightRawData limelightRawData) {
-		return limelightRawData.estimatedPose().getZ() <= LimeLightConstants.ROBOT_TO_GROUND_TOLERANCE;
+		return limelightRawData.estimatedPose().getZ() <= LimeLightConstants.ROBOT_TO_GROUND_TOLERANCE_METERS;
 	}
 
 }

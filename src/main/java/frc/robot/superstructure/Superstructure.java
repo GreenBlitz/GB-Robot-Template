@@ -38,6 +38,7 @@ public class Superstructure {
 			case AMP -> amp();
 			case TRANSFER_SHOOTER_ELEVATOR -> transferShooterElevator();
 			case TRANSFER_ELEVATOR_SHOOTER -> transferElevatorShooter();
+			case INTAKE_OUTTAKE -> intakeOuttake();
 			case SHOOTER_OUTTAKE -> shooterOuttake();
 		};
 	}
@@ -86,6 +87,12 @@ public class Superstructure {
 	}
 
 	public Command transferElevatorShooter() {
+		return new ParallelCommandGroup(
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		);
+	}
+
+	public Command intakeOuttake() {
 		return new ParallelCommandGroup(
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);

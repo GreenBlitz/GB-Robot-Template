@@ -7,7 +7,8 @@ public class LinearFilterFactory {
 			case highPassIIR -> new LinearFilters.HighPassIIR(modifier);
 			case singlePoleIIR -> new LinearFilters.SinglePoleIIR(modifier);
 			case movingAverageFIR -> new LinearFilters.MovingAverageFIR((int) modifier);
-		};
+            case GBLinearFilter -> new LinearFilters.;
+        };
 	}
 
 }

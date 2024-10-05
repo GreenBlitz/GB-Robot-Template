@@ -5,13 +5,14 @@ import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.vision.IObservationsFilterer;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class LimelightFilterer extends GBSubsystem {
+public class LimelightFilterer extends GBSubsystem implements IObservationsFilterer {
 
 	private final MultiLimelightsRawData multiLimelightsRawData;
 	private final IPoseEstimator poseEstimator;
@@ -27,7 +28,7 @@ public class LimelightFilterer extends GBSubsystem {
 		multiLimelightsRawData.updateGyroAngles(gyroAnglesValues);
 	}
 
-	public List<VisionObservation> getFilteredVisionObservations() {
+	public List<VisionObservation> getAllFilteredData() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (LimelightRawData limelightRawData : multiLimelightsRawData.getAllAvailableLimelightData()) {
@@ -78,7 +79,7 @@ public class LimelightFilterer extends GBSubsystem {
 	}
 
 	public void logEstimatedPositions() {
-		List<VisionObservation> observations = getFilteredVisionObservations();
+		List<VisionObservation> observations = getAllFilteredData();
 
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(

@@ -13,7 +13,7 @@ public class PoseEstimatorConstants {
 
 		protected static final String LOG_PATH = "VisionLinearFilter/";
 
-		protected static final LinearFilterType FILTER_TYPE = LinearFilterType.movingAverageFIR;
+		protected static final LinearFilterType FILTER_TYPE = LinearFilterType.GBLinearFilter;
 
 		protected static final int SAMPLE_COUNT = 10;
 

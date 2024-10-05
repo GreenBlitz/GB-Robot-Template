@@ -32,6 +32,9 @@ import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristConstants;
+import frc.robot.subsystems.wrist.factory.WristFactory;
 import frc.robot.superstructure.Superstructure;
 import frc.utils.brakestate.BrakeStateManager;
 
@@ -52,6 +55,8 @@ public class Robot {
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private final Roller roller;
+	private final Wrist wrist;
+
 
 	private final Superstructure superstructure;
 
@@ -71,6 +76,8 @@ public class Robot {
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.roller = new Roller(RollerFactory.create(RollerConstants.LOG_PATH));
 		BrakeStateManager.add(() -> roller.setBrake(true), () -> roller.setBrake(false));
+		this.wrist = new Wrist(WristFactory.generateWristStuff(WristConstants.LOG_PATH));
+		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
 		this.superstructure = new Superstructure(this);
 
@@ -116,6 +123,10 @@ public class Robot {
 
 	public Roller getRoller() {
 		return roller;
+	}
+
+	public Wrist getWrist() {
+		return wrist;
 	}
 
 	public Superstructure getSuperstructure() {

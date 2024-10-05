@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import frc.robot.poseestimator.linearfilters.VisionObservationLinearFilterWrapper;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.LimeLightConstants;
 import frc.robot.vision.limelights.LimelightFilterer;
@@ -20,8 +21,8 @@ import java.util.Optional;
 public class GBPoseEstimator implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
-	private final TimeInterpolatableBuffer<Pose2d> visionPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
+	private final TimeInterpolatableBuffer<Pose2d> visionPoseInterpolator;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
 	private final LimelightFilterer limelightFilterer;
@@ -31,7 +32,6 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private SwerveDriveWheelPositions lastWheelPositions;
 	private Rotation2d lastGyroAngle;
 	private VisionObservation lastVisionObservation;
-	private final LimelightFilterer limelightFilterer;
 
 	public GBPoseEstimator(
 		SwerveDriveKinematics kinematics,
@@ -43,6 +43,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 		this.estimatedPose = new Pose2d();
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.visionPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.kinematics = kinematics;
 		this.lastWheelPositions = initialWheelPositions;
 		this.lastGyroAngle = initialGyroAngle;
@@ -135,7 +136,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 				addVisionObservation(
 					new VisionObservation(
 						filteredPose,
-						Limelight,
+						PoseEstimationMath.calculateStandardDeviationOfPose(filteredPose, estimatedPose),
 						visionObservation.timestamp()
 					)
 				);

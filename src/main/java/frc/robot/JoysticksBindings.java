@@ -25,13 +25,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-
-		LifterStateHandler a = new LifterStateHandler(robot.getLifter());
-		usedJoystick.B.onTrue(a.setState(LifterState.FORWARD));
-		usedJoystick.A.onTrue(a.setState(LifterState.BACKWARD));
-		usedJoystick.X.onTrue(a.setState(LifterState.EXTENDED));
-		usedJoystick.Y.onTrue(a.setState(LifterState.RETRACTED));
-		usedJoystick.START.onTrue(a.setState(LifterState.HOLD));
 		// bindings...
 	}
 

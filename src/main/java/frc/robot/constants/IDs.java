@@ -74,4 +74,8 @@ public class IDs {
 
 	}
 
+	public static class DigitalInputsIDs{
+		public static final int LIFTER_LIMIT_SWITCH = 9;
+	}
+
 }

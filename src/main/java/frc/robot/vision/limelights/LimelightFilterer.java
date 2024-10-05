@@ -5,7 +5,7 @@ import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.IObservationsFilterer;
+import frc.utils.Conversions;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
@@ -16,12 +16,14 @@ public class LimelightFilterer extends GBSubsystem implements IObservationsFilte
 
 	private final MultiLimelightsRawData multiLimelightsRawData;
 	private final IPoseEstimator poseEstimator;
+	private double lastSuccessfulObservationTime;
 
 	public LimelightFilterer(LimelightFiltererConfig config, IPoseEstimator poseEstimator) {
 		super(config.logPath());
 
 		this.multiLimelightsRawData = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
 		this.poseEstimator = poseEstimator;
+		this.lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
 	}
 
 	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
@@ -36,7 +38,9 @@ public class LimelightFilterer extends GBSubsystem implements IObservationsFilte
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}
-
+		if (!estimates.isEmpty()) {
+			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
+		}
 		return estimates;
 	}
 
@@ -52,8 +56,7 @@ public class LimelightFilterer extends GBSubsystem implements IObservationsFilte
 
 	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
 		Optional<Pose2d> estimatedPoseAtTimeStamp = poseEstimator.getEstimatedPoseAtTimeStamp(limelightRawData.timestamp());
-		double[] standardTransformDeviations;
-		standardTransformDeviations = estimatedPoseAtTimeStamp
+		double[] standardTransformDeviations = estimatedPoseAtTimeStamp
 			.map(pose2d -> PoseEstimationMath.calculateStandardDeviationOfPose(limelightRawData, pose2d))
 			.orElseGet(
 				() -> PoseEstimationMath.calculateStandardDeviationOfPose(limelightRawData, poseEstimator.getEstimatedPose())
@@ -89,7 +92,20 @@ public class LimelightFilterer extends GBSubsystem implements IObservationsFilte
 		}
 	}
 
+	private void correctPoseEstimation() {
+		boolean hasTooMuchTimePassed = Logger.getRealTimestamp() / 1.0e6 - lastSuccessfulObservationTime
+			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION;
+		List<VisionObservation> estimates = getAllFilteredData();
+		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
+			Optional<Pose2d> visionPose = poseEstimator.getVisionPose();
+			visionPose.ifPresent(poseEstimator::resetPose);
+		}
+		lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
+	}
+
 	@Override
-	protected void subsystemPeriodic() {}
+	protected void subsystemPeriodic() {
+		correctPoseEstimation();
+	}
 
 }

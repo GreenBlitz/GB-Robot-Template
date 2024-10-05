@@ -102,7 +102,7 @@ public class Superstructure {
 			case AMP -> amp();
 			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
-			case SHOOTER_OUTTAKE -> shooterOuttake();
+			case INTAKE_OUTTAKE -> intakeOuttake();
 			case ARM_OUTTAKE -> armOuttake();
 		};
 	}
@@ -325,7 +325,7 @@ public class Superstructure {
 		);
 	}
 
-	private Command shooterOuttake() {
+	private Command intakeOuttake() {
 		return new ParallelCommandGroup(
 			rollerStateHandler.setState(RollerState.ROLL_OUT),
 			intakeStateHandler.setState(IntakeState.OUTTAKE),

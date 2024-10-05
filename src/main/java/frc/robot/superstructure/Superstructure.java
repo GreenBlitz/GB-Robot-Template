@@ -343,7 +343,7 @@ public class Superstructure {
 			rollerStateHandler.setState(RollerState.ROLL_IN),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
-			intakeStateHandler.setState(IntakeState.STOP),
+			intakeStateHandler.setState(IntakeState.RELEASE_FOR_ARM),
 			funnelStateHandler.setState(FunnelState.STOP),
 			pivotStateHandler.setState(PivotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),

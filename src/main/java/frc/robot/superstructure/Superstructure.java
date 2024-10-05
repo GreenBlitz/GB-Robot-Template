@@ -136,10 +136,16 @@ public class Superstructure {
 				new SequentialCommandGroup(
 						swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
 								.until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
-						funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR), // .until(() -> isNoteInElevator())
 						//elevator.SCORE.until(() -> isReadyToAmp())
-						funnelStateHandler.setState(FunnelState.AMP)
-						//elevatorRoller.SCORE.until(() -> !isNoteInElevator)
+						new ParallelCommandGroup(
+								funnelStateHandler.setState(FunnelState.AMP)
+								//elevatorRoller.SCORE
+						), //.until(() -> !isNoteInElevator)
+						new ParallelCommandGroup(
+								funnelStateHandler.setState(FunnelState.STOP)
+								//elevator.IDLE
+								//elevatorRoller.STOP
+						)
 				)
 				//intakeRoller.STOP
 				//intakePivot.IDLE
@@ -180,7 +186,7 @@ public class Superstructure {
 				//flywheel.DEFAULT
 				//elevator.IDLE
 				//elevatorRoller.STOP
-		);
+		); //.until(() -> !isNoteInIntake)
 	}
 
 	public Command shooterOuttake() {
@@ -192,7 +198,7 @@ public class Superstructure {
 				//flywheel.OUTTAKE
 				//elevator.IDLE
 				//elevatorRoller.STOP
-		);
+		).until(() -> !isNoteInShooter());
 	}
 	//@formatter:on
 

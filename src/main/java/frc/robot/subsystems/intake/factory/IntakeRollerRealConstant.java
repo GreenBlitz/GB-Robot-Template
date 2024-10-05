@@ -20,10 +20,9 @@ public class IntakeRollerRealConstant {
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
-	private final static int CONVERSION_FACTOR = 3;
+	private final static double CONVERSION_FACTOR = 3.0;
 
 	private final static int CURRENT_LIMIT = 30;
-
 
 	private static void configMotor(SparkMaxWrapper motor) {
 		motor.setInverted(false);

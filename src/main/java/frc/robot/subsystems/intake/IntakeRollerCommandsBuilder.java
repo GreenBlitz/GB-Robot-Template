@@ -32,7 +32,7 @@ public class IntakeRollerCommandsBuilder {
                 interrupted -> intakeRoller.stop(),
                 () -> false,
                 intakeRoller
-        ).withName("set power by supplier: " + power);
+        ).withName("set power by supplier");
     }
 
     public Command stop() {

@@ -1,7 +1,6 @@
 package frc.robot.subsystems.elevator.factories;
 
 import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -42,14 +41,7 @@ public class RealElevatorConstants {
 		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
 	}
 
-	public static ElevatorStuff generateElevatorStuff(String logPath) {
-		SparkMaxWrapper mainSparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR);
-		SparkMaxWrapper secondarySparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR);
-
-		ControllableMotor mainMotor = new BrushlessSparkMAXMotor(logPath, mainSparkMaxWrapper, new SysIdRoutine.Config());
-
-		Supplier<Double> mainMotorPosition = () -> mainSparkMaxWrapper.getEncoder().getPosition();
-		SuppliedAngleSignal mainMotorPositionSignal = new SuppliedAngleSignal("main motor angle", mainMotorPosition, AngleUnit.ROTATIONS);
+	public static void configureMotors(SparkMaxWrapper mainSparkMaxWrapper, SparkMaxWrapper secondarySparkMaxWrapper, String logPath) {
 		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		mainSparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
 		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.GEAR_RATIO);
@@ -60,6 +52,17 @@ public class RealElevatorConstants {
 
 		secondarySparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		secondarySparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
+	}
+
+	public static ElevatorStuff generateElevatorStuff(String logPath) {
+		SparkMaxWrapper mainSparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR);
+		SparkMaxWrapper secondarySparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR);
+
+		ControllableMotor mainMotor = new BrushlessSparkMAXMotor(logPath, mainSparkMaxWrapper, new SysIdRoutine.Config());
+		configureMotors(mainSparkMaxWrapper, secondarySparkMaxWrapper, logPath);
+
+		Supplier<Double> mainMotorPosition = () -> mainSparkMaxWrapper.getEncoder().getPosition();
+		SuppliedAngleSignal mainMotorPositionSignal = new SuppliedAngleSignal("main motor angle", mainMotorPosition, AngleUnit.ROTATIONS);
 
 		Supplier<Double> motorsVoltage = mainSparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal motorsVoltageSignal = new SuppliedDoubleSignal("main motor voltage", motorsVoltage);

@@ -2,10 +2,6 @@ package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
@@ -22,6 +18,7 @@ public class LimelightFilterer extends GBSubsystem {
 	private final IPoseEstimator poseEstimator;
 	private final LinearFilter linearFilterX;
 	private final LinearFilter linearFilterY;
+	private double lastSuccessfulObservationTime;
 //	private final TimeInterpolatableBuffer<Pose2d> limelightPoseInterpolator;
 
 	public LimelightFilterer(LimelightFiltererConfig config, IPoseEstimator poseEstimator) {
@@ -31,6 +28,7 @@ public class LimelightFilterer extends GBSubsystem {
 		this.poseEstimator = poseEstimator;
 		this.linearFilterX = LinearFilter.movingAverage(20);
 		this.linearFilterY = LinearFilter.movingAverage(20);
+		this.lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
 //		this.limelightPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 	}
 
@@ -45,6 +43,10 @@ public class LimelightFilterer extends GBSubsystem {
 			if (keepLimelightData(limelightRawData)) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
+		}
+
+		if (!estimates.isEmpty()) {
+			lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
 		}
 
 		return estimates;
@@ -93,36 +95,25 @@ public class LimelightFilterer extends GBSubsystem {
 		}
 	}
 
+	public void correctPoseEstimation() {
+		boolean hasTooMuchTimePassed = Logger.getRealTimestamp() / 1.0e6 - lastSuccessfulObservationTime
+			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION;
+		List<VisionObservation> estimates = getAllAvailableLimelightData();
+//		if(!hasTooMuchTimePassed) {
+//			System.out.println("YES!------------\n----------------");
+//		}
+		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
+//			System.out.println("YES!----------");
+			Optional<Pose2d> visionPose = poseEstimator.getVisionPose();
+			visionPose.ifPresent(poseEstimator::resetPose);
+			lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
+		}
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
-		for (VisionObservation observation : getFilteredVisionObservations()) {
-			linearFilterX.calculate(observation.visionPose().getX());
-			linearFilterY.calculate(observation.visionPose().getY());
-		}
-		Pose2d visionPose = new Pose2d(linearFilterX.lastValue(), linearFilterY.lastValue(), poseEstimator.getEstimatedPose().getRotation());
-		Pose2d estimatedPose = poseEstimator.getEstimatedPose();
-		Pose3d limelightPosition = new Pose3d(
-			visionPose.getX(),
-			visionPose.getY(),
-			0,
-			new Rotation3d(0, 0, visionPose.getRotation().getRadians())
-		);
-		Pose3d estimatedPose3d = new Pose3d(
-			estimatedPose.getX(),
-			estimatedPose.getY(),
-			0,
-			new Rotation3d(0, 0, estimatedPose.getRotation().getRadians())
-		);
-		Transform3d transformDifference = limelightPosition.minus(estimatedPose3d);
-		Rotation3d rotationDifference = limelightPosition.getRotation().minus(estimatedPose3d.getRotation());
-		boolean is = transformDifference.getTranslation().getNorm() <= LimeLightConstants.POSITION_NORM_TOLERANCE
-			&& LimelightFilters.getRotationNorm(rotationDifference) <= LimeLightConstants.ROTATION_NORM_TOLERANCE;
-
-		if (!is) {
-			((GBPoseEstimator) poseEstimator).resetPoseByLimelight();
-			linearFilterX.reset();
-			linearFilterY.reset();
-		}
+//		System.out.println("YES!------------\n----------------");
+//		correctPoseEstimation();
 	}
 
 }

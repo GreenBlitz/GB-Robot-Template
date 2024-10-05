@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum WristState {
 
 	IN_ARM(Rotation2d.fromDegrees(0)),
-	ARM_INTAKE(Rotation2d.fromDegrees(-63)),
+	ARM_INTAKE(Rotation2d.fromDegrees(-68)),
 	PRE_TRAP(Rotation2d.fromDegrees(90)),
 	TRAP(Rotation2d.fromDegrees(180));
 

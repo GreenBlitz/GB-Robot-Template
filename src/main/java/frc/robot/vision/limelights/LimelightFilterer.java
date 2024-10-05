@@ -15,13 +15,15 @@ public class LimelightFilterer extends GBSubsystem {
 
 	private final MultiLimelightsRawData multiLimelightsRawData;
 	private final IPoseEstimator poseEstimator;
+    private double lastSuccessfulObservationTime;
 
-	public LimelightFilterer(LimelightFiltererConfig config, IPoseEstimator poseEstimator) {
+    public LimelightFilterer(LimelightFiltererConfig config, IPoseEstimator poseEstimator) {
 		super(config.logPath());
 
 		this.multiLimelightsRawData = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
 		this.poseEstimator = poseEstimator;
-	}
+        this.lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
+    }
 
 	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
 		multiLimelightsRawData.updateGyroAngles(gyroAnglesValues);
@@ -34,6 +36,10 @@ public class LimelightFilterer extends GBSubsystem {
 			if (keepLimelightData(limelightRawData)) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
+		}
+
+		if (!estimates.isEmpty()) {
+			lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
 		}
 
 		return estimates;
@@ -64,11 +70,11 @@ public class LimelightFilterer extends GBSubsystem {
 	}
 
 	private boolean keepLimelightData(LimelightRawData limelightRawData) {
-//		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
-		return LimelightFilters.isLimelightOutputInTolerance(limelightRawData, poseEstimator.getEstimatedPose());
-//			&& LimelightFilters.isRollZero(limelightRawData)
-//			&& LimelightFilters.isPitchZero(limelightRawData)
-//			&& LimelightFilters.isRobotOnGround(limelightRawData);
+		return LimelightFilters.isAprilTagInProperHeight(limelightRawData)
+			&& LimelightFilters.isLimelightOutputInTolerance(limelightRawData, poseEstimator.getEstimatedPose())
+			&& LimelightFilters.isRollZero(limelightRawData)
+			&& LimelightFilters.isPitchZero(limelightRawData)
+			&& LimelightFilters.isRobotOnGround(limelightRawData);
 	}
 
 	public void logEstimatedPositions() {
@@ -82,9 +88,25 @@ public class LimelightFilterer extends GBSubsystem {
 		}
 	}
 
+	public void correctPoseEstimation() {
+		boolean hasTooMuchTimePassed = Logger.getRealTimestamp() / 1.0e6 - lastSuccessfulObservationTime
+			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION;
+		List<VisionObservation> estimates = getAllAvailableLimelightData();
+//		if(!hasTooMuchTimePassed) {
+//			System.out.println("YES!------------\n----------------");
+//		}
+		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
+//			System.out.println("YES!----------");
+			Optional<Pose2d> visionPose = poseEstimator.getVisionPose();
+			visionPose.ifPresent(poseEstimator::resetPose);
+			lastSuccessfulObservationTime = Logger.getRealTimestamp() / 1.0e6;
+		}
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
-		logEstimatedPositions();
+//		System.out.println("YES!------------\n----------------");
+//		correctPoseEstimation();
 	}
 
 }

@@ -25,6 +25,7 @@ public class SuperStructure {
 //		visionObservationFiltered.updateGyroAngles(swerve.getAbsoluteHeading().getDegrees(), 0.01, 0, 0.01, 0, 0.01);
 		visionObservationFiltered.updateGyroAngles(new GyroAngleValues(swerve.getAbsoluteHeading().getDegrees(), 0.01, 0, 0.01, 0, 0.01));
 		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations(), visionObservationFiltered.getFilteredVisionObservations());
+		visionObservationFiltered.correctPoseEstimation();
 //		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
 	}
 

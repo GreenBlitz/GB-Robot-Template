@@ -31,7 +31,6 @@ public class GBPoseEstimator implements IPoseEstimator {
 	private SwerveDriveWheelPositions lastWheelPositions;
 	private Rotation2d lastGyroAngle;
 	private VisionObservation lastVisionObservation;
-	private boolean valueEntered;
 
 	public GBPoseEstimator(
 		SwerveDriveKinematics kinematics,
@@ -63,18 +62,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 	}
 
 	public void resetPoseByLimelight() {
-		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightData();
-		List<VisionObservation> rawData;
-		while (
-			stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION
-				&& !(rawData = limelightFilterer.getAllAvailableLimelightData()).isEmpty()
-		) {
-			if (!stackedRawData.contains(rawData.get(0))) {
-				stackedRawData.addAll(rawData);
-			}
-		}
-		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
-		resetPose(new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation()));
+		getVisionPose().ifPresent(this::resetPose);
 	}
 
 	@Override
@@ -107,7 +95,19 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		return Optional.of(lastVisionObservation.visionPose());
+		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightData();
+		List<VisionObservation> rawData;
+		while (
+			stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_POSE_CALIBRATION
+				&& !(rawData = limelightFilterer.getAllAvailableLimelightData()).isEmpty()
+		) {
+			if (!stackedRawData.contains(rawData.get(0))) {
+				stackedRawData.addAll(rawData);
+			}
+		}
+		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
+		Pose2d visionPose = new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation());
+		return Optional.of(visionPose);
 	}
 
 	@Override
@@ -123,9 +123,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 
 	@Override
 	public void updateVision(List<VisionObservation> visionObservations) {
-		boolean entered = false;
 		for (VisionObservation visionObservation : visionObservations) {
-			entered |= !isObservationTooOld(visionObservation);
 			if (!isObservationTooOld(visionObservation)) {
 				double currentTimeStamp = Logger.getRealTimestamp() / 1.0e6;
 				visionPoseInterpolator.addSample(currentTimeStamp, visionObservation.visionPose());
@@ -142,7 +140,6 @@ public class GBPoseEstimator implements IPoseEstimator {
 				}
 			}
 		}
-		valueEntered = entered;
 	}
 
 	@Override
@@ -174,11 +171,8 @@ public class GBPoseEstimator implements IPoseEstimator {
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
-			Pose2d appliedVisionObservation = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-			appliedVisionObservation = appliedVisionObservation
-				.plus(PoseEstimationMath.useKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
-			estimatedPose = new Pose2d(appliedVisionObservation.getTranslation(), odometryPoseSample.getRotation());
-			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, appliedVisionObservation);
+			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
+			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, estimatedPose);
 		});
 	}
 
@@ -204,9 +198,30 @@ public class GBPoseEstimator implements IPoseEstimator {
 		}
 	}
 
+	private Pose2d weightedPoseMean(List<VisionObservation> observations) {
+		Pose2d output = new Pose2d();
+		double positionDeviationSum = 0;
+		double rotationDeviationSum = 0;
+
+		for (VisionObservation observation : observations) {
+			double positionWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
+			double rotationWeight = Math.pow(observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()], -1);
+			positionDeviationSum += positionWeight;
+			rotationDeviationSum += rotationWeight;
+			output = new Pose2d(
+				output.getX() + observation.visionPose().getX() * positionWeight,
+				output.getY() + observation.visionPose().getY() * positionWeight,
+				output.getRotation().plus(observation.visionPose().getRotation()).times(rotationWeight)
+			);
+		}
+
+		output = new Pose2d(output.getTranslation().div(positionDeviationSum), output.getRotation().div(rotationDeviationSum));
+
+		return output;
+	}
+
 	public void logEstimatedPose() {
 		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "EstimatedPose", getEstimatedPose());
-		Logger.recordOutput(PoseEstimatorConstants.LOG_PATH + "IsLimelightValueEntered", valueEntered);
 	}
 
 }

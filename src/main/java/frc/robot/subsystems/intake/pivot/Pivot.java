@@ -17,7 +17,7 @@ public class Pivot extends GBSubsystem {
 		super(pivotStuff.logPath());
 		this.pivotStuff = pivotStuff;
 		this.motor = pivotStuff.motor();
-		this.commandBuilder = new PivotCommandBuilder();
+		this.commandBuilder = new PivotCommandBuilder(this);
 		this.positionRequest = pivotStuff.positionRequest();
 		this.voltageRequest = pivotStuff.voltageRequest();
 	}
@@ -44,6 +44,10 @@ public class Pivot extends GBSubsystem {
 
 	public void setVoltage(Double voltage) {
 		motor.applyDoubleRequest(voltageRequest.withSetPoint(voltage));
+	}
+
+	public void stop() {
+		motor.stop();
 	}
 
 	public void stayInPlace() {

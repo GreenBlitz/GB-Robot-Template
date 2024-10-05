@@ -3,11 +3,8 @@ package frc.robot.constants;
 
 import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj.PowerDistribution;
-<<<<<<< HEAD
-=======
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
->>>>>>> subsystems-dev
 import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
 
@@ -18,9 +15,6 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-<<<<<<< HEAD
-	public static final SparkMaxDeviceID PIVOT_MOTOR_ID = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
-=======
 	public static final Phoenix6DeviceID PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 
 	public static class TalonFXIDs {
@@ -59,7 +53,8 @@ public class IDs {
 
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
+		public static final SparkMaxDeviceID PIVOT = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
+
 	}
->>>>>>> subsystems-dev
 
 }

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.intake.pivot.factory;
 
-import com.revrobotics.CANSparkMax;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
@@ -20,17 +20,20 @@ public class RealPivotConstants {
 
 	private static final double GEAR_RATIO = 1;
 
-	private static final SimpleMotorFeedforward FEEDFORWARD_CALCULATOR = new SimpleMotorFeedforward(0, 0, 0);
+	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0, 0);
 
 	//@formatter:off
-	private static final Function<CANSparkMax, Double> FEEDFORWARD_FUNCTION =
-			canSparkMax -> FEEDFORWARD_CALCULATOR.calculate(canSparkMax.getAbsoluteEncoder().getVelocity());
+	private static final Function<Rotation2d, Double> FEEDFORWARD_FUNCTION =
+			position -> FEEDFORWARD_CALCULATOR.calculate(position.getRadians(), 0);
 	//@formatter:on
 
 	public static PivotStuff generatePivotStuff() {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.PIVOT_MOTOR_ID);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.PIVOT);
 		sparkMaxWrapper.getAbsoluteEncoder().setPositionConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getAbsoluteEncoder().setVelocityConversionFactor(GEAR_RATIO);
+		sparkMaxWrapper.getPIDController().setP(1);
+		sparkMaxWrapper.getPIDController().setI(0);
+		sparkMaxWrapper.getPIDController().setD(0);
 
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(PivotConstants.LOG_PATH, sparkMaxWrapper, config);

@@ -12,9 +12,7 @@ public class WristStateHandler {
 	}
 
 	public Command setState(WristState state) {
-		return wrist.getCommandsBuilder()
-			.moveToPosition(state.getPosition())
-			.until(() -> wrist.isAtPosition(state.getPosition(), Tolerances.WRIST_POSITION_TOLERANCE));
+		return wrist.getCommandsBuilder().moveToPosition(state.getPosition());
 	}
 
 }

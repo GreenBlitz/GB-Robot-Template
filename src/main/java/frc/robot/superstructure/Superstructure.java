@@ -269,7 +269,7 @@ public class Superstructure {
 	}
 	
 	private Command trap(){
-		return wristStateHandler.setState(WristState.TRAP).andThen(rollerStateHandler.setState(RollerState.ROLL_IN));
+		return wristStateHandler.setState(WristState.TRAP).alongWith(rollerStateHandler.setState(RollerState.ROLL_IN));
 	}
 	
 	private Command preClimb(){

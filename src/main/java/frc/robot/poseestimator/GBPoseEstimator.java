@@ -105,7 +105,7 @@ public class GBPoseEstimator implements IPoseEstimator {
 				stackedRawData.addAll(rawData);
 			}
 		}
-		Pose2d pose2d = PoseEstimationMath.weightedPoseMean(stackedRawData);
+		Pose2d pose2d = weightedPoseMean(stackedRawData);
 		Pose2d visionPose = new Pose2d(pose2d.getX(), pose2d.getY(), odometryPose.getRotation());
 		return Optional.of(visionPose);
 	}

@@ -252,7 +252,7 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					rollerStateHandler.setState(RollerState.STOP),
-					intakeStateHandler.setState(IntakeState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP)
 				)
 			),
 			pivotStateHandler.setState(PivotState.IDLE),

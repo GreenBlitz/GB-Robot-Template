@@ -11,24 +11,20 @@ import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.structures.SuperStructureConstants;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-import frc.utils.GBSubsystem;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 
 public class Swerve extends GBSubsystem {
-
-	public static final Lock ODOMETRY_LOCK = new ReentrantLock();
 
 	private final SwerveConstants constants;
 	private final Modules modules;
@@ -78,11 +74,6 @@ public class Swerve extends GBSubsystem {
 		return stateHelper;
 	}
 
-	@Override
-	public String getLogPath() {
-		return constants.logPath();
-	}
-
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
 		PathPlannerUtils.configurePathPlanner(
@@ -122,7 +113,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public void updateState() {
+	public void updateStatus() {
 		updateInputs();
 		logState();
 		logFieldRelativeVelocities();
@@ -130,12 +121,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		ODOMETRY_LOCK.lock();
-		{
-			gyro.updateSignals(gyroStuff.yawSignal());
-			modules.logStatus();
-		}
-		ODOMETRY_LOCK.unlock();
+		gyro.updateSignals(gyroStuff.yawSignal());
+		modules.updateInputs();
 	}
 
 	private void logState() {
@@ -181,7 +168,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(headingSupplier.get().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 

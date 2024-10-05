@@ -53,7 +53,6 @@ public class GBPoseEstimator implements IPoseEstimator {
 			PoseEstimatorConstants.VISION_LINEAR_FILTER.FILTER_TYPE,
 			PoseEstimatorConstants.VISION_LINEAR_FILTER.SAMPLE_COUNT
 		);
-		this.valueEntered = false;
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
 

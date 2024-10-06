@@ -40,10 +40,10 @@ public class Robot {
 			GyroFactory.create(SwerveType.SWERVE)
 		);
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.pivot = new Pivot(PivotFactory.create());
 
 		this.superstructure = new Superstructure(this);
 		configureBindings();
-		this.pivot = new Pivot(PivotFactory.create());
 	}
 
 	private void configureBindings() {

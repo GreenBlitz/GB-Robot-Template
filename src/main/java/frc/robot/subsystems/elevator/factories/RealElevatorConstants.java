@@ -61,13 +61,12 @@ public class RealElevatorConstants {
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> motorPosition = () -> sparkMaxWrapper.getEncoder().getPosition();
-		SuppliedAngleSignal motorPositionSignal = new SuppliedAngleSignal(motorName+ " angle", motorPosition, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal motorPositionSignal = new SuppliedAngleSignal(motorName + " angle", motorPosition, AngleUnit.ROTATIONS);
 
 		Supplier<Double> motorsVoltage = sparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("main motor voltage", motorsVoltage);
 
 		return new ElevatorMotorStuff(motor, motorVoltageSignal, motorPositionSignal);
-
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
@@ -86,7 +85,11 @@ public class RealElevatorConstants {
 		);
 
 		ElevatorMotorStuff firstMotorStuff = generateMotorStuff(logPath + "firstMotor", "first motor", IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR);
-		ElevatorMotorStuff secondMotorStuff = generateMotorStuff(logPath + "secondMotor", "second motor", IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR);
+		ElevatorMotorStuff secondMotorStuff = generateMotorStuff(
+			logPath + "secondMotor",
+			"second motor",
+			IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR
+		);
 
 		return new ElevatorStuff(logPath, angleRequest, limitSwitch, firstMotorStuff, secondMotorStuff);
 	}

@@ -8,9 +8,9 @@ import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.robot.subsystems.intake.IntakeRollerConstant;
 import frc.robot.subsystems.intake.IntakeRollerStuff;
 import java.util.function.BooleanSupplier;
-import static frc.robot.subsystems.intake.IntakeRollerConstant.GEAR_RATIO;
 
 public class IntakeRollerRealConstant {
 
@@ -28,8 +28,8 @@ public class IntakeRollerRealConstant {
 		motor.setInverted(IS_INVERTED);
 		motor.setIdleMode(SparkMaxWrapper.IdleMode.kCoast);
 		motor.setSmartCurrentLimit(CURRENT_LIMIT);
-		motor.getEncoder().setPositionConversionFactor(GEAR_RATIO);
-		motor.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
+		motor.getEncoder().setPositionConversionFactor(IntakeRollerConstant.GEAR_RATIO);
+		motor.getEncoder().setVelocityConversionFactor(IntakeRollerConstant.GEAR_RATIO);
 	}
 
 	public static IntakeRollerStuff generateIntakeRollerStuff(String logPath) {

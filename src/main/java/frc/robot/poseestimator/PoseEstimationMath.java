@@ -99,16 +99,16 @@ public class PoseEstimationMath {
 
 	public static Pose2d weightedPoseMean(List<VisionObservation> observations) {
 		Pose2d poseMean = new Pose2d();
-		double xDeviationSum = 0;
-		double yDeviationSum = 0;
+		double xWeightsSum = 0;
+		double yWeightsSum = 0;
 		double rotationDeviationSum = 0;
 
 		for (VisionObservation observation : observations) {
 			double xWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()];
 			double yWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.Y_VALUE.getEntryValue()];
 			double rotationWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()];
-			xDeviationSum += xWeight;
-			yDeviationSum += yWeight;
+			xWeightsSum += xWeight;
+			yWeightsSum += yWeight;
 			rotationDeviationSum += rotationWeight;
 			poseMean = new Pose2d(
 				poseMean.getX() + observation.robotPose().getX() * xWeight,
@@ -118,7 +118,7 @@ public class PoseEstimationMath {
 		}
 
 		poseMean = new Pose2d(
-			new Translation2d(poseMean.getX() / xDeviationSum, poseMean.getY() / yDeviationSum),
+			new Translation2d(poseMean.getX() / xWeightsSum, poseMean.getY() / yWeightsSum),
 			poseMean.getRotation().div(rotationDeviationSum)
 		);
 

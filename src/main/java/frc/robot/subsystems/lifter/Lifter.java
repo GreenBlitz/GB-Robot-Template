@@ -58,13 +58,13 @@ public class Lifter extends GBSubsystem {
 	private void updateInputs() {
 		motor.updateSignals(lifterStuff.positionSignal());
 		motor.updateSignals(lifterStuff.otherSignals());
-		
+
 		Logger.recordOutput("lifter position", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
-		
 	}
 
 	private double convertToMeters(Rotation2d motorPosition) {
 		return Conversions.angleToDistance(motorPosition, lifterStuff.drumRadius());
 	}
+
 }
 

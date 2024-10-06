@@ -8,7 +8,6 @@ import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.talonsrx.TalonSRXMotor;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerStuff;
-import com.revrobotics.SparkLimitSwitch;
 
 import java.util.function.BooleanSupplier;
 

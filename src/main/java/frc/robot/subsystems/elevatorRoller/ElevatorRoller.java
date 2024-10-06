@@ -29,6 +29,22 @@ public class ElevatorRoller extends GBSubsystem {
 		return commandsBuilder;
 	}
 
+	public boolean isNoteIn() {
+		return elevatorRollerDigitalInputInputs.debouncedValue;
+	}
+
+	protected void stop() {
+		motor.stop();
+	}
+
+	protected void setPower(double power) {
+		motor.setPower(power);
+	}
+
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
+	}
+
 	public void updateInputs() {
 		elevatorRollerDigitalInput.updateInputs(elevatorRollerDigitalInputInputs);
 		motor.updateSignals(elevatorRollerStuff.motorVoltage());
@@ -36,25 +52,9 @@ public class ElevatorRoller extends GBSubsystem {
 		Logger.recordOutput(elevatorRollerStuff.logPath() + "IsNoteInElevatorRoller", isNoteIn());
 	}
 
-	public boolean isNoteIn() {
-		return elevatorRollerDigitalInputInputs.debouncedValue;
-	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-	}
-
-	protected void setPower(double power) {
-		motor.setPower(power);
-	}
-
-	protected void stop() {
-		motor.stop();
-	}
-
-	public void setBrake(boolean brake) {
-		motor.setBrake(brake);
 	}
 
 }

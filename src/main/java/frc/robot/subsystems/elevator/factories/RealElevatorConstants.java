@@ -86,7 +86,11 @@ public class RealElevatorConstants {
 			RealElevatorConstants::feedforwardCalculation
 		);
 
-		ElevatorMotorStuff firstMotorStuff = generateMotorStuff(logPath + "firstMotor", "first motor", IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR);
+		ElevatorMotorStuff firstMotorStuff = generateMotorStuff(
+				logPath + "firstMotor",
+				"first motor",
+				IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR
+		);
 		ElevatorMotorStuff secondMotorStuff = generateMotorStuff(
 			logPath + "secondMotor",
 			"second motor",

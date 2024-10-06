@@ -37,6 +37,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void setPower(double power) {
+		firstMotor.setPower(power);
 		secondMotor.setPower(power);
 	}
 

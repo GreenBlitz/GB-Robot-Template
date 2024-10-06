@@ -31,7 +31,7 @@ public class LimeLightConstants {
 		ROBOT_TO_GROUND_TOLERANCE_METERS
 	);
 
-	public static final double STANDARD_DEVIATION_VISION_DEGREES = 0.6;
+	public static final double VISION_STANDARD_DEVIATION_ANGLES = 0.6;
 
 	public static final double TIME_TO_FIX_POSE_ESTIMATION_SECONDS = 1;
 

@@ -74,7 +74,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			LimeLightConstants.STANDARD_DEVIATION_VISION_DEGREES};
+			LimeLightConstants.VISION_STANDARD_DEVIATION_ANGLES};
 
 		return new VisionObservation(limelightRawData.estimatedPose().toPose2d(), standardDeviations, limelightRawData.timestamp());
 	}

@@ -15,15 +15,15 @@ public class Elevator extends GBSubsystem {
 	private final IRequest<Rotation2d> angleRequest;
 
 	private final ElevatorStuff elevatorStuff;
-	private final ControllableMotor firstMotor;
-	private final ControllableMotor secondMotor;
+	private final ControllableMotor frontMotor;
+	private final ControllableMotor backwardMotor;
 	private final IDigitalInput limitSwitch;
 
 	public Elevator(ElevatorStuff elevatorStuff) {
 		super(elevatorStuff.logPath());
 
-		this.firstMotor = elevatorStuff.firstMotorStuff().motor();
-		this.secondMotor = elevatorStuff.secondMotorStuff().motor();
+		this.frontMotor = elevatorStuff.frontMotorStuff().motor();
+		this.backwardMotor = elevatorStuff.backwardMotorStuff().motor();
 		this.limitSwitch = elevatorStuff.digitalInput();
 
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
@@ -37,23 +37,23 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void setPower(double power) {
-		firstMotor.setPower(power);
-		secondMotor.setPower(power);
+		frontMotor.setPower(power);
+		backwardMotor.setPower(power);
 	}
 
 	public void stop() {
-		firstMotor.stop();
-		secondMotor.stop();
+		frontMotor.stop();
+		backwardMotor.stop();
 	}
 
 	public void setBrake(boolean brake) {
-		firstMotor.setBrake(brake);
-		secondMotor.setBrake(brake);
+		frontMotor.setBrake(brake);
+		backwardMotor.setBrake(brake);
 	}
 
 	public void setTargetAngle(Rotation2d angle) {
-		firstMotor.applyAngleRequest(angleRequest.withSetPoint(angle));
-		secondMotor.applyAngleRequest(angleRequest.withSetPoint(angle));
+		frontMotor.applyAngleRequest(angleRequest.withSetPoint(angle));
+		backwardMotor.applyAngleRequest(angleRequest.withSetPoint(angle));
 	}
 
 	public boolean isAtBackwardLimit() {
@@ -62,14 +62,14 @@ public class Elevator extends GBSubsystem {
 
 	public Rotation2d getElevatorPosition() {
 		return Rotation2d.fromRotations(
-			(elevatorStuff.firstMotorStuff().motorPositionSignal().getLatestValue().getRotations()
-				+ elevatorStuff.secondMotorStuff().motorPositionSignal().getLatestValue().getRotations()) / 2
+			(elevatorStuff.frontMotorStuff().motorPositionSignal().getLatestValue().getRotations()
+				+ elevatorStuff.backwardMotorStuff().motorPositionSignal().getLatestValue().getRotations()) / 2
 		);
 	}
 
 	public void stayInPlace() {
-		firstMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.firstMotorStuff().motorPositionSignal().getLatestValue()));
-		secondMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.secondMotorStuff().motorPositionSignal().getLatestValue()));
+		frontMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.frontMotorStuff().motorPositionSignal().getLatestValue()));
+		backwardMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.backwardMotorStuff().motorPositionSignal().getLatestValue()));
 	}
 
 	public double rotationsToMeters(Rotation2d rotations) {
@@ -78,8 +78,8 @@ public class Elevator extends GBSubsystem {
 
 	public void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
-		firstMotor.updateSignals(elevatorStuff.firstMotorStuff().motorPositionSignal(), elevatorStuff.firstMotorStuff().voltageSignal());
-		secondMotor.updateSignals(elevatorStuff.secondMotorStuff().motorPositionSignal(), elevatorStuff.secondMotorStuff().voltageSignal());
+		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().motorPositionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
+		backwardMotor.updateSignals(elevatorStuff.backwardMotorStuff().motorPositionSignal(), elevatorStuff.backwardMotorStuff().voltageSignal());
 	}
 
 	public void logState() {

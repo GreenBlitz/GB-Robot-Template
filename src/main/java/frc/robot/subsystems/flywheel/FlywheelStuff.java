@@ -11,6 +11,8 @@ public record FlywheelStuff(
 	ControllableMotor leftFlywheel,
 	IRequest<Rotation2d> rightFlywheelVelocityRequest,
 	IRequest<Rotation2d> leftFlywheelVelocityRequest,
+	IRequest<Double> rightVoltageRequest,
+	IRequest<Double> leftVoltageRequest,
 	InputSignal<Rotation2d> rightVelocitySignal,
 	InputSignal<Rotation2d> leftVelocitySignal,
 	InputSignal[] rightSignals,

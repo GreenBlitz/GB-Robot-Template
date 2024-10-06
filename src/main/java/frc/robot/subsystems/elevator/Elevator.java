@@ -79,7 +79,8 @@ public class Elevator extends GBSubsystem {
 	public void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
 		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().motorPositionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
-		backwardMotor.updateSignals(elevatorStuff.backwardMotorStuff().motorPositionSignal(), elevatorStuff.backwardMotorStuff().voltageSignal());
+		backwardMotor
+			.updateSignals(elevatorStuff.backwardMotorStuff().motorPositionSignal(), elevatorStuff.backwardMotorStuff().voltageSignal());
 	}
 
 	public void logState() {

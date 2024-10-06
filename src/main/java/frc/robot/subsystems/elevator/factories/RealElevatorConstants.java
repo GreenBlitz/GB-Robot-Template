@@ -2,7 +2,6 @@ package frc.robot.subsystems.elevator.factories;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.SparkLimitSwitch;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -64,7 +63,7 @@ public class RealElevatorConstants {
 		Supplier<Double> motorsVoltage = sparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("main motor voltage", motorsVoltage);
 
-		return new Pair<>(new ElevatorMotorStuff(motor, motorVoltageSignal, motorPositionSignal), sparkMaxWrapper);
+		return new ElevatorMotorStuff(motor, motorVoltageSignal, motorPositionSignal);
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
@@ -73,16 +72,8 @@ public class RealElevatorConstants {
 		configureMotor(frontMotorWrapper);
 		configureMotor(backwardMotorWrapper);
 
-		ElevatorMotorStuff frontMotorStuff = generateMotor(
-				logPath + "frontMotor",
-				"first motor",
-				frontMotorWrapper
-		);
-		ElevatorMotorStuff backwardMotorStuff = generateMotor(
-				logPath + "secondMotor",
-				"second motor",
-				backwardMotorWrapper
-		);
+		ElevatorMotorStuff frontMotorStuff = generateMotor(logPath + "frontMotor", "first motor", frontMotorWrapper);
+		ElevatorMotorStuff backwardMotorStuff = generateMotor(logPath + "secondMotor", "second motor", backwardMotorWrapper);
 
 		BooleanSupplier atLimitSwitch = () -> frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);

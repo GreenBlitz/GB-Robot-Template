@@ -23,7 +23,15 @@ public record ElevatorStuff(
 		ElevatorMotorStuff backwardMotorStuff,
 		double rotationsToMetersConversionRatio
 	) {
-		this(logPath, logPath + "limitSwitch", angleRequest, digitalInput, frontMotorStuff, backwardMotorStuff, rotationsToMetersConversionRatio);
+		this(
+			logPath,
+			logPath + "limitSwitch",
+			angleRequest,
+			digitalInput,
+			frontMotorStuff,
+			backwardMotorStuff,
+			rotationsToMetersConversionRatio
+		);
 	}
 
 }

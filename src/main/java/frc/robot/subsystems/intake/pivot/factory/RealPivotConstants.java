@@ -24,7 +24,7 @@ public class RealPivotConstants {
 
 	//@formatter:off
 	private static final Function<Rotation2d, Double> FEEDFORWARD_FUNCTION =
-			position -> FEEDFORWARD_CALCULATOR.calculate(position.getRadians(), 0);
+		position -> FEEDFORWARD_CALCULATOR.calculate(position.getRadians(), 0);
 	//@formatter:on
 
 	public static PivotStuff generatePivotStuff() {

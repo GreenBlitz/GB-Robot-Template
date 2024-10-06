@@ -1,13 +1,16 @@
 package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.constants.Field;
 
 public class LimelightFilters {
 
-	protected static boolean
-		keepLimelightData(LimelightRawData limelightRawData, Pose2d currentEstimatedPose, LimelightFiltersTolerances tolerances) {
-		return LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters())
+	protected static boolean keepLimelightData(
+		LimelightRawData limelightRawData,
+		Pose2d currentEstimatedPose,
+		double aprilTagHeightMeters,
+		LimelightFiltersTolerances tolerances
+	) {
+		return LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
 			&& LimelightFilters.isLimelightOutputInTolerance(
 				limelightRawData,
 				currentEstimatedPose,
@@ -49,8 +52,9 @@ public class LimelightFilters {
 		return Math.abs(limelightRawData.estimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
 	}
 
-	protected static boolean isAprilTagInProperHeight(LimelightRawData limelightRawData, double aprilTagHeightToleranceMeters) {
-		double aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - Field.APRIL_TAG_HEIGHT_METERS);
+	protected static boolean
+		isAprilTagInProperHeight(LimelightRawData limelightRawData, double aprilTagHeightToleranceMeters, double aprilTagHeightMeters) {
+		double aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - aprilTagHeightMeters);
 		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
 	}
 

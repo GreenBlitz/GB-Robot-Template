@@ -14,6 +14,7 @@ import java.util.function.Function;
 public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer {
 
 	private final MultiLimelights multiLimelights;
+	private final LimelightFiltererConfig config;
 	private double lastSuccessfulObservationTime;
 	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
@@ -21,6 +22,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		super(config.logPath());
 
 		this.multiLimelights = new MultiLimelights(config.limelightsNames(), config.hardwareLogPath());
+		this.config = config;
 		this.lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
 	}
 
@@ -43,6 +45,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 				LimelightFilters.keepLimelightData(
 					limelightRawData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
+					config.aprilTagHeightMeters(),
 					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
 				)
 			) {
@@ -91,15 +94,15 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	}
 
 	@Override
-	public boolean correctPoseEstimation() {
+	public boolean isPoseEstimationCorrect() {
 		boolean hasTooMuchTimePassed = Conversions.microSecondsToSeconds(Logger.getRealTimestamp()) - lastSuccessfulObservationTime
 			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION_SECONDS;
 		List<VisionObservation> estimates = getAllAvailableLimelightData();
 		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
 			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	@Override

@@ -23,11 +23,14 @@ import static edu.wpi.first.units.Units.Volts;
 public class RealFlywheelConstants {
 
 	private static final double kS = 3;
-	private static final double kV = 3;
-	private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
-	private static final Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
-	private static final double CONVERSION_FACTOR = 1 / 1;
 
+	private static final double kV = 3;
+
+	private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
+
+	private static final Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
+
+	private static final double GEAR_RATIO = 1 / 1;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -52,7 +55,7 @@ public class RealFlywheelConstants {
 	public static FlywheelComponents generateFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
-		configMotor(sparkMaxWrapper, isInverted, CONVERSION_FACTOR);
+		configMotor(sparkMaxWrapper, isInverted, GEAR_RATIO);
 
 		SysIdRoutine.Config config = generateSysidConfig();
 

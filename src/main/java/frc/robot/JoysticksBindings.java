@@ -37,6 +37,7 @@ public class JoysticksBindings {
 					)
 			);
 		usedJoystick.A.onTrue(robot.getElevator().getCommandBuilder().setPower(0.2));
+		usedJoystick.B.onTrue(robot.getElevator().getCommandBuilder().stop());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

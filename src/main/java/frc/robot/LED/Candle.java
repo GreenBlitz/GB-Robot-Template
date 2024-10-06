@@ -93,24 +93,4 @@ public class Candle implements ILED, ILogicLED {
         this.caNdle.animate(this.twinkleOffAnimation);
     }
 
-    public void setColorAccordingToState(RobotStates robotStates) {
-        switch (robotStates) {
-            case STATE1: {
-                this.RainbowAnimation();
-                break;
-            }
-            case STATE2:{
-                this.ColorFlowAnimation();
-                break;
-            }
-            case STATE3:{
-                this.FireAnimation();
-                break;
-            }
-            default:{
-                this.turnOff();
-                break;
-            }
-        }
-    }
 }

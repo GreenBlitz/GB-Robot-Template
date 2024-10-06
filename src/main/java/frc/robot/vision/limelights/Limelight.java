@@ -38,7 +38,15 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public void updateLimelight() {
-		robotOrientationEntry.setDoubleArray(gyroAngleValues.getAsArray());
+		robotOrientationEntry.setDoubleArray(
+			new double[] {
+				gyroAngleValues.yaw(),
+				gyroAngleValues.yawRate(),
+				gyroAngleValues.pitch(),
+				gyroAngleValues.pitchRate(),
+				gyroAngleValues.roll(),
+				gyroAngleValues.rollRate(),}
+		);
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 	}

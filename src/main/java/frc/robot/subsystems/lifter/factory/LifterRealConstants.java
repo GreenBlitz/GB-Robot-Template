@@ -20,57 +20,47 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class LifterRealConstants {
 
-    private static final double DRUM_RADIUS = inchesToMeters(0.96);
-    private static final int MOTOR_CONFIGURATION_TRIES = 5;
-    private static final double DEBOUNCE_TIME = 0.05;
+	private static final double DRUM_RADIUS = inchesToMeters(0.96);
+	private static final int MOTOR_CONFIGURATION_TRIES = 5;
+	private static final double DEBOUNCE_TIME = 0.05;
 
-    private static TalonFXConfiguration generateMotorConfiguration() {
-        TalonFXConfiguration configuration = new TalonFXConfiguration();
+	private static TalonFXConfiguration generateMotorConfiguration() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-        configuration.Feedback.SensorToMechanismRatio = 7 * (60.0 / 24.0);
-
-
-        return configuration;
-    }
+		configuration.Feedback.SensorToMechanismRatio = 7 * (60.0 / 24.0);
 
 
-    private static SysIdRoutine.Config generateSysidConfig() {
-        return new SysIdRoutine.Config(
-                Volts.of(1).per(Seconds.of(1)),
-                Volts.of(7),
-                Seconds.of(10),
-                (state) -> SignalLogger.writeString("state", state.toString())
-        );
-    }
+		return configuration;
+	}
 
-    protected static IDigitalInput generateLimitSwitch(String logPath) {
-        return new ChanneledDigitalInput(
-                IDs.DigitalInputsIDs.LIFTER_LIMIT_SWITCH,
-                DEBOUNCE_TIME,
-                true
-        );
-    }
 
-    protected static LifterStuff generateLifterStuff(String logPath) {
-        TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
-        if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
-            new Alert(Alert.AlertType.ERROR, logPath + "lifter motor was not configured").report();
-        }
+	private static SysIdRoutine.Config generateSysidConfig() {
+		return new SysIdRoutine.Config(
+			Volts.of(1).per(Seconds.of(1)),
+			Volts.of(7),
+			Seconds.of(10),
+			(state) -> SignalLogger.writeString("state", state.toString())
+		);
+	}
 
-        return new LifterStuff(
-                logPath,
-                new TalonFXMotor(
-                        logPath,
-                        talonFXWrapper,
-                        generateSysidConfig()
-                ),
-                generateLimitSwitch(logPath + "limitSwitch/"),
-                DRUM_RADIUS,
-                Phoenix6SignalBuilder.generatePhoenix6Signal(
-                        talonFXWrapper.getPosition(),
-                        GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-                        AngleUnit.ROTATIONS
-                )
-        );
-    }
+	protected static IDigitalInput generateLimitSwitch(String logPath) {
+		return new ChanneledDigitalInput(IDs.DigitalInputsIDs.LIFTER_LIMIT_SWITCH, DEBOUNCE_TIME, true);
+	}
+
+	protected static LifterStuff generateLifterStuff(String logPath) {
+		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
+		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
+			new Alert(Alert.AlertType.ERROR, logPath + "lifter motor was not configured").report();
+		}
+
+		return new LifterStuff(
+			logPath,
+			new TalonFXMotor(logPath, talonFXWrapper, generateSysidConfig()),
+			generateLimitSwitch(logPath + "limitSwitch/"),
+			DRUM_RADIUS,
+			Phoenix6SignalBuilder
+				.generatePhoenix6Signal(talonFXWrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
+		);
+	}
+
 }

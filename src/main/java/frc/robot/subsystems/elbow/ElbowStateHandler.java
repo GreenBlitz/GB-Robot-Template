@@ -15,7 +15,7 @@ public class ElbowStateHandler {
 		if (elbowState == ElbowState.MANUAL) {
 			return new InstantCommand();
 		}
-		if(elbowState == ElbowState.FREE){
+		if (elbowState == ElbowState.FREE) {
 			return elbow.getCommandsBuilder().setPower(() -> 0).alongWith(new InstantCommand(() -> elbow.setBrake(false)));
 		}
 		return elbow.getCommandsBuilder().moveToAngle(elbowState.getTargetPosition()).alongWith(new InstantCommand(() -> elbow.setBrake(false)));

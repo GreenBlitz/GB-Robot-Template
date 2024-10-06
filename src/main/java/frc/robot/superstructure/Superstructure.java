@@ -39,7 +39,7 @@ public class Superstructure {
 	private final RollerStateHandler rollerStateHandler;
 	private final WristStateHandler wristStateHandler;
 	private final ClimbStateHandler climbStateHandler;
-	
+
 	private RobotState currentState;
 
 	public Superstructure(Robot robot) {
@@ -52,10 +52,7 @@ public class Superstructure {
 		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
 		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
 		this.wristStateHandler = new WristStateHandler(robot.getWrist());
-		this.climbStateHandler = new ClimbStateHandler(
-				new LifterStateHandler(robot.getLifter()),
-				new SolenoidStateHandler(robot.getSolenoid())
-		);
+		this.climbStateHandler = new ClimbStateHandler(new LifterStateHandler(robot.getLifter()), new SolenoidStateHandler(robot.getSolenoid()));
 	}
 
 	public RobotState getCurrentState() {
@@ -267,19 +264,19 @@ public class Superstructure {
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);
 	}
-	
+
 	private Command trap(){
 		return wristStateHandler.setState(WristState.TRAP).alongWith(rollerStateHandler.setState(RollerState.ROLL_IN));
 	}
-	
+
 	private Command preClimb(){
 		return elbowStateHandler.setState(ElbowState.CLIMB).alongWith(wristStateHandler.setState(WristState.PRE_TRAP).alongWith(climbStateHandler.setState(ClimbState.EXTEND)));
 	}
-	
+
 	private Command climb(){
 		return elbowStateHandler.setState(ElbowState.FREE).alongWith(climbStateHandler.setState(ClimbState.RETRACT));
 	}
-	
+
 	private Command transferArmToShooter() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(

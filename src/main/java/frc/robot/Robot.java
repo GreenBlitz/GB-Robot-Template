@@ -63,7 +63,7 @@ public class Robot {
 
 
 	private final Superstructure superstructure;
-	
+
 	public Robot() {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),

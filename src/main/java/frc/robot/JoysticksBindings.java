@@ -25,24 +25,26 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		robot.getSwerve().setDefaultCommand(
-				robot.getSwerve().getCommandsBuilder().driveBySavedState(
+		robot.getSwerve()
+			.setDefaultCommand(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveBySavedState(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-				)
-		);
+					)
+			);
 		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
-		
+
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_CLIMB));
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB));
 		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.TRAP));
-		
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

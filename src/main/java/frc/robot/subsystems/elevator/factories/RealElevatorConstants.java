@@ -35,6 +35,8 @@ public class RealElevatorConstants {
 	// TODO: check this later
 	private final static Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
+	private final static double ROTATIONS_TO_METERS_CONVERTION_RATIO = 1;
+
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
 	public static ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
@@ -91,7 +93,7 @@ public class RealElevatorConstants {
 			IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR
 		);
 
-		return new ElevatorStuff(logPath, angleRequest, limitSwitch, firstMotorStuff, secondMotorStuff);
+		return new ElevatorStuff(logPath, angleRequest, limitSwitch, firstMotorStuff, secondMotorStuff, ROTATIONS_TO_METERS_CONVERTION_RATIO);
 	}
 
 }

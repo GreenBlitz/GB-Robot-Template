@@ -11,7 +11,8 @@ public record ElevatorStuff(
 	IRequest<Rotation2d> angleRequest,
 	IDigitalInput digitalInput,
 	ElevatorMotorStuff firstMotorStuff,
-	ElevatorMotorStuff secondMotorStuff
+	ElevatorMotorStuff secondMotorStuff,
+	double rotationsToMetersConversionRatio
 ) {
 
 	public ElevatorStuff(
@@ -19,9 +20,10 @@ public record ElevatorStuff(
 		IRequest<Rotation2d> angleRequest,
 		IDigitalInput digitalInput,
 		ElevatorMotorStuff firstMotorStuff,
-		ElevatorMotorStuff secondMotorStuff
+		ElevatorMotorStuff secondMotorStuff,
+		double rotationsToMetersConversionRatio
 	) {
-		this(logPath, logPath + "limitSwitch", angleRequest, digitalInput, firstMotorStuff, secondMotorStuff);
+		this(logPath, logPath + "limitSwitch", angleRequest, digitalInput, firstMotorStuff, secondMotorStuff, rotationsToMetersConversionRatio);
 	}
 
 }

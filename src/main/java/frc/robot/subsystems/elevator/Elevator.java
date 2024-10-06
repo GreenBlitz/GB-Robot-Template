@@ -59,9 +59,17 @@ public class Elevator extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
+	public Rotation2d getElevatorPosition() {
+		return Rotation2d.fromRotations((elevatorStuff.firstMotorStuff().motorPositionSignal().getLatestValue().getRotations() + elevatorStuff.secondMotorStuff().motorPositionSignal().getLatestValue().getRotations()) / 2)
+	}
+
 	public void stayInPlace() {
 		firstMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.firstMotorStuff().motorPositionSignal().getLatestValue()));
 		secondMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.secondMotorStuff().motorPositionSignal().getLatestValue()));
+	}
+
+	public double rotationsToMeters(Rotation2d rotations) {
+		return rotations.getRotations() * ElevatorConstants.GEAR_RATIO * elevatorStuff.rotationsToMetersConversionRatio();
 	}
 
 	public void updateInputs() {
@@ -70,11 +78,16 @@ public class Elevator extends GBSubsystem {
 		secondMotor.updateSignals(elevatorStuff.secondMotorStuff().motorPositionSignal(), elevatorStuff.secondMotorStuff().voltageSignal());
 	}
 
+	public void logState() {
+		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
+		Logger.recordOutput(this.getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
+		Logger.recordOutput(this.getLogPath() + "elevatorPosition", rotationsToMeters(getElevatorPosition()));
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
-		Logger.recordOutput(this.getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
+		logState();
 	}
 
 }

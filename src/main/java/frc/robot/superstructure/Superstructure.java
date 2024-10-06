@@ -55,72 +55,73 @@ public class Superstructure {
 	//@formatter:off
 	public Command idle() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				funnelStateHandler.setState(FunnelState.STOP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			funnelStateHandler.setState(FunnelState.STOP)
 		);
 	}
 
 	public Command intake() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
-				funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
+			funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
 		);
 	}
 
 	public Command preSpeaker() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
-				funnelStateHandler.setState(FunnelState.STOP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
+			funnelStateHandler.setState(FunnelState.STOP)
 		);
 	}
 
 	public Command speaker() {
 		return new ParallelCommandGroup(
-				funnelStateHandler.setState(FunnelState.SPEAKER),
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
+			funnelStateHandler.setState(FunnelState.SPEAKER),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		);
 	}
 
 	public Command preAmp() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
-				funnelStateHandler.setState(FunnelState.STOP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
+			funnelStateHandler.setState(FunnelState.STOP)
 		);
 	}
 
 	public Command amp() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
-						.until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
-				funnelStateHandler.setState(FunnelState.AMP)
+			swerve.getCommandsBuilder()
+				.saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
+				.until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
+			funnelStateHandler.setState(FunnelState.AMP)
 		);
 	}
 
 	public Command transferShooterElevator() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR)
 		);
 	}
 
 	public Command transferElevatorShooter() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
 		);
 	}
 
 	public Command intakeOuttake() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE)
 		);
 	}
 
 	public Command shooterOuttake() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE)
 		).until(() -> !isNoteInShooter());
 	}
 	//@formatter:on

@@ -22,7 +22,7 @@ public class IntakeRollerCommandsBuilder {
 			interrupted -> intakeRoller.stop(),
 			() -> false,
 			intakeRoller
-		).withName("set power: " + power);
+		).withName("set power to : " + power);
 	}
 
 	public Command setPower(DoubleSupplier power) {
@@ -41,4 +41,3 @@ public class IntakeRollerCommandsBuilder {
 	}
 
 }
-

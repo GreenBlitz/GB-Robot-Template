@@ -16,6 +16,7 @@ public class IntakeRoller extends GBSubsystem {
 
 	public IntakeRoller(IntakeRollerStuff intakeRollerStuff) {
 		super(intakeRollerStuff.logPath());
+
 		this.motor = intakeRollerStuff.motor();
 		this.beamBreaker = intakeRollerStuff.digitalInput();
 		this.intakeRollerStuff = intakeRollerStuff;

@@ -224,7 +224,6 @@ public class Superstructure {
 				).until(() -> robot.getElbow().isAtAngle(ElbowState.PRE_AMP.getTargetPosition(), Tolerances.ELBOW_POSITION)),
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
-					rollerStateHandler.setState(RollerState.STOP),
 					intakeStateHandler.setState(IntakeState.STOP)
 				)
 			),

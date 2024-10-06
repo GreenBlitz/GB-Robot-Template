@@ -28,7 +28,7 @@ public class RealElevatorRollerConstants {
 		TalonSRX talonSRX = new TalonSRX(IDs.TalonSRXIDs.ELEVATOR_ROLLER);
 		configMotor(talonSRX);
 
-		TalonSRXMotor talonSRXMotor = new TalonSRXMotor(logPath + "srxMotor/", talonSRX, ElevatorRollerConstants.GEAR_RATIO);
+		TalonSRXMotor talonSRXMotor = new TalonSRXMotor(logPath, talonSRX, ElevatorRollerConstants.GEAR_RATIO);
 
 		BooleanSupplier isBeamBroken = () -> talonSRX.getSensorCollection().isRevLimitSwitchClosed();
 		talonSRX.overrideLimitSwitchesEnable(false);

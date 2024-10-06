@@ -12,7 +12,6 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
-import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
@@ -46,21 +45,17 @@ public class RealElevatorConstants {
 		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
 	}
 
-	public static void configureMotors(SparkMaxWrapper mainSparkMaxWrapper, SparkMaxWrapper secondarySparkMaxWrapper, String logPath) {
-		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
-		mainSparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
-		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.GEAR_RATIO);
-		mainSparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
-		mainSparkMaxWrapper.getPIDController().setP(1);
-		mainSparkMaxWrapper.getPIDController().setI(0);
-		mainSparkMaxWrapper.getPIDController().setD(0);
-
-		secondarySparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
-		secondarySparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
+	public static void configureMotor(SparkMaxWrapper sparkMaxWrapper) {
+		sparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
+		sparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
+		sparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.GEAR_RATIO);
+		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
+		sparkMaxWrapper.getPIDController().setP(1);
+		sparkMaxWrapper.getPIDController().setI(0);
+		sparkMaxWrapper.getPIDController().setD(0);
 	}
 
-	public static Pair<ElevatorMotorStuff, SparkMaxWrapper> generateMotor(String logPath, String motorName, SparkMaxDeviceID motorID) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(motorID);
+	public static ElevatorMotorStuff generateMotor(String logPath, String motorName, SparkMaxWrapper sparkMaxWrapper) {
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> motorPosition = () -> sparkMaxWrapper.getEncoder().getPosition();
@@ -73,22 +68,24 @@ public class RealElevatorConstants {
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
+		SparkMaxWrapper frontMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FRONT_MOTOR);
+		SparkMaxWrapper backwardMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR);
+		configureMotor(frontMotorWrapper);
+		configureMotor(backwardMotorWrapper);
 
-		Pair<ElevatorMotorStuff, SparkMaxWrapper> frontMotor = generateMotor(
+		ElevatorMotorStuff frontMotorStuff = generateMotor(
 				logPath + "frontMotor",
 				"first motor",
-				IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR
+				frontMotorWrapper
 		);
-		ElevatorMotorStuff frontMotorStuff = frontMotor.getFirst();
 		ElevatorMotorStuff backwardMotorStuff = generateMotor(
 				logPath + "secondMotor",
 				"second motor",
-				IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR
-		).getFirst();
+				backwardMotorWrapper
+		);
 
-		SparkMaxWrapper sparkMaxWrapper = frontMotor.getSecond();
-		BooleanSupplier atLimitSwitch = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
-		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);
+		BooleanSupplier atLimitSwitch = () -> frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
+		frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);
 		IDigitalInput limitSwitch = new SuppliedDigitalInput(atLimitSwitch, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
 		SparkMaxAngleRequest angleRequest = new SparkMaxAngleRequest(

@@ -58,7 +58,7 @@ public class ElevatorCommandBuilder {
         return new InstantCommand(elevator::stop);
     }
 
-    public Command calibratedFeedForward() {
+    public static Command calibratedFeedForward() {
         double[] oldValues = new double[] {RealElevatorConstants.FEEDFORWARD_CALCULATOR.ka, RealElevatorConstants.FEEDFORWARD_CALCULATOR.kg, RealElevatorConstants.FEEDFORWARD_CALCULATOR.kv, RealElevatorConstants.FEEDFORWARD_CALCULATOR.ks};
         return new ParallelCommandGroup(
                 new LoggedDashboardCommand("ks", (Double newkS) -> RealElevatorConstants.FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(oldValues[0], oldValues[1], oldValues[2], newkS)),

@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator.factories;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.SparkLimitSwitch;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -58,7 +59,7 @@ public class RealElevatorConstants {
 		secondarySparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
 	}
 
-	public static ElevatorMotorStuff generateMotorStuff(String logPath, String motorName, SparkMaxDeviceID motorID) {
+	public static Pair<ElevatorMotorStuff, SparkMaxWrapper> generateMotor(String logPath, String motorName, SparkMaxDeviceID motorID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(motorID);
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
@@ -68,13 +69,24 @@ public class RealElevatorConstants {
 		Supplier<Double> motorsVoltage = sparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("main motor voltage", motorsVoltage);
 
-		return new ElevatorMotorStuff(motor, motorVoltageSignal, motorPositionSignal);
+		return new Pair<>(new ElevatorMotorStuff(motor, motorVoltageSignal, motorPositionSignal), sparkMaxWrapper);
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR);
-		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
+		Pair<ElevatorMotorStuff, SparkMaxWrapper> firstMotor = generateMotor(
+				logPath + "firstMotor",
+				"first motor",
+				IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR
+		);
+		ElevatorMotorStuff firstMotorStuff = firstMotor.getFirst();
+		ElevatorMotorStuff secondMotorStuff = generateMotor(
+				logPath + "secondMotor",
+				"second motor",
+				IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR
+		).getFirst();
+
+		SparkMaxWrapper sparkMaxWrapper = firstMotor.getSecond();
 		BooleanSupplier atLimitSwitch = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);
 		IDigitalInput limitSwitch = new SuppliedDigitalInput(atLimitSwitch, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
@@ -84,17 +96,6 @@ public class RealElevatorConstants {
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
 			ElevatorConstants.ELEVATOR_PID_SLOT,
 			RealElevatorConstants::feedforwardCalculation
-		);
-
-		ElevatorMotorStuff firstMotorStuff = generateMotorStuff(
-				logPath + "firstMotor",
-				"first motor",
-				IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR
-		);
-		ElevatorMotorStuff secondMotorStuff = generateMotorStuff(
-			logPath + "secondMotor",
-			"second motor",
-			IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR
 		);
 
 		return new ElevatorStuff(logPath, angleRequest, limitSwitch, firstMotorStuff, secondMotorStuff, ROTATIONS_TO_METERS_CONVERTION_RATIO);

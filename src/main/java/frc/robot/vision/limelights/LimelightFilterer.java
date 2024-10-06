@@ -13,30 +13,31 @@ import java.util.function.Function;
 
 public class LimelightFilterer extends GBSubsystem {
 
-	private final MultiLimelightsRawData multiLimelightsRawData;
+	private final MultiLimelights multiLimelights;
 	private double lastSuccessfulObservationTime;
 	private final Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
 	public LimelightFilterer(LimelightFiltererConfig config, Function<Double, Pose2d> getEstimatedPoseAtTimestamp) {
 		super(config.logPath());
 
-		this.multiLimelightsRawData = new MultiLimelightsRawData(config.limelightsNames(), config.hardwareLogPath());
+		this.multiLimelights = new MultiLimelights(config.limelightsNames(), config.hardwareLogPath());
 		this.lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
 		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}
 
 	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
-		multiLimelightsRawData.updateGyroAngles(gyroAngleValues);
+		multiLimelights.updateGyroAngles(gyroAngleValues);
 	}
 
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (LimelightRawData limelightRawData : multiLimelightsRawData.getAllAvailableLimelightData()) {
+		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
 			if (
 				LimelightFilters.keepLimelightData(
 					limelightRawData,
-					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
+					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
+					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
 				)
 			) {
 				estimates.add(rawDataToObservation(limelightRawData));
@@ -51,7 +52,7 @@ public class LimelightFilterer extends GBSubsystem {
 	public List<VisionObservation> getAllAvailableLimelightData() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (LimelightRawData limelightRawData : multiLimelightsRawData.getAllAvailableLimelightData()) {
+		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
 			estimates.add(rawDataToObservation(limelightRawData));
 		}
 

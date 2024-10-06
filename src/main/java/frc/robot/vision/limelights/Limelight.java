@@ -52,8 +52,8 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
-		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NULL_APRILTAG_ID);
-		if (id == LimeLightConstants.NULL_APRILTAG_ID) {
+		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
+		if (id == LimeLightConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
 
@@ -61,31 +61,31 @@ public class Limelight extends GBSubsystem {
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
 		Pose3d robotPose = new Pose3d(
-			getPoseInformation(LimelightEntryValue.X_AXIS),
-			getPoseInformation(LimelightEntryValue.Y_AXIS),
-			getPoseInformation(LimelightEntryValue.Z_AXIS),
+			getPoseValue(LimelightEntryValue.X_AXIS),
+			getPoseValue(LimelightEntryValue.Y_AXIS),
+			getPoseValue(LimelightEntryValue.Z_AXIS),
 			new Rotation3d(
-				Math.toRadians(getPoseInformation(LimelightEntryValue.ROLL_ANGLE)),
-				Math.toRadians(getPoseInformation(LimelightEntryValue.PITCH_ANGLE)),
-				Math.toRadians(getPoseInformation(LimelightEntryValue.YAW_ANGLE))
+				Math.toRadians(getPoseValue(LimelightEntryValue.ROLL_ANGLE)),
+				Math.toRadians(getPoseValue(LimelightEntryValue.PITCH_ANGLE)),
+				Math.toRadians(getPoseValue(LimelightEntryValue.YAW_ANGLE))
 			)
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 
 	public double getAprilTagHeight() {
-		return getAprilTagInformation(LimelightEntryValue.Y_AXIS);
+		return getAprilTagValue(LimelightEntryValue.Y_AXIS);
 	}
 
 	public double getDistanceFromAprilTag() {
-		return getAprilTagInformation(LimelightEntryValue.Z_AXIS);
+		return getAprilTagValue(LimelightEntryValue.Z_AXIS);
 	}
 
-	public double getAprilTagInformation(LimelightEntryValue entryValue) {
+	public double getAprilTagValue(LimelightEntryValue entryValue) {
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
-	public double getPoseInformation(LimelightEntryValue entryValue) {
+	public double getPoseValue(LimelightEntryValue entryValue) {
 		return robotPoseArray[entryValue.getIndex()];
 	}
 

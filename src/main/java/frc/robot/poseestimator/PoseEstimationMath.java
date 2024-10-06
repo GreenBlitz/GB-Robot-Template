@@ -38,21 +38,22 @@ public class PoseEstimationMath {
 	}
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
-		if (odometryStandardDeviation == 0) {
-			return 0;
-		}
-		double squaredVisionStandardDeviation = Math.pow(visionStandardDeviation, 2);
-		return odometryStandardDeviation / (odometryStandardDeviation + Math.sqrt(odometryStandardDeviation * squaredVisionStandardDeviation));
-	}
-
-	public static Transform2d
-		applyKalmanOnTransform(VisionObservation observation, Pose2d appliedVisionObservation, double[] odometryStandardDeviations) {
-		double[] combinedStandardDeviations = getKalmanRatio(observation.standardDeviations(), odometryStandardDeviations);
-		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.robotPose());
-		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
+		return odometryStandardDeviation == 0
+			? 0
+			: (odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation * Math.sqrt(odometryStandardDeviation)));
 	}
 
 	//@formatter:off
+    public static Transform2d applyKalmanOnTransform(
+            VisionObservation observation,
+            Pose2d appliedVisionObservation,
+            double[] odometryStandardDeviations
+    ) {
+        double[] combinedStandardDeviations = getKalmanRatio(observation.standardDeviations(), odometryStandardDeviations);
+        Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.robotPose());
+        return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
+    }
+
 	public static Transform2d scaleDifferenceFromKalman(
 			Transform2d visionDifferenceFromOdometry,
 			double[] combinedStandardDeviations

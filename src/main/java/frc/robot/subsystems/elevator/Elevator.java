@@ -15,13 +15,15 @@ public class Elevator extends GBSubsystem {
 	private final IRequest<Rotation2d> angleRequest;
 
 	private final ElevatorStuff elevatorStuff;
-	private final ControllableMotor mainMotor;
+	private final ControllableMotor firstMotor;
+	private final ControllableMotor secondMotor;
 	private final IDigitalInput limitSwitch;
 
 	public Elevator(ElevatorStuff elevatorStuff) {
 		super(elevatorStuff.logPath());
 
-		this.mainMotor = elevatorStuff.mainMotor();
+		this.firstMotor = elevatorStuff.firstMotorStuff().motor();
+		this.secondMotor = elevatorStuff.secondMotorStuff().motor();
 		this.limitSwitch = elevatorStuff.digitalInput();
 
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
@@ -35,19 +37,22 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void setPower(double power) {
-		mainMotor.setPower(power);
+		secondMotor.setPower(power);
 	}
 
 	public void stop() {
-		elevatorStuff.mainMotor().stop();
+		firstMotor.stop();
+		secondMotor.stop();
 	}
 
 	public void setBrake(boolean brake) {
-		elevatorStuff.mainMotor().setBrake(brake);
+		firstMotor.setBrake(brake);
+		secondMotor.setBrake(brake);
 	}
 
 	public void setTargetAngle(Rotation2d angle) {
-		mainMotor.applyAngleRequest(angleRequest.withSetPoint(angle));
+		firstMotor.applyAngleRequest(angleRequest.withSetPoint(angle));
+		secondMotor.applyAngleRequest(angleRequest.withSetPoint(angle));
 	}
 
 	public boolean isAtBackwardLimit() {
@@ -55,12 +60,14 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void stayInPlace() {
-		mainMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.mainMotorPositionSignal().getLatestValue()));
+		firstMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.firstMotorStuff().motorPositionSignal().getLatestValue()));
+		secondMotor.applyAngleRequest(angleRequest.withSetPoint(elevatorStuff.secondMotorStuff().motorPositionSignal().getLatestValue()));
 	}
 
 	public void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
-		mainMotor.updateSignals(elevatorStuff.mainMotorPositionSignal(), elevatorStuff.voltageSignal());
+		firstMotor.updateSignals(elevatorStuff.firstMotorStuff().motorPositionSignal(), elevatorStuff.firstMotorStuff().voltageSignal());
+		secondMotor.updateSignals(elevatorStuff.secondMotorStuff().motorPositionSignal(), elevatorStuff.secondMotorStuff().voltageSignal());
 	}
 
 	@Override

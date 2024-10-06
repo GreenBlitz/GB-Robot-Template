@@ -5,7 +5,7 @@ public class LEDConstatns {
         public static int ID_PORT = 0;
     }
     public class LEDStrip{
-        public static final int LED_PORT = 4;
-        public static final int STRIP_LENGTH = 20;
+        public static final int LED_PORT = 9;
+        public static final int STRIP_LENGTH = 200;
     }
 }

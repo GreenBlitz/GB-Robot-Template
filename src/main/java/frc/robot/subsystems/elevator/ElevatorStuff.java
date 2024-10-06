@@ -10,22 +10,20 @@ import frc.robot.hardware.signal.InputSignal;
 public record ElevatorStuff(
 	String logPath,
 	String digitalInputsLogPath,
-	ControllableMotor mainMotor,
-	InputSignal<Double> voltageSignal,
-	InputSignal<Rotation2d> mainMotorPositionSignal,
 	IRequest<Rotation2d> angleRequest,
-	IDigitalInput digitalInput
+	IDigitalInput digitalInput,
+	ElevatorMotorStuff firstMotorStuff,
+	ElevatorMotorStuff secondMotorStuff
 ) {
 
 	public ElevatorStuff(
 		String logPath,
-		ControllableMotor mainMotor,
-		InputSignal<Double> voltageSignal,
-		InputSignal<Rotation2d> mainMotorPositionSignal,
 		IRequest<Rotation2d> angleRequest,
-		IDigitalInput digitalInput
+		IDigitalInput digitalInput,
+		ElevatorMotorStuff firstMotorStuff,
+		ElevatorMotorStuff secondMotorStuff
 	) {
-		this(logPath, logPath + "limitSwitch", mainMotor, voltageSignal, mainMotorPositionSignal, angleRequest, digitalInput);
+		this(logPath, logPath + "limitSwitch", angleRequest, digitalInput, firstMotorStuff, secondMotorStuff);
 	}
 
 }

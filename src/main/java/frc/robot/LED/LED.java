@@ -22,4 +22,5 @@ public class LED implements ILED{
         setColor(new Color(0, 0, 0),index);
     }
 
+    public void Blink(){}
 }

@@ -29,13 +29,6 @@ public class Candle implements ILED, ILogicLED {
         this.twinkleOffAnimation = new TwinkleOffAnimation(0, 255, 255);
     }
 
-    public static Candle getInstance() {
-        if (instance == null) {
-            instance = new Candle();
-        }
-        return instance;
-    }
-
     @Override
     public void setColor(Color color, int index) {
         this.caNdle.setLEDs((int) color.red, (int)color.green, (int)color.blue);

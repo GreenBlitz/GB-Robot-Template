@@ -9,17 +9,17 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeRoller extends GBSubsystem {
 
 	private final IMotor motor;
-	private final IDigitalInput digitalInput;
-	private final DigitalInputInputsAutoLogged digitalInputsInputs;
+	private final IDigitalInput beamBreaker;
+	private final DigitalInputInputsAutoLogged beamBreakerInputs;
 	private final IntakeRollerStuff intakeRollerStuff;
 	private final IntakeRollerCommandsBuilder intakeRollercommandsBuilder;
 
 	public IntakeRoller(IntakeRollerStuff intakeRollerStuff) {
 		super(intakeRollerStuff.logPath());
 		this.motor = intakeRollerStuff.motor();
-		this.digitalInput = intakeRollerStuff.digitalInput();
+		this.beamBreaker = intakeRollerStuff.digitalInput();
 		this.intakeRollerStuff = intakeRollerStuff;
-		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
+		this.beamBreakerInputs = new DigitalInputInputsAutoLogged();
 		this.intakeRollercommandsBuilder = new IntakeRollerCommandsBuilder(this);
 
 		updateInputs();
@@ -30,7 +30,7 @@ public class IntakeRoller extends GBSubsystem {
 	}
 
 	public boolean isNoteIn() {
-		return digitalInputsInputs.debouncedValue;
+		return beamBreakerInputs.debouncedValue;
 	}
 
 	protected void stop() {
@@ -42,9 +42,9 @@ public class IntakeRoller extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		digitalInput.updateInputs(digitalInputsInputs);
+		beamBreaker.updateInputs(beamBreakerInputs);
 		motor.updateSignals(intakeRollerStuff.voltageSignal());
-		Logger.processInputs(intakeRollerStuff.digitalInputLogPath(), digitalInputsInputs);
+		Logger.processInputs(intakeRollerStuff.digitalInputLogPath(), beamBreakerInputs);
 		Logger.recordOutput(intakeRollerStuff.logPath() + "IsNoteIn", isNoteIn());
 	}
 

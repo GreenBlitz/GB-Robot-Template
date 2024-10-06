@@ -20,23 +20,21 @@ public class IntakeRollerRealConstant {
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
-	private final static double GEAR_RATIO = 3.0;
+	private final static int CURRENT_LIMIT = 40;
 
-	private final static int CURRENT_LIMIT = 30;
+	private final static boolean INVERTED = false;
 
 	private static void configMotor(SparkMaxWrapper motor) {
-		motor.setInverted(false);
+		motor.setInverted(INVERTED);
 		motor.setIdleMode(SparkMaxWrapper.IdleMode.kCoast);
 		motor.setSmartCurrentLimit(CURRENT_LIMIT);
-		motor.getEncoder().setPositionConversionFactor(GEAR_RATIO);
-		motor.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
 	}
 
 	public static IntakeRollerStuff generateIntakeRollerStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.INTAKE_ROLLER);
-		SysIdRoutine.Config config = new SysIdRoutine.Config();
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, config);
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+
 		configMotor(sparkMaxWrapper);
 
 		BooleanSupplier isBeamBroken = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();

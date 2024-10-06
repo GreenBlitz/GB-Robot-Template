@@ -33,7 +33,6 @@ public class RealElevatorConstants {
 
 	private final static CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
 
-	// TODO: check this later
 	private final static Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
 	private final static double ROTATIONS_TO_METERS_CONVERTION_RATIO = 1;

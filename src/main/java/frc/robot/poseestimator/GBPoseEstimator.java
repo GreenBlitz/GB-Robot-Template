@@ -50,6 +50,18 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		setOdometryStandardDeviations(odometryStandardDeviations);
 	}
 
+	public GBPoseEstimator(
+		String logPath,
+		SwerveDriveKinematics kinematics,
+		SwerveDriveWheelPositions initialWheelPositions,
+		Rotation2d initialGyroAngle,
+		double[] odometryStandardDeviations,
+		Pose2d initialPose
+	) {
+		this(logPath, kinematics, initialWheelPositions, initialGyroAngle, odometryStandardDeviations);
+		resetPose(initialPose);
+	}
+
 	public LimelightFilterer getLimelightFilterer() {
 		return limelightFilterer;
 	}

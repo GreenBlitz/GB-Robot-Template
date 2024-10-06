@@ -94,7 +94,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public Optional<Pose2d> getVisionPose() {
 		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightRawData();
 		List<VisionObservation> rawData = limelightFilterer.getAllAvailableLimelightRawData();
-		while (stackedRawData.size() < PoseEstimatorConstants.OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALIBRATION && !rawData.isEmpty()) {
+		while (stackedRawData.size() < PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION && !rawData.isEmpty()) {
 			if (!stackedRawData.contains(rawData.get(0))) {
 				stackedRawData.addAll(rawData);
 			}

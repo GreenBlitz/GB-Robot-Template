@@ -20,6 +20,8 @@ public class Pivot extends GBSubsystem {
 		this.commandBuilder = new PivotCommandBuilder(this);
 		this.positionRequest = pivotStuff.positionRequest();
 		this.voltageRequest = pivotStuff.voltageRequest();
+
+		updateSignals();
 	}
 
 	public PivotCommandBuilder getCommandBuilder() {

@@ -31,6 +31,8 @@ public class RealElevatorConstants {
 
 	private final static CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
 
+	public static final int ELEVATOR_PID_SLOT = 0;
+
 	// TODO: check this later
 	private final static Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
@@ -82,7 +84,7 @@ public class RealElevatorConstants {
 		SparkMaxAngleRequest angleRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(0),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-			ElevatorConstants.ELEVATOR_PID_SLOT,
+			ELEVATOR_PID_SLOT,
 			RealElevatorConstants::feedforwardCalculation
 		);
 

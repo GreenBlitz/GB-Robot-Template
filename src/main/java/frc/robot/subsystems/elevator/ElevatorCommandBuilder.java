@@ -37,7 +37,7 @@ public class ElevatorCommandBuilder {
                 interrupted -> elevator.stop(),
                 () -> false,
                 elevator
-        ).withName("Set power: " + power);
+        ).withName("Set power by supplier with value: " + power.getAsDouble());
     }
 
     public Command setTargetPosition(Rotation2d angle) {
@@ -58,7 +58,7 @@ public class ElevatorCommandBuilder {
         return new InstantCommand(elevator::stop);
     }
 
-    public static Command calibratedFeedForward() {
+    public static Command calibrateFeedForward() {
         double[] oldValues = new double[] {RealElevatorConstants.FEEDFORWARD_CALCULATOR.ka, RealElevatorConstants.FEEDFORWARD_CALCULATOR.kg, RealElevatorConstants.FEEDFORWARD_CALCULATOR.kv, RealElevatorConstants.FEEDFORWARD_CALCULATOR.ks};
         return new ParallelCommandGroup(
                 new LoggedDashboardCommand("ks", (Double newkS) -> RealElevatorConstants.FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(oldValues[0], oldValues[1], oldValues[2], newkS)),

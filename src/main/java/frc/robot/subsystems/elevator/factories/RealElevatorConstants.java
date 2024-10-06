@@ -72,18 +72,12 @@ public class RealElevatorConstants {
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
-
-		Pair<ElevatorMotorStuff, SparkMaxWrapper> firstMotor = generateMotor(
-				logPath + "firstMotor",
-				"first motor",
-				IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR
-		);
+		Pair<
+			ElevatorMotorStuff,
+			SparkMaxWrapper> firstMotor = generateMotor(logPath + "firstMotor", "first motor", IDs.CANSparkMAXIDs.ELEVATOR_FIRST_MOTOR);
 		ElevatorMotorStuff firstMotorStuff = firstMotor.getFirst();
-		ElevatorMotorStuff secondMotorStuff = generateMotor(
-				logPath + "secondMotor",
-				"second motor",
-				IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR
-		).getFirst();
+		ElevatorMotorStuff secondMotorStuff = generateMotor(logPath + "secondMotor", "second motor", IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR)
+			.getFirst();
 
 		SparkMaxWrapper sparkMaxWrapper = firstMotor.getSecond();
 		BooleanSupplier atLimitSwitch = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();

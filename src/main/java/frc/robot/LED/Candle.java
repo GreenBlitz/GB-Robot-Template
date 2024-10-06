@@ -2,8 +2,7 @@ package frc.robot.LED;
 
 import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle;
-
-import java.awt.*;
+import edu.wpi.first.wpilibj.util.Color;
 
 public class Candle implements ILED, ILogicLED {
     private static Candle instance;
@@ -18,8 +17,7 @@ public class Candle implements ILED, ILogicLED {
     private TwinkleAnimation twinkleAnimation;
     private TwinkleOffAnimation twinkleOffAnimation;
 
-
-    private Candle() {
+    public Candle() {
         this.caNdle = new CANdle(LEDConstatns.Candle.ID_PORT);
         this.caNdle.configLEDType(CANdle.LEDStripType.RGB);
         this.colorFlowAnimation = new ColorFlowAnimation(0, 255, 255);
@@ -39,12 +37,12 @@ public class Candle implements ILED, ILogicLED {
     }
 
     @Override
-    public void setColor(Color color) {
-        this.caNdle.setLEDs(color.getRed(), color.getGreen(), color.getBlue());
+    public void setColor(Color color, int index) {
+        this.caNdle.setLEDs((int) color.red, (int)color.green, (int)color.blue);
     }
 
     @Override
-    public void turnOff() {
+    public void turnOff(int index) {
         this.caNdle.setLEDs(0, 0, 0);
     }
 

@@ -8,4 +8,7 @@ public class LEDConstatns {
         public static final int LED_PORT = 9;
         public static final int STRIP_LENGTH = 200;
     }
+    public class LEDFactory{
+        public static final boolean LED_IS_CANDLE = false;
+    }
 }

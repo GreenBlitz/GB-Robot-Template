@@ -11,24 +11,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class LimelightFilterer extends GBSubsystem {
+public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer {
 
 	private final MultiLimelights multiLimelights;
 	private double lastSuccessfulObservationTime;
-	private final Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
+	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
-	public LimelightFilterer(LimelightFiltererConfig config, Function<Double, Pose2d> getEstimatedPoseAtTimestamp) {
+	public LimelightFilterer(LimelightFiltererConfig config) {
 		super(config.logPath());
 
 		this.multiLimelights = new MultiLimelights(config.limelightsNames(), config.hardwareLogPath());
 		this.lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
+	}
+
+	@Override
+	public void setEstimatedPoseAtTimestampFunction(Function<Double, Pose2d> getEstimatedPoseAtTimestamp) {
 		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}
 
+	@Override
 	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
 		multiLimelights.updateGyroAngles(gyroAngleValues);
 	}
 
+	@Override
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
@@ -49,6 +55,7 @@ public class LimelightFilterer extends GBSubsystem {
 		return estimates;
 	}
 
+	@Override
 	public List<VisionObservation> getAllAvailableLimelightData() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
@@ -72,7 +79,7 @@ public class LimelightFilterer extends GBSubsystem {
 		return new VisionObservation(limelightRawData.estimatedPose().toPose2d(), standardDeviations, limelightRawData.timestamp());
 	}
 
-	public void logEstimatedPositions() {
+	private void logEstimatedPositions() {
 		List<VisionObservation> observations = getFilteredVisionObservations();
 
 		for (int i = 0; i < observations.size(); i++) {
@@ -83,6 +90,7 @@ public class LimelightFilterer extends GBSubsystem {
 		}
 	}
 
+	@Override
 	public boolean correctPoseEstimation() {
 		boolean hasTooMuchTimePassed = Conversions.microSecondsToSeconds(Logger.getRealTimestamp()) - lastSuccessfulObservationTime
 			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION_SECONDS;
@@ -92,6 +100,11 @@ public class LimelightFilterer extends GBSubsystem {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void subsystemPeriodic() {
+		logEstimatedPositions();
 	}
 
 }

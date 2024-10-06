@@ -8,10 +8,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
-import frc.robot.vision.limelights.LimelightFilterer;
+import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.limelights.LimelightFiltererConfig;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 import java.util.List;
@@ -28,7 +27,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private Pose2d estimatedPose;
 	private SwerveDriveWheelPositions latestWheelPositions;
 	private Rotation2d latestGyroAngle;
-	private final LimelightFilterer limelightFilterer;
+	private final ILimelightFilterer limelightFilterer;
 
 	public GBPoseEstimator(
 		String logPath,
@@ -36,7 +35,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
 		double[] odometryStandardDeviations,
-		LimelightFiltererConfig limelightFiltererConfig,
+		ILimelightFilterer limelightFilterer,
 		Pose2d initialRobotPose
 	) {
 		super(logPath);
@@ -48,12 +47,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.latestWheelPositions = initialWheelPositions;
 		this.latestGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
-		this.limelightFilterer = new LimelightFilterer(limelightFiltererConfig, this::getEstimatedPoseAtTimeStamp);
+		this.limelightFilterer = limelightFilterer;
+		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		resetPose(initialRobotPose);
 	}
 
-	public LimelightFilterer getLimelightFilterer() {
+	public ILimelightFilterer getLimelightFilterer() {
 		return limelightFilterer;
 	}
 
@@ -182,10 +182,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void subsystemPeriodic() {
-		limelightFilterer.logEstimatedPositions();
 		if (limelightFilterer.correctPoseEstimation()) {
 			resetPoseByLimelight();
 		}
+		updateVision(limelightFilterer.getFilteredVisionObservations());
 	}
 
 }

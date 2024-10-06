@@ -44,6 +44,9 @@ public class Flywheel extends GBSubsystem {
 	protected void setVoltage(double voltage) {
 		topFlywheelComponents.voltageRequest().withSetPoint(voltage);
 		bottomFlywheelComponents.voltageRequest().withSetPoint(voltage);
+
+		topMotor.applyDoubleRequest(topFlywheelComponents.voltageRequest());
+		bottomMotor.applyDoubleRequest(bottomFlywheelComponents.voltageRequest());
 	}
 
 	protected void setTargetVelocity(Rotation2d targetVelocity) {
@@ -52,11 +55,16 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
-		return MathUtil.isNear(
+		return (MathUtil.isNear(
 			targetVelocity.getRotations(),
 			topFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
 			velocityTolerance.getRotations()
-		);
+		)
+			&& MathUtil.isNear(
+				targetVelocity.getRotations(),
+				bottomFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
+				velocityTolerance.getRotations()
+			));
 	}
 
 	protected void stop() {
@@ -67,11 +75,6 @@ public class Flywheel extends GBSubsystem {
 	protected void updateInputs() {
 		topMotor.updateSignals(topFlywheelComponents.voltageSignal(), topFlywheelComponents.velocitySignal());
 		bottomMotor.updateSignals(bottomFlywheelComponents.voltageSignal(), bottomFlywheelComponents.velocitySignal());
-
-		topMotor.applyDoubleRequest(topFlywheelComponents.voltageRequest());
-		bottomMotor.applyDoubleRequest(bottomFlywheelComponents.voltageRequest());
-		topMotor.applyAngleRequest(topFlywheelComponents.velocityRequest());
-		bottomMotor.applyAngleRequest(bottomFlywheelComponents.velocityRequest());
 	}
 
 	@Override

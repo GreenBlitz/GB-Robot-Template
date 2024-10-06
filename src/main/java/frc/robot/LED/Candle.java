@@ -18,8 +18,7 @@ public class Candle implements ILED, ILogicLED {
     private TwinkleAnimation twinkleAnimation;
     private TwinkleOffAnimation twinkleOffAnimation;
 
-
-    private Candle() {
+    public Candle() {
         this.caNdle = new CANdle(LEDConstatns.Candle.ID_PORT);
         this.caNdle.configLEDType(CANdle.LEDStripType.RGB);
         this.colorFlowAnimation = new ColorFlowAnimation(0, 255, 255);
@@ -29,13 +28,6 @@ public class Candle implements ILED, ILogicLED {
         this.singleFadeAnimation = new SingleFadeAnimation(0, 255, 255);
         this.twinkleAnimation = new TwinkleAnimation(0, 255, 255);
         this.twinkleOffAnimation = new TwinkleOffAnimation(0, 255, 255);
-    }
-
-    public static Candle getInstance() {
-        if (instance == null) {
-            instance = new Candle();
-        }
-        return instance;
     }
 
     @Override

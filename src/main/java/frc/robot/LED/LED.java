@@ -12,4 +12,8 @@ public class LED implements ILED{
     public void turnOff() {
 
     }
+
+    public void Blink(){
+
+    }
 }

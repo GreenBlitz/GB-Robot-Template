@@ -127,7 +127,7 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a milliseconds to seconds
+	 * Converts a time from milliseconds to seconds
 	 *
 	 * @param milliSeconds the milliseconds
 	 * @return the seconds

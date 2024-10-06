@@ -36,7 +36,6 @@ public class JoysticksBindings {
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
 					)
 			);
-
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

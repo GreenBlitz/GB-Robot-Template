@@ -57,7 +57,7 @@ public class Pivot extends GBSubsystem {
 	}
 
 	public boolean isAtAngle(Rotation2d targetAngle) {
-		return Math.abs(pivotStuff.positionSignal().getLatestValue().minus(targetAngle).getDegrees())
+		return Math.abs(pivotStuff.positionSignal().getLatestValue().getRadians() - (targetAngle).getRadians())
 			< PivotConstants.POSITION_DEGREES_TOLERANCE;
 	}
 

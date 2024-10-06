@@ -27,9 +27,9 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	private final Pivot pivot;
 	private final Swerve swerve;
 	private final Funnel funnel;
+	private final Pivot pivot;
 
 	private final Superstructure superstructure;
 
@@ -54,16 +54,16 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-	public Pivot getPivot() {
-		return pivot;
-	}
-
 	public Swerve getSwerve() {
 		return swerve;
 	}
 
 	public Funnel getFunnel() {
 		return funnel;
+	}
+
+	public Pivot getPivot() {
+		return pivot;
 	}
 
 	public Superstructure getSuperstructure() {

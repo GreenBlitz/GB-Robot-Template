@@ -8,10 +8,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
-import frc.robot.vision.limelights.LimeLightConstants;
 import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.vision.limelights.LimelightFiltererConfig;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 import java.util.List;
@@ -35,7 +35,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		SwerveDriveKinematics kinematics,
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
-		double[] odometryStandardDeviations
+		double[] odometryStandardDeviations,
+		LimelightFiltererConfig limelightFiltererConfig,
+		Pose2d initialRobotPose
 	) {
 		super(logPath);
 		this.odometryPose = new Pose2d();
@@ -46,20 +48,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.latestWheelPositions = initialWheelPositions;
 		this.latestGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
-		this.limelightFilterer = new LimelightFilterer(LimeLightConstants.DEFAULT_CONFIG, this::getEstimatedPoseAtTimeStamp);
+		this.limelightFilterer = new LimelightFilterer(limelightFiltererConfig, this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
-	}
-
-	public GBPoseEstimator(
-		String logPath,
-		SwerveDriveKinematics kinematics,
-		SwerveDriveWheelPositions initialWheelPositions,
-		Rotation2d initialGyroAngle,
-		double[] odometryStandardDeviations,
-		Pose2d initialPose
-	) {
-		this(logPath, kinematics, initialWheelPositions, initialGyroAngle, odometryStandardDeviations);
-		resetPose(initialPose);
+		resetPose(initialRobotPose);
 	}
 
 	public LimelightFilterer getLimelightFilterer() {

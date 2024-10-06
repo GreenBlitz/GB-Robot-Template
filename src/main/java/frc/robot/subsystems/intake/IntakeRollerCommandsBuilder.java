@@ -34,7 +34,7 @@ public class IntakeRollerCommandsBuilder {
 			intakeRoller
 		).withName("set power by supplier");
 	}
-    //@formatter:on
+	//@formatter:on
 
 	public Command stop() {
 		return new RunCommand(intakeRoller::stop, intakeRoller).withName("stop");

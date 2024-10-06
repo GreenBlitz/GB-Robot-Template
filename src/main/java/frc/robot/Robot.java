@@ -31,9 +31,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Flywheel flywheel;
-
 	private final Swerve swerve;
-
 	private final Funnel funnel;
 
 	private final Superstructure superstructure;

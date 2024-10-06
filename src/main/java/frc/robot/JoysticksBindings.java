@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.superstructure.RobotState;
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -24,6 +26,17 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		robot.getSwerve().setDefaultCommand(robot.getSwerve().getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0));
+
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.SHOOTER_INTAKE));
+		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.ARM_INTAKE));
+		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
+		usedJoystick.POV_LEFT.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
+		usedJoystick.POV_RIGHT.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
+
+		usedJoystick.L1.whileTrue(robot.getRoller().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

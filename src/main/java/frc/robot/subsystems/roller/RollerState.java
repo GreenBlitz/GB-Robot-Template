@@ -4,6 +4,7 @@ public enum RollerState {
 
 	AFTER_INTAKE(0.4),
 	ROLL_IN(0.4),
+	ROLL_IN_HARD(0.8),
 	ROLL_OUT(-0.4),
 	MANUAL(0),
 	STOP(0);

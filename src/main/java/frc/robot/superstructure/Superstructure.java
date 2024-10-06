@@ -116,7 +116,7 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.IDLE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elbowStateHandler.setState(ElbowState.IDLE),
-			wristStateHandler.setState(WristState.IN_ARM),
+			wristStateHandler.setState(WristState.AFTER_INTAKE),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		);
 	}
@@ -159,23 +159,26 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_ARM),
 					rollerStateHandler.setState(RollerState.ROLL_IN),
+					funnelStateHandler.setState(FunnelState.SLOW_INTAKE),
 					wristStateHandler.setState(WristState.ARM_INTAKE)
 				).withTimeout(Timeouts.INTAKE_ROLLER),////.until(this::isObjectInRoller)
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_ARM),
 					rollerStateHandler.setState(RollerState.STOP),
-					wristStateHandler.setState(WristState.IN_ARM)
-				).until(() -> robot.getWrist().isAtPosition(WristState.IN_ARM.getPosition(), Tolerances.WRIST_POSITION)),
+					funnelStateHandler.setState(FunnelState.SLOW_INTAKE),
+					wristStateHandler.setState(WristState.AFTER_INTAKE)
+				).withTimeout(Timeouts.WRIST_TO_POSITION)
+					.until(() -> robot.getWrist().isAtPosition(WristState.AFTER_INTAKE.getPosition(), Tolerances.WRIST_POSITION)),
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.STOP),
 					rollerStateHandler.setState(RollerState.STOP),
-					wristStateHandler.setState(WristState.IN_ARM)
+					funnelStateHandler.setState(FunnelState.STOP),
+					wristStateHandler.setState(WristState.AFTER_INTAKE)
 				)
 			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			pivotStateHandler.setState(PivotState.ARM_INTAKE),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
-			funnelStateHandler.setState(FunnelState.STOP),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
 		);
 	}
@@ -339,11 +342,11 @@ public class Superstructure {
 
 	private Command armOuttake() {
 		return new ParallelCommandGroup(
-			rollerStateHandler.setState(RollerState.ROLL_IN),
+			rollerStateHandler.setState(RollerState.ROLL_IN_HARD),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
-			wristStateHandler.setState(WristState.IN_ARM),
-			intakeStateHandler.setState(IntakeState.RELEASE_FOR_ARM),
-			funnelStateHandler.setState(FunnelState.STOP),
+			wristStateHandler.setState(WristState.AFTER_INTAKE),
+			intakeStateHandler.setState(IntakeState.STOP),
+			funnelStateHandler.setState(FunnelState.SLOW_OUTTAKE),
 			pivotStateHandler.setState(PivotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)

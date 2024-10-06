@@ -14,8 +14,8 @@ public class LimelightFilters {
 			&& LimelightFilters.isLimelightOutputInTolerance(
 				limelightRawData,
 				currentEstimatedPose,
-				tolerances.positionTolerance(),
-				tolerances.rotationTolerance()
+				tolerances.normalizedPositionTolerance(),
+				tolerances.normalizedRotationTolerance()
 			)
 			&& LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance())
 			&& LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance())
@@ -25,8 +25,8 @@ public class LimelightFilters {
 	protected static boolean isLimelightOutputInTolerance(
 		LimelightRawData limelightRawData,
 		Pose2d estimatedPose,
-		double positionTolerance,
-		double rotationTolerance
+		double normalizedPositionTolerance,
+		double normalizedRotationTolerance
 	) {
 		Pose3d limelightPosition = limelightRawData.estimatedPose();
 		Pose3d estimatedPose3d = new Pose3d(
@@ -37,7 +37,8 @@ public class LimelightFilters {
 		);
 		Transform3d transformDifference = limelightPosition.minus(estimatedPose3d);
 		Rotation3d rotationDifference = limelightPosition.getRotation().minus(estimatedPose3d.getRotation());
-		return transformDifference.getTranslation().getNorm() <= positionTolerance && getRotationNorm(rotationDifference) <= rotationTolerance;
+		return transformDifference.getTranslation().getNorm() <= normalizedPositionTolerance
+			&& getRotationNorm(rotationDifference) <= normalizedRotationTolerance;
 	}
 
 	private static double getRotationNorm(Rotation3d angle) {

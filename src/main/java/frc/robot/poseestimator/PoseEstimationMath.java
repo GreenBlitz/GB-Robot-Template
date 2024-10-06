@@ -1,10 +1,7 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.limelights.LimelightRawData;
@@ -101,25 +98,31 @@ public class PoseEstimationMath {
 	}
 
 	public static Pose2d weightedPoseMean(List<VisionObservation> observations) {
-		Pose2d output = new Pose2d();
-		double positionDeviationSum = 0;
+		Pose2d poseMean = new Pose2d();
+		double xDeviationSum = 0;
+		double yDeviationSum = 0;
 		double rotationDeviationSum = 0;
 
 		for (VisionObservation observation : observations) {
-			double positionWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()];
+			double xWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()];
+			double yWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.Y_VALUE.getEntryValue()];
 			double rotationWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()];
-			positionDeviationSum += positionWeight;
+			xDeviationSum += xWeight;
+			yDeviationSum += yWeight;
 			rotationDeviationSum += rotationWeight;
-			output = new Pose2d(
-				output.getX() + observation.robotPose().getX() * positionWeight,
-				output.getY() + observation.robotPose().getY() * positionWeight,
-				output.getRotation().plus(observation.robotPose().getRotation()).times(rotationWeight)
+			poseMean = new Pose2d(
+				poseMean.getX() + observation.robotPose().getX() * xWeight,
+				poseMean.getY() + observation.robotPose().getY() * yWeight,
+				poseMean.getRotation().plus(observation.robotPose().getRotation()).times(rotationWeight)
 			);
 		}
 
-		output = new Pose2d(output.getTranslation().div(positionDeviationSum), output.getRotation().div(rotationDeviationSum));
+		poseMean = new Pose2d(
+			new Translation2d(poseMean.getX() / xDeviationSum, poseMean.getY() / yDeviationSum),
+			poseMean.getRotation().div(rotationDeviationSum)
+		);
 
-		return output;
+		return poseMean;
 	}
 
 }

@@ -14,7 +14,7 @@ public interface ILimelightFilterer {
 
 	List<VisionObservation> getFilteredVisionObservations();
 
-	List<VisionObservation> getAllAvailableLimelightData();
+	List<VisionObservation> getAllAvailableLimelightRawData();
 
 	boolean isPoseEstimationCorrect();
 

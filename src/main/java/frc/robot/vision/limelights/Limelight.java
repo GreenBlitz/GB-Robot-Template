@@ -22,8 +22,8 @@ public class Limelight extends GBSubsystem {
 	private double[] aprilTagPoseArray;
 	private GyroAngleValues gyroAngleValues;
 
-	public Limelight(String name, String hardwareLogPath) {
-		super(hardwareLogPath + name + "/");
+	public Limelight(String name, String logPath) {
+		super(logPath + name + "/");
 
 		this.name = name;
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");

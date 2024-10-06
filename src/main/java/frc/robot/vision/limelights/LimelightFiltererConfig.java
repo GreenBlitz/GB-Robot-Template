@@ -1,3 +1,3 @@
 package frc.robot.vision.limelights;
 
-public record LimelightFiltererConfig(String logPath, String hardwareLogPath, String[] limelightsNames, double aprilTagHeightMeters) {}
+public record LimelightFiltererConfig(String logPath, double aprilTagHeightMeters) {}

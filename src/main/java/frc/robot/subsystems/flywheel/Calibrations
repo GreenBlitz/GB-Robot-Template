@@ -1,0 +1,8 @@
+Calibrations:
+
+1. kS
+2. kV
+3. P+I+D
+4. SysIdRoutine (מה שזה לא יהיה)
+5. Smart current limit
+6. which of the motors is inverted

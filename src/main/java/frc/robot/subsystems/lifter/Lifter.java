@@ -2,8 +2,8 @@ package frc.robot.subsystems.lifter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
-import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class Lifter extends GBSubsystem {

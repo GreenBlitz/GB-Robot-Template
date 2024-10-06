@@ -54,7 +54,7 @@ public class IDs {
 
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
-	    // ! need to check those IDs which doesn't exists yet since we don't have a working robot
+		// ! need to check those IDs which doesn't exists yet since we don't have a working robot
 
 		public static final SparkMaxDeviceID ELEVATOR_FIRST_MOTOR = new SparkMaxDeviceID(2, CANSparkLowLevel.MotorType.kBrushless);
 

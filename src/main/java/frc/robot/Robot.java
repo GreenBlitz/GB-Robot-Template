@@ -42,7 +42,7 @@ public class Robot {
 			GyroFactory.create(SwerveType.SWERVE)
 		);
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
-        this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
+		this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
 
 		this.superstructure = new Superstructure(this);
 

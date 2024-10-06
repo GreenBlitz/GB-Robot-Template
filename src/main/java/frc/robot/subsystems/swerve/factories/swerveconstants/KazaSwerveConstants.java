@@ -14,8 +14,8 @@ public class KazaSwerveConstants {
 	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(6, 0, 0);
 	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(6, 0, 0);// todo calibrate
 
-	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0;
-	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0;// todo ask
+	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.30915;
+	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.24115;
 	private static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
 	private static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
 		MODULE_X_DISTANCE_FROM_CENTER,

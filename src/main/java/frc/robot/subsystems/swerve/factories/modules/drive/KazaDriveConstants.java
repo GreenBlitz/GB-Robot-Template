@@ -45,7 +45,7 @@ public class KazaDriveConstants {
 		driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 		;
 		driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-		driveConfig.Feedback.SensorToMechanismRatio = 1; // todo real value
+		driveConfig.Feedback.SensorToMechanismRatio = 8.0;
 
 		driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
 		driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;

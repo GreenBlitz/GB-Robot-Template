@@ -7,8 +7,8 @@ import frc.robot.subsystems.swerve.modules.ModuleUtils;
 
 public class KazaModuleConstants {
 
-	private static final double WHEEL_DIAMETER_METERS = 0;
-	private static final double COUPLING_RATIO = 0;// todo real values
+	private static final double WHEEL_DIAMETER_METERS = 0.1016;
+	private static final double COUPLING_RATIO = 0;// todo real value
 
 	protected static ModuleConstants getModuleConstants(ModuleUtils.ModulePosition modulePosition) {
 		return new ModuleConstants(

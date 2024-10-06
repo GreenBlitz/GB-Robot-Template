@@ -9,6 +9,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.elevatorRoller.ElevatorRoller;
 import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerConstants;
 import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerFactory;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.funnel.FunnelConstants;
+import frc.robot.subsystems.funnel.factory.FunnelFactory;
+import frc.robot.superstructure.Superstructure;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -20,10 +29,21 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final ElevatorRoller elevatorRoller;
+	private final Swerve swerve;
+	private final Funnel funnel;
+
+	private final Superstructure superstructure;
 
 	public Robot() {
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			GyroFactory.create(SwerveType.SWERVE)
+		);
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
+		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 
+		this.superstructure = new Superstructure(this);
 		configureBindings();
 	}
 
@@ -31,13 +51,24 @@ public class Robot {
 		JoysticksBindings.configureBindings(this);
 	}
 
-
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
 	}
 
 	public ElevatorRoller getElevatorRoller() {
-		return elevatorRoller;
+			return elevatorRoller;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
+	}
+
+	public Funnel getFunnel() {
+		return funnel;
+	}
+
+	public Superstructure getSuperstructure() {
+		return superstructure;
 	}
 
 }

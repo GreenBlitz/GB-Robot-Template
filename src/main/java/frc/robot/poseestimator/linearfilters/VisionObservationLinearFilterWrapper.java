@@ -13,7 +13,7 @@ public class VisionObservationLinearFilterWrapper {
 	private final GBLinearFilter xFilter;
 	private final GBLinearFilter yFilter;
 	private final GBLinearFilter angleFilter;
-	private final Stack<Pose2d> updatedObservations;
+	private Pose2d LastObservation;
 
 	/**
 	 * A wrapper for {@code ILinearFilter} using odometry and vision
@@ -27,7 +27,7 @@ public class VisionObservationLinearFilterWrapper {
 		xFilter = LinearFilterFactory.create(filterType, logPath, modifier);
 		yFilter = LinearFilterFactory.create(filterType, logPath, modifier);
 		angleFilter = LinearFilterFactory.create(filterType, logPath, modifier);
-		this.updatedObservations = new Stack<>();
+		this.LastObservation = new Pose2d();
 	}
 
 	/**
@@ -51,24 +51,24 @@ public class VisionObservationLinearFilterWrapper {
 		Optional<Pose2d> odometryEndingPose = odometryObservationsOverTime.getSample(newOdometrySEndingTimestamps);
 
 		if (odometryStartingPose.isPresent() && odometryEndingPose.isPresent()) {
-			updatedObservations.add(fixVisionPose(visionObservation, odometryStartingPose.get(), odometryEndingPose.get()));
+			LastObservation = fixVisionPose(visionObservation, odometryStartingPose.get(), odometryEndingPose.get());
 		}
 	}
 
 	public void addRawData(VisionObservation data) {
-		updatedObservations.add(data.visionPose());
+		LastObservation = data.robotPose();
 	}
 
 	private Pose2d fixVisionPose(Pose2d visionPose, Pose2d odometryStartingPose, Pose2d odometryEndingPose) {
-		Transform2d changeInPosition = odometryEndingPose.minus(odometryEndingPose);
+		Transform2d changeInPosition = odometryStartingPose.minus(odometryEndingPose);
 		return visionPose.plus(changeInPosition);
 	}
 
 	public Pose2d calculateFilteredPose() {
 		return new Pose2d(
-			xFilter.calculateNewData(updatedObservations.peek().getX()),
-			yFilter.calculateNewData(updatedObservations.peek().getY()),
-			Rotation2d.fromRotations(angleFilter.calculateNewData(updatedObservations.getLast().getRotation().getRotations()))
+			xFilter.calculateNewData(LastObservation.getX()),
+			yFilter.calculateNewData(LastObservation.getY()),
+			Rotation2d.fromRotations(angleFilter.calculateNewData(LastObservation.getRotation().getRotations()))
 		);
 	}
 

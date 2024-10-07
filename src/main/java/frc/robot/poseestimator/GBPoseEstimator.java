@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import frc.robot.poseestimator.linearfilters.VisionObservationLinearFilterWrapper;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
@@ -23,11 +24,12 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
+	private final ILimelightFilterer limelightFilterer;
+	private final VisionObservationLinearFilterWrapper linearFilterWrapper;
 	private Pose2d odometryPose;
 	private Pose2d estimatedPose;
 	private SwerveDriveWheelPositions latestWheelPositions;
 	private Rotation2d latestGyroAngle;
-	private final ILimelightFilterer limelightFilterer;
 
 	public GBPoseEstimator(
 		String logPath,
@@ -49,6 +51,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer = limelightFilterer;
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
+		this.linearFilterWrapper = new VisionObservationLinearFilterWrapper(
+				PoseEstimatorConstants.LinearFiltersConstants.LOG_PATH,
+				PoseEstimatorConstants.LinearFiltersConstants.FILTER_TYPE,
+				PoseEstimatorConstants.LinearFiltersConstants.SAMPLE_COUNT
+		);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		resetPose(initialRobotPose);
 	}
@@ -152,6 +159,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void addVisionObservation(VisionObservation observation) {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
+			linearFilterWrapper.addRawData(observation);
+			Pose2d filteredObservation = linearFilterWrapper.calculateFilteredPose();
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());

@@ -25,22 +25,21 @@ import java.util.function.Supplier;
 
 public class RealElevatorConstants {
 
-	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
+	private static final double DEBOUNCE_TIME_SECONDS = 0.05;
 
-	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
+	private static final Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 
-	private final static CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
+	private static final CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
 
-	public static final int ELEVATOR_PID_SLOT = 0;
+	private static final int ELEVATOR_PID_SLOT = 0;
 
-	// TODO: check this later
-	private final static Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
+	private static final Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
-	private final static double ROTATIONS_TO_METERS_CONVERTION_RATIO = 1;
+	private static final double ROTATIONS_TO_METERS_CONVERTION_RATIO = 1;
 
-	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
+	private static final SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
-	public static ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
+	private static final ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
 
 	public static double feedforwardCalculation(Rotation2d velocity) {
 		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());

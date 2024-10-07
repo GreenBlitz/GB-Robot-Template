@@ -39,11 +39,11 @@ public class ElevatorCommandBuilder {
 
     public Command setTargetPosition(Rotation2d angle) {
         return new FunctionalCommand(
-                () -> {},
-                () -> elevator.setTargetAngle(angle),
-                interrupted -> elevator.stayInPlace(),
-                () -> false,
-                elevator
+            () -> {},
+            () -> elevator.setTargetAngle(angle),
+            interrupted -> elevator.stayInPlace(),
+            () -> false,
+            elevator
         );
     }
 
@@ -51,11 +51,11 @@ public class ElevatorCommandBuilder {
         return new RunCommand(elevator::stop);
     }
 
-    public static Command calibrateFeedForward() {
+    public Command calibrateFeedForward() {
         double[] oldValues = new double[] {RealElevatorConstants.FEEDFORWARD_CALCULATOR.ka, RealElevatorConstants.FEEDFORWARD_CALCULATOR.kg, RealElevatorConstants.FEEDFORWARD_CALCULATOR.kv, RealElevatorConstants.FEEDFORWARD_CALCULATOR.ks};
         return new ParallelCommandGroup(
-                new LoggedDashboardCommand("ks", (Double newkS) -> RealElevatorConstants.FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(oldValues[0], oldValues[1], oldValues[2], newkS)),
-                new LoggedDashboardCommand("kg", (Double newkG) -> RealElevatorConstants.FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(oldValues[0], newkG, oldValues[2], oldValues[3]))
+            new LoggedDashboardCommand("ks", elevator::setPower, elevator),
+            new LoggedDashboardCommand("kg", elevator::setPower, elevator)
         );
     }
     //@formatter:on

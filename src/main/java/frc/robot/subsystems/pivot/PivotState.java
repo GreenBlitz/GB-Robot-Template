@@ -6,6 +6,7 @@ public enum PivotState {
 
 	IDLE(Rotation2d.fromDegrees(40)),
 	INTAKE(Rotation2d.fromDegrees(35)),
+	ARM_INTAKE(Rotation2d.fromDegrees(30)),
 	PRE_SPEAKER(Rotation2d.fromDegrees(50)),
 	TRANSFER(Rotation2d.fromDegrees(17));
 

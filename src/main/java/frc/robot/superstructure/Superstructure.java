@@ -133,7 +133,7 @@ public class Superstructure {
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
 					funnelStateHandler.setState(FunnelState.INTAKE),
 					rollerStateHandler.setState(RollerState.ROLL_IN)
-				).withTimeout(Timeouts.INTAKE_FUNNEL),//.until(this::isObjectInFunnel)
+				).withTimeout(Timeouts.INTAKE_FUNNEL_SECONDS),//.until(this::isObjectInFunnel)
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.STOP),
 					rollerStateHandler.setState(RollerState.STOP),
@@ -161,13 +161,13 @@ public class Superstructure {
 					rollerStateHandler.setState(RollerState.ROLL_IN),
 					funnelStateHandler.setState(FunnelState.SLOW_INTAKE),
 					wristStateHandler.setState(WristState.ARM_INTAKE)
-				).withTimeout(Timeouts.INTAKE_ROLLER),////.until(this::isObjectInRoller)
+				).withTimeout(Timeouts.INTAKE_ROLLER_SECONDS),////.until(this::isObjectInRoller)
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_ARM),
 					rollerStateHandler.setState(RollerState.STOP),
 					funnelStateHandler.setState(FunnelState.SLOW_INTAKE),
 					wristStateHandler.setState(WristState.DEFAULT)
-				).withTimeout(Timeouts.WRIST_TO_POSITION)
+				).withTimeout(Timeouts.WRIST_TO_POSITION_SECONDS)
 					.until(() -> robot.getWrist().isAtPosition(WristState.DEFAULT.getPosition(), Tolerances.WRIST_POSITION)),
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.STOP),
@@ -200,7 +200,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
-				funnelStateHandler.setState(FunnelState.SHOOT).withTimeout(Timeouts.SHOOTING),// .until(() -> !isObjectInFunnel())
+				funnelStateHandler.setState(FunnelState.SHOOT).withTimeout(Timeouts.SHOOTING_SECONDS),// .until(() -> !isObjectInFunnel())
 				funnelStateHandler.setState(FunnelState.STOP)
 			),
 			rollerStateHandler.setState(RollerState.STOP),
@@ -254,7 +254,7 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStateHandler.setState(IntakeState.STOP),
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
-				).withTimeout(Timeouts.AMP_RELEASE),//.until(() -> !isObjectInRoller())
+				).withTimeout(Timeouts.AMP_RELEASE_SECONDS),//.until(() -> !isObjectInRoller())
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					rollerStateHandler.setState(RollerState.STOP),
@@ -279,7 +279,7 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					rollerStateHandler.setState(RollerState.ROLL_IN),
 					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
-				).withTimeout(Timeouts.TRANSFER_SHOOTER_ARM),//.until(this::isObjectInRoller),
+				).withTimeout(Timeouts.TRANSFER_SHOOTER_ARM_SECONDS),//.until(this::isObjectInRoller),
 				new ParallelDeadlineGroup(
 					rollerStateHandler.setState(RollerState.AFTER_INTAKE),
 					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
@@ -312,7 +312,7 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.INTAKE),
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
-				).withTimeout(Timeouts.TRANSFER_ARM_SHOOTER),//.until(this::isObjectInFunnel)
+				).withTimeout(Timeouts.TRANSFER_ARM_SHOOTER_SECONDS),//.until(this::isObjectInFunnel)
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStateHandler.setState(IntakeState.STOP),

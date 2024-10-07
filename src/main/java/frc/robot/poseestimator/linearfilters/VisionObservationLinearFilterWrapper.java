@@ -43,7 +43,7 @@ public class VisionObservationLinearFilterWrapper {
 	 * @param newOdometrySEndingTimestamps:  the ending of the new odometry data
 	 * @param odometryObservationsOverTime:  interpolated buffer contains the data from the starting to the ending of the new odometry data
 	 */
-	private Pose2d getFixedData(
+	private Optional<Pose2d> getFixedData(
 		Pose2d visionObservation,
 		double newOdometryStartingTimestamps,
 		double newOdometrySEndingTimestamps,
@@ -53,8 +53,9 @@ public class VisionObservationLinearFilterWrapper {
 		Optional<Pose2d> odometryEndingPose = odometryObservationsOverTime.getSample(newOdometrySEndingTimestamps);
 
 		if (odometryStartingPose.isPresent() && odometryEndingPose.isPresent()) {
-			LastObservation = fixVisionPose(visionObservation, odometryStartingPose.get(), odometryEndingPose.get());
+			return Optional.of(fixVisionPose(visionObservation, odometryStartingPose.get(), odometryEndingPose.get()));
 		}
+		return Optional.empty();
 	}
 
 	public void addData(VisionObservation data) {
@@ -83,10 +84,12 @@ public class VisionObservationLinearFilterWrapper {
 		yFilter.getFilter().reset();
 		angleFilter.getFilter().reset();
 		for (VisionObservation data : internalData) {
-			Pose2d fixed = getFixedData(data.robotPose(), data.timestamp(), timestamp, odometryObservationsOverTime);
-			xFilter.calculateNewData(fixed.getX());
-			yFilter.calculateNewData(fixed.getY());
-			Rotation2d.fromRotations(angleFilter.calculateNewData(fixed.getRotation().getRotations()));
+			Optional<Pose2d> fixed = getFixedData(data.robotPose(), data.timestamp(), timestamp, odometryObservationsOverTime);
+			fixed.ifPresent((Pose2d fixedData) -> {
+				xFilter.calculateNewData(fixedData.getX());
+				yFilter.calculateNewData(fixedData.getY());
+				Rotation2d.fromRotations(angleFilter.calculateNewData(fixedData.getRotation().getRotations()));
+			});
 		}
 		return new Pose2d(
 			xFilter.getFilter().lastValue(),

@@ -16,7 +16,7 @@ public enum AngleUnit {
 		this.toRotation2d = toRotation2d;
 	}
 
-	public Rotation2d toAngle(double value) {
+	public Rotation2d toRotation2d(double value) {
 		return toRotation2d.apply(value);
 	}
 

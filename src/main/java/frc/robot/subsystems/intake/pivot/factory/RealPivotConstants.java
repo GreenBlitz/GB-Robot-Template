@@ -7,7 +7,6 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
-import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.intake.pivot.PivotConstants;
@@ -27,13 +26,17 @@ public class RealPivotConstants {
 		position -> FEEDFORWARD_CALCULATOR.calculate(position.getRadians(), 0);
 	//@formatter:on
 
-	public static PivotStuff generatePivotStuff() {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.PIVOT);
+	private static void configMotor(SparkMaxWrapper sparkMaxWrapper) {
 		sparkMaxWrapper.getAbsoluteEncoder().setPositionConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getAbsoluteEncoder().setVelocityConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getPIDController().setP(1);
 		sparkMaxWrapper.getPIDController().setI(0);
 		sparkMaxWrapper.getPIDController().setD(0);
+	}
+
+	public static PivotStuff generatePivotStuff() {
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.PIVOT);
+		configMotor(sparkMaxWrapper);
 
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(PivotConstants.LOG_PATH, sparkMaxWrapper, config);
@@ -52,21 +55,7 @@ public class RealPivotConstants {
 			FEEDFORWARD_FUNCTION
 		);
 
-		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(
-			voltageSignal.getLatestValue(),
-			SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,
-			PivotConstants.PID_SLOT
-		);
-
-		return new PivotStuff(
-			PivotConstants.LOG_PATH,
-			motor,
-			voltageSignal,
-			positionSignal,
-			voltageRequest,
-			positionRequest,
-			sparkMaxWrapper.getAbsoluteEncoder()
-		);
+		return new PivotStuff(PivotConstants.LOG_PATH, motor, voltageSignal, positionSignal, positionRequest);
 	}
 
 }

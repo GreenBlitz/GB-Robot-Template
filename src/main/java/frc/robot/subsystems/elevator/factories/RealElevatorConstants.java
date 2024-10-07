@@ -56,26 +56,26 @@ public class RealElevatorConstants {
 		sparkMaxWrapper.getPIDController().setD(0);
 	}
 
-	public static ElevatorMotorStuff generateMotor(String logPath, String motorName, SparkMaxWrapper sparkMaxWrapper) {
+	public static ElevatorMotorStuff generateMotorStuff(String logPath, String motorName, SparkMaxWrapper sparkMaxWrapper) {
+		configureMotor(sparkMaxWrapper);
+
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> motorPosition = () -> sparkMaxWrapper.getEncoder().getPosition();
 		SuppliedAngleSignal motorPositionSignal = new SuppliedAngleSignal(motorName + " angle", motorPosition, AngleUnit.ROTATIONS);
 
 		Supplier<Double> motorsVoltage = sparkMaxWrapper::getVoltage;
-		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("main motor voltage", motorsVoltage);
+		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal(motorName + " voltage", motorsVoltage);
 
 		return new ElevatorMotorStuff(motor, motorVoltageSignal, motorPositionSignal);
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
-		SparkMaxWrapper frontMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FRONT_MOTOR);
-		SparkMaxWrapper backwardMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_SECOND_MOTOR);
-		configureMotor(frontMotorWrapper);
-		configureMotor(backwardMotorWrapper);
+		SparkMaxWrapper frontMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FRONT);
+		SparkMaxWrapper backwardMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_BACKWARD);
 
-		ElevatorMotorStuff frontMotorStuff = generateMotor(logPath + "frontMotor", "first motor", frontMotorWrapper);
-		ElevatorMotorStuff backwardMotorStuff = generateMotor(logPath + "secondMotor", "second motor", backwardMotorWrapper);
+		ElevatorMotorStuff frontMotorStuff = generateMotorStuff(logPath + "front motor", "first motor", frontMotorWrapper);
+		ElevatorMotorStuff backwardMotorStuff = generateMotorStuff(logPath + "backward motor", "second motor", backwardMotorWrapper);
 
 		BooleanSupplier atLimitSwitch = () -> frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);

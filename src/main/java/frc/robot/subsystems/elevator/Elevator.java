@@ -60,11 +60,11 @@ public class Elevator extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
-	public Rotation2d getElevatorPosition() {
-		return Rotation2d.fromRotations(
-			(elevatorStuff.frontMotorStuff().motorPositionSignal().getLatestValue().getRotations()
-				+ elevatorStuff.backwardMotorStuff().motorPositionSignal().getLatestValue().getRotations()) / 2
-		);
+	public double getElevatorPositionMeters() {
+		return rotationsToMeters(Rotation2d.fromRotations(
+				(elevatorStuff.frontMotorStuff().motorPositionSignal().getLatestValue().getRotations()
+						+ elevatorStuff.backwardMotorStuff().motorPositionSignal().getLatestValue().getRotations()) / 2
+		));
 	}
 
 	public void stayInPlace() {
@@ -86,7 +86,7 @@ public class Elevator extends GBSubsystem {
 	public void logState() {
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
 		Logger.recordOutput(this.getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
-		Logger.recordOutput(this.getLogPath() + "elevatorPosition", rotationsToMeters(getElevatorPosition()));
+		Logger.recordOutput(this.getLogPath() + "elevatorPosition", getElevatorPositionMeters());
 	}
 
 	@Override

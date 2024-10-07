@@ -1,4 +1,4 @@
-package frc.utils;
+package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -9,7 +9,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 	private final String logPath;
 
 	public GBSubsystem(String logPath) {
-		this.logPath = "Subsystems/" + logPath;
+		this.logPath = logPath;
 	}
 
 	private String getCurrentCommandName() {
@@ -23,10 +23,10 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	@Override
 	public final void periodic() {
-		Logger.recordOutput(getLogPath() + "Current Command", getCurrentCommandName());
+		Logger.recordOutput(getLogPath() + "CurrentCommand", getCurrentCommandName());
 		subsystemPeriodic();
 	}
 
-	protected abstract void subsystemPeriodic();
+	protected void subsystemPeriodic() {}
 
 }

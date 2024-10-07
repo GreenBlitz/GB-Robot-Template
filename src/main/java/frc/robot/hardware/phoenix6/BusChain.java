@@ -1,8 +1,9 @@
-package frc.utils.ctre;
+package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.CANBus;
-import edu.wpi.first.wpilibj.Timer;
-import frc.robot.constants.LogPaths;
+import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 
@@ -26,6 +27,55 @@ public enum BusChain {
 		this.chainName = chainName;
 		this.logPath = LOG_PATH_PREFIX + this.chainName + "/";
 		this.busStatus = CANBus.getStatus(this.chainName);
+
+		createAlerts();
+	}
+
+	private void createAlerts() {
+		//@formatter:off
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "StatusErrorAt",
+				() -> !busStatus.Status.isOK()
+			)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "ReceiveErrorAt",
+				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
+			)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "FloodedAt",
+				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
+			)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "TransmitErrorsAt",
+				() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
+			)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "DisconnectedAt",
+				() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+			)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "FullAt",
+				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
+			)
+		);
+		//@formatter:on
 	}
 
 	public String getChainName() {
@@ -35,7 +85,6 @@ public enum BusChain {
 	public void updateStatus() {
 		busStatus = CANBus.getStatus(chainName);
 		logStatus();
-		reportAlerts();
 	}
 
 	public void logStatus() {
@@ -45,30 +94,6 @@ public enum BusChain {
 		Logger.recordOutput(logPath + "FullCount", busStatus.TxFullCount);
 		Logger.recordOutput(logPath + "ReceiveError", busStatus.REC);
 		Logger.recordOutput(logPath + "TransmitError", busStatus.TEC);
-	}
-
-	public void reportAlerts() {
-		String alertLogPath = LogPaths.ALERT_LOG_PATH + logPath;
-		double currentTime = Timer.getFPGATimestamp();
-
-		if (!busStatus.Status.isOK()) {
-			Logger.recordOutput(alertLogPath + "StatusErrorAt", currentTime);
-		}
-		if (busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE) {
-			Logger.recordOutput(alertLogPath + "FloodedAt", currentTime);
-		}
-		if (busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT) {
-			Logger.recordOutput(alertLogPath + "DisconnectedAt", currentTime);
-		}
-		if (busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT) {
-			Logger.recordOutput(alertLogPath + "FullAt", currentTime);
-		}
-		if (busStatus.REC > PERMITTED_RECEIVE_ERRORS) {
-			Logger.recordOutput(alertLogPath + "ReceiveErrorAt", currentTime);
-		}
-		if (busStatus.TEC > PERMITTED_TRANSMIT_ERRORS) {
-			Logger.recordOutput(alertLogPath + "TransmitErrorsAt", currentTime);
-		}
 	}
 
 	public static void logChainsStatuses() {

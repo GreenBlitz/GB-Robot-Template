@@ -34,10 +34,10 @@ public class RealFlywheelConstants {
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
-				Volts.of(1).per(Seconds.of(1)),
-				Volts.of(7),
-				Seconds.of(10),
-				(state) -> SignalLogger.writeString("state", state.toString())
+			Volts.of(1).per(Seconds.of(1)),
+			Volts.of(7),
+			Seconds.of(10),
+			(state) -> SignalLogger.writeString("state", state.toString())
 		);
 	}
 
@@ -66,10 +66,10 @@ public class RealFlywheelConstants {
 		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", sparkMaxWrapper.getEncoder()::getVelocity, AngleUnit.ROTATIONS);
 
 		SparkMaxAngleRequest velocityRequest = new SparkMaxAngleRequest(
-				Rotation2d.fromRotations(0),
-				SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
-				0,
-				feedForwardCalculator
+			Rotation2d.fromRotations(0),
+			SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
+			0,
+			feedForwardCalculator
 		);
 
 		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);

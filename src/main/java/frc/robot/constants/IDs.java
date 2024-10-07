@@ -11,8 +11,8 @@ import frc.utils.battery.PowerDistributionDeviceID;
 public class IDs {
 
 	public static final PowerDistributionDeviceID POWER_DISTRIBUTION_DEVICE_ID = new PowerDistributionDeviceID(
-			20,
-			PowerDistribution.ModuleType.kRev
+		20,
+		PowerDistribution.ModuleType.kRev
 	);
 
 	public static final Phoenix6DeviceID PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);

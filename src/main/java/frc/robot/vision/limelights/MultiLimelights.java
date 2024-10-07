@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MultiLimelightsRawData {
+public class MultiLimelights {
 
 	private final List<Limelight> limelights;
 
-	public MultiLimelightsRawData(String[] names, String hardwareLogPath) {
+	public MultiLimelights(String[] names, String hardwareLogPath) {
 		this.limelights = new ArrayList<>();
 
 		for (String limelightName : names) {
@@ -18,9 +18,9 @@ public class MultiLimelightsRawData {
 		}
 	}
 
-	public void updateGyroAngles(GyroAngleValues gyroAnglesValues) {
+	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
 		for (Limelight limelight : limelights) {
-			limelight.updateGyroAngleValues(gyroAnglesValues);
+			limelight.updateGyroAngleValues(gyroAngleValues);
 		}
 	}
 

@@ -12,10 +12,6 @@ public class SingleJointedArmSimulation extends MotorSimulation {
 		this.armSimulation = armSimulation;
 	}
 
-	public double getCurrent() {
-		return armSimulation.getCurrentDrawAmps();
-	}
-
 	@Override
 	public Rotation2d getPosition() {
 		return Rotation2d.fromRadians(armSimulation.getAngleRads());

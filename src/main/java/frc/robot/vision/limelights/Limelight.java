@@ -6,8 +6,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
-import frc.utils.GBSubsystem;
 
 import java.util.Optional;
 
@@ -22,8 +22,8 @@ public class Limelight extends GBSubsystem {
 	private double[] aprilTagPoseArray;
 	private GyroAngleValues gyroAngleValues;
 
-	public Limelight(String name, String hardwareLogPath) {
-		super(hardwareLogPath + name + "/");
+	public Limelight(String name, String logPath) {
+		super(logPath + name + "/");
 
 		this.name = name;
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
@@ -38,14 +38,22 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public void updateLimelight() {
-		robotOrientationEntry.setDoubleArray(gyroAngleValues.getAsArray());
+		robotOrientationEntry.setDoubleArray(
+			new double[] {
+				gyroAngleValues.yaw(),
+				gyroAngleValues.yawRate(),
+				gyroAngleValues.pitch(),
+				gyroAngleValues.pitchRate(),
+				gyroAngleValues.roll(),
+				gyroAngleValues.rollRate(),}
+		);
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
-		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NULL_APRILTAG_ID);
-		if (id == LimeLightConstants.NULL_APRILTAG_ID) {
+		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
+		if (id == LimeLightConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
 
@@ -53,39 +61,36 @@ public class Limelight extends GBSubsystem {
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
 		Pose3d robotPose = new Pose3d(
-			getPoseInformation(LimelightEntryValue.X_AXIS),
-			getPoseInformation(LimelightEntryValue.Y_AXIS),
-			getPoseInformation(LimelightEntryValue.Z_AXIS),
+			getPoseValue(LimelightEntryValue.X_AXIS),
+			getPoseValue(LimelightEntryValue.Y_AXIS),
+			getPoseValue(LimelightEntryValue.Z_AXIS),
 			new Rotation3d(
-				Math.toRadians(getPoseInformation(LimelightEntryValue.ROLL_ANGLE)),
-				Math.toRadians(getPoseInformation(LimelightEntryValue.PITCH_ANGLE)),
-				Math.toRadians(getPoseInformation(LimelightEntryValue.YAW_ANGLE))
+				Math.toRadians(getPoseValue(LimelightEntryValue.ROLL_ANGLE)),
+				Math.toRadians(getPoseValue(LimelightEntryValue.PITCH_ANGLE)),
+				Math.toRadians(getPoseValue(LimelightEntryValue.YAW_ANGLE))
 			)
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 
 	public double getAprilTagHeight() {
-		return getAprilTagInformation(LimelightEntryValue.Y_AXIS);
+		return getAprilTagValue(LimelightEntryValue.Y_AXIS);
 	}
 
 	public double getDistanceFromAprilTag() {
-		return getAprilTagInformation(LimelightEntryValue.Z_AXIS);
+		return getAprilTagValue(LimelightEntryValue.Z_AXIS);
 	}
 
-	public double getAprilTagInformation(LimelightEntryValue entryValue) {
+	public double getAprilTagValue(LimelightEntryValue entryValue) {
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
-	public double getPoseInformation(LimelightEntryValue entryValue) {
+	public double getPoseValue(LimelightEntryValue entryValue) {
 		return robotPoseArray[entryValue.getIndex()];
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
 	}
-
-	@Override
-	protected void subsystemPeriodic() {}
 
 }

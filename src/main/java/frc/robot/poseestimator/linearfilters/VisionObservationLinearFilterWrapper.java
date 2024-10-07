@@ -70,7 +70,6 @@ public class VisionObservationLinearFilterWrapper {
 	}
 
 	public Pose2d calculateFilteredPose() {
-		// ! bad code. pls dont' merge this, or fix this. Several sideeffects.
 		return new Pose2d(
 			xFilter.calculateNewData(LastObservation.getX()),
 			yFilter.calculateNewData(LastObservation.getY()),
@@ -79,6 +78,7 @@ public class VisionObservationLinearFilterWrapper {
 	}
 
 	public Pose2d calculateFixedData(TimeInterpolatableBuffer<Pose2d> odometryObservationsOverTime) {
+		// ! bad code. pls dont' merge this, or fix this. Several side effects.
 		double timestamp = Timer.getFPGATimestamp();
 		xFilter.getFilter().reset();
 		yFilter.getFilter().reset();

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.poseestimator.linearfilters.VisionObservationLinearFilterWrapper;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
@@ -160,7 +161,12 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			linearFilterWrapper.addData(observation);
-			Pose2d filteredObservation = linearFilterWrapper.calculateFilteredPose();
+			Pose2d fixedPose = linearFilterWrapper.calculateFilteredPose();
+			VisionObservation filteredObservation = new VisionObservation(
+					fixedPose,
+					PoseEstimationMath.calculateStandardDeviationOfPose(fixedPose, estimatedPose),
+					Timer.getFPGATimestamp()
+			);
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());

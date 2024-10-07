@@ -73,7 +73,7 @@ public class LinearFilters {
 				if (data.size() >= sampleSize) {
 					data.removeFirst();
 				}
-				for (int i = 0; i<=sampleSize; i++) {
+				for (int i = 0; i <= sampleSize; i++) {
 					weights += 1.0 / i;
 					output += data.indexOf(i) * weights;
 				}

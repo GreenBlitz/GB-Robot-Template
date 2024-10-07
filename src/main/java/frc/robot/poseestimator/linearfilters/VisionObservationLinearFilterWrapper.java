@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.poseestimator.observations.VisionObservation;
 
 import java.util.*;
@@ -13,6 +14,7 @@ public class VisionObservationLinearFilterWrapper {
 	private final GBLinearFilter xFilter;
 	private final GBLinearFilter yFilter;
 	private final GBLinearFilter angleFilter;
+	private final Stack<VisionObservation> internalData;
 	private Pose2d LastObservation;
 
 	/**
@@ -20,28 +22,28 @@ public class VisionObservationLinearFilterWrapper {
 	 *
 	 * @param logPath:    like, the log path
 	 * @param filterType: the type of the linear filter that would be applied
-	 * @param modifier:   modify the behavior of the filter. In case of FIR filters, this would be the sample count (casted to an
-	 *                    integer), and for IIR filters the time constant (the period is always the RobotRIO cycle time).
+	 * @param modifier:   modify the behavior of the filter. In case of FIR filters, this would be the sample count (casted to an integer), and
+	 *                    for IIR filters the time constant (the period is always the RobotRIO cycle time).
 	 */
 	public VisionObservationLinearFilterWrapper(String logPath, LinearFilterType filterType, double modifier) {
-		xFilter = LinearFilterFactory.create(filterType, logPath, modifier);
-		yFilter = LinearFilterFactory.create(filterType, logPath, modifier);
-		angleFilter = LinearFilterFactory.create(filterType, logPath, modifier);
+		this.xFilter = LinearFilterFactory.create(filterType, logPath, modifier);
+		this.yFilter = LinearFilterFactory.create(filterType, logPath, modifier);
+		this.angleFilter = LinearFilterFactory.create(filterType, logPath, modifier);
+		this.internalData = new Stack<>();
 		this.LastObservation = new Pose2d();
 	}
 
 	/**
 	 *
-	 * adds new data to the filter, transformed by the new odometry data from the within a time period. That way, the old vision
-	 * observation would be updated to its new approximated position
+	 * adds new data to the filter, transformed by the new odometry data from the within a time period. That way, the old vision observation
+	 * would be updated to its new approximated position
 	 *
 	 * @param visionObservation:             the observation that needs to be fixed and added
 	 * @param newOdometryStartingTimestamps: the starting of the new odometry data
 	 * @param newOdometrySEndingTimestamps:  the ending of the new odometry data
-	 * @param odometryObservationsOverTime:  interpolated buffer contains the data from the starting to the ending of the new
-	 *                                       odometry data
+	 * @param odometryObservationsOverTime:  interpolated buffer contains the data from the starting to the ending of the new odometry data
 	 */
-	public void addFixedData(
+	private Pose2d getFixedData(
 		Pose2d visionObservation,
 		double newOdometryStartingTimestamps,
 		double newOdometrySEndingTimestamps,
@@ -55,8 +57,10 @@ public class VisionObservationLinearFilterWrapper {
 		}
 	}
 
-	public void addRawData(VisionObservation data) {
+	public void addData(VisionObservation data) {
 		LastObservation = data.robotPose();
+		internalData.add(data);
+		checkSize();
 	}
 
 	private Pose2d fixVisionPose(Pose2d visionPose, Pose2d odometryStartingPose, Pose2d odometryEndingPose) {
@@ -65,11 +69,36 @@ public class VisionObservationLinearFilterWrapper {
 	}
 
 	public Pose2d calculateFilteredPose() {
+		// ! bad code. pls dont' merge this, or fix this. Several sideeffects.
 		return new Pose2d(
 			xFilter.calculateNewData(LastObservation.getX()),
 			yFilter.calculateNewData(LastObservation.getY()),
 			Rotation2d.fromRotations(angleFilter.calculateNewData(LastObservation.getRotation().getRotations()))
 		);
+	}
+
+	public Pose2d calculateFixedData(TimeInterpolatableBuffer<Pose2d> odometryObservationsOverTime) {
+		double timestamp = Timer.getFPGATimestamp();
+		xFilter.getFilter().reset();
+		yFilter.getFilter().reset();
+		angleFilter.getFilter().reset();
+		for (VisionObservation data : internalData) {
+			Pose2d fixed = getFixedData(data.robotPose(), data.timestamp(), timestamp, odometryObservationsOverTime);
+			xFilter.calculateNewData(fixed.getX());
+			yFilter.calculateNewData(fixed.getY());
+			Rotation2d.fromRotations(angleFilter.calculateNewData(fixed.getRotation().getRotations()));
+		}
+		return new Pose2d(
+			xFilter.getFilter().lastValue(),
+			yFilter.getFilter().lastValue(),
+			Rotation2d.fromRotations(angleFilter.calculateNewData(LastObservation.getRotation().getRotations()))
+		);
+	}
+
+	protected void checkSize() {
+		if (internalData.size() >= LinearFiltersConstants.MAX_SIZE) {
+			internalData.removeLast();
+		}
 	}
 
 }

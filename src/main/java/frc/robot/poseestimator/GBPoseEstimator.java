@@ -52,9 +52,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.limelightFilterer = limelightFilterer;
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		this.linearFilterWrapper = new VisionObservationLinearFilterWrapper(
-				PoseEstimatorConstants.LinearFiltersConstants.LOG_PATH,
-				PoseEstimatorConstants.LinearFiltersConstants.FILTER_TYPE,
-				PoseEstimatorConstants.LinearFiltersConstants.SAMPLE_COUNT
+			PoseEstimatorConstants.LinearFiltersConstants.LOG_PATH,
+			PoseEstimatorConstants.LinearFiltersConstants.FILTER_TYPE,
+			PoseEstimatorConstants.LinearFiltersConstants.SAMPLE_COUNT
 		);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		resetPose(initialRobotPose);
@@ -159,7 +159,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void addVisionObservation(VisionObservation observation) {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
-			linearFilterWrapper.addRawData(observation);
+			linearFilterWrapper.addData(observation);
 			Pose2d filteredObservation = linearFilterWrapper.calculateFilteredPose();
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);

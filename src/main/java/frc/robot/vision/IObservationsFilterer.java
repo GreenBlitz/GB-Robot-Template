@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IObservationsFilterer {
 
-    public abstract List<VisionObservation> getAllFilteredData();
+	public abstract List<VisionObservation> getAllFilteredData();
 
 }

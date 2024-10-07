@@ -61,10 +61,12 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public double getElevatorPositionMeters() {
-		return rotationsToMeters(Rotation2d.fromRotations(
+		return rotationsToMeters(
+			Rotation2d.fromRotations(
 				(elevatorStuff.frontMotorStuff().motorPositionSignal().getLatestValue().getRotations()
-						+ elevatorStuff.backwardMotorStuff().motorPositionSignal().getLatestValue().getRotations()) / 2
-		));
+					+ elevatorStuff.backwardMotorStuff().motorPositionSignal().getLatestValue().getRotations()) / 2
+			)
+		);
 	}
 
 	public void stayInPlace() {

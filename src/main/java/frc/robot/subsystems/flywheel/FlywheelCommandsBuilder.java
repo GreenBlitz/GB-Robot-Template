@@ -25,7 +25,7 @@ public class FlywheelCommandsBuilder {
 		).withName("Set power to " + power);
 	}
 
-	public Command init(Rotation2d targetVelocity) {
+	public Command setVelocity(Rotation2d targetVelocity) {
 		return new InitExecuteCommand(
 				() ->{},
 				() -> flywheel.setTargetVelocity(targetVelocity),

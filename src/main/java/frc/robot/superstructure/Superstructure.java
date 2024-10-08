@@ -25,7 +25,7 @@ public class Superstructure {
 	public Superstructure(Robot robot) {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
-		this.flywheelStateHandler = new FlywheelStateHandler(robot.getFlywheel());
+		this.flywheelStateHandler = new FlywheelStateHandler(robot);
 		this.funnelStateHandler = new FunnelStateHandler(robot);
 	}
 

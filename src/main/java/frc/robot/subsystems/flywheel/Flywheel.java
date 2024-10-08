@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.flywheel.factory.RealFlywheelConstants;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class Flywheel extends GBSubsystem {
@@ -75,7 +74,7 @@ public class Flywheel extends GBSubsystem {
 		bottomMotor.updateSignals(bottomFlywheelComponents.voltageSignal(), bottomFlywheelComponents.velocitySignal());
 	}
 
-	protected void subsystemInit(){
+	protected void subsystemInit() {
 		commandsBuilder.setVelocity(FlywheelState.DEFAULT.getVelocity());
 	}
 

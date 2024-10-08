@@ -6,6 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.constants.IDs;
+import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.FlywheelComponents;
+import frc.robot.subsystems.flywheel.FlywheelConstants;
+import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -29,9 +34,18 @@ public class Robot {
 
 	private final Funnel funnel;
 
+	private final Flywheel flywheel;
+
 	private final Superstructure superstructure;
 
 	public Robot() {
+		FlywheelComponents topFlywheelComponents = FlywheelFactory
+			.create(FlywheelConstants.LOG_PATH + "TopMotor", true, IDs.CANSparkMAXIDs.TOP_FLYWHEEL);
+
+		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
+			.create(FlywheelConstants.LOG_PATH + "BottomMotor", false, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL);
+
+		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH);
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE),
@@ -58,6 +72,11 @@ public class Robot {
 	public Funnel getFunnel() {
 		return funnel;
 	}
+
+	public Flywheel getFlywheel() {
+		return flywheel;
+	}
+
 
 	public Superstructure getSuperstructure() {
 		return superstructure;

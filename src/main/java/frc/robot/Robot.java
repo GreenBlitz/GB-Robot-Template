@@ -6,9 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.intake.IntakeRoller;
-import frc.robot.subsystems.intake.IntakeRollerConstant;
-import frc.robot.subsystems.intake.factory.IntakeRollerFactory;
+import frc.robot.subsystems.intake.roller.IntakeRoller;
+import frc.robot.subsystems.intake.roller.IntakeRollerConstant;
+import frc.robot.subsystems.intake.roller.factory.IntakeRollerFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;

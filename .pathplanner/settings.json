@@ -1,15 +1,9 @@
 {
-  "robotWidth": 0.9,
+  "robotWidth": 0.897,
   "robotLength": 0.767,
   "holonomicMode": true,
-  "pathFolders": [
-    "competition",
-    "test"
-  ],
-  "autoFolders": [
-    "competition",
-    "test"
-  ],
+  "pathFolders": [],
+  "autoFolders": [],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,

@@ -4,7 +4,13 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
+import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
+import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
@@ -14,6 +20,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.auto.AutonomousChooser;
+import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;
 
@@ -31,6 +38,7 @@ public class Robot {
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final SuperStructure superStructure;
+	BrushlessSparkMAXMotor motor;
 
 	public Robot() {
 		this.swerve = new Swerve(
@@ -45,12 +53,20 @@ public class Robot {
 
 		this.superStructure = new SuperStructure(swerve, poseEstimator);
 
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(new SparkMaxDeviceID(3, CANSparkLowLevel.MotorType.kBrushless));
+
+		motor = new BrushlessSparkMAXMotor("intake", sparkMaxWrapper, new SysIdRoutine.Config());
+
 		buildPathPlannerForAuto();
 		configureBindings();
 	}
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
+		PathPlannerUtils
+			.registerCommand("Intake", new FunctionalCommand(() -> {}, () -> motor.setPower(0.6), (interrupted) -> motor.stop(), () -> false));
+		PathPlannerUtils
+			.registerCommand("Shoot", new FunctionalCommand(() -> {}, () -> motor.setPower(-0.6), (interrupted) -> motor.stop(), () -> false).withTimeout(3));
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 //		PathPlannerUtils.setTargetRotationOverride(() -> {

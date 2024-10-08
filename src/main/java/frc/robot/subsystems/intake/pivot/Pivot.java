@@ -47,8 +47,7 @@ public class Pivot extends GBSubsystem {
 	}
 
 	protected boolean isAtAngle(Rotation2d targetAngle, Rotation2d tolerance) {
-		return Math.abs(pivotStuff.positionSignal().getLatestValue().getRadians() - (targetAngle).getRadians())
-			< tolerance.getRadians();
+		return Math.abs(pivotStuff.positionSignal().getLatestValue().getRadians() - (targetAngle).getRadians()) < tolerance.getRadians();
 	}
 
 	private void updateInputs() {

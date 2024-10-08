@@ -3,22 +3,22 @@ package frc.robot.structures;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class SuperStructure {
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final IPoseEstimator poseEstimator;
 
-	public SuperStructure(Swerve swerve, PoseEstimator poseEstimator) {
+	public SuperStructure(Swerve swerve, IPoseEstimator poseEstimator) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
 	}
 
 	public void periodic() {
 		swerve.updateStatus();
-		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
+		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
 	}
 
 
@@ -34,7 +34,7 @@ public class SuperStructure {
 	public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vxMetersPerSecond,
-			poseEstimator.getCurrentPose().getX(),
+			poseEstimator.getEstimatedPose().getX(),
 			targetXBlueAlliancePosition
 		);
 	}
@@ -42,13 +42,13 @@ public class SuperStructure {
 	public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vyMetersPerSecond,
-			poseEstimator.getCurrentPose().getY(),
+			poseEstimator.getEstimatedPose().getY(),
 			targetYBlueAlliancePosition
 		);
 	}
 
 	public boolean isAtAngle(Rotation2d targetAngle) {
-		double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getCurrentPose().getRotation()).getDegrees());
+		double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getEstimatedPose().getRotation()).getDegrees());
 		boolean isAtAngle = angleDifferenceDeg < SuperStructureConstants.HEADING_TOLERANCE.getDegrees();
 
 		double currentRotationVelocityRadians = swerve.getRobotRelativeVelocity().omegaRadiansPerSecond;

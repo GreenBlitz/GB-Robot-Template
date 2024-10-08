@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
-import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.structures.SuperStructureConstants;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -19,6 +19,8 @@ import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -151,20 +153,37 @@ public class Swerve extends GBSubsystem {
 		return Math.min(gyroStuff.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
-	public OdometryObservation[] getAllOdometryObservations() {
+	public List<OdometryObservation> getAllOdometryObservations() {
 		int odometrySamples = getNumberOfOdometrySamples();
 
-		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
+		List<OdometryObservation> odometryObservations = new ArrayList<>();
 		for (int i = 0; i < odometrySamples; i++) {
-			odometryObservations[i] = new OdometryObservation(
-				modules.getWheelsPositions(i),
-				gyroStuff.yawSignal().asArray()[i],
-				gyroStuff.yawSignal().getTimestamps()[i]
+			odometryObservations.add(
+				new OdometryObservation(
+					modules.getWheelsPositions(i),
+					gyroStuff.yawSignal().asArray()[i],
+					gyroStuff.yawSignal().getTimestamps()[i]
+				)
 			);
 		}
 
 		return odometryObservations;
 	}
+
+//	public OdometryObservation[] getAllOdometryObservations() {
+//		int odometrySamples = getNumberOfOdometrySamples();
+//
+//		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
+//		for (int i = 0; i < odometrySamples; i++) {
+//			odometryObservations[i] = new OdometryObservation(
+//				modules.getWheelsPositions(i),
+//				gyroStuff.yawSignal().asArray()[i],
+//				gyroStuff.yawSignal().getTimestamps()[i]
+//			);
+//		}
+//
+//		return odometryObservations;
+//	}
 
 
 	public Rotation2d getAbsoluteHeading() {

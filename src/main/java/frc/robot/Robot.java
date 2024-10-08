@@ -4,9 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.poseestimator.GBPoseEstimator;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.structures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -14,6 +20,10 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.limelights.ILimelightFilterer;
+import frc.robot.vision.limelights.LimelightFilterer;
+import frc.robot.vision.limelights.LimelightFiltererConfig;
+import frc.robot.vision.limelights.MultiLimelights;
 
 import java.util.Optional;
 
@@ -28,7 +38,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final IPoseEstimator poseEstimator;
 	private final SuperStructure superStructure;
 
 	public Robot() {
@@ -37,10 +47,21 @@ public class Robot {
 			ModulesFactory.create(SwerveType.SWERVE),
 			GyroFactory.create(SwerveType.SWERVE)
 		);
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+//		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+		MultiLimelights multiLimelights = new MultiLimelights(new String[] {"limelight-front", "limelight-back"}, "Limelight/");
+		ILimelightFilterer limelightFilterer = new LimelightFilterer(new LimelightFiltererConfig("LimelightFilterer", 1.2397), multiLimelights);
+		this.poseEstimator = new GBPoseEstimator(
+			"PoseEstimator/",
+			limelightFilterer,
+			swerve.getConstants().kinematics(),
+			new SwerveDriveWheelPositions(new SwerveModulePosition[4]),
+			new Rotation2d(),
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+			new Pose2d()
+		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
 		this.superStructure = new SuperStructure(swerve, poseEstimator);
 
@@ -50,7 +71,7 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 	}
 
 	private void configureBindings() {
@@ -70,7 +91,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public PoseEstimator getPoseEstimator() {
+	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

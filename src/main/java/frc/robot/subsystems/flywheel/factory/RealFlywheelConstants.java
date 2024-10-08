@@ -41,11 +41,11 @@ public class RealFlywheelConstants {
 		);
 	}
 
-	private static void configMotor(SparkMaxWrapper sparkMax, boolean isInverted, double conversionFactor) {
+	private static void configMotor(SparkMaxWrapper sparkMax, boolean isInverted, double gear_ratio) {
 		sparkMax.setInverted(isInverted);
 		sparkMax.setSmartCurrentLimit(40);
-		sparkMax.getEncoder().setPositionConversionFactor(conversionFactor);
-		sparkMax.getEncoder().setVelocityConversionFactor(conversionFactor);
+		sparkMax.getEncoder().setPositionConversionFactor(gear_ratio);
+		sparkMax.getEncoder().setVelocityConversionFactor(gear_ratio);
 
 		sparkMax.getPIDController().setP(5);
 		sparkMax.getPIDController().setI(0);

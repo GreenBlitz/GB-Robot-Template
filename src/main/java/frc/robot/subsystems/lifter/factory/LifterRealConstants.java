@@ -40,6 +40,7 @@ public class LifterRealConstants {
 		);
 	}
 
+	//@formatter:off
 	protected static LifterStuff generateLifterStuff(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
 		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
@@ -50,9 +51,13 @@ public class LifterRealConstants {
 			logPath,
 			new TalonFXMotor(logPath, talonFXWrapper, generateSysidConfig()),
 			DRUM_RADIUS,
-			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(talonFXWrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
+			Phoenix6SignalBuilder.generatePhoenix6Signal(
+					talonFXWrapper.getPosition(),
+					GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+					AngleUnit.ROTATIONS
+			)
 		);
 	}
-
+	//@formatter:on
 }
+

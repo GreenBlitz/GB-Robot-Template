@@ -3,6 +3,7 @@ package frc.robot.subsystems.lifter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.elbow.ElbowConstants;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 
@@ -52,6 +53,10 @@ public class Lifter extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
+		if (LifterConstants.MINIMUM_ACHIVEABLE_POSITION_METERS > convertToMeters(lifterStuff.positionSignal().getLatestValue())) {
+			motor.resetPosition(convertFromMeters(LifterConstants.MINIMUM_ACHIVEABLE_POSITION_METERS));
+		}
+
 		updateInputs();
 	}
 
@@ -64,6 +69,10 @@ public class Lifter extends GBSubsystem {
 
 	private double convertToMeters(Rotation2d motorPosition) {
 		return Conversions.angleToDistance(motorPosition, lifterStuff.drumRadius());
+	}
+
+	private Rotation2d convertFromMeters(double mechanismPosition) {
+		return Conversions.distanceToAngle(mechanismPosition, lifterStuff.drumRadius());
 	}
 
 }

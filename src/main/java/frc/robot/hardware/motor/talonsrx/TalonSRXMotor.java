@@ -64,7 +64,6 @@ public class TalonSRXMotor implements ControllableMotor {
 		motor.set(TalonSRXControlMode.PercentOutput, power);
 	}
 
-
 	@Override
 	public void applyDoubleRequest(IRequest<Double> request) {
 		DoubleSRXRequest srxRequest = (DoubleSRXRequest) request;

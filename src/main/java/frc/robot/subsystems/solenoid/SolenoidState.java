@@ -6,15 +6,14 @@ public enum SolenoidState {
 	RETRACT(0.8),
 	HOLD(0.2);
 
+	private final double power;
 
-	private final double appliedPower;
-
-	SolenoidState(double appliedPower) {
-		this.appliedPower = appliedPower;
+	SolenoidState(double power) {
+		this.power = power;
 	}
 
-	public double getAppliedPower() {
-		return appliedPower;
+	public double getPower() {
+		return power;
 	}
 
 }

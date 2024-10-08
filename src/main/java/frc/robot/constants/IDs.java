@@ -53,6 +53,7 @@ public class IDs {
 
 		public static final SparkMaxDeviceID TOP_FLYWHEEL = new SparkMaxDeviceID(11);
 		public static final SparkMaxDeviceID BOTTOM_FLYWHEEL = new SparkMaxDeviceID(12);
+		public static final SparkMaxDeviceID INTAKE_ROLLER = new SparkMaxDeviceID(11, CANSparkLowLevel.MotorType.kBrushless);
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
 	}

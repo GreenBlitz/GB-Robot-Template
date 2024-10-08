@@ -11,6 +11,9 @@ import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelComponents;
 import frc.robot.subsystems.flywheel.FlywheelConstants;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
+import frc.robot.subsystems.intake.IntakeRoller;
+import frc.robot.subsystems.intake.IntakeRollerConstant;
+import frc.robot.subsystems.intake.factory.IntakeRollerFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -33,6 +36,7 @@ public class Robot {
 	private final Swerve swerve;
 
 	private final Funnel funnel;
+	private final IntakeRoller intakeRoller;
 
 	private final Flywheel flywheel;
 
@@ -52,6 +56,7 @@ public class Robot {
 			GyroFactory.create(SwerveType.SWERVE)
 		);
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
 		this.superstructure = new Superstructure(this);
 
 		configureBindings();
@@ -77,6 +82,9 @@ public class Robot {
 		return flywheel;
 	}
 
+	public IntakeRoller getIntakeRoller() {
+		return intakeRoller;
+	}
 
 	public Superstructure getSuperstructure() {
 		return superstructure;

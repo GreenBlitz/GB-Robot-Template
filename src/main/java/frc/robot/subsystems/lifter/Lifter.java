@@ -3,7 +3,6 @@ package frc.robot.subsystems.lifter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.elbow.ElbowConstants;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 

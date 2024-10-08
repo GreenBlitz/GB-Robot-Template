@@ -9,8 +9,8 @@ public class DoubleSRXRequest implements IRequest<Double> {
 	private double setPoint;
 
 	public DoubleSRXRequest(ControlMode controlMode) {
-		this.setPoint = 0;
 		this.controlMode = controlMode;
+		this.setPoint = 0;
 	}
 
 	@Override

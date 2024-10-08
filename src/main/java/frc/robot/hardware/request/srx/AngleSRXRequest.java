@@ -6,9 +6,9 @@ import frc.robot.hardware.request.IRequest;
 
 public class AngleSRXRequest implements IRequest<Rotation2d> {
 
-	private final ControlMode controlMode;
-	private final int pidSlot;
 	private Rotation2d setPoint;
+	private final int pidSlot;
+	private final ControlMode controlMode;
 
 	public AngleSRXRequest(ControlMode controlMode, int pidSlot) {
 		this.setPoint = new Rotation2d();
@@ -22,16 +22,16 @@ public class AngleSRXRequest implements IRequest<Rotation2d> {
 		return this;
 	}
 
-	public ControlMode getControlMode() {
-		return controlMode;
-	}
-
 	public Rotation2d getSetPoint() {
 		return setPoint;
 	}
 
 	public int getPidSlot() {
 		return pidSlot;
+	}
+
+	public ControlMode getControlMode() {
+		return controlMode;
 	}
 
 }

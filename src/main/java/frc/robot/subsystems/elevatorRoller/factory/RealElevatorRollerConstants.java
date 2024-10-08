@@ -14,7 +14,9 @@ import java.util.function.BooleanSupplier;
 public class RealElevatorRollerConstants {
 
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
+
 	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
+
 	private final static int CURRENT_LIMIT = 40;
 
 	private static void configMotor(TalonSRX motor) {

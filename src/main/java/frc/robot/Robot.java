@@ -28,8 +28,8 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	private final ElevatorRoller elevatorRoller;
 	private final Swerve swerve;
+	private final ElevatorRoller elevatorRoller;
 	private final Funnel funnel;
 
 	private final Superstructure superstructure;
@@ -55,12 +55,12 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-	public ElevatorRoller getElevatorRoller() {
-		return elevatorRoller;
-	}
-
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public ElevatorRoller getElevatorRoller() {
+		return elevatorRoller;
 	}
 
 	public Funnel getFunnel() {

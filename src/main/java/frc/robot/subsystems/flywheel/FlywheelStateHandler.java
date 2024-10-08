@@ -11,7 +11,7 @@ public class FlywheelStateHandler {
 	}
 
 	public Command setState(FlywheelState state) {
-		return flywheel.getCommandsBuilder().init(state.getVelocity());
+		return flywheel.getCommandsBuilder().setVelocity(state.getVelocity());
 	}
 
 }

@@ -37,4 +37,5 @@ public class ClimbStateHandler {
 			case RETRACT -> lifterStateHandler.setState(LifterState.RETRACTED).alongWith(solenoidStateHandler.setState(SolenoidState.OFF));
 		};
 	}
+
 }

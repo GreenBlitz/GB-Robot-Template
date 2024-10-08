@@ -75,7 +75,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public double rotationsToMeters(Rotation2d rotations) {
-		return rotations.getRotations() * ElevatorConstants.GEAR_RATIO * elevatorStuff.rotationsToMetersConversionRatio();
+		return rotations.getRotations() * ElevatorConstants.GEAR_RATIO * elevatorStuff.motorRotationsToMetersConversionRatio();
 	}
 
 	public void updateInputs() {

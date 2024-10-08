@@ -12,7 +12,7 @@ public record ElevatorStuff(
 	IDigitalInput digitalInput,
 	ElevatorMotorStuff frontMotorStuff,
 	ElevatorMotorStuff backwardMotorStuff,
-	double rotationsToMetersConversionRatio
+	double motorRotationsToMetersConversionRatio
 ) {
 
 	public ElevatorStuff(

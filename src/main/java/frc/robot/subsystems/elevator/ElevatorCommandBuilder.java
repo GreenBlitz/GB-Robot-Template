@@ -2,7 +2,6 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
 import frc.utils.utilcommands.LoggedDashboardCommand;
 
 import java.util.function.DoubleSupplier;
@@ -51,7 +50,6 @@ public class ElevatorCommandBuilder {
     }
 
     public Command calibrateFeedForward() {
-        double[] oldValues = new double[] {RealElevatorConstants.FEEDFORWARD_CALCULATOR.ka, RealElevatorConstants.FEEDFORWARD_CALCULATOR.kg, RealElevatorConstants.FEEDFORWARD_CALCULATOR.kv, RealElevatorConstants.FEEDFORWARD_CALCULATOR.ks};
         return new ParallelCommandGroup(
             new LoggedDashboardCommand("ks", elevator::setPower, elevator),
             new LoggedDashboardCommand("kg", elevator::setPower, elevator)

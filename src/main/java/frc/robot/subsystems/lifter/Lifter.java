@@ -63,7 +63,7 @@ public class Lifter extends GBSubsystem {
 		motor.updateSignals(lifterComponents.positionSignal());
 		motor.updateSignals(lifterComponents.otherSignals());
 
-		Logger.recordOutput("lifter position", convertToMeters(lifterComponents.positionSignal().getLatestValue()));
+		Logger.recordOutput("lifter position in meters", convertToMeters(lifterComponents.positionSignal().getLatestValue()));
 	}
 
 	private double convertToMeters(Rotation2d motorPosition) {

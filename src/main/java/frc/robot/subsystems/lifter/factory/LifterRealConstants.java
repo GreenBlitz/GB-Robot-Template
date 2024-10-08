@@ -18,14 +18,13 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class LifterRealConstants {
 
-	private static final double DRUM_RADIUS = inchesToMeters(0.96);
+	private static final double DRUM_RADIUS_METERS = inchesToMeters(0.96);
 	private static final int MOTOR_CONFIGURATION_TRIES = 5;
 
 	private static TalonFXConfiguration generateMotorConfiguration() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
 		configuration.Feedback.SensorToMechanismRatio = 7 * (60.0 / 24.0);
-
 
 		return configuration;
 	}
@@ -50,7 +49,7 @@ public class LifterRealConstants {
 		return new LifterComponents(
 			logPath,
 			new TalonFXMotor(logPath, talonFXWrapper, generateSysidConfig()),
-			DRUM_RADIUS,
+			DRUM_RADIUS_METERS,
 			Phoenix6SignalBuilder.generatePhoenix6Signal(
 					talonFXWrapper.getPosition(),
 					GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,

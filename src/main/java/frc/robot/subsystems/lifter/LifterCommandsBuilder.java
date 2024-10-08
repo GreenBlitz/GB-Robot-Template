@@ -20,7 +20,8 @@ public class LifterCommandsBuilder {
 				() -> {},
 				() -> lifter.setPower(power),
 				(interrupted) -> lifter.stop(),
-				() -> false, lifter
+				() -> false,
+				lifter
 		).withName("set power " + power);
 	}
 

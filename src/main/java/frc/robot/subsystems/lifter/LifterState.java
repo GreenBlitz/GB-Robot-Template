@@ -1,6 +1,5 @@
 package frc.robot.subsystems.lifter;
 
-
 public enum LifterState {
 
 	HOLD(0, 0),
@@ -11,6 +10,7 @@ public enum LifterState {
 
 	private final double targetPosition;
 	private final double power;
+
 
 	LifterState(double targetPosition, double power) {
 		this.targetPosition = targetPosition;

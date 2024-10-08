@@ -11,8 +11,8 @@ import frc.utils.battery.PowerDistributionDeviceID;
 public class IDs {
 
 	public static final PowerDistributionDeviceID POWER_DISTRIBUTION_DEVICE_ID = new PowerDistributionDeviceID(
-		20,
-		PowerDistribution.ModuleType.kRev
+			20,
+			PowerDistribution.ModuleType.kRev
 	);
 
 	public static final Phoenix6DeviceID PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
@@ -51,7 +51,7 @@ public class IDs {
 
 	public static class CANSparkMAXIDs {
 
-		public static final SparkMaxDeviceID TOP_FLYWHEEL = new SparkMaxDeviceID(11);
+		public static final SparkMaxDeviceID TOP_FLYWHEEL = new SparkMaxDeviceID(13);
 		public static final SparkMaxDeviceID BOTTOM_FLYWHEEL = new SparkMaxDeviceID(12);
 		public static final SparkMaxDeviceID INTAKE_ROLLER = new SparkMaxDeviceID(11, CANSparkLowLevel.MotorType.kBrushless);
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);

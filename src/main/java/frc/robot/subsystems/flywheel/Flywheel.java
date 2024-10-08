@@ -53,15 +53,15 @@ public class Flywheel extends GBSubsystem {
 
 	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
 		return MathUtil.isNear(
-			targetVelocity.getRotations(),
-			topFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
-			velocityTolerance.getRotations()
+				targetVelocity.getRotations(),
+				topFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
+				velocityTolerance.getRotations()
 		)
-			&& MathUtil.isNear(
+				&& MathUtil.isNear(
 				targetVelocity.getRotations(),
 				bottomFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
 				velocityTolerance.getRotations()
-			);
+		);
 	}
 
 	protected void stop() {
@@ -72,10 +72,6 @@ public class Flywheel extends GBSubsystem {
 	protected void updateInputs() {
 		topMotor.updateSignals(topFlywheelComponents.voltageSignal(), topFlywheelComponents.velocitySignal());
 		bottomMotor.updateSignals(bottomFlywheelComponents.voltageSignal(), bottomFlywheelComponents.velocitySignal());
-	}
-
-	protected void subsystemInit() {
-		commandsBuilder.setVelocity(FlywheelState.DEFAULT.getVelocity());
 	}
 
 	@Override

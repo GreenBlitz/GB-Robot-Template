@@ -75,6 +75,10 @@ public class Flywheel extends GBSubsystem {
 		bottomMotor.updateSignals(bottomFlywheelComponents.voltageSignal(), bottomFlywheelComponents.velocitySignal());
 	}
 
+	protected void subsystemInit(){
+		commandsBuilder.setVelocity(FlywheelState.DEFAULT.getVelocity());
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();

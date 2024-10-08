@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.factory;
+package frc.robot.subsystems.intake.roller.factory;
 
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.filter.Debouncer;
@@ -8,8 +8,8 @@ import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
-import frc.robot.subsystems.intake.IntakeRollerConstant;
-import frc.robot.subsystems.intake.IntakeRollerStuff;
+import frc.robot.subsystems.intake.roller.IntakeRollerConstant;
+import frc.robot.subsystems.intake.roller.IntakeRollerStuff;
 import java.util.function.BooleanSupplier;
 
 public class IntakeRollerRealConstant {

@@ -8,7 +8,7 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import frc.robot.subsystems.lifter.LifterStuff;
+import frc.robot.subsystems.lifter.LifterComponents;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
@@ -41,13 +41,13 @@ public class LifterRealConstants {
 	}
 
 	//@formatter:off
-	protected static LifterStuff generateLifterStuff(String logPath) {
+	protected static LifterComponents generateLifterComponents(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
 		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "lifter motor was not configured").report();
 		}
 
-		return new LifterStuff(
+		return new LifterComponents(
 			logPath,
 			new TalonFXMotor(logPath, talonFXWrapper, generateSysidConfig()),
 			DRUM_RADIUS,

@@ -125,4 +125,17 @@ public class PoseEstimationMath {
 		return poseMean;
 	}
 
+	public static Rotation2d calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
+		double summedXComponent = 0;
+		double summedYComponent = 0;
+		for (Rotation2d heading : estimatedHeadings) {
+			summedXComponent += heading.getCos();
+			summedYComponent += heading.getSin();
+		}
+		if (summedXComponent == 0 || summedYComponent == 0) {
+			return estimatedHeadings.get(0);
+		}
+		return new Rotation2d(Math.atan2(summedYComponent, summedXComponent));
+	}
+
 }

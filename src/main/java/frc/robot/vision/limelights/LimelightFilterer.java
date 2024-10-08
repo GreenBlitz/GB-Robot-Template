@@ -1,6 +1,7 @@
 package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
@@ -24,6 +25,11 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		this.multiLimelights = multiLimelights;
 		this.config = config;
 		this.lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
+	}
+
+	@Override
+	public List<Rotation2d> getAllRobotHeadingEstimations() {
+		return multiLimelights.getAllRobotHeadingEstimations();
 	}
 
 	@Override

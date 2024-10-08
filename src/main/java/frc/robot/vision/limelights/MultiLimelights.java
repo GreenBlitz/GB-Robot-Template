@@ -2,6 +2,8 @@ package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +45,15 @@ public class MultiLimelights {
 		}
 
 		return limelightsData;
+	}
+
+	public List<Rotation2d> getAllRobotHeadingEstimations() {
+		List<Rotation2d> headingEstimations = new ArrayList<>();
+		for (Limelight limelight : limelights) {
+			Optional<Rotation2d> heading = limelight.getRobotHeading();
+			heading.ifPresent(headingEstimations::add);
+		}
+		return headingEstimations;
 	}
 
 }

@@ -2,6 +2,7 @@ package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -17,9 +18,11 @@ public class Limelight extends GBSubsystem {
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
+	private final NetworkTableEntry robotPoseForHeadingEntry;
 	private final String name;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
+	private Rotation2d robotHeading;
 	private GyroAngleValues gyroAngleValues;
 
 	public Limelight(String name, String logPath) {
@@ -30,6 +33,7 @@ public class Limelight extends GBSubsystem {
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
+		this.robotPoseForHeadingEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.gyroAngleValues = new GyroAngleValues(0, 0, 0, 0, 0, 0);
 	}
 
@@ -49,6 +53,9 @@ public class Limelight extends GBSubsystem {
 		);
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		double[] robotPoseWithoutGyroInput = robotPoseForHeadingEntry
+			.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		robotHeading = new Rotation2d(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
@@ -87,6 +94,14 @@ public class Limelight extends GBSubsystem {
 
 	public double getPoseValue(LimelightEntryValue entryValue) {
 		return robotPoseArray[entryValue.getIndex()];
+	}
+
+	public Optional<Rotation2d> getRobotHeading() {
+		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
+		if (id == LimeLightConstants.NO_APRILTAG_ID) {
+			return Optional.empty();
+		}
+		return Optional.of(robotHeading);
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {

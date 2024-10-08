@@ -43,11 +43,8 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	protected void setVoltage(double voltage) {
-		topFlywheelComponents.voltageRequest().withSetPoint(voltage);
-		bottomFlywheelComponents.voltageRequest().withSetPoint(voltage);
-
-		topMotor.applyDoubleRequest(topFlywheelComponents.voltageRequest());
-		bottomMotor.applyDoubleRequest(bottomFlywheelComponents.voltageRequest());
+		topMotor.applyDoubleRequest(topFlywheelComponents.voltageRequest().withSetPoint(voltage));
+		bottomMotor.applyDoubleRequest(bottomFlywheelComponents.voltageRequest().withSetPoint(voltage));
 	}
 
 	protected void setTargetVelocity(Rotation2d targetVelocity) {
@@ -56,7 +53,7 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
-		return (MathUtil.isNear(
+		return MathUtil.isNear(
 			targetVelocity.getRotations(),
 			topFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
 			velocityTolerance.getRotations()
@@ -65,7 +62,7 @@ public class Flywheel extends GBSubsystem {
 				targetVelocity.getRotations(),
 				bottomFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
 				velocityTolerance.getRotations()
-			));
+			);
 	}
 
 	protected void stop() {

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.flywheel.factory;
 
-
 import frc.robot.Robot;
 import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.subsystems.flywheel.FlywheelComponents;

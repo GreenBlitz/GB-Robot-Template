@@ -3,7 +3,7 @@ package frc.robot.subsystems.roller;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -18,8 +18,8 @@ public class RollerCommandsBuilder {
 	//@formatter:off
 	public Command setPower(double power) {
 		return new FunctionalCommand(
-				() -> roller.setPower(power),
 				() -> {},
+				() -> roller.setPower(power),
 				interrupted -> roller.stop(),
 				() -> false,
 				roller
@@ -48,7 +48,7 @@ public class RollerCommandsBuilder {
 	}
 
 	public Command stop() {
-		return new InstantCommand(roller::stop, roller).withName("Stop");
+		return new RunCommand(roller::stop, roller).withName("Stop");
 	}
 	//@formatter:on
 

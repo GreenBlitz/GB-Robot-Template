@@ -11,7 +11,7 @@ public class PivotStateHandler {
 	}
 
 	public Command setState(PivotState state) {
-		return pivot.getCommandBuilder().goToPosition(state.getPositionDegrees());
+		return pivot.getCommandBuilder().goToPosition(state.getPosition());
 	}
 
 }

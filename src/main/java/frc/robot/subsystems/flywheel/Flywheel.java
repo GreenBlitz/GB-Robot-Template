@@ -2,6 +2,7 @@ package frc.robot.subsystems.flywheel;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Robot;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -14,8 +15,9 @@ public class Flywheel extends GBSubsystem {
 	private final ControllableMotor bottomMotor;
 	private final FlywheelCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
+	private final FlywheelStateHandler stateHandler;
 
-	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents, String logPath) {
+	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents, String logPath, Robot robot) {
 		super(logPath);
 
 		this.topFlywheelComponents = topFlywheelComponents;
@@ -24,6 +26,7 @@ public class Flywheel extends GBSubsystem {
 		this.bottomMotor = bottomFlywheelComponents.motor();
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
 		this.sysIdCalibrator = new SysIdCalibrator(bottomMotor.getSysidConfigInfo(), this, this::setVoltage);
+		this.stateHandler = new FlywheelStateHandler(robot);
 
 		updateInputs();
 	}
@@ -34,6 +37,10 @@ public class Flywheel extends GBSubsystem {
 
 	public SysIdCalibrator getSysIdCalibrator() {
 		return sysIdCalibrator;
+	}
+
+	public FlywheelStateHandler getStateHandler() {
+		return stateHandler;
 	}
 
 	protected void setPower(double power) {
@@ -49,6 +56,10 @@ public class Flywheel extends GBSubsystem {
 	protected void setTargetVelocity(Rotation2d targetVelocity) {
 		topMotor.applyAngleRequest(topFlywheelComponents.velocityRequest().withSetPoint(targetVelocity));
 		bottomMotor.applyAngleRequest(bottomFlywheelComponents.velocityRequest().withSetPoint(targetVelocity));
+	}
+
+	protected void setState(FlywheelState state) {
+		stateHandler.setState(state);
 	}
 
 	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {

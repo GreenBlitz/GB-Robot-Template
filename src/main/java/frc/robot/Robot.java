@@ -55,7 +55,7 @@ public class Robot {
 		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
 			.create(FlywheelConstants.LOG_PATH + "BottomMotor", false, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL);
 
-		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH);
+		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH, this);
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE),

@@ -18,8 +18,6 @@ public class Superstructure {
 	private final Swerve swerve;
 	private final FlywheelStateHandler flywheelStateHandler;
 	private final FunnelStateHandler funnelStateHandler;
-
-
 	private RobotState currentState;
 
 	public Superstructure(Robot robot) {

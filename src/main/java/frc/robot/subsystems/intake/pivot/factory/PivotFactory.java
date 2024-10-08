@@ -5,9 +5,9 @@ import frc.robot.subsystems.intake.pivot.PivotStuff;
 
 public class PivotFactory {
 
-	public static PivotStuff create() {
+	public static PivotStuff create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealPivotConstants.generatePivotStuff();
+			case REAL -> RealPivotConstants.generatePivotStuff(logPath);
 			case SIMULATION -> null;
 		};
 	}

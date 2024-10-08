@@ -19,6 +19,10 @@ public class RealPivotConstants {
 
 	private static final double GEAR_RATIO = 1;
 
+	public static final int PID_SLOT = 0;
+
+	public static final Rotation2d POSITION_TOLERANCE = Rotation2d.fromDegrees(5);
+
 	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0, 0);
 
 	//@formatter:off
@@ -34,7 +38,7 @@ public class RealPivotConstants {
 		sparkMaxWrapper.getPIDController().setD(0);
 	}
 
-	public static PivotStuff generatePivotStuff() {
+	protected static PivotStuff generatePivotStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.PIVOT);
 		configMotor(sparkMaxWrapper);
 
@@ -51,11 +55,11 @@ public class RealPivotConstants {
 		SparkMaxAngleRequest positionRequest = new SparkMaxAngleRequest(
 			positionSignal.getLatestValue(),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-			PivotConstants.PID_SLOT,
+			PID_SLOT,
 			FEEDFORWARD_FUNCTION
 		);
 
-		return new PivotStuff(PivotConstants.LOG_PATH, motor, voltageSignal, positionSignal, positionRequest);
+		return new PivotStuff(logPath, motor, voltageSignal, positionSignal, positionRequest);
 	}
 
 }

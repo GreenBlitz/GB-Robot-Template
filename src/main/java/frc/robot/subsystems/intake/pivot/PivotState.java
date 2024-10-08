@@ -1,18 +1,20 @@
 package frc.robot.subsystems.intake.pivot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public enum PivotState {
 
-	DOWN(0),
-	UP(1);
+	DOWN(Rotation2d.fromDegrees(0)),
+	UP(Rotation2d.fromDegrees(1));
 
-	private double degrees;
+	private Rotation2d positionDegrees;
 
-	PivotState(double degrees) {
-		this.degrees = degrees;
+	PivotState(Rotation2d positionDegrees) {
+		this.positionDegrees = positionDegrees;
 	}
 
-	public double getDegrees() {
-		return degrees;
+	public double getPositionDegrees() {
+		return positionDegrees.getDegrees();
 	}
 
 }

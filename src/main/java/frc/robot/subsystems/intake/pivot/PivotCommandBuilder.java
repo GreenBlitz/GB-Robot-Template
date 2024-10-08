@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class PivotCommandBuilder {
 
@@ -18,31 +19,23 @@ public class PivotCommandBuilder {
 			() -> {},
 			() -> pivot.setPosition(position),
 			interrupted -> pivot.stop(),
-			() -> pivot.isAtAngle(position),
+			() -> false,
 			pivot
 		).withName("Go to position: " + position.getDegrees());
 	}
 
-	public Command goToPosition(double position) {
-		return new FunctionalCommand(
-			() -> {},
-			() -> pivot.setPosition(Rotation2d.fromDegrees(position)),
-			interrupted -> pivot.stop(),
-			() -> pivot.isAtAngle(Rotation2d.fromDegrees(position)),
-			pivot
-		).withName("Go to position: " + position);
-	}
-
 	public Command setPower(double power) {
-		return new InstantCommand(() -> pivot.setPower(power)).withName("Set power to: " + power);
+		return new FunctionalCommand(
+				() -> {},
+				() -> pivot.setPower(power),
+				interrupted -> pivot.stop(),
+				() -> false,
+				pivot
+		).withName("Set power to: " + power);
 	}
 
 	public Command stop() {
-		return new InstantCommand(pivot::stop, pivot).withName("Stop");
-	}
-
-	public Command stayInPlace() {
-		return new InstantCommand(pivot::stayInPlace, pivot).withName("Stay in place");
+		return new RunCommand(pivot::stop, pivot).withName("Stop");
 	}
 
 }

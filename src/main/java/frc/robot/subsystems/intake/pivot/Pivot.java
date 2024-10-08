@@ -16,10 +16,10 @@ public class Pivot extends GBSubsystem {
 		super(pivotStuff.logPath());
 		this.pivotStuff = pivotStuff;
 		this.motor = pivotStuff.motor();
-		this.commandBuilder = new PivotCommandBuilder(this);
 		this.positionRequest = pivotStuff.positionRequest();
+		this.commandBuilder = new PivotCommandBuilder(this);
 
-		updateSignals();
+		updateInputs();
 	}
 
 	public PivotCommandBuilder getCommandBuilder() {
@@ -30,34 +30,34 @@ public class Pivot extends GBSubsystem {
 		motor.setBrake(shouldBreak);
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	public void setPosition(Rotation2d position) {
+	protected void setPosition(Rotation2d position) {
 		motor.applyAngleRequest(positionRequest.withSetPoint(position));
 	}
 
-	public void stop() {
+	protected void stop() {
 		motor.stop();
 	}
 
-	public void stayInPlace() {
+	protected void stayInPlace() {
 		motor.applyAngleRequest(positionRequest.withSetPoint(pivotStuff.positionSignal().getLatestValue()));
 	}
 
-	public boolean isAtAngle(Rotation2d targetAngle) {
+	protected boolean isAtAngle(Rotation2d targetAngle, Rotation2d tolerance) {
 		return Math.abs(pivotStuff.positionSignal().getLatestValue().getRadians() - (targetAngle).getRadians())
-			< PivotConstants.POSITION_TOLERANCE.getRadians();
+			< tolerance.getRadians();
 	}
 
-	public void updateSignals() {
+	private void updateInputs() {
 		motor.updateSignals(pivotStuff.positionSignal(), pivotStuff.voltageSignal());
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
-		updateSignals();
+		updateInputs();
 	}
 
 }

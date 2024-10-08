@@ -1,7 +1,5 @@
 package frc.robot;
 
-import frc.robot.subsystems.lifter.LifterState;
-import frc.robot.subsystems.lifter.LifterStateHandler;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 

@@ -87,9 +87,9 @@ public class Superstructure {
 
 	public Command speaker() {
 		return new ParallelCommandGroup(
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
-			funnelStateHandler.setState(FunnelState.SPEAKER),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
+			funnelStateHandler.setState(FunnelState.SPEAKER)
 			);
 	}
 

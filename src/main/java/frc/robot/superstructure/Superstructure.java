@@ -96,7 +96,7 @@ public class Superstructure {
 	public Command preAmp() {
 		return new ParallelCommandGroup(
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
-			elevatorRollerStateHandler.setState(ElevatorRollerState.INTAKE_TO_ELEVATOR_ROLLER),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
 			funnelStateHandler.setState(FunnelState.STOP)
 		).until(this::isNoteInElevatorRoller);
 	}

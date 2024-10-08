@@ -2,7 +2,8 @@ package frc.robot.subsystems.elevatorRoller;
 
 public enum ElevatorRollerState {
 
-	INTAKE_TO_ELEVATOR_ROLLER(0),
+	TRANSFER_FROM_ELEVATOR(0),
+	TRANSFER_TO_ELEVATOR(0),
 	AMP(0),
 	STOP(0);
 

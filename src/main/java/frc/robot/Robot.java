@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.intake.IntakeRoller;
+import frc.robot.subsystems.intake.IntakeRollerConstant;
+import frc.robot.subsystems.intake.factory.IntakeRollerFactory;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.factories.ElevatorFactory;
@@ -32,6 +35,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final Funnel funnel;
+	private final IntakeRoller intakeRoller;
 
 	private final Superstructure superstructure;
 
@@ -42,10 +46,10 @@ public class Robot {
 			GyroFactory.create(SwerveType.SWERVE)
 		);
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
 		this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
 
 		this.superstructure = new Superstructure(this);
-
 		configureBindings();
 	}
 
@@ -67,6 +71,10 @@ public class Robot {
 
 	public Funnel getFunnel() {
 		return funnel;
+	}
+
+	public IntakeRoller getIntakeRoller() {
+		return intakeRoller;
 	}
 
 	public Superstructure getSuperstructure() {

@@ -19,7 +19,7 @@ public class RealPivotConstants {
 
 	private static final double GEAR_RATIO = 1;
 
-	public static final int PID_SLOT = 0;
+	public static final int POSITION_PID_SLOT = 0;
 
 	public static final Rotation2d POSITION_TOLERANCE = Rotation2d.fromDegrees(5);
 
@@ -48,14 +48,14 @@ public class RealPivotConstants {
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
 			"position",
-			() -> sparkMaxWrapper.getAbsoluteEncoder().getPosition(),
+			sparkMaxWrapper.getAbsoluteEncoder()::getPosition,
 			AngleUnit.ROTATIONS
 		);
 
 		SparkMaxAngleRequest positionRequest = new SparkMaxAngleRequest(
 			positionSignal.getLatestValue(),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-			PID_SLOT,
+				POSITION_PID_SLOT,
 			FEEDFORWARD_FUNCTION
 		);
 

@@ -9,7 +9,7 @@ public class Pivot extends GBSubsystem {
 
 	private final PivotStuff pivotStuff;
 	private final ControllableMotor motor;
-	private final PivotCommandBuilder commandBuilder;
+	private final PivotCommandsBuilder commandsBuilder;
 	private final IRequest<Rotation2d> positionRequest;
 
 	public Pivot(PivotStuff pivotStuff) {
@@ -17,13 +17,13 @@ public class Pivot extends GBSubsystem {
 		this.pivotStuff = pivotStuff;
 		this.motor = pivotStuff.motor();
 		this.positionRequest = pivotStuff.positionRequest();
-		this.commandBuilder = new PivotCommandBuilder(this);
+		this.commandsBuilder = new PivotCommandsBuilder(this);
 
 		updateInputs();
 	}
 
-	public PivotCommandBuilder getCommandBuilder() {
-		return commandBuilder;
+	public PivotCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	public void setBreak(boolean shouldBreak) {
@@ -46,9 +46,12 @@ public class Pivot extends GBSubsystem {
 		motor.applyAngleRequest(positionRequest.withSetPoint(pivotStuff.positionSignal().getLatestValue()));
 	}
 
+	//@formatter:off
 	protected boolean isAtAngle(Rotation2d targetAngle, Rotation2d tolerance) {
-		return Math.abs(pivotStuff.positionSignal().getLatestValue().getRadians() - (targetAngle).getRadians()) < tolerance.getRadians();
+		return Math.abs(pivotStuff.positionSignal().getLatestValue().getRadians() -
+				targetAngle.getRadians()) < tolerance.getRadians();
 	}
+	//@formatter:on
 
 	private void updateInputs() {
 		motor.updateSignals(pivotStuff.positionSignal(), pivotStuff.voltageSignal());

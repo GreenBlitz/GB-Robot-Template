@@ -5,23 +5,33 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
-public class PivotCommandBuilder {
+public class PivotCommandsBuilder {
 
 	private final Pivot pivot;
 
-	public PivotCommandBuilder(Pivot pivot) {
+	public PivotCommandsBuilder(Pivot pivot) {
 		this.pivot = pivot;
 	}
 
+	//@formatter:off
 	public Command goToPosition(Rotation2d position) {
-		return new FunctionalCommand(() -> {}, () -> pivot.setPosition(position), interrupted -> pivot.stop(), () -> false, pivot)
-			.withName("Go to position: " + position.getDegrees());
+		return new FunctionalCommand(
+				() -> {},
+				() -> pivot.setPosition(position),
+				interrupted -> pivot.stayInPlace(),
+				() -> false, pivot
+		).withName("Go to position: " + position.getDegrees());
 	}
 
 	public Command setPower(double power) {
-		return new FunctionalCommand(() -> {}, () -> pivot.setPower(power), interrupted -> pivot.stop(), () -> false, pivot)
-			.withName("Set power to: " + power);
+		return new FunctionalCommand(
+				() -> {},
+				() -> pivot.setPower(power),
+				interrupted -> pivot.stop(),
+				() -> false, pivot
+		).withName("Set power to: " + power);
 	}
+	//@formatter:on
 
 	public Command stop() {
 		return new RunCommand(pivot::stop, pivot).withName("Stop");

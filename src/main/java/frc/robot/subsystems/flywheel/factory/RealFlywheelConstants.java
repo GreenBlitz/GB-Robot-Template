@@ -41,11 +41,11 @@ public class RealFlywheelConstants {
 		);
 	}
 
-	private static void configMotor(SparkMaxWrapper sparkMax, boolean isInverted, double gear_ratio) {
+	private static void configMotor(SparkMaxWrapper sparkMax, boolean isInverted) {
 		sparkMax.setInverted(isInverted);
 		sparkMax.setSmartCurrentLimit(40);
-		sparkMax.getEncoder().setPositionConversionFactor(gear_ratio);
-		sparkMax.getEncoder().setVelocityConversionFactor(gear_ratio);
+		sparkMax.getEncoder().setPositionConversionFactor(GEAR_RATIO);
+		sparkMax.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
 
 		sparkMax.getPIDController().setP(5);
 		sparkMax.getPIDController().setI(0);
@@ -55,7 +55,7 @@ public class RealFlywheelConstants {
 	public static FlywheelComponents generateFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
-		configMotor(sparkMaxWrapper, isInverted, GEAR_RATIO);
+		configMotor(sparkMaxWrapper, isInverted);
 
 		SysIdRoutine.Config config = generateSysidConfig();
 

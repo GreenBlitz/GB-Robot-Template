@@ -71,10 +71,10 @@ public class RealElevatorConstants {
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
 		SparkMaxWrapper frontMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FRONT);
-		SparkMaxWrapper backwardMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_BACKWARD);
+		SparkMaxWrapper backMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_BACK);
 
-		ElevatorMotorStuff frontMotorStuff = generateMotorStuff(logPath + "front motor", "first motor", frontMotorWrapper);
-		ElevatorMotorStuff backwardMotorStuff = generateMotorStuff(logPath + "backward motor", "second motor", backwardMotorWrapper);
+		ElevatorMotorStuff frontMotorStuff = generateMotorStuff(logPath + "front motor", "front motor", frontMotorWrapper);
+		ElevatorMotorStuff backMotorStuff = generateMotorStuff(logPath + "back motor", "back motor", backMotorWrapper);
 
 		BooleanSupplier atLimitSwitch = () -> frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);
@@ -92,7 +92,7 @@ public class RealElevatorConstants {
 			angleRequest,
 			limitSwitch,
 			frontMotorStuff,
-			backwardMotorStuff,
+			backMotorStuff,
 			MOTOR_ROTATIONS_TO_METERS_CONVERTION_RATIO
 		);
 	}

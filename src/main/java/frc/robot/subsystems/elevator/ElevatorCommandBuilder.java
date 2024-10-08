@@ -32,13 +32,13 @@ public class ElevatorCommandBuilder {
             interrupted -> elevator.stop(),
             () -> false,
             elevator
-        ).withName("Set power by supplier with value: " + power.getAsDouble());
+        ).withName("Set power by supplier");
     }
 
     public Command setTargetPosition(Rotation2d angle) {
         return new FunctionalCommand(
             () -> {},
-            () -> elevator.setTargetAngle(angle),
+            () -> elevator.setTargetPosition(angle),
             interrupted -> elevator.stayInPlace(),
             () -> false,
             elevator

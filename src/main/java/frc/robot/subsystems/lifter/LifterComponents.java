@@ -10,6 +10,7 @@ public record LifterComponents(
 	ControllableMotor motor,
 	IDigitalInput limitSwitch,
 	double drumRadius,
+	IDigitalInput limitSwitch,
 	InputSignal<Rotation2d> positionSignal,
 	InputSignal... otherSignals
 ) {}

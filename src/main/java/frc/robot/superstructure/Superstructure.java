@@ -70,99 +70,99 @@ public class Superstructure {
 	//@formatter:off
 	public Command idle() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
-				funnelStateHandler.setState(FunnelState.STOP),
-				intakeStatesHandler.setState(IntakeStates.STOP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+			funnelStateHandler.setState(FunnelState.STOP),
+			intakeStatesHandler.setState(IntakeStates.STOP)
 		);
 	}
 
 	public Command intake() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
-				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
-				funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
-				intakeStatesHandler.setState(IntakeStates.INTAKE)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+			funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
+			intakeStatesHandler.setState(IntakeStates.INTAKE)
 		);
 	}
 
 	public Command preSpeaker() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
-				flywheelStateHandler.setState(FlywheelState.SHOOTING),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
-				funnelStateHandler.setState(FunnelState.STOP),
-				intakeStatesHandler.setState(IntakeStates.STOP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
+			flywheelStateHandler.setState(FlywheelState.SHOOTING),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+			funnelStateHandler.setState(FunnelState.STOP),
+			intakeStatesHandler.setState(IntakeStates.STOP)
 		);
 	}
 
 	public Command speaker() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
-				flywheelStateHandler.setState(FlywheelState.SHOOTING),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
-				funnelStateHandler.setState(FunnelState.SPEAKER) ,
-				intakeStatesHandler.setState(IntakeStates.STOP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
+			flywheelStateHandler.setState(FlywheelState.SHOOTING),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+			funnelStateHandler.setState(FunnelState.SPEAKER) ,
+			intakeStatesHandler.setState(IntakeStates.STOP)
 		);
 	}
 
 	public Command preAmp() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
-				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
-				funnelStateHandler.setState(FunnelState.STOP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
+			funnelStateHandler.setState(FunnelState.STOP)
 		).until(this::isNoteInElevatorRoller);
 	}
 
 	public Command amp() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
-				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.AMP),
-				funnelStateHandler.setState(FunnelState.AMP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.AMP),
+			funnelStateHandler.setState(FunnelState.AMP)
 		);
 	}
 
 	public Command transferShooterElevator() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
-				funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR),
-				intakeStatesHandler.setState(IntakeStates.SHOOTER_TO_ELEVATOR)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
+			funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR),
+			intakeStatesHandler.setState(IntakeStates.SHOOTER_TO_ELEVATOR)
 		);
 	}
 
 	public Command transferElevatorShooter() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
-				funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
-				intakeStatesHandler.setState(IntakeStates.NOTE_TO_SHOOTER)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
+			funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
+			intakeStatesHandler.setState(IntakeStates.NOTE_TO_SHOOTER)
 		);
 	}
 
 	public Command intakeOuttake() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
-				funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE),
-				intakeStatesHandler.setState(IntakeStates.OUTTAKE)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
+			funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE),
+			intakeStatesHandler.setState(IntakeStates.OUTTAKE)
 		);
 	}
 
 	public Command shooterOuttake() {
 		return new ParallelCommandGroup(
-				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-				flywheelStateHandler.setState(FlywheelState.SHOOTER_OUTTAKE),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
-				funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE),
-				intakeStatesHandler.setState(IntakeStates.STOP)
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+			flywheelStateHandler.setState(FlywheelState.SHOOTER_OUTTAKE),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+			funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE),
+			intakeStatesHandler.setState(IntakeStates.STOP)
 		).until(() -> !isNoteInShooter());
 	}
 	//@formatter:on

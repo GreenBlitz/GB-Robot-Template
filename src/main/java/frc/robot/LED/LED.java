@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 
-public class LED implements ILED {
+public class LED implements ILED, ILogicLED{
 
 	private LED led;
 
@@ -18,21 +18,39 @@ public class LED implements ILED {
 	private Timer LEDBlinkTimer;
 
 	@Override
-	public void setColor(Color color, int index) {
-		this.addressableLEDBuffer.setLED(index, color);
+	public void setSingleLEDColor(Color color, int index) {
+		addressableLEDBuffer.setLED(index, color);
+	}
+
+    @Override
+    public void setSectionColor(Color color, int startIndex, int endIndex) {
+		for (int i = startIndex; i < endIndex; i++) {
+			setSingleLEDColor(color, i);
+		}
+    }
+
+    @Override
+	public void singleLEDTurnOff(int index) {
+		setSingleLEDColor(Color.kBlack, index);
 	}
 
 	@Override
-	public void turnOff(int index) {
-		setColor(new Color(0, 0, 0), index);
+	public void sectionTurnOff(int startIndex, int endIndex){
+		setSectionColor(Color.kBlack, 0, LEDConstatns.LEDStrip.LED_LENGTH);
 	}
 
-	public void Blink() {
+	@Override
+	public void Blink(int startIndex, int endIndex) {
 		if ((LEDBlinkTimer.get()) % (LEDConstatns.LEDStrip.BLINK_DURATION * 2) >= LEDConstatns.LEDStrip.BLINK_DURATION) {
-			led.turnOff(LEDConstatns.LEDStrip.LED_LENGTH);
+			led.sectionTurnOff(startIndex, endIndex);
 		} else {
-			led.setColor(color, LEDConstatns.LEDStrip.LED_LENGTH);
+			led.setSectionColor(color, startIndex, endIndex);
 		}
+	}
+	@Override
+	public void LarsonAnimation(int startIndex, int endIndex)) {
+
+
 	}
 
 }

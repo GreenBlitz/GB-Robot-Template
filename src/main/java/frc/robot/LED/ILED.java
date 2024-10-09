@@ -1,13 +1,15 @@
 package frc.robot.LED;
 
-import java.awt.*;
 import edu.wpi.first.wpilibj.util.Color;
-
 
 public interface ILED {
 
-	void setColor(Color color, int index);
+	void setSectionColor(Color color, int startIndex, int endIndex);
+	void setSingleLEDColor(Color color, int index);
 
-	void turnOff(int index);
+
+	void sectionTurnOff(int startIndex, int endIndex);
+
+	void singleLEDTurnOff(int index);
 
 }

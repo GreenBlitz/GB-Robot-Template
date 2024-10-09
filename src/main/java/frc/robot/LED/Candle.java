@@ -5,84 +5,41 @@ import com.ctre.phoenix.led.CANdle;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class Candle implements ILED, ILogicLED {
-
-	private static Candle instance;
 	private CANdle caNdle;
-	private ColorFlowAnimation colorFlowAnimation;
-	private FireAnimation fireAnimation;
-	private LarsonAnimation larsonAnimation;
-	private RainbowAnimation rainbowAnimation;
-	private RgbFadeAnimation rgbFadeAnimation;
-	private SingleFadeAnimation singleFadeAnimation;
-	private StrobeAnimation strobeAnimation;
-	private TwinkleAnimation twinkleAnimation;
-	private TwinkleOffAnimation twinkleOffAnimation;
+
 
 	public Candle() {
 		this.caNdle = new CANdle(LEDConstatns.Candle.ID_PORT);
 		this.caNdle.configLEDType(CANdle.LEDStripType.RGB);
-		this.colorFlowAnimation = new ColorFlowAnimation(0, 255, 255);
-		this.fireAnimation = new FireAnimation();
-		this.larsonAnimation = new LarsonAnimation(0, 255, 255);
-		this.rgbFadeAnimation = new RgbFadeAnimation(0, 255, 255);
-		this.singleFadeAnimation = new SingleFadeAnimation(0, 255, 255);
-		this.twinkleAnimation = new TwinkleAnimation(0, 255, 255);
-		this.twinkleOffAnimation = new TwinkleOffAnimation(0, 255, 255);
 	}
 
 	@Override
-	public void setColor(Color color, int index) {
-		this.caNdle.setLEDs((int) color.red, (int) color.green, (int) color.blue);
+	public void setSectionColor(Color color, int startIndex, int endIndex) {
+		caNdle.setLEDs((int) color.red, (int) color.green, (int) color.blue, 1, startIndex, endIndex);
 	}
 
 	@Override
-	public void turnOff(int index) {
-		this.caNdle.setLEDs(0, 0, 0);
+	public void setSingleLEDColor(Color color, int index) {
+		caNdle.setLEDs(0,0,0);
 	}
 
 	@Override
-	public void ColorFlowAnimation() {
-		this.caNdle.animate(this.colorFlowAnimation);
+	public void singleLEDTurnOff(int index) {
+		caNdle.setLEDs(0, 0, 0);
 	}
 
 	@Override
-	public void FireAnimation() {
-		this.caNdle.animate(this.fireAnimation);
+	public void sectionTurnOff(int startIndex, int endIndex) {
+		caNdle.setLEDs(0, 0, 0, 1, startIndex, endIndex);
 	}
 
 	@Override
-	public void LarsonAnimation() {
-		this.caNdle.animate(this.larsonAnimation);
+	public void LarsonAnimation(int startIndex, int endIndex) {
+		int numLED = endIndex - startIndex;
+		LarsonAnimation larsonAnimation = new LarsonAnimation(36,48,48, 36, 2.5, numLED, LarsonAnimation.BounceMode.Back, 5);
+		caNdle.animate(larsonAnimation);
 	}
 
-	@Override
-	public void RainbowAnimation() {
-		this.caNdle.animate(this.rainbowAnimation);
-	}
 
-	@Override
-	public void RGBFadeAnimation() {
-		this.caNdle.animate(this.rgbFadeAnimation);
-	}
-
-	@Override
-	public void SingleFadeAnimation() {
-		this.caNdle.animate(this.singleFadeAnimation);
-	}
-
-	@Override
-	public void StrobeAnimation() {
-		this.caNdle.animate(this.strobeAnimation);
-	}
-
-	@Override
-	public void TwinkleAnimation() {
-		this.caNdle.animate(this.twinkleAnimation);
-	}
-
-	@Override
-	public void TwinkleOffAnimation() {
-		this.caNdle.animate(this.twinkleOffAnimation);
-	}
 
 }

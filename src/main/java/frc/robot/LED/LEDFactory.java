@@ -8,7 +8,7 @@ public class LEDFactory {
 		return switch (robotType) {
 			case REAL -> LEDConstatns.LEDFactory.LED_IS_CANDLE ? new Candle() : new AddressableLED();
 
-			case SIMULATION -> new LEDSimulation();
+			case SIMULATION -> null;
 		};
 	}
 

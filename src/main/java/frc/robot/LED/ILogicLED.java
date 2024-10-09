@@ -4,22 +4,7 @@ import com.ctre.phoenix.led.*;
 
 public interface ILogicLED {
 
-	void ColorFlowAnimation();
+	void LarsonAnimation(int startIndex, int endIndex));
 
-	void FireAnimation();
-
-	void LarsonAnimation();
-
-	void RainbowAnimation();
-
-	void RGBFadeAnimation();
-
-	void SingleFadeAnimation();
-
-	void StrobeAnimation();
-
-	void TwinkleAnimation();
-
-	void TwinkleOffAnimation();
 
 }

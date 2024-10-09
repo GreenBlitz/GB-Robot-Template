@@ -40,32 +40,32 @@ public class Elevator extends GBSubsystem {
 		return commandBuilder;
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		frontMotor.setPower(power);
 		backMotor.setPower(power);
 	}
 
-	public void setVoltage(double voltage) {
+	protected void setVoltage(double voltage) {
 		frontMotor.applyDoubleRequest(voltageRequest.withSetPoint(voltage));
 		backMotor.applyDoubleRequest(voltageRequest.withSetPoint(voltage));
 	}
 
-	public void stop() {
+	protected void stop() {
 		frontMotor.stop();
 		backMotor.stop();
 	}
 
-	public void setBrake(boolean brake) {
+	protected void setBrake(boolean brake) {
 		frontMotor.setBrake(brake);
 		backMotor.setBrake(brake);
 	}
 
-	public void setTargetPosition(Rotation2d position) {
+	protected void setTargetPosition(Rotation2d position) {
 		frontMotor.applyAngleRequest(positionRequest.withSetPoint(position));
 		backMotor.applyAngleRequest(positionRequest.withSetPoint(position));
 	}
 
-	public boolean isAtBackwardLimit() {
+	protected boolean isAtBackwardLimit() {
 		return digitalInputsInputs.debouncedValue;
 	}
 
@@ -78,7 +78,7 @@ public class Elevator extends GBSubsystem {
 		);
 	}
 
-	public void stayInPlace() {
+	protected void stayInPlace() {
 		frontMotor.applyAngleRequest(positionRequest.withSetPoint(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue()));
 		backMotor.applyAngleRequest(positionRequest.withSetPoint(elevatorStuff.backMotorStuff().positionSignal().getLatestValue()));
 	}
@@ -87,7 +87,7 @@ public class Elevator extends GBSubsystem {
 		return rotations.getRotations() * elevatorStuff.motorRotationsToMetersConversionRatio();
 	}
 
-	public void updateInputs() {
+	protected void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
 		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().positionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
 		backMotor.updateSignals(elevatorStuff.backMotorStuff().positionSignal(), elevatorStuff.backMotorStuff().voltageSignal());

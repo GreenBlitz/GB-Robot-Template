@@ -114,7 +114,7 @@ public class Superstructure {
 	public Command transferShooterElevator() {
 		return new ParallelCommandGroup(
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
 			funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR)
 		);
 	}
@@ -122,7 +122,7 @@ public class Superstructure {
 	public Command transferElevatorShooter() {
 		return new ParallelCommandGroup(
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 			funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
 		);
 	}
@@ -130,7 +130,7 @@ public class Superstructure {
 	public Command intakeOuttake() {
 		return new ParallelCommandGroup(
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 			funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE)
 		);
 	}

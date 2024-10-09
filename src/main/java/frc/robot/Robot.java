@@ -4,8 +4,25 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.constants.Field;
+import frc.robot.poseestimator.GBPoseEstimator;
+import frc.robot.poseestimator.PoseEstimatorConstants;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.limelights.LimeLightConstants;
+import frc.robot.vision.limelights.LimelightFilterer;
+import frc.robot.vision.limelights.LimelightFiltererConfig;
+import frc.robot.vision.limelights.MultiLimelights;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -16,8 +33,49 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Swerve swerve;
+    private final GBPoseEstimator poseEstimator;
+
 	public Robot() {
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			GyroFactory.create(SwerveType.SWERVE)
+		);
+		swerve.updateStatus();
+
+        MultiLimelights multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
+        LimelightFilterer limelightFilterer = new LimelightFilterer(
+				new LimelightFiltererConfig(
+                	"limelightfilterer",
+                	Field.APRIL_TAGS_AVERAGE_HEIGHT_METERS
+				),
+				multiLimelights
+		);
+		this.poseEstimator = new GBPoseEstimator(
+			"PoseEstimator/",
+			limelightFilterer,
+			swerve.getConstants().kinematics(),
+			swerve.getModules().getWheelsPositions(0),
+			swerve.getAbsoluteHeading(),
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+			new Pose2d()
+		);
+
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(
+				() -> Optional.of(poseEstimator.getEstimatedPose()),
+				Optional::empty,
+				swerve
+		));
+
 		configureBindings();
+	}
+
+	public void periodic() {
+		swerve.updateStatus();
+		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
 	}
 
 	private void configureBindings() {

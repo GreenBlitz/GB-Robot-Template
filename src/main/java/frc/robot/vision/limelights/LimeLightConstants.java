@@ -2,7 +2,11 @@ package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
+import java.util.List;
+
 public class LimeLightConstants {
+
+	public static String[] LIMELIGHT_NAMES = {"limelight-front", "limelight-back"};
 
 	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation/";
 

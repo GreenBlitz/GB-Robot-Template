@@ -8,6 +8,8 @@ import frc.utils.mirror.MirrorMath;
 
 public class Field {
 
+	public static final double APRIL_TAGS_AVERAGE_HEIGHT_METERS = 1.24;
+
 	public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
 
 	public static boolean isFieldConventionAlliance() {

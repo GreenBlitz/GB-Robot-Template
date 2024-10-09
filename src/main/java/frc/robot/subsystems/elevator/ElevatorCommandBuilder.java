@@ -35,7 +35,7 @@ public class ElevatorCommandBuilder {
 		).withName("Set power by supplier");
 	}
 
-    public Command setTargetPosition(Rotation2d angle) {
+	public Command setTargetPosition(Rotation2d angle) {
 		return new FunctionalCommand(
 			() -> {},
 			() -> elevator.setTargetPosition(angle),

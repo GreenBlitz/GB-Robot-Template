@@ -39,10 +39,6 @@ public class Flywheel extends GBSubsystem {
 		return sysIdCalibrator;
 	}
 
-	public FlywheelStateHandler getStateHandler() {
-		return stateHandler;
-	}
-
 	protected void setPower(double power) {
 		topMotor.setPower(power);
 		bottomMotor.setPower(power);

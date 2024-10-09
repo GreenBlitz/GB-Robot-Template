@@ -1,5 +1,6 @@
 # Calibrations: 
  - **Soft limits**
+ - States' positions
  - IDs
  - PID
  - FF

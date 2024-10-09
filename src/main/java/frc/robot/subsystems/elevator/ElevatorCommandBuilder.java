@@ -51,8 +51,8 @@ public class ElevatorCommandBuilder {
 
     public Command calibrateFeedForward() {
         return new ParallelCommandGroup(
-            new LoggedDashboardCommand("ks", elevator::setPower, elevator),
-            new LoggedDashboardCommand("kg", elevator::setPower, elevator)
+            new LoggedDashboardCommand("ks", elevator::setVoltage, elevator),
+            new LoggedDashboardCommand("kg", elevator::setVoltage, elevator)
         );
     }
     //@formatter:on

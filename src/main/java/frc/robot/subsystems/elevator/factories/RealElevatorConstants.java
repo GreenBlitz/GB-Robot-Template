@@ -13,6 +13,7 @@ import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.elevator.ElevatorConstants;
@@ -90,9 +91,16 @@ public class RealElevatorConstants {
 			RealElevatorConstants::feedforwardCalculation
 		);
 
+		SparkMaxDoubleRequest doubleRequest = new SparkMaxDoubleRequest(
+				0,
+				SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,
+				ELEVATOR_PID_SLOT
+		);
+
 		return new ElevatorStuff(
 			logPath,
 			angleRequest,
+			doubleRequest,
 			limitSwitch,
 			frontMotorStuff,
 			backMotorStuff,

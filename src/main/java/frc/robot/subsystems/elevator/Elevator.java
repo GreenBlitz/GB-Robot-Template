@@ -13,6 +13,7 @@ public class Elevator extends GBSubsystem {
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final ElevatorCommandBuilder commandBuilder;
 	private final IRequest<Rotation2d> positionRequest;
+	private final IRequest<Double> voltageRequest;
 
 	private final ElevatorStuff elevatorStuff;
 	private final ControllableMotor frontMotor;
@@ -30,6 +31,7 @@ public class Elevator extends GBSubsystem {
 		this.elevatorStuff = elevatorStuff;
 		this.commandBuilder = new ElevatorCommandBuilder(this);
 		this.positionRequest = elevatorStuff.angleRequest();
+		this.voltageRequest = elevatorStuff.voltageRequest();
 	}
 
 	public ElevatorCommandBuilder getCommandBuilder() {
@@ -39,6 +41,11 @@ public class Elevator extends GBSubsystem {
 	public void setPower(double power) {
 		frontMotor.setPower(power);
 		backMotor.setPower(power);
+	}
+
+	public void setVoltage(double voltage) {
+		frontMotor.applyDoubleRequest(voltageRequest);
+		backMotor.applyDoubleRequest(voltageRequest);
 	}
 
 	public void stop() {
@@ -82,9 +89,7 @@ public class Elevator extends GBSubsystem {
 		limitSwitch.updateInputs(digitalInputsInputs);
 		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().motorPositionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
 		backMotor.updateSignals(elevatorStuff.backMotorStuff().motorPositionSignal(), elevatorStuff.backMotorStuff().voltageSignal());
-	}
 
-	public void logState() {
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
 		Logger.recordOutput(this.getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
 		Logger.recordOutput(this.getLogPath() + "elevatorPosition", getPositionMeters());
@@ -93,7 +98,6 @@ public class Elevator extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		logState();
 	}
 
 }

@@ -32,9 +32,9 @@ public class RealElevatorConstants {
 
 	private static final int ELEVATOR_PID_SLOT = 0;
 
-	private static final Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
+	public static final Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
-	private static final Rotation2d FORWARD_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
+	public static final Rotation2d FORWARD_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
 	private static final double MOTOR_ROTATIONS_TO_METERS_CONVERTION_RATIO = 1;
 

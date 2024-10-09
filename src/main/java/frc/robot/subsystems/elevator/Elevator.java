@@ -6,6 +6,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GBSubsystem {
@@ -30,6 +31,8 @@ public class Elevator extends GBSubsystem {
 		this.elevatorStuff = elevatorStuff;
 		this.positionRequest = elevatorStuff.positionRequest();
 		this.voltageRequest = elevatorStuff.voltageRequest();
+		this.backMotor.resetPosition(RealElevatorConstants.REVERSE_SOFT_LIMIT_VALUE);
+		this.frontMotor.resetPosition(RealElevatorConstants.REVERSE_SOFT_LIMIT_VALUE);
 
 		this.commandBuilder = new ElevatorCommandsBuilder(this);
 
@@ -58,11 +61,6 @@ public class Elevator extends GBSubsystem {
 	protected void setBrake(boolean brake) {
 		frontMotor.setBrake(brake);
 		backMotor.setBrake(brake);
-	}
-
-	public void resetPosition(Rotation2d position){
-		frontMotor.resetPosition(position);
-		backMotor.resetPosition(position);
 	}
 
 	protected void setTargetPosition(Rotation2d position) {

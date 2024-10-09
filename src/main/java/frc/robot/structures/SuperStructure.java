@@ -27,6 +27,8 @@ public class SuperStructure {
 		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations(), visionObservationFiltered.getFilteredVisionObservations());
 		visionObservationFiltered.correctPoseEstimation();
 //		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
+		swerve.updateStatus();
+		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
 	}
 
 

@@ -6,13 +6,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.simulation.SimulationManager;
+import frc.utils.auto.PathPlannerUtils;
+import frc.utils.alerts.AlertManager;
+import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.ctre.BusChain;
 import frc.utils.cycletime.CycleTimeUtils;
 import frc.utils.logger.LoggerFactory;
-import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.LoggedRobot;
+import frc.utils.brakestate.BrakeStateManager;
 
 
 /**
@@ -28,10 +31,24 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		PathPlannerUtils.startPathPlanner();
+		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
+	}
+
+	@Override
+	public void disabledInit() {
+		if (!DriverStationUtils.isMatch()) {
+			BrakeStateManager.coast();
+		}
+	}
+
+	@Override
+	public void disabledExit() {
+		if (!DriverStationUtils.isMatch()) {
+			BrakeStateManager.brake();
+		}
 	}
 
 	@Override
@@ -57,6 +74,7 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+		AlertManager.reportAlerts();
 	}
 
 	@Override

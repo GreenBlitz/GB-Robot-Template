@@ -1,6 +1,6 @@
 package frc.utils.utilcommands;
 
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 import java.util.function.Consumer;

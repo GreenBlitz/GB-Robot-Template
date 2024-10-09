@@ -1,34 +1,34 @@
 package frc.robot.subsystems.swerve.factories.modules;
 
-import frc.robot.subsystems.swerve.SwerveName;
+import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.modules.constants.ModuleConstantsFactory;
 import frc.robot.subsystems.swerve.factories.modules.drive.DriveFactory;
 import frc.robot.subsystems.swerve.factories.modules.encoder.EncoderFactory;
 import frc.robot.subsystems.swerve.factories.modules.steer.SteerFactory;
-import frc.robot.subsystems.swerve.modules.Module;
-import frc.robot.subsystems.swerve.modules.ModuleUtils;
-import frc.robot.subsystems.swerve.modules.Modules;
+import frc.robot.subsystems.swerve.module.Module;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.Modules;
 
 
 public class ModulesFactory {
 
-	private static Module createModule(SwerveName swerveName, ModuleUtils.ModulePosition modulePosition) {
+	private static Module createModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
 		return new Module(
-			ModuleConstantsFactory.create(swerveName, modulePosition),
-			EncoderFactory.create(swerveName, modulePosition),
-			SteerFactory.create(swerveName, modulePosition),
-			DriveFactory.create(swerveName, modulePosition)
+			ModuleConstantsFactory.create(swerveType, modulePosition),
+			EncoderFactory.create(swerveType, modulePosition),
+			SteerFactory.create(swerveType, modulePosition),
+			DriveFactory.create(swerveType, modulePosition)
 		);
 	}
 
-	public static Modules create(SwerveName swerveName) {
+	public static Modules create(SwerveType swerveType) {
 		return new Modules(
-			swerveName,
+			swerveType.getLogPath(),
 			new Module[] {
-				createModule(swerveName, ModuleUtils.ModulePosition.FRONT_LEFT),
-				createModule(swerveName, ModuleUtils.ModulePosition.FRONT_RIGHT),
-				createModule(swerveName, ModuleUtils.ModulePosition.BACK_LEFT),
-				createModule(swerveName, ModuleUtils.ModulePosition.BACK_RIGHT)}
+				createModule(swerveType, ModuleUtils.ModulePosition.FRONT_LEFT),
+				createModule(swerveType, ModuleUtils.ModulePosition.FRONT_RIGHT),
+				createModule(swerveType, ModuleUtils.ModulePosition.BACK_LEFT),
+				createModule(swerveType, ModuleUtils.ModulePosition.BACK_RIGHT)}
 		);
 	}
 

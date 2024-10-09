@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.joysticks.SmartJoystick;
 
 import java.util.function.Consumer;
@@ -31,7 +31,7 @@ public class SysIdCalibrator {
 		this.usedSubsystem = subsystem;
 		this.isCTRE = sysIdConfigInfo.isCTRE;
 
-		final SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
+		SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
 			(Measure<Voltage> volts) -> voltageSetControl.accept(volts.in(Volts)),
 			null,
 			usedSubsystem,

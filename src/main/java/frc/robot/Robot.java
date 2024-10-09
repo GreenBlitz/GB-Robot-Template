@@ -10,6 +10,7 @@ import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.structures.SuperStructure;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveName;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -37,9 +38,9 @@ public class Robot {
 
 	public Robot() {
 		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(SwerveName.SWERVE),
-			ModulesFactory.create(SwerveName.SWERVE),
-			GyroFactory.create(SwerveName.SWERVE)
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			GyroFactory.create(SwerveType.SWERVE)
 		);
 		this.poseEstimator = new GBPoseEstimator(
 			SwerveConstants.KINEMATICS,

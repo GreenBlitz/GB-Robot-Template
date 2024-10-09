@@ -75,7 +75,6 @@ public class Superstructure {
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 				funnelStateHandler.setState(FunnelState.STOP),
 				intakeStatesHandler.setState(IntakeStates.STOP)
-
 		);
 	}
 

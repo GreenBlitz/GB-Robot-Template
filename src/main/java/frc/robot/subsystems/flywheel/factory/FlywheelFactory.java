@@ -17,9 +17,9 @@ public class FlywheelFactory {
 		Robot robot
 	) {
 		FlywheelStuff topStuff = RealFlywheelConstants
-				.generateFlywheelStuff(topLogPath, FlywheelConstants.IS_TOP_MOTOR_INVERTED, topID);
+			.generateFlywheelStuff(topLogPath, FlywheelConstants.IS_TOP_MOTOR_INVERTED, topID);
 		FlywheelStuff bottomStuff = RealFlywheelConstants
-				.generateFlywheelStuff(bottomLogPath, FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, bottomID);
+			.generateFlywheelStuff(bottomLogPath, FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, bottomID);
 
 		return new Flywheel(topStuff, bottomStuff, FlywheelConstants.LOG_PATH, robot);
 	}

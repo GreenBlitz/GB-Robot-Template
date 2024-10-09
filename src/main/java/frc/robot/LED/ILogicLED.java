@@ -4,7 +4,7 @@ import com.ctre.phoenix.led.*;
 
 public interface ILogicLED {
 
-	void LarsonAnimation(int startIndex, int endIndex));
+	void LarsonAnimation(int startIndex, int endIndex);
 
 
 }

@@ -39,7 +39,6 @@ public class LED implements ILED, ILogicLED{
 		setSectionColor(Color.kBlack, 0, LEDConstatns.LEDStrip.LED_LENGTH);
 	}
 
-	@Override
 	public void Blink(int startIndex, int endIndex) {
 		if ((LEDBlinkTimer.get()) % (LEDConstatns.LEDStrip.BLINK_DURATION * 2) >= LEDConstatns.LEDStrip.BLINK_DURATION) {
 			led.sectionTurnOff(startIndex, endIndex);

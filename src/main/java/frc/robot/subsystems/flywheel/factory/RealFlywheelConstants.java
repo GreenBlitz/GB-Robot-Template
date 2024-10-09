@@ -50,7 +50,7 @@ public class RealFlywheelConstants {
 		configuration.Slot0.kS = 0.26603;
 		configuration.Slot0.kV = 0.11306;
 		configuration.Slot0.kA = 0.027703;
-		configuration.Slot0.kP = 1;
+		configuration.Slot0.kP = 10;
 
 		configuration.Feedback.SensorToMechanismRatio = FlyWheelConstants.GEAR_RATIO;
 

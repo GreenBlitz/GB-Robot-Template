@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.elbow.ElbowState;
+import frc.robot.subsystems.flywheel.FlywheelState;
 import frc.robot.subsystems.pivot.PivotState;
 import frc.robot.subsystems.wrist.WristState;
 import frc.robot.superstructure.Tolerances;
@@ -31,21 +32,18 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		
-		usedJoystick.Y.onTrue(robot.getSuperstructure().elbowStateHandler.setState(ElbowState.IDLE)
+		usedJoystick.Y.onTrue(robot.getSuperstructure().flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER)
 				.alongWith(new RunCommand(() -> Logger.recordOutput(
-						"is Elbwow in place",
-						robot.getElbow().isAtAngle(ElbowState.IDLE.getTargetPosition(), Tolerances.ELBOW_POSITION)))));
-		
-		usedJoystick.B.onTrue(robot.getSuperstructure().elbowStateHandler.setState(ElbowState.TRANSFER)
+						"is FLYWHEEL in velcity",
+						robot.getFlywheel().isAtVelocities(
+								FlywheelState.PRE_SPEAKER.getRightVelocity(), FlywheelState.PRE_SPEAKER.getLeftVelocity(),
+								Tolerances.FLYWHEEL_VELOCITY_PER_SECOND)))));
+		usedJoystick.X.onTrue(robot.getSuperstructure().flywheelStateHandler.setState(FlywheelState.DEFAULT)
 				.alongWith(new RunCommand(() -> Logger.recordOutput(
-						"is Elbwow in place",
-						robot.getElbow().isAtAngle(ElbowState.TRANSFER.getTargetPosition(), Tolerances.ELBOW_POSITION)))));
-		
-		usedJoystick.X.onTrue(robot.getSuperstructure().elbowStateHandler.setState(ElbowState.PRE_AMP)
-				.alongWith(new RunCommand(() -> Logger.recordOutput(
-						"is Elbwow in place",
-						robot.getElbow().isAtAngle(ElbowState.PRE_AMP.getTargetPosition(), Tolerances.ELBOW_POSITION)))));
-		
+						"is FLYWHEEL in velcity",
+						robot.getFlywheel().isAtVelocities(
+								FlywheelState.DEFAULT.getRightVelocity(), FlywheelState.DEFAULT.getLeftVelocity(),
+								Tolerances.FLYWHEEL_VELOCITY_PER_SECOND)))));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

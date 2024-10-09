@@ -104,7 +104,7 @@ public class Superstructure {
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
 			flywheelStateHandler.setState(FlywheelState.SHOOTING),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
-			funnelStateHandler.setState(FunnelState.SPEAKER) ,
+			funnelStateHandler.setState(FunnelState.SPEAKER),
 			intakeStatesHandler.setState(IntakeStates.STOP)
 		);
 	}

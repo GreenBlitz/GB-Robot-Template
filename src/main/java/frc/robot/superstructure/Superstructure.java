@@ -26,14 +26,14 @@ public class Superstructure {
 
 	private final Robot robot;
 
-	public final Swerve swerve;
-	public final ElbowStateHandler elbowStateHandler;
-	public final FlywheelStateHandler flywheelStateHandler;
-	public final FunnelStateHandler funnelStateHandler;
-	public final IntakeStateHandler intakeStateHandler;
-	public final PivotStateHandler pivotStateHandler;
-	public final RollerStateHandler rollerStateHandler;
-	public final WristStateHandler wristStateHandler;
+	private final Swerve swerve;
+	private final ElbowStateHandler elbowStateHandler;
+	private final FlywheelStateHandler flywheelStateHandler;
+	private final FunnelStateHandler funnelStateHandler;
+	private final IntakeStateHandler intakeStateHandler;
+	private final PivotStateHandler pivotStateHandler;
+	private final RollerStateHandler rollerStateHandler;
+	private final WristStateHandler wristStateHandler;
 
 	private RobotState currentState;
 

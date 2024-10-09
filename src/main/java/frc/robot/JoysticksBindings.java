@@ -1,14 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.subsystems.elbow.ElbowState;
-import frc.robot.subsystems.flywheel.FlywheelState;
-import frc.robot.subsystems.pivot.PivotState;
-import frc.robot.subsystems.wrist.WristState;
-import frc.robot.superstructure.Tolerances;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
-import org.littletonrobotics.junction.Logger;
 
 public class JoysticksBindings {
 
@@ -31,19 +24,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		
-		usedJoystick.Y.onTrue(robot.getSuperstructure().flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER)
-				.alongWith(new RunCommand(() -> Logger.recordOutput(
-						"is FLYWHEEL in velcity",
-						robot.getFlywheel().isAtVelocities(
-								FlywheelState.PRE_SPEAKER.getRightVelocity(), FlywheelState.PRE_SPEAKER.getLeftVelocity(),
-								Tolerances.FLYWHEEL_VELOCITY_PER_SECOND)))));
-		usedJoystick.X.onTrue(robot.getSuperstructure().flywheelStateHandler.setState(FlywheelState.DEFAULT)
-				.alongWith(new RunCommand(() -> Logger.recordOutput(
-						"is FLYWHEEL in velcity",
-						robot.getFlywheel().isAtVelocities(
-								FlywheelState.DEFAULT.getRightVelocity(), FlywheelState.DEFAULT.getLeftVelocity(),
-								Tolerances.FLYWHEEL_VELOCITY_PER_SECOND)))));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -54,6 +54,10 @@ public class Superstructure {
 		return robot.getElevatorRoller().isNoteIn();
 	}
 
+	private boolean isNoteInIntake(){
+		return robot.getIntakeRoller().isNoteIn();
+	}
+
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case IDLE -> idle();
@@ -89,7 +93,7 @@ public class Superstructure {
 								//intakePivot.OUT
 								intakeRollerStatesHandler.setState(IntakeStates.INTAKE),
 								funnelStateHandler.setState(FunnelState.STOP)
-						).withTimeout(3), // .until(() -> isNoteInIntake
+						).until(this::isNoteInIntake),
 						new ParallelCommandGroup(
 								funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
 								//intakePivot.IN
@@ -162,7 +166,7 @@ public class Superstructure {
 						new ParallelCommandGroup(
 								funnelStateHandler.setState(FunnelState.AMP),
 								elevatorRollerStateHandler.setState(ElevatorRollerState.AMP)
-						), //.until(() -> !isNoteInElevator)
+						).until(() -> !isNoteInElevatorRoller()),
 						new ParallelCommandGroup(
 								funnelStateHandler.setState(FunnelState.STOP),
 								//elevator.IDLE
@@ -208,7 +212,7 @@ public class Superstructure {
 				flywheelStateHandler.setState(FlywheelState.DEFAULT),
 				//elevator.IDLE
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
-		); //.until(() -> !isNoteInIntake)
+		).until(() -> !isNoteInIntake());
 	}
 
 	public Command shooterOuttake() {

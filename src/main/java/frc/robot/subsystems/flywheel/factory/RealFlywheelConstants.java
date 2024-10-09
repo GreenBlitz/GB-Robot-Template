@@ -1,6 +1,7 @@
 package frc.robot.subsystems.flywheel.factory;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -45,6 +46,7 @@ public class RealFlywheelConstants {
 		sparkMax.setSmartCurrentLimit(40);
 		sparkMax.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 		sparkMax.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
+		sparkMax.setIdleMode(CANSparkBase.IdleMode.kCoast);
 
 		sparkMax.getPIDController().setP(5);
 		sparkMax.getPIDController().setI(0);

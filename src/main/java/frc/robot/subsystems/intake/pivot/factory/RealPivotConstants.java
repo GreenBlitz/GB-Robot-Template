@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake.pivot.factory;
 
+import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -36,14 +37,16 @@ public class RealPivotConstants {
 		sparkMaxWrapper.getPIDController().setP(1);
 		sparkMaxWrapper.getPIDController().setI(0);
 		sparkMaxWrapper.getPIDController().setD(0);
+		sparkMaxWrapper.setSmartCurrentLimit(30);
+		sparkMaxWrapper.setIdleMode(CANSparkBase.IdleMode.kBrake);
+		sparkMaxWrapper.setInverted(false);
 	}
 
 	protected static PivotStuff generatePivotStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.PIVOT);
 		configMotor(sparkMaxWrapper);
 
-		SysIdRoutine.Config config = new SysIdRoutine.Config();
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(PivotConstants.LOG_PATH, sparkMaxWrapper, config);
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(PivotConstants.LOG_PATH, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
@@ -55,7 +58,7 @@ public class RealPivotConstants {
 		SparkMaxAngleRequest positionRequest = new SparkMaxAngleRequest(
 			positionSignal.getLatestValue(),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-				POSITION_PID_SLOT,
+			POSITION_PID_SLOT,
 			FEEDFORWARD_FUNCTION
 		);
 

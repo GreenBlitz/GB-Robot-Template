@@ -31,10 +31,10 @@ public class PivotCommandsBuilder {
 				() -> false, pivot
 		).withName("Set power to: " + power);
 	}
-	//@formatter:on
 
 	public Command stop() {
 		return new RunCommand(pivot::stop, pivot).withName("Stop");
 	}
+	//@formatter:on
 
 }

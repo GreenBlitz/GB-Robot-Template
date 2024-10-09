@@ -2,7 +2,6 @@ package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-import java.util.List;
 
 public class LimeLightConstants {
 

@@ -16,6 +16,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
@@ -29,8 +30,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private SwerveDriveWheelPositions latestWheelPositions;
 	private Rotation2d latestGyroAngle;
 	private Rotation2d headingOffset;
+	private Consumer<Rotation2d> resetSwerve;
+
 
 	public GBPoseEstimator(
+		Consumer<Rotation2d> resetSwerve,
 		String logPath,
 		ILimelightFilterer limelightFilterer,
 		SwerveDriveKinematics kinematics,
@@ -40,6 +44,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Pose2d initialRobotPose
 	) {
 		super(logPath);
+		this.resetSwerve = resetSwerve;
 		this.odometryPose = new Pose2d();
 		this.estimatedPose = new Pose2d();
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
@@ -64,7 +69,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	public void calculateHeadingOffset(Rotation2d gyroAngle) {
-		headingOffset = getEstimatedRobotHeadingByVision().minus(gyroAngle);
+		headingOffset = gyroAngle;
 	}
 
 	@Override
@@ -75,6 +80,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private Rotation2d getEstimatedRobotHeadingByVision() {
+		if (true){
+			return limelightFilterer.getAllRobotHeadingEstimations().get(0);
+		}
 		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
 		List<Rotation2d> headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();
 		while (
@@ -101,6 +109,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.estimatedPose = initialPose;
 		this.latestGyroAngle = initialPose.getRotation();
 		this.odometryPose = initialPose;
+		this.resetSwerve.accept(initialPose.getRotation());
 		odometryPoseInterpolator.clear();
 	}
 
@@ -148,9 +157,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public void updateVision(List<VisionObservation> visionObservations) {
 		for (VisionObservation visionObservation : visionObservations) {
-			if (!isObservationTooOld(visionObservation)) {
+//			if (!isObservationTooOld(visionObservation)) {
 				addVisionObservation(visionObservation);
-			}
+//			}
 		}
 	}
 

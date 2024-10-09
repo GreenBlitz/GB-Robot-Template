@@ -89,11 +89,11 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	}
 
 	private void logEstimatedPositions() {
-		List<VisionObservation> observations = getFilteredVisionObservations();
+		List<VisionObservation> observations = getAllAvailableLimelightRawData();
 
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(
-				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
+				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i,
 				observations.get(i).robotPose()
 			);
 		}

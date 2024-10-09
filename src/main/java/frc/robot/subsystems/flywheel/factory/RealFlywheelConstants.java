@@ -19,7 +19,6 @@ import java.util.function.Function;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-
 public class RealFlywheelConstants {
 
 	private static final double kS = 3;

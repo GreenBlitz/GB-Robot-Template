@@ -16,11 +16,11 @@ public class FlywheelCommandsBuilder {
 	//@formatter:off
 	public Command setPower(double power) {
 		return new FunctionalCommand(
-				() -> {},
-				() -> flywheel.setPower(power),
-				interrupted -> flywheel.stop(),
-				() -> false,
-				flywheel
+			() -> {},
+			() -> flywheel.setPower(power),
+			interrupted -> flywheel.stop(),
+			() -> false,
+			flywheel
 		).withName("Set power to " + power);
 	}
 

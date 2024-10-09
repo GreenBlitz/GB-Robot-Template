@@ -8,8 +8,14 @@ import frc.robot.subsystems.flywheel.FlywheelConstants;
 
 public class FlywheelFactory {
 
-	private static Flywheel
-		generateReelFlywheel(String topLogPath, String bottomLogPath, SparkMaxDeviceID topID, SparkMaxDeviceID bottomID, Robot robot) {
+	//@formatter:off
+	private static Flywheel generateReelFlywheel(
+			String topLogPath,
+			String bottomLogPath,
+			SparkMaxDeviceID topID,
+			SparkMaxDeviceID bottomID,
+			Robot robot
+	) {
 		FlywheelComponents topComponents = RealFlywheelConstants
 			.generateFlywheelComponent(topLogPath, FlywheelConstants.IS_TOP_MOTOR_INVERTED, topID);
 		FlywheelComponents bottomComponents = RealFlywheelConstants
@@ -24,6 +30,7 @@ public class FlywheelFactory {
 			case SIMULATION -> null;
 		};
 	}
+	//@formatter:on
 
 }
 

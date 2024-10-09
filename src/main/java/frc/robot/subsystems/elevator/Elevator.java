@@ -32,6 +32,8 @@ public class Elevator extends GBSubsystem {
 		this.commandBuilder = new ElevatorCommandsBuilder(this);
 		this.positionRequest = elevatorStuff.positionRequest();
 		this.voltageRequest = elevatorStuff.voltageRequest();
+
+		updateInputs();
 	}
 
 	public ElevatorCommandsBuilder getCommandBuilder() {

@@ -31,10 +31,6 @@ public class FlywheelCommandsBuilder {
 		).withName("Set target velocity to " + targetVelocity);
 	}
 
-	public Command setState(FlywheelState state) {
-		return new RunCommand(() -> flywheel.setState(state), flywheel).withName("Stop");
-	}
-
 	public Command stop() {
 		return new RunCommand(flywheel::stop, flywheel).withName("Stop");
 	}

@@ -9,20 +9,20 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class Flywheel extends GBSubsystem {
 
-	private final FlywheelComponents topFlywheelComponents;
-	private final FlywheelComponents bottomFlywheelComponents;
+	private final FlywheelStuff topFlywheelStuff;
+	private final FlywheelStuff bottomFlywheelStuff;
 	private final ControllableMotor topMotor;
 	private final ControllableMotor bottomMotor;
 	private final FlywheelCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
 
-	public Flywheel(FlywheelComponents topFlywheelComponents, FlywheelComponents bottomFlywheelComponents, String logPath, Robot robot) {
+	public Flywheel(FlywheelStuff topFlywheelStuff, FlywheelStuff bottomFlywheelStuff, String logPath, Robot robot) {
 		super(logPath);
 
-		this.topFlywheelComponents = topFlywheelComponents;
-		this.bottomFlywheelComponents = bottomFlywheelComponents;
-		this.topMotor = topFlywheelComponents.motor();
-		this.bottomMotor = bottomFlywheelComponents.motor();
+		this.topFlywheelStuff = topFlywheelStuff;
+		this.bottomFlywheelStuff = bottomFlywheelStuff;
+		this.topMotor = topFlywheelStuff.motor();
+		this.bottomMotor = bottomFlywheelStuff.motor();
 		this.commandsBuilder = new FlywheelCommandsBuilder(this);
 		this.sysIdCalibrator = new SysIdCalibrator(bottomMotor.getSysidConfigInfo(), this, this::setVoltage);
 
@@ -43,24 +43,24 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	protected void setVoltage(double voltage) {
-		topMotor.applyDoubleRequest(topFlywheelComponents.voltageRequest().withSetPoint(voltage));
-		bottomMotor.applyDoubleRequest(bottomFlywheelComponents.voltageRequest().withSetPoint(voltage));
+		topMotor.applyDoubleRequest(topFlywheelStuff.voltageRequest().withSetPoint(voltage));
+		bottomMotor.applyDoubleRequest(bottomFlywheelStuff.voltageRequest().withSetPoint(voltage));
 	}
 
 	protected void setTargetVelocity(Rotation2d targetVelocity) {
-		topMotor.applyAngleRequest(topFlywheelComponents.velocityRequest().withSetPoint(targetVelocity));
-		bottomMotor.applyAngleRequest(bottomFlywheelComponents.velocityRequest().withSetPoint(targetVelocity));
+		topMotor.applyAngleRequest(topFlywheelStuff.velocityRequest().withSetPoint(targetVelocity));
+		bottomMotor.applyAngleRequest(bottomFlywheelStuff.velocityRequest().withSetPoint(targetVelocity));
 	}
 
 	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
 		return MathUtil.isNear(
 			targetVelocity.getRotations(),
-			topFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
+			topFlywheelStuff.velocitySignal().getLatestValue().getRotations(),
 			velocityTolerance.getRotations()
 		)
 			&& MathUtil.isNear(
 				targetVelocity.getRotations(),
-				bottomFlywheelComponents.velocitySignal().getLatestValue().getRotations(),
+				bottomFlywheelStuff.velocitySignal().getLatestValue().getRotations(),
 				velocityTolerance.getRotations()
 			);
 	}
@@ -71,8 +71,8 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	protected void updateInputs() {
-		topMotor.updateSignals(topFlywheelComponents.voltageSignal(), topFlywheelComponents.velocitySignal());
-		bottomMotor.updateSignals(bottomFlywheelComponents.voltageSignal(), bottomFlywheelComponents.velocitySignal());
+		topMotor.updateSignals(topFlywheelStuff.voltageSignal(), topFlywheelStuff.velocitySignal());
+		bottomMotor.updateSignals(bottomFlywheelStuff.voltageSignal(), bottomFlywheelStuff.velocitySignal());
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
-import frc.robot.subsystems.flywheel.FlywheelComponents;
+import frc.robot.subsystems.flywheel.FlywheelStuff;
 import frc.utils.AngleUnit;
 
 import java.util.function.Function;
@@ -51,7 +51,7 @@ public class RealFlywheelConstants {
 		sparkMax.getPIDController().setD(0);
 	}
 
-	public static FlywheelComponents generateFlywheelComponent(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
+	public static FlywheelStuff generateFlywheelStuff(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
 		configMotor(sparkMaxWrapper, isInverted);
@@ -73,7 +73,7 @@ public class RealFlywheelConstants {
 
 		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
 
-		return new FlywheelComponents(logPath, motor, isInverted, voltageSignal, velocitySignal, voltageRequest, velocityRequest);
+		return new FlywheelStuff(logPath, motor, isInverted, voltageSignal, velocitySignal, voltageRequest, velocityRequest);
 	}
 
 }

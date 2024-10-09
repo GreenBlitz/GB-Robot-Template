@@ -1,8 +1,6 @@
 package frc.robot.subsystems.elevator;
 
 
-import edu.wpi.first.math.geometry.Rotation2d;
-
 public class ElevatorConstants {
 
 	public static final String LOG_PATH = "Subsystems/Elevator/";

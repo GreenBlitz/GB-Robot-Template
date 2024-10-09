@@ -49,13 +49,6 @@ public class Robot {
 	private final Superstructure superstructure;
 
 	public Robot() {
-		FlywheelComponents topFlywheelComponents = FlywheelFactory
-			.create(FlywheelConstants.LOG_PATH + "TopMotor", true, IDs.CANSparkMAXIDs.TOP_FLYWHEEL);
-
-		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
-			.create(FlywheelConstants.LOG_PATH + "BottomMotor", false, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL);
-
-		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH, this);
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE),
@@ -64,6 +57,13 @@ public class Robot {
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
+		FlywheelComponents topFlywheelComponents = FlywheelFactory
+				.create(FlywheelConstants.LOG_PATH + "TopMotor/", FlywheelConstants.IS_TOP_MOTOR_INVERTED, IDs.CANSparkMAXIDs.TOP_FLYWHEEL);
+
+		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
+				.create(FlywheelConstants.LOG_PATH + "BottomMotor/", FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL);
+
+		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH, this);
 		this.superstructure = new Superstructure(this);
 
 		configureBindings();

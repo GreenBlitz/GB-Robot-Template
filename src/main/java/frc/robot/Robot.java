@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.constants.IDs;
+import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.elevatorRoller.ElevatorRoller;
 import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerConstants;
 import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerFactory;
@@ -35,6 +38,7 @@ public class Robot {
 	private final ElevatorRoller elevatorRoller;
 	private final Funnel funnel;
 	private final IntakeRoller intakeRoller;
+	private final Flywheel flywheel;
 
 	private final Superstructure superstructure;
 
@@ -47,8 +51,10 @@ public class Robot {
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
-
+		this.flywheel = FlywheelFactory
+			.create("TopMotor/", "BottomMotor/", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
 		this.superstructure = new Superstructure(this);
+
 		configureBindings();
 	}
 
@@ -70,6 +76,10 @@ public class Robot {
 
 	public Funnel getFunnel() {
 		return funnel;
+	}
+
+	public Flywheel getFlywheel() {
+		return flywheel;
 	}
 
 	public IntakeRoller getIntakeRoller() {

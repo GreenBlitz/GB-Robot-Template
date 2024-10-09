@@ -32,10 +32,10 @@ public class Elbow extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		updateInputs();
 		if (ElbowConstants.MINIMUM_ACHIEVABLE_POSITION.getRotations() > elbowStuff.positionSignal().getLatestValue().getRotations()) {
 			motor.resetPosition(ElbowConstants.MINIMUM_ACHIEVABLE_POSITION);
 		}
+		updateInputs();
 	}
 
 	private void updateInputs() {

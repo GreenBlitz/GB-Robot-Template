@@ -30,7 +30,7 @@ public class RealFlywheelConstants {
 
 	private static final Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
 
-	private static final double GEAR_RATIO = 1 / 1;
+	private static final double GEAR_RATIO = 1;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(

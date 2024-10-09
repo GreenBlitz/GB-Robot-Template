@@ -12,7 +12,7 @@ public class PoseEstimationMath {
 
 	public static Twist2d addGyroToTwist(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
 		boolean hasGyroUpdated = currentGyroAngle != null;
-		if (hasGyroUpdated) {
+		if (hasGyroUpdated && lastGyroAngle != null) {
 			return updateChangeInAngle(twist, currentGyroAngle, lastGyroAngle);
 		}
 		return twist;

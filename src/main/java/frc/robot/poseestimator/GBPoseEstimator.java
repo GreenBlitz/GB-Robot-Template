@@ -157,7 +157,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public void updateOdometry(List<OdometryObservation> odometryObservations) {
 		for (OdometryObservation observation : odometryObservations) {
-			setHeadingOffsetAtFirstOdometryObservation(observation);
 			addOdometryObservation(observation);
 		}
 		logEstimatedPose();

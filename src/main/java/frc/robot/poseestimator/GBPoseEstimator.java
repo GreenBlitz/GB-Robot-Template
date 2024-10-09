@@ -66,6 +66,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		headingOffset = getEstimatedRobotHeadingByVision().minus(gyroAngle);
 	}
 
+	@Override
+	public void resetHeadingOffset(Rotation2d newHeading) {
+		if (latestGyroAngle != null) {
+			headingOffset = newHeading.minus(latestGyroAngle);
+		}
+	}
+
 	private Rotation2d getEstimatedRobotHeadingByVision() {
 		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
 		List<Rotation2d> headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();

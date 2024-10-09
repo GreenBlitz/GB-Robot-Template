@@ -17,4 +17,6 @@ public interface IOdometryEstimator {
 
 	void setOdometryStandardDeviations(double[] standardDeviations);
 
+	void resetHeadingOffset(Rotation2d newHeading);
+
 }

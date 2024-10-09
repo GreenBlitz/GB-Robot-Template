@@ -31,21 +31,21 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		
-		usedJoystick.POV_LEFT.onTrue(robot.getSuperstructure().elbowStateHandler.setState(ElbowState.IDLE));
-		usedJoystick.Y.onTrue(robot.getSuperstructure().pivotStateHandler.setState(PivotState.PRE_SPEAKER)
+		usedJoystick.Y.onTrue(robot.getSuperstructure().elbowStateHandler.setState(ElbowState.IDLE)
 				.alongWith(new RunCommand(() -> Logger.recordOutput(
-						"is Pivot in place",
-						robot.getPivot().isAtPosition(PivotState.PRE_SPEAKER.getTargetPosition(), Tolerances.PIVOT_POSITION)))));
+						"is Elbwow in place",
+						robot.getElbow().isAtAngle(ElbowState.IDLE.getTargetPosition(), Tolerances.ELBOW_POSITION)))));
 		
-		usedJoystick.A.onTrue(robot.getSuperstructure().pivotStateHandler.setState(PivotState.TRANSFER)
+		usedJoystick.B.onTrue(robot.getSuperstructure().elbowStateHandler.setState(ElbowState.TRANSFER)
 				.alongWith(new RunCommand(() -> Logger.recordOutput(
-						"is Pivot in place",
-						robot.getPivot().isAtPosition(PivotState.TRANSFER.getTargetPosition(), Tolerances.PIVOT_POSITION)))));
+						"is Elbwow in place",
+						robot.getElbow().isAtAngle(ElbowState.TRANSFER.getTargetPosition(), Tolerances.ELBOW_POSITION)))));
 		
-		usedJoystick.X.onTrue(robot.getSuperstructure().pivotStateHandler.setState(PivotState.IDLE)
+		usedJoystick.X.onTrue(robot.getSuperstructure().elbowStateHandler.setState(ElbowState.PRE_AMP)
 				.alongWith(new RunCommand(() -> Logger.recordOutput(
-						"is Pivot in place",
-						robot.getPivot().isAtPosition(PivotState.IDLE.getTargetPosition(), Tolerances.PIVOT_POSITION)))));
+						"is Elbwow in place",
+						robot.getElbow().isAtAngle(ElbowState.PRE_AMP.getTargetPosition(), Tolerances.ELBOW_POSITION)))));
+		
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

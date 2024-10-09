@@ -9,7 +9,7 @@ public class Tolerances {
 	public static final double TRANSLATION_METERS = 0.05;
 	public static final double TRANSLATION_VELOCITY_DEADBAND = 0.05;
 
-	public static final Rotation2d ELBOW_POSITION = Rotation2d.fromDegrees(3);
+	public static final Rotation2d ELBOW_POSITION = Rotation2d.fromDegrees(1);
 	public static final Rotation2d WRIST_POSITION = Rotation2d.fromDegrees(5);
 	public static final Rotation2d PIVOT_POSITION = Rotation2d.fromDegrees(1);
 	public static final Rotation2d FLYWHEEL_VELOCITY_PER_SECOND = Rotation2d.fromRotations(4);

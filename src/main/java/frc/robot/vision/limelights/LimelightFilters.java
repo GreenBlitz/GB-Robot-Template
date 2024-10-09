@@ -10,16 +10,22 @@ public class LimelightFilters {
 		double aprilTagHeightMeters,
 		LimelightFiltersTolerances tolerances
 	) {
-		return LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
-			&& LimelightFilters.isLimelightOutputInTolerance(
-				limelightRawData,
-				currentEstimatedPose,
-				tolerances.normalizedPositionTolerance(),
-				tolerances.normalizedRotationTolerance()
-			)
-			&& LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance())
-			&& LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance())
-			&& LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
+		return LimelightFilters.isLimelightOutputInTolerance(
+			limelightRawData,
+			currentEstimatedPose,
+			tolerances.normalizedPositionTolerance(),
+			tolerances.normalizedRotationTolerance()
+		);
+//		return LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
+//			&& LimelightFilters.isLimelightOutputInTolerance(
+//				limelightRawData,
+//				currentEstimatedPose,
+//				tolerances.normalizedPositionTolerance(),
+//				tolerances.normalizedRotationTolerance()
+//			)
+//			&& LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance())
+//			&& LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance())
+//			&& LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
 	}
 
 	protected static boolean isLimelightOutputInTolerance(
@@ -37,8 +43,8 @@ public class LimelightFilters {
 		);
 		Transform3d transformDifference = limelightPosition.minus(estimatedPose3d);
 		Rotation3d rotationDifference = limelightPosition.getRotation().minus(estimatedPose3d.getRotation());
-		return transformDifference.getTranslation().getNorm() <= normalizedPositionTolerance
-			&& getRotationNorm(rotationDifference) <= normalizedRotationTolerance;
+		return transformDifference.getTranslation().getNorm() <= normalizedPositionTolerance;
+//			&& getRotationNorm(rotationDifference) <= normalizedRotationTolerance;
 	}
 
 	private static double getRotationNorm(Rotation3d angle) {

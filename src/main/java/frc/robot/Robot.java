@@ -62,7 +62,7 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
-		this.superStructure = new SuperStructure(swerve, poseEstimator);
+		this.superStructure = new SuperStructure(swerve, poseEstimator, limelightFilterer);
 
 		buildPathPlannerForAuto();
 		configureBindings();

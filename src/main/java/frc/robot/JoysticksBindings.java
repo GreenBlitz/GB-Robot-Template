@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
@@ -34,7 +35,8 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 //		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeading(new Rotation2d())));
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
+//		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
+		usedJoystick.B.onTrue(new InstantCommand(() -> ((GBPoseEstimator) robot.getPoseEstimator()).resetPoseByLimelight()));
 
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheelsInX());
 		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true));

@@ -46,7 +46,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.limelightFilterer = limelightFilterer;
 		this.kinematics = kinematics;
-		this.latestWheelPositions = initialWheelPositions;
+//		this.latestWheelPositions = initialWheelPositions;
 		this.latestGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
@@ -64,7 +64,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	public void calculateHeadingOffset(Rotation2d gyroAngle) {
-		headingOffset = getEstimatedRobotHeadingByVision().minus(gyroAngle);
+//		headingOffset = getEstimatedRobotHeadingByVision().minus(gyroAngle);
+		headingOffset = gyroAngle.minus(getEstimatedRobotHeadingByVision());
 	}
 
 	@Override
@@ -213,10 +214,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void subsystemPeriodic() {
-		if (!limelightFilterer.isPoseEstimationCorrect()) {
-			resetPoseByLimelight();
-		}
-		updateVision(limelightFilterer.getFilteredVisionObservations());
+//		if (!limelightFilterer.isPoseEstimationCorrect()) {
+//			resetPoseByLimelight();
+//		}
+//		updateVision(limelightFilterer.getAllAvailableLimelightRawData());
 	}
 
 }

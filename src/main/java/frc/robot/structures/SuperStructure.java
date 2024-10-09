@@ -5,20 +5,24 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.vision.limelights.ILimelightFilterer;
 
 public class SuperStructure {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final ILimelightFilterer limelightFilter;
 
-	public SuperStructure(Swerve swerve, IPoseEstimator poseEstimator) {
+	public SuperStructure(Swerve swerve, IPoseEstimator poseEstimator, ILimelightFilterer limelightFilter) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
+		this.limelightFilter = limelightFilter;
 	}
 
 	public void periodic() {
 		swerve.updateStatus();
 		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
+		poseEstimator.updateVision(limelightFilter.getAllAvailableLimelightRawData());
 	}
 
 

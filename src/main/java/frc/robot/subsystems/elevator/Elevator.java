@@ -60,6 +60,11 @@ public class Elevator extends GBSubsystem {
 		backMotor.setBrake(brake);
 	}
 
+	public void resetPosition(Rotation2d position){
+		frontMotor.resetPosition(position);
+		backMotor.resetPosition(position);
+	}
+
 	protected void setTargetPosition(Rotation2d position) {
 		frontMotor.applyAngleRequest(positionRequest.withSetPoint(position));
 		backMotor.applyAngleRequest(positionRequest.withSetPoint(position));

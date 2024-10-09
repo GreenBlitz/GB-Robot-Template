@@ -37,11 +37,8 @@ public class Robot {
 	private final Swerve swerve;
 
 	private final ElevatorRoller elevatorRoller;
-
 	private final Funnel funnel;
-
 	private final IntakeRoller intakeRoller;
-
 	private final Flywheel flywheel;
 
 	private final Superstructure superstructure;

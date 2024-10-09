@@ -52,6 +52,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		resetPose(initialRobotPose);
+		calculateHeadingOffset(initialGyroAngle);
 	}
 
 	public ILimelightFilterer getLimelightFilterer() {
@@ -86,12 +87,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();
 		}
 		return PoseEstimationMath.calculateAngleAverage(stackedHeadingEstimations);
-	}
-
-	private void setHeadingOffsetAtFirstOdometryObservation(OdometryObservation observation) {
-		if (observation.gyroAngle() != null && latestGyroAngle == null) {
-			calculateHeadingOffset(observation.gyroAngle());
-		}
 	}
 
 	@Override
@@ -197,9 +192,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
 		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
-		if (latestGyroAngle != null) {
-			latestGyroAngle = observation.gyroAngle();
-		}
+		latestGyroAngle = observation.gyroAngle();
 		latestWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);
 		estimatedPose = estimatedPose.exp(twist);

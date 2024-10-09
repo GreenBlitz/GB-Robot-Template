@@ -17,6 +17,12 @@ import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerFactory;
 import frc.robot.subsystems.intake.roller.IntakeRoller;
 import frc.robot.subsystems.intake.roller.IntakeRollerConstant;
 import frc.robot.subsystems.intake.roller.factory.IntakeRollerFactory;
+import frc.robot.subsystems.intake.pivot.Pivot;
+import frc.robot.subsystems.intake.pivot.PivotConstants;
+import frc.robot.subsystems.intake.pivot.factory.PivotFactory;
+import frc.robot.subsystems.intake.roller.IntakeRoller;
+import frc.robot.subsystems.intake.roller.IntakeRollerConstant;
+import frc.robot.subsystems.intake.roller.factory.IntakeRollerFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -41,6 +47,7 @@ public class Robot {
 	private final ElevatorRoller elevatorRoller;
 
 	private final Funnel funnel;
+	private final Pivot pivot;
 
 	private final IntakeRoller intakeRoller;
 
@@ -63,6 +70,7 @@ public class Robot {
 		);
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
 		this.superstructure = new Superstructure(this);
 
@@ -87,6 +95,10 @@ public class Robot {
 
 	public Funnel getFunnel() {
 		return funnel;
+	}
+
+	public Pivot getPivot() {
+		return pivot;
 	}
 
 	public Flywheel getFlywheel() {

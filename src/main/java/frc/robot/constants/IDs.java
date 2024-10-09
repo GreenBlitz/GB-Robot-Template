@@ -65,6 +65,8 @@ public class IDs {
 
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
+		public static final SparkMaxDeviceID PIVOT = new SparkMaxDeviceID(2, CANSparkLowLevel.MotorType.kBrushless);
+
 	}
 
 }

@@ -47,11 +47,7 @@ public class RealPivotConstants {
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(PivotConstants.LOG_PATH, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
-		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
-			"position",
-			sparkMaxWrapper.getEncoder()::getPosition,
-			AngleUnit.ROTATIONS
-		);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", sparkMaxWrapper.getEncoder()::getPosition, AngleUnit.ROTATIONS);
 
 		SparkMaxAngleRequest positionRequest = new SparkMaxAngleRequest(
 			positionSignal.getLatestValue(),

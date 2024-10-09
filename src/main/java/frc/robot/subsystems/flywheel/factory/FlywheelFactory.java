@@ -10,11 +10,11 @@ public class FlywheelFactory {
 
 	//@formatter:off
 	private static Flywheel generateRealFlywheel(
-			String topLogPath,
-			String bottomLogPath,
-			SparkMaxDeviceID topID,
-			SparkMaxDeviceID bottomID,
-			Robot robot
+		String topLogPath,
+		String bottomLogPath,
+		SparkMaxDeviceID topID,
+		SparkMaxDeviceID bottomID,
+		Robot robot
 	) {
 		FlywheelStuff topStuff = RealFlywheelConstants
 				.generateFlywheelStuff(topLogPath, FlywheelConstants.IS_TOP_MOTOR_INVERTED, topID);

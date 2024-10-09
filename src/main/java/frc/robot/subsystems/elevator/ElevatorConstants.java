@@ -9,6 +9,6 @@ public class ElevatorConstants {
 
 	public final static double GEAR_RATIO = 48.0 / 14.0;
 
-	public static final Rotation2d MINIMUM_ACHIEVABLE_POSITION = Rotation2d.fromDegrees(0);
+	public static final double MINIMUM_ACHIEVABLE_POSITION_METERS = 0;
 
 }

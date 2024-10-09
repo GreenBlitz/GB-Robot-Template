@@ -55,7 +55,7 @@ public class Robot {
 			limelightFilterer,
 			swerve.getConstants().kinematics(),
 			new SwerveDriveWheelPositions(new SwerveModulePosition[4]),
-			new Rotation2d(),
+			swerve.getYaw(),
 			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
 			new Pose2d()
 		);

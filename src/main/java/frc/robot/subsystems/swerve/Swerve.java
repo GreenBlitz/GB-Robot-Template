@@ -122,6 +122,10 @@ public class Swerve extends GBSubsystem {
 		logNumberOfOdometrySamples();
 	}
 
+	public Rotation2d getYaw() {
+		return gyroStuff.yawSignal().getLatestValue();
+	}
+
 	private void updateInputs() {
 		gyro.updateSignals(gyroStuff.yawSignal());
 		modules.updateInputs();

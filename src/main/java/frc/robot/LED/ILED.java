@@ -5,8 +5,9 @@ import edu.wpi.first.wpilibj.util.Color;
 
 
 public interface ILED {
-    void setColor(Color color, int index);
 
-    void turnOff(int index);
+	void setColor(Color color, int index);
+
+	void turnOff(int index);
 
 }

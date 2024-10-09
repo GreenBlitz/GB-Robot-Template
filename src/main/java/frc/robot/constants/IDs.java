@@ -17,6 +17,12 @@ public class IDs {
 
 	public static final Phoenix6DeviceID PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 
+	public static class TalonSRXIDs {
+
+		public static final int ELEVATOR_ROLLER = 9;
+
+	}
+
 	public static class TalonFXIDs {
 
 		public static final Phoenix6DeviceID FRONT_LEFT_STEER = new Phoenix6DeviceID(0, BusChain.CANIVORE);
@@ -50,6 +56,8 @@ public class IDs {
 	}
 
 	public static class CANSparkMAXIDs {
+
+		public static final SparkMaxDeviceID INTAKE_ROLLER = new SparkMaxDeviceID(11, CANSparkLowLevel.MotorType.kBrushless);
 
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 

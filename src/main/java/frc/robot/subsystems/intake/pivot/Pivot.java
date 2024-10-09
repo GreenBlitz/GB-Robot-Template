@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.brakestate.BrakeStateManager;
 
 public class Pivot extends GBSubsystem {
 
@@ -22,6 +23,10 @@ public class Pivot extends GBSubsystem {
 		this.positionRequest = pivotStuff.positionRequest();
 		this.commandsBuilder = new PivotCommandsBuilder(this);
 		this.resetAngleFilter = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
+
+		BrakeStateManager.add(() -> setBreak(true), () -> setBreak(false));
+
+		motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 
 		updateInputs();
 		resetResetFilter();

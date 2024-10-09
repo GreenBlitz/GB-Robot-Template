@@ -30,8 +30,8 @@ public class RealPivotConstants {
 	//@formatter:on
 
 	private static void configMotor(SparkMaxWrapper sparkMaxWrapper) {
-		sparkMaxWrapper.getAbsoluteEncoder().setPositionConversionFactor(GEAR_RATIO);
-		sparkMaxWrapper.getAbsoluteEncoder().setVelocityConversionFactor(GEAR_RATIO);
+		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
+		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getPIDController().setP(1);
 		sparkMaxWrapper.getPIDController().setI(0);
 		sparkMaxWrapper.getPIDController().setD(0);
@@ -49,7 +49,7 @@ public class RealPivotConstants {
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
 			"position",
-			sparkMaxWrapper.getAbsoluteEncoder()::getPosition,
+			sparkMaxWrapper.getEncoder()::getPosition,
 			AngleUnit.ROTATIONS
 		);
 

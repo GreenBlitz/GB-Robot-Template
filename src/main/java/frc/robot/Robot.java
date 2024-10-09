@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.intake.pivot.Pivot;
 import frc.robot.subsystems.intake.pivot.PivotConstants;
 import frc.robot.subsystems.intake.pivot.factory.PivotFactory;
+import frc.robot.constants.IDs;
+import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.elevatorRoller.ElevatorRoller;
 import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerConstants;
 import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerFactory;
@@ -39,6 +42,7 @@ public class Robot {
 	private final Funnel funnel;
 	private final Pivot pivot;
 	private final IntakeRoller intakeRoller;
+	private final Flywheel flywheel;
 
 	private final Superstructure superstructure;
 
@@ -52,8 +56,10 @@ public class Robot {
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
-
+		this.flywheel = FlywheelFactory
+			.create("TopMotor/", "BottomMotor/", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
 		this.superstructure = new Superstructure(this);
+
 		configureBindings();
 	}
 
@@ -79,6 +85,10 @@ public class Robot {
 
 	public Pivot getPivot() {
 		return pivot;
+	}
+
+	public Flywheel getFlywheel() {
+		return flywheel;
 	}
 
 	public IntakeRoller getIntakeRoller() {

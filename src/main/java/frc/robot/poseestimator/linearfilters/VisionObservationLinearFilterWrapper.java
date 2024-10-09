@@ -100,7 +100,7 @@ public class VisionObservationLinearFilterWrapper {
 
 	protected void checkSize() {
 		if (internalData.size() >= LinearFiltersConstants.MAX_SIZE) {
-			internalData.removeLast();
+			internalData.remove(internalData.size() - 1);
 		}
 	}
 

@@ -31,8 +31,8 @@ public class Elevator extends GBSubsystem {
 		this.elevatorStuff = elevatorStuff;
 		this.positionRequest = elevatorStuff.positionRequest();
 		this.voltageRequest = elevatorStuff.voltageRequest();
-		this.backMotor.resetPosition(RealElevatorConstants.REVERSE_SOFT_LIMIT_VALUE);
-		this.frontMotor.resetPosition(RealElevatorConstants.REVERSE_SOFT_LIMIT_VALUE);
+		this.backMotor.resetPosition(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION);
+		this.frontMotor.resetPosition(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION);
 
 		this.commandBuilder = new ElevatorCommandsBuilder(this);
 
@@ -103,6 +103,9 @@ public class Elevator extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
+		if (ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION.getRotations() > getPositionMeters()){
+			frontMotor.resetPosition(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION);
+		}
 	}
 
 }

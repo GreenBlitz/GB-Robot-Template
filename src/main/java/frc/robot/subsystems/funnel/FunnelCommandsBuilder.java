@@ -27,11 +27,11 @@ public class FunnelCommandsBuilder {
 
 	public Command setPower(DoubleSupplier power) {
 		return new FunctionalCommand(
-				() -> {},
-				() -> funnel.setPower(power.getAsDouble()),
-				interrupted -> funnel.stop(),
-				() -> false,
-				funnel
+			() -> {},
+			() -> funnel.setPower(power.getAsDouble()),
+			interrupted -> funnel.stop(),
+			() -> false,
+			funnel
 		).withName("Set power by supplier");
 	}
 

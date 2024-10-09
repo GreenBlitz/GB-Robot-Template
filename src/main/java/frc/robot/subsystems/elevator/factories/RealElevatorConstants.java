@@ -36,7 +36,7 @@ public class RealElevatorConstants {
 
 	private static final Rotation2d FORWARD_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
-	private static final double MOTOR_ROTATIONS_TO_METERS_CONVERTION_RATIO = 1;
+	private static final double MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO = 1;
 
 	private static final SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
@@ -52,6 +52,7 @@ public class RealElevatorConstants {
 		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) FORWARD_SOFT_LIMIT_VALUE.getRotations());
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 
+		sparkMaxWrapper.setSmartCurrentLimit(40);
 		sparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.GEAR_RATIO);
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
 		sparkMaxWrapper.getPIDController().setP(1);
@@ -104,7 +105,7 @@ public class RealElevatorConstants {
 			limitSwitch,
 			frontMotorStuff,
 			backMotorStuff,
-			MOTOR_ROTATIONS_TO_METERS_CONVERTION_RATIO
+			MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO
 		);
 	}
 

@@ -31,6 +31,9 @@ public class Elevator extends GBSubsystem {
 		this.positionRequest = elevatorStuff.positionRequest();
 		this.voltageRequest = elevatorStuff.voltageRequest();
 
+		frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
+		backMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
+
 		this.commandBuilder = new ElevatorCommandsBuilder(this);
 
 		updateInputs();
@@ -87,18 +90,26 @@ public class Elevator extends GBSubsystem {
 		return rotations.getRotations() * elevatorStuff.motorRotationsToMetersConversionRatio();
 	}
 
+	public Rotation2d metersToMotorRotations(double meters) {
+		return Rotation2d.fromRotations(meters / elevatorStuff.motorRotationsToMetersConversionRatio());
+	}
+
 	protected void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
 		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().positionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
 		backMotor.updateSignals(elevatorStuff.backMotorStuff().positionSignal(), elevatorStuff.backMotorStuff().voltageSignal());
 
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
-		Logger.recordOutput(this.getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
-		Logger.recordOutput(this.getLogPath() + "elevatorPosition", getPositionMeters());
+		Logger.recordOutput(getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
+		Logger.recordOutput(getLogPath() + "elevatorPosition", getPositionMeters());
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
+		if (ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS > getPositionMeters()) {
+			frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
+			backMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
+		}
 		updateInputs();
 	}
 

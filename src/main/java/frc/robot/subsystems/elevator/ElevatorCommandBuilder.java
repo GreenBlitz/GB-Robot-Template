@@ -43,7 +43,7 @@ public class ElevatorCommandBuilder {
 			() -> false,
 			elevator
 		);
-    }
+	}
 
 	public Command stop() {
 		return new RunCommand(elevator::stop);

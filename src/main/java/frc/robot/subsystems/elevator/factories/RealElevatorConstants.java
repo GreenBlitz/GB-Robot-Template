@@ -92,9 +92,9 @@ public class RealElevatorConstants {
 		);
 
 		SparkMaxDoubleRequest doubleRequest = new SparkMaxDoubleRequest(
-				0,
-				SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,
-				ELEVATOR_PID_SLOT
+			0,
+			SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,
+			ELEVATOR_PID_SLOT
 		);
 
 		return new ElevatorStuff(

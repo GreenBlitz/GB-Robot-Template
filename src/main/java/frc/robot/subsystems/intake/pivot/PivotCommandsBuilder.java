@@ -16,19 +16,19 @@ public class PivotCommandsBuilder {
 	//@formatter:off
 	public Command goToPosition(Rotation2d position) {
 		return new FunctionalCommand(
-				() -> {},
-				() -> pivot.setPosition(position),
-				interrupted -> pivot.stayInPlace(),
-				() -> false, pivot
+			() -> {},
+			() -> pivot.setPosition(position),
+			interrupted -> pivot.stayInPlace(),
+			() -> false, pivot
 		).withName("Go to position: " + position.getDegrees());
 	}
 
 	public Command setPower(double power) {
 		return new FunctionalCommand(
-				() -> {},
-				() -> pivot.setPower(power),
-				interrupted -> pivot.stop(),
-				() -> false, pivot
+			() -> {},
+			() -> pivot.setPower(power),
+			interrupted -> pivot.stop(),
+			() -> false, pivot
 		).withName("Set power to: " + power);
 	}
 

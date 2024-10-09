@@ -38,7 +38,7 @@ public class RealPivotConstants {
 		sparkMaxWrapper.getPIDController().setI(0);
 		sparkMaxWrapper.getPIDController().setD(0);
 		sparkMaxWrapper.setSmartCurrentLimit(30);
-		sparkMaxWrapper.setIdleMode(CANSparkBase.IdleMode.kBrake);
+		sparkMaxWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
 		sparkMaxWrapper.setInverted(false);
 	}
 

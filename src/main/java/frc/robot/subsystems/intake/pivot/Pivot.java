@@ -20,11 +20,9 @@ public class Pivot extends GBSubsystem {
 		super(pivotStuff.logPath());
 		this.pivotStuff = pivotStuff;
 		this.motor = pivotStuff.motor();
-		this.positionRequest = pivotStuff.positionRequest();
 		this.commandsBuilder = new PivotCommandsBuilder(this);
+		this.positionRequest = pivotStuff.positionRequest();
 		this.resetAngleFilter = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
-
-		BrakeStateManager.add(() -> setBreak(true), () -> setBreak(false));
 
 		motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 

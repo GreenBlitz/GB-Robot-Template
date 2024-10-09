@@ -40,7 +40,7 @@ public class RealPivotConstants {
 		sparkMaxWrapper.setInverted(false);
 	}
 
-	protected static PivotStuff generatePivotStuff(String logPath) {
+	static PivotStuff generatePivotStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.PIVOT);
 		configMotor(sparkMaxWrapper);
 

@@ -28,13 +28,13 @@ class RealGyroConstants {
 	protected static GyroStuff generateGyroStuff(String logPath) {
 		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.PIGEON_2_DEVICE_ID);
 		if (!pigeon2Wrapper.applyConfiguration(generateGyroConfig(), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 
 		Phoenix6AngleSignal yawSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(pigeon2Wrapper.getYaw(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES);
 
-		return new GyroStuff(new Pigeon2Gyro(logPath, pigeon2Wrapper), yawSignal);
+		return new GyroStuff(logPath, new Pigeon2Gyro(logPath, pigeon2Wrapper), yawSignal);
 	}
 
 }

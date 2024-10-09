@@ -4,8 +4,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.poseestimator.GBPoseEstimator;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.PoseEstimatorConstants;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
@@ -21,6 +29,10 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtils;
+import frc.robot.vision.limelights.ILimelightFilterer;
+import frc.robot.vision.limelights.LimelightFilterer;
+import frc.robot.vision.limelights.LimelightFiltererConfig;
+import frc.robot.vision.limelights.MultiLimelights;
 
 import java.util.Optional;
 
@@ -36,7 +48,7 @@ public class Robot {
 	private static AutonomousChooser autonomousChooser;
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final IPoseEstimator poseEstimator;
 	private final SuperStructure superStructure;
 	BrushlessSparkMAXMotor motor;
 
@@ -46,10 +58,21 @@ public class Robot {
 			ModulesFactory.create(SwerveType.SWERVE),
 			GyroFactory.create(SwerveType.SWERVE)
 		);
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+//		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+		MultiLimelights multiLimelights = new MultiLimelights(new String[] {"limelight-front", "limelight-back"}, "Limelight/");
+		ILimelightFilterer limelightFilterer = new LimelightFilterer(new LimelightFiltererConfig("LimelightFilterer", 1.2397), multiLimelights);
+		this.poseEstimator = new GBPoseEstimator(
+			"PoseEstimator/",
+			limelightFilterer,
+			swerve.getConstants().kinematics(),
+			new SwerveDriveWheelPositions(new SwerveModulePosition[4]),
+			new Rotation2d(),
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+			new Pose2d()
+		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
 		this.superStructure = new SuperStructure(swerve, poseEstimator);
 
@@ -67,7 +90,7 @@ public class Robot {
 			.registerCommand("Intake", new FunctionalCommand(() -> {}, () -> motor.setPower(0.6), (interrupted) -> motor.stop(), () -> false));
 		PathPlannerUtils
 			.registerCommand("Shoot", new FunctionalCommand(() -> {}, () -> motor.setPower(-0.6), (interrupted) -> motor.stop(), () -> false).withTimeout(3));
-		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 //		PathPlannerUtils.setTargetRotationOverride(() -> {
 //			if (poseEstimator.getCurrentPose().getX() > 3)
@@ -94,7 +117,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public PoseEstimator getPoseEstimator() {
+	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

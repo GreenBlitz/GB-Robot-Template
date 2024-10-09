@@ -23,7 +23,7 @@ public class ModulesFactory {
 
 	public static Modules create(SwerveType swerveType) {
 		return new Modules(
-			swerveType,
+			swerveType.getLogPath(),
 			new Module[] {
 				createModule(swerveType, ModuleUtils.ModulePosition.FRONT_LEFT),
 				createModule(swerveType, ModuleUtils.ModulePosition.FRONT_RIGHT),

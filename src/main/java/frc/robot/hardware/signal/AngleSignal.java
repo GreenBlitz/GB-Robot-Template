@@ -40,7 +40,7 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	@Override
 	public void toLog(LogTable table) {
 		TimedValue<Double> timedValue = getNewValue();
-		value = angleUnit.toAngle(timedValue.value());
+		value = angleUnit.toRotation2d(timedValue.value());
 		timestamp = timedValue.timestamp();
 		table.put(name, value);
 	}

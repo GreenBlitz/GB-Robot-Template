@@ -9,13 +9,13 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
-import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.structures.SuperStructureConstants;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-import frc.utils.GBSubsystem;
 import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -133,7 +133,7 @@ public class Swerve extends GBSubsystem {
 		ODOMETRY_LOCK.lock();
 		{
 			gyro.updateSignals(gyroStuff.yawSignal());
-			modules.logStatus();
+			modules.updateInputs();
 		}
 		ODOMETRY_LOCK.unlock();
 	}

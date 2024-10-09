@@ -1,7 +1,6 @@
 package frc.robot.hardware.request.cansparkmax;
 
 import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.request.IRequest;
 
@@ -24,14 +23,14 @@ public class SparkMaxAngleRequest implements IRequest<Rotation2d> {
 
 	private final SparkAngleRequestType controlType;
 	private final int pidSlot;
-	private final Function<CANSparkMax, Double> feedforwardCalculator;
+	private final Function<Rotation2d, Double> feedforwardCalculator;
 	private Rotation2d setPoint;
 
 	public SparkMaxAngleRequest(
 		Rotation2d setPoint,
 		SparkAngleRequestType controlType,
 		int pidSlot,
-		Function<CANSparkMax, Double> feedforwardCalculator
+		Function<Rotation2d, Double> feedforwardCalculator
 	) {
 		this.setPoint = setPoint;
 		this.controlType = controlType;
@@ -61,8 +60,8 @@ public class SparkMaxAngleRequest implements IRequest<Rotation2d> {
 		return pidSlot;
 	}
 
-	public Function<CANSparkMax, Double> getFeedforwardCalculator() {
-		return feedforwardCalculator;
+	public double getFeedforwardCalculation() {
+		return feedforwardCalculator.apply(setPoint);
 	}
 
 }

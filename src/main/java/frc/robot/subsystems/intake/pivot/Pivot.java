@@ -59,7 +59,7 @@ public class Pivot extends GBSubsystem {
 		motor.applyAngleRequest(positionRequest.withSetPoint(pivotStuff.positionSignal().getLatestValue()));
 	}
 
-	boolean isAtAngle(Rotation2d targetAngle, Rotation2d tolerance) {
+	public boolean isAtAngle(Rotation2d targetAngle, Rotation2d tolerance) {
 		return MathUtil.isNear(targetAngle.getDegrees(), pivotStuff.positionSignal().getLatestValue().getDegrees(), tolerance.getDegrees());
 	}
 

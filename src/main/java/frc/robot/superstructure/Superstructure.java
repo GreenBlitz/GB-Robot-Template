@@ -129,8 +129,8 @@ public class Superstructure {
 
 	public Command shooterOuttake() {
 		return new ParallelCommandGroup(
-				flywheel.getCommandsBuilder().setState(FlywheelState.SHOOTER_OUTTAKE),
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+				flywheel.getCommandsBuilder().setState(FlywheelState.SHOOTER_OUTTAKE),
 				funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE)
 		).until(() -> !isNoteInShooter());
 	}

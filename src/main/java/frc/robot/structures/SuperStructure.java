@@ -21,8 +21,7 @@ public class SuperStructure {
 
 	public void periodic() {
 		swerve.updateStatus();
-		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
-		poseEstimator.updateVision(limelightFilter.getAllAvailableLimelightRawData());
+		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations(),limelightFilter.getAllAvailableLimelightRawData());
 	}
 
 

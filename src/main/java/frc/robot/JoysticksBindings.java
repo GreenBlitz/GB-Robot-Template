@@ -1,7 +1,13 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.elbow.ElbowState;
+import frc.robot.subsystems.pivot.PivotState;
+import frc.robot.subsystems.wrist.WristState;
+import frc.robot.superstructure.Tolerances;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
+import org.littletonrobotics.junction.Logger;
 
 public class JoysticksBindings {
 
@@ -24,6 +30,22 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		
+		usedJoystick.POV_LEFT.onTrue(robot.getSuperstructure().elbowStateHandler.setState(ElbowState.IDLE));
+		usedJoystick.Y.onTrue(robot.getSuperstructure().pivotStateHandler.setState(PivotState.PRE_SPEAKER)
+				.alongWith(new RunCommand(() -> Logger.recordOutput(
+						"is Pivot in place",
+						robot.getPivot().isAtPosition(PivotState.PRE_SPEAKER.getTargetPosition(), Tolerances.PIVOT_POSITION)))));
+		
+		usedJoystick.A.onTrue(robot.getSuperstructure().pivotStateHandler.setState(PivotState.TRANSFER)
+				.alongWith(new RunCommand(() -> Logger.recordOutput(
+						"is Pivot in place",
+						robot.getPivot().isAtPosition(PivotState.TRANSFER.getTargetPosition(), Tolerances.PIVOT_POSITION)))));
+		
+		usedJoystick.X.onTrue(robot.getSuperstructure().pivotStateHandler.setState(PivotState.IDLE)
+				.alongWith(new RunCommand(() -> Logger.recordOutput(
+						"is Pivot in place",
+						robot.getPivot().isAtPosition(PivotState.IDLE.getTargetPosition(), Tolerances.PIVOT_POSITION)))));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

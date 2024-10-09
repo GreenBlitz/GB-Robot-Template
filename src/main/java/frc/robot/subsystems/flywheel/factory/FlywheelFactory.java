@@ -26,7 +26,7 @@ public class FlywheelFactory {
 
 	public static Flywheel create(String topLogPath, String bottomLogPath, SparkMaxDeviceID topID, SparkMaxDeviceID bottomID, Robot robot) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> generateRealFlywheel(topLogPath, bottomLogPath, topID, bottomID, robot);
+			case REAL -> generateRealFlywheel(FlywheelConstants.LOG_PATH + topLogPath, FlywheelConstants.LOG_PATH + bottomLogPath, topID, bottomID, robot);
 			case SIMULATION -> null;
 		};
 	}

@@ -26,7 +26,7 @@ public record ElevatorStuff(
 	) {
 		this(
 			logPath,
-			logPath + "limitSwitch",
+			logPath + "limitSwitch/",
 			angleRequest,
 			voltageRequest,
 			digitalInput,

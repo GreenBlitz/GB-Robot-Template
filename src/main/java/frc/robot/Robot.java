@@ -32,14 +32,13 @@ import frc.robot.superstructure.Superstructure;
  */
 public class Robot {
 
-	private final Elevator elevator;
-
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
 	private final ElevatorRoller elevatorRoller;
 	private final Funnel funnel;
 	private final IntakeRoller intakeRoller;
+	private final Elevator elevator;
 
 	private final Superstructure superstructure;
 
@@ -66,10 +65,6 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-	public Elevator getElevator() {
-		return elevator;
-	}
-
 	public Swerve getSwerve() {
 		return swerve;
 	}
@@ -84,6 +79,10 @@ public class Robot {
 
 	public IntakeRoller getIntakeRoller() {
 		return intakeRoller;
+	}
+
+	public Elevator getElevator() {
+		return elevator;
 	}
 
 	public Superstructure getSuperstructure() {

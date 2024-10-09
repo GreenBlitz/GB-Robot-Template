@@ -14,7 +14,7 @@ public class ElevatorCommandBuilder {
 		this.elevator = elevator;
 	}
 
-    //@formatter:off
+	//@formatter:off
 	public Command setPower(double power) {
 		return new FunctionalCommand(
 			() -> {},

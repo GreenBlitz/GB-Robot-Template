@@ -29,11 +29,11 @@ public class RealElevatorConstants {
 
 	private static final Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 
-	private static final CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
-
 	private static final int ELEVATOR_PID_SLOT = 0;
 
 	private static final Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
+
+	private static final Rotation2d FORWARD_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
 
 	private static final double MOTOR_ROTATIONS_TO_METERS_CONVERTION_RATIO = 1;
 
@@ -46,8 +46,11 @@ public class RealElevatorConstants {
 	}
 
 	public static void configureMotor(SparkMaxWrapper sparkMaxWrapper) {
-		sparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
-		sparkMaxWrapper.enableSoftLimit(SOFT_LIMIT_DIRECTION, true);
+		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
+		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
+		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) FORWARD_SOFT_LIMIT_VALUE.getRotations());
+		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
+
 		sparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.GEAR_RATIO);
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
 		sparkMaxWrapper.getPIDController().setP(1);
@@ -55,16 +58,16 @@ public class RealElevatorConstants {
 		sparkMaxWrapper.getPIDController().setD(0);
 	}
 
-	public static ElevatorMotorStuff generateMotorStuff(String logPath, String motorName, SparkMaxWrapper sparkMaxWrapper) {
+	public static ElevatorMotorStuff generateMotorStuff(String logPath, String name, SparkMaxWrapper sparkMaxWrapper) {
 		configureMotor(sparkMaxWrapper);
 
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> motorPosition = () -> sparkMaxWrapper.getEncoder().getPosition();
-		SuppliedAngleSignal motorPositionSignal = new SuppliedAngleSignal(motorName + " angle", motorPosition, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal motorPositionSignal = new SuppliedAngleSignal(name + " angle", motorPosition, AngleUnit.ROTATIONS);
 
 		Supplier<Double> motorsVoltage = sparkMaxWrapper::getVoltage;
-		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal(motorName + " voltage", motorsVoltage);
+		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal(name + " voltage", motorsVoltage);
 
 		return new ElevatorMotorStuff(motor, motorVoltageSignal, motorPositionSignal);
 	}

@@ -109,7 +109,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR),
-			intakeStatesHandler.setState(IntakeStates.ELEVATOR_TO_SHOOTER)
+			intakeStatesHandler.setState(IntakeStates.SHOOTER_TO_ELEVATOR)
 		);
 	}
 
@@ -125,7 +125,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE),
-			intakeStatesHandler.setState(IntakeStates.STOP)
+			intakeStatesHandler.setState(IntakeStates.OUTTAKE)
 		);
 	}
 

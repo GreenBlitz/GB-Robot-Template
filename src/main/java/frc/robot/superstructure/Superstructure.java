@@ -25,6 +25,7 @@ public class Superstructure {
 	private final ElevatorRollerStateHandler elevatorRollerStateHandler;
 	private final FunnelStateHandler funnelStateHandler;
 	private final IntakeStatesHandler intakeStatesHandler;
+
 	private RobotState currentState;
 
 	public Superstructure(Robot robot) {

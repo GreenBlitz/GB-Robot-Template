@@ -19,7 +19,8 @@ public class PivotCommandsBuilder {
 			() -> {},
 			() -> pivot.setPosition(position),
 			interrupted -> pivot.stayInPlace(),
-			() -> false, pivot
+			() -> false,
+			pivot
 		).withName("Go to position: " + position.getDegrees());
 	}
 
@@ -28,7 +29,8 @@ public class PivotCommandsBuilder {
 			() -> {},
 			() -> pivot.setPower(power),
 			interrupted -> pivot.stop(),
-			() -> false, pivot
+			() -> false,
+			pivot
 		).withName("Set power to: " + power);
 	}
 

@@ -67,13 +67,13 @@ public class Pivot extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		updateInputs();
 		if (
 			PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations()
 				> resetAngleFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
 		) {
 			motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 		}
+		updateInputs();
 	}
 
 }

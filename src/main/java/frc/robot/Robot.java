@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.intake.pivot.Pivot;
 import frc.robot.subsystems.intake.pivot.PivotConstants;
 import frc.robot.subsystems.intake.pivot.factory.PivotFactory;
+import frc.robot.subsystems.elevatorRoller.ElevatorRoller;
+import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerConstants;
+import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerFactory;
 import frc.robot.subsystems.intake.roller.IntakeRoller;
 import frc.robot.subsystems.intake.roller.IntakeRollerConstant;
 import frc.robot.subsystems.intake.roller.factory.IntakeRollerFactory;
@@ -32,6 +35,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
+	private final ElevatorRoller elevatorRoller;
 	private final Funnel funnel;
 	private final Pivot pivot;
 	private final IntakeRoller intakeRoller;
@@ -44,6 +48,7 @@ public class Robot {
 			ModulesFactory.create(SwerveType.SWERVE),
 			GyroFactory.create(SwerveType.SWERVE)
 		);
+		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
@@ -62,6 +67,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public ElevatorRoller getElevatorRoller() {
+		return elevatorRoller;
 	}
 
 	public Funnel getFunnel() {

@@ -17,6 +17,12 @@ public class IDs {
 
 	public static final Phoenix6DeviceID PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 
+	public static class TalonSRXIDs {
+
+		public static final int ELEVATOR_ROLLER = 9;
+
+	}
+
 	public static class TalonFXIDs {
 
 		public static final Phoenix6DeviceID FRONT_LEFT_STEER = new Phoenix6DeviceID(0, BusChain.CANIVORE);

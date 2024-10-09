@@ -11,6 +11,8 @@ import frc.robot.subsystems.flywheel.FlywheelState;
 import frc.robot.subsystems.flywheel.FlywheelStateHandler;
 import frc.robot.subsystems.funnel.FunnelState;
 import frc.robot.subsystems.funnel.FunnelStateHandler;
+import frc.robot.subsystems.intake.pivot.PivotState;
+import frc.robot.subsystems.intake.pivot.PivotStateHandler;
 import frc.robot.subsystems.intake.roller.IntakeStates;
 import frc.robot.subsystems.intake.roller.IntakeStatesHandler;
 import frc.robot.subsystems.swerve.Swerve;
@@ -26,6 +28,7 @@ public class Superstructure {
 	private final FlywheelStateHandler flywheelStateHandler;
 	private final FunnelStateHandler funnelStateHandler;
 	private final IntakeStatesHandler intakeRollerStatesHandler;
+	private final PivotStateHandler pivotStateHandler;
 
 	private RobotState currentState;
 
@@ -36,6 +39,7 @@ public class Superstructure {
 		this.flywheelStateHandler = new FlywheelStateHandler(robot);
 		this.funnelStateHandler = new FunnelStateHandler(robot);
 		this.intakeRollerStatesHandler = new IntakeStatesHandler(robot.getIntakeRoller());
+		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
 	}
 
 	public RobotState getCurrentState() {
@@ -80,8 +84,8 @@ public class Superstructure {
 				funnelStateHandler.setState(FunnelState.STOP),
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 				intakeRollerStatesHandler.setState(IntakeStates.STOP),
-				flywheelStateHandler.setState(FlywheelState.DEFAULT)
-				//intakePivot.IN
+				flywheelStateHandler.setState(FlywheelState.DEFAULT),
+				pivotStateHandler.setState(PivotState.UP)
 				//elevator.IDLE
 		);
 	}
@@ -90,13 +94,13 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 				new SequentialCommandGroup(
 						new ParallelCommandGroup(
-								//intakePivot.OUT
+								pivotStateHandler.setState(PivotState.DOWN),
 								intakeRollerStatesHandler.setState(IntakeStates.INTAKE),
 								funnelStateHandler.setState(FunnelState.STOP)
 						).until(this::isNoteInIntake),
 						new ParallelCommandGroup(
-								funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
-								//intakePivot.IN
+								funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
+								pivotStateHandler.setState(PivotState.UP)
 						).until(this::isNoteInShooter),
 						new ParallelCommandGroup(
 								intakeRollerStatesHandler.setState(IntakeStates.STOP),
@@ -117,7 +121,7 @@ public class Superstructure {
 				funnelStateHandler.setState(FunnelState.STOP),
 				intakeRollerStatesHandler.setState(IntakeStates.STOP),
 				//elevator.IDLE
-				//intakePivot.IN
+				pivotStateHandler.setState(PivotState.UP),
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
 		);
 	}
@@ -132,7 +136,7 @@ public class Superstructure {
 				flywheelStateHandler.setState(FlywheelState.SHOOTING),
 				intakeRollerStatesHandler.setState(IntakeStates.STOP),
 				//elevator.IDLE
-				//intakePivot.IN
+				pivotStateHandler.setState(PivotState.UP),
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		);
@@ -146,7 +150,7 @@ public class Superstructure {
 						//elevator.PRE_SCORE
 				).withTimeout(3), // .until(() -> isReadyToAmp())
 				intakeRollerStatesHandler.setState(IntakeStates.STOP),
-				//intakePivot.IN
+				pivotStateHandler.setState(PivotState.UP),
 				flywheelStateHandler.setState(FlywheelState.DEFAULT),
 				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR)
 		);
@@ -174,7 +178,7 @@ public class Superstructure {
 						)
 				),
 				intakeRollerStatesHandler.setState(IntakeStates.STOP),
-				//intakePivot.IN
+				pivotStateHandler.setState(PivotState.UP),
 				flywheelStateHandler.setState(FlywheelState.DEFAULT)
 		);
 	}
@@ -185,7 +189,7 @@ public class Superstructure {
 				funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR),
 				intakeRollerStatesHandler.setState(IntakeStates.NOTE_TO_SHOOTER),
 				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				//intakePivot.IN
+				pivotStateHandler.setState(PivotState.UP),
 				//elevator.IDLE
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
 		);
@@ -197,7 +201,7 @@ public class Superstructure {
 				funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
 				intakeRollerStatesHandler.setState(IntakeStates.ELEVATOR_TO_SHOOTER),
 				flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				//intakePivot.IN
+				pivotStateHandler.setState(PivotState.UP),
 				//elevator.IDLE
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
 		);
@@ -208,7 +212,7 @@ public class Superstructure {
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 				funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE),
 				intakeRollerStatesHandler.setState(IntakeStates.ELEVATOR_TO_SHOOTER),
-				//intakePivot.OUT
+				pivotStateHandler.setState(PivotState.DOWN),
 				flywheelStateHandler.setState(FlywheelState.DEFAULT),
 				//elevator.IDLE
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
@@ -220,7 +224,7 @@ public class Superstructure {
 				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 				funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE),
 				intakeRollerStatesHandler.setState(IntakeStates.STOP),
-				//intakePivot.IN
+				pivotStateHandler.setState(PivotState.UP),
 				flywheelStateHandler.setState(FlywheelState.SHOOTER_OUTTAKE),
 				//elevator.IDLE
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)

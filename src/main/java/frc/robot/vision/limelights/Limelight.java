@@ -29,7 +29,7 @@ public class Limelight extends GBSubsystem {
 		super(logPath + name + "/");
 
 		this.name = name;
-		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
+		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
@@ -97,6 +97,7 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public Optional<Rotation2d> getRobotHeading() {
+		updateLimelight();
 		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
 		if (id == LimeLightConstants.NO_APRILTAG_ID) {
 			return Optional.empty();

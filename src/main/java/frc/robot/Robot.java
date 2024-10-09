@@ -35,17 +35,19 @@ public class Robot {
 
 	private final Swerve swerve;
     private final GBPoseEstimator poseEstimator;
+	private final LimelightFilterer limelightFilterer;
+	private final MultiLimelights multiLimelights;
 
 	public Robot() {
-		this.swerve = new Swerve(
+        this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE),
 			GyroFactory.create(SwerveType.SWERVE)
 		);
 		swerve.updateStatus();
 
-        MultiLimelights multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
-        LimelightFilterer limelightFilterer = new LimelightFilterer(
+        multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
+        limelightFilterer = new LimelightFilterer(
 				new LimelightFiltererConfig(
                 	"limelightfilterer",
                 	Field.APRIL_TAGS_AVERAGE_HEIGHT_METERS
@@ -75,7 +77,7 @@ public class Robot {
 
 	public void periodic() {
 		swerve.updateStatus();
-		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
+		poseEstimator.updatePoseEstimator(Arrays.asList(swerve.getAllOdometryObservations()),limelightFilterer.getFilteredVisionObservations());
 	}
 
 	private void configureBindings() {
@@ -85,6 +87,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Swerve getSwerve(){
+		return swerve;
 	}
 
 }

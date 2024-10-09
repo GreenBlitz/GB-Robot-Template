@@ -168,7 +168,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(headingSupplier.get().getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 

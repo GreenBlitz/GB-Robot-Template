@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.flywheel.Flywheel;
-import frc.robot.subsystems.flywheel.FlywheelComponents;
-import frc.robot.subsystems.flywheel.FlywheelConstants;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.elevatorRoller.ElevatorRoller;
 import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerConstants;
@@ -57,13 +55,8 @@ public class Robot {
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
-		FlywheelComponents topFlywheelComponents = FlywheelFactory
-				.create(FlywheelConstants.LOG_PATH + "TopMotor/", FlywheelConstants.IS_TOP_MOTOR_INVERTED, IDs.CANSparkMAXIDs.TOP_FLYWHEEL);
-
-		FlywheelComponents bottomFlywheelComponents = FlywheelFactory
-				.create(FlywheelConstants.LOG_PATH + "BottomMotor/", FlywheelConstants.IS_BOTTOM_MOTOR_INVERTED, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL);
-
-		this.flywheel = new Flywheel(topFlywheelComponents, bottomFlywheelComponents, FlywheelConstants.LOG_PATH, this);
+		this.flywheel = FlywheelFactory
+			.create("TopMotor/", "BottomMotor/", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
 		this.superstructure = new Superstructure(this);
 
 		configureBindings();

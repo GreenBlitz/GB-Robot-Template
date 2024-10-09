@@ -52,7 +52,7 @@ public class RealFlywheelConstants {
 		sparkMax.getPIDController().setD(0);
 	}
 
-	public static FlywheelComponents generateFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
+	public static FlywheelComponents generateFlywheelComponent(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
 		configMotor(sparkMaxWrapper, isInverted);

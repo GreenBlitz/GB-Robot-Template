@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum ElevatorStates {
 
-	PREAMP(Rotation2d.fromRotations(0)),
+	PRE_AMP(Rotation2d.fromRotations(0)),
 	AMP(Rotation2d.fromRotations(0)),
 	DEFAULT(Rotation2d.fromRotations(0));
 

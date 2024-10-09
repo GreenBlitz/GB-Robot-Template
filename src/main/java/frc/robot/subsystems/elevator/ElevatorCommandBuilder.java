@@ -14,47 +14,47 @@ public class ElevatorCommandBuilder {
 		this.elevator = elevator;
 	}
 
-	//@formatter:off
-    public Command setPower(double power) {
-        return new FunctionalCommand(
-            () -> {},
-            () -> elevator.setPower(power),
-            interrupted -> elevator.stop(),
-            () -> false,
-            elevator
-        ).withName("Set power: " + power);
-    }
+    //@formatter:off
+	public Command setPower(double power) {
+		return new FunctionalCommand(
+			() -> {},
+			() -> elevator.setPower(power),
+			interrupted -> elevator.stop(),
+			() -> false,
+			elevator
+		).withName("Set power: " + power);
+	}
 
-    public Command setPower(DoubleSupplier power) {
-        return new FunctionalCommand(
-            () -> {},
-            () -> elevator.setPower(power.getAsDouble()),
-            interrupted -> elevator.stop(),
-            () -> false,
-            elevator
-        ).withName("Set power by supplier");
-    }
+	public Command setPower(DoubleSupplier power) {
+		return new FunctionalCommand(
+			() -> {},
+			() -> elevator.setPower(power.getAsDouble()),
+			interrupted -> elevator.stop(),
+			() -> false,
+			elevator
+		).withName("Set power by supplier");
+	}
 
     public Command setTargetPosition(Rotation2d angle) {
-        return new FunctionalCommand(
-            () -> {},
-            () -> elevator.setTargetPosition(angle),
-            interrupted -> elevator.stayInPlace(),
-            () -> false,
-            elevator
-        );
+		return new FunctionalCommand(
+			() -> {},
+			() -> elevator.setTargetPosition(angle),
+			interrupted -> elevator.stayInPlace(),
+			() -> false,
+			elevator
+		);
     }
 
-    public Command stop() {
-        return new RunCommand(elevator::stop);
-    }
+	public Command stop() {
+		return new RunCommand(elevator::stop);
+	}
 
-    public Command calibrateFeedForward() {
-        return new ParallelCommandGroup(
-            new LoggedDashboardCommand("ks", elevator::setVoltage, elevator),
-            new LoggedDashboardCommand("kg", elevator::setVoltage, elevator)
-        );
-    }
-    //@formatter:on
+	public Command calibrateFeedForward() {
+		return new ParallelCommandGroup(
+			new LoggedDashboardCommand("ks", elevator::setVoltage, elevator),
+			new LoggedDashboardCommand("kg", elevator::setVoltage, elevator)
+		);
+	}
+	//@formatter:on
 
 }

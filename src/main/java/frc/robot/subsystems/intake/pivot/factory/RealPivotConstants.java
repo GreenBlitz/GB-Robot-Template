@@ -22,8 +22,6 @@ public class RealPivotConstants {
 
 	public static final int POSITION_PID_SLOT = 0;
 
-	public static final Rotation2d POSITION_TOLERANCE = Rotation2d.fromDegrees(5);
-
 	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0, 0);
 
 	//@formatter:off

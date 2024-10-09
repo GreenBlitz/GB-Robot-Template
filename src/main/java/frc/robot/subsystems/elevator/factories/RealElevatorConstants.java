@@ -65,12 +65,12 @@ public class RealElevatorConstants {
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> motorPosition = () -> sparkMaxWrapper.getEncoder().getPosition();
-		SuppliedAngleSignal motorPositionSignal = new SuppliedAngleSignal(name + " angle", motorPosition, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(name + " angle", motorPosition, AngleUnit.ROTATIONS);
 
 		Supplier<Double> motorsVoltage = sparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal(name + " voltage", motorsVoltage);
 
-		return new ElevatorMotorStuff(motor, motorVoltageSignal, motorPositionSignal);
+		return new ElevatorMotorStuff(motor, motorVoltageSignal, positionSignal);
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
@@ -84,14 +84,14 @@ public class RealElevatorConstants {
 		frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);
 		IDigitalInput limitSwitch = new SuppliedDigitalInput(atLimitSwitch, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		SparkMaxAngleRequest angleRequest = new SparkMaxAngleRequest(
+		SparkMaxAngleRequest positionRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(0),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
 			ELEVATOR_PID_SLOT,
 			RealElevatorConstants::feedforwardCalculation
 		);
 
-		SparkMaxDoubleRequest doubleRequest = new SparkMaxDoubleRequest(
+		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(
 			0,
 			SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,
 			ELEVATOR_PID_SLOT
@@ -99,8 +99,8 @@ public class RealElevatorConstants {
 
 		return new ElevatorStuff(
 			logPath,
-			angleRequest,
-			doubleRequest,
+			positionRequest,
+			voltageRequest,
 			limitSwitch,
 			frontMotorStuff,
 			backMotorStuff,

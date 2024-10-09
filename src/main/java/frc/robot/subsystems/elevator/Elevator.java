@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.Logger;
 public class Elevator extends GBSubsystem {
 
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
-	private final ElevatorCommandBuilder commandBuilder;
+	private final ElevatorCommandsBuilder commandBuilder;
 	private final IRequest<Rotation2d> positionRequest;
 	private final IRequest<Double> voltageRequest;
 
@@ -29,12 +29,12 @@ public class Elevator extends GBSubsystem {
 
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.elevatorStuff = elevatorStuff;
-		this.commandBuilder = new ElevatorCommandBuilder(this);
-		this.positionRequest = elevatorStuff.angleRequest();
+		this.commandBuilder = new ElevatorCommandsBuilder(this);
+		this.positionRequest = elevatorStuff.positionRequest();
 		this.voltageRequest = elevatorStuff.voltageRequest();
 	}
 
-	public ElevatorCommandBuilder getCommandBuilder() {
+	public ElevatorCommandsBuilder getCommandBuilder() {
 		return commandBuilder;
 	}
 
@@ -44,8 +44,8 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void setVoltage(double voltage) {
-		frontMotor.applyDoubleRequest(voltageRequest);
-		backMotor.applyDoubleRequest(voltageRequest);
+		frontMotor.applyDoubleRequest(voltageRequest.withSetPoint(voltage));
+		backMotor.applyDoubleRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	public void stop() {
@@ -68,27 +68,27 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public double getPositionMeters() {
-		return rotationsToMeters(
+		return motorRotationsToMeters(
 			Rotation2d.fromRotations(
-				(elevatorStuff.frontMotorStuff().motorPositionSignal().getLatestValue().getRotations()
-					+ elevatorStuff.backMotorStuff().motorPositionSignal().getLatestValue().getRotations()) / 2
+				(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue().getRotations()
+					+ elevatorStuff.backMotorStuff().positionSignal().getLatestValue().getRotations()) / 2
 			)
 		);
 	}
 
 	public void stayInPlace() {
-		frontMotor.applyAngleRequest(positionRequest.withSetPoint(elevatorStuff.frontMotorStuff().motorPositionSignal().getLatestValue()));
-		backMotor.applyAngleRequest(positionRequest.withSetPoint(elevatorStuff.backMotorStuff().motorPositionSignal().getLatestValue()));
+		frontMotor.applyAngleRequest(positionRequest.withSetPoint(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue()));
+		backMotor.applyAngleRequest(positionRequest.withSetPoint(elevatorStuff.backMotorStuff().positionSignal().getLatestValue()));
 	}
 
-	public double rotationsToMeters(Rotation2d rotations) {
+	public double motorRotationsToMeters(Rotation2d rotations) {
 		return rotations.getRotations() * elevatorStuff.motorRotationsToMetersConversionRatio();
 	}
 
 	public void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
-		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().motorPositionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
-		backMotor.updateSignals(elevatorStuff.backMotorStuff().motorPositionSignal(), elevatorStuff.backMotorStuff().voltageSignal());
+		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().positionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
+		backMotor.updateSignals(elevatorStuff.backMotorStuff().positionSignal(), elevatorStuff.backMotorStuff().voltageSignal());
 
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
 		Logger.recordOutput(this.getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());

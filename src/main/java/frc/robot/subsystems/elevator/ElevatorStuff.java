@@ -7,7 +7,7 @@ import frc.robot.hardware.request.IRequest;
 public record ElevatorStuff(
 	String logPath,
 	String digitalInputsLogPath,
-	IRequest<Rotation2d> angleRequest,
+	IRequest<Rotation2d> positionRequest,
 	IRequest<Double> voltageRequest,
 	IDigitalInput digitalInput,
 	ElevatorMotorStuff frontMotorStuff,
@@ -17,22 +17,22 @@ public record ElevatorStuff(
 
 	public ElevatorStuff(
 		String logPath,
-		IRequest<Rotation2d> angleRequest,
+		IRequest<Rotation2d> positionRequest,
 		IRequest<Double> voltageRequest,
 		IDigitalInput digitalInput,
 		ElevatorMotorStuff frontMotorStuff,
 		ElevatorMotorStuff backMotorStuff,
-		double rotationsToMetersConversionRatio
+		double motorRotationsToMetersConversionRatio
 	) {
 		this(
 			logPath,
 			logPath + "limitSwitch/",
-			angleRequest,
+			positionRequest,
 			voltageRequest,
 			digitalInput,
 			frontMotorStuff,
 			backMotorStuff,
-			rotationsToMetersConversionRatio
+			motorRotationsToMetersConversionRatio
 		);
 	}
 

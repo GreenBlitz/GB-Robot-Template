@@ -6,11 +6,11 @@ import frc.utils.utilcommands.LoggedDashboardCommand;
 
 import java.util.function.DoubleSupplier;
 
-public class ElevatorCommandBuilder {
+public class ElevatorCommandsBuilder {
 
 	private final Elevator elevator;
 
-	public ElevatorCommandBuilder(Elevator elevator) {
+	public ElevatorCommandsBuilder(Elevator elevator) {
 		this.elevator = elevator;
 	}
 
@@ -46,13 +46,13 @@ public class ElevatorCommandBuilder {
 	}
 
 	public Command stop() {
-		return new RunCommand(elevator::stop);
+		return new RunCommand(elevator::stop, elevator).withName("Stop");
 	}
 
 	public Command calibrateFeedForward() {
 		return new ParallelCommandGroup(
-			new LoggedDashboardCommand("ks", elevator::setVoltage, elevator),
-			new LoggedDashboardCommand("kg", elevator::setVoltage, elevator)
+			new LoggedDashboardCommand("ks", elevator::setVoltage, elevator).withName("Ks calibration"),
+			new LoggedDashboardCommand("kg", elevator::setVoltage, elevator).withName("Kg calibration")
 		);
 	}
 	//@formatter:on

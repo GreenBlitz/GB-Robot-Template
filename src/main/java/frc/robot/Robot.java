@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,7 +53,7 @@ public class Robot {
 			"PoseEstimator/",
 			limelightFilterer,
 			swerve.getConstants().kinematics(),
-			new SwerveDriveWheelPositions(new SwerveModulePosition[4]),
+			new SwerveDriveWheelPositions(new SwerveModulePosition[0]),
 			swerve.getYaw(),
 			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
 			new Pose2d()

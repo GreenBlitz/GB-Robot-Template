@@ -97,6 +97,7 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public Optional<Rotation2d> getRobotHeading() {
+		updateLimelight();
 		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
 		if (id == LimeLightConstants.NO_APRILTAG_ID) {
 			return Optional.empty();

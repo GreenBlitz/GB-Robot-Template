@@ -189,13 +189,15 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private void addOdometryObservation(OdometryObservation observation) {
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
-		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
-		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
+		if (latestWheelPositions != null) {
+			Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
+			twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
+			odometryPose = odometryPose.exp(twist);
+			estimatedPose = estimatedPose.exp(twist);
+			odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
+		}
 		latestGyroAngle = observation.gyroAngle();
 		latestWheelPositions = observation.wheelsPositions();
-		odometryPose = odometryPose.exp(twist);
-		estimatedPose = estimatedPose.exp(twist);
-		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}
 
 	private void updateGyroAnglesInLimeLight(Rotation2d gyroAngle) {

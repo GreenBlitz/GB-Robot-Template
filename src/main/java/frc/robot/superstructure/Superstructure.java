@@ -94,7 +94,7 @@ public class Superstructure {
 		this.currentState = state;
 		return switch (state) {
 			case IDLE -> idle();
-			case SHOOTER_INTAKE -> shooterIntake();
+			case INTAKE -> intake();
 			case ARM_INTAKE -> armIntake();
 			case PRE_SPEAKER -> preSpeaker();
 			case SPEAKER -> speaker();
@@ -121,7 +121,7 @@ public class Superstructure {
 		);
 	}
 
-	private Command shooterIntake() {
+	private Command intake() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
@@ -142,7 +142,7 @@ public class Superstructure {
 			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			pivotStateHandler.setState(PivotState.IDLE),
-			elbowStateHandler.setState(ElbowState.SHOOTER_INTAKE),
+			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
 		);
@@ -187,7 +187,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			rollerStateHandler.setState(RollerState.STOP),
 			intakeStateHandler.setState(IntakeState.STOP),
-			funnelStateHandler.setState(FunnelState.STOP),
+			funnelStateHandler.setState(FunnelState.MANUAL),
 			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.IDLE),

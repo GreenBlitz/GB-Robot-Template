@@ -25,90 +25,90 @@ import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
 
-    private final Robot robot;
+	private final Robot robot;
 
-    private final Swerve swerve;
-    private final ElbowStateHandler elbowStateHandler;
-    private final FlywheelStateHandler flywheelStateHandler;
-    private final FunnelStateHandler funnelStateHandler;
-    private final IntakeStateHandler intakeStateHandler;
-    private final PivotStateHandler pivotStateHandler;
-    private final RollerStateHandler rollerStateHandler;
-    private final WristStateHandler wristStateHandler;
+	private final Swerve swerve;
+	private final ElbowStateHandler elbowStateHandler;
+	private final FlywheelStateHandler flywheelStateHandler;
+	private final FunnelStateHandler funnelStateHandler;
+	private final IntakeStateHandler intakeStateHandler;
+	private final PivotStateHandler pivotStateHandler;
+	private final RollerStateHandler rollerStateHandler;
+	private final WristStateHandler wristStateHandler;
 
-    private RobotState currentState;
+	private RobotState currentState;
 
-    public Superstructure(Robot robot) {
-        this.robot = robot;
-        this.swerve = robot.getSwerve();
-        this.elbowStateHandler = new ElbowStateHandler(robot.getElbow());
-        this.flywheelStateHandler = new FlywheelStateHandler(robot.getFlywheel());
-        this.funnelStateHandler = new FunnelStateHandler(robot.getFunnel());
-        this.intakeStateHandler = new IntakeStateHandler(robot.getIntake());
-        this.pivotStateHandler = new PivotStateHandler(robot.getPivot(), Pose2d::new);
-        this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
-        this.wristStateHandler = new WristStateHandler(robot.getWrist());
-    }
+	public Superstructure(Robot robot) {
+		this.robot = robot;
+		this.swerve = robot.getSwerve();
+		this.elbowStateHandler = new ElbowStateHandler(robot.getElbow());
+		this.flywheelStateHandler = new FlywheelStateHandler(robot.getFlywheel());
+		this.funnelStateHandler = new FunnelStateHandler(robot.getFunnel());
+		this.intakeStateHandler = new IntakeStateHandler(robot.getIntake());
+		this.pivotStateHandler = new PivotStateHandler(robot.getPivot(), Pose2d::new);
+		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
+		this.wristStateHandler = new WristStateHandler(robot.getWrist());
+	}
 
-    public RobotState getCurrentState() {
-        return currentState;
-    }
+	public RobotState getCurrentState() {
+		return currentState;
+	}
 
-    public void logStatus() {
-        Logger.recordOutput("CurrentState", currentState);
-    }
+	public void logStatus() {
+		Logger.recordOutput("CurrentState", currentState);
+	}
 
-    private boolean isObjectInRoller() {
-        return robot.getRoller().isObjectIn();
-    }
+	private boolean isObjectInRoller() {
+		return robot.getRoller().isObjectIn();
+	}
 
-    private boolean isObjectInIntake() {
-        return robot.getIntake().isObjectIn();
-    }
+	private boolean isObjectInIntake() {
+		return robot.getIntake().isObjectIn();
+	}
 
-    private boolean isObjectInFunnel() {
-        return robot.getFunnel().isObjectIn();
-    }
+	private boolean isObjectInFunnel() {
+		return robot.getFunnel().isObjectIn();
+	}
 
-    private boolean isReadyToTransfer() {
-        boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.TRANSFER.getTargetPosition(), Tolerances.PIVOT_POSITION);
-        boolean isElbowReady = robot.getElbow().isAtAngle(ElbowState.TRANSFER.getTargetPosition(), Tolerances.ELBOW_POSITION_TRANSFER);
+	private boolean isReadyToTransfer() {
+		boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.TRANSFER.getTargetPosition(), Tolerances.PIVOT_POSITION);
+		boolean isElbowReady = robot.getElbow().isAtAngle(ElbowState.TRANSFER.getTargetPosition(), Tolerances.ELBOW_POSITION_TRANSFER);
 
-        return isElbowReady && isPivotReady;
-    }
+		return isElbowReady && isPivotReady;
+	}
 
-    private boolean isReadyToShoot() {
-        boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.PRE_SPEAKER.getTargetPosition(), Tolerances.PIVOT_POSITION);
+	private boolean isReadyToShoot() {
+		boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.PRE_SPEAKER.getTargetPosition(), Tolerances.PIVOT_POSITION);
 
-        boolean isFlywheelReady = robot.getFlywheel()
-                .isAtVelocities(
-                        FlywheelState.PRE_SPEAKER.getRightVelocity(),
-                        FlywheelState.PRE_SPEAKER.getLeftVelocity(),
-                        Tolerances.FLYWHEEL_VELOCITY_PER_SECOND
-                );
+		boolean isFlywheelReady = robot.getFlywheel()
+			.isAtVelocities(
+				FlywheelState.PRE_SPEAKER.getRightVelocity(),
+				FlywheelState.PRE_SPEAKER.getLeftVelocity(),
+				Tolerances.FLYWHEEL_VELOCITY_PER_SECOND
+			);
 
-        return isFlywheelReady && isPivotReady;
-    }
+		return isFlywheelReady && isPivotReady;
+	}
 
 
-    public Command setState(RobotState state) {
-        this.currentState = state;
-        return switch (state) {
-            case IDLE -> idle();
-            case SHOOTER_INTAKE -> shooterIntake();
-            case ARM_INTAKE -> armIntake();
-            case PRE_SPEAKER -> preSpeaker();
-            case SPEAKER -> speaker();
-            case PRE_AMP -> preAMP();
-            case AMP -> amp();
-            case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
-            case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
-            case INTAKE_OUTTAKE -> intakeOuttake();
-            case ARM_OUTTAKE -> armOuttake();
-        };
-    }
+	public Command setState(RobotState state) {
+		this.currentState = state;
+		return switch (state) {
+			case IDLE -> idle();
+			case SHOOTER_INTAKE -> shooterIntake();
+			case ARM_INTAKE -> armIntake();
+			case PRE_SPEAKER -> preSpeaker();
+			case SPEAKER -> speaker();
+			case PRE_AMP -> preAMP();
+			case AMP -> amp();
+			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
+			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
+			case INTAKE_OUTTAKE -> intakeOuttake();
+			case ARM_OUTTAKE -> armOuttake();
+		};
+	}
 
-    //@formatter:off
+	//@formatter:off
 	private Command idle() {
 		return new ParallelCommandGroup(
 			rollerStateHandler.setState(RollerState.MANUAL),

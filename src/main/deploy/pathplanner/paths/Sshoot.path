@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 0.45,
-        "y": 7.0
+        "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3564597442965962,
-        "y": 7.422292235270493
+        "x": 0.717334047280707,
+        "y": 3.6239236442436855
       },
       "isLocked": false,
-      "linkedName": "A"
+      "linkedName": "S"
     },
     {
       "anchor": {
-        "x": 0.708089344106616,
-        "y": 6.646941582171453
+        "x": 0.6341317187138877,
+        "y": 4.428212820389605
       },
       "prevControl": {
-        "x": 1.262771534552078,
-        "y": 6.748633317086454
+        "x": 1.6058556623729974,
+        "y": 4.192092983612626
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shootA"
+      "linkedName": "shootS"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.93151184050774,
+    "rotation": 120.25643716352924,
     "rotateFast": false
   },
   "reversed": false,

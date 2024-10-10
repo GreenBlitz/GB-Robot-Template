@@ -26,10 +26,10 @@ public class Pivot extends GBSubsystem {
 		motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 
 		updateInputs();
-		resetResetFilter();
+		updateResetFilter();
 	}
 
-	private void resetResetFilter() {
+	private void updateResetFilter() {
 		for (int i = 0; i < PivotConstants.MEDIAN_FILTER_SIZE; i++) {
 			resetAngleFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations());
 		}

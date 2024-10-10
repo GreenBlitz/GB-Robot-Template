@@ -1,10 +1,8 @@
 package frc.robot.hardware.signal.supplied;
 
-import edu.wpi.first.hal.HALUtil;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.TimedValue;
 import frc.utils.AngleUnit;
-import frc.utils.Conversions;
 import frc.utils.time.TimeUtils;
 
 import java.util.function.Supplier;

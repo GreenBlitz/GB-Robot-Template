@@ -21,6 +21,10 @@ public class LEDConstants {
 		public static final Color BLINK_COLOR = Color.kDarkGreen;
 		public static final Color COLORFLOW_ANIMATION_COLOR = Color.kMediumPurple;
 		public static final Color LARSON_ANIMATION_COLOR = Color.kAqua;
+		public static final double LARSON_ANIMATION_SPEED = 2.5;
+		public static final double COLORFLOW_ANIMATION_SPEED = 2.5;
+
+
 
 
 

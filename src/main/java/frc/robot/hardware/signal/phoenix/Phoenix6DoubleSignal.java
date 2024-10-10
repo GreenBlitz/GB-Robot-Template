@@ -3,6 +3,7 @@ package frc.robot.hardware.signal.phoenix;
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.hardware.signal.TimedValue;
+import org.littletonrobotics.junction.Logger;
 
 public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6SignalBuilder.SignalGetter {
 
@@ -15,7 +16,7 @@ public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6Signal
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(statusSignal.getValue(), statusSignal.getTimestamp().getTime());
+		return new TimedValue<>(statusSignal.getValue(),Logger.getRealTimestamp() / 1.0e6);
 	}
 
 	@Override

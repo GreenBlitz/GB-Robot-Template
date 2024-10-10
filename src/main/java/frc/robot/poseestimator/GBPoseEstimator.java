@@ -57,7 +57,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		resetPose(initialRobotPose);
-		calculateHeadingOffset(initialGyroAngle);
+//		calculateHeadingOffset(initialGyroAngle);
 	}
 
 	public ILimelightFilterer getLimelightFilterer() {
@@ -161,6 +161,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				addVisionObservation(visionObservation);
 //			}
 		}
+		logEstimatedPose();
 	}
 
 	@Override
@@ -187,6 +188,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void addVisionObservation(VisionObservation observation) {
+		Logger.recordOutput("inside vision", observation.timestamp());
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			Pose2d currentEstimation = PoseEstimationMath
@@ -197,10 +199,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void addOdometryObservation(OdometryObservation observation) {
-		updateGyroAnglesInLimeLight(observation.gyroAngle());
+//		updateGyroAnglesInLimeLight(observation.gyroAngle());
+		Logger.recordOutput("inside odometry", observation.timestamp());
 		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
-		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle.plus(headingOffset));
-		latestGyroAngle = observation.gyroAngle().plus(headingOffset);
+		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
+		latestGyroAngle = observation.gyroAngle();
 		latestWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);
 		estimatedPose = estimatedPose.exp(twist);
@@ -221,7 +224,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public void subsystemPeriodic() {
 		if (!limelightFilterer.isPoseEstimationCorrect()) {
-			resetPoseByLimelight();
+//			resetPoseByLimelight();
 		}
 	}
 

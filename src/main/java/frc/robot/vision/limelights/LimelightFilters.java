@@ -39,7 +39,7 @@ public class LimelightFilters {
 		}
 
 		return aprilTagInProperHeight
-			&& limelightOutputInTolerance
+//			&& limelightOutputInTolerance
 			&& rollInTolerance
 			&& pitchInTolerance
 			&& robotOnGround;

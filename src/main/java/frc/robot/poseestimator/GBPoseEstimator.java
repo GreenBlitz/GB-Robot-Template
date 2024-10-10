@@ -223,7 +223,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (!limelightFilterer.isPoseEstimationCorrect()) {
 			resetPoseByLimelight();
 		}
-		updateVision(limelightFilterer.getFilteredVisionObservations());
 	}
 
 }

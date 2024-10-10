@@ -1,6 +1,7 @@
 package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.*;
+import org.littletonrobotics.junction.Logger;
 
 public class LimelightFilters {
 
@@ -37,8 +38,12 @@ public class LimelightFilters {
 		);
 		Transform3d transformDifference = limelightPosition.minus(estimatedPose3d);
 		Rotation3d rotationDifference = limelightPosition.getRotation().minus(estimatedPose3d.getRotation());
-		return transformDifference.getTranslation().getNorm() <= normalizedPositionTolerance
+		boolean output = transformDifference.getTranslation().getNorm() <= normalizedPositionTolerance
 			&& getRotationNorm(rotationDifference) <= normalizedRotationTolerance;
+		if (output) {
+			Logger.recordOutput("filtered because output tolarance: ", limelightRawData.estimatedPose());
+		}
+		return output;
 	}
 
 	private static double getRotationNorm(Rotation3d angle) {
@@ -46,21 +51,37 @@ public class LimelightFilters {
 	}
 
 	protected static boolean isPitchInTolerance(LimelightRawData limelightRawData, Rotation2d pitchTolerance) {
-		return Math.abs(limelightRawData.estimatedPose().getRotation().getY()) <= pitchTolerance.getRadians();
+		boolean output = Math.abs(limelightRawData.estimatedPose().getRotation().getY()) <= pitchTolerance.getRadians();
+		if (output) {
+			Logger.recordOutput("filtered because bad pitch: ", limelightRawData.estimatedPose());
+		}
+		return output;
 	}
 
 	protected static boolean isRollInTolerance(LimelightRawData limelightRawData, Rotation2d rollTolerance) {
-		return Math.abs(limelightRawData.estimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
+		boolean output = Math.abs(limelightRawData.estimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
+		if (output) {
+			Logger.recordOutput("filtered because bad roll: ", limelightRawData.estimatedPose());
+		}
+		return output;
 	}
 
 	protected static boolean
 		isAprilTagInProperHeight(LimelightRawData limelightRawData, double aprilTagHeightToleranceMeters, double aprilTagHeightMeters) {
 		double aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - aprilTagHeightMeters);
-		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
+		boolean output = aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
+		if (!output) {
+			Logger.recordOutput("filtered because height: ", limelightRawData.estimatedPose());
+		}
+		return output;
 	}
 
 	protected static boolean isRobotOnGround(LimelightRawData limelightRawData, double robotToGroundToleranceMeters) {
-		return limelightRawData.estimatedPose().getZ() <= robotToGroundToleranceMeters;
+		boolean output = limelightRawData.estimatedPose().getZ() <= robotToGroundToleranceMeters;
+		if (output) {
+			Logger.recordOutput("filtered because robot is flying: ", limelightRawData.estimatedPose());
+		}
+		return output;
 	}
 
 }

@@ -14,24 +14,21 @@ public class PivotStateHandler {
 
 	public PivotStateHandler(Pivot pivot, Supplier<Pose2d> robotPoseSupplier) {
 		this.pivot = pivot;
-        this.robotPoseSupplier = robotPoseSupplier;
-    }
+		this.robotPoseSupplier = robotPoseSupplier;
+	}
 
 	public Command setState(PivotState pivotState) {
-		if(pivotState == PivotState.INTERPOLATE){
-			if(robotPoseSupplier == null){
+		if (pivotState == PivotState.INTERPOLATE) {
+			if (robotPoseSupplier == null) {
 				return new InstantCommand(() -> {}, pivot);
 			}
-			return pivot.getCommandsBuilder().moveToPosition(
-					() -> DistanceToAngleMap.getAngle(
-							getDistanceFromRootToShooter(robotPoseSupplier.get())
-					)
-			);
+			return pivot.getCommandsBuilder()
+				.moveToPosition(() -> DistanceToAngleMap.getAngle(getDistanceFromRootToShooter(robotPoseSupplier.get())));
 		}
 		return pivot.getCommandsBuilder().moveToPosition(pivotState.getTargetPosition());
 	}
 
-	private double getDistanceFromRootToShooter(Pose2d rootPose){
+	private double getDistanceFromRootToShooter(Pose2d rootPose) {
 		return Field.getSpeaker().toTranslation2d().getDistance(rootPose.getTranslation());
 	}
 

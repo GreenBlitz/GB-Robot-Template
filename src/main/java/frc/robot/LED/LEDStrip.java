@@ -2,7 +2,7 @@ package frc.robot.LED;
 
 import edu.wpi.first.wpilibj.util.Color;
 
-public class AddressableLED implements ILED {
+public class LEDStrip implements ILED {
 
 	@Override
 	public void setSectionColor(Color color, int startIndex, int endIndex) {

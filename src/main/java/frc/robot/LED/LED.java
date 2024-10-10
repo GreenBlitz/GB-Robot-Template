@@ -1,5 +1,6 @@
 package frc.robot.LED;
 
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -9,13 +10,18 @@ public class LED implements ILED, ILogicLED{
 
 	private LED led;
 
-	private Color color;
-
 	private AddressableLED addressableLED;
 
 	private AddressableLEDBuffer addressableLEDBuffer;
 
 	private Timer LEDBlinkTimer;
+
+	private LED() {
+		this.addressableLED = new AddressableLED(LEDConstants.LEDStrip.LED_PORT);
+		this.addressableLEDBuffer = new AddressableLEDBuffer(LEDConstants.LEDStrip.LED_LENGTH);
+		this.addressableLED.setLength(LEDConstants.LEDStrip.LED_LENGTH);
+		this.addressableLED.start();
+	}
 
 	@Override
 	public void setSingleLEDColor(Color color, int index) {
@@ -36,19 +42,20 @@ public class LED implements ILED, ILogicLED{
 
 	@Override
 	public void sectionTurnOff(int startIndex, int endIndex){
-		setSectionColor(Color.kBlack, 0, LEDConstatns.LEDStrip.LED_LENGTH);
+		setSectionColor(Color.kBlack, 0, LEDConstants.LEDStrip.LED_LENGTH);
 	}
 
+	@Override
 	public void Blink(int startIndex, int endIndex) {
-		if ((LEDBlinkTimer.get()) % (LEDConstatns.LEDStrip.BLINK_DURATION * 2) >= LEDConstatns.LEDStrip.BLINK_DURATION) {
+		if ((LEDBlinkTimer.get()) % (LEDConstants.LEDStrip.BLINK_DURATION * 2) >= LEDConstants.LEDStrip.BLINK_DURATION) {
 			led.sectionTurnOff(startIndex, endIndex);
 		} else {
-			led.setSectionColor(color, startIndex, endIndex);
+			led.setSectionColor(LEDConstants.LEDStrip.BLINK_COLOR, startIndex, endIndex);
 		}
 	}
 	@Override
-	public void LarsonAnimation(int startIndex, int endIndex)) {
-
+	public void LarsonAnimation(int startIndex, int endIndex) {
+		for ()
 
 	}
 

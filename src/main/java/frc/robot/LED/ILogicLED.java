@@ -1,10 +1,10 @@
 package frc.robot.LED;
 
-import com.ctre.phoenix.led.*;
-
 public interface ILogicLED {
 
-	void LarsonAnimation(int startIndex, int endIndex);
+	void colorFlowAnimation(int startIndex, int endIndex);
+	void larsonAnimation(int startIndex, int endIndex, int ledPocketSize);
+
 	void Blink(int startIndex, int endIndex);
 
 

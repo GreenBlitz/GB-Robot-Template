@@ -19,6 +19,10 @@ public class LEDConstants {
 		public static final int LED_PORT = 9;
 		public static final double BLINK_DURATION = 0.5;
 		public static final Color BLINK_COLOR = Color.kDarkGreen;
+		public static final Color COLORFLOW_ANIMATION_COLOR = Color.kMediumPurple;
+		public static final Color LARSON_ANIMATION_COLOR = Color.kAqua;
+
+
 
 	}
 

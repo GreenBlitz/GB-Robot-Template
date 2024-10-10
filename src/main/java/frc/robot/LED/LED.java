@@ -15,6 +15,7 @@ public class LED implements ILED, ILogicLED{
 	private AddressableLEDBuffer addressableLEDBuffer;
 
 	private Timer LEDBlinkTimer;
+	private Timer colorFlowTimer;
 
 	private LED() {
 		this.addressableLED = new AddressableLED(LEDConstants.LEDStrip.LED_PORT);
@@ -54,8 +55,24 @@ public class LED implements ILED, ILogicLED{
 		}
 	}
 	@Override
-	public void LarsonAnimation(int startIndex, int endIndex) {
-		for ()
+	public void colorFlowAnimation(int startIndex, int endIndex) {
+		colorFlowTimer.start();
+		for (int i = startIndex; i < endIndex; i++){
+			double startTime = colorFlowTimer.get();
+			setSingleLEDColor(LEDConstants.LEDStrip.COLORFLOW_ANIMATION_COLOR, i);
+			while(colorFlowTimer.get() - startTime <= 0.075){}
+		}
+
+	}
+
+	@Override
+	public void larsonAnimation(int startIndex, int endIndex, int ledPocketSize){
+		int currentStartIndex = startIndex;
+		while(currentStartIndex != endIndex){
+			setSectionColor(LEDConstants.LEDStrip.LARSON_ANIMATION_COLOR, startIndex, ledPocketSize);
+			singleLEDTurnOff(currentStartIndex);
+			currentStartIndex++;
+		}
 
 	}
 

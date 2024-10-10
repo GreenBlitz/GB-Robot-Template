@@ -4,13 +4,13 @@ import com.ctre.phoenix.led.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 
-public class Candle implements ILED, ILogicLED {
-	private CANdle caNdle;
+public class CANdle implements ILED, ILogicLED {
+	private com.ctre.phoenix.led.CANdle caNdle;
 	private Timer CANdleBlinkTimer;
 
 
-	public Candle() {
-		this.caNdle = new CANdle(LEDConstants.CANdle.ID_PORT);
+	public CANdle() {
+		this.caNdle = new com.ctre.phoenix.led.CANdle(LEDConstants.CANdle.ID_PORT);
 		this.caNdle.configLEDType(com.ctre.phoenix.led.CANdle.LEDStripType.RGB);
 	}
 
@@ -22,7 +22,6 @@ public class Candle implements ILED, ILogicLED {
 	@Override
 	public void setSingleLEDColor(Color color, int index) {
 		caNdle.setLEDs(0,0,0);ֿ
-		caNdle.animate(new TwinkleAnimation())
 	}
 
 	@Override
@@ -36,9 +35,16 @@ public class Candle implements ILED, ILogicLED {
 	}
 
 	@Override
-	public void LarsonAnimation(int startIndex, int endIndex, ) {
+	public void colorFlowAnimation(int startIndex, int endIndex) {
 		int numLED = endIndex - startIndex;
-		LarsonAnimation larsonAnimation = new LarsonAnimation(36,48,48, 36, 2.5, numLED, LarsonAnimation.BounceMode.Back, 5);
+		ColorFlowAnimation colorFlowAnimation = new ColorFlowAnimation(36,48,48, 36, 2.5, numLED, ColorFlowAnimation.Direction.Forward);
+		caNdle.animate(colorFlowAnimation);
+	}
+
+	@Override
+	public void larsonAnimation(int startIndex, int endIndex, int ledPocketSize) {
+		int numLED = endIndex - startIndex;
+		LarsonAnimation larsonAnimation = new LarsonAnimation(36,48,48, 36, 2.5, numLED, LarsonAnimation.BounceMode.Back, ledPocketSize, startIndex);
 		caNdle.animate(larsonAnimation);
 	}
 

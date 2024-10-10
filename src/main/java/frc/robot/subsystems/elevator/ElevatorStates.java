@@ -6,7 +6,7 @@ public enum ElevatorStates {
 
 	PRE_AMP(Rotation2d.fromRotations(0)),
 	AMP(Rotation2d.fromRotations(0)),
-	DEFAULT(Rotation2d.fromRotations(0));
+	IDLE(Rotation2d.fromRotations(0));
 
 	private final Rotation2d position;
 

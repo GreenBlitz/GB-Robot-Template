@@ -50,7 +50,7 @@ public class Pivot extends GBSubsystem {
 		if (
 			PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations()
 				> resetFilterRotations.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
-				&& !(DriverStationUtils.isTeleopEnabled() || DriverStationUtils.isAutonomousEnabled())
+				&& DriverStationUtils.isDisabled()
 		) {
 			motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 		}

@@ -55,7 +55,7 @@ public class RealPivotConstants {
 		SparkMaxAngleRequest positionRequest = new SparkMaxAngleRequest(
 			positionSignal.getLatestValue(),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-				POSITION_PID_SLOT,
+			POSITION_PID_SLOT,
 			FEEDFORWARD_FUNCTION
 		);
 

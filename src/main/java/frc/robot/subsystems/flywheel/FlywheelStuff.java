@@ -5,7 +5,7 @@ import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.signal.InputSignal;
 
-public record FlywheelComponents(
+public record FlywheelStuff(
 	String logPath,
 	ControllableMotor motor,
 	boolean isInverted,

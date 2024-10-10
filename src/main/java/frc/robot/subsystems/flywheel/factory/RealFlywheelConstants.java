@@ -1,6 +1,7 @@
 package frc.robot.subsystems.flywheel.factory;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -11,14 +12,13 @@ import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
-import frc.robot.subsystems.flywheel.FlywheelComponents;
+import frc.robot.subsystems.flywheel.FlywheelStuff;
 import frc.utils.AngleUnit;
 
 import java.util.function.Function;
 
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
-
 
 public class RealFlywheelConstants {
 
@@ -30,7 +30,7 @@ public class RealFlywheelConstants {
 
 	private static final Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
 
-	private static final double GEAR_RATIO = 1 / 1;
+	private static final double GEAR_RATIO = 1;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -46,13 +46,14 @@ public class RealFlywheelConstants {
 		sparkMax.setSmartCurrentLimit(40);
 		sparkMax.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 		sparkMax.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
+		sparkMax.setIdleMode(CANSparkBase.IdleMode.kCoast);
 
 		sparkMax.getPIDController().setP(5);
 		sparkMax.getPIDController().setI(0);
 		sparkMax.getPIDController().setD(0);
 	}
 
-	public static FlywheelComponents generateFlywheelComponents(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
+	public static FlywheelStuff generateFlywheelStuff(String logPath, boolean isInverted, SparkMaxDeviceID deviceID) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(deviceID);
 
 		configMotor(sparkMaxWrapper, isInverted);
@@ -74,7 +75,7 @@ public class RealFlywheelConstants {
 
 		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
 
-		return new FlywheelComponents(logPath, motor, isInverted, voltageSignal, velocitySignal, voltageRequest, velocityRequest);
+		return new FlywheelStuff(logPath, motor, isInverted, voltageSignal, velocitySignal, voltageRequest, velocityRequest);
 	}
 
 }

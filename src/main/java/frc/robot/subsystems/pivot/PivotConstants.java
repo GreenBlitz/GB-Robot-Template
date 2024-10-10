@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class PivotConstants {
 
-	public static final String LOG_PATH = "Subsystems/Pivot";
+	public static final String LOG_PATH = "Subsystems/Pivot/";
 
 	public static final double GEAR_RATIO = 15.0 * (72.0 / 14.0) * 2.0;
 

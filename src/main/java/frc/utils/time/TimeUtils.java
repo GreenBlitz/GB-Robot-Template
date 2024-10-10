@@ -31,10 +31,9 @@ public class TimeUtils {
 		logStatus();
 	}
 
-
-
 	private static void logStatus() {
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTime", getCurrentCycleTimeSeconds());
+		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
+		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", getCurrentTimeSeconds());
 	}
 
 	public static double getCurrentTimeSeconds() {

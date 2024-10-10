@@ -1,6 +1,5 @@
 package frc.robot;
 
-import frc.robot.constants.IDs;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -28,11 +27,16 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		robot.getSwerve().setDefaultCommand(robot.getSwerve().getCommandsBuilder().driveBySavedState(
-				() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-				() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-				() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-		));
+		robot.getSwerve()
+			.setDefaultCommand(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveBySavedState(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+					)
+			);
 
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.AMP));
@@ -43,12 +47,10 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
 
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER, 0.1).whileTrue(
-				robot.getFunnel().getCommandsBuilder().setPower(() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER))
-		);
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER, 0.1).whileTrue(
-				robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER))
-		);
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER, 0.1)
+			.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER)));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER, 0.1)
+			.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

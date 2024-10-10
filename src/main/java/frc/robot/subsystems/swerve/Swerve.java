@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
-import frc.robot.poseestimation.OdometryObservation;
+import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
@@ -20,15 +20,11 @@ import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 
 public class Swerve extends GBSubsystem {
-
-	public static final Lock ODOMETRY_LOCK = new ReentrantLock();
 
 	private final SwerveConstants constants;
 	private final Modules modules;
@@ -62,7 +58,7 @@ public class Swerve extends GBSubsystem {
 		updateInputs();
 	}
 
-	protected Modules getModules() {
+	public Modules getModules() {
 		return modules;
 	}
 
@@ -118,12 +114,7 @@ public class Swerve extends GBSubsystem {
 		savedState = state;
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		updateState();
-	}
-
-	public void updateState() {
+	public void updateStatus() {
 		updateInputs();
 		logState();
 		logFieldRelativeVelocities();
@@ -131,12 +122,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		ODOMETRY_LOCK.lock();
-		{
-			gyro.updateSignals(gyroStuff.yawSignal());
-			modules.logStatus();
-		}
-		ODOMETRY_LOCK.unlock();
+		gyro.updateSignals(gyroStuff.yawSignal());
+		modules.updateInputs();
 	}
 
 	private void logState() {

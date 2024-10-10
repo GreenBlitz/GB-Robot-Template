@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.DriverStationUtils;
 
 public class Pivot extends GBSubsystem {
 
@@ -49,6 +50,7 @@ public class Pivot extends GBSubsystem {
 		if (
 			PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations()
 				> resetFilterRotations.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
+				&& !(DriverStationUtils.isTeleopEnabled() || DriverStationUtils.isAutonomousEnabled())
 		) {
 			motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
 		}

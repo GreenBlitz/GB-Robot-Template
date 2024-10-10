@@ -16,6 +16,7 @@ import frc.robot.subsystems.pivot.PivotStateHandler;
 import frc.robot.subsystems.roller.RollerState;
 import frc.robot.subsystems.roller.RollerStateHandler;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.wrist.WristState;
@@ -44,7 +45,7 @@ public class Superstructure {
 		this.flywheelStateHandler = new FlywheelStateHandler(robot.getFlywheel());
 		this.funnelStateHandler = new FunnelStateHandler(robot.getFunnel());
 		this.intakeStateHandler = new IntakeStateHandler(robot.getIntake());
-		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
+		this.pivotStateHandler = new PivotStateHandler(robot.getPivot(), robot.getPoseEstimator()::getEstimatedPose);
 		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
 		this.wristStateHandler = new WristStateHandler(robot.getWrist());
 	}
@@ -71,7 +72,7 @@ public class Superstructure {
 
 	private boolean isReadyToTransfer() {
 		boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.TRANSFER.getTargetPosition(), Tolerances.PIVOT_POSITION);
-		boolean isElbowReady = robot.getElbow().isAtAngle(ElbowState.TRANSFER.getTargetPosition(), Tolerances.ELBOW_POSITION);
+		boolean isElbowReady = robot.getElbow().isAtAngle(ElbowState.TRANSFER.getTargetPosition(), Tolerances.ELBOW_POSITION_TRANSFER);
 
 		return isElbowReady && isPivotReady;
 	}
@@ -86,7 +87,12 @@ public class Superstructure {
 				Tolerances.FLYWHEEL_VELOCITY_PER_SECOND
 			);
 
-		return isFlywheelReady && isPivotReady;
+		boolean isSwerveReady = swerve.isAtHeading(
+			SwerveMath.getRelativeTranslation(robot.getPoseEstimator().getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d())
+				.getAngle()
+		);
+
+		return isFlywheelReady && isPivotReady && isSwerveReady;
 	}
 
 
@@ -283,7 +289,7 @@ public class Superstructure {
 				new ParallelDeadlineGroup(
 					rollerStateHandler.setState(RollerState.AFTER_INTAKE),
 					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
-				),
+				).withTimeout(Timeouts.INTAKE_ARM_1_ROTATION_SECONDS),
 				new ParallelCommandGroup(
 					rollerStateHandler.setState(RollerState.STOP),
 					funnelStateHandler.setState(FunnelState.STOP),

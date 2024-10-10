@@ -4,8 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
@@ -27,6 +27,9 @@ import frc.robot.subsystems.roller.factory.RollerFactory;
 import frc.robot.subsystems.solenoid.Solenoid;
 import frc.robot.subsystems.solenoid.SolenoidConstants;
 import frc.robot.subsystems.solenoid.factory.SolenoidFactory;
+import frc.robot.constants.Field;
+import frc.robot.poseestimator.GBPoseEstimator;
+import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -37,6 +40,15 @@ import frc.robot.subsystems.wrist.WristConstants;
 import frc.robot.subsystems.wrist.factory.WristFactory;
 import frc.robot.superstructure.Superstructure;
 import frc.utils.brakestate.BrakeStateManager;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.limelights.LimeLightConstants;
+import frc.robot.vision.limelights.LimelightFilterer;
+import frc.robot.vision.limelights.LimelightFiltererConfig;
+import frc.robot.vision.limelights.MultiLimelights;
+import frc.utils.auto.AutonomousChooser;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -47,7 +59,12 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private AutonomousChooser autonomousChooser;
+
 	private final Swerve swerve;
+	private final GBPoseEstimator poseEstimator;
+	private final LimelightFilterer limelightFilterer;
+	private final MultiLimelights multiLimelights;
 	private final Solenoid solenoid;
 	private final Funnel funnel;
 	private final Intake intake;
@@ -56,7 +73,6 @@ public class Robot {
 	private final Pivot pivot;
 	private final Roller roller;
 	private final Wrist wrist;
-
 
 	private final Superstructure superstructure;
 
@@ -81,7 +97,40 @@ public class Robot {
 
 		this.superstructure = new Superstructure(this);
 
+		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
+		this.limelightFilterer = new LimelightFilterer(
+			new LimelightFiltererConfig("limelightfilterer/", Field.APRIL_TAGS_AVERAGE_HEIGHT_METERS),
+			multiLimelights
+		);
+		this.poseEstimator = new GBPoseEstimator(
+			swerve::setHeading,
+			"PoseEstimator/",
+			limelightFilterer,
+			swerve.getConstants().kinematics(),
+			swerve.getModules().getWheelsPositions(0),
+			swerve.getAbsoluteHeading(),
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+			new Pose2d()
+		);
+
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
+
+		configPathPlanner();
 		configureBindings();
+	}
+
+	public void periodic() {
+		swerve.updateStatus();
+//		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
+		poseEstimator.updatePoseEstimator(Arrays.asList(swerve.getAllOdometryObservations()), limelightFilterer.getFilteredVisionObservations());
+	}
+
+	private void configPathPlanner() {
+		// Register commands...
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
+		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 	}
 
 	private void configureBindings() {
@@ -90,7 +139,7 @@ public class Robot {
 
 
 	public Command getAutonomousCommand() {
-		return new InstantCommand();
+		return autonomousChooser.getChosenValue();
 	}
 
 	public Swerve getSwerve() {
@@ -131,6 +180,10 @@ public class Robot {
 
 	public Superstructure getSuperstructure() {
 		return superstructure;
+	}
+
+	public GBPoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 
 }

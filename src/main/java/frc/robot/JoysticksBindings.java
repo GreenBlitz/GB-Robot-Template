@@ -31,6 +31,7 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(
 				new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(old.getX(), old.getY(), Rotation2d.fromDegrees(0))))
 		);
+		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPoseByLimelight()));
 
 		robot.getSwerve()
 			.setDefaultCommand(

@@ -158,8 +158,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void updateVision(List<VisionObservation> visionObservations) {
 		for (VisionObservation visionObservation : visionObservations) {
 //			if (!isObservationTooOld(visionObservation)) {
+			if(true){
 				addVisionObservation(visionObservation);
-//			}
+			}
 		}
 	}
 
@@ -192,7 +193,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-			estimatedPoseInterpolator.addSample(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()), estimatedPose);
+//			estimatedPoseInterpolator.addSample(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()), estimatedPose);
+			estimatedPoseInterpolator.addSample(Logger.getRealTimestamp() / 1.0e6, estimatedPose);
 		});
 	}
 
@@ -220,9 +222,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void subsystemPeriodic() {
-		if (!limelightFilterer.isPoseEstimationCorrect()) {
-			resetPoseByLimelight();
-		}
+//		if (false &&
+//				!limelightFilterer.isPoseEstimationCorrect()) {
+//			resetPoseByLimelight();
+//		}
 	}
 
 }

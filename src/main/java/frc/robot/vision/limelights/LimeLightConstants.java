@@ -15,9 +15,9 @@ public class LimeLightConstants {
 
 	public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 1.07;
 
-	public static final double POSITION_NORM_TOLERANCE = 0.05;
+	public static final double POSITION_NORM_TOLERANCE = 0.5;
 
-	public static final double ROTATION_NORM_TOLERANCE = 0.1;
+	public static final double ROTATION_NORM_TOLERANCE = 0.5;
 
 	public static final Rotation2d ROLL_TOLERANCE = Rotation2d.fromDegrees(10);
 

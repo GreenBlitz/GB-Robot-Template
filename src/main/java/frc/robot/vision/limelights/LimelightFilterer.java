@@ -58,6 +58,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 			) {
 				;
 				estimates.add(rawDataToObservation(limelightRawData));
+				Logger.recordOutput("visionpose", rawDataToObservation(limelightRawData).robotPose());
 			}
 		}
 
@@ -67,7 +68,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 
 
 		if (!estimates.isEmpty()) {
-			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
+			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp() / 1.0e6);
 		}
 		return estimates;
 	}

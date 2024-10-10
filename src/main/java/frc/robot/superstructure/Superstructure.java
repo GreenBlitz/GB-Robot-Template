@@ -1,6 +1,5 @@
 package frc.robot.superstructure;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
@@ -89,9 +88,8 @@ public class Superstructure {
 			);
 
 		boolean isSwerveReady = swerve.isAtHeading(
-			SwerveMath.getRelativeTranslation(
-				robot.getPoseEstimator().getEstimatedPose().getTranslation(),
-				Field.getSpeaker().toTranslation2d()).getAngle()
+			SwerveMath.getRelativeTranslation(robot.getPoseEstimator().getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d())
+				.getAngle()
 		);
 
 		return isFlywheelReady && isPivotReady && isSwerveReady;

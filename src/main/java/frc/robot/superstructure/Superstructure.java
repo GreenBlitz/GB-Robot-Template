@@ -71,7 +71,7 @@ public class Superstructure {
 
 	private boolean isReadyToTransfer() {
 		boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.TRANSFER.getTargetPosition(), Tolerances.PIVOT_POSITION);
-		boolean isElbowReady = robot.getElbow().isAtAngle(ElbowState.TRANSFER.getTargetPosition(), Tolerances.ELBOW_POSITION);
+		boolean isElbowReady = robot.getElbow().isAtAngle(ElbowState.TRANSFER.getTargetPosition(), Tolerances.ELBOW_POSITION_TRANSFER);
 
 		return isElbowReady && isPivotReady;
 	}
@@ -283,7 +283,7 @@ public class Superstructure {
 				new ParallelDeadlineGroup(
 					rollerStateHandler.setState(RollerState.AFTER_INTAKE),
 					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
-				),
+				).withTimeout(Timeouts.INTAKE_ARM_1_ROTATION_SECONDS),
 				new ParallelCommandGroup(
 					rollerStateHandler.setState(RollerState.STOP),
 					funnelStateHandler.setState(FunnelState.STOP),

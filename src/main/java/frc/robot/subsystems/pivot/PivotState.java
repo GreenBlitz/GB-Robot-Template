@@ -8,7 +8,7 @@ public enum PivotState {
 	INTAKE(Rotation2d.fromDegrees(35)),
 	ARM_INTAKE(Rotation2d.fromDegrees(30)),
 	PRE_SPEAKER(Rotation2d.fromDegrees(50)),
-	TRANSFER(Rotation2d.fromDegrees(17));
+	TRANSFER(Rotation2d.fromDegrees(16.4));
 
 	private final Rotation2d targetPosition;
 

@@ -46,25 +46,32 @@ public class JoysticksBindings {
 					)
 			);
 
-		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
-		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.AMP));
-		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
-		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.SHOOTER_INTAKE));
+		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.ARM_INTAKE));
+		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.SHOOTER_INTAKE));
 		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
-		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.ARM_OUTTAKE));
-		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
-		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
-		usedJoystick.POV_LEFT.onTrue(robot.getSuperstructure().setState(RobotState.ARM_INTAKE));
 
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER, 0.1)
-			.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER)));
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER, 0.1)
-			.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER)));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.AMP));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+
+		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
+		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
+
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.ARM_OUTTAKE));
+
+		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		usedJoystick.POV_RIGHT.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
+
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER, 0.1)
+				.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER)));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER, 0.1)
+				.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER)));
+
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

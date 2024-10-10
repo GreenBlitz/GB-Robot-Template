@@ -2,7 +2,7 @@ package frc.robot.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.time.TimeUtils;
 
 public class SingleJointedArmSimulation extends MotorSimulation {
 
@@ -29,7 +29,7 @@ public class SingleJointedArmSimulation extends MotorSimulation {
 
 	@Override
 	protected void updateMotor() {
-		armSimulation.update(CycleTimeUtils.getCurrentCycleTime());
+		armSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
 	}
 
 }

@@ -1,6 +1,5 @@
 package frc.robot.superstructure;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.constants.Field;

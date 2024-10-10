@@ -52,7 +52,8 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 					limelightRawData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
 					config.aprilTagHeightMeters(),
-					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
+					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES,
+					super.getLogPath()
 				)
 			) {
 				estimates.add(rawDataToObservation(limelightRawData));

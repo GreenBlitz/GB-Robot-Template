@@ -20,7 +20,7 @@ public class IDs {
 
 		public static final int SOLENOID = 55;
 
-		public static final int WRIST = 11;
+		public static final int WRIST = 0;
 
 	}
 

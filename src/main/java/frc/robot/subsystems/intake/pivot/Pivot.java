@@ -11,9 +11,9 @@ public class Pivot extends GBSubsystem {
 
 	private final PivotStuff pivotStuff;
 	private final ControllableMotor motor;
-	private final PivotCommandsBuilder commandsBuilder;
 	private final IRequest<Rotation2d> positionRequest;
 	private final MedianFilter resetAngleFilter;
+	private final PivotCommandsBuilder commandsBuilder;
 
 	public Pivot(PivotStuff pivotStuff) {
 		super(pivotStuff.logPath());

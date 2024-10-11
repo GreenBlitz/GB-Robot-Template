@@ -56,7 +56,7 @@ public class Robot {
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
-		BrakeStateManager.add(() -> pivot.setBreak(true), () -> pivot.setBreak(false));
+		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
 		this.flywheel = FlywheelFactory
 			.create("TopMotor/", "BottomMotor/", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);

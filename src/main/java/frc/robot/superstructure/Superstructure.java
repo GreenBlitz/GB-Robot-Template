@@ -27,6 +27,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
 
+	private static final double NOTE_IN_RUMBLE_POWER = 0.5;
+
 	private final Robot robot;
 
 	private final Swerve swerve;
@@ -98,7 +100,7 @@ public class Superstructure {
 		SmartJoystick mainJoystick = JoysticksBindings.getMainJoystick();
 		return new FunctionalCommand(
 				() -> {},
-				() -> mainJoystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.5),
+				() -> mainJoystick.setRumble(GenericHID.RumbleType.kBothRumble, NOTE_IN_RUMBLE_POWER),
 				interrupted -> mainJoystick.stopRumble(GenericHID.RumbleType.kBothRumble),
 				() -> false
 		).withTimeout(Timeouts.NOTE_IN_RUMBLE);

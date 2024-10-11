@@ -106,7 +106,6 @@ public class Superstructure {
 		).withTimeout(Timeouts.NOTE_IN_RUMBLE);
 	}
 
-
 	public Command setState(RobotState state) {
 		this.currentState = state;
 		return switch (state) {

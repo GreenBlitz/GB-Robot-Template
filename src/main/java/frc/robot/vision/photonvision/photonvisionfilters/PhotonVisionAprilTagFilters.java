@@ -36,10 +36,7 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 		return output;
 	}
 
-	private boolean isAprilTagWithinRange(PhotonVisionTargetRawData targetData) {
-		double height = targetData.targetPose().getZ();
-		return Math.abs(Field.APRIL_TAG_HEIGHT_METERS - height) <= PhotonVisionConstants.APRIL_TAG_HEIGHT_TOLERANCE;
-	}
+	private
 
 	private static double[] getStandardDeviations(PhotonVisionTargetRawData targetData) {
 		double ambiguity = targetData.ambiguity();

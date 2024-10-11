@@ -2,7 +2,7 @@ package frc.robot.vision.photonvision;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;

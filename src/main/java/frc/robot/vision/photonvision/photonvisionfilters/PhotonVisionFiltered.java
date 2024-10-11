@@ -1,7 +1,7 @@
 package frc.robot.vision.photonvision.photonvisionfilters;
 
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.photonvision.*;
-import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;

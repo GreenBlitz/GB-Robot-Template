@@ -42,11 +42,11 @@ public class RealElevatorConstants {
 
 	private static final ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
 
-	public static double feedforwardCalculation(Rotation2d velocity) {
+	private static double feedforwardCalculation(Rotation2d velocity) {
 		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
 	}
 
-	public static void configureMotor(SparkMaxWrapper sparkMaxWrapper) {
+	private static void configureMotor(SparkMaxWrapper sparkMaxWrapper) {
 		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) FORWARD_SOFT_LIMIT_VALUE.getRotations());

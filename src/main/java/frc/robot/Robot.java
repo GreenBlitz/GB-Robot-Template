@@ -84,16 +84,16 @@ public class Robot {
 		return funnel;
 	}
 
+	public Elevator getElevator() {
+		return elevator;
+	}
+
 	public Flywheel getFlywheel() {
 		return flywheel;
 	}
 
 	public IntakeRoller getIntakeRoller() {
 		return intakeRoller;
-	}
-
-	public Elevator getElevator() {
-		return elevator;
 	}
 
 	public Superstructure getSuperstructure() {

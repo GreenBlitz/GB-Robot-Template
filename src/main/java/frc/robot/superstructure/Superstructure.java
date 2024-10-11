@@ -99,10 +99,10 @@ public class Superstructure {
 	private Command noteInRumble() {
 		SmartJoystick mainJoystick = JoysticksBindings.getMainJoystick();
 		return new FunctionalCommand(
-				() -> {},
-				() -> mainJoystick.setRumble(GenericHID.RumbleType.kBothRumble, NOTE_IN_RUMBLE_POWER),
-				interrupted -> mainJoystick.stopRumble(GenericHID.RumbleType.kBothRumble),
-				() -> false
+			() -> {},
+			() -> mainJoystick.setRumble(GenericHID.RumbleType.kBothRumble, NOTE_IN_RUMBLE_POWER),
+			interrupted -> mainJoystick.stopRumble(GenericHID.RumbleType.kBothRumble),
+			() -> false
 		).withTimeout(Timeouts.NOTE_IN_RUMBLE);
 	}
 

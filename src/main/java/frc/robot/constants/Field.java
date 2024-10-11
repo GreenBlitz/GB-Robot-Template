@@ -8,6 +8,8 @@ import frc.utils.mirror.MirrorMath;
 
 public class Field {
 
+	public static final double APRIL_TAGS_AVERAGE_HEIGHT_METERS = 1.24;
+
 	public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
 
 	public static boolean isFieldConventionAlliance() {
@@ -16,8 +18,6 @@ public class Field {
 
 	public static final double LENGTH_METERS = 16.54175;
 	public static final double WIDTH_METERS = 8.0137;
-
-	public final static double APRIL_TAG_HEIGHT_METERS = 1.2397;
 
 
 	private static final Translation3d SPEAKER = new Translation3d(0.23, WIDTH_METERS - 2.55, 2.045);

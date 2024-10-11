@@ -1,8 +1,8 @@
-package frc.robot.structures;
+package frc.robot.superstructure;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class SuperStructureConstants {
+public class Tolerances {
 
 	public static final Rotation2d HEADING_TOLERANCE = Rotation2d.fromDegrees(1.5);
 	public static final Rotation2d ROTATION_VELOCITY_TOLERANCE = Rotation2d.fromRadians(0.05);

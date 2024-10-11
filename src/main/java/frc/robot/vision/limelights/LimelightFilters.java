@@ -1,6 +1,7 @@
 package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.*;
+import org.littletonrobotics.junction.Logger;
 
 public class LimelightFilters {
 
@@ -8,18 +9,40 @@ public class LimelightFilters {
 		LimelightRawData limelightRawData,
 		Pose2d currentEstimatedPose,
 		double aprilTagHeightMeters,
-		LimelightFiltersTolerances tolerances
+		LimelightFiltersTolerances tolerances,
+		String logpath
 	) {
-		return LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
-			&& LimelightFilters.isLimelightOutputInTolerance(
-				limelightRawData,
-				currentEstimatedPose,
-				tolerances.normalizedPositionTolerance(),
-				tolerances.normalizedRotationTolerance()
-			)
-			&& LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance())
-			&& LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance())
-			&& LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
+		boolean aprilTagInProperHeight = LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters);
+		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
+			limelightRawData,
+			currentEstimatedPose,
+			tolerances.normalizedPositionTolerance(),
+			tolerances.normalizedRotationTolerance()
+		);
+		boolean rollInTolerance = LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance());
+		boolean pitchInTolerance = LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance());
+		boolean robotOnGround = LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
+		if (!aprilTagInProperHeight) {
+			Logger.recordOutput(logpath + "filteredBecauseBadHeight", limelightRawData.estimatedPose());
+		}
+		if (!limelightOutputInTolerance) {
+			Logger.recordOutput(logpath + "filteredBecauseBadTolerance", limelightRawData.estimatedPose());
+		}
+		if (!rollInTolerance) {
+			Logger.recordOutput(logpath + "filteredBecauseBadRoll", limelightRawData.estimatedPose());
+		}
+		if (!pitchInTolerance) {
+			Logger.recordOutput(logpath + "filteredBecauseBadPitch", limelightRawData.estimatedPose());
+		}
+		if (!robotOnGround) {
+			Logger.recordOutput(logpath + "filteredBecauseRobotIsFuckingFlying", limelightRawData.estimatedPose());
+		}
+
+		return aprilTagInProperHeight
+//			&& limelightOutputInTolerance
+			&& rollInTolerance
+			&& pitchInTolerance
+			&& robotOnGround;
 	}
 
 	protected static boolean isLimelightOutputInTolerance(

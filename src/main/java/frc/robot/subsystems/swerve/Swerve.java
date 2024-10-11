@@ -9,13 +9,13 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
-import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.structures.SuperStructureConstants;
+import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.superstructure.Tolerances;
 import frc.utils.pathplannerutils.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -58,7 +58,7 @@ public class Swerve extends GBSubsystem {
 		updateInputs();
 	}
 
-	protected Modules getModules() {
+	public Modules getModules() {
 		return modules;
 	}
 
@@ -168,7 +168,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(headingSupplier.get().getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 
@@ -287,10 +287,10 @@ public class Swerve extends GBSubsystem {
 
 	public boolean isAtHeading(Rotation2d targetHeading) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
-		boolean isAtHeading = headingDeltaDegrees < SuperStructureConstants.HEADING_TOLERANCE.getDegrees();
+		boolean isAtHeading = headingDeltaDegrees < Tolerances.HEADING_TOLERANCE.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < SuperStructureConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < Tolerances.ROTATION_VELOCITY_TOLERANCE.getRadians();
 
 		return isAtHeading && isStopping;
 	}

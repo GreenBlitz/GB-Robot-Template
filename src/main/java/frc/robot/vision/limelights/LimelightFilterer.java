@@ -1,6 +1,7 @@
 package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
@@ -27,6 +28,11 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	}
 
 	@Override
+	public List<Rotation2d> getAllRobotHeadingEstimations() {
+		return multiLimelights.getAllRobotHeadingEstimations();
+	}
+
+	@Override
 	public void setEstimatedPoseAtTimestampFunction(Function<Double, Pose2d> getEstimatedPoseAtTimestamp) {
 		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}
@@ -46,14 +52,16 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 					limelightRawData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
 					config.aprilTagHeightMeters(),
-					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
+					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES,
+					super.getLogPath()
 				)
 			) {
 				estimates.add(rawDataToObservation(limelightRawData));
+				Logger.recordOutput("visionpose",rawDataToObservation(limelightRawData).robotPose());
 			}
 		}
 		if (!estimates.isEmpty()) {
-			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
+			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp() / 1.0e6);
 		}
 		return estimates;
 	}
@@ -83,11 +91,11 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	}
 
 	private void logEstimatedPositions() {
-		List<VisionObservation> observations = getFilteredVisionObservations();
+		List<VisionObservation> observations = getAllAvailableLimelightRawData();
 
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(
-				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
+				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i,
 				observations.get(i).robotPose()
 			);
 		}

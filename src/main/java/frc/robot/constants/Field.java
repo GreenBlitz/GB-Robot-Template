@@ -15,6 +15,4 @@ public class Field {
 
 	public static final double WIDTH_METERS = 8.0137;
 
-	public final static double APRIL_TAG_HEIGHT_METERS = 1.2397;
-
 }

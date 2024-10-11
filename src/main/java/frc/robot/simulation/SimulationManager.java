@@ -1,6 +1,6 @@
 package frc.robot.simulation;
 
-import frc.utils.devicewrappers.TalonFXWrapper;
+import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 
 import java.util.ArrayList;
 import java.util.List;

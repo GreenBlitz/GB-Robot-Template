@@ -10,6 +10,8 @@ public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
 	Pose2d getEstimatedPose();
 
+	Pose2d getEstimatedPoseAtTimeStamp(double timeStamp);
+
 	void resetPose(Pose2d newPose);
 
 	void updatePoseEstimator(List<OdometryObservation> odometryObservation, List<VisionObservation> visionObservations);

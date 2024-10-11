@@ -7,7 +7,7 @@ import frc.robot.constants.MathConstants;
 public class Conversions {
 
 	public static final double MAG_TICKS = 4096;
-	public static final double HUNDRED_MILLIESECONDS_PER_SECONDS = 10;
+	public static final double HUNDRED_MILLISECONDS_PER_SECONDS = 10;
 	public static final double SECONDS_PER_MINUTE = 60;
 
 
@@ -66,13 +66,13 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a frequency from per 100millieseconds to per minute.
+	 * Converts a frequency from per 100 milliseconds to per minute.
 	 *
-	 * @param frequency the frequency per 100millieseconds
+	 * @param frequency the frequency per 100 milliseconds
 	 * @return the frequency per minute
 	 */
-	public static double per100MilliesecondsToPerMinute(double frequency) {
-		return perSecondToPerMinute(per100MilliesecondsToPerSecond(frequency));
+	public static double per100MillisecondsToPerMinute(double frequency) {
+		return perSecondToPerMinute(per100MillisecondsToPerSecond(frequency));
 	}
 
 	/**
@@ -86,33 +86,33 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a frequency from per 100 millieseconds to per second.
+	 * Converts a frequency from per 100 milliseconds to per second.
 	 *
-	 * @param frequency the frequency per 100 millieseconds
+	 * @param frequency the frequency per 100 milliseconds
 	 * @return the frequency per second
 	 */
-	public static double per100MilliesecondsToPerSecond(double frequency) {
-		return frequency * HUNDRED_MILLIESECONDS_PER_SECONDS;
+	public static double per100MillisecondsToPerSecond(double frequency) {
+		return frequency * HUNDRED_MILLISECONDS_PER_SECONDS;
 	}
 
 	/**
-	 * Converts a frequency from per minute to per 100 millieseconds.
+	 * Converts a frequency from per minute to per 100 milliseconds.
 	 *
 	 * @param frequency the frequency per minute
-	 * @return the frequency per 100millieseconds
+	 * @return the frequency per 100 milliseconds
 	 */
-	public static double perMinuteToPer100Millieseconds(double frequency) {
-		return perSecondToPer100Millieseconds(frequency) / SECONDS_PER_MINUTE;
+	public static double perMinuteToPer100Milliseconds(double frequency) {
+		return perSecondToPer100Milliseconds(frequency) / SECONDS_PER_MINUTE;
 	}
 
 	/**
-	 * Converts a frequency from per second to per 100millieseconds.
+	 * Converts a frequency from per second to per 100 milliseconds.
 	 *
 	 * @param frequency the frequency per second
-	 * @return the frequency per 100millieseconds
+	 * @return the frequency per 100 milliseconds
 	 */
-	public static double perSecondToPer100Millieseconds(double frequency) {
-		return frequency / HUNDRED_MILLIESECONDS_PER_SECONDS;
+	public static double perSecondToPer100Milliseconds(double frequency) {
+		return frequency / HUNDRED_MILLISECONDS_PER_SECONDS;
 	}
 
 
@@ -124,6 +124,16 @@ public class Conversions {
 	 */
 	public static double microSecondsToSeconds(double microSeconds) {
 		return microSeconds / 1e6;
+	}
+
+	/**
+	 * Converts a time from milliseconds to seconds
+	 *
+	 * @param milliSeconds the milliseconds
+	 * @return the seconds
+	 */
+	public static double milliSecondsToSeconds(double milliSeconds) {
+		return milliSeconds / 1e3;
 	}
 
 	/**
@@ -149,9 +159,9 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a target output voltage to a percentage output when voltage compensation is enabled. The voltage compensation
-	 * saturation determines what voltage represents 100% output. The compensated power is the voltage represented by a percentage
-	 * of the saturation voltage.
+	 * Converts a target output voltage to a percentage output when voltage compensation is enabled. The voltage compensation saturation
+	 * determines what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the saturation
+	 * voltage.
 	 *
 	 * @param voltage    the target voltage output
 	 * @param saturation the configured saturation which represents 100% output
@@ -162,9 +172,8 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a target output percentage output to voltage when voltage compensation is enabled. The voltage compensation
-	 * saturation determines what voltage represents 100% output. The compensated power is the voltage represented by a percentage
-	 * of the saturation voltage.
+	 * Converts a target output percentage output to voltage when voltage compensation is enabled. The voltage compensation saturation determines
+	 * what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the saturation voltage.
 	 *
 	 * @param power      the target percentage output
 	 * @param saturation the configured saturation which represents 100% output
@@ -182,10 +191,7 @@ public class Conversions {
 	 * @return the scaled constraints
 	 */
 	public static TrapezoidProfile.Constraints scaleConstraints(TrapezoidProfile.Constraints constraints, double percentage) {
-		return new TrapezoidProfile.Constraints(
-			constraints.maxVelocity * (percentage / 100),
-			constraints.maxAcceleration * (percentage / 100)
-		);
+		return new TrapezoidProfile.Constraints(constraints.maxVelocity * (percentage / 100), constraints.maxAcceleration * (percentage / 100));
 	}
 
 }

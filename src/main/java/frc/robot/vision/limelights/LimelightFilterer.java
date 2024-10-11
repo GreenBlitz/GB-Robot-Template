@@ -6,13 +6,16 @@ import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.vision.IFilterer;
+import frc.robot.vision.aprilTags.AprilTagFilters;
+import frc.robot.vision.VisionRawData;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer {
+public class LimelightFilterer extends GBSubsystem implements IFilterer {
 
 	private final MultiLimelights multiLimelights;
 	private final LimelightFiltererConfig config;
@@ -46,16 +49,16 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
+		for (VisionRawData visionRawData : multiLimelights.getAllAvailableLimelightData()) {
 			if (
-				LimelightFilters.keepLimelightData(
-					limelightRawData,
+				AprilTagFilters.keepLimelightData(
+					visionRawData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
 					config.aprilTagHeightMeters(),
 					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
 				)
 			) {
-				estimates.add(rawDataToObservation(limelightRawData));
+				estimates.add(rawDataToObservation(visionRawData));
 			}
 		}
 		if (!estimates.isEmpty()) {
@@ -68,16 +71,16 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	public List<VisionObservation> getAllAvailableLimelightRawData() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
-			estimates.add(rawDataToObservation(limelightRawData));
+		for (VisionRawData visionRawData : multiLimelights.getAllAvailableLimelightData()) {
+			estimates.add(rawDataToObservation(visionRawData));
 		}
 
 		return estimates;
 	}
 
-	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
+	private VisionObservation rawDataToObservation(VisionRawData visionRawData) {
 		double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(
-			limelightRawData,
+			visionRawData,
 			getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
 		);
 		double[] standardDeviations = new double[] {
@@ -85,7 +88,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
 			LimeLightConstants.VISION_STANDARD_DEVIATION_ANGLES};
 
-		return new VisionObservation(limelightRawData.estimatedPose().toPose2d(), standardDeviations, limelightRawData.timestamp());
+		return new VisionObservation(visionRawData.targetPose().toPose2d(), standardDeviations, visionRawData.timestamp());
 	}
 
 	private void logEstimatedPositions() {

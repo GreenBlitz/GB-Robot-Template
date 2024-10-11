@@ -1,13 +1,17 @@
 package frc.robot.vision.photonvision.photonvisionfilters;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.vision.IFilterer;
+import frc.robot.vision.VisionRawData;
+import frc.robot.vision.aprilTags.AprilTagFiltersTolerances;
 import frc.robot.vision.photonvision.*;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-public abstract class PhotonVisionFiltered extends GBSubsystem {
+public abstract class PhotonVisionFiltered extends GBSubsystem implements IFilterer {
 
 	private final ArrayList<PhotonVisionCamera> cameras;
 
@@ -19,19 +23,11 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 		}
 	}
 
-	protected boolean isDataTooAmbiguous(PhotonVisionTargetRawData targetData) {
-		return targetData.ambiguity() >= PhotonVisionConstants.MAXIMUM_ALLOWED_AMBIGUITY;
-	}
+	protected abstract boolean keepPhotonVisionData(VisionRawData targetData, Pose2d currentPose, double aprilTagHeightMeters, AprilTagFiltersTolerances tolerances);
 
-	protected boolean isDataLatencyTooHigh(PhotonVisionTargetRawData targetData) {
-		return targetData.latency() >= PhotonVisionConstants.MAXIMUM_ALLOWED_LATENCY;
-	}
-
-	protected abstract boolean keepPhotonVisionData(PhotonVisionTargetRawData targetData);
-
-	public ArrayList<PhotonVisionTargetRawData> getAllFilteredData() {
-		ArrayList<PhotonVisionTargetRawData> output = new ArrayList<>();
-		for (PhotonVisionTargetRawData targetData : getAllTargetData()) {
+	public ArrayList<VisionRawData> getAllFilteredData() {
+		ArrayList<VisionRawData> output = new ArrayList<>();
+		for (VisionRawData targetData : getAllTargetData()) {
 			if (keepPhotonVisionData(targetData)) {
 				output.add(targetData);
 			}
@@ -40,12 +36,12 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 		return output;
 	}
 
-	protected ArrayList<PhotonVisionTargetRawData> getAllTargetData() {
-		ArrayList<PhotonVisionTargetRawData> output = new ArrayList<>();
+	protected ArrayList<VisionRawData> getAllTargetData() {
+		ArrayList<VisionRawData> output = new ArrayList<>();
 		for (PhotonVisionCamera camera : cameras) {
-			Optional<ArrayList<Optional<PhotonVisionTargetRawData>>> targets = camera.getTargetsData();
+			Optional<ArrayList<Optional<VisionRawData>>> targets = camera.getTargetsData();
 			if (targets.isPresent()) {
-				for (Optional<PhotonVisionTargetRawData> targetRawData : targets.get()) {
+				for (Optional<VisionRawData> targetRawData : targets.get()) {
 					targetRawData.ifPresent(output::add);
 				}
 			}
@@ -55,7 +51,7 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 	}
 
 	private void logAllFilteredData() {
-		for (PhotonVisionTargetRawData targetData : getAllFilteredData()) {
+		for (VisionRawData targetData : getAllFilteredData()) {
 			Logger.recordOutput(
 				super.getLogPath() + targetData.cameraName() + "Time" + targetData.timestamp(),
 				targetData.targetPose()
@@ -64,7 +60,7 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 	}
 
 	private void logAllTargetData() {
-		for (PhotonVisionTargetRawData targetData : getAllTargetData()) {
+		for (VisionRawData targetData : getAllTargetData()) {
 			Logger.recordOutput(
 				super.getLogPath() + targetData.cameraName() + "Time" + targetData.timestamp(),
 				targetData.targetPose()

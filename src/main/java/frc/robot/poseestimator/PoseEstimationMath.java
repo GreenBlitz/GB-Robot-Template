@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.vision.VisionRawData;
 import frc.robot.vision.limelights.LimelightRawData;
 
 import java.util.List;
@@ -82,9 +83,9 @@ public class PoseEstimationMath {
 		return appliedVisionObservation;
 	}
 
-	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
-		double normalizedLimelightX = limelightRawData.estimatedPose().getX() / Field.LENGTH_METERS;
-		double normalizedLimelightY = limelightRawData.estimatedPose().getY() / Field.WIDTH_METERS;
+	public static double[] calculateStandardDeviationOfPose(VisionRawData limelightRawData, Pose2d currentEstimatedPose) {
+		double normalizedLimelightX = limelightRawData.targetPose().getX() / Field.LENGTH_METERS;
+		double normalizedLimelightY = limelightRawData.targetPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
 		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
 		return new double[] {

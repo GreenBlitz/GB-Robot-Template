@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
-import frc.robot.vision.limelights.ILimelightFilterer;
+import frc.robot.vision.IFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.Conversions;
@@ -21,7 +21,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
-	private final ILimelightFilterer limelightFilterer;
+	private final IFilterer limelightFilterer;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
 	private Pose2d odometryPose;
@@ -32,7 +32,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		ILimelightFilterer limelightFilterer,
+		IFilterer limelightFilterer,
 		SwerveDriveKinematics kinematics,
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
@@ -55,7 +55,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		calculateHeadingOffset(initialGyroAngle);
 	}
 
-	public ILimelightFilterer getLimelightFilterer() {
+	public IFilterer getLimelightFilterer() {
 		return limelightFilterer;
 	}
 

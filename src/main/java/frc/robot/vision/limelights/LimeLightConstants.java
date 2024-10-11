@@ -1,6 +1,7 @@
 package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.vision.aprilTags.AprilTagFiltersTolerances;
 
 public class LimeLightConstants {
 
@@ -22,13 +23,16 @@ public class LimeLightConstants {
 
 	public static final double ROBOT_TO_GROUND_TOLERANCE_METERS = 0.2;
 
-	public final static LimelightFiltersTolerances DEFAULT_LIMELIGHT_FILTERS_TOLERANCES = new LimelightFiltersTolerances(
+	public static final double MAXIMUM_AMBIGUITY = 1;
+
+	public final static AprilTagFiltersTolerances DEFAULT_LIMELIGHT_FILTERS_TOLERANCES = new AprilTagFiltersTolerances(
 		APRIL_TAG_HEIGHT_TOLERANCE_METERS,
 		POSITION_NORM_TOLERANCE,
 		ROTATION_NORM_TOLERANCE,
 		ROLL_TOLERANCE,
 		PITCH_TOLERANCE,
-		ROBOT_TO_GROUND_TOLERANCE_METERS
+		ROBOT_TO_GROUND_TOLERANCE_METERS,
+		MAXIMUM_AMBIGUITY
 	);
 
 	public static final double VISION_STANDARD_DEVIATION_ANGLES = 0.6;

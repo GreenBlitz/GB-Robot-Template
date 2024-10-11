@@ -3,6 +3,7 @@ package frc.robot.vision.photonvision;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.vision.VisionRawData;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -30,17 +31,17 @@ public class PhotonVisionCamera extends GBSubsystem {
 		this(cameraConfiguration.name(), cameraConfiguration.cameraToRobot(), cameraConfiguration.targetType());
 	}
 
-	public Optional<PhotonVisionTargetRawData>
+	public Optional<VisionRawData>
 		tackedTargetToTargetRawdata(PhotonTrackedTarget trackedTarget, PhotonPipelineResult pipelineResult) {
 		double latency = pipelineResult.getLatencyMillis();
 		double ambiguity = trackedTarget.getPoseAmbiguity();
 		double timestamp = pipelineResult.getTimestampSeconds();
 
 		Optional<Pose3d> targetPose = calculateTargetPose(trackedTarget);
-		return targetPose.map(pose3d -> new PhotonVisionTargetRawData(camera.getName(), pose3d, timestamp, ambiguity, latency));
+		return targetPose.map(pose3d -> new VisionRawData(camera.getName(), pose3d, timestamp, ambiguity, latency));
 	}
 
-	public Optional<PhotonVisionTargetRawData> getBestTargetData() {
+	public Optional<VisionRawData> getBestTargetData() {
 		PhotonPipelineResult pipelineResult = camera.getLatestResult();
 		Optional<PhotonTrackedTarget> bestTarget = Optional.of(pipelineResult.getBestTarget());
 		if (bestTarget.isEmpty()) {
@@ -49,10 +50,10 @@ public class PhotonVisionCamera extends GBSubsystem {
 		return tackedTargetToTargetRawdata(bestTarget.get(), pipelineResult);
 	}
 
-	public Optional<ArrayList<Optional<PhotonVisionTargetRawData>>> getTargetsData() {
+	public Optional<ArrayList<Optional<VisionRawData>>> getTargetsData() {
 		PhotonPipelineResult pipelineResult = camera.getLatestResult();
 		Optional<List<PhotonTrackedTarget>> targets = Optional.of(pipelineResult.getTargets());
-		ArrayList<Optional<PhotonVisionTargetRawData>> output = new ArrayList<>();
+		ArrayList<Optional<VisionRawData>> output = new ArrayList<>();
 
 		if (targets.isEmpty()) {
 			return Optional.empty();

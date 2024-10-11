@@ -37,6 +37,10 @@ public class Limelight extends GBSubsystem {
 		this.gyroAngleValues = new GyroAngleValues(0, 0, 0, 0, 0, 0);
 	}
 
+	public String getCameraName() {
+		return this.name;
+	}
+
 	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
 		this.gyroAngleValues = gyroAngleValues;
 	}
@@ -49,7 +53,8 @@ public class Limelight extends GBSubsystem {
 				gyroAngleValues.pitch(),
 				gyroAngleValues.pitchRate(),
 				gyroAngleValues.roll(),
-				gyroAngleValues.rollRate(),}
+				gyroAngleValues.rollRate(),
+			}
 		);
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);

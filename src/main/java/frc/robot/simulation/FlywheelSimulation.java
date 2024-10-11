@@ -14,10 +14,6 @@ public class FlywheelSimulation extends MotorSimulation {
 		this.flywheelSimulation = flywheelSimulation;
 	}
 
-	public double getCurrent() {
-		return flywheelSimulation.getCurrentDrawAmps();
-	}
-
 	@Override
 	public Rotation2d getPosition() {
 		return Rotation2d.fromRadians(lastPositionRadians);

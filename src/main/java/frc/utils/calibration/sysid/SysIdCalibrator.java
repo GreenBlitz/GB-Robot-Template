@@ -7,102 +7,43 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.joysticks.SmartJoystick;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
 
-import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 public class SysIdCalibrator {
-
-	public static final double DEFAULT_VOLTAGE_STEP = 7;
-	public static final double DEFAULT_RAMP_RATE_VOLTS_PER_SECOND = 1;
-	public static final double DEFAULT_TIMEOUT_SECONDS = 10;
 
 	private final SysIdRoutine sysIdRoutine;
 	private final GBSubsystem usedSubsystem;
 	private final boolean isCTRE;
 
-	/**
-	 * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
-	 *
-	 * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
-	 */
-	public SysIdCalibrator(
-		boolean isCTRE,
-		GBSubsystem subsystem,
-		Consumer<Double> voltageSetControl,
-		double voltageStepVolts,
-		double rampRateVoltsPerSecond
-	) {
-		this(isCTRE, subsystem, voltageSetControl, voltageStepVolts, rampRateVoltsPerSecond, DEFAULT_TIMEOUT_SECONDS);
-	}
+	public record SysIdConfigInfo(SysIdRoutine.Config config, boolean isCTRE) {}
 
 	/**
 	 * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
 	 *
 	 * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
 	 */
-	public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl, double voltageStep) {
-		this(isCTRE, subsystem, voltageSetControl, voltageStep, DEFAULT_RAMP_RATE_VOLTS_PER_SECOND, DEFAULT_TIMEOUT_SECONDS);
-	}
-
-	/**
-	 * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
-	 *
-	 * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
-	 */
-	public SysIdCalibrator(boolean isCTRE, GBSubsystem subsystem, Consumer<Double> voltageSetControl) {
-		this(
-			isCTRE,
-			subsystem,
-			voltageSetControl,
-			DEFAULT_VOLTAGE_STEP,
-			DEFAULT_RAMP_RATE_VOLTS_PER_SECOND,
-			DEFAULT_TIMEOUT_SECONDS
-		);
-	}
-
-	/**
-	 * IMPORTANT: You must do SignalLogger.stop() at the end of the calibration
-	 *
-	 * @param voltageSetControl - note that this function needs to use kg in it so the mechanism won't move because of gravity.
-	 */
-	public SysIdCalibrator(
-		boolean isCTRE,
-		GBSubsystem subsystem,
-		Consumer<Double> voltageSetControl,
-		double voltageStepVolts,
-		double rampRateVoltsPerSecond,
-		double timeoutSeconds
-	) {
+	public SysIdCalibrator(SysIdConfigInfo sysIdConfigInfo, GBSubsystem subsystem, Consumer<Double> voltageSetControl) {
 		this.usedSubsystem = subsystem;
-		this.isCTRE = isCTRE;
+		this.isCTRE = sysIdConfigInfo.isCTRE;
 
-		final SysIdRoutine.Config config = new SysIdRoutine.Config(
-			Volts.of(rampRateVoltsPerSecond).per(Seconds.of(1)),
-			Volts.of(voltageStepVolts),
-			Seconds.of(timeoutSeconds),
-			this.isCTRE
-				? (state) -> SignalLogger.writeString("state", state.toString())
-				: (state) -> Logger.recordOutput("state", state.toString())
-		);
-		final SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
+		SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
 			(Measure<Voltage> volts) -> voltageSetControl.accept(volts.in(Volts)),
 			null,
 			usedSubsystem,
 			usedSubsystem.getName()
 		);
 
-		this.sysIdRoutine = new SysIdRoutine(config, mechanism);
+		this.sysIdRoutine = new SysIdRoutine(sysIdConfigInfo.config, mechanism);
 	}
 
 	/**
-	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You
-	 * must do SignalLogger.stop() at the end of the calibration
+	 * Sets for you all the buttons you need to do sysid calibration. The buttons are ordered by the click order. IMPORTANT: You must do
+	 * SignalLogger.stop() at the end of the calibration
 	 *
 	 * @param smartJoystick - the joystick to apply the buttons on
 	 */

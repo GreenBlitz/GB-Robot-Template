@@ -2,7 +2,7 @@ package frc.utils.logger;
 
 import com.ctre.phoenix6.SignalLogger;
 import frc.robot.Robot;
-import frc.robot.constants.LogPaths;
+import frc.utils.alerts.Alert;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
@@ -10,6 +10,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import java.nio.file.Path;
 
 public class LoggerFactory {
+
+	private static final String LOG_PATH = "Logger/";
 
 	public static void initializeLogger() {
 		switch (Robot.ROBOT_TYPE) {
@@ -24,13 +26,9 @@ public class LoggerFactory {
 		if (LogSavePath.USB.isWritable()) {
 			startLoggerOnUSB();
 		} else {
+			new Alert(Alert.AlertType.WARNING, LOG_PATH + "Didn't find USB").report();
 			startLoggerOnRoborio();
-			reportNoUSBFound();
 		}
-	}
-
-	private static void reportNoUSBFound() {
-		Logger.recordOutput(LogPaths.ALERT_LOG_PATH + "/Didn't find USB");
 	}
 
 	private static void startSimulationLogger() {
@@ -49,7 +47,7 @@ public class LoggerFactory {
 		setLoggingPath(logSavePath.getSavePath());
 		Logger.addDataReceiver(new NT4Publisher());
 		Logger.start();
-		Logger.recordOutput("Logged In", logSavePath);
+		Logger.recordOutput(LOG_PATH + "Logged In", logSavePath);
 	}
 
 	private static void setLoggingPath(Path path) {

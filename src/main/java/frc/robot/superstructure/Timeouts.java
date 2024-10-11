@@ -10,5 +10,6 @@ public class Timeouts {
 	public static final double TRANSFER_SHOOTER_ARM_SECONDS = 0.6;
 	public static final double TRANSFER_ARM_SHOOTER_SECONDS = 0.5;
 	public static final double INTAKE_ARM_1_ROTATION_SECONDS = 0.15;
+	public static final double NOTE_IN_RUMBLE = 0.2;
 
 }

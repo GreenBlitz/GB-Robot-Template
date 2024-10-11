@@ -1,6 +1,8 @@
 package frc.robot.superstructure;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.JoysticksBindings;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
 import frc.robot.subsystems.elbow.ElbowState;
@@ -20,9 +22,12 @@ import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.wrist.WristState;
 import frc.robot.subsystems.wrist.WristStateHandler;
+import frc.utils.joysticks.SmartJoystick;
 import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
+
+	private static final double NOTE_IN_RUMBLE_POWER = 0.5;
 
 	private final Robot robot;
 
@@ -57,6 +62,7 @@ public class Superstructure {
 		Logger.recordOutput("CurrentState", currentState);
 	}
 
+
 	private boolean isObjectInRoller() {
 		return robot.getRoller().isObjectIn();
 	}
@@ -89,6 +95,16 @@ public class Superstructure {
 		return isFlywheelReady && isPivotReady;
 	}
 
+
+	private Command noteInRumble() {
+		SmartJoystick mainJoystick = JoysticksBindings.getMainJoystick();
+		return new FunctionalCommand(
+			() -> {},
+			() -> mainJoystick.setRumble(GenericHID.RumbleType.kBothRumble, NOTE_IN_RUMBLE_POWER),
+			interrupted -> mainJoystick.stopRumble(GenericHID.RumbleType.kBothRumble),
+			() -> false
+		).withTimeout(Timeouts.NOTE_IN_RUMBLE);
+	}
 
 	public Command setState(RobotState state) {
 		this.currentState = state;
@@ -130,6 +146,7 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.STOP)
 				).until(this::isObjectInIntake),
 				new ParallelCommandGroup(
+					noteInRumble(),
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
 					funnelStateHandler.setState(FunnelState.INTAKE),
 					rollerStateHandler.setState(RollerState.ROLL_IN)
@@ -157,11 +174,12 @@ public class Superstructure {
 					wristStateHandler.setState(WristState.ARM_INTAKE)
 				).until(this::isObjectInIntake),
 				new ParallelCommandGroup(
+					noteInRumble(),
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_ARM),
 					rollerStateHandler.setState(RollerState.ROLL_IN),
 					funnelStateHandler.setState(FunnelState.SLOW_INTAKE),
 					wristStateHandler.setState(WristState.ARM_INTAKE)
-				).withTimeout(Timeouts.INTAKE_ROLLER_SECONDS),////.until(this::isObjectInRoller)
+				).withTimeout(Timeouts.INTAKE_ROLLER_SECONDS),//.until(this::isObjectInRoller)
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_ARM),
 					rollerStateHandler.setState(RollerState.STOP),

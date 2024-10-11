@@ -38,8 +38,8 @@ public class Pivot extends GBSubsystem {
 		return commandsBuilder;
 	}
 
-	public void setBrake(boolean shouldBreak) {
-		motor.setBrake(shouldBreak);
+	public void setBrake(boolean shouldBrake) {
+		motor.setBrake(shouldBrake);
 	}
 
 	protected void setPower(double power) {

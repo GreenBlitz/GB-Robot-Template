@@ -1,11 +1,9 @@
 package frc.robot.vision.limelights;
 
-import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.VisionRawData;
-import frc.utils.Conversions;
 
 import java.util.ArrayList;
 import java.util.List;

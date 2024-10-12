@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.subsystems.flywheel.FlywheelState;
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -48,6 +50,32 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+
+		usedJoystick.A.onTrue(robot.getPivot().getCommandsBuilder().calibInterpolation());
+		usedJoystick.B.onTrue(robot.getPivot().getCommandsBuilder().useInterpolation());
+
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER, 0.1).whileTrue(
+				robot.getFunnel().getCommandsBuilder().setPower(
+						() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER) * 0.5));
+
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER, 0.1).whileTrue(
+			robot.getFunnel().getCommandsBuilder().setPower(
+					() -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER) * 0.7)
+			 .alongWith(robot.getIntake().getCommandsBuilder().setPower(
+					 () -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER) * 0.4)));
+
+		usedJoystick.R1.onTrue(
+			robot.getFlywheel().getCommandsBuilder().setVelocities(
+				FlywheelState.PRE_SPEAKER.getRightVelocity(),
+				FlywheelState.PRE_SPEAKER.getLeftVelocity()
+			)
+		);
+		usedJoystick.L1.onTrue(
+			robot.getFlywheel().getCommandsBuilder().setVelocities(
+				FlywheelState.DEFAULT.getRightVelocity(),
+				FlywheelState.DEFAULT.getLeftVelocity()
+			)
+		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

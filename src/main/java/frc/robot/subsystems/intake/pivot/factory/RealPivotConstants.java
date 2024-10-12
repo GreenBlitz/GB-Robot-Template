@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake.pivot.factory;
 
+import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -21,8 +22,6 @@ public class RealPivotConstants {
 
 	public static final int POSITION_PID_SLOT = 0;
 
-	public static final Rotation2d POSITION_TOLERANCE = Rotation2d.fromDegrees(5);
-
 	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0, 0);
 
 	//@formatter:off
@@ -31,26 +30,28 @@ public class RealPivotConstants {
 	//@formatter:on
 
 	private static void configMotor(SparkMaxWrapper sparkMaxWrapper) {
-		sparkMaxWrapper.getAbsoluteEncoder().setPositionConversionFactor(GEAR_RATIO);
-		sparkMaxWrapper.getAbsoluteEncoder().setVelocityConversionFactor(GEAR_RATIO);
+		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
+		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
 		sparkMaxWrapper.getPIDController().setP(1);
 		sparkMaxWrapper.getPIDController().setI(0);
 		sparkMaxWrapper.getPIDController().setD(0);
+		sparkMaxWrapper.setSmartCurrentLimit(30);
+		sparkMaxWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
+		sparkMaxWrapper.setInverted(false);
+		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) PivotConstants.FORWARD_SOFT_LIMIT.getRotations());
+		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
+		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) PivotConstants.REVERSE_SOFT_LIMIT.getRotations());
+		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 	}
 
 	protected static PivotStuff generatePivotStuff(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.PIVOT);
 		configMotor(sparkMaxWrapper);
 
-		SysIdRoutine.Config config = new SysIdRoutine.Config();
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(PivotConstants.LOG_PATH, sparkMaxWrapper, config);
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(PivotConstants.LOG_PATH, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
-		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
-			"position",
-			sparkMaxWrapper.getAbsoluteEncoder()::getPosition,
-			AngleUnit.ROTATIONS
-		);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", sparkMaxWrapper.getEncoder()::getPosition, AngleUnit.ROTATIONS);
 
 		SparkMaxAngleRequest positionRequest = new SparkMaxAngleRequest(
 			positionSignal.getLatestValue(),

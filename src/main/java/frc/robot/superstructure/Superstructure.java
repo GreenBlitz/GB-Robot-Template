@@ -96,7 +96,7 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
-					pivotStateHandler.setState(PivotState.DOWN)
+					pivotStateHandler.setState(PivotState.ON_FLOOR)
 				).until(this::isNoteInIntake),
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
@@ -191,9 +191,9 @@ public class Superstructure {
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR),
-			intakeStatesHandler.setState(IntakeStates.NOTE_TO_SHOOTER),
-			pivotStateHandler.setState(PivotState.UP)
 			//elevator.IDLE
+			intakeStatesHandler.setState(IntakeStates.SHOOTER_TO_ELEVATOR),
+			pivotStateHandler.setState(PivotState.UP)
 		);
 	}
 
@@ -216,7 +216,7 @@ public class Superstructure {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE),
 			intakeStatesHandler.setState(IntakeStates.OUTTAKE),
-			pivotStateHandler.setState(PivotState.DOWN)
+			pivotStateHandler.setState(PivotState.ON_FLOOR)
 			//elevator.IDLE
 		).until(() -> !isNoteInIntake());
 	}

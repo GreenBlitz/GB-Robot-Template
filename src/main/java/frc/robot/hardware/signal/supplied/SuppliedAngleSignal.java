@@ -1,11 +1,9 @@
 package frc.robot.hardware.signal.supplied;
 
-import edu.wpi.first.hal.HALUtil;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.TimedValue;
 import frc.utils.AngleUnit;
-import frc.utils.Conversions;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.time.TimeUtils;
 
 import java.util.function.Supplier;
 
@@ -20,7 +18,7 @@ public class SuppliedAngleSignal extends AngleSignal {
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(angleSupplier.get(), Logger.getRealTimestamp() / 1.0e6);
+		return new TimedValue<>(angleSupplier.get(), TimeUtils.getCurrentTimeSeconds());
 	}
 
 }

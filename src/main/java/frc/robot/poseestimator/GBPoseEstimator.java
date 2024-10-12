@@ -80,7 +80,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private Rotation2d getEstimatedRobotHeadingByVision() {
-		if (true){
+		if (true) {
 			return limelightFilterer.getAllRobotHeadingEstimations().get(0);
 		}
 		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
@@ -158,7 +158,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void updateVision(List<VisionObservation> visionObservations) {
 		for (VisionObservation visionObservation : visionObservations) {
 //			if (!isObservationTooOld(visionObservation)) {
-				addVisionObservation(visionObservation);
+			addVisionObservation(visionObservation);
 //			}
 		}
 		logEstimatedPose();

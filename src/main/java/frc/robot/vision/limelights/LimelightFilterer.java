@@ -57,7 +57,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 				)
 			) {
 				estimates.add(rawDataToObservation(limelightRawData));
-				Logger.recordOutput("visionpose",rawDataToObservation(limelightRawData).robotPose());
+				Logger.recordOutput("visionpose", rawDataToObservation(limelightRawData).robotPose());
 			}
 		}
 		if (!estimates.isEmpty()) {
@@ -94,10 +94,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		List<VisionObservation> observations = getAllAvailableLimelightRawData();
 
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(
-				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i,
-				observations.get(i).robotPose()
-			);
+			Logger.recordOutput(super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
 		}
 	}
 

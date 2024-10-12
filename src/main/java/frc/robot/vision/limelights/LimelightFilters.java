@@ -12,7 +12,8 @@ public class LimelightFilters {
 		LimelightFiltersTolerances tolerances,
 		String logpath
 	) {
-		boolean aprilTagInProperHeight = LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters);
+		boolean aprilTagInProperHeight = LimelightFilters
+			.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters);
 		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
 			limelightRawData,
 			currentEstimatedPose,

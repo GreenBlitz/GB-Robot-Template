@@ -11,8 +11,7 @@ public record ElevatorStuff(
 	IRequest<Double> voltageRequest,
 	IDigitalInput digitalInput,
 	ElevatorMotorStuff frontMotorStuff,
-	ElevatorMotorStuff backMotorStuff,
-	double motorRotationsToMetersConversionRatio
+	ElevatorMotorStuff backMotorStuff
 ) {
 
 	public ElevatorStuff(
@@ -21,8 +20,7 @@ public record ElevatorStuff(
 		IRequest<Double> voltageRequest,
 		IDigitalInput digitalInput,
 		ElevatorMotorStuff frontMotorStuff,
-		ElevatorMotorStuff backMotorStuff,
-		double motorRotationsToMetersConversionRatio
+		ElevatorMotorStuff backMotorStuff
 	) {
 		this(
 			logPath,
@@ -31,8 +29,7 @@ public record ElevatorStuff(
 			voltageRequest,
 			digitalInput,
 			frontMotorStuff,
-			backMotorStuff,
-			motorRotationsToMetersConversionRatio
+			backMotorStuff
 		);
 	}
 

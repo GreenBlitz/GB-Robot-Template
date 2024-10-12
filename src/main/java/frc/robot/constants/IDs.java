@@ -65,9 +65,9 @@ public class IDs {
 
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
-		public static final SparkMaxDeviceID ELEVATOR_FRONT = new SparkMaxDeviceID(12, CANSparkLowLevel.MotorType.kBrushless);
+		public static final SparkMaxDeviceID ELEVATOR_FRONT = new SparkMaxDeviceID(14, CANSparkLowLevel.MotorType.kBrushless);
 
-		public static final SparkMaxDeviceID ELEVATOR_BACK = new SparkMaxDeviceID(13, CANSparkLowLevel.MotorType.kBrushless);
+		public static final SparkMaxDeviceID ELEVATOR_BACK = new SparkMaxDeviceID(15, CANSparkLowLevel.MotorType.kBrushless);
 
 	}
 

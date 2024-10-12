@@ -8,4 +8,6 @@ public class ElevatorConstants {
 
 	public static final double MINIMUM_ACHIEVABLE_POSITION_METERS = 0;
 
+	public static final double MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO = 1;
+
 }

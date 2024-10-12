@@ -72,26 +72,25 @@ public class Elevator extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
+	private Rotation2d getApproximatedElevatorAngle() {
+		return Rotation2d.fromRotations((elevatorStuff.frontMotorStuff().positionSignal().getLatestValue().getRotations()
+			+ elevatorStuff.backMotorStuff().positionSignal().getLatestValue().getRotations()) / 2);
+	}
+
 	public double getPositionMeters() {
-		return motorRotationsToMeters(
-			Rotation2d.fromRotations(
-				(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue().getRotations()
-					+ elevatorStuff.backMotorStuff().positionSignal().getLatestValue().getRotations()) / 2
-			)
-		);
+		return motorRotationsToMeters(getApproximatedElevatorAngle());
 	}
 
 	protected void stayInPlace() {
-		frontMotor.applyAngleRequest(positionRequest.withSetPoint(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue()));
-		backMotor.applyAngleRequest(positionRequest.withSetPoint(elevatorStuff.backMotorStuff().positionSignal().getLatestValue()));
+		setTargetPosition(getApproximatedElevatorAngle());
 	}
 
 	public double motorRotationsToMeters(Rotation2d rotations) {
-		return rotations.getRotations() * elevatorStuff.motorRotationsToMetersConversionRatio();
+		return rotations.getRotations() * ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO;
 	}
 
 	public Rotation2d metersToMotorRotations(double meters) {
-		return Rotation2d.fromRotations(meters / elevatorStuff.motorRotationsToMetersConversionRatio());
+		return Rotation2d.fromRotations(meters / ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
 	}
 
 	protected void updateInputs() {

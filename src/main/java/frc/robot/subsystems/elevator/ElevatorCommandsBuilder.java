@@ -50,9 +50,7 @@ public class ElevatorCommandsBuilder {
 	}
 
 	public Command calibrateFeedForward() {
-		return new ParallelCommandGroup(
-			new LoggedDashboardCommand("StaticFF", elevator::setVoltage, elevator).withName("Static FF calibration")
-		);
+		return new LoggedDashboardCommand("StaticFF", elevator::setVoltage, elevator).withName("Static FF calibration");
 	}
 	//@formatter:on
 

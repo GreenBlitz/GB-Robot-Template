@@ -96,14 +96,7 @@ public class RealElevatorConstants {
 			ELEVATOR_PID_SLOT
 		);
 
-		return new ElevatorStuff(
-			logPath,
-			positionRequest,
-			voltageRequest,
-			limitSwitch,
-			frontMotorStuff,
-			backMotorStuff
-		);
+		return new ElevatorStuff(logPath, positionRequest, voltageRequest, limitSwitch, frontMotorStuff, backMotorStuff);
 	}
 
 }

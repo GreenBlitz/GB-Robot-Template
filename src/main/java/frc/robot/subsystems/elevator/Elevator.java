@@ -73,8 +73,10 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private Rotation2d getApproximatedElevatorAngle() {
-		return Rotation2d.fromRotations((elevatorStuff.frontMotorStuff().positionSignal().getLatestValue().getRotations()
-			+ elevatorStuff.backMotorStuff().positionSignal().getLatestValue().getRotations()) / 2);
+		return Rotation2d.fromRotations(
+			(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue().getRotations()
+				+ elevatorStuff.backMotorStuff().positionSignal().getLatestValue().getRotations()) / 2
+		);
 	}
 
 	public double getPositionMeters() {

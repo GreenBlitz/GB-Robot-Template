@@ -22,15 +22,7 @@ public record ElevatorStuff(
 		ElevatorMotorStuff frontMotorStuff,
 		ElevatorMotorStuff backMotorStuff
 	) {
-		this(
-			logPath,
-			logPath + "limitSwitch/",
-			positionRequest,
-			voltageRequest,
-			digitalInput,
-			frontMotorStuff,
-			backMotorStuff
-		);
+		this(logPath, logPath + "limitSwitch/", positionRequest, voltageRequest, digitalInput, frontMotorStuff, backMotorStuff);
 	}
 
 }

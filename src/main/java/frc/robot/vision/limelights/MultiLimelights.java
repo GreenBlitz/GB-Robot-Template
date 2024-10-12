@@ -38,14 +38,14 @@ public class MultiLimelights {
 
 			if (observation.isPresent()) {
 				double timestamp = observation.get().getSecond();
-				VisionRawData visionRawData = new VisionRawData(
+				VisionRawData visionData = new VisionRawData(
 					limelight.getCameraName(),
 					observation.get().getFirst(),
 					calculateAmbiguity(limelight.getAprilTagHeight()),
 					timestamp,
 					Conversions.microSecondsToSeconds(HALUtil.getFPGATime()) - timestamp
 				);
-				limelightsData.add(visionRawData);
+				limelightsData.add(visionData);
 			}
 		}
 

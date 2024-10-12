@@ -20,7 +20,7 @@ public abstract class PhotonVisionFiltered extends GBSubsystem {
 		}
 	}
 
-	protected abstract boolean keepPhotonVisionData(VisionRawData targetData);
+	protected abstract boolean keepPhotonVisionData(VisionRawData visionData);
 
 	public ArrayList<VisionRawData> getAllFilteredData() {
 		ArrayList<VisionRawData> output = new ArrayList<>();

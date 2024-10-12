@@ -93,14 +93,14 @@ public class PoseEstimationMath {
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
 	}
 
-	public static VisionObservation rawDataToObservation(VisionRawData visionRawData, Pose2d currentPoseEstimation) {
-		double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(visionRawData, currentPoseEstimation);
+	public static VisionObservation rawDataToObservation(VisionRawData visionData, Pose2d currentPoseEstimation) {
+		double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(visionData, currentPoseEstimation);
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
 			LimeLightConstants.VISION_STANDARD_DEVIATION_ANGLES};
 
-		return new VisionObservation(visionRawData.targetPose().toPose2d(), standardDeviations, visionRawData.timestamp());
+		return new VisionObservation(visionData.targetPose().toPose2d(), standardDeviations, visionData.timestamp());
 	}
 
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {

@@ -45,17 +45,17 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (VisionRawData visionRawData : multiLimelights.getAllAvailableLimelightData()) {
+		for (VisionRawData visionData : multiLimelights.getAllAvailableLimelightData()) {
 			if (
 				AprilTagFilters.keepLimelightData(
-					visionRawData,
+					visionData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
 					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
 				)
 			) {
 				estimates.add(
 					PoseEstimationMath.rawDataToObservation(
-						visionRawData,
+						visionData,
 						getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
 					)
 				);
@@ -71,10 +71,10 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	public List<VisionObservation> getAllAvailableRawData() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (VisionRawData visionRawData : multiLimelights.getAllAvailableLimelightData()) {
+		for (VisionRawData visionData : multiLimelights.getAllAvailableLimelightData()) {
 			estimates.add(
 				PoseEstimationMath.rawDataToObservation(
-					visionRawData,
+					visionData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
 				)
 			);

@@ -5,27 +5,27 @@ import frc.robot.vision.VisionRawData;
 
 public class AprilTagFilters {
 
-	public static boolean keepLimelightData(VisionRawData visionRawData, Pose2d currentEstimatedPose, AprilTagFiltersTolerances tolerances) {
+	public static boolean keepLimelightData(VisionRawData visionData, Pose2d currentEstimatedPose, AprilTagFiltersTolerances tolerances) {
 		return AprilTagFilters.isLimelightOutputInTolerance(
-			visionRawData,
+			visionData,
 			currentEstimatedPose,
 			tolerances.normalizedPositionTolerance(),
 			tolerances.normalizedRotationTolerance()
 		)
-			&& AprilTagFilters.isRollInTolerance(visionRawData, tolerances.rollTolerance())
-			&& AprilTagFilters.isPitchInTolerance(visionRawData, tolerances.pitchTolerance())
-			&& AprilTagFilters.isRobotOnGround(visionRawData, tolerances.robotToGroundToleranceMeters())
-			&& !AprilTagFilters.isDataTooAmbiguous(visionRawData, tolerances.maximumAmbiguity())
-			&& !AprilTagFilters.isLatencyTooHigh(visionRawData, tolerances.maximumLatency());
+			&& AprilTagFilters.isRollInTolerance(visionData, tolerances.rollTolerance())
+			&& AprilTagFilters.isPitchInTolerance(visionData, tolerances.pitchTolerance())
+			&& AprilTagFilters.isRobotOnGround(visionData, tolerances.robotToGroundToleranceMeters())
+			&& !AprilTagFilters.isDataTooAmbiguous(visionData, tolerances.maximumAmbiguity())
+			&& !AprilTagFilters.isLatencyTooHigh(visionData, tolerances.maximumLatency());
 	}
 
 	protected static boolean isLimelightOutputInTolerance(
-		VisionRawData visionRawData,
+		VisionRawData visionData,
 		Pose2d estimatedPose,
 		double normalizedPositionTolerance,
 		double normalizedRotationTolerance
 	) {
-		Pose3d limelightPosition = visionRawData.targetPose();
+		Pose3d limelightPosition = visionData.targetPose();
 		Pose3d estimatedPose3d = new Pose3d(
 			estimatedPose.getX(),
 			estimatedPose.getY(),

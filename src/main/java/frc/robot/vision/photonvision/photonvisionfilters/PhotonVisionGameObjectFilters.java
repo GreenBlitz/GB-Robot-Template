@@ -14,7 +14,7 @@ public class PhotonVisionGameObjectFilters extends PhotonVisionFiltered {
 	}
 
 	@Override
-	protected boolean keepPhotonVisionData(VisionRawData targetData) {
+	protected boolean keepPhotonVisionData(VisionRawData visionData) {
 		return true;
 	}
 

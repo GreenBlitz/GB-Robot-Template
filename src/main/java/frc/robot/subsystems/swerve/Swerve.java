@@ -114,11 +114,6 @@ public class Swerve extends GBSubsystem {
 		savedState = state;
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		updateState();
-	}
-
 	public void updateStatus() {
 		updateInputs();
 		logState();

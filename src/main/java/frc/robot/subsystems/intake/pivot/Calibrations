@@ -6,3 +6,4 @@ Calibrations:
 4. state positions
 5. current limit
 6. minimum achievable angle
+7. soft limits

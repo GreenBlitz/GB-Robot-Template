@@ -17,7 +17,7 @@ public class PivotCommandsBuilder {
 	public Command goToPosition(Rotation2d position) {
 		return new FunctionalCommand(
 			() -> {},
-			() -> pivot.setPosition(position),
+			() -> pivot.setTargetPosition(position),
 			interrupted -> pivot.stayInPlace(),
 			() -> false,
 			pivot

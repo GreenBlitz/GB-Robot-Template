@@ -46,8 +46,8 @@ public class Pivot extends GBSubsystem {
 		motor.setPower(power);
 	}
 
-	protected void setPosition(Rotation2d position) {
-		motor.applyAngleRequest(positionRequest.withSetPoint(position));
+	protected void setTargetPosition(Rotation2d targetPosition) {
+		motor.applyAngleRequest(positionRequest.withSetPoint(targetPosition));
 	}
 
 	protected void stop() {
@@ -58,8 +58,8 @@ public class Pivot extends GBSubsystem {
 		motor.applyAngleRequest(positionRequest.withSetPoint(pivotStuff.positionSignal().getLatestValue()));
 	}
 
-	public boolean isAtAngle(Rotation2d targetAngle, Rotation2d tolerance) {
-		return MathUtil.isNear(targetAngle.getDegrees(), pivotStuff.positionSignal().getLatestValue().getDegrees(), tolerance.getDegrees());
+	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
+		return MathUtil.isNear(targetPosition.getDegrees(), pivotStuff.positionSignal().getLatestValue().getDegrees(), tolerance.getDegrees());
 	}
 
 	private void updateInputs() {

@@ -38,6 +38,10 @@ public class RealPivotConstants {
 		sparkMaxWrapper.setSmartCurrentLimit(30);
 		sparkMaxWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
 		sparkMaxWrapper.setInverted(false);
+		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) PivotConstants.FORWARD_SOFT_LIMIT.getRotations());
+		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
+		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) PivotConstants.REVERSE_SOFT_LIMIT.getRotations());
+		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 	}
 
 	protected static PivotStuff generatePivotStuff(String logPath) {

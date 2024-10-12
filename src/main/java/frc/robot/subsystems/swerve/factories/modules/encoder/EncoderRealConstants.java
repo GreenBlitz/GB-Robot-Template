@@ -35,7 +35,7 @@ class EncoderRealConstants {
 		CANcoderConfiguration caNcoderConfiguration = generateEncoderConfig();
 		caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
 		if (!PhoenixProUtils.checkWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.WARNING, logPath + "ConfigurationFailAt").report();
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder

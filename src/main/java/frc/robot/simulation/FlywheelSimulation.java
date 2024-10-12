@@ -2,7 +2,7 @@ package frc.robot.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.time.TimeUtils;
 
 public class FlywheelSimulation extends MotorSimulation {
 
@@ -31,8 +31,8 @@ public class FlywheelSimulation extends MotorSimulation {
 
 	@Override
 	protected void updateMotor() {
-		flywheelSimulation.update(CycleTimeUtils.getCurrentCycleTime());
-		lastPositionRadians += getVelocity().getRadians() * CycleTimeUtils.getCurrentCycleTime();
+		flywheelSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+		lastPositionRadians += getVelocity().getRadians() * TimeUtils.getCurrentCycleTimeSeconds();
 	}
 
 }

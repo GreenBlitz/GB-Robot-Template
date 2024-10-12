@@ -13,12 +13,12 @@ public interface ILimelightFilterer {
 
 	void setEstimatedPoseAtTimestampFunction(Function<Double, Pose2d> getEstimatedPoseAtTimestamp);
 
-	void updateGyroAngles(GyroAngleValues gyroAngleValues);
-
 	List<VisionObservation> getFilteredVisionObservations();
 
-	List<VisionObservation> getAllAvailableLimelightRawData();
+	List<VisionObservation> getAllAvailableRawData();
 
 	boolean isPoseEstimationCorrect();
+
+	void updateGyroAngles(GyroAngleValues gyroAngleValues);
 
 }

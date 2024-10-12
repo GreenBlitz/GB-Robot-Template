@@ -4,7 +4,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.limelights.LimelightRawData;
+import frc.robot.vision.VisionRawData;
+import frc.robot.vision.limelights.LimeLightConstants;
 
 import java.util.List;
 
@@ -82,14 +83,24 @@ public class PoseEstimationMath {
 		return appliedVisionObservation;
 	}
 
-	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
-		double normalizedLimelightX = limelightRawData.estimatedPose().getX() / Field.LENGTH_METERS;
-		double normalizedLimelightY = limelightRawData.estimatedPose().getY() / Field.WIDTH_METERS;
+	public static double[] calculateStandardDeviationOfPose(VisionRawData visionData, Pose2d currentEstimatedPose) {
+		double normalizedLimelightX = visionData.targetPose().getX() / Field.LENGTH_METERS;
+		double normalizedLimelightY = visionData.targetPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
 		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
 		return new double[] {
 			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
+	}
+
+	public static VisionObservation rawDataToObservation(VisionRawData visionData, Pose2d currentPoseEstimation) {
+		double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(visionData, currentPoseEstimation);
+		double[] standardDeviations = new double[] {
+			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
+			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+			LimeLightConstants.VISION_STANDARD_DEVIATION_ANGLES};
+
+		return new VisionObservation(visionData.targetPose().toPose2d(), standardDeviations, visionData.timestamp());
 	}
 
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {

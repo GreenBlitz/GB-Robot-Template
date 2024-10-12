@@ -32,10 +32,6 @@ public class RealElevatorConstants {
 
 	private static final int ELEVATOR_PID_SLOT = 0;
 
-	private static final Rotation2d REVERSE_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
-
-	private static final Rotation2d FORWARD_SOFT_LIMIT_VALUE = Rotation2d.fromRotations(0);
-
 	private static final SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
 	private static final ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
@@ -49,9 +45,11 @@ public class RealElevatorConstants {
 	}
 
 	private static void configureMotor(SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
-		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) REVERSE_SOFT_LIMIT_VALUE.getRotations());
+		sparkMaxWrapper
+			.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE.getRotations());
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
-		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) FORWARD_SOFT_LIMIT_VALUE.getRotations());
+		sparkMaxWrapper
+			.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE.getRotations());
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 
 		sparkMaxWrapper.setIdleMode(IDLE_MODE);
@@ -70,10 +68,10 @@ public class RealElevatorConstants {
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> motorPosition = sparkMaxWrapper.getEncoder()::getPosition;
-		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(name + " angle", motorPosition, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("angle", motorPosition, AngleUnit.ROTATIONS);
 
 		Supplier<Double> motorsVoltage = sparkMaxWrapper::getVoltage;
-		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal(name + " voltage", motorsVoltage);
+		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("voltage", motorsVoltage);
 
 		return new ElevatorMotorStuff(motor, motorVoltageSignal, positionSignal);
 	}

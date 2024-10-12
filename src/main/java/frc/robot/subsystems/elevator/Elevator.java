@@ -58,7 +58,7 @@ public class Elevator extends GBSubsystem {
 		backMotor.stop();
 	}
 
-	protected void setBrake(boolean brake) {
+	public void setBrake(boolean brake) {
 		frontMotor.setBrake(brake);
 		backMotor.setBrake(brake);
 	}

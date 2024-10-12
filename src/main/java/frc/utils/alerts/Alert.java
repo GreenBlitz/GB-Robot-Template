@@ -1,7 +1,6 @@
 package frc.utils.alerts;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;

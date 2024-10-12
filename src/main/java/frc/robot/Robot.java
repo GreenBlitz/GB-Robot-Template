@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.intake.pivot.Pivot;
+import frc.robot.subsystems.intake.pivot.PivotConstants;
+import frc.robot.subsystems.intake.pivot.factory.PivotFactory;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
@@ -27,6 +30,7 @@ import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
 import frc.robot.superstructure.Superstructure;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -40,6 +44,7 @@ public class Robot {
 	private final Swerve swerve;
 	private final ElevatorRoller elevatorRoller;
 	private final Funnel funnel;
+	private final Pivot pivot;
 	private final IntakeRoller intakeRoller;
 	private final Elevator elevator;
 	private final Flywheel flywheel;
@@ -54,11 +59,12 @@ public class Robot {
 		);
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
+		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
 		this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
 		this.flywheel = FlywheelFactory
 			.create("TopMotor/", "BottomMotor/", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
-
 		this.superstructure = new Superstructure(this);
 
 		configureBindings();
@@ -82,6 +88,10 @@ public class Robot {
 
 	public Funnel getFunnel() {
 		return funnel;
+	}
+
+	public Pivot getPivot() {
+		return pivot;
 	}
 
 	public Elevator getElevator() {

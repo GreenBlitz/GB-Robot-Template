@@ -43,7 +43,7 @@ public class MultiLimelights {
 					observation.get().getFirst(),
 					calculateAmbiguity(limelight.getAprilTagHeight()),
 					timestamp,
-					Conversions.microSecondsToSeconds(HALUtil.getFPGATime()) - timestamp
+					limelight.getLatency()
 				);
 				limelightsData.add(visionData);
 			}

@@ -68,20 +68,24 @@ public class Limelight extends GBSubsystem {
 			return Optional.empty();
 		}
 
-		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()]);
+		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LimelightEntryValue.TOTAL_LATENCY_ROBOT_POSE_ONLY.getIndex()]);
 		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
 
 		Pose3d robotPose = new Pose3d(
-			getPoseValue(LimelightEntryValue.X_AXIS),
-			getPoseValue(LimelightEntryValue.Y_AXIS),
-			getPoseValue(LimelightEntryValue.Z_AXIS),
+			getRobotPoseValue(LimelightEntryValue.X_AXIS),
+			getRobotPoseValue(LimelightEntryValue.Y_AXIS),
+			getRobotPoseValue(LimelightEntryValue.Z_AXIS),
 			new Rotation3d(
-				Math.toRadians(getPoseValue(LimelightEntryValue.ROLL_ANGLE)),
-				Math.toRadians(getPoseValue(LimelightEntryValue.PITCH_ANGLE)),
-				Math.toRadians(getPoseValue(LimelightEntryValue.YAW_ANGLE))
+				Math.toRadians(getRobotPoseValue(LimelightEntryValue.ROLL_ANGLE)),
+				Math.toRadians(getRobotPoseValue(LimelightEntryValue.PITCH_ANGLE)),
+				Math.toRadians(getRobotPoseValue(LimelightEntryValue.YAW_ANGLE))
 			)
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
+	}
+
+	public double getLatency() {
+		return getRobotPoseValue(LimelightEntryValue.TOTAL_LATENCY_ROBOT_POSE_ONLY);
 	}
 
 	public double getAprilTagHeight() {
@@ -96,7 +100,7 @@ public class Limelight extends GBSubsystem {
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
-	public double getPoseValue(LimelightEntryValue entryValue) {
+	public double getRobotPoseValue(LimelightEntryValue entryValue) {
 		return robotPoseArray[entryValue.getIndex()];
 	}
 

@@ -8,7 +8,7 @@ public enum LimelightEntryValue {
 	ROLL_ANGLE(3),
 	PITCH_ANGLE(4),
 	YAW_ANGLE(5),
-	TOTAL_LATENCY(6);
+	TOTAL_LATENCY_ROBOT_POSE_ONLY(6);
 
 	private final int limelightIndexValue;
 

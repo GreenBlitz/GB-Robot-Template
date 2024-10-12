@@ -53,8 +53,7 @@ public class Limelight extends GBSubsystem {
 				gyroAngleValues.pitch(),
 				gyroAngleValues.pitchRate(),
 				gyroAngleValues.roll(),
-				gyroAngleValues.rollRate(),
-			}
+				gyroAngleValues.rollRate(),}
 		);
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);

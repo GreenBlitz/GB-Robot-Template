@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.VisionRawData;
-import frc.robot.vision.limelights.LimelightRawData;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
-import frc.robot.vision.IFilterer;
+import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.Conversions;
@@ -21,7 +21,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
-	private final IFilterer limelightFilterer;
+	private final ILimelightFilterer limelightFilterer;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
 	private Pose2d odometryPose;
@@ -32,7 +32,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		IFilterer limelightFilterer,
+		ILimelightFilterer limelightFilterer,
 		SwerveDriveKinematics kinematics,
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
@@ -55,7 +55,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		calculateHeadingOffset(initialGyroAngle);
 	}
 
-	public IFilterer getLimelightFilterer() {
+	public ILimelightFilterer getLimelightFilterer() {
 		return limelightFilterer;
 	}
 
@@ -120,13 +120,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightRawData();
-		List<VisionObservation> rawData = limelightFilterer.getAllAvailableLimelightRawData();
+		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableRawData();
+		List<VisionObservation> rawData = limelightFilterer.getAllAvailableRawData();
 		while (stackedRawData.size() < PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION && !rawData.isEmpty()) {
 			if (!stackedRawData.contains(rawData.get(0))) {
 				stackedRawData.addAll(rawData);
 			}
-			rawData = limelightFilterer.getAllAvailableLimelightRawData();
+			rawData = limelightFilterer.getAllAvailableRawData();
 		}
 		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedRawData);
 		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), odometryPose.getRotation());

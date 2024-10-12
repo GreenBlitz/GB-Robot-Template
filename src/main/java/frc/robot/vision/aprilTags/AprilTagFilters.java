@@ -11,8 +11,8 @@ public class AprilTagFilters {
 		double aprilTagHeightMeters,
 		AprilTagFiltersTolerances tolerances
 	) {
-		return AprilTagFilters.isAprilTagInProperHeight(visionRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
-			&& AprilTagFilters.isLimelightOutputInTolerance(
+//		return AprilTagFilters.isAprilTagInProperHeight(visionRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
+		return AprilTagFilters.isLimelightOutputInTolerance(
 				visionRawData,
 				currentEstimatedPose,
 				tolerances.normalizedPositionTolerance(),
@@ -55,11 +55,11 @@ public class AprilTagFilters {
 		return Math.abs(visionRawData.targetPose().getRotation().getX()) <= rollTolerance.getRadians();
 	}
 
-	protected static boolean
-		isAprilTagInProperHeight(VisionRawData visionRawData, double aprilTagHeightToleranceMeters, double aprilTagHeightMeters) {
-		double aprilTagHeightConfidence = Math.abs(visionRawData.aprilTagHeight() - aprilTagHeightMeters);
-		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
-	}
+//	protected static boolean
+//		isAprilTagInProperHeight(VisionRawData visionRawData, double aprilTagHeightToleranceMeters, double aprilTagHeightMeters) {
+//		double aprilTagHeightConfidence = Math.abs(visionRawData.aprilTagHeight() - aprilTagHeightMeters);
+//		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
+//	}
 
 	protected static boolean isRobotOnGround(VisionRawData visionRawData, double robotToGroundToleranceMeters) {
 		return visionRawData.targetPose().getZ() <= robotToGroundToleranceMeters;

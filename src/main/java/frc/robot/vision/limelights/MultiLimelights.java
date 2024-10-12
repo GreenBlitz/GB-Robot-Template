@@ -39,7 +39,7 @@ public class MultiLimelights {
 					limelight.getCameraName(),
 					observation.get().getFirst(),
 					calculateAmbiguity(limelight.getAprilTagHeight()),
-					limelight.getDistanceFromAprilTag(),
+//					limelight.getDistanceFromAprilTag(),
 					observation.get().getSecond()
 				);
 				limelightsData.add(visionRawData);

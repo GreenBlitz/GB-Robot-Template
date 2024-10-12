@@ -31,14 +31,13 @@ public class PhotonVisionCamera extends GBSubsystem {
 		this(cameraConfiguration.name(), cameraConfiguration.cameraToRobot(), cameraConfiguration.targetType());
 	}
 
-	public Optional<VisionRawData>
-		tackedTargetToTargetRawdata(PhotonTrackedTarget trackedTarget, PhotonPipelineResult pipelineResult) {
+	public Optional<VisionRawData> tackedTargetToTargetRawdata(PhotonTrackedTarget trackedTarget, PhotonPipelineResult pipelineResult) {
 		double latency = pipelineResult.getLatencyMillis();
 		double ambiguity = trackedTarget.getPoseAmbiguity();
 		double timestamp = pipelineResult.getTimestampSeconds();
 
 		Optional<Pose3d> targetPose = calculateTargetPose(trackedTarget);
-		return targetPose.map(pose3d -> new VisionRawData(camera.getName(), pose3d, timestamp, ambiguity, latency));
+		return targetPose.map(pose3d -> new VisionRawData(camera.getName(), pose3d, ambiguity, timestamp));
 	}
 
 	public Optional<VisionRawData> getBestTargetData() {

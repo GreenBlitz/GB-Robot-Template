@@ -6,7 +6,6 @@ import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.IFilterer;
 import frc.robot.vision.aprilTags.AprilTagFilters;
 import frc.robot.vision.VisionRawData;
 import frc.utils.Conversions;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class LimelightFilterer extends GBSubsystem implements IFilterer {
+public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer {
 
 	private final MultiLimelights multiLimelights;
 	private final LimelightFiltererConfig config;
@@ -68,7 +67,7 @@ public class LimelightFilterer extends GBSubsystem implements IFilterer {
 	}
 
 	@Override
-	public List<VisionObservation> getAllAvailableLimelightRawData() {
+	public List<VisionObservation> getAllAvailableRawData() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (VisionRawData visionRawData : multiLimelights.getAllAvailableLimelightData()) {
@@ -106,7 +105,7 @@ public class LimelightFilterer extends GBSubsystem implements IFilterer {
 	public boolean isPoseEstimationCorrect() {
 		boolean hasTooMuchTimePassed = Conversions.microSecondsToSeconds(Logger.getRealTimestamp()) - lastSuccessfulObservationTime
 			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION_SECONDS;
-		List<VisionObservation> estimates = getAllAvailableLimelightRawData();
+		List<VisionObservation> estimates = getAllAvailableRawData();
 		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
 			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
 			return false;

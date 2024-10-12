@@ -2,7 +2,7 @@ package frc.robot.simulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.time.TimeUtils;
 
 /**
  * This class simulates a motor. Used for Subsystems like rollers and intake.
@@ -13,10 +13,6 @@ public class SimpleMotorSimulation extends MotorSimulation {
 
 	public SimpleMotorSimulation(DCMotorSim motorSimulation) {
 		this.motorSimulation = motorSimulation;
-	}
-
-	public double getCurrent() {
-		return motorSimulation.getCurrentDrawAmps();
 	}
 
 	@Override
@@ -36,7 +32,7 @@ public class SimpleMotorSimulation extends MotorSimulation {
 
 	@Override
 	protected void updateMotor() {
-		motorSimulation.update(CycleTimeUtils.getCurrentCycleTime());
+		motorSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
 	}
 
 }

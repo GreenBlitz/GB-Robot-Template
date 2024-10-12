@@ -47,7 +47,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 
 		for (VisionRawData visionData : multiLimelights.getAllAvailableLimelightData()) {
 			if (
-				AprilTagFilters.keepLimelightData(
+				AprilTagFilters.keepRobotPoseData(
 					visionData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
 					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES

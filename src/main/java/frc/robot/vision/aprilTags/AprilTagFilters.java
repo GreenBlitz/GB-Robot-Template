@@ -5,7 +5,7 @@ import frc.robot.vision.VisionRawData;
 
 public class AprilTagFilters {
 
-	public static boolean keepLimelightData(VisionRawData visionData, Pose2d currentEstimatedPose, AprilTagFiltersTolerances tolerances) {
+	public static boolean keepRobotPoseData(VisionRawData visionData, Pose2d currentEstimatedPose, AprilTagFiltersTolerances tolerances) {
 		return AprilTagFilters.isLimelightOutputInTolerance(
 			visionData,
 			currentEstimatedPose,

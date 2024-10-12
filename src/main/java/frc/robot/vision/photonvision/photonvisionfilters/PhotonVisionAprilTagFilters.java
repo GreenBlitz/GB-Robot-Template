@@ -31,7 +31,7 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 
 	@Override
 	protected boolean keepPhotonVisionData(VisionRawData visionData) {
-		return AprilTagFilters.keepLimelightData(visionData, calculateCurrentPoseEstimation(), tolerances);
+		return AprilTagFilters.keepRobotPoseData(visionData, calculateCurrentPoseEstimation(), tolerances);
 	}
 
 	public ArrayList<VisionObservation> getAllFilteredVisionObservations() {

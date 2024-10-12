@@ -68,7 +68,7 @@ public class Elevator extends GBSubsystem {
 		backMotor.applyAngleRequest(positionRequest.withSetPoint(position));
 	}
 
-	protected boolean isAtBackwardLimit() {
+	public boolean isAtBackwardLimit() {
 		return digitalInputsInputs.debouncedValue;
 	}
 
@@ -87,11 +87,11 @@ public class Elevator extends GBSubsystem {
 		setTargetPosition(getApproximatedElevatorAngle());
 	}
 
-	public double motorRotationsToMeters(Rotation2d rotations) {
+	private double motorRotationsToMeters(Rotation2d rotations) {
 		return rotations.getRotations() * ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO;
 	}
 
-	public Rotation2d metersToMotorRotations(double meters) {
+	private Rotation2d metersToMotorRotations(double meters) {
 		return Rotation2d.fromRotations(meters / ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
 	}
 

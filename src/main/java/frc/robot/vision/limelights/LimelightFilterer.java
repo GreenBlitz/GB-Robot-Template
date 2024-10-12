@@ -2,7 +2,6 @@ package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
@@ -57,7 +56,12 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
 				)
 			) {
-				estimates.add(rawDataToObservation(visionRawData));
+				estimates.add(
+					PoseEstimationMath.rawDataToObservation(
+						visionRawData,
+						getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
+					)
+				);
 			}
 		}
 		if (!estimates.isEmpty()) {
@@ -71,23 +75,15 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (VisionRawData visionRawData : multiLimelights.getAllAvailableLimelightData()) {
-			estimates.add(rawDataToObservation(visionRawData));
+			estimates.add(
+				PoseEstimationMath.rawDataToObservation(
+					visionRawData,
+					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
+				)
+			);
 		}
 
 		return estimates;
-	}
-
-	private VisionObservation rawDataToObservation(VisionRawData visionRawData) {
-		double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(
-			visionRawData,
-			getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
-		);
-		double[] standardDeviations = new double[] {
-			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
-			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			LimeLightConstants.VISION_STANDARD_DEVIATION_ANGLES};
-
-		return new VisionObservation(visionRawData.targetPose().toPose2d(), standardDeviations, visionRawData.timestamp());
 	}
 
 	private void logEstimatedPositions() {

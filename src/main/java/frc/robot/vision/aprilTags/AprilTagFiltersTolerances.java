@@ -9,5 +9,6 @@ public record AprilTagFiltersTolerances(
 	Rotation2d rollTolerance,
 	Rotation2d pitchTolerance,
 	double robotToGroundToleranceMeters,
-	double maximumAmbiguity
+	double maximumAmbiguity,
+	double maximumLatency
 ) {}

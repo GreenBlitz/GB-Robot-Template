@@ -13,15 +13,16 @@ public class AprilTagFilters {
 	) {
 //		return AprilTagFilters.isAprilTagInProperHeight(visionRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
 		return AprilTagFilters.isLimelightOutputInTolerance(
-				visionRawData,
-				currentEstimatedPose,
-				tolerances.normalizedPositionTolerance(),
-				tolerances.normalizedRotationTolerance()
-			)
+			visionRawData,
+			currentEstimatedPose,
+			tolerances.normalizedPositionTolerance(),
+			tolerances.normalizedRotationTolerance()
+		)
 			&& AprilTagFilters.isRollInTolerance(visionRawData, tolerances.rollTolerance())
 			&& AprilTagFilters.isPitchInTolerance(visionRawData, tolerances.pitchTolerance())
 			&& AprilTagFilters.isRobotOnGround(visionRawData, tolerances.robotToGroundToleranceMeters())
-			&& AprilTagFilters.isDataTooAmbiguous(visionRawData, tolerances.maximumAmbiguity());
+			&& !AprilTagFilters.isDataTooAmbiguous(visionRawData, tolerances.maximumAmbiguity())
+			&& !AprilTagFilters.isLatencyTooHigh(visionRawData, tolerances.maximumLatency());
 	}
 
 	protected static boolean isLimelightOutputInTolerance(
@@ -47,12 +48,12 @@ public class AprilTagFilters {
 		return Math.sqrt(Math.pow(angle.getX(), 2) + Math.pow(angle.getY(), 2) + Math.pow(angle.getZ(), 2));
 	}
 
-	protected static boolean isPitchInTolerance(VisionRawData visionRawData, Rotation2d pitchTolerance) {
-		return Math.abs(visionRawData.targetPose().getRotation().getY()) <= pitchTolerance.getRadians();
+	protected static boolean isPitchInTolerance(VisionRawData visionData, Rotation2d pitchTolerance) {
+		return Math.abs(visionData.targetPose().getRotation().getY()) <= pitchTolerance.getRadians();
 	}
 
-	protected static boolean isRollInTolerance(VisionRawData visionRawData, Rotation2d rollTolerance) {
-		return Math.abs(visionRawData.targetPose().getRotation().getX()) <= rollTolerance.getRadians();
+	protected static boolean isRollInTolerance(VisionRawData visionData, Rotation2d rollTolerance) {
+		return Math.abs(visionData.targetPose().getRotation().getX()) <= rollTolerance.getRadians();
 	}
 
 //	protected static boolean
@@ -61,12 +62,16 @@ public class AprilTagFilters {
 //		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
 //	}
 
-	protected static boolean isRobotOnGround(VisionRawData visionRawData, double robotToGroundToleranceMeters) {
-		return visionRawData.targetPose().getZ() <= robotToGroundToleranceMeters;
+	protected static boolean isRobotOnGround(VisionRawData visionData, double robotToGroundToleranceMeters) {
+		return visionData.targetPose().getZ() <= robotToGroundToleranceMeters;
 	}
 
-	protected static boolean isDataTooAmbiguous(VisionRawData targetData, double maximumAmbiguity) {
-		return targetData.ambiguity() >= maximumAmbiguity;
+	protected static boolean isDataTooAmbiguous(VisionRawData visionData, double maximumAmbiguity) {
+		return visionData.ambiguity() >= maximumAmbiguity;
+	}
+
+	protected static boolean isLatencyTooHigh(VisionRawData visionData, double maximumLatency) {
+		return visionData.latency() >= maximumLatency;
 	}
 
 }

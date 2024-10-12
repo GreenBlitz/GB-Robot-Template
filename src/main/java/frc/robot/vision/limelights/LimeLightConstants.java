@@ -23,7 +23,9 @@ public class LimeLightConstants {
 
 	public static final double ROBOT_TO_GROUND_TOLERANCE_METERS = 0.2;
 
-	public static final double MAXIMUM_AMBIGUITY = 1;
+	public static final double MAXIMUM_AMBIGUITY = 0.3;
+
+	public static final double MAXIMUM_LATENCY_SECONDS = 1;
 
 	public final static AprilTagFiltersTolerances DEFAULT_LIMELIGHT_FILTERS_TOLERANCES = new AprilTagFiltersTolerances(
 		APRIL_TAG_HEIGHT_TOLERANCE_METERS,
@@ -32,7 +34,8 @@ public class LimeLightConstants {
 		ROLL_TOLERANCE,
 		PITCH_TOLERANCE,
 		ROBOT_TO_GROUND_TOLERANCE_METERS,
-		MAXIMUM_AMBIGUITY
+		MAXIMUM_AMBIGUITY,
+		MAXIMUM_LATENCY_SECONDS
 	);
 
 	public static final double VISION_STANDARD_DEVIATION_ANGLES = 0.6;

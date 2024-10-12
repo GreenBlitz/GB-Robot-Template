@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.VisionRawData;
+import frc.robot.vision.limelights.LimeLightConstants;
 
 import java.util.List;
 
@@ -82,14 +83,24 @@ public class PoseEstimationMath {
 		return appliedVisionObservation;
 	}
 
-	public static double[] calculateStandardDeviationOfPose(VisionRawData limelightRawData, Pose2d currentEstimatedPose) {
-		double normalizedLimelightX = limelightRawData.targetPose().getX() / Field.LENGTH_METERS;
-		double normalizedLimelightY = limelightRawData.targetPose().getY() / Field.WIDTH_METERS;
+	public static double[] calculateStandardDeviationOfPose(VisionRawData visionData, Pose2d currentEstimatedPose) {
+		double normalizedLimelightX = visionData.targetPose().getX() / Field.LENGTH_METERS;
+		double normalizedLimelightY = visionData.targetPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
 		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
 		return new double[] {
 			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
+	}
+
+	public static VisionObservation rawDataToObservation(VisionRawData visionRawData, Pose2d currentPoseEstimation) {
+		double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(visionRawData, currentPoseEstimation);
+		double[] standardDeviations = new double[] {
+			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
+			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+			LimeLightConstants.VISION_STANDARD_DEVIATION_ANGLES};
+
+		return new VisionObservation(visionRawData.targetPose().toPose2d(), standardDeviations, visionRawData.timestamp());
 	}
 
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {

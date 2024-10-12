@@ -1,9 +1,11 @@
 package frc.robot.vision.limelights;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.VisionRawData;
+import frc.utils.Conversions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +37,14 @@ public class MultiLimelights {
 			Optional<Pair<Pose3d, Double>> observation = limelight.getUpdatedPose3DEstimation();
 
 			if (observation.isPresent()) {
+				double timestamp = observation.get().getSecond();
 				VisionRawData visionRawData = new VisionRawData(
 					limelight.getCameraName(),
 					observation.get().getFirst(),
 					calculateAmbiguity(limelight.getAprilTagHeight()),
 //					limelight.getDistanceFromAprilTag(),
-					observation.get().getSecond()
+					timestamp,
+					Conversions.microSecondsToSeconds(HALUtil.getFPGATime()) - timestamp
 				);
 				limelightsData.add(visionRawData);
 			}

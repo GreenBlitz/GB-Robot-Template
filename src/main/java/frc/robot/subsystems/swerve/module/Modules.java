@@ -14,7 +14,7 @@ public class Modules {
 	private final Module[] modules;
 	private final String logPath;
 
-	public Modules(String logPath, Module[] modules) {
+	public Modules(String logPath, Module... modules) {
 		this.modules = modules;
 		this.logPath = logPath + ModuleConstants.LOG_PATH_ADDITION;
 	}
@@ -23,7 +23,7 @@ public class Modules {
 		return modules[modulePosition.getIndex()];
 	}
 
-	public void logStatus() {
+	public void updateInputs() {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
@@ -112,7 +112,7 @@ public class Modules {
 	}
 
 	public boolean isAtTargetStates() {
-		return isAtTargetAngles() && isAtTargetAngles();
+		return isAtTargetAngles() && isAtTargetVelocities();
 	}
 
 

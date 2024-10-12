@@ -42,7 +42,6 @@ public class MultiLimelights {
 					limelight.getCameraName(),
 					observation.get().getFirst(),
 					calculateAmbiguity(limelight.getAprilTagHeight()),
-//					limelight.getDistanceFromAprilTag(),
 					timestamp,
 					Conversions.microSecondsToSeconds(HALUtil.getFPGATime()) - timestamp
 				);

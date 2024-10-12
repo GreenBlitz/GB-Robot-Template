@@ -5,13 +5,7 @@ import frc.robot.vision.VisionRawData;
 
 public class AprilTagFilters {
 
-	public static boolean keepLimelightData(
-		VisionRawData visionRawData,
-		Pose2d currentEstimatedPose,
-		double aprilTagHeightMeters,
-		AprilTagFiltersTolerances tolerances
-	) {
-//		return AprilTagFilters.isAprilTagInProperHeight(visionRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
+	public static boolean keepLimelightData(VisionRawData visionRawData, Pose2d currentEstimatedPose, AprilTagFiltersTolerances tolerances) {
 		return AprilTagFilters.isLimelightOutputInTolerance(
 			visionRawData,
 			currentEstimatedPose,
@@ -55,12 +49,6 @@ public class AprilTagFilters {
 	protected static boolean isRollInTolerance(VisionRawData visionData, Rotation2d rollTolerance) {
 		return Math.abs(visionData.targetPose().getRotation().getX()) <= rollTolerance.getRadians();
 	}
-
-//	protected static boolean
-//		isAprilTagInProperHeight(VisionRawData visionRawData, double aprilTagHeightToleranceMeters, double aprilTagHeightMeters) {
-//		double aprilTagHeightConfidence = Math.abs(visionRawData.aprilTagHeight() - aprilTagHeightMeters);
-//		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
-//	}
 
 	protected static boolean isRobotOnGround(VisionRawData visionData, double robotToGroundToleranceMeters) {
 		return visionData.targetPose().getZ() <= robotToGroundToleranceMeters;

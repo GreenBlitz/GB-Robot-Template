@@ -21,10 +21,6 @@ public class PhotonVisionConstants {
 
 	public static final String camerasLogPathPrefix = "PhotonCameras/";
 
-	public static final double AMBIGUITY_TO_LOCATION_STANDARD_DEVIATIONS_FACTOR = 2; // ! Shall be calibrated
-
-	public static final double AMBIGUITY_TO_ROTATION_STANDARD_DEVIATIONS_FACTOR = 2; // ! Shall be calibrated
-
 	public static final AprilTagFiltersTolerances DEFAULT_APRIL_TAGS_TOLERANCES = new AprilTagFiltersTolerances(
 		1.3,
 		0.1,

@@ -16,15 +16,13 @@ import java.util.function.Function;
 public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer {
 
 	private final MultiLimelights multiLimelights;
-	private final LimelightFiltererConfig config;
 	private double lastSuccessfulObservationTime;
 	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
-	public LimelightFilterer(LimelightFiltererConfig config, MultiLimelights multiLimelights) {
-		super(config.logPath());
+	public LimelightFilterer(String logPath, MultiLimelights multiLimelights) {
+		super(logPath);
 
 		this.multiLimelights = multiLimelights;
-		this.config = config;
 		this.lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
 	}
 
@@ -52,7 +50,6 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 				AprilTagFilters.keepLimelightData(
 					visionRawData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
-					config.aprilTagHeightMeters(),
 					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
 				)
 			) {

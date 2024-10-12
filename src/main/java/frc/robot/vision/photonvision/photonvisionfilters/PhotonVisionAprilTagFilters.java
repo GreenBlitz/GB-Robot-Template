@@ -7,7 +7,6 @@ import frc.robot.vision.VisionRawData;
 import frc.robot.vision.aprilTags.AprilTagFilters;
 import frc.robot.vision.aprilTags.AprilTagFiltersTolerances;
 import frc.robot.vision.photonvision.CameraConfiguration;
-import frc.robot.vision.photonvision.PhotonVisionConstants;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
 
@@ -32,12 +31,7 @@ public class PhotonVisionAprilTagFilters extends PhotonVisionFiltered {
 
 	@Override
 	protected boolean keepPhotonVisionData(VisionRawData targetData) {
-		return AprilTagFilters.keepLimelightData(
-			targetData,
-			calculateCurrentPoseEstimation(),
-			PhotonVisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(0).get().getZ(),
-			tolerances
-		);
+		return AprilTagFilters.keepLimelightData(targetData, calculateCurrentPoseEstimation(), tolerances);
 	}
 
 	public ArrayList<VisionObservation> getAllFilteredVisionObservations() {

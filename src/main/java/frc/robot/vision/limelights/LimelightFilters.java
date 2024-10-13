@@ -4,19 +4,14 @@ import edu.wpi.first.math.geometry.*;
 
 public class LimelightFilters {
 
-	protected static boolean keepLimelightData(
-		LimelightRawData limelightRawData,
-		Pose2d currentEstimatedPose,
-		double aprilTagHeightMeters,
-		LimelightFiltersTolerances tolerances
-	) {
-		return LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters)
-			&& LimelightFilters.isLimelightOutputInTolerance(
-				limelightRawData,
-				currentEstimatedPose,
-				tolerances.normalizedPositionTolerance(),
-				tolerances.normalizedRotationTolerance()
-			)
+	protected static boolean
+		keepLimelightData(LimelightRawData limelightRawData, Pose2d currentEstimatedPose, LimelightFiltersTolerances tolerances) {
+		return LimelightFilters.isLimelightOutputInTolerance(
+			limelightRawData,
+			currentEstimatedPose,
+			tolerances.normalizedPositionTolerance(),
+			tolerances.normalizedRotationTolerance()
+		)
 			&& LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance())
 			&& LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance())
 			&& LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
@@ -51,12 +46,6 @@ public class LimelightFilters {
 
 	protected static boolean isRollInTolerance(LimelightRawData limelightRawData, Rotation2d rollTolerance) {
 		return Math.abs(limelightRawData.estimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
-	}
-
-	protected static boolean
-		isAprilTagInProperHeight(LimelightRawData limelightRawData, double aprilTagHeightToleranceMeters, double aprilTagHeightMeters) {
-		double aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - aprilTagHeightMeters);
-		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
 	}
 
 	protected static boolean isRobotOnGround(LimelightRawData limelightRawData, double robotToGroundToleranceMeters) {

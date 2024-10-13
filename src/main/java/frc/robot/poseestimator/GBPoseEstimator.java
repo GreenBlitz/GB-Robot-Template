@@ -36,8 +36,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		SwerveDriveKinematics kinematics,
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
-		double[] odometryStandardDeviations,
-		Pose2d initialRobotPose
+		double[] odometryStandardDeviations
 	) {
 		super(logPath);
 		//@formatter:off
@@ -58,7 +57,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
-		resetPose(initialRobotPose);
 		calculateHeadingOffset(initialGyroAngle);
 	}
 

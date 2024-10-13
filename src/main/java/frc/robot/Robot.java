@@ -76,7 +76,7 @@ public class Robot {
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.roller = new Roller(RollerFactory.create(RollerConstants.LOG_PATH));
 		BrakeStateManager.add(() -> roller.setBrake(true), () -> roller.setBrake(false));
-		this.wrist = new Wrist(WristFactory.generateWristStuff(WristConstants.LOG_PATH));
+		this.wrist = new Wrist(WristFactory.create(WristConstants.LOG_PATH));
 		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
 		this.superstructure = new Superstructure(this);

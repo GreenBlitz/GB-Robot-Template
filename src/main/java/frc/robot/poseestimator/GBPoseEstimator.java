@@ -223,8 +223,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public void subsystemPeriodic() {
 		if (!limelightFilterer.isPoseEstimationCorrect()) {
-			resetPoseByLimelight();
 			calculateHeadingOffset(latestGyroAngle);
+			resetPoseByLimelight();
 		}
 		updateVision(limelightFilterer.getFilteredVisionObservations());
 	}

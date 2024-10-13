@@ -61,8 +61,13 @@ public class Superstructure {
 		return currentState;
 	}
 
+	public boolean isEnableChangeStateAutomatically() {
+		return enableChangeStateAutomatically;
+	}
+
 	public void logStatus() {
-		Logger.recordOutput("CurrentState", currentState);
+		Logger.recordOutput("Superstructure/CurrentState", currentState);
+		Logger.recordOutput("Superstructure/enableChangeStateAutomatically", enableChangeStateAutomatically);
 	}
 
 

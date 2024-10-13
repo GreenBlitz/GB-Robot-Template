@@ -104,7 +104,7 @@ public class Superstructure {
 		return isFlywheelReady && isPivotReady;
 	}
 
-	private Command setCurrentState(RobotState state) {
+	private Command setCurrentStateName(RobotState state) {
 		return new InstantCommand(() -> currentState = state);
 	}
 
@@ -142,7 +142,7 @@ public class Superstructure {
 	private Command idle() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
-			setCurrentState(RobotState.IDLE),
+			setCurrentStateName(RobotState.IDLE),
 			rollerStateHandler.setState(RollerState.MANUAL),
 			intakeStateHandler.setState(IntakeState.STOP),
 			funnelStateHandler.setState(FunnelState.MANUAL),
@@ -156,7 +156,7 @@ public class Superstructure {
 
 	private Command intake() {
 		return new ParallelCommandGroup(
-			setCurrentState(RobotState.INTAKE),
+			setCurrentStateName(RobotState.INTAKE),
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
@@ -187,7 +187,7 @@ public class Superstructure {
 
 	private Command armIntake() {
 		return new ParallelCommandGroup(
-			setCurrentState(RobotState.ARM_INTAKE),
+			setCurrentStateName(RobotState.ARM_INTAKE),
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
@@ -227,7 +227,7 @@ public class Superstructure {
 	private Command preSpeaker() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
-			setCurrentState(RobotState.PRE_SPEAKER),
+			setCurrentStateName(RobotState.PRE_SPEAKER),
 			rollerStateHandler.setState(RollerState.STOP),
 			intakeStateHandler.setState(IntakeState.STOP),
 			funnelStateHandler.setState(FunnelState.MANUAL),
@@ -241,7 +241,7 @@ public class Superstructure {
 
 	private Command speaker() {
 		return new ParallelCommandGroup(
-			setCurrentState(RobotState.SPEAKER),
+			setCurrentStateName(RobotState.SPEAKER),
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
 				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
@@ -262,7 +262,7 @@ public class Superstructure {
 	private Command preAMP() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(false),
-			setCurrentState(RobotState.PRE_AMP),
+			setCurrentStateName(RobotState.PRE_AMP),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
@@ -287,7 +287,7 @@ public class Superstructure {
 
 	private Command amp() {
 		return new ParallelCommandGroup(
-			setCurrentState(RobotState.AMP),
+			setCurrentStateName(RobotState.AMP),
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
@@ -319,7 +319,7 @@ public class Superstructure {
 
 	private Command transferShooterToArm() {
 		return new ParallelCommandGroup(
-			setCurrentState(RobotState.TRANSFER_SHOOTER_TO_ARM),
+			setCurrentStateName(RobotState.TRANSFER_SHOOTER_TO_ARM),
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
@@ -353,7 +353,7 @@ public class Superstructure {
 
 	private Command transferArmToShooter() {
 		return new ParallelCommandGroup(
-			setCurrentState(RobotState.TRANSFER_ARM_TO_SHOOTER),
+			setCurrentStateName(RobotState.TRANSFER_ARM_TO_SHOOTER),
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
@@ -386,7 +386,7 @@ public class Superstructure {
 	private Command intakeOuttake() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
-			setCurrentState(RobotState.INTAKE_OUTTAKE),
+			setCurrentStateName(RobotState.INTAKE_OUTTAKE),
 			rollerStateHandler.setState(RollerState.ROLL_OUT),
 			intakeStateHandler.setState(IntakeState.OUTTAKE),
 			funnelStateHandler.setState(FunnelState.OUTTAKE),
@@ -401,7 +401,7 @@ public class Superstructure {
 	private Command armOuttake() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
-			setCurrentState(RobotState.ARM_OUTTAKE),
+			setCurrentStateName(RobotState.ARM_OUTTAKE),
 			rollerStateHandler.setState(RollerState.FAST_ROLL_IN),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
 			wristStateHandler.setState(WristState.DEFAULT),

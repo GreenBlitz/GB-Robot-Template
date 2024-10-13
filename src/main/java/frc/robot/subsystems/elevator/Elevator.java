@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.Logger;
 public class Elevator extends GBSubsystem {
 
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
-	private final ElevatorCommandsBuilder commandBuilder;
+	private final ElevatorCommandsBuilder commandsBuilder;
 	private final IRequest<Rotation2d> positionRequest;
 	private final IRequest<Double> voltageRequest;
 
@@ -34,13 +34,13 @@ public class Elevator extends GBSubsystem {
 		frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
 		backMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
 
-		this.commandBuilder = new ElevatorCommandsBuilder(this);
+		this.commandsBuilder = new ElevatorCommandsBuilder(this);
 
 		updateInputs();
 	}
 
-	public ElevatorCommandsBuilder getCommandBuilder() {
-		return commandBuilder;
+	public ElevatorCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	protected void setPower(double power) {
@@ -72,7 +72,7 @@ public class Elevator extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
-	private Rotation2d getApproximatedElevatorAngle() {
+	private Rotation2d getElevatorAngle() {
 		return Rotation2d.fromRotations(
 			(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue().getRotations()
 				+ elevatorStuff.backMotorStuff().positionSignal().getLatestValue().getRotations()) / 2
@@ -80,11 +80,11 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public double getPositionMeters() {
-		return motorRotationsToMeters(getApproximatedElevatorAngle());
+		return motorRotationsToMeters(getElevatorAngle());
 	}
 
 	protected void stayInPlace() {
-		setTargetPosition(getApproximatedElevatorAngle());
+		setTargetPosition(getElevatorAngle());
 	}
 
 	private double motorRotationsToMeters(Rotation2d rotations) {

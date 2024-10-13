@@ -22,6 +22,7 @@ import frc.robot.subsystems.elevator.ElevatorStuff;
 import frc.utils.AngleUnit;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class RealElevatorConstants {
@@ -36,13 +37,11 @@ public class RealElevatorConstants {
 
 	private static final ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
 
-	private static CANSparkBase.IdleMode IDLE_MODE = CANSparkBase.IdleMode.kBrake;
+	private static final CANSparkBase.IdleMode IDLE_MODE = CANSparkBase.IdleMode.kBrake;
 
-	private static int CURRENT_LIMIT = 40;
+	private static final int CURRENT_LIMIT = 40;
 
-	private static double feedforwardCalculation(Rotation2d velocity) {
-		return RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
-	}
+	private static final Function<Rotation2d, Double> FEEDFORWARD_FUNCTION = velocity -> RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
 
 	private static void configureMotor(SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		sparkMaxWrapper
@@ -62,7 +61,7 @@ public class RealElevatorConstants {
 		sparkMaxWrapper.getPIDController().setD(0);
 	}
 
-	public static ElevatorMotorStuff generateMotorStuff(String logPath, String name, SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
+	public static ElevatorMotorStuff generateMotorStuff(String logPath, SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		configureMotor(sparkMaxWrapper, inverted);
 
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
@@ -70,8 +69,8 @@ public class RealElevatorConstants {
 		Supplier<Double> motorPosition = sparkMaxWrapper.getEncoder()::getPosition;
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("angle", motorPosition, AngleUnit.ROTATIONS);
 
-		Supplier<Double> motorsVoltage = sparkMaxWrapper::getVoltage;
-		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("voltage", motorsVoltage);
+		Supplier<Double> motorVoltage = sparkMaxWrapper::getVoltage;
+		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("voltage", motorVoltage);
 
 		return new ElevatorMotorStuff(motor, motorVoltageSignal, positionSignal);
 	}
@@ -80,8 +79,8 @@ public class RealElevatorConstants {
 		SparkMaxWrapper frontMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FRONT);
 		SparkMaxWrapper backMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_BACK);
 
-		ElevatorMotorStuff frontMotorStuff = generateMotorStuff(logPath + "front motor", "front motor", frontMotorWrapper, false);
-		ElevatorMotorStuff backMotorStuff = generateMotorStuff(logPath + "back motor", "back motor", backMotorWrapper, false);
+		ElevatorMotorStuff frontMotorStuff = generateMotorStuff(logPath + "frontMotor/", frontMotorWrapper, false);
+		ElevatorMotorStuff backMotorStuff = generateMotorStuff(logPath + "backMotor/", backMotorWrapper, false);
 
 		BooleanSupplier atLimitSwitch = () -> frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);
@@ -91,7 +90,7 @@ public class RealElevatorConstants {
 			Rotation2d.fromRotations(0),
 			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
 			ELEVATOR_PID_SLOT,
-			RealElevatorConstants::feedforwardCalculation
+			FEEDFORWARD_FUNCTION
 		);
 
 		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(

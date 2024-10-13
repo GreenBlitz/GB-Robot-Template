@@ -93,7 +93,7 @@ public class PoseEstimationMath {
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
 	}
 
-	public static VisionObservation rawDataToObservation(VisionRawData visionData, Pose2d currentPoseEstimation) {
+	public static VisionObservation visionRawDataToObservation(VisionRawData visionData, Pose2d currentPoseEstimation) {
 		double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(visionData, currentPoseEstimation);
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],

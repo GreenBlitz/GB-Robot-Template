@@ -31,7 +31,7 @@ public class PhotonVisionCamera extends GBSubsystem {
 		this(cameraConfiguration.name(), cameraConfiguration.cameraToRobot(), cameraConfiguration.targetType());
 	}
 
-	public Optional<VisionRawData> tackedTargetToTargetRawdata(PhotonTrackedTarget trackedTarget, PhotonPipelineResult pipelineResult) {
+	public Optional<VisionRawData> trackedTargetToTargetRawData(PhotonTrackedTarget trackedTarget, PhotonPipelineResult pipelineResult) {
 		double latency = pipelineResult.getLatencyMillis();
 		double ambiguity = trackedTarget.getPoseAmbiguity();
 		double timestamp = pipelineResult.getTimestampSeconds();
@@ -46,23 +46,23 @@ public class PhotonVisionCamera extends GBSubsystem {
 		if (bestTarget.isEmpty()) {
 			return Optional.empty();
 		}
-		return tackedTargetToTargetRawdata(bestTarget.get(), pipelineResult);
+		return trackedTargetToTargetRawData(bestTarget.get(), pipelineResult);
 	}
 
-	public Optional<ArrayList<Optional<VisionRawData>>> getTargetsData() {
+	public ArrayList<Optional<VisionRawData>> getTargetsData() {
 		PhotonPipelineResult pipelineResult = camera.getLatestResult();
 		Optional<List<PhotonTrackedTarget>> targets = Optional.of(pipelineResult.getTargets());
 		ArrayList<Optional<VisionRawData>> output = new ArrayList<>();
 
 		if (targets.isEmpty()) {
-			return Optional.empty();
+			return new ArrayList<>();
 		}
 
 		for (PhotonTrackedTarget target : targets.get()) {
-			output.add(tackedTargetToTargetRawdata(target, pipelineResult));
+			output.add(trackedTargetToTargetRawData(target, pipelineResult));
 		}
 
-		return Optional.of(output);
+		return output;
 	}
 
 	private Optional<Pose3d> calculateTargetPose(PhotonTrackedTarget bestTarget) {
@@ -88,8 +88,5 @@ public class PhotonVisionCamera extends GBSubsystem {
 		Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTarget, tagPoseInField.get(), cameraToRobot);
 		return Optional.of(robotPose);
 	}
-
-	@Override
-	protected void subsystemPeriodic() {}
 
 }

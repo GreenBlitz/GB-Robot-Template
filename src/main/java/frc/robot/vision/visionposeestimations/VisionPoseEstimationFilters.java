@@ -1,22 +1,23 @@
-package frc.robot.vision.aprilTags;
+package frc.robot.vision.visionposeestimations;
 
 import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.VisionRawData;
 
-public class AprilTagFilters {
+public class VisionPoseEstimationFilters {
 
-	public static boolean keepRobotPoseData(VisionRawData visionData, Pose2d currentEstimatedPose, AprilTagFiltersTolerances tolerances) {
-		return AprilTagFilters.isLimelightOutputInTolerance(
+	public static boolean
+		keepRobotPoseData(VisionRawData visionData, Pose2d currentEstimatedPose, VisionPoseEstimationFiltersTolerances tolerances) {
+		return VisionPoseEstimationFilters.isLimelightOutputInTolerance(
 			visionData,
 			currentEstimatedPose,
 			tolerances.normalizedPositionTolerance(),
 			tolerances.normalizedRotationTolerance()
 		)
-			&& AprilTagFilters.isRollInTolerance(visionData, tolerances.rollTolerance())
-			&& AprilTagFilters.isPitchInTolerance(visionData, tolerances.pitchTolerance())
-			&& AprilTagFilters.isRobotOnGround(visionData, tolerances.robotToGroundToleranceMeters())
-			&& !AprilTagFilters.isDataTooAmbiguous(visionData, tolerances.maximumAmbiguity())
-			&& !AprilTagFilters.isLatencyTooHigh(visionData, tolerances.maximumLatency());
+			&& VisionPoseEstimationFilters.isRollInTolerance(visionData, tolerances.rollTolerance())
+			&& VisionPoseEstimationFilters.isPitchInTolerance(visionData, tolerances.pitchTolerance())
+			&& VisionPoseEstimationFilters.isRobotOnGround(visionData, tolerances.robotToGroundToleranceMeters())
+			&& !VisionPoseEstimationFilters.isDataTooAmbiguous(visionData, tolerances.maximumAmbiguity())
+			&& !VisionPoseEstimationFilters.isLatencyTooHigh(visionData, tolerances.maximumLatency());
 	}
 
 	protected static boolean isLimelightOutputInTolerance(

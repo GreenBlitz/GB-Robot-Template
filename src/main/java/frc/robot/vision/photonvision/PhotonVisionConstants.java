@@ -5,7 +5,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import frc.robot.vision.aprilTags.AprilTagFiltersTolerances;
+import frc.robot.vision.visionposeestimations.VisionPoseEstimationFiltersTolerances;
 
 public class PhotonVisionConstants {
 
@@ -21,7 +21,7 @@ public class PhotonVisionConstants {
 
 	public static final String camerasLogPathPrefix = "PhotonCameras/";
 
-	public static final AprilTagFiltersTolerances DEFAULT_APRIL_TAGS_TOLERANCES = new AprilTagFiltersTolerances(
+	public static final VisionPoseEstimationFiltersTolerances DEFAULT_APRIL_TAGS_TOLERANCES = new VisionPoseEstimationFiltersTolerances(
 		1.3,
 		0.1,
 		0.2,

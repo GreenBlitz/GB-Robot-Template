@@ -1,7 +1,7 @@
 package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.vision.aprilTags.AprilTagFiltersTolerances;
+import frc.robot.vision.visionposeestimations.VisionPoseEstimationFiltersTolerances;
 
 public class LimeLightConstants {
 
@@ -27,7 +27,7 @@ public class LimeLightConstants {
 
 	public static final double MAXIMUM_LATENCY_SECONDS = 1;
 
-	public final static AprilTagFiltersTolerances DEFAULT_LIMELIGHT_FILTERS_TOLERANCES = new AprilTagFiltersTolerances(
+	public final static VisionPoseEstimationFiltersTolerances DEFAULT_LIMELIGHT_FILTERS_TOLERANCES = new VisionPoseEstimationFiltersTolerances(
 		APRIL_TAG_HEIGHT_TOLERANCE_METERS,
 		POSITION_NORM_TOLERANCE,
 		ROTATION_NORM_TOLERANCE,

@@ -27,7 +27,6 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
-
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();

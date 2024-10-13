@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.aprilTags.AprilTagFilters;
+import frc.robot.vision.visionposeestimations.VisionPoseEstimationFilters;
 import frc.robot.vision.VisionRawData;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
@@ -47,14 +47,14 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 
 		for (VisionRawData visionData : multiLimelights.getAllAvailableLimelightData()) {
 			if (
-				AprilTagFilters.keepRobotPoseData(
+				VisionPoseEstimationFilters.keepRobotPoseData(
 					visionData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
 					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES
 				)
 			) {
 				estimates.add(
-					PoseEstimationMath.rawDataToObservation(
+					PoseEstimationMath.visionRawDataToObservation(
 						visionData,
 						getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
 					)
@@ -73,7 +73,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 
 		for (VisionRawData visionData : multiLimelights.getAllAvailableLimelightData()) {
 			estimates.add(
-				PoseEstimationMath.rawDataToObservation(
+				PoseEstimationMath.visionRawDataToObservation(
 					visionData,
 					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
 				)

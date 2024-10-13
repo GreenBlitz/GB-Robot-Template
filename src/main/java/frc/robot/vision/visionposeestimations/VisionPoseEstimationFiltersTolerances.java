@@ -1,8 +1,8 @@
-package frc.robot.vision.aprilTags;
+package frc.robot.vision.visionposeestimations;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public record AprilTagFiltersTolerances(
+public record VisionPoseEstimationFiltersTolerances(
 	double aprilTagHeightToleranceMeters,
 	double normalizedPositionTolerance,
 	double normalizedRotationTolerance,

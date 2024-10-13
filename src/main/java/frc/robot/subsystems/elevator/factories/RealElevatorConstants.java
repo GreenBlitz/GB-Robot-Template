@@ -69,7 +69,7 @@ public class RealElevatorConstants {
 		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> motorPosition = sparkMaxWrapper.getEncoder()::getPosition;
-		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("angle", motorPosition, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", motorPosition, AngleUnit.ROTATIONS);
 
 		Supplier<Double> motorVoltage = sparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", motorVoltage);

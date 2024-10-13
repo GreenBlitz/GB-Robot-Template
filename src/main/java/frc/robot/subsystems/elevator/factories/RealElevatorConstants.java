@@ -41,7 +41,9 @@ public class RealElevatorConstants {
 
 	private static final int CURRENT_LIMIT = 40;
 
-	private static final Function<Rotation2d, Double> FEEDFORWARD_FUNCTION = velocity -> RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
+	private static final Function<
+		Rotation2d,
+		Double> FEEDFORWARD_FUNCTION = velocity -> RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
 
 	private static void configureMotor(SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		sparkMaxWrapper

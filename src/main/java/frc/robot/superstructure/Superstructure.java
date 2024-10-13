@@ -137,7 +137,7 @@ public class Superstructure {
 	}
 
 	//@formatter:off
-	protected Command idle() {
+	private Command idle() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
 			rollerStateHandler.setState(RollerState.MANUAL),
@@ -151,7 +151,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command intake() {
+	private Command intake() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
@@ -181,7 +181,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command armIntake() {
+	private Command armIntake() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
@@ -219,7 +219,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command preSpeaker() {
+	private Command preSpeaker() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
 			rollerStateHandler.setState(RollerState.STOP),
@@ -233,7 +233,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command speaker() {
+	private Command speaker() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
@@ -252,7 +252,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command preAMP() {
+	private Command preAMP() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
@@ -277,7 +277,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command amp() {
+	private Command amp() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
@@ -308,7 +308,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command transferShooterToArm() {
+	private Command transferShooterToArm() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
@@ -341,7 +341,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command transferArmToShooter() {
+	private Command transferArmToShooter() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
@@ -372,7 +372,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command intakeOuttake() {
+	private Command intakeOuttake() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
 			rollerStateHandler.setState(RollerState.ROLL_OUT),
@@ -386,7 +386,7 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	protected Command armOuttake() {
+	private Command armOuttake() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
 			rollerStateHandler.setState(RollerState.FAST_ROLL_IN),

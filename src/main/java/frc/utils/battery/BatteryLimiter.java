@@ -38,7 +38,7 @@ class BatteryLimiter extends Command {
 		);
 
 		if (Robot.ROBOT_TYPE.isSimulation()) {
-			CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPs.SIMULATION_IP);
+			CMDHandler.runPythonScript(Path.of("BatteryMessage"), IPs.SIMULATION_IP);
 		}
 	}
 

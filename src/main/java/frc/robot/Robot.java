@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.bindings.KeyboardBindings;
+import frc.robot.bindings.JoysticksBindings;
+import frc.utils.controllers.keyboard.KeyboardController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -22,6 +25,9 @@ public class Robot {
 
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
+		if (KeyboardController.ENABLE_KEYBOARD) {
+			KeyboardBindings.configureBindings(this);
+		}
 	}
 
 	public Command getAutonomousCommand() {

@@ -91,6 +91,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			}
 			headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();
 		}
+		if (stackedHeadingEstimations.isEmpty()) {
+			return new Rotation2d();
+		}
 		return PoseEstimationMath.calculateAngleAverage(stackedHeadingEstimations);
 	}
 
@@ -221,6 +224,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void subsystemPeriodic() {
 		if (!limelightFilterer.isPoseEstimationCorrect()) {
 			resetPoseByLimelight();
+			calculateHeadingOffset(latestGyroAngle);
 		}
 		updateVision(limelightFilterer.getFilteredVisionObservations());
 	}

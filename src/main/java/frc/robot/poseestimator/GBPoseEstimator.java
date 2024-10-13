@@ -39,15 +39,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		double[] odometryStandardDeviations
 	) {
 		super(logPath);
-		//@formatter:off
-		getVisionPose().ifPresentOrElse(calculatedPose -> {
-			this.odometryPose = calculatedPose;
-			this.estimatedPose = calculatedPose;
-			}, () -> {
-			this.odometryPose = new Pose2d();
-			this.estimatedPose = new Pose2d();
-		});
-		//@formatter:on
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.limelightFilterer = limelightFilterer;
@@ -58,6 +49,15 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		calculateHeadingOffset(initialGyroAngle);
+		//@formatter:off
+		getVisionPose().ifPresentOrElse(calculatedPose -> {
+			this.odometryPose = calculatedPose;
+			this.estimatedPose = calculatedPose;
+		}, () -> {
+			this.odometryPose = new Pose2d();
+			this.estimatedPose = new Pose2d();
+		});
+		//@formatter:on
 	}
 
 	public ILimelightFilterer getLimelightFilterer() {
@@ -65,7 +65,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	public void resetPoseByLimelight() {
-		getVisionPose().ifPresent(this::resetPose);
+		getVisionPose().ifPresent(visionEstimatedPose -> {
+			estimatedPose = visionEstimatedPose;
+			odometryPose = estimatedPose;
+			odometryPoseInterpolator.clear();
+		});
 	}
 
 	public void calculateHeadingOffset(Rotation2d gyroAngle) {
@@ -102,21 +106,12 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void resetPose(Pose2d initialPose) {
-		this.estimatedPose = initialPose;
-		this.latestGyroAngle = initialPose.getRotation();
-		this.odometryPose = initialPose;
-		odometryPoseInterpolator.clear();
-	}
-
-	@Override
 	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		this.latestWheelPositions = wheelPositions;
 		this.latestGyroAngle = gyroAngle;
 		this.odometryPose = robotPose;
 		odometryPoseInterpolator.clear();
 	}
-
 
 	@Override
 	public Pose2d getOdometryPose() {
@@ -167,12 +162,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			addOdometryObservation(observation);
 		}
 		logEstimatedPose();
-	}
-
-	@Override
-	public void updatePoseEstimator(List<OdometryObservation> odometryObservation, List<VisionObservation> visionObservations) {
-		updateOdometry(odometryObservation);
-		updateVision(visionObservations);
 	}
 
 	private boolean isObservationTooOld(VisionObservation visionObservation) {

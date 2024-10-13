@@ -4,8 +4,12 @@ import edu.wpi.first.math.geometry.*;
 
 public class LimelightFilters {
 
-	protected static boolean
-		keepLimelightData(LimelightRawData limelightRawData, Pose2d currentEstimatedPose, LimelightFiltersTolerances tolerances) {
+	//@formatter:off
+	protected static boolean keepLimelightData(
+		LimelightRawData limelightRawData,
+		Pose2d currentEstimatedPose,
+		LimelightFiltersTolerances tolerances
+	) {
 		return LimelightFilters.isLimelightOutputInTolerance(
 			limelightRawData,
 			currentEstimatedPose,
@@ -16,6 +20,7 @@ public class LimelightFilters {
 			&& LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance())
 			&& LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
 	}
+	//@formatter:on
 
 	protected static boolean isLimelightOutputInTolerance(
 		LimelightRawData limelightRawData,

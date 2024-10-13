@@ -3,7 +3,7 @@ package frc.robot.simulation;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.utils.Conversions;
-import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.time.TimeUtils;
 
 public class ElevatorSimulation extends MotorSimulation {
 
@@ -47,7 +47,7 @@ public class ElevatorSimulation extends MotorSimulation {
 
 	@Override
 	protected void updateMotor() {
-		elevatorSimulation.update(CycleTimeUtils.getCurrentCycleTime());
+		elevatorSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
 	}
 
 }

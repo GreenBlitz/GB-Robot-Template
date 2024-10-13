@@ -98,6 +98,14 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		}
 	}
 
+	private void logAprilTagHeights() {
+		List<LimelightRawData> observations = multiLimelights.getAllAvailableLimelightData();
+
+		for (int i = 0; i < observations.size(); i++) {
+			Logger.recordOutput(super.getLogPath() + LimeLightConstants.APRIL_TAG_HEIGHT_LOGPATH_PREFIX + i, observations.get(i).aprilTagHeight());
+		}
+	}
+
 	@Override
 	public boolean isPoseEstimationCorrect() {
 		boolean hasTooMuchTimePassed = Conversions.microSecondsToSeconds(Logger.getRealTimestamp()) - lastSuccessfulObservationTime

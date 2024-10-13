@@ -16,7 +16,7 @@ public class LEDConstants {
 	public class LEDStrip {
 
 		public static final int LED_LENGTH = 200;
-		public static final int LED_PORT = 4;
+		public static final int LED_PORT = 5;
 		public static final double BLINK_DURATION = 0.5;
 		public static final Color BLINK_COLOR = Color.GREEN;
 		public static final Color COLORFLOW_ANIMATION_COLOR = Color.PINK;

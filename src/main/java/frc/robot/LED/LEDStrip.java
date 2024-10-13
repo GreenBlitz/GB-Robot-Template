@@ -22,7 +22,7 @@ public class LEDStrip implements ILED {
     @Override
     public void setSingleLEDColor(Color color, int index) {
         addressableLEDBuffer.setRGB(index, color.getRed(), color.getGreen(), color.getBlue());
-//        this.update();
+        this.update();
 
     }
 

@@ -27,15 +27,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-
-		ClimbStateHandler a  =new ClimbStateHandler(
-				new LifterStateHandler(robot.getLifter()),
-				new SolenoidStateHandler(robot.getSolenoid())
-		);
-
-		usedJoystick.X.onTrue(a.setState(ClimbState.EXTEND));
-		usedJoystick.A.onTrue(a.setState(ClimbState.RETRACT));
-		usedJoystick.Y.onTrue(a.setState(ClimbState.STOP));
 		// bindings...
 	}
 

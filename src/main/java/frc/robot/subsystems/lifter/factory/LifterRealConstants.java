@@ -34,15 +34,6 @@ public class LifterRealConstants {
 		return configuration;
 	}
 
-	private static SysIdRoutine.Config generateSysidConfig() {
-		return new SysIdRoutine.Config(
-			Volts.of(SysIdRoutineConfigConstants.RAMP_RATE_MAGNITUDE).per(Seconds.of(SysIdRoutineConfigConstants.RAMP_RATE_SECONDS)),
-			Volts.of(SysIdRoutineConfigConstants.STEP_VOLTAGE),
-			Seconds.of(SysIdRoutineConfigConstants.TIME_OUT),
-			(state) -> SignalLogger.writeString("state", state.toString())
-		);
-	}
-
 	private static IDigitalInput generateLimitSwitch() {
 		return new ChanneledDigitalInput(DIGITAL_INPUT_ID, DEBOUNCE_TIME);
 	}
@@ -57,7 +48,7 @@ public class LifterRealConstants {
 
 		return new LifterComponents(
 			logPath,
-			new TalonFXMotor(logPath, talonFXWrapper, generateSysidConfig()),
+			new TalonFXMotor(logPath, talonFXWrapper, new SysIdRoutine.Config()),
 			DRUM_RADIUS,
 			generateLimitSwitch(),
 			Phoenix6SignalBuilder.generatePhoenix6Signal(
@@ -67,12 +58,5 @@ public class LifterRealConstants {
 			)
 		);
 	}
-
-    private static class SysIdRoutineConfigConstants {
-        private static final double RAMP_RATE_MAGNITUDE = 1;
-        private static final double RAMP_RATE_SECONDS = 1;
-        private static final double STEP_VOLTAGE = 7;
-        private static final double TIME_OUT = 10;
-    }
 	//@formatter:on
 }

@@ -6,7 +6,7 @@ public enum LifterState {
 	FORWARD(0, 0.2),
 	BACKWARD(0, -0.2),
 	RETRACTED(0.05, -0.9),
-	EXTENDED(0.25, 0.9);
+	EXTENDED(0.40, 0.9);
 
 	private final double targetPosition;
 	private final double power;

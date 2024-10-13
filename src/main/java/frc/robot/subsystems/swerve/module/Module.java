@@ -106,8 +106,6 @@ public class Module {
 		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityPerSecond);
 		driveInputs.positionsMeters = Arrays.stream(driveInputs.uncoupledPositions).mapToDouble(this::toDriveMeters).toArray();
 
-		moduleInputs.isAtTargetAngle = isAtTargetAngle();
-		moduleInputs.isAtTargetVelocity = isAtTargetVelocity();
 		moduleInputs.isClosedLoop = isClosedLoop;
 		moduleInputs.targetState = targetState;
 
@@ -171,30 +169,30 @@ public class Module {
 
 
 	//@formatter:off
-	public boolean isAtTargetVelocity() {
+	public boolean isAtTargetVelocity(double speedToleranceMetersPerSecond) {
 		return MathUtil.isNear(
 			getTargetState().speedMetersPerSecond,
 			getDriveVelocityMetersPerSecond(),
-			ModuleConstants.SPEED_TOLERANCE_METERS_PER_SECOND
+			speedToleranceMetersPerSecond
 		);
 	}
 	//@formatter:on
 
-	public boolean isAtTargetAngle() {
-		boolean isStopping = steerStuff.velocitySignal().getLatestValue().getRadians() <= ModuleConstants.ANGLE_VELOCITY_DEADBAND.getRadians();
+	public boolean isAtTargetAngle(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband) {
+		boolean isStopping = steerStuff.velocitySignal().getLatestValue().getRadians() <= angleVelocityPerSecondDeadband.getRadians();
 		if (!isStopping) {
 			return false;
 		}
 		boolean isAtAngle = MathUtil.isNear(
 			MathUtil.angleModulus(getTargetState().angle.getRadians()),
 			MathUtil.angleModulus(getCurrentAngle().getRadians()),
-			ModuleConstants.ANGLE_TOLERANCE.getRadians()
+			angleTolerance.getRadians()
 		);
 		return isAtAngle;
 	}
 
-	public boolean isAtTargetState() {
-		return isAtTargetAngle() && isAtTargetVelocity();
+	public boolean isAtTargetState(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
+		return isAtTargetAngle(angleTolerance, angleVelocityPerSecondDeadband) && isAtTargetVelocity(speedToleranceMetersPerSecond);
 	}
 
 

@@ -279,8 +279,8 @@ public class Superstructure {
 	protected Command amp() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
+				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
-					enableChangeStateAutomatically(false),
 					funnelStateHandler.setState(FunnelState.STOP),
 					rollerStateHandler.setState(RollerState.STOP),
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))

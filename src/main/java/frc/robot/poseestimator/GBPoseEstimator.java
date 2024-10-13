@@ -81,7 +81,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private Rotation2d getEstimatedRobotHeadingByVision() {
 		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
-		List<Rotation2d> headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();
+		List<Rotation2d> headingEstimation = stackedHeadingEstimations;
 		while (
 			stackedHeadingEstimations.size() < PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 				&& !headingEstimation.isEmpty()
@@ -90,9 +90,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				stackedHeadingEstimations.addAll(headingEstimation);
 			}
 			headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();
-		}
-		if (stackedHeadingEstimations.isEmpty()) {
-			return new Rotation2d();
 		}
 		return PoseEstimationMath.calculateAngleAverage(stackedHeadingEstimations);
 	}
@@ -155,7 +152,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		return estimatedPoseAtTimestamp.orElseGet(() -> estimatedPose);
 	}
 
-
 	@Override
 	public void updateVision(List<VisionObservation> visionObservations) {
 		for (VisionObservation visionObservation : visionObservations) {
@@ -217,7 +213,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	public void logEstimatedPose() {
-		Logger.recordOutput(super.getLogPath() + "EstimatedPose", getEstimatedPose());
+		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
 	}
 
 	@Override

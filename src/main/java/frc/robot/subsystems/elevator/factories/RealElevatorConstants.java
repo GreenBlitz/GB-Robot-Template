@@ -70,9 +70,9 @@ public class RealElevatorConstants {
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("angle", motorPosition, AngleUnit.ROTATIONS);
 
 		Supplier<Double> motorVoltage = sparkMaxWrapper::getVoltage;
-		SuppliedDoubleSignal motorVoltageSignal = new SuppliedDoubleSignal("voltage", motorVoltage);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", motorVoltage);
 
-		return new ElevatorMotorStuff(motor, motorVoltageSignal, positionSignal);
+		return new ElevatorMotorStuff(motor, voltageSignal, positionSignal);
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {

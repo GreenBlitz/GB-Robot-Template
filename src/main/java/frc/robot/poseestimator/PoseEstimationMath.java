@@ -132,6 +132,8 @@ public class PoseEstimationMath {
 			summedXComponent += heading.getCos();
 			summedYComponent += heading.getSin();
 		}
+		summedXComponent /= estimatedHeadings.size();
+		summedYComponent /= estimatedHeadings.size();
 		if (summedXComponent == 0 || summedYComponent == 0) {
 			return estimatedHeadings.get(0);
 		}

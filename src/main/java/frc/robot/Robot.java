@@ -35,6 +35,7 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristConstants;
 import frc.robot.subsystems.wrist.factory.WristFactory;
+import frc.robot.superstructure.StatesMotionPlanner;
 import frc.robot.superstructure.Superstructure;
 import frc.utils.brakestate.BrakeStateManager;
 
@@ -57,8 +58,8 @@ public class Robot {
 	private final Roller roller;
 	private final Wrist wrist;
 
-
 	private final Superstructure superstructure;
+	private final StatesMotionPlanner statesMotionPlanner;
 
 	public Robot() {
 		this.swerve = new Swerve(
@@ -80,6 +81,7 @@ public class Robot {
 		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
 		this.superstructure = new Superstructure(this);
+		this.statesMotionPlanner = new StatesMotionPlanner(superstructure);
 
 		configureBindings();
 	}
@@ -131,6 +133,10 @@ public class Robot {
 
 	public Superstructure getSuperstructure() {
 		return superstructure;
+	}
+
+	public StatesMotionPlanner getStatesMotionPlanner() {
+		return statesMotionPlanner;
 	}
 
 }

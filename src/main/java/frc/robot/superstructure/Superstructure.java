@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+import frc.robot.constants.Field;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerState;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerStateHandler;
 import frc.robot.subsystems.flywheel.FlywheelState;
@@ -59,6 +60,23 @@ public class Superstructure {
 
 	private boolean isNoteInIntake() {
 		return robot.getIntakeRoller().isNoteIn();
+	}
+
+	private boolean isReadyToShoot(){
+		boolean isFlywheelReady = robot.getFlywheel().isAtVelocity(
+			FlywheelState.SHOOTING.getVelocity(),
+			Tolerances.FLYWHEEL_VELOCITY_TOLERANCE
+		);
+		//boolean isSwerveReady = swerve.isAtHeading(speaker);
+		return isFlywheelReady; //&& isSwerveReady
+	}
+
+	private boolean isReadyToAmp(){
+		boolean isElevatorRollerReady = robot.getElevatorRoller().isNoteIn();
+		// boolean isElevatorReady =
+		//	(robot.getElevator.getElevatorAngle() - ElevatorStates.AMP)
+		//	<= Tolerances.ELEVATOR_POSITION_TOLERANCE;
+		return isElevatorRollerReady; //&& isElevatorReady
 	}
 
 	public Command setState(RobotState state) {

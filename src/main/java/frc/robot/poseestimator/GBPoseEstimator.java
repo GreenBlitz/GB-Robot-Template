@@ -40,8 +40,15 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Pose2d initialRobotPose
 	) {
 		super(logPath);
-		this.odometryPose = new Pose2d();
-		this.estimatedPose = new Pose2d();
+		//@formatter:off
+		getVisionPose().ifPresentOrElse(calculatedPose -> {
+			this.odometryPose = calculatedPose;
+			this.estimatedPose = calculatedPose;
+			}, () -> {
+			this.odometryPose = new Pose2d();
+			this.estimatedPose = new Pose2d();
+		});
+		//@formatter:on
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.limelightFilterer = limelightFilterer;
@@ -127,6 +134,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				stackedRawData.addAll(rawData);
 			}
 			rawData = limelightFilterer.getAllAvailableLimelightRawData();
+		}
+		if (stackedRawData.isEmpty()) {
+			return Optional.empty();
 		}
 		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedRawData);
 		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), odometryPose.getRotation());

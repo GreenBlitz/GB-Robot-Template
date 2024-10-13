@@ -11,7 +11,7 @@ import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.utils.Conversions;
+import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -40,13 +40,18 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		SwerveDriveKinematics kinematics,
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
-		double[] odometryStandardDeviations,
-		Pose2d initialRobotPose
+		double[] odometryStandardDeviations
 	) {
 		super(logPath);
-		this.resetSwerve = resetSwerve;
-		this.odometryPose = new Pose2d();
-		this.estimatedPose = new Pose2d();
+		//@formatter:off
+		getVisionPose().ifPresentOrElse(calculatedPose -> {
+			this.odometryPose = calculatedPose;
+			this.estimatedPose = calculatedPose;
+			}, () -> {
+			this.odometryPose = new Pose2d();
+			this.estimatedPose = new Pose2d();
+		});
+		//@formatter:on
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.limelightFilterer = limelightFilterer;
@@ -56,7 +61,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
-		resetPose(initialRobotPose);
 //		calculateHeadingOffset(initialGyroAngle);
 	}
 
@@ -84,7 +88,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			return limelightFilterer.getAllRobotHeadingEstimations().get(0);
 		}
 		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
-		List<Rotation2d> headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();
+		List<Rotation2d> headingEstimation = stackedHeadingEstimations;
 		while (
 			stackedHeadingEstimations.size() < PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 				&& !headingEstimation.isEmpty()
@@ -136,6 +140,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				stackedRawData.addAll(rawData);
 			}
 			rawData = limelightFilterer.getAllAvailableLimelightRawData();
+		}
+		if (stackedRawData.isEmpty()) {
+			return Optional.empty();
 		}
 		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedRawData);
 		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), odometryPose.getRotation());
@@ -194,7 +201,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-			estimatedPoseInterpolator.addSample(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()), estimatedPose);
+			estimatedPoseInterpolator.addSample(TimeUtils.getCurrentTimeSeconds(), estimatedPose);
 		});
 	}
 
@@ -218,12 +225,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	public void logEstimatedPose() {
-		Logger.recordOutput(super.getLogPath() + "EstimatedPose", getEstimatedPose());
+		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
 	}
 
 	@Override
 	public void subsystemPeriodic() {
 		if (!limelightFilterer.isPoseEstimationCorrect()) {
+//			calculateHeadingOffset(latestGyroAngle);
 //			resetPoseByLimelight();
 		}
 	}

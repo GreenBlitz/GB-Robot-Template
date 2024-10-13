@@ -28,7 +28,6 @@ public class LimeLightConstants {
 	public static final double ROBOT_TO_GROUND_TOLERANCE_METERS = 0.2;
 
 	public final static LimelightFiltersTolerances DEFAULT_LIMELIGHT_FILTERS_TOLERANCES = new LimelightFiltersTolerances(
-		APRIL_TAG_HEIGHT_TOLERANCE_METERS,
 		POSITION_NORM_TOLERANCE,
 		ROTATION_NORM_TOLERANCE,
 		ROLL_TOLERANCE,

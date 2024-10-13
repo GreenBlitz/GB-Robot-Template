@@ -62,7 +62,7 @@ public class Robot {
 
 		multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
 		limelightFilterer = new LimelightFilterer(
-			new LimelightFiltererConfig("limelightfilterer", Field.APRIL_TAGS_AVERAGE_HEIGHT_METERS),
+			new LimelightFiltererConfig("limelightfilterer", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
 			multiLimelights
 		);
 		this.poseEstimator = new GBPoseEstimator(

@@ -72,6 +72,7 @@ public class Robot {
 			swerve.getAbsoluteHeading(),
 			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
 		);
+		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

@@ -8,7 +8,6 @@ public class LimelightFilters {
 	protected static boolean keepLimelightData(
 		LimelightRawData limelightRawData,
 		Pose2d currentEstimatedPose,
-		double aprilTagHeightMeters,
 		LimelightFiltersTolerances tolerances,
 		String logpath
 	) {

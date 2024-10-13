@@ -43,6 +43,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		double[] odometryStandardDeviations
 	) {
 		super(logPath);
+		this.limelightFilterer = limelightFilterer;
 		//@formatter:off
 		getVisionPose().ifPresentOrElse(calculatedPose -> {
 			this.odometryPose = calculatedPose;
@@ -53,13 +54,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		});
 		//@formatter:on
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.limelightFilterer = limelightFilterer;
-		this.kinematics = kinematics;
+		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);		this.kinematics = kinematics;
 		this.latestWheelPositions = initialWheelPositions;
 		this.latestGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
-		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		setOdometryStandardDeviations(odometryStandardDeviations);
 //		calculateHeadingOffset(initialGyroAngle);
 	}

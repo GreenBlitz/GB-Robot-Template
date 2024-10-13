@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.hal.PWMJNI;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.LED.LED;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.ctre.BusStatus;
@@ -23,6 +26,9 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 
 	private Robot robot;
+
+	private LED led;
+
 
 	@Override
 	public void robotInit() {
@@ -54,6 +60,7 @@ public class RobotManager extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		BusStatus.logChainsStatuses();
 		BatteryUtils.logStatus();
+		robot.led.update();
 	}
 
 	@Override

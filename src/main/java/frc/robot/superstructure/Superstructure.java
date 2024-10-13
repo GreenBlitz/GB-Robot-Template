@@ -29,8 +29,8 @@ public class Superstructure {
 
 	private static final double NOTE_IN_RUMBLE_POWER = 0.5;
 
+	private final String logPath;
 	private final Robot robot;
-
 	private final Swerve swerve;
 	private final ElbowStateHandler elbowStateHandler;
 	private final FlywheelStateHandler flywheelStateHandler;
@@ -43,7 +43,7 @@ public class Superstructure {
 	private RobotState currentState;
 	private boolean enableChangeStateAutomatically;
 
-	public Superstructure(Robot robot) {
+	public Superstructure(String logPath, Robot robot) {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.elbowStateHandler = new ElbowStateHandler(robot.getElbow());
@@ -54,6 +54,7 @@ public class Superstructure {
 		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
 		this.wristStateHandler = new WristStateHandler(robot.getWrist());
 
+		this.logPath = logPath;
 		this.enableChangeStateAutomatically = true;
 	}
 
@@ -66,8 +67,8 @@ public class Superstructure {
 	}
 
 	public void logStatus() {
-		Logger.recordOutput("Superstructure/CurrentState", currentState);
-		Logger.recordOutput("Superstructure/enableChangeStateAutomatically", enableChangeStateAutomatically);
+		Logger.recordOutput(logPath + "CurrentState", currentState);
+		Logger.recordOutput(logPath + "EnableChangeStateAutomatically", enableChangeStateAutomatically);
 	}
 
 

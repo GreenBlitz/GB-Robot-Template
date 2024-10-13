@@ -80,7 +80,7 @@ public class Robot {
 		this.wrist = new Wrist(WristFactory.generateWristStuff(WristConstants.LOG_PATH));
 		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
-		this.superstructure = new Superstructure(this);
+		this.superstructure = new Superstructure("Superstructure/", this);
 		this.statesMotionPlanner = new StatesMotionPlanner(superstructure);
 
 		configureBindings();

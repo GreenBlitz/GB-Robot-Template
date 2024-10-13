@@ -98,7 +98,8 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		List<LimelightRawData> observations = multiLimelights.getAllAvailableLimelightData();
 
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(super.getLogPath() + LimeLightConstants.APRIL_TAG_HEIGHT_LOGPATH_PREFIX + i, observations.get(i).aprilTagHeight());
+			Logger
+				.recordOutput(super.getLogPath() + LimeLightConstants.APRIL_TAG_HEIGHT_LOGPATH_PREFIX + i, observations.get(i).aprilTagHeight());
 		}
 	}
 

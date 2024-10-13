@@ -5,11 +5,9 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkLowLevel;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.Field;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
@@ -72,8 +70,7 @@ public class Robot {
 			swerve.getConstants().kinematics(),
 			swerve.getModules().getWheelsPositions(0),
 			swerve.getAbsoluteHeading(),
-			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
-			new Pose2d()
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
 		);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});

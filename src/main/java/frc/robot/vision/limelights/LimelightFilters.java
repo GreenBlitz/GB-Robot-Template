@@ -11,7 +11,8 @@ public class LimelightFilters {
 		double aprilTagHeightMeters,
 		LimelightFiltersTolerances tolerances,
 		String logpath
-	) {		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
+	) {
+		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
 			limelightRawData,
 			currentEstimatedPose,
 			tolerances.normalizedPositionTolerance(),
@@ -33,10 +34,7 @@ public class LimelightFilters {
 			Logger.recordOutput(logpath + "filteredBecauseRobotIsFuckingFlying", limelightRawData.estimatedPose());
 		}
 
-		return limelightOutputInTolerance
-			&& rollInTolerance
-			&& pitchInTolerance
-			&& robotOnGround;
+		return limelightOutputInTolerance && rollInTolerance && pitchInTolerance && robotOnGround;
 	}
 
 	protected static boolean isLimelightOutputInTolerance(

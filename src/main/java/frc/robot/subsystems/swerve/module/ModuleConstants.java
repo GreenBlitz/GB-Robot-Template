@@ -21,9 +21,9 @@ public record ModuleConstants(String logPath, double wheelDiameterMeters, double
 		);
 	}
 
-	static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
-	static final Rotation2d ANGLE_VELOCITY_DEADBAND = Rotation2d.fromDegrees(3);
-	static final double SPEED_TOLERANCE_METERS_PER_SECOND = 0.1;
+//	static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
+//	static final Rotation2d ANGLE_VELOCITY_DEADBAND = Rotation2d.fromDegrees(3);
+//	static final double SPEED_TOLERANCE_METERS_PER_SECOND = 0.1;
 
 	public static final double VOLTAGE_COMPENSATION_SATURATION = BatteryUtils.DEFAULT_VOLTAGE;
 	public static final boolean DEFAULT_IS_CLOSE_LOOP = true;

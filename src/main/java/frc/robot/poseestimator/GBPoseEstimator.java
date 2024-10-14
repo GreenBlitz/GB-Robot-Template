@@ -157,9 +157,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void updateVision(List<VisionObservation> visionObservations) {
 		for (VisionObservation visionObservation : visionObservations) {
 //			if (!isObservationTooOld(visionObservation)) {
-			if (true) {
-				addVisionObservation(visionObservation);
-			}
+			addVisionObservation(visionObservation);
+//			}
 		}
 		logEstimatedPose();
 	}

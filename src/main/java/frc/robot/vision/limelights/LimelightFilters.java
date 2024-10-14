@@ -14,12 +14,12 @@ public class LimelightFilters {
 	) {
 		boolean aprilTagInProperHeight = LimelightFilters
 			.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters);
-//		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
-//			limelightRawData,
-//			currentEstimatedPose,
-//			tolerances.normalizedPositionTolerance(),
-//			tolerances.normalizedRotationTolerance()
-//		);
+		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
+			limelightRawData,
+			currentEstimatedPose,
+			tolerances.normalizedPositionTolerance(),
+			tolerances.normalizedRotationTolerance()
+		);
 		boolean rollInTolerance = LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance());
 		boolean pitchInTolerance = LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance());
 		boolean robotOnGround = LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());

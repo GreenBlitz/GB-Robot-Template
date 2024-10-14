@@ -17,11 +17,11 @@ public class LifterCommandsBuilder {
 
 	public Command setPower(double power) {
 		return new FunctionalCommand(
-				() -> {},
-				() -> lifter.setPower(power),
-				(interrupted) -> lifter.stop(),
-				() -> false,
-				lifter
+			() -> {},
+			() -> lifter.setPower(power),
+			(interrupted) -> lifter.stop(),
+			() -> false,
+			lifter
 		).withName("set power " + power);
 	}
 

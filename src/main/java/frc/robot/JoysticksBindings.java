@@ -16,6 +16,30 @@ public class JoysticksBindings {
 	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
+	public static SmartJoystick getMainJoystick() {
+		return MAIN_JOYSTICK;
+	}
+
+	public static SmartJoystick getSecondJoystick() {
+		return SECOND_JOYSTICK;
+	}
+
+	public static SmartJoystick getThirdJoystick() {
+		return THIRD_JOYSTICK;
+	}
+
+	public static SmartJoystick getFourthJoystick() {
+		return FOURTH_JOYSTICK;
+	}
+
+	public static SmartJoystick getFifthJoystick() {
+		return FIFTH_JOYSTICK;
+	}
+
+	public static SmartJoystick getSixthJoystick() {
+		return SIXTH_JOYSTICK;
+	}
+
 	public static void configureBindings(Robot robot) {
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);

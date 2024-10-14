@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.swerve.SwerveType;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -15,16 +14,16 @@ public class Modules {
 	private final Module[] modules;
 	private final String logPath;
 
-	public Modules(SwerveType swerveType, Module[] modules) {
+	public Modules(String logPath, Module... modules) {
 		this.modules = modules;
-		this.logPath = swerveType.getLogPath() + ModuleConstants.LOG_PATH_ADDITION;
+		this.logPath = logPath + ModuleConstants.LOG_PATH_ADDITION;
 	}
 
 	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 
-	public void logStatus() {
+	public void updateInputs() {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
@@ -113,7 +112,7 @@ public class Modules {
 	}
 
 	public boolean isAtTargetStates() {
-		return isAtTargetAngles() && isAtTargetAngles();
+		return isAtTargetAngles() && isAtTargetVelocities();
 	}
 
 

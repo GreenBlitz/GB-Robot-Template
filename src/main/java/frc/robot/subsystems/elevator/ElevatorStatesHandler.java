@@ -11,7 +11,7 @@ public class ElevatorStatesHandler {
 	}
 
 	public Command setState(ElevatorStates elevatorState) {
-		return elevator.getCommandsBuilder().setTargetPosition(elevatorState.getPositionMeters());
+		return elevator.getCommandsBuilder().setTargetPositionMeters(elevatorState.getPositionMeters());
 	}
 
 }

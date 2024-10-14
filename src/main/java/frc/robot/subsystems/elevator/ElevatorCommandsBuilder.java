@@ -34,10 +34,10 @@ public class ElevatorCommandsBuilder {
 		).withName("Set power by supplier");
 	}
 
-	public Command setTargetPosition(double angle) {
+	public Command setTargetPositionMeters(double position) {
 		return new FunctionalCommand(
 			() -> {},
-			() -> elevator.setTargetPositionMeters(angle),
+			() -> elevator.setTargetPositionMeters(position),
 			interrupted -> elevator.stayInPlace(),
 			() -> false,
 			elevator

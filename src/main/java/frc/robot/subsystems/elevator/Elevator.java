@@ -64,9 +64,9 @@ public class Elevator extends GBSubsystem {
 	}
 
 	protected void setTargetPositionMeters(double position) {
-		Rotation2d rotations = metersToMotorRotations(position);
-		frontMotor.applyAngleRequest(positionRequest.withSetPoint(rotations));
-		backMotor.applyAngleRequest(positionRequest.withSetPoint(rotations));
+		Rotation2d angleSetPoint = metersToMotorRotations(position);
+		frontMotor.applyAngleRequest(positionRequest.withSetPoint(angleSetPoint));
+		backMotor.applyAngleRequest(positionRequest.withSetPoint(angleSetPoint));
 	}
 
 	public boolean isAtBackwardLimit() {

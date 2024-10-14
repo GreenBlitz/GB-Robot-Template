@@ -58,8 +58,8 @@ public class Robot {
 		);
 		swerve.updateStatus();
 
-		multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
-		limelightFilterer = new LimelightFilterer(
+		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
+		this.limelightFilterer = new LimelightFilterer(
 			new LimelightFiltererConfig("limelightfilterer", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
 			multiLimelights
 		);
@@ -85,7 +85,7 @@ public class Robot {
 	public void periodic() {
 		swerve.updateStatus();
 //		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
-		poseEstimator.updatePoseEstimator(Arrays.asList(swerve.getAllOdometryObservations()), limelightFilterer.getFilteredVisionObservations());
+		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
 	}
 
 	private void configPathPlanner() {

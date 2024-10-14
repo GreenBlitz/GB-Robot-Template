@@ -43,23 +43,26 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		double[] odometryStandardDeviations
 	) {
 		super(logPath);
+		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.limelightFilterer = limelightFilterer;
+		this.kinematics = kinematics;
+		this.latestWheelPositions = initialWheelPositions;
+		this.latestGyroAngle = initialGyroAngle;
+		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
+		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
+		setOdometryStandardDeviations(odometryStandardDeviations);
+//		calculateHeadingOffset(initialGyroAngle);
+		calculateHeadingOffset(initialGyroAngle);
 		//@formatter:off
 		getVisionPose().ifPresentOrElse(calculatedPose -> {
 			this.odometryPose = calculatedPose;
 			this.estimatedPose = calculatedPose;
-			}, () -> {
+		}, () -> {
 			this.odometryPose = new Pose2d();
 			this.estimatedPose = new Pose2d();
 		});
 		//@formatter:on
-		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);		this.kinematics = kinematics;
-		this.latestWheelPositions = initialWheelPositions;
-		this.latestGyroAngle = initialGyroAngle;
-		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
-		setOdometryStandardDeviations(odometryStandardDeviations);
-//		calculateHeadingOffset(initialGyroAngle);
 	}
 
 	public ILimelightFilterer getLimelightFilterer() {
@@ -67,11 +70,18 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	public void resetPoseByLimelight() {
-		getVisionPose().ifPresent(this::resetPose);
+		getVisionPose().ifPresent(visionEstimatedPose -> {
+			estimatedPose = visionEstimatedPose;
+			odometryPose = estimatedPose;
+			odometryPoseInterpolator.clear();
+		});
 	}
 
 	public void calculateHeadingOffset(Rotation2d gyroAngle) {
+		headingOffset = getEstimatedRobotHeadingByVision().minus(gyroAngle);
+		// @pose-swerveAdditions:on
 		headingOffset = gyroAngle;
+		// @pose-swerveAdditions:off
 	}
 
 	@Override
@@ -82,9 +92,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private Rotation2d getEstimatedRobotHeadingByVision() {
+		// @pose-swerveAdditions:on
 		if (true) {
 			return limelightFilterer.getAllRobotHeadingEstimations().get(0);
 		}
+		// @pose-swerveAdditions:off
 		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
 		List<Rotation2d> headingEstimation = stackedHeadingEstimations;
 		while (
@@ -106,7 +118,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	@Override
+	// @pose-swerveAdditions:on
+//	@Override
 	public void resetPose(Pose2d initialPose) {
 		this.estimatedPose = initialPose;
 		this.latestGyroAngle = initialPose.getRotation();
@@ -114,6 +127,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.resetSwerve.accept(initialPose.getRotation());
 		odometryPoseInterpolator.clear();
 	}
+	// @pose-swerveAdditions:off
 
 	@Override
 	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
@@ -122,7 +136,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryPose = robotPose;
 		odometryPoseInterpolator.clear();
 	}
-
 
 	@Override
 	public Pose2d getOdometryPose() {
@@ -158,7 +171,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		return estimatedPoseAtTimestamp.orElseGet(() -> estimatedPose);
 	}
 
-
 	@Override
 	public void updateVision(List<VisionObservation> visionObservations) {
 		for (VisionObservation visionObservation : visionObservations) {
@@ -166,7 +178,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			addVisionObservation(visionObservation);
 //			}
 		}
+		// @pose-swerveAdditions:on
 		logEstimatedPose();
+		// @pose-swerveAdditions:off
 	}
 
 	@Override
@@ -175,12 +189,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			addOdometryObservation(observation);
 		}
 		logEstimatedPose();
-	}
-
-	@Override
-	public void updatePoseEstimator(List<OdometryObservation> odometryObservation, List<VisionObservation> visionObservations) {
-		updateOdometry(odometryObservation);
-		updateVision(visionObservations);
 	}
 
 	private boolean isObservationTooOld(VisionObservation visionObservation) {
@@ -193,7 +201,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void addVisionObservation(VisionObservation observation) {
+		// @pose-swerveAdditions:on
 		Logger.recordOutput("inside vision", observation.timestamp());
+		// @pose-swerveAdditions:off
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			Pose2d currentEstimation = PoseEstimationMath
@@ -205,7 +215,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private void addOdometryObservation(OdometryObservation observation) {
 //		updateGyroAnglesInLimeLight(observation.gyroAngle());
+		// @pose-swerveAdditions:on
 		Logger.recordOutput("inside odometry", observation.timestamp());
+		// @pose-swerveAdditions:off
 		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
 		latestGyroAngle = observation.gyroAngle();
@@ -232,6 +244,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 //			calculateHeadingOffset(latestGyroAngle);
 //			resetPoseByLimelight();
 		}
+		// @pose-swerveAdditions:on
+		updateVision(limelightFilterer.getFilteredVisionObservations());
+		// @pose-swerveAdditions:off
 	}
 
 }

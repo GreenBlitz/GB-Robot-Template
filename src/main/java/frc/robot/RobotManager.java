@@ -75,7 +75,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-		robot.getSuperstructure().logStatus();
 	}
 
 	@Override

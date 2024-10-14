@@ -133,6 +133,7 @@ public class Robot {
 	public void periodic() {
 		swerve.updateStatus();
 		poseEstimator.updatePoseEstimator(Arrays.asList(swerve.getAllOdometryObservations()), limelightFilterer.getFilteredVisionObservations());
+		superstructure.logStatus();
 	}
 
 	private void configPathPlanner() {

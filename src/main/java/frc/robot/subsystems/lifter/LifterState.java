@@ -10,8 +10,7 @@ public enum LifterState {
 
 	private final double targetPosition;
 	private final double power;
-
-
+	
 	LifterState(double targetPosition, double power) {
 		this.targetPosition = targetPosition;
 		this.power = power;

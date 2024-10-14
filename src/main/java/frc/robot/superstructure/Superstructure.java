@@ -1,6 +1,7 @@
 package frc.robot.superstructure;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
@@ -78,6 +79,10 @@ public class Superstructure {
 		return isElevatorRollerReady && isElevatorReady;
 	}
 
+	private Command setCurrentStateName(RobotState state) {
+		return new InstantCommand(() -> currentState = state);
+	}
+
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case IDLE -> idle();
@@ -96,6 +101,7 @@ public class Superstructure {
 	//@formatter:off
 	public Command idle() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.IDLE),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
@@ -108,6 +114,7 @@ public class Superstructure {
 
 	public Command intake() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.INTAKE),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
@@ -133,6 +140,7 @@ public class Superstructure {
 
 	public Command preSpeaker() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.PRE_SPEAKER),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			flywheelStateHandler.setState(FlywheelState.SHOOTING),
@@ -144,6 +152,7 @@ public class Superstructure {
 
 	public Command speaker() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.SPEAKER),
 			new SequentialCommandGroup(
 				funnelStateHandler.setState(FunnelState.STOP).withTimeout(3).until(this::isReadyToShoot),
 				funnelStateHandler.setState(FunnelState.SPEAKER).until(() -> !isNoteInShooter()),
@@ -160,6 +169,7 @@ public class Superstructure {
 
 	public Command preAmp() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.PRE_AMP),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 			funnelStateHandler.setState(FunnelState.STOP),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
@@ -172,6 +182,7 @@ public class Superstructure {
 
 	public Command amp() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.AMP),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
@@ -195,6 +206,7 @@ public class Superstructure {
 
 	public Command transferShooterElevator() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.TRANSFER_SHOOTER_ELEVATOR),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.STOP),
@@ -212,13 +224,14 @@ public class Superstructure {
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
-				elevatorStatesHandler.setState(ElevatorStates.IDLE),
+			elevatorStatesHandler.setState(ElevatorStates.IDLE),
 			pivotStateHandler.setState(PivotState.UP)
 		);
 	}
 
 	public Command transferElevatorShooter() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.TRANSFER_ELEVATOR_SHOOTER),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.STOP),
@@ -243,6 +256,7 @@ public class Superstructure {
 
 	public Command intakeOuttake() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.INTAKE_OUTTAKE),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
@@ -255,6 +269,7 @@ public class Superstructure {
 
 	public Command shooterOuttake() {
 		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.SHOOTER_OUTTAKE),
 			new SequentialCommandGroup(
 				funnelStateHandler.setState(FunnelState.STOP).withTimeout(3), // .until(() -> isReadyToShooterOuttake())
 				funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE).until(() -> !isNoteInShooter()),

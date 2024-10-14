@@ -83,6 +83,9 @@ public class PoseEstimationMath {
 	}
 
 	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
+		if (currentEstimatedPose == null) {
+			return new double[] {0, 0, 0};
+		}
 		double normalizedLimelightX = limelightRawData.estimatedPose().getX() / Field.LENGTH_METERS;
 		double normalizedLimelightY = limelightRawData.estimatedPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;

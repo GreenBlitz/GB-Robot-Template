@@ -43,6 +43,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		double[] odometryStandardDeviations
 	) {
 		super(logPath);
+
+		this.resetSwerve = resetSwerve;
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.limelightFilterer = limelightFilterer;
@@ -78,7 +80,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	public void calculateHeadingOffset(Rotation2d gyroAngle) {
-		headingOffset = getEstimatedRobotHeadingByVision().minus(gyroAngle);
+//		headingOffset = getEstimatedRobotHeadingByVision().minus(gyroAngle);
 		// @pose-swerveAdditions:on
 		headingOffset = gyroAngle;
 		// @pose-swerveAdditions:off
@@ -93,9 +95,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private Rotation2d getEstimatedRobotHeadingByVision() {
 		// @pose-swerveAdditions:on
-		if (true) {
-			return limelightFilterer.getAllRobotHeadingEstimations().get(0);
-		}
+//		if (true) {
+//			return limelightFilterer.getAllRobotHeadingEstimations().get(0);
+//		}
 		// @pose-swerveAdditions:off
 		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
 		List<Rotation2d> headingEstimation = stackedHeadingEstimations;

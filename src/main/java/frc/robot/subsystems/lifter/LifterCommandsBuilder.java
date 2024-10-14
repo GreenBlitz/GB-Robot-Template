@@ -2,6 +2,7 @@ package frc.robot.subsystems.lifter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -16,11 +17,16 @@ public class LifterCommandsBuilder {
 
 	public Command setPower(double power) {
 		return new FunctionalCommand(
-				() -> {},
-				() -> lifter.setPower(power),
-				(interrupted) -> lifter.stop(),
-				() -> false, lifter
+			() -> {},
+			() -> lifter.setPower(power),
+			(interrupted) -> lifter.stop(),
+			() -> false,
+			lifter
 		).withName("set power " + power);
+	}
+
+	public Command stop() {
+		return new RunCommand(lifter::stop, lifter).withName("stop");
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {

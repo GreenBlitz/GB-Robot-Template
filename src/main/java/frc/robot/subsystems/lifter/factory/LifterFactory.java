@@ -7,7 +7,7 @@ public class LifterFactory {
 
 	public static LifterStuff create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> LifterRealConstants.generateLifterStuff(logPath);
+			case REAL -> LifterRealConstants.generateLifterComponents(logPath);
 			case SIMULATION -> null;
 		};
 	}

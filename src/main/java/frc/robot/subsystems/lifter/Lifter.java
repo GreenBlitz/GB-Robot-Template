@@ -1,6 +1,8 @@
 package frc.robot.subsystems.lifter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
@@ -11,22 +13,29 @@ public class Lifter extends GBSubsystem {
 	private final ControllableMotor motor;
 	private final LifterStuff lifterStuff;
 	private final LifterCommandsBuilder lifterCommandsBuilder;
+	private final IDigitalInput limitSwitch;
+	private final DigitalInputInputsAutoLogged limitSwitchInputs;
 
 	public Lifter(LifterStuff lifterStuff) {
 		super(lifterStuff.logPath());
+
 		this.motor = lifterStuff.motor();
+
 		this.lifterStuff = lifterStuff;
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
-		motor.resetPosition(new Rotation2d());
 
+		this.limitSwitch = lifterStuff.limitSwitch();
+		this.limitSwitchInputs = new DigitalInputInputsAutoLogged();
+
+		motor.resetPosition(new Rotation2d());
 		updateInputs();
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	public void stop() {
+	protected void stop() {
 		motor.stop();
 	}
 
@@ -34,20 +43,20 @@ public class Lifter extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	public boolean isHigher(double expectedPositionMeters) {
+	protected boolean isHigher(double expectedPositionMeters) {
 		return expectedPositionMeters < convertToMeters(lifterStuff.positionSignal().getLatestValue());
 	}
 
-	public boolean isLower(double expectedPositionMeters) {
+	protected boolean isLower(double expectedPositionMeters) {
 		return !isHigher(expectedPositionMeters);
-	}
-
-	public LifterStuff getLifterStuff() {
-		return lifterStuff;
 	}
 
 	public LifterCommandsBuilder getCommandsBuilder() {
 		return lifterCommandsBuilder;
+	}
+
+	public boolean isLimitSwitchPressed() {
+		return limitSwitchInputs.debouncedValue;
 	}
 
 	@Override
@@ -63,7 +72,9 @@ public class Lifter extends GBSubsystem {
 		motor.updateSignals(lifterStuff.positionSignal());
 		motor.updateSignals(lifterStuff.otherSignals());
 
-		Logger.recordOutput("lifter position", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
+		Logger.recordOutput(getLogPath() + "lifter position in meters", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
+
+		limitSwitch.updateInputs(limitSwitchInputs);
 	}
 
 	private double convertToMeters(Rotation2d motorPosition) {

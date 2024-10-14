@@ -92,6 +92,11 @@ public class Robot {
 		configureBindings();
 	}
 
+	public void periodic() {
+		swerve.updateStatus();
+		superstructure.logStatus();
+	}
+
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}

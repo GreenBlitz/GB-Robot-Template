@@ -18,23 +18,23 @@ public class Lifter extends GBSubsystem {
 
 	public Lifter(LifterStuff lifterStuff) {
 		super(lifterStuff.logPath());
-		
+
 		this.motor = lifterStuff.motor();
-		
+
 		this.lifterStuff = lifterStuff;
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
-		
+
 		this.limitSwitch = lifterStuff.limitSwitch();
 		this.limitSwitchInputs = new DigitalInputInputsAutoLogged();
-		
+
 		motor.resetPosition(new Rotation2d());
 		updateInputs();
 	}
-	
+
 	protected void setPower(double power) {
 		motor.setPower(power);
 	}
-	
+
 	protected void stop() {
 		motor.stop();
 	}
@@ -42,20 +42,20 @@ public class Lifter extends GBSubsystem {
 	protected void setBrake(boolean brake) {
 		motor.setBrake(brake);
 	}
-	
+
 	protected boolean isHigher(double expectedPositionMeters) {
 		return expectedPositionMeters < convertToMeters(lifterStuff.positionSignal().getLatestValue());
 	}
-	
+
 	protected boolean isLower(double expectedPositionMeters) {
 		return !isHigher(expectedPositionMeters);
 	}
-	
+
 	public LifterCommandsBuilder getCommandsBuilder() {
 		return lifterCommandsBuilder;
 	}
 
-	public boolean isLimitSwitchPressed(){
+	public boolean isLimitSwitchPressed() {
 		return limitSwitchInputs.debouncedValue;
 	}
 
@@ -75,7 +75,7 @@ public class Lifter extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "lifter position in meters", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
 
 		limitSwitch.updateInputs(limitSwitchInputs);
-		Logger.processInputs(lifterStuff.logPath() + "limitSwitch/",limitSwitchInputs);
+		Logger.processInputs(lifterStuff.logPath() + "limitSwitch/", limitSwitchInputs);
 	}
 
 	private double convertToMeters(Rotation2d motorPosition) {
@@ -85,5 +85,6 @@ public class Lifter extends GBSubsystem {
 	private Rotation2d convertFromMeters(double mechanismPosition) {
 		return Conversions.distanceToAngle(mechanismPosition, lifterStuff.drumRadius());
 	}
+
 }
 

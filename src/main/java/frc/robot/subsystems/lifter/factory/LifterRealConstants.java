@@ -17,25 +17,25 @@ import static edu.wpi.first.math.util.Units.inchesToMeters;
 
 public class LifterRealConstants {
 
-    private static final double DRUM_RADIUS = inchesToMeters(0.96);
-    private static final int MOTOR_CONFIGURATION_TRIES = 5;
+	private static final double DRUM_RADIUS = inchesToMeters(0.96);
+	private static final int MOTOR_CONFIGURATION_TRIES = 5;
 	private static final int DIGITAL_INPUT_ID = 9;
 	private static final double DEBOUNCE_TIME = 0.05;
 
-    private static TalonFXConfiguration generateMotorConfiguration() {
-        TalonFXConfiguration configuration = new TalonFXConfiguration();
+	private static TalonFXConfiguration generateMotorConfiguration() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-        configuration.Feedback.SensorToMechanismRatio = 7 * (60.0 / 24.0);
+		configuration.Feedback.SensorToMechanismRatio = 7 * (60.0 / 24.0);
 
 
-        return configuration;
-    }
+		return configuration;
+	}
 
-	private static IDigitalInput generateLimitSwitch(){
+	private static IDigitalInput generateLimitSwitch() {
 		return new ChanneledDigitalInput(DIGITAL_INPUT_ID, DEBOUNCE_TIME);
 	}
 
-    //@formatter:off
+	//@formatter:off
 	protected static LifterStuff generateLifterComponents(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
 		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {

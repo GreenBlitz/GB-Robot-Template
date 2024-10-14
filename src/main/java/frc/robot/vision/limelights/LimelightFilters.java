@@ -8,12 +8,9 @@ public class LimelightFilters {
 	protected static boolean keepLimelightData(
 		LimelightRawData limelightRawData,
 		Pose2d currentEstimatedPose,
-		double aprilTagHeightMeters,
 		LimelightFiltersTolerances tolerances,
 		String logpath
 	) {
-		boolean aprilTagInProperHeight = LimelightFilters
-			.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters);
 		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
 			limelightRawData,
 			currentEstimatedPose,
@@ -23,17 +20,21 @@ public class LimelightFilters {
 		boolean rollInTolerance = LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance());
 		boolean pitchInTolerance = LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance());
 		boolean robotOnGround = LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
-		Logger.recordOutput(logpath + "filteredBecauseBadHeight", !aprilTagInProperHeight);
-//			Logger.recordOutput(logpath + "filteredBecauseBadTolerance", !limelightOutputInTolerance);
-		Logger.recordOutput(logpath + "filteredBecauseBadRoll", !rollInTolerance);
-		Logger.recordOutput(logpath + "filteredBecauseBadPitch", !pitchInTolerance);
-		Logger.recordOutput(logpath + "filteredBecauseRobotIsFuckingFlying", !robotOnGround);
 
-		return aprilTagInProperHeight
-//			&& limelightOutputInTolerance
-			&& rollInTolerance
-			&& pitchInTolerance
-			&& robotOnGround;
+		if (!limelightOutputInTolerance) {
+			Logger.recordOutput(logpath + "filteredBecauseBadTolerance", limelightRawData.estimatedPose());
+		}
+		if (!rollInTolerance) {
+			Logger.recordOutput(logpath + "filteredBecauseBadRoll", limelightRawData.estimatedPose());
+		}
+		if (!pitchInTolerance) {
+			Logger.recordOutput(logpath + "filteredBecauseBadPitch", limelightRawData.estimatedPose());
+		}
+		if (!robotOnGround) {
+			Logger.recordOutput(logpath + "filteredBecauseRobotIsFuckingFlying", limelightRawData.estimatedPose());
+		}
+
+		return rollInTolerance && pitchInTolerance && robotOnGround;
 	}
 
 	protected static boolean isLimelightOutputInTolerance(

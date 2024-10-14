@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
@@ -30,7 +29,6 @@ import frc.robot.subsystems.roller.factory.RollerFactory;
 import frc.robot.subsystems.solenoid.Solenoid;
 import frc.robot.subsystems.solenoid.SolenoidConstants;
 import frc.robot.subsystems.solenoid.factory.SolenoidFactory;
-import frc.robot.constants.Field;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.Swerve;
@@ -103,12 +101,10 @@ public class Robot {
 		this.wrist = new Wrist(WristFactory.create(WristConstants.LOG_PATH));
 		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
-		this.superstructure = new Superstructure("Superstructure/", this);
-		this.statesMotionPlanner = new StatesMotionPlanner(superstructure);
 
 		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
 		this.limelightFilterer = new LimelightFilterer(
-			new LimelightFiltererConfig("limelightfilterer/", Field.APRIL_TAGS_AVERAGE_HEIGHT_METERS),
+			new LimelightFiltererConfig("limelightfilterer", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
 			multiLimelights
 		);
 		this.poseEstimator = new GBPoseEstimator(
@@ -118,13 +114,16 @@ public class Robot {
 			swerve.getConstants().kinematics(),
 			swerve.getModules().getWheelsPositions(0),
 			swerve.getAbsoluteHeading(),
-			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
-			new Pose2d()
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
 		);
+		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
+
+		this.superstructure = new Superstructure("Superstructure/", this);
+		this.statesMotionPlanner = new StatesMotionPlanner(superstructure);
 
 		configPathPlanner();
 		configureBindings();
@@ -132,7 +131,7 @@ public class Robot {
 
 	public void periodic() {
 		swerve.updateStatus();
-		poseEstimator.updatePoseEstimator(Arrays.asList(swerve.getAllOdometryObservations()), limelightFilterer.getFilteredVisionObservations());
+		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
 		superstructure.logStatus();
 	}
 

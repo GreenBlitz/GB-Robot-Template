@@ -5,7 +5,7 @@ public enum RobotState {
 	IDLE,
 	INTAKE,
 	ARM_INTAKE,
-	SHOOTER_OUTTAKE, // intake, pivot, funnel
+//	SHOOTER_OUTTAKE, // intake, pivot, funnel
 	SPEAKER, // Funnel
 	AMP, // Roller
 	PRE_CLIMB,

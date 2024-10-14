@@ -340,7 +340,7 @@ public class Superstructure {
 	}
 
 	private Command preClimb(){
-		return elbowStateHandler.setState(ElbowState.CLIMB).alongWith(wristStateHandler.setState(WristState.PRE_TRAP).alongWith(climbStateHandler.setState(ClimbState.EXTEND)));
+		return elbowStateHandler.setState(ElbowState.CLIMB).alongWith(wristStateHandler.setState(WristState.PRE_TRAP).alongWith(climbStateHandler.setState(ClimbState.EXTEND))).alongWith(pivotStateHandler.setState(PivotState.PRE_SPEAKER));
 	}
 
 	private Command climb(){

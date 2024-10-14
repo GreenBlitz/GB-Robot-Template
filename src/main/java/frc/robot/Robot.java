@@ -5,11 +5,9 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkLowLevel;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.Field;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
@@ -60,9 +58,9 @@ public class Robot {
 		);
 		swerve.updateStatus();
 
-		multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
-		limelightFilterer = new LimelightFilterer(
-			new LimelightFiltererConfig("limelightfilterer", Field.APRIL_TAGS_AVERAGE_HEIGHT_METERS),
+		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
+		this.limelightFilterer = new LimelightFilterer(
+			new LimelightFiltererConfig("limelightfilterer", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
 			multiLimelights
 		);
 		this.poseEstimator = new GBPoseEstimator(
@@ -72,9 +70,9 @@ public class Robot {
 			swerve.getConstants().kinematics(),
 			swerve.getModules().getWheelsPositions(0),
 			swerve.getAbsoluteHeading(),
-			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
-			new Pose2d()
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
 		);
+		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
@@ -87,7 +85,7 @@ public class Robot {
 	public void periodic() {
 		swerve.updateStatus();
 //		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
-		poseEstimator.updatePoseEstimator(Arrays.asList(swerve.getAllOdometryObservations()), limelightFilterer.getFilteredVisionObservations());
+		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
 	}
 
 	private void configPathPlanner() {
@@ -118,4 +116,5 @@ public class Robot {
 	public GBPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
+
 }

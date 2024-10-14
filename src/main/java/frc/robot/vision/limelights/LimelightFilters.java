@@ -8,11 +8,9 @@ public class LimelightFilters {
 	protected static boolean keepLimelightData(
 		LimelightRawData limelightRawData,
 		Pose2d currentEstimatedPose,
-		double aprilTagHeightMeters,
 		LimelightFiltersTolerances tolerances,
 		String logpath
 	) {
-		boolean aprilTagInProperHeight = LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters);
 		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
 			limelightRawData,
 			currentEstimatedPose,
@@ -22,9 +20,6 @@ public class LimelightFilters {
 		boolean rollInTolerance = LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance());
 		boolean pitchInTolerance = LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance());
 		boolean robotOnGround = LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
-		if (!aprilTagInProperHeight) {
-			Logger.recordOutput(logpath + "filteredBecauseBadHeight", limelightRawData.estimatedPose());
-		}
 		if (!limelightOutputInTolerance) {
 			Logger.recordOutput(logpath + "filteredBecauseBadTolerance", limelightRawData.estimatedPose());
 		}
@@ -38,11 +33,7 @@ public class LimelightFilters {
 			Logger.recordOutput(logpath + "filteredBecauseRobotIsFuckingFlying", limelightRawData.estimatedPose());
 		}
 
-		return aprilTagInProperHeight
-//			&& limelightOutputInTolerance
-			&& rollInTolerance
-			&& pitchInTolerance
-			&& robotOnGround;
+		return limelightOutputInTolerance && rollInTolerance && pitchInTolerance && robotOnGround;
 	}
 
 	protected static boolean isLimelightOutputInTolerance(

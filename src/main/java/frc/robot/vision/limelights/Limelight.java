@@ -6,9 +6,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
+import frc.utils.time.TimeUtils;
 
 import java.util.Optional;
 
@@ -65,7 +65,7 @@ public class Limelight extends GBSubsystem {
 		}
 
 		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()]);
-		double timestamp = Timer.getFPGATimestamp() - processingLatencySeconds;
+		double timestamp = TimeUtils.getCurrentTimeSeconds() - processingLatencySeconds;
 
 		Pose3d robotPose = new Pose3d(
 			getPoseValue(LimelightEntryValue.X_AXIS),

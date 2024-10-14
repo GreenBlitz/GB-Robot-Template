@@ -5,7 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.TimedValue;
 import frc.utils.AngleUnit;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.time.TimeUtils;
 
 public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6SignalBuilder.SignalGetter {
 
@@ -20,7 +20,7 @@ public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6Signal
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValue(signal, slopeSignal), Logger.getRealTimestamp() / 1.0e6);
+		return new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValue(signal, slopeSignal), TimeUtils.getCurrentTimeSeconds());
 	}
 
 	@Override

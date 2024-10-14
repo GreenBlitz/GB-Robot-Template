@@ -50,7 +50,7 @@ public class Swerve extends GBSubsystem {
 		this.gyro = gyroStuff.gyro();
 		this.gyroStuff = gyroStuff;
 
-		this.headingSupplier = this::getAbsoluteHeading;
+		this.headingSupplier = this::getGyroAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -166,6 +166,10 @@ public class Swerve extends GBSubsystem {
 		return odometryObservations;
 	}
 
+	public Rotation2d getGyroAbsoluteYaw() {
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());
+		return Rotation2d.fromRadians(inputtedHeadingRadians);
+	}
 
 	public Rotation2d getAbsoluteHeading() {
 		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());

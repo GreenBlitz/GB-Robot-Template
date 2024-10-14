@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
-import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.time.TimeUtils;
 
 public class SwerveMath {
 
@@ -21,7 +21,7 @@ public class SwerveMath {
 	}
 
 	public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-		return ChassisSpeeds.discretize(chassisSpeeds, CycleTimeUtils.getCurrentCycleTime());
+		return ChassisSpeeds.discretize(chassisSpeeds, TimeUtils.getCurrentCycleTimeSeconds());
 	}
 
 	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, SwerveConstants constants) {

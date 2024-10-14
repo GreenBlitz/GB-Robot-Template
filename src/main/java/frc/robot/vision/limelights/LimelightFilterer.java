@@ -6,7 +6,7 @@ import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.Conversions;
+import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 
 		this.multiLimelights = multiLimelights;
 		this.config = config;
-		this.lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
+		this.lastSuccessfulObservationTime = TimeUtils.getCurrentTimeSeconds();
 	}
 
 	@Override
@@ -50,18 +50,16 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 			if (
 				LimelightFilters.keepLimelightData(
 					limelightRawData,
-					getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp())),
-					config.aprilTagHeightMeters(),
-					LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES,
+					getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()),
+					config.limelightFiltersTolerances(),
 					super.getLogPath()
 				)
 			) {
 				estimates.add(rawDataToObservation(limelightRawData));
-				Logger.recordOutput("visionpose",rawDataToObservation(limelightRawData).robotPose());
 			}
 		}
 		if (!estimates.isEmpty()) {
-			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp() / 1.0e6);
+			lastSuccessfulObservationTime = TimeUtils.getCurrentTimeSeconds();
 		}
 		return estimates;
 	}
@@ -78,10 +76,8 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	}
 
 	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
-		double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(
-			limelightRawData.estimatedPose().toPose2d(),
-			getEstimatedPoseAtTimestamp.apply(Conversions.microSecondsToSeconds(Logger.getRealTimestamp()))
-		);
+		double[] standardTransformDeviations = PoseEstimationMath
+			.calculateStandardDeviationOfPose(limelightRawData.estimatedPose().toPose2d(), getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()));
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
@@ -94,20 +90,26 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		List<VisionObservation> observations = getAllAvailableLimelightRawData();
 
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(
-				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i,
-				observations.get(i).robotPose()
-			);
+			Logger.recordOutput(super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
+		}
+	}
+
+	private void logAprilTagHeights() {
+		List<LimelightRawData> observations = multiLimelights.getAllAvailableLimelightData();
+
+		for (int i = 0; i < observations.size(); i++) {
+			Logger
+				.recordOutput(super.getLogPath() + LimeLightConstants.APRIL_TAG_HEIGHT_LOGPATH_PREFIX + i, observations.get(i).aprilTagHeight());
 		}
 	}
 
 	@Override
 	public boolean isPoseEstimationCorrect() {
-		boolean hasTooMuchTimePassed = Conversions.microSecondsToSeconds(Logger.getRealTimestamp()) - lastSuccessfulObservationTime
+		boolean hasTooMuchTimePassed = TimeUtils.getCurrentTimeSeconds() - lastSuccessfulObservationTime
 			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION_SECONDS;
 		List<VisionObservation> estimates = getAllAvailableLimelightRawData();
 		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
-			lastSuccessfulObservationTime = Conversions.microSecondsToSeconds(Logger.getRealTimestamp());
+			lastSuccessfulObservationTime = TimeUtils.getCurrentTimeSeconds();
 			return false;
 		}
 		return true;

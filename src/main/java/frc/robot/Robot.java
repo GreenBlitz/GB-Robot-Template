@@ -18,6 +18,9 @@ import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerFactory;
 import frc.robot.subsystems.intake.roller.IntakeRoller;
 import frc.robot.subsystems.intake.roller.IntakeRollerConstant;
 import frc.robot.subsystems.intake.roller.factory.IntakeRollerFactory;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.elevator.factories.ElevatorFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -43,6 +46,7 @@ public class Robot {
 	private final Funnel funnel;
 	private final Pivot pivot;
 	private final IntakeRoller intakeRoller;
+	private final Elevator elevator;
 	private final Flywheel flywheel;
 
 	private final Superstructure superstructure;
@@ -58,6 +62,8 @@ public class Robot {
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
+		this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
+		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
 		this.flywheel = FlywheelFactory
 			.create("TopMotor/", "BottomMotor/", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
 		this.superstructure = new Superstructure(this);
@@ -87,6 +93,10 @@ public class Robot {
 
 	public Pivot getPivot() {
 		return pivot;
+	}
+
+	public Elevator getElevator() {
+		return elevator;
 	}
 
 	public Flywheel getFlywheel() {

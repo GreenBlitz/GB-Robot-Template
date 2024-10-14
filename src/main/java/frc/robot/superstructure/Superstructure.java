@@ -3,6 +3,8 @@ package frc.robot.superstructure;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Robot;
+import frc.robot.subsystems.elevator.ElevatorStates;
+import frc.robot.subsystems.elevator.ElevatorStatesHandler;
 import frc.robot.subsystems.flywheel.FlywheelState;
 import frc.robot.subsystems.flywheel.FlywheelStateHandler;
 import frc.robot.constants.Field;
@@ -28,6 +30,7 @@ public class Superstructure {
 	private final FunnelStateHandler funnelStateHandler;
 	private final IntakeStatesHandler intakeStatesHandler;
 	private final PivotStateHandler pivotStateHandler;
+	private final ElevatorStatesHandler elevatorStatesHandler;
 
 	private RobotState currentState;
 
@@ -39,6 +42,7 @@ public class Superstructure {
 		this.funnelStateHandler = new FunnelStateHandler(robot);
 		this.intakeStatesHandler = new IntakeStatesHandler(robot.getIntakeRoller());
 		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
+		this.elevatorStatesHandler = new ElevatorStatesHandler(robot.getElevator());
 	}
 
 	public RobotState getCurrentState() {
@@ -80,7 +84,8 @@ public class Superstructure {
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			funnelStateHandler.setState(FunnelState.STOP),
 			intakeStatesHandler.setState(IntakeStates.STOP),
-			pivotStateHandler.setState(PivotState.UP)
+			pivotStateHandler.setState(PivotState.UP),
+			elevatorStatesHandler.setState(ElevatorStates.IDLE)
 		);
 	}
 
@@ -91,7 +96,8 @@ public class Superstructure {
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
 			intakeStatesHandler.setState(IntakeStates.INTAKE),
-			pivotStateHandler.setState(PivotState.ON_FLOOR)
+			pivotStateHandler.setState(PivotState.ON_FLOOR),
+			elevatorStatesHandler.setState(ElevatorStates.IDLE)
 		);
 	}
 
@@ -102,7 +108,8 @@ public class Superstructure {
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			funnelStateHandler.setState(FunnelState.STOP),
 			intakeStatesHandler.setState(IntakeStates.STOP),
-			pivotStateHandler.setState(PivotState.UP)
+			pivotStateHandler.setState(PivotState.UP),
+			elevatorStatesHandler.setState(ElevatorStates.IDLE)
 		);
 	}
 
@@ -113,7 +120,8 @@ public class Superstructure {
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			funnelStateHandler.setState(FunnelState.SPEAKER),
 			intakeStatesHandler.setState(IntakeStates.STOP),
-			pivotStateHandler.setState(PivotState.UP)
+			pivotStateHandler.setState(PivotState.UP),
+			elevatorStatesHandler.setState(ElevatorStates.IDLE)
 		);
 	}
 
@@ -123,7 +131,8 @@ public class Superstructure {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
 			funnelStateHandler.setState(FunnelState.STOP),
-			pivotStateHandler.setState(PivotState.UP)
+			pivotStateHandler.setState(PivotState.UP),
+			elevatorStatesHandler.setState(ElevatorStates.PRE_AMP)
 		).until(this::isNoteInElevatorRoller);
 	}
 
@@ -133,7 +142,8 @@ public class Superstructure {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.AMP),
 			funnelStateHandler.setState(FunnelState.AMP),
-			pivotStateHandler.setState(PivotState.UP)
+			pivotStateHandler.setState(PivotState.UP),
+			elevatorStatesHandler.setState(ElevatorStates.AMP)
 		);
 	}
 
@@ -144,7 +154,8 @@ public class Superstructure {
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
 			funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR),
 			intakeStatesHandler.setState(IntakeStates.SHOOTER_TO_ELEVATOR),
-			pivotStateHandler.setState(PivotState.UP)
+			pivotStateHandler.setState(PivotState.UP),
+			elevatorStatesHandler.setState(ElevatorStates.IDLE)
 		);
 	}
 
@@ -155,7 +166,8 @@ public class Superstructure {
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 			funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
 			intakeStatesHandler.setState(IntakeStates.NOTE_TO_SHOOTER),
-			pivotStateHandler.setState(PivotState.UP)
+			pivotStateHandler.setState(PivotState.UP),
+			elevatorStatesHandler.setState(ElevatorStates.IDLE)
 		);
 	}
 
@@ -166,7 +178,8 @@ public class Superstructure {
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 			funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE),
 			intakeStatesHandler.setState(IntakeStates.OUTTAKE),
-			pivotStateHandler.setState(PivotState.ON_FLOOR)
+			pivotStateHandler.setState(PivotState.ON_FLOOR),
+			elevatorStatesHandler.setState(ElevatorStates.IDLE)
 		);
 	}
 

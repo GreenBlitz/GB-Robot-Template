@@ -16,7 +16,6 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 
 	private final MultiLimelights multiLimelights;
 	private final LimelightFiltererConfig config;
-	private double lastSuccessfulObservationTime;
 	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
 	public LimelightFilterer(LimelightFiltererConfig config, MultiLimelights multiLimelights) {
@@ -24,7 +23,6 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 
 		this.multiLimelights = multiLimelights;
 		this.config = config;
-		this.lastSuccessfulObservationTime = TimeUtils.getCurrentTimeSeconds();
 	}
 
 	@Override
@@ -50,9 +48,6 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 			if (LimelightFilters.keepLimelightData(limelightRawData, config.limelightFiltersTolerances())) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
-		}
-		if (!estimates.isEmpty()) {
-			lastSuccessfulObservationTime = TimeUtils.getCurrentTimeSeconds();
 		}
 		return estimates;
 	}

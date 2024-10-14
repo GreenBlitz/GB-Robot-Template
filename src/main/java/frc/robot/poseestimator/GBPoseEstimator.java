@@ -15,6 +15,7 @@ import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
@@ -144,7 +145,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public Pose2d getEstimatedPoseAtTimeStamp(double timeStamp) {
 		Optional<Pose2d> estimatedPoseAtTimestamp = estimatedPoseInterpolator.getSample(timeStamp);
-		return estimatedPoseAtTimestamp.orElseGet(() -> estimatedPose);
+		return estimatedPoseAtTimestamp.orElseGet(() -> Objects.requireNonNullElseGet(estimatedPose, Pose2d::new));
 	}
 
 	@Override

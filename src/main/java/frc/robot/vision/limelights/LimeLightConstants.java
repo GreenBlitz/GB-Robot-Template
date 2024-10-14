@@ -19,7 +19,7 @@ public class LimeLightConstants {
 
 	public static final double POSITION_NORM_TOLERANCE = 0.5;
 
-	public static final double ROTATION_NORM_TOLERANCE = 0.5;
+	public static final double ROTATION_NORM_TOLERANCE = 90.5;
 
 	public static final Rotation2d ROLL_TOLERANCE = Rotation2d.fromDegrees(10);
 

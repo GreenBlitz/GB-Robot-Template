@@ -39,7 +39,7 @@ public class Lifter extends GBSubsystem {
 		motor.stop();
 	}
 
-	protected void setBrake(boolean brake) {
+	public void setBrake(boolean brake) {
 		motor.setBrake(brake);
 	}
 

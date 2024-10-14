@@ -7,8 +7,8 @@ public class FunnelStateHandler {
 
 	private final Funnel funnel;
 
-	public FunnelStateHandler(Robot robot) {
-		this.funnel = robot.getFunnel();
+	public FunnelStateHandler(Funnel funnel) {
+		this.funnel = funnel;
 	}
 
 	public Command setState(FunnelState state) {

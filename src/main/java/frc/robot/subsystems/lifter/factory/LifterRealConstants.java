@@ -32,11 +32,11 @@ public class LifterRealConstants {
 	}
 
 	private static IDigitalInput generateLimitSwitch() {
-		return new ChanneledDigitalInput(DIGITAL_INPUT_ID, DEBOUNCE_TIME);
+		return new ChanneledDigitalInput(DIGITAL_INPUT_ID, DEBOUNCE_TIME, true);
 	}
 
 	//@formatter:off
-	protected static LifterStuff generateLifterComponents(String logPath) {
+	protected static LifterStuff generateLifterStuff(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
 		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "lifter motor was not configured").report();

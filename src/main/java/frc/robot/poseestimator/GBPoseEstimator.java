@@ -158,7 +158,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			return Optional.empty();
 		}
 		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedRawData);
-		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), odometryPose.getRotation());
+		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), latestGyroAngle);
 		return Optional.of(visionPose);
 	}
 

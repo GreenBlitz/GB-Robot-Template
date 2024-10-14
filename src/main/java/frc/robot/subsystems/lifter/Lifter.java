@@ -39,7 +39,7 @@ public class Lifter extends GBSubsystem {
 		motor.stop();
 	}
 
-	protected void setBrake(boolean brake) {
+	public void setBrake(boolean brake) {
 		motor.setBrake(brake);
 	}
 
@@ -75,7 +75,6 @@ public class Lifter extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "lifter position in meters", convertToMeters(lifterStuff.positionSignal().getLatestValue()));
 
 		limitSwitch.updateInputs(limitSwitchInputs);
-		Logger.processInputs(lifterStuff.logPath() + "limitSwitch/", limitSwitchInputs);
 	}
 
 	private double convertToMeters(Rotation2d motorPosition) {

@@ -29,7 +29,7 @@ public class Limelight extends GBSubsystem {
 		super(logPath + name + "/");
 
 		this.name = name;
-		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
+		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
@@ -55,7 +55,7 @@ public class Limelight extends GBSubsystem {
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		double[] robotPoseWithoutGyroInput = robotPoseForHeadingEntry
 			.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		robotHeading = new Rotation2d(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
+		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {

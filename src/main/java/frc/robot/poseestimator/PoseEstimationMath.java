@@ -41,19 +41,19 @@ public class PoseEstimationMath {
 	}
 
 	//@formatter:off
-    public static Transform2d applyKalmanOnTransform(
-            VisionObservation observation,
-            Pose2d appliedVisionObservation,
-            double[] odometryStandardDeviations
-    ) {
-        double[] combinedStandardDeviations = getKalmanRatio(observation.standardDeviations(), odometryStandardDeviations);
-        Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.robotPose());
-        return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
-    }
+	public static Transform2d applyKalmanOnTransform(
+		VisionObservation observation,
+		Pose2d appliedVisionObservation,
+		double[] odometryStandardDeviations
+	) {
+		double[] combinedStandardDeviations = getKalmanRatio(observation.standardDeviations(), odometryStandardDeviations);
+		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.robotPose());
+		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
+	}
 
 	public static Transform2d scaleDifferenceFromKalman(
-			Transform2d visionDifferenceFromOdometry,
-			double[] combinedStandardDeviations
+		Transform2d visionDifferenceFromOdometry,
+		double[] combinedStandardDeviations
 	) {
 		return new Transform2d(
 			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
@@ -83,6 +83,9 @@ public class PoseEstimationMath {
 	}
 
 	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
+		if (currentEstimatedPose == null) {
+			return new double[] {0.01, 0.01, 0.01};
+		}
 		double normalizedLimelightX = limelightRawData.estimatedPose().getX() / Field.LENGTH_METERS;
 		double normalizedLimelightY = limelightRawData.estimatedPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
@@ -132,9 +135,11 @@ public class PoseEstimationMath {
 			summedXComponent += heading.getCos();
 			summedYComponent += heading.getSin();
 		}
-		if (summedXComponent == 0 || summedYComponent == 0) {
-			return estimatedHeadings.get(0);
+		if (summedXComponent == 0 || summedYComponent == 0 || estimatedHeadings.isEmpty()) {
+			return new Rotation2d();
 		}
+		summedXComponent /= estimatedHeadings.size();
+		summedYComponent /= estimatedHeadings.size();
 		return new Rotation2d(Math.atan2(summedYComponent, summedXComponent));
 	}
 

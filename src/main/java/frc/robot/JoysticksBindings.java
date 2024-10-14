@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.superstructure.RobotState;
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -36,6 +37,7 @@ public class JoysticksBindings {
 	public static SmartJoystick getSixthJoystick() {
 		return SIXTH_JOYSTICK;
 	}
+	
 
 	public static void configureBindings(Robot robot) {
 		mainJoystickButtons(robot);
@@ -50,10 +52,18 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
+		robot.getSwerve().setDefaultCommand(
+				robot.getSwerve().getCommandsBuilder().drive(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+				)
+		);
+		
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.PRE_CLIMB));
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB));
 		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.TRAP));
-		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

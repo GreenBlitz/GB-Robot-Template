@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-
 public enum ElevatorStates {
 
 	PRE_AMP(0),

@@ -33,7 +33,7 @@ public class LimelightFilters {
 			Logger.recordOutput(logpath + "filteredBecauseRobotIsFuckingFlying", limelightRawData.estimatedPose());
 		}
 
-		return limelightOutputInTolerance && rollInTolerance && pitchInTolerance && robotOnGround;
+		return rollInTolerance && pitchInTolerance && robotOnGround;
 	}
 
 	protected static boolean isLimelightOutputInTolerance(

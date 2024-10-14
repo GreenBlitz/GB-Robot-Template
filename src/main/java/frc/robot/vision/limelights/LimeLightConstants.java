@@ -12,10 +12,6 @@ public class LimeLightConstants {
 
 	public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 0.07;
 
-	public static final double POSITION_NORM_TOLERANCE = 0.1;
-
-	public static final double ROTATION_NORM_TOLERANCE = 0.2;
-
 	public static final Rotation2d ROLL_TOLERANCE = Rotation2d.fromDegrees(10);
 
 	public static final Rotation2d PITCH_TOLERANCE = Rotation2d.fromDegrees(10);
@@ -23,8 +19,6 @@ public class LimeLightConstants {
 	public static final double ROBOT_TO_GROUND_TOLERANCE_METERS = 0.2;
 
 	public final static LimelightFiltersTolerances DEFAULT_LIMELIGHT_FILTERS_TOLERANCES = new LimelightFiltersTolerances(
-		POSITION_NORM_TOLERANCE,
-		ROTATION_NORM_TOLERANCE,
 		ROLL_TOLERANCE,
 		PITCH_TOLERANCE,
 		ROBOT_TO_GROUND_TOLERANCE_METERS

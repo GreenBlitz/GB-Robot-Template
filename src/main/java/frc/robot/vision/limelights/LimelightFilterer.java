@@ -47,13 +47,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
-			if (
-				LimelightFilters.keepLimelightData(
-					limelightRawData,
-					getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()),
-					config.limelightFiltersTolerances()
-				)
-			) {
+			if (LimelightFilters.keepLimelightData(limelightRawData, config.limelightFiltersTolerances())) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}
@@ -94,18 +88,6 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 				observations.get(i).robotPose()
 			);
 		}
-	}
-
-	@Override
-	public boolean isPoseEstimationCorrect() {
-		boolean hasTooMuchTimePassed = TimeUtils.getCurrentTimeSeconds() - lastSuccessfulObservationTime
-			> LimeLightConstants.TIME_TO_FIX_POSE_ESTIMATION_SECONDS;
-		List<VisionObservation> estimates = getAllAvailableLimelightRawData();
-		if (hasTooMuchTimePassed && !estimates.isEmpty()) {
-			lastSuccessfulObservationTime = TimeUtils.getCurrentTimeSeconds();
-			return false;
-		}
-		return true;
 	}
 
 	@Override

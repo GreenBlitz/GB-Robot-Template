@@ -29,6 +29,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private SwerveDriveWheelPositions latestWheelPositions;
 	private Rotation2d latestGyroAngle;
 	private Rotation2d headingOffset;
+	private boolean hasHeadingOffsetBeenInitialized;
 
 	public GBPoseEstimator(
 		String logPath,
@@ -47,6 +48,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.latestGyroAngle = initialGyroAngle;
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
+		this.hasHeadingOffsetBeenInitialized = false;
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		calculateHeadingOffset(initialGyroAngle);
 		//@formatter:off
@@ -64,17 +66,15 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		return limelightFilterer;
 	}
 
-	public void resetPoseByLimelight() {
-		getVisionPose().ifPresent(visionEstimatedPose -> {
-			estimatedPose = visionEstimatedPose;
-			odometryPose = estimatedPose;
-			odometryPoseInterpolator.clear();
-		});
-	}
-
+	//@formatter:off
 	public void calculateHeadingOffset(Rotation2d gyroAngle) {
-		headingOffset = getEstimatedRobotHeadingByVision().minus(gyroAngle);
+		Optional<Rotation2d> estimatedRobotHeading = getEstimatedRobotHeadingByVision();
+		estimatedRobotHeading.ifPresentOrElse(estimatedHeading -> {
+			headingOffset = estimatedHeading.minus(gyroAngle);
+			hasHeadingOffsetBeenInitialized = true;
+		}, () -> headingOffset = new Rotation2d());
 	}
+	//@formatter:on
 
 	@Override
 	public void resetHeadingOffset(Rotation2d newHeading) {
@@ -83,7 +83,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	private Rotation2d getEstimatedRobotHeadingByVision() {
+	private Optional<Rotation2d> getEstimatedRobotHeadingByVision() {
 		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
 		List<Rotation2d> headingEstimation = stackedHeadingEstimations;
 		while (
@@ -132,7 +132,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			return Optional.empty();
 		}
 		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedRawData);
-		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), odometryPose.getRotation());
+		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), latestGyroAngle.plus(headingOffset));
 		return Optional.of(visionPose);
 	}
 
@@ -184,9 +184,12 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void addOdometryObservation(OdometryObservation observation) {
+		if (!hasHeadingOffsetBeenInitialized) {
+			calculateHeadingOffset(observation.gyroAngle());
+		}
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
 		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
-		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
+		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle().plus(headingOffset), latestGyroAngle.plus(headingOffset));
 		latestGyroAngle = observation.gyroAngle();
 		latestWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);
@@ -207,10 +210,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void subsystemPeriodic() {
-		if (!limelightFilterer.isPoseEstimationCorrect()) {
-			calculateHeadingOffset(latestGyroAngle);
-			resetPoseByLimelight();
-		}
 		updateVision(limelightFilterer.getFilteredVisionObservations());
 	}
 

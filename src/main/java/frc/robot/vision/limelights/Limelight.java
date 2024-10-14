@@ -55,7 +55,7 @@ public class Limelight extends GBSubsystem {
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		double[] robotPoseWithoutGyroInput = robotPoseForHeadingEntry
 			.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		robotHeading = new Rotation2d(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
+		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {

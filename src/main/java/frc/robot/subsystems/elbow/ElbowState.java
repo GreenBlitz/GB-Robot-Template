@@ -6,7 +6,7 @@ public enum ElbowState {
 
 	IDLE(Rotation2d.fromDegrees(-72)),
 	MANUAL(new Rotation2d()),
-	SHOOTER_INTAKE(Rotation2d.fromDegrees(-78)),
+	INTAKE(Rotation2d.fromDegrees(-78)),
 	ARM_INTAKE(Rotation2d.fromDegrees(-74)),
 	PRE_AMP(Rotation2d.fromDegrees(50)),
 	TRANSFER(Rotation2d.fromDegrees(-78));

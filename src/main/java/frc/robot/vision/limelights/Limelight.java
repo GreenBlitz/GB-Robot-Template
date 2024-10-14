@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
 import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class Limelight extends GBSubsystem {
 				gyroAngleValues.pitch(),
 				gyroAngleValues.pitchRate(),
 				gyroAngleValues.roll(),
-				gyroAngleValues.rollRate(),}
+				gyroAngleValues.rollRate()}
 		);
 		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
@@ -107,6 +108,16 @@ public class Limelight extends GBSubsystem {
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
+	}
+
+	public void logEstimation() {
+		getUpdatedPose3DEstimation()
+			.ifPresent((Pair<Pose3d, Double> estimation) -> Logger.recordOutput(super.getLogPath(), estimation.getFirst()));
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		logEstimation();
 	}
 
 }

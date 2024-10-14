@@ -24,6 +24,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
 
+	private final String logPath;
+
 	private final Robot robot;
 	private final Swerve swerve;
 	private final ElevatorRollerStateHandler elevatorRollerStateHandler;
@@ -35,7 +37,9 @@ public class Superstructure {
 
 	private RobotState currentState;
 
-	public Superstructure(Robot robot) {
+	public Superstructure(String logPath, Robot robot) {
+		this.logPath = logPath;
+
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.elevatorRollerStateHandler = new ElevatorRollerStateHandler(robot);
@@ -51,7 +55,7 @@ public class Superstructure {
 	}
 
 	public void logStatus() {
-		Logger.recordOutput("CurrentState", currentState);
+		Logger.recordOutput(logPath + "CurrentState", currentState);
 	}
 
 	private boolean isNoteInShooter() {

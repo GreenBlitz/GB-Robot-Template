@@ -146,15 +146,16 @@ public class Robot {
 		PathPlannerUtils.registerCommand(RobotState.INTAKE.name(), superstructure.setState(RobotState.INTAKE));
 
 		Supplier<Optional<Rotation2d>> angleToSpeakerSupplier = () -> Optional.of(
-				SwerveMath.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle()
+			SwerveMath.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle()
 		);
-		PathPlannerUtils.registerCommand(RobotState.PRE_SPEAKER.name(),
-				superstructure.setState(RobotState.PRE_SPEAKER)
-		  		.beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
+		PathPlannerUtils.registerCommand(
+			RobotState.PRE_SPEAKER.name(),
+			superstructure.setState(RobotState.PRE_SPEAKER)
+				.beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
 		);
-		PathPlannerUtils.registerCommand(RobotState.SPEAKER.name(),
-				superstructure.setState(RobotState.SPEAKER)
-			  	.beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
+		PathPlannerUtils.registerCommand(
+			RobotState.SPEAKER.name(),
+			superstructure.setState(RobotState.SPEAKER).beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
 		);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);

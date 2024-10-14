@@ -63,9 +63,10 @@ public class Elevator extends GBSubsystem {
 		backMotor.setBrake(brake);
 	}
 
-	protected void setTargetPosition(Rotation2d position) {
-		frontMotor.applyAngleRequest(positionRequest.withSetPoint(position));
-		backMotor.applyAngleRequest(positionRequest.withSetPoint(position));
+	protected void setTargetPositionMeters(double position) {
+		Rotation2d angleSetPoint = metersToMotorRotations(position);
+		frontMotor.applyAngleRequest(positionRequest.withSetPoint(angleSetPoint));
+		backMotor.applyAngleRequest(positionRequest.withSetPoint(angleSetPoint));
 	}
 
 	public boolean isAtBackwardLimit() {
@@ -84,7 +85,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	protected void stayInPlace() {
-		setTargetPosition(getElevatorAngle());
+		setTargetPositionMeters(getPositionMeters());
 	}
 
 	private double motorRotationsToMeters(Rotation2d rotations) {

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.utils.utilcommands.LoggedDashboardCommand;
 
@@ -35,10 +34,10 @@ public class ElevatorCommandsBuilder {
 		).withName("Set power by supplier");
 	}
 
-	public Command setTargetPosition(Rotation2d angle) {
+	public Command setTargetPositionMeters(double position) {
 		return new FunctionalCommand(
 			() -> {},
-			() -> elevator.setTargetPosition(angle),
+			() -> elevator.setTargetPositionMeters(position),
 			interrupted -> elevator.stayInPlace(),
 			() -> false,
 			elevator

@@ -1,20 +1,18 @@
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-
 public enum ElevatorStates {
 
-	PRE_AMP(Rotation2d.fromRotations(0)),
-	AMP(Rotation2d.fromRotations(0)),
-	IDLE(Rotation2d.fromRotations(0));
+	PRE_AMP(0),
+	AMP(0),
+	IDLE(0);
 
-	private final Rotation2d position;
+	private final double position;
 
-	ElevatorStates(Rotation2d position) {
+	ElevatorStates(double position) {
 		this.position = position;
 	}
 
-	public Rotation2d getPosition() {
+	public double getPositionMeters() {
 		return position;
 	}
 

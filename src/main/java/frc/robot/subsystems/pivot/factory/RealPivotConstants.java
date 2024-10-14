@@ -36,8 +36,8 @@ public class RealPivotConstants {
 	private static TalonFXConfiguration generateMotorConfig() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-		configuration.Slot0.kP = 198;
-		configuration.Slot0.kD = 3.6;
+		configuration.Slot0.kP = 230;
+		configuration.Slot0.kD = 10;
 		configuration.Slot0.kV = 18.57;
 		configuration.Slot0.kS = 0.26;
 		configuration.Slot0.kA = 0.7702;

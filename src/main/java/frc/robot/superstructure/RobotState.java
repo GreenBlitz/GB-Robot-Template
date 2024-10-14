@@ -4,6 +4,7 @@ public enum RobotState {
 
 	IDLE,
 	INTAKE,
+	ARM_INTAKE,
 	SHOOTER_OUTTAKE, // intake, pivot, funnel
 	SPEAKER, // Funnel
 	AMP, // Roller
@@ -14,5 +15,7 @@ public enum RobotState {
 	PRE_AMP,
 	TRANSFER_SHOOTER_TO_ARM,
 	TRANSFER_ARM_TO_SHOOTER,
+	INTAKE_OUTTAKE,
+	ARM_OUTTAKE,
 
 }

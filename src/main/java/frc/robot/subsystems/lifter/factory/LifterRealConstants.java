@@ -1,6 +1,5 @@
 package frc.robot.subsystems.lifter.factory;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
@@ -10,13 +9,11 @@ import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
-import frc.robot.subsystems.lifter.LifterComponents;
+import frc.robot.subsystems.lifter.LifterStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 
 public class LifterRealConstants {
 
@@ -34,30 +31,20 @@ public class LifterRealConstants {
 		return configuration;
 	}
 
-	private static SysIdRoutine.Config generateSysidConfig() {
-		return new SysIdRoutine.Config(
-			Volts.of(SysIdRoutineConfigConstants.RAMP_RATE_MAGNITUDE).per(Seconds.of(SysIdRoutineConfigConstants.RAMP_RATE_SECONDS)),
-			Volts.of(SysIdRoutineConfigConstants.STEP_VOLTAGE),
-			Seconds.of(SysIdRoutineConfigConstants.TIME_OUT),
-			(state) -> SignalLogger.writeString("state", state.toString())
-		);
-	}
-
 	private static IDigitalInput generateLimitSwitch() {
-		return new ChanneledDigitalInput(DIGITAL_INPUT_ID, DEBOUNCE_TIME);
+		return new ChanneledDigitalInput(DIGITAL_INPUT_ID, DEBOUNCE_TIME, true);
 	}
 
 	//@formatter:off
-	protected static LifterComponents generateLifterComponents(String logPath) {
+	protected static LifterStuff generateLifterStuff(String logPath) {
 		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
-
 		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "lifter motor was not configured").report();
 		}
 
-		return new LifterComponents(
+		return new LifterStuff(
 			logPath,
-			new TalonFXMotor(logPath, talonFXWrapper, generateSysidConfig()),
+			new TalonFXMotor(logPath, talonFXWrapper, new SysIdRoutine.Config()),
 			DRUM_RADIUS,
 			generateLimitSwitch(),
 			Phoenix6SignalBuilder.generatePhoenix6Signal(
@@ -67,12 +54,6 @@ public class LifterRealConstants {
 			)
 		);
 	}
-
-    private static class SysIdRoutineConfigConstants {
-        private static final double RAMP_RATE_MAGNITUDE = 1;
-        private static final double RAMP_RATE_SECONDS = 1;
-        private static final double STEP_VOLTAGE = 7;
-        private static final double TIME_OUT = 10;
-    }
 	//@formatter:on
 }
+

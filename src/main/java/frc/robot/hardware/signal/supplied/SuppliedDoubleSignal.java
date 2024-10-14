@@ -2,7 +2,7 @@ package frc.robot.hardware.signal.supplied;
 
 import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.hardware.signal.TimedValue;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.time.TimeUtils;
 
 import java.util.function.Supplier;
 
@@ -17,7 +17,7 @@ public class SuppliedDoubleSignal extends DoubleSignal {
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(doubleSupplier.get(), Logger.getRealTimestamp() / 1.0e6);
+		return new TimedValue<>(doubleSupplier.get(), TimeUtils.getCurrentTimeSeconds());
 	}
 
 }

@@ -5,7 +5,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.signal.InputSignal;
 
-public record LifterComponents(
+public record LifterStuff(
 	String logPath,
 	ControllableMotor motor,
 	double drumRadius,

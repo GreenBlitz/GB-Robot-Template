@@ -6,7 +6,6 @@ public enum SolenoidState {
 	RETRACT(0.8),
 	HOLD(0.2);
 
-
 	private final double power;
 
 	SolenoidState(double power) {

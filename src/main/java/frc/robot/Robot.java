@@ -6,18 +6,21 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.funnel.Funnel;
-import frc.robot.subsystems.funnel.FunnelConstants;
-import frc.robot.subsystems.funnel.factory.FunnelFactory;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.intake.factory.IntakeFactory;
 import frc.robot.subsystems.elbow.Elbow;
 import frc.robot.subsystems.elbow.ElbowConstants;
 import frc.robot.subsystems.elbow.factory.ElbowFactory;
 import frc.robot.subsystems.flywheel.FlyWheelConstants;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.funnel.FunnelConstants;
+import frc.robot.subsystems.funnel.factory.FunnelFactory;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.factory.IntakeFactory;
+import frc.robot.subsystems.lifter.Lifter;
+import frc.robot.subsystems.lifter.LifterConstants;
+import frc.robot.subsystems.lifter.factory.LifterFactory;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotConstants;
 import frc.robot.subsystems.pivot.factory.PivotFactory;
@@ -54,6 +57,7 @@ public class Robot {
 	private final Elbow elbow;
 	private final Flywheel flywheel;
 	private final Pivot pivot;
+	private final Lifter lifter;
 	private final Roller roller;
 	private final Wrist wrist;
 
@@ -74,6 +78,7 @@ public class Robot {
 		this.elbow = new Elbow(ElbowFactory.create(ElbowConstants.LOG_PATH));
 		BrakeStateManager.add(() -> elbow.setBrake(true), () -> elbow.setBrake(false));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
+		this.lifter = new Lifter(LifterFactory.create(LifterConstants.LOG_PATH));
 		this.roller = new Roller(RollerFactory.create(RollerConstants.LOG_PATH));
 		BrakeStateManager.add(() -> roller.setBrake(true), () -> roller.setBrake(false));
 		this.wrist = new Wrist(WristFactory.create(WristConstants.LOG_PATH));
@@ -119,6 +124,10 @@ public class Robot {
 
 	public Pivot getPivot() {
 		return pivot;
+	}
+
+	public Lifter getLifter() {
+		return lifter;
 	}
 
 	public Roller getRoller() {

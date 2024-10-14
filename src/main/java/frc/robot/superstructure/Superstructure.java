@@ -135,6 +135,7 @@ public class Superstructure {
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
 			case INTAKE_OUTTAKE -> intakeOuttake();
 			case ARM_OUTTAKE -> armOuttake();
+			case INTAKE_WITH_FLYWHEEL -> intakeWithFlywheel();
 		};
 	}
 
@@ -410,6 +411,37 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+	}
+
+	private Command intakeWithFlywheel() {
+	return new ParallelCommandGroup(
+		setCurrentStateName(RobotState.INTAKE_WITH_FLYWHEEL),
+		new SequentialCommandGroup(
+			enableChangeStateAutomatically(false),
+			new ParallelCommandGroup(
+				intakeStateHandler.setState(IntakeState.INTAKE),
+				rollerStateHandler.setState(RollerState.ROLL_IN),
+				funnelStateHandler.setState(FunnelState.STOP)
+			).until(this::isObjectInIntake),
+			new ParallelCommandGroup(
+				noteInRumble(),
+				intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
+				funnelStateHandler.setState(FunnelState.INTAKE),
+				rollerStateHandler.setState(RollerState.ROLL_IN)
+			).withTimeout(Timeouts.INTAKE_FUNNEL_SECONDS),//.until(this::isObjectInFunnel)
+			enableChangeStateAutomatically(true),
+			new ParallelCommandGroup(
+				intakeStateHandler.setState(IntakeState.STOP),
+				rollerStateHandler.setState(RollerState.STOP),
+				funnelStateHandler.setState(FunnelState.STOP)
+			)
+		),
+		flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
+		pivotStateHandler.setState(PivotState.IDLE),
+		elbowStateHandler.setState(ElbowState.INTAKE),
+		wristStateHandler.setState(WristState.IN_ARM),
+		swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 	//@formatter:on

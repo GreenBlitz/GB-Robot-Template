@@ -144,6 +144,7 @@ public class Robot {
 	private void configPathPlanner() {
 		// Register commands...
 		PathPlannerUtils.registerCommand(RobotState.INTAKE.name(), superstructure.setState(RobotState.INTAKE));
+		PathPlannerUtils.registerCommand(RobotState.INTAKE_WITH_FLYWHEEL.name(), superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL));
 
 		Supplier<Optional<Rotation2d>> angleToSpeakerSupplier = () -> Optional.of(
 			SwerveMath.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle()

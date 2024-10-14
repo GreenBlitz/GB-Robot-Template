@@ -18,7 +18,6 @@ import frc.robot.subsystems.pivot.PivotStateHandler;
 import frc.robot.subsystems.roller.RollerState;
 import frc.robot.subsystems.roller.RollerStateHandler;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.wrist.WristState;

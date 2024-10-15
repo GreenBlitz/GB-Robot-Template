@@ -284,7 +284,6 @@ public class Superstructure {
 				)
 			),
 			rollerStateHandler.setState(RollerState.STOP),
-			intakeStateHandler.setState(IntakeState.STOP),
 			pivotStateHandler.setState(PivotState.INTERPOLATE),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.IDLE),

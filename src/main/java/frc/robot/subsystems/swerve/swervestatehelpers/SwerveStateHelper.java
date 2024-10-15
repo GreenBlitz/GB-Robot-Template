@@ -40,6 +40,7 @@ public class SwerveStateHelper {
 			case SPEAKER -> handleSpeakerAssist(speeds, robotPoseSupplier.get());
 			case NOTE -> handleNoteAimAssist(speeds, robotPoseSupplier.get(), noteTranslationSupplier.get(), swerveState);
 			case AMP -> handleAmpAssist(speeds, robotPoseSupplier.get());
+			case PASS -> handlePassAssist(speeds, robotPoseSupplier.get());
 		};
 	}
 
@@ -71,6 +72,19 @@ public class SwerveStateHelper {
 			robotPose.getRotation(),
 			SwerveMath.getRelativeTranslation(robotPose.getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle(),
 			swerveConstants
+		);
+	}
+
+	private ChassisSpeeds handlePassAssist(ChassisSpeeds speeds, Optional<Pose2d> optionalRobotPose) {
+		if (optionalRobotPose.isEmpty()) {
+			return speeds;
+		}
+		Pose2d robotPose = optionalRobotPose.get();
+		return AimAssistMath.getRotationAssistedChassisSpeeds(
+				speeds,
+				robotPose.getRotation(),
+				SwerveMath.getRelativeTranslation(robotPose.getTranslation(), Field.getPassTarget().toTranslation2d()).getAngle(),
+				swerveConstants
 		);
 	}
 

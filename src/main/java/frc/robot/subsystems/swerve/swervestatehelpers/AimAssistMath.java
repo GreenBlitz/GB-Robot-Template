@@ -67,4 +67,14 @@ public class AimAssistMath {
 			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
+	public static Translation2d getClosetPointOnCircle(Translation2d robot, Translation2d centerOfCircle, double radius) {
+		Translation2d robotDifferenceToCircleCenter = robot.minus(centerOfCircle);
+		double slope = robotDifferenceToCircleCenter.getY() / robotDifferenceToCircleCenter.getX();
+		double cutPointX = radius / Math.sqrt(Math.pow(slope, 2) + 1);
+		cutPointX *= Math.signum(robot.getX());
+		double cutPointY = slope * cutPointX;
+		Translation2d cutPointRelativeToCircleCenter = new Translation2d(cutPointX, cutPointY);
+		return cutPointRelativeToCircleCenter.plus(centerOfCircle);
+	}
+
 }

@@ -231,7 +231,10 @@ public class Superstructure {
 				)
 			),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
+			new SequentialCommandGroup(
+				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR).until(this::isNoteInElevatorRoller),
+				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
+			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE),
 			pivotStateHandler.setState(PivotState.UP)
@@ -256,7 +259,10 @@ public class Superstructure {
 				)
 			),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
-			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR),
+			new SequentialCommandGroup(
+				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR).until(() -> !this.isNoteInElevatorRoller()),
+				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
+			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE),
 			pivotStateHandler.setState(PivotState.UP)
@@ -273,7 +279,7 @@ public class Superstructure {
 			intakeStatesHandler.setState(IntakeStates.OUTTAKE),
 			pivotStateHandler.setState(PivotState.ON_FLOOR),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
-		).until(() -> !isNoteInIntake());
+		).until(() -> !isNoteInIntake() && !isNoteInElevatorRoller() && !isNoteInShooter());
 	}
 
 	public Command shooterOuttake() {

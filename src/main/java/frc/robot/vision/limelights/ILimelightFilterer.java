@@ -17,6 +17,6 @@ public interface ILimelightFilterer {
 
 	List<VisionObservation> getFilteredVisionObservations();
 
-	List<VisionObservation> getAllAvailableLimelightRawData();
+	List<VisionObservation> getAllAvailableVisionObservations();
 
 }

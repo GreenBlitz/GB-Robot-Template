@@ -53,7 +53,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	}
 
 	@Override
-	public List<VisionObservation> getAllAvailableLimelightRawData() {
+	public List<VisionObservation> getAllAvailableVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {

@@ -120,18 +120,21 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		List<VisionObservation> stackedRawData = limelightFilterer.getAllAvailableLimelightRawData();
-		List<VisionObservation> rawData = limelightFilterer.getAllAvailableLimelightRawData();
-		while (stackedRawData.size() < PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION && !rawData.isEmpty()) {
-			if (!stackedRawData.contains(rawData.get(0))) {
-				stackedRawData.addAll(rawData);
+		List<VisionObservation> stackedVisionObservations = limelightFilterer.getAllAvailableVisionObservations();
+		List<VisionObservation> visionObservations = stackedVisionObservations;
+		while (
+			stackedVisionObservations.size() < PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
+				&& !visionObservations.isEmpty()
+		) {
+			if (!stackedVisionObservations.contains(visionObservations.get(0))) {
+				stackedVisionObservations.addAll(visionObservations);
 			}
-			rawData = limelightFilterer.getAllAvailableLimelightRawData();
+			visionObservations = limelightFilterer.getAllAvailableVisionObservations();
 		}
-		if (stackedRawData.isEmpty()) {
+		if (stackedVisionObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedRawData);
+		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedVisionObservations);
 		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), latestGyroAngle.plus(headingOffset));
 		return Optional.of(visionPose);
 	}

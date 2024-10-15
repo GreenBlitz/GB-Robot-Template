@@ -244,10 +244,19 @@ public class Superstructure {
 			setCurrentStateName(RobotState.SPEAKER),
 			new SequentialCommandGroup(
 				enableChangeStateAutomatically(false),
-				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
-				funnelStateHandler.setState(FunnelState.SHOOT).withTimeout(Timeouts.SHOOTING_SECONDS),// .until(() -> !isObjectInFunnel())
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP)
+				).until(this::isReadyToShoot),
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.SHOOT),
+					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL)
+				).withTimeout(Timeouts.SHOOTING_SECONDS),// .until(() -> !isObjectInFunnel()),
 				enableChangeStateAutomatically(true),
-				funnelStateHandler.setState(FunnelState.STOP)
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP)
+				)
 			),
 			rollerStateHandler.setState(RollerState.STOP),
 			intakeStateHandler.setState(IntakeState.STOP),

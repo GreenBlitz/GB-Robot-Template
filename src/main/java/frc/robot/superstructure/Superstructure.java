@@ -14,7 +14,6 @@ import frc.robot.subsystems.flywheel.FlywheelState;
 import frc.robot.subsystems.flywheel.FlywheelStateHandler;
 import frc.robot.subsystems.funnel.FunnelState;
 import frc.robot.subsystems.funnel.FunnelStateHandler;
-import frc.robot.subsystems.intake.pivot.Pivot;
 import frc.robot.subsystems.intake.pivot.PivotState;
 import frc.robot.subsystems.intake.pivot.PivotStateHandler;
 import frc.robot.subsystems.intake.roller.IntakeStates;
@@ -80,7 +79,11 @@ public class Superstructure {
 
 	private boolean isReadyToAmp() {
 		boolean isElevatorRollerReady = robot.getElevatorRoller().isNoteIn();
-		boolean isElevatorReady = MathUtil.isNear(ElevatorStates.AMP.getPositionMeters(),robot.getElevator().getPositionMeters(),Tolerances.ELEVATOR_POSITION_METERS_TOLERANCE);
+		boolean isElevatorReady = MathUtil.isNear(
+			ElevatorStates.AMP.getPositionMeters(),
+			robot.getElevator().getPositionMeters(),
+			Tolerances.ELEVATOR_POSITION_METERS_TOLERANCE
+		);
 		return isElevatorRollerReady && isElevatorReady;
 	}
 

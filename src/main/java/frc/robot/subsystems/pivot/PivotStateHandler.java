@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Field;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -27,11 +28,10 @@ public class PivotStateHandler {
 				emptyCommand.addRequirements(pivot);
 				return emptyCommand;
 			}
-			Supplier<Double> metersFromSpeaker = () -> Field.getSpeaker()
-				.toTranslation2d()
-				.getDistance(robotPoseSupplier.get().get().getTranslation());
 			return pivot.getCommandsBuilder()
-				.moveToPosition(() -> Rotation2d.fromRadians(PivotSpeakerInterpolationMap.METERS_TO_RADIANS.get(metersFromSpeaker.get())));
+				.moveToPosition(() -> Rotation2d.fromRadians(
+						PivotSpeakerInterpolationMap.METERS_TO_RADIANS.get(
+								Field.getMetersFromSpeaker(robotPoseSupplier.get().get()))));
 		}
 		return pivot.getCommandsBuilder().moveToPosition(pivotState.getTargetPosition());
 	}

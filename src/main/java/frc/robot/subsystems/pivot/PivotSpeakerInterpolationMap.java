@@ -11,18 +11,17 @@ public class PivotSpeakerInterpolationMap {
 		Double,
 		Double> METERS_TO_RADIANS = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), Interpolator.forDouble());
 
-	static {
-		METERS_TO_RADIANS.put(0.9, Units.degreesToRadians(58));
-		METERS_TO_RADIANS.put(1.5, Units.degreesToRadians(48.5));
-		METERS_TO_RADIANS.put(2.0, Units.degreesToRadians(41));
-		METERS_TO_RADIANS.put(2.65, Units.degreesToRadians(38.2));
-		METERS_TO_RADIANS.put(2.7, Units.degreesToRadians(34.2));
-		METERS_TO_RADIANS.put(3.25, Units.degreesToRadians(33.75));
-		METERS_TO_RADIANS.put(3.47, Units.degreesToRadians(32.3));
-		METERS_TO_RADIANS.put(4.15, Units.degreesToRadians(28.9));
-		METERS_TO_RADIANS.put(4.5, Units.degreesToRadians(27.6));
-		METERS_TO_RADIANS.put(5.0, Units.degreesToRadians(26.2));
-		METERS_TO_RADIANS.put(5.5, Units.degreesToRadians(25));
+	static {//perhaps it is shifted by 0.2 meters in othe fields, in steampunk it is 1.1, 1.7
+		METERS_TO_RADIANS.put(1.1, Units.degreesToRadians(58.5));
+		METERS_TO_RADIANS.put(1.7, Units.degreesToRadians(51));
+		METERS_TO_RADIANS.put(2.2, Units.degreesToRadians(46));
+		METERS_TO_RADIANS.put(2.7, Units.degreesToRadians(43));
+		METERS_TO_RADIANS.put(3.0, Units.degreesToRadians(40));
+		METERS_TO_RADIANS.put(3.3, Units.degreesToRadians(37));
+		METERS_TO_RADIANS.put(3.6, Units.degreesToRadians(34));
+		METERS_TO_RADIANS.put(3.9, Units.degreesToRadians(31));
+		METERS_TO_RADIANS.put(4.2, Units.degreesToRadians(28));
+		METERS_TO_RADIANS.put(4.5, Units.degreesToRadians(25));
 	}
 
 }

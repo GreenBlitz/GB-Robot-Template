@@ -74,15 +74,13 @@ public class JoysticksBindings {
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
 		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PRE_SPEAKER));
 		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
+		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
-
-		// for interpolation calibration
-		usedJoystick.A.onTrue(robot.getPivot().getCommandsBuilder().calibInterpolation());
-		usedJoystick.B.onTrue(robot.getPivot().getCommandsBuilder().useInterpolation());
 
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER, 0.1)
 			.whileTrue(robot.getFunnel().getCommandsBuilder().setPower(() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER) * 0.5));
@@ -109,10 +107,8 @@ public class JoysticksBindings {
 
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
-		// bindings...
 
-		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
-		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
+
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

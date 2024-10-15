@@ -14,11 +14,11 @@
         {
           "type": "named",
           "data": {
-            "name": "SPEAKER"
+            "name": "shoot"
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -43,7 +43,7 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -68,7 +68,7 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {

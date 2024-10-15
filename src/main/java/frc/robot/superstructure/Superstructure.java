@@ -25,6 +25,7 @@ import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.wrist.WristState;
 import frc.robot.subsystems.wrist.WristStateHandler;
 import frc.utils.joysticks.SmartJoystick;
+import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class Superstructure {
 	private final WristStateHandler wristStateHandler;
 
 	private RobotState currentState;
-	private boolean enableChangeStateAutomatically;
+	public boolean enableChangeStateAutomatically;
 
 	public Superstructure(String logPath, Robot robot) {
 		this.robot = robot;

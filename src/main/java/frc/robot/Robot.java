@@ -8,6 +8,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.Field;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
@@ -159,14 +161,16 @@ public class Robot {
 		);
 		PathPlannerUtils.registerCommand(
 			RobotState.SPEAKER.name(),
-			superstructure.setState(RobotState.SPEAKER)
+			new SequentialCommandGroup(
+				new InstantCommand(() -> superstructure.enableChangeStateAutomatically = false),
+				superstructure.setState(RobotState.SPEAKER)
 				.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0))
 				.until(superstructure::isEnableChangeStateAutomatically)
+			)
 		);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 //		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
-		PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier);
 	}
 
 	private void configureBindings() {

@@ -81,6 +81,9 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
+
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

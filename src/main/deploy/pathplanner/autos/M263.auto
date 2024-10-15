@@ -14,7 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "SPEAKER"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "INTAKE_WITH_FLYWHEEL"
           }
         },
         {
@@ -26,13 +32,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "SPEAKER"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "INTAKE_WITH_FLYWHEEL"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "26"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PRE_SPEAKER"
           }
         },
         {
@@ -44,7 +62,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "SPEAKER"
           }
         }
       ]

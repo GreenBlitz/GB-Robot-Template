@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "PRE_SPEAKER"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Ashoot"
@@ -20,7 +26,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "SPEAKER"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "INTAKE_WITH_FLYWHEEL"
           }
         },
         {
@@ -32,13 +44,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "SPEAKER"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "INTAKE_WITH_FLYWHEEL"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "15"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PRE_SPEAKER"
           }
         },
         {
@@ -50,7 +74,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "SPEAKER"
           }
         }
       ]

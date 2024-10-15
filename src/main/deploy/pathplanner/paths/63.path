@@ -20,12 +20,12 @@
         "y": 4.85
       },
       "prevControl": {
-        "x": 3.8956004055955136,
-        "y": 4.9560833465908045
+        "x": 3.901189505984328,
+        "y": 4.840334745077685
       },
       "nextControl": {
-        "x": 1.891411350390268,
-        "y": 4.7425327283087
+        "x": 1.8644289499705946,
+        "y": 4.859997166499325
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 4.1
       },
       "prevControl": {
-        "x": 2.1618817094896015,
-        "y": 4.196768758239867
+        "x": 1.20862210340683,
+        "y": 4.450117887396973
       },
       "nextControl": null,
       "isLocked": false,
@@ -51,30 +51,19 @@
       "name": "Shoot",
       "waypointRelativePos": 1.25,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
-                "name": "Shoot"
+                "name": "SPEAKER"
               }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Intake",
-      "waypointRelativePos": 1.75,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
+            },
             {
               "type": "named",
               "data": {
-                "name": "Intake"
+                "name": "INTAKE_WITH_FLYWHEEL"
               }
             }
           ]

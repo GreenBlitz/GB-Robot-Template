@@ -4,13 +4,7 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
-import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
-import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.subsystems.swerve.Swerve;
@@ -24,7 +18,6 @@ import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.vision.limelights.LimelightFiltererConfig;
 import frc.robot.vision.limelights.MultiLimelights;
 import frc.utils.auto.AutonomousChooser;
-import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -45,12 +38,7 @@ public class Robot {
 	private final LimelightFilterer limelightFilterer;
 	private final MultiLimelights multiLimelights;
 
-	private BrushlessSparkMAXMotor motor;
-
 	public Robot() {
-		SparkMaxWrapper wrapper = new SparkMaxWrapper(new SparkMaxDeviceID(11, CANSparkLowLevel.MotorType.kBrushless));
-		motor = new BrushlessSparkMAXMotor("intake", wrapper, new SysIdRoutine.Config());
-
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE),
@@ -84,18 +72,12 @@ public class Robot {
 
 	public void periodic() {
 		swerve.updateStatus();
-//		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
+		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
 		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
 	}
 
 	private void configPathPlanner() {
 		// Register commands...
-		PathPlannerUtils
-			.registerCommand("Intake", new FunctionalCommand(() -> {}, () -> motor.setPower(0.6), interrupted -> motor.stop(), () -> false));
-		PathPlannerUtils.registerCommand(
-			"Intake",
-			new FunctionalCommand(() -> {}, () -> motor.setPower(-0.6), interrupted -> motor.stop(), () -> false).withTimeout(10)
-		);
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 	}

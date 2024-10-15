@@ -69,10 +69,11 @@ public class Robot {
 
 	private AutonomousChooser autonomousChooser;
 
-	private final Swerve swerve;
 	private final GBPoseEstimator poseEstimator;
 	private final LimelightFilterer limelightFilterer;
 	private final MultiLimelights multiLimelights;
+
+	private final Swerve swerve;
 	private final Solenoid solenoid;
 	private final Funnel funnel;
 	private final Intake intake;
@@ -107,7 +108,6 @@ public class Robot {
 		this.wrist = new Wrist(WristFactory.create(WristConstants.LOG_PATH));
 		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
-
 		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
 		this.limelightFilterer = new LimelightFilterer(
 			new LimelightFiltererConfig("limelightfilterer", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
@@ -137,6 +137,7 @@ public class Robot {
 
 	public void periodic() {
 		swerve.updateStatus();
+		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
 		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
 		superstructure.logStatus();
 	}
@@ -156,7 +157,11 @@ public class Robot {
 		);
 		PathPlannerUtils.registerCommand(
 			RobotState.SPEAKER.name(),
-			superstructure.setState(RobotState.SPEAKER).beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
+			superstructure.setState(RobotState.SPEAKER)
+				.beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
+				.until(superstructure::isEnableChangeStateAutomatically)
+				.andThen(() -> PathPlannerUtils.setRotationTargetOverride(Optional::empty))
+				.handleInterrupt(() -> PathPlannerUtils.setRotationTargetOverride(Optional::empty))
 		);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
@@ -172,12 +177,12 @@ public class Robot {
 		return autonomousChooser.getChosenValue();
 	}
 
-	public Swerve getSwerve() {
-		return swerve;
-	}
-
 	public GBPoseEstimator getPoseEstimator() {
 		return poseEstimator;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
 	}
 
 	public Solenoid getSolenoid() {

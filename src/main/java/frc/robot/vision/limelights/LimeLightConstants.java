@@ -15,7 +15,6 @@ public class LimeLightConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
-
 	public final static double APRIL_TAG_HEIGHT_TOLERANCE_METERS = 1.07;
 
 	public static final double POSITION_NORM_TOLERANCE = 1.5;

@@ -20,7 +20,6 @@ public class LimelightFilters {
 		boolean rollInTolerance = LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance());
 		boolean pitchInTolerance = LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance());
 		boolean robotOnGround = LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
-
 		if (!limelightOutputInTolerance) {
 			Logger.recordOutput(logpath + "filteredBecauseBadTolerance", limelightRawData.estimatedPose());
 		}
@@ -70,7 +69,6 @@ public class LimelightFilters {
 
 	protected static boolean
 		isAprilTagInProperHeight(LimelightRawData limelightRawData, double aprilTagHeightToleranceMeters, double aprilTagHeightMeters) {
-		Logger.recordOutput("tag height", aprilTagHeightMeters);
 		double aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - aprilTagHeightMeters);
 		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
 	}

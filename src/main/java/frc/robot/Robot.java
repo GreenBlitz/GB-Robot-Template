@@ -5,18 +5,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.funnel.Funnel;
-import frc.robot.subsystems.funnel.FunnelConstants;
-import frc.robot.subsystems.funnel.factory.FunnelFactory;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.intake.factory.IntakeFactory;
 import frc.robot.subsystems.elbow.Elbow;
 import frc.robot.subsystems.elbow.ElbowConstants;
 import frc.robot.subsystems.elbow.factory.ElbowFactory;
 import frc.robot.subsystems.flywheel.FlyWheelConstants;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.funnel.FunnelConstants;
+import frc.robot.subsystems.funnel.factory.FunnelFactory;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.factory.IntakeFactory;
 import frc.robot.subsystems.lifter.Lifter;
 import frc.robot.subsystems.lifter.LifterConstants;
 import frc.robot.subsystems.lifter.factory.LifterFactory;
@@ -63,10 +63,11 @@ public class Robot {
 
 	private AutonomousChooser autonomousChooser;
 
-	private final Swerve swerve;
 	private final GBPoseEstimator poseEstimator;
 	private final LimelightFilterer limelightFilterer;
 	private final MultiLimelights multiLimelights;
+
+	private final Swerve swerve;
 	private final Solenoid solenoid;
 	private final Funnel funnel;
 	private final Intake intake;
@@ -101,7 +102,6 @@ public class Robot {
 		this.wrist = new Wrist(WristFactory.create(WristConstants.LOG_PATH));
 		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
-
 		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
 		this.limelightFilterer = new LimelightFilterer(
 			new LimelightFiltererConfig("limelightfilterer", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
@@ -131,6 +131,7 @@ public class Robot {
 
 	public void periodic() {
 		swerve.updateStatus();
+		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
 		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
 		superstructure.logStatus();
 	}
@@ -150,12 +151,12 @@ public class Robot {
 		return autonomousChooser.getChosenValue();
 	}
 
-	public Swerve getSwerve() {
-		return swerve;
-	}
-
 	public GBPoseEstimator getPoseEstimator() {
 		return poseEstimator;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
 	}
 
 	public Solenoid getSolenoid() {

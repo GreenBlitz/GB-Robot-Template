@@ -67,7 +67,7 @@ public class JoysticksBindings {
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
 					)
 			);
-		//for aim assist test
+		// for aim assist test
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
 		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PRE_SPEAKER));
 		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));

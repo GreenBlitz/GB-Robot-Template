@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.Field;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
@@ -53,6 +55,7 @@ import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.vision.limelights.LimelightFiltererConfig;
 import frc.robot.vision.limelights.MultiLimelights;
 import frc.utils.auto.AutonomousChooser;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -144,6 +147,7 @@ public class Robot {
 
 	private void configPathPlanner() {
 		// Register commands...
+		PathPlannerUtils.registerCommand("Shoot", new InstantCommand());
 		PathPlannerUtils.registerCommand(RobotState.INTAKE.name(), superstructure.setState(RobotState.INTAKE));
 		PathPlannerUtils.registerCommand(RobotState.INTAKE_WITH_FLYWHEEL.name(), superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL));
 
@@ -159,13 +163,15 @@ public class Robot {
 			RobotState.SPEAKER.name(),
 			superstructure.setState(RobotState.SPEAKER)
 				.beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
+					.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0,() -> 0))
 				.until(superstructure::isEnableChangeStateAutomatically)
 				.andThen(() -> PathPlannerUtils.setRotationTargetOverride(Optional::empty))
 				.handleInterrupt(() -> PathPlannerUtils.setRotationTargetOverride(Optional::empty))
 		);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
-		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+//		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+		PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier);
 	}
 
 	private void configureBindings() {
@@ -174,7 +180,7 @@ public class Robot {
 
 
 	public Command getAutonomousCommand() {
-		return autonomousChooser.getChosenValue();
+		return AutoBuilder.buildAuto("M231");
 	}
 
 	public GBPoseEstimator getPoseEstimator() {

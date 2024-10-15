@@ -18,33 +18,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "INTAKE_WITH_FLYWHEEL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "M2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SPEAKER"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "INTAKE_WITH_FLYWHEEL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "23"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "INTAKE"
+                }
+              }
+            ]
           }
         },
         {
@@ -54,15 +43,47 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "INTAKE_WITH_FLYWHEEL"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "23"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "INTAKE"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "31"
+            "name": "SPEAKER"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "31"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "INTAKE"
+                }
+              }
+            ]
           }
         },
         {

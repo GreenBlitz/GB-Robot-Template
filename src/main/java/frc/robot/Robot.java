@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -152,13 +153,15 @@ public class Robot {
 		PathPlannerUtils.registerCommand(RobotState.INTAKE.name(), superstructure.setState(RobotState.INTAKE));
 		PathPlannerUtils.registerCommand(RobotState.INTAKE_WITH_FLYWHEEL.name(), superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL));
 
-		Supplier<Optional<Rotation2d>> angleToSpeakerSupplier = () -> Optional.of(
-			SwerveMath.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle()
-		);
-		PathPlannerUtils.registerCommand(
-			RobotState.PRE_SPEAKER.name(),
-			superstructure.setState(RobotState.PRE_SPEAKER)
-		);
+		Supplier<Optional<Rotation2d>> angleToSpeakerSupplier = () -> {
+			Translation2d robotRelativeToSpeaker = SwerveMath.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d());
+			if (robotRelativeToSpeaker.getX() <= 4)
+				return Optional.of(
+					robotRelativeToSpeaker.getAngle()
+				);
+			return Optional.empty();
+		};
+		PathPlannerUtils.registerCommand(RobotState.PRE_SPEAKER.name(), superstructure.setState(RobotState.PRE_SPEAKER));
 		PathPlannerUtils.registerCommand(
 			RobotState.SPEAKER.name(),
 			new SequentialCommandGroup(

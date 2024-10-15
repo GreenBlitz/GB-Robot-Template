@@ -30,15 +30,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "INTAKE_WITH_FLYWHEEL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "shoot7"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "shoot7"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "INTAKE"
+                }
+              }
+            ]
           }
         },
         {
@@ -60,15 +67,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "INTAKE_WITH_FLYWHEEL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "shoot8"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "shoot8"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "INTAKE"
+                }
+              }
+            ]
           }
         },
         {

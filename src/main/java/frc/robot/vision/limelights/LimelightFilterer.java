@@ -58,7 +58,6 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}
-
 		if (!estimates.isEmpty()) {
 			lastSuccessfulObservationTime = TimeUtils.getCurrentTimeSeconds();
 		}

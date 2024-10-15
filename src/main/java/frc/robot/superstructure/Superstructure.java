@@ -54,7 +54,8 @@ public class Superstructure {
 		this.flywheelStateHandler = new FlywheelStateHandler(robot.getFlywheel());
 		this.funnelStateHandler = new FunnelStateHandler(robot.getFunnel());
 		this.intakeStateHandler = new IntakeStateHandler(robot.getIntake());
-		this.pivotStateHandler = new PivotStateHandler(robot.getPivot(), Optional.of(() -> robot.getPoseEstimator().getEstimatedPose()));
+		this.pivotStateHandler = new PivotStateHandler(
+				robot.getPivot(), Optional.of(() -> robot.getPoseEstimator().getEstimatedPose()));
 		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
 		this.wristStateHandler = new WristStateHandler(robot.getWrist());
 
@@ -285,7 +286,7 @@ public class Superstructure {
 			rollerStateHandler.setState(RollerState.STOP),
 			pivotStateHandler.setState(PivotState.INTERPOLATE),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
-			elbowStateHandler.setState(ElbowState.IDLE),
+			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());

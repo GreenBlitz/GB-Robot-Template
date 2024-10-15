@@ -156,16 +156,12 @@ public class Robot {
 		PathPlannerUtils.registerCommand(
 			RobotState.PRE_SPEAKER.name(),
 			superstructure.setState(RobotState.PRE_SPEAKER)
-				.beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
 		);
 		PathPlannerUtils.registerCommand(
 			RobotState.SPEAKER.name(),
 			superstructure.setState(RobotState.SPEAKER)
-				.beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
 				.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0))
 				.until(superstructure::isEnableChangeStateAutomatically)
-				.andThen(() -> PathPlannerUtils.setRotationTargetOverride(Optional::empty))
-				.handleInterrupt(() -> PathPlannerUtils.setRotationTargetOverride(Optional::empty))
 		);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);

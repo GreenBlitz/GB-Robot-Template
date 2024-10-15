@@ -55,7 +55,6 @@ import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.vision.limelights.LimelightFiltererConfig;
 import frc.robot.vision.limelights.MultiLimelights;
 import frc.utils.auto.AutonomousChooser;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -163,7 +162,7 @@ public class Robot {
 			RobotState.SPEAKER.name(),
 			superstructure.setState(RobotState.SPEAKER)
 				.beforeStarting(() -> PathPlannerUtils.setRotationTargetOverride(angleToSpeakerSupplier))
-					.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0,() -> 0))
+				.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0))
 				.until(superstructure::isEnableChangeStateAutomatically)
 				.andThen(() -> PathPlannerUtils.setRotationTargetOverride(Optional::empty))
 				.handleInterrupt(() -> PathPlannerUtils.setRotationTargetOverride(Optional::empty))

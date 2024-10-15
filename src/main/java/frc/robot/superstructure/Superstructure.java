@@ -252,7 +252,7 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.ELEVATOR_TO_SHOOTER),
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
-				),//.until(isNoteInShooter)
+				).until(this::isNoteInShooter),
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.STOP),
 					funnelStateHandler.setState(FunnelState.STOP)

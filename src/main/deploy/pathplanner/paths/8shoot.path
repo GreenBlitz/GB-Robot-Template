@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 0.6341317187138877,
-        "y": 4.428212820389605
+        "x": 3.0,
+        "y": 2.5
       },
       "prevControl": {
-        "x": 1.2341317187138874,
-        "y": 3.628212820389605
+        "x": 3.5999999999999996,
+        "y": 1.6999999999999997
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shootS"
+      "linkedName": "3meter"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 120.76271953423888,
+    "rotation": 133.71200094026676,
     "rotateFast": false
   },
   "reversed": false,

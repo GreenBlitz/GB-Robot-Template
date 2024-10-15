@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6341317187138877,
-        "y": 4.428212820389605
+        "x": 3.0,
+        "y": 2.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.494816817393367,
-        "y": 3.919075156382026
+        "x": 3.8606850986794794,
+        "y": 1.9908623359924205
       },
       "isLocked": false,
-      "linkedName": "shootS"
+      "linkedName": "3meter"
     },
     {
       "anchor": {

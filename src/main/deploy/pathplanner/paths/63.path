@@ -49,7 +49,7 @@
   "eventMarkers": [
     {
       "name": "Shoot",
-      "waypointRelativePos": 1.25,
+      "waypointRelativePos": 1.35,
       "command": {
         "type": "sequential",
         "data": {

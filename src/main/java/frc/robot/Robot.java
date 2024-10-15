@@ -163,7 +163,7 @@ public class Robot {
 		PathPlannerUtils.registerCommand(
 			RobotState.SPEAKER.name(),
 			superstructure.setState(RobotState.SPEAKER)
-				.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0))
+//				.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0))
 				.until(superstructure::isEnableChangeStateAutomatically)
 		);
 

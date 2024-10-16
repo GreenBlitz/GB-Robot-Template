@@ -22,6 +22,10 @@ public class Field {
 	public static final double LENGTH_METERS = 16.54175;
 	public static final double WIDTH_METERS = 8.0137;
 
+	public static double getMetersFromSpeaker(Pose2d robotPose) {
+		return getSpeaker().toTranslation2d().getDistance(robotPose.getTranslation());
+	}
+
 	private static final Translation3d SPEAKER = new Translation3d(0.23, WIDTH_METERS - 2.55, 2.045);
 
 	public static Translation3d getSpeaker() {

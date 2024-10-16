@@ -47,7 +47,7 @@ public class Superstructure {
 	private final WristStateHandler wristStateHandler;
 
 	private RobotState currentState;
-	public boolean enableChangeStateAutomatically;
+	private boolean enableChangeStateAutomatically;
 
 	public Superstructure(String logPath, Robot robot) {
 		this.robot = robot;

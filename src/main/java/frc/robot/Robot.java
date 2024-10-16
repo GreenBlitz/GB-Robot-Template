@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.Field;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
@@ -113,9 +112,9 @@ public class Robot {
 		this.wrist = new Wrist(WristFactory.create(WristConstants.LOG_PATH));
 		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
-		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
+		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware/");
 		this.limelightFilterer = new LimelightFilterer(
-			new LimelightFiltererConfig("limelightfilterer", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
+			new LimelightFiltererConfig("limelightfilterer/", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
 			multiLimelights
 		);
 		this.poseEstimator = new GBPoseEstimator(
@@ -154,11 +153,10 @@ public class Robot {
 		PathPlannerUtils.registerCommand(RobotState.INTAKE_WITH_FLYWHEEL.name(), superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL));
 
 		Supplier<Optional<Rotation2d>> angleToSpeakerSupplier = () -> {
-			Translation2d robotRelativeToSpeaker = SwerveMath.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d());
+			Translation2d robotRelativeToSpeaker = SwerveMath
+				.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d());
 			if (robotRelativeToSpeaker.getX() <= 4)
-				return Optional.of(
-					robotRelativeToSpeaker.getAngle()
-				);
+				return Optional.of(robotRelativeToSpeaker.getAngle());
 			return Optional.empty();
 		};
 		PathPlannerUtils.registerCommand(RobotState.PRE_SPEAKER.name(), superstructure.setState(RobotState.PRE_SPEAKER));
@@ -167,8 +165,8 @@ public class Robot {
 			new SequentialCommandGroup(
 				new InstantCommand(() -> superstructure.enableChangeStateAutomatically = false),
 				superstructure.setState(RobotState.SPEAKER)
-				.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0))
-				.until(superstructure::isEnableChangeStateAutomatically)
+					.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0))
+					.until(superstructure::isEnableChangeStateAutomatically)
 			)
 		);
 

@@ -27,6 +27,7 @@ public class Field {
 	}
 
 	private static final Translation3d TO_PASS = new Translation3d(1, WIDTH_METERS - 0.8, 0);
+
 	public static Translation3d getPassTarget() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
 			return TO_PASS;

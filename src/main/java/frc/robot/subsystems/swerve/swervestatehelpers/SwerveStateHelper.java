@@ -81,10 +81,10 @@ public class SwerveStateHelper {
 		}
 		Pose2d robotPose = optionalRobotPose.get();
 		return AimAssistMath.getRotationAssistedChassisSpeeds(
-				speeds,
-				robotPose.getRotation(),
-				SwerveMath.getRelativeTranslation(robotPose.getTranslation(), Field.getPassTarget().toTranslation2d()).getAngle(),
-				swerveConstants
+			speeds,
+			robotPose.getRotation(),
+			SwerveMath.getRelativeTranslation(robotPose.getTranslation(), Field.getPassTarget().toTranslation2d()).getAngle(),
+			swerveConstants
 		);
 	}
 

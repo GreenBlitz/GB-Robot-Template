@@ -52,25 +52,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		Pose2d old = robot.getPoseEstimator().getEstimatedPose();
-		usedJoystick.Y
-			.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(old.getX(), old.getY(), Rotation2d.fromDegrees(0)))));
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPoseByLimelight()));
-
-		robot.getSwerve()
-			.setDefaultCommand(
-				robot.getSwerve()
-					.getCommandsBuilder()
-					.driveBySavedState(
-						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-					)
-			);
-		// for aim assist test
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
-		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PRE_SPEAKER));
-		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
+		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

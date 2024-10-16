@@ -7,4 +7,3 @@
  - Rotations to meters ratio
  - current limit
  - Gear ratio
- - Motor id

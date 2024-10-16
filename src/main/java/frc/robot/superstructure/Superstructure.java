@@ -134,7 +134,7 @@ public class Superstructure {
 		return new InstantCommand(() -> currentState = state);
 	}
 
-	protected Command enableChangeStateAutomatically(boolean enable) {
+	public Command enableChangeStateAutomatically(boolean enable) {
 		return new InstantCommand(() -> enableChangeStateAutomatically = enable);
 	}
 

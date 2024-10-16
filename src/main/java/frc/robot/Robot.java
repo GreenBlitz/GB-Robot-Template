@@ -103,9 +103,9 @@ public class Robot {
 		this.wrist = new Wrist(WristFactory.create(WristConstants.LOG_PATH));
 		BrakeStateManager.add(() -> wrist.setBrake(true), () -> wrist.setBrake(false));
 
-		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware");
+		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware/");
 		this.limelightFilterer = new LimelightFilterer(
-			new LimelightFiltererConfig("limelightfilterer", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
+			new LimelightFiltererConfig("limelightfilterer/", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
 			multiLimelights
 		);
 		this.poseEstimator = new GBPoseEstimator(

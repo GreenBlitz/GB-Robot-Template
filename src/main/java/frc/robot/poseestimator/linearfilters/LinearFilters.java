@@ -1,6 +1,7 @@
 package frc.robot.poseestimator.linearfilters;
 
 import edu.wpi.first.math.filter.LinearFilter;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.LinkedList;
 
@@ -74,7 +75,7 @@ public class LinearFilters {
 					data.removeFirst();
 				}
 				for (int i = 0; i <= sampleSize; i++) {
-					weights += 1.0 / i;
+					weights += 1.0 / (i + 1);
 					output += data.indexOf(i) * weights;
 				}
 

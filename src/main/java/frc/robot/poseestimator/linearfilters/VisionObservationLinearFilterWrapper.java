@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.poseestimator.observations.VisionObservation;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ public class VisionObservationLinearFilterWrapper {
 	private final GBLinearFilter yFilter;
 	private final GBLinearFilter angleFilter;
 	private final Stack<VisionObservation> internalData;
+	private final String logPath;
 	private Pose2d LastObservation;
 
 	/**
@@ -26,6 +28,7 @@ public class VisionObservationLinearFilterWrapper {
 	 *                    for IIR filters the time constant (the period is always the RobotRIO cycle time).
 	 */
 	public VisionObservationLinearFilterWrapper(String logPath, LinearFilterType filterType, double modifier) {
+		this.logPath = logPath;
 		this.xFilter = LinearFilterFactory.create(filterType, logPath, modifier);
 		this.yFilter = LinearFilterFactory.create(filterType, logPath, modifier);
 		this.angleFilter = LinearFilterFactory.create(filterType, logPath, modifier);
@@ -62,6 +65,7 @@ public class VisionObservationLinearFilterWrapper {
 		LastObservation = data.robotPose();
 		internalData.add(data);
 		checkSize();
+		Logger.recordOutput(logPath  + "gotData", data.robotPose());
 	}
 
 	private Pose2d fixVisionPose(Pose2d visionPose, Pose2d odometryStartingPose, Pose2d odometryEndingPose) {
@@ -70,15 +74,17 @@ public class VisionObservationLinearFilterWrapper {
 	}
 
 	public Pose2d calculateFilteredPose() {
-		return new Pose2d(
-			xFilter.calculateNewData(LastObservation.getX()),
-			yFilter.calculateNewData(LastObservation.getY()),
-			Rotation2d.fromRotations(angleFilter.calculateNewData(LastObservation.getRotation().getRotations()))
+		Pose2d output = new Pose2d(
+				xFilter.calculateNewData(LastObservation.getX()),
+				yFilter.calculateNewData(LastObservation.getY()),
+				Rotation2d.fromRotations(angleFilter.calculateNewData(LastObservation.getRotation().getRotations()))
 		);
+		Logger.recordOutput(logPath + "outputed", output);
+		return output;
 	}
 
 	public Pose2d calculateFixedData(TimeInterpolatableBuffer<Pose2d> odometryObservationsOverTime) {
-		// ! bad code. pls dont' merge this, or fix this. Several side effects.
+		// ! bad code. pls don't merge this, or fix this. Several side effects.
 		double timestamp = Timer.getFPGATimestamp();
 		xFilter.getFilter().reset();
 		yFilter.getFilter().reset();
@@ -86,16 +92,19 @@ public class VisionObservationLinearFilterWrapper {
 		for (VisionObservation data : internalData) {
 			Optional<Pose2d> fixed = getFixedData(data.robotPose(), data.timestamp(), timestamp, odometryObservationsOverTime);
 			fixed.ifPresent((Pose2d fixedData) -> {
-				xFilter.calculateNewData(fixedData.getX());
-				yFilter.calculateNewData(fixedData.getY());
-				Rotation2d.fromRotations(angleFilter.calculateNewData(fixedData.getRotation().getRotations()));
+				Pose2d output = new Pose2d(
+						xFilter.calculateNewData(fixedData.getX()),
+						yFilter.calculateNewData(fixedData.getY()),
+						Rotation2d.fromRotations(angleFilter.calculateNewData(fixedData.getRotation().getRotations()))
+				);
+				System.out.println(Arrays.toString(new double[]{output.getX(), output.getY(), output.getRotation().getDegrees()}));
+				Logger.recordOutput(logPath + "outputedFixed", output);
+//				return output;
 			});
 		}
-		return new Pose2d(
-			xFilter.getFilter().lastValue(),
-			yFilter.getFilter().lastValue(),
-			Rotation2d.fromRotations(angleFilter.calculateNewData(LastObservation.getRotation().getRotations()))
-		);
+		System.out.println("interpolation failed");
+		Logger.recordOutput("interpolation failed", timestamp);
+		return new Pose2d();
 	}
 
 	protected void checkSize() {

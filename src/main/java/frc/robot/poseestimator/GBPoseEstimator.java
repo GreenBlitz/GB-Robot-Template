@@ -199,12 +199,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private void addVisionObservation(VisionObservation observation) {
 		// @pose-swerveAdditions:on
-		Logger.recordOutput("inside vision", observation.timestamp());
+		Logger.recordOutput(super.getLogPath() + "inside vision", observation.timestamp());
 		// @pose-swerveAdditions:off
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			linearFilterWrapper.addData(observation);
-			Pose2d fixedPose = linearFilterWrapper.calculateFilteredPose();
+			Pose2d fixedPose = linearFilterWrapper.calculateFixedData(odometryPoseInterpolator);
+			Logger.recordOutput(super.getLogPath() + "visionPose", fixedPose);
 			double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(fixedPose, estimatedPose);
 			double[] standardDeviations = new double[] {
 					standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
@@ -228,7 +229,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
 		// @pose-swerveAdditions:on
-		Logger.recordOutput("inside odometry", observation.timestamp());
+		Logger.recordOutput(super.getLogPath() + "inside odometry", observation.timestamp());
 		// @pose-swerveAdditions:off
 		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle().plus(headingOffset), latestGyroAngle.plus(headingOffset));

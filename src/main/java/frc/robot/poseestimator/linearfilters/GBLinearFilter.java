@@ -8,7 +8,7 @@ public abstract class GBLinearFilter {
 		return getFilter().calculate(newData);
 	};
 
-	double getLatestCalculation(double input) {
+	double getLatestCalculation() {
 		return getFilter().lastValue();
 	};
 

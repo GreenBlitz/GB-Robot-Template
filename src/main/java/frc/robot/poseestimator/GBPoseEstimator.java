@@ -13,12 +13,11 @@ import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.vision.limelights.LimeLightConstants;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.function.Consumer;
 
 public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
@@ -206,9 +205,14 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			linearFilterWrapper.addData(observation);
 			Pose2d fixedPose = linearFilterWrapper.calculateFilteredPose();
+			double[] standardTransformDeviations = PoseEstimationMath.calculateStandardDeviationOfPose(fixedPose, estimatedPose);
+			double[] standardDeviations = new double[] {
+					standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
+					standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+					LimeLightConstants.VISION_STANDARD_DEVIATION_ANGLES};
 			VisionObservation filteredObservation = new VisionObservation(
 					fixedPose,
-					PoseEstimationMath.calculateStandardDeviationOfPose(fixedPose, estimatedPose),
+					standardDeviations,
 					Timer.getFPGATimestamp()
 			);
 			Pose2d currentEstimation = PoseEstimationMath

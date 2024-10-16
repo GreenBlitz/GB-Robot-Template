@@ -57,7 +57,7 @@ public class LinearFilters {
 
 		class shittyFilter extends LinearFilter {
 
-			private LinkedList<Double> data;
+			private final LinkedList<Double> data = new LinkedList<>();
 			private int sampleSize;
 
 			public shittyFilter(int samples) {
@@ -83,7 +83,7 @@ public class LinearFilters {
 
 			@Override
 			public double lastValue() {
-				return data.peek();
+				return (data.peek() == null) ? data.peek() : 0;
 			}
 
 		}

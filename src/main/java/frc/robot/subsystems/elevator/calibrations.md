@@ -3,6 +3,8 @@
  - States' positions
  - IDs
  - PID
- - FF
+ - KG, KS
  - Rotations to meters ratio
  - current limit
+ - Gear ratio
+ - Motor id

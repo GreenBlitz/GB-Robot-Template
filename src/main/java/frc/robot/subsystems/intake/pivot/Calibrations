@@ -1,9 +1,9 @@
 Calibrations:
 
-1. gear ratio
-2. pid
-3. feedforward
-4. state positions
-5. current limit
-6. minimum achievable angle
-7. soft limits
+1. Gear ratio
+2. PID
+3. KS, KG
+4. State positions
+5. Current limit
+6. Minimum achievable angle
+7. Soft limits

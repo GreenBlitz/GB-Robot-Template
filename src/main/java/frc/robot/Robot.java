@@ -148,30 +148,8 @@ public class Robot {
 
 	private void configPathPlanner() {
 		// Register commands...
-		PathPlannerUtils.registerCommand("Shoot", new InstantCommand());
-		PathPlannerUtils.registerCommand(RobotState.INTAKE.name(), superstructure.setState(RobotState.INTAKE));
-		PathPlannerUtils.registerCommand(RobotState.INTAKE_WITH_FLYWHEEL.name(), superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL));
-
-		Supplier<Optional<Rotation2d>> angleToSpeakerSupplier = () -> {
-			Translation2d robotRelativeToSpeaker = SwerveMath
-				.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d());
-			if (robotRelativeToSpeaker.getX() <= 4)
-				return Optional.of(robotRelativeToSpeaker.getAngle());
-			return Optional.empty();
-		};
-		PathPlannerUtils.registerCommand(RobotState.PRE_SPEAKER.name(), superstructure.setState(RobotState.PRE_SPEAKER));
-		PathPlannerUtils.registerCommand(
-			RobotState.SPEAKER.name(),
-			new SequentialCommandGroup(
-				new InstantCommand(() -> superstructure.enableChangeStateAutomatically = false),
-				superstructure.setState(RobotState.SPEAKER)
-					.alongWith(swerve.getCommandsBuilder().driveBySavedState(() -> 0, () -> 0, () -> 0))
-					.until(superstructure::isEnableChangeStateAutomatically)
-			)
-		);
-
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
-//		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 	}
 
 	private void configureBindings() {

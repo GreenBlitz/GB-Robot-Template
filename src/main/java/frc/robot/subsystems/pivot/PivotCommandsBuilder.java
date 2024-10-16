@@ -69,7 +69,7 @@ public class PivotCommandsBuilder {
 	public Command useInterpolation() {
 		return new LoggedDashboardCommand(
 			"use Interpolation",
-			distance -> pivot.setTargetPosition(Rotation2d.fromRadians(PivotSpeakerInterpolationMap.METERS_TO_RADIANS.get(distance))),
+			distance -> pivot.setTargetPosition(Rotation2d.fromRadians(PivotInterpolationMap.METERS_TO_RADIANS.get(distance))),
 			pivot
 		);
 	}

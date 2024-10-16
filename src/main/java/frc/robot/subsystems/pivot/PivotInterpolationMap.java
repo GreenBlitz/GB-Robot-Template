@@ -5,7 +5,7 @@ import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.util.Units;
 
-public class PivotSpeakerInterpolationMap {
+public class PivotInterpolationMap {
 
 	public static InterpolatingTreeMap<
 		Double,

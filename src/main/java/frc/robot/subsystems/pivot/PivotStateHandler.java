@@ -30,7 +30,7 @@ public class PivotStateHandler {
 			}
 			return pivot.getCommandsBuilder()
 				.moveToPosition(() -> Rotation2d.fromRadians(
-						PivotSpeakerInterpolationMap.METERS_TO_RADIANS.get(
+						PivotInterpolationMap.METERS_TO_RADIANS.get(
 								Field.getMetersFromSpeaker(robotPoseSupplier.get().get()))));
 		}
 		return pivot.getCommandsBuilder().moveToPosition(pivotState.getTargetPosition());

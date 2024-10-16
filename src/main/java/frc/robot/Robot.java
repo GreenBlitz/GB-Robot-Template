@@ -54,6 +54,7 @@ public class Robot {
 			multiLimelights
 		);
 		this.poseEstimator = new GBPoseEstimator(
+			swerve::setHeading,
 			"PoseEstimator/",
 			limelightFilterer,
 			swerve.getConstants().kinematics(),

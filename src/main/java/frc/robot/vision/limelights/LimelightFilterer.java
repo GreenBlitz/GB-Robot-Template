@@ -45,15 +45,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
-			if (
-				LimelightFilters.keepLimelightData(
-					limelightRawData,
-					getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()),
-					config.limelightFiltersTolerances(),
-					super.getLogPath()
-				)
-			) {
-//			if (LimelightFilters.keepLimelightData(limelightRawData, config.limelightFiltersTolerances())) {
+			if (LimelightFilters.keepLimelightData(limelightRawData, config.limelightFiltersTolerances(), super.getLogPath())) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}

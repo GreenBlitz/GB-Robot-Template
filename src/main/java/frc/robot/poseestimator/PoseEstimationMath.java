@@ -7,6 +7,7 @@ import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.limelights.LimelightRawData;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PoseEstimationMath {
 
@@ -128,7 +129,7 @@ public class PoseEstimationMath {
 		return poseMean;
 	}
 
-	public static Rotation2d calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
+	public static Optional<Rotation2d> calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
 		double summedXComponent = 0;
 		double summedYComponent = 0;
 		for (Rotation2d heading : estimatedHeadings) {
@@ -136,11 +137,11 @@ public class PoseEstimationMath {
 			summedYComponent += heading.getSin();
 		}
 		if (summedXComponent == 0 || summedYComponent == 0 || estimatedHeadings.isEmpty()) {
-			return new Rotation2d();
+			return Optional.empty();
 		}
 		summedXComponent /= estimatedHeadings.size();
 		summedYComponent /= estimatedHeadings.size();
-		return new Rotation2d(Math.atan2(summedYComponent, summedXComponent));
+		return Optional.of(new Rotation2d(Math.atan2(summedYComponent, summedXComponent)));
 	}
 
 }

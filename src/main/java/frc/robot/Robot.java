@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
+import frc.robot.poseestimator.linearfilters.LinearFilterType;
+import frc.robot.poseestimator.linearfilters.VisionObservationLinearFilterWrapper;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -52,13 +54,13 @@ public class Robot {
 			multiLimelights
 		);
 		this.poseEstimator = new GBPoseEstimator(
-			swerve::setHeading,
 			"PoseEstimator/",
 			limelightFilterer,
 			swerve.getConstants().kinematics(),
 			swerve.getModules().getWheelsPositions(0),
 			swerve.getAbsoluteHeading(),
-			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+			new VisionObservationLinearFilterWrapper("linearFilterWrapper/", LinearFilterType.GBLinearFilter, 5)
 		);
 		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
 
@@ -77,9 +79,7 @@ public class Robot {
 	}
 
 	private void configPathPlanner() {
-		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
-		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+
 	}
 
 	private void configureBindings() {

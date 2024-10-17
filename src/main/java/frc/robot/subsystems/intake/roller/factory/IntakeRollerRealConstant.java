@@ -20,7 +20,7 @@ public class IntakeRollerRealConstant {
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
-	private final static int CURRENT_LIMIT = 30;
+	private final static int CURRENT_LIMIT = 40;
 
 	private final static boolean IS_INVERTED = false;
 

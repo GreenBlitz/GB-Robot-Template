@@ -165,11 +165,11 @@ public class Superstructure {
 			case AMP -> amp();
 			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
-			case TRAP -> trap();
-			case CLIMB -> climb();
-			case PRE_CLIMB -> preClimb();
 			case INTAKE_OUTTAKE -> intakeOuttake();
 			case ARM_OUTTAKE -> armOuttake();
+			case PRE_CLIMB -> preClimb();
+			case CLIMB -> climb();
+			case TRAP -> trap();
 		};
 	}
 
@@ -185,6 +185,7 @@ public class Superstructure {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elbowStateHandler.setState(ElbowState.IDLE),
 			wristStateHandler.setState(WristState.DEFAULT),
+			climbStateHandler.setState(ClimbState.RETRACT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
@@ -394,18 +395,6 @@ public class Superstructure {
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
-	private Command trap(){
-		return wristStateHandler.setState(WristState.TRAP).alongWith(rollerStateHandler.setState(RollerState.ROLL_IN));
-	}
-
-	private Command preClimb(){
-		return elbowStateHandler.setState(ElbowState.CLIMB).alongWith(wristStateHandler.setState(WristState.PRE_TRAP).alongWith(climbStateHandler.setState(ClimbState.EXTEND))).alongWith(pivotStateHandler.setState(PivotState.PRE_SPEAKER));
-	}
-
-	private Command climb(){
-		return elbowStateHandler.setState(ElbowState.FREE).alongWith(climbStateHandler.setState(ClimbState.RETRACT));
-	}
-
 	private Command transferArmToShooter() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.TRANSFER_ARM_TO_SHOOTER),
@@ -440,8 +429,8 @@ public class Superstructure {
 
 	private Command intakeOuttake() {
 		return new ParallelCommandGroup(
-			enableChangeStateAutomatically(true),
 			setCurrentStateName(RobotState.INTAKE_OUTTAKE),
+			enableChangeStateAutomatically(true),
 			rollerStateHandler.setState(RollerState.ROLL_OUT),
 			intakeStateHandler.setState(IntakeState.OUTTAKE),
 			funnelStateHandler.setState(FunnelState.OUTTAKE),
@@ -455,8 +444,8 @@ public class Superstructure {
 
 	private Command armOuttake() {
 		return new ParallelCommandGroup(
-			enableChangeStateAutomatically(true),
 			setCurrentStateName(RobotState.ARM_OUTTAKE),
+			enableChangeStateAutomatically(true),
 			rollerStateHandler.setState(RollerState.FAST_ROLL_IN),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
 			wristStateHandler.setState(WristState.DEFAULT),
@@ -464,6 +453,62 @@ public class Superstructure {
 			funnelStateHandler.setState(FunnelState.SLOW_OUTTAKE),
 			pivotStateHandler.setState(PivotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+	}
+
+	private Command preClimb(){
+		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.PRE_CLIMB),
+			enableChangeStateAutomatically(false),
+			elbowStateHandler.setState(ElbowState.CLIMB),
+			wristStateHandler.setState(WristState.PRE_TRAP),
+			climbStateHandler.setState(ClimbState.EXTEND),
+			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
+			flywheelStateHandler.setState(FlywheelState.STOP),
+			intakeStateHandler.setState(IntakeState.STOP),
+			funnelStateHandler.setState(FunnelState.STOP),
+			rollerStateHandler.setState(RollerState.STOP),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+	}
+
+	private Command climb(){
+		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.CLIMB),
+			enableChangeStateAutomatically(false),
+			elbowStateHandler.setState(ElbowState.FREE),
+			wristStateHandler.setState(WristState.PRE_TRAP),
+			climbStateHandler.setState(ClimbState.RETRACT),
+			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
+			flywheelStateHandler.setState(FlywheelState.STOP),
+			intakeStateHandler.setState(IntakeState.STOP),
+			funnelStateHandler.setState(FunnelState.STOP),
+			rollerStateHandler.setState(RollerState.STOP),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+	}
+
+	private Command trap(){
+		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.CLIMB),
+			enableChangeStateAutomatically(false),
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					wristStateHandler.setState(WristState.TRAP),
+					rollerStateHandler.setState(RollerState.STOP)
+				).withTimeout(Timeouts.WRIST_TO_CLIMB_POSITION_SECONDS),
+				new ParallelCommandGroup(
+					wristStateHandler.setState(WristState.TRAP),
+					rollerStateHandler.setState(RollerState.ROLL_IN)
+				)
+			),
+			elbowStateHandler.setState(ElbowState.FREE),
+			climbStateHandler.setState(ClimbState.RETRACT),
+			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
+			flywheelStateHandler.setState(FlywheelState.STOP),
+			intakeStateHandler.setState(IntakeState.STOP),
+			funnelStateHandler.setState(FunnelState.STOP),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}

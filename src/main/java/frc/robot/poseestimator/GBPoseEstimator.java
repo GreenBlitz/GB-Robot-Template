@@ -229,6 +229,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 						odometryPoseInterpolator
 				);
                 fixedObservation = dataCalced.orElse(observation);
+			} else if (calcMode == 4) {
+				Optional<VisionObservation> dataCalced = visionDenoiser.calculateLinearFilterResult(
+						estimatedPose
+				);
+				fixedObservation = dataCalced.orElse(observation);
 			} else {
 				fixedObservation = observation;
 			}

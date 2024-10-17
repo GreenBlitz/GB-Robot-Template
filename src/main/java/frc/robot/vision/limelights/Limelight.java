@@ -36,6 +36,7 @@ public class Limelight extends GBSubsystem {
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
 		this.robotPoseForHeadingEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.gyroAngleValues = new GyroAngleValues(0, 0, 0, 0, 0, 0);
+		updateLimelight();
 	}
 
 	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {

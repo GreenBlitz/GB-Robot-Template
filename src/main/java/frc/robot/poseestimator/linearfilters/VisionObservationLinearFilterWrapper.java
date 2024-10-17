@@ -73,14 +73,12 @@ public class VisionObservationLinearFilterWrapper {
 		return visionPose.plus(changeInPosition);
 	}
 
-	public Pose2d calculateFilteredPose() {
-		Pose2d output = new Pose2d(
-				xFilter.calculateNewData(LastObservation.getX()),
-				yFilter.calculateNewData(LastObservation.getY()),
-				Rotation2d.fromRotations(angleFilter.calculateNewData(LastObservation.getRotation().getRotations()))
+	public Pose2d calculateNonFixedData() {
+		return new Pose2d(
+			xFilter.getLatestCalculation(),
+			yFilter.getLatestCalculation(),
+			Rotation2d.fromRotations(angleFilter.getLatestCalculation())
 		);
-		Logger.recordOutput(logPath + "outputed", output);
-		return output;
 	}
 
 	public Pose2d calculateFixedData(TimeInterpolatableBuffer<Pose2d> odometryObservationsOverTime) {

@@ -7,6 +7,7 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.talonsrx.TalonSRXMotor;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.robot.subsystems.elevatorRoller.ElevatorRollerConstants;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerStuff;
 
 import java.util.function.BooleanSupplier;
@@ -17,7 +18,7 @@ public class RealElevatorRollerConstants {
 
 	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
 
-	private final static int CURRENT_LIMIT = 40;
+	private final static int CURRENT_LIMIT = 30;
 
 	private static void configMotor(TalonSRX motor) {
 		motor.configContinuousCurrentLimit(CURRENT_LIMIT);

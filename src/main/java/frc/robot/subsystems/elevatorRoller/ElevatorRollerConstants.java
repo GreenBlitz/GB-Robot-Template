@@ -1,9 +1,9 @@
-package frc.robot.subsystems.elevatorRoller.factory;
+package frc.robot.subsystems.elevatorRoller;
 
 public class ElevatorRollerConstants {
 
 	public static final String LOG_PATH = "Subsystems/ElevatorRoller/";
 
-	public static final double GEAR_RATIO = 15.0;
+	public static final double GEAR_RATIO = 10.0;
 
 }

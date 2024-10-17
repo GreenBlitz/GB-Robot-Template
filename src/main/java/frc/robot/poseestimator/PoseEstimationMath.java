@@ -124,7 +124,8 @@ public class PoseEstimationMath {
 		return sum / dataset.size();
 	}
 
-	public static double calculateStandardDeviation(ArrayList<Double> dataset) {		double mean = mean(dataset);
+	public static double calculateStandardDeviation(ArrayList<Double> dataset) {
+		double mean = mean(dataset);
 		double squaredDeviation = 0;
 		for (double data : dataset) {
 			squaredDeviation += Math.pow(data - mean, 2);

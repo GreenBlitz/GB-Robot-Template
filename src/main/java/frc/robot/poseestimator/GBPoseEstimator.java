@@ -39,7 +39,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		SwerveDriveKinematics kinematics,
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
-		double[] odometryStandardDeviations, VisionDenoiser visionDenoiser
+		double[] odometryStandardDeviations,
+		VisionDenoiser visionDenoiser
 	) {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
@@ -183,7 +184,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			visionDenoiser.addVisionObservation(observation);
 			VisionObservation fixedObservation;
-			if (visionDenoiser.calculateAverage().isPresent()){
+			if (visionDenoiser.calculateAverage().isPresent()) {
 				fixedObservation = visionDenoiser.calculateAverage().get();
 			} else {
 				fixedObservation = observation;

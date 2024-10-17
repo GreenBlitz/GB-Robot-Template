@@ -184,4 +184,17 @@ public class PoseEstimationMath {
 		return Optional.of(new Rotation2d(Math.atan2(summedYComponent, summedXComponent)));
 	}
 
+	public static Pose3d toPose3D(Pose2d pose) {
+		return new Pose3d(
+				pose.getX(),
+				pose.getY(),
+				0,
+				new Rotation3d(
+						0,
+						0,
+						pose.getRotation().getRadians()
+				)
+		);
+	}
+
 }

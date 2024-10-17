@@ -34,6 +34,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private Rotation2d headingOffset;
 	private Consumer<Rotation2d> resetSwerve;
 	private boolean hasHeadingOffsetBeenInitialized;
+	private int calcMode;
 
 	public GBPoseEstimator(
 		Consumer<Rotation2d> resetSwerve,
@@ -43,7 +44,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
 		double[] odometryStandardDeviations,
-		VisionDenoiser visionDenoiser
+		VisionDenoiser visionDenoiser,
+		int calcMode
 	) {
 		super(logPath);
 
@@ -58,6 +60,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		this.hasHeadingOffsetBeenInitialized = false;
+		this.calcMode = calcMode;
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		calculateHeadingOffset(initialGyroAngle);
 		//@formatter:off
@@ -206,8 +209,26 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			visionDenoiser.addVisionObservation(observation);
 			VisionObservation fixedObservation;
-			if (visionDenoiser.calculateAverage().isPresent()) {
-				fixedObservation = visionDenoiser.calculateAverage().get();
+			if (calcMode == 0) {
+				Optional<VisionObservation> dataCalced = visionDenoiser.calculateAverageFixedPose(
+						estimatedPose,
+						odometryPose,
+						odometryPoseInterpolator
+				);
+                fixedObservation = dataCalced.orElse(observation);
+			} else if (calcMode == 1) {
+				Optional<VisionObservation> dataCalced = visionDenoiser.calculateAverage();
+                fixedObservation = dataCalced.orElse(observation);
+			} else if (calcMode == 2) {
+				Optional<VisionObservation> dataCalced = visionDenoiser.calculateWeightedAverage();
+                fixedObservation = dataCalced.orElse(observation);
+			} else if (calcMode == 3) {
+				Optional<VisionObservation> dataCalced = visionDenoiser.calculateWeightedAverageFixedPose(
+						estimatedPose,
+						odometryPose,
+						odometryPoseInterpolator
+				);
+                fixedObservation = dataCalced.orElse(observation);
 			} else {
 				fixedObservation = observation;
 			}

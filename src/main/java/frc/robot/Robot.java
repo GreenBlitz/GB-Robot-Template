@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
+import frc.robot.poseestimator.VisionDenoiser;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -47,20 +48,98 @@ public class Robot {
 		swerve.updateStatus();
 
 		this.multiLimelights = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware/");
+		MultiLimelights multiLimelightsB = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware/");
+		MultiLimelights multiLimelightsC = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware/");
+		MultiLimelights multiLimelightsD = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware/");
+		MultiLimelights multiLimelightsE = new MultiLimelights(LimeLightConstants.LIMELIGHT_NAMES, "limelightsHardware/");
+
 		this.limelightFilterer = new LimelightFilterer(
-			new LimelightFiltererConfig("limelightfilterer/", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
+			new LimelightFiltererConfig("limelightfiltererA/", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
 			multiLimelights
 		);
 		this.poseEstimator = new GBPoseEstimator(
 			swerve::setHeading,
-			"PoseEstimator/",
+			"PoseEstimatorA/",
 			limelightFilterer,
 			swerve.getConstants().kinematics(),
 			swerve.getModules().getWheelsPositions(0),
 			swerve.getAbsoluteHeading(),
-			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
+			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+			new VisionDenoiser(10),
+			1
 		);
 		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
+
+
+		LimelightFilterer limelightFiltererB = new LimelightFilterer(
+				new LimelightFiltererConfig("limelightfiltererB/", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
+				multiLimelightsB
+		);
+		GBPoseEstimator poseEstimatorB = new GBPoseEstimator(
+				swerve::setHeading,
+				"PoseEstimatorB/",
+				limelightFiltererB,
+				swerve.getConstants().kinematics(),
+				swerve.getModules().getWheelsPositions(0),
+				swerve.getAbsoluteHeading(),
+				PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+				new VisionDenoiser(10),
+				0
+		);
+		limelightFiltererB.setEstimatedPoseAtTimestampFunction(poseEstimatorB::getEstimatedPoseAtTimeStamp);
+
+
+		LimelightFilterer limelightFiltererC = new LimelightFilterer(
+				new LimelightFiltererConfig("limelightfiltererC/", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
+				multiLimelightsC
+		);
+		GBPoseEstimator  poseEstimatorC = new GBPoseEstimator(
+				swerve::setHeading,
+				"PoseEstimatorC/",
+				limelightFiltererC,
+				swerve.getConstants().kinematics(),
+				swerve.getModules().getWheelsPositions(0),
+				swerve.getAbsoluteHeading(),
+				PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+				new VisionDenoiser(10),
+				2
+		);
+		limelightFiltererC.setEstimatedPoseAtTimestampFunction(poseEstimatorC::getEstimatedPoseAtTimeStamp);
+
+
+		LimelightFilterer limelightFiltererD = new LimelightFilterer(
+				new LimelightFiltererConfig("limelightfiltererD/", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
+				multiLimelightsD
+		);
+		GBPoseEstimator poseEstimatorD = new GBPoseEstimator(
+				swerve::setHeading,
+				"PoseEstimatorD/",
+				limelightFiltererD,
+				swerve.getConstants().kinematics(),
+				swerve.getModules().getWheelsPositions(0),
+				swerve.getAbsoluteHeading(),
+				PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+				new VisionDenoiser(10),
+				3
+		);
+		limelightFiltererD.setEstimatedPoseAtTimestampFunction(poseEstimatorD::getEstimatedPoseAtTimeStamp);
+
+		LimelightFilterer limelightFiltererE = new LimelightFilterer(
+				new LimelightFiltererConfig("limelightfiltererE/", LimeLightConstants.DEFAULT_LIMELIGHT_FILTERS_TOLERANCES),
+				multiLimelightsE
+		);
+		GBPoseEstimator poseEstimatorE = new GBPoseEstimator(
+				swerve::setHeading,
+				"PoseEstimatorE/",
+				limelightFiltererE,
+				swerve.getConstants().kinematics(),
+				swerve.getModules().getWheelsPositions(0),
+				swerve.getAbsoluteHeading(),
+				PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
+				new VisionDenoiser(10),
+				4
+		);
+		limelightFiltererE.setEstimatedPoseAtTimestampFunction(poseEstimatorE::getEstimatedPoseAtTimeStamp);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

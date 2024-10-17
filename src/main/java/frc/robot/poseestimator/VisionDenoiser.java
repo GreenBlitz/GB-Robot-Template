@@ -10,7 +10,7 @@ import java.util.*;
 public class VisionDenoiser {
 
 	private final int maximumSize;
-	private LinkedList<VisionObservation> observations;
+	private LinkedList<VisionObservation> observations = new LinkedList<>();
 
 	public VisionDenoiser(int maximumSize) {
 		this.maximumSize = maximumSize;

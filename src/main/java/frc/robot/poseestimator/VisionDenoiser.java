@@ -16,6 +16,7 @@ public class VisionDenoiser {
 	private LinearFilter xFilter;
 	private LinearFilter yFilter;
 	private LinearFilter angFilter;
+	private Pose2d lastFilterOutput;
 
 	public VisionDenoiser(int maximumSize) {
 		this.maximumSize = maximumSize;
@@ -33,9 +34,11 @@ public class VisionDenoiser {
 	public void addVisionObservation(VisionObservation observation) {
 		observations.add(observation);
 		popLastIfQueueTooLarge();
-		xFilter.calculate(observation.robotPose().getX());
-		yFilter.calculate(observation.robotPose().getY());
-		angFilter.calculate(observation.robotPose().getRotation().getRadians());
+		lastFilterOutput = getFilterResult(
+				xFilter.calculate(observation.robotPose().getX()),
+				yFilter.calculate(observation.robotPose().getY()),
+				angFilter.calculate(observation.robotPose().getRotation().getRadians())
+		);
 	}
 
 	private ArrayList<Pose2d> getRobotPoseObservations() {
@@ -109,11 +112,11 @@ public class VisionDenoiser {
 		return output;
 	}
 
-	private Pose2d getFilterResult() {
+	private Pose2d getFilterResult(double x, double y, double ang) {
 		return new Pose2d(
-				xFilter.lastValue(),
-				yFilter.lastValue(),
-				Rotation2d.fromRadians(angFilter.lastValue())
+				x,
+				y,
+				Rotation2d.fromRadians(ang)
 		);
 	}
 
@@ -128,14 +131,13 @@ public class VisionDenoiser {
 	}
 
 	public Optional<VisionObservation> calculateLinearFilterResult(Pose2d currentPose) {
-		Pose2d filterResult = getFilterResult();
-		Double timestamp = observations.getLast().timestamp();
-		if (timestamp == null) {
+		if (observations.size() == 0) {
 			return Optional.empty();
 		}
+		Double timestamp = observations.getLast().timestamp();
 		return Optional.of(new VisionObservation(
-				filterResult,
-				PoseEstimationMath.calculateStandardDeviationOfPose(new ArrayList<>(List.of(currentPose, filterResult))),
+				lastFilterOutput,
+				PoseEstimationMath.calculateStandardDeviationOfPose(new ArrayList<>(List.of(currentPose, lastFilterOutput))),
 				timestamp
 		));
 	}

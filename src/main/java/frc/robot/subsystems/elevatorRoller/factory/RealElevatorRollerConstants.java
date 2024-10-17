@@ -25,6 +25,7 @@ public class RealElevatorRollerConstants {
 		motor.configPeakCurrentLimit(CURRENT_LIMIT);
 		motor.enableCurrentLimit(true);
 		motor.setNeutralMode(NeutralMode.Coast);
+		motor.setInverted(true);
 	}
 
 	public static ElevatorRollerStuff generateRollerElevatorStuff(String logPath) {

@@ -1,5 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.superstructure.RobotState;
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -48,6 +53,20 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeadingOffset(new Rotation2d())));
+		robot.getSwerve().setDefaultCommand(robot.getSwerve().getCommandsBuilder().driveBySavedState(
+				() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+				() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+				() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+		));
+
+		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
+		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.ARM_INTAKE));
+		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.AMP));
+		usedJoystick.POV_DOWN.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

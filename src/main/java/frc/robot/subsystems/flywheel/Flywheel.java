@@ -37,6 +37,10 @@ public class Flywheel extends GBSubsystem {
 		return commandsBuilder;
 	}
 
+	public Rotation2d getVelocity() {
+		return flywheelStuff.rightVelocitySignal().getLatestValue();
+	}
+
 	public SysIdCalibrator getRightSysidCalibrator() {
 		return rightSysidCalibrator;
 	}

@@ -117,22 +117,19 @@ public class PoseEstimationMath {
 	}
 
 	public static double mean(ArrayList<Double> dataset) {
-		double n = dataset.size();
-		double mean = 0;
+		double sum = 0;
 		for (double data : dataset) {
-			mean += data / n;
+			sum += data;
 		}
-		return mean;
+		return sum / dataset.size();
 	}
 
-	public static double calculateStandardDeviation(ArrayList<Double> dataset) {
-		double n = dataset.size();
-		double mean = mean(dataset);
+	public static double calculateStandardDeviation(ArrayList<Double> dataset) {		double mean = mean(dataset);
 		double squaredDeviation = 0;
 		for (double data : dataset) {
-			squaredDeviation += Math.pow(data - mean, 2) / n;
+			squaredDeviation += Math.pow(data - mean, 2);
 		}
-		return Math.sqrt(squaredDeviation);
+		return Math.sqrt(squaredDeviation / dataset.size());
 	}
 
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {

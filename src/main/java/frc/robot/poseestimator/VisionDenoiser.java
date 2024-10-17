@@ -9,8 +9,8 @@ import java.util.*;
 
 public class VisionDenoiser {
 
-	LinkedList<VisionObservation> observations;
-	final int maximumSize;
+	private final int maximumSize;
+	private LinkedList<VisionObservation> observations;
 
 	public VisionDenoiser(int maximumSize) {
 		this.maximumSize = maximumSize;

@@ -45,7 +45,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
-			if (LimelightFilters.keepLimelightData(limelightRawData, config.limelightFiltersTolerances())) {
+			if (LimelightFilters.keepLimelightData(limelightRawData, config.limelightFiltersTolerances(), super.getLogPath())) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
 		}
@@ -75,13 +75,19 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	}
 
 	private void logEstimatedPositions() {
-		List<VisionObservation> observations = getFilteredVisionObservations();
+		List<VisionObservation> observations = getAllAvailableVisionObservations();
 
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(
-				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
-				observations.get(i).robotPose()
-			);
+			Logger.recordOutput(super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
+		}
+	}
+
+	private void logAprilTagHeights() {
+		List<LimelightRawData> observations = multiLimelights.getAllAvailableLimelightData();
+
+		for (int i = 0; i < observations.size(); i++) {
+			Logger
+				.recordOutput(super.getLogPath() + LimeLightConstants.APRIL_TAG_HEIGHT_LOGPATH_PREFIX + i, observations.get(i).aprilTagHeight());
 		}
 	}
 

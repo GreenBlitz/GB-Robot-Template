@@ -11,4 +11,6 @@ public class Tolerances {
 	public static final Rotation2d FLYWHEEL_VELOCITY_TOLERANCE = Rotation2d.fromRotations(1);
 	public static final double ELEVATOR_POSITION_METERS_TOLERANCE = 0.02;
 
+	public static final double OUT_OF_ROBOT_NOTE_DETECTION_TIMEOUT_SECONDS = 0.2;
+
 }

@@ -75,9 +75,9 @@ public class VisionObservationLinearFilterWrapper {
 
 	public Pose2d calculateNonFixedData() {
 		return new Pose2d(
-			xFilter.getLatestCalculation(),
-			yFilter.getLatestCalculation(),
-			Rotation2d.fromRotations(angleFilter.getLatestCalculation())
+			xFilter.calculateNewData(internalData.getLast().robotPose().getX()),
+			yFilter.calculateNewData(internalData.getLast().robotPose().getY()),
+			Rotation2d.fromRotations(internalData.getLast().robotPose().getRotation().getRotations())
 		);
 	}
 

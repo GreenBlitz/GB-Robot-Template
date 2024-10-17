@@ -23,7 +23,6 @@ import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Superstructure {

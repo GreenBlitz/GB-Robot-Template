@@ -91,13 +91,13 @@ public class Superstructure {
 
 	private boolean isNoteInRobot(AtomicReference<Double> lastTimeDetectedNote) {
 		if (!isNoteInIntake() && !isNoteInElevatorRoller() && !isNoteInShooter()) {
-			boolean noteNotDetectedInAWhile = lastTimeDetectedNote.get() - TimeUtils.getCurrentTimeSeconds()
-				> Tolerances.OUT_OF_ROBOT_NOTE_DETECTION_TIMEOUT_SECONDS;
-			return noteNotDetectedInAWhile;
+			boolean noteDetectedLately = lastTimeDetectedNote.get() - TimeUtils.getCurrentTimeSeconds()
+				< Tolerances.OUT_OF_ROBOT_NOTE_DETECTION_TIMEOUT_SECONDS;
+			return noteDetectedLately;
 		} else {
 			lastTimeDetectedNote.set(TimeUtils.getCurrentTimeSeconds());
 		}
-		return false;
+		return true;
 	}
 
 	private Command setCurrentStateValue(RobotState state) {
@@ -285,7 +285,7 @@ public class Superstructure {
 			intakeStatesHandler.setState(IntakeStates.OUTTAKE),
 			pivotStateHandler.setState(PivotState.ON_FLOOR),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
-		).until(() -> this.isNoteInRobot(lastTimeDetectedNote));
+		).until(() -> !this.isNoteInRobot(lastTimeDetectedNote));
 	}
 
 	public Command shooterOuttake() {

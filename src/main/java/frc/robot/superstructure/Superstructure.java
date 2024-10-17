@@ -91,9 +91,9 @@ public class Superstructure {
 	}
 
 	private boolean isNoteInRobot(AtomicReference<Double> lastTimeDetectedNote) {
-		if (!isNoteInIntake() && !isNoteInElevatorRoller() && !isNoteInShooter()){
-			boolean noteNotDetectedInAWhile = lastTimeDetectedNote.get() - TimeUtils.getCurrentTimeSeconds() >
-					Tolerances.OUT_OF_ROBOT_NOTE_DETECTION_TIMEOUT_SECONDS;
+		if (!isNoteInIntake() && !isNoteInElevatorRoller() && !isNoteInShooter()) {
+			boolean noteNotDetectedInAWhile = lastTimeDetectedNote.get() - TimeUtils.getCurrentTimeSeconds()
+				> Tolerances.OUT_OF_ROBOT_NOTE_DETECTION_TIMEOUT_SECONDS;
 			return noteNotDetectedInAWhile;
 		} else {
 			lastTimeDetectedNote.set(TimeUtils.getCurrentTimeSeconds());

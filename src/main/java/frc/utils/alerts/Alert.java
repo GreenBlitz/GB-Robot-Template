@@ -28,7 +28,6 @@ public class Alert {
 		if (!DriverStationUtils.isMatch()) {
 			switch (type) {
 				case ERROR -> DriverStation.reportError(logPath, LOG_TRACE);
-				case WARNING -> DriverStation.reportWarning(logPath, LOG_TRACE);
 			}
 		}
 		Logger.recordOutput(logPath, TimeUtils.getCurrentTimeSeconds());

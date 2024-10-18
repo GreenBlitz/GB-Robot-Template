@@ -5,9 +5,7 @@ import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
@@ -34,12 +32,9 @@ public class Elevator extends GBSubsystem {
 		this.elevatorStuff = elevatorStuff;
 		this.positionRequest = elevatorStuff.positionRequest();
 		this.voltageRequest = elevatorStuff.voltageRequest();
-
-		frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
-
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
 
-		frontMotor.resetPosition(new Rotation2d());
+		frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
 		updateInputs();
 	}
 
@@ -64,10 +59,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	protected void setTargetPositionMeters(double position) {
-		Logger.recordOutput(super.getLogPath() + "setPoint", position);
-		Rotation2d angleSetPoint = metersToMotorRotations(position);
-		Logger.recordOutput(super.getLogPath() + "setPointRotations", angleSetPoint);
-		frontMotor.applyAngleRequest(positionRequest.withSetPoint(angleSetPoint));
+		frontMotor.applyAngleRequest(positionRequest.withSetPoint(metersToMotorRotations(position)));
 	}
 
 	public boolean isAtBackwardLimit() {
@@ -75,7 +67,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private Rotation2d getElevatorAngle() {
-		return Rotation2d.fromRotations((elevatorStuff.motorStuff().positionSignal().getLatestValue().getRotations()));
+		return elevatorStuff.motorStuff().positionSignal().getLatestValue();
 	}
 
 	public SysIdCalibrator getSysIdCalibrator() {
@@ -97,37 +89,23 @@ public class Elevator extends GBSubsystem {
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
 		Logger.recordOutput(getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
 		Logger.recordOutput(getLogPath() + "elevatorPosition", getPositionMeters());
-		Logger.recordOutput(getLogPath() + "elevatorMotorRotations", elevatorStuff.motorStuff().positionSignal().getLatestValue());
-
-		Logger.recordOutput(
-			"elevatorPositionRotations",
-			Elevator.motorRotationsToMeters(elevatorStuff.motorStuff().positionSignal().getLatestValue())
-		);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		if (ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS > getPositionMeters()) {
 			frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
-//			backMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
 		}
-
-		Logger.recordOutput("target a ", ((SparkMaxAngleRequest) positionRequest).getSetPoint().getRotations());
-		Logger.recordOutput("current a ", (elevatorStuff.motorStuff().positionSignal().getLatestValue().getRotations()));
 
 		updateInputs();
 	}
 
 	public static double motorRotationsToMeters(Rotation2d rotations) {
-		return Conversions.angleToDistance(rotations, ElevatorConstants.TIMING_PULLEY_ROTATIONS_TO_METERS_CONVERSION_RATIO);
+		return rotations.getRotations() * ElevatorConstants.TIMING_PULLEY_ROTATIONS_TO_METERS_CONVERSION_RATIO;
 	}
 
 	public static Rotation2d metersToMotorRotations(double meters) {
-		Logger.recordOutput(
-			String.valueOf(meters),
-			Conversions.distanceToAngle(meters, ElevatorConstants.TIMING_PULLEY_ROTATIONS_TO_METERS_CONVERSION_RATIO).getRotations()
-		);
-		return Conversions.distanceToAngle(meters, ElevatorConstants.TIMING_PULLEY_ROTATIONS_TO_METERS_CONVERSION_RATIO);
+		return Rotation2d.fromRotations(meters / ElevatorConstants.TIMING_PULLEY_ROTATIONS_TO_METERS_CONVERSION_RATIO);
 	}
 
 }

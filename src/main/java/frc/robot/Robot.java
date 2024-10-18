@@ -57,7 +57,7 @@ public class Robot {
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
 		this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
-//		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
+		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
 		this.flywheel = FlywheelFactory
 			.create("TopMotor", "BottomMotor", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
 		this.superstructure = new Superstructure(this);

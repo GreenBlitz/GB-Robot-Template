@@ -28,8 +28,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		Pose2d old = robot.getPoseEstimator().getEstimatedPose();
-		usedJoystick.Y
-			.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(old.getX(), old.getY(), Rotation2d.fromDegrees(0)))));
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeadingOffset(new Rotation2d())));
 //		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPoseByLimelight()));
 
 		robot.getSwerve()

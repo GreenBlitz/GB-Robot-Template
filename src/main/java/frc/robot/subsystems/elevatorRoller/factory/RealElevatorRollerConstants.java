@@ -5,13 +5,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
-import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.talonsrx.TalonSRXMotor;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerConstants;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerStuff;
 
-import java.util.function.BooleanSupplier;
 
 public class RealElevatorRollerConstants {
 

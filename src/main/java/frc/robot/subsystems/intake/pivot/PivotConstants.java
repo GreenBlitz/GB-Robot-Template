@@ -12,7 +12,7 @@ public class PivotConstants {
 
 	public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(3);
 
-	public static final double GEAR_RATIO = 1/((7.0 / 1) * (5.0 / 1) * (60.0 / 16));
+	public static final double GEAR_RATIO = 1 / ((7.0 / 1) * (5.0 / 1) * (60.0 / 16));
 
 	public static final int MEDIAN_FILTER_SIZE = 5;
 

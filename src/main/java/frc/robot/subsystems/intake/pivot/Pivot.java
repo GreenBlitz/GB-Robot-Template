@@ -46,7 +46,7 @@ public class Pivot extends GBSubsystem {
 		motor.setPower(power);
 	}
 
-	protected void setVoltage(double voltage){
+	protected void setVoltage(double voltage) {
 		motor.applyDoubleRequest(pivotStuff.voltageRequest().withSetPoint(voltage));
 	}
 

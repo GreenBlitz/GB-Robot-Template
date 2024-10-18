@@ -58,11 +58,7 @@ public class RealPivotConstants {
 			POSITION_PID_SLOT,
 			FEEDFORWARD_FUNCTION
 		);
-		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(
-				0,
-				SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,
-				0
-		);
+		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
 
 		return new PivotStuff(logPath, motor, voltageSignal, positionSignal, positionRequest, voltageRequest);
 	}

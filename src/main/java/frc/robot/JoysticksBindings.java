@@ -27,27 +27,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-
-//		robot.getSwerve()
-//			.setDefaultCommand(
-//				robot.getSwerve()
-//					.getCommandsBuilder()
-//					.driveBySavedState(
-//						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-//						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-//						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-//					)
-//			);
-
-			usedJoystick.A.onTrue(robot.getSuperstructure().funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
-					.alongWith(robot.getSuperstructure().intakeStatesHandler.setState(IntakeStates.INTAKE))
-			);
-		usedJoystick.X.onTrue(robot.getSuperstructure().funnelStateHandler.setState(FunnelState.STOP)
-				.alongWith(robot.getSuperstructure().intakeStatesHandler.setState(IntakeStates.STOP))
-		);
-		usedJoystick.Y.onTrue(robot.getSuperstructure().funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE)
-				.alongWith(robot.getSuperstructure().intakeStatesHandler.setState(IntakeStates.OUTTAKE))
-		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -11,6 +11,7 @@ import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 import java.util.List;
@@ -31,6 +32,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private Rotation2d latestGyroAngle;
 	private Rotation2d headingOffset;
 	private boolean hasHeadingOffsetBeenInitialized;
+	private boolean isRobotDisabled;
 
 	public GBPoseEstimator(
 		String logPath,
@@ -50,6 +52,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.limelightFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		this.hasHeadingOffsetBeenInitialized = false;
+		this.isRobotDisabled = false;
 		setOdometryStandardDeviations(odometryStandardDeviations);
 		calculateHeadingOffset(initialGyroAngle);
 		//@formatter:off
@@ -72,6 +75,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		getEstimatedRobotHeadingByVision().ifPresentOrElse(estimatedHeading -> {
 			headingOffset = estimatedHeading.minus(gyroAngle);
 			hasHeadingOffsetBeenInitialized = true;
+			updateGyroOffsetsInPose();
 		}, () -> headingOffset = new Rotation2d());
 	}
 	//@formatter:on
@@ -207,12 +211,27 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
+	private void updateGyroOffsetsInPose() {
+		estimatedPose = new Pose2d(estimatedPose.getTranslation(), latestGyroAngle.plus(headingOffset));
+		odometryPose = new Pose2d(odometryPose.getTranslation(), latestGyroAngle.plus(headingOffset));
+	}
+
 	public void logEstimatedPose() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
 	}
 
+	private void updateHeadingOffsetWhenEnabled() {
+		if (!isRobotDisabled && DriverStationUtils.isDisabled()) {
+			isRobotDisabled = true;
+		} else if (isRobotDisabled && !DriverStationUtils.isDisabled()) {
+			isRobotDisabled = false;
+			hasHeadingOffsetBeenInitialized = false;
+		}
+	}
+
 	@Override
 	public void subsystemPeriodic() {
+		updateHeadingOffsetWhenEnabled();
 		updateVision(limelightFilterer.getFilteredVisionObservations());
 	}
 

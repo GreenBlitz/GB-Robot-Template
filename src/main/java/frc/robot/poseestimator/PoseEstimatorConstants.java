@@ -5,7 +5,7 @@ public class PoseEstimatorConstants {
 
 	protected static final String LOG_PATH = "PoseEstimator/";
 
-	protected static final int VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION = 45;
+	protected static final int VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION = 25;
 
 	protected static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 

@@ -3,7 +3,7 @@ package frc.robot.subsystems.intake.roller;
 public enum IntakeStates {
 
 	INTAKE(0.7),
-	NOTE_TO_SHOOTER(0.5),
+	NOTE_TO_SHOOTER(-0.5),
 	SHOOTER_TO_ELEVATOR(0.5),
 	OUTTAKE(-0.7),
 	STOP(0);

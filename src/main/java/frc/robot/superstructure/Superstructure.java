@@ -231,7 +231,7 @@ public class Superstructure {
 			setCurrentStateValue(RobotState.TRANSFER_SHOOTER_ELEVATOR),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					intakeStatesHandler.setState(IntakeStates.SHOOTER_TO_ELEVATOR),
+					intakeStatesHandler.setState(IntakeStates.NOTE_TO_SHOOTER),
 					funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR)
 				).until(this::isNoteInElevatorRoller),
 				new ParallelCommandGroup(

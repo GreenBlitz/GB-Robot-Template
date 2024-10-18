@@ -84,25 +84,12 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (estimatedRobotHeading.isPresent()) {
 			headingOffset = estimatedRobotHeading.get().minus(gyroAngle);
 			updateGyroOffsetInPose();
-//			Pose2d oldPose = estimatedPose;
-//			if (oldPose == null) {
-//				oldPose = new Pose2d();
-//			}
-//			resetPose(new Pose2d(
-//					oldPose.getX(),
-//					oldPose.getY(),
-//					gyroAngle.plus(headingOffset).rotateBy(Rotation2d.fromDegrees(180))
-//			));
 			hasHeadingOffsetBeenInitialized = true;
 		}
 		else {
 			headingOffset = new Rotation2d();
 			hasHeadingOffsetBeenInitialized = false;
 		}
-//		getEstimatedRobotHeadingByVision().ifPresentOrElse(estimatedHeading -> {
-//			headingOffset = estimatedHeading.minus(gyroAngle);
-//			hasHeadingOffsetBeenInitialized = true;
-//		}, () -> headingOffset = new Rotation2d());
 	}
 	//@formatter:on
 

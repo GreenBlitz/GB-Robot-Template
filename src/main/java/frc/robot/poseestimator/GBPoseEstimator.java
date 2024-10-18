@@ -24,6 +24,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final ILimelightFilterer limelightFilterer;
+	private final VisionDenoiser visionDenoiser;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
 	private Pose2d odometryPose;
@@ -41,7 +42,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		SwerveDriveKinematics kinematics,
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
-		double[] odometryStandardDeviations
+		double[] odometryStandardDeviations,
+		VisionDenoiser visionDenoiser
 	) {
 		super(logPath);
 
@@ -49,6 +51,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.limelightFilterer = limelightFilterer;
+		this.visionDenoiser = visionDenoiser;
 		this.kinematics = kinematics;
 		this.latestWheelPositions = initialWheelPositions;
 		this.latestGyroAngle = initialGyroAngle;
@@ -201,8 +204,15 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		// @pose-swerveAdditions:off
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
+			visionDenoiser.addVisionObservation(observation);
+			VisionObservation fixedObservation;
+			if (visionDenoiser.calculateLinearFilterResult().isPresent()) {
+				fixedObservation = visionDenoiser.calculateAverage().get();
+			} else {
+				fixedObservation = observation;
+			}
 			Pose2d currentEstimation = PoseEstimationMath
-				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
+				.combineVisionToOdometry(fixedObservation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
 			estimatedPoseInterpolator.addSample(TimeUtils.getCurrentTimeSeconds(), estimatedPose);
 		});

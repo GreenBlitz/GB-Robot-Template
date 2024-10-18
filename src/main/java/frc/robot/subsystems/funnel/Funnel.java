@@ -10,8 +10,10 @@ import org.littletonrobotics.junction.Logger;
 public class Funnel extends GBSubsystem {
 
 	private final IMotor motor;
-	private final IDigitalInput digitalInput;
-	private final DigitalInputInputsAutoLogged digitalInputsInputs;
+	private final IDigitalInput leftDigitalInput;
+	private final IDigitalInput rightDigitalInput;
+	private final DigitalInputInputsAutoLogged leftDigitalInputsInputs;
+	private final DigitalInputInputsAutoLogged rightDigitalInputsInputs;
 	private final InputSignal<Double> voltageSignal;
 	private final FunnelCommandsBuilder commandBuilder;
 	private final FunnelStuff funnelStuff;
@@ -20,9 +22,11 @@ public class Funnel extends GBSubsystem {
 		super(funnelStuff.logPath());
 		this.funnelStuff = funnelStuff;
 		this.motor = funnelStuff.motor();
-		this.digitalInput = funnelStuff.digitalInput();
+		this.leftDigitalInput = funnelStuff.leftDigitalInput();
+		this.rightDigitalInput = funnelStuff.rightDigitalInput();
 		this.voltageSignal = funnelStuff.inputSignal();
-		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
+		this.leftDigitalInputsInputs = new DigitalInputInputsAutoLogged();
+		this.rightDigitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.commandBuilder = new FunnelCommandsBuilder(this);
 
 		updateInputs();
@@ -33,7 +37,7 @@ public class Funnel extends GBSubsystem {
 	}
 
 	public boolean isObjectIn() {
-		return digitalInputsInputs.debouncedValue;
+		return leftDigitalInputsInputs.debouncedValue || rightDigitalInputsInputs.debouncedValue;
 	}
 
 	protected void setPower(double power) {
@@ -49,9 +53,11 @@ public class Funnel extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		digitalInput.updateInputs(digitalInputsInputs);
+		leftDigitalInput.updateInputs(leftDigitalInputsInputs);
+		rightDigitalInput.updateInputs(rightDigitalInputsInputs);
 		motor.updateSignals(voltageSignal);
-		Logger.processInputs(funnelStuff.digitalInputLogPath(), digitalInputsInputs);
+		Logger.processInputs(funnelStuff.leftDigitalInputLogPath(), leftDigitalInputsInputs);
+		Logger.processInputs(funnelStuff.rightDigitalInputLogPath(), rightDigitalInputsInputs);
 		Logger.recordOutput(funnelStuff.logPath() + "IsObjectIn", isObjectIn());
 	}
 

@@ -31,7 +31,6 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 	private Robot robot;
-	public SwerveDriveOdometry odometry;
 
 	@Override
 	public void robotInit() {
@@ -82,8 +81,6 @@ public class RobotManager extends LoggedRobot {
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
 		robot.getSuperstructure().logStatus();
-//		odometry.update(robot.getSwerve().getAllOdometryObservations()[0].gyroAngle(),robot.getSwerve().getAllOdometryObservations()[0].wheelPositions());
-//		Logger.recordOutput("odometry pose", odometry.getPoseMeters());
 	}
 
 	@Override

@@ -64,8 +64,9 @@ public class Elevator extends GBSubsystem {
 	}
 	
 	protected void setTargetPositionMeters(double position) {
-		Logger.recordOutput(super.getLogPath() + "targetPosition", position);
+		Logger.recordOutput(super.getLogPath() + "setPoint", position);
 		Rotation2d angleSetPoint = metersToMotorRotations(position);
+		Logger.recordOutput(super.getLogPath() + "setPointRotations", angleSetPoint);
 		frontMotor.applyAngleRequest(positionRequest.withSetPoint(angleSetPoint));
 	}
 	
@@ -96,6 +97,7 @@ public class Elevator extends GBSubsystem {
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
 		Logger.recordOutput(getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
 		Logger.recordOutput(getLogPath() + "elevatorPosition", getPositionMeters());
+		Logger.recordOutput(getLogPath() + "elevatorMotorRotations", elevatorStuff.motorStuff().positionSignal().getLatestValue());
 		
 		Logger.recordOutput(
 				"elevatorPositionRotations",
@@ -122,10 +124,10 @@ public class Elevator extends GBSubsystem {
 	
 	public static Rotation2d metersToMotorRotations(double meters) {
 		Logger.recordOutput(
-				String.valueOf(meters*10),
-				Conversions.distanceToAngle(meters*10, ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO).getRotations()
+				String.valueOf(meters),
+				Conversions.distanceToAngle(meters, ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO).getRotations()
 		);
-		return Conversions.distanceToAngle(meters*10, ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
+		return Conversions.distanceToAngle(meters, ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
 	}
 	
 }

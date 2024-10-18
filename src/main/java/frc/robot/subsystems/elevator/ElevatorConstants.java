@@ -10,7 +10,7 @@ public class ElevatorConstants {
 	
 	public static final double MINIMUM_ACHIEVABLE_POSITION_METERS = 0;
 	
-	public static final double MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO = 0.47 / (0.34 * MathConstants.HALF_CIRCLE.getRadians());
+	public static final double MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO = 0.47 / (0.034 * MathConstants.HALF_CIRCLE.getRadians());
 	
 	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0.02;
 	

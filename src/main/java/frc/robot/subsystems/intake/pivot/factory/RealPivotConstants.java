@@ -21,7 +21,7 @@ public class RealPivotConstants {
 
 	public static final int POSITION_PID_SLOT = 0;
 
-	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0, 0);
+	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0.55, 0);
 
 	//@formatter:off
 	private static final Function<Rotation2d, Double> FEEDFORWARD_FUNCTION =
@@ -31,12 +31,12 @@ public class RealPivotConstants {
 	private static void configMotor(SparkMaxWrapper sparkMaxWrapper) {
 		sparkMaxWrapper.getEncoder().setPositionConversionFactor(PivotConstants.GEAR_RATIO);
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(PivotConstants.GEAR_RATIO);
-		sparkMaxWrapper.getPIDController().setP(0);
+		sparkMaxWrapper.getPIDController().setP(6);
 		sparkMaxWrapper.getPIDController().setI(0);
-		sparkMaxWrapper.getPIDController().setD(0);
+		sparkMaxWrapper.getPIDController().setD(0.5);
 		sparkMaxWrapper.setSmartCurrentLimit(30);
 		sparkMaxWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
-		sparkMaxWrapper.setInverted(false);
+		sparkMaxWrapper.setInverted(true	);
 		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) PivotConstants.FORWARD_SOFT_LIMIT.getRotations());
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) PivotConstants.REVERSE_SOFT_LIMIT.getRotations());

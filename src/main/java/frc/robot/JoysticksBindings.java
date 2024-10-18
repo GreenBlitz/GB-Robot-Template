@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -24,6 +25,8 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.A.onTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(100)));
+		usedJoystick.X.onTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(30)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum FlywheelState {
 
-	DEFAULT(Rotation2d.fromRotations(40)),
+	DEFAULT(Rotation2d.fromRotations(0)),
 	SHOOTER_OUTTAKE(Rotation2d.fromRotations(20)),
 	SHOOTING(Rotation2d.fromRotations(60));
 

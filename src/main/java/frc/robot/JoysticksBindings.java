@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerState;
+import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -25,10 +26,10 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.A.onTrue(robot.getSuperstructure().elevatorRollerStateHandler.setState(ElevatorRollerState.AMP));
-		usedJoystick.X.onTrue(robot.getSuperstructure().elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR));
-		usedJoystick.Y.onTrue(robot.getSuperstructure().elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR));
-		usedJoystick.B.onTrue(robot.getSuperstructure().elevatorRollerStateHandler.setState(ElevatorRollerState.STOP));
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
+		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

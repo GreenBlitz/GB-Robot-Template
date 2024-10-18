@@ -123,7 +123,7 @@ public class Superstructure {
 	public Command idle() {
 		return new ParallelCommandGroup(
 			setCurrentStateValue(RobotState.IDLE),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+//			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			funnelStateHandler.setState(FunnelState.STOP),
@@ -141,18 +141,14 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
 					pivotStateHandler.setState(PivotState.ON_FLOOR)
-				).until(this::isNoteInIntake),
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
-					intakeStatesHandler.setState(IntakeStates.INTAKE),
-					pivotStateHandler.setState(PivotState.UP)
 				).until(this::isNoteInShooter),
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
+					pivotStateHandler.setState(PivotState.UP),
 					intakeStatesHandler.setState(IntakeStates.STOP)
 				)
 			),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
+//			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE)),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
@@ -180,7 +176,7 @@ public class Superstructure {
 				funnelStateHandler.setState(FunnelState.SPEAKER).until(() -> !isNoteInShooter()),
 				funnelStateHandler.setState(FunnelState.STOP)
 			),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
+//			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			flywheelStateHandler.setState(FlywheelState.SHOOTING),
 			intakeStatesHandler.setState(IntakeStates.STOP),
@@ -275,17 +271,16 @@ public class Superstructure {
 	}
 
 	public Command intakeOuttake() {
-		AtomicReference<Double> lastTimeDetectedNote = new AtomicReference<>(TimeUtils.getCurrentTimeSeconds());
 		return new ParallelCommandGroup(
 			setCurrentStateValue(RobotState.INTAKE_OUTTAKE),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
+//			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			funnelStateHandler.setState(FunnelState.INTAKE_OUTTAKE),
 			intakeStatesHandler.setState(IntakeStates.OUTTAKE),
 			pivotStateHandler.setState(PivotState.ON_FLOOR),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
-		).until(() -> !this.isNoteInRobot(lastTimeDetectedNote));
+		);
 	}
 
 	public Command shooterOuttake() {

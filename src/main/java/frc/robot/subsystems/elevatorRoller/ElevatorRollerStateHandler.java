@@ -1,7 +1,6 @@
 package frc.robot.subsystems.elevatorRoller;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 
 public class ElevatorRollerStateHandler {
 

@@ -78,7 +78,7 @@ public class RealElevatorConstants {
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
 		sparkMaxWrapper.getPIDController().setP(1);
 		sparkMaxWrapper.getPIDController().setI(0);
-		sparkMaxWrapper.getPIDController().setD(0);
+		sparkMaxWrapper.getPIDController().setD(0.5);
 	}
 	
 	public static ElevatorMotorStuff generateMotorStuff(String logPath, SparkMaxWrapper sparkMaxWrapper, boolean inverted) {

@@ -47,10 +47,10 @@ public class RealElevatorConstants {
 
 	private static void configureMotor(SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		sparkMaxWrapper
-			.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE.getRotations());
+			.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS);
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 		sparkMaxWrapper
-			.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE.getRotations());
+			.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS);
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 
 		sparkMaxWrapper.setIdleMode(IDLE_MODE);
@@ -79,10 +79,8 @@ public class RealElevatorConstants {
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
 		SparkMaxWrapper frontMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FRONT);
-		SparkMaxWrapper backMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_BACK);
 
-		ElevatorMotorStuff frontMotorStuff = generateMotorStuff(logPath + "frontMotor/", frontMotorWrapper, false);
-		ElevatorMotorStuff backMotorStuff = generateMotorStuff(logPath + "backMotor/", backMotorWrapper, false);
+		ElevatorMotorStuff motorStuff = generateMotorStuff(logPath + "frontMotor/", frontMotorWrapper, false);
 
 		BooleanSupplier atLimitSwitch = () -> frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);
@@ -101,7 +99,7 @@ public class RealElevatorConstants {
 			ELEVATOR_PID_SLOT
 		);
 
-		return new ElevatorStuff(logPath, positionRequest, voltageRequest, limitSwitch, frontMotorStuff, backMotorStuff);
+		return new ElevatorStuff(logPath, positionRequest, voltageRequest, limitSwitch, motorStuff);
 	}
 
 }

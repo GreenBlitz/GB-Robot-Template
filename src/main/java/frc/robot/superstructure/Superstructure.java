@@ -26,7 +26,7 @@ public class Superstructure {
 	private final Robot robot;
 	private final Swerve swerve;
 	private final FlywheelStateHandler flywheelStateHandler;
-	private final ElevatorRollerStateHandler elevatorRollerStateHandler;
+	public final ElevatorRollerStateHandler elevatorRollerStateHandler;
 	private final FunnelStateHandler funnelStateHandler;
 	private final IntakeStatesHandler intakeStatesHandler;
 	private final PivotStateHandler pivotStateHandler;

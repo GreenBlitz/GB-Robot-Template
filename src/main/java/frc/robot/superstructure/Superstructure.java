@@ -92,7 +92,7 @@ public class Superstructure {
 	private boolean isNoteInRobot(AtomicReference<Double> lastTimeDetectedNote) {
 		if (!isNoteInIntake() && !isNoteInElevatorRoller() && !isNoteInShooter()) {
 			boolean noteDetectedLately = lastTimeDetectedNote.get() - TimeUtils.getCurrentTimeSeconds()
-				< Tolerances.NOTE_DETECTION_TIMEOUT_SECONDS_TOLERANCE;
+				< Tolerances.NOTE_DETECTION_TIMEOUT_SECONDS;
 			return noteDetectedLately;
 		} else {
 			lastTimeDetectedNote.set(TimeUtils.getCurrentTimeSeconds());

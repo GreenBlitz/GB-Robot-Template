@@ -33,7 +33,7 @@ class DriveRealConstants {
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
 			Volts.of(0.5).per(Seconds.of(1)),
-			Volts.of(2),
+			Volts.of(5),
 			null,
 			state -> SignalLogger.writeString("state", state.toString())
 		);
@@ -52,9 +52,9 @@ class DriveRealConstants {
 		driveConfig.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		driveConfig.Slot0.kS = 0.21549;
-		driveConfig.Slot0.kV = 0.72124;
-		driveConfig.Slot0.kA = 0.11218;
+		driveConfig.Slot0.kS = 0.65208;
+		driveConfig.Slot0.kV = 2.38856;
+		driveConfig.Slot0.kA = 0.35233;
 		driveConfig.Slot0.kP = 1.5;
 		driveConfig.Slot0.kI = 0;
 		driveConfig.Slot0.kD = 0;

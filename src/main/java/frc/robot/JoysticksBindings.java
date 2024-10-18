@@ -1,5 +1,9 @@
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerState;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
@@ -49,6 +53,13 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+		
+		SignalLogger.start();
+		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kReverse));
+		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
+		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
+		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
+		usedJoystick.START.onTrue(new InstantCommand(() -> SignalLogger.stop()));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

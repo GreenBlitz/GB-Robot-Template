@@ -15,7 +15,7 @@ public record FunnelStuff(
 ) {
 
 	public FunnelStuff(String logPath, IMotor motor, InputSignal<Double> voltageSignal, IDigitalInput leftDigitalInput, IDigitalInput rightDigitalInput) {
-		this(logPath, logPath + "leftDigitalInput", logPath + "leftDigitalInput", motor, voltageSignal, leftDigitalInput, rightDigitalInput);
+		this(logPath, logPath + "leftDigitalInput", logPath + "rightDigitalInput", motor, voltageSignal, leftDigitalInput, rightDigitalInput);
 	}
 
 }

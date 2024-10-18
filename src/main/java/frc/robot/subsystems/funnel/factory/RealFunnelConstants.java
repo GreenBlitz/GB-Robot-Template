@@ -37,8 +37,8 @@ public class RealFunnelConstants {
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
-		ChanneledDigitalInput leftDigitalInput = new ChanneledDigitalInput(LEFT_DIGITAL_INPUT_CHANNEL, DEBOUNCE_TIME_SECONDS, true);
-		ChanneledDigitalInput rightDigitalInput = new ChanneledDigitalInput(RIGHT_DIGITAL_INPUT_CHANNEL, DEBOUNCE_TIME_SECONDS, true);
+		ChanneledDigitalInput leftDigitalInput = new ChanneledDigitalInput(LEFT_DIGITAL_INPUT_CHANNEL, DEBOUNCE_TIME_SECONDS);
+		ChanneledDigitalInput rightDigitalInput = new ChanneledDigitalInput(RIGHT_DIGITAL_INPUT_CHANNEL, DEBOUNCE_TIME_SECONDS);
 
 		return new FunnelStuff(logPath, motor, voltageSignal, leftDigitalInput, rightDigitalInput);
 	}

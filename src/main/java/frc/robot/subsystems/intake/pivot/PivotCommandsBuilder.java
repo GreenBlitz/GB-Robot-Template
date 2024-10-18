@@ -36,7 +36,7 @@ public class PivotCommandsBuilder {
 	}
 
 	public Command calibrateKg() {
-		return new LoggedDashboardCommand("kgkgkgkgkg", pivot::setVoltage, pivot);
+		return new LoggedDashboardCommand("pivot kg calibration", pivot::setVoltage, pivot);
 	}
 
 	public Command stop() {

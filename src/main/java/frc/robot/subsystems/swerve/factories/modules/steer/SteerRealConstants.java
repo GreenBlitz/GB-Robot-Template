@@ -47,15 +47,14 @@ class SteerRealConstants {
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		steerConfig.Feedback.RotorToSensorRatio = 150.0 / 7.0;
-		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		steerConfig.Feedback.SensorToMechanismRatio = 6;
 
-		steerConfig.Slot0.kS = 0.19648;
-		steerConfig.Slot0.kV = 2.5763;
-		steerConfig.Slot0.kA = 0.50361;
-		steerConfig.Slot0.kP = 88;
+		steerConfig.Slot0.kS = 0;
+		steerConfig.Slot0.kV = 0;
+		steerConfig.Slot0.kA = 0;
+		steerConfig.Slot0.kP = 0;
 		steerConfig.Slot0.kI = 0;
-		steerConfig.Slot0.kD = 1.5;
+		steerConfig.Slot0.kD = 0;
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
 		return steerConfig;

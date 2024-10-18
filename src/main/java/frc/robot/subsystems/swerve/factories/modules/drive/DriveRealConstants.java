@@ -45,7 +45,7 @@ class DriveRealConstants {
 		driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
 		driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-		driveConfig.Feedback.SensorToMechanismRatio = 6.12;
+		driveConfig.Feedback.SensorToMechanismRatio = 8;
 
 		driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
 		driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;

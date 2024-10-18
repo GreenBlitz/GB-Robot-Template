@@ -26,6 +26,15 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+		
+		robot.getSwerve().setDefaultCommand(
+				robot.getSwerve().getCommandsBuilder().drive(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+				)
+		);
+		
 		// bindings...
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));

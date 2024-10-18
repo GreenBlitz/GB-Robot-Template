@@ -25,6 +25,10 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
+import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.superstructure.Superstructure;
 import frc.utils.brakestate.BrakeStateManager;
 
@@ -48,11 +52,11 @@ public class Robot {
 	private final Superstructure superstructure;
 
 	public Robot() {
-		this.swerve = null;// new Swerve(
-//			SwerveConstantsFactory.create(SwerveType.SWERVE),
-//			ModulesFactory.create(SwerveType.SWERVE),
-//			GyroFactory.create(SwerveType.SWERVE)
-//		);
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			GyroFactory.create(SwerveType.SWERVE)
+		);
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));

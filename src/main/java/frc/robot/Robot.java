@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.factories.ElevatorFactory;
+import frc.robot.subsystems.elevatorRoller.ElevatorRollerConstants;
+import frc.robot.subsystems.elevatorRoller.factory.ElevatorRollerFactory;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.intake.pivot.Pivot;
 import frc.robot.subsystems.flywheel.Flywheel;
@@ -51,7 +53,7 @@ public class Robot {
 //			ModulesFactory.create(SwerveType.SWERVE),
 //			GyroFactory.create(SwerveType.SWERVE)
 //		);
-		this.elevatorRoller = null;// new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
+		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));

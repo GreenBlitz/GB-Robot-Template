@@ -1,10 +1,9 @@
 # Calibrations:
-- **Soft limits**
-- States' positions
-- IDs
-- PID
+- **Soft limits** - done
+- States' positions - done
+- IDs - done
+- PID - done
 - Rotations to meters ratio -- done
 - current limit -- done
 - min achievable position -- done
-- KG, KS
-- Gear ratio
+- Gear ratio - done

@@ -134,7 +134,7 @@ public class Superstructure {
 		return new InstantCommand(() -> currentState = state);
 	}
 
-	private Command enableChangeStateAutomatically(boolean enable) {
+	public Command enableChangeStateAutomatically(boolean enable) {
 		return new InstantCommand(() -> enableChangeStateAutomatically = enable);
 	}
 
@@ -183,8 +183,8 @@ public class Superstructure {
 	private Command intake() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.INTAKE),
+			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
-				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE),
 					rollerStateHandler.setState(RollerState.ROLL_IN),
@@ -214,8 +214,8 @@ public class Superstructure {
 	private Command armIntake() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.ARM_INTAKE),
+			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
-				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE),
 					rollerStateHandler.setState(RollerState.ROLL_IN),
@@ -268,8 +268,8 @@ public class Superstructure {
 	private Command speaker() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.SPEAKER),
+			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
-				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStateHandler.setState(IntakeState.STOP)
@@ -295,8 +295,8 @@ public class Superstructure {
 
 	private Command preAMP() {
 		return new ParallelCommandGroup(
-			enableChangeStateAutomatically(false),
 			setCurrentStateName(RobotState.PRE_AMP),
+			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
@@ -322,8 +322,8 @@ public class Superstructure {
 	private Command amp() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.AMP),
+			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
-				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					rollerStateHandler.setState(RollerState.STOP),
@@ -354,8 +354,8 @@ public class Superstructure {
 	private Command transferShooterToArm() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.TRANSFER_SHOOTER_TO_ARM),
+			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
-				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
 					pivotStateHandler.setState(PivotState.TRANSFER),
 					elbowStateHandler.setState(ElbowState.TRANSFER),
@@ -388,8 +388,8 @@ public class Superstructure {
 	private Command transferArmToShooter() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.TRANSFER_ARM_TO_SHOOTER),
+			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
-				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
 					pivotStateHandler.setState(PivotState.TRANSFER),
 					elbowStateHandler.setState(ElbowState.TRANSFER),

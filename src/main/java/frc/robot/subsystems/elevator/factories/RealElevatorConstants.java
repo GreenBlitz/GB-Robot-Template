@@ -26,7 +26,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-
 public class RealElevatorConstants {
 
 	private static final double DEBOUNCE_TIME_SECONDS = 0.05;

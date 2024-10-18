@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.IDs;
+import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.elevator.factories.ElevatorFactory;
 import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.intake.pivot.Pivot;
 import frc.robot.subsystems.flywheel.Flywheel;
@@ -54,8 +56,8 @@ public class Robot {
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
-		this.elevator = null;// new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
-//		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
+		this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
+		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
 		this.flywheel = FlywheelFactory
 			.create("TopMotor", "BottomMotor", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
 		this.superstructure = new Superstructure(this);

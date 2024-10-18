@@ -27,8 +27,8 @@ public class Superstructure {
 	private final Swerve swerve;
 	private final FlywheelStateHandler flywheelStateHandler;
 	private final ElevatorRollerStateHandler elevatorRollerStateHandler;
-	public final FunnelStateHandler funnelStateHandler;
-	public final IntakeStatesHandler intakeStatesHandler;
+	private final FunnelStateHandler funnelStateHandler;
+	private final IntakeStatesHandler intakeStatesHandler;
 	private final PivotStateHandler pivotStateHandler;
 	private final ElevatorStatesHandler elevatorStatesHandler;
 

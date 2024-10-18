@@ -77,10 +77,28 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	//@formatter:off
 	public void calculateHeadingOffset(Rotation2d gyroAngle) {
-		getEstimatedRobotHeadingByVision().ifPresentOrElse(estimatedHeading -> {
-			headingOffset = estimatedHeading.minus(gyroAngle);
+		Optional<Rotation2d> estimatedRobotHeading = getEstimatedRobotHeadingByVision();
+		if (estimatedRobotHeading.isPresent()) {
+			headingOffset = estimatedRobotHeading.get().minus(gyroAngle);
+//			Pose2d oldPose = estimatedPose;
+//			if (oldPose == null) {
+//				oldPose = new Pose2d();
+//			}
+//			resetPose(new Pose2d(
+//					oldPose.getX(),
+//					oldPose.getY(),
+//					gyroAngle.plus(headingOffset).rotateBy(Rotation2d.fromDegrees(180))
+//			));
 			hasHeadingOffsetBeenInitialized = true;
-		}, () -> headingOffset = new Rotation2d());
+		}
+		else {
+			headingOffset = new Rotation2d();
+			hasHeadingOffsetBeenInitialized = false;
+		}
+//		getEstimatedRobotHeadingByVision().ifPresentOrElse(estimatedHeading -> {
+//			headingOffset = estimatedHeading.minus(gyroAngle);
+//			hasHeadingOffsetBeenInitialized = true;
+//		}, () -> headingOffset = new Rotation2d());
 	}
 	//@formatter:on
 
@@ -102,6 +120,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				stackedHeadingEstimations.addAll(headingEstimation);
 			}
 			headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();
+		}
+		Optional<Rotation2d> output = PoseEstimationMath.calculateAngleAverage(stackedHeadingEstimations);
+		if (output.isPresent()) {
+			Logger.recordOutput(super.getLogPath() + "headingByVision", output.get());
 		}
 		return PoseEstimationMath.calculateAngleAverage(stackedHeadingEstimations);
 	}
@@ -233,7 +255,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void updateGyroAnglesInLimeLight(Rotation2d gyroAngle) {
-		if (gyroAngle != null) {
+		if (gyroAngle != null && hasHeadingOffsetBeenInitialized) {
 			Rotation2d headingWithOffset = gyroAngle.plus(headingOffset);
 			Logger.recordOutput("gyro-with-offset", headingOffset.getDegrees());
 			limelightFilterer.updateGyroAngles(new GyroAngleValues(headingWithOffset.getDegrees(), 0, 0, 0, 0, 0));
@@ -243,10 +265,15 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void logEstimatedPose() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
 	}
-
+	
 	@Override
 	public void subsystemPeriodic() {
 		updateVision(limelightFilterer.getFilteredVisionObservations());
+		Logger.recordOutput(super.getLogPath() + "headingOffset", headingOffset);
+		Logger.recordOutput(super.getLogPath() + "hasBeenInitialized", hasHeadingOffsetBeenInitialized);
+		Logger.recordOutput(super.getLogPath() + "latestGyroAngle", latestGyroAngle);
+		Logger.recordOutput(super.getLogPath() + "latestGyroAngleMod", latestGyroAngle.plus(Rotation2d.fromDegrees(0)));
+		
 	}
 
 }

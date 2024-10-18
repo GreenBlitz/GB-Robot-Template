@@ -26,7 +26,7 @@ public class VisionDenoiser {
 		this.angleFilterRadians = LinearFilter.movingAverage(maximumSize);
 	}
 
-	private void popLastIfQueueTooLarge() {
+	private void popLastObservationIfQueueIsTooLarge() {
 		if (observations.size() > maximumSize) {
 			observations.poll();
 		}
@@ -34,7 +34,7 @@ public class VisionDenoiser {
 
 	public void addVisionObservation(VisionObservation observation) {
 		observations.add(observation);
-		popLastIfQueueTooLarge();
+		popLastObservationIfQueueIsTooLarge();
 		lastFilterOutput = getFilterResult(
 			xFilter.calculate(observation.robotPose().getX()),
 			yFilter.calculate(observation.robotPose().getY()),
@@ -54,7 +54,7 @@ public class VisionDenoiser {
 		if (!overwrittenObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		ArrayList<Pose2d> poses = getRobotPosesFromGivenObservations();
+		List<Pose2d> poses = getRobotPosesFromGivenObservations();
 		return Optional.of(
 			new VisionObservation(
 				PoseEstimationMath.meanOfPose(poses),
@@ -77,7 +77,7 @@ public class VisionDenoiser {
 		if (!overwrittenObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		ArrayList<Pose2d> poses = getRobotPosesFromGivenObservations();
+		List<Pose2d> poses = getRobotPosesFromGivenObservations();
 		return Optional.of(
 			new VisionObservation(
 				PoseEstimationMath.weightedPoseMean(overwrittenObservations),
@@ -133,7 +133,6 @@ public class VisionDenoiser {
 		}
 		double timestamp = observations.getLast().timestamp();
 		return Optional.of(new VisionObservation(lastFilterOutput,
-//			PoseEstimationMath.calculateStandardDeviationOfPose(new ArrayList<>(List.of(currentPose, lastFilterOutput))),
 			PoseEstimationMath.calculateStandardDeviationOfPose(getRobotPosesFromGivenObservations()),
 			timestamp
 		));

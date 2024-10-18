@@ -85,11 +85,11 @@ public class PoseEstimationMath {
 		return appliedVisionObservation;
 	}
 
-	public static double[] calculateStandardDeviationOfPose(ArrayList<Pose2d> dataset) {
+	public static double[] calculateStandardDeviationOfPose(List<Pose2d> dataset) {
 		return applyFunctionOnPose(dataset, PoseEstimationMath::calculateStandardDeviation);
 	}
 
-	private static double[] applyFunctionOnPose(ArrayList<Pose2d> dataset, Function<ArrayList<Double>, Double> function) {
+	private static double[] applyFunctionOnPose(List<Pose2d> dataset, Function<List<Double>, Double> function) {
 		ArrayList<Double> XSet = new ArrayList<>();
 		ArrayList<Double> YSet = new ArrayList<>();
 		ArrayList<Double> AngleSet = new ArrayList<>();
@@ -111,12 +111,12 @@ public class PoseEstimationMath {
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
 	}
 
-	public static Pose2d meanOfPose(ArrayList<Pose2d> dataset) {
+	public static Pose2d meanOfPose(List<Pose2d> dataset) {
 		double[] deconstructPose = applyFunctionOnPose(dataset, PoseEstimationMath::mean);
 		return new Pose2d(deconstructPose[0], deconstructPose[1], Rotation2d.fromRadians(deconstructPose[2]));
 	}
 
-	public static double mean(ArrayList<Double> dataset) {
+	public static double mean(List<Double> dataset) {
 		double sum = 0;
 		for (double data : dataset) {
 			sum += data;
@@ -124,7 +124,7 @@ public class PoseEstimationMath {
 		return sum / dataset.size();
 	}
 
-	public static double calculateStandardDeviation(ArrayList<Double> dataset) {
+	public static double calculateStandardDeviation(List<Double> dataset) {
 		double mean = mean(dataset);
 		double squaredDeviation = 0;
 		for (double data : dataset) {

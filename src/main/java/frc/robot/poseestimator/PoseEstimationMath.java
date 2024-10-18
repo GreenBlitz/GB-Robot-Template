@@ -90,9 +90,9 @@ public class PoseEstimationMath {
 	}
 
 	private static double[] applyFunctionOnPose(List<Pose2d> dataset, Function<List<Double>, Double> function) {
-		ArrayList<Double> XSet = new ArrayList<>();
-		ArrayList<Double> YSet = new ArrayList<>();
-		ArrayList<Double> AngleSet = new ArrayList<>();
+		List<Double> XSet = new ArrayList<>();
+		List<Double> YSet = new ArrayList<>();
+		List<Double> AngleSet = new ArrayList<>();
 		for (Pose2d data : dataset) {
 			XSet.add(data.getX());
 			YSet.add(data.getY());

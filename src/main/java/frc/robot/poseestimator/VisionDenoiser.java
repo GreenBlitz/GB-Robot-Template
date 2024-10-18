@@ -69,7 +69,7 @@ public class VisionDenoiser {
 	}
 
 	public Optional<VisionObservation>
-	calculateAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+		calculateAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
 		return calculateAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
 	}
 
@@ -92,7 +92,7 @@ public class VisionDenoiser {
 	}
 
 	public Optional<VisionObservation>
-	calculateWeightedAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+		calculateWeightedAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
 		return calculateWeightedAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
 	}
 

@@ -18,8 +18,6 @@ import java.util.function.Function;
 
 public class RealPivotConstants {
 
-	private static final double GEAR_RATIO = 1;
-
 	public static final int POSITION_PID_SLOT = 0;
 
 	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0, 0);
@@ -30,9 +28,9 @@ public class RealPivotConstants {
 	//@formatter:on
 
 	private static void configMotor(SparkMaxWrapper sparkMaxWrapper) {
-		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
-		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
-		sparkMaxWrapper.getPIDController().setP(1);
+		sparkMaxWrapper.getEncoder().setPositionConversionFactor(PivotConstants.GEAR_RATIO);
+		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(PivotConstants.GEAR_RATIO);
+		sparkMaxWrapper.getPIDController().setP(0);
 		sparkMaxWrapper.getPIDController().setI(0);
 		sparkMaxWrapper.getPIDController().setD(0);
 		sparkMaxWrapper.setSmartCurrentLimit(30);

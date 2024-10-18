@@ -7,8 +7,8 @@ public class ElevatorRollerStateHandler {
 
 	private final ElevatorRoller elevatorRoller;
 
-	public ElevatorRollerStateHandler(Robot robot) {
-		this.elevatorRoller = robot.getElevatorRoller();
+	public ElevatorRollerStateHandler(ElevatorRoller elevatorRoller) {
+		this.elevatorRoller = elevatorRoller;
 	}
 
 	public Command setState(ElevatorRollerState state) {

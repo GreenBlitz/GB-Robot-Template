@@ -37,9 +37,9 @@ public class Superstructure {
 	public Superstructure(Robot robot) {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
-		this.flywheelStateHandler = new FlywheelStateHandler(robot);
-		this.elevatorRollerStateHandler = new ElevatorRollerStateHandler(robot);
-		this.funnelStateHandler = new FunnelStateHandler(robot);
+		this.flywheelStateHandler = new FlywheelStateHandler(robot.getFlywheel());
+		this.elevatorRollerStateHandler = new ElevatorRollerStateHandler(robot.getElevatorRoller());
+		this.funnelStateHandler = new FunnelStateHandler(robot.getFunnel());
 		this.intakeStatesHandler = new IntakeStatesHandler(robot.getIntakeRoller());
 		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
 		this.elevatorStatesHandler = new ElevatorStatesHandler(robot.getElevator());

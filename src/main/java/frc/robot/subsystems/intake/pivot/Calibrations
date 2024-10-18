@@ -1,9 +1,9 @@
 Calibrations:
 
-1. Gear ratio
-2. PID
-3. KS, KG
-4. State positions
-5. Current limit
-6. Minimum achievable angle
-7. Soft limits
+1. Gear ratio - done
+2. PID - done
+3. KS, KG - done
+4. State positions - done
+5. Current limit - done
+6. Maximum achievable angle - done
+7. Soft limits - done

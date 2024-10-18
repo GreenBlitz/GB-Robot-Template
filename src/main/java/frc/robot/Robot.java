@@ -13,6 +13,8 @@ import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.intake.pivot.Pivot;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.elevatorRoller.ElevatorRoller;
+import frc.robot.subsystems.intake.pivot.PivotConstants;
+import frc.robot.subsystems.intake.pivot.factory.PivotFactory;
 import frc.robot.subsystems.intake.roller.IntakeRoller;
 import frc.robot.subsystems.intake.roller.IntakeRollerConstant;
 import frc.robot.subsystems.intake.roller.factory.IntakeRollerFactory;
@@ -22,6 +24,7 @@ import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
 import frc.robot.superstructure.Superstructure;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -50,8 +53,8 @@ public class Robot {
 //		);
 		this.elevatorRoller = null;// new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
-		this.pivot = null;// new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
-//		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
+		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
+		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 		this.intakeRoller = new IntakeRoller(IntakeRollerFactory.create(IntakeRollerConstant.LOG_PATH));
 		this.elevator = new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
 //		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));

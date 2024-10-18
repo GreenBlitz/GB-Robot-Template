@@ -8,6 +8,7 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.intake.pivot.PivotConstants;
@@ -18,11 +19,9 @@ import java.util.function.Function;
 
 public class RealPivotConstants {
 
-	private static final double GEAR_RATIO = 1;
-
 	public static final int POSITION_PID_SLOT = 0;
 
-	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0, 0);
+	private static final ArmFeedforward FEEDFORWARD_CALCULATOR = new ArmFeedforward(0, 0.55, 0);
 
 	//@formatter:off
 	private static final Function<Rotation2d, Double> FEEDFORWARD_FUNCTION =
@@ -30,14 +29,14 @@ public class RealPivotConstants {
 	//@formatter:on
 
 	private static void configMotor(SparkMaxWrapper sparkMaxWrapper) {
-		sparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
-		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
-		sparkMaxWrapper.getPIDController().setP(1);
+		sparkMaxWrapper.getEncoder().setPositionConversionFactor(PivotConstants.GEAR_RATIO);
+		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(PivotConstants.GEAR_RATIO);
+		sparkMaxWrapper.getPIDController().setP(6);
 		sparkMaxWrapper.getPIDController().setI(0);
-		sparkMaxWrapper.getPIDController().setD(0);
+		sparkMaxWrapper.getPIDController().setD(0.5);
 		sparkMaxWrapper.setSmartCurrentLimit(30);
 		sparkMaxWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
-		sparkMaxWrapper.setInverted(false);
+		sparkMaxWrapper.setInverted(true);
 		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) PivotConstants.FORWARD_SOFT_LIMIT.getRotations());
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 		sparkMaxWrapper.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) PivotConstants.REVERSE_SOFT_LIMIT.getRotations());
@@ -59,8 +58,9 @@ public class RealPivotConstants {
 			POSITION_PID_SLOT,
 			FEEDFORWARD_FUNCTION
 		);
+		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
 
-		return new PivotStuff(logPath, motor, voltageSignal, positionSignal, positionRequest);
+		return new PivotStuff(logPath, motor, voltageSignal, positionSignal, positionRequest, voltageRequest);
 	}
 
 }

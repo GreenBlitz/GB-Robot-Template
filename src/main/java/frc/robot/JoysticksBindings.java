@@ -39,19 +39,6 @@ public class JoysticksBindings {
 				)
 		);
 		
-		SignalLogger.start();
-		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kReverse));
-		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
-		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
-		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
-		usedJoystick.START.onTrue(new InstantCommand(() -> SignalLogger.stop()));
-	}
-
-	private static void secondJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SECOND_JOYSTICK;
-		
-		
-		// bindings...
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
 		usedJoystick.START.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ELEVATOR_SHOOTER));
@@ -59,7 +46,16 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
 		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.AMP));
-		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));;
+		
+	}
+
+	private static void secondJoystickButtons(Robot robot) {
+		SmartJoystick usedJoystick = SECOND_JOYSTICK;
+		
+		
+		// bindings...
+
 		// bindings...
 	}
 

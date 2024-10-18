@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -16,6 +19,7 @@ import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
 
 
 /**
@@ -27,6 +31,7 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 	private Robot robot;
+	public SwerveDriveOdometry odometry;
 
 	@Override
 	public void robotInit() {
@@ -35,6 +40,7 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
+//		this.odometry = new SwerveDriveOdometry(robot.getSwerve().getConstants().kinematics(),new Rotation2d(), new SwerveModulePosition[]{});
 	}
 
 	@Override
@@ -76,6 +82,8 @@ public class RobotManager extends LoggedRobot {
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
 		robot.getSuperstructure().logStatus();
+//		odometry.update(robot.getSwerve().getAllOdometryObservations()[0].gyroAngle(),robot.getSwerve().getAllOdometryObservations()[0].wheelPositions());
+//		Logger.recordOutput("odometry pose", odometry.getPoseMeters());
 	}
 
 	@Override

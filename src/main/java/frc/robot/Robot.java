@@ -54,7 +54,7 @@ public class Robot {
 		this.elevator = null;// new Elevator(ElevatorFactory.create(ElevatorConstants.LOG_PATH));
 //		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
 		this.flywheel = FlywheelFactory
-			.create("TopMotor/", "BottomMotor/", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
+			.create("TopMotor", "BottomMotor", IDs.CANSparkMAXIDs.TOP_FLYWHEEL, IDs.CANSparkMAXIDs.BOTTOM_FLYWHEEL, this);
 		this.superstructure = new Superstructure(this);
 
 		configureBindings();

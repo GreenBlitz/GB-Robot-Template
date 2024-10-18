@@ -10,8 +10,7 @@ public record ElevatorStuff(
 	IRequest<Rotation2d> positionRequest,
 	IRequest<Double> voltageRequest,
 	IDigitalInput digitalInput,
-	ElevatorMotorStuff frontMotorStuff,
-	ElevatorMotorStuff backMotorStuff
+	ElevatorMotorStuff motorStuff
 ) {
 
 	public ElevatorStuff(
@@ -19,10 +18,9 @@ public record ElevatorStuff(
 		IRequest<Rotation2d> positionRequest,
 		IRequest<Double> voltageRequest,
 		IDigitalInput digitalInput,
-		ElevatorMotorStuff frontMotorStuff,
-		ElevatorMotorStuff backMotorStuff
+		ElevatorMotorStuff motorStuff
 	) {
-		this(logPath, logPath + "limitSwitch/", positionRequest, voltageRequest, digitalInput, frontMotorStuff, backMotorStuff);
+		this(logPath, logPath + "limitSwitch/", positionRequest, voltageRequest, digitalInput, motorStuff);
 	}
 
 }

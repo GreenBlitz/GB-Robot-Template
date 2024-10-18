@@ -67,10 +67,7 @@ public class IDs {
 
 		public static final SparkMaxDeviceID PIVOT = new SparkMaxDeviceID(2, CANSparkLowLevel.MotorType.kBrushless);
 
-		public static final SparkMaxDeviceID ELEVATOR_FRONT = new SparkMaxDeviceID(14, CANSparkLowLevel.MotorType.kBrushless);
-
-		public static final SparkMaxDeviceID ELEVATOR_BACK = new SparkMaxDeviceID(15, CANSparkLowLevel.MotorType.kBrushless);
-
+		public static final SparkMaxDeviceID ELEVATOR = new SparkMaxDeviceID(60, CANSparkLowLevel.MotorType.kBrushless);
 	}
 
 }

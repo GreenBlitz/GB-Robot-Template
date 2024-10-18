@@ -7,6 +7,7 @@ import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.limelights.LimelightRawData;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PoseEstimationMath {
 
@@ -41,19 +42,19 @@ public class PoseEstimationMath {
 	}
 
 	//@formatter:off
-    public static Transform2d applyKalmanOnTransform(
-            VisionObservation observation,
-            Pose2d appliedVisionObservation,
-            double[] odometryStandardDeviations
-    ) {
-        double[] combinedStandardDeviations = getKalmanRatio(observation.standardDeviations(), odometryStandardDeviations);
-        Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.robotPose());
-        return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
-    }
+	public static Transform2d applyKalmanOnTransform(
+		VisionObservation observation,
+		Pose2d appliedVisionObservation,
+		double[] odometryStandardDeviations
+	) {
+		double[] combinedStandardDeviations = getKalmanRatio(observation.standardDeviations(), odometryStandardDeviations);
+		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.robotPose());
+		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
+	}
 
 	public static Transform2d scaleDifferenceFromKalman(
-			Transform2d visionDifferenceFromOdometry,
-			double[] combinedStandardDeviations
+		Transform2d visionDifferenceFromOdometry,
+		double[] combinedStandardDeviations
 	) {
 		return new Transform2d(
 			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
@@ -83,6 +84,9 @@ public class PoseEstimationMath {
 	}
 
 	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
+		if (currentEstimatedPose == null) {
+			return new double[] {0.01, 0.01, 0.01};
+		}
 		double normalizedLimelightX = limelightRawData.estimatedPose().getX() / Field.LENGTH_METERS;
 		double normalizedLimelightY = limelightRawData.estimatedPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
@@ -125,17 +129,19 @@ public class PoseEstimationMath {
 		return poseMean;
 	}
 
-	public static Rotation2d calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
+	public static Optional<Rotation2d> calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
 		double summedXComponent = 0;
 		double summedYComponent = 0;
 		for (Rotation2d heading : estimatedHeadings) {
 			summedXComponent += heading.getCos();
 			summedYComponent += heading.getSin();
 		}
-		if (summedXComponent == 0 || summedYComponent == 0) {
-			return estimatedHeadings.get(0);
+		if (summedXComponent == 0 || summedYComponent == 0 || estimatedHeadings.isEmpty()) {
+			return Optional.empty();
 		}
-		return new Rotation2d(Math.atan2(summedYComponent, summedXComponent));
+		summedXComponent /= estimatedHeadings.size();
+		summedYComponent /= estimatedHeadings.size();
+		return Optional.of(new Rotation2d(Math.atan2(summedYComponent, summedXComponent)));
 	}
 
 }

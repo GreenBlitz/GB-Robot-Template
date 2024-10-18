@@ -5,57 +5,21 @@ import org.littletonrobotics.junction.Logger;
 
 public class LimelightFilters {
 
-	protected static boolean keepLimelightData(
-		LimelightRawData limelightRawData,
-		Pose2d currentEstimatedPose,
-		double aprilTagHeightMeters,
-		LimelightFiltersTolerances tolerances,
-		String logpath
-	) {
-		boolean aprilTagInProperHeight = LimelightFilters.isAprilTagInProperHeight(limelightRawData, tolerances.aprilTagHeightToleranceMeters(), aprilTagHeightMeters);
-//		boolean limelightOutputInTolerance = LimelightFilters.isLimelightOutputInTolerance(
-//			limelightRawData,
-//			currentEstimatedPose,
-//			tolerances.normalizedPositionTolerance(),
-//			tolerances.normalizedRotationTolerance()
-//		);
+	protected static boolean keepLimelightData(LimelightRawData limelightRawData, LimelightFiltersTolerances tolerances, String logpath) {
 		boolean rollInTolerance = LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance());
 		boolean pitchInTolerance = LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance());
 		boolean robotOnGround = LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
-			Logger.recordOutput(logpath + "filteredBecauseBadHeight", !aprilTagInProperHeight);
-//			Logger.recordOutput(logpath + "filteredBecauseBadTolerance", !limelightOutputInTolerance);
-			Logger.recordOutput(logpath + "filteredBecauseBadRoll", !rollInTolerance);
-			Logger.recordOutput(logpath + "filteredBecauseBadPitch", !pitchInTolerance);
-			Logger.recordOutput(logpath + "filteredBecauseRobotIsFuckingFlying", !robotOnGround);
+		if (!rollInTolerance) {
+			Logger.recordOutput(logpath + "filteredBecauseBadRoll", limelightRawData.estimatedPose());
+		}
+		if (!pitchInTolerance) {
+			Logger.recordOutput(logpath + "filteredBecauseBadPitch", limelightRawData.estimatedPose());
+		}
+		if (!robotOnGround) {
+			Logger.recordOutput(logpath + "filteredBecauseRobotIsFuckingFlying", limelightRawData.estimatedPose());
+		}
 
-		return aprilTagInProperHeight
-//			&& limelightOutputInTolerance
-			&& rollInTolerance
-			&& pitchInTolerance
-			&& robotOnGround;
-	}
-
-	protected static boolean isLimelightOutputInTolerance(
-		LimelightRawData limelightRawData,
-		Pose2d estimatedPose,
-		double normalizedPositionTolerance,
-		double normalizedRotationTolerance
-	) {
-		Pose3d limelightPosition = limelightRawData.estimatedPose();
-		Pose3d estimatedPose3d = new Pose3d(
-			estimatedPose.getX(),
-			estimatedPose.getY(),
-			0,
-			new Rotation3d(0, 0, estimatedPose.getRotation().getRadians())
-		);
-		Transform3d transformDifference = limelightPosition.minus(estimatedPose3d);
-		Rotation3d rotationDifference = limelightPosition.getRotation().minus(estimatedPose3d.getRotation());
-		return transformDifference.getTranslation().getNorm() <= normalizedPositionTolerance
-			&& getRotationNorm(rotationDifference) <= normalizedRotationTolerance;
-	}
-
-	private static double getRotationNorm(Rotation3d angle) {
-		return Math.sqrt(Math.pow(angle.getX(), 2) + Math.pow(angle.getY(), 2) + Math.pow(angle.getZ(), 2));
+		return rollInTolerance && pitchInTolerance && robotOnGround;
 	}
 
 	protected static boolean isPitchInTolerance(LimelightRawData limelightRawData, Rotation2d pitchTolerance) {
@@ -64,13 +28,6 @@ public class LimelightFilters {
 
 	protected static boolean isRollInTolerance(LimelightRawData limelightRawData, Rotation2d rollTolerance) {
 		return Math.abs(limelightRawData.estimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
-	}
-
-	protected static boolean
-		isAprilTagInProperHeight(LimelightRawData limelightRawData, double aprilTagHeightToleranceMeters, double aprilTagHeightMeters) {
-		Logger.recordOutput("tag height", aprilTagHeightMeters);
-		double aprilTagHeightConfidence = Math.abs(limelightRawData.aprilTagHeight() - aprilTagHeightMeters);
-		return aprilTagHeightConfidence <= aprilTagHeightToleranceMeters;
 	}
 
 	protected static boolean isRobotOnGround(LimelightRawData limelightRawData, double robotToGroundToleranceMeters) {

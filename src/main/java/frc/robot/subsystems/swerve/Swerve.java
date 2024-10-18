@@ -16,7 +16,7 @@ import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.superstructure.Tolerances;
-import frc.utils.pathplannerutils.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -50,7 +50,7 @@ public class Swerve extends GBSubsystem {
 		this.gyro = gyroStuff.gyro();
 		this.gyroStuff = gyroStuff;
 
-		this.headingSupplier = this::getAbsoluteHeading;
+		this.headingSupplier = this::getGyroAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -76,7 +76,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
-		PathPlannerUtils.configurePathPlanner(
+		PathPlannerUtils.configPathPlanner(
 			currentPoseSupplier,
 			resetPoseConsumer,
 			this::getRobotRelativeVelocity,
@@ -166,9 +166,13 @@ public class Swerve extends GBSubsystem {
 		return odometryObservations;
 	}
 
+	public Rotation2d getGyroAbsoluteYaw() {
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());
+		return Rotation2d.fromRadians(inputtedHeadingRadians);
+	}
 
 	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(headingSupplier.get().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 

@@ -4,10 +4,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum PivotState {
 
-	ON_FLOOR(Rotation2d.fromDegrees(0)),
-	UP(Rotation2d.fromDegrees(1));
+	ON_FLOOR(Rotation2d.fromDegrees(4)),
+	UP(Rotation2d.fromDegrees(98));
 
-	private Rotation2d position;
+	private final Rotation2d position;
 
 	PivotState(Rotation2d position) {
 		this.position = position;

@@ -70,7 +70,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		TimeUtils.updateCycleTime(); // Better to be first
-//		robot.getSwerve().updateStatus();
+		robot.periodic();
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();

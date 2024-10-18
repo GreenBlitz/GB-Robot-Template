@@ -116,7 +116,7 @@ public class Robot {
 			swerve.getModules().getWheelsPositions(0),
 			swerve.getAbsoluteHeading(),
 			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
-			new VisionDenoiser(20)
+			new VisionDenoiser(PoseEstimatorConstants.LINEAR_FILTER_SAMPLES_FOR_EACH_VISION_CALCULATION)
 		);
 		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
 

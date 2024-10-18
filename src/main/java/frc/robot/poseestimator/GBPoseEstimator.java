@@ -184,7 +184,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			visionDenoiser.addVisionObservation(observation);
 			VisionObservation fixedObservation;
-			if (visionDenoiser.calculateAverage().isPresent()) {
+			if (visionDenoiser.calculateLinearFilterResult().isPresent()) {
 				fixedObservation = visionDenoiser.calculateAverage().get();
 			} else {
 				fixedObservation = observation;

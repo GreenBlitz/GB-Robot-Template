@@ -12,6 +12,6 @@ public class ElevatorConstants {
 
 	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0.01;
 
-	public static final double FORWARD_SOFT_LIMIT_VALUE_METERS = 0.3;
+	public static final double FORWARD_SOFT_LIMIT_VALUE_METERS = 0.315;
 
 }

@@ -36,7 +36,7 @@ public class RealElevatorRollerConstants {
 		TalonSRXMotor talonSRXMotor = new TalonSRXMotor(logPath, talonSRX, ElevatorRollerConstants.GEAR_RATIO);
 
 		talonSRX.overrideLimitSwitchesEnable(false);
-		ChanneledDigitalInput beamBreaker = new ChanneledDigitalInput(0, DEBOUNCE_TIME_SECONDS);
+		ChanneledDigitalInput beamBreaker = new ChanneledDigitalInput(0, DEBOUNCE_TIME_SECONDS, true);
 
 		SuppliedDoubleSignal voltage = new SuppliedDoubleSignal("voltage", talonSRX::getMotorOutputVoltage);
 

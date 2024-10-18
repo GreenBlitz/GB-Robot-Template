@@ -12,7 +12,7 @@ import java.util.*;
 public class VisionDenoiser {
 
 	private final int maximumSize;
-	private LinkedList<VisionObservation> observations = new LinkedList<>();
+	private LinkedList<VisionObservation> observations;
 	private LinearFilter xFilter;
 	private LinearFilter yFilter;
 	private LinearFilter angleFilterRadians;
@@ -20,13 +20,14 @@ public class VisionDenoiser {
 
 	public VisionDenoiser(int maximumSize) {
 		this.maximumSize = maximumSize;
+		this.observations = new LinkedList<>();
 
 		this.xFilter = LinearFilter.movingAverage(maximumSize);
 		this.yFilter = LinearFilter.movingAverage(maximumSize);
 		this.angleFilterRadians = LinearFilter.movingAverage(maximumSize);
 	}
 
-	private void popLastIfQueueTooLarge() {
+	private void popLastObservationIfQueueIsTooLarge() {
 		if (observations.size() > maximumSize) {
 			observations.poll();
 		}
@@ -34,7 +35,7 @@ public class VisionDenoiser {
 
 	public void addVisionObservation(VisionObservation observation) {
 		observations.add(observation);
-		popLastIfQueueTooLarge();
+		popLastObservationIfQueueIsTooLarge();
 		lastFilterOutput = getFilterResult(
 			xFilter.calculate(observation.robotPose().getX()),
 			yFilter.calculate(observation.robotPose().getY()),
@@ -54,7 +55,7 @@ public class VisionDenoiser {
 		if (!overwrittenObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		ArrayList<Pose2d> poses = getRobotPosesFromGivenObservations();
+		List<Pose2d> poses = getRobotPosesFromGivenObservations();
 		return Optional.of(
 			new VisionObservation(
 				PoseEstimationMath.meanOfPose(poses),
@@ -68,16 +69,21 @@ public class VisionDenoiser {
 		return calculateAverage(observations);
 	}
 
-	public Optional<VisionObservation>
-		calculateAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+	// @formatter:off
+	public Optional<VisionObservation> calculateAverageFixedPose(
+		Pose2d currentPose,
+		Pose2d odometryPose,
+		TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator
+	) {
 		return calculateAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
 	}
+	// @formatter:on
 
 	private Optional<VisionObservation> calculateWeightedAverage(LinkedList<VisionObservation> overwrittenObservations) {
 		if (!overwrittenObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		ArrayList<Pose2d> poses = getRobotPosesFromGivenObservations();
+		List<Pose2d> poses = getRobotPosesFromGivenObservations();
 		return Optional.of(
 			new VisionObservation(
 				PoseEstimationMath.weightedPoseMean(overwrittenObservations),
@@ -91,13 +97,21 @@ public class VisionDenoiser {
 		return calculateWeightedAverage(observations);
 	}
 
-	public Optional<VisionObservation>
-		calculateWeightedAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
-		return calculateWeightedAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
+	// @formatter:off
+	public Optional<VisionObservation> calculateWeightedAverageFixedPose(
+		Pose2d currentEstimatedPose,
+		Pose2d odometryPose,
+		TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator
+	) {
+		return calculateWeightedAverage(fixAccordingToOdometry(currentEstimatedPose, odometryPose, odometryPoseInterpolator));
 	}
 
-	private LinkedList<VisionObservation>
-		fixAccordingToOdometry(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+	private LinkedList<VisionObservation> fixAccordingToOdometry(
+		Pose2d currentPose,
+		Pose2d odometryPose,
+		TimeInterpolatableBuffer<Pose2d>
+		odometryPoseInterpolator
+	) {
 		LinkedList<VisionObservation> output = new LinkedList<>();
 		for (VisionObservation observation : observations) {
 			double currentTimestamp = TimeUtils.getCurrentTimeSeconds();
@@ -122,6 +136,7 @@ public class VisionDenoiser {
 		}
 		return output;
 	}
+	// @formatter:on
 
 	private Pose2d getFilterResult(double x, double y, double ang) {
 		return new Pose2d(x, y, Rotation2d.fromRadians(ang));
@@ -132,11 +147,13 @@ public class VisionDenoiser {
 			return Optional.empty();
 		}
 		double timestamp = observations.getLast().timestamp();
-		return Optional.of(new VisionObservation(lastFilterOutput,
-//			PoseEstimationMath.calculateStandardDeviationOfPose(new ArrayList<>(List.of(currentPose, lastFilterOutput))),
-			PoseEstimationMath.calculateStandardDeviationOfPose(getRobotPosesFromGivenObservations()),
-			timestamp
-		));
+		return Optional.of(
+			new VisionObservation(
+				lastFilterOutput,
+				PoseEstimationMath.calculateStandardDeviationOfPose(getRobotPosesFromGivenObservations()),
+				timestamp
+			)
+		);
 	}
 
 }

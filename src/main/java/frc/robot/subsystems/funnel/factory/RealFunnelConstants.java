@@ -43,6 +43,7 @@ public class RealFunnelConstants {
 		motor.setSmartCurrentLimit(30);
 		motor.getEncoder().setPositionConversionFactor(FunnelConstants.GEAR_RATIO);
 		motor.getEncoder().setVelocityConversionFactor(FunnelConstants.GEAR_RATIO);
+		motor.setInverted(true);
 	}
 
 }

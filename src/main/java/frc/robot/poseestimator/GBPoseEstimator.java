@@ -230,9 +230,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				);
                 fixedObservation = dataCalced.orElse(observation);
 			} else if (calcMode == 4) {
-				Optional<VisionObservation> dataCalced = visionDenoiser.calculateLinearFilterResult(
-						estimatedPose
-				);
+				Optional<VisionObservation> dataCalced = visionDenoiser.calculateLinearFilterResult();
 				fixedObservation = dataCalced.orElse(observation);
 			} else {
 				fixedObservation = observation;

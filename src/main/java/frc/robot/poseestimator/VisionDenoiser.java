@@ -15,14 +15,15 @@ public class VisionDenoiser {
 	private LinkedList<VisionObservation> observations = new LinkedList<>();
 	private LinearFilter xFilter;
 	private LinearFilter yFilter;
-	private LinearFilter angFilter;
+	private LinearFilter angleFilterRadians;
 	private Pose2d lastFilterOutput;
 
 	public VisionDenoiser(int maximumSize) {
 		this.maximumSize = maximumSize;
+
 		this.xFilter = LinearFilter.movingAverage(maximumSize);
 		this.yFilter = LinearFilter.movingAverage(maximumSize);
-		this.angFilter = LinearFilter.movingAverage(maximumSize);
+		this.angleFilterRadians = LinearFilter.movingAverage(maximumSize);
 	}
 
 	private void popLastIfQueueTooLarge() {
@@ -35,13 +36,13 @@ public class VisionDenoiser {
 		observations.add(observation);
 		popLastIfQueueTooLarge();
 		lastFilterOutput = getFilterResult(
-				xFilter.calculate(observation.robotPose().getX()),
-				yFilter.calculate(observation.robotPose().getY()),
-				angFilter.calculate(observation.robotPose().getRotation().getRadians())
+			xFilter.calculate(observation.robotPose().getX()),
+			yFilter.calculate(observation.robotPose().getY()),
+			angleFilterRadians.calculate(observation.robotPose().getRotation().getRadians())
 		);
 	}
 
-	private ArrayList<Pose2d> getRobotPoseObservations() {
+	private ArrayList<Pose2d> getRobotPosesFromGivenObservations() {
 		ArrayList<Pose2d> output = new ArrayList<>();
 		for (VisionObservation observation : observations) {
 			output.add(observation.robotPose());
@@ -53,7 +54,7 @@ public class VisionDenoiser {
 		if (!overwrittenObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		ArrayList<Pose2d> poses = getRobotPoseObservations();
+		ArrayList<Pose2d> poses = getRobotPosesFromGivenObservations();
 		return Optional.of(
 			new VisionObservation(
 				PoseEstimationMath.meanOfPose(poses),
@@ -67,11 +68,16 @@ public class VisionDenoiser {
 		return calculateAverage(observations);
 	}
 
+	public Optional<VisionObservation>
+	calculateAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+		return calculateAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
+	}
+
 	private Optional<VisionObservation> calculateWeightedAverage(LinkedList<VisionObservation> overwrittenObservations) {
 		if (!overwrittenObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		ArrayList<Pose2d> poses = getRobotPoseObservations();
+		ArrayList<Pose2d> poses = getRobotPosesFromGivenObservations();
 		return Optional.of(
 			new VisionObservation(
 				PoseEstimationMath.weightedPoseMean(overwrittenObservations),
@@ -83,6 +89,11 @@ public class VisionDenoiser {
 
 	public Optional<VisionObservation> calculateWeightedAverage() {
 		return calculateWeightedAverage(observations);
+	}
+
+	public Optional<VisionObservation>
+	calculateWeightedAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+		return calculateWeightedAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
 	}
 
 	private LinkedList<VisionObservation>
@@ -113,32 +124,18 @@ public class VisionDenoiser {
 	}
 
 	private Pose2d getFilterResult(double x, double y, double ang) {
-		return new Pose2d(
-				x,
-				y,
-				Rotation2d.fromRadians(ang)
-		);
+		return new Pose2d(x, y, Rotation2d.fromRadians(ang));
 	}
 
-	public Optional<VisionObservation>
-		calculateAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
-		return calculateAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
-	}
-
-	public Optional<VisionObservation>
-		calculateWeightedAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
-		return calculateWeightedAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
-	}
-
-	public Optional<VisionObservation> calculateLinearFilterResult(Pose2d currentPose) {
+	public Optional<VisionObservation> calculateLinearFilterResult() {
 		if (observations.size() == 0) {
 			return Optional.empty();
 		}
-		Double timestamp = observations.getLast().timestamp();
-		return Optional.of(new VisionObservation(
-				lastFilterOutput,
-				PoseEstimationMath.calculateStandardDeviationOfPose(new ArrayList<>(List.of(currentPose, lastFilterOutput))),
-				timestamp
+		double timestamp = observations.getLast().timestamp();
+		return Optional.of(new VisionObservation(lastFilterOutput,
+//			PoseEstimationMath.calculateStandardDeviationOfPose(new ArrayList<>(List.of(currentPose, lastFilterOutput))),
+			PoseEstimationMath.calculateStandardDeviationOfPose(getRobotPosesFromGivenObservations()),
+			timestamp
 		));
 	}
 

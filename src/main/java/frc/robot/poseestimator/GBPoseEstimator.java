@@ -209,12 +209,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void updateOdometry(List<OdometryObservation> odometryObservations) {
-		if (hasHeadingOffsetBeenInitialized) {
-			for (OdometryObservation observation : odometryObservations) {
-				addOdometryObservation(observation);
-			}
-			logEstimatedPose();
+		for (OdometryObservation observation : odometryObservations) {
+			addOdometryObservation(observation);
 		}
+		logEstimatedPose();
 	}
 
 	private boolean isObservationTooOld(VisionObservation visionObservation) {
@@ -244,6 +242,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void addOdometryObservation(OdometryObservation observation) {
+		if (!hasHeadingOffsetBeenInitialized) {
+			calculateHeadingOffset(observation.gyroAngle());
+		}
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
 		// @pose-swerveAdditions:on
 		Logger.recordOutput("inside odometry", observation.timestamp());
@@ -282,9 +283,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			hasHeadingOffsetBeenInitialized = false;
 		} else if (DriverStationUtils.isDisabled() && isCurrentlyEnabled) {
 			isCurrentlyEnabled = false;
-		}
-		if (!hasHeadingOffsetBeenInitialized) {
-			calculateHeadingOffset(latestGyroAngle);
 		}
 		Logger.recordOutput(super.getLogPath() + "headingOffset", headingOffset);
 		Logger.recordOutput(super.getLogPath() + "hasBeenInitialized", hasHeadingOffsetBeenInitialized);

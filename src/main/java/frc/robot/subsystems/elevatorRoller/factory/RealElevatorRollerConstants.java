@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.constants.IDs;
+import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.motor.talonsrx.TalonSRXMotor;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
@@ -34,9 +35,8 @@ public class RealElevatorRollerConstants {
 
 		TalonSRXMotor talonSRXMotor = new TalonSRXMotor(logPath, talonSRX, ElevatorRollerConstants.GEAR_RATIO);
 
-		BooleanSupplier isBeamBroken = () -> talonSRX.getSensorCollection().isRevLimitSwitchClosed();
 		talonSRX.overrideLimitSwitchesEnable(false);
-		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
+		ChanneledDigitalInput beamBreaker = new ChanneledDigitalInput(0, DEBOUNCE_TIME_SECONDS);
 
 		SuppliedDoubleSignal voltage = new SuppliedDoubleSignal("voltage", talonSRX::getMotorOutputVoltage);
 

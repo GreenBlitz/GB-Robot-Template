@@ -1,6 +1,5 @@
 package frc.robot.subsystems.flywheel.factory;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +13,7 @@ import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.flywheel.FlywheelStuff;
 import frc.utils.AngleUnit;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Function;
 
@@ -22,9 +22,9 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class RealFlywheelConstants {
 
-	private static final double kS = 3;
+	private static final double kS = 0.37804;
 
-	private static final double kV = 3;
+	private static final double kV = 0.13081;
 
 	private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
 
@@ -37,7 +37,7 @@ public class RealFlywheelConstants {
 			Volts.of(1).per(Seconds.of(1)),
 			Volts.of(7),
 			Seconds.of(10),
-			(state) -> SignalLogger.writeString("state", state.toString())
+			(state) -> Logger.recordOutput("state", state.toString())
 		);
 	}
 
@@ -48,7 +48,7 @@ public class RealFlywheelConstants {
 		sparkMax.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
 		sparkMax.setIdleMode(CANSparkBase.IdleMode.kCoast);
 
-		sparkMax.getPIDController().setP(5);
+		sparkMax.getPIDController().setP(0);
 		sparkMax.getPIDController().setI(0);
 		sparkMax.getPIDController().setD(0);
 	}
@@ -64,7 +64,11 @@ public class RealFlywheelConstants {
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
-		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", sparkMaxWrapper.getEncoder()::getVelocity, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal(
+			"velocity",
+			() -> sparkMaxWrapper.getEncoder().getVelocity() / 60.0,
+			AngleUnit.ROTATIONS
+		);
 
 		SparkMaxAngleRequest velocityRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(0),

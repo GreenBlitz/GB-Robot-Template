@@ -1,8 +1,5 @@
 package frc.robot;
 
-import frc.robot.subsystems.funnel.FunnelState;
-import frc.robot.subsystems.intake.roller.IntakeStates;
-import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 

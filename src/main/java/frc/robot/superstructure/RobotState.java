@@ -13,5 +13,6 @@ public enum RobotState {
 	TRANSFER_ARM_TO_SHOOTER,
 	INTAKE_OUTTAKE,
 	ARM_OUTTAKE,
+	PASSING,
 
 }

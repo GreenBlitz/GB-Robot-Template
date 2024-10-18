@@ -110,6 +110,19 @@ public class Superstructure {
 		return isFlywheelReady && isPivotReady;
 	}
 
+	private boolean isReadyToPass() {
+		boolean isPivotReady = robot.getPivot().isAtPosition(PivotState.PASSING.getTargetPosition(), Tolerances.PIVOT_POSITION);
+
+		boolean isFlywheelReady = robot.getFlywheel()
+			.isAtVelocities(
+				FlywheelState.PASSING.getRightVelocity(),
+				FlywheelState.PASSING.getLeftVelocity(),
+				Tolerances.FLYWHEEL_VELOCITY_PER_SECOND
+			);
+
+		return isFlywheelReady && isPivotReady;
+	}
+
 	private boolean isReadyToShootInterpolation() {
 		Translation2d robotTranslation2d = robot.getPoseEstimator().getEstimatedPose().getTranslation();
 
@@ -161,6 +174,7 @@ public class Superstructure {
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
 			case INTAKE_OUTTAKE -> intakeOuttake();
 			case ARM_OUTTAKE -> armOuttake();
+			case PASSING -> passing();
 		};
 	}
 
@@ -444,6 +458,34 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+	}
+
+	private Command passing() {
+		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.SPEAKER),
+			new SequentialCommandGroup(
+				enableChangeStateAutomatically(false),
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP)
+				).until(this::isReadyToPass),
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.SHOOT),
+					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL)
+				).withTimeout(Timeouts.SHOOTING_SECONDS), // .until(() -> !isObjectInFunnel()),
+				enableChangeStateAutomatically(true),
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP)
+				)
+			),
+			rollerStateHandler.setState(RollerState.STOP),
+			pivotStateHandler.setState(PivotState.PASSING),
+			flywheelStateHandler.setState(FlywheelState.PASSING),
+			elbowStateHandler.setState(ElbowState.INTAKE),
+			wristStateHandler.setState(WristState.IN_ARM),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.PASS))
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 	//@formatter:on

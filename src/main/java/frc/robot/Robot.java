@@ -5,19 +5,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-
-import frc.robot.subsystems.elbow.Elbow;
-import frc.robot.subsystems.elbow.ElbowConstants;
-import frc.robot.subsystems.elbow.factory.ElbowFactory;
-import frc.robot.subsystems.flywheel.FlyWheelConstants;
-import frc.robot.subsystems.flywheel.Flywheel;
-import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.factory.IntakeFactory;
+import frc.robot.subsystems.elbow.Elbow;
+import frc.robot.subsystems.elbow.ElbowConstants;
+import frc.robot.subsystems.elbow.factory.ElbowFactory;
+import frc.robot.subsystems.flywheel.FlyWheelConstants;
+import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.factory.FlywheelFactory;
 import frc.robot.subsystems.lifter.Lifter;
 import frc.robot.subsystems.lifter.LifterConstants;
 import frc.robot.subsystems.lifter.factory.LifterFactory;

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.flywheel.factory;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -65,8 +64,11 @@ public class RealFlywheelConstants {
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
-		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity",
-				() -> sparkMaxWrapper.getEncoder().getVelocity() / 60.0 , AngleUnit.ROTATIONS);
+		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal(
+			"velocity",
+			() -> sparkMaxWrapper.getEncoder().getVelocity() / 60.0,
+			AngleUnit.ROTATIONS
+		);
 
 		SparkMaxAngleRequest velocityRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(0),

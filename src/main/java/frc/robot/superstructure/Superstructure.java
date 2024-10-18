@@ -30,7 +30,7 @@ public class Superstructure {
 	private final FunnelStateHandler funnelStateHandler;
 	private final IntakeStatesHandler intakeStatesHandler;
 	private final PivotStateHandler pivotStateHandler;
-	private final ElevatorStatesHandler elevatorStatesHandler;
+	public final ElevatorStatesHandler elevatorStatesHandler;
 
 	private RobotState currentState;
 

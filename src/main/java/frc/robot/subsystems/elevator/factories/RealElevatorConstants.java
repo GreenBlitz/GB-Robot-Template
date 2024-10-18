@@ -21,14 +21,11 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorMotorStuff;
 import frc.robot.subsystems.elevator.ElevatorStuff;
 import frc.utils.AngleUnit;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 
 public class RealElevatorConstants {
 
@@ -69,7 +66,7 @@ public class RealElevatorConstants {
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
 		sparkMaxWrapper.getPIDController().setP(1);
 		sparkMaxWrapper.getPIDController().setI(0);
-		sparkMaxWrapper.getPIDController().setD(0);
+		sparkMaxWrapper.getPIDController().setD(0.2);
 	}
 
 	public static ElevatorMotorStuff generateMotorStuff(String logPath, SparkMaxWrapper sparkMaxWrapper, boolean inverted) {

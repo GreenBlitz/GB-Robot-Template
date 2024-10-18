@@ -10,8 +10,8 @@ public class ElevatorConstants {
 
 	public static final double TIMING_PULLEY_ROTATIONS_TO_METERS_CONVERSION_RATIO = 0.13;
 
-	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0.0;
+	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0.01;
 
-	public static final double FORWARD_SOFT_LIMIT_VALUE_METERS = 0.6;
+	public static final double FORWARD_SOFT_LIMIT_VALUE_METERS = 0.3;
 
 }

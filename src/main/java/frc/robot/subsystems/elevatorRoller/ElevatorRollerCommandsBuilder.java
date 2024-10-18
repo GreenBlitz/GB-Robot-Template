@@ -20,7 +20,8 @@ public class ElevatorRollerCommandsBuilder {
 				()-> {},
 				()-> elevatorRoller.setPower(power),
 				interrupted-> elevatorRoller.stop(),
-				()-> false
+				()-> false,
+				elevatorRoller
 		).withName("Set power to " + power);
 	}
 
@@ -29,7 +30,8 @@ public class ElevatorRollerCommandsBuilder {
 				()-> {},
 				()-> elevatorRoller.setPower(power.getAsDouble()),
 				interrupted-> elevatorRoller.stop(),
-				()-> false
+				()-> false,
+				elevatorRoller
 		).withName("Set power by supplier");
 	}
 

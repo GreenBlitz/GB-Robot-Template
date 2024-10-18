@@ -8,6 +8,7 @@ import frc.robot.constants.IDs;
 import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.intake.pivot.PivotConstants;
@@ -57,8 +58,13 @@ public class RealPivotConstants {
 			POSITION_PID_SLOT,
 			FEEDFORWARD_FUNCTION
 		);
+		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(
+				0,
+				SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,
+				0
+		);
 
-		return new PivotStuff(logPath, motor, voltageSignal, positionSignal, positionRequest);
+		return new PivotStuff(logPath, motor, voltageSignal, positionSignal, positionRequest, voltageRequest);
 	}
 
 }

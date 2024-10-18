@@ -10,5 +10,6 @@ public record PivotStuff(
 	ControllableMotor motor,
 	InputSignal<Double> voltageSignal,
 	InputSignal<Rotation2d> positionSignal,
-	IRequest<Rotation2d> positionRequest
+	IRequest<Rotation2d> positionRequest,
+	IRequest<Double> voltageRequest
 ) {}

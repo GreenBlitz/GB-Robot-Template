@@ -22,7 +22,7 @@ public class IntakeRollerRealConstant {
 
 	private final static int CURRENT_LIMIT = 40;
 
-	private final static boolean IS_INVERTED = false;
+	private final static boolean IS_INVERTED = true;
 
 	private static void configMotor(SparkMaxWrapper motor) {
 		motor.setInverted(IS_INVERTED);

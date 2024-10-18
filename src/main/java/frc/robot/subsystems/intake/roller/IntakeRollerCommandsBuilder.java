@@ -8,7 +8,7 @@ import java.util.function.DoubleSupplier;
 
 public class IntakeRollerCommandsBuilder {
 
-	private IntakeRoller intakeRoller;
+	private final IntakeRoller intakeRoller;
 
 	public IntakeRollerCommandsBuilder(IntakeRoller intake) {
 		this.intakeRoller = intake;

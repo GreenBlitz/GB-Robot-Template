@@ -1,9 +1,6 @@
 Calibration:
 
-1. Gear Ratio
-2. Current Limit
-3. Motor id
-4. NOTE_TO_SHOOTER power
-5. INTAKE power
-6. SHOOTER_TO_ELEVATOR power
-7. OUTTAKE power
+1. Gear Ratio - done
+2. Current Limit - done
+3. Motor id - done
+4. States powers - done

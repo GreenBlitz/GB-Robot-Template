@@ -105,9 +105,7 @@ public class VisionDenoiser {
 	) {
 		return calculateWeightedAverage(fixAccordingToOdometry(currentEstimatedPose, odometryPose, odometryPoseInterpolator));
 	}
-	// @formatter:on
 
-	// @formatter:off
 	private LinkedList<VisionObservation> fixAccordingToOdometry(
 		Pose2d currentPose,
 		Pose2d odometryPose,

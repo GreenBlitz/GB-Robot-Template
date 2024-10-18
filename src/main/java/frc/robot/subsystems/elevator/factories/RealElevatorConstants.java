@@ -42,22 +42,13 @@ public class RealElevatorConstants {
 
 	private static final ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
 
-	private static final CANSparkBase.IdleMode IDLE_MODE = CANSparkBase.IdleMode.kBrake;
+	private static final CANSparkBase.IdleMode IDLE_MODE = CANSparkBase.IdleMode.kCoast;
 
 	private static final int CURRENT_LIMIT = 40;
 
 	private static final Function<
 		Rotation2d,
 		Double> FEEDFORWARD_FUNCTION = velocity -> RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
-
-	private static SysIdRoutine.Config generateSysidConfig() {
-		return new SysIdRoutine.Config(
-			Volts.of(0.5).per(Seconds.of(1)),
-			Volts.of(3),
-			Seconds.of(100),
-			(state) -> Logger.recordOutput("state", state.toString())
-		);
-	}
 
 	private static void configureMotor(SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		sparkMaxWrapper.setSoftLimit(
@@ -78,13 +69,13 @@ public class RealElevatorConstants {
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
 		sparkMaxWrapper.getPIDController().setP(1);
 		sparkMaxWrapper.getPIDController().setI(0);
-		sparkMaxWrapper.getPIDController().setD(0.5);
+		sparkMaxWrapper.getPIDController().setD(0);
 	}
 
 	public static ElevatorMotorStuff generateMotorStuff(String logPath, SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		configureMotor(sparkMaxWrapper, inverted);
 
-		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, generateSysidConfig());
+		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> motorPosition = sparkMaxWrapper.getEncoder()::getPosition;
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", motorPosition, AngleUnit.RADIANS);

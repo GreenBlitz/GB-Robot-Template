@@ -6,7 +6,6 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GBSubsystem {
@@ -18,10 +17,7 @@ public class Elevator extends GBSubsystem {
 
 	private final ElevatorStuff elevatorStuff;
 	private final ControllableMotor frontMotor;
-	// private final ControllableMotor backMotor;
 	private final IDigitalInput limitSwitch;
-
-	private SysIdCalibrator sysIdCalibrator;
 
 	public Elevator(ElevatorStuff elevatorStuff) {
 		super(elevatorStuff.logPath());
@@ -64,14 +60,6 @@ public class Elevator extends GBSubsystem {
 
 	public boolean isAtBackwardLimit() {
 		return digitalInputsInputs.debouncedValue;
-	}
-
-	private Rotation2d getElevatorAngle() {
-		return elevatorStuff.motorStuff().positionSignal().getLatestValue();
-	}
-
-	public SysIdCalibrator getSysIdCalibrator() {
-		return this.sysIdCalibrator;
 	}
 
 	public double getPositionMeters() {

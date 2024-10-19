@@ -17,7 +17,7 @@ public class SteerFactory {
 				case FRONT_RIGHT ->
 					SteerRealConstants.generateSteerStuff(logPath, IDs.TalonFXIDs.FRONT_RIGHT_STEER, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, true);
 				case BACK_LEFT ->
-					SteerRealConstants.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_LEFT_STEER, IDs.CANCodersIDs.BACK_LEFT_ENCODER, false);
+					SteerRealConstants.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_LEFT_STEER, IDs.CANCodersIDs.BACK_LEFT_ENCODER, true);
 				case BACK_RIGHT ->
 					SteerRealConstants.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_RIGHT_STEER, IDs.CANCodersIDs.BACK_RIGHT_ENCODER, true);
 			};

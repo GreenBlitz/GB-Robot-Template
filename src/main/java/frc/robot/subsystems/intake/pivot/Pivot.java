@@ -28,6 +28,10 @@ public class Pivot extends GBSubsystem {
 		updateResetFilter();
 	}
 
+	public Rotation2d getCurrentPosition() {
+		return pivotStuff.positionSignal().getLatestValue();
+	}
+
 	private void updateResetFilter() {
 		for (int i = 0; i < PivotConstants.MEDIAN_FILTER_SIZE; i++) {
 			resetAngleFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations());

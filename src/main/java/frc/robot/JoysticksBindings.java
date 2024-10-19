@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.superstructure.RobotState;
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
@@ -24,11 +26,35 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+
+		robot.getSwerve()
+			.setDefaultCommand(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveBySavedState(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+					)
+			);
+
+		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.AMP));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
+		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		usedJoystick.BACK.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_ELEVATOR));
+		usedJoystick.START.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ELEVATOR_SHOOTER));
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
+		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.SHOOTER_OUTTAKE));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

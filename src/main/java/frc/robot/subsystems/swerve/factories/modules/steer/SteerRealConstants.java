@@ -4,9 +4,9 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
@@ -47,15 +47,14 @@ class SteerRealConstants {
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		steerConfig.Feedback.RotorToSensorRatio = 150.0 / 7.0;
-		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		steerConfig.Feedback.SensorToMechanismRatio = 6;
 
-		steerConfig.Slot0.kS = 0.19648;
-		steerConfig.Slot0.kV = 2.5763;
-		steerConfig.Slot0.kA = 0.50361;
-		steerConfig.Slot0.kP = 88;
+		steerConfig.Slot0.kS = 0.17562;
+		steerConfig.Slot0.kV = 0.71463;
+		steerConfig.Slot0.kA = 0.7236;
+		steerConfig.Slot0.kP = 20;
 		steerConfig.Slot0.kI = 0;
-		steerConfig.Slot0.kD = 1.5;
+		steerConfig.Slot0.kD = 0;
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
 		return steerConfig;
@@ -81,6 +80,8 @@ class SteerRealConstants {
 			.generatePhoenix6Signal(motor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getPosition(), velocitySignal, GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+
+		steer.resetPosition(new Rotation2d());
 
 		return new SteerStuff(steer, positionRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.simulation.SimulationManager;
-import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
@@ -31,7 +30,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		PathPlannerUtils.startPathfinder();
+//		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();

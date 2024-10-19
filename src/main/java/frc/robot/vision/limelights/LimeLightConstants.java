@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class LimeLightConstants {
 
-	public static String[] LIMELIGHT_NAMES = {"limelight-front", "limelight-back"};
+	public static String[] LIMELIGHT_NAMES = {"limelight-back"};
 
 	public static final String ESTIMATION_LOGPATH_PREFIX = "AprilTagHeights/";
 

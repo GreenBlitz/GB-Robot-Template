@@ -51,11 +51,16 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		robot.getSwerve().setDefaultCommand(robot.getSwerve().getCommandsBuilder().driveBySavedState(
-				() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-				() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-				() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-		));
+		robot.getSwerve()
+			.setDefaultCommand(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveBySavedState(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+					)
+			);
 
 		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
 		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));

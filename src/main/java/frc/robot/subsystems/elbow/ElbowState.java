@@ -10,7 +10,8 @@ public enum ElbowState {
 	ARM_INTAKE(Rotation2d.fromDegrees(-74)),
 	PRE_AMP(Rotation2d.fromDegrees(50)),
 	TRANSFER(Rotation2d.fromDegrees(-78)),
-	CLIMB(Rotation2d.fromDegrees(72)),
+	PRE_CLIMB(Rotation2d.fromDegrees(-7)),
+	CLIMB(Rotation2d.fromDegrees(90)),
 	FREE(new Rotation2d());
 
 	private final Rotation2d targetPosition;

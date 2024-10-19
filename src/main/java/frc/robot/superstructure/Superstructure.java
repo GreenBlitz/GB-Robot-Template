@@ -181,6 +181,7 @@ public class Superstructure {
 			case INTAKE_OUTTAKE -> intakeOuttake();
 			case ARM_OUTTAKE -> armOuttake();
 			case PRE_CLIMB -> preClimb();
+			case CLIMB_LESADER -> climbLesader();
 			case CLIMB -> climb();
 			case TRAP -> trap();
 			case PASSING -> passing();
@@ -188,6 +189,23 @@ public class Superstructure {
 	}
 
 	//@formatter:off
+	
+	private Command climbLesader (){
+		return new ParallelCommandGroup(
+				setCurrentStateName(RobotState.CLIMB_LESADER),
+				enableChangeStateAutomatically(false),
+				elbowStateHandler.setState(ElbowState.CLIMB),
+				wristStateHandler.setState(WristState.PRE_TRAP),
+				climbStateHandler.setState(ClimbState.EXTEND),
+				pivotStateHandler.setState(PivotState.PRE_SPEAKER),
+				flywheelStateHandler.setState(FlywheelState.STOP),
+				intakeStateHandler.setState(IntakeState.STOP),
+				funnelStateHandler.setState(FunnelState.STOP),
+				rollerStateHandler.setState(RollerState.STOP),
+				swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+	}
+	
 	private Command idle() {
 		return new ParallelCommandGroup(
 			enableChangeStateAutomatically(true),
@@ -475,8 +493,8 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.PRE_CLIMB),
 			enableChangeStateAutomatically(false),
-			elbowStateHandler.setState(ElbowState.CLIMB),
-			wristStateHandler.setState(WristState.PRE_TRAP),
+			elbowStateHandler.setState(ElbowState.PRE_CLIMB),
+			wristStateHandler.setState(WristState.IN_ARM),
 			climbStateHandler.setState(ClimbState.EXTEND),
 			pivotStateHandler.setState(PivotState.PRE_SPEAKER),
 			flywheelStateHandler.setState(FlywheelState.STOP),

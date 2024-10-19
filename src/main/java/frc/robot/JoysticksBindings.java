@@ -63,9 +63,12 @@ public class JoysticksBindings {
 					)
 			);
 
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.PRE_CLIMB));
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB));
 		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.TRAP));
+		usedJoystick.START.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB_LESADER));
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 	}
 

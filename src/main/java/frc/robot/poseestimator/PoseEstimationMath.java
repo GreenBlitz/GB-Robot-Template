@@ -112,8 +112,12 @@ public class PoseEstimationMath {
 	}
 
 	public static Pose2d meanOfPose(List<Pose2d> dataset) {
-		double[] deconstructPose = applyFunctionOnPose(dataset, PoseEstimationMath::mean);
-		return new Pose2d(deconstructPose[0], deconstructPose[1], Rotation2d.fromRadians(deconstructPose[2]));
+		double[] deconstructedPose = applyFunctionOnPose(dataset, PoseEstimationMath::mean);
+		return new Pose2d(
+			deconstructedPose[PoseArrayEntryValue.X_VALUE.getEntryValue()],
+			deconstructedPose[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+			Rotation2d.fromRadians(deconstructedPose[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()]
+			));
 	}
 
 	public static double mean(List<Double> dataset) {

@@ -1,7 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import frc.robot.constants.IDs;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -49,7 +47,7 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
-		
+
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
 		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));

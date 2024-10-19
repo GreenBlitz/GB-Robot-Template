@@ -22,7 +22,7 @@ public class RealFunnelConstants {
 
 	public static void configMotor(SparkMaxWrapper motor) {
 		motor.setInverted(true);
-		motor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+		motor.setIdleMode(CANSparkBase.IdleMode.kBrake);
 		motor.setSmartCurrentLimit(30);
 		motor.getEncoder().setPositionConversionFactor(FunnelConstants.GEAR_RATIO);
 		motor.getEncoder().setVelocityConversionFactor(FunnelConstants.GEAR_RATIO);

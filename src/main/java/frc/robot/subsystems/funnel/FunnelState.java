@@ -2,7 +2,7 @@ package frc.robot.subsystems.funnel;
 
 public enum FunnelState {
 
-	INTAKE(0.55),
+	INTAKE(0.45),
 	SLOW_INTAKE(0.2),
 	SHOOT(0.7),
 	OUTTAKE(-0.5),

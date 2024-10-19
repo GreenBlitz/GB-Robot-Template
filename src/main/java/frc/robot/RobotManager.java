@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -27,6 +28,7 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 	private Robot robot;
+	DigitalInput a = new DigitalInput(0);
 
 	@Override
 	public void robotInit() {
@@ -34,7 +36,7 @@ public class RobotManager extends LoggedRobot {
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 
-		this.robot = new Robot();
+//		this.robot = new Robot();
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = robot.getAutonomousCommand();
+//		autonomousCommand = robot.getAutonomousCommand();
 
 		if (autonomousCommand != null) {
 			autonomousCommand.schedule();
@@ -70,12 +72,13 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		TimeUtils.updateCycleTime(); // Better to be first
-		robot.periodic();
+//		robot.periodic();
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-		robot.getSuperstructure().logStatus();
+//		robot.getSuperstructure().logStatus();
+		System.out.println(a.get());
 	}
 
 	@Override

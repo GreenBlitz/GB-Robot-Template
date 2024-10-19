@@ -25,15 +25,19 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		
-		robot.getSwerve().setDefaultCommand(
-				robot.getSwerve().getCommandsBuilder().drive(
+		// bindings...
+
+		robot.getSwerve()
+			.setDefaultCommand(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.drive(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-				)
-		);
-		
+					)
+			);
+
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
 		usedJoystick.START.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ELEVATOR_SHOOTER));
@@ -41,16 +45,12 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
 		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.AMP));
-		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));;
-		
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		;
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
-		
-		
-		// bindings...
-
 		// bindings...
 	}
 

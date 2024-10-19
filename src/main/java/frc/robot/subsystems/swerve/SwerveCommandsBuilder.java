@@ -47,11 +47,8 @@ public class SwerveCommandsBuilder {
 	public Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
 		Command sysIdCommand = driveCalibrator.getSysIdCommand(isQuasistatic, direction);
 		sysIdCommand.getRequirements().clear();
- 
-		return new ParallelCommandGroup(
-			pointWheels(new Rotation2d(), false).repeatedly(),
-			sysIdCommand
-		).withName("Drive calibration");
+
+		return new ParallelCommandGroup(pointWheels(new Rotation2d(), false).repeatedly(), sysIdCommand).withName("Drive calibration");
 	}
 
 	//@formatter:off

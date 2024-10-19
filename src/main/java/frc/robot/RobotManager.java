@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -19,7 +16,6 @@ import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
 
 
 /**
@@ -39,7 +35,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
-//		this.odometry = new SwerveDriveOdometry(robot.getSwerve().getConstants().kinematics(),new Rotation2d(), new SwerveModulePosition[]{});
 	}
 
 	@Override
@@ -75,8 +70,8 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		TimeUtils.updateCycleTime(); // Better to be first
-		CommandScheduler.getInstance().run();
 		robot.periodic();
+		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();

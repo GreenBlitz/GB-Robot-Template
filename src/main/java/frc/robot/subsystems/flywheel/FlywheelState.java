@@ -3,10 +3,11 @@ package frc.robot.subsystems.flywheel;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum FlywheelState {
-
-	DEFAULT(Rotation2d.fromRotations(0), 0.7),
-	STOP(Rotation2d.fromRotations(0), 0.7),
-	PRE_SPEAKER(Rotation2d.fromRotations(50), 0.7);
+	
+	DEFAULT(Rotation2d.fromRotations(30), 0.7),
+	PASSING(Rotation2d.fromRotations(50), 0.7),
+	PRE_SPEAKER(Rotation2d.fromRotations(50), 0.7),
+	STOP(Rotation2d.fromRotations(0), 0);
 
 	private final Rotation2d velocity;
 	private final double differentialRatio;

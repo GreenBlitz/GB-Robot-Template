@@ -26,6 +26,15 @@ public class Field {
 		return getSpeaker().toTranslation2d().getDistance(robotPose.getTranslation());
 	}
 
+	private static final Translation3d TO_PASS = new Translation3d(1, WIDTH_METERS - 0.8, 0);
+
+	public static Translation3d getPassTarget() {
+		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {
+			return TO_PASS;
+		}
+		return new Translation3d(MirrorMath.getMirroredX(TO_PASS.getX()), SPEAKER.getY(), SPEAKER.getZ());
+	}
+
 	private static final Translation3d SPEAKER = new Translation3d(0.23, WIDTH_METERS - 2.55, 2.045);
 
 	public static Translation3d getSpeaker() {

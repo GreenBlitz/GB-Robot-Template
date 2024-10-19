@@ -15,7 +15,7 @@ public class RealSwerveConstants {
 
 	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(6, 0, 0);
 
-	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(6, 0, 0);
+	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(3, 0, 0);
 
 
 	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import frc.robot.constants.IDs;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -38,22 +40,23 @@ public class JoysticksBindings {
 					)
 			);
 
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getPivot().getCommandsBuilder().down1Deg());
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getPivot().getCommandsBuilder().up1Deg());
-
-		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
-		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
-		usedJoystick.START.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ELEVATOR_SHOOTER));
-		usedJoystick.BACK.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_ELEVATOR));
-		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
-		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
-		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.AMP));
-		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.AMP));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+		
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
+		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		usedJoystick.BACK.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_ELEVATOR));
+		usedJoystick.START.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ELEVATOR_SHOOTER));
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
+		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.SHOOTER_OUTTAKE));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

@@ -116,8 +116,8 @@ public class PoseEstimationMath {
 		return new Pose2d(
 			deconstructedPose[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			deconstructedPose[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			Rotation2d.fromRadians(deconstructedPose[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()]
-			));
+			Rotation2d.fromRadians(deconstructedPose[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()])
+		);
 	}
 
 	public static double mean(List<Double> dataset) {

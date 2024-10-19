@@ -11,7 +11,8 @@ public class PoseEstimatorConstants {
 
 	protected static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 
-	public static final double[] DEFAULT_ODOMETRY_STANDARD_DEVIATIONS = {0.0001, 0.001, 0.0002};
+	public static final double[] DEFAULT_ODOMETRY_STANDARD_DEVIATIONS = {0.0001, 0.0001, 0.0002};
 //	public static final double[] DEFAULT_ODOMETRY_STANDARD_DEVIATIONS = {0.0003, 0.003, 0.0002};
+
 
 }

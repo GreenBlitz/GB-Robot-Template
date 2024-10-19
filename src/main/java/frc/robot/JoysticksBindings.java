@@ -67,7 +67,10 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
 
-		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
+		usedJoystick.POV_RIGHT.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
+		usedJoystick.POV_LEFT.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
+
+		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.ARM_INTAKE));
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.AMP));
 
 		usedJoystick.Y.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PASSING));

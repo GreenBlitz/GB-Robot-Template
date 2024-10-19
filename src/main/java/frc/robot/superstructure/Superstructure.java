@@ -177,7 +177,7 @@ public class Superstructure {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			intakeStatesHandler.setState(IntakeStates.STOP),
 			pivotStateHandler.setState(PivotState.UP),
-			elevatorStatesHandler.setState(ElevatorStates.AMP)
+			elevatorStatesHandler.setState(ElevatorStates.IDLE)
 		);
 	}
 

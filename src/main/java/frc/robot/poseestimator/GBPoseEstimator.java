@@ -83,7 +83,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Optional<Rotation2d> estimatedRobotHeading = getEstimatedRobotHeadingByVision();
 		if (estimatedRobotHeading.isPresent()) {
 			headingOffset = estimatedRobotHeading.get().minus(gyroAngle);
-			updateGyroOffsetInPose();
 			hasHeadingOffsetBeenInitialized = true;
 		}
 		else {
@@ -231,6 +230,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void addOdometryObservation(OdometryObservation observation) {
 		if (!hasHeadingOffsetBeenInitialized) {
 			calculateHeadingOffset(observation.gyroAngle());
+			updateGyroOffsetInPose();
 		}
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
 		// @pose-swerveAdditions:on

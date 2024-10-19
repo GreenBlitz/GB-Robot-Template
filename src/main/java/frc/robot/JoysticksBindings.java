@@ -46,7 +46,6 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
 		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.AMP));
 		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
-		;
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

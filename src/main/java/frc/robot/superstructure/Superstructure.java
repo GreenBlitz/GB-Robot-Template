@@ -122,11 +122,11 @@ public class Superstructure {
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
-					intakeStatesHandler.setState(IntakeStates.INTAKE),
-					pivotStateHandler.setState(PivotState.ON_FLOOR)
+					intakeStatesHandler.setState(IntakeStates.INTAKE)
+//					pivotStateHandler.setState(PivotState.ON_FLOOR)
 				).until(this::isNoteInShooter),
 				new ParallelCommandGroup(
-					pivotStateHandler.setState(PivotState.UP),
+//					pivotStateHandler.setState(PivotState.UP),
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStatesHandler.setState(IntakeStates.STOP)
 				)

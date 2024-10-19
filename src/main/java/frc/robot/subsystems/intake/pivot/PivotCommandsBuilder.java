@@ -25,6 +25,26 @@ public class PivotCommandsBuilder {
 		).withName("Go to position: " + position.getDegrees());
 	}
 
+	public Command down1Deg() {
+		return new FunctionalCommand(
+				() -> pivot.setTargetPosition(Rotation2d.fromDegrees(pivot.getCurrentPosition().getDegrees() - 1)),
+				() -> {},
+				interrupted -> pivot.stayInPlace(),
+				() -> false,
+				pivot
+		).withName("down 1 wedeg");
+	}
+
+	public Command up1Deg() {
+		return new FunctionalCommand(
+				() -> pivot.setTargetPosition(Rotation2d.fromDegrees(pivot.getCurrentPosition().getDegrees() + 1)),
+				() -> {},
+				interrupted -> pivot.stayInPlace(),
+				() -> false,
+				pivot
+		).withName("up 1 def");
+	}
+
 	public Command setPower(double power) {
 		return new FunctionalCommand(
 			() -> {},

@@ -31,12 +31,15 @@ public class JoysticksBindings {
 			.setDefaultCommand(
 				robot.getSwerve()
 					.getCommandsBuilder()
-					.drive(
+					.driveBySavedState(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
 					)
 			);
+
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getPivot().getCommandsBuilder().down1Deg());
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getPivot().getCommandsBuilder().up1Deg());
 
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));

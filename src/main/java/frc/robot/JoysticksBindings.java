@@ -76,9 +76,7 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PASSING));
 		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
 		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
-		usedJoystick.B.onTrue(new InstantCommand(() -> {
-			robot.getPoseEstimator().resetHeadingOffset(new Rotation2d());
-		}));
+		usedJoystick.B.onTrue(new InstantCommand(() -> { robot.getPoseEstimator().resetHeadingOffset(new Rotation2d()); }));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

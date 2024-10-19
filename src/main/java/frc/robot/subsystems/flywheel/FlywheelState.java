@@ -5,8 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum FlywheelState {
 
 	DEFAULT(Rotation2d.fromRotations(30), 0.7),
-	PASSING(Rotation2d.fromRotations(50), 0.7),
-	PRE_SPEAKER(Rotation2d.fromRotations(50), 0.7);
+	PASSING(Rotation2d.fromRotations(60), 0.7),
+	PRE_SPEAKER(Rotation2d.fromRotations(60), 0.7);
 
 	private final Rotation2d velocity;
 	private final double differentialRatio;

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -62,10 +64,18 @@ public class JoysticksBindings {
 					)
 			);
 
-		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
-		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
-		usedJoystick.Y.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
-		usedJoystick.B.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
+		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
+
+		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.AMP));
+
+		usedJoystick.Y.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PASSING));
+		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
+		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
+		usedJoystick.B.onTrue(new InstantCommand(() -> {
+			robot.getPoseEstimator().resetHeadingOffset(new Rotation2d());
+		}));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

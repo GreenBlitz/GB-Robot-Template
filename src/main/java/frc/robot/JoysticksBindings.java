@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -60,6 +63,26 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
+
+		usedJoystick.POV_DOWN.whileTrue(
+				robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(0)));
+		usedJoystick.POV_UP.whileTrue(
+				robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
+
+		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
+				() -> robot.getPoseEstimator().getEstimatedPose(),
+                Pose2d::new,
+				(pose2d) -> robot.getPoseEstimator().isAtPose(pose2d, robot.getSwerve())
+		));
+
+		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
+				() -> robot.getPoseEstimator().getEstimatedPose(),
+				() -> new Pose2d(0, 4, new Rotation2d()),
+				(pose2d) -> robot.getPoseEstimator().isAtPose(pose2d, robot.getSwerve())
+		));
+
+		usedJoystick.B.onTrue(
+				new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d())));
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

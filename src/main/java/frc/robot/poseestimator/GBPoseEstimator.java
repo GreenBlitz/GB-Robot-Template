@@ -7,6 +7,9 @@ import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveMath;
+import frc.robot.superstructure.Tolerances;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -275,6 +278,14 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Logger.recordOutput(super.getLogPath() + "hasBeenInitialized", hasHeadingOffsetBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "latestGyroAngle", latestGyroAngle);
 		Logger.recordOutput(super.getLogPath() + "latestGyroAngleMod", latestGyroAngle.plus(Rotation2d.fromDegrees(0)));
+	}
+
+	public boolean isAtPose(Pose2d wantedPose, Swerve swerve){
+		double driveMagnitude = SwerveMath.getDriveMagnitude(swerve.getRobotRelativeVelocity());
+		boolean isStopping = driveMagnitude < Tolerances.TRANSLATION_VELOCITY_TOLERANCE;
+		boolean isAtHeading = swerve.isAtHeading(wantedPose.getRotation());
+		boolean isAtPose = estimatedPose.getTranslation().getDistance(wantedPose.getTranslation()) <= Tolerances.TRANSLATION_TOLERANCE_METERS;
+		return isAtPose && isAtHeading && isStopping;
 	}
 
 }

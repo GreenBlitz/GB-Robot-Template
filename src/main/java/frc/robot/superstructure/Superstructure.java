@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.JoysticksBindings;
 import frc.robot.Robot;
+import frc.robot.constants.Field;
 import frc.robot.subsystems.elevator.ElevatorStates;
 import frc.robot.subsystems.elevator.ElevatorStatesHandler;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerState;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.intake.pivot.PivotStateHandler;
 import frc.robot.subsystems.intake.roller.IntakeStates;
 import frc.robot.subsystems.intake.roller.IntakeStatesHandler;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.utils.joysticks.SmartJoystick;
@@ -69,18 +71,29 @@ public class Superstructure {
 
 	private boolean isReadyToShoot() {
 		boolean isFlywheelReady = robot.getFlywheel().isAtVelocity(FlywheelState.SHOOTING.getVelocity(), Tolerances.FLYWHEEL_VELOCITY_TOLERANCE);
-		// boolean isSwerveReady = swerve.isAtHeading(speaker);
-		return isFlywheelReady;// && isSwerveReady
+		boolean isSwerveReady = swerve.isAtHeading(
+			SwerveMath.getRelativeTranslation(
+				robot.getPoseEstimator().getEstimatedPose().getTranslation(),
+				Field.getSpeaker().toTranslation2d()).getAngle()
+		);
+		return isFlywheelReady && isSwerveReady;
 	}
 
 	private Command noteInRumble() {
 		SmartJoystick mainJoystick = JoysticksBindings.getMainJoystick();
+		SmartJoystick secondJoystick = JoysticksBindings.getSecondJoystick();
 		return new FunctionalCommand(
-				() -> {},
-				() -> mainJoystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.5),
-				interrupted -> mainJoystick.stopRumble(GenericHID.RumbleType.kBothRumble),
-				() -> false
-		).withTimeout(0.2);
+			() -> {},
+			() -> {
+				mainJoystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.7);
+				secondJoystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.7);
+			},
+			interrupted -> {
+				mainJoystick.stopRumble(GenericHID.RumbleType.kBothRumble);
+				secondJoystick.stopRumble(GenericHID.RumbleType.kBothRumble);
+			},
+			() -> false
+		).withTimeout(0.5);
 	}
 
 	private boolean isReadyToAmp() {
@@ -251,7 +264,7 @@ public class Superstructure {
 			setCurrentStateName(RobotState.TRANSFER_ELEVATOR_SHOOTER),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					intakeStatesHandler.setState(IntakeStates.INTAKE),
+					intakeStatesHandler.setState(IntakeStates.SHOOTER_TO_ELEVATOR),
 					elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
 				).until(this::isNoteInShooter),

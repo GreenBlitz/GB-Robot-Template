@@ -108,8 +108,9 @@ public class Robot {
 
 		this.superstructure = new Superstructure("Superstructure/", this);
 
-//		configPathPlanner();
+		configPathPlanner();
 		configureBindings();
+		PathPlannerUtils.scheduleWarmup();
 	}
 
 	public void periodic() {
@@ -127,7 +128,7 @@ public class Robot {
 				"shoot",
 				(getSuperstructure().setState(RobotState.SPEAKER).until(
 						() -> !getFunnel().isNoteInShooter()
-				)).andThen(new WaitCommand(1))
+				))
 		);
 	}
 

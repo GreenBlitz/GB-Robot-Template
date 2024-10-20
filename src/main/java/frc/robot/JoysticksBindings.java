@@ -21,6 +21,10 @@ public class JoysticksBindings {
 		return MAIN_JOYSTICK;
 	}
 
+	public static SmartJoystick getSecondJoystick() {
+		return SECOND_JOYSTICK;
+	}
+
 	public static void configureBindings(Robot robot) {
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);

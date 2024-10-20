@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8782413928464217,
-        "y": 5.578590066271041
+        "x": 8.2795852864433,
+        "y": 5.783822476735862
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8147643568014407,
-        "y": 5.242755212783153
+        "x": 5.826125106795668,
+        "y": 6.921929480222596
       },
       "isLocked": false,
-      "linkedName": "took2"
+      "linkedName": "took5-amp156"
     },
     {
       "anchor": {
-        "x": 2.6263652527305057,
-        "y": 4.1886069226683915
+        "x": 3.9697046666820603,
+        "y": 6.156972313944628
       },
       "prevControl": {
-        "x": 1.6263652527305057,
-        "y": 4.1886069226683915
+        "x": 4.5760731521463045,
+        "y": 6.436834691851201
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "took3"
+      "linkedName": "5shoot-amp156"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.85,
-      "rotationDegrees": 172.53186036621977,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 171.02737338510366,
+    "rotation": -165.32360686254995,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "mid123",
+  "folder": "amp156",
   "previewStartingState": {
-    "rotation": -179.4594898128694,
+    "rotation": 155.82089285331077,
     "velocity": 0
   },
   "useDefaultConstraints": true

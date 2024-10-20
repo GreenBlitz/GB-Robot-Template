@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "mid123",
   "previewStartingState": {
     "rotation": -179.13194855025455,
     "velocity": 0

@@ -3,35 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8782413928464217,
-        "y": 5.578590066271041
+        "x": 3.9697046666820603,
+        "y": 6.156972313944628
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8147643568014407,
-        "y": 5.242755212783153
+        "x": 3.288706213776064,
+        "y": 4.039346987784885
       },
       "isLocked": false,
-      "linkedName": "took2"
+      "linkedName": "5shoot-amp156"
     },
     {
       "anchor": {
-        "x": 2.6263652527305057,
-        "y": 4.1886069226683915
+        "x": 8.298242778303738,
+        "y": 4.0953194633662
       },
       "prevControl": {
-        "x": 1.6263652527305057,
-        "y": 4.1886069226683915
+        "x": 6.693698478306047,
+        "y": 4.0020320040640085
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "took3"
+      "linkedName": "took6-amp156"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.85,
-      "rotationDegrees": 172.53186036621977,
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": 179.23664496371194,
       "rotateFast": false
     }
   ],
@@ -45,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 171.02737338510366,
+    "rotation": -177.1375947738883,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "mid123",
+  "folder": "amp156",
   "previewStartingState": {
-    "rotation": -179.4594898128694,
+    "rotation": -165.96375653207355,
     "velocity": 0
   },
   "useDefaultConstraints": true

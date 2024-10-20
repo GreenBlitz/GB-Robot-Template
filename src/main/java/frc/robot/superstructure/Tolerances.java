@@ -9,6 +9,6 @@ public class Tolerances {
 	public static final double TRANSLATION_TOLERANCE_METERS = 0.2;
 	public static final double TRANSLATION_VELOCITY_TOLERANCE = 0.15;
 	public static final Rotation2d FLYWHEEL_VELOCITY_TOLERANCE = Rotation2d.fromRotations(4);
-	public static final double ELEVATOR_POSITION_METERS_TOLERANCE = 0.02;
+	public static final double ELEVATOR_POSITION_METERS_TOLERANCE = 0.05;
 
 }

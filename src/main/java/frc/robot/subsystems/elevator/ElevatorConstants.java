@@ -6,7 +6,7 @@ public class ElevatorConstants {
 
 	public final static double GEAR_RATIO = 1.0 / 3.0;
 
-	public static final double MINIMUM_ACHIEVABLE_POSITION_METERS = 0;
+	public static final double MINIMUM_ACHIEVABLE_POSITION_METERS = 0.01;
 
 	public static final double TIMING_PULLEY_ROTATIONS_TO_METERS_CONVERSION_RATIO = 0.13;
 

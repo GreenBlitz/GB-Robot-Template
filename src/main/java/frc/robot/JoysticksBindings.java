@@ -43,10 +43,10 @@ public class JoysticksBindings {
 
 		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
 		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.AMP));
 //		usedJoystick.Y.onTrue(new InstantCommand(
 //				() -> robot.getPoseEstimator().resetPose(robot.getPoseEstimator().getVisionPose().get())));
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.AMP));
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
+//		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

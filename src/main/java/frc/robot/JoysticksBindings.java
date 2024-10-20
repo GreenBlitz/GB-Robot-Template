@@ -64,6 +64,8 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 
+		usedJoystick.BACK.onTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(90)));
+
 		usedJoystick.POV_DOWN.whileTrue(
 				robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(0)));
 		usedJoystick.POV_UP.whileTrue(
@@ -77,12 +79,12 @@ public class JoysticksBindings {
 
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
 				() -> robot.getPoseEstimator().getEstimatedPose(),
-				() -> new Pose2d(0, 1, new Rotation2d()),
+				() -> new Pose2d(2, 1, new Rotation2d()),
 				(pose2d) -> robot.getPoseEstimator().isAtPose(pose2d, robot.getSwerve())
 		));
 
 		usedJoystick.B.onTrue(
-				new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d())));
+				new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(1,1,new Rotation2d()))));
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

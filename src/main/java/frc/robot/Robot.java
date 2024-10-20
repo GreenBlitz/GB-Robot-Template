@@ -101,13 +101,12 @@ public class Robot {
 		);
 		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
 
-//		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
 		this.superstructure = new Superstructure("Superstructure/", this);
 
-//		configPathPlanner();
+		configPathPlanner();
 		configureBindings();
 	}
 
@@ -119,7 +118,7 @@ public class Robot {
 
 	private void configPathPlanner() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d ->  poseEstimator.resetPose(pose2d));
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 	}
 

@@ -3,6 +3,7 @@
   "robotLength": 0.767,
   "holonomicMode": true,
   "pathFolders": [
+    "source78",
     "amp156",
     "mid123"
   ],

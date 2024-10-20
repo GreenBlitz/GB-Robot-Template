@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.elevator.ElevatorStates;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -52,6 +53,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
 		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.AMP));
+
 //		usedJoystick.Y.onTrue(new InstantCommand(
 //				() -> robot.getPoseEstimator().resetPose(robot.getPoseEstimator().getVisionPose().get())));
 //		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
@@ -60,6 +62,8 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+
+		usedJoystick.X.onTrue(robot.getSuperstructure().elevatorStatesHandler.setState(ElevatorStates.AMP));
 
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));

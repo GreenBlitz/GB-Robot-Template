@@ -126,9 +126,9 @@ public class Robot {
 
 		PathPlannerUtils.registerCommand(
 				"shoot",
-				(getSuperstructure().setState(RobotState.SPEAKER).until(
+				getSuperstructure().setState(RobotState.SPEAKER).until(
 						() -> !getFunnel().isNoteInShooter()
-				))
+				)
 		);
 	}
 

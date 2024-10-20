@@ -108,7 +108,7 @@ public class Robot {
 
 		this.superstructure = new Superstructure("Superstructure/", this);
 
-		configPathPlanner();
+//		configPathPlanner();
 		configureBindings();
 	}
 

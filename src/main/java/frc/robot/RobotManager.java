@@ -31,7 +31,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		PathPlannerUtils.startPathfinder();
+//		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
@@ -53,18 +53,18 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = robot.getAutonomousCommand();
-
-		if (autonomousCommand != null) {
-			autonomousCommand.schedule();
-		}
+//		autonomousCommand = robot.getAutonomousCommand();
+//
+//		if (autonomousCommand != null) {
+//			autonomousCommand.schedule();
+//		}
 	}
 
 	@Override
 	public void teleopInit() {
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
-		}
+//		if (autonomousCommand != null) {
+//			autonomousCommand.cancel();
+//		}
 	}
 
 	@Override

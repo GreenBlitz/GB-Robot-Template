@@ -66,27 +66,27 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 
-		usedJoystick.BACK.onTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(90)));
-
-		usedJoystick.POV_DOWN.whileTrue(
-				robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(0)));
-		usedJoystick.POV_UP.whileTrue(
-				robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
-
-		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
-				() -> robot.getPoseEstimator().getEstimatedPose(),
-                Pose2d::new,
-				(pose2d) -> robot.getPoseEstimator().isAtPose(pose2d, robot.getSwerve())
-		));
-
-		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
-				() -> robot.getPoseEstimator().getEstimatedPose(),
-				() -> new Pose2d(2, 1, Rotation2d.fromDegrees(90)),
-				(pose2d) -> robot.getPoseEstimator().isAtPose(pose2d, robot.getSwerve())
-		));
-
-		usedJoystick.B.onTrue(
-				new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(1,1,new Rotation2d()))));
+//		usedJoystick.BACK.onTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(90)));
+//
+//		usedJoystick.POV_DOWN.whileTrue(
+//				robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(0)));
+//		usedJoystick.POV_UP.whileTrue(
+//				robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
+//
+//		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
+//				() -> robot.getPoseEstimator().getEstimatedPose(),
+//                Pose2d::new,
+//				(pose2d) -> robot.getPoseEstimator().isAtPose(pose2d, robot.getSwerve())
+//		));
+//
+//		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
+//				() -> robot.getPoseEstimator().getEstimatedPose(),
+//				() -> new Pose2d(2, 1, Rotation2d.fromDegrees(90)),
+//				(pose2d) -> robot.getPoseEstimator().isAtPose(pose2d, robot.getSwerve())
+//		));
+//
+//		usedJoystick.B.onTrue(
+//				new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(1,1,new Rotation2d()))));
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

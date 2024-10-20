@@ -77,7 +77,7 @@ public class JoysticksBindings {
 
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
 				() -> robot.getPoseEstimator().getEstimatedPose(),
-				() -> new Pose2d(0, 4, new Rotation2d()),
+				() -> new Pose2d(0, 1, new Rotation2d()),
 				(pose2d) -> robot.getPoseEstimator().isAtPose(pose2d, robot.getSwerve())
 		));
 

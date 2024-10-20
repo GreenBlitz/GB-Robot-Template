@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.factories.ElevatorFactory;
@@ -28,7 +29,9 @@ import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.superstructure.RobotState;
 import frc.robot.superstructure.Superstructure;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
@@ -119,6 +122,13 @@ public class Robot {
 		// Register commands...
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d ->  poseEstimator.resetPose(pose2d));
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+
+		PathPlannerUtils.registerCommand(
+				"shoot",
+				(getSuperstructure().setState(RobotState.SPEAKER).until(
+						() -> !getFunnel().isNoteInShooter()
+				)).andThen(new WaitCommand(1))
+		);
 	}
 
 	private void configureBindings() {

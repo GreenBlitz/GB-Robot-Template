@@ -196,6 +196,11 @@ public class Superstructure {
 					elevatorStatesHandler.setState(ElevatorStates.AMP)
 				).until(() -> !isNoteInElevatorRoller()),//.withTimeout(Timeouts.AMP_SECONDS),
 				new ParallelCommandGroup(
+					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
+					elevatorRollerStateHandler.setState(ElevatorRollerState.AMP),
+					elevatorStatesHandler.setState(ElevatorStates.AMP)
+				).withTimeout(Timeouts.AMP_AFTER_SENSOR_SECONDS),
+				new ParallelCommandGroup(
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 					elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 					elevatorStatesHandler.setState(ElevatorStates.IDLE)
@@ -236,17 +241,14 @@ public class Superstructure {
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
+					elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
 				).until(this::isNoteInShooter),
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.STOP),
+					elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 					funnelStateHandler.setState(FunnelState.STOP)
 				)
-			),
-			new SequentialCommandGroup(
-				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR)
-						.until(() -> !this.isNoteInElevatorRoller()),//.withTimeout(Timeouts.AMP_SECONDS),
-				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
 			),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),

@@ -18,9 +18,9 @@ public class RealSwerveConstants {
 	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(3, 0, 0);
 
 
-	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
+	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.30628;
 
-	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
+	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.22526;
 
 	private static final double DRIVE_RADIUS_METERS = Math.hypot(MODULE_X_DISTANCE_FROM_CENTER, MODULE_Y_DISTANCE_FROM_CENTER);
 

@@ -258,7 +258,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public void logEstimatedPose() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
-		Logger.recordOutput(super.getLogPath() + "VisionPose/", getVisionPose().get());
 	}
 
 	private void updateGyroOffsetInPose() {

@@ -1,10 +1,9 @@
 package frc.robot.superstructure;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.JoysticksBindings;
 import frc.robot.Robot;
 import frc.robot.subsystems.elevator.ElevatorStates;
 import frc.robot.subsystems.elevator.ElevatorStatesHandler;
@@ -21,6 +20,7 @@ import frc.robot.subsystems.intake.roller.IntakeStatesHandler;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+import frc.utils.joysticks.SmartJoystick;
 import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
@@ -71,6 +71,16 @@ public class Superstructure {
 		boolean isFlywheelReady = robot.getFlywheel().isAtVelocity(FlywheelState.SHOOTING.getVelocity(), Tolerances.FLYWHEEL_VELOCITY_TOLERANCE);
 		// boolean isSwerveReady = swerve.isAtHeading(speaker);
 		return isFlywheelReady;// && isSwerveReady
+	}
+
+	private Command noteInRumble() {
+		SmartJoystick mainJoystick = JoysticksBindings.getMainJoystick();
+		return new FunctionalCommand(
+				() -> {},
+				() -> mainJoystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.5),
+				interrupted -> mainJoystick.stopRumble(GenericHID.RumbleType.kBothRumble),
+				() -> false
+		).withTimeout(0.2);
 	}
 
 	private boolean isReadyToAmp() {
@@ -126,6 +136,7 @@ public class Superstructure {
 					pivotStateHandler.setState(PivotState.ON_FLOOR)
 				).until(this::isNoteInShooter),
 				new ParallelCommandGroup(
+					noteInRumble(),
 					pivotStateHandler.setState(PivotState.UP),
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStatesHandler.setState(IntakeStates.STOP)

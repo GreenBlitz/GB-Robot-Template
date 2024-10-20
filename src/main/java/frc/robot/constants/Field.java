@@ -45,7 +45,7 @@ public class Field {
 	}
 
 
-	private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
+	private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(-90);
 
 	public static Rotation2d getAngleToAmp() {
 		if (DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE) {

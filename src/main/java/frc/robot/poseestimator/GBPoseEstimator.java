@@ -96,6 +96,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void resetHeadingOffset(Rotation2d newHeading) {
 		if (latestGyroAngle != null) {
 			headingOffset = newHeading.minus(latestGyroAngle);
+			updateGyroOffsetInPose();
 		}
 	}
 
@@ -220,6 +221,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			VisionObservation fixedObservation;
 			Optional<VisionObservation> fixedOptionalObservation = visionDenoiser.calculateLinearFilterResult();
 			fixedObservation = fixedOptionalObservation.orElse(observation);
+			Logger.recordOutput("vision x stdDev", fixedObservation.standardDeviations()[0]);
+			Logger.recordOutput("vision y stdDev", fixedObservation.standardDeviations()[1]);
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(fixedObservation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
@@ -259,7 +262,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private void updateGyroOffsetInPose() {
 		estimatedPose = new Pose2d(estimatedPose.getTranslation(), latestGyroAngle.plus(headingOffset));
-		odometryPose = new Pose2d(estimatedPose.getTranslation(), latestGyroAngle.plus(headingOffset));
+		odometryPose = new Pose2d(odometryPose.getTranslation(), latestGyroAngle.plus(headingOffset));
 	}
 
 	@Override
@@ -271,7 +274,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		} else if (DriverStationUtils.isDisabled() && isCurrentlyEnabled) {
 			isCurrentlyEnabled = false;
 		}
+
 		Logger.recordOutput(super.getLogPath() + "headingOffset", headingOffset);
+		Logger.recordOutput(super.getLogPath() + "isEnabled", isCurrentlyEnabled);
 		Logger.recordOutput(super.getLogPath() + "hasBeenInitialized", hasHeadingOffsetBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "latestGyroAngle", latestGyroAngle);
 		Logger.recordOutput(super.getLogPath() + "latestGyroAngleMod", latestGyroAngle.plus(Rotation2d.fromDegrees(0)));

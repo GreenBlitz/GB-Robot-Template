@@ -15,13 +15,13 @@ public class PivotInterpolationMap {
 		METERS_TO_RADIANS.put(1.1, Units.degreesToRadians(58.5));
 		METERS_TO_RADIANS.put(1.7, Units.degreesToRadians(51));
 		METERS_TO_RADIANS.put(2.2, Units.degreesToRadians(46));
-		METERS_TO_RADIANS.put(2.7, Units.degreesToRadians(43));
-		METERS_TO_RADIANS.put(3.0, Units.degreesToRadians(40));
-		METERS_TO_RADIANS.put(3.3, Units.degreesToRadians(37));
-		METERS_TO_RADIANS.put(3.6, Units.degreesToRadians(34));
-		METERS_TO_RADIANS.put(3.9, Units.degreesToRadians(31));
-		METERS_TO_RADIANS.put(4.2, Units.degreesToRadians(28));
-		METERS_TO_RADIANS.put(4.5, Units.degreesToRadians(25));
+		METERS_TO_RADIANS.put(2.7, Units.degreesToRadians(41));
+		METERS_TO_RADIANS.put(3.0, Units.degreesToRadians(38));
+		METERS_TO_RADIANS.put(3.3, Units.degreesToRadians(35));
+		METERS_TO_RADIANS.put(3.6, Units.degreesToRadians(32));
+		METERS_TO_RADIANS.put(3.9, Units.degreesToRadians(30));
+		METERS_TO_RADIANS.put(4.2, Units.degreesToRadians(27));
+		METERS_TO_RADIANS.put(4.5, Units.degreesToRadians(26));
 	}
 
 }

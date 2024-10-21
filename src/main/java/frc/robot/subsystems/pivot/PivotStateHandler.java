@@ -33,6 +33,9 @@ public class PivotStateHandler {
 						.fromRadians(PivotInterpolationMap.METERS_TO_RADIANS.get(Field.getMetersFromSpeaker(robotPoseSupplier.get().get())))
 				);
 		}
+		if (pivotState == PivotState.MANUAL) {
+			return new InstantCommand();
+		}
 		return pivot.getCommandsBuilder().moveToPosition(pivotState.getTargetPosition());
 	}
 

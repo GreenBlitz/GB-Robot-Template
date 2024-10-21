@@ -1,0 +1,157 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6859860992449257,
+      "y": 6.6047521185951465
+    },
+    "rotation": -120.34324888423961
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "amp-before1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PRE_SPEAKER"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SPEAKER"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "before1-1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "INTAKE_WITH_FLYWHEEL"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SPEAKER"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1-5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "INTAKE_WITH_FLYWHEEL"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "5-shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PRE_SPEAKER"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SPEAKER"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "5shoot-6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "INTAKE_WITH_FLYWHEEL"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "6-shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PRE_SPEAKER"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SPEAKER"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

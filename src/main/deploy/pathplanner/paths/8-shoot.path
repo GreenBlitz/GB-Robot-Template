@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.2795852864433,
+        "y": 0.8209296418592844
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.266400350982521,
+        "y": 0.8302583877895031
+      },
+      "isLocked": false,
+      "linkedName": "took8-source78"
+    },
+    {
+      "anchor": {
+        "x": 2.4211328422656844,
+        "y": 3.4889509779019563
+      },
+      "prevControl": {
+        "x": 2.197242939940425,
+        "y": 2.2762140069734693
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "8shoot-source78"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 135.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "source78",
+  "previewStartingState": {
+    "rotation": 166.50426671920417,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

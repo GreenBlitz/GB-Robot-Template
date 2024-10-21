@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.2795852864433,
+        "y": 5.783822476735862
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.826125106795668,
+        "y": 6.921929480222596
+      },
+      "isLocked": false,
+      "linkedName": "took5-amp156"
+    },
+    {
+      "anchor": {
+        "x": 3.9697046666820603,
+        "y": 6.156972313944628
+      },
+      "prevControl": {
+        "x": 4.5760731521463045,
+        "y": 6.436834691851201
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "5shoot-amp156"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -165.32360686254995,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "amp156",
+  "previewStartingState": {
+    "rotation": 155.82089285331077,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

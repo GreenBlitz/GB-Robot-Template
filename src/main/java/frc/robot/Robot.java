@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
@@ -40,8 +41,10 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristConstants;
 import frc.robot.subsystems.wrist.factory.WristFactory;
+import frc.robot.superstructure.RobotState;
 import frc.robot.superstructure.StatesMotionPlanner;
 import frc.robot.superstructure.Superstructure;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.vision.limelights.LimeLightConstants;
@@ -120,7 +123,6 @@ public class Robot {
 		);
 		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
 
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
@@ -139,8 +141,24 @@ public class Robot {
 	}
 
 	private void configPathPlanner() {
-		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
+		// Register commands..
+		PathPlannerUtils.registerCommand(
+			RobotState.INTAKE_WITH_FLYWHEEL.name(),
+			new SequentialCommandGroup(
+				superstructure.enableChangeStateAutomatically(false),
+				superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL).until(superstructure::isEnableChangeStateAutomatically)
+			)
+		);
+		PathPlannerUtils.registerCommand(RobotState.PRE_SPEAKER.name(), superstructure.setState(RobotState.PRE_SPEAKER));
+		PathPlannerUtils.registerCommand(
+			RobotState.SPEAKER.name(),
+			new SequentialCommandGroup(
+				superstructure.enableChangeStateAutomatically(false),
+				superstructure.setState(RobotState.SPEAKER).until(superstructure::isEnableChangeStateAutomatically)
+			)
+		);
+
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 	}
 

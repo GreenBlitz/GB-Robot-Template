@@ -31,15 +31,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "comp"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "comp"
           }
         }
       ]

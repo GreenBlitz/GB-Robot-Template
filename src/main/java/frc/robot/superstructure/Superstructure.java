@@ -76,6 +76,8 @@ public class Superstructure {
 				robot.getPoseEstimator().getEstimatedPose().getTranslation(),
 				Field.getSpeaker().toTranslation2d()).getAngle()
 		);
+		Logger.recordOutput("tets/is swerv reda", isSwerveReady);
+		Logger.recordOutput("tets/is flywheel reda", isFlywheelReady);
 		return isFlywheelReady && isSwerveReady;
 	}
 
@@ -218,7 +220,7 @@ public class Superstructure {
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 					elevatorRollerStateHandler.setState(ElevatorRollerState.AMP),
 					elevatorStatesHandler.setState(ElevatorStates.AMP)
-				).until(() -> !isNoteInElevatorRoller()),//.withTimeout(Timeouts.AMP_SECONDS),
+				).withTimeout(Timeouts.AMP_SECONDS),
 				new ParallelCommandGroup(
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 					elevatorRollerStateHandler.setState(ElevatorRollerState.AMP),
@@ -245,7 +247,7 @@ public class Superstructure {
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
 					funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR),
 					elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR)
-				).until(this::isNoteInElevatorRoller),//.withTimeout(Timeouts.AMP_SECONDS),
+				).withTimeout(Timeouts.AMP_SECONDS),
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.STOP),
 					funnelStateHandler.setState(FunnelState.STOP),

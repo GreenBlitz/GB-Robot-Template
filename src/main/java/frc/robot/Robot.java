@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.IDs;
@@ -121,15 +122,20 @@ public class Robot {
 
 	private void configPathPlanner() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d ->  poseEstimator.resetPose(pose2d));
-		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
-
 		PathPlannerUtils.registerCommand(
 				"shoot",
 				getSuperstructure().setState(RobotState.SPEAKER).until(
 						() -> !getFunnel().isNoteInShooter()
 				)
 		);
+		PathPlannerUtils.registerCommand(
+				RobotState.PRE_SPEAKER.name(),
+				getSuperstructure().setState(RobotState.PRE_SPEAKER)
+		);
+
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d ->  poseEstimator.resetPose(pose2d));
+		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+
 	}
 
 	private void configureBindings() {
@@ -137,7 +143,7 @@ public class Robot {
 	}
 
 	public Command getAutonomousCommand() {
-		return autonomousChooser.getChosenValue();
+		return AutoBuilder.buildAuto("DriveShoot");
 	}
 
 	public GBPoseEstimator getPoseEstimator() {

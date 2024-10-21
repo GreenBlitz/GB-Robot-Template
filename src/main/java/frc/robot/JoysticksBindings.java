@@ -67,21 +67,23 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
 
-		usedJoystick.POV_RIGHT.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
-		usedJoystick.POV_LEFT.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
-
 		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.ARM_INTAKE));
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.AMP));
 
 		usedJoystick.Y.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PASSING));
-		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
 		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
-		usedJoystick.B.onTrue(new InstantCommand(() -> { robot.getPoseEstimator().resetHeadingOffset(new Rotation2d()); }));
+		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
+		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
+		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
+		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

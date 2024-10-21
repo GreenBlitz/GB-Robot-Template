@@ -142,14 +142,16 @@ public class Robot {
 
 	private void configPathPlanner() {
 		// Register commands..
-		PathPlannerUtils.registerCommand(RobotState.INTAKE_WITH_FLYWHEEL.name(),
+		PathPlannerUtils.registerCommand(
+			RobotState.INTAKE_WITH_FLYWHEEL.name(),
 			new SequentialCommandGroup(
 				superstructure.enableChangeStateAutomatically(false),
 				superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL).until(superstructure::isEnableChangeStateAutomatically)
 			)
 		);
 		PathPlannerUtils.registerCommand(RobotState.PRE_SPEAKER.name(), superstructure.setState(RobotState.PRE_SPEAKER));
-		PathPlannerUtils.registerCommand(RobotState.SPEAKER.name(),
+		PathPlannerUtils.registerCommand(
+			RobotState.SPEAKER.name(),
 			new SequentialCommandGroup(
 				superstructure.enableChangeStateAutomatically(false),
 				superstructure.setState(RobotState.SPEAKER).until(superstructure::isEnableChangeStateAutomatically)

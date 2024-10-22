@@ -169,6 +169,7 @@ public class Superstructure {
 			case ARM_INTAKE -> armIntake();
 			case PRE_SPEAKER -> preSpeaker();
 			case SPEAKER -> speaker();
+			case SPEAKER_MANUAL_PIVOT -> speakerManualPivot();
 			case PRE_AMP -> preAMP();
 			case AMP -> amp();
 			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
@@ -332,6 +333,34 @@ public class Superstructure {
 			),
 			rollerStateHandler.setState(RollerState.STOP),
 			pivotStateHandler.setState(PivotState.INTERPOLATE),
+			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
+			elbowStateHandler.setState(ElbowState.INTAKE),
+			wristStateHandler.setState(WristState.IN_ARM),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+	}
+
+	private Command speakerManualPivot() {
+		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.SPEAKER_MANUAL_PIVOT),
+			enableChangeStateAutomatically(false),
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP)
+				).until(this::isReadyToShootInterpolation),
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.SHOOT),
+					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL)
+				).until(() -> !isObjectInFunnel()),
+				enableChangeStateAutomatically(true),
+				new ParallelCommandGroup(
+					funnelStateHandler.setState(FunnelState.STOP),
+					intakeStateHandler.setState(IntakeState.STOP)
+				)
+			),
+			rollerStateHandler.setState(RollerState.STOP),
+			pivotStateHandler.setState(PivotState.MANUAL),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),

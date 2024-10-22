@@ -87,6 +87,9 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
+
+		usedJoystick.R1.onTrue(robot.getPivot().getCommandsBuilder().calibInterpolation());
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER_MANUAL_PIVOT));
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

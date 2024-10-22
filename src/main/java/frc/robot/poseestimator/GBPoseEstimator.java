@@ -84,6 +84,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (estimatedRobotHeading.isPresent()) {
 			headingOffset = estimatedRobotHeading.get().minus(gyroAngle);
 			hasHeadingOffsetBeenInitialized = true;
+			Optional<Pose2d> estimatedPoseOfVision = getVisionPose();
+			estimatedPoseOfVision.ifPresent(pose2d->estimatedPose = new Pose2d(pose2d.getTranslation(), latestGyroAngle.plus(headingOffset)));
 		}
 		else {
 			headingOffset = new Rotation2d();
@@ -125,17 +127,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			odometryStandardDeviations[i] = newStandardDeviations[i] * newStandardDeviations[i];
 		}
 	}
-
-	// @pose-swerveAdditions:on
-//	@Override
-	public void resetPose(Pose2d initialPose) {
-		this.estimatedPose = initialPose;
-		this.latestGyroAngle = initialPose.getRotation();
-		this.odometryPose = initialPose;
-		this.resetSwerve.accept(initialPose.getRotation());
-		odometryPoseInterpolator.clear();
-	}
-	// @pose-swerveAdditions:off
 
 	@Override
 	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
@@ -240,11 +231,12 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Logger.recordOutput("inside odometry", observation.timestamp());
 		// @pose-swerveAdditions:off
 		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
-		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle().plus(headingOffset), latestGyroAngle.plus(headingOffset));
+		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
 		latestGyroAngle = observation.gyroAngle();
 		latestWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);
 		estimatedPose = estimatedPose.exp(twist);
+//		estimatedPose
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}
 
@@ -268,7 +260,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public void subsystemPeriodic() {
 		updateVision(limelightFilterer.getFilteredVisionObservations());
-		if (hasHeadingOffsetBeenInitialized && !DriverStationUtils.isDisabled() && !isCurrentlyEnabled) {
+		if (!DriverStationUtils.isDisabled() && !isCurrentlyEnabled) {
 			isCurrentlyEnabled = true;
 			hasHeadingOffsetBeenInitialized = false;
 		} else if (DriverStationUtils.isDisabled() && isCurrentlyEnabled) {

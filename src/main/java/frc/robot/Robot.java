@@ -154,7 +154,7 @@ public class Robot {
 			RobotState.SPEAKER.name(),
 			new SequentialCommandGroup(
 				superstructure.enableChangeStateAutomatically(false),
-				superstructure.setState(RobotState.SPEAKER).until(superstructure::isEnableChangeStateAutomatically)
+				superstructure.setState(RobotState.SPEAKER_MANUAL_PIVOT).until(superstructure::isEnableChangeStateAutomatically)
 			)
 		);
 

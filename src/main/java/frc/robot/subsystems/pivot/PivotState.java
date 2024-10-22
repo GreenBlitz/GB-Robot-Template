@@ -11,7 +11,8 @@ public enum PivotState {
 	INTERPOLATE(new Rotation2d()),
 	MANUAL(new Rotation2d()),
 	PASSING(Rotation2d.fromDegrees(55)),
-	TRANSFER(Rotation2d.fromDegrees(17));
+	TRANSFER(Rotation2d.fromDegrees(17)),
+	CLOSESHOOT(Rotation2d.fromDegrees(58.5));
 
 	private final Rotation2d targetPosition;
 

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -72,6 +74,9 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PASSING));
 		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
 		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
+		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> {
+			robot.getSwerve().setHeading(new Rotation2d());
+		}));
 
 		usedJoystick.START.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRAP));
 	}
@@ -86,9 +91,19 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
 
-		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB_LESADER));
-		usedJoystick.POV_RIGHT.onTrue(robot.getSuperstructure().setState(RobotState.PRE_CLIMB));
+		usedJoystick.POV_RIGHT.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB_LESADER));
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.PRE_CLIMB));
 		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB));
+
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(
+				robot.getRoller().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER) * 0.3)
+		);
+
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(
+				robot.getRoller().getCommandsBuilder().setPower(() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER) * 0.3)
+		);
+
+		usedJoystick.START.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER_MANUAL_PIVOT)); //close shoot
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

@@ -64,7 +64,7 @@ public class RealPivotConstants {
 		if (!motor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFail").report();
 		}
-
+		motor.setInverted(true);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder

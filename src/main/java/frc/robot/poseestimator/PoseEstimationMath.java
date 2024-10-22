@@ -22,9 +22,9 @@ public class PoseEstimationMath {
 	}
 
 	public static Twist2d updateChangeInAngle(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
-		double rotationDifference = currentGyroAngle.getRadians() - lastGyroAngle.getRadians();
-		double wrappedRotationDifference = MathUtil.angleModulus(rotationDifference);
-		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
+		Rotation2d rotationDifference = currentGyroAngle.minus(lastGyroAngle);
+//		double wrappedRotationDifference = MathUtil.angleModulus(rotationDifference);
+		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 	}
 
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {

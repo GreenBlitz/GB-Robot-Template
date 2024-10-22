@@ -26,7 +26,9 @@ public class ClimbStateHandler {
 					)
 					.andThen(lifterStateHandler.setState(LifterState.EXTENDED).raceWith(solenoidStateHandler.setState(SolenoidState.HOLD)))
 					.andThen(solenoidStateHandler.setState(SolenoidState.OFF));
-			case RETRACT -> lifterStateHandler.setState(LifterState.RETRACTED).alongWith(solenoidStateHandler.setState(SolenoidState.OFF));
+			case RETRACT ->
+				((lifterStateHandler.setState(LifterState.BACKWARD).withTimeout(0.5)).andThen(lifterStateHandler.setState(LifterState.RETRACTED))
+					.alongWith(solenoidStateHandler.setState(SolenoidState.OFF)));
 		};
 	}
 

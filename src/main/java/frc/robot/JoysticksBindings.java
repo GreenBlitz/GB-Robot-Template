@@ -38,6 +38,7 @@ public class JoysticksBindings {
 		return SIXTH_JOYSTICK;
 	}
 
+
 	public static void configureBindings(Robot robot) {
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);
@@ -71,6 +72,8 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PASSING));
 		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
 		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
+
+		usedJoystick.START.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRAP));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -82,6 +85,10 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
+
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB_LESADER));
+		usedJoystick.POV_RIGHT.onTrue(robot.getSuperstructure().setState(RobotState.PRE_CLIMB));
+		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

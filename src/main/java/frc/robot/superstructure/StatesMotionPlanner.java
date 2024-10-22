@@ -27,7 +27,8 @@ public class StatesMotionPlanner {
 					superstructure.setState(state).until(superstructure::isEnableChangeStateAutomatically),
 					superstructure.setState(RobotState.IDLE)
 				);
-			case INTAKE_OUTTAKE, AMP, ARM_OUTTAKE, PRE_AMP, PRE_SPEAKER, IDLE -> superstructure.setState(state);
+			case TRAP, CLIMB, PRE_CLIMB, INTAKE_OUTTAKE, AMP, ARM_OUTTAKE, PRE_AMP, PRE_SPEAKER, IDLE, CLIMB_LESADER ->
+				superstructure.setState(state);
 		};
 	}
 

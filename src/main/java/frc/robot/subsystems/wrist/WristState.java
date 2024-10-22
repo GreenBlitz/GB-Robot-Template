@@ -8,7 +8,7 @@ public enum WristState {
 	DEFAULT(Rotation2d.fromDegrees(30)),
 	ARM_INTAKE(Rotation2d.fromDegrees(-68)),
 	PRE_TRAP(Rotation2d.fromDegrees(90)),
-	TRAP(Rotation2d.fromDegrees(180));
+	TRAP(Rotation2d.fromDegrees(192));
 
 	private final Rotation2d position;
 

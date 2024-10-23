@@ -1,6 +1,5 @@
 package frc.robot.poseestimator;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
@@ -20,9 +19,8 @@ public class PoseEstimationMath {
 	}
 
 	public static Twist2d updateChangeInAngle(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
-		double rotationDifference = currentGyroAngle.getRadians() - lastGyroAngle.getRadians();
-		double wrappedRotationDifference = MathUtil.angleModulus(rotationDifference);
-		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
+		Rotation2d rotationDifference = currentGyroAngle.minus(lastGyroAngle);
+		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 	}
 
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
@@ -74,13 +72,8 @@ public class PoseEstimationMath {
 		Pose2d odometryPose,
 		double[] odometryStandardDeviations
 	) {
-		Transform2d poseDifferenceFromSample = new Transform2d(odometryInterpolatedPoseSample, odometryPose);
-		Transform2d sampleDifferenceFromPose = poseDifferenceFromSample.inverse();
-		Pose2d appliedVisionObservation = estimatedPose.plus(sampleDifferenceFromPose);
-		appliedVisionObservation = appliedVisionObservation
-			.plus(applyKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
-		appliedVisionObservation = appliedVisionObservation.plus(poseDifferenceFromSample);
-		return appliedVisionObservation;
+		Transform2d sampleDifferenceFromPose = new Transform2d(odometryPose, odometryInterpolatedPoseSample);
+		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
 	}
 
 	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {

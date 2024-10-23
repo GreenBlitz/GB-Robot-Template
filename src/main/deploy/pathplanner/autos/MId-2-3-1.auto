@@ -12,38 +12,32 @@
     "data": {
       "commands": [
         {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Mid-Before2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "PRE_SPEAKER"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "SPEAKER"
+            "name": "CLOSE_SHOOT"
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "before2-2"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Mid-Before2"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "before2-2"
+                      }
+                    }
+                  ]
                 }
               },
               {

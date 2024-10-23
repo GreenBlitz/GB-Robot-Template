@@ -7,6 +7,7 @@ import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -36,6 +37,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private Consumer<Rotation2d> resetSwerve;
 	private boolean hasHeadingOffsetBeenInitialized;
 	private boolean isCurrentlyEnabled;
+	private Swerve swerve;
 
 	public GBPoseEstimator(
 		Consumer<Rotation2d> resetSwerve,
@@ -45,11 +47,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		SwerveDriveWheelPositions initialWheelPositions,
 		Rotation2d initialGyroAngle,
 		double[] odometryStandardDeviations,
-		VisionDenoiser visionDenoiser
+		VisionDenoiser visionDenoiser,
+		Swerve swerve
 	) {
 		super(logPath);
 
 		this.resetSwerve = resetSwerve;
+		this.swerve = swerve;
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.limelightFilterer = limelightFilterer;
@@ -62,7 +66,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.hasHeadingOffsetBeenInitialized = false;
 		this.isCurrentlyEnabled = false;
 		setOdometryStandardDeviations(odometryStandardDeviations);
-		calculateHeadingOffset(initialGyroAngle);
+//		calculateHeadingOffset(initialGyroAngle);
+		headingOffset = new Rotation2d();
 		//@formatter:off
 		getVisionPose().ifPresentOrElse(calculatedPose -> {
 			this.odometryPose = calculatedPose;
@@ -104,7 +109,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public void resetPose(Pose2d newPose) {
 		this.odometryPose = newPose;
-		resetHeadingOffset(newPose.getRotation());
+//		resetHeadingOffset(newPose.getRotation());
+		swerve.setHeading(newPose.getRotation());
 		odometryPoseInterpolator.clear();
 	}
 

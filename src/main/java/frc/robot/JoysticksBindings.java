@@ -44,13 +44,17 @@ public class JoysticksBindings {
 
 
 	public static void configureBindings(Robot robot) {
-		testJoystickButtons(robot);
-		mainJoystickButtons(robot);
-		secondJoystickButtons(robot);
-//		thirdJoystickButtons(robot);
+		thirdJoystickButtons(robot);
 		fourthJoystickButtons(robot);
 		fifthJoystickButtons(robot);
 		sixthJoystickButtons(robot);
+
+		bindCriticalJoysticks(robot);
+	}
+
+	private static void bindCriticalJoysticks(Robot robot){
+		secondJoystickButtons(robot);
+		mainJoystickButtons(robot);
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
@@ -84,22 +88,6 @@ public class JoysticksBindings {
 		usedJoystick.START.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRAP));
 	}
 
-	private static void testJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = THIRD_JOYSTICK;
-		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> {
-			robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(1,1), Rotation2d.fromDegrees(0)));
-		}));
-		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> {
-			robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(2,2), Rotation2d.fromDegrees(180)));
-		}));
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> {
-			robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(3,3), Rotation2d.fromDegrees(90)));
-		}));
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> {
-			robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(4,5), Rotation2d.fromDegrees(270)));
-		}));
-	}
-
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
@@ -117,11 +105,11 @@ public class JoysticksBindings {
 		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.CLIMB));
 
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(
-				robot.getRoller().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER) * 0.3)
+				robot.getFunnel().getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER) * 0.3)
 		);
 
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(
-				robot.getRoller().getCommandsBuilder().setPower(() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER) * 0.3)
+				robot.getFunnel().getCommandsBuilder().setPower(() -> -usedJoystick.getAxisValue(Axis.LEFT_TRIGGER) * 0.3)
 		);
 
 		usedJoystick.START.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER_MANUAL_PIVOT)); //close shoot
@@ -130,6 +118,29 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
+
+		robot.getSwerve()
+				.setDefaultCommand(
+						robot.getSwerve()
+								.getCommandsBuilder()
+								.driveBySavedState(
+										() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+										() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+										() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+								)
+				);
+		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> {
+			robot.getSwerve().setHeading(Rotation2d.fromDegrees(0));
+		}));
+		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> {
+			robot.getSwerve().setHeading(Rotation2d.fromDegrees(90));
+		}));
+		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> {
+			robot.getSwerve().setHeading(Rotation2d.fromDegrees(180));
+		}));
+		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> {
+			robot.getSwerve().setHeading(Rotation2d.fromDegrees(270));
+		}));
 
 		usedJoystick.R1.onTrue(robot.getPivot().getCommandsBuilder().calibInterpolation());
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER_MANUAL_PIVOT));

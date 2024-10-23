@@ -119,7 +119,8 @@ public class Robot {
 			swerve.getModules().getWheelsPositions(0),
 			swerve.getAbsoluteHeading(),
 			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS,
-			new VisionDenoiser(PoseEstimatorConstants.LINEAR_FILTER_SAMPLES_FOR_EACH_VISION_CALCULATION)
+			new VisionDenoiser(PoseEstimatorConstants.LINEAR_FILTER_SAMPLES_FOR_EACH_VISION_CALCULATION),
+				swerve
 		);
 		limelightFilterer.setEstimatedPoseAtTimestampFunction(poseEstimator::getEstimatedPoseAtTimeStamp);
 
@@ -154,11 +155,18 @@ public class Robot {
 			RobotState.SPEAKER.name(),
 			new SequentialCommandGroup(
 				superstructure.enableChangeStateAutomatically(false),
-				superstructure.setState(RobotState.SPEAKER_MANUAL_PIVOT).until(superstructure::isEnableChangeStateAutomatically)
+				superstructure.setState(RobotState.SPEAKER).until(superstructure::isEnableChangeStateAutomatically).withTimeout(4)
 			)
 		);
+		PathPlannerUtils.registerCommand(
+				"CLOSE_SHOOT",
+				new SequentialCommandGroup(
+						superstructure.enableChangeStateAutomatically(false),
+						superstructure.setState(RobotState.SPEAKER_MANUAL_PIVOT).until(superstructure::isEnableChangeStateAutomatically)
+				)
+		);
 
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator :: resetPose);
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 	}
 

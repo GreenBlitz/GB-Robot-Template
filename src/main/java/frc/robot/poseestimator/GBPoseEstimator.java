@@ -68,7 +68,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		getEstimatedRobotHeadingByVision().ifPresentOrElse(estimatedHeading -> {
 			headingOffset = estimatedHeading.minus(gyroAngle);
 			hasHeadingOffsetBeenInitialized = true;
-			updateGyroOffsetsInPose();
 		}, () -> headingOffset = new Rotation2d());
 	}
 	//@formatter:on
@@ -138,7 +137,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Pose2d getEstimatedPose() {
-		return estimatedPose;
+		return new Pose2d(estimatedPose.getTranslation(), estimatedPose.getRotation().plus(headingOffset));
 	}
 
 	@Override
@@ -201,12 +200,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (gyroAngle != null) {
 			Rotation2d headingWithOffset = gyroAngle.plus(headingOffset);
 			limelightFilterer.updateGyroAngles(new GyroAngleValues(headingWithOffset.getDegrees(), 0, 0, 0, 0, 0));
-		}
-	}
-
-	private void updateGyroOffsetsInPose() {
-		if (estimatedPose != null) {
-			estimatedPose = new Pose2d(estimatedPose.getTranslation(), latestGyroAngle.plus(headingOffset));
 		}
 	}
 

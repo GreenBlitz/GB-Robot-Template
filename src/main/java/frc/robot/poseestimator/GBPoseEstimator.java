@@ -212,8 +212,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void updateGyroOffsetsInPose() {
-		estimatedPose = new Pose2d(estimatedPose.getTranslation(), latestGyroAngle.plus(headingOffset));
-		odometryPose = new Pose2d(odometryPose.getTranslation(), latestGyroAngle.plus(headingOffset));
+		if(estimatedPose != null) {
+			estimatedPose = new Pose2d(estimatedPose.getTranslation(), latestGyroAngle.plus(headingOffset));
+			odometryPose = new Pose2d(odometryPose.getTranslation(), latestGyroAngle.plus(headingOffset));
+		}
 	}
 
 	public void logEstimatedPose() {

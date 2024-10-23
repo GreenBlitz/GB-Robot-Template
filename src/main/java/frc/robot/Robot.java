@@ -135,7 +135,7 @@ public class Robot {
 
 	public void periodic() {
 		swerve.updateStatus();
-		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
+//		poseEstimator.updateVision(limelightFilterer.getFilteredVisionObservations());
 		poseEstimator.updateOdometry(Arrays.asList(swerve.getAllOdometryObservations()));
 		superstructure.logStatus();
 	}

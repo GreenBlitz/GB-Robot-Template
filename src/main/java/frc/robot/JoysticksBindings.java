@@ -1,6 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
@@ -42,9 +44,10 @@ public class JoysticksBindings {
 
 
 	public static void configureBindings(Robot robot) {
+		testJoystickButtons(robot);
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);
-		thirdJoystickButtons(robot);
+//		thirdJoystickButtons(robot);
 		fourthJoystickButtons(robot);
 		fifthJoystickButtons(robot);
 		sixthJoystickButtons(robot);
@@ -75,10 +78,26 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
 		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> {
-			robot.getSwerve().setHeading(new Rotation2d());
+			robot.getSwerve().setHeading(Rotation2d.fromDegrees(180));
 		}));
 
 		usedJoystick.START.onTrue(robot.getStatesMotionPlanner().setState(RobotState.TRAP));
+	}
+
+	private static void testJoystickButtons(Robot robot) {
+		SmartJoystick usedJoystick = THIRD_JOYSTICK;
+		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> {
+			robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(1,1), Rotation2d.fromDegrees(0)));
+		}));
+		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> {
+			robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(2,2), Rotation2d.fromDegrees(180)));
+		}));
+		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> {
+			robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(3,3), Rotation2d.fromDegrees(90)));
+		}));
+		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> {
+			robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(4,5), Rotation2d.fromDegrees(270)));
+		}));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -88,6 +107,8 @@ public class JoysticksBindings {
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
+		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.PRE_PASSING));
+
 		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_TO_ARM));
 		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_ARM_TO_SHOOTER));
 

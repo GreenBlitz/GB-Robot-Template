@@ -1,11 +1,12 @@
 {
-  "robotWidth": 0.897,
-  "robotLength": 0.767,
+  "robotWidth": 0.995,
+  "robotLength": 0.855,
   "holonomicMode": true,
   "pathFolders": [
-    "source78",
+    "M231close",
     "amp156",
-    "mid123"
+    "mid123",
+    "source78"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

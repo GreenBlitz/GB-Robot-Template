@@ -21,7 +21,8 @@ public class StatesMotionPlanner {
 				SPEAKER_MANUAL_PIVOT,
 				TRANSFER_SHOOTER_TO_ARM,
 				TRANSFER_ARM_TO_SHOOTER,
-				PASSING ->
+				PASSING,
+				PRE_PASSING ->
 				new SequentialCommandGroup(
 					superstructure.enableChangeStateAutomatically(false),
 					superstructure.setState(state).until(superstructure::isEnableChangeStateAutomatically),

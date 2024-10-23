@@ -98,8 +98,14 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void resetHeadingOffset(Rotation2d newHeading) {
 		if (latestGyroAngle != null) {
 			headingOffset = newHeading.minus(latestGyroAngle);
-			updateGyroOffsetInPose();
+//			updateGyroOffsetInPose();
 		}
+	}
+
+	public void resetPose(Pose2d newPose) {
+		this.odometryPose = newPose;
+		resetHeadingOffset(newPose.getRotation());
+		odometryPoseInterpolator.clear();
 	}
 
 	private Optional<Rotation2d> getEstimatedRobotHeadingByVision() {
@@ -118,6 +124,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (output.isPresent()) {
 			Logger.recordOutput(super.getLogPath() + "headingByVision", output.get());
 		}
+
 		return PoseEstimationMath.calculateAngleAverage(stackedHeadingEstimations);
 	}
 
@@ -164,7 +171,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Pose2d getEstimatedPose() {
-		return estimatedPose;
+		return new Pose2d(odometryPose.getTranslation(), odometryPose.getRotation().plus(headingOffset));
+//		return estimatedPose;
 	}
 
 	@Override
@@ -222,11 +230,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void addOdometryObservation(OdometryObservation observation) {
-		if (!hasHeadingOffsetBeenInitialized) {
-			calculateHeadingOffset(observation.gyroAngle());
-			updateGyroOffsetInPose();
-		}
-		updateGyroAnglesInLimeLight(observation.gyroAngle());
+//		if (!hasHeadingOffsetBeenInitialized) {
+//			calculateHeadingOffset(observation.gyroAngle());
+//			updateGyroOffsetInPose();
+//		}
+//		updateGyroAnglesInLimeLight(observation.gyroAngle());
 		// @pose-swerveAdditions:on
 		Logger.recordOutput("inside odometry", observation.timestamp());
 		// @pose-swerveAdditions:off
@@ -236,7 +244,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		latestWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);
 		estimatedPose = estimatedPose.exp(twist);
-//		estimatedPose
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}
 

@@ -187,6 +187,7 @@ public class Superstructure {
 			case CLIMB -> climb();
 			case TRAP -> trap();
 			case PASSING -> passing();
+			case PRE_PASSING -> prePass();
 		};
 	}
 
@@ -630,6 +631,21 @@ public class Superstructure {
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)//.withAimAssist(AimAssist.PASS))
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+	}
+
+	private Command prePass() {
+		return new ParallelCommandGroup(
+			enableChangeStateAutomatically(true),
+			setCurrentStateName(RobotState.PRE_SPEAKER),
+			rollerStateHandler.setState(RollerState.STOP),
+			intakeStateHandler.setState(IntakeState.STOP),
+			funnelStateHandler.setState(FunnelState.STOP),
+			pivotStateHandler.setState(PivotState.PASSING),
+			flywheelStateHandler.setState(FlywheelState.PASSING),
+			elbowStateHandler.setState(ElbowState.IDLE),
+			wristStateHandler.setState(WristState.IN_ARM),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
 		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 	//@formatter:on

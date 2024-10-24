@@ -23,6 +23,13 @@ public class PoseEstimationMath {
 		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 	}
 
+	public static Twist2d rotateTwistToFitHeading(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d realHeading) {
+		Rotation2d headingDeference = realHeading.minus(currentGyroAngle);
+		double dx = headingDeference.getCos() * twist.dx - headingDeference.getSin() * twist.dy;
+		double dy = headingDeference.getSin() * twist.dx + headingDeference.getCos() * twist.dy;
+		return new Twist2d(dx, dy, twist.dtheta);
+	}
+
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
 		double[] combinedStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {

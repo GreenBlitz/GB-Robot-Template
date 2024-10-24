@@ -189,6 +189,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		updateGyroAnglesInLimeLight(observation.gyroAngle());
 		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
+		twist = PoseEstimationMath.rotateTwistToFitHeading(twist, observation.gyroAngle(), observation.gyroAngle().plus(headingOffset));
 		latestGyroAngle = observation.gyroAngle();
 		latestWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);

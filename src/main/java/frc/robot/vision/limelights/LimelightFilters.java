@@ -1,31 +1,31 @@
 package frc.robot.vision.limelights;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.vision.VisionRawData;
+import frc.robot.vision.RawVisionData;
 
 public class LimelightFilters {
 
 	//@formatter:off
 	protected static boolean keepLimelightData(
-		VisionRawData limelightRawData,
+		RawVisionData rawVisionData,
 		LimelightFiltersTolerances tolerances
 	) {
-		return LimelightFilters.isRollInTolerance(limelightRawData, tolerances.rollTolerance())
-			&& LimelightFilters.isPitchInTolerance(limelightRawData, tolerances.pitchTolerance())
-			&& LimelightFilters.isRobotOnGround(limelightRawData, tolerances.robotToGroundToleranceMeters());
+		return LimelightFilters.isRollInTolerance(rawVisionData, tolerances.rollTolerance())
+			&& LimelightFilters.isPitchInTolerance(rawVisionData, tolerances.pitchTolerance())
+			&& LimelightFilters.isRobotOnGround(rawVisionData, tolerances.robotToGroundToleranceMeters());
 	}
 	//@formatter:on
 
-	protected static boolean isPitchInTolerance(VisionRawData limelightRawData, Rotation2d pitchTolerance) {
-		return Math.abs(limelightRawData.estimatedPose().getRotation().getY()) <= pitchTolerance.getRadians();
+	protected static boolean isPitchInTolerance(RawVisionData rawVisionData, Rotation2d pitchTolerance) {
+		return Math.abs(rawVisionData.estimatedPose().getRotation().getY()) <= pitchTolerance.getRadians();
 	}
 
-	protected static boolean isRollInTolerance(VisionRawData limelightRawData, Rotation2d rollTolerance) {
-		return Math.abs(limelightRawData.estimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
+	protected static boolean isRollInTolerance(RawVisionData rawVisionData, Rotation2d rollTolerance) {
+		return Math.abs(rawVisionData.estimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
 	}
 
-	protected static boolean isRobotOnGround(VisionRawData limelightRawData, double robotToGroundToleranceMeters) {
-		return limelightRawData.estimatedPose().getZ() <= robotToGroundToleranceMeters;
+	protected static boolean isRobotOnGround(RawVisionData rawVisionData, double robotToGroundToleranceMeters) {
+		return rawVisionData.estimatedPose().getZ() <= robotToGroundToleranceMeters;
 	}
 
 }

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import frc.robot.poseestimator.helpers.ObservationCountHelper;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
@@ -23,6 +24,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
+	private final ObservationCountHelper<Rotation2d> headingCountHelper;
+	private final ObservationCountHelper<VisionObservation> poseCountHelper;
 	private final ILimelightFilterer limelightFilterer;
 	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
@@ -45,6 +48,14 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.headingCountHelper = new ObservationCountHelper<>(
+			limelightFilterer::getAllRobotHeadingEstimations,
+			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
+		);
+		this.poseCountHelper = new ObservationCountHelper<>(
+			limelightFilterer::getAllAvailableVisionObservations,
+			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
+		);
 		this.limelightFilterer = limelightFilterer;
 		this.kinematics = kinematics;
 		this.latestWheelPositions = initialWheelPositions;
@@ -81,18 +92,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private Optional<Rotation2d> getEstimatedRobotHeadingByVision() {
-		List<Rotation2d> stackedHeadingEstimations = limelightFilterer.getAllRobotHeadingEstimations();
-		List<Rotation2d> headingEstimation = stackedHeadingEstimations;
-		while (
-			stackedHeadingEstimations.size() < PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
-				&& !headingEstimation.isEmpty()
-		) {
-			if (!stackedHeadingEstimations.contains(headingEstimation.get(0))) {
-				stackedHeadingEstimations.addAll(headingEstimation);
-			}
-			headingEstimation = limelightFilterer.getAllRobotHeadingEstimations();
+		List<Rotation2d> stackedHeadings = headingCountHelper.getStackedObservations();
+		if (stackedHeadings.isEmpty()) {
+			return Optional.empty();
 		}
-		return PoseEstimationMath.calculateAngleAverage(stackedHeadingEstimations);
+		return PoseEstimationMath.calculateAngleAverage(stackedHeadings);
 	}
 
 	@Override
@@ -117,21 +121,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		List<VisionObservation> stackedVisionObservations = limelightFilterer.getAllAvailableVisionObservations();
-		List<VisionObservation> visionObservations = stackedVisionObservations;
-		while (
-			stackedVisionObservations.size() < PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
-				&& !visionObservations.isEmpty()
-		) {
-			if (!stackedVisionObservations.contains(visionObservations.get(0))) {
-				stackedVisionObservations.addAll(visionObservations);
-			}
-			visionObservations = limelightFilterer.getAllAvailableVisionObservations();
-		}
-		if (stackedVisionObservations.isEmpty()) {
+		List<VisionObservation> stackedObservations = poseCountHelper.getStackedObservations();
+		if (stackedObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedVisionObservations);
+		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedObservations);
 		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), latestGyroAngle.plus(headingOffset));
 		return Optional.of(visionPose);
 	}

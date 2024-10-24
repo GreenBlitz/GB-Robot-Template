@@ -54,15 +54,15 @@ public class SwerveCommandsBuilder {
 		sysIdCommand.getRequirements().clear();
 
 		return new SequentialCommandGroup(
-			pointWheels(new Rotation2d(), false),
-			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false).repeatedly())
+			pointWheels(new Rotation2d(), false, new Rotation2d(), new Rotation2d()),
+			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false, new Rotation2d(), new Rotation2d()).repeatedly())
 		).withName("Drive calibration");
 	}
 
 	//@formatter:off
-	public Command wheelRadiusCalibration() {
+	public Command wheelRadiusCalibration(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
 		return new SequentialCommandGroup(
-			pointWheelsInCircle(),
+			pointWheelsInCircle(angleTolerance, angleVelocityPerSecondDeadband, speedToleranceMetersPerSecond),
 			new WheelRadiusCharacterization(
 				swerve,
 				swerve.getConstants().driveRadiusMeters(),
@@ -80,32 +80,32 @@ public class SwerveCommandsBuilder {
 	//@formatter:on
 
 
-	public Command pointWheelsInX() {
+	public Command pointWheelsInX(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
 		return new FunctionalCommand(
 			() -> {},
 			() -> swerve.getModules().pointWheelsInX(SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop),
 			interrupted -> {},
-			swerve.getModules()::isAtTargetStates,
+			() -> swerve.getModules().isAtTargetStates(angleTolerance, angleVelocityPerSecondDeadband, speedToleranceMetersPerSecond),
 			swerve
 		).withName("Point wheels in X");
 	}
 
-	public Command pointWheelsInCircle() {
+	public Command pointWheelsInCircle(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
 		return new FunctionalCommand(
 			() -> {},
 			swerve.getModules()::pointWheelsInCircle,
 			interrupted -> {},
-			swerve.getModules()::isAtTargetAngles,
+			() -> swerve.getModules().isAtTargetStates(angleTolerance, angleVelocityPerSecondDeadband, speedToleranceMetersPerSecond),
 			swerve
 		).withName("Point wheels in circle");
 	}
 
-	public Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
+	public Command pointWheels(Rotation2d wheelsAngle, boolean optimize, Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband) {
 		return new FunctionalCommand(
 			() -> {},
 			() -> swerve.getModules().pointWheels(wheelsAngle, optimize),
 			interrupted -> {},
-			swerve.getModules()::isAtTargetAngles,
+			() -> swerve.getModules().isAtTargetAngles(angleTolerance, angleVelocityPerSecondDeadband),
 			swerve
 		).withName("Point wheels");
 	}

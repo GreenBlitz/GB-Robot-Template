@@ -16,8 +16,8 @@ public class Modules extends GBSubsystem {
 	private final ModulesCommandsBuilder commandsBuilder;
 
 	public Modules(String logPath, Module... modules) {
-        super(logPath + ModuleConstants.LOG_PATH_ADDITION);
-        this.modules = modules;
+		super(logPath + ModuleConstants.LOG_PATH_ADDITION);
+		this.modules = modules;
 		this.commandsBuilder = new ModulesCommandsBuilder(this);
 	}
 

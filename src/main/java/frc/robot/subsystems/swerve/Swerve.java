@@ -58,7 +58,7 @@ public class Swerve extends GBSubsystem {
 		updateInputs();
 	}
 
-	protected Modules getModules() {
+	public Modules getModules() {
 		return modules;
 	}
 

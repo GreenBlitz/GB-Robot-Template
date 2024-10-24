@@ -68,6 +68,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		getEstimatedRobotHeadingByVision().ifPresentOrElse(estimatedHeading -> {
 			headingOffset = estimatedHeading.minus(gyroAngle);
 			hasHeadingOffsetBeenInitialized = true;
+			estimatedPose = new Pose2d(estimatedPose.getTranslation(), estimatedHeading);
 		}, () -> headingOffset = new Rotation2d());
 	}
 	//@formatter:on
@@ -137,7 +138,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Pose2d getEstimatedPose() {
-		return new Pose2d(estimatedPose.getTranslation(), estimatedPose.getRotation().plus(headingOffset));
+		return estimatedPose;
 	}
 
 	@Override
@@ -180,11 +181,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				odometryPoseSample,
 				estimatedPose,
 				odometryPose,
-				latestGyroAngle,
-				latestGyroAngle.plus(headingOffset),
+				headingOffset,
 				odometryStandardDeviations
 			);
-			estimatedPose = new Pose2d(currentEstimation.getTranslation(), latestGyroAngle);
+			estimatedPose = new Pose2d(currentEstimation.getTranslation(), estimatedPose.getRotation().plus(headingOffset));
 			estimatedPoseInterpolator.addSample(TimeUtils.getCurrentTimeSeconds(), estimatedPose);
 		});
 	}
@@ -199,7 +199,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		latestGyroAngle = observation.gyroAngle();
 		latestWheelPositions = observation.wheelsPositions();
 		odometryPose = odometryPose.exp(twist);
-		twist = PoseEstimationMath.rotateTwistToFitHeading(twist, observation.gyroAngle(), observation.gyroAngle().plus(headingOffset));
+		twist = PoseEstimationMath.rotateTwistToFitHeading(twist, headingOffset);
 		estimatedPose = estimatedPose.exp(twist);
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}

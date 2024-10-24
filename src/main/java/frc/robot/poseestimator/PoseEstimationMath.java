@@ -23,19 +23,17 @@ public class PoseEstimationMath {
 		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 	}
 
-	public static Twist2d rotateTwistToFitHeading(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d realHeading) {
+	public static Twist2d rotateTwistToFitHeading(Twist2d twist, Rotation2d differenceFromHeadingToGyro) {
 		Transform2d rotatedTransform = rotateTransformToFitHeading(
 			new Transform2d(twist.dx, twist.dy, Rotation2d.fromRadians(twist.dtheta)),
-			currentGyroAngle,
-			realHeading
+			differenceFromHeadingToGyro
 		);
 		return new Twist2d(rotatedTransform.getX(), rotatedTransform.getY(), twist.dtheta);
 	}
 
-	public static Transform2d rotateTransformToFitHeading(Transform2d transform, Rotation2d currentGyroAngle, Rotation2d realHeading) {
-		Rotation2d headingDeference = realHeading.minus(currentGyroAngle);
-		double dx = headingDeference.getCos() * transform.getX() - headingDeference.getSin() * transform.getY();
-		double dy = headingDeference.getSin() * transform.getX() + headingDeference.getCos() * transform.getY();
+	public static Transform2d rotateTransformToFitHeading(Transform2d transform, Rotation2d differenceFromHeadingToGyro) {
+		double dx = differenceFromHeadingToGyro.getCos() * transform.getX() - differenceFromHeadingToGyro.getSin() * transform.getY();
+		double dy = differenceFromHeadingToGyro.getSin() * transform.getX() + differenceFromHeadingToGyro.getCos() * transform.getY();
 		return new Transform2d(dx, dy, transform.getRotation());
 	}
 
@@ -86,12 +84,11 @@ public class PoseEstimationMath {
 		Pose2d odometryInterpolatedPoseSample,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
-		Rotation2d currentGyroAngle,
-		Rotation2d realHeading,
+		Rotation2d differenceFromHeadingToGyro,
 		double[] odometryStandardDeviations
 	) {
 		Transform2d sampleDifferenceFromPose = new Transform2d(odometryPose, odometryInterpolatedPoseSample);
-		sampleDifferenceFromPose = rotateTransformToFitHeading(sampleDifferenceFromPose, currentGyroAngle, realHeading);
+		sampleDifferenceFromPose = rotateTransformToFitHeading(sampleDifferenceFromPose, differenceFromHeadingToGyro);
 		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
 	}
 

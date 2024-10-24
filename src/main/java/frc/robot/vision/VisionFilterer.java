@@ -1,4 +1,4 @@
-package frc.robot.vision.limelights;
+package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -6,22 +6,20 @@ import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.GyroAngleValues;
-import frc.robot.vision.MultiVisionSources;
-import frc.robot.vision.RawVisionData;
+import frc.robot.vision.limelights.IVisionFilterer;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer {
+public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 
 	private final MultiVisionSources multiVisionSources;
-	private final LimelightFiltererConfig config;
+	private final VisionFiltererConfig config;
 	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
-	public LimelightFilterer(LimelightFiltererConfig config, MultiVisionSources multiVisionSources) {
+	public VisionFilterer(VisionFiltererConfig config, MultiVisionSources multiVisionSources) {
 		super(config.logPath());
 
 		this.multiVisionSources = multiVisionSources;
@@ -48,7 +46,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (RawVisionData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
-			if (LimelightFilters.keepLimelightData(rawVisionData, config.limelightFiltersTolerances())) {
+			if (VisionFilters.keepVisionData(rawVisionData, config.VisionFiltersTolerances())) {
 				estimates.add(rawDataToObservation(rawVisionData));
 			}
 		}
@@ -72,7 +70,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			LimeLightConstants.VISION_STANDARD_DEVIATION_ANGLES};
+			VisionConstants.VISION_STANDARD_DEVIATION_ANGLES};
 
 		return new VisionObservation(rawVisionData.estimatedPose().toPose2d(), standardDeviations, rawVisionData.timestamp());
 	}
@@ -82,7 +80,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(
-				super.getLogPath() + LimeLightConstants.ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
+				super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
 				observations.get(i).robotPose()
 			);
 		}

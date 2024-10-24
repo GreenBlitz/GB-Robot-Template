@@ -8,7 +8,7 @@ import frc.robot.vision.GyroAngleValues;
 import java.util.List;
 import java.util.function.Function;
 
-public interface ILimelightFilterer {
+public interface IVisionFilterer {
 
 	List<Rotation2d> getAllRobotHeadingEstimations();
 

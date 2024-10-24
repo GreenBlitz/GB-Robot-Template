@@ -1,8 +1,8 @@
-package frc.robot.vision.limelights;
+package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class LimeLightConstants {
+public class VisionConstants {
 
 	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation/";
 
@@ -16,7 +16,7 @@ public class LimeLightConstants {
 
 	public static final double ROBOT_TO_GROUND_TOLERANCE_METERS = 0.2;
 
-	public final static LimelightFiltersTolerances DEFAULT_LIMELIGHT_FILTERS_TOLERANCES = new LimelightFiltersTolerances(
+	public final static VisionFiltersTolerances DEFAULT_VISION_FILTERS_TOLERANCES = new VisionFiltersTolerances(
 		ROLL_TOLERANCE,
 		PITCH_TOLERANCE,
 		ROBOT_TO_GROUND_TOLERANCE_METERS

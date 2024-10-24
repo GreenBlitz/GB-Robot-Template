@@ -1,18 +1,17 @@
-package frc.robot.vision.limelights;
+package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.vision.RawVisionData;
 
-public class LimelightFilters {
+public class VisionFilters {
 
 	//@formatter:off
-	protected static boolean keepLimelightData(
+	public static boolean keepVisionData(
 		RawVisionData rawVisionData,
-		LimelightFiltersTolerances tolerances
+		VisionFiltersTolerances tolerances
 	) {
-		return LimelightFilters.isRollInTolerance(rawVisionData, tolerances.rollTolerance())
-			&& LimelightFilters.isPitchInTolerance(rawVisionData, tolerances.pitchTolerance())
-			&& LimelightFilters.isRobotOnGround(rawVisionData, tolerances.robotToGroundToleranceMeters());
+		return VisionFilters.isRollInTolerance(rawVisionData, tolerances.rollTolerance())
+			&& VisionFilters.isPitchInTolerance(rawVisionData, tolerances.pitchTolerance())
+			&& VisionFilters.isRobotOnGround(rawVisionData, tolerances.robotToGroundToleranceMeters());
 	}
 	//@formatter:on
 

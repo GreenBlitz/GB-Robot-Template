@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.VisionConstants;
 import frc.utils.Conversions;
 import frc.utils.time.TimeUtils;
 
@@ -52,16 +53,15 @@ public class Limelight extends GBSubsystem {
 				gyroAngleValues.roll(),
 				gyroAngleValues.rollRate(),}
 		);
-		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		double[] robotPoseWithoutGyroInput = robotPoseForHeadingEntry
-			.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		double[] robotPoseWithoutGyroInput = robotPoseForHeadingEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 
 	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
-		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
-		if (id == LimeLightConstants.NO_APRILTAG_ID) {
+		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
+		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
 
@@ -98,8 +98,8 @@ public class Limelight extends GBSubsystem {
 	}
 
 	public Optional<Rotation2d> getRobotHeading() {
-		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
-		if (id == LimeLightConstants.NO_APRILTAG_ID) {
+		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
+		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
 		return Optional.of(robotHeading);

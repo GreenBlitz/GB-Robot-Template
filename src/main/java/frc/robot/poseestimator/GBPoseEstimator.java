@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
 import frc.robot.subsystems.GBSubsystem;
@@ -27,24 +26,16 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final ObservationCountHelper<Rotation2d> headingCountHelper;
 	private final ObservationCountHelper<VisionObservation> poseCountHelper;
 	private final IVisionFilterer visionFilterer;
-	private final SwerveDriveKinematics kinematics;
 	private final double[] odometryStandardDeviations;
+	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
 	private Pose2d estimatedPose;
-	private SwerveDriveWheelPositions latestWheelPositions;
-	private Rotation2d latestGyroAngle;
 	private Rotation2d headingOffset;
 	private boolean hasHeadingOffsetBeenInitialized;
+	private boolean hasEstimatedPoseBeenInitialized;
 	private boolean isRobotDisabled;
 
-	public GBPoseEstimator(
-		String logPath,
-		IVisionFilterer visionFilterer,
-		SwerveDriveKinematics kinematics,
-		SwerveDriveWheelPositions initialWheelPositions,
-		Rotation2d initialGyroAngle,
-		double[] odometryStandardDeviations
-	) {
+	public GBPoseEstimator(String logPath, IVisionFilterer visionFilterer, OdometryValues odometryValues, double[] odometryStandardDeviations) {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
@@ -57,17 +48,16 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
 		this.visionFilterer = visionFilterer;
-		this.kinematics = kinematics;
-		this.latestWheelPositions = initialWheelPositions;
-		this.latestGyroAngle = initialGyroAngle;
+		this.lastOdometryValues = odometryValues;
 		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.visionFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		this.hasHeadingOffsetBeenInitialized = false;
+		this.hasEstimatedPoseBeenInitialized = false;
 		this.isRobotDisabled = false;
 		setOdometryStandardDeviations(odometryStandardDeviations);
-		calculateHeadingOffset(initialGyroAngle);
+		calculateHeadingOffset(lastOdometryValues.gyroAngle());
+		this.estimatedPose = new Pose2d();
 		this.odometryPose = new Pose2d();
-		getVisionPose().ifPresentOrElse(calculatedPose -> this.estimatedPose = calculatedPose, () -> this.estimatedPose = new Pose2d());
 	}
 
 	public IVisionFilterer getVisionFilterer() {
@@ -75,19 +65,26 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	//@formatter:off
-	public void calculateHeadingOffset(Rotation2d gyroAngle) {
+	private void calculateHeadingOffset(Rotation2d gyroAngle) {
 		getEstimatedRobotHeadingByVision().ifPresentOrElse(estimatedHeading -> {
 			headingOffset = estimatedHeading.minus(gyroAngle);
 			hasHeadingOffsetBeenInitialized = true;
 			estimatedPose = new Pose2d(estimatedPose.getTranslation(), estimatedHeading);
 		}, () -> headingOffset = new Rotation2d());
 	}
+
+	private void calculateEstimatedPoseByVision() {
+		getVisionPose().ifPresentOrElse(visionEstimatedPose -> {
+			estimatedPose = visionEstimatedPose;
+			hasEstimatedPoseBeenInitialized = true;
+		}, () -> estimatedPose = new Pose2d());
+	}
 	//@formatter:on
 
 	@Override
 	public void resetHeadingOffset(Rotation2d newHeading) {
-		if (latestGyroAngle != null) {
-			headingOffset = newHeading.minus(latestGyroAngle);
+		if (lastOdometryValues.gyroAngle() != null) {
+			headingOffset = newHeading.minus(lastOdometryValues.gyroAngle());
 		}
 	}
 
@@ -108,8 +105,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
-		this.latestWheelPositions = wheelPositions;
-		this.latestGyroAngle = gyroAngle;
+		this.lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), wheelPositions, gyroAngle);
 		this.odometryPose = robotPose;
 		odometryPoseInterpolator.clear();
 	}
@@ -126,7 +122,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			return Optional.empty();
 		}
 		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedObservations);
-		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), latestGyroAngle.plus(headingOffset));
+		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), lastOdometryValues.gyroAngle().plus(headingOffset));
 		return Optional.of(visionPose);
 	}
 
@@ -188,10 +184,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			calculateHeadingOffset(observation.gyroAngle());
 		}
 		updateGyroAnglesInVisionSources(observation.gyroAngle());
-		Twist2d twist = kinematics.toTwist2d(latestWheelPositions, observation.wheelsPositions());
-		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), latestGyroAngle);
-		latestGyroAngle = observation.gyroAngle();
-		latestWheelPositions = observation.wheelsPositions();
+		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions(), observation.wheelsPositions());
+		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastOdometryValues.gyroAngle());
+		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelsPositions(), observation.gyroAngle());
 		odometryPose = odometryPose.exp(twist);
 		twist = PoseEstimationMath.rotateTwistToFitHeading(twist, headingOffset);
 		estimatedPose = estimatedPose.exp(twist);
@@ -209,18 +204,26 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
 	}
 
-	private void updateHeadingOffsetWhenEnabled() {
+	private void onEnabled() {
+		hasHeadingOffsetBeenInitialized = false;
+		hasEstimatedPoseBeenInitialized = false;
+	}
+
+	private void listenToEnabled() {
 		if (!isRobotDisabled && DriverStationUtils.isDisabled()) {
 			isRobotDisabled = true;
 		} else if (isRobotDisabled && !DriverStationUtils.isDisabled()) {
 			isRobotDisabled = false;
-			hasHeadingOffsetBeenInitialized = false;
+			onEnabled();
 		}
 	}
 
 	@Override
 	public void subsystemPeriodic() {
-		updateHeadingOffsetWhenEnabled();
+		listenToEnabled();
+		if (!hasEstimatedPoseBeenInitialized) {
+			calculateEstimatedPoseByVision();
+		}
 		updateVision(visionFilterer.getFilteredVisionObservations());
 	}
 

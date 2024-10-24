@@ -24,10 +24,19 @@ public class PoseEstimationMath {
 	}
 
 	public static Twist2d rotateTwistToFitHeading(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d realHeading) {
+		Transform2d rotatedTransform = rotateTransformToFitHeading(
+			new Transform2d(twist.dx, twist.dy, Rotation2d.fromRadians(twist.dtheta)),
+			currentGyroAngle,
+			realHeading
+		);
+		return new Twist2d(rotatedTransform.getX(), rotatedTransform.getY(), twist.dtheta);
+	}
+
+	public static Transform2d rotateTransformToFitHeading(Transform2d transform, Rotation2d currentGyroAngle, Rotation2d realHeading) {
 		Rotation2d headingDeference = realHeading.minus(currentGyroAngle);
-		double dx = headingDeference.getCos() * twist.dx - headingDeference.getSin() * twist.dy;
-		double dy = headingDeference.getSin() * twist.dx + headingDeference.getCos() * twist.dy;
-		return new Twist2d(dx, dy, twist.dtheta);
+		double dx = headingDeference.getCos() * transform.getX() - headingDeference.getSin() * transform.getY();
+		double dy = headingDeference.getSin() * transform.getX() + headingDeference.getCos() * transform.getY();
+		return new Transform2d(dx, dy, transform.getRotation());
 	}
 
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
@@ -77,9 +86,12 @@ public class PoseEstimationMath {
 		Pose2d odometryInterpolatedPoseSample,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
+		Rotation2d currentGyroAngle,
+		Rotation2d realHeading,
 		double[] odometryStandardDeviations
 	) {
 		Transform2d sampleDifferenceFromPose = new Transform2d(odometryPose, odometryInterpolatedPoseSample);
+		sampleDifferenceFromPose = rotateTransformToFitHeading(sampleDifferenceFromPose, currentGyroAngle, realHeading);
 		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
 	}
 

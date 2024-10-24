@@ -3,6 +3,8 @@ package frc.robot.vision.limelights;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.VisionRawData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +28,15 @@ public class MultiLimelights {
 		}
 	}
 
-	public List<LimelightRawData> getAllAvailableLimelightData() {
-		List<LimelightRawData> limelightsData = new ArrayList<>();
+	public List<VisionRawData> getAllAvailableLimelightData() {
+		List<VisionRawData> limelightsData = new ArrayList<>();
 
 		for (Limelight limelight : limelights) {
 			limelight.updateLimelight();
 			Optional<Pair<Pose3d, Double>> observation = limelight.getUpdatedPose3DEstimation();
 
 			if (observation.isPresent()) {
-				LimelightRawData limelightRawData = new LimelightRawData(
+				VisionRawData limelightRawData = new VisionRawData(
 					observation.get().getFirst(),
 					limelight.getAprilTagHeight(),
 					limelight.getDistanceFromAprilTag(),

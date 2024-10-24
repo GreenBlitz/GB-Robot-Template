@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.limelights.GyroAngleValues;
+import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;

@@ -6,6 +6,8 @@ import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.VisionRawData;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
+		for (VisionRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
 			if (LimelightFilters.keepLimelightData(limelightRawData, config.limelightFiltersTolerances())) {
 				estimates.add(rawDataToObservation(limelightRawData));
 			}
@@ -56,14 +58,14 @@ public class LimelightFilterer extends GBSubsystem implements ILimelightFilterer
 	public List<VisionObservation> getAllAvailableVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (LimelightRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
+		for (VisionRawData limelightRawData : multiLimelights.getAllAvailableLimelightData()) {
 			estimates.add(rawDataToObservation(limelightRawData));
 		}
 
 		return estimates;
 	}
 
-	private VisionObservation rawDataToObservation(LimelightRawData limelightRawData) {
+	private VisionObservation rawDataToObservation(VisionRawData limelightRawData) {
 		double[] standardTransformDeviations = PoseEstimationMath
 			.calculateStandardDeviationOfPose(limelightRawData, getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()));
 		double[] standardDeviations = new double[] {

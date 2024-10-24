@@ -1,4 +1,4 @@
-package frc.robot.vision.limelights;
+package frc.robot.vision;
 
 /**
  * a record represents the gyros angle passed into the limelight's NT tables, to the robot_orientation_set entry. its values found in

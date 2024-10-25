@@ -1,5 +1,6 @@
 package frc.robot.vision.sources;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.GyroAngleValues;
 
@@ -14,5 +15,7 @@ public interface VisionSource<VisionData> {
 	Optional<VisionData> getAllData();
 
 	Optional<Rotation2d> getRobotHeading();
+
+	void updateCurrentEstimatedPose(Pose2d estimatedPose);
 
 }

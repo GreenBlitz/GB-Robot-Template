@@ -1,6 +1,7 @@
 package frc.robot.vision.sources;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -113,6 +114,11 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawVisi
 			return Optional.empty();
 		}
 		return Optional.of(robotHeading);
+	}
+
+	@Override
+	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {
+
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {

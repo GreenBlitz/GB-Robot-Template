@@ -63,8 +63,10 @@ public class Modules extends GBSubsystem {
 	}
 
 
-	public void setSteersVoltage(ModuleUtils.ModulePosition module, double voltage) {
-		modules[module.getIndex()].setSteerVoltage(voltage);
+	public void setSteersVoltage(double voltage) {
+		for (Module module : modules) {
+			module.setSteerVoltage(voltage);
+		}
 	}
 
 	public void setDrivesVoltage(double voltage) {

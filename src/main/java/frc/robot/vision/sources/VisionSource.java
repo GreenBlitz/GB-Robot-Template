@@ -1,6 +1,7 @@
-package frc.robot.vision;
+package frc.robot.vision.sources;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.vision.GyroAngleValues;
 
 import java.util.Optional;
 

@@ -6,7 +6,6 @@ import frc.robot.poseestimator.PoseArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.limelights.IVisionFilterer;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;

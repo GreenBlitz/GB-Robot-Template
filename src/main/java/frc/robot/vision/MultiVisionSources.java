@@ -1,6 +1,8 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.vision.sources.VisionSource;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

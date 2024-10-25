@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.GyroAngleValues;
-import frc.robot.vision.limelights.IVisionFilterer;
+import frc.robot.vision.IVisionFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.DriverStationUtils;
@@ -151,7 +151,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		for (OdometryObservation observation : odometryObservations) {
 			addOdometryObservation(observation);
 		}
-		logEstimatedPose();
 	}
 
 	private boolean isObservationTooOld(VisionObservation visionObservation) {
@@ -225,6 +224,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			calculateEstimatedPoseByVision();
 		}
 		updateVision(visionFilterer.getFilteredVisionObservations());
+		logEstimatedPose();
 	}
 
 }

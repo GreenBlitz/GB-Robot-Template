@@ -6,6 +6,8 @@ public class VisionConstants {
 
 	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation/";
 
+	public static final String SOURCE_LOGPATH = "VisionSource/";
+
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 7;
 
 	public static final int NO_APRILTAG_ID = -1;

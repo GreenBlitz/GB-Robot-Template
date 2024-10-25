@@ -1,9 +1,8 @@
-package frc.robot.vision.limelights;
+package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.GyroAngleValues;
 
 import java.util.List;
 import java.util.function.Function;

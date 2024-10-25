@@ -1,4 +1,4 @@
-package frc.robot.vision.limelights;
+package frc.robot.vision.sources;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -10,7 +10,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.RawVisionData;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.VisionSource;
+import frc.robot.vision.limelights.LimelightEntryValue;
 import frc.utils.Conversions;
 import frc.utils.time.TimeUtils;
 

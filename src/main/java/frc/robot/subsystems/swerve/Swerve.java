@@ -23,7 +23,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-
 public class Swerve extends GBSubsystem {
 
 	private final SwerveConstants constants;

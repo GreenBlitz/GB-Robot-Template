@@ -35,15 +35,13 @@ public class Swerve extends GBSubsystem {
 	private final SwerveCommandsBuilder commandsBuilder;
 
 	private SwerveState currentState;
-	private SwerveState savedState;
 	private SwerveStateHelper stateHelper;
 	private Supplier<Rotation2d> headingSupplier;
 
 
 	public Swerve(SwerveConstants constants, Modules modules, GyroStuff gyroStuff) {
 		super(constants.logPath());
-		this.savedState = new SwerveState(SwerveState.DEFAULT_DRIVE);
-		this.currentState = new SwerveState(savedState);
+		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
 		this.modules = modules;
@@ -107,11 +105,6 @@ public class Swerve extends GBSubsystem {
 		constants.xMetersPIDController().reset();
 		constants.yMetersPIDController().reset();
 		constants.rotationDegreesPIDController().reset();
-	}
-
-
-	public void saveState(SwerveState state) {
-		savedState = state;
 	}
 
 	public void updateStatus() {
@@ -229,12 +222,6 @@ public class Swerve extends GBSubsystem {
 		driveByState(targetSpeeds, swerveState);
 	}
 	//@formatter:on
-
-
-	protected void driveBySavedState(double xPower, double yPower, double rotationPower) {
-		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(xPower, yPower, rotationPower, constants);
-		driveByState(speedsFromPowers, savedState);
-	}
 
 	protected void driveByState(double xPower, double yPower, double rotationPower, SwerveState swerveState) {
 		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(xPower, yPower, rotationPower, constants);

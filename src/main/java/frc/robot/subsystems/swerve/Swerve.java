@@ -10,7 +10,7 @@ import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.gyro.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.structures.SuperStructureConstants;
+import frc.robot.structures.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
@@ -291,10 +291,10 @@ public class Swerve extends GBSubsystem {
 
 	public boolean isAtHeading(Rotation2d targetHeading) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
-		boolean isAtHeading = headingDeltaDegrees < SuperStructureConstants.HEADING_TOLERANCE.getDegrees();
+		boolean isAtHeading = headingDeltaDegrees < Tolerances.SWERVE_HEADING.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < SuperStructureConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < Tolerances.ROTATION_VELOCITY_DEADBAND.getRadians();
 
 		return isAtHeading && isStopping;
 	}

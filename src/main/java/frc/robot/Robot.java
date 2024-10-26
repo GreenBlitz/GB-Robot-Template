@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimation.PoseEstimator;
-import frc.robot.structures.SuperStructure;
+import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -29,7 +29,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
-	private final SuperStructure superStructure;
+	private final Superstructure superStructure;
 
 	public Robot() {
 		this.swerve = new Swerve(
@@ -42,7 +42,7 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
 
-		this.superStructure = new SuperStructure(swerve, poseEstimator);
+		this.superStructure = new Superstructure(swerve, poseEstimator);
 
 		buildPathPlannerForAuto();
 		configureBindings();
@@ -62,7 +62,7 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-	public SuperStructure getSuperStructure() {
+	public Superstructure getSuperStructure() {
 		return superStructure;
 	}
 

@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
@@ -142,21 +141,10 @@ public class Robot {
 
 	private void configPathPlanner() {
 		// Register commands..
-		PathPlannerUtils.registerCommand(
-			RobotState.INTAKE_WITH_FLYWHEEL.name(),
-			new SequentialCommandGroup(
-				superstructure.enableChangeStateAutomatically(false),
-				superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL).until(superstructure::isEnableChangeStateAutomatically)
-			)
-		);
+
+		PathPlannerUtils.registerCommand(RobotState.INTAKE_WITH_FLYWHEEL.name(), superstructure.setState(RobotState.INTAKE_WITH_FLYWHEEL));
 		PathPlannerUtils.registerCommand(RobotState.PRE_SPEAKER.name(), superstructure.setState(RobotState.PRE_SPEAKER));
-		PathPlannerUtils.registerCommand(
-			RobotState.SPEAKER.name(),
-			new SequentialCommandGroup(
-				superstructure.enableChangeStateAutomatically(false),
-				superstructure.setState(RobotState.SPEAKER).until(superstructure::isEnableChangeStateAutomatically)
-			)
-		);
+		PathPlannerUtils.registerCommand(RobotState.SPEAKER.name(), superstructure.setState(RobotState.SPEAKER));
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {});
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");

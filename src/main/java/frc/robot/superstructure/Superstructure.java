@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.JoysticksBindings;
 import frc.robot.Robot;
 import frc.robot.constants.Field;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.elbow.ElbowState;
 import frc.robot.subsystems.elbow.ElbowStateHandler;
 import frc.robot.subsystems.flywheel.FlywheelState;
@@ -31,11 +32,18 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
-public class Superstructure {
+public class Superstructure extends GBSubsystem {
+
+	private interface RobotCommandGenerator {
+
+		Command makeRobotCommand(Command command);
+
+	}
+
+	private final RobotCommandGenerator robotCommandGenerator = command -> { command.addRequirements(this); return command; };
 
 	private static final double NOTE_IN_RUMBLE_POWER = 0.5;
 
-	private final String logPath;
 	private final Robot robot;
 	private final Swerve swerve;
 	private final ElbowStateHandler elbowStateHandler;
@@ -45,11 +53,12 @@ public class Superstructure {
 	private final PivotStateHandler pivotStateHandler;
 	private final RollerStateHandler rollerStateHandler;
 	private final WristStateHandler wristStateHandler;
+	private final EndBehaviorManager endBehaviorManager;
 
 	private RobotState currentState;
-	private boolean enableChangeStateAutomatically;
 
 	public Superstructure(String logPath, Robot robot) {
+		super(logPath);
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.elbowStateHandler = new ElbowStateHandler(robot.getElbow());
@@ -60,23 +69,17 @@ public class Superstructure {
 		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
 		this.wristStateHandler = new WristStateHandler(robot.getWrist());
 
-		this.logPath = logPath;
-		this.enableChangeStateAutomatically = true;
+		this.endBehaviorManager = new EndBehaviorManager(this);
+		setDefaultCommand(endBehaviorManager.endState(currentState).asProxy()); // todo - test
 	}
 
 	public RobotState getCurrentState() {
 		return currentState;
 	}
 
-	public boolean isEnableChangeStateAutomatically() {
-		return enableChangeStateAutomatically;
-	}
-
 	public void logStatus() {
-		Logger.recordOutput(logPath + "CurrentState", currentState);
-		Logger.recordOutput(logPath + "EnableChangeStateAutomatically", enableChangeStateAutomatically);
+		Logger.recordOutput(getLogPath() + "CurrentState", currentState);
 	}
-
 
 	private boolean isObjectInRoller() {
 		return robot.getRoller().isObjectIn();
@@ -147,10 +150,6 @@ public class Superstructure {
 		return new InstantCommand(() -> currentState = state);
 	}
 
-	public Command enableChangeStateAutomatically(boolean enable) {
-		return new InstantCommand(() -> enableChangeStateAutomatically = enable);
-	}
-
 	private Command noteInRumble() {
 		SmartJoystick mainJoystick = JoysticksBindings.getMainJoystick();
 		return new FunctionalCommand(
@@ -162,28 +161,27 @@ public class Superstructure {
 	}
 
 	public Command setState(RobotState state) {
-		return switch (state) {
+		return robotCommandGenerator.makeRobotCommand(switch (state) {
 			case IDLE -> idle();
 			case INTAKE -> intake();
 			case INTAKE_WITH_FLYWHEEL -> intakeWithFlywheel();
 			case ARM_INTAKE -> armIntake();
 			case PRE_SPEAKER -> preSpeaker();
 			case SPEAKER -> speaker();
-			case SPEAKER_MANUAL_PIVOT -> speakerManualPivot();
 			case PRE_AMP -> preAMP();
 			case AMP -> amp();
+			case ARM_UP -> armUp();
 			case TRANSFER_SHOOTER_TO_ARM -> transferShooterToArm();
 			case TRANSFER_ARM_TO_SHOOTER -> transferArmToShooter();
 			case INTAKE_OUTTAKE -> intakeOuttake();
 			case ARM_OUTTAKE -> armOuttake();
 			case PASSING -> passing();
-		};
+		});
 	}
 
 	//@formatter:off
 	private Command idle() {
 		return new ParallelCommandGroup(
-			enableChangeStateAutomatically(true),
 			setCurrentStateName(RobotState.IDLE),
 			rollerStateHandler.setState(RollerState.MANUAL),
 			intakeStateHandler.setState(IntakeState.STOP),
@@ -193,13 +191,11 @@ public class Superstructure {
 			elbowStateHandler.setState(ElbowState.IDLE),
 			wristStateHandler.setState(WristState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command intake() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.INTAKE),
-			enableChangeStateAutomatically(false),
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE),
@@ -211,26 +207,19 @@ public class Superstructure {
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
 					funnelStateHandler.setState(FunnelState.INTAKE),
 					rollerStateHandler.setState(RollerState.ROLL_IN)
-				).until(this::isObjectInFunnel),
-				enableChangeStateAutomatically(true),
-				new ParallelCommandGroup(
-					intakeStateHandler.setState(IntakeState.STOP),
-					rollerStateHandler.setState(RollerState.STOP),
-					funnelStateHandler.setState(FunnelState.STOP)
-				)
+				).until(this::isObjectInFunnel)
 			),
+			setCurrentStateName(RobotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			pivotStateHandler.setState(PivotState.IDLE),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command intakeWithFlywheel() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.INTAKE),
-			enableChangeStateAutomatically(false),
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE),
@@ -242,26 +231,19 @@ public class Superstructure {
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
 					funnelStateHandler.setState(FunnelState.INTAKE),
 					rollerStateHandler.setState(RollerState.ROLL_IN)
-				).until(this::isObjectInFunnel),
-				enableChangeStateAutomatically(true),
-				new ParallelCommandGroup(
-					intakeStateHandler.setState(IntakeState.STOP),
-					rollerStateHandler.setState(RollerState.STOP),
-					funnelStateHandler.setState(FunnelState.STOP)
-				)
+				).until(this::isObjectInFunnel)
 			),
+			setCurrentStateName(RobotState.INTAKE_WITH_FLYWHEEL),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			pivotStateHandler.setState(PivotState.IDLE),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command armIntake() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.ARM_INTAKE),
-			enableChangeStateAutomatically(false),
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStateHandler.setState(IntakeState.INTAKE),
@@ -281,25 +263,18 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.SLOW_INTAKE),
 					wristStateHandler.setState(WristState.DEFAULT)
 				).withTimeout(Timeouts.WRIST_TO_POSITION_SECONDS)
-				 .until(() -> robot.getWrist().isAtPosition(WristState.DEFAULT.getPosition(), Tolerances.WRIST_POSITION)),
-				enableChangeStateAutomatically(true),
-				new ParallelCommandGroup(
-					intakeStateHandler.setState(IntakeState.STOP),
-					rollerStateHandler.setState(RollerState.STOP),
-					funnelStateHandler.setState(FunnelState.STOP),
-					wristStateHandler.setState(WristState.DEFAULT)
-				)
+				 .until(() -> robot.getWrist().isAtPosition(WristState.DEFAULT.getPosition(), Tolerances.WRIST_POSITION))
 			),
+			setCurrentStateName(RobotState.ARM_INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			pivotStateHandler.setState(PivotState.ARM_INTAKE),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command preSpeaker() {
 		return new ParallelCommandGroup(
-			enableChangeStateAutomatically(true),
 			setCurrentStateName(RobotState.PRE_SPEAKER),
 			rollerStateHandler.setState(RollerState.STOP),
 			intakeStateHandler.setState(IntakeState.STOP),
@@ -309,13 +284,11 @@ public class Superstructure {
 			elbowStateHandler.setState(ElbowState.IDLE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command speaker() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.SPEAKER),
-			enableChangeStateAutomatically(false),
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
@@ -324,54 +297,21 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.SHOOT),
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL)
-				).until(() -> !isObjectInFunnel()),
-				enableChangeStateAutomatically(true),
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.STOP),
-					intakeStateHandler.setState(IntakeState.STOP)
-				)
+				).until(() -> !isObjectInFunnel())
 			),
+			setCurrentStateName(RobotState.SPEAKER),
 			rollerStateHandler.setState(RollerState.STOP),
 			pivotStateHandler.setState(PivotState.INTERPOLATE),
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
-	}
-
-	private Command speakerManualPivot() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.SPEAKER_MANUAL_PIVOT),
-			enableChangeStateAutomatically(false),
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.STOP),
-					intakeStateHandler.setState(IntakeState.STOP)
-				).until(this::isReadyToShootInterpolation),
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.SHOOT),
-					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL)
-				).until(() -> !isObjectInFunnel()),
-				enableChangeStateAutomatically(true),
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.STOP),
-					intakeStateHandler.setState(IntakeState.STOP)
-				)
-			),
-			rollerStateHandler.setState(RollerState.STOP),
-			pivotStateHandler.setState(PivotState.MANUAL),
-			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
-			elbowStateHandler.setState(ElbowState.INTAKE),
-			wristStateHandler.setState(WristState.IN_ARM),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command preAMP() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.PRE_AMP),
-			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
@@ -391,13 +331,11 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.IDLE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT)
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command amp() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.AMP),
-			enableChangeStateAutomatically(false),
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
@@ -413,23 +351,31 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStateHandler.setState(IntakeState.STOP),
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
-				).withTimeout(Timeouts.AMP_RELEASE_SECONDS),//.until(() -> !isObjectInRoller())
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.STOP),
-					rollerStateHandler.setState(RollerState.STOP),
-					intakeStateHandler.setState(IntakeState.STOP)
-				)
+				).withTimeout(Timeouts.AMP_RELEASE_SECONDS)//.until(() -> !isObjectInRoller())
 			),
+			setCurrentStateName(RobotState.AMP),
 			pivotStateHandler.setState(PivotState.IDLE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT)
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
+	}
+
+	private Command armUp() {
+		return new ParallelCommandGroup(
+			setCurrentStateName(RobotState.IDLE),
+			rollerStateHandler.setState(RollerState.MANUAL),
+			intakeStateHandler.setState(IntakeState.STOP),
+			funnelStateHandler.setState(FunnelState.MANUAL),
+			pivotStateHandler.setState(PivotState.IDLE),
+			flywheelStateHandler.setState(FlywheelState.DEFAULT),
+			elbowStateHandler.setState(ElbowState.PRE_AMP),
+			wristStateHandler.setState(WristState.DEFAULT),
+			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+		);
 	}
 
 	private Command transferShooterToArm() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.TRANSFER_SHOOTER_TO_ARM),
-			enableChangeStateAutomatically(false),
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					pivotStateHandler.setState(PivotState.TRANSFER),
@@ -444,26 +390,18 @@ public class Superstructure {
 				new ParallelDeadlineGroup(
 					rollerStateHandler.setState(RollerState.AFTER_INTAKE),
 					funnelStateHandler.setState(FunnelState.TRANSFER_TO_ARM)
-				).withTimeout(Timeouts.INTAKE_ARM_1_ROTATION_SECONDS),
-				enableChangeStateAutomatically(true),
-				new ParallelCommandGroup(
-					rollerStateHandler.setState(RollerState.STOP),
-					funnelStateHandler.setState(FunnelState.STOP),
-					pivotStateHandler.setState(PivotState.IDLE),
-					elbowStateHandler.setState(ElbowState.IDLE)
-				)
+				).withTimeout(Timeouts.INTAKE_ARM_1_ROTATION_SECONDS)
 			),
+			setCurrentStateName(RobotState.TRANSFER_SHOOTER_TO_ARM),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			intakeStateHandler.setState(IntakeState.STOP),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command transferArmToShooter() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.TRANSFER_ARM_TO_SHOOTER),
-			enableChangeStateAutomatically(false),
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					pivotStateHandler.setState(PivotState.TRANSFER),
@@ -476,25 +414,17 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.INTAKE),
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL),
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
-				).until(this::isObjectInFunnel),
-				enableChangeStateAutomatically(true),
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.STOP),
-					intakeStateHandler.setState(IntakeState.STOP),
-					rollerStateHandler.setState(RollerState.STOP),
-					pivotStateHandler.setState(PivotState.IDLE),
-					elbowStateHandler.setState(ElbowState.IDLE)
-				)
+				).until(this::isObjectInFunnel)
 			),
+			setCurrentStateName(RobotState.TRANSFER_ARM_TO_SHOOTER),
 			wristStateHandler.setState(WristState.IN_ARM),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command intakeOuttake() {
 		return new ParallelCommandGroup(
-			enableChangeStateAutomatically(true),
 			setCurrentStateName(RobotState.INTAKE_OUTTAKE),
 			rollerStateHandler.setState(RollerState.ROLL_OUT),
 			intakeStateHandler.setState(IntakeState.OUTTAKE),
@@ -504,12 +434,11 @@ public class Superstructure {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command armOuttake() {
 		return new ParallelCommandGroup(
-			enableChangeStateAutomatically(true),
 			setCurrentStateName(RobotState.ARM_OUTTAKE),
 			rollerStateHandler.setState(RollerState.FAST_ROLL_IN),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
@@ -519,14 +448,12 @@ public class Superstructure {
 			pivotStateHandler.setState(PivotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	private Command passing() {
-		return new ParallelCommandGroup(
-			setCurrentStateName(RobotState.SPEAKER),
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
-				enableChangeStateAutomatically(false),
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStateHandler.setState(IntakeState.STOP)
@@ -534,20 +461,16 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.SHOOT),
 					intakeStateHandler.setState(IntakeState.INTAKE_WITH_FUNNEL)
-				).until(() -> !isObjectInFunnel()),
-				enableChangeStateAutomatically(true),
-				new ParallelCommandGroup(
-					funnelStateHandler.setState(FunnelState.STOP),
-					intakeStateHandler.setState(IntakeState.STOP)
-				)
+				).until(() -> !isObjectInFunnel())
 			),
+			setCurrentStateName(RobotState.SPEAKER),
 			rollerStateHandler.setState(RollerState.STOP),
 			pivotStateHandler.setState(PivotState.PASSING),
 			flywheelStateHandler.setState(FlywheelState.PASSING),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.PASS))
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 	//@formatter:on
 

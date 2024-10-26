@@ -20,3 +20,25 @@ else
 fi
 
 echo "*********************************************************"
+
+branch_name=$(git rev-parse --abbrev-ref HEAD) # Save current branch name
+[[ "$branch_name" == *-test ]] || exit 0 # Check if test branch
+dev_branch="${branch_name%-test}" # Save dev branch name
+
+# Check if the dev branch exists
+git show-ref --verify --quiet "refs/heads/$dev_branch" || {
+  echo "Branch $dev_branch does not exist"
+  exit 0
+}
+
+echo "Checking if up to date with dev branch..."
+echo "---------------------------------------------------------"
+
+# Check if branches are up-to-date
+if git merge-base --is-ancestor "$dev_branch" "$branch_name"; then
+  echo -e "${GREEN}Already up-to-date with branch $dev_branch${NO_COLOR}"
+else
+  echo -e "${RED}$branch_name is not up-to-date with branch $dev_branch${NO_COLOR}"
+fi
+
+echo "*********************************************************"

@@ -4,11 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 
@@ -37,41 +35,7 @@ public class SwerveStateHelper {
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		return switch (swerveState.getAimAssist()) {
 			case NONE -> speeds;
-			case SPEAKER -> handleSpeakerAssist(speeds, robotPoseSupplier.get());
-			case NOTE -> handleNoteAimAssist(speeds, robotPoseSupplier.get(), noteTranslationSupplier.get(), swerveState);
-			case AMP -> handleAmpAssist(speeds, robotPoseSupplier.get());
 		};
-	}
-
-	private ChassisSpeeds handleNoteAimAssist(
-		ChassisSpeeds speeds,
-		Optional<Pose2d> optionalRobotPose,
-		Optional<Translation2d> optionalNoteTranslation,
-		SwerveState swerveState
-	) {
-		if (optionalRobotPose.isEmpty() || optionalNoteTranslation.isEmpty()) {
-			return speeds;
-		}
-		return AimAssistMath
-			.getObjectAssistedSpeeds(speeds, optionalRobotPose.get(), optionalNoteTranslation.get(), swerveConstants, swerveState);
-	}
-
-	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Optional<Pose2d> optionalRobotPose) {
-		Rotation2d robotHeading = optionalRobotPose.isPresent() ? optionalRobotPose.get().getRotation() : swerve.getAbsoluteHeading();
-		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, Field.getAngleToAmp(), swerveConstants);
-	}
-
-	private ChassisSpeeds handleSpeakerAssist(ChassisSpeeds speeds, Optional<Pose2d> optionalRobotPose) {
-		if (optionalRobotPose.isEmpty()) {
-			return speeds;
-		}
-		Pose2d robotPose = optionalRobotPose.get();
-		return AimAssistMath.getRotationAssistedChassisSpeeds(
-			speeds,
-			robotPose.getRotation(),
-			SwerveMath.getRelativeTranslation(robotPose.getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle(),
-			swerveConstants
-		);
 	}
 
 

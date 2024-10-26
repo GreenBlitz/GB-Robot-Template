@@ -27,6 +27,7 @@ import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.wrist.WristState;
 import frc.robot.subsystems.wrist.WristStateHandler;
+import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.SmartJoystick;
 import org.littletonrobotics.junction.Logger;
 
@@ -57,6 +58,7 @@ public class Superstructure extends GBSubsystem {
 	private final RollerStateHandler rollerStateHandler;
 	private final WristStateHandler wristStateHandler;
 	private final EndBehaviorManager endBehaviorManager;
+	private final SmartJoystick mainJoystick;
 
 	private RobotState currentState;
 
@@ -71,6 +73,7 @@ public class Superstructure extends GBSubsystem {
 		this.pivotStateHandler = new PivotStateHandler(robot.getPivot(), Optional.of(() -> robot.getPoseEstimator().getEstimatedPose()));
 		this.rollerStateHandler = new RollerStateHandler(robot.getRoller());
 		this.wristStateHandler = new WristStateHandler(robot.getWrist());
+		this.mainJoystick = JoysticksBindings.getMainJoystick();
 
 		this.endBehaviorManager = new EndBehaviorManager(this);
 		setDefaultCommand(endBehaviorManager.endState(currentState).asProxy()); // todo - test
@@ -163,6 +166,16 @@ public class Superstructure extends GBSubsystem {
 		).withTimeout(Timeouts.NOTE_IN_RUMBLE);
 	}
 
+	private Command driveByMainJoystick(SwerveState state) {
+		return swerve.getCommandsBuilder()
+			.driveState(
+				() -> mainJoystick.getAxisValue(Axis.LEFT_Y),
+				() -> mainJoystick.getAxisValue(Axis.LEFT_X),
+				() -> mainJoystick.getAxisValue(Axis.RIGHT_X),
+				state
+			);
+	}
+
 	public Command setState(RobotState state) {
 		return robotCommandGenerator.makeRobotCommand(switch (state) {
 			case IDLE -> idle();
@@ -192,7 +205,7 @@ public class Superstructure extends GBSubsystem {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elbowStateHandler.setState(ElbowState.IDLE),
 			wristStateHandler.setState(WristState.DEFAULT),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE)
 		);
 	}
 
@@ -215,7 +228,7 @@ public class Superstructure extends GBSubsystem {
 			pivotStateHandler.setState(PivotState.IDLE),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
 		);
 	}
 
@@ -238,7 +251,7 @@ public class Superstructure extends GBSubsystem {
 			pivotStateHandler.setState(PivotState.IDLE),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
 		);
 	}
 
@@ -268,7 +281,7 @@ public class Superstructure extends GBSubsystem {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			pivotStateHandler.setState(PivotState.ARM_INTAKE),
 			elbowStateHandler.setState(ElbowState.ARM_INTAKE),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NOTE))
 		);
 	}
 
@@ -281,7 +294,7 @@ public class Superstructure extends GBSubsystem {
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.IDLE),
 			wristStateHandler.setState(WristState.IN_ARM),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		);
 	}
 
@@ -302,7 +315,7 @@ public class Superstructure extends GBSubsystem {
 			flywheelStateHandler.setState(FlywheelState.PRE_SPEAKER),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER))
 		);
 	}
 
@@ -310,7 +323,6 @@ public class Superstructure extends GBSubsystem {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 					funnelStateHandler.setState(FunnelState.STOP)
 				).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
 				new ParallelCommandGroup(
@@ -323,6 +335,7 @@ public class Superstructure extends GBSubsystem {
 					intakeStateHandler.setState(IntakeState.STOP)
 				)
 			),
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 			rollerStateHandler.setState(RollerState.STOP),
 			pivotStateHandler.setState(PivotState.IDLE),
 			wristStateHandler.setState(WristState.IN_ARM),
@@ -335,8 +348,7 @@ public class Superstructure extends GBSubsystem {
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
-					rollerStateHandler.setState(RollerState.STOP),
-					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP))
+					rollerStateHandler.setState(RollerState.STOP)
 				).until(() -> swerve.isAtHeading(Field.getAngleToAmp())),
 				new ParallelCommandGroup(
 					elbowStateHandler.setState(ElbowState.PRE_AMP),
@@ -349,6 +361,7 @@ public class Superstructure extends GBSubsystem {
 					rollerStateHandler.setState(RollerState.ROLL_OUT)
 				).withTimeout(Timeouts.AMP_RELEASE_SECONDS)//.until(() -> !isObjectInRoller())
 			),
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 			pivotStateHandler.setState(PivotState.IDLE),
 			wristStateHandler.setState(WristState.IN_ARM),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT)
@@ -364,7 +377,7 @@ public class Superstructure extends GBSubsystem {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elbowStateHandler.setState(ElbowState.PRE_AMP),
 			wristStateHandler.setState(WristState.DEFAULT),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE)
 		);
 	}
 
@@ -389,7 +402,7 @@ public class Superstructure extends GBSubsystem {
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			intakeStateHandler.setState(IntakeState.STOP),
 			wristStateHandler.setState(WristState.IN_ARM),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE)
 		);
 	}
 
@@ -411,7 +424,7 @@ public class Superstructure extends GBSubsystem {
 			),
 			wristStateHandler.setState(WristState.IN_ARM),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE)
 		);
 	}
 
@@ -424,7 +437,7 @@ public class Superstructure extends GBSubsystem {
 			elbowStateHandler.setState(ElbowState.MANUAL),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			wristStateHandler.setState(WristState.IN_ARM),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE)
 		);
 	}
 
@@ -437,7 +450,7 @@ public class Superstructure extends GBSubsystem {
 			funnelStateHandler.setState(FunnelState.SLOW_OUTTAKE),
 			pivotStateHandler.setState(PivotState.INTAKE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE)
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE)
 		);
 	}
 
@@ -458,7 +471,7 @@ public class Superstructure extends GBSubsystem {
 			flywheelStateHandler.setState(FlywheelState.PASSING),
 			elbowStateHandler.setState(ElbowState.INTAKE),
 			wristStateHandler.setState(WristState.IN_ARM),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.PASS))
+			driveByMainJoystick(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.PASS))
 		);
 	}
 	//@formatter:on

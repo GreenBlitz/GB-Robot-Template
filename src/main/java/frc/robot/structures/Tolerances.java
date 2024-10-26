@@ -1,4 +1,4 @@
-package frc.robot.superstructure;
+package frc.robot.structures;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

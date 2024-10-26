@@ -143,18 +143,6 @@ public class SwerveCommandsBuilder {
 		).withName("Drive with state");
 	}
 
-	public Command driveBySavedState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
-		return new InitExecuteCommand(
-			swerve::resetPIDControllers,
-			() -> swerve.driveBySavedState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble()),
-			swerve
-		).withName("Drive with saved state");
-	}
-
-	public Command saveState(SwerveState state) {
-		return new InstantCommand(() -> swerve.saveState(state));
-	}
-
 
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, Function<Pose2d, Boolean> isAtPose) {
 		return new DeferredCommand(

@@ -75,6 +75,7 @@ public class Superstructure extends GBSubsystem {
 		this.wristStateHandler = new WristStateHandler(robot.getWrist());
 		this.mainJoystick = JoysticksBindings.getMainJoystick();
 
+		this.currentState = RobotState.IDLE;
 		this.endBehaviorManager = new EndBehaviorManager(this);
 		setDefaultCommand(endBehaviorManager.endState(currentState).asProxy()); // todo - test
 	}

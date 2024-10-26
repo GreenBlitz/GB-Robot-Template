@@ -6,12 +6,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class SuperStructure {
+public class Superstructure {
 
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 
-	public SuperStructure(Swerve swerve, PoseEstimator poseEstimator) {
+	public Superstructure(Swerve swerve, PoseEstimator poseEstimator) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
 	}

@@ -90,7 +90,8 @@ public class SwerveCommandsBuilder {
 		).withName("Point wheels in X");
 	}
 
-	public Command pointWheelsInCircle(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
+	public Command
+		pointWheelsInCircle(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
 		return new FunctionalCommand(
 			() -> {},
 			swerve.getModules()::pointWheelsInCircle,

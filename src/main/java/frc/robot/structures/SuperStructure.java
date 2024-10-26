@@ -25,8 +25,8 @@ public class SuperStructure {
 	//@formatter:off
     private static boolean isAtTranslationPosition(double currentTranslationVelocity, double currentTranslationPosition, double targetTranslationPosition) {
         boolean isNearTargetPosition = MathUtil
-                .isNear(targetTranslationPosition, currentTranslationPosition, SuperStructureConstants.TRANSLATION_TOLERANCE_METERS);
-        boolean isStopping = Math.abs(currentTranslationVelocity) < SuperStructureConstants.TRANSLATION_VELOCITY_TOLERANCE;
+                .isNear(targetTranslationPosition, currentTranslationPosition, Tolerances.TRANSLATION_METERS);
+        boolean isStopping = Math.abs(currentTranslationVelocity) < Tolerances.TRANSLATION_VELOCITY_DEADBAND;
         return isNearTargetPosition && isStopping;
     }
     //@formatter:on
@@ -49,10 +49,10 @@ public class SuperStructure {
 
 	public boolean isAtAngle(Rotation2d targetAngle) {
 		double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getCurrentPose().getRotation()).getDegrees());
-		boolean isAtAngle = angleDifferenceDeg < SuperStructureConstants.HEADING_TOLERANCE.getDegrees();
+		boolean isAtAngle = angleDifferenceDeg < Tolerances.SWERVE_HEADING.getDegrees();
 
 		double currentRotationVelocityRadians = swerve.getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(currentRotationVelocityRadians) < SuperStructureConstants.ROTATION_VELOCITY_TOLERANCE.getRadians();
+		boolean isStopping = Math.abs(currentRotationVelocityRadians) < Tolerances.ROTATION_VELOCITY_DEADBAND.getRadians();
 
 		return isAtAngle && isStopping;
 	}

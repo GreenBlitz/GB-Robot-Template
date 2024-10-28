@@ -30,9 +30,6 @@ public class JoysticksBindings {
 		sixthJoystickButtons(robot);
 	}
 
-	static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
-	static final Rotation2d ANGLE_VELOCITY_DEADBAND = Rotation2d.fromDegrees(3);
-	static final double SPEED_TOLERANCE_METERS_PER_SECOND = 0.1;
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
@@ -40,12 +37,8 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeading(new Rotation2d())));
 		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
 
-		usedJoystick.A.whileTrue(
-			robot.getSwerve().getCommandsBuilder().pointWheelsInX(ANGLE_TOLERANCE, ANGLE_VELOCITY_DEADBAND, SPEED_TOLERANCE_METERS_PER_SECOND)
-		);
-		usedJoystick.X.whileTrue(
-			robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true, ANGLE_TOLERANCE, ANGLE_VELOCITY_DEADBAND)
-		);
+		usedJoystick.A.whileTrue(robot.getSwerve().getModules().getCommandsBuilder().pointWheelsInX());
+		usedJoystick.X.whileTrue(robot.getSwerve().getModules().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true));
 
 		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
 		usedJoystick.POV_DOWN.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(-17)));
@@ -143,13 +136,9 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
-		usedJoystick.A.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.wheelRadiusCalibration(ANGLE_TOLERANCE, ANGLE_VELOCITY_DEADBAND, SPEED_TOLERANCE_METERS_PER_SECOND)
-		);
-		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().steerCalibration(true, SysIdRoutine.Direction.kForward));
-		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
+		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
+		usedJoystick.B.whileTrue(robot.getSwerve().getModules().getCommandsBuilder().steerCalibration(true, SysIdRoutine.Direction.kForward));
+		usedJoystick.Y.whileTrue(robot.getSwerve().getModules().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

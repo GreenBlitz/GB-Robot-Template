@@ -33,12 +33,12 @@ public class Phoenix6DoubleRequest implements IRequest<Double> {
 		this.setPoint = setPoint;
 		return this;
 	}
-	
+
 	@Override
 	public Double getSetPoint() {
 		return setPoint;
 	}
-	
+
 	public ControlRequest getControlRequest() {
 		return controlRequest;
 	}

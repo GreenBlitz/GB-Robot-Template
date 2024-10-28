@@ -34,12 +34,12 @@ public class Phoenix6AngleRequest implements IRequest<Rotation2d> {
 		this.setPoint = setPoint;
 		return this;
 	}
-	
+
 	@Override
 	public Rotation2d getSetPoint() {
 		return setPoint;
 	}
-	
+
 	public ControlRequest getControlRequest() {
 		return controlRequest;
 	}

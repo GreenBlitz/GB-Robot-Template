@@ -124,13 +124,27 @@ public class Robot {
 		// Register commands...
 		PathPlannerUtils.registerCommand(
 				"shoot",
-				getSuperstructure().setState(RobotState.SPEAKER).until(
+				(getSuperstructure().setState(RobotState.SPEAKER).until(
 						() -> !getFunnel().isNoteInShooter()
+				).alongWith(
+						swerve.getCommandsBuilder().driveBySavedState(
+								() -> 0, () -> 0, () -> 0
+						)
+				)).withTimeout(3)
+		);
+		PathPlannerUtils.registerCommand(
+				RobotState.INTAKE.name(),
+				getSuperstructure().setState(RobotState.INTAKE).until(
+						getFunnel() :: isNoteInShooter
 				)
 		);
 		PathPlannerUtils.registerCommand(
 				RobotState.PRE_SPEAKER.name(),
 				getSuperstructure().setState(RobotState.PRE_SPEAKER)
+		);
+		PathPlannerUtils.registerCommand(
+				RobotState.IDLE.name(),
+				getSuperstructure().setState(RobotState.IDLE)
 		);
 
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d ->  poseEstimator.resetPose(pose2d));
@@ -143,7 +157,7 @@ public class Robot {
 	}
 
 	public Command getAutonomousCommand() {
-		return AutoBuilder.buildAuto("DriveShoot");
+		return autonomousChooser.getChosenValue();
 	}
 
 	public GBPoseEstimator getPoseEstimator() {

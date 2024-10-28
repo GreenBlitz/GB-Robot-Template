@@ -8,14 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
-import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
@@ -27,42 +23,20 @@ public class SwerveCommandsBuilder {
 
 	private final Swerve swerve;
 
-	private final SysIdCalibrator steerCalibrator;
-	private final SysIdCalibrator driveCalibrator;
-
 	public SwerveCommandsBuilder(Swerve swerve) {
 		this.swerve = swerve;
-		this.steerCalibrator = new SysIdCalibrator(
-			swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getSteerSysIdConfigInfo(),
-			swerve,
-			voltage -> swerve.getModules().setSteersVoltage(ModuleUtils.ModulePosition.FRONT_LEFT, voltage)
-		);
-		this.driveCalibrator = new SysIdCalibrator(
-			swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getDriveSysIdConfigInfo(),
-			swerve,
-			swerve.getModules()::setDrivesVoltage
-		);
 	}
 
-
-	public Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-		return steerCalibrator.getSysIdCommand(isQuasistatic, direction).withName("Steer calibration");
-	}
-
-	public Command driveCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
-		Command sysIdCommand = driveCalibrator.getSysIdCommand(isQuasistatic, direction);
-		sysIdCommand.getRequirements().clear();
-
-		return new SequentialCommandGroup(
-			pointWheels(new Rotation2d(), false),
-			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false).repeatedly())
-		).withName("Drive calibration");
-	}
 
 	//@formatter:off
 	public Command wheelRadiusCalibration() {
 		return new SequentialCommandGroup(
-			pointWheelsInCircle(),
+			swerve.getModules().getCommandsBuilder().pointWheelsInCircle()
+				.until(() -> swerve.getModules().isAtTargetAngles(
+					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
+					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+				)
+			),
 			new WheelRadiusCharacterization(
 				swerve,
 				swerve.getConstants().driveRadiusMeters(),
@@ -78,37 +52,6 @@ public class SwerveCommandsBuilder {
 		).withName("Wheel radius calibration");
 	}
 	//@formatter:on
-
-
-	public Command pointWheelsInX() {
-		return new FunctionalCommand(
-			() -> {},
-			() -> swerve.getModules().pointWheelsInX(SwerveState.DEFAULT_DRIVE.getLoopMode().isClosedLoop),
-			interrupted -> {},
-			swerve.getModules()::isAtTargetStates,
-			swerve
-		).withName("Point wheels in X");
-	}
-
-	public Command pointWheelsInCircle() {
-		return new FunctionalCommand(
-			() -> {},
-			swerve.getModules()::pointWheelsInCircle,
-			interrupted -> {},
-			swerve.getModules()::isAtTargetAngles,
-			swerve
-		).withName("Point wheels in circle");
-	}
-
-	public Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
-		return new FunctionalCommand(
-			() -> {},
-			() -> swerve.getModules().pointWheels(wheelsAngle, optimize),
-			interrupted -> {},
-			swerve.getModules()::isAtTargetAngles,
-			swerve
-		).withName("Point wheels");
-	}
 
 
 	public Command turnToHeading(Rotation2d targetHeading) {

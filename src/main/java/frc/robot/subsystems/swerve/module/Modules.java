@@ -5,40 +5,46 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
+import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 
-public class Modules {
+public class Modules extends GBSubsystem {
 
 	private final Module[] modules;
-	private final String logPath;
+	private final ModulesCommandsBuilder commandsBuilder;
 
 	public Modules(String logPath, Module... modules) {
+		super(logPath + ModuleConstants.LOG_PATH_ADDITION);
 		this.modules = modules;
-		this.logPath = logPath + ModuleConstants.LOG_PATH_ADDITION;
+		this.commandsBuilder = new ModulesCommandsBuilder(this);
 	}
 
 	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 
+	public ModulesCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
+	}
+
 	public void updateInputs() {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
-		Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
-		Logger.recordOutput(logPath + "TargetStates", getTargetStates());
+		Logger.recordOutput(getLogPath() + "CurrentStates", getCurrentStates());
+		Logger.recordOutput(getLogPath() + "TargetStates", getTargetStates());
 	}
 
 
-	public void pointWheels(Rotation2d targetAngle, boolean optimize) {
+	protected void pointWheels(Rotation2d targetAngle, boolean optimize) {
 		for (Module module : modules) {
 			module.pointToAngle(targetAngle, optimize);
 		}
 	}
 
-	public void pointWheelsInCircle() {
+	protected void pointWheelsInCircle() {
 		boolean optimizeAngle = true;
 		modules[0].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
 		modules[1].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
@@ -57,8 +63,10 @@ public class Modules {
 	}
 
 
-	public void setSteersVoltage(ModuleUtils.ModulePosition module, double voltage) {
-		modules[module.getIndex()].setSteerVoltage(voltage);
+	public void setSteersVoltage(double voltage) {
+		for (Module module : modules) {
+			module.setSteerVoltage(voltage);
+		}
 	}
 
 	public void setDrivesVoltage(double voltage) {
@@ -93,26 +101,26 @@ public class Modules {
 	}
 
 
-	public boolean isAtTargetVelocities() {
+	public boolean isAtTargetVelocities(double speedToleranceMetersPerSecond) {
 		for (Module module : modules) {
-			if (!module.isAtTargetVelocity()) {
+			if (!module.isAtTargetVelocity(speedToleranceMetersPerSecond)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public boolean isAtTargetAngles() {
+	public boolean isAtTargetAngles(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband) {
 		for (Module module : modules) {
-			if (!module.isAtTargetAngle()) {
+			if (!module.isAtTargetAngle(angleTolerance, angleVelocityPerSecondDeadband)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public boolean isAtTargetStates() {
-		return isAtTargetAngles() && isAtTargetVelocities();
+	public boolean isAtTargetStates(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
+		return isAtTargetAngles(angleTolerance, angleVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
 	}
 
 

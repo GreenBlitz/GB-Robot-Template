@@ -157,7 +157,7 @@ public class Superstructure {
 		return new InstantCommand(() -> enableChangeStateAutomatically = enable);
 	}
 
-	private Command noteInRumble() {
+	private Command git noteInRumble() {
 		SmartJoystick mainJoystick = JoysticksBindings.getMainJoystick();
 		return new FunctionalCommand(
 			() -> {},

@@ -11,10 +11,12 @@ public class Phoenix6DoubleRequest implements IRequest<Double> {
 
 	private final ControlRequest controlRequest;
 	private final Consumer<Double> withSetPoint;
+	private double setPoint;
 
 	private Phoenix6DoubleRequest(ControlRequest controlRequest, Consumer<Double> withSetPoint) {
 		this.withSetPoint = withSetPoint;
 		this.controlRequest = controlRequest;
+		this.setPoint = 0;
 	}
 
 	public Phoenix6DoubleRequest(VoltageOut voltageOut) {
@@ -28,9 +30,15 @@ public class Phoenix6DoubleRequest implements IRequest<Double> {
 	@Override
 	public Phoenix6DoubleRequest withSetPoint(Double setPoint) {
 		withSetPoint.accept(setPoint);
+		this.setPoint = setPoint;
 		return this;
 	}
-
+	
+	@Override
+	public Double getSetPoint() {
+		return
+	}
+	
 	public ControlRequest getControlRequest() {
 		return controlRequest;
 	}

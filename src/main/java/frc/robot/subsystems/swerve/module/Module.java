@@ -129,73 +129,6 @@ public class Module {
 	}
 
 
-	/**
-	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest odometry update, the
-	 * accumulated odometry positions since the last loop to get a more accurate position.
-	 *
-	 * @param odometryUpdateIndex the index of the odometry update
-	 * @return the position of the module at the given odometry update index
-	 */
-	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
-		return new SwerveModulePosition(
-			driveInputs.positionsMeters[odometryUpdateIndex],
-			steerStuff.positionSignal().asArray()[odometryUpdateIndex]
-		);
-	}
-
-	public int getNumberOfOdometrySamples() {
-		return Math.min(driveInputs.positionsMeters.length, steerStuff.positionSignal().asArray().length);
-	}
-
-	public SwerveModuleState getTargetState() {
-		return targetState;
-	}
-
-	public SwerveModuleState getCurrentState() {
-		return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
-	}
-
-	public Rotation2d getDriveAngle() {
-		return driveInputs.uncoupledPositions[driveInputs.uncoupledPositions.length - 1];
-	}
-
-	public double getDriveVelocityMetersPerSecond() {
-		return driveInputs.velocityMetersPerSecond;
-	}
-
-	public Rotation2d getCurrentAngle() {
-		return steerStuff.positionSignal().getLatestValue();
-	}
-
-
-	//@formatter:off
-	public boolean isAtTargetVelocity(double speedToleranceMetersPerSecond) {
-		return MathUtil.isNear(
-			getTargetState().speedMetersPerSecond,
-			getDriveVelocityMetersPerSecond(),
-			speedToleranceMetersPerSecond
-		);
-	}
-	//@formatter:on
-
-	public boolean isAtTargetAngle(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband) {
-		boolean isStopping = steerStuff.velocitySignal().getLatestValue().getRadians() <= angleVelocityPerSecondDeadband.getRadians();
-		if (!isStopping) {
-			return false;
-		}
-		boolean isAtAngle = MathUtil.isNear(
-			MathUtil.angleModulus(getTargetState().angle.getRadians()),
-			MathUtil.angleModulus(getCurrentAngle().getRadians()),
-			angleTolerance.getRadians()
-		);
-		return isAtAngle;
-	}
-
-	public boolean isAtTargetState(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
-		return isAtTargetAngle(angleTolerance, angleVelocityPerSecondDeadband) && isAtTargetVelocity(speedToleranceMetersPerSecond);
-	}
-
-
 	public void stop() {
 		targetState = new SwerveModuleState(0, steerStuff.positionSignal().getLatestValue());
 		steer.stop();
@@ -258,6 +191,73 @@ public class Module {
 			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
 		);
 		setDriveVoltage(voltage);
+	}
+
+
+	/**
+	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest odometry update, the
+	 * accumulated odometry positions since the last loop to get a more accurate position.
+	 *
+	 * @param odometryUpdateIndex the index of the odometry update
+	 * @return the position of the module at the given odometry update index
+	 */
+	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
+		return new SwerveModulePosition(
+			driveInputs.positionsMeters[odometryUpdateIndex],
+			steerStuff.positionSignal().asArray()[odometryUpdateIndex]
+		);
+	}
+
+	public int getNumberOfOdometrySamples() {
+		return Math.min(driveInputs.positionsMeters.length, steerStuff.positionSignal().asArray().length);
+	}
+
+	public SwerveModuleState getTargetState() {
+		return targetState;
+	}
+
+	public SwerveModuleState getCurrentState() {
+		return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getCurrentAngle());
+	}
+
+	public Rotation2d getDriveAngle() {
+		return driveInputs.uncoupledPositions[driveInputs.uncoupledPositions.length - 1];
+	}
+
+	public double getDriveVelocityMetersPerSecond() {
+		return driveInputs.velocityMetersPerSecond;
+	}
+
+	public Rotation2d getCurrentAngle() {
+		return steerStuff.positionSignal().getLatestValue();
+	}
+
+
+	//@formatter:off
+	public boolean isAtTargetVelocity(double speedToleranceMetersPerSecond) {
+		return MathUtil.isNear(
+				getTargetState().speedMetersPerSecond,
+				getDriveVelocityMetersPerSecond(),
+				speedToleranceMetersPerSecond
+		);
+	}
+	//@formatter:on
+
+	public boolean isAtTargetAngle(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband) {
+		boolean isStopping = steerStuff.velocitySignal().getLatestValue().getRadians() <= angleVelocityPerSecondDeadband.getRadians();
+		if (!isStopping) {
+			return false;
+		}
+		boolean isAtAngle = MathUtil.isNear(
+			MathUtil.angleModulus(getTargetState().angle.getRadians()),
+			MathUtil.angleModulus(getCurrentAngle().getRadians()),
+			angleTolerance.getRadians()
+		);
+		return isAtAngle;
+	}
+
+	public boolean isAtTargetState(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
+		return isAtTargetAngle(angleTolerance, angleVelocityPerSecondDeadband) && isAtTargetVelocity(speedToleranceMetersPerSecond);
 	}
 
 }

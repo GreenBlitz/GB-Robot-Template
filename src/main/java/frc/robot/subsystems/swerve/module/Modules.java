@@ -38,6 +38,19 @@ public class Modules extends GBSubsystem {
 	}
 
 
+	public void resetModulesAngleByEncoder() {
+		for (Module module : modules) {
+			module.resetByEncoder();
+		}
+	}
+
+	public void setBrake(boolean brake) {
+		for (Module currentModule : modules) {
+			currentModule.setBrake(brake);
+		}
+	}
+
+
 	protected void pointWheels(Rotation2d targetAngle, boolean optimize) {
 		for (Module module : modules) {
 			module.pointToAngle(targetAngle, optimize);
@@ -63,6 +76,12 @@ public class Modules extends GBSubsystem {
 	}
 
 
+	public void stop() {
+		for (Module currentModule : modules) {
+			currentModule.stop();
+		}
+	}
+
 	public void setSteersVoltage(double voltage) {
 		for (Module module : modules) {
 			module.setSteerVoltage(voltage);
@@ -75,29 +94,51 @@ public class Modules extends GBSubsystem {
 		}
 	}
 
-
-	public void resetModulesAngleByEncoder() {
-		for (Module module : modules) {
-			module.resetByEncoder();
-		}
-	}
-
-	public void setBrake(boolean brake) {
-		for (Module currentModule : modules) {
-			currentModule.setBrake(brake);
-		}
-	}
-
 	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
 		for (int i = 0; i < modules.length; i++) {
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
 	}
 
-	public void stop() {
-		for (Module currentModule : modules) {
-			currentModule.stop();
+
+	public int getNumberOfOdometrySamples() {
+		int numberOfOdometrySamples = modules[0].getNumberOfOdometrySamples();
+		for (int i = 1; i < modules.length; i++) {
+			numberOfOdometrySamples = Math.min(numberOfOdometrySamples, modules[i].getNumberOfOdometrySamples());
 		}
+		return numberOfOdometrySamples;
+	}
+
+	public SwerveModuleState[] getTargetStates() {
+		SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
+		for (int i = 0; i < modules.length; i++) {
+			states[i] = modules[i].getTargetState();
+		}
+
+		return states;
+	}
+
+	public SwerveModuleState[] getCurrentStates() {
+		SwerveModuleState[] states = new SwerveModuleState[modules.length];
+
+		for (int i = 0; i < modules.length; i++) {
+			states[i] = modules[i].getCurrentState();
+		}
+
+		return states;
+	}
+
+	public Rotation2d[] getDrivesAngles() {
+		return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
+	}
+
+	public SwerveDriveWheelPositions getWheelsPositions(int odometrySampleIndex) {
+		SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
+		for (int i = 0; i < modules.length; i++) {
+			swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
+		}
+		return new SwerveDriveWheelPositions(swerveModulePositions);
 	}
 
 
@@ -121,48 +162,6 @@ public class Modules extends GBSubsystem {
 
 	public boolean isAtTargetStates(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
 		return isAtTargetAngles(angleTolerance, angleVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
-	}
-
-
-	public SwerveModuleState[] getTargetStates() {
-		SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-		for (int i = 0; i < modules.length; i++) {
-			states[i] = modules[i].getTargetState();
-		}
-
-		return states;
-	}
-
-	public SwerveModuleState[] getCurrentStates() {
-		SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-		for (int i = 0; i < modules.length; i++) {
-			states[i] = modules[i].getCurrentState();
-		}
-
-		return states;
-	}
-
-
-	public Rotation2d[] getDrivesAngles() {
-		return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
-	}
-
-	public int getNumberOfOdometrySamples() {
-		int numberOfOdometrySamples = modules[0].getNumberOfOdometrySamples();
-		for (int i = 1; i < modules.length; i++) {
-			numberOfOdometrySamples = Math.min(numberOfOdometrySamples, modules[i].getNumberOfOdometrySamples());
-		}
-		return numberOfOdometrySamples;
-	}
-
-	public SwerveDriveWheelPositions getWheelsPositions(int odometrySampleIndex) {
-		SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
-		for (int i = 0; i < modules.length; i++) {
-			swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
-		}
-		return new SwerveDriveWheelPositions(swerveModulePositions);
 	}
 
 }

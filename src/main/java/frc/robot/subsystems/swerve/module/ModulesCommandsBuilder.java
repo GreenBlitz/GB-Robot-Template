@@ -47,16 +47,17 @@ public class ModulesCommandsBuilder {
 		).withName("Drive calibration");
 	}
 
-	public Command pointWheelsInX() {
-		return new RunCommand(() -> modules.pointWheelsInX(ModuleConstants.DEFAULT_IS_CLOSE_LOOP), modules).withName("Point wheels in X");
+
+	public Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
+		return new RunCommand(() -> modules.pointWheels(wheelsAngle, optimize), modules).withName("Point wheels to: " + wheelsAngle);
 	}
 
 	public Command pointWheelsInCircle() {
 		return new RunCommand(modules::pointWheelsInCircle, modules).withName("Point wheels in circle");
 	}
 
-	public Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
-		return new RunCommand(() -> modules.pointWheels(wheelsAngle, optimize), modules).withName("Point wheels to: " + wheelsAngle);
+	public Command pointWheelsInX() {
+		return new RunCommand(() -> modules.pointWheelsInX(ModuleConstants.DEFAULT_IS_CLOSE_LOOP), modules).withName("Point wheels in X");
 	}
 
 }

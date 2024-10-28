@@ -42,22 +42,6 @@ public class RobotManager extends LoggedRobot {
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 
-		SparkMaxDoubleRequest doubleRequest = new SparkMaxDoubleRequest(1, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
-		doubleRequest.withSetPoint(5.0);
-		Logger.recordOutput("sparkDouble", doubleRequest.getSetPoint());
-
-		SparkMaxAngleRequest angleRequest = new SparkMaxAngleRequest(Rotation2d.fromRotations(0), SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY, 0);
-		angleRequest.withSetPoint(Rotation2d.fromRotations(200));
-		Logger.recordOutput("sparkAngle", angleRequest.getSetPoint().getRotations());
-
-		Phoenix6AngleRequest angleRequest1 = new Phoenix6AngleRequest(new PositionVoltage(1));
-		angleRequest1.withSetPoint(Rotation2d.fromRotations(15));
-		Logger.recordOutput("phonixAngle", angleRequest1.getSetPoint().getRotations());
-
-		Phoenix6DoubleRequest doubleRequest1 = new Phoenix6DoubleRequest(new VoltageOut(5));
-		doubleRequest1.withSetPoint(10.0);
-		Logger.recordOutput("phonixDouble", doubleRequest1.getSetPoint());
-
 		this.robot = new Robot();
 	}
 

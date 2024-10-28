@@ -93,26 +93,26 @@ public class Modules {
 	}
 
 
-	public boolean isAtTargetVelocities() {
+	public boolean isAtTargetVelocities(double speedToleranceMetersPerSecond) {
 		for (Module module : modules) {
-			if (!module.isAtTargetVelocity()) {
+			if (!module.isAtTargetVelocity(speedToleranceMetersPerSecond)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public boolean isAtTargetAngles() {
+	public boolean isAtTargetAngles(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband) {
 		for (Module module : modules) {
-			if (!module.isAtTargetAngle()) {
+			if (!module.isAtTargetAngle(angleTolerance, angleVelocityPerSecondDeadband)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public boolean isAtTargetStates() {
-		return isAtTargetAngles() && isAtTargetVelocities();
+	public boolean isAtTargetStates(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
+		return isAtTargetAngles(angleTolerance, angleVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
 	}
 
 

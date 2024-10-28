@@ -36,7 +36,7 @@ public class Phoenix6DoubleRequest implements IRequest<Double> {
 	
 	@Override
 	public Double getSetPoint() {
-		return
+		return setPoint;
 	}
 	
 	public ControlRequest getControlRequest() {

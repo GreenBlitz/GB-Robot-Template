@@ -12,10 +12,12 @@ public class Phoenix6AngleRequest implements IRequest<Rotation2d> {
 
 	private final ControlRequest controlRequest;
 	private final Consumer<Rotation2d> withSetPoint;
+	private Rotation2d setPoint;
 
 	private Phoenix6AngleRequest(ControlRequest controlRequest, Consumer<Rotation2d> withSetPoint) {
 		this.withSetPoint = withSetPoint;
 		this.controlRequest = controlRequest;
+		this.setPoint = new Rotation2d();
 	}
 
 	public Phoenix6AngleRequest(PositionVoltage positionVoltage) {
@@ -29,12 +31,13 @@ public class Phoenix6AngleRequest implements IRequest<Rotation2d> {
 	@Override
 	public Phoenix6AngleRequest withSetPoint(Rotation2d setPoint) {
 		withSetPoint.accept(setPoint);
+		this.setPoint = setPoint;
 		return this;
 	}
 	
 	@Override
 	public Rotation2d getSetPoint() {
-		return
+		return setPoint;
 	}
 	
 	public ControlRequest getControlRequest() {

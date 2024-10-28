@@ -14,7 +14,9 @@ public class SparkMaxWrapper extends CANSparkMax {
 	public double getVoltage() {
 		return getAppliedOutput() * getBusVoltage();
 	}
+
 	public Rotation2d getVelocity() {
 		return Rotation2d.fromRotations(Conversions.perMinuteToPerSecond(getEncoder().getVelocity()));
 	}
+
 }

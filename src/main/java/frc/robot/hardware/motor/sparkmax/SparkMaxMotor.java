@@ -1,7 +1,6 @@
 package frc.robot.hardware.motor.sparkmax;
 
 import com.revrobotics.CANSparkBase;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;

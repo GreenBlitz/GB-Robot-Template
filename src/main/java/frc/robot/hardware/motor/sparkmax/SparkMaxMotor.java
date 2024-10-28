@@ -1,6 +1,7 @@
 package frc.robot.hardware.motor.sparkmax;
 
 import com.revrobotics.CANSparkBase;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;
@@ -28,6 +29,10 @@ public abstract class SparkMaxMotor implements IMotor {
 	@Override
 	public boolean isConnected() {
 		return connectedInput.connected;
+	}
+
+	public Rotation2d getVelocity() {
+		return Rotation2d.fromRotations(motor.getEncoder().getVelocity() / 60);
 	}
 
 	@Override

@@ -31,10 +31,6 @@ public abstract class SparkMaxMotor implements IMotor {
 		return connectedInput.connected;
 	}
 
-	public Rotation2d getVelocity() {
-		return Rotation2d.fromRotations(motor.getEncoder().getVelocity() / 60);
-	}
-
 	@Override
 	public void updateSignals(InputSignal... signals) {
 		for (InputSignal signal : signals) {

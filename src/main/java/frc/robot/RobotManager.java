@@ -4,9 +4,16 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
 import frc.robot.simulation.SimulationManager;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
@@ -16,6 +23,7 @@ import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
@@ -33,6 +41,22 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
+
+		SparkMaxDoubleRequest doubleRequest = new SparkMaxDoubleRequest(1, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
+		doubleRequest.withSetPoint(5.0);
+		Logger.recordOutput("sparkDouble", doubleRequest.getSetPoint());
+
+		SparkMaxAngleRequest angleRequest = new SparkMaxAngleRequest(Rotation2d.fromRotations(0), SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY, 0);
+		angleRequest.withSetPoint(Rotation2d.fromRotations(200));
+		Logger.recordOutput("sparkAngle", angleRequest.getSetPoint().getRotations());
+
+		Phoenix6AngleRequest angleRequest1 = new Phoenix6AngleRequest(new PositionVoltage(1));
+		angleRequest1.withSetPoint(Rotation2d.fromRotations(15));
+		Logger.recordOutput("phonixAngle", angleRequest1.getSetPoint().getRotations());
+
+		Phoenix6DoubleRequest doubleRequest1 = new Phoenix6DoubleRequest(new VoltageOut(5));
+		doubleRequest1.withSetPoint(10.0);
+		Logger.recordOutput("phonixDouble", doubleRequest1.getSetPoint());
 
 		this.robot = new Robot();
 	}

@@ -9,7 +9,4 @@ public class Tolerances {
 	public static final double TRANSLATION_METERS = 0.05;
 	public static final double TRANSLATION_VELOCITY_DEADBAND = 0.05;
 
-
-	public static final double SPEED_TOLERANCE_METERS_PER_SECOND = 0.1;
-
 }

@@ -25,4 +25,7 @@ public record ModuleConstants(String logPath, double wheelDiameterMeters, double
 	public static final boolean DEFAULT_IS_CLOSE_LOOP = true;
 	public static final String LOG_PATH_ADDITION = "Modules/";
 
+	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
+	static final Rotation2d CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
+
 }

@@ -37,7 +37,9 @@ public class ModulesCommandsBuilder {
 		sysIdCommand.getRequirements().clear();
 
 		return new SequentialCommandGroup(
-			pointWheels(new Rotation2d(), false),
+			pointWheels(new Rotation2d(), false).until(
+					() -> modules.isAtTargetAngles(ModuleConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE, ModuleConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND)
+			),
 			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false).repeatedly())
 		).withName("Drive calibration");
 	}

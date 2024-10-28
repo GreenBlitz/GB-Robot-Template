@@ -28,7 +28,8 @@ public class ModulesFactory {
 				createModule(swerveType, ModuleUtils.ModulePosition.FRONT_LEFT),
 				createModule(swerveType, ModuleUtils.ModulePosition.FRONT_RIGHT),
 				createModule(swerveType, ModuleUtils.ModulePosition.BACK_LEFT),
-				createModule(swerveType, ModuleUtils.ModulePosition.BACK_RIGHT)}
+//				createModule(swerveType, ModuleUtils.ModulePosition.BACK_RIGHT),
+			}
 		);
 	}
 

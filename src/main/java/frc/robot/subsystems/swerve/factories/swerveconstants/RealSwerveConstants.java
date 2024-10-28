@@ -37,7 +37,8 @@ public class RealSwerveConstants {
 		FRONT_LEFT_TRANSLATION2D,
 		FRONT_RIGHT_TRANSLATION2D,
 		BACK_LEFT_TRANSLATION2D,
-		BACK_RIGHT_TRANSLATION2D};
+//		BACK_RIGHT_TRANSLATION2D,
+	};
 
 	protected static SwerveConstants getSwerveConstants(SwerveType swerveType) {
 		return new SwerveConstants(

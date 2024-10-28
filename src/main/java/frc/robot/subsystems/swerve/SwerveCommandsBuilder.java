@@ -4,11 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
@@ -29,15 +25,14 @@ public class SwerveCommandsBuilder {
 
 	//@formatter:off
 	public Command wheelRadiusCalibration() {
-		Rotation2d moduleAngleTolerance = Rotation2d.fromDegrees(3);
-		Rotation2d moduleAngleVelocityPerSecondDeadband = Rotation2d.fromDegrees(3);
 		return new SequentialCommandGroup(
 			swerve.getModules().getCommandsBuilder().pointWheelsInCircle()
 				.until(() -> swerve.getModules().isAtTargetAngles(
-					moduleAngleTolerance,
-					moduleAngleVelocityPerSecondDeadband
+					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
+					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
 				)
 			),
+			new WaitCommand(2),
 			new WheelRadiusCharacterization(
 				swerve,
 				swerve.getConstants().driveRadiusMeters(),

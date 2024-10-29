@@ -158,7 +158,7 @@ public class Robot {
 			)
 		);
 
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose,  poseEstimator :: resetPose);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 	}
 

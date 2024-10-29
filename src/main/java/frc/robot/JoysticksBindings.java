@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -61,6 +63,8 @@ public class JoysticksBindings {
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
 					)
 			);
+		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> { robot.getSwerve().setHeading(Rotation2d.fromDegrees(180)); }));
+
 
 		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));

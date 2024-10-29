@@ -1,6 +1,12 @@
 Calibrations:
 ******************
 
+ModuleConstants:
+-----------------------
+- Wheel Diameter
+- Coupling Ratio,
+- Velocity At 12 Volts
+
 Encoder:
 ----------------------
 - Encoder ID
@@ -32,9 +38,3 @@ Drive:
 - PID
 - Control mode (motion magic, voltage, torque)
 - Enable/Disable FOC (only talonfx)
-
-ModuleConstants:
------------------------
-- Wheel Diameter
-- Coupling Ratio,
-- Velocity At 12 Volts

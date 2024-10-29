@@ -1,16 +1,17 @@
-package frc.robot.hardware.signal.phoenix;
+package frc.robot.hardware.signal.phoenix6;
 
 import com.ctre.phoenix6.StatusSignal;
-import frc.robot.hardware.signal.DoubleSignal;
+import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.TimedValue;
+import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtils;
 
-public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6SignalBuilder.SignalGetter {
+public class Phoenix6AngleSignal extends AngleSignal implements Phoenix6SignalBuilder.SignalGetter {
 
 	private final StatusSignal<Double> statusSignal;
 
-	protected Phoenix6DoubleSignal(String name, StatusSignal<Double> statusSignal) {
-		super(name);
+	protected Phoenix6AngleSignal(String name, StatusSignal<Double> statusSignal, AngleUnit angleUnit) {
+		super(name, angleUnit);
 		this.statusSignal = statusSignal;
 	}
 

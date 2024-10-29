@@ -1,6 +1,3 @@
-Calibrations:
-******************
-
 ModuleConstants:
 -----------------------
 - Wheel Diameter

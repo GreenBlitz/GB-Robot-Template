@@ -59,20 +59,20 @@ public class Modules extends GBSubsystem {
 
 	protected void pointWheelsInCircle() {
 		boolean optimizeAngle = true;
-		modules[0].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
-		modules[1].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
-		modules[2].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
-		modules[3].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+		modules[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+		modules[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
 	}
 
 	public void pointWheelsInX(boolean isClosedLoop) {
 		SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
 		SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
 
-		modules[0].setTargetState(frontLeftBackRight, isClosedLoop);
-		modules[1].setTargetState(frontRightBackLeft, isClosedLoop);
-		modules[2].setTargetState(frontRightBackLeft, isClosedLoop);
-		modules[3].setTargetState(frontLeftBackRight, isClosedLoop);
+		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].setTargetState(frontLeftBackRight, isClosedLoop);
+		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].setTargetState(frontRightBackLeft, isClosedLoop);
+		modules[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()].setTargetState(frontRightBackLeft, isClosedLoop);
+		modules[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()].setTargetState(frontLeftBackRight, isClosedLoop);
 	}
 
 
@@ -110,23 +110,11 @@ public class Modules extends GBSubsystem {
 	}
 
 	public SwerveModuleState[] getTargetStates() {
-		SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-		for (int i = 0; i < modules.length; i++) {
-			states[i] = modules[i].getTargetState();
-		}
-
-		return states;
+		return Arrays.stream(modules).map(Module::getTargetState).toArray(SwerveModuleState[]::new);
 	}
 
 	public SwerveModuleState[] getCurrentStates() {
-		SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-		for (int i = 0; i < modules.length; i++) {
-			states[i] = modules[i].getCurrentState();
-		}
-
-		return states;
+		return Arrays.stream(modules).map(Module::getCurrentState).toArray(SwerveModuleState[]::new);
 	}
 
 	public Rotation2d[] getDrivesAngles() {

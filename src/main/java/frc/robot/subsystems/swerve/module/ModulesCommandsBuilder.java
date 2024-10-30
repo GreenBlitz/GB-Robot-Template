@@ -19,7 +19,7 @@ public class ModulesCommandsBuilder {
 		this.steerCalibrator = new SysIdCalibrator(
 			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getSteerSysIdConfigInfo(),
 			modules,
-			voltage -> modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT).setSteerVoltage(voltage)
+			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT)::setSteerVoltage
 		);
 		this.driveCalibrator = new SysIdCalibrator(
 			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getDriveSysIdConfigInfo(),

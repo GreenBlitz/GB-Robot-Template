@@ -46,19 +46,15 @@ public class ModuleUtils {
 	/**
 	 * When the steer motor moves, the drive motor moves as well due to the coupling. This will affect the current position of the drive motor,
 	 * so we need to remove the coupling from the velocity or the position.
-	 *
-	 * @param driveCoupledAngle the position or velocity
-	 * @param steerAngle        the angle or velocity in angle of the module
-	 * @return the distance or velocity without the coupling
 	 */
-	public static Rotation2d uncoupleAngle(Rotation2d driveCoupledAngle, Rotation2d steerAngle, double couplingRatio) {
+	public static Rotation2d uncoupleAngle(Rotation2d coupledDriveAngle, Rotation2d steerAngle, double couplingRatio) {
 		Rotation2d steerCoupledAngle = coupleSteerAngle(steerAngle, couplingRatio);
-		return Rotation2d.fromRotations(driveCoupledAngle.getRotations() - steerCoupledAngle.getRotations());
+		return Rotation2d.fromRotations(coupledDriveAngle.getRotations() - steerCoupledAngle.getRotations());
 	}
 
-	public static Rotation2d coupleAngle(Rotation2d driveUncoupledAngle, Rotation2d steerAngle, double couplingRatio) {
+	public static Rotation2d coupleAngle(Rotation2d uncoupledDriveAngle, Rotation2d steerAngle, double couplingRatio) {
 		Rotation2d steerCoupledAngle = coupleSteerAngle(steerAngle, couplingRatio);
-		return Rotation2d.fromRotations(driveUncoupledAngle.getRotations() + steerCoupledAngle.getRotations());
+		return Rotation2d.fromRotations(uncoupledDriveAngle.getRotations() + steerCoupledAngle.getRotations());
 	}
 
 	public static Rotation2d coupleSteerAngle(Rotation2d steerAngle, double couplingRatio) {
@@ -69,15 +65,11 @@ public class ModuleUtils {
 	/**
 	 * When changing direction, the module will skew since the angle motor is not at its target angle. This method will counter that by reducing
 	 * the target velocity according to the angle motor's error cosine.
-	 *
-	 * @param targetVelocityMetersPerSecond the target velocity, in meters per second
-	 * @param targetSteerAngle              the target steer angle
-	 * @return the reduced target velocity in revolutions per second
 	 */
-	public static double reduceSkew(double targetVelocityMetersPerSecond, Rotation2d targetSteerAngle, Rotation2d currentSteerAngle) {
-		double steerDeltaRadians = targetSteerAngle.getRadians() - currentSteerAngle.getRadians();
+	public static double reduceSkew(double targetDriveVelocityMetersPerSecond, Rotation2d targetSteerPosition, Rotation2d currentSteerPosition) {
+		double steerDeltaRadians = targetSteerPosition.getRadians() - currentSteerPosition.getRadians();
 		double cosineScalar = Math.abs(Math.cos(steerDeltaRadians));
-		return targetVelocityMetersPerSecond * cosineScalar;
+		return targetDriveVelocityMetersPerSecond * cosineScalar;
 	}
 
 }

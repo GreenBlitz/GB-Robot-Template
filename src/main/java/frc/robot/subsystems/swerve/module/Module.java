@@ -82,7 +82,7 @@ public class Module {
 
 
 	private void fixDriveInputsCoupling() {
-		driveInputs.uncoupledVelocityPerSecond = ModuleUtils.getUncoupledAngle(
+		driveInputs.uncoupledVelocityPerSecond = ModuleUtils.uncoupleAngle(
 			driveStuff.velocitySignal().getLatestValue(),
 			steerStuff.velocitySignal().getLatestValue(),
 			constants.couplingRatio()
@@ -93,7 +93,7 @@ public class Module {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerStuff.positionSignal().asArray()[i].getRotations() - startingSteerAngle.getRotations());
 			driveInputs.uncoupledPositions[i] = ModuleUtils
-				.getUncoupledAngle(driveStuff.positionSignal().asArray()[i], steerDelta, constants.couplingRatio());
+				.uncoupleAngle(driveStuff.positionSignal().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
 
@@ -101,6 +101,7 @@ public class Module {
 		encoder.updateSignals(encoderStuff.positionSignal());
 		steer.updateSignals(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
 		drive.updateSignals(driveStuff.positionSignal(), driveStuff.velocitySignal(), driveStuff.currentSignal(), driveStuff.voltageSignal());
+
 		fixDriveInputsCoupling();
 
 		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityPerSecond);
@@ -148,11 +149,7 @@ public class Module {
 
 	public void pointToAngle(Rotation2d angle, boolean optimize) {
 		SwerveModuleState moduleState = new SwerveModuleState(0, angle);
-		if (optimize) {
-			targetState.angle = SwerveModuleState.optimize(moduleState, getCurrentAngle()).angle;
-		} else {
-			targetState.angle = moduleState.angle;
-		}
+		targetState.angle = optimize ? SwerveModuleState.optimize(moduleState, getCurrentAngle()).angle : moduleState.angle;
 		steer.applyAngleRequest(steerPositionRequest.withSetPoint(targetState.angle));
 	}
 
@@ -177,7 +174,7 @@ public class Module {
 		setClosedLoop(true);
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtils
-			.getCoupledAngle(targetVelocityPerSecond, steerStuff.velocitySignal().getLatestValue(), constants.couplingRatio());
+			.coupleAngle(targetVelocityPerSecond, steerStuff.velocitySignal().getLatestValue(), constants.couplingRatio());
 		drive.applyAngleRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
 	}
 

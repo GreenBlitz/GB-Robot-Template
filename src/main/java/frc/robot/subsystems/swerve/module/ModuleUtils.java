@@ -33,7 +33,7 @@ public class ModuleUtils {
 		double voltageCompensationSaturation
 	) {
 		Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-		Rotation2d coupledVelocityPerSecond = getCoupledAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
+		Rotation2d coupledVelocityPerSecond = coupleAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
 		return velocityToVoltage(coupledVelocityPerSecond, maxVelocityPerSecond, voltageCompensationSaturation);
 	}
 
@@ -51,17 +51,17 @@ public class ModuleUtils {
 	 * @param steerAngle        the angle or velocity in angle of the module
 	 * @return the distance or velocity without the coupling
 	 */
-	public static Rotation2d getUncoupledAngle(Rotation2d driveCoupledAngle, Rotation2d steerAngle, double couplingRatio) {
-		Rotation2d steerCoupledAngle = getSteerCoupledAngle(steerAngle, couplingRatio);
+	public static Rotation2d uncoupleAngle(Rotation2d driveCoupledAngle, Rotation2d steerAngle, double couplingRatio) {
+		Rotation2d steerCoupledAngle = coupleSteerAngle(steerAngle, couplingRatio);
 		return Rotation2d.fromRotations(driveCoupledAngle.getRotations() - steerCoupledAngle.getRotations());
 	}
 
-	public static Rotation2d getCoupledAngle(Rotation2d driveUncoupledAngle, Rotation2d steerAngle, double couplingRatio) {
-		Rotation2d steerCoupledAngle = getSteerCoupledAngle(steerAngle, couplingRatio);
+	public static Rotation2d coupleAngle(Rotation2d driveUncoupledAngle, Rotation2d steerAngle, double couplingRatio) {
+		Rotation2d steerCoupledAngle = coupleSteerAngle(steerAngle, couplingRatio);
 		return Rotation2d.fromRotations(driveUncoupledAngle.getRotations() + steerCoupledAngle.getRotations());
 	}
 
-	public static Rotation2d getSteerCoupledAngle(Rotation2d steerAngle, double couplingRatio) {
+	public static Rotation2d coupleSteerAngle(Rotation2d steerAngle, double couplingRatio) {
 		return Rotation2d.fromRotations(steerAngle.getRotations() * couplingRatio);
 	}
 

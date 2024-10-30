@@ -51,18 +51,18 @@ public class Modules extends GBSubsystem {
 	}
 
 
-	protected void pointWheels(Rotation2d targetAngle, boolean optimize) {
+	protected void pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
 		for (Module module : modules) {
-			module.pointToAngle(targetAngle, optimize);
+			module.pointSteer(targetSteerPosition, optimize);
 		}
 	}
 
 	protected void pointWheelsInCircle() {
 		boolean optimizeAngle = true;
-		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
-		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
-		modules[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
-		modules[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+		modules[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+		modules[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
 	}
 
 	public void pointWheelsInX(boolean isClosedLoop) {
@@ -139,17 +139,17 @@ public class Modules extends GBSubsystem {
 		return true;
 	}
 
-	public boolean isAtTargetAngles(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband) {
+	public boolean isAtTargetSteersPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
 		for (Module module : modules) {
-			if (!module.isAtTargetAngle(angleTolerance, angleVelocityPerSecondDeadband)) {
+			if (!module.isAtTargetSteerPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public boolean isAtTargetStates(Rotation2d angleTolerance, Rotation2d angleVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
-		return isAtTargetAngles(angleTolerance, angleVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
+	public boolean isAtTargetStates(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
+		return isAtTargetSteersPositions(steerTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
 	}
 
 }

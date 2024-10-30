@@ -38,7 +38,7 @@ public class ModulesCommandsBuilder {
 
 		return new SequentialCommandGroup(
 			pointWheels(new Rotation2d(), false).until(
-				() -> modules.isAtTargetAngles(
+				() -> modules.isAtTargetSteersPositions(
 					ModuleConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
 					ModuleConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
 				)
@@ -48,8 +48,8 @@ public class ModulesCommandsBuilder {
 	}
 
 
-	public Command pointWheels(Rotation2d wheelsAngle, boolean optimize) {
-		return new RunCommand(() -> modules.pointWheels(wheelsAngle, optimize), modules).withName("Point wheels to: " + wheelsAngle);
+	public Command pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
+		return new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize), modules).withName("Point wheels to: " + targetSteerPosition);
 	}
 
 	public Command pointWheelsInCircle() {

@@ -49,7 +49,8 @@ public class ModulesCommandsBuilder {
 
 
 	public Command pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
-		return new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize), modules).withName("Point wheels to: " + targetSteerPosition);
+		return new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize), modules)
+			.withName("Point wheels to: " + targetSteerPosition);
 	}
 
 	public Command pointWheelsInCircle() {

@@ -18,7 +18,7 @@ public class SuppliedDigitalInput implements IDigitalInput {
 		this.inverted = inverted;
 	}
 
-	public SuppliedDigitalInput(BooleanSupplier booleanSupplier,Debouncer debouncer) {
+	public SuppliedDigitalInput(BooleanSupplier booleanSupplier, Debouncer debouncer) {
 		this(booleanSupplier, debouncer, false);
 	}
 

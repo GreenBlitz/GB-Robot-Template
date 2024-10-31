@@ -7,6 +7,7 @@ import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
+import frc.utils.alerts.Alert;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class BrushlessSparkMAXMotor extends SparkMaxMotor implements ControllableMotor {
@@ -31,10 +32,19 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 		motor.getEncoder().setPosition(position.getRotations());
 	}
 
-	//@formatter:off
 	@Override
-	public void applyDoubleRequest(IRequest<Double> request) {
-		SparkMaxDoubleRequest doubleRequest = (SparkMaxDoubleRequest) request;
+	public void applyRequest(IRequest request) {
+		if (request instanceof SparkMaxDoubleRequest sparkDoubleRequest) {
+			applyDoubleRequest(sparkDoubleRequest);
+		} else if (request instanceof SparkMaxAngleRequest sparkMaxAngleRequest) {
+			applyAngleRequest(sparkMaxAngleRequest);
+		} else {
+			new Alert(Alert.AlertType.WARNING, getLogPath() + "got invalid type of request").report();
+		}
+	}
+
+	//@formatter:off
+	public void applyDoubleRequest(SparkMaxDoubleRequest doubleRequest) {
 		motor.getPIDController().setReference(
 			doubleRequest.getSetPoint(),
 			doubleRequest.getControlType(),
@@ -42,9 +52,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 		);
 	}
 
-	@Override
-	public void applyAngleRequest(IRequest<Rotation2d> request) {
-		SparkMaxAngleRequest angleRequest = (SparkMaxAngleRequest) request;
+	public void applyAngleRequest(SparkMaxAngleRequest angleRequest) {
 		motor.getPIDController().setReference(
 			angleRequest.getSetPoint().getRotations(),
 			angleRequest.getControlType(),

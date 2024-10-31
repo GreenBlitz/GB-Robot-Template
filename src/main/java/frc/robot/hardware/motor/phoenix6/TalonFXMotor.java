@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
-import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6Request;
+import frc.utils.alerts.Alert;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
@@ -50,17 +50,11 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	}
 
 
-	@Override
-	public void applyDoubleRequest(IRequest<Double> request) {
-		if (request instanceof Phoenix6DoubleRequest) {
-			motor.setControl(((Phoenix6DoubleRequest) request).getControlRequest());
-		}
-	}
-
-	@Override
-	public void applyAngleRequest(IRequest<Rotation2d> request) {
-		if (request instanceof Phoenix6AngleRequest) {
-			motor.setControl(((Phoenix6AngleRequest) request).getControlRequest());
+	public void applyRequest(IRequest request) {
+		if (request instanceof Phoenix6Request<?>) {
+			motor.setControl(((Phoenix6Request<?>) request).getControlRequest());
+		} else {
+			new Alert(Alert.AlertType.WARNING, getLogPath() + "got invalid type of request").report();
 		}
 	}
 

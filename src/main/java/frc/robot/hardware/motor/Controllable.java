@@ -10,8 +10,6 @@ public interface Controllable {
 
 	void resetPosition(Rotation2d position);
 
-	void applyDoubleRequest(IRequest<Double> request);
-
-	void applyAngleRequest(IRequest<Rotation2d> request);
+	void applyRequest(IRequest request);
 
 }

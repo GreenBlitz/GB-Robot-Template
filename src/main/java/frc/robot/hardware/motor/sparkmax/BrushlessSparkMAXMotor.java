@@ -33,7 +33,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 
 	@Override
 	public void applyRequest(IRequest request) {
-		if (request instanceof SparkMaxRequest sparkMaxRequest) {
+		if (request instanceof SparkMaxRequest<?> sparkMaxRequest) {
 			motor.getPIDController()
 				.setReference(
 					sparkMaxRequest.getSetPointAsDouble(),

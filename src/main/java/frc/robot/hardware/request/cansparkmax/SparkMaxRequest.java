@@ -28,7 +28,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 	}
 
 	SparkMaxRequest(T setPoint, CANSparkBase.ControlType controlType, int pidSlot, Function<T, Double> setPointToDoubleConverter) {
-		this(setPoint, controlType, pidSlot, CANSparkMAX -> { return 0.0; }, setPointToDoubleConverter);
+		this(setPoint, controlType, pidSlot, CANSparkMAX -> 0.0, setPointToDoubleConverter);
 	}
 
 	@Override

@@ -22,17 +22,6 @@ public class SparkMaxRequestBuilder {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, Rotation2d::getRotations);
 	}
 
-	//@formatter:off
-    public SparkMaxRequest<Double> generate(
-        Double setPoint,
-        CANSparkBase.ControlType controlType,
-        int pidSlot,
-        Function<Double, Double> feedforwardCalculator
-    ) {
-		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, feedforwardCalculator, setpoint -> setpoint);
-	}
-    //@formatter:on
-
 	public SparkMaxRequest<Double> generate(Double setPoint, CANSparkBase.ControlType controlType, int pidSlot) {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, setpoint -> setpoint);
 	}

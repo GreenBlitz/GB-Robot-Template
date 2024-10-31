@@ -12,14 +12,14 @@ public class SuppliedDigitalInput implements IDigitalInput {
 	private final Debouncer debouncer;
 	private final boolean inverted;
 
-	public SuppliedDigitalInput(BooleanSupplier booleanSupplier, Debouncer.DebounceType debounceType, double debounceTime, boolean inverted) {
+	public SuppliedDigitalInput(BooleanSupplier booleanSupplier, Debouncer debouncer, boolean inverted) {
 		this.booleanSupplier = booleanSupplier;
-		this.debouncer = new Debouncer(debounceTime, debounceType);
+		this.debouncer = debouncer;
 		this.inverted = inverted;
 	}
 
-	public SuppliedDigitalInput(BooleanSupplier booleanSupplier, Debouncer.DebounceType debounceType, double debounceTime) {
-		this(booleanSupplier, debounceType, debounceTime, false);
+	public SuppliedDigitalInput(BooleanSupplier booleanSupplier,Debouncer debouncer) {
+		this(booleanSupplier, debouncer, false);
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public abstract class Phoenix6Device implements IDevice {
 				).report();
 			}
 		}
-		return signalsSet.toArray(new InputSignal<?>[0]);
+		return signalsSet.toArray(InputSignal<?>[]::new);
 	}
 
 

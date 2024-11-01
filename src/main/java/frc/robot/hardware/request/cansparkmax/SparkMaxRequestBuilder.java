@@ -8,7 +8,7 @@ import java.util.function.Function;
 public class SparkMaxRequestBuilder {
 
 	//@formatter:off
-    public SparkMaxRequest<Rotation2d> build(
+    public static SparkMaxRequest<Rotation2d> build(
         Rotation2d setPoint,
         CANSparkBase.ControlType controlType,
         int pidSlot,
@@ -18,11 +18,11 @@ public class SparkMaxRequestBuilder {
 	}
     //@formatter:on
 
-	public SparkMaxRequest<Rotation2d> build(Rotation2d setPoint, CANSparkBase.ControlType controlType, int pidSlot) {
+	public static SparkMaxRequest<Rotation2d> build(Rotation2d setPoint, CANSparkBase.ControlType controlType, int pidSlot) {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, Rotation2d::getRotations);
 	}
 
-	public SparkMaxRequest<Double> build(Double setPoint, CANSparkBase.ControlType controlType, int pidSlot) {
+	public static SparkMaxRequest<Double> build(Double setPoint, CANSparkBase.ControlType controlType, int pidSlot) {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, setpoint -> setpoint);
 	}
 

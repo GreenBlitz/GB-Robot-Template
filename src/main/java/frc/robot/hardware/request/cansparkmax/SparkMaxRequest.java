@@ -37,6 +37,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 		return this;
 	}
 
+	@Override
 	public T getSetPoint() {
 		return setPoint;
 	}

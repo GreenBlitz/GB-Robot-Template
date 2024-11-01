@@ -40,8 +40,8 @@ public abstract class Phoenix6Device implements IDevice {
 					signalsSet.add(bothLatencySignal.getSignalSlope());
 				}
 			} else {
-				new Alert(Alert.AlertType.WARNING,
-						logPath + "signal number "+ i + "got invalid type: " + signals[i].getClass().getSimpleName()).report();
+				new Alert(Alert.AlertType.WARNING, logPath + "signal number " + i + "got invalid type: " + signals[i].getClass().getSimpleName())
+					.report();
 			}
 		}
 

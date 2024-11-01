@@ -31,27 +31,31 @@ public abstract class Phoenix6Device implements IDevice {
 		return connectedInput.connected;
 	}
 
-	private StatusCode refreshSignals(InputSignal... signals) {
+	private StatusCode refreshSignals(InputSignal<?>... signals) {
 		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
-		for (InputSignal signal : signals) {
-			if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
-				signalsSet.add(((Phoenix6SignalBuilder.SignalGetter) signal).getSignal());
-				if (signal instanceof Phoenix6BothLatencySignal) {
-					signalsSet.add(((Phoenix6BothLatencySignal) signal).getSignalSlope());
+		for (int i = 0; i < signals.length; i++) {
+			if (signals[i] instanceof Phoenix6SignalBuilder.SignalGetter signalGetter) {
+				signalsSet.add(signalGetter.getSignal());
+				if (signals[i] instanceof Phoenix6BothLatencySignal bothLatencySignal) {
+					signalsSet.add(bothLatencySignal.getSignalSlope());
 				}
+			} else {
+				new Alert(Alert.AlertType.WARNING, logPath + "signal number " + i + "got invalid type: " + signals[i].getClass().getSimpleName())
+					.report();
 			}
 		}
 
 		return BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new));
 	}
 
-	private void logSignals(InputSignal... signals) {
-		for (InputSignal signal : signals) {
+	private void logSignals(InputSignal<?>... signals) {
+		for (InputSignal<?> signal : signals) {
 			Logger.processInputs(logPath, signal);
 		}
 	}
 
-	public void updateSignals(InputSignal... signals) {
+	@Override
+	public void updateSignals(InputSignal<?>... signals) {
 		connectedInput.connected = refreshSignals(signals).isOK();
 		Logger.processInputs(logPath, connectedInput);
 		logSignals(signals);

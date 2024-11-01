@@ -16,6 +16,7 @@ import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
@@ -27,6 +28,8 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 
 	private Robot robot;
+
+	public static int cycles;
 
 	@Override
 	public void robotInit() {
@@ -70,6 +73,8 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		TimeUtils.updateCycleTime(); // Better to be first
+		cycles++;
+		Logger.recordOutput("Cycles", cycles);
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();

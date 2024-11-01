@@ -1,6 +1,7 @@
 package frc.utils.time;
 
 import edu.wpi.first.hal.HALUtil;
+import frc.robot.RobotManager;
 import frc.utils.Conversions;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
@@ -10,8 +11,6 @@ import org.littletonrobotics.junction.Logger;
 public class TimeUtils {
 
 	public static final double DEFAULT_CYCLE_TIME_SECONDS = 0.02;
-
-	private static int CYCLES = 0;
 
 	private static double lastCycleTimeSeconds = 0;
 	private static double newCycleTimeSeconds = 0;
@@ -29,7 +28,6 @@ public class TimeUtils {
 	public static void updateCycleTime() {
 		lastCycleTimeSeconds = newCycleTimeSeconds;
 		newCycleTimeSeconds = getCurrentTimeSeconds();
-		CYCLES++;
 
 		logStatus();
 	}
@@ -37,8 +35,7 @@ public class TimeUtils {
 	private static void logStatus() {
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", getCurrentTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "Cycles", CYCLES);
-		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", getCurrentTimeSeconds() / CYCLES);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", getCurrentTimeSeconds() / RobotManager.cycles);
 	}
 
 	public static double getCurrentTimeSeconds() {

@@ -33,7 +33,7 @@ public abstract class Phoenix6Device implements IDevice {
 
 	private StatusCode refreshSignals(InputSignal<?>... signals) {
 		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
-		for (final InputSignal<?> signal : signals) {
+		for (InputSignal<?> signal : signals) {
 			if (signal instanceof Phoenix6SignalBuilder.SignalGetter signalGetter) {
 				signalsSet.add(signalGetter.getSignal());
 				if (signal instanceof Phoenix6BothLatencySignal bothLatencySignal) {

@@ -233,9 +233,9 @@ public class Module {
 	//@formatter:off
 	public boolean isAtTargetVelocity(double speedToleranceMetersPerSecond) {
 		return MathUtil.isNear(
-				getTargetState().speedMetersPerSecond,
-				getDriveVelocityMetersPerSecond(),
-				speedToleranceMetersPerSecond
+			getTargetState().speedMetersPerSecond,
+			getDriveVelocityMetersPerSecond(),
+			speedToleranceMetersPerSecond
 		);
 	}
 	//@formatter:on

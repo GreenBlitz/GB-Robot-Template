@@ -4,7 +4,6 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.sun.source.tree.UsesTree;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Phoenix6RequestBuilder {

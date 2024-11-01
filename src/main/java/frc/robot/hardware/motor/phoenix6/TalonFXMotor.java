@@ -20,9 +20,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	public TalonFXMotor(String logPath, TalonFXWrapper motor, SysIdRoutine.Config sysidConfig, MechanismSimulation mechanismSimulation) {
 		super(logPath);
 		this.motor = motor;
+		this.talonFXSimulation = Robot.ROBOT_TYPE.isSimulation() ? new TalonFXSimulation(motor, mechanismSimulation) : null;
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		motor.optimizeBusUtilization();
-		this.talonFXSimulation = Robot.ROBOT_TYPE.isSimulation() ? new TalonFXSimulation(motor, mechanismSimulation) : null;
 	}
 
 	@Override

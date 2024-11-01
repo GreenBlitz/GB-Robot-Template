@@ -9,11 +9,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class Phoenix6RequestBuilder {
 
 	public static Phoenix6Request<Rotation2d> build(PositionVoltage positionVoltage) {
-		return new Phoenix6Request<>(new Rotation2d() ,positionVoltage, setPoint -> positionVoltage.withPosition(setPoint.getRotations()));
+		return new Phoenix6Request<>(new Rotation2d(), positionVoltage, setPoint -> positionVoltage.withPosition(setPoint.getRotations()));
 	}
 
 	public static Phoenix6Request<Rotation2d> build(VelocityVoltage velocityVoltage) {
-		return new Phoenix6Request<>(new Rotation2d() , velocityVoltage, setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()));
+		return new Phoenix6Request<>(new Rotation2d(), velocityVoltage, setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()));
 	}
 
 	public static Phoenix6Request<Double> build(VoltageOut voltageOut) {

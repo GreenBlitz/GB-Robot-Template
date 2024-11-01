@@ -1,7 +1,7 @@
 ModuleConstants:
 -----------------------
 - Wheel Diameter
-- Coupling Ratio,
+- Coupling Ratio
 - Velocity At 12 Volts
 
 Encoder:

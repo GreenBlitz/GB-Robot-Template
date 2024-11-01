@@ -49,12 +49,12 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		motor.set(power);
 	}
 
-
-	public void applyRequest(IRequest request) {
-		if (request instanceof Phoenix6Request<?>) {
-			motor.setControl(((Phoenix6Request<?>) request).getControlRequest());
+	@Override
+	public void applyRequest(IRequest<?> request) {
+		if (request instanceof Phoenix6Request<?> phoenix6Request) {
+			motor.setControl(phoenix6Request.getControlRequest());
 		} else {
-			new Alert(Alert.AlertType.WARNING, getLogPath() + "got invalid type of request").report();
+			new Alert(Alert.AlertType.WARNING, getLogPath() + "got invalid type of request: " + request.getClass()).report();
 		}
 	}
 

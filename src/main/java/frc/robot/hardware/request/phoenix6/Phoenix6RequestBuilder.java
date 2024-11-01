@@ -8,19 +8,19 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Phoenix6RequestBuilder {
 
-	public Phoenix6Request<Rotation2d> generate(PositionVoltage positionVoltage) {
+	public Phoenix6Request<Rotation2d> build(PositionVoltage positionVoltage) {
 		return new Phoenix6Request<>(positionVoltage, setPoint -> positionVoltage.withPosition(setPoint.getRotations()));
 	}
 
-	public Phoenix6Request<Rotation2d> generate(VelocityVoltage velocityVoltage) {
+	public Phoenix6Request<Rotation2d> build(VelocityVoltage velocityVoltage) {
 		return new Phoenix6Request<>(velocityVoltage, setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()));
 	}
 
-	public Phoenix6Request<Double> generate(VoltageOut voltageOut) {
+	public Phoenix6Request<Double> build(VoltageOut voltageOut) {
 		return new Phoenix6Request<>(voltageOut, voltageOut::withOutput);
 	}
 
-	public Phoenix6Request<Double> generate(TorqueCurrentFOC torqueCurrentFOC) {
+	public Phoenix6Request<Double> build(TorqueCurrentFOC torqueCurrentFOC) {
 		return new Phoenix6Request<>(torqueCurrentFOC, torqueCurrentFOC::withOutput);
 	}
 

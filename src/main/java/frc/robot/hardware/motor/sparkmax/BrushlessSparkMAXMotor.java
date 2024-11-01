@@ -32,7 +32,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 	}
 
 	@Override
-	public void applyRequest(IRequest request) {
+	public void applyRequest(IRequest<?> request) {
 		if (request instanceof SparkMaxRequest<?> sparkMaxRequest) {
 			motor.getPIDController()
 				.setReference(
@@ -42,7 +42,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 					sparkMaxRequest.getFeedforwardCalculation()
 				);
 		} else {
-			new Alert(Alert.AlertType.WARNING, getLogPath() + "got invalid type of request").report();
+			new Alert(Alert.AlertType.WARNING, getLogPath() + "got invalid type of request: " + request.getClass()).report();
 		}
 	}
 

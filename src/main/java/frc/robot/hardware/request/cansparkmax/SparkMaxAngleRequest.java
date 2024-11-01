@@ -48,6 +48,7 @@ public class SparkMaxAngleRequest implements IRequest<Rotation2d> {
 		return this;
 	}
 
+	@Override
 	public Rotation2d getSetPoint() {
 		return setPoint;
 	}

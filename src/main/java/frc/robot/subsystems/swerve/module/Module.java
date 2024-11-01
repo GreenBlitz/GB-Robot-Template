@@ -131,7 +131,7 @@ public class Module {
 
 
 	public void stop() {
-		targetState = new SwerveModuleState(0, steerStuff.positionSignal().getLatestValue());
+		targetState = new SwerveModuleState(0, getSteerPosition());
 		steer.stop();
 		drive.stop();
 	}

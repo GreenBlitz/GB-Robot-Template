@@ -31,8 +31,8 @@ public abstract class SparkMaxMotor implements IMotor {
 	}
 
 	@Override
-	public void updateSignals(InputSignal... signals) {
-		for (InputSignal signal : signals) {
+	public void updateSignals(InputSignal<?>... signals) {
+		for (InputSignal<?> signal : signals) {
 			Logger.processInputs(logPath, signal);
 		}
 	}

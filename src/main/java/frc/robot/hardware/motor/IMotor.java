@@ -10,4 +10,6 @@ public interface IMotor extends IDevice {
 
 	void setPower(double power);
 
+	void updateSimulation();
+
 }

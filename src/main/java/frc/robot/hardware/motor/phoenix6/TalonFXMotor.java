@@ -3,6 +3,7 @@ package frc.robot.hardware.motor.phoenix6;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Robot;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.request.IRequest;
@@ -13,13 +14,22 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	private final TalonFXWrapper motor;
+	private final TalonFXSimulation talonFXSimulation;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
-	public TalonFXMotor(String logPath, TalonFXWrapper motor, SysIdRoutine.Config sysidConfig) {
+	public TalonFXMotor(String logPath, TalonFXWrapper motor, SysIdRoutine.Config sysidConfig, MechanismSimulation mechanismSimulation) {
 		super(logPath);
 		this.motor = motor;
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		motor.optimizeBusUtilization();
+		this.talonFXSimulation = Robot.ROBOT_TYPE.isSimulation() ? new TalonFXSimulation(motor, mechanismSimulation) : null;
+	}
+
+	@Override
+	public void updateSimulation() {
+		if (talonFXSimulation != null) {
+			talonFXSimulation.updateMotor();
+		}
 	}
 
 	@Override

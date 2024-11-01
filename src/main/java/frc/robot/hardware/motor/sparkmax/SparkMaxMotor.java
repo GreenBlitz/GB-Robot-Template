@@ -26,6 +26,9 @@ public abstract class SparkMaxMotor implements IMotor {
 	}
 
 	@Override
+	public void updateSimulation() {}
+
+	@Override
 	public boolean isConnected() {
 		return connectedInput.connected;
 	}

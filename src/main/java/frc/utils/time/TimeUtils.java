@@ -29,6 +29,7 @@ public class TimeUtils {
 	public static void updateCycleTime() {
 		lastCycleTimeSeconds = newCycleTimeSeconds;
 		newCycleTimeSeconds = getCurrentTimeSeconds();
+		CYCLES++;
 
 		logStatus();
 	}
@@ -36,7 +37,6 @@ public class TimeUtils {
 	private static void logStatus() {
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", getCurrentTimeSeconds());
-		CYCLES++;
 		Logger.recordOutput(TimeConstants.LOG_PATH + "Cycles", CYCLES);
 		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", getCurrentTimeSeconds() / CYCLES);
 	}

@@ -3,7 +3,6 @@ package frc.robot.hardware.motor.sparkmax;
 import com.revrobotics.CANSparkBase;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.IMotor;
-import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.signal.InputSignal;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;

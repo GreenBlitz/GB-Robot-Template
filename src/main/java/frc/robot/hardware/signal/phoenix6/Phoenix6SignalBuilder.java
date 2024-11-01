@@ -1,4 +1,4 @@
-package frc.robot.hardware.signal.phoenix;
+package frc.robot.hardware.signal.phoenix6;
 
 import com.ctre.phoenix6.StatusSignal;
 import frc.utils.AngleUnit;

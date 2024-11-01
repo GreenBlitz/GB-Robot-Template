@@ -11,7 +11,7 @@ public class SparkMaxAngleRequest implements IRequest<Rotation2d> {
 	public enum SparkAngleRequestType {
 
 		POSITION(CANSparkBase.ControlType.kPosition),
-		VELOCITY(CANSparkBase.ControlType.kVelocity);
+		VELOCITY_PER_SECOND(CANSparkBase.ControlType.kVelocity);
 
 		private final CANSparkBase.ControlType type;
 

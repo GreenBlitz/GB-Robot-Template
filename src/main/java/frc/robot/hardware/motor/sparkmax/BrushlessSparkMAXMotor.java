@@ -36,9 +36,9 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 	public void applyDoubleRequest(IRequest<Double> request) {
 		SparkMaxDoubleRequest doubleRequest = (SparkMaxDoubleRequest) request;
 		motor.getPIDController().setReference(
-				doubleRequest.getSetPoint(),
-				doubleRequest.getControlType(),
-				doubleRequest.getPidSlot()
+			doubleRequest.getSetPoint(),
+			doubleRequest.getControlType(),
+			doubleRequest.getPidSlot()
 		);
 	}
 
@@ -46,10 +46,10 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 	public void applyAngleRequest(IRequest<Rotation2d> request) {
 		SparkMaxAngleRequest angleRequest = (SparkMaxAngleRequest) request;
 		motor.getPIDController().setReference(
-				angleRequest.getSetPoint().getRotations(),
-				angleRequest.getControlType(),
-				angleRequest.getPidSlot(),
-				angleRequest.getFeedforwardCalculation()
+			angleRequest.getSetPoint().getRotations(),
+			angleRequest.getControlType(),
+			angleRequest.getPidSlot(),
+			angleRequest.getFeedforwardCalculation()
 		);
 	}
 	//@formatter:on

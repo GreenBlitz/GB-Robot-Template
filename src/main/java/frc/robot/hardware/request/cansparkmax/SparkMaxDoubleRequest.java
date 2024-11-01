@@ -34,7 +34,8 @@ public class SparkMaxDoubleRequest implements IRequest<Double> {
 		return this;
 	}
 
-	public double getSetPoint() {
+	@Override
+	public Double getSetPoint() {
 		return setPoint;
 	}
 

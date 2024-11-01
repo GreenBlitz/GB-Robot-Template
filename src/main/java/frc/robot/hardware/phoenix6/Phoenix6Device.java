@@ -33,15 +33,17 @@ public abstract class Phoenix6Device implements IDevice {
 
 	private StatusCode refreshSignals(InputSignal<?>... signals) {
 		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
-		for (int i = 0; i < signals.length; i++) {
-			if (signals[i] instanceof Phoenix6SignalBuilder.SignalGetter signalGetter) {
+		for (final InputSignal<?> signal : signals) {
+			if (signal instanceof Phoenix6SignalBuilder.SignalGetter signalGetter) {
 				signalsSet.add(signalGetter.getSignal());
-				if (signals[i] instanceof Phoenix6BothLatencySignal bothLatencySignal) {
+				if (signal instanceof Phoenix6BothLatencySignal bothLatencySignal) {
 					signalsSet.add(bothLatencySignal.getSignalSlope());
 				}
 			} else {
-				new Alert(Alert.AlertType.WARNING, logPath + "signal number " + i + "got invalid type: " + signals[i].getClass().getSimpleName())
-					.report();
+				new Alert(
+					Alert.AlertType.WARNING,
+					logPath + "signal named: " + signal.getName() + " got invalid type: " + signal.getClass().getSimpleName()
+				).report();
 			}
 		}
 

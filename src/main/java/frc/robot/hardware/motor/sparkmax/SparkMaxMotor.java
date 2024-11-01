@@ -3,7 +3,9 @@ package frc.robot.hardware.motor.sparkmax;
 import com.revrobotics.CANSparkBase;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.IMotor;
+import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -33,7 +35,14 @@ public abstract class SparkMaxMotor implements IMotor {
 	@Override
 	public void updateSignals(InputSignal<?>... signals) {
 		for (InputSignal<?> signal : signals) {
-			Logger.processInputs(logPath, signal);
+			if (signal instanceof SuppliedDoubleSignal || signal instanceof SparkMaxAngleRequest) {
+				Logger.processInputs(logPath, signal);
+			} else {
+				new Alert(
+					Alert.AlertType.WARNING,
+					logPath + "signal named: " + signal.getName() + " got invalid type: " + signal.getClass().getSimpleName()
+				).report();
+			}
 		}
 	}
 

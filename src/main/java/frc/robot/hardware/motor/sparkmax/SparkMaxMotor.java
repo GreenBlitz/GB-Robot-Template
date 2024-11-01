@@ -44,6 +44,8 @@ public abstract class SparkMaxMotor implements IMotor {
 				).report();
 			}
 		}
+
+		Logger.processInputs(logPath, connectedInput);
 	}
 
 	@Override

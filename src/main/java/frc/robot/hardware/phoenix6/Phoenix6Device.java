@@ -42,7 +42,7 @@ public abstract class Phoenix6Device implements IDevice {
 			} else {
 				new Alert(
 					Alert.AlertType.WARNING,
-					logPath + "signal named: " + signal.getName() + " got invalid type: " + signal.getClass().getSimpleName()
+					logPath + "signal named " + signal.getName() + " got invalid type " + signal.getClass().getSimpleName()
 				).report();
 			}
 		}

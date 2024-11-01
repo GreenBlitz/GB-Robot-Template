@@ -40,7 +40,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			} else {
 				new Alert(
 					Alert.AlertType.WARNING,
-					logPath + "signal named: " + signal.getName() + " got invalid type: " + signal.getClass().getSimpleName()
+					logPath + "signal named " + signal.getName() + " got invalid type " + signal.getClass().getSimpleName()
 				).report();
 			}
 		}

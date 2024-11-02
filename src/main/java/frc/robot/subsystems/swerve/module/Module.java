@@ -98,9 +98,9 @@ public class Module {
 	}
 
 	public void updateInputs() {
-		encoder.updateSignals(encoderStuff.positionSignal());
-		steer.updateSignals(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
-		drive.updateSignals(driveStuff.positionSignal(), driveStuff.velocitySignal(), driveStuff.currentSignal(), driveStuff.voltageSignal());
+		encoder.updateInputs(encoderStuff.positionSignal());
+		steer.updateInputs(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
+		drive.updateInputs(driveStuff.positionSignal(), driveStuff.velocitySignal(), driveStuff.currentSignal(), driveStuff.voltageSignal());
 
 		fixDriveInputsCoupling();
 

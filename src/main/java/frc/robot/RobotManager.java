@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.simulation.SimulationManager;
+import frc.robot.testers.CoolTester;
+import frc.robot.testers.ITester;
+import frc.robot.testers.Tester;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -29,7 +32,7 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
-	private CoolTester[] coolTesters;
+	private ITester[] coolTesters;
 
 	@Override
 	public void robotInit() {
@@ -38,9 +41,9 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
-		this.coolTesters = new CoolTester[8];
+		this.coolTesters = new ITester[8];
 		for (int i = 0; i < coolTesters.length; i++) {
-			coolTesters[i] = new CoolTester(i);
+			coolTesters[i] = new Tester(i);
 		}
 	}
 
@@ -49,7 +52,7 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtils.isMatch()) {
 			BrakeStateManager.coast();
 		}
-        for (final CoolTester coolTester : coolTesters) {
+        for (final ITester coolTester : coolTesters) {
             coolTester.setControl(new VoltageOut(0));
         }
 	}
@@ -68,7 +71,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.schedule();
 		}
-		for (final CoolTester coolTester : coolTesters) {
+		for (final ITester coolTester : coolTesters) {
 			coolTester.setControl(new VoltageOut(4));
 		}
 	}
@@ -78,7 +81,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		for (final CoolTester coolTester : coolTesters) {
+		for (final ITester coolTester : coolTesters) {
 			coolTester.setControl(new VoltageOut(-6));
 		}
 	}
@@ -90,7 +93,7 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-		for (final CoolTester coolTester : coolTesters) {
+		for (final ITester coolTester : coolTesters) {
 			coolTester.run();
 		}
 	}

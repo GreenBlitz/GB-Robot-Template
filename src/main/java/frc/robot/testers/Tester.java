@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.testers;
 
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -16,7 +16,7 @@ import frc.utils.battery.BatteryUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
-public class Tester {
+public class Tester implements ITester {
 
     TalonFXWrapper motor;
     TalonFXSimState simState;

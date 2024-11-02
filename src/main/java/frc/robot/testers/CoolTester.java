@@ -1,10 +1,9 @@
-package frc.robot;
+package frc.robot.testers;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.signals.InvertedValue;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.hardware.motor.phoenix6.SimpleWheelSimulation;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
@@ -15,7 +14,7 @@ import frc.robot.hardware.signal.phoenix6.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
 import org.littletonrobotics.junction.Logger;
 
-public class CoolTester {
+public class CoolTester implements ITester {
 
     TalonFXMotor motor;
     double gearRatio = 5;
@@ -30,10 +29,9 @@ public class CoolTester {
         fxCfg.Feedback.SensorToMechanismRatio  = gearRatio;
         motor = new TalonFXMotor("Test/" + id + "/", new Phoenix6DeviceID(id), fxCfg, mechanismSimulation);
 
-        BaseStatusSignal.setUpdateFrequencyForAll(100, motor.getMotor().getPosition(), motor.getMotor().getMotorVoltage());
 
-//        voltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getMotor().getMotorVoltage(), 250);
-//        positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getMotor().getPosition(), 250, AngleUnit.ROTATIONS);
+        voltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getMotor().getMotorVoltage(), 100);
+        positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getMotor().getPosition(), 100, AngleUnit.ROTATIONS);
         BaseStatusSignal.setUpdateFrequencyForAll(100, motor.getMotor().getPosition(), motor.getMotor().getMotorVoltage());
     }
 
@@ -41,8 +39,8 @@ public class CoolTester {
         motor.updateSimulation();
 //        motor.updateSignals(voltageSignal, positionSignal);
 
-//        Logger.recordOutput("Test/"+ motor.getMotor().getDeviceID()+"/Refresh",
-//            BaseStatusSignal.refreshAll(positionSignal.getSignal(),  voltageSignal.getSignal()).isOK());
+        Logger.recordOutput("Test/"+ motor.getMotor().getDeviceID()+"/Refresh",
+            BaseStatusSignal.refreshAll(positionSignal.getSignal(),  voltageSignal.getSignal()).isOK());
         Logger.recordOutput("Test/"+ motor.getMotor().getDeviceID()+"/VoltageSignal", motor.getMotor().getMotorVoltage().getValue());
         Logger.recordOutput("Test/"+ motor.getMotor().getDeviceID()+"/Mahaha", motor.getTalonFXSimulation().getMotorSimState().getMotorVoltage());
         Logger.recordOutput("Test/"+ motor.getMotor().getDeviceID()+"/PositionSignal", motor.getMotor().getPosition().getValue());

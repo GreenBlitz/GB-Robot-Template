@@ -28,7 +28,6 @@ public class Phoenix6SignalBuilder {
 		return new Phoenix6AngleSignal(signalClone.getName(), signalClone, angleUnit);
 	}
 
-	//@formatter:off
 	public static Phoenix6LatencySignal generatePhoenix6Signal(
 		StatusSignal<Double> signal,
 		SignalGetter signalSlope,
@@ -53,7 +52,6 @@ public class Phoenix6SignalBuilder {
 		StatusSignal<Double> signalSlopeClone = cloneWithFrequency(signalSlope, frequency);
 		return new Phoenix6BothLatencySignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
 	}
-	//@formatter:on
 
 	public interface SignalGetter {
 

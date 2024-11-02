@@ -33,11 +33,11 @@ public class TimeUtils {
 	}
 
 	private static void logStatus() {
-		double currentTime = getCurrentTimeSeconds();
+		double currentTimeSeconds = getCurrentTimeSeconds();
 
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentTime);
-		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentTime / RobotManager.roborioCycles);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentTimeSeconds);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentTimeSeconds / RobotManager.roborioCycles);
 	}
 
 	public static double getCurrentTimeSeconds() {

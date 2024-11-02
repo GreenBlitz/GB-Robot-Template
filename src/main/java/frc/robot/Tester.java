@@ -46,7 +46,7 @@ public class Tester {
 
     public void run() {
         physicsSimulation.setInputVoltage(simState.getMotorVoltage());
-        physicsSimulation.update(TimeUtils.DEFAULT_CYCLE_TIME_SECONDS);
+        physicsSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
         simState.setRawRotorPosition(Rotation2d.fromRadians(physicsSimulation.getAngularPositionRad()).times(gearRatio).getRotations());
         simState.setRotorVelocity(Rotation2d.fromRadians(physicsSimulation.getAngularVelocityRadPerSec()).times(gearRatio).getRotations());
 

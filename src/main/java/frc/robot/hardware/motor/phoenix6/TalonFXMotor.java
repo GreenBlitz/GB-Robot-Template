@@ -1,11 +1,13 @@
 package frc.robot.hardware.motor.phoenix6;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
 import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
@@ -17,12 +19,27 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	private final TalonFXSimulation talonFXSimulation;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
-	public TalonFXMotor(String logPath, TalonFXWrapper motor, SysIdRoutine.Config sysidConfig, MechanismSimulation mechanismSimulation) {
+	public TalonFXMotor(
+		String logPath,
+		Phoenix6DeviceID deviceID,
+		TalonFXConfiguration configuration,
+		SysIdRoutine.Config sysidConfig,
+		MechanismSimulation simulation
+	) {
 		super(logPath);
-		this.motor = motor;
-		this.talonFXSimulation = Robot.ROBOT_TYPE.isSimulation() ? new TalonFXSimulation(motor, mechanismSimulation) : null;
+		this.motor = Robot.ROBOT_TYPE.isSimulation() ? new TalonFXWrapper(deviceID.ID()) : new TalonFXWrapper(deviceID);
+		motor.applyConfiguration(configuration, 5);
+		this.talonFXSimulation = Robot.ROBOT_TYPE.isSimulation() ? new TalonFXSimulation(motor, configuration, simulation) : null;
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		motor.optimizeBusUtilization();
+	}
+
+	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, TalonFXConfiguration configuration, MechanismSimulation simulation) {
+		this(logPath, deviceID, configuration, new SysIdRoutine.Config(), simulation);
+	}
+
+	public TalonFXWrapper getMotor() {
+		return motor;
 	}
 
 	@Override

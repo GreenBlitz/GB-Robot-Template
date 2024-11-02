@@ -141,7 +141,7 @@ public class Modules extends GBSubsystem {
 
 	public boolean isAtTargetSteersPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
 		for (Module module : modules) {
-			if (!module.isAtTargetSteerPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
+			if (!module.isSteerAtTargetPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
 			}
 		}

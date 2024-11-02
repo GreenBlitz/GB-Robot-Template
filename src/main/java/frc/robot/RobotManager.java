@@ -29,7 +29,7 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
-	private Tester[] testers;
+	private CoolTester[] coolTesters;
 
 	@Override
 	public void robotInit() {
@@ -38,9 +38,9 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
-		this.testers = new Tester[8];
-		for (int i = 0; i < testers.length; i++) {
-			testers[i] = new Tester(i);
+		this.coolTesters = new CoolTester[8];
+		for (int i = 0; i < coolTesters.length; i++) {
+			coolTesters[i] = new CoolTester(i);
 		}
 	}
 
@@ -49,8 +49,8 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtils.isMatch()) {
 			BrakeStateManager.coast();
 		}
-        for (final Tester tester : testers) {
-            tester.setControl(new VoltageOut(0));
+        for (final CoolTester coolTester : coolTesters) {
+            coolTester.setControl(new VoltageOut(0));
         }
 	}
 
@@ -68,8 +68,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.schedule();
 		}
-		for (final Tester tester : testers) {
-			tester.setControl(new VoltageOut(4));
+		for (final CoolTester coolTester : coolTesters) {
+			coolTester.setControl(new VoltageOut(4));
 		}
 	}
 
@@ -78,8 +78,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		for (final Tester tester : testers) {
-			tester.setControl(new VoltageOut(-6));
+		for (final CoolTester coolTester : coolTesters) {
+			coolTester.setControl(new VoltageOut(-6));
 		}
 	}
 
@@ -90,8 +90,8 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-		for (final Tester tester : testers) {
-			tester.run();
+		for (final CoolTester coolTester : coolTesters) {
+			coolTester.run();
 		}
 	}
 

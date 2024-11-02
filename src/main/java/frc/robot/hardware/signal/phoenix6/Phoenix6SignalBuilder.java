@@ -13,7 +13,7 @@ public class Phoenix6SignalBuilder {
 	}
 
 	private static StatusSignal<Double> cloneWithFrequency(StatusSignal<Double> signal, double frequency) {
-		StatusSignal<Double> signalClone = signal.clone();
+		StatusSignal<Double> signalClone = signal;
 		setFrequencyWithRetry(signalClone, frequency);
 		return signalClone;
 	}

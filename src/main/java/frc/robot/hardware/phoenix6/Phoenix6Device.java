@@ -31,21 +31,28 @@ public abstract class Phoenix6Device implements IDevice {
 		return connectedInput.connected;
 	}
 
-	private InputSignal<?>[] getValidSignals(InputSignal<?>... signals) {
-		LinkedList<InputSignal<?>> signalsSet = new LinkedList<>();
-		for (InputSignal<?> signal : signals) {
-			if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
-				signalsSet.add(signal);
-			} else {
-				new Alert(
-					Alert.AlertType.WARNING,
-					logPath + "signal named " + signal.getName() + " got invalid type " + signal.getClass().getSimpleName()
-				).report();
-			}
+
+	private boolean isSignalValid(InputSignal<?> signal) {
+		if (signal instanceof Phoenix6SignalBuilder.SignalGetter) {
+			return true;
+		} else {
+			new Alert(
+				Alert.AlertType.WARNING,
+				logPath + "signal named " + signal.getName() + " got invalid type " + signal.getClass().getSimpleName()
+			).report();
+			return false;
 		}
-		return signalsSet.toArray(InputSignal<?>[]::new);
 	}
 
+	private InputSignal<?>[] getValidSignals(InputSignal<?>... signals) {
+		LinkedList<InputSignal<?>> validSignals = new LinkedList<>();
+		for (InputSignal<?> signal : signals) {
+			if (isSignalValid(signal)) {
+				validSignals.add(signal);
+			}
+		}
+		return validSignals.toArray(InputSignal<?>[]::new);
+	}
 
 	private StatusCode refreshSignals(InputSignal<?>... signals) {
 		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();

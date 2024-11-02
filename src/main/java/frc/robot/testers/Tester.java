@@ -1,6 +1,7 @@
 package frc.robot.testers;
 
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -42,13 +43,13 @@ public class Tester implements ITester {
 
 //        BaseStatusSignal.setUpdateFrequencyForAll(100, motor.getPosition(), motor.getMotorVoltage(), motor.getVelocity());
 		positionSignal = motor.getPosition();
-		positionSignal.setUpdateFrequency(100);
+		positionSignal.setUpdateFrequency(1000);
 
 		velocitySignal = motor.getVelocity();
-		velocitySignal.setUpdateFrequency(100);
+		velocitySignal.setUpdateFrequency(1000);
 
 		voltageSignal = motor.getMotorVoltage();
-		voltageSignal.setUpdateFrequency(100);
+		voltageSignal.setUpdateFrequency(1000);
 
 		simState.Orientation = ChassisReference.CounterClockwise_Positive;
 		simState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
@@ -60,11 +61,13 @@ public class Tester implements ITester {
 		simState.setRawRotorPosition(Rotation2d.fromRadians(physicsSimulation.getAngularPositionRad()).times(gearRatio).getRotations());
 		simState.setRotorVelocity(Rotation2d.fromRadians(physicsSimulation.getAngularVelocityRadPerSec()).times(gearRatio).getRotations());
 
+		System.out.println(BaseStatusSignal.refreshAll(voltageSignal, positionSignal, velocitySignal) + " " + motor.getDeviceID());
+
 		Logger.recordOutput("Test/" + motor.getDeviceID() + "/VoltageSim", simState.getMotorVoltage());
-		Logger.recordOutput("Test/" + motor.getDeviceID() + "/VoltageMotor", voltageSignal.refresh().getValue());
-		Logger.recordOutput("Test/" + motor.getDeviceID() + "/VelocityMotor", velocitySignal.refresh().getValue());
-		Logger.recordOutput("Test/" + motor.getDeviceID() + "/PositionMotor", positionSignal.refresh().getValue());
-		Logger.recordOutput("Test/" + motor.getDeviceID() + "/PositionFreq", positionSignal.refresh().getAppliedUpdateFrequency());
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/VoltageMotor", voltageSignal.getValue());
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/VelocityMotor", velocitySignal.getValue());
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/PositionMotor", positionSignal.getValue());
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/PositionFreq", positionSignal.getAppliedUpdateFrequency());
 		Logger.recordOutput(
 			"Test/" + motor.getDeviceID() + "/VelocityMech",
 			Rotation2d.fromRadians(physicsSimulation.getAngularVelocityRadPerSec()).getRotations()

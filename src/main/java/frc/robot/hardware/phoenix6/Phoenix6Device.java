@@ -39,7 +39,7 @@ public abstract class Phoenix6Device implements IDevice {
 	private void reportInvalidSignal(InputSignal<?> invalidSignal) {
 		new Alert(
 			Alert.AlertType.WARNING,
-			logPath + "signal named " + invalidSignal.getName() + " got invalid type " + invalidSignal.getClass().getSimpleName()
+			logPath + "signal named " + invalidSignal.getName() + " has invalid type " + invalidSignal.getClass().getSimpleName()
 		).report();
 	}
 
@@ -76,8 +76,8 @@ public abstract class Phoenix6Device implements IDevice {
 	}
 
 	@Override
-	public void updateSignals(InputSignal<?>... signals) {
-		InputSignal<?>[] validSignals = getValidSignals(signals);
+	public void updateInputs(InputSignal<?>... inputSignals) {
+		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
 		connectedInput.connected = refreshSignals(validSignals).isOK();
 		Logger.processInputs(logPath, connectedInput);
 		logSignals(validSignals);

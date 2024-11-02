@@ -24,8 +24,8 @@ public class Tester {
 		SuppliedDoubleSignal hey = new SuppliedDoubleSignal("heyyyyy", sparkMaxWrapper::getVoltage);
 
 
-		phoenixMotor.updateSignals(setPointSignal, hey);
-		sparkMAXMotor.updateSignals(setPointSignal, hey);
+		phoenixMotor.updateInputs(setPointSignal, hey);
+		sparkMAXMotor.updateInputs(setPointSignal, hey);
 	}
 
 

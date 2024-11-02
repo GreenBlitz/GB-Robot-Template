@@ -14,6 +14,11 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	}
 
 	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
 	public Double getLatestValue() {
 		return value;
 	}

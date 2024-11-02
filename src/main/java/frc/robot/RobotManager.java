@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -28,6 +29,8 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
+	private Tester[] testers;
+
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
@@ -35,6 +38,10 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
+		this.testers = new Tester[8];
+		for (int i = 0; i < testers.length; i++) {
+			testers[i] = new Tester(i);
+		}
 	}
 
 	@Override
@@ -42,6 +49,9 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtils.isMatch()) {
 			BrakeStateManager.coast();
 		}
+        for (final Tester tester : testers) {
+            tester.setControl(new VoltageOut(0));
+        }
 	}
 
 	@Override
@@ -58,12 +68,18 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.schedule();
 		}
+		for (final Tester tester : testers) {
+			tester.setControl(new VoltageOut(4));
+		}
 	}
 
 	@Override
 	public void teleopInit() {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
+		}
+		for (final Tester tester : testers) {
+			tester.setControl(new VoltageOut(-6));
 		}
 	}
 
@@ -74,6 +90,9 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+		for (final Tester tester : testers) {
+			tester.run();
+		}
 	}
 
 	@Override

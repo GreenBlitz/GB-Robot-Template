@@ -73,8 +73,8 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		roborioCycles++; // Better to be first
-		Logger.recordOutput("RoborioCycles", roborioCycles); // Better to be second
-		TimeUtils.updateCycleTime(); // Better to be third
+		TimeUtils.updateCycleTime(); // Better to be second
+		Logger.recordOutput("RoborioCycles", roborioCycles);
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();

@@ -15,6 +15,8 @@ public class TimeUtils {
 	private static double lastCycleTimeSeconds = 0;
 	private static double newCycleTimeSeconds = 0;
 
+	private static double currentTime;
+
 	static {
 		AlertManager.addAlert(
 			new PeriodicAlert(
@@ -28,14 +30,15 @@ public class TimeUtils {
 	public static void updateCycleTime() {
 		lastCycleTimeSeconds = newCycleTimeSeconds;
 		newCycleTimeSeconds = getCurrentTimeSeconds();
+		currentTime = getCurrentTimeSeconds();
 
 		logStatus();
 	}
 
 	private static void logStatus() {
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", getCurrentTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", getCurrentTimeSeconds() / RobotManager.roborioCycles);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentTime);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentTime / RobotManager.roborioCycles);
 	}
 
 	public static double getCurrentTimeSeconds() {

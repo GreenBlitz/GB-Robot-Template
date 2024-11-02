@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.simulation.SimulationManager;
-import frc.robot.testers.CoolTester;
 import frc.robot.testers.ITester;
 import frc.robot.testers.Tester;
 import frc.utils.auto.PathPlannerUtils;
@@ -52,9 +51,9 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtils.isMatch()) {
 			BrakeStateManager.coast();
 		}
-        for (final ITester coolTester : coolTesters) {
-            coolTester.setControl(new VoltageOut(0));
-        }
+		for (int i = 0; i < coolTesters.length; i++) {
+			coolTesters[i].setControl(new VoltageOut(0));
+		}
 	}
 
 	@Override
@@ -71,8 +70,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.schedule();
 		}
-		for (final ITester coolTester : coolTesters) {
-			coolTester.setControl(new VoltageOut(4));
+		for (int i = 0; i < coolTesters.length; i++) {
+			coolTesters[i].setControl(new VoltageOut(4));
 		}
 	}
 
@@ -81,8 +80,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		for (final ITester coolTester : coolTesters) {
-			coolTester.setControl(new VoltageOut(-6));
+		for (int i = 0; i < coolTesters.length; i++) {
+			coolTesters[i].setControl(new VoltageOut(-6));
 		}
 	}
 
@@ -93,8 +92,8 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-		for (final ITester coolTester : coolTesters) {
-			coolTester.run();
+		for (int i = 0; i < coolTesters.length; i++) {
+			coolTesters[i].run();
 		}
 	}
 

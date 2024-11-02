@@ -1,10 +1,11 @@
 package frc.robot.testers;
 
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -18,48 +19,64 @@ import org.littletonrobotics.junction.Logger;
 
 public class Tester implements ITester {
 
-    TalonFXWrapper motor;
-    TalonFXSimState simState;
-    double gearRatio = 5;
-    DCMotorSim physicsSimulation = new DCMotorSim(DCMotor.getFalcon500Foc(1), gearRatio, 0.001);
+	TalonFX motor;
+	TalonFXSimState simState;
+	double gearRatio = 5;
+	DCMotorSim physicsSimulation = new DCMotorSim(DCMotor.getFalcon500Foc(1), gearRatio, 0.001);
 
-    public Tester(int id) {
-        motor = new TalonFXWrapper(id);
-        simState = motor.getSimState();
-        StatusCode returnCode;
+	StatusSignal<Double> positionSignal, voltageSignal, velocitySignal;
 
-        TalonFXConfiguration fxCfg = new TalonFXConfiguration();
-        fxCfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        fxCfg.Feedback.SensorToMechanismRatio  = gearRatio;
-        for (int i = 0; i < 5; ++i) {
-            returnCode = motor.getConfigurator().apply(fxCfg);
-            if (returnCode.isOK()) break;
-        }
+	public Tester(int id) {
+		motor = new TalonFXWrapper(id);
+		simState = motor.getSimState();
+		StatusCode returnCode;
 
-        BaseStatusSignal.setUpdateFrequencyForAll(100, motor.getPosition(), motor.getMotorVoltage(), motor.getVelocity());
+		TalonFXConfiguration fxCfg = new TalonFXConfiguration();
+		fxCfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+		fxCfg.Feedback.SensorToMechanismRatio = gearRatio;
+		for (int i = 0; i < 5; ++i) {
+			returnCode = motor.getConfigurator().apply(fxCfg);
+			if (returnCode.isOK())
+				break;
+		}
 
-        simState.Orientation = ChassisReference.CounterClockwise_Positive;
-        simState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
+//        BaseStatusSignal.setUpdateFrequencyForAll(100, motor.getPosition(), motor.getMotorVoltage(), motor.getVelocity());
+		positionSignal = motor.getPosition();
+		positionSignal.setUpdateFrequency(100);
 
+		velocitySignal = motor.getVelocity();
+		velocitySignal.setUpdateFrequency(100);
 
-    }
+		voltageSignal = motor.getMotorVoltage();
+		voltageSignal.setUpdateFrequency(100);
 
-    public void run() {
-        physicsSimulation.setInputVoltage(simState.getMotorVoltage());
-        physicsSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
-        simState.setRawRotorPosition(Rotation2d.fromRadians(physicsSimulation.getAngularPositionRad()).times(gearRatio).getRotations());
-        simState.setRotorVelocity(Rotation2d.fromRadians(physicsSimulation.getAngularVelocityRadPerSec()).times(gearRatio).getRotations());
+		simState.Orientation = ChassisReference.CounterClockwise_Positive;
+		simState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
+	}
 
-        Logger.recordOutput("Test/"+ motor.getDeviceID()+"/VoltageSim",simState.getMotorVoltage());
-        Logger.recordOutput("Test/"+ motor.getDeviceID()+"/VoltageMotor",motor.getMotorVoltage().getValue());
-        Logger.recordOutput("Test/"+ motor.getDeviceID() +"/VelocityMotor",motor.getVelocity().getValue());
-        Logger.recordOutput("Test/"+ motor.getDeviceID() +"/PositionMotor",motor.getPosition().getValue());
-        Logger.recordOutput("Test/"+ motor.getDeviceID() +"/VelocityMech",Rotation2d.fromRadians(physicsSimulation.getAngularVelocityRadPerSec()).getRotations());
-        Logger.recordOutput("Test/"+ motor.getDeviceID() +"/PositionMech",Rotation2d.fromRadians(physicsSimulation.getAngularPositionRad()).getRotations());
-    }
+	public void run() {
+		physicsSimulation.setInputVoltage(simState.getMotorVoltage());
+		physicsSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+		simState.setRawRotorPosition(Rotation2d.fromRadians(physicsSimulation.getAngularPositionRad()).times(gearRatio).getRotations());
+		simState.setRotorVelocity(Rotation2d.fromRadians(physicsSimulation.getAngularVelocityRadPerSec()).times(gearRatio).getRotations());
 
-    public void setControl(ControlRequest controlRequest) {
-        motor.setControl(controlRequest);
-    }
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/VoltageSim", simState.getMotorVoltage());
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/VoltageMotor", voltageSignal.refresh().getValue());
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/VelocityMotor", velocitySignal.refresh().getValue());
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/PositionMotor", positionSignal.refresh().getValue());
+		Logger.recordOutput("Test/" + motor.getDeviceID() + "/PositionFreq", positionSignal.refresh().getAppliedUpdateFrequency());
+		Logger.recordOutput(
+			"Test/" + motor.getDeviceID() + "/VelocityMech",
+			Rotation2d.fromRadians(physicsSimulation.getAngularVelocityRadPerSec()).getRotations()
+		);
+		Logger.recordOutput(
+			"Test/" + motor.getDeviceID() + "/PositionMech",
+			Rotation2d.fromRadians(physicsSimulation.getAngularPositionRad()).getRotations()
+		);
+	}
+
+	public void setControl(ControlRequest controlRequest) {
+		motor.setControl(controlRequest);
+	}
 
 }

@@ -20,7 +20,6 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
 
-
 	public TalonFXMotor(
 		String logPath,
 		Phoenix6DeviceID deviceID,

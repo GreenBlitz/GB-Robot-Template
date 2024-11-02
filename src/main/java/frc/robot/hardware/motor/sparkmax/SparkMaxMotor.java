@@ -32,16 +32,24 @@ public abstract class SparkMaxMotor implements IMotor {
 		return connectedInput.connected;
 	}
 
+	private boolean isValid(InputSignal<?> signal) {
+		return signal instanceof SuppliedDoubleSignal || signal instanceof SuppliedAngleSignal;
+	}
+
+	private void reportInvalidSignal(InputSignal<?> invalidSignal) {
+		new Alert(
+			Alert.AlertType.WARNING,
+			logPath + "signal named " + invalidSignal.getName() + " got invalid type " + invalidSignal.getClass().getSimpleName()
+		).report();
+	}
+
 	@Override
 	public void updateSignals(InputSignal<?>... signals) {
 		for (InputSignal<?> signal : signals) {
-			if (signal instanceof SuppliedDoubleSignal || signal instanceof SuppliedAngleSignal) {
+			if (isValid(signal)) {
 				Logger.processInputs(logPath, signal);
 			} else {
-				new Alert(
-					Alert.AlertType.WARNING,
-					logPath + "signal named " + signal.getName() + " got invalid type " + signal.getClass().getSimpleName()
-				).report();
+				reportInvalidSignal(signal);
 			}
 		}
 

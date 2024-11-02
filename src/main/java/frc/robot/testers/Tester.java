@@ -43,13 +43,13 @@ public class Tester implements ITester {
 
 //        BaseStatusSignal.setUpdateFrequencyForAll(100, motor.getPosition(), motor.getMotorVoltage(), motor.getVelocity());
 		positionSignal = motor.getPosition();
-		positionSignal.setUpdateFrequency(1000);
+		positionSignal.setUpdateFrequency(100);
 
 		velocitySignal = motor.getVelocity();
-		velocitySignal.setUpdateFrequency(1000);
+		velocitySignal.setUpdateFrequency(100);
 
 		voltageSignal = motor.getMotorVoltage();
-		voltageSignal.setUpdateFrequency(1000);
+		voltageSignal.setUpdateFrequency(100);
 
 		simState.Orientation = ChassisReference.CounterClockwise_Positive;
 		simState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);

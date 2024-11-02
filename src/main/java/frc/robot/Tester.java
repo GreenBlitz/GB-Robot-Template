@@ -12,23 +12,21 @@ import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 
 public class Tester {
 
-    public static void run() {
-        TalonFXWrapper talonFXWrapper = new TalonFXWrapper(0);
-        TalonFXMotor phoenixMotor = new TalonFXMotor("Test/Phoenix/", talonFXWrapper, new SysIdRoutine.Config());
+	public static void run() {
+		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(0);
+		TalonFXMotor phoenixMotor = new TalonFXMotor("Test/Phoenix/", talonFXWrapper, new SysIdRoutine.Config());
 
-        SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(new SparkMaxDeviceID(0));
-        BrushlessSparkMAXMotor sparkMAXMotor = new BrushlessSparkMAXMotor("Test/Spark/", sparkMaxWrapper, new SysIdRoutine.Config());
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(new SparkMaxDeviceID(0));
+		BrushlessSparkMAXMotor sparkMAXMotor = new BrushlessSparkMAXMotor("Test/Spark/", sparkMaxWrapper, new SysIdRoutine.Config());
 
-        Phoenix6DoubleSignal setPointSignal = Phoenix6SignalBuilder
-            .generatePhoenix6Signal(talonFXWrapper.getClosedLoopReference(), 60);
+		Phoenix6DoubleSignal setPointSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(talonFXWrapper.getClosedLoopReference(), 60);
 
-        SuppliedDoubleSignal hey = new SuppliedDoubleSignal("heyyyyy", sparkMaxWrapper::getVoltage);
-
+		SuppliedDoubleSignal hey = new SuppliedDoubleSignal("heyyyyy", sparkMaxWrapper::getVoltage);
 
 
-        phoenixMotor.updateSignals(setPointSignal, hey);
-        sparkMAXMotor.updateSignals(setPointSignal, hey);
-    }
+		phoenixMotor.updateSignals(setPointSignal, hey);
+		sparkMAXMotor.updateSignals(setPointSignal, hey);
+	}
 
 
 }

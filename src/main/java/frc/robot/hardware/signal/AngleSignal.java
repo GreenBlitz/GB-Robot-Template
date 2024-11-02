@@ -18,6 +18,11 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	}
 
 	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
 	public Rotation2d getLatestValue() {
 		return value;
 	}

@@ -139,7 +139,7 @@ public class Modules extends GBSubsystem {
 		return true;
 	}
 
-	public boolean isAtTargetSteersPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
+	public boolean isSteersAtTargetPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
 		for (Module module : modules) {
 			if (!module.isSteerAtTargetPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
@@ -149,7 +149,7 @@ public class Modules extends GBSubsystem {
 	}
 
 	public boolean isAtTargetStates(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
-		return isAtTargetSteersPositions(steerTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
+		return isSteersAtTargetPositions(steerTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
 	}
 
 }

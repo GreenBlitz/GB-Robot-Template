@@ -9,7 +9,7 @@ import frc.utils.battery.BatteryUtils;
 public class TalonFXSimulation {
 
 	private final TalonFXSimState motorSimState;
-	private MechanismSimulation mechanismSimulation = null;
+	private MechanismSimulation mechanismSimulation;
 
 	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration, MechanismSimulation simulation) {
 		this.mechanismSimulation = simulation;

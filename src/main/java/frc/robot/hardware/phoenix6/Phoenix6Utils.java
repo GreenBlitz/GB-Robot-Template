@@ -5,7 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 
 import java.util.function.Supplier;
 
-public class PhoenixProUtils {
+public class Phoenix6Utils {
 
 	public static <T> StatusSignal<T> getRefreshedSignal(boolean refresh, StatusSignal<T> signal) {
 		return refresh ? signal.refresh() : signal;

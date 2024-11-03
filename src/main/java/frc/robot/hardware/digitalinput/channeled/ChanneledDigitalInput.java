@@ -22,6 +22,7 @@ public class ChanneledDigitalInput implements IDigitalInput {
 		this.debouncer = debouncer;
 		this.inverted = inverted;
 	}
+
 	public ChanneledDigitalInput(int channel, Debouncer debouncer) {
 		this(channel, debouncer, false);
 	}

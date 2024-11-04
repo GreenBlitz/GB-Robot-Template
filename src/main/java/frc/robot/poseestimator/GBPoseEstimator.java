@@ -127,6 +127,12 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
+	public void resetPose(Pose2d newPose) {
+		this.estimatedPose = newPose;
+		this.headingOffset = newPose.getRotation().minus(lastOdometryValues.gyroAngle());
+	}
+
+	@Override
 	public Pose2d getEstimatedPose() {
 		return estimatedPose;
 	}

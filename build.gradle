@@ -144,7 +144,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 // Get a path as relative to the root directory of the project (usually for printing)
-def rootRelative(path) {
+def getRootRelativePath(path) {
 	rootDir.toPath().relativize(path)
 }
 
@@ -155,7 +155,7 @@ def ensureSymlink(link, target) {
 
 		Files.createSymbolicLink(link, target)
 
-		println("--- Installed symbolic link ${rootRelative(link)} -> ${rootRelative(target)} ---")
+		println("--- Installed symbolic link ${getRootRelativePath(link)} -> ${getRootRelativePath(target)} ---")
 	}
 }
 
@@ -179,7 +179,7 @@ tasks.register('installLocalGitHookSymlinks') {
 		hooksDest.toFile().listFiles().each { link ->
 			if (Files.isSymbolicLink(link.toPath()) && !Files.exists(Files.readSymbolicLink(link.toPath()))) {
 				link.delete()
-				println("--- Deleted stale link ${rootRelative(link.toPath())} ---")
+				println("--- Deleted stale link ${getRootRelativePath(link.toPath())} ---")
 			}
 		}
 	}

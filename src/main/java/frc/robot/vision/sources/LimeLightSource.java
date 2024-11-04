@@ -117,9 +117,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawVisi
 	}
 
 	@Override
-	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {
-
-	}
+	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);

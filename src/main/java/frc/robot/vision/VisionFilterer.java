@@ -47,6 +47,8 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 		for (RawVisionData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
 			if (VisionFilters.keepVisionData(rawVisionData, config.VisionFiltersTolerances())) {
 				estimates.add(rawDataToObservation(rawVisionData));
+			} else {
+				logFilteredOutRawData(rawVisionData);
 			}
 		}
 		return estimates;
@@ -76,7 +78,6 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 
 	private void logEstimatedPositions() {
 		List<VisionObservation> observations = getFilteredVisionObservations();
-
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(
 				super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
@@ -85,9 +86,27 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 		}
 	}
 
+	private void logNotFilteredEstimatedPositions() {
+		List<VisionObservation> observations = getAllAvailableVisionObservations();
+		for (int i = 0; i < observations.size(); i++) {
+			Logger.recordOutput(
+				super.getLogPath() + VisionConstants.NOT_FILTERED_ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
+				observations.get(i).robotPose()
+			);
+		}
+	}
+
+	private void logFilteredOutRawData(RawVisionData rawVisionData) {
+		Logger.recordOutput(
+			super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA + "Time" + rawVisionData.timestamp(),
+			rawVisionData.estimatedPose()
+		);
+	}
+
 	@Override
 	public void subsystemPeriodic() {
 		logEstimatedPositions();
+		logNotFilteredEstimatedPositions();
 	}
 
 }

@@ -4,7 +4,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class VisionConstants {
 
-	public static final String ESTIMATION_LOGPATH_PREFIX = "Estimation/";
+	public static final String ESTIMATION_LOGPATH_PREFIX = "FilteredEstimation/";
+
+	public static final String NOT_FILTERED_ESTIMATION_LOGPATH_PREFIX = "NotFilteredEstimation/";
+
+	public static final String FILTERED_OUT_RAW_DATA = "FilteredOutRawData/";
 
 	public static final String SOURCE_LOGPATH = "VisionSource/";
 

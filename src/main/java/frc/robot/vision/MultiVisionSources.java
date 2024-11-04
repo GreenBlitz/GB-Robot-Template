@@ -31,7 +31,7 @@ public class MultiVisionSources {
 	public List<RawVisionData> getAllAvailablePoseData() {
 		List<RawVisionData> rawPoseData = new ArrayList<>();
 		visionSources.forEach(visionSource -> {
-			if(getEstimatedPoseAtTimestamp != null) {
+			if (getEstimatedPoseAtTimestamp != null) {
 				visionSource.updateCurrentEstimatedPose(getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()));
 			}
 			visionSource.update();

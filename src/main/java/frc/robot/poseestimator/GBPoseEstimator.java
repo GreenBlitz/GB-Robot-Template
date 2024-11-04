@@ -205,8 +205,15 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	public void logEstimatedPose() {
+	public void log() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
+		Logger.recordOutput(super.getLogPath() + "OdometryPose/", odometryPose);
+		Logger.recordOutput(super.getLogPath() + "HeadingAveragingCount/", headingCountHelper.getCount());
+		Logger.recordOutput(super.getLogPath() + "PoseAveragingCount/", poseCountHelper.getCount());
+		Logger.recordOutput(super.getLogPath() + "HeadingOffset/", headingOffset.getDegrees());
+		Logger.recordOutput(super.getLogPath() + "hasHeadingOffsetBeenInitialized/", hasHeadingOffsetBeenInitialized);
+		Logger.recordOutput(super.getLogPath() + "hasEstimatedPoseBeenInitialized/", hasEstimatedPoseBeenInitialized);
+		Logger.recordOutput(super.getLogPath() + "latestGyroAngle/", lastOdometryValues.gyroAngle());
 	}
 
 	private void onEnabled() {
@@ -230,7 +237,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			calculateEstimatedPoseByVision();
 		}
 		updateVision(visionFilterer.getFilteredVisionObservations());
-		logEstimatedPose();
+		log();
 	}
 
 }

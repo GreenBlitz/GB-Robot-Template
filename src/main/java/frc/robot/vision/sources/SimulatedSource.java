@@ -10,14 +10,10 @@ import java.util.Optional;
 public class SimulatedSource implements VisionSource<RawVisionData> {
 
 	@Override
-	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
-
-	}
+	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {}
 
 	@Override
-	public void update() {
-
-	}
+	public void update() {}
 
 	@Override
 	public Optional<RawVisionData> getAllData() {
@@ -30,8 +26,6 @@ public class SimulatedSource implements VisionSource<RawVisionData> {
 	}
 
 	@Override
-	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {
-
-	}
+	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {}
 
 }

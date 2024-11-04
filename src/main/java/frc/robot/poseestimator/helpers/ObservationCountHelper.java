@@ -30,4 +30,8 @@ public class ObservationCountHelper<T> {
 		return new ArrayList<>();
 	}
 
+	public int getCount() {
+		return observationsCount;
+	}
+
 }

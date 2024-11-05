@@ -3,18 +3,15 @@ package frc.robot.subsystems.swerve.module;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
-import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
-import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 
-public class MapleModule implements IModule {
+public class MapleModule extends Module {
 
 	@AutoLog
 	public static class ModuleIOInputs {
@@ -32,29 +29,21 @@ public class MapleModule implements IModule {
 
 	}
 
-	private final ModuleConstants constants;
 	private final SwerveModuleSimulation moduleSimulation;
-	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
 	private final ModuleIOInputsAutoLogged moduleIOInputs;
-	private SwerveModuleState targetState = new SwerveModuleState();
 	private final PIDController turnFeedback;
 
 
 	public MapleModule(ModuleConstants constants, SwerveModuleSimulation moduleSimulation) {
-		this.constants = constants;
+		super(constants);
 		this.moduleSimulation = moduleSimulation;
 
 		this.driveInputs = new DriveInputsAutoLogged();
-		this.moduleInputs = new ModuleInputsAutoLogged();
 		this.moduleIOInputs = new ModuleIOInputsAutoLogged();
 
 		turnFeedback = new PIDController(7.0, 0.0, 0.0);
 		turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
-	}
-
-	public double toDriveMeters(Rotation2d angle) {
-		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
 
 	@Override
@@ -84,9 +73,6 @@ public class MapleModule implements IModule {
 
 		driveInputs.velocityMetersPerSecond = toDriveMeters(Rotation2d.fromRadians(moduleIOInputs.driveVelocityRadPerSec));
 		driveInputs.positionsMeters = new double[] {toDriveMeters(Rotation2d.fromRadians(moduleIOInputs.drivePositionRad))};
-		moduleInputs.isClosedLoop = false;
-		moduleInputs.targetState = targetState;
-		Logger.processInputs(constants.logPath(), moduleInputs);
 		Logger.processInputs(constants.logPath() + "/drive", driveInputs);
 	}
 
@@ -97,13 +83,8 @@ public class MapleModule implements IModule {
 	public void resetByEncoder() {}
 
 	@Override
-	public void stop() {
-		setDriveVoltage(0);
-		setSteerVoltage(0);
-	}
-
-	@Override
 	public void setDriveVoltage(double voltage) {
+		setClosedLoop(false);
 		moduleSimulation.requestDriveVoltageOut(voltage);
 	}
 
@@ -112,22 +93,10 @@ public class MapleModule implements IModule {
 		moduleSimulation.requestSteerVoltageOut(voltage);
 	}
 
-	@Override
-	public void pointSteer(Rotation2d steerTargetPosition, boolean optimize) {
-		SwerveModuleState moduleState = new SwerveModuleState(0, steerTargetPosition);
-		targetState.angle = optimize ? SwerveModuleState.optimize(moduleState, getSteerPosition()).angle : moduleState.angle;
-		moveSteerToPosition(targetState.angle);
-	}
 
-	private void moveSteerToPosition(Rotation2d position) {
+	@Override
+	public void setTargetSteerPosition(Rotation2d position) {
 		setSteerVoltage(turnFeedback.calculate(getSteerPosition().getRadians(), position.getRadians()));
-	}
-
-	@Override
-	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
-		this.targetState = SwerveModuleState.optimize(targetState, getSteerPosition());
-		moveSteerToPosition(this.targetState.angle);
-		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
 	}
 
 	@Override
@@ -154,23 +123,13 @@ public class MapleModule implements IModule {
 	}
 
 	@Override
-	public SwerveModuleState getTargetState() {
-		return targetState;
-	}
-
-	@Override
-	public SwerveModuleState getCurrentState() {
-		return new SwerveModuleState(driveInputs.velocityMetersPerSecond, getSteerPosition());
-	}
-
-	@Override
 	public Rotation2d getDriveAngle() {
 		return Rotation2d.fromRadians(moduleIOInputs.drivePositionRad);
 	}
 
 	@Override
-	public double getDriveVelocityMetersPerSecond() {
-		return driveInputs.velocityMetersPerSecond;
+	public Rotation2d getDriveVelocitySeconds() {
+		return Rotation2d.fromRadians(moduleIOInputs.driveVelocityRadPerSec);
 	}
 
 	@Override
@@ -179,18 +138,8 @@ public class MapleModule implements IModule {
 	}
 
 	@Override
-	public boolean isAtTargetVelocity(double speedToleranceMetersPerSecond) {
-		return false;
-	}
-
-	@Override
-	public boolean isSteerAtTargetPosition(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
-		return false;
-	}
-
-	@Override
-	public boolean isAtTargetState(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
-		return false;
+	public Rotation2d getSteerVelocitySeconds() {
+		return Rotation2d.fromRadians(moduleIOInputs.turnVelocityRadPerSec);
 	}
 
 }

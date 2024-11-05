@@ -6,9 +6,9 @@ import frc.robot.subsystems.swerve.factories.modules.constants.ModuleConstantsFa
 import frc.robot.subsystems.swerve.factories.modules.drive.DriveFactory;
 import frc.robot.subsystems.swerve.factories.modules.encoder.EncoderFactory;
 import frc.robot.subsystems.swerve.factories.modules.steer.SteerFactory;
-import frc.robot.subsystems.swerve.module.IModule;
-import frc.robot.subsystems.swerve.module.MapleModule;
 import frc.robot.subsystems.swerve.module.Module;
+import frc.robot.subsystems.swerve.module.MapleModule;
+import frc.robot.subsystems.swerve.module.HardwareModule;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -18,10 +18,10 @@ import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 public class ModulesFactory {
 
 	//@formatter:off
-	private static IModule createModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition, SwerveModuleSimulation moduleSimulation) {
+	private static Module createModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition, SwerveModuleSimulation moduleSimulation) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->
-				new Module(
+				new HardwareModule(
 					ModuleConstantsFactory.create(swerveType, modulePosition),
 					EncoderFactory.create(swerveType, modulePosition),
 					SteerFactory.create(swerveType, modulePosition),

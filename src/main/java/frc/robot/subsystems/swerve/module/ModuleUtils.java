@@ -33,7 +33,7 @@ public class ModuleUtils {
 		double voltageCompensationSaturation
 	) {
 		Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-		Rotation2d coupledVelocityPerSecond = coupleAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
+		Rotation2d coupledVelocityPerSecond = coupleDriveAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
 		return velocityToVoltage(coupledVelocityPerSecond, maxVelocityPerSecond, voltageCompensationSaturation);
 	}
 
@@ -47,12 +47,12 @@ public class ModuleUtils {
 	 * When the steer motor moves, the drive motor moves as well due to the coupling. This will affect the current position of the drive motor,
 	 * so we need to remove the coupling from the velocity or the position.
 	 */
-	public static Rotation2d uncoupleAngle(Rotation2d coupledDriveAngle, Rotation2d steerAngle, double couplingRatio) {
+	public static Rotation2d uncoupleDriveAngle(Rotation2d coupledDriveAngle, Rotation2d steerAngle, double couplingRatio) {
 		Rotation2d steerCoupledAngle = coupleSteerAngle(steerAngle, couplingRatio);
 		return Rotation2d.fromRotations(coupledDriveAngle.getRotations() - steerCoupledAngle.getRotations());
 	}
 
-	public static Rotation2d coupleAngle(Rotation2d uncoupledDriveAngle, Rotation2d steerAngle, double couplingRatio) {
+	public static Rotation2d coupleDriveAngle(Rotation2d uncoupledDriveAngle, Rotation2d steerAngle, double couplingRatio) {
 		Rotation2d steerCoupledAngle = coupleSteerAngle(steerAngle, couplingRatio);
 		return Rotation2d.fromRotations(uncoupledDriveAngle.getRotations() + steerCoupledAngle.getRotations());
 	}

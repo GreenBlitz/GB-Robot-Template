@@ -32,7 +32,7 @@ class DriveRealConstants {
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
-			Volts.of(0.5).per(Seconds.of(1)),
+			Volts.of(0.5).per(Seconds),
 			Volts.of(2),
 			null,
 			state -> SignalLogger.writeString("state", state.toString())

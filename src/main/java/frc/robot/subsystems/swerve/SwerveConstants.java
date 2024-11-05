@@ -1,9 +1,8 @@
 package frc.robot.subsystems.swerve;
 
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,7 +21,7 @@ public record SwerveConstants(
 	Translation2d[] modulesLocations,
 	double driveRadiusMeters,
 	SwerveDriveKinematics kinematics,
-	HolonomicPathFollowerConfig holonomicPathFollowerConfig
+	PPHolonomicDriveController holonomicPathFollowerConfig
 ) {
 
 	public SwerveConstants(
@@ -46,13 +45,7 @@ public record SwerveConstants(
 			modulesLocations,
 			driveRadiusMeters,
 			new SwerveDriveKinematics(modulesLocations),
-			new HolonomicPathFollowerConfig(
-				translationMetersPIDConstants,
-				rotationDegreesPIDConstants,
-				velocityAt12VoltsMetersPerSecond,
-				driveRadiusMeters,
-				REPLANNING_CONFIG
-			)
+			new PPHolonomicDriveController(translationMetersPIDConstants, rotationDegreesPIDConstants)
 		);
 
 		this.rotationDegreesPIDController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
@@ -67,7 +60,6 @@ public record SwerveConstants(
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
 
-	private static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
 	static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
 	static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
 

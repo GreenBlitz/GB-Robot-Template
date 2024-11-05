@@ -32,20 +32,18 @@ public class MapleModule implements IModule {
 
 	}
 
-	private final String logPath;
+	private final ModuleConstants constants;
 	private final SwerveModuleSimulation moduleSimulation;
 	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
 	private final ModuleIOInputsAutoLogged moduleIOInputs;
 	private SwerveModuleState targetState = new SwerveModuleState();
-	private final double wheelDiameter;
 	private final PIDController turnFeedback;
 
 
-	public MapleModule(String logPath, SwerveModuleSimulation moduleSimulation, double wheelDiameter) {
-		this.logPath = logPath;
+	public MapleModule(ModuleConstants constants, SwerveModuleSimulation moduleSimulation) {
+		this.constants = constants;
 		this.moduleSimulation = moduleSimulation;
-		this.wheelDiameter = wheelDiameter;
 
 		this.driveInputs = new DriveInputsAutoLogged();
 		this.moduleInputs = new ModuleInputsAutoLogged();
@@ -56,7 +54,7 @@ public class MapleModule implements IModule {
 	}
 
 	public double toDriveMeters(Rotation2d angle) {
-		return Conversions.angleToDistance(angle, wheelDiameter);
+		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
 
 	@Override
@@ -81,15 +79,15 @@ public class MapleModule implements IModule {
 		moduleIOInputs.turnVelocityRadPerSec = moduleSimulation.getSteerRelativeEncoderSpeedRadPerSec();
 		moduleIOInputs.turnAppliedVolts = moduleSimulation.getSteerMotorAppliedVolts();
 		moduleIOInputs.turnCurrentAmps = new double[] {Math.abs(moduleSimulation.getSteerMotorSupplyCurrentAmps())};
-		Logger.processInputs(logPath + "/moduleIO", moduleIOInputs);
+		Logger.processInputs(constants.logPath() + "/moduleIO", moduleIOInputs);
 
 
 		driveInputs.velocityMetersPerSecond = toDriveMeters(Rotation2d.fromRadians(moduleIOInputs.driveVelocityRadPerSec));
 		driveInputs.positionsMeters = new double[] {toDriveMeters(Rotation2d.fromRadians(moduleIOInputs.drivePositionRad))};
 		moduleInputs.isClosedLoop = false;
 		moduleInputs.targetState = targetState;
-		Logger.processInputs(logPath, moduleInputs);
-		Logger.processInputs(logPath + "/drive", driveInputs);
+		Logger.processInputs(constants.logPath(), moduleInputs);
+		Logger.processInputs(constants.logPath() + "/drive", driveInputs);
 	}
 
 	@Override
@@ -136,9 +134,9 @@ public class MapleModule implements IModule {
 		double voltage = ModuleUtils.velocityToOpenLoopVoltage(
 			targetVelocityMetersPerSecond,
 			new Rotation2d(),
-			0,
-			Conversions.distanceToAngle(5, wheelDiameter),
-			wheelDiameter,
+			constants.couplingRatio(),
+			constants.velocityAt12VoltsPerSecond(),
+			constants.wheelDiameterMeters(),
 			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
 		);
 		setDriveVoltage(voltage);

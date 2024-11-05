@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -17,6 +18,9 @@ import frc.utils.logger.LoggerFactory;
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.List;
 
 
 /**
@@ -85,7 +89,12 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void simulationPeriodic() {
-		robot.updateSimulationField();
+		SimulatedArena.getInstance().simulationPeriodic();
+		robot.updateSimulationRobot();
+		List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
+		if (notes != null) {
+			Logger.recordOutput("FieldSimulation/Notes", notes.toArray(Pose3d[]::new));
+		}
 		SimulationManager.updateRegisteredSimulations();
 	}
 

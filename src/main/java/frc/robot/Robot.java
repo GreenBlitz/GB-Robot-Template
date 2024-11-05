@@ -51,10 +51,10 @@ public class Robot {
 		GyroSimulation gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
 
 		this.swerveDriveSimulation = new SwerveDriveSimulation(
-			50,
-			0.8,
-			0.667,
-			0.9,
+			45,
+			0.65,
+			0.65,
+			0.74,
 			0.74,
 			SwerveModuleSimulation.getMark4(
 				// creates a mark4 module

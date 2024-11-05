@@ -14,13 +14,11 @@ import frc.robot.subsystems.swerve.module.Modules;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 
-import java.util.function.Supplier;
-
 
 public class ModulesFactory {
 
-	private static IModule
-		createModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition, SwerveModuleSimulation moduleSimulation) {
+	//@formatter:off
+	private static IModule createModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition, SwerveModuleSimulation moduleSimulation) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->
 				new Module(
@@ -32,6 +30,7 @@ public class ModulesFactory {
 			case SIMULATION -> new MapleModule(ModuleConstantsFactory.create(swerveType, modulePosition), moduleSimulation);
 		};
 	}
+	//@formatter:on
 
 	public static Modules create(SwerveType swerveType, SwerveDriveSimulation swerveDriveSimulation) {
 		return new Modules(

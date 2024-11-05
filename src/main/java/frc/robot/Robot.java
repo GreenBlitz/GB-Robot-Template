@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimation.PoseEstimator;
@@ -12,9 +11,11 @@ import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.factories.SimulationSwerveGenerator;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.gyro.SimulationGyroConstants;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.modules.SimulationModuleGenerator;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import org.ironmaple.simulation.SimulatedArena;
@@ -46,34 +47,19 @@ public class Robot {
 		GyroSimulation gyroSimulation = null;
 		if (ROBOT_TYPE.isSimulation()) {
 			gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
-			Supplier<SwerveModuleSimulation> simulationModule = SwerveModuleSimulation
-				.getMark4(
-					DCMotor.getKrakenX60(1),
-					DCMotor.getFalcon500(1),
-					80,
-					SwerveModuleSimulation.DRIVE_WHEEL_TYPE.RUBBER,
-					3
-				);
-			this.swerveDriveSimulation = new SwerveDriveSimulation(
-				45,
-				0.65,
-				0.65,
-				0.74,
-				0.74,
-				simulationModule,
-				gyroSimulation,
-				PoseEstimatorConstants.DEFAULT_POSE
-			);
+			Supplier<SwerveModuleSimulation> simulationModule = SimulationModuleGenerator.generate();
+			this.swerveDriveSimulation = SimulationSwerveGenerator
+				.generate(simulationModule, gyroSimulation, PoseEstimatorConstants.DEFAULT_POSE);
 			SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 		} else {
 			swerveDriveSimulation = null;
 		}
-
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE, swerveDriveSimulation),
 			GyroFactory.create(SwerveType.SWERVE, gyroSimulation)
 		);
+
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());

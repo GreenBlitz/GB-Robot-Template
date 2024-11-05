@@ -18,6 +18,6 @@ public class PoseEstimatorConstants {
 	 */
 	protected static final Vector<N3> ODOMETRY_STANDARD_DEVIATIONS = VecBuilder.fill(0.003, 0.003, 0.0002);
 
-	protected static final Pose2d DEFAULT_POSE = new Pose2d(2, 5, new Rotation2d());
+	public static final Pose2d DEFAULT_POSE = new Pose2d(2, 5, new Rotation2d());
 
 }

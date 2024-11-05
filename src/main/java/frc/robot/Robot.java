@@ -11,6 +11,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -29,6 +30,7 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 
 /**
@@ -49,6 +51,13 @@ public class Robot {
 
 	public Robot() {
 		GyroSimulation gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
+		Supplier<SwerveModuleSimulation> generalModule = SwerveModuleSimulation.getMark4(
+			DCMotor.getKrakenX60(1),
+			DCMotor.getFalcon500(1),
+			80,
+			SwerveModuleSimulation.DRIVE_WHEEL_TYPE.RUBBER,
+			3
+		);
 
 		this.swerveDriveSimulation = new SwerveDriveSimulation(
 			45,
@@ -56,26 +65,12 @@ public class Robot {
 			0.65,
 			0.74,
 			0.74,
-			SwerveModuleSimulation.getMark4(
-				// creates a mark4 module
-				DCMotor.getKrakenX60(1), // drive motor is a Kraken x60
-				DCMotor.getFalcon500(1), // steer motor is a Falcon 500
-				80, // current limit: 80 Amps
-				SwerveModuleSimulation.DRIVE_WHEEL_TYPE.RUBBER, // rubber wheels
-				3 // l3 gear ratio
-			),
+			generalModule,
 			gyroSimulation,
-			new Pose2d(
-				// initial starting pose on field, set it to where-ever you want
-				3,
-				3,
-				new Rotation2d()
-			)
+			PoseEstimatorConstants.DEFAULT_POSE
 		);
-		SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation); // register the drive train simulation
 
-		// reset the field for auto (placing game-pieces in positions)
-		SimulatedArena.getInstance().resetFieldForAuto();
+		SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 
 		Modules modules = ROBOT_TYPE.isReal()
 			? ModulesFactory.create(SwerveType.SWERVE)
@@ -134,15 +129,11 @@ public class Robot {
 
 			Logger.recordOutput("FieldSimulation/RobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose());
 
-			final List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
-			if (notes != null)
+			List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
+			if (notes != null) {
 				Logger.recordOutput("FieldSimulation/Notes", notes.toArray(Pose3d[]::new));
+			}
 		}
-
-//		intake.visualizeNoteInIntake(
-//			swerveDriveSimulation == null
-//				? drive.getPose()
-//				: swerveDriveSimulation.getSimulatedDriveTrainPose());
 	}
 
 }

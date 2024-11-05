@@ -14,6 +14,7 @@ import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
 
@@ -75,6 +76,11 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+	}
+
+	@Override
+	public void simulationInit() {
+		SimulatedArena.getInstance().resetFieldForAuto();
 	}
 
 	@Override

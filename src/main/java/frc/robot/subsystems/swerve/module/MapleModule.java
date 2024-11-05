@@ -98,7 +98,8 @@ public class MapleModule implements IModule {
 
 	@Override
 	public void stop() {
-		moduleSimulation.requestDriveVoltageOut(0);
+		setDriveVoltage(0);
+		setSteerVoltage(0);
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public class MapleModule implements IModule {
 	}
 
 	private void moveSteerToPosition(Rotation2d position) {
-		moduleSimulation.requestSteerVoltageOut(turnFeedback.calculate(getSteerPosition().getRadians(), position.getRadians()));
+		setSteerVoltage(turnFeedback.calculate(getSteerPosition().getRadians(), position.getRadians()));
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public class SwerveCommandsBuilder {
 				swerve,
 				swerve.getConstants().driveRadiusMeters(),
 				SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND,
-				swerve.getModules()::getDrivesAngles,
+				swerve.getModules()::getDrivesPositions,
 				swerve::getAbsoluteHeading,
 				rotationsPerSecond -> swerve.driveByState(
 						new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()),

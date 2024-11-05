@@ -117,8 +117,8 @@ public class Modules extends GBSubsystem {
 		return Arrays.stream(modules).map(Module::getCurrentState).toArray(SwerveModuleState[]::new);
 	}
 
-	public Rotation2d[] getDrivesAngles() {
-		return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
+	public Rotation2d[] getDrivesPositions() {
+		return Arrays.stream(modules).map(Module::getDriveLatestPosition).toArray(Rotation2d[]::new);
 	}
 
 	public SwerveModulePosition[] getWheelsPositions(int odometrySampleIndex) {

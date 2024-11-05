@@ -1,22 +1,27 @@
 package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.angleencoder.IAngleEncoder;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
-import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
 import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
 import frc.robot.subsystems.swerve.module.stuffs.SteerStuff;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Arrays;
-
 public class HardwareModule extends Module {
+
+	@AutoLog
+	public static class CouplingInputs {
+
+		public Rotation2d uncoupledVelocityPerSecond = new Rotation2d();
+		public Rotation2d[] uncoupledPositions = new Rotation2d[0];
+
+	}
 
 	private final IAngleEncoder encoder;
 	private final EncoderStuff encoderStuff;
@@ -31,7 +36,7 @@ public class HardwareModule extends Module {
 	private final IRequest<Double> driveVoltageRequest;
 	private final DriveStuff driveStuff;
 
-	private final DriveInputsAutoLogged driveInputs;
+	private final CouplingInputsAutoLogged couplingInputs;
 
 	private Rotation2d startingSteerPosition;
 
@@ -52,36 +57,39 @@ public class HardwareModule extends Module {
 
 		this.targetState = new SwerveModuleState();
 		this.startingSteerPosition = new Rotation2d();
-		this.driveInputs = new DriveInputsAutoLogged();
+		this.couplingInputs = new CouplingInputsAutoLogged();
 
 		updateInputs();
 		resetByEncoder();
 	}
 
+	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
 		return steer.getSysidConfigInfo();
 	}
 
+	@Override
 	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {
 		return drive.getSysidConfigInfo();
 	}
 
 	private void fixDriveInputsCoupling() {
-		driveInputs.uncoupledVelocityPerSecond = ModuleUtils.uncoupleDriveAngle(
+		couplingInputs.uncoupledVelocityPerSecond = ModuleUtils.uncoupleDriveAngle(
 			driveStuff.velocitySignal().getLatestValue(),
 			steerStuff.velocitySignal().getLatestValue(),
 			constants.couplingRatio()
 		);
 
-		driveInputs.uncoupledPositions = new Rotation2d[driveStuff.positionSignal().asArray().length];
-		for (int i = 0; i < driveInputs.uncoupledPositions.length; i++) {
+		couplingInputs.uncoupledPositions = new Rotation2d[driveStuff.positionSignal().asArray().length];
+		for (int i = 0; i < couplingInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerStuff.positionSignal().asArray()[i].getRotations() - startingSteerPosition.getRotations());
-			driveInputs.uncoupledPositions[i] = ModuleUtils
+			couplingInputs.uncoupledPositions[i] = ModuleUtils
 				.uncoupleDriveAngle(driveStuff.positionSignal().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
 
+	@Override
 	public void updateInputs() {
 		encoder.updateInputs(encoderStuff.positionSignal());
 		steer.updateInputs(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
@@ -89,32 +97,31 @@ public class HardwareModule extends Module {
 
 		fixDriveInputsCoupling();
 
-		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityPerSecond);
-		driveInputs.positionsMeters = Arrays.stream(driveInputs.uncoupledPositions).mapToDouble(this::toDriveMeters).toArray();
-
-		Logger.processInputs(driveStuff.logPath(), driveInputs);
+		Logger.processInputs(driveStuff.logPath(), couplingInputs);
 	}
 
+	@Override
 	public void setBrake(boolean brake) {
 		steer.setBrake(brake);
 		drive.setBrake(brake);
 	}
 
+	@Override
 	public void resetByEncoder() {
 		startingSteerPosition = encoderStuff.positionSignal().getLatestValue();
 		steer.resetPosition(startingSteerPosition);
 	}
 
-
+	@Override
 	public void setDriveVoltage(double voltage) {
 		setClosedLoop(false);
 		drive.applyDoubleRequest(driveVoltageRequest.withSetPoint(voltage));
 	}
 
+	@Override
 	public void setSteerVoltage(double voltage) {
 		steer.applyDoubleRequest(steerVoltageRequest.withSetPoint(voltage));
 	}
-
 
 	@Override
 	public void setTargetSteerPosition(Rotation2d position) {
@@ -122,16 +129,6 @@ public class HardwareModule extends Module {
 	}
 
 	@Override
-	public void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerPosition, boolean isClosedLoop) {
-		targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerPosition, getSteerPosition());
-
-		if (isClosedLoop) {
-			setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
-		} else {
-			setTargetOpenLoopVelocity(targetVelocityMetersPerSecond);
-		}
-	}
-
 	public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
 		setClosedLoop(true);
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
@@ -140,52 +137,19 @@ public class HardwareModule extends Module {
 		drive.applyAngleRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
 	}
 
-	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
-		double voltage = ModuleUtils.velocityToOpenLoopVoltage(
-			targetVelocityMetersPerSecond,
-			steerStuff.velocitySignal().getLatestValue(),
-			constants.couplingRatio(),
-			constants.velocityAt12VoltsPerSecond(),
-			constants.wheelDiameterMeters(),
-			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
-		);
-		setDriveVoltage(voltage);
-	}
-
-
-	/**
-	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest odometry update, the
-	 * accumulated odometry positions since the last loop to get a more accurate position.
-	 *
-	 * @param odometryUpdateIndex the index of the odometry update
-	 * @return the position of the module at the given odometry update index
-	 */
 	@Override
-	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
-		return new SwerveModulePosition(
-			driveInputs.positionsMeters[odometryUpdateIndex],
-			steerStuff.positionSignal().asArray()[odometryUpdateIndex]
-		);
-	}
-
-	@Override
-	public int getNumberOfOdometrySamples() {
-		return Math.min(driveInputs.positionsMeters.length, steerStuff.positionSignal().asArray().length);
-	}
-
-	@Override
-	public Rotation2d getDriveAngle() {
-		return driveInputs.uncoupledPositions[driveInputs.uncoupledPositions.length - 1];
+	public Rotation2d[] getDrivePositions() {
+		return couplingInputs.uncoupledPositions;
 	}
 
 	@Override
 	public Rotation2d getDriveVelocitySeconds() {
-		return driveInputs.uncoupledVelocityPerSecond;
+		return couplingInputs.uncoupledVelocityPerSecond;
 	}
 
 	@Override
-	public Rotation2d getSteerPosition() {
-		return steerStuff.positionSignal().getLatestValue();
+	public Rotation2d[] getSteerPositions() {
+		return steerStuff.positionSignal().asArray();
 	}
 
 	@Override

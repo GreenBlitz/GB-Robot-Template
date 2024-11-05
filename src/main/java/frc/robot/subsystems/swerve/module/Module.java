@@ -217,7 +217,7 @@ public class Module {
 		return new SwerveModuleState(getDriveVelocityMetersPerSecond(), getSteerPosition());
 	}
 
-	public Rotation2d getDriveAngle() {
+	public Rotation2d getDrivePosition() {
 		return driveInputs.uncoupledPositions[driveInputs.uncoupledPositions.length - 1];
 	}
 

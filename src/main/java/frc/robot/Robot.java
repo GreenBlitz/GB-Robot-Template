@@ -11,9 +11,11 @@ import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.gyro.SimulationGyroConstants;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import org.ironmaple.simulation.drivesims.GyroSimulation;
 
 import java.util.Optional;
 
@@ -32,10 +34,11 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	public Robot() {
+		GyroSimulation gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE),
-			GyroFactory.create(SwerveType.SWERVE)
+			GyroFactory.create(SwerveType.SWERVE, gyroSimulation)
 		);
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
 

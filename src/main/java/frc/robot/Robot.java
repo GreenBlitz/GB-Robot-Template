@@ -44,10 +44,9 @@ public class Robot {
 
 	public Robot() {
 		GyroSimulation gyroSimulation = null;
-		Supplier<SwerveModuleSimulation> simulationModule = null;
 		if (ROBOT_TYPE.isSimulation()) {
 			gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
-			simulationModule = SwerveModuleSimulation
+			Supplier<SwerveModuleSimulation> simulationModule = SwerveModuleSimulation
 				.getMark4(
 					DCMotor.getKrakenX60(1),
 					DCMotor.getFalcon500(1),

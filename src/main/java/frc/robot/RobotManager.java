@@ -25,7 +25,7 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RobotManager extends LoggedRobot {
 
-	public static int roborioCycles;
+	private int roborioCycles;
 
 	private Command autonomousCommand;
 
@@ -75,7 +75,7 @@ public class RobotManager extends LoggedRobot {
 	public void robotPeriodic() {
 		roborioCycles++; // Better to be first
 		Logger.recordOutput("RoborioCycles", roborioCycles);
-		TimeUtils.updateCycleTime(); // Better to be second
+		TimeUtils.updateCycleTime(roborioCycles); // Better to be second
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();

@@ -18,6 +18,7 @@ public class Modules extends GBSubsystem {
 		super(logPath + ModuleConstants.LOG_PATH_ADDITION);
 		this.modules = modules;
 		this.commandsBuilder = new ModulesCommandsBuilder(this);
+		updateInputs();
 	}
 
 	public IModule getModule(ModuleUtils.ModulePosition modulePosition) {

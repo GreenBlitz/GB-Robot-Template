@@ -37,7 +37,7 @@ public class MapleModule implements IModule {
 	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
 	private final ModuleIOInputsAutoLogged moduleIOInputs;
-	private SwerveModuleState targetState;
+	private SwerveModuleState targetState = new SwerveModuleState();
 	private final double wheelDiameter;
 	private final PIDController turnFeedback;
 

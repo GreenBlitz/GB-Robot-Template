@@ -8,19 +8,16 @@ import org.ironmaple.simulation.drivesims.GyroSimulation;
 
 public class SimulationGyroConstants {
 
-    public static GyroSimulation generateGyroSimulation() {
-        return GyroSimulation.createPigeon2();
-    }
+	public static GyroSimulation generateGyroSimulation() {
+		return GyroSimulation.createPigeon2();
+	}
 
-    public static GyroStuff generateGyroStuff(String logPath, GyroSimulation gyroSimulation) {
-        return new GyroStuff(
-            logPath,
-            new MapleGyro(logPath, gyroSimulation),
-            new SuppliedAngleSignal(
-                "yaw",
-                () -> gyroSimulation.getGyroReading().getRotations(),
-                AngleUnit.ROTATIONS)
-        );
-    }
+	public static GyroStuff generateGyroStuff(String logPath, GyroSimulation gyroSimulation) {
+		return new GyroStuff(
+			logPath,
+			new MapleGyro(logPath, gyroSimulation),
+			new SuppliedAngleSignal("yaw", () -> gyroSimulation.getGyroReading().getRotations(), AngleUnit.ROTATIONS)
+		);
+	}
 
 }

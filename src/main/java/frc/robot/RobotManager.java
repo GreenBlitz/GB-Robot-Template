@@ -79,6 +79,7 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void simulationPeriodic() {
+		robot.updateSimulationField();
 		SimulationManager.updateRegisteredSimulations();
 	}
 

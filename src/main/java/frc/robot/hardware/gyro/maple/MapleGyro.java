@@ -8,29 +8,29 @@ import org.littletonrobotics.junction.Logger;
 
 public class MapleGyro implements IGyro {
 
-    private final GyroSimulation gyroSimulation;
-    private final String logPath;
+	private final GyroSimulation gyroSimulation;
+	private final String logPath;
 
-    public MapleGyro(String logPath, GyroSimulation gyroSimulation) {
-        this.logPath = logPath;
-        this.gyroSimulation = gyroSimulation;
-    }
+	public MapleGyro(String logPath, GyroSimulation gyroSimulation) {
+		this.logPath = logPath;
+		this.gyroSimulation = gyroSimulation;
+	}
 
-    @Override
-    public void setYaw(Rotation2d yaw) {
-        gyroSimulation.setRotation(yaw);
-    }
+	@Override
+	public void setYaw(Rotation2d yaw) {
+		gyroSimulation.setRotation(yaw);
+	}
 
-    @Override
-    public boolean isConnected() {
-        return true;
-    }
+	@Override
+	public boolean isConnected() {
+		return true;
+	}
 
-    @Override
-    public void updateInputs(InputSignal<?>... inputSignals) {
-        for (InputSignal<?> inputSignal : inputSignals) {
-            Logger.processInputs(logPath, inputSignal);
-        }
-    }
+	@Override
+	public void updateInputs(InputSignal<?>... inputSignals) {
+		for (InputSignal<?> inputSignal : inputSignals) {
+			Logger.processInputs(logPath, inputSignal);
+		}
+	}
 
 }

@@ -18,7 +18,7 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 
-public class Module {
+public class Module implements IModule {
 
 	private final ModuleConstants constants;
 

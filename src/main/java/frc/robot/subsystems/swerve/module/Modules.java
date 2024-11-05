@@ -11,16 +11,16 @@ import java.util.Arrays;
 
 public class Modules extends GBSubsystem {
 
-	private final Module[] modules;
+	private final IModule[] modules;
 	private final ModulesCommandsBuilder commandsBuilder;
 
-	public Modules(String logPath, Module... modules) {
+	public Modules(String logPath, IModule... modules) {
 		super(logPath + ModuleConstants.LOG_PATH_ADDITION);
 		this.modules = modules;
 		this.commandsBuilder = new ModulesCommandsBuilder(this);
 	}
 
-	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
+	public IModule getModule(ModuleUtils.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 
@@ -29,7 +29,7 @@ public class Modules extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		for (Module currentModule : modules) {
+		for (IModule currentModule : modules) {
 			currentModule.updateInputs();
 		}
 		Logger.recordOutput(getLogPath() + "CurrentStates", getCurrentStates());
@@ -38,20 +38,20 @@ public class Modules extends GBSubsystem {
 
 
 	public void resetModulesAngleByEncoder() {
-		for (Module module : modules) {
+		for (IModule module : modules) {
 			module.resetByEncoder();
 		}
 	}
 
 	public void setBrake(boolean brake) {
-		for (Module currentModule : modules) {
+		for (IModule currentModule : modules) {
 			currentModule.setBrake(brake);
 		}
 	}
 
 
 	protected void pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
-		for (Module module : modules) {
+		for (IModule module : modules) {
 			module.pointSteer(targetSteerPosition, optimize);
 		}
 	}
@@ -76,19 +76,19 @@ public class Modules extends GBSubsystem {
 
 
 	public void stop() {
-		for (Module currentModule : modules) {
+		for (IModule currentModule : modules) {
 			currentModule.stop();
 		}
 	}
 
 	public void setSteersVoltage(double voltage) {
-		for (Module module : modules) {
+		for (IModule module : modules) {
 			module.setSteerVoltage(voltage);
 		}
 	}
 
 	public void setDrivesVoltage(double voltage) {
-		for (Module module : modules) {
+		for (IModule module : modules) {
 			module.setDriveVoltage(voltage);
 		}
 	}
@@ -109,15 +109,15 @@ public class Modules extends GBSubsystem {
 	}
 
 	public SwerveModuleState[] getTargetStates() {
-		return Arrays.stream(modules).map(Module::getTargetState).toArray(SwerveModuleState[]::new);
+		return Arrays.stream(modules).map(IModule::getTargetState).toArray(SwerveModuleState[]::new);
 	}
 
 	public SwerveModuleState[] getCurrentStates() {
-		return Arrays.stream(modules).map(Module::getCurrentState).toArray(SwerveModuleState[]::new);
+		return Arrays.stream(modules).map(IModule::getCurrentState).toArray(SwerveModuleState[]::new);
 	}
 
 	public Rotation2d[] getDrivesAngles() {
-		return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
+		return Arrays.stream(modules).map(IModule::getDriveAngle).toArray(Rotation2d[]::new);
 	}
 
 	public SwerveModulePosition[] getWheelsPositions(int odometrySampleIndex) {
@@ -130,7 +130,7 @@ public class Modules extends GBSubsystem {
 
 
 	public boolean isAtTargetVelocities(double speedToleranceMetersPerSecond) {
-		for (Module module : modules) {
+		for (IModule module : modules) {
 			if (!module.isAtTargetVelocity(speedToleranceMetersPerSecond)) {
 				return false;
 			}
@@ -139,7 +139,7 @@ public class Modules extends GBSubsystem {
 	}
 
 	public boolean isSteersAtTargetPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
-		for (Module module : modules) {
+		for (IModule module : modules) {
 			if (!module.isSteerAtTargetPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
 			}

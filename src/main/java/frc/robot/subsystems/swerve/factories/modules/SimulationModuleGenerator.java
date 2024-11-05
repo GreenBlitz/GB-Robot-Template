@@ -1,6 +1,9 @@
 package frc.robot.subsystems.swerve.factories.modules;
 
+import com.pathplanner.lib.config.PIDConstants;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import frc.robot.subsystems.swerve.module.maple.MapleModuleConstants;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 
 import java.util.function.Supplier;
@@ -15,6 +18,14 @@ public class SimulationModuleGenerator {
 
 	public static Supplier<SwerveModuleSimulation> generate() {
 		return SwerveModuleSimulation.getMark4(DRIVE_MOTOR, STEER_MOTOR, DRIVE_CURRENT_LIMIT_AMPS, DRIVE_WHEEL_TYPE, GEAR_RATIO_LEVEL);
+	}
+
+	private static final PIDConstants STEER_PID_RADIANS = new PIDConstants(7);
+	private static final PIDConstants DRIVE_PID_RADIANS_PER_SECOND = new PIDConstants(0.05);
+	private static final SimpleMotorFeedforward DRIVE_FEED_FORWARD_RADIANS_PER_SECOND = new SimpleMotorFeedforward(0.1, 0.13);
+
+	public static MapleModuleConstants generateMapleModuleConstants() {
+		return new MapleModuleConstants(STEER_PID_RADIANS, DRIVE_PID_RADIANS_PER_SECOND, DRIVE_FEED_FORWARD_RADIANS_PER_SECOND);
 	}
 
 }

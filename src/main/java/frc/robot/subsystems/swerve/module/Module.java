@@ -32,6 +32,10 @@ public abstract class Module {
 		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
 
+	public Rotation2d fromDriveMeters(double distance) {
+		return Conversions.distanceToAngle(distance, constants.wheelDiameterMeters());
+	}
+
 	public void setClosedLoop(boolean closedLoop) {
 		isClosedLoop = closedLoop;
 	}
@@ -168,7 +172,7 @@ public abstract class Module {
 
 	public abstract void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond);
 
-	public abstract void setTargetSteerPosition(Rotation2d position);
+	public abstract void setTargetSteerPosition(Rotation2d targetSteerPosition);
 
 	public abstract Rotation2d[] getDrivePositions();
 

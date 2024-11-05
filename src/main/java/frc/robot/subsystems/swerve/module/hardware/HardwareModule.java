@@ -1,10 +1,13 @@
-package frc.robot.subsystems.swerve.module;
+package frc.robot.subsystems.swerve.module.hardware;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.angleencoder.IAngleEncoder;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
+import frc.robot.subsystems.swerve.module.Module;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
 import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
 import frc.robot.subsystems.swerve.module.stuffs.SteerStuff;
@@ -124,8 +127,8 @@ public class HardwareModule extends Module {
 	}
 
 	@Override
-	public void setTargetSteerPosition(Rotation2d position) {
-		steer.applyAngleRequest(steerPositionRequest.withSetPoint(position));
+	public void setTargetSteerPosition(Rotation2d targetSteerPosition) {
+		steer.applyAngleRequest(steerPositionRequest.withSetPoint(targetSteerPosition));
 	}
 
 	@Override

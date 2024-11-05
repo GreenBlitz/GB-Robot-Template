@@ -8,7 +8,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.hardware.angleencoder.phoenix6.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
-import frc.robot.hardware.phoenix6.PhoenixProUtils;
+import frc.robot.hardware.phoenix6.Phoenix6Utils;
 import frc.robot.hardware.signal.phoenix6.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix6.Phoenix6SignalBuilder;
 import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
@@ -34,7 +34,7 @@ class EncoderRealConstants {
 		cancoder.getConfigurator().refresh(magnetSensorConfigs);
 		CANcoderConfiguration caNcoderConfiguration = generateEncoderConfig();
 		caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-		if (!PhoenixProUtils.checkWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
+		if (!Phoenix6Utils.checkWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 

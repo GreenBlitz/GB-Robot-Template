@@ -32,7 +32,7 @@ public class SwerveCommandsBuilder {
 	public Command wheelRadiusCalibration() {
 		return new SequentialCommandGroup(
 			swerve.getModules().getCommandsBuilder().pointWheelsInCircle()
-				.until(() -> swerve.getModules().isAtTargetSteersPositions(
+				.until(() -> swerve.getModules().isSteersAtTargetPositions(
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
 				)

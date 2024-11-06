@@ -24,14 +24,14 @@ public class TimeUtils {
 		);
 	}
 
-	public static void updateCycleTime(double roborioCycles) {
+	public static void updateCycleTime(int roborioCycles) {
 		lastCycleTimeSeconds = newCycleTimeSeconds;
 		newCycleTimeSeconds = getCurrentTimeSeconds();
 
 		logStatus(roborioCycles);
 	}
 
-	private static void logStatus(double roborioCycles) {
+	private static void logStatus(int roborioCycles) {
 		double currentTimeSeconds = getCurrentTimeSeconds();
 
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());

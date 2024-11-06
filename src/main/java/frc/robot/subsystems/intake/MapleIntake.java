@@ -37,6 +37,10 @@ public class MapleIntake extends GBSubsystem {
 		return intakeSimulation.getGamePiecesAmount() != 0;
 	}
 
+	public boolean releaseNote() {
+		return intakeSimulation.obtainGamePieceFromIntake();
+	}
+
 	private static final Translation2d shooterTranslationOnRobot = new Translation2d(0.1, 0);
 	private static final double shooterHeightMeters = 0.45, shooterPitchAngleRad = -Math.toRadians(55);
 

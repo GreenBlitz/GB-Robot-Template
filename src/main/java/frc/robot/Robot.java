@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -137,13 +138,14 @@ public class Robot {
 	}
 
 	public Command shoot() {
-		return new ParallelCommandGroup(
-			new InstantCommand(mapleIntake::releaseNote, mapleIntake),
+		return new ConditionalCommand(
 			new InstantCommand(() -> shootNoteWithCurrentRPM(
 				swerveDriveSimulation.getSimulatedDriveTrainPose(),
 				swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
 				Rotation2d.fromRotations(60 * 60)
-			))
+			)),
+			new InstantCommand(() -> {}, mapleIntake),
+            mapleIntake::releaseNote
 		);
 	}
 

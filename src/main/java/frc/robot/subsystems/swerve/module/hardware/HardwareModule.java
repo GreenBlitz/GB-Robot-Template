@@ -118,17 +118,17 @@ public class HardwareModule extends Module {
 	@Override
 	public void setDriveVoltage(double voltage) {
 		setClosedLoop(false);
-		drive.applyDoubleRequest(driveVoltageRequest.withSetPoint(voltage));
+		drive.applyRequest(driveVoltageRequest.withSetPoint(voltage));
 	}
 
 	@Override
 	public void setSteerVoltage(double voltage) {
-		steer.applyDoubleRequest(steerVoltageRequest.withSetPoint(voltage));
+		steer.applyRequest(steerVoltageRequest.withSetPoint(voltage));
 	}
 
 	@Override
 	public void setTargetSteerPosition(Rotation2d targetSteerPosition) {
-		steer.applyAngleRequest(steerPositionRequest.withSetPoint(targetSteerPosition));
+		steer.applyRequest(steerPositionRequest.withSetPoint(targetSteerPosition));
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class HardwareModule extends Module {
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtils
 			.coupleDriveAngle(targetVelocityPerSecond, getSteerVelocitySeconds(), constants.couplingRatio());
-		drive.applyAngleRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
+		drive.applyRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
 	}
 
 	@Override

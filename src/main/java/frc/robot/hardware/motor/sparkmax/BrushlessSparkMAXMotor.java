@@ -39,7 +39,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 					sparkMaxRequest.getSetPointAsDouble(),
 					sparkMaxRequest.getControlType(),
 					sparkMaxRequest.getPidSlot(),
-					sparkMaxRequest.getFeedforwardCalculation()
+					sparkMaxRequest.getFeedforwardGain()
 				);
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "Got invalid type of request " + request.getClass().getSimpleName()).report();

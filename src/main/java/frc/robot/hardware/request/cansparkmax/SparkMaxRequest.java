@@ -54,7 +54,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 		return pidSlot;
 	}
 
-	public double getFeedforwardCalculation() {
+	public double getFeedforwardGain() {
 		return feedforwardCalculator.apply(setPoint);
 	}
 

@@ -27,6 +27,10 @@ public abstract class Phoenix6Device implements IDevice {
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
+	public String getLogPath() {
+		return logPath;
+	}
+
 	public boolean isConnected() {
 		return connectedInput.connected;
 	}

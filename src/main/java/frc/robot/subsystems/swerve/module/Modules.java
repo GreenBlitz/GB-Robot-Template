@@ -117,8 +117,8 @@ public class Modules extends GBSubsystem {
 		return Arrays.stream(modules).map(Module::getCurrentState).toArray(SwerveModuleState[]::new);
 	}
 
-	public Rotation2d[] getDrivesAngles() {
-		return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
+	public Rotation2d[] getDrivesPositions() {
+		return Arrays.stream(modules).map(Module::getDrivePosition).toArray(Rotation2d[]::new);
 	}
 
 	public SwerveDriveWheelPositions getWheelsPositions(int odometrySampleIndex) {
@@ -139,9 +139,9 @@ public class Modules extends GBSubsystem {
 		return true;
 	}
 
-	public boolean isAtTargetSteersPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
+	public boolean isSteersAtTargetPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
 		for (Module module : modules) {
-			if (!module.isAtTargetSteerPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
+			if (!module.isSteerAtTargetPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
 			}
 		}
@@ -149,7 +149,7 @@ public class Modules extends GBSubsystem {
 	}
 
 	public boolean isAtTargetStates(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
-		return isAtTargetSteersPositions(steerTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
+		return isSteersAtTargetPositions(steerTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
 	}
 
 }

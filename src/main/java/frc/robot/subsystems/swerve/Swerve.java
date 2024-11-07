@@ -94,7 +94,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateSignals(gyroStuff.yawSignal());
+		gyro.updateInputs(gyroStuff.yawSignal());
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -114,7 +114,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		gyro.updateSignals(gyroStuff.yawSignal());
+		gyro.updateInputs(gyroStuff.yawSignal());
 		modules.updateInputs();
 	}
 

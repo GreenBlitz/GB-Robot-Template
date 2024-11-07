@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkBase;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -25,16 +27,37 @@ public abstract class SparkMaxMotor implements IMotor {
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
+	public String getLogPath() {
+		return logPath;
+	}
+
 	@Override
 	public boolean isConnected() {
 		return connectedInput.connected;
 	}
 
+	private boolean isValid(InputSignal<?> signal) {
+		return signal instanceof SuppliedDoubleSignal || signal instanceof SuppliedAngleSignal;
+	}
+
+	private void reportInvalidSignal(InputSignal<?> invalidSignal) {
+		new Alert(
+			Alert.AlertType.WARNING,
+			logPath + "signal named " + invalidSignal.getName() + " has invalid type " + invalidSignal.getClass().getSimpleName()
+		).report();
+	}
+
 	@Override
-	public void updateSignals(InputSignal<?>... signals) {
-		for (InputSignal<?> signal : signals) {
-			Logger.processInputs(logPath, signal);
+	public void updateInputs(InputSignal<?>... inputSignals) {
+		for (InputSignal<?> signal : inputSignals) {
+			if (isValid(signal)) {
+				Logger.processInputs(logPath, signal);
+			} else {
+				reportInvalidSignal(signal);
+			}
 		}
+
+		Logger.processInputs(logPath, connectedInput);
 	}
 
 	@Override

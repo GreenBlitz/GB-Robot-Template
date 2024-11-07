@@ -38,7 +38,7 @@ public class ModulesCommandsBuilder {
 
 		return new SequentialCommandGroup(
 			pointWheels(new Rotation2d(), false).until(
-				() -> modules.isAtTargetSteersPositions(
+				() -> modules.isSteersAtTargetPositions(
 					ModuleConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
 					ModuleConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
 				)

@@ -27,21 +27,46 @@ public abstract class Phoenix6Device implements IDevice {
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
+	public String getLogPath() {
+		return logPath;
+	}
+
 	public boolean isConnected() {
 		return connectedInput.connected;
 	}
 
+
+	private boolean isValid(InputSignal<?> signal) {
+		return signal instanceof Phoenix6SignalBuilder.SignalGetter;
+	}
+
+	private void reportInvalidSignal(InputSignal<?> invalidSignal) {
+		new Alert(
+			Alert.AlertType.WARNING,
+			logPath + "signal named " + invalidSignal.getName() + " has invalid type " + invalidSignal.getClass().getSimpleName()
+		).report();
+	}
+
+	private InputSignal<?>[] getValidSignals(InputSignal<?>... signals) {
+		LinkedList<InputSignal<?>> validSignals = new LinkedList<>();
+		for (InputSignal<?> signal : signals) {
+			if (isValid(signal)) {
+				validSignals.add(signal);
+			} else {
+				reportInvalidSignal(signal);
+			}
+		}
+		return validSignals.toArray(InputSignal<?>[]::new);
+	}
+
 	private StatusCode refreshSignals(InputSignal<?>... signals) {
 		LinkedList<StatusSignal<Double>> signalsSet = new LinkedList<>();
-		for (int i = 0; i < signals.length; i++) {
-			if (signals[i] instanceof Phoenix6SignalBuilder.SignalGetter signalGetter) {
+		for (InputSignal<?> signal : signals) {
+			if (signal instanceof Phoenix6SignalBuilder.SignalGetter signalGetter) {
 				signalsSet.add(signalGetter.getSignal());
-				if (signals[i] instanceof Phoenix6BothLatencySignal bothLatencySignal) {
+				if (signal instanceof Phoenix6BothLatencySignal bothLatencySignal) {
 					signalsSet.add(bothLatencySignal.getSignalSlope());
 				}
-			} else {
-				new Alert(Alert.AlertType.WARNING, logPath + "signal number " + i + "got invalid type: " + signals[i].getClass().getSimpleName())
-					.report();
 			}
 		}
 
@@ -55,10 +80,11 @@ public abstract class Phoenix6Device implements IDevice {
 	}
 
 	@Override
-	public void updateSignals(InputSignal<?>... signals) {
-		connectedInput.connected = refreshSignals(signals).isOK();
+	public void updateInputs(InputSignal<?>... inputSignals) {
+		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
+		connectedInput.connected = refreshSignals(validSignals).isOK();
 		Logger.processInputs(logPath, connectedInput);
-		logSignals(signals);
+		logSignals(validSignals);
 	}
 
 }

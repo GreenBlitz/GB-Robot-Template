@@ -7,13 +7,14 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
 import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
-import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
-import frc.robot.hardware.request.phoenix6.Phoenix6DoubleRequest;
+import frc.robot.hardware.request.phoenix6.Phoenix6Request;
+import frc.robot.hardware.request.phoenix6.Phoenix6RequestBuilder;
 import frc.robot.hardware.signal.phoenix6.Phoenix6AngleSignal;
 import frc.robot.hardware.signal.phoenix6.Phoenix6DoubleSignal;
 import frc.robot.hardware.signal.phoenix6.Phoenix6LatencySignal;
@@ -62,8 +63,8 @@ class SteerRealConstants {
 	}
 
 	protected static SteerStuff generateSteerStuff(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID, boolean inverted) {
-		Phoenix6AngleRequest positionRequest = new Phoenix6AngleRequest(new PositionVoltage(0).withEnableFOC(true));
-		Phoenix6DoubleRequest voltageRequest = new Phoenix6DoubleRequest(new VoltageOut(0).withEnableFOC(true));
+		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true));
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
 
 		TalonFXWrapper motor = new TalonFXWrapper(deviceID);
 		TalonFXConfiguration configuration = generateMotorConfig(inverted);

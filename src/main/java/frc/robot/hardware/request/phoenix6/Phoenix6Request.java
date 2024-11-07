@@ -12,9 +12,9 @@ public class Phoenix6Request<T> implements IRequest<T> {
 	private T setPoint;
 
 	Phoenix6Request(T defaultSetPoint, ControlRequest controlRequest, Consumer<T> withSetPoint) {
-		this.withSetPoint = withSetPoint;
-		this.controlRequest = controlRequest;
 		this.setPoint = defaultSetPoint;
+		this.controlRequest = controlRequest;
+		this.withSetPoint = withSetPoint;
 	}
 
 	@Override

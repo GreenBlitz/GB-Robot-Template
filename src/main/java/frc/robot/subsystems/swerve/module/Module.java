@@ -139,25 +139,29 @@ public class Module {
 
 	public void setDriveVoltage(double voltage) {
 		setClosedLoop(false);
-		drive.applyDoubleRequest(driveVoltageRequest.withSetPoint(voltage));
+		drive.applyRequest(driveVoltageRequest.withSetPoint(voltage));
 	}
 
 	public void setSteerVoltage(double voltage) {
-		steer.applyDoubleRequest(steerVoltageRequest.withSetPoint(voltage));
+		steer.applyRequest(steerVoltageRequest.withSetPoint(voltage));
 	}
 
 
 	public void pointSteer(Rotation2d steerTargetPosition, boolean optimize) {
 		SwerveModuleState moduleState = new SwerveModuleState(0, steerTargetPosition);
 		targetState.angle = optimize ? SwerveModuleState.optimize(moduleState, getSteerPosition()).angle : moduleState.angle;
-		steer.applyAngleRequest(steerPositionRequest.withSetPoint(targetState.angle));
+		setTargetSteerPosition(targetState.angle);
 	}
 
 
 	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
 		this.targetState = SwerveModuleState.optimize(targetState, getSteerPosition());
-		steer.applyAngleRequest(steerPositionRequest.withSetPoint(this.targetState.angle));
+		setTargetSteerPosition(this.targetState.angle);
 		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
+	}
+
+	private void setTargetSteerPosition(Rotation2d targetSteerPosition) {
+		steer.applyRequest(steerPositionRequest.withSetPoint(targetSteerPosition));
 	}
 
 	public void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerPosition, boolean isClosedLoop) {
@@ -175,7 +179,7 @@ public class Module {
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtils
 			.coupleDriveAngle(targetVelocityPerSecond, steerStuff.velocitySignal().getLatestValue(), constants.couplingRatio());
-		drive.applyAngleRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
+		drive.applyRequest(driveVelocityRequest.withSetPoint(coupledVelocityPerSecond));
 	}
 
 	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {

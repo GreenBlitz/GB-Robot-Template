@@ -9,11 +9,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.poseestimation.PoseEstimator;
@@ -139,48 +137,39 @@ public class Robot {
 
 	public Command shoot() {
 		return new ConditionalCommand(
-			new InstantCommand(() -> shootNoteWithCurrentRPM(
-				swerveDriveSimulation.getSimulatedDriveTrainPose(),
-				swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-				Rotation2d.fromRotations(60 * 60)
-			)),
+			new InstantCommand(
+				() -> shootNoteWithCurrentRPM(
+					swerveDriveSimulation.getSimulatedDriveTrainPose(),
+					swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+					Rotation2d.fromRotations(60 * 60)
+				)
+			),
 			new InstantCommand(() -> {}, mapleIntake),
-            mapleIntake::releaseNote
+			mapleIntake::releaseNote
 		);
 	}
 
-	public void shootNoteWithCurrentRPM(Pose2d robotSimulationWorldPose, ChassisSpeeds chassisSpeedsFieldRelative,
-		Rotation2d velocityMinutes) {
+	public void shootNoteWithCurrentRPM(Pose2d robotSimulationWorldPose, ChassisSpeeds chassisSpeedsFieldRelative, Rotation2d velocityMinutes) {
 		SimulatedArena.getInstance()
-					  .addGamePieceProjectile(
-						  new NoteOnFly(
-							  robotSimulationWorldPose
-								  .getTranslation(), // specify the position of the chassis
-							  new Translation2d(
-								  0.2,
-								  0), // the shooter is installed at this position on the robot (in reference
-							  // to the robot chassis center)
-							  chassisSpeedsFieldRelative, // specify the field-relative speed of the chassis
-							  // to add it to the initial velocity of the projectile
-							  robotSimulationWorldPose
-								  .getRotation(), // the shooter facing is the robot's facing
-							  0.45, // initial height of the flying note
-							  velocityMinutes.getRotations()
-								  / 6000
-								  * 20, // we think the launching speed is proportional to the rpm, and is 16
-							  // meters/second when the motor rpm is 6000
-							  Math.toRadians(55) // the note is launched at fixed angle of 55 degrees.
-						  )
-							  .asSpeakerShotNote(() -> System.out.println("hit target!!!"))
-							  .enableBecomeNoteOnFieldAfterTouchGround()
-							  .withProjectileTrajectoryDisplayCallBack(
-								  (pose3ds) ->
-									  Logger.recordOutput(
-										  "Flywheel/NoteProjectileSuccessful", pose3ds.toArray(Pose3d[]::new)),
-								  (pose3ds) ->
-									  Logger.recordOutput(
-										  "Flywheel/NoteProjectileUnsuccessful",
-										  pose3ds.toArray(Pose3d[]::new))));
+			.addGamePieceProjectile(
+				new NoteOnFly(
+					robotSimulationWorldPose.getTranslation(), // specify the position of the chassis
+					new Translation2d(0.2, 0), // the shooter is installed at this position on the robot (in reference
+					// to the robot chassis center)
+					chassisSpeedsFieldRelative, // specify the field-relative speed of the chassis
+					// to add it to the initial velocity of the projectile
+					robotSimulationWorldPose.getRotation(), // the shooter facing is the robot's facing
+					0.45, // initial height of the flying note
+					velocityMinutes.getRotations() / 6000 * 20, // we think the launching speed is proportional to the rpm, and is 16
+					// meters/second when the motor rpm is 6000
+					Math.toRadians(55) // the note is launched at fixed angle of 55 degrees.
+				).asSpeakerShotNote(() -> System.out.println("hit target!!!"))
+					.enableBecomeNoteOnFieldAfterTouchGround()
+					.withProjectileTrajectoryDisplayCallBack(
+						(pose3ds) -> Logger.recordOutput("Flywheel/NoteProjectileSuccessful", pose3ds.toArray(Pose3d[]::new)),
+						(pose3ds) -> Logger.recordOutput("Flywheel/NoteProjectileUnsuccessful", pose3ds.toArray(Pose3d[]::new))
+					)
+			);
 	}
 
 }

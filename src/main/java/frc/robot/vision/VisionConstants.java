@@ -6,7 +6,7 @@ public class VisionConstants {
 
 	public static final String ESTIMATION_LOGPATH_PREFIX = "FilteredEstimation/";
 
-	public static final String NOT_FILTERED_ESTIMATION_LOGPATH_PREFIX = "NotFilteredEstimation/";
+	public static final String NON_FILTERED_ESTIMATION_LOGPATH_PREFIX = "NonFilteredEstimation/";
 
 	public static final String FILTERED_OUT_RAW_DATA = "FilteredOutRawData/";
 
@@ -28,6 +28,6 @@ public class VisionConstants {
 		ROBOT_TO_GROUND_TOLERANCE_METERS
 	);
 
-	public static final double VISION_STANDARD_DEVIATION_ANGLES = 0.6;
+	public static final double VISION_ANGLE_STANDARD_DEVIATION = 0.6;
 
 }

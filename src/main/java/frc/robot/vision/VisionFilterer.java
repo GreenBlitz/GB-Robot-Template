@@ -71,7 +71,7 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			VisionConstants.VISION_STANDARD_DEVIATION_ANGLES};
+			VisionConstants.VISION_ANGLE_STANDARD_DEVIATION};
 
 		return new VisionObservation(rawVisionData.estimatedPose().toPose2d(), standardDeviations, rawVisionData.timestamp());
 	}
@@ -86,11 +86,11 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 		}
 	}
 
-	private void logNotFilteredEstimatedPositions() {
+	private void logNonFilteredEstimatedPositions() {
 		List<VisionObservation> observations = getAllAvailableVisionObservations();
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(
-				super.getLogPath() + VisionConstants.NOT_FILTERED_ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
+				super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
 				observations.get(i).robotPose()
 			);
 		}
@@ -106,7 +106,7 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 	@Override
 	public void subsystemPeriodic() {
 		logEstimatedPositions();
-		logNotFilteredEstimatedPositions();
+		logNonFilteredEstimatedPositions();
 	}
 
 }

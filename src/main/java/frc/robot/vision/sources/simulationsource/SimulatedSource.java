@@ -18,26 +18,32 @@ import java.util.function.Supplier;
 
 public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisionData> {
 
+	private final Random randomValuesGenerator;
+	private final Rotation2d fieldOfView;
+
 	private final double detectionRangeMeters;
 	private final double spikesProbability;
 	private final double maximumSpikeMeters;
-	private final Random randomValuesGenerator;
+	private final List<RawVisionData> currentObservations;
+
 	private final Supplier<Pose2d> simulateRobotPose;
 	private final Supplier<Double> transformNoise;
 	private final Supplier<Double> angleNoise;
-	private final List<RawVisionData> currentObservations;
 
 	public SimulatedSource(String cameraName, Supplier<Pose2d> simulateRobotPose, SimulatedSourceConfiguration config) {
 		super(cameraName + "Simulated/");
 
+		this.randomValuesGenerator = new Random();
+		this.currentObservations = new ArrayList<>();
+
 		this.detectionRangeMeters = config.detectionRangeMeters();
 		this.spikesProbability = config.spikesProbability();
 		this.maximumSpikeMeters = config.maximumSpikeMeters();
-		this.randomValuesGenerator = new Random();
+		this.fieldOfView = config.fieldOfView();
+
 		this.simulateRobotPose = simulateRobotPose;
 		this.angleNoise = () -> randomValuesGenerator.nextGaussian() * config.angleNoiseScaling();
 		this.transformNoise = () -> randomValuesGenerator.nextGaussian() * config.transformNoiseScaling();
-		this.currentObservations = new ArrayList<>();
 	}
 
 	@Override
@@ -69,6 +75,12 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 			PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
 			TimeUtils.getCurrentTimeSeconds()
 		);
+	}
+
+	public boolean isRobotPointingIntoAngle(Rotation2d angle) {
+		Rotation2d robotAngle = simulateRobotPose.get().getRotation();
+		double angleDeltaRadians = Math.abs(robotAngle.minus(angle).getRadians());
+		return (Math.PI - angleDeltaRadians) < (fieldOfView.getRadians() / 2);
 	}
 
 	public Pose2d calculateNoisedPose() {

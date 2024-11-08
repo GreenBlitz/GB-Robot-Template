@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.poseestimation.PoseEstimator;
-import frc.robot.poseestimation.PoseEstimatorConstants;
+import frc.robot.poseestimator.GBPoseEstimator;
+import frc.robot.poseestimator.OdometryValues;
+import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -18,6 +21,11 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.modules.SimulationModuleGenerator;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.MultiVisionSources;
+import frc.robot.vision.VisionConstants;
+import frc.robot.vision.VisionFilterer;
+import frc.robot.vision.VisionFiltererConfig;
+import frc.robot.vision.sources.simulationsource.SimulatedSource;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -40,7 +48,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final GBPoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
 	public Robot() {
@@ -49,7 +57,7 @@ public class Robot {
 			gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
 			Supplier<SwerveModuleSimulation> simulationModule = SimulationModuleGenerator.generate();
 			this.swerveDriveSimulation = SimulationSwerveGenerator
-				.generate(simulationModule, gyroSimulation, PoseEstimatorConstants.DEFAULT_POSE);
+				.generate(simulationModule, gyroSimulation, new Pose2d(2, 5, new Rotation2d()));
 			SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 		} else {
 			swerveDriveSimulation = null;
@@ -60,10 +68,21 @@ public class Robot {
 			GyroFactory.create(SwerveType.SWERVE, gyroSimulation)
 		);
 
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+		this.poseEstimator = new GBPoseEstimator(
+			"poseEstimator/",
+			new VisionFilterer(
+				new VisionFiltererConfig("visionFiltere/", VisionConstants.DEFAULT_VISION_FILTERS_TOLERANCES),
+				new MultiVisionSources(new SimulatedSource(
+					"limelight-front", () -> swerveDriveSimulation.getSimulatedDriveTrainPose(),
+					VisionConstants.LIMELIGHT_3_SIMULATED_SOURCE_CONFIGURATION
+				))
+			),
+			new OdometryValues(swerve.getConstants().kinematics(), "???", swerve.getGyroAbsoluteYaw()),
+			new double[] {.02, 0.02, 0.03}
+		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -73,7 +92,7 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 	}
 
 	private void configureBindings() {
@@ -93,7 +112,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public PoseEstimator getPoseEstimator() {
+	public GBPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

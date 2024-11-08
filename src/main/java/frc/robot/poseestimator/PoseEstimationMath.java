@@ -126,7 +126,7 @@ public class PoseEstimationMath {
 			poseMean = new Pose2d(
 				poseMean.getX() + observation.robotPose().getX(),
 				poseMean.getY() + observation.robotPose().getY(),
-				poseMean.getRotation().plus(observation.robotPose().getRotation()).times()
+				poseMean.getRotation().plus(observation.robotPose().getRotation())
 			);
 		}
 

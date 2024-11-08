@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.OdometryValues;
-import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -75,10 +74,13 @@ public class Robot {
 			"poseEstimator/",
 			new VisionFilterer(
 				new VisionFiltererConfig("visionFiltere/", VisionConstants.DEFAULT_VISION_FILTERS_TOLERANCES),
-				new MultiVisionSources(new SimulatedSource(
-					"limelight-front", () -> swerveDriveSimulation.getSimulatedDriveTrainPose(),
-					VisionConstants.LIMELIGHT_3_SIMULATED_SOURCE_CONFIGURATION
-				))
+				new MultiVisionSources(
+					new SimulatedSource(
+						"limelight-front",
+						() -> swerveDriveSimulation.getSimulatedDriveTrainPose(),
+						VisionConstants.LIMELIGHT_3_SIMULATED_SOURCE_CONFIGURATION
+					)
+				)
 			),
 			new OdometryValues(swerve.getConstants().kinematics(), "???", swerve.getGyroAbsoluteYaw()),
 			new double[] {.02, 0.02, 0.03}

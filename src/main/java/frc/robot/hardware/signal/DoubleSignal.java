@@ -1,5 +1,6 @@
 package frc.robot.hardware.signal;
 
+import frc.robot.hardware.interfaces.InputSignal;
 import org.littletonrobotics.junction.LogTable;
 
 public abstract class DoubleSignal implements InputSignal<Double> {
@@ -11,6 +12,11 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	public DoubleSignal(String name) {
 		this.name = name;
 		this.value = 0;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 
 	@Override

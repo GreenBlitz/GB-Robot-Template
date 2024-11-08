@@ -1,8 +1,7 @@
 package frc.utils.calibration.sysid;
 
 import com.ctre.phoenix6.SignalLogger;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Voltage;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -32,7 +31,7 @@ public class SysIdCalibrator {
 		this.isCTRE = sysIdConfigInfo.isCTRE;
 
 		SysIdRoutine.Mechanism mechanism = new SysIdRoutine.Mechanism(
-			(Measure<Voltage> volts) -> voltageSetControl.accept(volts.in(Volts)),
+			(Voltage volts) -> voltageSetControl.accept(volts.in(Volts)),
 			null,
 			usedSubsystem,
 			usedSubsystem.getName()

@@ -9,6 +9,7 @@ import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.RawVisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,16 +57,25 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 
 		for (AprilTag aprilTag : PoseEstimatorConstants.APRIL_TAG_FIELD.loadAprilTagLayoutField().getTags()) {
 			Pose3d aprilTagPose = aprilTag.pose;
+			String logPath = super.getLogPath() + "IDs/" + aprilTag.ID;
+
 			if (PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), simulatedPose) <= detectionRangeMeters) {
-				Pose2d noisedPose = calculateNoisedPose();
-				currentObservations.add(constructRawVisionData(noisedPose, aprilTagPose));
+				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
+					Pose2d noisedPose = calculateNoisedPose();
+					currentObservations.add(constructRawVisionData(noisedPose, aprilTagPose));
+					Logger.recordOutput(logPath, "returning");
+				} else {
+					Logger.recordOutput(logPath, "not facing");
+				}
+			} else {
+				Logger.recordOutput(logPath, "far away");
 			}
 		}
 	}
 
 	public RawVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose) {
 		return new RawVisionData(
-			//@formatter:off
+		//@formatter:off
 			new Pose3d(
 				new Translation3d(noisedPose.getX(), noisedPose.getY(), 0),
 				new Rotation3d(0, 0, noisedPose.getRotation().getRadians())
@@ -79,12 +89,13 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 
 	public boolean isRobotPointingIntoAngle(Rotation2d angle) {
 		Rotation2d robotAngle = simulateRobotPose.get().getRotation();
-		double angleDeltaRadians = Math.abs(robotAngle.minus(angle).getRadians());
-		return (Math.PI - angleDeltaRadians) < (fieldOfView.getRadians() / 2);
+		double angleDeltaRadians = Math.abs(Math.PI - robotAngle.minus(angle).getRadians());
+		return (angleDeltaRadians) < (fieldOfView.getRadians() / 2);
 	}
 
 	public Pose2d calculateNoisedPose() {
 		Pose2d simulatedPose = simulateRobotPose.get();
+
 		double xSpike = 0;
 		double ySpike = 0;
 		if (spikesProbability >= randomValuesGenerator.nextDouble()) {
@@ -103,9 +114,10 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	public Optional<RawVisionData> getAllData() {
 		if (currentObservations.isEmpty()) {
 			return Optional.empty();
-		} else {
-			return Optional.of(currentObservations.get(0));
 		}
+		RawVisionData output = currentObservations.get(0);
+		Logger.recordOutput(super.getLogPath() + "position", output.estimatedPose());
+		return Optional.of(output);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package frc.robot.hardware.signal;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.AngleUnit;
 import org.littletonrobotics.junction.LogTable;
 

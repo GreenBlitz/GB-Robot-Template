@@ -147,11 +147,11 @@ public class PoseEstimationMath {
 
 		double taylorResult = x - Math.pow(x, 3) / 6 + Math.pow(x, 5) / 120;
 		double integralFix = PoseEstimatorConstants.INTEGRAL_SIN_FIX;
-		return taylorResult*sign - integralFix;
+		return taylorResult * sign - integralFix;
 	}
 
 	public static double fastCos(double x) {
-		return fastSin( Math.PI / 2 - x);
+		return fastSin(Math.PI / 2 - x);
 	}
 
 	public static Optional<Rotation2d> calculateAngleAverage(List<Rotation2d> estimatedHeadings) {

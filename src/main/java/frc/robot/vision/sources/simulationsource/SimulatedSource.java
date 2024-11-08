@@ -1,4 +1,4 @@
-package frc.robot.vision.sources;
+package frc.robot.vision.sources.simulationsource;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
@@ -7,6 +7,7 @@ import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.RawVisionData;
+import frc.robot.vision.sources.VisionSource;
 import frc.utils.time.TimeUtils;
 
 import java.util.ArrayList;
@@ -26,14 +27,14 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	private final Supplier<Double> angleNoise;
 	private final List<RawVisionData> currentObservations;
 
-	public SimulatedSource(SimulatedSourceConfiguration config) {
-		super(config.logPath());
+	public SimulatedSource(String cameraName, Supplier<Pose2d> simulateRobotPose, SimulatedSourceConfiguration config) {
+		super(cameraName + "Simulated/");
 
 		this.detectionRangeMeters = config.detectionRangeMeters();
 		this.spikesProbability = config.spikesProbability();
 		this.maximumSpikeMeters = config.maximumSpikeMeters();
 		this.randomValuesGenerator = new Random();
-		this.simulateRobotPose = config.robotSimulatedPose();
+		this.simulateRobotPose = simulateRobotPose;
 		this.angleNoise = () -> randomValuesGenerator.nextGaussian() * config.angleNoiseScaling();
 		this.transformNoise = () -> randomValuesGenerator.nextGaussian() * config.transformNoiseScaling();
 		this.currentObservations = new ArrayList<>();
@@ -47,7 +48,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 		Pose2d simulatedPose = simulateRobotPose.get();
 		currentObservations.clear();
 
-		for (AprilTag aprilTag : PoseEstimatorConstants.aprilTagField.loadAprilTagLayoutField().getTags()) {
+		for (AprilTag aprilTag : PoseEstimatorConstants.APRIL_TAG_FIELD.loadAprilTagLayoutField().getTags()) {
 			Pose3d aprilTagPose = aprilTag.pose;
 			if (PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), simulatedPose) <= detectionRangeMeters) {
 				Pose2d noisedPose = calculateNoisedPose();

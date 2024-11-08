@@ -1,6 +1,7 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.vision.sources.simulationsource.SimulatedSourceConfiguration;
 
 public class VisionConstants {
 
@@ -26,6 +27,10 @@ public class VisionConstants {
 		ROLL_TOLERANCE,
 		PITCH_TOLERANCE,
 		ROBOT_TO_GROUND_TOLERANCE_METERS
+	);
+
+	public static SimulatedSourceConfiguration LIMELIGHT_3_SIMULATED_SOURCE_CONFIGURATION = new SimulatedSourceConfiguration(
+		0.1, 0.2, 0.05, 3, 2
 	);
 
 	public static final double VISION_ANGLE_STANDARD_DEVIATION = 0.6;

@@ -121,7 +121,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (stackedObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		Pose2d averagePose = PoseEstimationMath.weightedPoseMean(stackedObservations);
+		Pose2d averagePose = PoseEstimationMath.poseMean(stackedObservations);
 		Pose2d visionPose = new Pose2d(averagePose.getX(), averagePose.getY(), lastOdometryValues.gyroAngle().plus(headingOffset));
 		return Optional.of(visionPose);
 	}
@@ -176,7 +176,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				odometryPoseSample,
 				estimatedPose,
 				odometryPose,
-				headingOffset,
 				odometryStandardDeviations
 			);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), estimatedPose.getRotation().plus(headingOffset));
@@ -193,7 +192,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastOdometryValues.gyroAngle());
 		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelsPositions(), observation.gyroAngle());
 		odometryPose = odometryPose.exp(twist);
-		twist = PoseEstimationMath.rotateTwistToFitHeading(twist, headingOffset);
 		estimatedPose = estimatedPose.exp(twist);
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}

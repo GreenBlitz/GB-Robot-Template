@@ -23,20 +23,6 @@ public class PoseEstimationMath {
 		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 	}
 
-	public static Twist2d rotateTwistToFitHeading(Twist2d twist, Rotation2d differenceFromHeadingToGyro) {
-		Transform2d rotatedTransform = rotateTransformToFitHeading(
-			new Transform2d(twist.dx, twist.dy, Rotation2d.fromRadians(twist.dtheta)),
-			differenceFromHeadingToGyro
-		);
-		return new Twist2d(rotatedTransform.getX(), rotatedTransform.getY(), twist.dtheta);
-	}
-
-	public static Transform2d rotateTransformToFitHeading(Transform2d transform, Rotation2d differenceFromHeadingToGyro) {
-		double dx = differenceFromHeadingToGyro.getCos() * transform.getX() - differenceFromHeadingToGyro.getSin() * transform.getY();
-		double dy = differenceFromHeadingToGyro.getSin() * transform.getX() + differenceFromHeadingToGyro.getCos() * transform.getY();
-		return new Transform2d(dx, dy, transform.getRotation());
-	}
-
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
 		double[] combinedStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
@@ -84,11 +70,9 @@ public class PoseEstimationMath {
 		Pose2d odometryInterpolatedPoseSample,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
-		Rotation2d differenceFromHeadingToGyro,
 		double[] odometryStandardDeviations
 	) {
 		Transform2d sampleDifferenceFromPose = new Transform2d(odometryPose, odometryInterpolatedPoseSample);
-		sampleDifferenceFromPose = rotateTransformToFitHeading(sampleDifferenceFromPose, differenceFromHeadingToGyro);
 		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
 	}
 
@@ -133,6 +117,21 @@ public class PoseEstimationMath {
 		);
 
 		return poseMean;
+	}
+
+	public static Pose2d poseMean(List<VisionObservation> observations) {
+		Pose2d poseMean = new Pose2d();
+
+		for (VisionObservation observation : observations) {
+			poseMean = new Pose2d(
+				poseMean.getX() + observation.robotPose().getX(),
+				poseMean.getY() + observation.robotPose().getY(),
+				poseMean.getRotation().plus(observation.robotPose().getRotation()).times()
+			);
+		}
+
+		int observationsCount = observations.size();
+		return poseMean.div(observationsCount);
 	}
 
 	public static Optional<Rotation2d> calculateAngleAverage(List<Rotation2d> estimatedHeadings) {

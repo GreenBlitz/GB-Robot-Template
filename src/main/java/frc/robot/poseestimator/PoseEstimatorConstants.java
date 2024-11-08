@@ -2,7 +2,6 @@ package frc.robot.poseestimator;
 
 
 import edu.wpi.first.apriltag.AprilTagFields;
-import frc.robot.vision.sources.simulationsource.SimulatedSourceConfiguration;
 
 public class PoseEstimatorConstants {
 

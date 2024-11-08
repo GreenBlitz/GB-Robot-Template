@@ -17,7 +17,6 @@ import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtils;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -46,9 +45,11 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawVisi
 		this.gyroAngleValues = new GyroAngleValues(0, 0, 0, 0, 0, 0);
 
 		AlertManager.addAlert(
-			new PeriodicAlert(Alert.AlertType.WARNING,
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
 				this.getLogPath() + "DisconnectedAt",
-			() -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
+				() -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1
+			)
 		);
 	}
 

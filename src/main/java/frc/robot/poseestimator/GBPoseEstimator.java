@@ -171,13 +171,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void addVisionObservation(VisionObservation observation) {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
-			Pose2d currentEstimation = PoseEstimationMath.combineVisionToOdometry(
-				observation,
-				odometryPoseSample,
-				estimatedPose,
-				odometryPose,
-				odometryStandardDeviations
-			);
+			Pose2d currentEstimation = PoseEstimationMath
+				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), estimatedPose.getRotation().plus(headingOffset));
 			estimatedPoseInterpolator.addSample(TimeUtils.getCurrentTimeSeconds(), estimatedPose);
 		});

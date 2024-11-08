@@ -1,9 +1,9 @@
 package frc.robot.subsystems.swerve.module.stuffs;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hard.interfaces.ControllableMotor;
-import frc.robot.hard.interfaces.IRequest;
-import frc.robot.hard.interfaces.InputSignal;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IRequest;
+import frc.robot.hardware.interfaces.InputSignal;
 
 public record DriveStuff(
 	String logPath,

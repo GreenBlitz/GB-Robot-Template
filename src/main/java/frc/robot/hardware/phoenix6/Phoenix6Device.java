@@ -4,10 +4,10 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.ConnectedInputAutoLogged;
-import frc.robot.hardware.IDevice;
-import frc.robot.hardware.signal.InputSignal;
-import frc.robot.hardware.signal.phoenix6.Phoenix6BothLatencySignal;
-import frc.robot.hardware.signal.phoenix6.Phoenix6SignalBuilder;
+import frc.robot.hardware.interfaces.IDevice;
+import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6BothLatencySignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -25,6 +25,10 @@ public abstract class Phoenix6Device implements IDevice {
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
+	}
+
+	public String getLogPath() {
+		return logPath;
 	}
 
 	public boolean isConnected() {

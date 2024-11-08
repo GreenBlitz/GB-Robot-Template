@@ -1,8 +1,8 @@
 package frc.robot.hardware.gyro.maple;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.gyro.IGyro;
-import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.interfaces.InputSignal;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.littletonrobotics.junction.Logger;
 

@@ -2,9 +2,9 @@ package frc.robot.subsystems.swerve.module.hardware;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.hardware.angleencoder.IAngleEncoder;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IAngleEncoder;
+import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.swerve.module.Module;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;

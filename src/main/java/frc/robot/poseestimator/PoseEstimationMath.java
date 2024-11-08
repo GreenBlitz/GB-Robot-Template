@@ -150,4 +150,8 @@ public class PoseEstimationMath {
 		return Optional.of(new Rotation2d(Math.atan2(summedYComponent, summedXComponent)));
 	}
 
+	public static double distanceBetweenPosesMeters(Pose2d first, Pose2d second) {
+		return first.minus(second).getTranslation().getNorm();
+	}
+
 }

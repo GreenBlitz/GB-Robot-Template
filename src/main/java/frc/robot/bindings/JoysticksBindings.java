@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.bindings;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,9 +8,10 @@ import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
-import frc.utils.joysticks.Axis;
-import frc.utils.joysticks.JoystickPorts;
-import frc.utils.joysticks.SmartJoystick;
+import frc.robot.Robot;
+import frc.utils.controllers.joysticks.Axis;
+import frc.utils.controllers.joysticks.JoystickPorts;
+import frc.utils.controllers.joysticks.SmartJoystick;
 
 public class JoysticksBindings {
 

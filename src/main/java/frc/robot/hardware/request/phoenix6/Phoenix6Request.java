@@ -8,18 +8,18 @@ import java.util.function.Consumer;
 public class Phoenix6Request<T> implements IRequest<T> {
 
 	private final ControlRequest controlRequest;
-	private final Consumer<T> withSetPoint;
+	private final Consumer<T> setSetPoint;
 	private T setPoint;
 
-	Phoenix6Request(T defaultSetPoint, ControlRequest controlRequest, Consumer<T> withSetPoint) {
+	Phoenix6Request(T defaultSetPoint, ControlRequest controlRequest, Consumer<T> setSetPoint) {
 		this.setPoint = defaultSetPoint;
 		this.controlRequest = controlRequest;
-		this.withSetPoint = withSetPoint;
+		this.setSetPoint = setSetPoint;
 	}
 
 	@Override
 	public Phoenix6Request<T> withSetPoint(T setPoint) {
-		withSetPoint.accept(setPoint);
+		setSetPoint.accept(setPoint);
 		this.setPoint = setPoint;
 		return this;
 	}

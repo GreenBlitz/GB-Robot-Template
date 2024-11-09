@@ -34,7 +34,7 @@ public class VisionConstants {
 		0.1,
 		0.05,
 		2.5,
-		3.5,
+		3,
 		Rotation2d.fromDegrees(61)
 	);
 

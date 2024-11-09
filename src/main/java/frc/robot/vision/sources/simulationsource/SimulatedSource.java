@@ -64,13 +64,12 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();
 					currentObservations.add(constructRawVisionData(noisedPose, aprilTagPose));
-					Logger.recordOutput(logPath + "state", "returning");
+					Logger.recordOutput(logPath, "returning");
 				} else {
-					Logger.recordOutput(logPath + "state", "not facing");
-					Logger.recordOutput(logPath + "at", aprilTagPose.getRotation().toRotation2d());
+					Logger.recordOutput(logPath, "not facing");
 				}
 			} else {
-				Logger.recordOutput(logPath + "state", distanceMeters);
+				Logger.recordOutput(logPath, "d=" + distanceMeters + "m");
 			}
 		}
 	}

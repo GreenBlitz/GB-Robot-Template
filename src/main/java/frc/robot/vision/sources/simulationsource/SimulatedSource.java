@@ -111,19 +111,24 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 		);
 	}
 
-	@Override
-	public Optional<RawVisionData> getAllData() {
+	public Optional<RawVisionData> getLatestObservation() {
 		if (currentObservations.isEmpty()) {
 			return Optional.empty();
 		}
 		RawVisionData output = currentObservations.get(0);
-		Logger.recordOutput(super.getLogPath() + "position", output.estimatedPose());
 		return Optional.of(output);
 	}
 
 	@Override
+	public Optional<RawVisionData> getAllData() {
+		Optional<RawVisionData> output = getLatestObservation();
+		output.ifPresent((RawVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.estimatedPose()));
+		return output;
+	}
+
+	@Override
 	public Optional<Rotation2d> getRobotHeading() {
-		return Optional.empty();
+		return getLatestObservation().map(rawVisionData -> rawVisionData.estimatedPose().toPose2d().getRotation());
 	}
 
 	@Override

@@ -24,16 +24,19 @@ public class TimeUtils {
 		);
 	}
 
-	public static void updateCycleTime() {
+	public static void updateCycleTime(int roborioCycles) {
 		lastCycleTimeSeconds = newCycleTimeSeconds;
 		newCycleTimeSeconds = getCurrentTimeSeconds();
 
-		logStatus();
+		logStatus(roborioCycles);
 	}
 
-	private static void logStatus() {
+	private static void logStatus(int roborioCycles) {
+		double currentTimeSeconds = getCurrentTimeSeconds();
+
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", getCurrentTimeSeconds());
+		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentTimeSeconds);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentTimeSeconds / roborioCycles);
 	}
 
 	public static double getCurrentTimeSeconds() {

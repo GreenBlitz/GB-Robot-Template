@@ -16,14 +16,14 @@ public class MapleModule extends Module {
 	@AutoLog
 	public static class ModuleIOInputs {
 
-		public double drivePositionRad = 0.0;
-		public double driveVelocityRadPerSec = 0.0;
+		public Rotation2d drivePosition = new Rotation2d();
+		public Rotation2d driveVelocityPositionPerSecond = new Rotation2d();
 		public double driveAppliedVolts = 0.0;
 		public double[] driveCurrentAmps = {0};
 
 		public Rotation2d turnAbsolutePosition = new Rotation2d();
 		public Rotation2d turnPosition = new Rotation2d();
-		public double turnVelocityRadPerSec = 0.0;
+		public Rotation2d turnVelocityPositionPerSecond = new Rotation2d();
 		public double turnAppliedVolts = 0.0;
 		public double[] turnCurrentAmps = {0};
 
@@ -56,14 +56,14 @@ public class MapleModule extends Module {
 
 	@Override
 	public void updateInputs() {
-		moduleIOInputs.drivePositionRad = moduleSimulation.getDriveWheelFinalPositionRad();
-		moduleIOInputs.driveVelocityRadPerSec = moduleSimulation.getDriveWheelFinalSpeedRadPerSec();
+		moduleIOInputs.drivePosition = Rotation2d.fromRadians(moduleSimulation.getDriveWheelFinalPositionRad());
+		moduleIOInputs.driveVelocityPositionPerSecond = Rotation2d.fromRadians(moduleSimulation.getDriveWheelFinalSpeedRadPerSec());
 		moduleIOInputs.driveAppliedVolts = moduleSimulation.getDriveMotorAppliedVolts();
 		moduleIOInputs.driveCurrentAmps = new double[] {Math.abs(moduleSimulation.getDriveMotorSupplyCurrentAmps())};
 
 		moduleIOInputs.turnAbsolutePosition = moduleSimulation.getSteerAbsoluteFacing();
 		moduleIOInputs.turnPosition = Rotation2d.fromRadians(moduleSimulation.getSteerRelativeEncoderPositionRad());
-		moduleIOInputs.turnVelocityRadPerSec = moduleSimulation.getSteerRelativeEncoderSpeedRadPerSec();
+		moduleIOInputs.turnVelocityPositionPerSecond = Rotation2d.fromRadians(moduleSimulation.getSteerRelativeEncoderSpeedRadPerSec());
 		moduleIOInputs.turnAppliedVolts = moduleSimulation.getSteerMotorAppliedVolts();
 		moduleIOInputs.turnCurrentAmps = new double[] {Math.abs(moduleSimulation.getSteerMotorSupplyCurrentAmps())};
 
@@ -102,12 +102,12 @@ public class MapleModule extends Module {
 
 	@Override
 	public Rotation2d[] getDrivePositions() {
-		return new Rotation2d[] {Rotation2d.fromRadians(moduleIOInputs.drivePositionRad)};
+		return new Rotation2d[] {moduleIOInputs.drivePosition};
 	}
 
 	@Override
 	public Rotation2d getDriveVelocitySeconds() {
-		return Rotation2d.fromRadians(moduleIOInputs.driveVelocityRadPerSec);
+		return moduleIOInputs.driveVelocityPositionPerSecond;
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class MapleModule extends Module {
 
 	@Override
 	public Rotation2d getSteerVelocitySeconds() {
-		return Rotation2d.fromRadians(moduleIOInputs.turnVelocityRadPerSec);
+		return moduleIOInputs.turnVelocityPositionPerSecond;
 	}
 
 }

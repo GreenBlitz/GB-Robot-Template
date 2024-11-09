@@ -130,15 +130,10 @@ public abstract class Module {
 		return toDriveMeters(getDriveVelocitySeconds());
 	}
 
-	//@formatter:off
+
 	public boolean isAtTargetVelocity(double speedToleranceMetersPerSecond) {
-		return MathUtil.isNear(
-			getTargetState().speedMetersPerSecond,
-			getDriveVelocityMetersPerSecond(),
-			speedToleranceMetersPerSecond
-		);
+		return MathUtil.isNear(getTargetState().speedMetersPerSecond, getDriveVelocityMetersPerSecond(), speedToleranceMetersPerSecond);
 	}
-	//@formatter:on
 
 	public boolean isSteerAtTargetPosition(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
 		boolean isStopping = getSteerVelocitySeconds().getRadians() <= steerVelocityPerSecondDeadband.getRadians();

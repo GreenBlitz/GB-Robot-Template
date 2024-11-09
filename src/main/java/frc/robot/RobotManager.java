@@ -75,11 +75,8 @@ public class RobotManager extends LoggedRobot {
 		}
 	}
 
-	double start = 0;
-
 	@Override
 	public void robotPeriodic() {
-		start = TimeUtils.getCurrentTimeSeconds();
 		roborioCycles++; // Better to be first
 		Logger.recordOutput("RoborioCycles", roborioCycles);
 		TimeUtils.updateCycleTime(roborioCycles); // Better to be second
@@ -88,14 +85,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-		SimulatedArena.getInstance().simulationPeriodic();
-		robot.updateSimulationRobot();
-		List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
-		if (notes != null) {
-			Logger.recordOutput("FieldSimulation/Notes", notes.toArray(Pose3d[]::new));
-		}
-		SimulationManager.updateRegisteredSimulations();
-		Logger.recordOutput("cycycycycycyc", TimeUtils.getCurrentTimeSeconds() - start);
 	}
 
 	@Override
@@ -105,7 +94,13 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void simulationPeriodic() {
-
+		SimulatedArena.getInstance().simulationPeriodic();
+		robot.updateSimulationRobot();
+		List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
+		if (notes != null) {
+			Logger.recordOutput("FieldSimulation/Notes", notes.toArray(Pose3d[]::new));
+		}
+		SimulationManager.updateRegisteredSimulations();
 	}
 
 }

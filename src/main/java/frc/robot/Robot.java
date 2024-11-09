@@ -82,11 +82,7 @@ public class Robot {
 					)
 				)
 			),
-			new OdometryValues(
-				swerve.getConstants().kinematics(),
-				swerve.getModules().getWheelsPositions(0),
-				swerve.getAbsoluteHeading()
-			),
+			new OdometryValues(swerve.getConstants().kinematics(), swerve.getModules().getWheelsPositions(0), swerve.getAbsoluteHeading()),
 			new double[] {.02, 0.02, 0.03}
 		);
 

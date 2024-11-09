@@ -82,7 +82,8 @@ public class Robot {
 					)
 				)
 			),
-			new OdometryValues(swerve.getConstants().kinematics(), "???", swerve.getGyroAbsoluteYaw()),
+//			new OdometryValues(swerve.getConstants().kinematics(), ???, swerve.getGyroAbsoluteYaw()),
+			swerve.getAllOdometryObservations(),
 			new double[] {.02, 0.02, 0.03}
 		);
 

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.GyroAngleValues;
@@ -104,7 +105,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void resetOdometry(SwerveDriveKinematics wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
+	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		this.lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), wheelPositions, gyroAngle);
 		this.odometryPose = robotPose;
 		odometryPoseInterpolator.clear();
@@ -153,7 +154,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateOdometry(List<OdometryObservation> odometryObservations) {
+	public void updateOdometry(OdometryObservation[] odometryObservations) {
 		for (OdometryObservation observation : odometryObservations) {
 			addOdometryObservation(observation);
 		}

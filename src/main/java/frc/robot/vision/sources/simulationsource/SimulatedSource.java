@@ -59,7 +59,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 			Pose3d aprilTagPose = aprilTag.pose;
 			String logPath = super.getLogPath() + "IDs/" + aprilTag.ID;
 
-			double distanceMeters = PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), simulatedPose)
+			double distanceMeters = PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), simulatedPose);
 			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();

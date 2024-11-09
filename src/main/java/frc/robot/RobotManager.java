@@ -30,6 +30,8 @@ import java.util.List;
  */
 public class RobotManager extends LoggedRobot {
 
+	private int roborioCycles;
+
 	private Command autonomousCommand;
 	private Robot robot;
 
@@ -38,6 +40,7 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
+		roborioCycles = 0;
 
 		this.robot = new Robot();
 	}
@@ -72,14 +75,27 @@ public class RobotManager extends LoggedRobot {
 		}
 	}
 
+	double start = 0;
+
 	@Override
 	public void robotPeriodic() {
-		TimeUtils.updateCycleTime(); // Better to be first
+		start = TimeUtils.getCurrentTimeSeconds();
+		roborioCycles++; // Better to be first
+		Logger.recordOutput("RoborioCycles", roborioCycles);
+		TimeUtils.updateCycleTime(roborioCycles); // Better to be second
 		robot.getSuperStructure().periodic();
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+		SimulatedArena.getInstance().simulationPeriodic();
+		robot.updateSimulationRobot();
+		List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
+		if (notes != null) {
+			Logger.recordOutput("FieldSimulation/Notes", notes.toArray(Pose3d[]::new));
+		}
+		SimulationManager.updateRegisteredSimulations();
+		Logger.recordOutput("cycycycycycyc", TimeUtils.getCurrentTimeSeconds() - start);
 	}
 
 	@Override
@@ -89,13 +105,7 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void simulationPeriodic() {
-		SimulatedArena.getInstance().simulationPeriodic();
-		robot.updateSimulationRobot();
-		List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
-		if (notes != null) {
-			Logger.recordOutput("FieldSimulation/Notes", notes.toArray(Pose3d[]::new));
-		}
-		SimulationManager.updateRegisteredSimulations();
+
 	}
 
 }

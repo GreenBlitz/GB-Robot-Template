@@ -35,7 +35,7 @@ public class VisionConstants {
 		0.05,
 		2.5,
 		3.5,
-		Rotation2d.fromDegrees(30)
+		Rotation2d.fromDegrees(61)
 	);
 
 	public static final double VISION_ANGLE_STANDARD_DEVIATION = 0.6;

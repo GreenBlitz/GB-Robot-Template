@@ -59,7 +59,7 @@ public class Robot {
 			gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
 			Supplier<SwerveModuleSimulation> simulationModule = SimulationModuleGenerator.generate();
 			this.swerveDriveSimulation = SimulationSwerveGenerator
-				.generate(simulationModule, gyroSimulation, new Pose2d(2, 5, new Rotation2d()));
+				.generate(simulationModule, gyroSimulation, new Pose2d(2, 5, Rotation2d.fromDegrees(25)));
 			SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 		} else {
 			swerveDriveSimulation = null;

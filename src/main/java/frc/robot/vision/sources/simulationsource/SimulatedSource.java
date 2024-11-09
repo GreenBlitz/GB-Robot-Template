@@ -59,16 +59,18 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 			Pose3d aprilTagPose = aprilTag.pose;
 			String logPath = super.getLogPath() + "IDs/" + aprilTag.ID;
 
-			if (PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), simulatedPose) <= detectionRangeMeters) {
+			double distanceMeters = PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), simulatedPose);
+			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();
 					currentObservations.add(constructRawVisionData(noisedPose, aprilTagPose));
-					Logger.recordOutput(logPath, "returning");
+					Logger.recordOutput(logPath + "state", "returning");
 				} else {
-					Logger.recordOutput(logPath, "not facing");
+					Logger.recordOutput(logPath + "state", "not facing");
+					Logger.recordOutput(logPath + "at", aprilTagPose.getRotation().toRotation2d());
 				}
 			} else {
-				Logger.recordOutput(logPath, "far away");
+				Logger.recordOutput(logPath + "state", distanceMeters);
 			}
 		}
 	}
@@ -89,7 +91,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 
 	public boolean isRobotPointingIntoAngle(Rotation2d angle) {
 		Rotation2d robotAngle = simulateRobotPose.get().getRotation();
-		double angleDeltaRadians = Math.abs(Math.PI - robotAngle.minus(angle).getRadians());
+		double angleDeltaRadians = Math.abs(robotAngle.minus(angle).getRadians());
 		return (angleDeltaRadians) < (fieldOfView.getRadians() / 2);
 	}
 

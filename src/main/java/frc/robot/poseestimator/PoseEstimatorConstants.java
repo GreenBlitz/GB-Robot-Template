@@ -15,6 +15,6 @@ public class PoseEstimatorConstants {
 
 	public static final double[] DEFAULT_ODOMETRY_STANDARD_DEVIATIONS = {0.003, 0.003, 0.0002};
 
-	public static final double INTEGRAL_SIN_FIX = -0.0008945229984747005 / 2;
+	public static final double INTEGRAL_SIN_FIX = -0.0008945229984747005;
 
 }

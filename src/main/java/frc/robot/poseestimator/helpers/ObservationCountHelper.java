@@ -9,7 +9,7 @@ public class ObservationCountHelper<T> {
 
 	private final Supplier<List<T>> observationSupplier;
 	private final int maxCount;
-	private final List<T> stackedObservations;
+	private List<T> stackedObservations;
 	private int observationsCount;
 
 	public ObservationCountHelper(Supplier<List<T>> observationSupplier, int maxCount) {
@@ -22,7 +22,9 @@ public class ObservationCountHelper<T> {
 	public List<T> getStackedObservations() {
 		if (observationsCount == maxCount) {
 			observationsCount = 0;
-			return stackedObservations;
+			List<T> copyOfStackedObservations = stackedObservations;
+			stackedObservations = new ArrayList<>();
+			return copyOfStackedObservations;
 		} else {
 			stackedObservations.addAll(observationSupplier.get());
 			observationsCount++;

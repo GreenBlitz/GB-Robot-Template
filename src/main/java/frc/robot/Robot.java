@@ -97,7 +97,7 @@ public class Robot {
 		return poseEstimator;
 	}
 
-	public void updateSimulationRobot() {
+	public void logSimulationRobot() {
 		if (swerveDriveSimulation != null) {
 			Logger.recordOutput("FieldSimulation/RobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose());
 		}

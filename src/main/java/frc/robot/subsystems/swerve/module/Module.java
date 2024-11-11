@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
+import frc.robot.subsystems.swerve.module.extrainputs.CouplingInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
@@ -36,6 +37,7 @@ public class Module {
 
 	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
+	private final CouplingInputsAutoLogged couplingInputs;
 
 	private SwerveModuleState targetState;
 	private Rotation2d startingSteerPosition;
@@ -70,6 +72,7 @@ public class Module {
 		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
 		this.moduleInputs = new ModuleInputsAutoLogged();
 		this.driveInputs = new DriveInputsAutoLogged();
+		this.couplingInputs = new CouplingInputsAutoLogged();
 
 		updateInputs();
 		resetByEncoder();
@@ -89,14 +92,14 @@ public class Module {
 
 
 	private void fixDriveInputsCoupling() {
-		driveInputs.uncoupledVelocityPerSecond = ModuleUtils
+		couplingInputs.uncoupledVelocityPerSecond = ModuleUtils
 			.uncoupleDriveAngle(driveSignals.velocity().getLatestValue(), steerSignals.velocity().getLatestValue(), constants.couplingRatio());
 
-		driveInputs.uncoupledPositions = new Rotation2d[driveSignals.position().asArray().length];
-		for (int i = 0; i < driveInputs.uncoupledPositions.length; i++) {
+		couplingInputs.uncoupledPositions = new Rotation2d[driveSignals.position().asArray().length];
+		for (int i = 0; i < couplingInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerSignals.position().asArray()[i].getRotations() - startingSteerPosition.getRotations());
-			driveInputs.uncoupledPositions[i] = ModuleUtils
+			couplingInputs.uncoupledPositions[i] = ModuleUtils
 				.uncoupleDriveAngle(driveSignals.position().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
@@ -108,14 +111,15 @@ public class Module {
 
 		fixDriveInputsCoupling();
 
-		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityPerSecond);
-		driveInputs.positionsMeters = Arrays.stream(driveInputs.uncoupledPositions).mapToDouble(this::toDriveMeters).toArray();
+		driveInputs.velocityMetersPerSecond = toDriveMeters(couplingInputs.uncoupledVelocityPerSecond);
+		driveInputs.positionsMeters = Arrays.stream(couplingInputs.uncoupledPositions).mapToDouble(this::toDriveMeters).toArray();
 
 		moduleInputs.isClosedLoop = isClosedLoop;
 		moduleInputs.targetState = targetState;
 
 		Logger.processInputs(constants.logPath(), moduleInputs);
 		Logger.processInputs(constants.logPath() + "/Drive", driveInputs);
+		Logger.processInputs(constants.logPath() + "/Drive", couplingInputs);
 	}
 
 
@@ -226,7 +230,7 @@ public class Module {
 	}
 
 	public Rotation2d getDrivePosition() {
-		return driveInputs.uncoupledPositions[driveInputs.uncoupledPositions.length - 1];
+		return couplingInputs.uncoupledPositions[couplingInputs.uncoupledPositions.length - 1];
 	}
 
 	public double getDriveVelocityMetersPerSecond() {

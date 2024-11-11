@@ -28,30 +28,29 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	//@formatter:off
 	public Command wheelRadiusCalibration() {
 		return new SequentialCommandGroup(
-			swerve.getModules().getCommandsBuilder().pointWheelsInCircle()
-				.until(() -> swerve.getModules().isSteersAtTargetPositions(
-					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
-				)
-			),
+			swerve.getModules()
+				.getCommandsBuilder()
+				.pointWheelsInCircle()
+				.until(
+					() -> swerve.getModules()
+						.isSteersAtTargetPositions(
+							SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
+							SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+						)
+				),
 			new WheelRadiusCharacterization(
 				swerve,
 				swerve.getConstants().driveRadiusMeters(),
 				SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND,
 				swerve.getModules()::getDrivesPositions,
 				swerve::getAbsoluteHeading,
-				rotationsPerSecond -> swerve.driveByState(
-						new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()),
-						SwerveState.DEFAULT_DRIVE
-				),
+				rotationsPerSecond -> swerve.driveByState(new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()), SwerveState.DEFAULT_DRIVE),
 				swerve.getModules()::stop
 			)
 		).withName("Wheel radius calibration");
 	}
-	//@formatter:on
 
 
 	public Command turnToHeading(Rotation2d targetHeading) {

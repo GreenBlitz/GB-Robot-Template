@@ -89,11 +89,8 @@ public class Module {
 
 
 	private void fixDriveInputsCoupling() {
-		driveInputs.uncoupledVelocityPerSecond = ModuleUtils.uncoupleDriveAngle(
-			driveSignals.velocity().getLatestValue(),
-			steerSignals.velocity().getLatestValue(),
-			constants.couplingRatio()
-		);
+		driveInputs.uncoupledVelocityPerSecond = ModuleUtils
+			.uncoupleDriveAngle(driveSignals.velocity().getLatestValue(), steerSignals.velocity().getLatestValue(), constants.couplingRatio());
 
 		driveInputs.uncoupledPositions = new Rotation2d[driveSignals.position().asArray().length];
 		for (int i = 0; i < driveInputs.uncoupledPositions.length; i++) {
@@ -106,18 +103,8 @@ public class Module {
 
 	public void updateInputs() {
 		encoder.updateInputs(encoderSignals.position());
-		steer.updateInputs(
-			steerSignals.position(),
-			steerSignals.velocity(),
-			steerSignals.current(),
-			steerSignals.voltage()
-		);
-		drive.updateInputs(
-			driveSignals.position(),
-			driveSignals.velocity(),
-			driveSignals.current(),
-			driveSignals.voltage()
-		);
+		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
+		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
 
 		fixDriveInputsCoupling();
 

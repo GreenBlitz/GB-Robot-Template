@@ -1,13 +1,11 @@
-package frc.robot.subsystems.swerve.module.stuffs;
+package frc.robot.subsystems.swerve.module.records;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 
-public record DriveStuff(
-	String logPath,
-	ControllableMotor drive,
+public record DriveRequests(
+
 	IRequest<Rotation2d> velocityRequest,
 	IRequest<Double> voltageRequest,
 	InputSignal<Rotation2d> positionSignal,

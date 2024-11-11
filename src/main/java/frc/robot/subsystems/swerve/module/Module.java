@@ -90,33 +90,33 @@ public class Module {
 
 	private void fixDriveInputsCoupling() {
 		driveInputs.uncoupledVelocityPerSecond = ModuleUtils.uncoupleDriveAngle(
-			driveSignals.velocitySignal().getLatestValue(),
-			steerSignals.velocitySignal().getLatestValue(),
+			driveSignals.velocity().getLatestValue(),
+			steerSignals.velocity().getLatestValue(),
 			constants.couplingRatio()
 		);
 
-		driveInputs.uncoupledPositions = new Rotation2d[driveSignals.positionSignal().asArray().length];
+		driveInputs.uncoupledPositions = new Rotation2d[driveSignals.position().asArray().length];
 		for (int i = 0; i < driveInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
-				.fromRotations(steerSignals.positionSignal().asArray()[i].getRotations() - startingSteerPosition.getRotations());
+				.fromRotations(steerSignals.position().asArray()[i].getRotations() - startingSteerPosition.getRotations());
 			driveInputs.uncoupledPositions[i] = ModuleUtils
-				.uncoupleDriveAngle(driveSignals.positionSignal().asArray()[i], steerDelta, constants.couplingRatio());
+				.uncoupleDriveAngle(driveSignals.position().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
 
 	public void updateInputs() {
-		encoder.updateInputs(encoderSignals.positionSignal());
+		encoder.updateInputs(encoderSignals.position());
 		steer.updateInputs(
-			steerSignals.positionSignal(),
-			steerSignals.velocitySignal(),
-			steerSignals.currentSignal(),
-			steerSignals.voltageSignal()
+			steerSignals.position(),
+			steerSignals.velocity(),
+			steerSignals.current(),
+			steerSignals.voltage()
 		);
 		drive.updateInputs(
-			driveSignals.positionSignal(),
-			driveSignals.velocitySignal(),
-			driveSignals.currentSignal(),
-			driveSignals.voltageSignal()
+			driveSignals.position(),
+			driveSignals.velocity(),
+			driveSignals.current(),
+			driveSignals.voltage()
 		);
 
 		fixDriveInputsCoupling();
@@ -142,7 +142,7 @@ public class Module {
 	}
 
 	public void resetByEncoder() {
-		startingSteerPosition = encoderSignals.positionSignal().getLatestValue();
+		startingSteerPosition = encoderSignals.position().getLatestValue();
 		steer.resetPosition(startingSteerPosition);
 	}
 
@@ -156,11 +156,11 @@ public class Module {
 
 	public void setDriveVoltage(double voltage) {
 		setClosedLoop(false);
-		drive.applyRequest(driveRequests.voltageRequest().withSetPoint(voltage));
+		drive.applyRequest(driveRequests.voltage().withSetPoint(voltage));
 	}
 
 	public void setSteerVoltage(double voltage) {
-		steer.applyRequest(steerRequests.voltageRequest().withSetPoint(voltage));
+		steer.applyRequest(steerRequests.voltage().withSetPoint(voltage));
 	}
 
 
@@ -178,7 +178,7 @@ public class Module {
 	}
 
 	private void setTargetSteerPosition(Rotation2d targetSteerPosition) {
-		steer.applyRequest(steerRequests.positionRequest().withSetPoint(targetSteerPosition));
+		steer.applyRequest(steerRequests.position().withSetPoint(targetSteerPosition));
 	}
 
 	public void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerPosition, boolean isClosedLoop) {
@@ -195,14 +195,14 @@ public class Module {
 		setClosedLoop(true);
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtils
-			.coupleDriveAngle(targetVelocityPerSecond, steerSignals.velocitySignal().getLatestValue(), constants.couplingRatio());
-		drive.applyRequest(driveRequests.velocityRequest().withSetPoint(coupledVelocityPerSecond));
+			.coupleDriveAngle(targetVelocityPerSecond, steerSignals.velocity().getLatestValue(), constants.couplingRatio());
+		drive.applyRequest(driveRequests.velocity().withSetPoint(coupledVelocityPerSecond));
 	}
 
 	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
 		double voltage = ModuleUtils.velocityToOpenLoopVoltage(
 			targetVelocityMetersPerSecond,
-			steerSignals.velocitySignal().getLatestValue(),
+			steerSignals.velocity().getLatestValue(),
 			constants.couplingRatio(),
 			constants.velocityAt12VoltsPerSecond(),
 			constants.wheelDiameterMeters(),
@@ -222,12 +222,12 @@ public class Module {
 	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
 		return new SwerveModulePosition(
 			driveInputs.positionsMeters[odometryUpdateIndex],
-			steerSignals.positionSignal().asArray()[odometryUpdateIndex]
+			steerSignals.position().asArray()[odometryUpdateIndex]
 		);
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(driveInputs.positionsMeters.length, steerSignals.positionSignal().asArray().length);
+		return Math.min(driveInputs.positionsMeters.length, steerSignals.position().asArray().length);
 	}
 
 	public SwerveModuleState getTargetState() {
@@ -247,7 +247,7 @@ public class Module {
 	}
 
 	public Rotation2d getSteerPosition() {
-		return steerSignals.positionSignal().getLatestValue();
+		return steerSignals.position().getLatestValue();
 	}
 
 
@@ -256,7 +256,7 @@ public class Module {
 	}
 
 	public boolean isSteerAtTargetPosition(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
-		boolean isStopping = steerSignals.velocitySignal().getLatestValue().getRadians() <= steerVelocityPerSecondDeadband.getRadians();
+		boolean isStopping = steerSignals.velocity().getLatestValue().getRadians() <= steerVelocityPerSecondDeadband.getRadians();
 		if (!isStopping) {
 			return false;
 		}

@@ -159,7 +159,7 @@ public class PoseEstimationMath {
 		double summedYComponent = 0;
 		for (Rotation2d heading : estimatedHeadings) {
 			summedXComponent += fastCos(heading.getRadians());
-			summedYComponent += fastSin(heading.getSin());
+			summedYComponent += fastSin(heading.getRadians());
 		}
 		if (summedXComponent == 0 || summedYComponent == 0 || estimatedHeadings.isEmpty()) {
 			return Optional.empty();

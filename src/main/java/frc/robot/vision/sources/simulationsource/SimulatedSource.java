@@ -63,13 +63,15 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();
-					currentObservations.add(constructRawVisionData(noisedPose, aprilTagPose));
-					Logger.recordOutput(logPath, "returning");
+					RawVisionData visionInput = constructRawVisionData(noisedPose, aprilTagPose);
+					currentObservations.add(visionInput);
+					Logger.recordOutput(logPath + "state", "returning");
+					Logger.recordOutput(logPath + "latestOutputPose", visionInput.estimatedPose());
 				} else {
-					Logger.recordOutput(logPath, "not facing");
+					Logger.recordOutput(logPath + "state", "not facing");
 				}
 			} else {
-				Logger.recordOutput(logPath, "d=" + distanceMeters + "m");
+				Logger.recordOutput(logPath + "state", "d=" + distanceMeters + "m");
 			}
 		}
 	}
@@ -128,7 +130,9 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 
 	@Override
 	public Optional<Rotation2d> getRobotHeading() {
-		return getLatestObservation().map(rawVisionData -> rawVisionData.estimatedPose().toPose2d().getRotation());
+		Optional<Rotation2d> heading = getLatestObservation().map(rawVisionData -> rawVisionData.estimatedPose().toPose2d().getRotation());
+		heading.ifPresent((Rotation2d robotHeading) -> Logger.recordOutput(getLogPath() + "heading", robotHeading));
+		return heading;
 	}
 
 	@Override

@@ -22,14 +22,15 @@ public class Superstructure {
 	}
 
 
-	//@formatter:off
-    private static boolean isAtTranslationPosition(double currentTranslationVelocity, double currentTranslationPosition, double targetTranslationPosition) {
-        boolean isNearTargetPosition = MathUtil
-                .isNear(targetTranslationPosition, currentTranslationPosition, Tolerances.TRANSLATION_METERS);
-        boolean isStopping = Math.abs(currentTranslationVelocity) < Tolerances.TRANSLATION_VELOCITY_DEADBAND;
-        return isNearTargetPosition && isStopping;
-    }
-    //@formatter:on
+	private static boolean isAtTranslationPosition(
+		double currentTranslationVelocity,
+		double currentTranslationPosition,
+		double targetTranslationPosition
+	) {
+		boolean isNearTargetPosition = MathUtil.isNear(targetTranslationPosition, currentTranslationPosition, Tolerances.TRANSLATION_METERS);
+		boolean isStopping = Math.abs(currentTranslationVelocity) < Tolerances.TRANSLATION_VELOCITY_DEADBAND;
+		return isNearTargetPosition && isStopping;
+	}
 
 	public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
 		return isAtTranslationPosition(

@@ -206,21 +206,16 @@ public class Swerve extends GBSubsystem {
 		driveByState(targetFieldRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}
 
-	//@formatter:off
 	protected void turnToHeading(Rotation2d targetHeading, SwerveState swerveState) {
 		ChassisSpeeds targetSpeeds = new ChassisSpeeds(
 			0,
 			0,
-			Rotation2d.fromDegrees(
-					constants.rotationDegreesPIDController().calculate(
-							headingSupplier.get().getDegrees(),
-							targetHeading.getDegrees()
-					)
-			).getRadians()
+			Rotation2d
+				.fromDegrees(constants.rotationDegreesPIDController().calculate(headingSupplier.get().getDegrees(), targetHeading.getDegrees()))
+				.getRadians()
 		);
 		driveByState(targetSpeeds, swerveState);
 	}
-	//@formatter:on
 
 
 	protected void driveByState(double xPower, double yPower, double rotationPower, SwerveState swerveState) {

@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.simulation.SimulationManager;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -30,6 +29,8 @@ import java.util.List;
  */
 public class RobotManager extends LoggedRobot {
 
+	private int roborioCycles;
+
 	private Command autonomousCommand;
 	private Robot robot;
 
@@ -38,6 +39,7 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
+		roborioCycles = 0;
 
 		this.robot = new Robot();
 	}
@@ -74,7 +76,9 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		TimeUtils.updateCycleTime(); // Better to be first
+		roborioCycles++; // Better to be first
+		Logger.recordOutput("RoborioCycles", roborioCycles);
+		TimeUtils.updateCycleTime(roborioCycles); // Better to be second
 		robot.getSuperStructure().periodic();
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
@@ -90,12 +94,11 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void simulationPeriodic() {
 		SimulatedArena.getInstance().simulationPeriodic();
-		robot.updateSimulationRobot();
+		robot.logSimulationRobot();
 		List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
 		if (notes != null) {
 			Logger.recordOutput("FieldSimulation/Notes", notes.toArray(Pose3d[]::new));
 		}
-		SimulationManager.updateRegisteredSimulations();
 	}
 
 }

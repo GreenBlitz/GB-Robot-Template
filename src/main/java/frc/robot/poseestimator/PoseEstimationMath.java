@@ -147,7 +147,7 @@ public class PoseEstimationMath {
 
 		double taylorResult = x - Math.pow(x, 3) / 6 + Math.pow(x, 5) / 120;
 		double integralFix = PoseEstimatorConstants.INTEGRAL_SIN_FIX;
-		return taylorResult * sign - integralFix;
+		return taylorResult * sign + integralFix;
 	}
 
 	public static double fastCos(double x) {
@@ -159,7 +159,7 @@ public class PoseEstimationMath {
 		double summedYComponent = 0;
 		for (Rotation2d heading : estimatedHeadings) {
 			summedXComponent += fastCos(heading.getRadians());
-			summedYComponent += fastSin(heading.getSin());
+			summedYComponent += fastSin(heading.getRadians());
 		}
 		if (summedXComponent == 0 || summedYComponent == 0 || estimatedHeadings.isEmpty()) {
 			return Optional.empty();

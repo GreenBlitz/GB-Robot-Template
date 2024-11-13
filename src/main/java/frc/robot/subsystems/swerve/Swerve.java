@@ -77,7 +77,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
-		RobotConfig robotConfig = new RobotConfig(0, 0, new ModuleConfig(0, 0, 0, DCMotor.getFalcon500(1), 60, 2), 0);
+		RobotConfig robotConfig = PathPlannerUtils.DEFAULT_ROBOT_CONFIG;
 		try {
 			robotConfig = RobotConfig.fromGUISettings();
 		} catch (Exception e) {

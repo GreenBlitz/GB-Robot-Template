@@ -13,10 +13,6 @@ public class TalonFXSimulation {
 	private final TalonFXSimState motorSimState;
 	private final MechanismSimulation mechanismSimulation;
 
-	public TalonFXSimState getMotorSimState() {
-		return motorSimState;
-	}
-
 	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration, MechanismSimulation simulation) {
 		this.mechanismSimulation = simulation;
 		this.motorSimState = talonFXWrapper.getSimState();

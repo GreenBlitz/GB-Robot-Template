@@ -40,10 +40,8 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristConstants;
 import frc.robot.subsystems.wrist.factory.WristFactory;
-import frc.robot.superstructure.RobotState;
 import frc.robot.superstructure.StatesMotionPlanner;
 import frc.robot.superstructure.Superstructure;
-import frc.utils.auto.PathPlannerUtils;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.vision.limelights.LimeLightConstants;

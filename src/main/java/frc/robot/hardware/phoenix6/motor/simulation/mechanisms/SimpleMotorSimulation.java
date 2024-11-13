@@ -14,7 +14,7 @@ public class SimpleMotorSimulation extends MechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getSystemPositionRotations() {
+	public Rotation2d getSystemPosition() {
 		return Rotation2d.fromRadians(motorSimulation.getAngularPositionRad());
 	}
 

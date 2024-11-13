@@ -10,15 +10,16 @@ public abstract class MechanismSimulation {
 		this.gearRatio = gearRatio;
 	}
 
-	public Rotation2d getRotorPositionRotations() {
-		return getSystemPositionRotations().times(gearRatio);
+	public Rotation2d getRotorPosition() {
+		return getSystemPosition().times(gearRatio);
 	}
 
 	public Rotation2d getRotorVelocityRotationsPerSecond() {
 		return getSystemVelocityRotationsPerSecond().times(gearRatio);
 	}
 
-	public abstract Rotation2d getSystemPositionRotations();
+
+	public abstract Rotation2d getSystemPosition();
 
 	public abstract Rotation2d getSystemVelocityRotationsPerSecond();
 

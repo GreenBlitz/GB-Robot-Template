@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import frc.robot.hardware.phoenix6.motor.TalonFXWrapper;
-import frc.robot.hardware.phoenix6.motor.simulation.mechanisms.MechanismSimulation;
+import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.utils.battery.BatteryUtils;
 
 public class TalonFXSimulation {
@@ -32,13 +32,12 @@ public class TalonFXSimulation {
 	}
 
 	public void updateMotor() {
-		if (mechanismSimulation == null) {
-			return;
+		if (mechanismSimulation != null) {
+			mechanismSimulation.setInputVoltage(motorSimState.getMotorVoltage());
+			mechanismSimulation.updateMotor();
+			motorSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
+			motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRotationsPerSecond().getRotations());
 		}
-		mechanismSimulation.setInputVoltage(motorSimState.getMotorVoltage());
-		mechanismSimulation.updateMotor();
-		motorSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
-		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRotationsPerSecond().getRotations());
 	}
 
 }

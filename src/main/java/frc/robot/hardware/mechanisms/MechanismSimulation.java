@@ -1,4 +1,4 @@
-package frc.robot.hardware.phoenix6.motor.simulation.mechanisms;
+package frc.robot.hardware.mechanisms;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

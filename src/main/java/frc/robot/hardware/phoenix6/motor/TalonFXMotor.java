@@ -10,7 +10,7 @@ import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motor.simulation.TalonFXSimulation;
-import frc.robot.hardware.phoenix6.motor.simulation.mechanisms.MechanismSimulation;
+import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.utils.alerts.Alert;
 import frc.utils.calibration.sysid.SysIdCalibrator;

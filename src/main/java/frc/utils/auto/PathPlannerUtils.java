@@ -29,7 +29,12 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-	public static final RobotConfig DEFAULT_ROBOT_CONFIG = new RobotConfig(74, 8.6, new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500(2), 60, 2), 0.577);
+	public static final RobotConfig DEFAULT_ROBOT_CONFIG = new RobotConfig(
+		74,
+		8.6,
+		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500(2), 60, 2),
+		0.577
+	);
 
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 

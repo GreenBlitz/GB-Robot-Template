@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,7 +7,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.interfaces.IGyro;
@@ -85,14 +83,14 @@ public class Swerve extends GBSubsystem {
 			e.printStackTrace();
 		} finally {
 			PathPlannerUtils.configPathPlanner(
-					currentPoseSupplier,
-					resetPoseConsumer,
-					this::getRobotRelativeVelocity,
-					(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
-					constants.ppHolonomicDriveController(),
-					robotConfig,
-					() -> !Field.isFieldConventionAlliance(),
-					this
+				currentPoseSupplier,
+				resetPoseConsumer,
+				this::getRobotRelativeVelocity,
+				(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
+				constants.ppHolonomicDriveController(),
+				robotConfig,
+				() -> !Field.isFieldConventionAlliance(),
+				this
 			);
 		}
 	}

@@ -32,7 +32,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	) {
 		super(logPath);
 		this.motor = Robot.ROBOT_TYPE.isSimulation() ? new TalonFXWrapper(deviceID.ID()) : new TalonFXWrapper(deviceID);
-		motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES);
+		if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
+		}
 		this.talonFXSimulation = Robot.ROBOT_TYPE.isSimulation() && simulation != null
 			? new TalonFXSimulation(motor, configuration, simulation)
 			: null;

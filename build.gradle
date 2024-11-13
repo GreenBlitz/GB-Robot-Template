@@ -169,14 +169,14 @@ tasks.register('installLocalGitHookSymlinks') {
 
 	doLast {
 		def hooksSources = fileTree("$rootDir/.scripts/git-hooks/")
-		def hooksDest = file("$rootDir/.git/hooks/").toPath()
+		def hooksDestinationBecauseHillelInsisted = file("$rootDir/.git/hooks/").toPath()
 
 		hooksSources.forEach { File source ->
-			def link = hooksDest.resolve(source.getName())
+			def link = hooksDestinationBecauseHillelInsisted.resolve(source.getName())
 			ensureSymlink(link, source.toPath())
 		}
 
-		hooksDest.toFile().listFiles().each { link ->
+		hooksDestinationBecauseHillelInsisted.toFile().listFiles().each { link ->
 			if (Files.isSymbolicLink(link.toPath()) && !Files.exists(Files.readSymbolicLink(link.toPath()))) {
 				link.delete()
 				println("--- Deleted stale link ${getRootRelativePath(link.toPath())} ---")

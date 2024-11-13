@@ -44,6 +44,10 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		this(logPath, deviceID, configuration, sysidConfig, null);
 	}
 
+	public TalonFXWrapper getMotor() {
+		return motor;
+	}
+
 	@Override
 	public void updateSimulation() {
 		if (talonFXSimulation != null) {

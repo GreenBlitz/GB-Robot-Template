@@ -79,7 +79,7 @@ public class Swerve extends GBSubsystem {
 		try {
 			robotConfig = RobotConfig.fromGUISettings();
 		} catch (Exception e) {
-			new Alert(Alert.AlertType.ERROR, e.getMessage());
+			new Alert(Alert.AlertType.ERROR, e.getMessage()).report();
 			e.printStackTrace();
 		} finally {
 			PathPlannerUtils.configPathPlanner(

@@ -56,7 +56,6 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		return sysidConfigInfo;
 	}
 
-
 	@Override
 	public void setBrake(boolean brake) {
 		NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;

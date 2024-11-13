@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -37,13 +36,11 @@ public class PoseCalculator {
 	private final Matrix<N3, N1> qStdDevs = new Matrix<>(Nat.N3(), Nat.N1());
 	// Odometry
 	private final SwerveDriveKinematics kinematics;
-	private SwerveDriveWheelPositions lastWheelPositions = new SwerveDriveWheelPositions(
-		new SwerveModulePosition[] {
-			new SwerveModulePosition(),
-			new SwerveModulePosition(),
-			new SwerveModulePosition(),
-			new SwerveModulePosition()}
-	);
+	private SwerveModulePosition[] lastWheelPositions = new SwerveModulePosition[] {
+		new SwerveModulePosition(),
+		new SwerveModulePosition(),
+		new SwerveModulePosition(),
+		new SwerveModulePosition()};
 	private Rotation2d lastGyroAngle = new Rotation2d();
 	private boolean isFirstOdometryUpdate = true;
 

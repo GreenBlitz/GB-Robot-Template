@@ -23,8 +23,7 @@ import frc.robot.subsystems.swerve.module.stuffs.SteerStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 
 class SteerRealConstants {
 
@@ -32,7 +31,7 @@ class SteerRealConstants {
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
-			Volts.of(0.5).per(Seconds.of(1)),
+			Volts.of(0.5).per(Second),
 			Volts.of(1),
 			null,
 			state -> SignalLogger.writeString("state", state.toString())

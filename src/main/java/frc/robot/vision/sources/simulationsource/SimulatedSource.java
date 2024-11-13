@@ -30,6 +30,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	private final Supplier<Pose2d> simulateRobotPose;
 	private final Supplier<Double> transformNoise;
 	private final Supplier<Double> angleNoise;
+	private double latestAngleNoised = 0;
 
 	public SimulatedSource(String cameraName, Supplier<Pose2d> simulateRobotPose, SimulatedSourceConfiguration config) {
 		super(cameraName + "Simulated/");
@@ -43,7 +44,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 		this.fieldOfView = config.fieldOfView();
 
 		this.simulateRobotPose = simulateRobotPose;
-		this.angleNoise = () -> randomValuesGenerator.nextGaussian() * config.angleNoiseScaling();
+		this.angleNoise = () -> (randomValuesGenerator.nextGaussian() * 2 - 1) * config.angleNoiseScaling();
 		this.transformNoise = () -> randomValuesGenerator.nextGaussian() * config.transformNoiseScaling();
 	}
 
@@ -106,10 +107,11 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 			ySpike = randomValuesGenerator.nextDouble() * maximumSpikeMeters;
 		}
 
+		latestAngleNoised = simulatedPose.getRotation().getRadians() + angleNoise.get();
 		return new Pose2d(
 			simulatedPose.getX() + transformNoise.get() + xSpike,
 			simulatedPose.getY() + transformNoise.get() + ySpike,
-			Rotation2d.fromRadians(simulatedPose.getRotation().getRadians() + angleNoise.get())
+			Rotation2d.fromRadians(latestAngleNoised)
 		);
 	}
 
@@ -130,9 +132,14 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 
 	@Override
 	public Optional<Rotation2d> getRobotHeading() {
-		Optional<Rotation2d> heading = getLatestObservation().map(rawVisionData -> rawVisionData.estimatedPose().toPose2d().getRotation());
-		heading.ifPresent((Rotation2d robotHeading) -> Logger.recordOutput(getLogPath() + "heading", robotHeading));
-		return heading;
+		Optional<RawVisionData> latestObservation = getLatestObservation();
+		if (latestObservation.isEmpty()) {
+			return Optional.empty();
+		}
+		Rotation2d robotHeading = latestObservation.get().estimatedPose().toPose2d().getRotation();
+		Logger.recordOutput(getLogPath() + "robotHeading", robotHeading);
+		Logger.recordOutput(getLogPath() + "angleNoise", latestAngleNoised);
+		return Optional.of(robotHeading);
 	}
 
 	@Override

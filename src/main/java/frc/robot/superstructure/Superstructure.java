@@ -32,6 +32,7 @@ import frc.utils.joysticks.SmartJoystick;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import java.util.Set;
 
 public class Superstructure extends GBSubsystem {
 
@@ -77,7 +78,7 @@ public class Superstructure extends GBSubsystem {
 
 		this.currentState = RobotState.IDLE;
 		this.endBehaviorManager = new EndBehaviorManager(this);
-		setDefaultCommand(endBehaviorManager.endState(currentState).asProxy()); // todo - test
+		setDefaultCommand(new DeferredCommand(() -> endBehaviorManager.endState(currentState), Set.of(this)));
 	}
 
 	public RobotState getCurrentState() {

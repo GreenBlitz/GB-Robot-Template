@@ -1,18 +1,26 @@
-package frc.robot.vision.limelights;
+package frc.robot.vision.sources;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.RawVisionData;
+import frc.robot.vision.VisionConstants;
+import frc.robot.vision.limelights.LimelightEntryValue;
 import frc.utils.Conversions;
+import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtils;
 
 import java.util.Optional;
 
-public class Limelight extends GBSubsystem {
+public class LimeLightSource extends GBSubsystem implements VisionSource<RawVisionData> {
 
 	private final NetworkTableEntry robotPoseEntry;
 	private final NetworkTableEntry aprilTagIdEntry;
@@ -25,8 +33,8 @@ public class Limelight extends GBSubsystem {
 	private Rotation2d robotHeading;
 	private GyroAngleValues gyroAngleValues;
 
-	public Limelight(String name, String logPath) {
-		super(logPath + name + "/");
+	public LimeLightSource(String name, String parentLogPath) {
+		super(parentLogPath + name + "/");
 
 		this.name = name;
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
@@ -35,13 +43,23 @@ public class Limelight extends GBSubsystem {
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
 		this.robotPoseForHeadingEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.gyroAngleValues = new GyroAngleValues(0, 0, 0, 0, 0, 0);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				this.getLogPath() + "DisconnectedAt",
+				() -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1
+			)
+		);
 	}
 
-	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
+	@Override
+	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
 		this.gyroAngleValues = gyroAngleValues;
 	}
 
-	public void updateLimelight() {
+	@Override
+	public void update() {
 		robotOrientationEntry.setDoubleArray(
 			new double[] {
 				gyroAngleValues.yaw(),
@@ -49,18 +67,17 @@ public class Limelight extends GBSubsystem {
 				gyroAngleValues.pitch(),
 				gyroAngleValues.pitchRate(),
 				gyroAngleValues.roll(),
-				gyroAngleValues.rollRate(),}
+				gyroAngleValues.rollRate()}
 		);
-		robotPoseArray = robotPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		double[] robotPoseWithoutGyroInput = robotPoseForHeadingEntry
-			.getDoubleArray(new double[LimeLightConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		double[] robotPoseWithoutGyroInput = robotPoseForHeadingEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 
-	public Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
-		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
-		if (id == LimeLightConstants.NO_APRILTAG_ID) {
+	private Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
+		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
+		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
 
@@ -80,29 +97,38 @@ public class Limelight extends GBSubsystem {
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 
-	public double getAprilTagHeight() {
-		return getAprilTagValue(LimelightEntryValue.Y_AXIS);
-	}
-
-	public double getDistanceFromAprilTag() {
-		return getAprilTagValue(LimelightEntryValue.Z_AXIS);
+	public double getPoseValue(LimelightEntryValue entryValue) {
+		return robotPoseArray[entryValue.getIndex()];
 	}
 
 	public double getAprilTagValue(LimelightEntryValue entryValue) {
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
-	public double getPoseValue(LimelightEntryValue entryValue) {
-		return robotPoseArray[entryValue.getIndex()];
+	@Override
+	public Optional<RawVisionData> getAllData() {
+		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
+		return poseEstimation.map(
+			pose3dDoublePair -> new RawVisionData(
+				pose3dDoublePair.getFirst(),
+				getAprilTagValue(LimelightEntryValue.Y_AXIS),
+				getAprilTagValue(LimelightEntryValue.Z_AXIS),
+				pose3dDoublePair.getSecond()
+			)
+		);
 	}
 
+	@Override
 	public Optional<Rotation2d> getRobotHeading() {
-		int id = (int) aprilTagIdEntry.getInteger(LimeLightConstants.NO_APRILTAG_ID);
-		if (id == LimeLightConstants.NO_APRILTAG_ID) {
+		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
+		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
 		return Optional.of(robotHeading);
 	}
+
+	@Override
+	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);

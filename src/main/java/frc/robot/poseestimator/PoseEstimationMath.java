@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.limelights.LimelightRawData;
+import frc.robot.vision.RawVisionData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,8 @@ public class PoseEstimationMath {
 	}
 
 	public static Twist2d updateChangeInAngle(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
-		double rotationDifference = currentGyroAngle.getRadians() - lastGyroAngle.getRadians();
-		double wrappedRotationDifference = MathUtil.angleModulus(rotationDifference);
-		return new Twist2d(twist.dx, twist.dy, wrappedRotationDifference);
+		Rotation2d rotationDifference = currentGyroAngle.minus(lastGyroAngle);
+		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 	}
 
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
@@ -76,13 +75,8 @@ public class PoseEstimationMath {
 		Pose2d odometryPose,
 		double[] odometryStandardDeviations
 	) {
-		Transform2d poseDifferenceFromSample = new Transform2d(odometryInterpolatedPoseSample, odometryPose);
-		Transform2d sampleDifferenceFromPose = poseDifferenceFromSample.inverse();
-		Pose2d appliedVisionObservation = estimatedPose.plus(sampleDifferenceFromPose);
-		appliedVisionObservation = appliedVisionObservation
-			.plus(applyKalmanOnTransform(observation, appliedVisionObservation, odometryStandardDeviations));
-		appliedVisionObservation = appliedVisionObservation.plus(poseDifferenceFromSample);
-		return appliedVisionObservation;
+		Transform2d sampleDifferenceFromPose = new Transform2d(odometryPose, odometryInterpolatedPoseSample);
+		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
 	}
 
 	public static double[] calculateStandardDeviationOfPose(List<Pose2d> dataset) {
@@ -101,9 +95,9 @@ public class PoseEstimationMath {
 		return new double[] {function.apply(XSet), function.apply(YSet), function.apply(AngleSet)};
 	}
 
-	public static double[] calculateStandardDeviationOfPose(LimelightRawData limelightRawData, Pose2d currentEstimatedPose) {
-		double normalizedLimelightX = limelightRawData.estimatedPose().getX() / Field.LENGTH_METERS;
-		double normalizedLimelightY = limelightRawData.estimatedPose().getY() / Field.WIDTH_METERS;
+	public static double[] calculateStandardDeviationOfPose(RawVisionData rawVisionData, Pose2d currentEstimatedPose) {
+		double normalizedLimelightX = rawVisionData.estimatedPose().getX() / Field.LENGTH_METERS;
+		double normalizedLimelightY = rawVisionData.estimatedPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
 		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
 		return new double[] {
@@ -170,6 +164,21 @@ public class PoseEstimationMath {
 		return poseMean;
 	}
 
+	public static Pose2d poseMean(List<VisionObservation> observations) {
+		Pose2d poseMean = new Pose2d();
+
+		for (VisionObservation observation : observations) {
+			poseMean = new Pose2d(
+				poseMean.getX() + observation.robotPose().getX(),
+				poseMean.getY() + observation.robotPose().getY(),
+				poseMean.getRotation().plus(observation.robotPose().getRotation())
+			);
+		}
+
+		int observationsCount = observations.size();
+		return poseMean.div(observationsCount);
+	}
+
 	public static Optional<Rotation2d> calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
 		double summedXComponent = 0;
 		double summedYComponent = 0;
@@ -183,6 +192,10 @@ public class PoseEstimationMath {
 		summedXComponent /= estimatedHeadings.size();
 		summedYComponent /= estimatedHeadings.size();
 		return Optional.of(new Rotation2d(Math.atan2(summedYComponent, summedXComponent)));
+	}
+
+	public static double distanceBetweenPosesMeters(Pose2d first, Pose2d second) {
+		return first.minus(second).getTranslation().getNorm();
 	}
 
 }

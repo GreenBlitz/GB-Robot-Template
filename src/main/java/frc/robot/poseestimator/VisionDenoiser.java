@@ -12,7 +12,7 @@ import java.util.*;
 public class VisionDenoiser {
 
 	private final int maximumSize;
-	private LinkedList<VisionObservation> observations;
+	private ArrayList<VisionObservation> observations;
 	private LinearFilter xFilter;
 	private LinearFilter yFilter;
 	private LinearFilter angleFilterRadians;
@@ -20,7 +20,7 @@ public class VisionDenoiser {
 
 	public VisionDenoiser(int maximumSize) {
 		this.maximumSize = maximumSize;
-		this.observations = new LinkedList<>();
+		this.observations = new ArrayList<>();
 
 		this.xFilter = LinearFilter.movingAverage(maximumSize);
 		this.yFilter = LinearFilter.movingAverage(maximumSize);
@@ -29,8 +29,12 @@ public class VisionDenoiser {
 
 	private void popLastObservationIfQueueIsTooLarge() {
 		if (observations.size() > maximumSize) {
-			observations.poll();
+			observations.remove(observations.size() - 1);
 		}
+	}
+
+	private VisionObservation getLastObservation(List<VisionObservation> list) {
+		return list.get(list.size() - 1);
 	}
 
 	public void addVisionObservation(VisionObservation observation) {
@@ -51,7 +55,7 @@ public class VisionDenoiser {
 		return output;
 	}
 
-	private Optional<VisionObservation> calculateAverage(LinkedList<VisionObservation> overwrittenObservations) {
+	private Optional<VisionObservation> calculateAverage(List<VisionObservation> overwrittenObservations) {
 		if (!overwrittenObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -60,7 +64,7 @@ public class VisionDenoiser {
 			new VisionObservation(
 				PoseEstimationMath.meanOfPose(poses),
 				PoseEstimationMath.calculateStandardDeviationOfPose(poses),
-				overwrittenObservations.peekLast().timestamp()
+				getLastObservation(overwrittenObservations).timestamp()
 			)
 		);
 	}
@@ -79,7 +83,7 @@ public class VisionDenoiser {
 	}
 	// @formatter:on
 
-	private Optional<VisionObservation> calculateWeightedAverage(LinkedList<VisionObservation> overwrittenObservations) {
+	private Optional<VisionObservation> calculateWeightedAverage(List<VisionObservation> overwrittenObservations) {
 		if (!overwrittenObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -88,7 +92,7 @@ public class VisionDenoiser {
 			new VisionObservation(
 				PoseEstimationMath.weightedPoseMean(overwrittenObservations),
 				PoseEstimationMath.calculateStandardDeviationOfPose(poses),
-				overwrittenObservations.peekLast().timestamp()
+				getLastObservation(overwrittenObservations).timestamp()
 			)
 		);
 	}
@@ -106,13 +110,16 @@ public class VisionDenoiser {
 		return calculateWeightedAverage(fixAccordingToOdometry(currentEstimatedPose, odometryPose, odometryPoseInterpolator));
 	}
 
-	private LinkedList<VisionObservation> fixAccordingToOdometry(
+	private List<VisionObservation> fixAccordingToOdometry(
 		Pose2d currentPose,
 		Pose2d odometryPose,
 		TimeInterpolatableBuffer<Pose2d>
 		odometryPoseInterpolator
 	) {
-		LinkedList<VisionObservation> output = new LinkedList<>();
+		ArrayList<VisionObservation> output = new ArrayList<>();
+		ArrayList<Pose2d> pastFixedPoses = new ArrayList<>();
+		pastFixedPoses.add(currentPose);
+
 		for (VisionObservation observation : observations) {
 			double currentTimestamp = TimeUtils.getCurrentTimeSeconds();
 			Optional<Pose2d> odometryFix = odometryPoseInterpolator.getSample(currentTimestamp);
@@ -125,10 +132,11 @@ public class VisionDenoiser {
 					PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
 				);
 				Pose2d fixedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
+				pastFixedPoses.add(fixedPose);
 				output.add(
 					new VisionObservation(
 						fixedPose,
-						PoseEstimationMath.calculateStandardDeviationOfPose(new ArrayList<>(List.of(fixedPose, currentPose))),
+						PoseEstimationMath.calculateStandardDeviationOfPose(pastFixedPoses),
 						currentTimestamp
 					)
 				);
@@ -146,7 +154,7 @@ public class VisionDenoiser {
 		if (observations.size() == 0) {
 			return Optional.empty();
 		}
-		double timestamp = observations.getLast().timestamp();
+		double timestamp = getLastObservation(observations).timestamp();
 		return Optional.of(
 			new VisionObservation(
 				lastFilterOutput,

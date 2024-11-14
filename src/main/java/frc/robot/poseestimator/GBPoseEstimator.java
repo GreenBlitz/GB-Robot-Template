@@ -165,7 +165,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		for (OdometryObservation observation : odometryObservations) {
 			addOdometryObservation(observation);
 		}
-		logEstimatedPose();
 	}
 
 	private boolean isObservationTooOld(VisionObservation visionObservation) {

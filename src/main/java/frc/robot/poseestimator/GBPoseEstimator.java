@@ -104,7 +104,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void resetOdometry(SwerveModulePosition wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
+	public void resetOdometry(SwerveModulePosition wheelPositions[], Rotation2d gyroAngle, Pose2d robotPose) {
 		this.lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), wheelPositions, gyroAngle);
 		this.odometryPose = robotPose;
 		odometryPoseInterpolator.clear();
@@ -183,7 +183,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			calculateHeadingOffset(observation.gyroAngle());
 		}
 		updateGyroAnglesInVisionSources(observation.gyroAngle());
-		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions(), observation.wheelsPositions());
+		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastOdometryValues.gyroAngle());
 		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelsPositions(), observation.gyroAngle());
 		odometryPose = odometryPose.exp(twist);

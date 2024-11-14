@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IOdometryEstimator {
 
-	void updateOdometry(List<OdometryObservation> odometryObservation);
+	void updateOdometry(OdometryObservation[] odometryObservation);
 
 	void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose);
 

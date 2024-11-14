@@ -153,7 +153,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateOdometry(List<OdometryObservation> odometryObservations) {
+	public void updateOdometry(OdometryObservation[] odometryObservations) {
 		for (OdometryObservation observation : odometryObservations) {
 			addOdometryObservation(observation);
 		}

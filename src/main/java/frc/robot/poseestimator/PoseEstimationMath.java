@@ -1,6 +1,5 @@
 package frc.robot.poseestimator;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;

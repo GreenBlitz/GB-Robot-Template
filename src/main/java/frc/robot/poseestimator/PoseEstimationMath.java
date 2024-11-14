@@ -138,7 +138,7 @@ public class PoseEstimationMath {
 		double summedXComponent = 0;
 		double summedYComponent = 0;
 		for (Rotation2d heading : estimatedHeadings) {
-			summedXComponent += heading.getSin();
+			summedXComponent += heading.getCos();
 			summedYComponent += heading.getSin();
 		}
 		if (summedXComponent == 0 || summedYComponent == 0 || estimatedHeadings.isEmpty()) {

@@ -30,10 +30,10 @@ public class VisionConstants {
 	);
 
 	public static SimulatedSourceConfiguration LIMELIGHT_3_SIMULATED_SOURCE_CONFIGURATION = new SimulatedSourceConfiguration(
-		0.1,
-		0.1,
-		0.05,
-		2.5,
+		0.01,
+		0,
+		0,
+		0,
 		3,
 		Rotation2d.fromDegrees(61)
 	);

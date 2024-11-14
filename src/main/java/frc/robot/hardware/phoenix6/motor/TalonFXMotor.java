@@ -15,12 +15,14 @@ import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.utils.alerts.Alert;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
+import java.util.Optional;
+
 public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private final TalonFXWrapper motor;
-	private final TalonFXSimulation talonFXSimulation;
+	private final Optional<TalonFXSimulation> talonFXSimulationOptional;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
 	public TalonFXMotor(
@@ -35,9 +37,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
 		}
-		this.talonFXSimulation = Robot.ROBOT_TYPE.isSimulation() && simulation != null
-			? new TalonFXSimulation(motor, configuration, simulation)
-			: null;
+		this.talonFXSimulationOptional = Robot.ROBOT_TYPE.isSimulation() && simulation != null
+			? Optional.of(new TalonFXSimulation(motor, configuration, simulation))
+			: Optional.empty();
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		motor.optimizeBusUtilization();
 	}
@@ -52,9 +54,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	@Override
 	public void updateSimulation() {
-		if (talonFXSimulation != null) {
-			talonFXSimulation.updateMotor();
-		}
+		talonFXSimulationOptional.ifPresent(TalonFXSimulation::updateMotor);
 	}
 
 	@Override

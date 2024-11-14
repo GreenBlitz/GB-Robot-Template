@@ -101,6 +101,9 @@ public class Module {
 	}
 
 	public void updateInputs() {
+		steer.updateSimulation();
+		drive.updateSimulation();
+
 		encoder.updateInputs(encoderStuff.positionSignal());
 		steer.updateInputs(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
 		drive.updateInputs(driveStuff.positionSignal(), driveStuff.velocitySignal(), driveStuff.currentSignal(), driveStuff.voltageSignal());
@@ -153,7 +156,7 @@ public class Module {
 
 	public void pointSteer(Rotation2d steerTargetPosition, boolean optimize) {
 		SwerveModuleState moduleState = new SwerveModuleState(0, steerTargetPosition);
-		targetState.angle = optimize ? SwerveModuleState.optimize(moduleState, getSteerPosition()).angle : moduleState.angle;
+		targetState.angle = optimize ? targetState.optimize(moduleState, getSteerPosition()).angle : moduleState.angle;
 		setTargetSteerPosition(targetState.angle);
 	}
 

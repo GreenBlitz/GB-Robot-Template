@@ -134,32 +134,12 @@ public class PoseEstimationMath {
 		return poseMean.div(observationsCount);
 	}
 
-	public static double fastSin(double x) {
-		double sign = 1;
-
-		x = x % (2 * Math.PI);
-		if (x > Math.PI) {
-			sign = -1;
-			x -= Math.PI;
-		} else if (x > Math.PI / 2) {
-			x = Math.PI - x;
-		}
-
-		double taylorResult = x - Math.pow(x, 3) / 6 + Math.pow(x, 5) / 120;
-		double integralFix = PoseEstimatorConstants.INTEGRAL_SIN_FIX;
-		return taylorResult * sign + integralFix;
-	}
-
-	public static double fastCos(double x) {
-		return fastSin(Math.PI / 2 - x);
-	}
-
 	public static Optional<Rotation2d> calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
 		double summedXComponent = 0;
 		double summedYComponent = 0;
 		for (Rotation2d heading : estimatedHeadings) {
-			summedXComponent += fastCos(heading.getRadians());
-			summedYComponent += fastSin(heading.getRadians());
+			summedXComponent += heading.getSin();
+			summedYComponent += heading.getSin();
 		}
 		if (summedXComponent == 0 || summedYComponent == 0 || estimatedHeadings.isEmpty()) {
 			return Optional.empty();

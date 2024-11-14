@@ -27,6 +27,9 @@ public abstract class SparkMaxMotor implements IMotor {
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
+	@Override
+	public void updateSimulation() {}
+
 	public String getLogPath() {
 		return logPath;
 	}

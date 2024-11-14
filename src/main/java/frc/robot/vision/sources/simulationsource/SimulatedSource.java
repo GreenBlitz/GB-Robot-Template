@@ -107,10 +107,22 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 			ySpike = randomValuesGenerator.nextDouble() * maximumSpikeMeters;
 		}
 
-		latestAngleNoised = simulatedPose.getRotation().getRadians() + angleNoise.get();
+		Double angNoise = angleNoise.get();
+		Double yNoise = transformNoise.get();
+		Double xNoise = transformNoise.get();
+
+		String noiseLogPath = getLogPath() + "noise/";
+		Logger.recordOutput(noiseLogPath + "x", xNoise);
+		Logger.recordOutput(noiseLogPath + "y", yNoise);
+		Logger.recordOutput(noiseLogPath + "ang", angNoise);
+
+		latestAngleNoised = simulatedPose.getRotation().getRadians() + angNoise;
+		Logger.recordOutput(getLogPath() + "actualSimulationHeading", simulatedPose.getRotation().getRadians());
+		Logger.recordOutput(getLogPath() + "angleNoised", latestAngleNoised);
+
 		return new Pose2d(
-			simulatedPose.getX() + transformNoise.get() + xSpike,
-			simulatedPose.getY() + transformNoise.get() + ySpike,
+			simulatedPose.getX() + xNoise + xSpike,
+			simulatedPose.getY() + yNoise + ySpike,
 			Rotation2d.fromRadians(latestAngleNoised)
 		);
 	}
@@ -134,11 +146,11 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	public Optional<Rotation2d> getRobotHeading() {
 		Optional<RawVisionData> latestObservation = getLatestObservation();
 		if (latestObservation.isEmpty()) {
+			Logger.recordOutput(getLogPath() + "lastEmptyObservationTimestamp", Logger.getRealTimestamp());
 			return Optional.empty();
 		}
 		Rotation2d robotHeading = latestObservation.get().estimatedPose().toPose2d().getRotation();
 		Logger.recordOutput(getLogPath() + "robotHeading", robotHeading);
-		Logger.recordOutput(getLogPath() + "angleNoise", latestAngleNoised);
 		return Optional.of(robotHeading);
 	}
 

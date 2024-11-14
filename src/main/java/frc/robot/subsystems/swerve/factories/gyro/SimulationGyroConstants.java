@@ -6,10 +6,12 @@ import frc.robot.subsystems.swerve.GyroStuff;
 import frc.utils.AngleUnit;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 
+import java.util.function.Supplier;
+
 public class SimulationGyroConstants {
 
-	public static GyroSimulation generateGyroSimulation() {
-		return GyroSimulation.createPigeon2();
+	public static Supplier<GyroSimulation> generateGyroSimulation() {
+		return GyroSimulation.getPigeon2();
 	}
 
 	public static GyroStuff generateGyroStuff(String logPath, GyroSimulation gyroSimulation) {

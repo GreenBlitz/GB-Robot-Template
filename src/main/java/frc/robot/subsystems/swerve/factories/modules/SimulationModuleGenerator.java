@@ -13,7 +13,7 @@ public class SimulationModuleGenerator {
 	private static final DCMotor DRIVE_MOTOR = DCMotor.getFalcon500(1);
 	private static final DCMotor STEER_MOTOR = DCMotor.getFalcon500(1);
 	private static final double DRIVE_CURRENT_LIMIT_AMPS = 60;
-	private static final SwerveModuleSimulation.DRIVE_WHEEL_TYPE DRIVE_WHEEL_TYPE = SwerveModuleSimulation.DRIVE_WHEEL_TYPE.RUBBER;
+	private static final double DRIVE_WHEEL_TYPE = 1.25;
 	private static final int GEAR_RATIO_LEVEL = 3; // L3 gear ratio
 
 	public static Supplier<SwerveModuleSimulation> generate() {

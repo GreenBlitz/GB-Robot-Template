@@ -55,7 +55,7 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	public Robot() {
-		GyroSimulation gyroSimulation = null;
+		Supplier<GyroSimulation> gyroSimulation = null;
 		if (ROBOT_TYPE.isSimulation()) {
 			gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
 			Supplier<SwerveModuleSimulation> simulationModule = SimulationModuleGenerator.generate();
@@ -68,7 +68,7 @@ public class Robot {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE, swerveDriveSimulation),
-			GyroFactory.create(SwerveType.SWERVE, gyroSimulation)
+			GyroFactory.create(SwerveType.SWERVE, gyroSimulation.get())
 		);
 
 		this.poseEstimator = new GBPoseEstimator(

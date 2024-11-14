@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 
 import java.util.function.Supplier;
 
@@ -17,17 +18,19 @@ public class SimulationSwerveGenerator {
 
 	public static SwerveDriveSimulation generate(
 		Supplier<SwerveModuleSimulation> moduleSimulationSupplier,
-		GyroSimulation gyroSimulation,
+		Supplier<GyroSimulation> gyroSimulation,
 		Pose2d startingPose
 	) {
 		return new SwerveDriveSimulation(
-			ROBOT_MASS_WIDTH_BUMPERS_KG,
-			TRACK_WIDTH_METERS,
-			TRACK_LENGTH_METERS,
-			BUMPER_WIDTH_METERS,
-			BUMPER_LENGTH_METERS,
-			moduleSimulationSupplier,
-			gyroSimulation,
+			new DriveTrainSimulationConfig(
+				ROBOT_MASS_WIDTH_BUMPERS_KG,
+				TRACK_WIDTH_METERS,
+				TRACK_LENGTH_METERS,
+				BUMPER_WIDTH_METERS,
+				BUMPER_LENGTH_METERS,
+				moduleSimulationSupplier,
+				gyroSimulation
+			),
 			startingPose
 		);
 	}

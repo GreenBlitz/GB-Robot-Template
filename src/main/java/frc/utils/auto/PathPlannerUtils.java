@@ -32,7 +32,7 @@ public class PathPlannerUtils {
 	public static final RobotConfig DEFAULT_ROBOT_CONFIG = new RobotConfig(
 		74,
 		8.6,
-		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500(2), 60, 2),
+		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500(1), 60, 1),
 		0.577
 	);
 

@@ -74,13 +74,12 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
-		RobotConfig robotConfig = PathPlannerUtils.DEFAULT_ROBOT_CONFIG;
+	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer, RobotConfig robotConfig) {
 		try {
 			robotConfig = RobotConfig.fromGUISettings();
-		} catch (Exception e) {
-			new Alert(Alert.AlertType.ERROR, e.getMessage()).report();
-			e.printStackTrace();
+		} catch (Exception exception) {
+			new Alert(Alert.AlertType.ERROR, getLogPath() + exception.getMessage()).report();
+			exception.printStackTrace();
 		} finally {
 			PathPlannerUtils.configPathPlanner(
 				currentPoseSupplier,

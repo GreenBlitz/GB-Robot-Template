@@ -40,10 +40,12 @@ public class VisionSourceFactory {
 	}
 
 	public static List<VisionSource<RawVisionData>> generateDefaultSources(Supplier<Pose2d> simulatedLocation) {
-		return new ArrayList<>(List.of(
-			VisionSourceFactory.createPoseEstimatingSource(CameraType.LIMELIGHT, "limelight-front", Optional.of(simulatedLocation)),
-			VisionSourceFactory.createPoseEstimatingSource(CameraType.LIMELIGHT, "limelight-back", Optional.of(simulatedLocation))
-		));
+		return new ArrayList<>(
+			List.of(
+				VisionSourceFactory.createPoseEstimatingSource(CameraType.LIMELIGHT, "limelight-front", Optional.of(simulatedLocation)),
+				VisionSourceFactory.createPoseEstimatingSource(CameraType.LIMELIGHT, "limelight-back", Optional.of(simulatedLocation))
+			)
+		);
 	}
 
 }

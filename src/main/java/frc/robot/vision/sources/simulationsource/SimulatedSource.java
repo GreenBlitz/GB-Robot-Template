@@ -140,7 +140,8 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {}
 
 	private void logMovingData() {
-		getLatestObservation().ifPresent((RawVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.estimatedPose()));
+		getLatestObservation()
+			.ifPresent((RawVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.estimatedPose()));
 		Logger.recordOutput(getLogPath() + "cameraPose", cameraPose.get());
 	}
 

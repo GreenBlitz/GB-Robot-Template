@@ -23,26 +23,28 @@ import java.util.Optional;
 public class LimeLightSource extends GBSubsystem implements VisionSource<RawVisionData> {
 
 	private final NetworkTableEntry robotPoseEntry;
+	private final NetworkTableEntry oldRobotPoseEntry;
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
-	private final NetworkTableEntry robotPoseForHeadingEntry;
 	private final String name;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
 	private GyroAngleValues gyroAngleValues;
+	private boolean useOldRobotPoseEntry;
 
 	public LimeLightSource(String name, String parentLogPath) {
 		super(parentLogPath + name + "/");
 
 		this.name = name;
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
+		this.oldRobotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
-		this.robotPoseForHeadingEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.gyroAngleValues = new GyroAngleValues(0, 0, 0, 0, 0, 0);
+		this.useOldRobotPoseEntry = false;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(
@@ -51,6 +53,10 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawVisi
 				() -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1
 			)
 		);
+	}
+
+	public void switchToOldBotPose(boolean useOldRobotPose) {
+		useOldRobotPoseEntry = useOldRobotPose;
 	}
 
 	@Override
@@ -69,9 +75,10 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawVisi
 				gyroAngleValues.roll(),
 				gyroAngleValues.rollRate()}
 		);
-		robotPoseArray = robotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		robotPoseArray = (useOldRobotPoseEntry ? oldRobotPoseEntry : robotPoseEntry)
+			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		double[] robotPoseWithoutGyroInput = robotPoseForHeadingEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		double[] robotPoseWithoutGyroInput = oldRobotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 

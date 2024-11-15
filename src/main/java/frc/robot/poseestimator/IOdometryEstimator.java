@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.observations.OdometryObservation;
 
-import java.util.List;
 
 public interface IOdometryEstimator {
 

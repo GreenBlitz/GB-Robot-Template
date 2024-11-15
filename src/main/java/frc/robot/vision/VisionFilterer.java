@@ -79,28 +79,20 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 	private void logEstimatedPositions() {
 		List<VisionObservation> observations = getFilteredVisionObservations();
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(
-				super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i,
-				observations.get(i).robotPose()
-			);
+			Logger.recordOutput(super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
 		}
 	}
 
 	private void logNonFilteredEstimatedPositions() {
 		List<VisionObservation> observations = getAllAvailableVisionObservations();
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(
-				super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_PREFIX + i,
-				observations.get(i).robotPose()
-			);
+			Logger
+				.recordOutput(super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
 		}
 	}
 
 	private void logFilteredOutRawData(RawVisionData rawVisionData) {
-		Logger.recordOutput(
-			super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA,
-			rawVisionData.estimatedPose()
-		);
+		Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA, rawVisionData.estimatedPose());
 	}
 
 	@Override

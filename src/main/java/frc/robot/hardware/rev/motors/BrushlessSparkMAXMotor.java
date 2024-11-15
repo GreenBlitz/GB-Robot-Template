@@ -36,7 +36,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 		if (request instanceof SparkMaxRequest<?> sparkMaxRequest) {
 			motor.getPIDController()
 				.setReference(
-					sparkMaxRequest.getSetPointForSparkMAX(),
+					sparkMaxRequest.getSparkMaxCompatibleSetPoint(),
 					sparkMaxRequest.getControlType(),
 					sparkMaxRequest.getPidSlot(),
 					sparkMaxRequest.getFeedforwardGain()

@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.observations.OdometryObservation;
 
-
 public interface IOdometryEstimator {
 
 	void updateOdometry(OdometryObservation[] odometryObservation);
@@ -13,8 +12,6 @@ public interface IOdometryEstimator {
 	void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose);
 
 	Pose2d getOdometryPose();
-
-	void setOdometryStandardDeviations(double[] standardDeviations);
 
 	void resetHeadingOffset(Rotation2d newHeading);
 

@@ -49,12 +49,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		);
 		this.visionFilterer = visionFilterer;
 		this.lastOdometryValues = odometryValues;
-		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.visionFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
 		this.hasHeadingOffsetBeenInitialized = false;
 		this.hasEstimatedPoseBeenInitialized = false;
 		this.isRobotDisabled = false;
-		setOdometryStandardDeviations(odometryStandardDeviations);
+		this.odometryStandardDeviations = odometryStandardDeviations;
 		calculateHeadingOffset(lastOdometryValues.gyroAngle());
 		this.estimatedPose = new Pose2d();
 		this.odometryPose = new Pose2d();
@@ -97,14 +96,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void setOdometryStandardDeviations(double[] newStandardDeviations) {
-		for (int i = 0; i < newStandardDeviations.length; i++) {
-			odometryStandardDeviations[i] = newStandardDeviations[i] * newStandardDeviations[i];
-		}
-	}
-
-	@Override
-	public void resetOdometry(SwerveModulePosition wheelPositions[], Rotation2d gyroAngle, Pose2d robotPose) {
+	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		this.lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), wheelPositions, gyroAngle);
 		this.odometryPose = robotPose;
 		odometryPoseInterpolator.clear();

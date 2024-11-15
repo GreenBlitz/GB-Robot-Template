@@ -143,12 +143,12 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-// Get a path as relative to the root directory of the project (usually for printing)
+// Setup local git hooks
+
 def getRootRelativePath(path) {
 	rootDir.toPath().relativize(path)
 }
 
-// Setup local git hooks
 def ensureSymlink(link, target) {
 	if (!Files.isSymbolicLink(link)) {
 		Files.deleteIfExists(link)
@@ -169,14 +169,14 @@ tasks.register('installLocalGitHookSymlinks') {
 
 	doLast {
 		def hooksSources = fileTree("$rootDir/.scripts/git-hooks/")
-		def hooksDestinationBecauseHillelInsisted = file("$rootDir/.git/hooks/").toPath()
+		def hooksDestination = file("$rootDir/.git/hooks/").toPath()
 
 		hooksSources.forEach { File source ->
-			def link = hooksDestinationBecauseHillelInsisted.resolve(source.getName())
+			def link = hooksDestination.resolve(source.getName())
 			ensureSymlink(link, source.toPath())
 		}
 
-		hooksDestinationBecauseHillelInsisted.toFile().listFiles().each { link ->
+		hooksDestination.toFile().listFiles().each { link ->
 			if (Files.isSymbolicLink(link.toPath()) && !Files.exists(Files.readSymbolicLink(link.toPath()))) {
 				link.delete()
 				println("--- Deleted stale link ${getRootRelativePath(link.toPath())} ---")
@@ -193,6 +193,7 @@ if (System.getenv().containsKey('CI') || !file('.git').isDirectory()) {
 }
 
 
+// Set VisualVM host IP
 discoverroborio.finalizedBy('setReachableIP')
 tasks.register('setReachableIP') {
 	group = 'networkUtils'

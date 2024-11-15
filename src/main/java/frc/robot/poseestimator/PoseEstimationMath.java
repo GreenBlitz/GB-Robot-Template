@@ -145,4 +145,8 @@ public class PoseEstimationMath {
 		return first.minus(second).getTranslation().getNorm();
 	}
 
+	public static double distanceBetweenPosesMeters(Pose3d first, Pose3d second) {
+		return first.minus(second).getTranslation().getNorm();
+	}
+
 }

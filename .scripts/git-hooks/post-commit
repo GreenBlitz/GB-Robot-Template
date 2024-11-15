@@ -5,6 +5,10 @@ GREEN=$(printf '\033[32m')
 BOLD=$(printf '\033[1m')
 RESET=$(printf '\033[0m')
 
+# Skip checking inside an automatic rebase
+git reflog -1 | grep -Fq 'rebase (pick)
+rebase (reword)' && exit 0
+
 if ./gradlew spotlessCheck; then
     echo "${BOLD}${GREEN}Static analysis succeeded. You may push your commit.${RESET}"
     exit 0

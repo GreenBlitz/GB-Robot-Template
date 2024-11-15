@@ -14,14 +14,14 @@ public abstract class MechanismSimulation {
 		return getSystemPosition().times(gearRatio);
 	}
 
-	public Rotation2d getRotorVelocityRotationsPerSecond() {
-		return getSystemVelocityRotationsPerSecond().times(gearRatio);
+	public Rotation2d getRotorVelocityAnglesPerSecond() {
+		return getSystemVelocityAnglesPerSecond().times(gearRatio);
 	}
 
 
 	public abstract Rotation2d getSystemPosition();
 
-	public abstract Rotation2d getSystemVelocityRotationsPerSecond();
+	public abstract Rotation2d getSystemVelocityAnglesPerSecond();
 
 	public abstract void setInputVoltage(double voltage);
 

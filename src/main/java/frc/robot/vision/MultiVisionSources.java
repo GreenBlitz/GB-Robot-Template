@@ -20,6 +20,10 @@ public class MultiVisionSources {
 		this.visionSources = List.of(visionSources);
 	}
 
+	public MultiVisionSources(List<VisionSource<RawVisionData>> visionSources) {
+		this.visionSources = visionSources;
+	}
+
 	public void setEstimatedPoseAtTimestampFunction(Function<Double, Pose2d> getEstimatedPoseAtTimestamp) {
 		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}

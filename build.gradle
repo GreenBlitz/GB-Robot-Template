@@ -143,8 +143,6 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-// Setup local git hooks
-
 def getRootRelativePath(path) {
 	rootDir.toPath().relativize(path)
 }
@@ -193,7 +191,6 @@ if (System.getenv().containsKey('CI') || !file('.git').isDirectory()) {
 }
 
 
-// Set VisualVM host IP
 discoverroborio.finalizedBy('setReachableIP')
 tasks.register('setReachableIP') {
 	group = 'networkUtils'

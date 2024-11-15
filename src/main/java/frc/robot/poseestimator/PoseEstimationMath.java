@@ -23,7 +23,7 @@ public class PoseEstimationMath {
 		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 	}
 
-	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
+	public static double[] getKalmanRatio(double[] visionStandardDeviations, double[] odometryStandardDeviations) {
 		double[] combinedStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
@@ -36,7 +36,8 @@ public class PoseEstimationMath {
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
 		return odometryStandardDeviation == 0
 			? 0
-			: (odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation * Math.sqrt(odometryStandardDeviation)));
+			: odometryStandardDeviation/(odometryStandardDeviation + visionStandardDeviation);
+//			: (odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation * Math.sqrt(odometryStandardDeviation)));
 	}
 
 	//@formatter:off
@@ -144,8 +145,8 @@ public class PoseEstimationMath {
 		if (summedXComponent == 0 || summedYComponent == 0 || estimatedHeadings.isEmpty()) {
 			return Optional.empty();
 		}
-		summedXComponent /= estimatedHeadings.size();
-		summedYComponent /= estimatedHeadings.size();
+//		summedXComponent /= estimatedHeadings.size();
+//		summedYComponent /= estimatedHeadings.size();
 		return Optional.of(new Rotation2d(Math.atan2(summedYComponent, summedXComponent)));
 	}
 

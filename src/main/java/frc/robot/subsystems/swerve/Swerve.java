@@ -19,6 +19,7 @@ import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.alerts.Alert;
 import frc.utils.auto.PathPlannerUtils;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -38,11 +39,14 @@ public class Swerve extends GBSubsystem {
 	private SwerveState currentState;
 	private SwerveStateHelper stateHelper;
 	private Supplier<Rotation2d> headingSupplier;
+	private SwerveDriveSimulation sim;
 
 
-	public Swerve(SwerveConstants constants, Modules modules, GyroStuff gyroStuff) {
+	public Swerve(SwerveConstants constants, Modules modules, GyroStuff gyroStuff, SwerveDriveSimulation sim) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
+
+		this.sim = sim;
 
 		this.constants = constants;
 		this.modules = modules;
@@ -162,7 +166,8 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelsPositions(i),
-				gyroStuff.yawSignal().asArray()[i],
+//				gyroStuff.yawSignal().asArray()[i],
+				sim.getSimulatedDriveTrainPose().getRotation(),
 				gyroStuff.yawSignal().getTimestamps()[i]
 			);
 		}

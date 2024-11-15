@@ -49,12 +49,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		);
 		this.visionFilterer = visionFilterer;
 		this.lastOdometryValues = odometryValues;
-		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
+//		this.odometryStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
 		this.visionFilterer.setEstimatedPoseAtTimestampFunction(this::getEstimatedPoseAtTimeStamp);
-		this.hasHeadingOffsetBeenInitialized = false;
+		this.hasHeadingOffsetBeenInitialized = true;
 		this.hasEstimatedPoseBeenInitialized = false;
 		this.isRobotDisabled = false;
-		setOdometryStandardDeviations(odometryStandardDeviations);
+//		setOdometryStandardDeviations(odometryStandardDeviations);
+		this.odometryStandardDeviations = odometryStandardDeviations;
 		calculateHeadingOffset(lastOdometryValues.gyroAngle());
 		this.estimatedPose = new Pose2d();
 		this.odometryPose = new Pose2d();
@@ -203,14 +204,14 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Logger.recordOutput(super.getLogPath() + "OdometryPose/", odometryPose);
 		Logger.recordOutput(super.getLogPath() + "HeadingAveragingCount/", headingCountHelper.getCount());
 		Logger.recordOutput(super.getLogPath() + "PoseAveragingCount/", poseCountHelper.getCount());
-		Logger.recordOutput(super.getLogPath() + "HeadingOffset/", headingOffset.getDegrees());
+		Logger.recordOutput(super.getLogPath() + "HeadingOffset/", headingOffset);
 		Logger.recordOutput(super.getLogPath() + "hasHeadingOffsetBeenInitialized/", hasHeadingOffsetBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "hasEstimatedPoseBeenInitialized/", hasEstimatedPoseBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "latestGyroAngle/", lastOdometryValues.gyroAngle());
 	}
 
 	private void onEnabled() {
-		hasHeadingOffsetBeenInitialized = false;
+		hasHeadingOffsetBeenInitialized = true;
 		hasEstimatedPoseBeenInitialized = false;
 	}
 

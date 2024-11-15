@@ -68,7 +68,8 @@ public class Robot {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE, swerveDriveSimulation),
-			GyroFactory.create(SwerveType.SWERVE, gyroSimulation.get())
+			GyroFactory.create(SwerveType.SWERVE, gyroSimulation.get()),
+			swerveDriveSimulation
 		);
 
 		this.poseEstimator = new GBPoseEstimator(
@@ -84,7 +85,7 @@ public class Robot {
 				)
 			),
 			new OdometryValues(swerve.getConstants().kinematics(), swerve.getModules().getWheelsPositions(0), swerve.getAbsoluteHeading()),
-			new double[] {.02, 0.02, 0.03}
+			new double[] {0.0008, 0.0008, 0.003}
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

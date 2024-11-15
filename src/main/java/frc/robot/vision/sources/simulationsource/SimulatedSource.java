@@ -78,12 +78,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 
 	public RawVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose) {
 		return new RawVisionData(
-		//@formatter:off
-			new Pose3d(
-				new Translation3d(noisedPose.getX(), noisedPose.getY(), 0),
-				new Rotation3d(0, 0, noisedPose.getRotation().getRadians())
-			),
-			//@formatter:on
+			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
 			aprilTagPose.getZ(),
 			PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
 			TimeUtils.getCurrentTimeSeconds()

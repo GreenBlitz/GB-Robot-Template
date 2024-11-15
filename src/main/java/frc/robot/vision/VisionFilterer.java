@@ -12,40 +12,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
+public class VisionFilterer extends GBSubsystem {
 
 	private final MultiVisionSources multiVisionSources;
 	private final VisionFiltererConfig config;
-	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
+	private final Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
-	public VisionFilterer(VisionFiltererConfig config, MultiVisionSources multiVisionSources) {
+	public VisionFilterer(
+		VisionFiltererConfig config,
+		MultiVisionSources multiVisionSources,
+		Function<Double, Pose2d> getEstimatedPoseAtTimestamp
+	) {
 		super(config.logPath());
 
 		this.multiVisionSources = multiVisionSources;
 		this.config = config;
+		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}
 
-	@Override
 	public List<Rotation2d> getAllRobotHeadingEstimations() {
 		return multiVisionSources.getAllRobotHeadingEstimations();
 	}
 
-	@Override
-	public void setEstimatedPoseAtTimestampFunction(Function<Double, Pose2d> getEstimatedPoseAtTimestamp) {
-		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
-	}
-
-	@Override
 	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
 		multiVisionSources.updateGyroAngles(gyroAngleValues);
 	}
 
-	@Override
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (RawVisionData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
-			if (VisionFilters.keepVisionData(rawVisionData, config.VisionFiltersTolerances())) {
+			if (config.filters().apply(rawVisionData, config.VisionFiltersTolerances())) {
 				estimates.add(rawDataToObservation(rawVisionData));
 			} else {
 				logFilteredOutRawData(rawVisionData);
@@ -54,7 +51,6 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 		return estimates;
 	}
 
-	@Override
 	public List<VisionObservation> getAllAvailableVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 

@@ -1,3 +1,9 @@
 package frc.robot.vision;
 
-public record VisionFiltererConfig(String logPath, VisionFiltersTolerances VisionFiltersTolerances) {}
+import java.util.function.BiFunction;
+
+public record VisionFiltererConfig(
+	String logPath,
+	VisionFiltersTolerances VisionFiltersTolerances,
+	BiFunction<RawVisionData, VisionFiltersTolerances, Boolean> filters
+) {}

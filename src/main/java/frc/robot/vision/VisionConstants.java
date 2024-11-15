@@ -23,10 +23,16 @@ public class VisionConstants {
 
 	public static final double ROBOT_TO_GROUND_TOLERANCE_METERS = 0.2;
 
-	public final static VisionFiltersTolerances DEFAULT_VISION_FILTERS_TOLERANCES = new VisionFiltersTolerances(
+	public static final VisionFiltersTolerances DEFAULT_VISION_FILTERS_TOLERANCES = new VisionFiltersTolerances(
 		ROLL_TOLERANCE,
 		PITCH_TOLERANCE,
 		ROBOT_TO_GROUND_TOLERANCE_METERS
+	);
+
+	public static final VisionFiltererConfig DEFAULT_VISION_FILTERER_CONFIG = new VisionFiltererConfig(
+		SOURCE_LOGPATH,
+		DEFAULT_VISION_FILTERS_TOLERANCES,
+		VisionFilters::doesRawDataPassAllFilters
 	);
 
 	public static SimulatedSourceConfiguration LIMELIGHT_3_SIMULATED_SOURCE_CONFIGURATION = new SimulatedSourceConfiguration(

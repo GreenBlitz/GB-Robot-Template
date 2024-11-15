@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.RawVisionData;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +36,6 @@ public class PoseEstimationMath {
 		return odometryStandardDeviation == 0 ? 0 : odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
 	}
 
-	//@formatter:off
 	public static Transform2d applyKalmanOnTransform(
 		VisionObservation observation,
 		Pose2d appliedVisionObservation,
@@ -48,10 +46,7 @@ public class PoseEstimationMath {
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
-	public static Transform2d scaleDifferenceFromKalman(
-		Transform2d visionDifferenceFromOdometry,
-		double[] combinedStandardDeviations
-	) {
+	public static Transform2d scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
 		return new Transform2d(
 			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
@@ -61,7 +56,6 @@ public class PoseEstimationMath {
 			)
 		);
 	}
-	//@formatter:on
 
 	public static Pose2d combineVisionToOdometry(
 		VisionObservation observation,

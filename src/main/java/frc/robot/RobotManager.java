@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkBase;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.rev.request.SparkMaxRequest;
+import frc.robot.hardware.rev.request.SparkMaxRequestBuilder;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -37,7 +41,20 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 		roborioCycles = 0;
 
+		SparkMaxRequest<Rotation2d> request1 = SparkMaxRequestBuilder.build(Rotation2d.fromRotations(2), CANSparkBase.ControlType.kVelocity, 0);
+		SparkMaxRequest<Rotation2d> request2 = SparkMaxRequestBuilder.build(Rotation2d.fromRotations(3), CANSparkBase.ControlType.kVelocity, 0, RobotManager::test);
+		Logger.recordOutput("req1", request1.getSetPoint().getRotations());
+		Logger.recordOutput("req2", request2.getSetPoint().getRotations());
+		request1.withSetPoint(Rotation2d.fromRotations(10));
+		request2.withSetPoint(Rotation2d.fromRotations(5));
+		Logger.recordOutput("req1with", request1.getSetPoint().getRotations());
+		Logger.recordOutput("req2with", request2.getSetPoint().getRotations());
+
 		this.robot = new Robot();
+	}
+
+	public static double test(Rotation2d rotation2d){
+		return rotation2d.getRotations();
 	}
 
 	@Override

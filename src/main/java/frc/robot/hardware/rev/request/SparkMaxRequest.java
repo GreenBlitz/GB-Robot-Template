@@ -35,11 +35,9 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 
 	@Override
 	public SparkMaxRequest<T> withSetPoint(T setPoint) {
-		if (controlType == CANSparkBase.ControlType.kVelocity) {
-			this.setPoint = (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations()));
-			return this;
-		}
-		this.setPoint = setPoint;
+		this.setPoint = controlType == CANSparkBase.ControlType.kVelocity
+			? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations()))
+			: setPoint;
 		return this;
 	}
 

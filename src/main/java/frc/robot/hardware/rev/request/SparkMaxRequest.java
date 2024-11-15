@@ -45,10 +45,11 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 	}
 
 	public Double getSetPointForSparkMAX() {
-		return controlType == CANSparkBase.ControlType.kVelocity
-			? setPointToDoubleConverter
-				.apply((T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations())))
-			: setPointToDoubleConverter.apply(setPoint);
+		return setPointToDoubleConverter.apply(
+			controlType == CANSparkBase.ControlType.kVelocity
+				? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations()))
+				: setPoint
+		);
 	}
 
 	public CANSparkBase.ControlType getControlType() {

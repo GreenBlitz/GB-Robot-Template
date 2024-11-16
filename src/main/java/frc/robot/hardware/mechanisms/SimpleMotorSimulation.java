@@ -19,7 +19,7 @@ public class SimpleMotorSimulation extends MechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getSystemVelocityRotationsPerSecond() {
+	public Rotation2d getSystemVelocityAnglesPerSecond() {
 		return Rotation2d.fromRadians(motorSimulation.getAngularVelocityRadPerSec());
 	}
 

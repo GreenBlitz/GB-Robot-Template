@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
-import frc.robot.hardware.phoenix6.motor.TalonFXWrapper;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
@@ -20,7 +19,6 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
 import frc.utils.AngleUnit;
-import frc.utils.alerts.Alert;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -66,21 +64,21 @@ class DriveRealConstants {
 		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder.build(new VelocityVoltage(0).withEnableFOC(true));
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
 
-		TalonFXWrapper motor = new TalonFXWrapper(deviceID);
-		if (!motor.applyConfiguration(generateMotorConfig(inverted), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
-		}
+		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, generateMotorConfig(inverted), generateSysidConfig());
 
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(drive.getMotor().getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(drive.getMotor().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getPosition(), velocitySignal, GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.generatePhoenix6Signal(drive.getMotor().getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(
+			drive.getMotor().getPosition(),
+			velocitySignal,
+			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS
+		);
 
-		TalonFXMotor drive = new TalonFXMotor(logPath, motor, generateSysidConfig());
 		return new DriveStuff(logPath, drive, velocityRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 

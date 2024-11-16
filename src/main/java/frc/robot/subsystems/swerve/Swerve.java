@@ -85,7 +85,7 @@ public class Swerve extends GBSubsystem {
 			new RobotConfig(0, 0, new ModuleConfig(0, 0, 0, DCMotor.getFalcon500(1), 60, 2), 0),
 			() -> !Field.isFieldConventionAlliance(),
 			this
-		);//todo
+		);// todo
 	}
 
 	public void setStateHelper(SwerveStateHelper swerveStateHelper) {

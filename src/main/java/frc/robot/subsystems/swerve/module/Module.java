@@ -85,7 +85,7 @@ public class Module {
 
 
 	private void fixDriveInputsCoupling() {
-		driveCouplingInputs.uncoupledVelocityPerSecond = ModuleUtils.uncoupleDriveAngle(
+		driveCouplingInputs.uncoupledVelocityAnglesPerSecond = ModuleUtils.uncoupleDriveAngle(
 			driveStuff.velocitySignal().getLatestValue(),
 			steerStuff.velocitySignal().getLatestValue(),
 			constants.couplingRatio()
@@ -110,7 +110,7 @@ public class Module {
 
 		fixDriveInputsCoupling();
 
-		driveInputs.velocityMetersPerSecond = toDriveMeters(driveCouplingInputs.uncoupledVelocityPerSecond);
+		driveInputs.velocityMetersPerSecond = toDriveMeters(driveCouplingInputs.uncoupledVelocityAnglesPerSecond);
 		driveInputs.positionsMeters = Arrays.stream(driveCouplingInputs.uncoupledPositions).mapToDouble(this::toDriveMeters).toArray();
 
 		moduleInputs.isClosedLoop = isClosedLoop;

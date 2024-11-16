@@ -19,9 +19,9 @@ import org.littletonrobotics.junction.Logger;
 public class HardwareModule extends Module {
 
 	@AutoLog
-	public static class CouplingInputs {
+	public static class DriveCouplingInputs {
 
-		public Rotation2d uncoupledVelocityPerSecond = new Rotation2d();
+		public Rotation2d uncoupledVelocityAnglesPerSecond = new Rotation2d();
 		public Rotation2d[] uncoupledPositions = new Rotation2d[0];
 
 	}
@@ -39,7 +39,7 @@ public class HardwareModule extends Module {
 	private final IRequest<Double> driveVoltageRequest;
 	private final DriveStuff driveStuff;
 
-	private final CouplingInputsAutoLogged couplingInputs;
+	private final DriveCouplingInputsAutoLogged driveCouplingInputs;
 
 	private Rotation2d startingSteerPosition;
 
@@ -60,7 +60,7 @@ public class HardwareModule extends Module {
 
 		this.targetState = new SwerveModuleState();
 		this.startingSteerPosition = new Rotation2d();
-		this.couplingInputs = new CouplingInputsAutoLogged();
+		this.driveCouplingInputs = new DriveCouplingInputsAutoLogged();
 
 		updateInputs();
 		resetByEncoder();
@@ -77,17 +77,17 @@ public class HardwareModule extends Module {
 	}
 
 	private void fixDriveInputsCoupling() {
-		couplingInputs.uncoupledVelocityPerSecond = ModuleUtils.uncoupleDriveAngle(
+		driveCouplingInputs.uncoupledVelocityAnglesPerSecond = ModuleUtils.uncoupleDriveAngle(
 			driveStuff.velocitySignal().getLatestValue(),
 			steerStuff.velocitySignal().getLatestValue(),
 			constants.couplingRatio()
 		);
 
-		couplingInputs.uncoupledPositions = new Rotation2d[driveStuff.positionSignal().asArray().length];
-		for (int i = 0; i < couplingInputs.uncoupledPositions.length; i++) {
+		driveCouplingInputs.uncoupledPositions = new Rotation2d[driveStuff.positionSignal().asArray().length];
+		for (int i = 0; i < driveCouplingInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerStuff.positionSignal().asArray()[i].getRotations() - startingSteerPosition.getRotations());
-			couplingInputs.uncoupledPositions[i] = ModuleUtils
+			driveCouplingInputs.uncoupledPositions[i] = ModuleUtils
 				.uncoupleDriveAngle(driveStuff.positionSignal().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
@@ -100,7 +100,7 @@ public class HardwareModule extends Module {
 
 		fixDriveInputsCoupling();
 
-		Logger.processInputs(driveStuff.logPath(), couplingInputs);
+		Logger.processInputs(driveStuff.logPath(), driveCouplingInputs);
 	}
 
 	@Override
@@ -142,12 +142,12 @@ public class HardwareModule extends Module {
 
 	@Override
 	public Rotation2d[] getDrivePositions() {
-		return couplingInputs.uncoupledPositions;
+		return driveCouplingInputs.uncoupledPositions;
 	}
 
 	@Override
 	public Rotation2d getDriveVelocitySeconds() {
-		return couplingInputs.uncoupledVelocityPerSecond;
+		return driveCouplingInputs.uncoupledVelocityAnglesPerSecond;
 	}
 
 	@Override

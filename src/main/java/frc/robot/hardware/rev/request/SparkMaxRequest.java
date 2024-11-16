@@ -1,7 +1,9 @@
 package frc.robot.hardware.rev.request;
 
 import com.revrobotics.CANSparkBase;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IRequest;
+import frc.utils.Conversions;
 
 import java.util.function.Function;
 
@@ -42,8 +44,12 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 		return setPoint;
 	}
 
-	public Double getSetPointAsDouble() {
-		return setPointToDoubleConverter.apply(setPoint);
+	public Double getSparkMaxCompatibleSetPoint() {
+		return setPointToDoubleConverter.apply(
+			controlType == CANSparkBase.ControlType.kVelocity
+				? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations()))
+				: setPoint
+		);
 	}
 
 	public CANSparkBase.ControlType getControlType() {

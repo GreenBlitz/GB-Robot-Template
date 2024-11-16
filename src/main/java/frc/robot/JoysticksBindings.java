@@ -57,7 +57,7 @@ public class JoysticksBindings {
 			.setDefaultCommand(
 				robot.getSwerve()
 					.getCommandsBuilder()
-					.driveBySavedState(
+					.drive(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
@@ -66,15 +66,15 @@ public class JoysticksBindings {
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> { robot.getSwerve().setHeading(Rotation2d.fromDegrees(180)); }));
 
 
-		usedJoystick.R1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE));
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER));
+		usedJoystick.R1.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
 
-		usedJoystick.L1.onTrue(robot.getStatesMotionPlanner().setState(RobotState.ARM_INTAKE));
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.AMP));
+		usedJoystick.L1.onTrue(robot.getSuperstructure().setState(RobotState.ARM_INTAKE));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getSuperstructure().setState(RobotState.AMP));
 
-		usedJoystick.Y.onTrue(robot.getStatesMotionPlanner().setState(RobotState.PASSING));
-		usedJoystick.X.onTrue(robot.getStatesMotionPlanner().setState(RobotState.INTAKE_OUTTAKE));
-		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().setState(RobotState.IDLE));
+		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.PASSING));
+		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -91,9 +91,7 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
-
-		usedJoystick.R1.onTrue(robot.getPivot().getCommandsBuilder().calibInterpolation());
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getStatesMotionPlanner().setState(RobotState.SPEAKER_MANUAL_PIVOT));
+		usedJoystick.A.onTrue(robot.getStatesMotionPlanner().intakeTransfertoarmAmp());
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

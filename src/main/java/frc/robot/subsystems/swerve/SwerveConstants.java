@@ -21,7 +21,7 @@ public record SwerveConstants(
 	Translation2d[] modulesLocations,
 	double driveRadiusMeters,
 	SwerveDriveKinematics kinematics,
-	PPHolonomicDriveController holonomicPathFollowerConfig
+	PPHolonomicDriveController ppHolonomicDriveController
 ) {
 
 	public SwerveConstants(

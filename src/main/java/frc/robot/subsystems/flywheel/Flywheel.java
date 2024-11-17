@@ -2,8 +2,8 @@ package frc.robot.subsystems.flywheel;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 

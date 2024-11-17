@@ -2,8 +2,8 @@ package frc.robot.subsystems.elbow;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
 
 public class Elbow extends GBSubsystem {
@@ -39,7 +39,7 @@ public class Elbow extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateSignals(elbowStuff.positionSignal(), elbowStuff.velocitySignal(), elbowStuff.currentSignal(), elbowStuff.voltageSignal());
+		motor.updateInputs(elbowStuff.positionSignal(), elbowStuff.velocitySignal(), elbowStuff.currentSignal(), elbowStuff.voltageSignal());
 	}
 
 	public void setBrake(boolean brake) {
@@ -51,7 +51,7 @@ public class Elbow extends GBSubsystem {
 	}
 
 	protected void setVoltage(double voltage) {
-		motor.applyDoubleRequest(voltageRequest.withSetPoint(voltage));
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	protected void stayInPlace() {
@@ -59,7 +59,7 @@ public class Elbow extends GBSubsystem {
 	}
 
 	protected void setTargetAngle(Rotation2d angle) {
-		motor.applyAngleRequest(positionRequest.withSetPoint(angle));
+		motor.applyRequest(positionRequest.withSetPoint(angle));
 	}
 
 	public boolean isAtAngle(Rotation2d angle, Rotation2d tolerance) {

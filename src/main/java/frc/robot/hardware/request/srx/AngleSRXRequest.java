@@ -2,7 +2,7 @@ package frc.robot.hardware.request.srx;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.interfaces.IRequest;
 
 public class AngleSRXRequest implements IRequest<Rotation2d> {
 

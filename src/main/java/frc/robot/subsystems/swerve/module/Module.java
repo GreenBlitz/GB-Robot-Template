@@ -4,9 +4,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.hardware.angleencoder.IAngleEncoder;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IAngleEncoder;
+import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
@@ -98,9 +98,9 @@ public class Module {
 	}
 
 	public void updateInputs() {
-		encoder.updateSignals(encoderStuff.positionSignal());
-		steer.updateSignals(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
-		drive.updateSignals(driveStuff.positionSignal(), driveStuff.velocitySignal(), driveStuff.currentSignal(), driveStuff.voltageSignal());
+		encoder.updateInputs(encoderStuff.positionSignal());
+		steer.updateInputs(steerStuff.positionSignal(), steerStuff.velocitySignal(), steerStuff.currentSignal(), steerStuff.voltageSignal());
+		drive.updateInputs(driveStuff.positionSignal(), driveStuff.velocitySignal(), driveStuff.currentSignal(), driveStuff.voltageSignal());
 		fixDriveInputsCoupling();
 
 		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityPerSecond);

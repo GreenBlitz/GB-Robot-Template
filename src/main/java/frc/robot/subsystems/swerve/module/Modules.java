@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
@@ -149,12 +148,12 @@ public class Modules {
 		return numberOfOdometrySamples;
 	}
 
-	public SwerveDriveWheelPositions getWheelsPositions(int odometrySampleIndex) {
+	public SwerveModulePosition[] getWheelsPositions(int odometrySampleIndex) {
 		SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
 		for (int i = 0; i < modules.length; i++) {
 			swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
 		}
-		return new SwerveDriveWheelPositions(swerveModulePositions);
+		return swerveModulePositions;
 	}
 
 }

@@ -2,9 +2,9 @@ package frc.robot.constants;
 
 import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {

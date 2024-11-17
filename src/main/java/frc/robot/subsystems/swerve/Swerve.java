@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
-import frc.robot.hardware.gyro.IGyro;
+import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -95,7 +95,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateSignals(gyroStuff.yawSignal());
+		gyro.updateInputs(gyroStuff.yawSignal());
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}

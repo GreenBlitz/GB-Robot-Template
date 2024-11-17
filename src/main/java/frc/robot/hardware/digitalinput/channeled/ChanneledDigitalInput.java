@@ -11,14 +11,14 @@ public class ChanneledDigitalInput implements IDigitalInput {
 	private final Debouncer debouncer;
 	private final boolean inverted;
 
-	public ChanneledDigitalInput(int channel, double debounceTime, boolean inverted) {
-		this.digitalInput = new DigitalInput(channel);
-		this.debouncer = new Debouncer(debounceTime);
+	public ChanneledDigitalInput(DigitalInput digitalInput, Debouncer debouncer, boolean inverted) {
+		this.digitalInput = digitalInput;
+		this.debouncer = debouncer;
 		this.inverted = inverted;
 	}
 
-	public ChanneledDigitalInput(int channel, double debounceTime) {
-		this(channel, debounceTime, false);
+	public ChanneledDigitalInput(DigitalInput digitalInput, Debouncer debouncer) {
+		this(digitalInput, debouncer, false);
 	}
 
 	@Override

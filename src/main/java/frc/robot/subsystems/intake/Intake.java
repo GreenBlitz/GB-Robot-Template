@@ -2,10 +2,9 @@ package frc.robot.subsystems.intake;
 
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.motor.IMotor;
+import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
-
 
 public class Intake extends GBSubsystem {
 

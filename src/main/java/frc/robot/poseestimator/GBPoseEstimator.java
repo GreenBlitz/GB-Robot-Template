@@ -28,6 +28,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
+	private Pose2d odometryPoseRelativeToInitialPose;
 	private Pose2d estimatedPose;
 	private Rotation2d headingOffset;
 	private boolean hasHeadingOffsetBeenInitialized;
@@ -61,6 +62,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		calculateHeadingOffset(lastOdometryValues.gyroAngle());
 		this.estimatedPose = new Pose2d();
 		this.odometryPose = new Pose2d();
+		this.odometryPoseRelativeToInitialPose = new Pose2d();
 	}
 
 	private void calculateHeadingOffset(Rotation2d gyroAngle) {
@@ -99,12 +101,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		this.lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), wheelPositions, gyroAngle);
 		this.odometryPose = robotPose;
+		this.odometryPoseRelativeToInitialPose = robotPose;
 		odometryPoseInterpolator.clear();
 	}
 
 	@Override
 	public Pose2d getOdometryPose() {
-		return odometryPose;
+		return odometryPoseRelativeToInitialPose;
 	}
 
 	@Override
@@ -122,6 +125,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void resetPose(Pose2d newPose) {
 		this.estimatedPose = newPose;
 		this.headingOffset = newPose.getRotation().minus(lastOdometryValues.gyroAngle());
+		this.odometryPoseRelativeToInitialPose = newPose;
 	}
 
 	@Override
@@ -180,6 +184,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelsPositions(), observation.gyroAngle());
 		odometryPose = odometryPose.exp(twist);
 		estimatedPose = estimatedPose.exp(twist);
+		odometryPoseRelativeToInitialPose = odometryPoseRelativeToInitialPose.exp(twist);
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}
 
@@ -192,7 +197,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public void log() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
-		Logger.recordOutput(super.getLogPath() + "OdometryPose/", odometryPose);
+		Logger.recordOutput(super.getLogPath() + "OdometryPose/", getOdometryPose());
 		Logger.recordOutput(super.getLogPath() + "HeadingAveragingCount/", headingCountHelper.getCount());
 		Logger.recordOutput(super.getLogPath() + "PoseAveragingCount/", poseCountHelper.getCount());
 		Logger.recordOutput(super.getLogPath() + "HeadingOffset/", headingOffset.getDegrees());

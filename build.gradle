@@ -157,7 +157,7 @@ def ensureSymlink(link, target) {
 	}
 }
 
-def GIT_HOOKS_SOURCE = "$rootDir/.scripts/git-hooks/"
+def GIT_HOOKS_SOURCE = "$rootDir/scripts/git-hooks/"
 def GIT_HOOKS_OUT = "$rootDir/.git/hooks"
 def gitConfig = 'Git Configuration'
 tasks.register('installLocalGitHookSymlinks') {

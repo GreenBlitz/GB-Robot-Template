@@ -29,11 +29,18 @@ import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
-	public static final RobotConfig DEFAULT_ROBOT_CONFIG = new RobotConfig(
+	public static final RobotConfig SYNCOPA_ROBOT_CONFIG = new RobotConfig(
 		74,
 		8.6,
-		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500(1), 60, 1),
+		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500Foc(1), 60, 1),
 		0.577
+	);
+	public static final RobotConfig RAFUL_ROBOT_CONFIG = new RobotConfig(
+			60,
+			6,
+			new ModuleConfig(0.0234, 7.98, 1.1, DCMotor.getKrakenX60Foc(1), 60, 1),
+			0.6946,
+			0.556
 	);
 
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.Supplier;
 

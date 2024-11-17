@@ -6,9 +6,8 @@ import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
-import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
-import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
-import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.lifter.LifterStuff;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
@@ -37,20 +36,16 @@ public class LifterRealConstants {
 
 	//@formatter:off
 	protected static LifterStuff generateLifterStuff(String logPath) {
-		TalonFXWrapper talonFXWrapper = new TalonFXWrapper(IDs.TalonFXIDs.LIFTER);
-		if (!talonFXWrapper.applyConfiguration(generateMotorConfiguration(), MOTOR_CONFIGURATION_TRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, logPath + "lifter motor was not configured").report();
-		}
-
+		TalonFXMotor lifter = new TalonFXMotor(logPath, IDs.TalonFXIDs.LIFTER, generateMotorConfiguration(), new SysIdRoutine.Config());
 		return new LifterStuff(
 			logPath,
-			new TalonFXMotor(logPath, talonFXWrapper, new SysIdRoutine.Config()),
+			lifter,
 			DRUM_RADIUS,
 			generateLimitSwitch(),
 			Phoenix6SignalBuilder.generatePhoenix6Signal(
-					talonFXWrapper.getPosition(),
-					GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-					AngleUnit.ROTATIONS
+				lifter.getMotor().getPosition(),
+				GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+				AngleUnit.ROTATIONS
 			)
 		);
 	}

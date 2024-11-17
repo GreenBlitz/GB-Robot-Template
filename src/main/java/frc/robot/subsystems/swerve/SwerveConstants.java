@@ -21,7 +21,7 @@ public record SwerveConstants(
 	Translation2d[] modulesLocations,
 	double driveRadiusMeters,
 	SwerveDriveKinematics kinematics,
-	PPHolonomicDriveController holonomicPathFollowerConfig
+	PPHolonomicDriveController ppHolonomicDriveController
 ) {
 
 	public SwerveConstants(
@@ -57,6 +57,8 @@ public record SwerveConstants(
 
 	static final double DRIVE_NEUTRAL_DEADBAND = 0.05;
 	static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.05);
+	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
+	static final Rotation2d CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
 
 	static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
 	static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;

@@ -46,10 +46,10 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		rightMotor.updateSignals(flywheelStuff.rightSignals());
-		rightMotor.updateSignals(flywheelStuff.rightVelocitySignal());
-		leftMotor.updateSignals(flywheelStuff.leftSignals());
-		leftMotor.updateSignals(flywheelStuff.leftVelocitySignal());
+		rightMotor.updateInputs(flywheelStuff.rightSignals());
+		rightMotor.updateInputs(flywheelStuff.rightVelocitySignal());
+		leftMotor.updateInputs(flywheelStuff.leftSignals());
+		leftMotor.updateInputs(flywheelStuff.leftVelocitySignal());
 	}
 
 	@Override
@@ -68,13 +68,13 @@ public class Flywheel extends GBSubsystem {
 	}
 
 	protected void setVoltages(double rightVoltage, double leftVoltage) {
-		rightMotor.applyDoubleRequest(flywheelStuff.rightVoltageRequest().withSetPoint(rightVoltage));
-		leftMotor.applyDoubleRequest(flywheelStuff.leftVoltageRequest().withSetPoint(leftVoltage));
+		rightMotor.applyRequest(flywheelStuff.rightVoltageRequest().withSetPoint(rightVoltage));
+		leftMotor.applyRequest(flywheelStuff.leftVoltageRequest().withSetPoint(leftVoltage));
 	}
 
 	protected void setTargetVelocities(Rotation2d rightFlywheelVelocity, Rotation2d leftFlywheelVelocity) {
-		rightMotor.applyAngleRequest(rightFlywheelVelocityRequest.withSetPoint(rightFlywheelVelocity));
-		leftMotor.applyAngleRequest(leftFlywheelVelocityRequest.withSetPoint(leftFlywheelVelocity));
+		rightMotor.applyRequest(rightFlywheelVelocityRequest.withSetPoint(rightFlywheelVelocity));
+		leftMotor.applyRequest(leftFlywheelVelocityRequest.withSetPoint(leftFlywheelVelocity));
 	}
 
 	//@formatter:off

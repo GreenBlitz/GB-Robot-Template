@@ -4,66 +4,36 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
+import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 
-public class Modules {
+public class Modules extends GBSubsystem {
 
 	private final Module[] modules;
-	private final String logPath;
+	private final ModulesCommandsBuilder commandsBuilder;
 
 	public Modules(String logPath, Module... modules) {
+		super(logPath + ModuleConstants.LOG_PATH_ADDITION);
 		this.modules = modules;
-		this.logPath = logPath + ModuleConstants.LOG_PATH_ADDITION;
+		this.commandsBuilder = new ModulesCommandsBuilder(this);
 	}
 
 	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 
+	public ModulesCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
+	}
+
 	public void updateInputs() {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
-		Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
-		Logger.recordOutput(logPath + "TargetStates", getTargetStates());
-	}
-
-
-	public void pointWheels(Rotation2d targetAngle, boolean optimize) {
-		for (Module module : modules) {
-			module.pointToAngle(targetAngle, optimize);
-		}
-	}
-
-	public void pointWheelsInCircle() {
-		boolean optimizeAngle = true;
-		modules[0].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
-		modules[1].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
-		modules[2].pointToAngle(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
-		modules[3].pointToAngle(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
-	}
-
-	public void pointWheelsInX(boolean isClosedLoop) {
-		SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
-		SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-
-		modules[0].setTargetState(frontLeftBackRight, isClosedLoop);
-		modules[1].setTargetState(frontRightBackLeft, isClosedLoop);
-		modules[2].setTargetState(frontRightBackLeft, isClosedLoop);
-		modules[3].setTargetState(frontLeftBackRight, isClosedLoop);
-	}
-
-
-	public void setSteersVoltage(ModuleUtils.ModulePosition module, double voltage) {
-		modules[module.getIndex()].setSteerVoltage(voltage);
-	}
-
-	public void setDrivesVoltage(double voltage) {
-		for (Module module : modules) {
-			module.setDriveVoltage(voltage);
-		}
+		Logger.recordOutput(getLogPath() + "CurrentStates", getCurrentStates());
+		Logger.recordOutput(getLogPath() + "TargetStates", getTargetStates());
 	}
 
 
@@ -79,11 +49,31 @@ public class Modules {
 		}
 	}
 
-	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
-		for (int i = 0; i < modules.length; i++) {
-			modules[i].setTargetState(moduleStates[i], isClosedLoop);
+
+	protected void pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
+		for (Module module : modules) {
+			module.pointSteer(targetSteerPosition, optimize);
 		}
 	}
+
+	protected void pointWheelsInCircle() {
+		boolean optimizeAngle = true;
+		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+		modules[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
+		modules[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+	}
+
+	public void pointWheelsInX(boolean isClosedLoop) {
+		SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
+		SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
+
+		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].setTargetState(frontLeftBackRight, isClosedLoop);
+		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].setTargetState(frontRightBackLeft, isClosedLoop);
+		modules[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()].setTargetState(frontRightBackLeft, isClosedLoop);
+		modules[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()].setTargetState(frontLeftBackRight, isClosedLoop);
+	}
+
 
 	public void stop() {
 		for (Module currentModule : modules) {
@@ -91,54 +81,24 @@ public class Modules {
 		}
 	}
 
-
-	public boolean isAtTargetVelocities() {
+	public void setSteersVoltage(double voltage) {
 		for (Module module : modules) {
-			if (!module.isAtTargetVelocity()) {
-				return false;
-			}
+			module.setSteerVoltage(voltage);
 		}
-		return true;
 	}
 
-	public boolean isAtTargetAngles() {
+	public void setDrivesVoltage(double voltage) {
 		for (Module module : modules) {
-			if (!module.isAtTargetAngle()) {
-				return false;
-			}
+			module.setDriveVoltage(voltage);
 		}
-		return true;
 	}
 
-	public boolean isAtTargetStates() {
-		return isAtTargetAngles() && isAtTargetVelocities();
-	}
-
-
-	public SwerveModuleState[] getTargetStates() {
-		SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
+	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
 		for (int i = 0; i < modules.length; i++) {
-			states[i] = modules[i].getTargetState();
+			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
-
-		return states;
 	}
 
-	public SwerveModuleState[] getCurrentStates() {
-		SwerveModuleState[] states = new SwerveModuleState[modules.length];
-
-		for (int i = 0; i < modules.length; i++) {
-			states[i] = modules[i].getCurrentState();
-		}
-
-		return states;
-	}
-
-
-	public Rotation2d[] getDrivesAngles() {
-		return Arrays.stream(modules).map(Module::getDriveAngle).toArray(Rotation2d[]::new);
-	}
 
 	public int getNumberOfOdometrySamples() {
 		int numberOfOdometrySamples = modules[0].getNumberOfOdometrySamples();
@@ -148,12 +108,48 @@ public class Modules {
 		return numberOfOdometrySamples;
 	}
 
+
+	public SwerveModuleState[] getTargetStates() {
+		return Arrays.stream(modules).map(Module::getTargetState).toArray(SwerveModuleState[]::new);
+	}
+
+	public SwerveModuleState[] getCurrentStates() {
+		return Arrays.stream(modules).map(Module::getCurrentState).toArray(SwerveModuleState[]::new);
+	}
+
+	public Rotation2d[] getDrivesPositions() {
+		return Arrays.stream(modules).map(Module::getDrivePosition).toArray(Rotation2d[]::new);
+	}
+
 	public SwerveModulePosition[] getWheelsPositions(int odometrySampleIndex) {
 		SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
 		for (int i = 0; i < modules.length; i++) {
 			swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);
 		}
 		return swerveModulePositions;
+	}
+
+
+	public boolean isAtTargetVelocities(double speedToleranceMetersPerSecond) {
+		for (Module module : modules) {
+			if (!module.isAtTargetVelocity(speedToleranceMetersPerSecond)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean isSteersAtTargetPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
+		for (Module module : modules) {
+			if (!module.isSteerAtTargetPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean isAtTargetStates(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
+		return isSteersAtTargetPositions(steerTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
 	}
 
 }

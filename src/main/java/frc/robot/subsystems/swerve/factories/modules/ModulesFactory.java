@@ -24,11 +24,10 @@ public class ModulesFactory {
 	public static Modules create(SwerveType swerveType) {
 		return new Modules(
 			swerveType.getLogPath(),
-			new Module[] {
-				createModule(swerveType, ModuleUtils.ModulePosition.FRONT_LEFT),
-				createModule(swerveType, ModuleUtils.ModulePosition.FRONT_RIGHT),
-				createModule(swerveType, ModuleUtils.ModulePosition.BACK_LEFT),
-				createModule(swerveType, ModuleUtils.ModulePosition.BACK_RIGHT)}
+			createModule(swerveType, ModuleUtils.ModulePosition.FRONT_LEFT),
+			createModule(swerveType, ModuleUtils.ModulePosition.FRONT_RIGHT),
+			createModule(swerveType, ModuleUtils.ModulePosition.BACK_LEFT),
+			createModule(swerveType, ModuleUtils.ModulePosition.BACK_RIGHT)
 		);
 	}
 

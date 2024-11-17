@@ -35,7 +35,7 @@ public class Intake extends GBSubsystem {
 
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
-		motor.updateSignals(intakeStuff.voltageSignal());
+		motor.updateInputs(intakeStuff.voltageSignal());
 		Logger.processInputs(intakeStuff.digitalInputLogPath(), digitalInputsInputs);
 		Logger.recordOutput(intakeStuff.logPath() + "IsObjectIn", isObjectIn());
 	}

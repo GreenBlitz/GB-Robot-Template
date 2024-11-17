@@ -4,21 +4,26 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Robot;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
-import frc.robot.hardware.motor.phoenix6.TalonFXMotor;
-import frc.robot.hardware.motor.phoenix6.TalonFXWrapper;
-import frc.robot.hardware.request.phoenix6.Phoenix6AngleRequest;
-import frc.robot.hardware.signal.phoenix.Phoenix6AngleSignal;
-import frc.robot.hardware.signal.phoenix.Phoenix6DoubleSignal;
-import frc.robot.hardware.signal.phoenix.Phoenix6LatencySignal;
-import frc.robot.hardware.signal.phoenix.Phoenix6SignalBuilder;
+import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
+import frc.robot.hardware.phoenix6.request.Phoenix6Request;
+import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
+import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.pivot.PivotConstants;
 import frc.robot.subsystems.pivot.PivotStuff;
+import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
+
+import static edu.wpi.first.units.Units.Second;
 
 public class RealPivotConstants {
 
@@ -26,7 +31,7 @@ public class RealPivotConstants {
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
-			Units.Volts.of(1.0).per(Units.Seconds.of(1.0)),
+			Units.Volts.of(1.0).per(Second),
 			Units.Volts.of(7.0),
 			Units.Seconds.of(10.0),
 			(state) -> SignalLogger.writeString("state", state.toString())
@@ -58,23 +63,19 @@ public class RealPivotConstants {
 	}
 
 	protected static PivotStuff generatePivotStuff(String logPath) {
-		Phoenix6AngleRequest positionRequest = new Phoenix6AngleRequest(new PositionVoltage(0).withEnableFOC(true));
+		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true));
 
-		TalonFXWrapper motor = new TalonFXWrapper(IDs.TalonFXIDs.PIVOT);
-		if (!motor.applyConfiguration(generateMotorConfig(), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFail").report();
-		}
+		TalonFXMotor pivot = new TalonFXMotor(logPath, IDs.TalonFXIDs.PIVOT, generateMotorConfig(), generateSysidConfig());
 
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.generatePhoenix6Signal(pivot.getMotor().getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getPosition(), velocitySignal, GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.generatePhoenix6Signal(pivot.getMotor().getPosition(), velocitySignal, GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(pivot.getMotor().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(pivot.getMotor().getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
-		TalonFXMotor pivot = new TalonFXMotor(logPath, motor, generateSysidConfig());
 		return new PivotStuff(logPath, pivot, positionRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 

@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.swerveconstants;
 
-import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.swerve.SwerveConstants;
@@ -37,7 +37,7 @@ public class RealSwerveConstants {
 		FRONT_LEFT_TRANSLATION2D,
 		FRONT_RIGHT_TRANSLATION2D,
 		BACK_LEFT_TRANSLATION2D,
-		BACK_RIGHT_TRANSLATION2D};
+		BACK_RIGHT_TRANSLATION2D,};
 
 	protected static SwerveConstants getSwerveConstants(SwerveType swerveType) {
 		return new SwerveConstants(

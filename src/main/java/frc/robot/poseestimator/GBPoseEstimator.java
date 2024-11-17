@@ -138,7 +138,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	// @pose-swerveAdditions:off
 
 	@Override
-	public void resetOdometry(SwerveModulePosition wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
+	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		this.latestWheelPositions = wheelPositions;
 		this.latestGyroAngle = gyroAngle;
 		this.odometryPose = robotPose;

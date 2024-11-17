@@ -3,8 +3,8 @@ package frc.robot.subsystems.pivot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.DriverStationUtils;
 
@@ -40,8 +40,8 @@ public class Pivot extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateSignals(pivotStuff.positionSignal());
-		motor.updateSignals(pivotStuff.inputSignals());
+		motor.updateInputs(pivotStuff.positionSignal());
+		motor.updateInputs(pivotStuff.inputSignals());
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class Pivot extends GBSubsystem {
 	}
 
 	protected void setTargetPosition(Rotation2d targetPosition) {
-		motor.applyAngleRequest(positionRequest.withSetPoint(targetPosition));
+		motor.applyRequest(positionRequest.withSetPoint(targetPosition));
 	}
 
 	protected void stayInPlace() {

@@ -3,7 +3,7 @@ package frc.robot.subsystems.lifter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.motor.ControllableMotor;
+import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
 import org.littletonrobotics.junction.Logger;
@@ -69,8 +69,8 @@ public class Lifter extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateSignals(lifterStuff.positionSignal());
-		motor.updateSignals(lifterStuff.otherSignals());
+		motor.updateInputs(lifterStuff.positionSignal());
+		motor.updateInputs(lifterStuff.otherSignals());
 
 		limitSwitch.updateInputs(limitSwitchInputs);
 

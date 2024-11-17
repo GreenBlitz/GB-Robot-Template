@@ -1,7 +1,7 @@
 package frc.robot.hardware.request.srx;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.interfaces.IRequest;
 
 public class DoubleSRXRequest implements IRequest<Double> {
 
@@ -23,7 +23,7 @@ public class DoubleSRXRequest implements IRequest<Double> {
 		return controlMode;
 	}
 
-	public double getSetPoint() {
+	public Double getSetPoint() {
 		return setPoint;
 	}
 

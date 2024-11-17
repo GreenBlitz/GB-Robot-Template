@@ -2,8 +2,8 @@ package frc.robot.subsystems.roller;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.motor.IMotor;
-import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.interfaces.IMotor;
+import frc.robot.hardware.interfaces.InputSignal;
 
 public record RollerStuff(
 	String logPath,

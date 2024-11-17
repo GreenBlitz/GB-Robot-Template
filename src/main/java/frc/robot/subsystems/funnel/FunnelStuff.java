@@ -1,8 +1,8 @@
 package frc.robot.subsystems.funnel;
 
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.motor.IMotor;
-import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.interfaces.IMotor;
+import frc.robot.hardware.interfaces.InputSignal;
 
 public record FunnelStuff(
 	String logPath,

@@ -2,11 +2,13 @@ package frc.robot.subsystems.funnel.factory;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.SparkLimitSwitch;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
-import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
-import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
+import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
+import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.FunnelStuff;
@@ -37,8 +39,14 @@ public class RealFunnelConstants {
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
-		ChanneledDigitalInput leftDigitalInput = new ChanneledDigitalInput(LEFT_DIGITAL_INPUT_CHANNEL, DEBOUNCE_TIME_SECONDS);
-		ChanneledDigitalInput rightDigitalInput = new ChanneledDigitalInput(RIGHT_DIGITAL_INPUT_CHANNEL, DEBOUNCE_TIME_SECONDS);
+		ChanneledDigitalInput leftDigitalInput = new ChanneledDigitalInput(
+			new DigitalInput(LEFT_DIGITAL_INPUT_CHANNEL),
+			new Debouncer(DEBOUNCE_TIME_SECONDS)
+		);
+		ChanneledDigitalInput rightDigitalInput = new ChanneledDigitalInput(
+			new DigitalInput(RIGHT_DIGITAL_INPUT_CHANNEL),
+			new Debouncer(DEBOUNCE_TIME_SECONDS)
+		);
 
 		return new FunnelStuff(logPath, motor, voltageSignal, leftDigitalInput, rightDigitalInput);
 	}

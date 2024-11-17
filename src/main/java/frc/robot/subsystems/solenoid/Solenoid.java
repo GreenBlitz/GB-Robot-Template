@@ -1,7 +1,7 @@
 package frc.robot.subsystems.solenoid;
 
-import frc.robot.hardware.motor.IMotor;
-import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.interfaces.IMotor;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 
 public class Solenoid extends GBSubsystem {
@@ -24,7 +24,7 @@ public class Solenoid extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		motor.updateSignals(voltageSignal);
+		motor.updateInputs(voltageSignal);
 	}
 
 	@Override

@@ -80,7 +80,6 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
-
 		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
 		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.IDLE));

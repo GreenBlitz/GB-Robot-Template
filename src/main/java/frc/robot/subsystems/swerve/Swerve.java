@@ -1,14 +1,17 @@
 package frc.robot.subsystems.swerve;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
-import frc.robot.hardware.gyro.IGyro;
+import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -22,7 +25,6 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
 
 public class Swerve extends GBSubsystem {
 
@@ -79,10 +81,11 @@ public class Swerve extends GBSubsystem {
 			resetPoseConsumer,
 			this::getRobotRelativeVelocity,
 			(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
-			constants.holonomicPathFollowerConfig(),
+			constants.ppHolonomicDriveController(),
+			new RobotConfig(0, 0, new ModuleConfig(0, 0, 0, DCMotor.getFalcon500(1), 60, 2), 0),
 			() -> !Field.isFieldConventionAlliance(),
 			this
-		);
+		);// todo
 	}
 
 	public void setStateHelper(SwerveStateHelper swerveStateHelper) {
@@ -95,7 +98,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateSignals(gyroStuff.yawSignal());
+		gyro.updateInputs(gyroStuff.yawSignal());
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -107,6 +110,7 @@ public class Swerve extends GBSubsystem {
 		constants.rotationDegreesPIDController().reset();
 	}
 
+
 	public void updateStatus() {
 		updateInputs();
 		logState();
@@ -115,7 +119,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		gyro.updateSignals(gyroStuff.yawSignal());
+		gyro.updateInputs(gyroStuff.yawSignal());
 		modules.updateInputs();
 	}
 
@@ -207,21 +211,17 @@ public class Swerve extends GBSubsystem {
 		driveByState(targetFieldRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}
 
-	//@formatter:off
 	protected void turnToHeading(Rotation2d targetHeading, SwerveState swerveState) {
 		ChassisSpeeds targetSpeeds = new ChassisSpeeds(
 			0,
 			0,
-			Rotation2d.fromDegrees(
-					constants.rotationDegreesPIDController().calculate(
-							headingSupplier.get().getDegrees(),
-							targetHeading.getDegrees()
-					)
-			).getRadians()
+			Rotation2d
+				.fromDegrees(constants.rotationDegreesPIDController().calculate(headingSupplier.get().getDegrees(), targetHeading.getDegrees()))
+				.getRadians()
 		);
 		driveByState(targetSpeeds, swerveState);
 	}
-	//@formatter:on
+
 
 	protected void driveByState(double xPower, double yPower, double rotationPower, SwerveState swerveState) {
 		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(xPower, yPower, rotationPower, constants);

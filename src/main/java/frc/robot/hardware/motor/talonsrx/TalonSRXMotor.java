@@ -5,11 +5,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IRequest;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.request.srx.AngleSRXRequest;
 import frc.robot.hardware.request.srx.DoubleSRXRequest;
-import frc.robot.hardware.signal.InputSignal;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
@@ -31,9 +31,13 @@ public class TalonSRXMotor implements ControllableMotor {
 		return true; // TODO
 	}
 
+
 	@Override
-	public void updateSignals(InputSignal... signals) {
-		for (InputSignal signal : signals) {
+	public void updateSimulation() {}
+
+	@Override
+	public void updateInputs(InputSignal<?>... inputSignals) {
+		for (InputSignal<?> signal : inputSignals) {
 			Logger.processInputs(logPath, signal);
 		}
 	}
@@ -66,16 +70,13 @@ public class TalonSRXMotor implements ControllableMotor {
 
 
 	@Override
-	public void applyDoubleRequest(IRequest<Double> request) {
-		DoubleSRXRequest srxRequest = (DoubleSRXRequest) request;
-		motor.set(srxRequest.getControlMode(), srxRequest.getSetPoint());
-	}
-
-	@Override
-	public void applyAngleRequest(IRequest<Rotation2d> request) {
-		AngleSRXRequest srxRequest = (AngleSRXRequest) request;
-		motor.selectProfileSlot(srxRequest.getPidSlot(), 0);
-		motor.set(srxRequest.getControlMode(), Conversions.angleToMagTicks(srxRequest.getSetPoint(), gearRatio));
+	public void applyRequest(IRequest<?> request) {
+		if (request instanceof AngleSRXRequest angleSRXRequest) {
+			motor.selectProfileSlot(angleSRXRequest.getPidSlot(), 0);
+			motor.set(angleSRXRequest.getControlMode(), Conversions.angleToMagTicks(angleSRXRequest.getSetPoint(), gearRatio));
+		} else if (request instanceof DoubleSRXRequest doubleSRXRequest) {
+			motor.set(doubleSRXRequest.getControlMode(), doubleSRXRequest.getSetPoint());
+		}
 	}
 
 }

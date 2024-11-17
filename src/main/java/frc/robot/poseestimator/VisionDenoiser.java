@@ -68,8 +68,11 @@ public class VisionDenoiser {
 		return calculateAverage(observations);
 	}
 
-	public Optional<VisionObservation>
-		calculateAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+	public Optional<VisionObservation> calculateAverageFixedPose(
+		Pose2d currentPose,
+		Pose2d odometryPose,
+		TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator
+	) {
 		return calculateAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
 	}
 
@@ -91,13 +94,19 @@ public class VisionDenoiser {
 		return calculateWeightedAverage(observations);
 	}
 
-	public Optional<VisionObservation>
-		calculateWeightedAverageFixedPose(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+	public Optional<VisionObservation> calculateWeightedAverageFixedPose(
+		Pose2d currentPose,
+		Pose2d odometryPose,
+		TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator
+	) {
 		return calculateWeightedAverage(fixAccordingToOdometry(currentPose, odometryPose, odometryPoseInterpolator));
 	}
 
-	private LinkedList<VisionObservation>
-		fixAccordingToOdometry(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+	private LinkedList<VisionObservation> fixAccordingToOdometry(
+		Pose2d currentPose,
+		Pose2d odometryPose,
+		TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator
+	) {
 		LinkedList<VisionObservation> output = new LinkedList<>();
 		for (VisionObservation observation : observations) {
 			double currentTimestamp = TimeUtils.getCurrentTimeSeconds();

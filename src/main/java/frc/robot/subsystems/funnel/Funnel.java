@@ -2,8 +2,8 @@ package frc.robot.subsystems.funnel;
 
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.motor.IMotor;
-import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.interfaces.IMotor;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -55,7 +55,7 @@ public class Funnel extends GBSubsystem {
 	public void updateInputs() {
 		leftDigitalInput.updateInputs(leftDigitalInputsInputs);
 		rightDigitalInput.updateInputs(rightDigitalInputsInputs);
-		motor.updateSignals(voltageSignal);
+		motor.updateInputs(voltageSignal);
 		Logger.processInputs(funnelStuff.leftDigitalInputLogPath(), leftDigitalInputsInputs);
 		Logger.processInputs(funnelStuff.rightDigitalInputLogPath(), rightDigitalInputsInputs);
 		Logger.recordOutput(funnelStuff.logPath() + "IsObjectIn", isObjectIn());

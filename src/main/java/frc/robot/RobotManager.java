@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.simulation.SimulationManager;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -16,6 +15,7 @@ import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 
 /**
@@ -25,6 +25,8 @@ import frc.utils.brakestate.BrakeStateManager;
  */
 public class RobotManager extends LoggedRobot {
 
+	private int roborioCycles;
+
 	private Command autonomousCommand;
 	private Robot robot;
 
@@ -33,6 +35,7 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
+		roborioCycles = 0;
 
 		this.robot = new Robot();
 	}
@@ -69,17 +72,14 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		TimeUtils.updateCycleTime(); // Better to be first
+		roborioCycles++; // Better to be first
+		Logger.recordOutput("RoborioCycles", roborioCycles);
+		TimeUtils.updateCycleTime(roborioCycles); // Better to be second
 		robot.periodic();
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-	}
-
-	@Override
-	public void simulationPeriodic() {
-		SimulationManager.updateRegisteredSimulations();
 	}
 
 }

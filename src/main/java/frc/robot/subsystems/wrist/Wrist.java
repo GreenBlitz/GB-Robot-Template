@@ -2,9 +2,9 @@ package frc.robot.subsystems.wrist;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.request.IRequest;
-import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IRequest;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 
 public class Wrist extends GBSubsystem {
@@ -42,8 +42,8 @@ public class Wrist extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateSignals(positionSignal);
-		motor.updateSignals(wristStuff.otherSignals());
+		motor.updateInputs(positionSignal);
+		motor.updateInputs(wristStuff.otherSignals());
 	}
 
 	@Override
@@ -60,11 +60,11 @@ public class Wrist extends GBSubsystem {
 	}
 
 	protected void setTargetPosition(Rotation2d position) {
-		motor.applyAngleRequest(positionRequest.withSetPoint(position));
+		motor.applyRequest(positionRequest.withSetPoint(position));
 	}
 
 	protected void stayInPlace() {
-		motor.applyAngleRequest(positionRequest.withSetPoint(positionSignal.getLatestValue()));
+		motor.applyRequest(positionRequest.withSetPoint(positionSignal.getLatestValue()));
 	}
 
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {

@@ -2,8 +2,8 @@ package frc.robot.subsystems.lifter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.signal.InputSignal;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.InputSignal;
 
 public record LifterStuff(
 	String logPath,

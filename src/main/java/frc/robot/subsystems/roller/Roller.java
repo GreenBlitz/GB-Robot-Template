@@ -3,7 +3,7 @@ package frc.robot.subsystems.roller;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.motor.IMotor;
+import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -40,7 +40,7 @@ public class Roller extends GBSubsystem {
 
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
-		motor.updateSignals(rollerStuff.voltageSignal(), rollerStuff.positionSignal());
+		motor.updateInputs(rollerStuff.voltageSignal(), rollerStuff.positionSignal());
 		Logger.processInputs(rollerStuff.digitalInputLogPath(), digitalInputsInputs);
 		Logger.recordOutput(rollerStuff.logPath() + "IsObjectIn", isObjectIn());
 	}

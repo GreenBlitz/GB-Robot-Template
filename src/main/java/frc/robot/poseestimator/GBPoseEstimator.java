@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
@@ -30,7 +30,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final double[] odometryStandardDeviations;
 	private Pose2d odometryPose;
 	private Pose2d estimatedPose;
-	private SwerveDriveWheelPositions latestWheelPositions;
+	private SwerveModulePosition[] latestWheelPositions;
 	private Rotation2d latestGyroAngle;
 	private Rotation2d headingOffset;
 	private Consumer<Rotation2d> resetSwerve;
@@ -42,7 +42,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		String logPath,
 		ILimelightFilterer limelightFilterer,
 		SwerveDriveKinematics kinematics,
-		SwerveDriveWheelPositions initialWheelPositions,
+		SwerveModulePosition[] initialWheelPositions,
 		Rotation2d initialGyroAngle,
 		double[] odometryStandardDeviations,
 		VisionDenoiser visionDenoiser
@@ -138,7 +138,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	// @pose-swerveAdditions:off
 
 	@Override
-	public void resetOdometry(SwerveDriveWheelPositions wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
+	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		this.latestWheelPositions = wheelPositions;
 		this.latestGyroAngle = gyroAngle;
 		this.odometryPose = robotPose;

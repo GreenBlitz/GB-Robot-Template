@@ -2,10 +2,9 @@ package frc.robot.subsystems.intake;
 
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.motor.IMotor;
+import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
-
 
 public class Intake extends GBSubsystem {
 
@@ -36,7 +35,7 @@ public class Intake extends GBSubsystem {
 
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputsInputs);
-		motor.updateSignals(intakeStuff.voltageSignal());
+		motor.updateInputs(intakeStuff.voltageSignal());
 		Logger.processInputs(intakeStuff.digitalInputLogPath(), digitalInputsInputs);
 		Logger.recordOutput(intakeStuff.logPath() + "IsObjectIn", isObjectIn());
 	}

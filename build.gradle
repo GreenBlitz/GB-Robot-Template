@@ -157,17 +157,19 @@ def ensureSymlink(link, target) {
 	}
 }
 
+def GIT_HOOKS_SOURCE = "$rootDir/.scripts/git-hooks/"
+def GIT_HOOKS_OUT = "$rootDir/.git/hooks"
 def gitConfig = 'Git Configuration'
 tasks.register('installLocalGitHookSymlinks') {
 	group = gitConfig
 
-	inputs.dir "$rootDir/.scripts/git-hooks/"
-	inputs.dir "$rootDir/.git/hooks/"
-	outputs.dir "$rootDir/.git/hooks/"
+	inputs.dir GIT_HOOKS_SOURCE
+	inputs.dir GIT_HOOKS_OUT
+	outputs.dir GIT_HOOKS_OUT
 
 	doLast {
-		def hooksSources = fileTree("$rootDir/.scripts/git-hooks/")
-		def hooksDestination = file("$rootDir/.git/hooks/").toPath()
+		def hooksSources = fileTree(GIT_HOOKS_SOURCE)
+		def hooksDestination = file(GIT_HOOKS_OUT).toPath()
 
 		hooksSources.forEach { File source ->
 			def link = hooksDestination.resolve(source.getName())

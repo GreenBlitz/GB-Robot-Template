@@ -7,7 +7,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Robot;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
@@ -19,15 +18,11 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.pivot.PivotConstants;
 import frc.robot.subsystems.pivot.PivotStuff;
-import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.AngleUnit;
-import frc.utils.alerts.Alert;
 
 import static edu.wpi.first.units.Units.Second;
 
 public class RealPivotConstants {
-
-	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -69,8 +64,12 @@ public class RealPivotConstants {
 
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(pivot.getMotor().getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(pivot.getMotor().getPosition(), velocitySignal, GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(
+			pivot.getMotor().getPosition(),
+			velocitySignal,
+			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS
+		);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(pivot.getMotor().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder

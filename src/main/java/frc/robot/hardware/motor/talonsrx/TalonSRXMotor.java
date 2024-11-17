@@ -33,9 +33,7 @@ public class TalonSRXMotor implements ControllableMotor {
 
 
 	@Override
-	public void updateSimulation() {
-
-	}
+	public void updateSimulation() {}
 
 	@Override
 	public void updateInputs(InputSignal<?>... inputSignals) {
@@ -76,8 +74,7 @@ public class TalonSRXMotor implements ControllableMotor {
 		if (request instanceof AngleSRXRequest angleSRXRequest) {
 			motor.selectProfileSlot(angleSRXRequest.getPidSlot(), 0);
 			motor.set(angleSRXRequest.getControlMode(), Conversions.angleToMagTicks(angleSRXRequest.getSetPoint(), gearRatio));
-		}
-		else if (request instanceof DoubleSRXRequest doubleSRXRequest) {
+		} else if (request instanceof DoubleSRXRequest doubleSRXRequest) {
 			motor.set(doubleSRXRequest.getControlMode(), doubleSRXRequest.getSetPoint());
 		}
 	}

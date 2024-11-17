@@ -40,7 +40,7 @@ public class RealIntakeConstants {
 
 		BooleanSupplier isPressed = () -> sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		sparkMaxWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
-		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
+		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isPressed, new Debouncer(DEBOUNCE_TIME_SECONDS, DEBOUNCE_TYPE));
 
 		return new IntakeStuff(logPath, motor, voltageSignal, beamBreaker);
 	}

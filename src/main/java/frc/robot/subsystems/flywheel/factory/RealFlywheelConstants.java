@@ -11,7 +11,6 @@ import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
-import frc.robot.hardware.phoenix6.motor.TalonFXWrapper;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
@@ -20,13 +19,10 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.flywheel.FlyWheelConstants;
 import frc.robot.subsystems.flywheel.FlywheelStuff;
 import frc.utils.AngleUnit;
-import frc.utils.alerts.Alert;
 
 import static edu.wpi.first.units.Units.*;
 
 public class RealFlywheelConstants {
-
-	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -69,8 +65,11 @@ public class RealFlywheelConstants {
 
 		TalonFXMotor rightFlywheel = new TalonFXMotor(rightLogPath, IDs.TalonFXIDs.RIGHT_FLYWHEEL, generateMotorConfig(), generateSysidConfig());
 
-		Phoenix6AngleSignal rightVelocitySignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(rightFlywheel.getMotor().getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6AngleSignal rightVelocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(
+			rightFlywheel.getMotor().getVelocity(),
+			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS
+		);
 		Phoenix6DoubleSignal rightCurrentSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(rightFlywheel.getMotor().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal rightVoltageSignal = Phoenix6SignalBuilder

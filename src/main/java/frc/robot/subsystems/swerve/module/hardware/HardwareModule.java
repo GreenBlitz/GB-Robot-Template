@@ -18,7 +18,6 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Arrays;
 
 public class HardwareModule extends Module {
 

@@ -6,18 +6,18 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Utils;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
-import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
-import frc.robot.subsystems.swerve.module.stuffs.EncoderStuff;
+import frc.robot.subsystems.swerve.module.records.EncoderSignals;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
-class EncoderRealConstants {
+class RealEncoderConstants {
 
-	private static final int APPLY_CONFIG_RETRIES = 10;
+	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private static CANcoderConfiguration generateEncoderConfig() {
 		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
@@ -28,7 +28,7 @@ class EncoderRealConstants {
 		return encoderConfig;
 	}
 
-	protected static EncoderStuff generateEncoderStuff(String logPath, Phoenix6DeviceID encoderDeviceID) {
+	protected static IAngleEncoder generateEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
 		CANcoder cancoder = new CANcoder(encoderDeviceID.ID(), encoderDeviceID.busChain().getChainName());
 		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
 		cancoder.getConfigurator().refresh(magnetSensorConfigs);
@@ -38,10 +38,14 @@ class EncoderRealConstants {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 
-		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(cancoder.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		return new CANCoderEncoder(logPath, cancoder);
+	}
 
-		return new EncoderStuff(new CANCoderEncoder(logPath, cancoder), positionSignal);
+	protected static EncoderSignals generateSignals(CANCoderEncoder encoder) {
+		return new EncoderSignals(
+			Phoenix6SignalBuilder
+				.generatePhoenix6Signal(encoder.getEncoder().getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
+		);
 	}
 
 }

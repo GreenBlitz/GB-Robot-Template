@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.structures.Superstructure;
@@ -44,6 +45,7 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	public Robot() {
+<<<<<<< HEAD
 		GyroSimulation gyroSimulation = null;
 		if (ROBOT_TYPE.isSimulation()) {
 			gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
@@ -58,6 +60,14 @@ public class Robot {
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE, swerveDriveSimulation),
 			GyroFactory.create(SwerveType.SWERVE, gyroSimulation)
+=======
+		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			gyro,
+			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
+>>>>>>> core-swerve
 		);
 
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());

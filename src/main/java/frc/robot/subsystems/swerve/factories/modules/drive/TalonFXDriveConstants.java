@@ -6,25 +6,30 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.mechanisms.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
-import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
-import frc.robot.subsystems.swerve.module.stuffs.DriveStuff;
+import frc.robot.subsystems.swerve.module.records.DriveRequests;
+import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.utils.AngleUnit;
 
 import static edu.wpi.first.units.Units.*;
 
-class DriveRealConstants {
+class TalonFXDriveConstants {
 
 	private static final double SLIP_CURRENT = 60;
+	private static final double GEAR_RATIO = 6.12;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -35,13 +40,24 @@ class DriveRealConstants {
 		);
 	}
 
+	private static SimpleMotorSimulation generateMechanismSimulation() {
+		double momentOfInertiaMetersSquared = 0.001;
+		return new SimpleMotorSimulation(
+			new DCMotorSim(
+				LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(1), momentOfInertiaMetersSquared, GEAR_RATIO),
+				DCMotor.getFalcon500Foc(1)
+			),
+			GEAR_RATIO
+		);
+	}
+
 	private static TalonFXConfiguration generateMotorConfig(boolean inverted) {
 		TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
 		driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
 		driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-		driveConfig.Feedback.SensorToMechanismRatio = 6.12;
+		driveConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
 		driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
 		driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;
@@ -58,12 +74,18 @@ class DriveRealConstants {
 		return driveConfig;
 	}
 
-	protected static DriveStuff generateDriveStuff(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
-		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder.build(new VelocityVoltage(0).withEnableFOC(true));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
+	protected static ControllableMotor generateDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
+		return new TalonFXMotor(logPath, deviceID, generateMotorConfig(inverted), generateSysidConfig(), generateMechanismSimulation());
+	}
 
-		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, generateMotorConfig(inverted), generateSysidConfig());
+	protected static DriveRequests generateRequests() {
+		return new DriveRequests(
+			Phoenix6RequestBuilder.build(new VelocityVoltage(0).withEnableFOC(true)),
+			Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true))
+		);
+	}
 
+	protected static DriveSignals generateSignals(TalonFXMotor drive) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(drive.getMotor().getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
@@ -77,7 +99,7 @@ class DriveRealConstants {
 			AngleUnit.ROTATIONS
 		);
 
-		return new DriveStuff(logPath, drive, velocityRequest, voltageRequest, positionSignal, velocitySignal, currentSignal, voltageSignal);
+		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 
 }

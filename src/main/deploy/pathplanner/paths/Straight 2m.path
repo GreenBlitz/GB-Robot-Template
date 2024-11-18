@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.75,
+        "x": 3.0,
         "y": 7.0
       },
       "isLocked": false,
@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.0,
+        "x": 4.0,
         "y": 7.0
       },
       "prevControl": {
-        "x": 2.25,
+        "x": 3.0,
         "y": 7.0
       },
       "nextControl": null,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "test",

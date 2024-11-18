@@ -1,11 +1,7 @@
 package frc.robot.subsystems.swerve.factories.modules.constants;
 
 import frc.robot.subsystems.swerve.SwerveType;
-<<<<<<< HEAD
-import frc.robot.subsystems.swerve.factories.swerveconstants.RealSwerveConstants;
-=======
 import frc.robot.subsystems.swerve.factories.swerveconstants.SimulationSwerveConstants;
->>>>>>> core-swerve
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 
@@ -20,11 +16,7 @@ public class SimulationModuleConstants {
 			swerveType.getLogPath(),
 			WHEEL_DIAMETER_METERS,
 			COUPLING_RATIO,
-<<<<<<< HEAD
-			RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND
-=======
 			SimulationSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND
->>>>>>> core-swerve
 		);
 	}
 

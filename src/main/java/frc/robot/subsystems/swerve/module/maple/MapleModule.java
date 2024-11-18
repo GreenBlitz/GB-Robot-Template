@@ -44,6 +44,10 @@ public class MapleModule extends Module {
 		this.driveFeedForwardRadiansPerSecond = mapleModuleConstants.driveFeedForwardRadiansPerSecond();
 	}
 
+	public SwerveModuleSimulation getModuleSimulation() {
+		return moduleSimulation;
+	}
+
 	@Override
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
 		return new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), false);

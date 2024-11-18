@@ -6,9 +6,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.subsystems.swerve.module.maple.MapleModuleConstants;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 
-import java.util.function.Supplier;
 
-public class SimulationModuleGenerator {
+public class MapleModuleGenerator {
 
 	private static final DCMotor DRIVE_MOTOR = DCMotor.getFalcon500(1);
 	private static final DCMotor STEER_MOTOR = DCMotor.getFalcon500(1);
@@ -16,8 +15,8 @@ public class SimulationModuleGenerator {
 	private static final SwerveModuleSimulation.DRIVE_WHEEL_TYPE DRIVE_WHEEL_TYPE = SwerveModuleSimulation.DRIVE_WHEEL_TYPE.RUBBER;
 	private static final int GEAR_RATIO_LEVEL = 3; // L3 gear ratio
 
-	public static Supplier<SwerveModuleSimulation> generate() {
-		return SwerveModuleSimulation.getMark4i(DRIVE_MOTOR, STEER_MOTOR, DRIVE_CURRENT_LIMIT_AMPS, DRIVE_WHEEL_TYPE, GEAR_RATIO_LEVEL);
+	public static SwerveModuleSimulation generate() {
+		return SwerveModuleSimulation.getMark4i(DRIVE_MOTOR, STEER_MOTOR, DRIVE_CURRENT_LIMIT_AMPS, DRIVE_WHEEL_TYPE, GEAR_RATIO_LEVEL).get();
 	}
 
 	private static final PIDConstants STEER_PID_RADIANS = new PIDConstants(7);

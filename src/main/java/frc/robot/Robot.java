@@ -6,28 +6,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.hardware.gyro.maple.MapleGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
-import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
-import frc.robot.subsystems.swerve.factories.SimulationSwerveGenerator;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
-import frc.robot.subsystems.swerve.factories.gyro.SimulationGyroConstants;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.robot.subsystems.swerve.factories.modules.SimulationModuleGenerator;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.drivesims.GyroSimulation;
-import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 
 /**
@@ -37,35 +26,26 @@ import java.util.function.Supplier;
  */
 public class Robot {
 
-	private static final boolean IS_MAPLE = true;
-
-
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private static final boolean IS_MAPLE = true;
+
 	private final Swerve swerve;
-	private final SwerveDriveSimulation swerveDriveSimulation;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
 	public Robot() {
+//		if (ROBOT_TYPE.isSimulation() && IS_MAPLE) { //todo: move into swerve
+//			GyroSimulation gyroSimulation = ((MapleGyro) gyro).getGyroSimulation();
+//			swerveDriveSimulation = SimulationSwerveGenerator.generate(simulationModule, gyroSimulation, PoseEstimatorConstants.DEFAULT_POSE);
+//			SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
+//		} else {
+//			swerveDriveSimulation = null;
+//		}
 		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE, IS_MAPLE);
-
-		if (ROBOT_TYPE.isSimulation() && IS_MAPLE) { //todo: move into swerve
-			GyroSimulation gyroSimulation = ((MapleGyro) gyro).getGyroSimulation();
-			Supplier<SwerveModuleSimulation> simulationModule = SimulationModuleGenerator.generate();
-			swerveDriveSimulation = SimulationSwerveGenerator.generate(simulationModule, gyroSimulation, PoseEstimatorConstants.DEFAULT_POSE);
-			SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
-		} else {
-			swerveDriveSimulation = null;
-		}
-
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
-<<<<<<< HEAD
-			ModulesFactory.create(SwerveType.SWERVE, swerveDriveSimulation),
-=======
-			ModulesFactory.create(SwerveType.SWERVE),
->>>>>> core-swerve
+			ModulesFactory.create(SwerveType.SWERVE, IS_MAPLE),
 			gyro,
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
 		);
@@ -108,9 +88,9 @@ public class Robot {
 	}
 
 	public void logSimulationRobot() {
-		if (swerveDriveSimulation != null) {
-			Logger.recordOutput("FieldSimulation/RobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose());
-		}
+//		if (swerveDriveSimulation != null) {
+//			Logger.recordOutput("FieldSimulation/RobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose());
+//		}
 	}
 
 }

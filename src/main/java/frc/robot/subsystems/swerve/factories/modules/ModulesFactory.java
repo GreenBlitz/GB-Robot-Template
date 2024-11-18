@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules;
 
+import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.modules.constants.ModuleConstantsFactory;
@@ -14,14 +15,20 @@ import frc.robot.subsystems.swerve.module.Modules;
 public class ModulesFactory {
 
 	private static Module createModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
-		IAngleEncoder angleEncoder = EncoderFactory.create(swerveType, modulePosition);
+		IAngleEncoder angleEncoder = EncoderFactory.createEncoder(swerveType, modulePosition);
+		ControllableMotor steer = SteerFactory.createSteer(swerveType, modulePosition);
+		ControllableMotor drive = DriveFactory.createDrive(swerveType, modulePosition);
 
 		return new Module(
 			ModuleConstantsFactory.create(swerveType, modulePosition),
 			angleEncoder,
 			EncoderFactory.createSignals(swerveType, angleEncoder),
-			SteerFactory.create(swerveType, modulePosition),
-			DriveFactory.create(swerveType, modulePosition)
+			steer,
+			SteerFactory.createRequests(swerveType),
+			SteerFactory.createSignals(swerveType, steer),
+			drive,
+			DriveFactory.createRequests(swerveType),
+			DriveFactory.createSignals(swerveType, drive)
 		);
 	}
 

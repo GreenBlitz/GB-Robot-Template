@@ -23,7 +23,7 @@ public class EncoderFactory {
 		};
 	}
 
-	public static IAngleEncoder create(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
+	public static IAngleEncoder createEncoder(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
 		String logPath = swerveType.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Encoder/";
 		return switch (swerveType) {
 			case SWERVE -> createSwerveEncoder(logPath, modulePosition);

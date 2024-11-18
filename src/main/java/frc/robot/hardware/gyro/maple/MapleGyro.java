@@ -16,6 +16,10 @@ public class MapleGyro implements IGyro {
 		this.gyroSimulation = gyroSimulation;
 	}
 
+	public GyroSimulation getGyroSimulation() {
+		return gyroSimulation;
+	}
+
 	@Override
 	public void setYaw(Rotation2d yaw) {
 		gyroSimulation.setRotation(yaw);

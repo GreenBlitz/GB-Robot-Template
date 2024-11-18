@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.hardware.gyro.maple.MapleGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.poseestimation.PoseEstimatorConstants;
@@ -36,38 +37,37 @@ import java.util.function.Supplier;
  */
 public class Robot {
 
-	private final SwerveDriveSimulation swerveDriveSimulation;
+	private static final boolean IS_MAPLE = true;
+
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
+	private final SwerveDriveSimulation swerveDriveSimulation;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
 	public Robot() {
-<<<<<<< HEAD
-		GyroSimulation gyroSimulation = null;
-		if (ROBOT_TYPE.isSimulation()) {
-			gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
+		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE, IS_MAPLE);
+
+		if (ROBOT_TYPE.isSimulation() && IS_MAPLE) { //todo: move into swerve
+			GyroSimulation gyroSimulation = ((MapleGyro) gyro).getGyroSimulation();
 			Supplier<SwerveModuleSimulation> simulationModule = SimulationModuleGenerator.generate();
-			this.swerveDriveSimulation = SimulationSwerveGenerator
-				.generate(simulationModule, gyroSimulation, PoseEstimatorConstants.DEFAULT_POSE);
+			swerveDriveSimulation = SimulationSwerveGenerator.generate(simulationModule, gyroSimulation, PoseEstimatorConstants.DEFAULT_POSE);
 			SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 		} else {
 			swerveDriveSimulation = null;
 		}
+
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
+<<<<<<< HEAD
 			ModulesFactory.create(SwerveType.SWERVE, swerveDriveSimulation),
-			GyroFactory.create(SwerveType.SWERVE, gyroSimulation)
 =======
-		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
-		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(SwerveType.SWERVE),
 			ModulesFactory.create(SwerveType.SWERVE),
+>>>>>> core-swerve
 			gyro,
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
->>>>>>> core-swerve
 		);
 
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());

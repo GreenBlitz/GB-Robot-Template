@@ -12,6 +12,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.structures.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
@@ -31,7 +32,7 @@ public class Swerve extends GBSubsystem {
 	private final SwerveConstants constants;
 	private final Modules modules;
 	private final IGyro gyro;
-	private final GyroStuff gyroStuff;
+	private final GyroSignals gyroSignals;
 
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
@@ -41,14 +42,14 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 
 
-	public Swerve(SwerveConstants constants, Modules modules, GyroStuff gyroStuff) {
+	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
 		this.modules = modules;
-		this.gyro = gyroStuff.gyro();
-		this.gyroStuff = gyroStuff;
+		this.gyro = gyro;
+		this.gyroSignals = gyroSignals;
 
 		this.headingSupplier = this::getGyroAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
@@ -98,7 +99,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateInputs(gyroStuff.yawSignal());
+		gyro.updateInputs(gyroSignals.yawSignal());
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -118,7 +119,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		gyro.updateInputs(gyroStuff.yawSignal());
+		gyro.updateInputs(gyroSignals.yawSignal());
 		modules.updateInputs();
 	}
 
@@ -145,7 +146,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(gyroStuff.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryObservation[] getAllOdometryObservations() {
@@ -155,8 +156,8 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelsPositions(i),
-				gyroStuff.yawSignal().asArray()[i],
-				gyroStuff.yawSignal().getTimestamps()[i]
+				gyroSignals.yawSignal().asArray()[i],
+				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}
 
@@ -164,7 +165,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public Rotation2d getGyroAbsoluteYaw() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(gyroStuff.yawSignal().getLatestValue().getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroSignals.yawSignal().getLatestValue().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 

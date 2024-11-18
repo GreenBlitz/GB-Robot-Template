@@ -26,8 +26,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 class SteerRealConstants {
 
-	private static final int APPLY_CONFIG_RETRIES = 5;
-
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
 			Volts.of(0.5).per(Second),

@@ -6,6 +6,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
+import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IAngleEncoder;
+import frc.robot.subsystems.swerve.module.records.DriveRequests;
+import frc.robot.subsystems.swerve.module.records.DriveSignals;
+import frc.robot.subsystems.swerve.module.records.EncoderSignals;
+import frc.robot.subsystems.swerve.module.records.SteerRequests;
+import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
@@ -46,6 +53,7 @@ public abstract class Module {
 		driveInputs.velocityMetersPerSecond = toDriveMeters(getDriveVelocitySeconds());
 		driveInputs.positionsMeters = Arrays.stream(getDrivePositions()).mapToDouble(this::toDriveMeters).toArray();
 		Logger.processInputs(constants.logPath() + "/drive", driveInputs);
+
 
 		moduleInputs.isClosedLoop = isClosedLoop;
 		moduleInputs.targetState = targetState;
@@ -127,7 +135,7 @@ public abstract class Module {
 	}
 
 	public double getDriveVelocityMetersPerSecond() {
-		return toDriveMeters(getDriveVelocitySeconds());
+		return driveInputs.velocityMetersPerSecond;
 	}
 
 

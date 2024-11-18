@@ -24,8 +24,6 @@ import static edu.wpi.first.units.Units.*;
 
 class DriveRealConstants {
 
-	private static final int APPLY_CONFIG_RETRIES = 5;
-
 	private static final double SLIP_CURRENT = 60;
 
 	private static SysIdRoutine.Config generateSysidConfig() {

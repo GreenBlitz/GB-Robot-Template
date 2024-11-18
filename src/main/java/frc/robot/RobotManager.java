@@ -93,8 +93,8 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void simulationPeriodic() {
+		// todo
 		SimulatedArena.getInstance().simulationPeriodic();
-		robot.logSimulationRobot();
 		List<Pose3d> notes = SimulatedArena.getInstance().getGamePiecesByType("Note");
 		if (notes != null) {
 			Logger.recordOutput("FieldSimulation/Notes", notes.toArray(Pose3d[]::new));

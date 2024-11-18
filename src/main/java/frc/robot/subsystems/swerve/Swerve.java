@@ -12,15 +12,23 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.empties.EmptyGyro;
+import frc.robot.hardware.gyro.maple.MapleGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.structures.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
+import frc.robot.subsystems.swerve.module.maple.MapleModule;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.utils.alerts.Alert;
 import frc.utils.auto.PathPlannerUtils;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.GyroSimulation;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -40,6 +48,7 @@ public class Swerve extends GBSubsystem {
 	private SwerveState currentState;
 	private SwerveStateHelper stateHelper;
 	private Supplier<Rotation2d> headingSupplier;
+	private Optional<SwerveDriveSimulation> swervePhysicsSimulation;
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
@@ -55,6 +64,7 @@ public class Swerve extends GBSubsystem {
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+		this.swervePhysicsSimulation = Optional.empty();
 
 		updateInputs();
 	}
@@ -93,6 +103,33 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = swerveStateHelper;
 	}
 
+	public void applyPhysicsSimulation(double robotMassWithBumpersKg, double bumperWidthMeters, double bumperLengthMeters, Pose2d startingPose) {
+		if (gyro instanceof MapleGyro && modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT) instanceof MapleModule) {
+			GyroSimulation gyroSimulation = ((MapleGyro) gyro).getGyroSimulation();
+			SwerveModuleSimulation[] moduleSimulations = {
+				((MapleModule) modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT)).getModuleSimulation(),
+				((MapleModule) modules.getModule(ModuleUtils.ModulePosition.FRONT_RIGHT)).getModuleSimulation(),
+				((MapleModule) modules.getModule(ModuleUtils.ModulePosition.BACK_LEFT)).getModuleSimulation(),
+				((MapleModule) modules.getModule(ModuleUtils.ModulePosition.BACK_RIGHT)).getModuleSimulation()};
+
+			swervePhysicsSimulation = Optional.of(
+				new SwerveDriveSimulation(
+					robotMassWithBumpersKg,
+					bumperWidthMeters,
+					bumperLengthMeters,
+					moduleSimulations,
+					constants.modulesLocations(),
+					gyroSimulation,
+					startingPose
+				)
+			);
+			SimulatedArena.getInstance().addDriveTrainSimulation(swervePhysicsSimulation.get());
+		} else {
+			new Alert(Alert.AlertType.ERROR, constants.logPath() + "Tried to use MAPLE-SIM without MapleGyro and/or MapleModules!!!").report();
+			throw new RuntimeException("Tried to use MAPLE-SIM without MapleGyro and/or MapleModules!!!");
+		}
+	}
+
 	public void setHeadingSupplier(Supplier<Rotation2d> headingSupplier) {
 		this.headingSupplier = headingSupplier;
 	}
@@ -116,6 +153,7 @@ public class Swerve extends GBSubsystem {
 		logState();
 		logFieldRelativeVelocities();
 		logNumberOfOdometrySamples();
+		logPhysicsSimulationPose();
 	}
 
 	private void updateInputs() {
@@ -142,6 +180,13 @@ public class Swerve extends GBSubsystem {
 
 	private void logNumberOfOdometrySamples() {
 		Logger.recordOutput(getLogPath() + "OdometrySamples", getNumberOfOdometrySamples());
+	}
+
+	private void logPhysicsSimulationPose() {
+		swervePhysicsSimulation.ifPresent(
+			swerveDriveSimulation -> Logger
+				.recordOutput(constants.logPath() + "SimulationRobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose())
+		);
 	}
 
 

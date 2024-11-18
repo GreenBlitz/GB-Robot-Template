@@ -6,8 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.constants.RobotConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -35,13 +37,6 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	public Robot() {
-//		if (ROBOT_TYPE.isSimulation() && IS_MAPLE) { //todo: move into swerve
-//			GyroSimulation gyroSimulation = ((MapleGyro) gyro).getGyroSimulation();
-//			swerveDriveSimulation = SimulationSwerveGenerator.generate(simulationModule, gyroSimulation, PoseEstimatorConstants.DEFAULT_POSE);
-//			SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
-//		} else {
-//			swerveDriveSimulation = null;
-//		}
 		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE, IS_MAPLE);
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
@@ -52,6 +47,12 @@ public class Robot {
 
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
 
+		swerve.applyPhysicsSimulation(
+			RobotConstants.ROBOT_MASS_WIDTH_BUMPERS_KG,
+			RobotConstants.BUMPER_WIDTH_METERS,
+			RobotConstants.BUMPER_LENGTH_METERS,
+			PoseEstimatorConstants.DEFAULT_POSE
+		);
 		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
 
@@ -85,12 +86,6 @@ public class Robot {
 
 	public PoseEstimator getPoseEstimator() {
 		return poseEstimator;
-	}
-
-	public void logSimulationRobot() {
-//		if (swerveDriveSimulation != null) {
-//			Logger.recordOutput("FieldSimulation/RobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose());
-//		}
 	}
 
 }

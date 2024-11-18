@@ -9,7 +9,7 @@ public class SwerveConstantsFactory {
 	private static SwerveConstants createSwerveConstants() {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealSwerveConstants.getSwerveConstants(SwerveType.SWERVE);
-			case SIMULATION -> null;// TODO
+			case SIMULATION -> SimulationSwerveConstants.getSwerveConstants(SwerveType.SWERVE);
 		};
 	}
 

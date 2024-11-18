@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
+import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.structures.Tolerances;
@@ -155,7 +156,7 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelsPositions(i),
-				gyroSignals.yawSignal().asArray()[i],
+				gyro instanceof EmptyGyro ? null : gyroSignals.yawSignal().asArray()[i],
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}

@@ -36,6 +36,7 @@ public abstract class Module {
 		return Conversions.distanceToAngle(distance, constants.wheelDiameterMeters());
 	}
 
+
 	public void setClosedLoop(boolean closedLoop) {
 		isClosedLoop = closedLoop;
 	}

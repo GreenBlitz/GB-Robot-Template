@@ -109,7 +109,7 @@ public class HardwareModule extends Module {
 
 		fixDriveInputsCoupling();
 
-		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
+		Logger.processInputs(constants.logPath() + "Drive", driveCouplingInputs);
 	}
 
 	@Override

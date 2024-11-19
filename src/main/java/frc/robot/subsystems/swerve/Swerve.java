@@ -15,7 +15,6 @@ import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.gyro.maple.MapleGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.structures.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -322,12 +321,12 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public boolean isAtHeading(Rotation2d targetHeading) {
+	public boolean isAtHeading(Rotation2d targetHeading, Rotation2d tolerance, Rotation2d velocityDeadbandAnglesPerSecond) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
-		boolean isAtHeading = headingDeltaDegrees < Tolerances.SWERVE_HEADING.getDegrees();
+		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < Tolerances.ROTATION_VELOCITY_DEADBAND.getRadians();
+		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAnglesPerSecond.getRadians();
 
 		return isAtHeading && isStopping;
 	}

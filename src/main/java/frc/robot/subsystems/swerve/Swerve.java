@@ -19,6 +19,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
+import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
@@ -277,12 +278,12 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public boolean isAtHeading(Rotation2d targetHeading) {
+	public boolean isAtHeading(Rotation2d targetHeading, Rotation2d tolerance, Rotation2d velocityDeadbandAnglesPerSecond) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
-		boolean isAtHeading = headingDeltaDegrees < Tolerances.SWERVE_HEADING.getDegrees();
+		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < Tolerances.ROTATION_VELOCITY_DEADBAND.getRadians();
+		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAnglesPerSecond.getRadians();
 
 		return isAtHeading && isStopping;
 	}

@@ -115,20 +115,14 @@ public class JoysticksBindings {
 		usedJoystick.BACK.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getCurrentPose,
-					() -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)),
-					robot.getSuperStructure()::isAtPose
-				)
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))))
 		);
 		usedJoystick.START.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getCurrentPose,
-					() -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)),
-					robot.getSuperStructure()::isAtPose
-				)
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(6, 6, Rotation2d.fromDegrees(90))))
 		);
 	}
 
@@ -146,58 +140,38 @@ public class JoysticksBindings {
 		usedJoystick.A.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getCurrentPose,
-					() -> new Pose2d(1, 8, Rotation2d.fromDegrees(90)),
-					robot.getSuperStructure()::isAtPose
-
-				)
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(1, 8, Rotation2d.fromDegrees(90)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(1, 8, Rotation2d.fromDegrees(90))))
 		);
 		usedJoystick.X.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getCurrentPose,
-					() -> new Pose2d(6, 6, Rotation2d.fromDegrees(117)),
-					robot.getSuperStructure()::isAtPose
-				)
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(6, 6, Rotation2d.fromDegrees(117)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(6, 6, Rotation2d.fromDegrees(117))))
 		);
 		usedJoystick.Y.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getCurrentPose,
-					() -> new Pose2d(7, 2, Rotation2d.fromDegrees(180)),
-					robot.getSuperStructure()::isAtPose
-				)
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(7, 2, Rotation2d.fromDegrees(180)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(7, 2, Rotation2d.fromDegrees(180))))
 		);
 		usedJoystick.B.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getCurrentPose,
-					() -> new Pose2d(16, 6, Rotation2d.fromDegrees(-75)),
-					robot.getSuperStructure()::isAtPose
-				)
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(16, 6, Rotation2d.fromDegrees(-75)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(16, 6, Rotation2d.fromDegrees(-75))))
 		);
 		usedJoystick.START.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getCurrentPose,
-					() -> new Pose2d(12, 8, Rotation2d.fromDegrees(14)),
-					robot.getSuperStructure()::isAtPose
-				)
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(12, 8, Rotation2d.fromDegrees(14)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(12, 8, Rotation2d.fromDegrees(14))))
 		);
 		usedJoystick.BACK.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getCurrentPose,
-					() -> new Pose2d(10, 4, Rotation2d.fromDegrees(140)),
-					robot.getSuperStructure()::isAtPose
-
-				)
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(10, 4, Rotation2d.fromDegrees(140)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(10, 4, Rotation2d.fromDegrees(140))))
 		);
 	}
 

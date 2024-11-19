@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
@@ -16,7 +15,6 @@ import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
 import java.util.function.DoubleSupplier;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class SwerveCommandsBuilder {
@@ -58,11 +56,9 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command turnToHeading(Rotation2d targetHeading, RotateAxis rotateAxis) {
-		return new FunctionalCommand(
+		return new InitExecuteCommand(
 			swerve::resetPIDControllers,
 			() -> swerve.turnToHeading(targetHeading, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
-			interrupted -> {},
-			() -> swerve.isAtHeading(targetHeading),
 			swerve
 		).withName("Rotate around " + rotateAxis.name() + " to " + targetHeading);
 	}
@@ -86,12 +82,9 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, Function<Pose2d, Boolean> isAtPose) {
+	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return new DeferredCommand(
-			() -> new SequentialCommandGroup(
-				pathToPose(currentPose.get(), targetPose.get()),
-				pidToPose(currentPose, targetPose.get(), isAtPose)
-			),
+			() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), pidToPose(currentPose, targetPose.get())),
 			Set.of(swerve)
 		).withName("Drive to pose");
 	}
@@ -109,14 +102,9 @@ public class SwerveCommandsBuilder {
 			.withName("Path to pose: " + targetPose);
 	}
 
-	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose, Function<Pose2d, Boolean> isAtPose) {
-		return new FunctionalCommand(
-			swerve::resetPIDControllers,
-			() -> swerve.pidToPose(currentPose.get(), targetPose),
-			interrupted -> {},
-			() -> isAtPose.apply(targetPose),
-			swerve
-		).withName("PID to pose: " + targetPose);
+	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
+		return new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.pidToPose(currentPose.get(), targetPose), swerve)
+			.withName("PID to pose: " + targetPose);
 	}
 
 }

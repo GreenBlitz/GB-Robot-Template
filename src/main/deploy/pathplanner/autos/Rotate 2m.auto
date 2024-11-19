@@ -3,7 +3,14 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate 2m"
+          }
+        }
+      ]
     }
   },
   "resetOdom": true,

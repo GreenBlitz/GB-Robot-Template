@@ -14,29 +14,24 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.constants.RobotConstants;
+import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.poseestimation.PoseEstimatorConstants;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.intake.MapleIntake;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
-import frc.robot.subsystems.swerve.factories.SimulationSwerveGenerator;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
-import frc.robot.subsystems.swerve.factories.gyro.SimulationGyroConstants;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.robot.subsystems.swerve.factories.modules.SimulationModuleGenerator;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.drivesims.GyroSimulation;
-import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.seasonspecific.crescendo2024.NoteOnFly;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 
 /**
@@ -46,9 +41,9 @@ import java.util.function.Supplier;
  */
 public class Robot {
 
-	private final SwerveDriveSimulation swerveDriveSimulation;
-
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+
+	private static final boolean IS_MAPLE = true;
 
 	private final Swerve swerve;
 	private final MapleIntake mapleIntake;
@@ -56,36 +51,34 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	public Robot() {
-		GyroSimulation gyroSimulation = null;
-		if (ROBOT_TYPE.isSimulation()) {
-			gyroSimulation = SimulationGyroConstants.generateGyroSimulation();
-			Supplier<SwerveModuleSimulation> simulationModule = SimulationModuleGenerator.generate();
-			this.swerveDriveSimulation = SimulationSwerveGenerator
-				.generate(simulationModule, gyroSimulation, PoseEstimatorConstants.DEFAULT_POSE);
-			SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
-		} else {
-			swerveDriveSimulation = null;
-		}
+		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE, IS_MAPLE);
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE, IS_MAPLE),
+			gyro,
+			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
+		);
+
+		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+
+		swerve.applyPhysicsSimulation(
+			RobotConstants.ROBOT_MASS_WIDTH_BUMPERS_KG,
+			RobotConstants.BUMPER_WIDTH_METERS,
+			RobotConstants.BUMPER_LENGTH_METERS,
+			PoseEstimatorConstants.DEFAULT_POSE
+		);
+		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+
 		IntakeSimulation intakeSimulation = new IntakeSimulation(
 			"Note", // the intake grabs game pieces of this type
-			swerveDriveSimulation, // specify the drivetrain to which the intake is attached to
+			swerve.getSwervePhysicsSimulation().get(), // specify the drivetrain to which the intake is attached to
 			0.6, // the width of the intake
 			IntakeSimulation.IntakeSide.BACK, // the intake is attached the back of the drivetrain
 			1 // the intake can only hold 1 game piece at a time
 		);
 		intakeSimulation.register();
 		mapleIntake = new MapleIntake("Subsystems/Intake", intakeSimulation);
-
-		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(SwerveType.SWERVE),
-			ModulesFactory.create(SwerveType.SWERVE, swerveDriveSimulation),
-			GyroFactory.create(SwerveType.SWERVE, gyroSimulation)
-		);
-
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
-
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -119,12 +112,11 @@ public class Robot {
 		return poseEstimator;
 	}
 
-	public void logSimulationRobot() {
-		if (swerveDriveSimulation != null) {
-			Logger.recordOutput("FieldSimulation/RobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose());
-		}
+	public void logSimulationIntake() {
 		mapleIntake.visualizeNoteInIntake(
-			swerveDriveSimulation == null ? poseEstimator.getCurrentPose() : swerveDriveSimulation.getSimulatedDriveTrainPose()
+			swerve.getSwervePhysicsSimulation().get() == null
+				? poseEstimator.getCurrentPose()
+				: swerve.getSwervePhysicsSimulation().get().getSimulatedDriveTrainPose()
 		);
 	}
 
@@ -139,8 +131,8 @@ public class Robot {
 		return new ConditionalCommand(
 			new InstantCommand(
 				() -> shootNoteWithCurrentRPM(
-					swerveDriveSimulation.getSimulatedDriveTrainPose(),
-					swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+					swerve.getSwervePhysicsSimulation().get().getSimulatedDriveTrainPose(),
+					swerve.getSwervePhysicsSimulation().get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
 					Rotation2d.fromRotations(60 * 60)
 				)
 			),

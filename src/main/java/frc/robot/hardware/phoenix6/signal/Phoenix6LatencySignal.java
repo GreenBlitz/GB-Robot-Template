@@ -20,7 +20,7 @@ public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6Signal
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValue(signal, slopeSignal), TimeUtils.getCurrentTimeSeconds());
+		return new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal), TimeUtils.getCurrentTimeSeconds());
 	}
 
 	@Override

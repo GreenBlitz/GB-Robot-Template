@@ -2,27 +2,28 @@ package frc.robot.hardware.mechanisms;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import frc.utils.Conversions;
 import frc.utils.time.TimeUtils;
 
 public class ElevatorSimulation extends MechanismSimulation {
 
 	private final ElevatorSim elevatorSim;
-	private final double metersToRotationsConversionFactor;
+	private final double wheelDiameter;
 
-	public ElevatorSimulation(ElevatorSim elevatorSim, double gearRatio, double metersToRotationsConversionFactor) {
+	public ElevatorSimulation(ElevatorSim elevatorSim, double gearRatio, double wheelDiameter) {
 		super(gearRatio);
 		this.elevatorSim = elevatorSim;
-		this.metersToRotationsConversionFactor = metersToRotationsConversionFactor;
+		this.wheelDiameter = wheelDiameter;
 	}
 
 	@Override
 	public Rotation2d getSystemPosition() {
-		return metersToRotations(elevatorSim.getPositionMeters());
+		return Conversions.distanceToAngle(elevatorSim.getPositionMeters(), wheelDiameter);
 	}
 
 	@Override
 	public Rotation2d getSystemVelocityAnglesPerSecond() {
-		return metersToRotations(elevatorSim.getVelocityMetersPerSecond());
+		return Conversions.distanceToAngle(elevatorSim.getVelocityMetersPerSecond(), wheelDiameter);
 	}
 
 	@Override
@@ -33,14 +34,6 @@ public class ElevatorSimulation extends MechanismSimulation {
 	@Override
 	public void updateMotor() {
 		elevatorSim.update(TimeUtils.getCurrentCycleTimeSeconds());
-	}
-
-	public Rotation2d metersToRotations(double meters) {
-		return Rotation2d.fromRotations(meters * metersToRotationsConversionFactor);
-	}
-
-	public double rotationsToMeters(Rotation2d rotations) {
-		return rotations.getRotations() / metersToRotationsConversionFactor;
 	}
 
 }

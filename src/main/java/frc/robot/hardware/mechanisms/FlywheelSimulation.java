@@ -8,14 +8,17 @@ public class FlywheelSimulation extends MechanismSimulation {
 
 	private final FlywheelSim flywheelSim;
 
+	private Rotation2d position;
+
 	public FlywheelSimulation(FlywheelSim flywheelSim, double gearRatio) {
 		super(gearRatio);
 		this.flywheelSim = flywheelSim;
+		this.position = Rotation2d.fromDegrees(0);
 	}
 
 	@Override
 	public Rotation2d getSystemPosition() {
-		return getSystemVelocityAnglesPerSecond().times(TimeUtils.getCurrentCycleTimeSeconds());
+		return position;
 	}
 
 	@Override
@@ -31,6 +34,8 @@ public class FlywheelSimulation extends MechanismSimulation {
 	@Override
 	public void updateMotor() {
 		flywheelSim.update(TimeUtils.getCurrentCycleTimeSeconds());
+		Rotation2d distanceDelta = getSystemVelocityAnglesPerSecond().times(TimeUtils.getCurrentCycleTimeSeconds());
+		position = Rotation2d.fromRotations(position.getRotations() + distanceDelta.getRotations());
 	}
 
 }

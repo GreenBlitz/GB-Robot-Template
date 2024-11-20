@@ -28,6 +28,10 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RobotManager extends LoggedRobot {
 
+	private Tester jointTester;
+	private Tester flywheelTester;
+	private Tester elevatorTester;
+
 	private int roborioCycles;
 
 	private Command autonomousCommand;
@@ -41,25 +45,13 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 		roborioCycles = 0;
 
-		SingleJointedArmSim armSim = new SingleJointedArmSim(
-				DCMotor.getFalcon500(1),
-				(28.0 * (60.0 / 16.0)),
-				SingleJointedArmSim.estimateMOI(
-						0.44,
-						0.44
-				),
-				0.44,
-				Rotation2d.fromDegrees(-81).getRadians(),
-				Rotation2d.fromDegrees(90).getRadians(),
-				false,
-				Rotation2d.fromDegrees(0).getRadians()
-		);
-		SingleJointedArmSimulation simulation = new SingleJointedArmSimulation(
-				armSim,
-				(28.0 * (60.0 / 16.0))
-		);
-		simulation.setInputVoltage(BatteryUtils.DEFAULT_VOLTAGE);
-		simulation.s
+		jointTester = new Tester(Tester.TESTER_TYPE.JOINT);
+		flywheelTester = new Tester(Tester.TESTER_TYPE.FLYWHEEL);
+		elevatorTester = new Tester(Tester.TESTER_TYPE.ELEVATOR);
+
+		jointTester.setVoltage(BatteryUtils.getCurrentVoltage());
+		flywheelTester.setVoltage(BatteryUtils.getCurrentVoltage());
+		elevatorTester.setVoltage(BatteryUtils.getCurrentVoltage());
 
 		this.robot = new Robot();
 	}
@@ -103,6 +95,10 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+
+		jointTester.update();
+		flywheelTester.update();
+		elevatorTester.update();
 	}
 
 }

@@ -28,26 +28,6 @@ public class SingleJointedArmSimulation extends MechanismSimulation {
 		singleJointedArmSim.setInputVoltage(voltage);
 	}
 
-	public double getCurrentDrawAmps() {
-		return singleJointedArmSim.getCurrentDrawAmps();
-	}
-
-	public boolean hasHitLowerLimit() {
-		return singleJointedArmSim.hasHitLowerLimit();
-	}
-
-	public boolean hasHitUpperLimit() {
-		return singleJointedArmSim.hasHitUpperLimit();
-	}
-
-	public boolean wouldHitLowerLimit(Rotation2d position) {
-		return singleJointedArmSim.wouldHitLowerLimit(position.getRadians());
-	}
-
-	public boolean wouldHitUpperLimit(Rotation2d position) {
-		return singleJointedArmSim.wouldHitUpperLimit(position.getRadians());
-	}
-
 	@Override
 	public void updateMotor() {
 		singleJointedArmSim.update(TimeUtils.getCurrentCycleTimeSeconds());

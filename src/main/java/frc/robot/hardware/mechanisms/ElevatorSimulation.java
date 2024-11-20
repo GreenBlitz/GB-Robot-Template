@@ -30,22 +30,6 @@ public class ElevatorSimulation extends MechanismSimulation {
 		elevatorSim.setInputVoltage(voltage);
 	}
 
-	public boolean hasHitLowerLimit() {
-		return elevatorSim.hasHitLowerLimit();
-	}
-
-	public boolean hasHitUpperLimit() {
-		return elevatorSim.hasHitUpperLimit();
-	}
-
-	public boolean wouldHitLowerLimit(Rotation2d position) {
-		return elevatorSim.wouldHitLowerLimit(rotationsToMeters(position));
-	}
-
-	public boolean wouldHitUpperLimit(Rotation2d position) {
-		return elevatorSim.wouldHitUpperLimit(rotationsToMeters(position));
-	}
-
 	@Override
 	public void updateMotor() {
 		elevatorSim.update(TimeUtils.getCurrentCycleTimeSeconds());

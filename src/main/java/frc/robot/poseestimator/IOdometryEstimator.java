@@ -13,6 +13,6 @@ public interface IOdometryEstimator {
 
 	Pose2d getOdometryPose();
 
-	void resetHeadingOffset(Rotation2d newHeading);
+	void calculateHeadingOffsetFromRobotHeading(Rotation2d newHeading);
 
 }

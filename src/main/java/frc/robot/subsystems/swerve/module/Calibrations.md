@@ -24,6 +24,11 @@ Steer:
 - Control mode (motion magic, voltage, torque)
 - Enable/Disable FOC (only talonfx)
 
+SteerSimulation:
+-----------------------
+- Moment of inertia
+- DCMotor
+
 Drive:
 -----------------------
 - Motor ID
@@ -35,3 +40,8 @@ Drive:
 - PID
 - Control mode (motion magic, voltage, torque)
 - Enable/Disable FOC (only talonfx)
+
+DriveSimulation:
+-----------------------
+ - Moment of inertia
+ - DCMotor

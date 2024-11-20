@@ -8,23 +8,22 @@ import frc.utils.time.TimeUtils;
 public class ElevatorSimulation extends MechanismSimulation{
 
     private final ElevatorSim elevatorSim;
-    private final double gearRatio;
+    private final double elevatorMetersToRotationsConversionFactor;
 
-    public ElevatorSimulation(ElevatorSim elevatorSim, double gearRatio) {
+    public ElevatorSimulation(ElevatorSim elevatorSim, double gearRatio, double elevatorMetersToRotationsConversionFactor) {
         super(gearRatio);
         this.elevatorSim = elevatorSim;
-        this.gearRatio = gearRatio;
-        elevatorSim.
+        this.elevatorMetersToRotationsConversionFactor = elevatorMetersToRotationsConversionFactor;
     }
 
     @Override
     public Rotation2d getSystemPosition() {
-        return Conversions.distanceToAngle(elevatorSim.getPositionMeters(), gearRatio);
+        return metersToElevatorRotations(elevatorSim.getPositionMeters());
     }
 
     @Override
     public Rotation2d getSystemVelocityAnglesPerSecond() {
-        return Conversions.distanceToAngle(elevatorSim.getVelocityMetersPerSecond(), gearRatio);
+        return metersToElevatorRotations(elevatorSim.getVelocityMetersPerSecond());
     }
 
     @Override
@@ -41,11 +40,24 @@ public class ElevatorSimulation extends MechanismSimulation{
     }
 
     public boolean wouldHitLowerLimit(Rotation2d position){
-        return elevatorSim.wouldHitLowerLimit(Conversions.angleToDistance(position, gearRatio));
+        return elevatorSim.wouldHitLowerLimit(elevatorRotationsToMeters(position));
+    }
+
+    public boolean wouldHitUpperLimit(Rotation2d position){
+        return elevatorSim.wouldHitUpperLimit(elevatorRotationsToMeters(position));
     }
 
     @Override
     public void updateMotor() {
         elevatorSim.update(TimeUtils.getCurrentCycleTimeSeconds());
     }
+
+    public Rotation2d metersToElevatorRotations(double meters) {
+        return Rotation2d.fromRotations(meters * elevatorMetersToRotationsConversionFactor);
+    }
+
+    public double elevatorRotationsToMeters(Rotation2d rotations){
+        return rotations.getRotations() / elevatorMetersToRotationsConversionFactor;
+    }
+
 }

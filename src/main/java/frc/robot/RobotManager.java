@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.hardware.mechanisms.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
@@ -36,6 +40,26 @@ public class RobotManager extends LoggedRobot {
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 		roborioCycles = 0;
+
+		SingleJointedArmSim armSim = new SingleJointedArmSim(
+				DCMotor.getFalcon500(1),
+				(28.0 * (60.0 / 16.0)),
+				SingleJointedArmSim.estimateMOI(
+						0.44,
+						0.44
+				),
+				0.44,
+				Rotation2d.fromDegrees(-81).getRadians(),
+				Rotation2d.fromDegrees(90).getRadians(),
+				false,
+				Rotation2d.fromDegrees(0).getRadians()
+		);
+		SingleJointedArmSimulation simulation = new SingleJointedArmSimulation(
+				armSim,
+				(28.0 * (60.0 / 16.0))
+		);
+		simulation.setInputVoltage(BatteryUtils.DEFAULT_VOLTAGE);
+		simulation.s
 
 		this.robot = new Robot();
 	}

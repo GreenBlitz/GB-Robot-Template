@@ -82,9 +82,8 @@ public class ModulesCommandsBuilder {
 	}
 
 	public Command setTargetStates(Supplier<SwerveModuleState[]> statesSupplier, boolean isClosedLoop) {
-		return toModulesCommand(
-			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop)).withName("Set states by supplier")
-		);
+		return toModulesCommand(new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop)))
+			.withName("Set states by supplier");
 	}
 
 }

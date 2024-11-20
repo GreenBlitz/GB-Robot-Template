@@ -77,9 +77,8 @@ public class ModulesCommandsBuilder {
 	}
 
 	public Command pointWheelsInX() {
-		return toModulesCommand(
-			new RunCommand(() -> modules.pointWheelsInX(ModuleConstants.DEFAULT_IS_CLOSE_LOOP)).withName("Point wheels in X")
-		);
+		return toModulesCommand(new RunCommand(() -> modules.pointWheelsInX(ModuleConstants.DEFAULT_IS_CLOSE_LOOP)))
+			.withName("Point wheels in X");
 	}
 
 	public Command setTargetStates(Supplier<SwerveModuleState[]> statesSupplier, boolean isClosedLoop) {

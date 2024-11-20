@@ -53,20 +53,23 @@ public class ModulesCommandsBuilder {
 		Command sysIdCommand = driveCalibrator.getSysIdCommand(isQuasistatic, direction);
 		sysIdCommand.getRequirements().clear();
 
-		return toModulesCommand(new SequentialCommandGroup(
-			pointWheels(new Rotation2d(), false).until(
-				() -> modules.isSteersAtTargetPositions(
-					ModuleConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-					ModuleConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
-				)
-			),
-			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false))
-		)).withName("Drive calibration");
+		return toModulesCommand(
+			new SequentialCommandGroup(
+				pointWheels(new Rotation2d(), false).until(
+					() -> modules.isSteersAtTargetPositions(
+						ModuleConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
+						ModuleConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+					)
+				),
+				new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false))
+			)
+		).withName("Drive calibration");
 	}
 
 
 	public Command pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
-		return toModulesCommand(new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize))).withName("Point wheels to: " + targetSteerPosition);
+		return toModulesCommand(new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize)))
+			.withName("Point wheels to: " + targetSteerPosition);
 	}
 
 	public Command pointWheelsInCircle() {
@@ -74,11 +77,15 @@ public class ModulesCommandsBuilder {
 	}
 
 	public Command pointWheelsInX() {
-		return toModulesCommand(new RunCommand(() -> modules.pointWheelsInX(ModuleConstants.DEFAULT_IS_CLOSE_LOOP)).withName("Point wheels in X"));
+		return toModulesCommand(
+			new RunCommand(() -> modules.pointWheelsInX(ModuleConstants.DEFAULT_IS_CLOSE_LOOP)).withName("Point wheels in X")
+		);
 	}
 
 	public Command setTargetStates(Supplier<SwerveModuleState[]> statesSupplier, boolean isClosedLoop) {
-		return toModulesCommand(new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop)).withName("Set states by supplier"));
+		return toModulesCommand(
+			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop)).withName("Set states by supplier")
+		);
 	}
 
 }

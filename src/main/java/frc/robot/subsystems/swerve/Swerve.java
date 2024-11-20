@@ -54,6 +54,7 @@ public class Swerve extends GBSubsystem {
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+		modules.getCommandsBuilder().withSubsystemsToRequire(this);
 
 		updateInputs();
 	}

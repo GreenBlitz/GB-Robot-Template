@@ -4,12 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.hardware.mechanisms.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
@@ -28,10 +24,6 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RobotManager extends LoggedRobot {
 
-	private Tester jointTester;
-	private Tester flywheelTester;
-	private Tester elevatorTester;
-
 	private int roborioCycles;
 
 	private Command autonomousCommand;
@@ -44,14 +36,6 @@ public class RobotManager extends LoggedRobot {
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 		roborioCycles = 0;
-
-		jointTester = new Tester(Tester.TESTER_TYPE.JOINT);
-		flywheelTester = new Tester(Tester.TESTER_TYPE.FLYWHEEL);
-		elevatorTester = new Tester(Tester.TESTER_TYPE.ELEVATOR);
-
-		jointTester.setVoltage(BatteryUtils.getCurrentVoltage());
-		flywheelTester.setVoltage(BatteryUtils.getCurrentVoltage());
-		elevatorTester.setVoltage(BatteryUtils.getCurrentVoltage());
 
 		this.robot = new Robot();
 	}
@@ -95,10 +79,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-
-		jointTester.update();
-		flywheelTester.update();
-		elevatorTester.update();
 	}
 
 }

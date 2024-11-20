@@ -9,10 +9,10 @@ import frc.utils.time.TimeUtils;
 
 public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6SignalBuilder.SignalGetter {
 
-	private final StatusSignal<Double> signal;
-	protected final StatusSignal<Double> slopeSignal;
+	private final StatusSignal<?> signal;
+	protected final StatusSignal<?> slopeSignal;
 
-	protected Phoenix6LatencySignal(String name, StatusSignal<Double> signal, StatusSignal<Double> slopeSignal, AngleUnit angleUnit) {
+	protected Phoenix6LatencySignal(String name, StatusSignal<?> signal, StatusSignal<?> slopeSignal, AngleUnit angleUnit) {
 		super(name, angleUnit);
 		this.signal = signal;
 		this.slopeSignal = slopeSignal;
@@ -24,7 +24,7 @@ public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6Signal
 	}
 
 	@Override
-	public StatusSignal<Double> getSignal() {
+	public StatusSignal<?> getSignal() {
 		// For using refresh all with more signals...
 		return signal;
 	}

@@ -32,7 +32,7 @@ public class FlywheelSimulation extends MechanismSimulation {
 		flywheelSim.setInputVoltage(voltage);
 	}
 
-	public Rotation2d getAccelerationPerSecondSquared() {
+	public Rotation2d getAccelerationAnglesPerSecondSquared() {
 		return Rotation2d.fromRadians(flywheelSim.getAngularAccelerationRadPerSecSq());
 	}
 

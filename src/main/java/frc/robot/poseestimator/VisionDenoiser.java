@@ -3,9 +3,11 @@ package frc.robot.poseestimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.*;
 
@@ -13,33 +15,35 @@ public class VisionDenoiser {
 
 	private final int maximumSize;
 	private ArrayList<VisionObservation> observations;
+	private final String logPath;
 
 	private final LinearFilter xFilter;
 	private final LinearFilter yFilter;
 	private final LinearFilter angleFilterRadians;
 	private Pose2d lastFilterOutput;
 
-	private final LinearFilter xFilterWithOdoemteryFix;
-	private final LinearFilter yFilterWithOdoemteryFix;
-	private final LinearFilter angleFilterRadiansWithOdoemteryFix;
+	private final LinearFilter xFilterWithOdometryFix;
+	private final LinearFilter yFilterWithOdometryFix;
+	private final LinearFilter angleFilterRadiansWithOdometryFix;
 
 
-	public VisionDenoiser(int maximumSize) {
+	public VisionDenoiser(int maximumSize, String logPath) {
 		this.maximumSize = maximumSize;
 		this.observations = new ArrayList<>();
+		this.logPath = logPath + "/";
 
 		this.xFilter = LinearFilter.movingAverage(maximumSize);
 		this.yFilter = LinearFilter.movingAverage(maximumSize);
 		this.angleFilterRadians = LinearFilter.movingAverage(maximumSize);
 
-		this.xFilterWithOdoemteryFix = LinearFilter.movingAverage(maximumSize);
-		this.yFilterWithOdoemteryFix = LinearFilter.movingAverage(maximumSize);
-		this.angleFilterRadiansWithOdoemteryFix = LinearFilter.movingAverage(maximumSize);
+		this.xFilterWithOdometryFix = LinearFilter.movingAverage(maximumSize);
+		this.yFilterWithOdometryFix = LinearFilter.movingAverage(maximumSize);
+		this.angleFilterRadiansWithOdometryFix = LinearFilter.movingAverage(maximumSize);
 	}
 
 	private void popLastObservationIfQueueIsTooLarge() {
 		if (observations.size() > maximumSize) {
-			observations.remove(observations.size() - 1);
+			observations.remove(0);
 		}
 	}
 
@@ -55,6 +59,9 @@ public class VisionDenoiser {
 			yFilter.calculate(observation.robotPose().getY()),
 			angleFilterRadians.calculate(observation.robotPose().getRotation().getRadians())
 		);
+		for (int i = 0; i < observations.size(); i++) {
+			Logger.recordOutput(logPath + "innerObservation/" + i, observations.get(i).robotPose());
+		}
 	}
 
 	private ArrayList<Pose2d> getRobotPosesFromGivenObservations() {
@@ -83,29 +90,21 @@ public class VisionDenoiser {
 		return calculateWeightedAverage(observations);
 	}
 
-	private ArrayList<VisionObservation>
-		fixAccordingToOdometry(Pose2d currentPose, Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
-		ArrayList<VisionObservation> output = new ArrayList<>();
-		ArrayList<Pose2d> pastFixedPoses = new ArrayList<>();
-		pastFixedPoses.add(currentPose);
+	private ArrayList<Pose2d> fixAccordingToOdometry(Pose2d odometryPose, TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator) {
+		ArrayList<Pose2d> output = new ArrayList<>();
+		int observationCount = 0;
 
 		for (VisionObservation observation : observations) {
-			double currentTimestamp = TimeUtils.getCurrentTimeSeconds();
-			Optional<Pose2d> odometryFix = odometryPoseInterpolator.getSample(currentTimestamp);
-			odometryFix.ifPresent(odometryPoseSample -> {
-				Pose2d currentEstimation = PoseEstimationMath.combineVisionToOdometry(
-					observation,
-					odometryPoseSample,
-					currentPose,
-					odometryPose,
-					PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
-				);
-				Pose2d fixedPose = new Pose2d(currentEstimation.getTranslation(), odometryPoseSample.getRotation());
-				pastFixedPoses.add(fixedPose);
-				output.add(
-					new VisionObservation(fixedPose, PoseEstimationMath.calculateStandardDeviationOfPose(pastFixedPoses), currentTimestamp)
-				);
-			});
+			observationCount++;
+			double observationTime = observation.timestamp();
+			Optional<Pose2d> odometryFix = odometryPoseInterpolator.getSample(observationTime);
+			if (odometryFix.isPresent()) {
+				Transform2d sampleDifferenceFromPose = new Transform2d(odometryFix.get(), odometryPose);
+				Pose2d fixedPose = observation.robotPose().plus(sampleDifferenceFromPose);
+				Logger.recordOutput(logPath + "fixedObservation/" + observationCount, fixedPose);
+				output.add(fixedPose);
+			}
+			;
 		}
 		return output;
 	}
@@ -116,51 +115,49 @@ public class VisionDenoiser {
 	}
 
 	public Optional<VisionObservation> calculateFixedObservationByOdometryLinearFilter(
-		Pose2d estimatedPose,
 		Pose2d odometryPose,
 		TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator
 	) {
-		if (observations.isEmpty()) {
+		if (observations.size() != maximumSize) {
 			return Optional.empty();
 		}
 
+		VisionObservation calculatedFixedPoseByOdometryLinearFilter = calculateFixedPoseByOdometryLinearFilter(
+			odometryPose,
+			odometryPoseInterpolator
+		);
+		Logger.recordOutput(logPath + "stdDevs", calculatedFixedPoseByOdometryLinearFilter.standardDeviations());
 		return Optional.of(
 			new VisionObservation(
-				calculateFixedPoseByOdometryLinearFilter(estimatedPose, odometryPose, odometryPoseInterpolator),
-				PoseEstimationMath.calculateStandardDeviationOfPose(getRobotPosesFromGivenObservations()),
+				calculatedFixedPoseByOdometryLinearFilter.robotPose(),
+				calculatedFixedPoseByOdometryLinearFilter.standardDeviations(),
 				TimeUtils.getCurrentTimeSeconds()
 			)
 		);
 	}
 
-	private Pose2d calculateFixedPoseByOdometryLinearFilter(
-		Pose2d estimatedPose,
+	private VisionObservation calculateFixedPoseByOdometryLinearFilter(
 		Pose2d odometryPose,
 		TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator
 	) {
-		ArrayList<VisionObservation> fixedData = fixAccordingToOdometry(estimatedPose, odometryPose, odometryPoseInterpolator);
-		Pose2d lastObservationPose = getLastObservation(fixedData).robotPose();
-		fixedData.remove(fixedData.size() - 1);
+		ArrayList<Pose2d> fixedData = fixAccordingToOdometry(odometryPose, odometryPoseInterpolator);
+		Pose2d lastObservationPose = fixedData.get(fixedData.size() - 1);
 
-		xFilterWithOdoemteryFix.reset(
-			fixedData.stream().mapToDouble((VisionObservation visionObservation) -> visionObservation.robotPose().getX()).toArray(),
-			new double[] {}
-		);
-		yFilterWithOdoemteryFix.reset(
-			fixedData.stream().mapToDouble((VisionObservation visionObservation) -> visionObservation.robotPose().getY()).toArray(),
-			new double[] {}
-		);
-		angleFilterRadiansWithOdoemteryFix.reset(
-			fixedData.stream()
-				.mapToDouble((VisionObservation visionObservation) -> visionObservation.robotPose().getRotation().getRadians())
-				.toArray(),
+		xFilterWithOdometryFix.reset(fixedData.stream().mapToDouble(Pose2d::getX).toArray(), new double[] {});
+		yFilterWithOdometryFix.reset(fixedData.stream().mapToDouble(Pose2d::getY).toArray(), new double[] {});
+		angleFilterRadiansWithOdometryFix.reset(
+			fixedData.stream().mapToDouble((Pose2d visionObservation) -> visionObservation.getRotation().getRadians()).toArray(),
 			new double[] {}
 		);
 
-		return new Pose2d(
-			xFilterWithOdoemteryFix.calculate(lastObservationPose.getX()),
-			yFilterWithOdoemteryFix.calculate(lastObservationPose.getY()),
-			Rotation2d.fromRadians(angleFilterRadiansWithOdoemteryFix.calculate(lastObservationPose.getRotation().getRadians()))
+		return new VisionObservation(
+			new Pose2d(
+				xFilterWithOdometryFix.calculate(lastObservationPose.getX()),
+				yFilterWithOdometryFix.calculate(lastObservationPose.getY()),
+				Rotation2d.fromRadians(angleFilterRadiansWithOdometryFix.calculate(lastObservationPose.getRotation().getRadians()))
+			),
+			PoseEstimationMath.calculateStandardDeviationOfPose(fixedData),
+			TimeUtils.getCurrentTimeSeconds()
 		);
 	}
 
@@ -169,13 +166,10 @@ public class VisionDenoiser {
 			return Optional.empty();
 		}
 		double timestamp = getLastObservation(observations).timestamp();
-		return Optional.of(
-			new VisionObservation(
-				lastFilterOutput,
+		return Optional.of(new VisionObservation(lastFilterOutput,
 				PoseEstimationMath.calculateStandardDeviationOfPose(getRobotPosesFromGivenObservations()),
-				timestamp
-			)
-		);
+			timestamp
+		));
 	}
 
 }

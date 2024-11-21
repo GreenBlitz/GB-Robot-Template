@@ -7,33 +7,33 @@ import frc.utils.time.TimeUtils;
 
 public class ElevatorSimulation extends MechanismSimulation {
 
-	private final ElevatorSim elevatorSim;
+	private final ElevatorSim elevatorSimulation;
 	private final double wheelDiameter;
 
-	public ElevatorSimulation(ElevatorSim elevatorSim, double gearRatio, double wheelDiameter) {
+	public ElevatorSimulation(ElevatorSim elevatorSimulation, double gearRatio, double wheelDiameter) {
 		super(gearRatio);
-		this.elevatorSim = elevatorSim;
+		this.elevatorSimulation = elevatorSimulation;
 		this.wheelDiameter = wheelDiameter;
 	}
 
 	@Override
 	public Rotation2d getSystemPosition() {
-		return Conversions.distanceToAngle(elevatorSim.getPositionMeters(), wheelDiameter);
+		return Conversions.distanceToAngle(elevatorSimulation.getPositionMeters(), wheelDiameter);
 	}
 
 	@Override
 	public Rotation2d getSystemVelocityAnglesPerSecond() {
-		return Conversions.distanceToAngle(elevatorSim.getVelocityMetersPerSecond(), wheelDiameter);
+		return Conversions.distanceToAngle(elevatorSimulation.getVelocityMetersPerSecond(), wheelDiameter);
 	}
 
 	@Override
 	public void setInputVoltage(double voltage) {
-		elevatorSim.setInputVoltage(voltage);
+		elevatorSimulation.setInputVoltage(voltage);
 	}
 
 	@Override
 	public void updateMotor() {
-		elevatorSim.update(TimeUtils.getCurrentCycleTimeSeconds());
+		elevatorSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
 	}
 
 }

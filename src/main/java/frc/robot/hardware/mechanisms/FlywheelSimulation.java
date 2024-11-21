@@ -6,13 +6,13 @@ import frc.utils.time.TimeUtils;
 
 public class FlywheelSimulation extends MechanismSimulation {
 
-	private final FlywheelSim flywheelSim;
+	private final FlywheelSim flywheelSimulation;
 
 	private Rotation2d position;
 
-	public FlywheelSimulation(FlywheelSim flywheelSim, double gearRatio) {
+	public FlywheelSimulation(FlywheelSim flywheelSimulation, double gearRatio) {
 		super(gearRatio);
-		this.flywheelSim = flywheelSim;
+		this.flywheelSimulation = flywheelSimulation;
 		this.position = Rotation2d.fromDegrees(0);
 	}
 
@@ -23,17 +23,17 @@ public class FlywheelSimulation extends MechanismSimulation {
 
 	@Override
 	public Rotation2d getSystemVelocityAnglesPerSecond() {
-		return Rotation2d.fromRadians(flywheelSim.getAngularVelocityRadPerSec());
+		return Rotation2d.fromRadians(flywheelSimulation.getAngularVelocityRadPerSec());
 	}
 
 	@Override
 	public void setInputVoltage(double voltage) {
-		flywheelSim.setInputVoltage(voltage);
+		flywheelSimulation.setInputVoltage(voltage);
 	}
 
 	@Override
 	public void updateMotor() {
-		flywheelSim.update(TimeUtils.getCurrentCycleTimeSeconds());
+		flywheelSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
 		Rotation2d distanceDelta = getSystemVelocityAnglesPerSecond().times(TimeUtils.getCurrentCycleTimeSeconds());
 		position = Rotation2d.fromRotations(position.getRotations() + distanceDelta.getRotations());
 	}

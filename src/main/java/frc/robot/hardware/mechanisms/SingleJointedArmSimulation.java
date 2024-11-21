@@ -6,31 +6,31 @@ import frc.utils.time.TimeUtils;
 
 public class SingleJointedArmSimulation extends MechanismSimulation {
 
-	private final SingleJointedArmSim singleJointedArmSim;
+	private final SingleJointedArmSim singleJointedArmSimulation;
 
-	public SingleJointedArmSimulation(SingleJointedArmSim singleJointedArmSim, double gearRatio) {
+	public SingleJointedArmSimulation(SingleJointedArmSim singleJointedArmSimulation, double gearRatio) {
 		super(gearRatio);
-		this.singleJointedArmSim = singleJointedArmSim;
+		this.singleJointedArmSimulation = singleJointedArmSimulation;
 	}
 
 	@Override
 	public Rotation2d getSystemPosition() {
-		return Rotation2d.fromRadians(singleJointedArmSim.getAngleRads());
+		return Rotation2d.fromRadians(singleJointedArmSimulation.getAngleRads());
 	}
 
 	@Override
 	public Rotation2d getSystemVelocityAnglesPerSecond() {
-		return Rotation2d.fromRadians(singleJointedArmSim.getVelocityRadPerSec());
+		return Rotation2d.fromRadians(singleJointedArmSimulation.getVelocityRadPerSec());
 	}
 
 	@Override
 	public void setInputVoltage(double voltage) {
-		singleJointedArmSim.setInputVoltage(voltage);
+		singleJointedArmSimulation.setInputVoltage(voltage);
 	}
 
 	@Override
 	public void updateMotor() {
-		singleJointedArmSim.update(TimeUtils.getCurrentCycleTimeSeconds());
+		singleJointedArmSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
 	}
 
 }

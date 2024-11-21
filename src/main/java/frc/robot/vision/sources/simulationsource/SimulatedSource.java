@@ -27,11 +27,17 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	private final double maximumSpikeMeters;
 	private final List<RawVisionData> currentObservations;
 
+	private final Supplier<Pose3d> cameraPose;
 	private final Supplier<Pose2d> simulateRobotPose;
 	private final Supplier<Double> transformNoise;
 	private final Supplier<Double> angleNoise;
 
-	public SimulatedSource(String cameraName, Supplier<Pose2d> simulateRobotPose, SimulatedSourceConfiguration config) {
+	public SimulatedSource(
+		String cameraName,
+		Supplier<Pose2d> simulateRobotPose,
+		Pose3d camerasRelativeToRobot,
+		SimulatedSourceConfiguration config
+	) {
 		super(cameraName + "Simulated/");
 
 		this.randomValuesGenerator = new Random();
@@ -45,6 +51,8 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 		this.simulateRobotPose = simulateRobotPose;
 		this.angleNoise = () -> randomValuesGenerator.nextGaussian() * config.angleNoiseScaling();
 		this.transformNoise = () -> randomValuesGenerator.nextGaussian() * config.transformNoiseScaling();
+
+		this.cameraPose = () -> new Pose3d(simulateRobotPose.get()).relativeTo(camerasRelativeToRobot);
 	}
 
 	@Override
@@ -59,7 +67,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 			Pose3d aprilTagPose = aprilTag.pose;
 			String logPath = super.getLogPath() + "IDs/" + aprilTag.ID;
 
-			double distanceMeters = PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), simulatedPose);
+			double distanceMeters = PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose, cameraPose.get());
 			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();
@@ -78,12 +86,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 
 	public RawVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose) {
 		return new RawVisionData(
-		//@formatter:off
-			new Pose3d(
-				new Translation3d(noisedPose.getX(), noisedPose.getY(), 0),
-				new Rotation3d(0, 0, noisedPose.getRotation().getRadians())
-			),
-			//@formatter:on
+			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
 			aprilTagPose.getZ(),
 			PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
 			TimeUtils.getCurrentTimeSeconds()
@@ -91,8 +94,8 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	}
 
 	public boolean isRobotPointingIntoAngle(Rotation2d angle) {
-		Rotation2d robotAngle = simulateRobotPose.get().getRotation();
-		double angleDeltaRadians = Math.abs(robotAngle.minus(angle).getRadians());
+		Rotation2d cameraAngle = cameraPose.get().getRotation().toRotation2d();
+		double angleDeltaRadians = Math.abs(cameraAngle.minus(angle).getRadians());
 		return (angleDeltaRadians) < (fieldOfView.getRadians() / 2);
 	}
 
@@ -117,15 +120,13 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 		if (currentObservations.isEmpty()) {
 			return Optional.empty();
 		}
-		RawVisionData output = currentObservations.get(0);
+		var output = currentObservations.get(0);
 		return Optional.of(output);
 	}
 
 	@Override
 	public Optional<RawVisionData> getAllData() {
-		Optional<RawVisionData> output = getLatestObservation();
-		output.ifPresent((RawVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.estimatedPose()));
-		return output;
+		return getLatestObservation();
 	}
 
 	@Override
@@ -137,5 +138,16 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 
 	@Override
 	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {}
+
+	private void logMovingData() {
+		getLatestObservation()
+			.ifPresent((RawVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.estimatedPose()));
+		Logger.recordOutput(getLogPath() + "cameraPose", cameraPose.get());
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		logMovingData();
+	}
 
 }

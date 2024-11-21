@@ -36,26 +36,20 @@ public class PoseEstimationMath {
 	}
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
-		return odometryStandardDeviation == 0
-			? 0
-			: (odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation * Math.sqrt(odometryStandardDeviation)));
+		return odometryStandardDeviation == 0 ? 0 : odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
 	}
 
-	//@formatter:off
 	public static Transform2d applyKalmanOnTransform(
 		VisionObservation observation,
 		Pose2d appliedVisionObservation,
 		double[] odometryStandardDeviations
 	) {
-		double[] combinedStandardDeviations = getKalmanRatio(observation.standardDeviations(), odometryStandardDeviations);
+		double[] combinedStandardDeviations = getKalmanRatio(odometryStandardDeviations, observation.standardDeviations());
 		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.robotPose());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
-	public static Transform2d scaleDifferenceFromKalman(
-		Transform2d visionDifferenceFromOdometry,
-		double[] combinedStandardDeviations
-	) {
+	public static Transform2d scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
 		return new Transform2d(
 			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
@@ -65,7 +59,6 @@ public class PoseEstimationMath {
 			)
 		);
 	}
-	//@formatter:on
 
 	public static Pose2d combineVisionToOdometry(
 		VisionObservation observation,
@@ -194,6 +187,10 @@ public class PoseEstimationMath {
 	}
 
 	public static double distanceBetweenPosesMeters(Pose2d first, Pose2d second) {
+		return first.minus(second).getTranslation().getNorm();
+	}
+
+	public static double distanceBetweenPosesMeters(Pose3d first, Pose3d second) {
 		return first.minus(second).getTranslation().getNorm();
 	}
 

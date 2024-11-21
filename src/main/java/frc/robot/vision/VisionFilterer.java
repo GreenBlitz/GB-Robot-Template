@@ -12,40 +12,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
+public class VisionFilterer extends GBSubsystem {
 
 	private final MultiVisionSources multiVisionSources;
 	private final VisionFiltererConfig config;
-	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
+	private final Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
-	public VisionFilterer(VisionFiltererConfig config, MultiVisionSources multiVisionSources) {
+	public VisionFilterer(
+		VisionFiltererConfig config,
+		MultiVisionSources multiVisionSources,
+		Function<Double, Pose2d> getEstimatedPoseAtTimestamp
+	) {
 		super(config.logPath());
 
 		this.multiVisionSources = multiVisionSources;
 		this.config = config;
+		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}
 
-	@Override
 	public List<Rotation2d> getAllRobotHeadingEstimations() {
 		return multiVisionSources.getAllRobotHeadingEstimations();
 	}
 
-	@Override
-	public void setEstimatedPoseAtTimestampFunction(Function<Double, Pose2d> getEstimatedPoseAtTimestamp) {
-		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
-	}
-
-	@Override
 	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
 		multiVisionSources.updateGyroAngles(gyroAngleValues);
 	}
 
-	@Override
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (RawVisionData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
-			if (VisionFilters.keepVisionData(rawVisionData, config.VisionFiltersTolerances())) {
+			if (config.filters().apply(rawVisionData, config.VisionFiltersTolerances())) {
 				estimates.add(rawDataToObservation(rawVisionData));
 			} else {
 				logFilteredOutRawData(rawVisionData);
@@ -54,7 +51,6 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 		return estimates;
 	}
 
-	@Override
 	public List<VisionObservation> getAllAvailableVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
@@ -79,28 +75,20 @@ public class VisionFilterer extends GBSubsystem implements IVisionFilterer {
 	private void logEstimatedPositions() {
 		List<VisionObservation> observations = getFilteredVisionObservations();
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(
-				super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
-				observations.get(i).robotPose()
-			);
+			Logger.recordOutput(super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
 		}
 	}
 
 	private void logNonFilteredEstimatedPositions() {
 		List<VisionObservation> observations = getAllAvailableVisionObservations();
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(
-				super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_PREFIX + i + "Time" + observations.get(i).timestamp(),
-				observations.get(i).robotPose()
-			);
+			Logger
+				.recordOutput(super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
 		}
 	}
 
 	private void logFilteredOutRawData(RawVisionData rawVisionData) {
-		Logger.recordOutput(
-			super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA + "Time" + rawVisionData.timestamp(),
-			rawVisionData.estimatedPose()
-		);
+		Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA, rawVisionData.estimatedPose());
 	}
 
 	@Override

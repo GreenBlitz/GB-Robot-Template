@@ -72,10 +72,10 @@ public class PoseEstimationMath {
 	}
 
 	public static double[] calculateStandardDeviationOfPose(List<Pose2d> dataset) {
-		return applyFunctionOnPose(dataset, PoseEstimationMath::calculateStandardDeviation);
+		return applyFunctionOnPoseElements(dataset, PoseEstimationMath::calculateStandardDeviation);
 	}
 
-	private static double[] applyFunctionOnPose(List<Pose2d> dataset, Function<List<Double>, Double> function) {
+	private static double[] applyFunctionOnPoseElements(List<Pose2d> dataset, Function<List<Double>, Double> function) {
 		List<Double> XSet = new ArrayList<>();
 		List<Double> YSet = new ArrayList<>();
 		List<Double> AngleSet = new ArrayList<>();
@@ -98,7 +98,7 @@ public class PoseEstimationMath {
 	}
 
 	public static Pose2d meanOfPose(List<Pose2d> dataset) {
-		double[] deconstructedPose = applyFunctionOnPose(dataset, PoseEstimationMath::mean);
+		double[] deconstructedPose = applyFunctionOnPoseElements(dataset, PoseEstimationMath::mean);
 		return new Pose2d(
 			deconstructedPose[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			deconstructedPose[PoseArrayEntryValue.Y_VALUE.getEntryValue()],

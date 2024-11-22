@@ -102,7 +102,7 @@ public class VisionDenoiser {
 			Optional<Pose2d> odometryFix = odometryPoseInterpolator.getSample(observationTime);
 			if (odometryFix.isPresent()) {
 				odometryPoses.add(odometryFix.get());
-				PoseEstimatorLogging.logVisionStandardDeviations(logPath + "odometry/", PoseEstimationMath.calculateStandardDeviationOfPose(odometryPoses));
+				PoseEstimatorLogging.logStandardDeviations(logPath + "odometry/", PoseEstimationMath.calculateStandardDeviationOfPose(odometryPoses));
 
 				Transform2d sampleDifferenceFromPose = new Transform2d(odometryFix.get(), odometryPose);
 				Pose2d fixedPose = observation.robotPose().plus(sampleDifferenceFromPose);

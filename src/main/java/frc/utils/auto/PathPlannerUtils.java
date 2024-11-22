@@ -50,7 +50,7 @@ public class PathPlannerUtils {
 		PPHolonomicDriveController holonomicDriveController,
 		RobotConfig robotConfig,
 		BooleanSupplier shouldFlipPath,
-		Subsystem driveSubsystem
+		Subsystem... driveRequirements
 	) {
 		AutoBuilder.configure(
 			poseSupplier,
@@ -60,7 +60,7 @@ public class PathPlannerUtils {
 			holonomicDriveController,
 			robotConfig,
 			shouldFlipPath,
-			driveSubsystem
+			driveRequirements
 		);
 	}
 

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
+import frc.robot.poseestimator.helpers.PoseEstimatorLogging;
 import frc.robot.poseestimator.helpers.VisionDenoiser;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.*;
@@ -213,10 +214,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Logger.recordOutput(super.getLogPath() + "hasHeadingOffsetBeenInitialized/", hasHeadingOffsetBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "hasEstimatedPoseBeenInitialized/", hasEstimatedPoseBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "latestGyroAngle/", lastOdometryValues.gyroAngle());
-		Logger.recordOutput(super.getLogPath() + "OdometryStdDevs/" + "X/", odometryStandardDeviations[0]);
-		Logger.recordOutput(super.getLogPath() + "OdometryStdDevs/" + "Y/", odometryStandardDeviations[1]);
-		Logger.recordOutput(super.getLogPath() + "OdometryStdDevs/" + "Angle/", odometryStandardDeviations[2]);
-
+		PoseEstimatorLogging.logVisionStandardDeviations(getLogPath() + "odometryStdDevs", odometryStandardDeviations);
 	}
 
 	private void onEnabled() {

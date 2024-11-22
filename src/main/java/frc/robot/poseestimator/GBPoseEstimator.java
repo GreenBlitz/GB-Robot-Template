@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
+import frc.robot.poseestimator.helpers.VisionDenoiser;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;

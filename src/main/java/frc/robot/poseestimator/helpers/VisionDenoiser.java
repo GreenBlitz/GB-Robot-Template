@@ -1,10 +1,11 @@
-package frc.robot.poseestimator;
+package frc.robot.poseestimator.helpers;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
+import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -14,7 +15,7 @@ import java.util.*;
 public class VisionDenoiser {
 
 	private final int maximumSize;
-	private ArrayList<VisionObservation> observations;
+	private final ArrayList<VisionObservation> observations;
 	private final String logPath;
 
 	private final LinearFilter xFilter;

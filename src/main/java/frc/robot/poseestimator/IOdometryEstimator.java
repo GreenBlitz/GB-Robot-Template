@@ -7,12 +7,12 @@ import frc.robot.poseestimator.observations.OdometryObservation;
 
 public interface IOdometryEstimator {
 
-	void updateOdometry(OdometryObservation[] odometryObservation);
+	void updateOdometry(OdometryObservation[] odometryObservations);
 
 	void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose);
 
 	Pose2d getOdometryPose();
 
-	void resetHeadingOffset(Rotation2d newHeading);
+	void setHeading(Rotation2d newHeading);
 
 }

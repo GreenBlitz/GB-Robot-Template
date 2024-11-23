@@ -175,7 +175,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			visionDenoiser.addVisionObservation(observation);
 			VisionObservation fixedObservation;
 			Optional<VisionObservation> fixedOptionalObservation = visionDenoiser
-						   .calculateFixedObservationByOdometryLinearFilter(odometryPose, odometryPoseInterpolator);
+				.calculateFixedObservationByOdometryLinearFilter(odometryPose, odometryPoseInterpolator);
 			fixedObservation = fixedOptionalObservation.orElse(observation);
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(fixedObservation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
@@ -189,7 +189,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			calculateHeadingOffset(observation.gyroAngle());
 		}
 		updateGyroAnglesInVisionSources(observation.gyroAngle());
-		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions());
+		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions(), observation.wheelsPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastOdometryValues.gyroAngle());
 		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelsPositions(), observation.gyroAngle());
 		odometryPose = odometryPose.exp(twist);

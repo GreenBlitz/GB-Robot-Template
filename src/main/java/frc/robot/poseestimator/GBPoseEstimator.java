@@ -214,7 +214,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Logger.recordOutput(super.getLogPath() + "hasHeadingOffsetBeenInitialized/", hasHeadingOffsetBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "hasEstimatedPoseBeenInitialized/", hasEstimatedPoseBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "latestGyroAngle/", lastOdometryValues.gyroAngle());
-		PoseEstimatorLogging.logStandardDeviations(getLogPath() + "odometryStdDevs", odometryStandardDeviations);
+		PoseEstimatorLogging.logStandardDeviations(getLogPath() + "odometry/", odometryStandardDeviations);
 	}
 
 	private void onEnabled() {

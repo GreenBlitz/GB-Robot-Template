@@ -12,7 +12,7 @@ public interface VisionSource<VisionData> {
 
 	void update();
 
-	Optional<VisionData> getAllData();
+	Optional<VisionData> getCalculatedData();
 
 	Optional<Rotation2d> getRobotHeading();
 

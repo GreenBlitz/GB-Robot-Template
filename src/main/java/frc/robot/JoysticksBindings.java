@@ -26,9 +26,9 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.BLUE)));
-		usedJoystick.X.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.YELLOW)));
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.GREEN)));
+		usedJoystick.A.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.blue)));
+		usedJoystick.X.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.green)));
+		usedJoystick.B.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.red)));
 		// bindings
 	}
 

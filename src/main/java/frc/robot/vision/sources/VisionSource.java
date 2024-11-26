@@ -6,13 +6,13 @@ import frc.robot.vision.GyroAngleValues;
 
 import java.util.Optional;
 
-public interface VisionSource<VisionData> {
+public interface VisionSource<T> {
 
 	void updateGyroAngles(GyroAngleValues gyroAngleValues);
 
 	void update();
 
-	Optional<VisionData> getCalculatedData();
+	Optional<T> getCalculatedData();
 
 	Optional<Rotation2d> getRobotHeading();
 

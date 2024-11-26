@@ -1,6 +1,5 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
 import groovy.json.JsonSlurper
-import java.nio.file.Files
 
 plugins {
 	id "java"
@@ -143,55 +142,18 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-def getRootRelativePath(path) {
-	rootDir.toPath().relativize(path)
-}
-
-def ensureSymlink(link, target) {
-	if (!Files.isSymbolicLink(link)) {
-		Files.deleteIfExists(link)
-
-		Files.createSymbolicLink(link, target)
-
-		println("--- Installed symbolic link ${getRootRelativePath(link)} -> ${getRootRelativePath(target)} ---")
+tasks.named("build").configure { dependsOn('installLocalGitHookPostCheckout') }
+tasks.register('installLocalGitHookPostCheckout', Copy) {
+	group = 'git'
+	from new File(rootProject.rootDir, '.scripts/post-checkout')
+	into { new File(rootProject.rootDir, '.git/hooks') }
+	filePermissions {
+		unix(0775)
 	}
-}
-
-def GIT_HOOKS_SOURCE = "$rootDir/scripts/git-hooks/"
-def GIT_HOOKS_OUT = "$rootDir/.git/hooks"
-def gitConfig = 'Git Configuration'
-tasks.register('installLocalGitHookSymlinks') {
-	group = gitConfig
-
-	inputs.dir GIT_HOOKS_SOURCE
-	inputs.dir GIT_HOOKS_OUT
-	outputs.dir GIT_HOOKS_OUT
-
 	doLast {
-		def hooksSources = fileTree(GIT_HOOKS_SOURCE)
-		def hooksDestination = file(GIT_HOOKS_OUT).toPath()
-
-		hooksSources.forEach { File source ->
-			def link = hooksDestination.resolve(source.getName())
-			ensureSymlink(link, source.toPath())
-		}
-
-		hooksDestination.toFile().listFiles().each { link ->
-			if (Files.isSymbolicLink(link.toPath()) && !Files.exists(Files.readSymbolicLink(link.toPath()))) {
-				link.delete()
-				println("--- Deleted stale link ${getRootRelativePath(link.toPath())} ---")
-			}
-		}
+		println("---Added Post Checkout Git Hook Script---")
 	}
 }
-
-def gitConfigTasks = tasks.matching { it.group == gitConfig }
-tasks.matching({ it.group != gitConfig }).configureEach({ it.dependsOn gitConfigTasks })
-
-if (System.getenv().containsKey('CI') || !file('.git').isDirectory()) {
-	gitConfigTasks.configureEach { it.enabled = false }
-}
-
 
 discoverroborio.finalizedBy('setReachableIP')
 tasks.register('setReachableIP') {
@@ -270,6 +232,5 @@ spotless {
 		greclipse()
 		indentWithTabs(4)
 		trimTrailingWhitespace()
-		endWithNewline()
 	}
 }

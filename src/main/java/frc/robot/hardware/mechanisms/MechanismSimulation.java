@@ -2,29 +2,20 @@ package frc.robot.hardware.mechanisms;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public abstract class MechanismSimulation {
-
-	private final double gearRatio;
-
-	MechanismSimulation(double gearRatio) {
-		this.gearRatio = gearRatio;
-	}
-
-	public Rotation2d getRotorPosition() {
-		return getSystemPosition().times(gearRatio);
-	}
-
-	public Rotation2d getRotorVelocityAnglesPerSecond() {
-		return getSystemVelocityAnglesPerSecond().times(gearRatio);
-	}
+public interface MechanismSimulation {
 
 
-	public abstract Rotation2d getSystemPosition();
+	Rotation2d getRotorPosition();
 
-	public abstract Rotation2d getSystemVelocityAnglesPerSecond();
+	Rotation2d getRotorVelocityAnglesPerSecond();
 
-	public abstract void setInputVoltage(double voltage);
 
-	public abstract void updateMotor();
+	Rotation2d getSystemPosition();
+
+	Rotation2d getSystemVelocityAnglesPerSecond();
+
+	void setInputVoltage(double voltage);
+
+	void updateMotor();
 
 }

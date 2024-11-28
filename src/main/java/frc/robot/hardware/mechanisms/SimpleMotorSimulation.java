@@ -4,13 +4,24 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.utils.time.TimeUtils;
 
-public class SimpleMotorSimulation extends MechanismSimulation {
+public class SimpleMotorSimulation implements MechanismSimulation {
 
 	private final DCMotorSim motorSimulation;
+	private final double gearRatio;
 
 	public SimpleMotorSimulation(DCMotorSim motorSimulation, double gearRatio) {
-		super(gearRatio);
 		this.motorSimulation = motorSimulation;
+		this.gearRatio = gearRatio;
+	}
+
+	@Override
+	public Rotation2d getRotorPosition() {
+		return getSystemPosition().times(gearRatio);
+	}
+
+	@Override
+	public Rotation2d getRotorVelocityAnglesPerSecond() {
+		return getSystemVelocityAnglesPerSecond().times(gearRatio);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package frc.robot.subsystems.motorposition;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.Supplier;
 
@@ -34,5 +35,8 @@ public class MotorCommandBuilder {
 		);
 	}
 
+	public Command stayInPlace() {
+		return new InitExecuteCommand(() -> {}, motorSubsystemPosition::stayInPlace, motorSubsystemPosition).withName("Stay in place");
+	}
 
 }

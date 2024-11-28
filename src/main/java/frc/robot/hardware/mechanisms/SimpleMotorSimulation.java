@@ -9,8 +9,8 @@ public class SimpleMotorSimulation extends WPIMechanismSimulation {
 	private final DCMotorSim motorSimulation;
 
 	public SimpleMotorSimulation(DCMotorSim motorSimulation) {
-        super(motorSimulation.getGearing());
-        this.motorSimulation = motorSimulation;
+		super(motorSimulation.getGearing());
+		this.motorSimulation = motorSimulation;
 	}
 
 	@Override

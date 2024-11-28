@@ -10,25 +10,32 @@ public abstract class WPIMechanismSimulation implements MechanismSimulation {
 		this.gearRatio = gearRatio;
 	}
 
+	@Override
 	public double getGearRatio() {
 		return gearRatio;
 	}
 
+	@Override
 	public Rotation2d getRotorPosition() {
 		return getSystemPosition().times(gearRatio);
 	}
 
+	@Override
 	public Rotation2d getRotorVelocityAnglesPerSecond() {
 		return getSystemVelocityAnglesPerSecond().times(gearRatio);
 	}
 
 
+	@Override
 	public abstract Rotation2d getSystemPosition();
 
+	@Override
 	public abstract Rotation2d getSystemVelocityAnglesPerSecond();
 
+	@Override
 	public abstract void setInputVoltage(double voltage);
 
+	@Override
 	public abstract void updateMotor();
 
 }

@@ -20,9 +20,11 @@ public class Phoenix6AngleSignal extends AngleSignal implements Phoenix6SignalBu
 		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
 	}
 
+	/**
+	 * For using refresh all with more signals...
+	 */
 	@Override
 	public StatusSignal<?> getSignal() {
-		// For using refresh all with more signals...
 		return statusSignal;
 	}
 

@@ -7,6 +7,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Utils;
+import frc.utils.brakestate.BrakeStateManager;
 
 public class TalonFXWrapper extends TalonFX {
 
@@ -17,7 +18,11 @@ public class TalonFXWrapper extends TalonFX {
 	}
 
 	public TalonFXWrapper(Phoenix6DeviceID ctreDeviceID) {
-		super(ctreDeviceID.ID(), Robot.ROBOT_TYPE.isSimulation() ? BusChain.ROBORIO.getChainName() : ctreDeviceID.busChain().getChainName());
+		super(ctreDeviceID.ID(), determineBusChain(ctreDeviceID));
+	}
+
+	private static String determineBusChain(Phoenix6DeviceID ctreDeviceID){
+		return Robot.ROBOT_TYPE.isSimulation() ? BusChain.ROBORIO.getChainName() : ctreDeviceID.busChain().getChainName();
 	}
 
 	public StatusCode applyConfiguration(TalonFXConfiguration configuration, int numberOfTries) {

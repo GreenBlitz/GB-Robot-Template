@@ -15,6 +15,11 @@ public class SimpleMotorSimulation implements MechanismSimulation {
 	}
 
 	@Override
+	public double getGearRatio() {
+		return gearRatio;
+	}
+
+	@Override
 	public Rotation2d getRotorPosition() {
 		return getSystemPosition().times(gearRatio);
 	}

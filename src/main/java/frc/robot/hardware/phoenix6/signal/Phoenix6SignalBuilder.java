@@ -54,6 +54,7 @@ public class Phoenix6SignalBuilder {
 	}
 
 	public interface SignalGetter {
+
 		/**
 		 * For using refresh all with more signals...
 		 */

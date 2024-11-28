@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.motorvelocity;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -8,7 +8,7 @@ import frc.robot.hardware.interfaces.InputSignal;
 public class MotorSubsystemVelocity {
 
     ControllableMotor motor;
-    MotorCommandBuilder commandBuilder;
+    MotorCommandBuilderVelocity commandBuilder;
     IRequest<Rotation2d> positionRequest;
     IRequest<Rotation2d> velocityRequest;
     IRequest<Double> volatgeRequest;

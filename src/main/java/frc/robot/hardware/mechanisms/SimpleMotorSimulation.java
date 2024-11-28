@@ -7,26 +7,24 @@ import frc.utils.time.TimeUtils;
 public class SimpleMotorSimulation implements MechanismSimulation {
 
 	private final DCMotorSim motorSimulation;
-	private final double gearRatio;
 
 	public SimpleMotorSimulation(DCMotorSim motorSimulation, double gearRatio) {
 		this.motorSimulation = motorSimulation;
-		this.gearRatio = gearRatio;
 	}
 
 	@Override
 	public double getGearRatio() {
-		return gearRatio;
+		return motorSimulation.getGearing();
 	}
 
 	@Override
 	public Rotation2d getRotorPosition() {
-		return getSystemPosition().times(gearRatio);
+		return getSystemPosition().times(getGearRatio());
 	}
 
 	@Override
 	public Rotation2d getRotorVelocityAnglesPerSecond() {
-		return getSystemVelocityAnglesPerSecond().times(gearRatio);
+		return getSystemVelocityAnglesPerSecond().times(getGearRatio());
 	}
 
 	@Override

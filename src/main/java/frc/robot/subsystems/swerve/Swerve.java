@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Field;
 import frc.robot.constants.MathConstants;
 import frc.robot.hardware.empties.EmptyGyro;
@@ -64,6 +63,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 		this.swervePhysicsSimulation = Optional.empty();
+		modules.getCommandsBuilder().withSubsystemsToRequire(this);
 
 		updateInputs();
 	}
@@ -85,17 +85,24 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer) {
-		PathPlannerUtils.configPathPlanner(
-			currentPoseSupplier,
-			resetPoseConsumer,
-			this::getRobotRelativeVelocity,
-			(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
-			constants.ppHolonomicDriveController(),
-			new RobotConfig(0, 0, new ModuleConfig(0, 0, 0, DCMotor.getFalcon500(1), 60, 2), 0),
-			() -> !Field.isFieldConventionAlliance(),
-			this
-		);// todo
+	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer, RobotConfig robotConfig) {
+		try {
+			robotConfig = RobotConfig.fromGUISettings();
+		} catch (Exception exception) {
+			DriverStation.reportError(exception.getMessage(), exception.getStackTrace());
+		} finally {
+			PathPlannerUtils.configPathPlanner(
+				currentPoseSupplier,
+				resetPoseConsumer,
+				this::getRobotRelativeVelocity,
+				(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
+				constants.ppHolonomicDriveController(),
+				robotConfig,
+				() -> !Field.isFieldConventionAlliance(),
+				this,
+				modules
+			);
+		}
 	}
 
 	public void setStateHelper(SwerveStateHelper swerveStateHelper) {

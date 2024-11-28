@@ -7,21 +7,23 @@ import frc.utils.time.TimeUtils;
 
 public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6SignalBuilder.SignalGetter {
 
-	private final StatusSignal<Double> statusSignal;
+	private final StatusSignal<?> statusSignal;
 
-	protected Phoenix6DoubleSignal(String name, StatusSignal<Double> statusSignal) {
+	protected Phoenix6DoubleSignal(String name, StatusSignal<?> statusSignal) {
 		super(name);
 		this.statusSignal = statusSignal;
 	}
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(statusSignal.getValue(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
+		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
 	}
 
+	/**
+	 * For using refresh all with more signals...
+	 */
 	@Override
-	public StatusSignal<Double> getSignal() {
-		// For using refresh all with more signals...
+	public StatusSignal<?> getSignal() {
 		return statusSignal;
 	}
 

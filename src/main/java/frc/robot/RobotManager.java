@@ -39,7 +39,7 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
-		roborioCycles = 0;
+		this.roborioCycles = 0;
 
 		this.robot = new Robot();
 	}
@@ -60,7 +60,7 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = robot.getAutonomousCommand();
+		this.autonomousCommand = robot.getAutonomousCommand();
 
 		if (autonomousCommand != null) {
 			autonomousCommand.schedule();
@@ -76,14 +76,18 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		roborioCycles++; // Better to be first
-		Logger.recordOutput("RoborioCycles", roborioCycles);
-		TimeUtils.updateCycleTime(roborioCycles); // Better to be second
+		updateTimeRelatedData(); // Better to be first
 		robot.getSuperStructure().periodic();
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+	}
+
+	private void updateTimeRelatedData() {
+		roborioCycles++;
+		Logger.recordOutput("RoborioCycles", roborioCycles);
+		TimeUtils.updateCycleTime(roborioCycles);
 	}
 
 	@Override

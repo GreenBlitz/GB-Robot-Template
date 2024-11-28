@@ -28,7 +28,7 @@ public class MotorSubsystemNitay extends GBSubsystem {
 	public MotorSubsystemNitay withVelocityControl(IRequest<Rotation2d> velocityRequest, InputSignal<Rotation2d> velocitySignal) {
 		this.velocityRequest = velocityRequest;
 		this.velocitySignal = velocitySignal;
-		this.targetVelocity = velocitySignal.getLatestValue();
+		setTargetVelocityRotation2dPerSecond(velocitySignal.getLatestValue());
 		return this;
 	}
 

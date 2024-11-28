@@ -89,7 +89,7 @@ public class Swerve extends GBSubsystem {
 				constants.ppHolonomicDriveController(),
 				robotConfig,
 				() -> !Field.isFieldConventionAlliance(),
-				this
+				this, modules
 			);
 		}
 	}

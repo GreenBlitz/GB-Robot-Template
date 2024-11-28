@@ -45,7 +45,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.visionFilterer = new VisionFilterer(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimeStamp);
+		this.visionFilterer = new VisionFilterer(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
 		this.headingCountHelper = new ObservationCountHelper<>(
 			visionFilterer::getAllRobotHeadingEstimations,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
@@ -83,7 +83,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	//@formatter:on
 
 	@Override
-	public void resetHeadingOffset(Rotation2d newHeading) {
+	public void setHeading(Rotation2d newHeading) {
 		if (lastOdometryValues.gyroAngle() != null) {
 			headingOffset = newHeading.minus(lastOdometryValues.gyroAngle());
 		}
@@ -134,7 +134,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public Pose2d getEstimatedPoseAtTimeStamp(double timeStamp) {
+	public Pose2d getEstimatedPoseAtTimestamp(double timeStamp) {
 		Optional<Pose2d> estimatedPoseAtTimestamp = estimatedPoseInterpolator.getSample(timeStamp);
 		return estimatedPoseAtTimestamp.orElseGet(() -> Objects.requireNonNullElseGet(estimatedPose, Pose2d::new));
 	}
@@ -181,7 +181,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		updateGyroAnglesInVisionSources(observation.gyroAngle());
 		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastOdometryValues.gyroAngle());
-		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelsPositions(), observation.gyroAngle());
+		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelPositions(), observation.gyroAngle());
 		odometryPose = odometryPose.exp(twist);
 		estimatedPose = estimatedPose.exp(twist);
 		odometryPoseRelativeToInitialPose = odometryPoseRelativeToInitialPose.exp(twist);

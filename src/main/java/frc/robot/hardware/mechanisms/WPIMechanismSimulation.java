@@ -11,11 +11,6 @@ public abstract class WPIMechanismSimulation implements MechanismSimulation {
 	}
 
 	@Override
-	public double getGearRatio() {
-		return gearRatio;
-	}
-
-	@Override
 	public Rotation2d getRotorPosition() {
 		return getSystemPosition().times(gearRatio);
 	}

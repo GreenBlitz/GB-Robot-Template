@@ -9,8 +9,10 @@ public class Phoenix6BothLatencySignal extends Phoenix6LatencySignal {
 		super(name, signal, slope, angleUnit);
 	}
 
+	/**
+	 * For using refresh all with more signals...
+	 */
 	public StatusSignal<?> getSignalSlope() {
-		// For using refresh all with more signals...
 		return slopeSignal;
 	}
 

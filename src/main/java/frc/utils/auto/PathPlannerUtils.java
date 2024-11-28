@@ -19,7 +19,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.subsystems.GBSubsystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class PathPlannerUtils {
 		PPHolonomicDriveController holonomicDriveController,
 		RobotConfig robotConfig,
 		BooleanSupplier shouldFlipPath,
-		Subsystem driveSubsystem
+		GBSubsystem... driveRequirements
 	) {
 		AutoBuilder.configure(
 			poseSupplier,
@@ -76,7 +76,7 @@ public class PathPlannerUtils {
 			holonomicDriveController,
 			robotConfig,
 			shouldFlipPath,
-			driveSubsystem
+			driveRequirements
 		);
 	}
 

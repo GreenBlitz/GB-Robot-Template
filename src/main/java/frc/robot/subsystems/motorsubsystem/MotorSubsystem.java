@@ -1,4 +1,4 @@
-package frc.robot.subsystems.motorposition;
+package frc.robot.subsystems.motorsubsystem;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,7 +8,7 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
 
-public class MotorSubsystemPosition extends GBSubsystem {
+public class MotorSubsystem extends GBSubsystem {
 
 	ControllableMotor motor;
 	MotorCommandBuilder commandBuilder;
@@ -16,7 +16,7 @@ public class MotorSubsystemPosition extends GBSubsystem {
 	InputSignal<Rotation2d> positionSignal;
 	Rotation2d targetPosition;
 
-	public MotorSubsystemPosition(ControllableMotor motor, String logPath) {
+	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
 		this.motor = motor;
 		this.commandBuilder = new MotorCommandBuilder();
@@ -60,7 +60,7 @@ public class MotorSubsystemPosition extends GBSubsystem {
 		return getPosition().getRadians() < expectedPosition.getRadians();
 	}
 
-	public MotorSubsystemPosition withPositionControl(IRequest<Rotation2d> positionRequest, InputSignal<Rotation2d> positionSignal) {
+	public MotorSubsystem withPositionControl(IRequest<Rotation2d> positionRequest, InputSignal<Rotation2d> positionSignal) {
 		this.positionRequest = positionRequest;
 		this.positionSignal = positionSignal;
 		this.targetPosition = positionSignal.getLatestValue();

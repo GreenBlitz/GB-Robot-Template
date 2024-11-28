@@ -1,10 +1,11 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.motorposition;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
 
 public class MotorSubsystemPosition extends GBSubsystem {

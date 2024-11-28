@@ -8,7 +8,7 @@ public class SimpleMotorSimulation implements MechanismSimulation {
 
 	private final DCMotorSim motorSimulation;
 
-	public SimpleMotorSimulation(DCMotorSim motorSimulation, double gearRatio) {
+	public SimpleMotorSimulation(DCMotorSim motorSimulation) {
 		this.motorSimulation = motorSimulation;
 	}
 

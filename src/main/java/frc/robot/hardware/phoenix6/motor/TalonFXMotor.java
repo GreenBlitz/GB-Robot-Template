@@ -33,19 +33,31 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		MechanismSimulation simulation
 	) {
 		super(logPath);
-		this.motor = Robot.ROBOT_TYPE.isSimulation() ? new TalonFXWrapper(deviceID.ID()) : new TalonFXWrapper(deviceID);
-		if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
-		}
-		this.talonFXSimulationOptional = Robot.ROBOT_TYPE.isSimulation() && simulation != null
-			? Optional.of(new TalonFXSimulation(motor, configuration, simulation))
-			: Optional.empty();
+		this.motor = createWrapper(deviceID);
+		applyConfiguration(configuration);
+		this.talonFXSimulationOptional = createTalonFXSimulationOptional(simulation, configuration);
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		motor.optimizeBusUtilization();
 	}
 
 	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, TalonFXConfiguration configuration, SysIdRoutine.Config sysidConfig) {
 		this(logPath, deviceID, configuration, sysidConfig, null);
+	}
+
+	private TalonFXWrapper createWrapper(Phoenix6DeviceID deviceID){
+		return Robot.ROBOT_TYPE.isSimulation() ? new TalonFXWrapper(deviceID.ID()) : new TalonFXWrapper(deviceID);
+	}
+
+	private void applyConfiguration(TalonFXConfiguration configuration){
+		if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
+		}
+	}
+
+	private Optional<TalonFXSimulation> createTalonFXSimulationOptional(MechanismSimulation simulation, TalonFXConfiguration configuration){
+		return Robot.ROBOT_TYPE.isSimulation() && simulation != null
+				? Optional.of(new TalonFXSimulation(motor, configuration, simulation))
+				: Optional.empty();
 	}
 
 	public TalonFXWrapper getMotor() {

@@ -29,6 +29,10 @@ public class MotorSubsystem extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
+	public void setPosition(Rotation2d position) {
+		motor.resetPosition(position);
+	}
+
 	public void setTargetPosition(Rotation2d targetPosition) {
 		if (positionRequest == null) {
 			throw new NullPointerException("the position request is null, try using: '.withPositionControl'");
@@ -52,12 +56,12 @@ public class MotorSubsystem extends GBSubsystem {
 		return getPosition().getRadians() > expectedPosition.getRadians();
 	}
 
-	protected void stayInPlace() {
-		setTargetPosition(getPosition());
-	}
-
 	public boolean isBehind(Rotation2d expectedPosition) {
 		return getPosition().getRadians() < expectedPosition.getRadians();
+	}
+
+	protected void stayInPlace() {
+		setTargetPosition(getPosition());
 	}
 
 	public MotorSubsystem withPositionControl(IRequest<Rotation2d> positionRequest, InputSignal<Rotation2d> positionSignal) {

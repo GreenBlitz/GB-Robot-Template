@@ -49,11 +49,10 @@ public class MotorSubsystem extends GBSubsystem {
 		motor.updateInputs(velocitySignal);
 	}
 
-	public String getLogPath() {
-		return super.getLogPath();
-	}
-
-	public void applyRequests() {
+	public void applyVelocityRequests() {
+		if (velocityRequest == null) {
+			throw new NullPointerException("the velocity request is null, try using: '.withVelocityControl'");
+		}
 		motor.applyRequest(velocityRequest);
 	}
 

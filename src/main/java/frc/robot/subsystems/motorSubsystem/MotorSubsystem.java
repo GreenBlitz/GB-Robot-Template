@@ -6,19 +6,13 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.Conversions;
 
 public class MotorSubsystem extends GBSubsystem {
 
 	ControllableMotor motor;
 	MotorCommandBuilder commandBuilder;
-	IRequest<Rotation2d> positionRequest;
 	IRequest<Rotation2d> velocityRequest;
-	IRequest<Double> volatgeRequest;
-	InputSignal<Rotation2d> positionSignal;
 	InputSignal<Rotation2d> velocitySignal;
-	Rotation2d targetPosition;
-	Rotation2d targetVelocity;
 
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
@@ -52,11 +46,7 @@ public class MotorSubsystem extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		motor.updateInputs(positionSignal, velocitySignal);
-	}
-
-	private Rotation2d convertFromMeters(double positionInMeters, double wheelDiameter) {
-		return Conversions.distanceToAngle(positionInMeters, wheelDiameter);
+		motor.updateInputs(velocitySignal);
 	}
 
 	public String getLogPath() {
@@ -64,9 +54,7 @@ public class MotorSubsystem extends GBSubsystem {
 	}
 
 	public void applyRequests() {
-		motor.applyRequest(positionRequest);
 		motor.applyRequest(velocityRequest);
-		motor.applyRequest(volatgeRequest);
 	}
 
 

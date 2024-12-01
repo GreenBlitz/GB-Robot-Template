@@ -13,6 +13,7 @@ public class MotorSubsystem extends GBSubsystem {
 	private final MotorCommandBuilder commandBuilder;
 	private IRequest<Rotation2d> velocityRequest;
 	private InputSignal<Rotation2d> velocitySignal;
+	private IRequest lastChangedRequest;
 
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
@@ -23,7 +24,6 @@ public class MotorSubsystem extends GBSubsystem {
 	public MotorSubsystem withVelocityControl(IRequest<Rotation2d> velocityRequest, InputSignal<Rotation2d> velocitySignal) {
 		this.velocityRequest = velocityRequest;
 		this.velocitySignal = velocitySignal;
-		setTargetVelocityRotation2dPerSecond(velocitySignal.getLatestValue());
 		return this;
 	}
 
@@ -47,6 +47,7 @@ public class MotorSubsystem extends GBSubsystem {
 			throw new NullPointerException("The velocity request is null. try using '.withVelocityControl'");
 		}
 		velocityRequest.withSetPoint(targetVelocity);
+		lastChangedRequest = velocityRequest;
 	}
 
 	public void updateInputs() {
@@ -56,8 +57,8 @@ public class MotorSubsystem extends GBSubsystem {
 	}
 
 	public void applyRequests() {
-		if (velocityRequest != null) {
-			motor.applyRequest(velocityRequest);
+		if (lastChangedRequest != null) {
+			motor.applyRequest(lastChangedRequest);
 		}
 	}
 

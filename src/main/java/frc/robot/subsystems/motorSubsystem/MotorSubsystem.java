@@ -16,7 +16,7 @@ public class MotorSubsystem extends GBSubsystem {
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
 		this.motor = motor;
-		this.commandBuilder = new MotorCommandBuilder();
+		this.commandBuilder = new MotorCommandBuilder(this);
 	}
 
 	public MotorSubsystem withVoltageControl(IRequest<Double> voltageRequest, InputSignal<Double> voltageSignal) {

@@ -58,9 +58,10 @@ public class MotorSubsystem extends GBSubsystem {
 	}
 
 	public void applyRequests() {
-		motor.applyRequest(lastChangedRequest);
+		if (lastChangedRequest != null) {
+			motor.applyRequest(lastChangedRequest);
+		}
 	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();

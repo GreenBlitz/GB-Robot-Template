@@ -12,11 +12,11 @@ public record Phoenix6DeviceID(int ID, BusChain busChain) {
 
 	public Phoenix6DeviceID(int ID, BusChain busChain) {
 		this.ID = ID;
-		this.busChain = Objects.equals(determineBusChain(busChain), BusChain.CANIVORE.getChainName()) ? BusChain.CANIVORE : BusChain.ROBORIO;
+		this.busChain = determineBusChain(busChain);
 	}
 
-	public static String determineBusChain(BusChain busChain) {
-		return Robot.ROBOT_TYPE.isSimulation() ? BusChain.ROBORIO.getChainName() : busChain.getChainName();
+	public static BusChain determineBusChain(BusChain busChain) {
+		return Robot.ROBOT_TYPE.isSimulation() ? BusChain.ROBORIO : busChain;
 	}
 
 }

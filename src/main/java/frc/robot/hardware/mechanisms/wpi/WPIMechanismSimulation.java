@@ -3,31 +3,17 @@ package frc.robot.hardware.mechanisms.wpi;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 
-public abstract class WPIMechanismSimulation implements MechanismSimulation {
+public interface WPIMechanismSimulation extends MechanismSimulation {
 
-	@Override
-	public Rotation2d getRotorPosition() {
+	default Rotation2d getRotorPosition() {
 		return getSystemPosition().times(getGearRatio());
 	}
 
 	@Override
-	public Rotation2d getRotorVelocityAnglesPerSecond() {
+	default Rotation2d getRotorVelocityAnglesPerSecond() {
 		return getSystemVelocityAnglesPerSecond().times(getGearRatio());
 	}
 
-
-	@Override
-	public abstract Rotation2d getSystemPosition();
-
-	@Override
-	public abstract Rotation2d getSystemVelocityAnglesPerSecond();
-
-	@Override
-	public abstract void setInputVoltage(double voltage);
-
-	@Override
-	public abstract void updateMotor();
-
-	public abstract double getGearRatio();
+	double getGearRatio();
 
 }

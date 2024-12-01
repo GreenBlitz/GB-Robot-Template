@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.utils.time.TimeUtils;
 
-public class SimpleMotorSimulation extends WPIMechanismSimulation {
+public class SimpleMotorSimulation implements WPIMechanismSimulation {
 
 	private final DCMotorSim motorSimulation;
 

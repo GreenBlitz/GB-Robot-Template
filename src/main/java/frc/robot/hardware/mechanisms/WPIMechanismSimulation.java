@@ -4,10 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public abstract class WPIMechanismSimulation implements MechanismSimulation {
 
-
-	WPIMechanismSimulation() {
-	}
-
 	@Override
 	public Rotation2d getRotorPosition() {
 		return getSystemPosition().times(getGearRatio());

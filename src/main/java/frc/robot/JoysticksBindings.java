@@ -1,10 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
-
-import java.awt.*;
 
 public class JoysticksBindings {
 
@@ -26,35 +23,32 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.blue)));
-		usedJoystick.X.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.green)));
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.led.setLEDColor(Color.red)));
-		// bindings
+		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-		// bindings
+		// bindings...
 	}
 
 }

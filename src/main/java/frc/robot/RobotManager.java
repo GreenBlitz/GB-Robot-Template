@@ -4,48 +4,59 @@
 
 package frc.robot;
 
-import edu.wpi.first.hal.PWMJNI;
-import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.LED.LED;
-import frc.robot.simulation.SimulationManager;
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.utils.auto.PathPlannerUtils;
+import frc.utils.alerts.AlertManager;
+import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.ctre.BusStatus;
-import frc.utils.cycletime.CycleTimeUtils;
+import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
+import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
- * TimedRobot documentation. If you change the name of this class or the package after creating this project, you must also update
- * the build.gradle file in the project.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after creating this project, you must also update the build.gradle file in
+ * the project.
  */
 public class RobotManager extends LoggedRobot {
+
+	private int roborioCycles;
 
 	private Command autonomousCommand;
 
 	private Robot robot;
 
-	private LED led;
-
-
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		BatteryUtils.scheduleLimiter(); // Using RobotConstants.BATTERY_LIMITER_ENABLE, disable with it!
+		PathPlannerUtils.startPathfinder();
+		BatteryUtils.scheduleLimiter();
+		this.roborioCycles = 0;
 
 		this.robot = new Robot();
 	}
 
 	@Override
 	public void disabledInit() {
-		robot.led.off();
+		if (!DriverStationUtils.isMatch()) {
+			BrakeStateManager.coast();
+		}
+	}
+
+	@Override
+	public void disabledExit() {
+		if (!DriverStationUtils.isMatch()) {
+			BrakeStateManager.brake();
+		}
 	}
 
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = robot.getAutonomousCommand();
+		this.autonomousCommand = robot.getAutonomousCommand();
 
 		if (autonomousCommand != null) {
 			autonomousCommand.schedule();
@@ -61,16 +72,17 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		CycleTimeUtils.updateCycleTime(); // Better to be first
+		updateTimeRelatedData(); // Better to be first
 		CommandScheduler.getInstance().run();
-		BusStatus.logChainsStatuses();
 		BatteryUtils.logStatus();
-		robot.led.update();
+		BusChain.logChainsStatuses();
+		AlertManager.reportAlerts();
 	}
 
-	@Override
-	public void simulationPeriodic() {
-		SimulationManager.updateRegisteredSimulations();
+	private void updateTimeRelatedData() {
+		roborioCycles++;
+		Logger.recordOutput("RoborioCycles", roborioCycles);
+		TimeUtils.updateCycleTime(roborioCycles);
 	}
 
 }

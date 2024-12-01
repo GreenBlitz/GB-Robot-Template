@@ -51,6 +51,10 @@ public class DriverStationUtils {
 		return DriverStation.isTestEnabled();
 	}
 
+	public static boolean isDisabled() {
+		return DriverStation.isDisabled();
+	}
+
 	public static boolean isMatch() {
 		return DriverStation.getMatchType() != DriverStation.MatchType.None;
 	}

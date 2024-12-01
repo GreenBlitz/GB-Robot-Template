@@ -37,14 +37,14 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public Rotation2d getVelocityRotation2dPerSecond() {
 		if (velocitySignal == null) {
-			throw new NullPointerException("the velocity signal is null, try using: '.withVelocityControl'");
+			throw new NullPointerException("The velocity signal is null, try using: '.withVelocityControl'");
 		}
 		return velocitySignal.getLatestValue();
 	}
 
 	public void setTargetVelocityRotation2dPerSecond(Rotation2d targetVelocity) {
 		if (velocityRequest == null) {
-			throw new NullPointerException("the velocity request is null, try using: '.withVelocityControl'");
+			throw new NullPointerException("The velocity request is null, try using: '.withVelocityControl'");
 		}
 		velocityRequest.withSetPoint(targetVelocity);
 	}

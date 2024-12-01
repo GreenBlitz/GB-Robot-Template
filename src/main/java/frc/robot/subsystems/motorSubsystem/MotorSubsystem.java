@@ -27,7 +27,7 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public Double getAppliedVoltage() {
 		if (voltageSignal == null) {
-			throw new NullPointerException("the voltage signal is null, try using: '.withVoltageControl'");
+			throw new NullPointerException("The voltage signal is null, try using: '.withVoltageControl'");
 		}
 		return voltageSignal.getLatestValue();
 	}
@@ -42,7 +42,7 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public void setVoltage(double voltage) {
 		if (voltageRequest == null) {
-			throw new NullPointerException("the voltage request is null, try using: '.withVoltageControl'");
+			throw new NullPointerException("The voltage request is null, try using: '.withVoltageControl'");
 		}
 		this.voltageRequest.withSetPoint(voltage);
 	}

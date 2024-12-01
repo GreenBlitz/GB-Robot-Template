@@ -2,7 +2,6 @@ package frc.robot.hardware.phoenix6;
 
 import frc.robot.Robot;
 
-import java.util.Objects;
 
 public record Phoenix6DeviceID(int ID, BusChain busChain) {
 

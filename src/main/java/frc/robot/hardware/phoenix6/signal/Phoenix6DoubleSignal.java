@@ -19,9 +19,11 @@ public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6Signal
 		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
 	}
 
+	/**
+	 * For using refresh all with more signals...
+	 */
 	@Override
 	public StatusSignal<?> getSignal() {
-		// For using refresh all with more signals...
 		return statusSignal;
 	}
 

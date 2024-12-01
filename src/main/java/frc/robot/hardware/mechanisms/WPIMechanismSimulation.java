@@ -4,20 +4,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public abstract class WPIMechanismSimulation implements MechanismSimulation {
 
-	private final double gearRatio;
 
-	WPIMechanismSimulation(double gearRatio) {
-		this.gearRatio = gearRatio;
+	WPIMechanismSimulation() {
 	}
 
 	@Override
 	public Rotation2d getRotorPosition() {
-		return getSystemPosition().times(gearRatio);
+		return getSystemPosition().times(getGearRatio());
 	}
 
 	@Override
 	public Rotation2d getRotorVelocityAnglesPerSecond() {
-		return getSystemVelocityAnglesPerSecond().times(gearRatio);
+		return getSystemVelocityAnglesPerSecond().times(getGearRatio());
 	}
 
 
@@ -32,5 +30,7 @@ public abstract class WPIMechanismSimulation implements MechanismSimulation {
 
 	@Override
 	public abstract void updateMotor();
+
+	public abstract double getGearRatio();
 
 }

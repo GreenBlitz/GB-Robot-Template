@@ -9,7 +9,6 @@ public class SimpleMotorSimulation extends WPIMechanismSimulation {
 	private final DCMotorSim motorSimulation;
 
 	public SimpleMotorSimulation(DCMotorSim motorSimulation) {
-		super(motorSimulation.getGearing());
 		this.motorSimulation = motorSimulation;
 	}
 
@@ -31,6 +30,11 @@ public class SimpleMotorSimulation extends WPIMechanismSimulation {
 	@Override
 	public void updateMotor() {
 		motorSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+	}
+
+	@Override
+	public double getGearRatio() {
+		return motorSimulation.getGearing();
 	}
 
 }

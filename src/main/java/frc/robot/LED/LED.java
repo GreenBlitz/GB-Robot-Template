@@ -52,22 +52,23 @@ public class LED implements ILogicLED {
 			currentStartIndex++;
 		}
 	}
-	public void fireAnimation(Color color, int amountOfAnimatedLEDs, int spaceBetweenLEDs){
+
+	public void fireAnimation(Color color, int amountOfAnimatedLEDs, int spaceBetweenLEDs) {
 		int currentFinalIndex = amountOfAnimatedLEDs;
 		int currentInitialIndex = 0;
-		while (currentFinalIndex<LEDConstants.LEDStrip.LED_LENGTH){
-			this.ledStrip.setSectionColor(color,currentInitialIndex, currentFinalIndex);
-			this.ledStrip.sectionTurnOff(currentFinalIndex,spaceBetweenLEDs);
-			currentInitialIndex+=spaceBetweenLEDs;
-			currentFinalIndex+=spaceBetweenLEDs;
+		while (currentFinalIndex < LEDConstants.LEDStrip.LED_LENGTH) {
+			this.ledStrip.setSectionColor(color, currentInitialIndex, currentFinalIndex);
+			this.ledStrip.sectionTurnOff(currentFinalIndex, spaceBetweenLEDs);
+			currentInitialIndex += spaceBetweenLEDs;
+			currentFinalIndex += spaceBetweenLEDs;
 		}
 	}
 
-	public void off(){
+	public void off() {
 		this.ledStrip.sectionTurnOff(0, LEDConstants.LEDStrip.LED_LENGTH);
 	}
 
-	public void update(){
+	public void update() {
 		ledStrip.update();
 	}
 

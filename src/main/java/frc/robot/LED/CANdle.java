@@ -34,9 +34,7 @@ public class CANdle implements ILED, ILogicLED {
 	}
 
 	@Override
-	public void update() {
-
-	}
+	public void update() {}
 
 	@Override
 	public void sectionTurnOff(int startIndex, int endIndex) {
@@ -83,7 +81,6 @@ public class CANdle implements ILED, ILogicLED {
 			caNdle.setLEDs(232, 315, 46, 9, startIndex, endIndex);
 		}
 	}
-
 
 
 }

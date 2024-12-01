@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.LED.LED;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
@@ -16,6 +17,8 @@ import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
 import org.littletonrobotics.junction.Logger;
+
+import java.awt.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
@@ -30,6 +33,8 @@ public class RobotManager extends LoggedRobot {
 
 	private Robot robot;
 
+	public LED led;
+
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
@@ -38,6 +43,8 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 
 		this.robot = new Robot();
+
+		this.led = new LED();
 	}
 
 	@Override
@@ -45,6 +52,7 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtils.isMatch()) {
 			BrakeStateManager.coast();
 		}
+		led.off();
 	}
 
 	@Override
@@ -77,6 +85,7 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+		led.update();
 	}
 
 	private void updateTimeRelatedData() {

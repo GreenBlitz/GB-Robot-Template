@@ -37,7 +37,7 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public Rotation2d getVelocityRotation2dPerSecond() {
 		if (velocitySignal == null) {
-			throw new NullPointerException("the velocity request is null, try using: '.withVelocityControl'");
+			throw new NullPointerException("the velocity signal is null, try using: '.withVelocityControl'");
 		}
 		return velocitySignal.getLatestValue();
 	}
@@ -46,26 +46,25 @@ public class MotorSubsystem extends GBSubsystem {
 		if (velocityRequest == null) {
 			throw new NullPointerException("the velocity request is null, try using: '.withVelocityControl'");
 		}
-		this.velocityRequest.withSetPoint(targetVelocity);
+		velocityRequest.withSetPoint(targetVelocity);
 	}
 
 	public void updateInputs() {
-		if (velocitySignal == null) {
-			throw new NullPointerException("the velocity signal is null, try using: '.withVelocityControl'");
+		if (velocitySignal!=null){
+			motor.updateInputs(velocitySignal);
 		}
-		motor.updateInputs(velocitySignal);
 	}
 
-	public void applyVelocityRequests() {
-		if (velocityRequest == null) {
-			throw new NullPointerException("the velocity request is null, try using: '.withVelocityControl'");
+	public void applyRequests() {
+		if (velocityRequest!=null) {
+			motor.applyRequest(velocityRequest);
 		}
-		motor.applyRequest(velocityRequest);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
-		applyVelocityRequests();
+		applyRequests();
 		updateInputs();
 	}
+
 }

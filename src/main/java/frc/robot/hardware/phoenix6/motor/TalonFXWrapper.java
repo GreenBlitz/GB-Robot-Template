@@ -15,7 +15,7 @@ public class TalonFXWrapper extends TalonFX {
 	}
 
 	public TalonFXWrapper(Phoenix6DeviceID ctreDeviceID) {
-		super(ctreDeviceID.ID(), Phoenix6DeviceID.determineBusChain(ctreDeviceID));
+		super(ctreDeviceID.ID(), ctreDeviceID.busChain().getChainName());
 	}
 
 	public StatusCode applyConfiguration(TalonFXConfiguration configuration, int numberOfTries) {

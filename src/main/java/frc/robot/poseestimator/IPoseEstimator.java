@@ -9,6 +9,6 @@ public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
 	Pose2d getEstimatedPose();
 
-	Pose2d getEstimatedPoseAtTimeStamp(double timeStamp);
+	Pose2d getEstimatedPoseAtTimestamp(double timestamp);
 
 }

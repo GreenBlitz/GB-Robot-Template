@@ -27,7 +27,7 @@ public class MotorSubsystem extends GBSubsystem {
 		return this;
 	}
 
-	public MotorCommandBuilder getCommandBuilder(){
+	public MotorCommandBuilder getCommandBuilder() {
 		return commandBuilder;
 	}
 
@@ -50,13 +50,13 @@ public class MotorSubsystem extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		if (velocitySignal!=null){
+		if (velocitySignal != null) {
 			motor.updateInputs(velocitySignal);
 		}
 	}
 
 	public void applyRequests() {
-		if (velocityRequest!=null) {
+		if (velocityRequest != null) {
 			motor.applyRequest(velocityRequest);
 		}
 	}

@@ -9,10 +9,10 @@ import frc.robot.subsystems.GBSubsystem;
 
 public class MotorSubsystem extends GBSubsystem {
 
-	ControllableMotor motor;
-	MotorCommandBuilder commandBuilder;
-	IRequest<Rotation2d> velocityRequest;
-	InputSignal<Rotation2d> velocitySignal;
+	private final ControllableMotor motor;
+	private final MotorCommandBuilder commandBuilder;
+	private IRequest<Rotation2d> velocityRequest;
+	private InputSignal<Rotation2d> velocitySignal;
 
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
@@ -25,6 +25,10 @@ public class MotorSubsystem extends GBSubsystem {
 		this.velocitySignal = velocitySignal;
 		setTargetVelocityRotation2dPerSecond(velocitySignal.getLatestValue());
 		return this;
+	}
+
+	public MotorCommandBuilder getCommandBuilder(){
+		return commandBuilder;
 	}
 
 	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d tolerance) {
@@ -46,6 +50,9 @@ public class MotorSubsystem extends GBSubsystem {
 	}
 
 	public void updateInputs() {
+		if (velocitySignal == null) {
+			throw new NullPointerException("the velocity signal is null, try using: '.withVelocityControl'");
+		}
 		motor.updateInputs(velocitySignal);
 	}
 
@@ -56,5 +63,9 @@ public class MotorSubsystem extends GBSubsystem {
 		motor.applyRequest(velocityRequest);
 	}
 
-
+	@Override
+	protected void subsystemPeriodic() {
+		applyVelocityRequests();
+		updateInputs();
+	}
 }

@@ -25,7 +25,7 @@ public class MotorSubsystem extends GBSubsystem {
 		return this;
 	}
 
-	public Double getAppliedVoltage(){
+	public Double getAppliedVoltage() {
 		if (voltageSignal == null) {
 			throw new NullPointerException("the voltage signal is null, try using: '.withVoltageControl'");
 		}
@@ -36,7 +36,7 @@ public class MotorSubsystem extends GBSubsystem {
 		motor.stop();
 	}
 
-	public MotorCommandBuilder getCommandBuilder(){
+	public MotorCommandBuilder getCommandBuilder() {
 		return commandBuilder;
 	}
 
@@ -47,12 +47,12 @@ public class MotorSubsystem extends GBSubsystem {
 		this.voltageRequest.withSetPoint(voltage);
 	}
 
-	public void setPower(Double power){
+	public void setPower(Double power) {
 		motor.setPower(power);
 	}
 
 
-	public void updateInputs(){
+	public void updateInputs() {
 		motor.updateInputs(voltageSignal);
 	}
 

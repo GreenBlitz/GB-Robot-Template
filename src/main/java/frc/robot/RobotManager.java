@@ -6,7 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
+import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
+import frc.robot.hardware.rev.motors.SparkMaxWrapper;
+import frc.robot.subsystems.motorSubsystem.MotorSubsystem;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;

@@ -1,16 +1,17 @@
-package frc.robot.hardware.mechanisms;
+package frc.robot.hardware.mechanisms.wpilib;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.utils.time.TimeUtils;
 
-public class SingleJointedArmSimulation extends MechanismSimulation {
+public class SingleJointedArmSimulation implements WPILibMechanismSimulation {
 
 	private final SingleJointedArmSim singleJointedArmSimulation;
+	private final double gearRatio;
 
 	public SingleJointedArmSimulation(SingleJointedArmSim singleJointedArmSimulation, double gearRatio) {
-		super(gearRatio);
 		this.singleJointedArmSimulation = singleJointedArmSimulation;
+		this.gearRatio = gearRatio;
 	}
 
 	@Override
@@ -31,6 +32,11 @@ public class SingleJointedArmSimulation extends MechanismSimulation {
 	@Override
 	public void updateMotor() {
 		singleJointedArmSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+	}
+
+	@Override
+	public double getGearRatio() {
+		return gearRatio;
 	}
 
 }

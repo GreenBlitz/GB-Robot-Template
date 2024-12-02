@@ -1,19 +1,20 @@
-package frc.robot.hardware.mechanisms;
+package frc.robot.hardware.mechanisms.wpilib;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.utils.Conversions;
 import frc.utils.time.TimeUtils;
 
-public class ElevatorSimulation extends MechanismSimulation {
+public class ElevatorSimulation implements WPILibMechanismSimulation {
 
 	private final ElevatorSim elevatorSimulation;
 	private final double wheelDiameter;
+	private final double gearRatio;
 
-	public ElevatorSimulation(ElevatorSim elevatorSimulation, double gearRatio, double wheelDiameter) {
-		super(gearRatio);
+	public ElevatorSimulation(ElevatorSim elevatorSimulation, double wheelDiameter, double gearRatio) {
 		this.elevatorSimulation = elevatorSimulation;
 		this.wheelDiameter = wheelDiameter;
+		this.gearRatio = gearRatio;
 	}
 
 	@Override
@@ -34,6 +35,11 @@ public class ElevatorSimulation extends MechanismSimulation {
 	@Override
 	public void updateMotor() {
 		elevatorSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+	}
+
+	@Override
+	public double getGearRatio() {
+		return gearRatio;
 	}
 
 }

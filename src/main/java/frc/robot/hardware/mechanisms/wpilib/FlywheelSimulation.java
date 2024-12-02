@@ -1,10 +1,10 @@
-package frc.robot.hardware.mechanisms;
+package frc.robot.hardware.mechanisms.wpilib;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.utils.time.TimeUtils;
 
-public class FlywheelSimulation extends MechanismSimulation {
+public class FlywheelSimulation implements WPILibMechanismSimulation {
 
 	private final FlywheelSim flywheelSimulation;
 
@@ -12,8 +12,7 @@ public class FlywheelSimulation extends MechanismSimulation {
 
 	private Rotation2d currentVelocity;
 
-	public FlywheelSimulation(FlywheelSim flywheelSimulation, double gearRatio) {
-		super(gearRatio);
+	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
 		this.flywheelSimulation = flywheelSimulation;
 		this.position = Rotation2d.fromDegrees(0);
 		this.currentVelocity = getSystemVelocityAnglesPerSecond();
@@ -42,6 +41,11 @@ public class FlywheelSimulation extends MechanismSimulation {
 		Rotation2d deltaDistance = Rotation2d.fromRotations(((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2))
 			.times(TimeUtils.getCurrentCycleTimeSeconds());
 		position = Rotation2d.fromRotations(position.getRotations() + deltaDistance.getRotations());
+	}
+
+	@Override
+	public double getGearRatio() {
+		return flywheelSimulation.getGearing();
 	}
 
 }

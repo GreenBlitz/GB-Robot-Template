@@ -6,14 +6,14 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class MotorCommandBuilder {
 
-	private MotorSubsystem motor;
+	private MotorSubsystem motorSubsystem;
 
-	public MotorCommandBuilder(MotorSubsystem motor) {
-		this.motor = motor;
+	public MotorCommandBuilder(MotorSubsystem motorSubsystem) {
+		this.motorSubsystem = motorSubsystem;
 	}
 
 	public Command setVelocity(Rotation2d velocity) {
-		return new RunCommand(() -> motor.setTargetVelocityRotation2dPerSecond(velocity), motor);
+		return new RunCommand(() -> motorSubsystem.setTargetVelocityRotation2dPerSecond(velocity), motorSubsystem);
 	}
 
 }

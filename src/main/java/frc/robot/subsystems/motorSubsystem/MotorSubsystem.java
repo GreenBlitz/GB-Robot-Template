@@ -62,9 +62,11 @@ public class MotorSubsystem extends GBSubsystem {
 			motor.applyRequest(lastChangedRequest);
 		}
 	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
 		applyRequests();
 	}
+
 }

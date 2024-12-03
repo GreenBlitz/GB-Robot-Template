@@ -32,11 +32,9 @@ public class TimeUtils {
 	}
 
 	private static void logStatus(int roborioCycles) {
-		double currentTimeSeconds = getCurrentTimeSeconds();
-
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentTimeSeconds);
-		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentTimeSeconds / roborioCycles);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentCycleStartingTimeSeconds);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentCycleStartingTimeSeconds / roborioCycles);
 	}
 
 	public static double getCurrentTimeSeconds() {

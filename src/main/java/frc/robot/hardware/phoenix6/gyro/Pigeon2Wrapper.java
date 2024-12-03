@@ -129,9 +129,9 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
 	public double getAccelerationMagnitude() {
 		return new Translation3d(
-				getAccelerationX().getValue().magnitude(),
-				getAccelerationY().getValue().magnitude(),
-				getAccelerationZ().getValue().magnitude()
+			getAccelerationX().getValue().magnitude(),
+			getAccelerationY().getValue().magnitude(),
+			getAccelerationZ().getValue().magnitude()
 		).getNorm();
 	}
 

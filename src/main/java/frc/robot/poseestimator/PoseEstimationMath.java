@@ -194,4 +194,12 @@ public class PoseEstimationMath {
 		return first.minus(second).getTranslation().getNorm();
 	}
 
+	public static double sigmoid(double x) {
+		return Math.pow(1 + Math.pow(Math.E, -x), -1);
+	}
+
+	public static double hacovercosin(double x) {
+		return (Math.sin(x) + 1) / 2.0;
+	}
+
 }

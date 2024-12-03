@@ -6,27 +6,34 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.Conversions;
 
 public class MotorSubsystem extends GBSubsystem {
 
 	ControllableMotor motor;
-	MotorCommandBuilder commandBuilder;
+	MotorCommandsBuilder commandBuilder;
 	IRequest<Rotation2d> positionRequest;
 	InputSignal<Rotation2d> positionSignal;
-	Rotation2d targetPosition;
+	MotorSubsystem motorSubsystem;
 
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
 		this.motor = motor;
-		this.commandBuilder = new MotorCommandBuilder();
+		this.commandBuilder = new MotorCommandsBuilder(motorSubsystem);
+	}
+
+	public MotorCommandsBuilder getCommandBuilder() {
+		return commandBuilder;
 	}
 
 	public Rotation2d getPosition() {
-		if (positionSignal == null) {
-			throw new NullPointerException("the position request is null, try using: '.withPositionControl'");
+		try {
+			if (positionSignal == null) {
+				throw new NullPointerException("the position request is null, try using: '.withPositionControl'");
+			}
+			return positionSignal.getLatestValue();
+		} catch (NullPointerException e) {
+			return null;
 		}
-		return positionSignal.getLatestValue();
 	}
 
 	public void setPosition(Rotation2d position) {
@@ -48,12 +55,12 @@ public class MotorSubsystem extends GBSubsystem {
 		motor.resetPosition(resetPosition);
 	}
 
-	public double convertToMeters(Rotation2d motorPosition, double wheelDiameter) {
-		return Conversions.angleToDistance(motorPosition, wheelDiameter);
-	}
-
 	public boolean isPast(Rotation2d expectedPosition) {
 		return getPosition().getRadians() > expectedPosition.getRadians();
+	}
+
+	public void rollRotations(Rotation2d rotation) {
+		setTargetPosition(getPosition().plus(rotation));
 	}
 
 	public boolean isBehind(Rotation2d expectedPosition) {
@@ -66,9 +73,24 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public MotorSubsystem withPositionControl(IRequest<Rotation2d> positionRequest, InputSignal<Rotation2d> positionSignal) {
 		this.positionRequest = positionRequest;
-		this.positionSignal = positionSignal;
-		this.targetPosition = positionSignal.getLatestValue();
+		PositionSignal(positionSignal);
 		return this;
+	}
+
+	public MotorSubsystem PositionSignal(InputSignal<Rotation2d> positionSignal) {
+		this.positionSignal = positionSignal;
+		return this;
+	}
+
+	public void updateInputs() {
+		if (positionSignal != null) {
+			motor.updateInputs(positionSignal);
+		}
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		updateInputs();
 	}
 
 }

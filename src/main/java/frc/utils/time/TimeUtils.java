@@ -11,8 +11,8 @@ public class TimeUtils {
 
 	public static final double DEFAULT_CYCLE_TIME_SECONDS = 0.02;
 
-	private static double lastCycleTimeSeconds = 0;
-	private static double newCycleTimeSeconds = 0;
+	private static double lastCycleStartingTimeSeconds = 0;
+	private static double currentCycleStartingTimeSeconds = 0;
 
 	static {
 		AlertManager.addAlert(
@@ -25,8 +25,8 @@ public class TimeUtils {
 	}
 
 	public static void updateCycleTime(int roborioCycles) {
-		lastCycleTimeSeconds = newCycleTimeSeconds;
-		newCycleTimeSeconds = getCurrentTimeSeconds();
+		lastCycleStartingTimeSeconds = currentCycleStartingTimeSeconds;
+		currentCycleStartingTimeSeconds = getCurrentTimeSeconds();
 
 		logStatus(roborioCycles);
 	}
@@ -44,7 +44,7 @@ public class TimeUtils {
 	}
 
 	public static double getCurrentCycleTimeSeconds() {
-		return newCycleTimeSeconds - lastCycleTimeSeconds;
+		return currentCycleStartingTimeSeconds - lastCycleStartingTimeSeconds;
 	}
 
 }

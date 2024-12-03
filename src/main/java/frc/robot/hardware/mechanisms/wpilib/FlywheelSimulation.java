@@ -7,9 +7,7 @@ import frc.utils.time.TimeUtils;
 public class FlywheelSimulation implements WPILibMechanismSimulation {
 
 	private final FlywheelSim flywheelSimulation;
-
 	private Rotation2d position;
-
 	private Rotation2d currentVelocity;
 
 	public FlywheelSimulation(FlywheelSim flywheelSimulation) {

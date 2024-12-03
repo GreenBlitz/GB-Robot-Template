@@ -19,7 +19,7 @@ public class simulatedAccelerometer extends GBSubsystem implements IAcceleromete
 	private double accelerationY;
 	private ChassisSpeeds previousVelocity;
 
-	public simulatedAccelerometer(Supplier<ChassisSpeeds> robotSimulatedVelocityRelativeToRobot, double noiseAmount, String logPath) {
+	public simulatedAccelerometer(String logPath, Supplier<ChassisSpeeds> robotSimulatedVelocityRelativeToRobot, double noiseAmount) {
 		super(logPath);
 		Random randomNumbersGenerator = new Random();
 

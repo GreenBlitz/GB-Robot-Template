@@ -59,18 +59,11 @@ public class MotorSubsystem extends GBSubsystem {
 		motor.updateInputs(voltageSignal);
 	}
 
-	public void applyRequests() {
-		if (lastChangedRequest != null) {
-			motor.applyRequest(lastChangedRequest);
-		}
-		wasRequestApllied = true;
-	}
-
 	private void reapplyRequest() {
 		if (!motor.isConnected()) {
 			wasRequestApllied = false;
 		}
-		if (!wasRequestApllied) {
+		if (!wasRequestApllied&& motor.isConnected()) {
 			motor.applyRequest(lastChangedRequest);
 			wasRequestApllied = true;
 		}
@@ -79,7 +72,6 @@ public class MotorSubsystem extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		applyRequests();
 		reapplyRequest();
 	}
 

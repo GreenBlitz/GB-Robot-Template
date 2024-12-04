@@ -12,12 +12,14 @@ public class MotorSubsystem extends GBSubsystem {
 	private IRequest<Double> voltageRequest;
 	private InputSignal<Double> voltageSignal;
 	private IRequest lastChangedRequest;
+	private boolean wasRequestApllied;
 
 
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
 		this.motor = motor;
 		this.commandBuilder = new MotorCommandBuilder(this);
+		this.wasRequestApllied = true;
 	}
 
 	public MotorSubsystem withVoltageControl(IRequest<Double> voltageRequest, InputSignal<Double> voltageSignal) {
@@ -61,12 +63,23 @@ public class MotorSubsystem extends GBSubsystem {
 		if (lastChangedRequest != null) {
 			motor.applyRequest(lastChangedRequest);
 		}
+		wasRequestApllied = true;
+	}
+
+	private void reapplyRequest() {
+		if (!motor.isConnected()) {
+			wasRequestApllied = false;
+		}
+		if (!wasRequestApllied) {
+			motor.applyRequest(lastChangedRequest);
+		}
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
 		applyRequests();
+		reapplyRequest();
 	}
 
 }

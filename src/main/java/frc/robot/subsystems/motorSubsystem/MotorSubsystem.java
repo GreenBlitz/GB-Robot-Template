@@ -72,6 +72,7 @@ public class MotorSubsystem extends GBSubsystem {
 		}
 		if (!wasRequestApllied) {
 			motor.applyRequest(lastChangedRequest);
+			wasRequestApllied = true;
 		}
 	}
 

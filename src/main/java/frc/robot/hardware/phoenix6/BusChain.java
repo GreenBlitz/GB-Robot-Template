@@ -1,6 +1,7 @@
 package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.CANBus;
+import frc.robot.constants.GlobalConstants;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -18,6 +19,7 @@ public enum BusChain {
 	private static final int PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT = 0;
 	private static final int PERMITTED_BUS_OFF_COUNT = 0;
 	private static final String LOG_PATH_PREFIX = "Bus/";
+	private final CANBus CAN_BUS = new CANBus(this.getChainName());
 
 	private final String chainName;
 	private final String logPath;
@@ -26,7 +28,8 @@ public enum BusChain {
 	BusChain(String chainName) {
 		this.chainName = chainName;
 		this.logPath = LOG_PATH_PREFIX + this.chainName + "/";
-		this.busStatus = CANBus.getStatus(this.chainName);
+		this.busStatus = CAN_BUS.getStatus();
+
 
 		createAlerts();
 	}
@@ -83,7 +86,7 @@ public enum BusChain {
 	}
 
 	public void updateStatus() {
-		busStatus = CANBus.getStatus(chainName);
+		busStatus = CAN_BUS.getStatus();
 		logStatus();
 	}
 

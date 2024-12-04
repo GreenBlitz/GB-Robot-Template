@@ -29,7 +29,6 @@ public enum BusChain {
 		this.logPath = LOG_PATH_PREFIX + this.chainName + "/";
 		this.busStatus = CAN_BUS.getStatus();
 
-
 		createAlerts();
 	}
 

@@ -6,12 +6,10 @@ import frc.robot.vision.RawVisionAprilTagData;
 
 import java.util.Optional;
 
-public interface RobotPoseEstimatingVisionSource extends VisionSource {
+public interface RobotPoseEstimatingVisionSource extends VisionSource<RawVisionAprilTagData> {
 
 	void updateGyroAngles(GyroAngleValues gyroAngleValues);
 
 	Optional<Rotation2d> getRobotHeading();
-
-	Optional<RawVisionAprilTagData> getRawVisionData();
 
 }

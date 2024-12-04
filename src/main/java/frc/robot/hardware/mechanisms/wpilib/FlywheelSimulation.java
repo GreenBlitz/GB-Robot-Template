@@ -46,8 +46,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	}
 
 	private void updatePositionRelatedData(Rotation2d velocity) {
-		Rotation2d deltaDistance = velocity
-			.times(TimeUtils.getCurrentCycleTimeSeconds());
+		Rotation2d deltaDistance = velocity.times(TimeUtils.getCurrentCycleTimeSeconds());
 		position = Rotation2d.fromRotations(position.getRotations() + deltaDistance.getRotations());
 	}
 

@@ -3,7 +3,7 @@ package frc.robot.poseestimator;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.RawVisionData;
+import frc.robot.vision.RawVisionAprilTagData;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +68,7 @@ public class PoseEstimationMath {
 		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
 	}
 
-	public static double[] calculateStandardDeviationOfPose(RawVisionData rawVisionData, Pose2d currentEstimatedPose) {
+	public static double[] calculateStandardDeviationOfPose(RawVisionAprilTagData rawVisionData, Pose2d currentEstimatedPose) {
 		double normalizedLimelightX = rawVisionData.estimatedPose().getX() / Field.LENGTH_METERS;
 		double normalizedLimelightY = rawVisionData.estimatedPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;

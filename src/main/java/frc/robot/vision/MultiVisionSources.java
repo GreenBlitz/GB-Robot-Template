@@ -2,6 +2,7 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.time.TimeUtils;
 import java.util.ArrayList;
@@ -11,15 +12,14 @@ import java.util.function.Function;
 
 public class MultiVisionSources {
 
-	private final List<VisionSource<RawVisionData>> visionSources;
+	private final List<RobotPoseEstimatingVisionSource> visionSources;
 	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
-	@SafeVarargs
-	public MultiVisionSources(VisionSource<RawVisionData>... visionSources) {
+	public MultiVisionSources(RobotPoseEstimatingVisionSource... visionSources) {
 		this.visionSources = List.of(visionSources);
 	}
 
-	public MultiVisionSources(List<VisionSource<RawVisionData>> visionSources) {
+	public MultiVisionSources(List<RobotPoseEstimatingVisionSource> visionSources) {
 		this.visionSources = visionSources;
 	}
 
@@ -31,14 +31,11 @@ public class MultiVisionSources {
 		visionSources.forEach(source -> source.updateGyroAngles(gyroAngleValues));
 	}
 
-	public List<RawVisionData> getAllAvailablePoseData() {
-		List<RawVisionData> rawPoseData = new ArrayList<>();
+	public List<RawVisionAprilTagData> getAllAvailablePoseData() {
+		List<RawVisionAprilTagData> rawPoseData = new ArrayList<>();
 		visionSources.forEach(visionSource -> {
-			if (getEstimatedPoseAtTimestamp != null) {
-				visionSource.updateCurrentEstimatedPose(getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()));
-			}
-			visionSource.update();
-			Optional<RawVisionData> rawData = visionSource.getAllData();
+			visionSource.updateEstimation();
+			Optional<RawVisionAprilTagData> rawData = visionSource.getRawVisionData();
 			rawData.ifPresent(rawPoseData::add);
 		});
 		return rawPoseData;

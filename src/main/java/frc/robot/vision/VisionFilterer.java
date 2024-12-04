@@ -41,7 +41,7 @@ public class VisionFilterer extends GBSubsystem {
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (RawVisionData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
+		for (RawVisionAprilTagData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
 			if (config.filters().apply(rawVisionData, config.VisionFiltersTolerances())) {
 				estimates.add(rawDataToObservation(rawVisionData));
 			} else {
@@ -54,14 +54,14 @@ public class VisionFilterer extends GBSubsystem {
 	public List<VisionObservation> getAllAvailableVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
-		for (RawVisionData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
+		for (RawVisionAprilTagData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
 			estimates.add(rawDataToObservation(rawVisionData));
 		}
 
 		return estimates;
 	}
 
-	private VisionObservation rawDataToObservation(RawVisionData rawVisionData) {
+	private VisionObservation rawDataToObservation(RawVisionAprilTagData rawVisionData) {
 		double[] standardTransformDeviations = PoseEstimationMath
 			.calculateStandardDeviationOfPose(rawVisionData, getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()));
 		double[] standardDeviations = new double[] {
@@ -75,7 +75,7 @@ public class VisionFilterer extends GBSubsystem {
 	private void logEstimatedPositions() {
 		List<VisionObservation> observations = getFilteredVisionObservations();
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(super.getLogPath() + VisionConstants.ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
+			Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_ESTIMATION_LOGPATH_ADDITION + i, observations.get(i).robotPose());
 		}
 	}
 
@@ -83,12 +83,12 @@ public class VisionFilterer extends GBSubsystem {
 		List<VisionObservation> observations = getAllAvailableVisionObservations();
 		for (int i = 0; i < observations.size(); i++) {
 			Logger
-				.recordOutput(super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_PREFIX + i, observations.get(i).robotPose());
+				.recordOutput(super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION + i, observations.get(i).robotPose());
 		}
 	}
 
-	private void logFilteredOutRawData(RawVisionData rawVisionData) {
-		Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA, rawVisionData.estimatedPose());
+	private void logFilteredOutRawData(RawVisionAprilTagData rawVisionData) {
+		Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA_LOGPATH_ADDITION, rawVisionData.estimatedPose());
 	}
 
 	@Override

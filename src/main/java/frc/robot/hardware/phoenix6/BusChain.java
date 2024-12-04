@@ -1,7 +1,6 @@
 package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.CANBus;
-import frc.robot.constants.GlobalConstants;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;

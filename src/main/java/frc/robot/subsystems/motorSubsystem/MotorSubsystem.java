@@ -14,11 +14,13 @@ public class MotorSubsystem extends GBSubsystem {
 	private IRequest<Rotation2d> velocityRequest;
 	private InputSignal<Rotation2d> velocitySignal;
 	private IRequest lastChangedRequest;
+	private boolean wasRequestApllied;
 
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
 		this.motor = motor;
 		this.commandBuilder = new MotorCommandBuilder(this);
+		wasRequestApllied = true;
 	}
 
 	public MotorCommandBuilder getCommandBuilder() {
@@ -48,6 +50,7 @@ public class MotorSubsystem extends GBSubsystem {
 		}
 		velocityRequest.withSetPoint(targetVelocity);
 		lastChangedRequest = velocityRequest;
+		wasRequestApllied = true;
 	}
 
 	public void updateInputs() {
@@ -60,10 +63,21 @@ public class MotorSubsystem extends GBSubsystem {
 		}
 	}
 
+	private void reapplyRequest() {
+		if (!motor.isConnected()) {
+			wasRequestApllied = false;
+		}
+		if (!wasRequestApllied) {
+			motor.applyRequest(lastChangedRequest);
+			wasRequestApllied = true;
+		}
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		applyRequests();
 		updateInputs();
+		reapplyRequest();
 	}
 
 }

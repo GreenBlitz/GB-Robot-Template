@@ -2,6 +2,7 @@ package frc.robot.subsystems.motorSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.utils.utilcommands.LoggedDashboardCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -23,6 +24,10 @@ public class MotorCommandBuilder {
 
 	public Command setVoltage(double voltage) {
 		return new RunCommand(() -> motorSubsystem.setVoltage(voltage), motorSubsystem);
+	}
+
+	public Command setVoltageByDashboard() {
+		return new LoggedDashboardCommand("set voltage", motorSubsystem::setVoltage, motorSubsystem);
 	}
 
 	public Command stop() {

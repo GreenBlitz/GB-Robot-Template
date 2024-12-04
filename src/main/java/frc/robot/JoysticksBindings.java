@@ -30,7 +30,6 @@ public class JoysticksBindings {
 		usedJoystick.B.onTrue(robot.motorSubsystem.getCommandBuilder().setPower(0.5));
 		usedJoystick.X.onTrue(robot.motorSubsystem.getCommandBuilder().stop());
 		usedJoystick.Y.onTrue(robot.motorSubsystem.getCommandBuilder().setPower(usedJoystick.getAxisValue(Axis.LEFT_Y)));
-
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

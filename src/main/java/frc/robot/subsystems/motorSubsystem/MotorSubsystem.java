@@ -13,11 +13,14 @@ public class MotorSubsystem extends GBSubsystem {
 	private InputSignal<Double> voltageSignal;
 	private IRequest lastChangedRequest;
 
-
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
 		this.motor = motor;
 		this.commandBuilder = new MotorCommandBuilder(this);
+	}
+
+	public MotorCommandBuilder getCommandBuilder() {
+		return commandBuilder;
 	}
 
 	public MotorSubsystem withVoltageControl(IRequest<Double> voltageRequest, InputSignal<Double> voltageSignal) {
@@ -26,7 +29,15 @@ public class MotorSubsystem extends GBSubsystem {
 		return this;
 	}
 
-	public Double getAppliedVoltage() {
+	public void setVoltage(double voltage) {
+		if (voltageRequest == null) {
+			throw new NullPointerException("The voltage request is null. try using '.withVoltageControl'");
+		}
+		this.voltageRequest.withSetPoint(voltage);
+		lastChangedRequest = voltageRequest;
+	}
+
+	public Double getVoltage() {
 		if (voltageSignal == null) {
 			throw new NullPointerException("The voltage signal is null. try using '.withVoltageControl'");
 		}
@@ -35,18 +46,6 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public void stop() {
 		motor.stop();
-	}
-
-	public MotorCommandBuilder getCommandBuilder() {
-		return commandBuilder;
-	}
-
-	public void setVoltage(double voltage) {
-		if (voltageRequest == null) {
-			throw new NullPointerException("The voltage request is null. try using '.withVoltageControl'");
-		}
-		this.voltageRequest.withSetPoint(voltage);
-		lastChangedRequest = voltageRequest;
 	}
 
 	public void setPower(Double power) {

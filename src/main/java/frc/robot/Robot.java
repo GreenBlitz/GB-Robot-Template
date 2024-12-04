@@ -24,8 +24,10 @@ public class Robot {
 
 	public Robot() {
 		configureBindings();
-		this.motorSubsystem = new MotorSubsystem(new BrushlessSparkMAXMotor("motor", new SparkMaxWrapper(new SparkMaxDeviceID(12)), new SysIdRoutine.Config()), "motor");
-
+		this.motorSubsystem = new MotorSubsystem(
+			new BrushlessSparkMAXMotor("motor", new SparkMaxWrapper(new SparkMaxDeviceID(12)), new SysIdRoutine.Config()),
+			"motor"
+		);
 	}
 
 	private void configureBindings() {

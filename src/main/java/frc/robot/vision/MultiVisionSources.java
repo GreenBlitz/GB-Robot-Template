@@ -2,7 +2,6 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.vision.sources.LimeLightSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.time.TimeUtils;
 import java.util.ArrayList;
@@ -26,14 +25,6 @@ public class MultiVisionSources {
 
 	public void setEstimatedPoseAtTimestampFunction(Function<Double, Pose2d> getEstimatedPoseAtTimestamp) {
 		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
-	}
-
-	public void switchLimelightsToOldBotPose(boolean useOldBotPose) {
-		visionSources.forEach(visionSource -> {
-			if (visionSource instanceof LimeLightSource) {
-				((LimeLightSource) visionSource).switchToOldBotPose(useOldBotPose);
-			}
-		});
 	}
 
 	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {

@@ -6,6 +6,7 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.alerts.Alert;
 
 public class MotorSubsystem extends GBSubsystem {
 
@@ -39,14 +40,14 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public Rotation2d getVelocityRotation2dPerSecond() {
 		if (velocitySignal == null) {
-			throw new NullPointerException("The velocity signal is null. try using '.withVelocityControl'");
+			new Alert(Alert.AlertType.ERROR, "The velocity signal is null. try using '.withVelocityControl'")
 		}
 		return velocitySignal.getLatestValue();
 	}
 
 	public void setTargetVelocityRotation2dPerSecond(Rotation2d targetVelocity) {
 		if (velocityRequest == null) {
-			throw new NullPointerException("The velocity request is null. try using '.withVelocityControl'");
+			new Alert(Alert.AlertType.ERROR, "The request signal is null. try using '.withVelocityControl'")
 		}
 		velocityRequest.withSetPoint(targetVelocity);
 		lastChangedRequest = velocityRequest;

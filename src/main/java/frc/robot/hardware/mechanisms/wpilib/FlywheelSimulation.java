@@ -31,7 +31,6 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 		flywheelSimulation.setInputVoltage(voltage);
 	}
 
-
 	@Override
 	public void updateMotor() {
 		flywheelSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());

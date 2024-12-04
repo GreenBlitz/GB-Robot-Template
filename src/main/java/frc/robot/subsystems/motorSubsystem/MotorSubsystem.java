@@ -21,14 +21,14 @@ public class MotorSubsystem extends GBSubsystem {
 		this.commandBuilder = new MotorCommandBuilder(this);
 	}
 
+	public MotorCommandBuilder getCommandBuilder() {
+		return commandBuilder;
+	}
+
 	public MotorSubsystem withVelocityControl(IRequest<Rotation2d> velocityRequest, InputSignal<Rotation2d> velocitySignal) {
 		this.velocityRequest = velocityRequest;
 		this.velocitySignal = velocitySignal;
 		return this;
-	}
-
-	public MotorCommandBuilder getCommandBuilder() {
-		return commandBuilder;
 	}
 
 	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d tolerance) {
@@ -51,9 +51,7 @@ public class MotorSubsystem extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		if (velocitySignal != null) {
 			motor.updateInputs(velocitySignal);
-		}
 	}
 
 	public void applyRequests() {

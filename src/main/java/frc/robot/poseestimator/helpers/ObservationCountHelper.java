@@ -7,32 +7,32 @@ import java.util.function.Supplier;
 public class ObservationCountHelper<T> {
 
 	private final Supplier<List<T>> observationSupplier;
-	private final int maxCount;
+	private final int maxDataIntakeRepeats;
 	private List<T> stackedObservations;
-	private int observationsCount;
+	private int dataIntakeCounter;
 
 	public ObservationCountHelper(Supplier<List<T>> observationSupplier, int maxCount) {
 		this.observationSupplier = observationSupplier;
-		this.maxCount = maxCount;
+		this.maxDataIntakeRepeats = maxCount;
 		stackedObservations = new ArrayList<>();
-		observationsCount = 0;
+		dataIntakeCounter = 0;
 	}
 
 	public List<T> getStackedObservations() {
-		if (observationsCount == maxCount) {
-			observationsCount = 0;
+		if (dataIntakeCounter == maxDataIntakeRepeats) {
+			dataIntakeCounter = 0;
 			List<T> copyOfStackedObservations = stackedObservations;
 			stackedObservations = new ArrayList<>();
 			return copyOfStackedObservations;
 		} else {
+			dataIntakeCounter++;
 			stackedObservations.addAll(observationSupplier.get());
-			observationsCount++;
+			return new ArrayList<>();
 		}
-		return new ArrayList<>();
 	}
 
 	public int getCount() {
-		return observationsCount;
+		return dataIntakeCounter;
 	}
 
 }

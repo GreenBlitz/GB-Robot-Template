@@ -48,7 +48,7 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public void setVoltage(double voltage) {
 		if (voltageRequest == null) {
-			new Alert(Alert.AlertType.ERROR,"The voltage signal is null. try using '.withVoltageControl'").report();
+			new Alert(Alert.AlertType.ERROR,"The voltage request is null. try using '.withVoltageControl'").report();
 		}
 		this.voltageRequest.withSetPoint(voltage);
 		lastChangedRequest = voltageRequest;

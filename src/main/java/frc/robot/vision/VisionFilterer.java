@@ -82,8 +82,10 @@ public class VisionFilterer extends GBSubsystem {
 	private void logNonFilteredEstimatedPositions() {
 		List<VisionObservation> observations = getAllAvailableVisionObservations();
 		for (int i = 0; i < observations.size(); i++) {
-			Logger
-				.recordOutput(super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION + i, observations.get(i).robotPose());
+			Logger.recordOutput(
+				super.getLogPath() + VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION + i,
+				observations.get(i).robotPose()
+			);
 		}
 	}
 

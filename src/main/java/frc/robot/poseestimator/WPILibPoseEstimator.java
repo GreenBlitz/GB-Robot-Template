@@ -41,11 +41,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Matrix<N3, N1> defaultVisionStandardDeviations
 	) {
 		super(logPath);
-		this.visionFilterer = new VisionFilterer(
-			visionFiltererConfig,
-			multiVisionSources,
-			this::getEstimatedPoseAtTimestamp
-		);
+		this.visionFilterer = new VisionFilterer(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
 		this.lastOdometryValues = odometryValues;
 		this.wpiPoseEstimator = new PoseEstimator<>(
 			odometryValues.kinematics(),
@@ -76,7 +72,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void updateOdometry(OdometryObservation[] odometryObservations) {
-		for(OdometryObservation odometryObservation : odometryObservations) {
+		for (OdometryObservation odometryObservation : odometryObservations) {
 			addOdometryObservation(odometryObservation);
 		}
 	}
@@ -108,7 +104,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void updateVision(List<VisionObservation> visionObservations) {
-		for(VisionObservation observation : visionObservations) {
+		for (VisionObservation observation : visionObservations) {
 			addVisionObservation(observation);
 		}
 	}

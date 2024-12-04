@@ -4,6 +4,9 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 
 public class MotorSubsystem extends GBSubsystem {
 
@@ -30,7 +33,7 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public double getAppliedVoltage() {
 		if (voltageSignal == null) {
-			throw new NullPointerException("The voltage signal is null. try using '.withVoltageControl'");
+			new Alert(Alert.AlertType.ERROR,"The voltage signal is null. try using '.withVoltageControl'").report();
 		}
 		return voltageSignal.getLatestValue();
 	}
@@ -45,7 +48,7 @@ public class MotorSubsystem extends GBSubsystem {
 
 	public void setVoltage(double voltage) {
 		if (voltageRequest == null) {
-			throw new NullPointerException("The voltage request is null. try using '.withVoltageControl'");
+			new Alert(Alert.AlertType.ERROR,"The voltage signal is null. try using '.withVoltageControl'").report();
 		}
 		this.voltageRequest.withSetPoint(voltage);
 		lastChangedRequest = voltageRequest;

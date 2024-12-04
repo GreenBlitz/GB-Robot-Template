@@ -28,7 +28,7 @@ public class MotorSubsystem extends GBSubsystem {
 		return this;
 	}
 
-	public Double getAppliedVoltage() {
+	public double getAppliedVoltage() {
 		if (voltageSignal == null) {
 			throw new NullPointerException("The voltage signal is null. try using '.withVoltageControl'");
 		}

@@ -5,7 +5,7 @@ import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.hardware.signal.TimedValue;
 import frc.utils.time.TimeUtils;
 
-public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6SignalBuilder.SignalGetter {
+public class Phoenix6DoubleSignal extends DoubleSignal implements SignalGetter {
 
 	private final StatusSignal<?> statusSignal;
 

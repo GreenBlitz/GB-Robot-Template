@@ -34,20 +34,16 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	@Override
 	public void updateMotor() {
 		flywheelSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
-		updatePosition();
-	}
-
-	@Override
-	public double getGearRatio() {
-		return flywheelSimulation.getGearing();
-	}
-
-	private void updatePosition() {
 		Rotation2d lastVelocity = currentVelocity;
 		currentVelocity = getSystemVelocityAnglesPerSecond();
 		Rotation2d deltaDistance = Rotation2d.fromRotations(((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2))
 			.times(TimeUtils.getCurrentCycleTimeSeconds());
 		position = Rotation2d.fromRotations(position.getRotations() + deltaDistance.getRotations());
+	}
+
+	@Override
+	public double getGearRatio() {
+		return flywheelSimulation.getGearing();
 	}
 
 }

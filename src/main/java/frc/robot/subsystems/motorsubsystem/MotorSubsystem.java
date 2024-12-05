@@ -7,12 +7,13 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 public class MotorSubsystem extends GBSubsystem {
 
 	ControllableMotor motor;
-	String logPath;
+	GBSubsystem logPath;
 	MotorCommandsBuilder motorCommandsBuilder;
-	SysIdCalibrator sysIdCalibrator;
+	protected final SysIdCalibrator sysIdCalibrator;
 
-	public MotorSubsystem(String logPath) {
-		super(logPath);
+	public MotorSubsystem(GBSubsystem logPath, ControllableMotor motor) {
+		super(String.valueOf(logPath));
+		this.motor = motor;
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setPower);
 	}
 
@@ -33,7 +34,7 @@ public class MotorSubsystem extends GBSubsystem {
 	}
 
 	public String getLogPath() {
-		return super.getLogPath();
+		return String.valueOf(logPath);
 	}
 
 	public void stop() {

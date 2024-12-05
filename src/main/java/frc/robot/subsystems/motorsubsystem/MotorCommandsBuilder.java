@@ -13,15 +13,15 @@ public class MotorCommandsBuilder {
 	}
 
 	public Command setPower(double power) {
-		return new RunCommand(() -> motorSubsystem.setPower(power), motorSubsystem);
+		return new RunCommand(() -> motorSubsystem.setPower(power), motorSubsystem).withName("set power");
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
-		return new RunCommand(() -> motorSubsystem.setPower(powerSupplier.getAsDouble()), motorSubsystem);
+		return new RunCommand(() -> motorSubsystem.setPower(powerSupplier.getAsDouble()), motorSubsystem).withName("set power by supplier");
 	}
 
 	public Command stop() {
-		return new RunCommand(() -> motorSubsystem.stop(), motorSubsystem);
+		return new RunCommand(() -> motorSubsystem.stop(), motorSubsystem).withName("stop");
 	}
 
 }

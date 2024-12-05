@@ -8,6 +8,6 @@ public interface VisionSource<T> {
 
 	void updateEstimation();
 
-	Optional<RawVisionAprilTagData> getRawVisionEstimation();
+	Optional<T> getRawVisionEstimation();
 
 }

@@ -3,7 +3,7 @@ package frc.robot.poseestimator;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.RawVisionData;
+import frc.robot.vision.rawdata.RawVisionData;
 import java.util.List;
 import java.util.Optional;
 

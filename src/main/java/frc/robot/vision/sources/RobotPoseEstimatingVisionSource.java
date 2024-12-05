@@ -2,7 +2,7 @@ package frc.robot.vision.sources;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.GyroAngleValues;
-import frc.robot.vision.RawVisionAprilTagData;
+import frc.robot.vision.rawdata.RawVisionAprilTagData;
 
 import java.util.Optional;
 

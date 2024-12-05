@@ -1,13 +1,14 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.*;
+import frc.robot.vision.rawdata.RawVisionData;
 
 public class VisionFilters {
 
 	public static boolean doesRawDataPassAllFilters(RawVisionData rawVisionData, VisionFiltersTolerances tolerances) {
 		return VisionFilters.isRollInTolerance(rawVisionData, tolerances.rollTolerance())
 			&& VisionFilters.isPitchInTolerance(rawVisionData, tolerances.pitchTolerance())
-			&& VisionFilters.isRobotOnGround(rawVisionData, tolerances.robotToGroundToleranceMeters());
+			&& VisionFilters.isRobotOnGround(rawVisionData, tolerances.robotDistanceFromGroundToleranceMeters());
 	}
 
 	protected static boolean isPitchInTolerance(RawVisionData rawVisionData, Rotation2d pitchTolerance) {

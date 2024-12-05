@@ -1,10 +1,10 @@
 package frc.robot.vision.sources;
 
-import frc.robot.vision.RawVisionAprilTagData;
+import frc.robot.vision.rawdata.RawVisionData;
 
 import java.util.Optional;
 
-public interface VisionSource<T> {
+public interface VisionSource<T extends RawVisionData> {
 
 	void updateEstimation();
 

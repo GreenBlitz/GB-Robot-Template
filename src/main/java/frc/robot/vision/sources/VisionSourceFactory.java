@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.RobotManager;
 import frc.robot.vision.CameraType;
-import frc.robot.vision.RawVisionData;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.sources.simulationsource.SimulatedSource;
 import frc.utils.alerts.Alert;
@@ -18,7 +17,7 @@ import java.util.function.Supplier;
 
 public class VisionSourceFactory {
 
-	public static VisionSource<RawVisionData> createPoseEstimatingSource(
+	public static RobotPoseEstimatingVisionSource createPoseEstimatingSource(
 		CameraType type,
 		String sourceName,
 		Optional<Supplier<Pose2d>> simulatedLocation,
@@ -26,7 +25,7 @@ public class VisionSourceFactory {
 	) {
 		if (RobotManager.isReal()) {
 			return switch (type) {
-				case LIMELIGHT -> new LimeLightSource(sourceName, VisionConstants.SOURCE_LOGPATH);
+				case LIMELIGHT -> new LimeLightSource(sourceName, VisionConstants.SOURCE_LOGPATH_ADDITION);
 				case PHOTON_VISION -> null;
 			};
 		} else if (RobotManager.isSimulation()) {
@@ -49,7 +48,7 @@ public class VisionSourceFactory {
 		return null;
 	}
 
-	public static List<VisionSource<RawVisionData>> generateDefaultSources(Supplier<Pose2d> simulatedLocation) {
+	public static List<RobotPoseEstimatingVisionSource> generateDefaultSources(Supplier<Pose2d> simulatedLocation) {
 		return new ArrayList<>(
 			List.of(
 				VisionSourceFactory.createPoseEstimatingSource(

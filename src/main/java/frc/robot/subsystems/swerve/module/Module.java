@@ -160,13 +160,17 @@ public class Module {
 
 	public void pointSteer(Rotation2d steerTargetPosition, boolean optimize) {
 		SwerveModuleState moduleState = new SwerveModuleState(0, steerTargetPosition);
-		targetState.angle = optimize ? targetState.optimize(moduleState, getSteerPosition()).angle : moduleState.angle;
+		if (optimize) {
+			targetState.optimize(getSteerPosition());
+		}
+		targetState.angle = moduleState.angle;
 		setTargetSteerPosition(targetState.angle);
 	}
 
 
 	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
-		this.targetState = SwerveModuleState.optimize(targetState, getSteerPosition());
+		targetState.optimize(getSteerPosition());
+		this.targetState = targetState;
 		setTargetSteerPosition(this.targetState.angle);
 		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
 	}

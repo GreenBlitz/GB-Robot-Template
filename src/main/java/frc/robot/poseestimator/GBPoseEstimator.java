@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
 import frc.robot.poseestimator.helpers.PoseEstimatorLogging;
 import frc.robot.poseestimator.helpers.VisionDenoiser;
+import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -29,6 +30,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final ObservationCountHelper<VisionObservation> poseCountHelper;
 	private final VisionFilterer visionFilterer;
 	private final VisionDenoiser visionDenoiser;
+	private final VisionObservationSwitcher visionObservationSwitcher;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
@@ -53,6 +55,12 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.accelerationInterpolator = TimeInterpolatableBuffer.createDoubleBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.visionFilterer = new VisionFilterer(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
 		this.visionDenoiser = visionDenoiser;
+		this.visionObservationSwitcher = new VisionObservationSwitcher(
+			() -> visionDenoiser.calculateFixedObservationByOdometryLinearFilter(odometryPose, odometryPoseInterpolator),
+			visionDenoiser::calculateLinearFilterResult,
+			PoseEstimatorConstants.DATA_CHANGE_RATE,
+			PoseEstimatorConstants.DATA_SWITCHING_DURATION
+		);
 		this.headingCountHelper = new ObservationCountHelper<>(
 			visionFilterer::getAllRobotHeadingEstimations,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
@@ -175,14 +183,14 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			visionDenoiser.addVisionObservation(observation);
-			Optional<VisionObservation> fixedOptionalObservation;
+
 			if (accelerationInterpolator.getSample(observation.timestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
-				fixedOptionalObservation = visionDenoiser
-					.calculateFixedObservationByOdometryLinearFilter(odometryPose, odometryPoseInterpolator);
+				visionObservationSwitcher.switchToFirstSource();
 			} else {
-				fixedOptionalObservation = visionDenoiser.calculateLinearFilterResult();
+				visionObservationSwitcher.switchToSecondsSource();
 			}
-			VisionObservation fixedObservation = fixedOptionalObservation.orElse(observation);
+
+			VisionObservation fixedObservation = visionObservationSwitcher.getValue(observation.timestamp()).orElse(observation);
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(fixedObservation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), estimatedPose.getRotation());

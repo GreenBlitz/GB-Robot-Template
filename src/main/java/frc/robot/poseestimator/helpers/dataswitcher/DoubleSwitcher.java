@@ -1,17 +1,15 @@
-package frc.robot.poseestimator.helpers;
+package frc.robot.poseestimator.helpers.dataswitcher;
 
 import frc.utils.time.TimeUtils;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/**
- * The <code>DataSwitcher</code> class is being used to switch between two data sources, over time, without creating a "bump" in the output.
- */
-public class DataSwitcher {
+public class DoubleSwitcher implements IDataSwitcher<Double> {
 
-	private final Supplier<Double> firstSource;
-	private final Supplier<Double> secondSource;
+	private final Supplier<Optional<Double>> firstSource;
+	private final Supplier<Optional<Double>> secondSource;
 	private final Function<Double, Double> timeToWeights;
 	private final double timeToSwitch;
 	private boolean useFirstSource;
@@ -25,9 +23,9 @@ public class DataSwitcher {
 	 * @param timeToWeights:       A surjective function time → [0, 1) that returns the weights in between the switches.
 	 * @param timeToSwitchSeconds: The time required to switch.
 	 */
-	public DataSwitcher(
-		Supplier<Double> firstSource,
-		Supplier<Double> secondSource,
+	public DoubleSwitcher(
+		Supplier<Optional<Double>> firstSource,
+		Supplier<Optional<Double>> secondSource,
 		Function<Double, Double> timeToWeights,
 		double timeToSwitchSeconds
 	) {
@@ -39,7 +37,10 @@ public class DataSwitcher {
 		this.switchingTime = TimeUtils.getCurrentTimeSeconds();
 	}
 
-	public double getValue(double time) {
+	public Optional<Double> getValue(double time) {
+		if (firstSource.get().isEmpty() || secondSource.get().isEmpty()) {
+			return Optional.empty();
+		}
 		double timeDelta = TimeUtils.getCurrentCycleTimeSeconds() - switchingTime;
 		if (timeDelta == 1) {
 			return useFirstSource ? firstSource.get() : secondSource.get();
@@ -52,7 +53,7 @@ public class DataSwitcher {
 			secondWeight = firstWeight;
 			firstWeight = temp;
 		}
-		return firstSource.get() * firstWeight + secondSource.get() * secondWeight;
+		return Optional.of(firstSource.get().get() * firstWeight + secondSource.get().get() * secondWeight);
 	}
 
 	public void switchSources() {

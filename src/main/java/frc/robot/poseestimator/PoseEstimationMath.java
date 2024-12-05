@@ -1,7 +1,6 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.RawVisionData;
 
@@ -92,9 +91,7 @@ public class PoseEstimationMath {
 		double visionY = rawVisionData.estimatedPose().getY();
 		double estimatedX = currentEstimatedPose.getX();
 		double estimatedY = currentEstimatedPose.getY();
-		return new double[] {
-			calculateStandardDeviation(visionX, estimatedX),
-			calculateStandardDeviation(visionY, estimatedY)};
+		return new double[] {calculateStandardDeviation(visionX, estimatedX), calculateStandardDeviation(visionY, estimatedY)};
 	}
 
 	public static Pose2d meanOfPose(List<Pose2d> dataset) {

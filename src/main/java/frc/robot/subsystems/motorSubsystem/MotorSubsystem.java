@@ -3,10 +3,7 @@ package frc.robot.subsystems.motorSubsystem;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
 public class MotorSubsystem extends GBSubsystem {
@@ -40,8 +37,7 @@ public class MotorSubsystem extends GBSubsystem {
 		if (voltageSignal == null) {
 			new Alert(Alert.AlertType.ERROR, "The voltage signal is null. try using '.withVoltageControl'").report();
 			return null;
-		}
-		else {
+		} else {
 			return voltageSignal.getLatestValue();
 		}
 	}
@@ -49,8 +45,7 @@ public class MotorSubsystem extends GBSubsystem {
 	public void setVoltage(double voltage) {
 		if (voltageRequest == null) {
 			new Alert(Alert.AlertType.ERROR, "The voltage request is null. try using '.withVoltageControl'").report();
-		}
-		else {
+		} else {
 			this.voltageRequest.withSetPoint(voltage);
 			lastChangedRequest = voltageRequest;
 		}
@@ -68,7 +63,7 @@ public class MotorSubsystem extends GBSubsystem {
 		motor.updateInputs(voltageSignal);
 	}
 
-	private void reapplyRequest	() {
+	private void reapplyRequest() {
 		if (!motor.isConnected()) {
 			allRequestsAreApplied = false;
 		}

@@ -32,14 +32,6 @@ public class VisionFilterer<T extends VisionSource> extends GBSubsystem {
 		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}
 
-//	public List<Rotation2d> getAllRobotHeadingEstimations() {
-//		return multiVisionSources.getAllRobotHeadingEstimations();
-//	}
-//
-//	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
-//		multiVisionSources.updateGyroAngles(gyroAngleValues);
-//	}
-
 	public List<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 

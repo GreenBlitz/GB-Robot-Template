@@ -13,7 +13,7 @@ import frc.robot.constants.MathConstants;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.gyro.maple.MapleGyro;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -24,6 +24,7 @@ import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.alerts.Alert;
 import frc.utils.auto.PathPlannerUtils;
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
@@ -193,6 +194,10 @@ public class Swerve extends GBSubsystem {
 			swerveDriveSimulation -> Logger
 				.recordOutput(constants.logPath() + "SimulationRobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose())
 		);
+	}
+
+	public Pose2d getSimulatedPose() {
+		return swervePhysicsSimulation.map(AbstractDriveTrainSimulation::getSimulatedDriveTrainPose).orElse(null);
 	}
 
 

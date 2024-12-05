@@ -11,6 +11,10 @@ import java.util.Optional;
 
 public class MultiRobotVisionSources extends MultiVisionSources<RobotPoseEstimatingVisionSource> {
 
+	public MultiRobotVisionSources(RobotPoseEstimatingVisionSource... sources) {
+		super(sources);
+	}
+
 	public void switchLimelightsToOldBotPose(boolean useOldBotPose) {
 		getVisionSources().forEach(visionSource -> {
 			if (visionSource instanceof LimeLightSource) {

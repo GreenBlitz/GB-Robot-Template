@@ -161,7 +161,7 @@ public class Module {
 	public void pointSteer(Rotation2d steerTargetPosition, boolean optimize) {
 		SwerveModuleState moduleState = new SwerveModuleState(0, steerTargetPosition);
 		if (optimize) {
-			targetState.optimize(getSteerPosition());
+			moduleState.optimize(getSteerPosition());
 		}
 		targetState.angle = moduleState.angle;
 		setTargetSteerPosition(targetState.angle);

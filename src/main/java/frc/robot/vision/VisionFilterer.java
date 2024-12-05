@@ -67,7 +67,7 @@ public class VisionFilterer extends GBSubsystem {
 		double[] standardDeviations = new double[] {
 			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			VisionConstants.VISION_ANGLE_STANDARD_DEVIATION};
+			VisionConstants.DEFAULT_VISION_STANDARD_DEVIATIONS[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()]};
 
 		return new VisionObservation(rawVisionData.estimatedPose().toPose2d(), standardDeviations, rawVisionData.timestamp());
 	}

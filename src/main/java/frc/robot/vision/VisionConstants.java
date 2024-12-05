@@ -28,6 +28,6 @@ public class VisionConstants {
 		ROBOT_DISTANCE_FROM_GROUND_TOLERANCE_METERS
 	);
 
-	public static final double VISION_ANGLE_STANDARD_DEVIATION = 0.6;
+	public static final double[] DEFAULT_VISION_STANDARD_DEVIATIONS = {0.0008, 0.0008, 0.6};
 
 }

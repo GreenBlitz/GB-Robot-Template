@@ -15,16 +15,17 @@ import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.MultiVisionSources;
-import frc.robot.vision.VisionFilterer;
-import frc.robot.vision.VisionFiltererConfig;
+import frc.robot.vision.RawVisionAprilTagData;
+import frc.robot.vision.VisionConstants;
 import frc.utils.time.TimeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
-	private final VisionFilterer visionFilterer;
+	private final MultiVisionSources multiVisionSources;
 	private final PoseEstimator<SwerveModulePosition[]> wpiPoseEstimator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private OdometryValues lastOdometryValues;
@@ -34,14 +35,13 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public WPILibPoseEstimator(
 		String logPath,
 		MultiVisionSources multiVisionSources,
-		VisionFiltererConfig visionFiltererConfig,
 		OdometryValues odometryValues,
 		Odometry<SwerveModulePosition[]> odometry,
 		Matrix<N3, N1> odometryStandardDeviations,
 		Matrix<N3, N1> defaultVisionStandardDeviations
 	) {
 		super(logPath);
-		this.visionFilterer = new VisionFilterer(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
+		this.multiVisionSources = multiVisionSources;
 		this.lastOdometryValues = odometryValues;
 		this.wpiPoseEstimator = new PoseEstimator<>(
 			odometryValues.kinematics(),
@@ -50,7 +50,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			defaultVisionStandardDeviations
 		);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.headingOffset = new Rotation2d();
 		this.odometryPose = odometry.getPoseMeters();
 	}
 
@@ -131,10 +130,24 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		return Optional.of(lastVisionPose);
 	}
 
+	private List<VisionObservation> rawVisionDataToObservations(List<RawVisionAprilTagData> rawData) {
+		List<VisionObservation> observations = new ArrayList<>();
+		for (RawVisionAprilTagData observation : rawData) {
+			observations.add(
+				new VisionObservation(
+					observation.estimatedPose().toPose2d(),
+					VisionConstants.DEFAULT_VISION_STANDARD_DEVIATIONS,
+					observation.timestamp()
+				)
+			);
+		}
+		return observations;
+	}
+
 	@Override
 	public void subsystemPeriodic() {
 		estimatedPoseInterpolator.addSample(TimeUtils.getCurrentTimeSeconds(), wpiPoseEstimator.getEstimatedPosition());
-		updateVision(visionFilterer.getFilteredVisionObservations());
+		updateVision(rawVisionDataToObservations(multiVisionSources.getAllAvailablePoseData()));
 	}
 
 }

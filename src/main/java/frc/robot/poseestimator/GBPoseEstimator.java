@@ -24,6 +24,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
+	private final TimeInterpolatableBuffer<Double> accelerationInterpolator;
 	private final ObservationCountHelper<Rotation2d> headingCountHelper;
 	private final ObservationCountHelper<VisionObservation> poseCountHelper;
 	private final VisionFilterer visionFilterer;
@@ -49,6 +50,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.accelerationInterpolator = TimeInterpolatableBuffer.createDoubleBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.visionFilterer = new VisionFilterer(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
 		this.visionDenoiser = visionDenoiser;
 		this.headingCountHelper = new ObservationCountHelper<>(
@@ -173,10 +175,14 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			visionDenoiser.addVisionObservation(observation);
-			VisionObservation fixedObservation;
-			Optional<VisionObservation> fixedOptionalObservation = visionDenoiser
-				.calculateFixedObservationByOdometryLinearFilter(odometryPose, odometryPoseInterpolator);
-			fixedObservation = fixedOptionalObservation.orElse(observation);
+			Optional<VisionObservation> fixedOptionalObservation;
+			if (accelerationInterpolator.getSample(observation.timestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
+				fixedOptionalObservation = visionDenoiser
+					.calculateFixedObservationByOdometryLinearFilter(odometryPose, odometryPoseInterpolator);
+			} else {
+				fixedOptionalObservation = visionDenoiser.calculateLinearFilterResult();
+			}
+			VisionObservation fixedObservation = fixedOptionalObservation.orElse(observation);
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(fixedObservation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), estimatedPose.getRotation());

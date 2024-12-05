@@ -4,10 +4,10 @@ import frc.robot.vision.rawdata.RawVisionData;
 
 import java.util.Optional;
 
-public interface VisionSource<ReturnType extends RawVisionData> {
+public interface VisionSource<T extends RawVisionData> {
 
 	void updateEstimation();
 
-	Optional<ReturnType> getRawVisionEstimation();
+	Optional<T> getRawVisionEstimation();
 
 }

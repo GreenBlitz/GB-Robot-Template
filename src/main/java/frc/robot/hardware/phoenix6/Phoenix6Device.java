@@ -7,7 +7,7 @@ import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IDevice;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6BothLatencySignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.hardware.phoenix6.signal.SignalGetter;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -37,7 +37,7 @@ public abstract class Phoenix6Device implements IDevice {
 
 
 	private boolean isValid(InputSignal<?> signal) {
-		return signal instanceof Phoenix6SignalBuilder.SignalGetter;
+		return signal instanceof SignalGetter;
 	}
 
 	private void reportInvalidSignal(InputSignal<?> invalidSignal) {
@@ -62,7 +62,7 @@ public abstract class Phoenix6Device implements IDevice {
 	private StatusCode refreshSignals(InputSignal<?>... signals) {
 		LinkedList<StatusSignal<?>> signalsSet = new LinkedList<>();
 		for (InputSignal<?> signal : signals) {
-			if (signal instanceof Phoenix6SignalBuilder.SignalGetter signalGetter) {
+			if (signal instanceof SignalGetter signalGetter) {
 				signalsSet.add(signalGetter.getSignal());
 				if (signal instanceof Phoenix6BothLatencySignal bothLatencySignal) {
 					signalsSet.add(bothLatencySignal.getSignalSlope());

@@ -5,7 +5,7 @@ import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.hardware.signal.TimedValue;
 import frc.utils.time.TimeUtils;
 
-public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6SignalBuilder.SignalGetter {
+public class Phoenix6DoubleSignal extends DoubleSignal implements SignalGetter {
 
 	private final StatusSignal<?> statusSignal;
 
@@ -19,9 +19,11 @@ public class Phoenix6DoubleSignal extends DoubleSignal implements Phoenix6Signal
 		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
 	}
 
+	/**
+	 * For using refresh all with more signals...
+	 */
 	@Override
 	public StatusSignal<?> getSignal() {
-		// For using refresh all with more signals...
 		return statusSignal;
 	}
 

@@ -19,12 +19,18 @@ public class DataSwitcher {
 
 	/**
 	 * Constructor method for the <code>DataSwitcher</code>` class.
-	 * @param firstSource: A function time → ℝ. First and default source of continues data (till switchSource()).
-	 * @param secondSource: A function dom time → ℝ. First source of continues data.
-	 * @param timeToWeights: A surjective function time → [0, 1) that returns the weights in between the switches.
+	 *
+	 * @param firstSource:         A function time → ℝ. First and default source of continues data (till switchSource()).
+	 * @param secondSource:        A function dom time → ℝ. First source of continues data.
+	 * @param timeToWeights:       A surjective function time → [0, 1) that returns the weights in between the switches.
 	 * @param timeToSwitchSeconds: The time required to switch.
 	 */
-	public DataSwitcher(Supplier<Double> firstSource, Supplier<Double> secondSource, Function<Double, Double> timeToWeights, double timeToSwitchSeconds) {
+	public DataSwitcher(
+		Supplier<Double> firstSource,
+		Supplier<Double> secondSource,
+		Function<Double, Double> timeToWeights,
+		double timeToSwitchSeconds
+	) {
 		this.firstSource = firstSource;
 		this.secondSource = secondSource;
 		this.timeToWeights = timeToWeights;

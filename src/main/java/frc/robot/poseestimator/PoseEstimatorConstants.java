@@ -19,6 +19,8 @@ public class PoseEstimatorConstants {
 
 //	public static final Function<Double, Double> DATA_CHANGE_RATE = (Double timestamp) -> PoseEstimationMath.sigmoid(9 * (timestamp - 0.5));
 
-	public static final Function<Double, Double> DATA_CHANGE_RATE = (Double timestamp) -> PoseEstimationMath.hacovercosin(Math.PI * (timestamp - 0.5));
+	public static final Function<
+		Double,
+		Double> DATA_CHANGE_RATE = (Double timestamp) -> PoseEstimationMath.hacovercosin(Math.PI * (timestamp - 0.5));
 
 }

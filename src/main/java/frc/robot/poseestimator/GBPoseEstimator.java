@@ -12,6 +12,7 @@ import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.multivisionsources.MultiRobotVisionSources;
+import frc.robot.vision.rawdata.RawVisionAprilTagData;
 import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
@@ -27,7 +28,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final ObservationCountHelper<Rotation2d> headingCountHelper;
 	private final ObservationCountHelper<VisionObservation> poseCountHelper;
-	private final VisionFilterer visionFilterer;
+	private final VisionFilterer<RawVisionAprilTagData, RobotPoseEstimatingVisionSource> visionFilterer;
 	private final MultiRobotVisionSources robotVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
@@ -49,11 +50,10 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.visionFilterer = new VisionFilterer<
-			RobotPoseEstimatingVisionSource>(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
+		this.visionFilterer = new VisionFilterer<>(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
 		this.robotVisionSources = multiVisionSources;
 		this.headingCountHelper = new ObservationCountHelper<>(
-			visionFilterer::getAllAvailableVisionObservations,
+			multiVisionSources::getAllRobotHeadingEstimations,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
 		this.poseCountHelper = new ObservationCountHelper<>(

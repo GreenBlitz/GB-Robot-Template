@@ -9,17 +9,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class MultiVisionSources<T extends VisionSource> {
+public class MultiVisionSources<ReturnType extends RawVisionData, CameraType extends VisionSource<ReturnType>> {
 
-	private final List<T> visionSources;
+	private final List<CameraType> visionSources;
 	private Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
 	@SafeVarargs
-	public MultiVisionSources(T... visionSources) {
+	public MultiVisionSources(CameraType... visionSources) {
 		this.visionSources = List.of(visionSources);
 	}
 
-	public MultiVisionSources(List<T> visionSources) {
+	public MultiVisionSources(List<CameraType> visionSources) {
 		this.visionSources = visionSources;
 	}
 
@@ -27,15 +27,15 @@ public class MultiVisionSources<T extends VisionSource> {
 		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}
 
-	protected List<T> getVisionSources() {
+	protected List<CameraType> getVisionSources() {
 		return visionSources;
 	}
 
-	public List<RawVisionData> getAllAvailablePoseData() {
-		List<RawVisionData> rawPoseData = new ArrayList<>();
+	public List<ReturnType> getAllAvailablePoseData() {
+		List<ReturnType> rawPoseData = new ArrayList<>();
 		visionSources.forEach(visionSource -> {
 			visionSource.updateEstimation();
-			Optional<RawVisionData> rawData = visionSource.getRawVisionEstimation();
+			Optional<ReturnType> rawData = visionSource.getRawVisionEstimation();
 			rawData.ifPresent(rawPoseData::add);
 		});
 		return rawPoseData;

@@ -48,7 +48,7 @@ public class VisionSourceFactory {
 		return null;
 	}
 
-	public static List<RobotPoseEstimatingVisionSource> generateDefaultSources(Supplier<Pose2d> simulatedLocation) {
+	public static List<RobotPoseEstimatingVisionSource> generateDefaultPoseEstimatingSources(Supplier<Pose2d> simulatedLocation) {
 		return new ArrayList<>(
 			List.of(
 				VisionSourceFactory.createPoseEstimatingSource(

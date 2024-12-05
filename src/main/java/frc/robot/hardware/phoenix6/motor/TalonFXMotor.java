@@ -101,4 +101,8 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		}
 	}
 
+	@Override
+	public boolean isConnected() {
+		return motor.isConnected();
+	}
 }

@@ -31,11 +31,6 @@ public abstract class Phoenix6Device implements IDevice {
 		return logPath;
 	}
 
-	public boolean isConnected() {
-		return connectedInput.connected;
-	}
-
-
 	private boolean isValid(InputSignal<?> signal) {
 		return signal instanceof SignalGetter;
 	}
@@ -82,7 +77,8 @@ public abstract class Phoenix6Device implements IDevice {
 	@Override
 	public void updateInputs(InputSignal<?>... inputSignals) {
 		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
-		connectedInput.connected = refreshSignals(validSignals).isOK();
+		refreshSignals(validSignals);
+		connectedInput.connected = isConnected();
 		Logger.processInputs(logPath, connectedInput);
 		logSignals(validSignals);
 	}

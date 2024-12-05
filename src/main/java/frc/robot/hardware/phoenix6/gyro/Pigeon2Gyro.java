@@ -19,4 +19,8 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 		gyro.setYaw(yaw);
 	}
 
+	@Override
+	public boolean isConnected() {
+		return gyro.isConnected();
+	}
 }

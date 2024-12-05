@@ -24,4 +24,5 @@ public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder {
 	public boolean isConnected() {
 		return encoder.isConnected();
 	}
+
 }

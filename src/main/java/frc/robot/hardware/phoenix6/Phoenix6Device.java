@@ -31,6 +31,7 @@ public abstract class Phoenix6Device implements IDevice {
 		return logPath;
 	}
 
+
 	private boolean isValid(InputSignal<?> signal) {
 		return signal instanceof SignalGetter;
 	}

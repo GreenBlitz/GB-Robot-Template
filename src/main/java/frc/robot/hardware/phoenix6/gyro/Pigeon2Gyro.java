@@ -23,4 +23,5 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 	public boolean isConnected() {
 		return gyro.isConnected();
 	}
+
 }

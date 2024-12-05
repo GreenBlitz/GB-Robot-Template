@@ -54,13 +54,4 @@ public class Phoenix6SignalBuilder {
 		return new Phoenix6BothLatencySignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
 	}
 
-	public interface SignalGetter {
-
-		/**
-		 * For using refresh all with more signals...
-		 */
-		StatusSignal<?> getSignal();
-
-	}
-
 }

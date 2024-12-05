@@ -6,7 +6,7 @@ import frc.robot.hardware.signal.TimedValue;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtils;
 
-public class Phoenix6AngleSignal extends AngleSignal implements Phoenix6SignalBuilder.SignalGetter {
+public class Phoenix6AngleSignal extends AngleSignal implements SignalGetter {
 
 	private final StatusSignal<?> statusSignal;
 

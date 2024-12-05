@@ -19,14 +19,14 @@ public enum BusChain {
 	private static final int PERMITTED_BUS_OFF_COUNT = 0;
 	private static final String LOG_PATH_PREFIX = "Bus/";
 
-	private final String chainName;
+	private final CANBus canBus;
 	private final String logPath;
 	private CANBusStatus busStatus;
 
 	BusChain(String chainName) {
-		this.chainName = chainName;
-		this.logPath = LOG_PATH_PREFIX + this.chainName + "/";
-		this.busStatus = CANBus.getStatus(this.chainName);
+		this.canBus = new CANBus(chainName);
+		this.logPath = LOG_PATH_PREFIX + getChainName() + "/";
+		this.busStatus = canBus.getStatus();
 
 		createAlerts();
 	}
@@ -79,11 +79,11 @@ public enum BusChain {
 	}
 
 	public String getChainName() {
-		return chainName;
+		return canBus.getName();
 	}
 
 	public void updateStatus() {
-		busStatus = CANBus.getStatus(chainName);
+		busStatus = canBus.getStatus();
 		logStatus();
 	}
 

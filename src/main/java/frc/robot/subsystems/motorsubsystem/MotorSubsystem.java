@@ -1,90 +1,47 @@
 package frc.robot.subsystems.motorsubsystem;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.interfaces.IRequest;
-import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class MotorSubsystem extends GBSubsystem {
 
 	ControllableMotor motor;
-	MotorCommandsBuilder commandBuilder;
-	IRequest<Rotation2d> positionRequest;
-	InputSignal<Rotation2d> positionSignal;
-	private IRequest lastChangedRequest;
+	String logPath;
+	MotorCommandsBuilder motorCommandsBuilder;
+	SysIdCalibrator sysIdCalibrator;
 
-	public MotorSubsystem(ControllableMotor motor, String logPath) {
+	public MotorSubsystem(String logPath) {
 		super(logPath);
-		this.motor = motor;
-		this.commandBuilder = new MotorCommandsBuilder(this);
+		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setPower);
 	}
 
-	public MotorCommandsBuilder getCommandBuilder() {
-		return commandBuilder;
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
 	}
 
-	public Rotation2d getPosition() {
-		if (positionSignal == null) {
-			throw new NullPointerException("the position request is null, try using: '.withPositionControl'");
-		}
-		return positionSignal.getLatestValue();
+	public MotorCommandsBuilder getCommandsBuilder() {
+		return motorCommandsBuilder;
 	}
 
-	public void setTargetPosition(Rotation2d targetPosition) {
-		if (positionRequest == null) {
-			throw new NullPointerException("the position request is null, try using: '.withPositionControl'");
-		}
-		this.positionRequest.withSetPoint(targetPosition);
-		lastChangedRequest = positionRequest;
+	public void setPower(double power) {
+		motor.setPower(power);
 	}
 
-	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
-		return MathUtil.isNear(targetPosition.getRotations(), getPosition().getRotations(), tolerance.getRotations());
+	public SysIdCalibrator getSysIdCalibrator() {
+		return sysIdCalibrator;
 	}
 
-	public void resetPosition(Rotation2d resetPosition) {
-		motor.resetPosition(resetPosition);
+	public String getLogPath() {
+		return super.getLogPath();
 	}
 
-	public boolean isPast(Rotation2d expectedPosition) {
-		return getPosition().getRadians() > expectedPosition.getRadians();
-	}
-
-	public void move(Rotation2d rotation) {
-		setTargetPosition(getPosition().plus(rotation));
-	}
-
-	public boolean isBehind(Rotation2d expectedPosition) {
-		return getPosition().getRadians() < expectedPosition.getRadians();
-	}
-
-	protected void stayInPlace() {
-		setTargetPosition(getPosition());
-	}
-
-	public MotorSubsystem withPositionControl(IRequest<Rotation2d> positionRequest, InputSignal<Rotation2d> positionSignal) {
-		this.positionRequest = positionRequest;
-		withPositionSignal(positionSignal);
-		return this;
-	}
-
-	public MotorSubsystem withPositionSignal(InputSignal<Rotation2d> positionSignal) {
-		this.positionSignal = positionSignal;
-		return this;
-	}
-
-	public void applyRequests() {
-		if (lastChangedRequest != null) {
-			motor.applyRequest(lastChangedRequest);
-		}
+	public void stop() {
+		motor.stop();
 	}
 
 	public void updateInputs() {
-		if (positionSignal != null) {
-			motor.updateInputs(positionSignal);
-		}
+		motor.updateInputs();
 	}
 
 	@Override

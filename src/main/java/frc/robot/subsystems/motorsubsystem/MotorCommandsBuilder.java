@@ -1,10 +1,8 @@
 package frc.robot.subsystems.motorsubsystem;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-
-import java.util.function.Supplier;
+import java.util.function.DoubleSupplier;
 
 public class MotorCommandsBuilder {
 
@@ -14,16 +12,16 @@ public class MotorCommandsBuilder {
 		this.motorSubsystem = motorSubsystem;
 	}
 
-	public Command moveToAngle(Rotation2d angle) {
-		return new RunCommand(() -> motorSubsystem.setTargetPosition(angle), motorSubsystem).withName("move to angle");
+	public Command setPower(double power) {
+		return new RunCommand(() -> motorSubsystem.setPower(power), motorSubsystem);
 	}
 
-	public Command moveToAngle(Supplier<Rotation2d> angleSupplier) {
-		return new RunCommand(() -> motorSubsystem.setTargetPosition(angleSupplier.get()), motorSubsystem).withName("move to angle by supplier");
+	public Command setPower(DoubleSupplier powerSupplier) {
+		return new RunCommand(() -> motorSubsystem.setPower(powerSupplier.getAsDouble()), motorSubsystem);
 	}
 
-	public Command stayInPlace() {
-		return new RunCommand(() -> motorSubsystem.stayInPlace()).withName("Stay in place");
+	public Command stop() {
+		return new RunCommand(() -> motorSubsystem.stop(), motorSubsystem);
 	}
 
 }

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.mechanisms.SimpleMotorSimulation;
+import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -47,8 +47,7 @@ class TalonFXSteerConstants {
 			new DCMotorSim(
 				LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(1), momentOfInertiaMetersSquared, GEAR_RATIO),
 				DCMotor.getFalcon500Foc(1)
-			),
-			GEAR_RATIO
+			)
 		);
 	}
 
@@ -82,7 +81,7 @@ class TalonFXSteerConstants {
 		boolean inverted
 	) {
 		TalonFXConfiguration configuration = generateMotorConfig(inverted);
-		configuration.Feedback.FeedbackRemoteSensorID = encoderID.ID();
+		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
 
 		return new TalonFXMotor(logPath, deviceID, configuration, generateSysidConfig(), generateMechanismSimulation());
 	}

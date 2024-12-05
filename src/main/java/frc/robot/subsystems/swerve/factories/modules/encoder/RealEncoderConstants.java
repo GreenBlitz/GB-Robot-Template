@@ -29,7 +29,7 @@ class RealEncoderConstants {
 	}
 
 	protected static IAngleEncoder generateEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
-		CANcoder cancoder = new CANcoder(encoderDeviceID.ID(), encoderDeviceID.busChain().getChainName());
+		CANcoder cancoder = new CANcoder(encoderDeviceID.id(), encoderDeviceID.busChain().getChainName());
 		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
 		cancoder.getConfigurator().refresh(magnetSensorConfigs);
 		CANcoderConfiguration caNcoderConfiguration = generateEncoderConfig();

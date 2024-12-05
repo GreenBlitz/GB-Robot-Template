@@ -3,31 +3,31 @@ package frc.robot.subsystems.motorSubsystem;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
-import frc.utils.alerts.AlertManager;
-import frc.utils.alerts.PeriodicAlert;
 
 public class MotorSubsystem extends GBSubsystem {
 
 	private final ControllableMotor motor;
-	private final MotorCommandBuilder commandBuilder;
+	private final MotorCommandsBuilder commandsBuilder;
 	private IRequest<Double> voltageRequest;
 	private InputSignal<Double> voltageSignal;
-	private IRequest lastChangedRequest;
-	private boolean wasRequestApllied;
+	private IRequest<?> lastChangedRequest;
+	private boolean allRequestsAreApplied;
 
 	public MotorSubsystem(ControllableMotor motor, String logPath) {
 		super(logPath);
 		this.motor = motor;
-		this.commandBuilder = new MotorCommandBuilder(this);
-		this.wasRequestApllied = true;
+		this.commandsBuilder = new MotorCommandsBuilder(this);
+		this.allRequestsAreApplied = true;
 	}
 
-	public MotorCommandBuilder getCommandBuilder() {
-		return commandBuilder;
+	public MotorCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
-
 
 	public MotorSubsystem withVoltageControl(IRequest<Double> voltageRequest, InputSignal<Double> voltageSignal) {
 		this.voltageRequest = voltageRequest;
@@ -54,7 +54,7 @@ public class MotorSubsystem extends GBSubsystem {
 		motor.stop();
 	}
 
-	public void setPower(Double power) {
+	public void setPower(double power) {
 		motor.setPower(power);
 	}
 
@@ -62,13 +62,13 @@ public class MotorSubsystem extends GBSubsystem {
 		motor.updateInputs(voltageSignal);
 	}
 
-	private void reapplyRequest() {
+	private void reapplyRequest	() {
 		if (!motor.isConnected()) {
-			wasRequestApllied = false;
+			allRequestsAreApplied = false;
 		}
-		if (!wasRequestApllied&& motor.isConnected()) {
+		if (!allRequestsAreApplied && motor.isConnected()) {
 			motor.applyRequest(lastChangedRequest);
-			wasRequestApllied = true;
+			allRequestsAreApplied = true;
 		}
 	}
 

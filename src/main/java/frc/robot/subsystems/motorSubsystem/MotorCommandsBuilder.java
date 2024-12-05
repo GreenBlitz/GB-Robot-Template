@@ -6,11 +6,11 @@ import frc.utils.utilcommands.LoggedDashboardCommand;
 
 import java.util.function.DoubleSupplier;
 
-public class MotorCommandBuilder {
+public class MotorCommandsBuilder {
 
 	private MotorSubsystem motorSubsystem;
 
-	public MotorCommandBuilder(MotorSubsystem motorSubsystem) {
+	public MotorCommandsBuilder(MotorSubsystem motorSubsystem) {
 		this.motorSubsystem = motorSubsystem;
 	}
 

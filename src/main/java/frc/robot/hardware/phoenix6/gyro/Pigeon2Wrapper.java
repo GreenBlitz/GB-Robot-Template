@@ -105,7 +105,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	public Pigeon2Wrapper(Phoenix6DeviceID deviceID) {
-		super(deviceID.ID(), deviceID.busChain().getChainName());
+		super(deviceID.id(), deviceID.busChain().getChainName());
 		this.rollOffSetDegrees = 0;
 		this.pitchOffSetDegrees = 0;
 	}

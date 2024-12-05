@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class VisionFilterer<ReturnType extends RawVisionData, CameraType extends VisionSource<ReturnType>> extends GBSubsystem {
+public class VisionFilterer<T extends VisionSource<? extends RawVisionData>> extends GBSubsystem {
 
-	private final MultiVisionSources<ReturnType, CameraType> multiVisionSources;
+	private final MultiVisionSources<T> multiVisionSources;
 	private final VisionFiltererConfig config;
 	private final Function<Double, Pose2d> getEstimatedPoseAtTimestamp;
 
 	public VisionFilterer(
 		VisionFiltererConfig config,
-		MultiVisionSources<ReturnType, CameraType> multiVisionSources,
+		MultiVisionSources<T> multiVisionSources,
 		Function<Double, Pose2d> getEstimatedPoseAtTimestamp
 	) {
 		super(config.logPath());

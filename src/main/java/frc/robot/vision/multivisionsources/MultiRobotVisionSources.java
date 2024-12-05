@@ -2,7 +2,6 @@ package frc.robot.vision.multivisionsources;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.GyroAngleValues;
-import frc.robot.vision.rawdata.RawVisionAprilTagData;
 import frc.robot.vision.sources.LimeLightSource;
 import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
 
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MultiRobotVisionSources extends MultiVisionSources<RawVisionAprilTagData, RobotPoseEstimatingVisionSource> {
+public class MultiRobotVisionSources extends MultiVisionSources<RobotPoseEstimatingVisionSource> {
 
 	public void switchLimelightsToOldBotPose(boolean useOldBotPose) {
 		getVisionSources().forEach(visionSource -> {

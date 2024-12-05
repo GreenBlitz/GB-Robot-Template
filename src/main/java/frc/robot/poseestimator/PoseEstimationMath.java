@@ -88,13 +88,13 @@ public class PoseEstimationMath {
 	}
 
 	public static double[] calculateStandardDeviationOfPose(RawVisionData rawVisionData, Pose2d currentEstimatedPose) {
-		double normalizedLimelightX = rawVisionData.estimatedPose().getX() / Field.LENGTH_METERS;
-		double normalizedLimelightY = rawVisionData.estimatedPose().getY() / Field.WIDTH_METERS;
-		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
-		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
+		double visionX = rawVisionData.estimatedPose().getX();
+		double visionY = rawVisionData.estimatedPose().getY();
+		double estimatedX = currentEstimatedPose.getX();
+		double estimatedY = currentEstimatedPose.getY();
 		return new double[] {
-			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
-			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
+			calculateStandardDeviation(visionX, estimatedX),
+			calculateStandardDeviation(visionY, estimatedY)};
 	}
 
 	public static Pose2d meanOfPose(List<Pose2d> dataset) {

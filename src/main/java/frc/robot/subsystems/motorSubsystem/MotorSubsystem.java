@@ -32,20 +32,20 @@ public class MotorSubsystem extends GBSubsystem {
 		return this;
 	}
 
-	public void setVoltage(double voltage) {
-		if (voltageRequest == null) {
-			new Alert(Alert.AlertType.ERROR,"The voltage request is null. try using '.withVoltageControl'").report();
-		}
-		this.voltageRequest.withSetPoint(voltage);
-		lastChangedRequest = voltageRequest;
-	}
-
 	public Double getVoltage() {
 		if (voltageSignal == null) {
 			new Alert(Alert.AlertType.ERROR,"The voltage signal is null. try using '.withVoltageControl'").report();
 			return null;
 		}
 		return voltageSignal.getLatestValue();
+	}
+
+	public void setVoltage(double voltage) {
+		if (voltageRequest == null) {
+			new Alert(Alert.AlertType.ERROR,"The voltage request is null. try using '.withVoltageControl'").report();
+		}
+		this.voltageRequest.withSetPoint(voltage);
+		lastChangedRequest = voltageRequest;
 	}
 
 	public void stop() {

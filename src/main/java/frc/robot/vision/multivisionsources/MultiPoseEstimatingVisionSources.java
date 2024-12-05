@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MultiRobotVisionSources extends MultiVisionSources<RobotPoseEstimatingVisionSource> {
+public class MultiPoseEstimatingVisionSources extends MultiVisionSources<RobotPoseEstimatingVisionSource> {
 
-	public MultiRobotVisionSources(RobotPoseEstimatingVisionSource... visionSources) {
+	public MultiPoseEstimatingVisionSources(RobotPoseEstimatingVisionSource... visionSources) {
 		super(visionSources);
 	}
 

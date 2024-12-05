@@ -11,7 +11,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.multivisionsources.MultiRobotVisionSources;
+import frc.robot.vision.multivisionsources.MultiPoseEstimatingVisionSources;
 import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
@@ -28,7 +28,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final ObservationCountHelper<Rotation2d> headingCountHelper;
 	private final ObservationCountHelper<VisionObservation> poseCountHelper;
 	private final VisionFilterer<RobotPoseEstimatingVisionSource> visionFilterer;
-	private final MultiRobotVisionSources robotVisionSources;
+	private final MultiPoseEstimatingVisionSources robotVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
@@ -41,7 +41,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		MultiRobotVisionSources multiVisionSources,
+		MultiPoseEstimatingVisionSources multiVisionSources,
 		VisionFiltererConfig visionFiltererConfig,
 		OdometryValues odometryValues,
 		double[] odometryStandardDeviations

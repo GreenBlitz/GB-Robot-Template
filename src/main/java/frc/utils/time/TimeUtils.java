@@ -11,8 +11,8 @@ public class TimeUtils {
 
 	public static final double DEFAULT_CYCLE_TIME_SECONDS = 0.02;
 
-	private static double lastCycleTimeSeconds = 0;
-	private static double newCycleTimeSeconds = 0;
+	private static double lastCycleStartingTimeSeconds = 0;
+	private static double currentCycleStartingTimeSeconds = 0;
 
 	static {
 		AlertManager.addAlert(
@@ -25,18 +25,16 @@ public class TimeUtils {
 	}
 
 	public static void updateCycleTime(int roborioCycles) {
-		lastCycleTimeSeconds = newCycleTimeSeconds;
-		newCycleTimeSeconds = getCurrentTimeSeconds();
+		lastCycleStartingTimeSeconds = currentCycleStartingTimeSeconds;
+		currentCycleStartingTimeSeconds = getCurrentTimeSeconds();
 
 		logStatus(roborioCycles);
 	}
 
 	private static void logStatus(int roborioCycles) {
-		double currentTimeSeconds = getCurrentTimeSeconds();
-
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentTimeSeconds);
-		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentTimeSeconds / roborioCycles);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentCycleStartingTimeSeconds);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentCycleStartingTimeSeconds / roborioCycles);
 	}
 
 	public static double getCurrentTimeSeconds() {
@@ -44,7 +42,7 @@ public class TimeUtils {
 	}
 
 	public static double getCurrentCycleTimeSeconds() {
-		return newCycleTimeSeconds - lastCycleTimeSeconds;
+		return currentCycleStartingTimeSeconds - lastCycleStartingTimeSeconds;
 	}
 
 }

@@ -6,7 +6,7 @@ import frc.robot.hardware.signal.TimedValue;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtils;
 
-public class Phoenix6AngleSignal extends AngleSignal implements Phoenix6SignalBuilder.SignalGetter {
+public class Phoenix6AngleSignal extends AngleSignal implements SignalGetter {
 
 	private final StatusSignal<?> statusSignal;
 
@@ -20,9 +20,11 @@ public class Phoenix6AngleSignal extends AngleSignal implements Phoenix6SignalBu
 		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
 	}
 
+	/**
+	 * For using refresh all with more signals...
+	 */
 	@Override
 	public StatusSignal<?> getSignal() {
-		// For using refresh all with more signals...
 		return statusSignal;
 	}
 

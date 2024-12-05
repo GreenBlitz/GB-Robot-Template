@@ -2,14 +2,14 @@ package frc.robot.hardware.phoenix6;
 
 import frc.robot.Robot;
 
-public record Phoenix6DeviceID(int ID, BusChain busChain) {
+public record Phoenix6DeviceID(int id, BusChain busChain) {
 
-	public Phoenix6DeviceID(int ID) {
-		this(ID, BusChain.ROBORIO);
+	public Phoenix6DeviceID(int id) {
+		this(id, BusChain.ROBORIO);
 	}
 
-	public Phoenix6DeviceID(int ID, BusChain busChain) {
-		this.ID = ID;
+	public Phoenix6DeviceID(int id, BusChain busChain) {
+		this.id = id;
 		this.busChain = determineBusChain(busChain);
 	}
 

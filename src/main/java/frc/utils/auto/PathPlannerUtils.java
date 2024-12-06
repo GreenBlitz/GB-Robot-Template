@@ -27,7 +27,10 @@ import java.util.function.Supplier;
 public class PathPlannerUtils {
 
 	private static final PathPlannerPath EMPTY_PATH = new PathPlannerPath(
-		new ArrayList<>(),
+		List.of(
+			new Waypoint(new Translation2d(), new Translation2d(), new Translation2d()),
+			new Waypoint(new Translation2d(), new Translation2d(), new Translation2d())
+		),
 		new PathConstraints(0, 0, 0, 0),
 		new IdealStartingState(0, new Rotation2d()),
 		new GoalEndState(0, new Rotation2d())

@@ -22,7 +22,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.multivisionsources.MultiRobotVisionSources;
+import frc.robot.vision.multivisionsources.MultiPoseEstimatingVisionSources;
 import frc.robot.vision.sources.simulationsource.SimulatedSource;
 import frc.utils.auto.PathPlannerUtils;
 
@@ -55,7 +55,7 @@ public class Robot {
 
 		this.poseEstimator = new GBPoseEstimator(
 			PoseEstimatorConstants.LOG_PATH,
-			new MultiRobotVisionSources(
+			new MultiPoseEstimatingVisionSources(
 				new SimulatedSource(
 					"limelight-front",
 					() -> swerve.getSimulatedPose(),

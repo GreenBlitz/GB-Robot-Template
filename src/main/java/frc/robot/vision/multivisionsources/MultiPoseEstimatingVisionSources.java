@@ -15,10 +15,6 @@ public class MultiPoseEstimatingVisionSources extends MultiVisionSources<RobotPo
 		super(visionSources);
 	}
 
-	public MultiRobotVisionSources(RobotPoseEstimatingVisionSource... sources) {
-		super(sources);
-	}
-
 	public void switchLimelightsToOldBotPose(boolean useOldBotPose) {
 		getVisionSources().forEach(visionSource -> {
 			if (visionSource instanceof LimeLightSource) {

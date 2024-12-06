@@ -38,6 +38,7 @@ public abstract class Phoenix6Device implements IDevice {
 		return device.isConnected();
 	}
 
+
 	private boolean isValid(InputSignal<?> signal) {
 		return signal instanceof SignalGetter;
 	}

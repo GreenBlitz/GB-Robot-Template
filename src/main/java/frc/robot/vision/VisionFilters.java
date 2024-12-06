@@ -12,15 +12,15 @@ public class VisionFilters {
 	}
 
 	protected static boolean isPitchInTolerance(RawVisionData rawVisionData, Rotation2d pitchTolerance) {
-		return Math.abs(rawVisionData.estimatedPose().getRotation().getY()) <= pitchTolerance.getRadians();
+		return Math.abs(rawVisionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians();
 	}
 
 	protected static boolean isRollInTolerance(RawVisionData rawVisionData, Rotation2d rollTolerance) {
-		return Math.abs(rawVisionData.estimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
+		return Math.abs(rawVisionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
 	}
 
 	protected static boolean isRobotOnGround(RawVisionData rawVisionData, double robotToGroundToleranceMeters) {
-		return rawVisionData.estimatedPose().getZ() <= robotToGroundToleranceMeters;
+		return rawVisionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters;
 	}
 
 }

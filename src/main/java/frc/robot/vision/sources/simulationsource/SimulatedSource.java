@@ -74,7 +74,7 @@ public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingV
 					RawVisionAprilTagData visionInput = constructRawVisionData(noisedPose, aprilTagPose);
 					currentObservations.add(visionInput);
 					Logger.recordOutput(logPath + "state", "returning");
-					Logger.recordOutput(logPath + "latestOutputPose", visionInput.estimatedPose());
+					Logger.recordOutput(logPath + "latestOutputPose", visionInput.getEstimatedPose());
 				} else {
 					Logger.recordOutput(logPath + "state", "not facing");
 				}
@@ -130,14 +130,14 @@ public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingV
 
 	@Override
 	public Optional<Rotation2d> getRobotHeading() {
-		Optional<Rotation2d> heading = getLatestObservation().map(rawVisionData -> rawVisionData.estimatedPose().toPose2d().getRotation());
+		Optional<Rotation2d> heading = getLatestObservation().map(rawVisionData -> rawVisionData.getEstimatedPose().toPose2d().getRotation());
 		heading.ifPresent((Rotation2d robotHeading) -> Logger.recordOutput(getLogPath() + "heading", robotHeading));
 		return heading;
 	}
 
 	private void logMovingData() {
 		getLatestObservation().ifPresent(
-			(RawVisionAprilTagData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.estimatedPose())
+			(RawVisionAprilTagData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.getEstimatedPose())
 		);
 		Logger.recordOutput(getLogPath() + "cameraPose", cameraPose.get());
 	}

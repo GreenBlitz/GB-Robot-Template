@@ -63,7 +63,7 @@ public class VisionFilterer<T extends VisionSource<? extends RawVisionData>> ext
 			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
 			VisionConstants.VISION_ANGLE_STANDARD_DEVIATION};
 
-		return new VisionObservation(rawVisionData.estimatedPose().toPose2d(), standardDeviations, rawVisionData.timestamp());
+		return new VisionObservation(rawVisionData.getEstimatedPose().toPose2d(), standardDeviations, rawVisionData.getTimestamp());
 	}
 
 	private void logEstimatedPositions() {
@@ -84,7 +84,7 @@ public class VisionFilterer<T extends VisionSource<? extends RawVisionData>> ext
 	}
 
 	private void logFilteredOutRawData(RawVisionData rawVisionData) {
-		Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA_LOGPATH_ADDITION, rawVisionData.estimatedPose());
+		Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_OUT_RAW_DATA_LOGPATH_ADDITION, rawVisionData.getEstimatedPose());
 	}
 
 	@Override

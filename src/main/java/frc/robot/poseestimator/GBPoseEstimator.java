@@ -2,7 +2,6 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -196,7 +195,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void updateGyroAnglesInVisionSources(Rotation2d gyroAngle) {
 		if (gyroAngle != null) {
 			Rotation2d headingWithOffset = gyroAngle.plus(headingOffset);
-			robotVisionSources.updateGyroAngles(new GyroAngleValues(new Rotation3d(0, 0, headingWithOffset.getDegrees()), 0, 0, 0));
+			robotVisionSources
+				.updateGyroAngles(new GyroAngleValues(headingWithOffset, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
 		}
 	}
 

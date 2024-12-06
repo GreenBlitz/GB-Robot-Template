@@ -5,17 +5,16 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.path.*;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.GBSubsystem;
 
@@ -26,6 +25,13 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PathPlannerUtils {
+
+	private static final PathPlannerPath EMPTY_PATH = new PathPlannerPath(
+		new ArrayList<>(),
+		new PathConstraints(0, 0, 0, 0),
+		new IdealStartingState(0, new Rotation2d()),
+		new GoalEndState(0, new Rotation2d())
+	);
 
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
@@ -66,6 +72,15 @@ public class PathPlannerUtils {
 
 	public static void registerCommand(String commandName, Command command) {
 		NamedCommands.registerCommand(commandName, command);
+	}
+
+	public static PathPlannerPath getPathFromPathFile(String pathName) {
+		try {
+			return PathPlannerPath.fromPathFile(pathName);
+		} catch (Exception exception) {
+			DriverStation.reportError(exception.getMessage(), exception.getStackTrace());
+		}
+		return EMPTY_PATH;
 	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {

@@ -1,7 +1,7 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.poseestimator.PoseArrayEntryValue;
+import frc.robot.poseestimator.Pose2dArrayEntryValue;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.subsystems.GBSubsystem;
@@ -59,8 +59,8 @@ public class VisionFilterer<T extends VisionSource<? extends RawVisionData>> ext
 		double[] standardTransformDeviations = PoseEstimationMath
 			.calculateStandardDeviationOfPose(rawVisionData, getEstimatedPoseAtTimestamp.apply(TimeUtils.getCurrentTimeSeconds()));
 		double[] standardDeviations = new double[] {
-			standardTransformDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
-			standardTransformDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+			standardTransformDeviations[Pose2dArrayEntryValue.X_VALUE.getEntryValue()],
+			standardTransformDeviations[Pose2dArrayEntryValue.Y_VALUE.getEntryValue()],
 			VisionConstants.VISION_ANGLE_STANDARD_DEVIATION};
 
 		return new VisionObservation(rawVisionData.getEstimatedPose().toPose2d(), standardDeviations, rawVisionData.getTimestamp());

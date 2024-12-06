@@ -6,8 +6,8 @@ import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.GyroAngleValues;
-import frc.robot.vision.RawVisionData;
-import frc.robot.vision.sources.VisionSource;
+import frc.robot.vision.rawdata.RawVisionAprilTagData;
+import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisionData> {
+public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingVisionSource {
 
 	private final Random randomValuesGenerator;
 	private final Rotation2d fieldOfView;
@@ -25,7 +25,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	private final double detectionRangeMeters;
 	private final double spikesProbability;
 	private final double maximumSpikeMeters;
-	private final List<RawVisionData> currentObservations;
+	private final List<RawVisionAprilTagData> currentObservations;
 
 	private final Supplier<Pose3d> cameraPose;
 	private final Supplier<Pose2d> simulateRobotPose;
@@ -59,7 +59,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {}
 
 	@Override
-	public void update() {
+	public void updateEstimation() {
 		Pose2d simulatedPose = simulateRobotPose.get();
 		currentObservations.clear();
 
@@ -71,10 +71,10 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();
-					RawVisionData visionInput = constructRawVisionData(noisedPose, aprilTagPose);
+					RawVisionAprilTagData visionInput = constructRawVisionData(noisedPose, aprilTagPose);
 					currentObservations.add(visionInput);
 					Logger.recordOutput(logPath + "state", "returning");
-					Logger.recordOutput(logPath + "latestOutputPose", visionInput.estimatedPose());
+					Logger.recordOutput(logPath + "latestOutputPose", visionInput.getEstimatedPose());
 				} else {
 					Logger.recordOutput(logPath + "state", "not facing");
 				}
@@ -84,8 +84,8 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 		}
 	}
 
-	public RawVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose) {
-		return new RawVisionData(
+	public RawVisionAprilTagData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose) {
+		return new RawVisionAprilTagData(
 			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
 			aprilTagPose.getZ(),
 			PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
@@ -116,7 +116,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 		);
 	}
 
-	public Optional<RawVisionData> getLatestObservation() {
+	public Optional<RawVisionAprilTagData> getLatestObservation() {
 		if (currentObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -124,24 +124,21 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawVisi
 		return Optional.of(output);
 	}
 
-	@Override
-	public Optional<RawVisionData> getAllData() {
+	public Optional<RawVisionAprilTagData> getRawVisionEstimation() {
 		return getLatestObservation();
 	}
 
 	@Override
 	public Optional<Rotation2d> getRobotHeading() {
-		Optional<Rotation2d> heading = getLatestObservation().map(rawVisionData -> rawVisionData.estimatedPose().toPose2d().getRotation());
+		Optional<Rotation2d> heading = getLatestObservation().map(rawVisionData -> rawVisionData.getEstimatedPose().toPose2d().getRotation());
 		heading.ifPresent((Rotation2d robotHeading) -> Logger.recordOutput(getLogPath() + "heading", robotHeading));
 		return heading;
 	}
 
-	@Override
-	public void updateCurrentEstimatedPose(Pose2d estimatedPose) {}
-
 	private void logMovingData() {
-		getLatestObservation()
-			.ifPresent((RawVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.estimatedPose()));
+		getLatestObservation().ifPresent(
+			(RawVisionAprilTagData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.getEstimatedPose())
+		);
 		Logger.recordOutput(getLogPath() + "cameraPose", cameraPose.get());
 	}
 

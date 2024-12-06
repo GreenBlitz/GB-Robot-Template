@@ -2,6 +2,7 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -13,6 +14,8 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.vision.multivisionsources.MultiPoseEstimatingVisionSources;
+import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -31,6 +34,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final VisionFilterer visionFilterer;
 	private final VisionDenoiser visionDenoiser;
 	private final VisionObservationSwitcher visionObservationSwitcher;
+	private final MultiPoseEstimatingVisionSources robotVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
@@ -43,7 +47,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		MultiVisionSources multiVisionSources,
+		MultiPoseEstimatingVisionSources multiVisionSources,
 		VisionFiltererConfig visionFiltererConfig,
 		OdometryValues odometryValues,
 		double[] odometryStandardDeviations,
@@ -52,8 +56,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.visionFilterer = new VisionFilterer<>(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
+		this.robotVisionSources = multiVisionSources;
 		this.accelerationInterpolator = TimeInterpolatableBuffer.createDoubleBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.visionFilterer = new VisionFilterer(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
 		this.visionDenoiser = visionDenoiser;
 		this.visionObservationSwitcher = new VisionObservationSwitcher(
 			() -> visionDenoiser.calculateFixedObservationByOdometryLinearFilter(odometryPose, odometryPoseInterpolator),
@@ -62,7 +67,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			PoseEstimatorConstants.DATA_SWITCHING_DURATION
 		);
 		this.headingCountHelper = new ObservationCountHelper<>(
-			visionFilterer::getAllRobotHeadingEstimations,
+			multiVisionSources::getAllRobotHeadingEstimations,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
 		this.poseCountHelper = new ObservationCountHelper<>(
@@ -215,7 +220,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void updateGyroAnglesInVisionSources(Rotation2d gyroAngle) {
 		if (gyroAngle != null) {
 			Rotation2d headingWithOffset = gyroAngle.plus(headingOffset);
-			visionFilterer.updateGyroAngles(new GyroAngleValues(headingWithOffset.getDegrees(), 0, 0, 0, 0, 0));
+			robotVisionSources.updateGyroAngles(new GyroAngleValues(new Rotation3d(0, 0, headingWithOffset.getDegrees()), 0, 0, 0));
 		}
 	}
 

@@ -2,9 +2,9 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.RawVisionData;
 
 import java.util.ArrayList;
+import frc.robot.vision.rawdata.RawVisionData;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -25,7 +25,7 @@ public class PoseEstimationMath {
 	}
 
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
-		double[] combinedStandardDeviations = new double[PoseArrayEntryValue.POSE_ARRAY_LENGTH];
+		double[] combinedStandardDeviations = new double[Pose2dArrayEntryValue.POSE_ARRAY_LENGTH];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
 			double visionStandardDeviation = visionStandardDeviations[i];
@@ -50,11 +50,11 @@ public class PoseEstimationMath {
 
 	public static Transform2d scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
 		return new Transform2d(
-			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[PoseArrayEntryValue.X_VALUE.getEntryValue()],
-			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
+			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[Pose2dArrayEntryValue.X_VALUE.getEntryValue()],
+			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[Pose2dArrayEntryValue.Y_VALUE.getEntryValue()],
 			Rotation2d.fromRadians(
 				visionDifferenceFromOdometry.getRotation().getRadians()
-					* combinedStandardDeviations[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()]
+					* combinedStandardDeviations[Pose2dArrayEntryValue.ROTATION_VALUE.getEntryValue()]
 			)
 		);
 	}
@@ -87,8 +87,8 @@ public class PoseEstimationMath {
 	}
 
 	public static double[] calculateStandardDeviationOfPose(RawVisionData rawVisionData, Pose2d currentEstimatedPose) {
-		double visionX = rawVisionData.estimatedPose().getX();
-		double visionY = rawVisionData.estimatedPose().getY();
+		double visionX = rawVisionData.getEstimatedPose().getX();
+		double visionY = rawVisionData.getEstimatedPose().getY();
 		double estimatedX = currentEstimatedPose.getX();
 		double estimatedY = currentEstimatedPose.getY();
 		return new double[] {calculateStandardDeviation(visionX, estimatedX), calculateStandardDeviation(visionY, estimatedY)};
@@ -97,9 +97,9 @@ public class PoseEstimationMath {
 	public static Pose2d meanOfPose(List<Pose2d> dataset) {
 		double[] deconstructedPose = applyFunctionOnPoseElements(dataset, PoseEstimationMath::mean);
 		return new Pose2d(
-			deconstructedPose[PoseArrayEntryValue.X_VALUE.getEntryValue()],
-			deconstructedPose[PoseArrayEntryValue.Y_VALUE.getEntryValue()],
-			Rotation2d.fromRadians(deconstructedPose[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()])
+			deconstructedPose[Pose2dArrayEntryValue.X_VALUE.getEntryValue()],
+			deconstructedPose[Pose2dArrayEntryValue.Y_VALUE.getEntryValue()],
+			Rotation2d.fromRadians(deconstructedPose[Pose2dArrayEntryValue.ROTATION_VALUE.getEntryValue()])
 		);
 	}
 
@@ -132,9 +132,9 @@ public class PoseEstimationMath {
 		double rotationDeviationSum = 0;
 
 		for (VisionObservation observation : observations) {
-			double xWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.X_VALUE.getEntryValue()];
-			double yWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.Y_VALUE.getEntryValue()];
-			double rotationWeight = 1 / observation.standardDeviations()[PoseArrayEntryValue.ROTATION_VALUE.getEntryValue()];
+			double xWeight = 1 / observation.standardDeviations()[Pose2dArrayEntryValue.X_VALUE.getEntryValue()];
+			double yWeight = 1 / observation.standardDeviations()[Pose2dArrayEntryValue.Y_VALUE.getEntryValue()];
+			double rotationWeight = 1 / observation.standardDeviations()[Pose2dArrayEntryValue.ROTATION_VALUE.getEntryValue()];
 			xWeightsSum += xWeight;
 			yWeightsSum += yWeight;
 			rotationDeviationSum += rotationWeight;

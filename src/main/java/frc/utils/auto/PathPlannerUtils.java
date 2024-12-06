@@ -23,8 +23,10 @@ import frc.robot.subsystems.GBSubsystem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class PathPlannerUtils {
@@ -70,29 +72,29 @@ public class PathPlannerUtils {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
-	private static PathPlannerPath getPathFromPathFile(String pathName) {
+	private static Optional<PathPlannerPath> getPathFromPathFile(String pathName) {
 		try {
-			return PathPlannerPath.fromPathFile(pathName);
+			return Optional.of(PathPlannerPath.fromPathFile(pathName));
 		} catch (Exception exception) {
 			DriverStation.reportError(exception.getMessage(), exception.getStackTrace());
 		}
-		return null;
+		return Optional.empty();
+	}
+
+	private static Command safelyApplyPathToCommandFunction(Function<PathPlannerPath, Command> pathToCommandFunction, String pathName) {
+		Optional<PathPlannerPath> path = getPathFromPathFile(pathName);
+		if (path.isPresent()) {
+			return pathToCommandFunction.apply(path.get());
+		}
+		return Commands.none();
 	}
 
 	public static Command followPath(String pathName) {
-		PathPlannerPath path = getPathFromPathFile(pathName);
-		if (path != null) {
-			return AutoBuilder.followPath(path);
-		}
-		return Commands.none();
+		return safelyApplyPathToCommandFunction(AutoBuilder::followPath, pathName);
 	}
 
 	public static Command pathfindThenFollowPath(String pathName, PathConstraints pathfindingConstraints) {
-		PathPlannerPath path = getPathFromPathFile(pathName);
-		if (path != null) {
-			return AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints);
-		}
-		return Commands.none();
+		return safelyApplyPathToCommandFunction((path) -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints), pathName);
 	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {

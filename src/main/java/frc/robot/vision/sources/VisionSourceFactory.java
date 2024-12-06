@@ -28,7 +28,7 @@ public class VisionSourceFactory {
 				case LIMELIGHT -> new LimeLightSource(sourceName, VisionConstants.SOURCE_LOGPATH_ADDITION);
 				case PHOTON_VISION -> null;
 			};
-		} else if (RobotManager.isSimulation()) {
+		} else {
 			if (simulatedLocation.isEmpty() || simulatedCameraRelativeToRobot.isEmpty()) {
 				AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, "can'tAccessRobotSimulatedLocation", () -> true));
 				return null;
@@ -45,7 +45,6 @@ public class VisionSourceFactory {
 				case PHOTON_VISION -> null;
 			};
 		}
-		return null;
 	}
 
 	public static List<RobotPoseEstimatingVisionSource> generateDefaultPoseEstimatingSources(Supplier<Pose2d> simulatedLocation) {

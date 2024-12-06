@@ -42,7 +42,7 @@ public class LimeLightSource extends GBSubsystem implements RobotPoseEstimatingV
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
-		this.gyroAngleValues = new GyroAngleValues(new Rotation3d(0, 0, 0), 0, 0, 0);
+		this.gyroAngleValues = new GyroAngleValues(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0);
 		this.useOldRobotPoseEntry = false;
 
 		AlertManager.addAlert(
@@ -67,11 +67,11 @@ public class LimeLightSource extends GBSubsystem implements RobotPoseEstimatingV
 	public void updateEstimation() {
 		robotOrientationEntry.setDoubleArray(
 			new double[] {
-				gyroAngleValues.angles().getZ(),
+				gyroAngleValues.yaw().getDegrees(),
 				gyroAngleValues.yawRate(),
-				gyroAngleValues.angles().getY(),
+				gyroAngleValues.pitch().getDegrees(),
 				gyroAngleValues.pitchRate(),
-				gyroAngleValues.angles().getX(),
+				gyroAngleValues.roll().getDegrees(),
 				gyroAngleValues.rollRate()}
 		);
 		robotPoseArray = (useOldRobotPoseEntry ? oldRobotPoseEntry : robotPoseEntry)

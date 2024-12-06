@@ -18,24 +18,24 @@ import java.util.LinkedList;
 
 public abstract class Phoenix6Device implements IDevice {
 
-	private final ParentDevice device;
 	private final ConnectedInputAutoLogged connectedInput;
 	private final String logPath;
 
-	public Phoenix6Device(String logPath, ParentDevice device) {
+	public Phoenix6Device(String logPath) {
 		this.logPath = logPath;
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
-		this.device = device;
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
+
+	public abstract ParentDevice getDevice();
 
 	public String getLogPath() {
 		return logPath;
 	}
 
 	public boolean isConnected() {
-		return device.isConnected();
+		return getDevice().isConnected();
 	}
 
 

@@ -1,5 +1,6 @@
 package frc.robot.hardware.phoenix6.gyro;
 
+import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
@@ -9,7 +10,7 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 	private final Pigeon2Wrapper gyro;
 
 	public Pigeon2Gyro(String logPath, Pigeon2Wrapper gyro) {
-		super(logPath, gyro);
+		super(logPath);
 		this.gyro = gyro;
 		gyro.optimizeBusUtilization();
 	}
@@ -19,4 +20,8 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 		gyro.setYaw(yaw);
 	}
 
+	@Override
+	public ParentDevice getDevice() {
+		return gyro;
+	}
 }

@@ -1,6 +1,7 @@
 package frc.robot.hardware.phoenix6.motor;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -8,6 +9,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.interfaces.IRequest;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motor.simulation.TalonFXSimulation;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -26,21 +28,21 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	public TalonFXMotor(
 		String logPath,
-		TalonFXWrapper wrapper,
+		Phoenix6DeviceID deviceID,
 		TalonFXConfiguration configuration,
 		SysIdRoutine.Config sysidConfig,
 		MechanismSimulation simulation
 	) {
-		super(logPath, wrapper);
-		this.motor = wrapper;
+		super(logPath);
+		this.motor = new TalonFXWrapper(deviceID);
 		applyConfiguration(configuration);
 		this.talonFXSimulationOptional = createSimulation(simulation, configuration);
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		motor.optimizeBusUtilization();
 	}
 
-	public TalonFXMotor(String logPath, TalonFXWrapper wrapper, TalonFXConfiguration configuration, SysIdRoutine.Config sysidConfig) {
-		this(logPath, wrapper, configuration, sysidConfig, null);
+	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, TalonFXConfiguration configuration, SysIdRoutine.Config sysidConfig) {
+		this(logPath, deviceID, configuration, sysidConfig, null);
 	}
 
 	private void applyConfiguration(TalonFXConfiguration configuration) {
@@ -98,6 +100,11 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "Got invalid type of request " + request.getClass().getSimpleName()).report();
 		}
+	}
+
+	@Override
+	public ParentDevice getDevice() {
+		return motor;
 	}
 
 }

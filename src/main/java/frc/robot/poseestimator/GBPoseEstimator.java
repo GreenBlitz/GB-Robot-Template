@@ -14,7 +14,6 @@ import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.multivisionsources.MultiPoseEstimatingVisionSources;
-import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;

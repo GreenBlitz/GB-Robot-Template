@@ -12,11 +12,11 @@ public class RawVisionData {
 		this.timestamp = timestamp;
 	}
 
-	public Pose3d estimatedPose() {
+	public Pose3d getEstimatedPose() {
 		return estimatedPose;
 	}
 
-	public double timestamp() {
+	public double getTimestamp() {
 		return timestamp;
 	}
 

@@ -13,11 +13,11 @@ public class RawVisionAprilTagData extends RawVisionData {
 		this.distanceFromAprilTag = distanceFromAprilTag;
 	}
 
-	public double aprilTagHeight() {
+	public double getAprilTagHeight() {
 		return aprilTagHeight;
 	}
 
-	public double distanceFromAprilTag() {
+	public double getDistanceFromAprilTag() {
 		return distanceFromAprilTag;
 	}
 

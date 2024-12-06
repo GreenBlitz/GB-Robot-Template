@@ -2,7 +2,6 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -11,7 +10,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.multivisionsources.MultiRobotVisionSources;
+import frc.robot.vision.multivisionsources.MultiPoseEstimatingVisionSources;
 import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
@@ -28,7 +27,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final ObservationCountHelper<Rotation2d> headingCountHelper;
 	private final ObservationCountHelper<VisionObservation> poseCountHelper;
 	private final VisionFilterer<RobotPoseEstimatingVisionSource> visionFilterer;
-	private final MultiRobotVisionSources robotVisionSources;
+	private final MultiPoseEstimatingVisionSources robotVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
@@ -41,7 +40,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		MultiRobotVisionSources multiVisionSources,
+		MultiPoseEstimatingVisionSources multiVisionSources,
 		VisionFiltererConfig visionFiltererConfig,
 		OdometryValues odometryValues,
 		double[] odometryStandardDeviations
@@ -196,7 +195,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void updateGyroAnglesInVisionSources(Rotation2d gyroAngle) {
 		if (gyroAngle != null) {
 			Rotation2d headingWithOffset = gyroAngle.plus(headingOffset);
-			robotVisionSources.updateGyroAngles(new GyroAngleValues(new Rotation3d(0, 0, headingWithOffset.getDegrees()), 0, 0, 0));
+			robotVisionSources
+				.updateGyroAngles(new GyroAngleValues(headingWithOffset, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
 		}
 	}
 

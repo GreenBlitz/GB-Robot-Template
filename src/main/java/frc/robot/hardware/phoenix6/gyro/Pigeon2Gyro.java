@@ -24,4 +24,5 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 	public ParentDevice getDevice() {
 		return gyro;
 	}
+
 }

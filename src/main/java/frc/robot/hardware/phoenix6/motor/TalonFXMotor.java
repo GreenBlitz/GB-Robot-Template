@@ -8,7 +8,6 @@ import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.interfaces.IRequest;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motor.simulation.TalonFXSimulation;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;

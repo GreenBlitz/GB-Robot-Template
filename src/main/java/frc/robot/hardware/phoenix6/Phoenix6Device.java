@@ -34,7 +34,7 @@ public abstract class Phoenix6Device implements IDevice {
 		return logPath;
 	}
 
-	public boolean isConnected(){
+	public boolean isConnected() {
 		return device.isConnected();
 	}
 

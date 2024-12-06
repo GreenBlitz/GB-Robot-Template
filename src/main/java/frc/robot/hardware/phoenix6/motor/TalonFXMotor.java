@@ -27,21 +27,21 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	public TalonFXMotor(
 		String logPath,
-		Phoenix6DeviceID deviceID,
+		TalonFXWrapper wrapper,
 		TalonFXConfiguration configuration,
 		SysIdRoutine.Config sysidConfig,
 		MechanismSimulation simulation
 	) {
-		super(logPath);
-		this.motor = new TalonFXWrapper(deviceID);
+		super(logPath, wrapper);
+		this.motor = wrapper;
 		applyConfiguration(configuration);
 		this.talonFXSimulationOptional = createSimulation(simulation, configuration);
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		motor.optimizeBusUtilization();
 	}
 
-	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, TalonFXConfiguration configuration, SysIdRoutine.Config sysidConfig) {
-		this(logPath, deviceID, configuration, sysidConfig, null);
+	public TalonFXMotor(String logPath, TalonFXWrapper wrapper, TalonFXConfiguration configuration, SysIdRoutine.Config sysidConfig) {
+		this(logPath, wrapper, configuration, sysidConfig, null);
 	}
 
 	private void applyConfiguration(TalonFXConfiguration configuration) {
@@ -99,11 +99,6 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "Got invalid type of request " + request.getClass().getSimpleName()).report();
 		}
-	}
-
-	@Override
-	public boolean isConnected() {
-		return motor.isConnected();
 	}
 
 }

@@ -9,7 +9,7 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 	private final Pigeon2Wrapper gyro;
 
 	public Pigeon2Gyro(String logPath, Pigeon2Wrapper gyro) {
-		super(logPath);
+		super(logPath, gyro);
 		this.gyro = gyro;
 		gyro.optimizeBusUtilization();
 	}
@@ -17,11 +17,6 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 	@Override
 	public void setYaw(Rotation2d yaw) {
 		gyro.setYaw(yaw);
-	}
-
-	@Override
-	public boolean isConnected() {
-		return gyro.isConnected();
 	}
 
 }

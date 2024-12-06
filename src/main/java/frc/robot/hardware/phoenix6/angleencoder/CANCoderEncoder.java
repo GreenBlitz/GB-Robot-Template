@@ -10,7 +10,7 @@ public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder {
 	private final CANcoder encoder;
 
 	public CANCoderEncoder(String logPath, CANcoder encoder) {
-		super(logPath);
+		super(logPath, encoder);
 		this.encoder = encoder;
 		encoder.optimizeBusUtilization();
 	}
@@ -18,11 +18,6 @@ public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder {
 	@Override
 	public void setPosition(Rotation2d position) {
 		encoder.setPosition(position.getRotations());
-	}
-
-	@Override
-	public boolean isConnected() {
-		return encoder.isConnected();
 	}
 
 }

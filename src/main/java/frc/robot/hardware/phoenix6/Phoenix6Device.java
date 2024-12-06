@@ -3,6 +3,7 @@ package frc.robot.hardware.phoenix6;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IDevice;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -17,13 +18,15 @@ import java.util.LinkedList;
 
 public abstract class Phoenix6Device implements IDevice {
 
+	private final ParentDevice device;
 	private final ConnectedInputAutoLogged connectedInput;
 	private final String logPath;
 
-	public Phoenix6Device(String logPath) {
+	public Phoenix6Device(String logPath, ParentDevice device) {
 		this.logPath = logPath;
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
+		this.device = device;
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
@@ -31,6 +34,9 @@ public abstract class Phoenix6Device implements IDevice {
 		return logPath;
 	}
 
+	public boolean isConnected(){
+		return device.isConnected();
+	}
 
 	private boolean isValid(InputSignal<?> signal) {
 		return signal instanceof SignalGetter;

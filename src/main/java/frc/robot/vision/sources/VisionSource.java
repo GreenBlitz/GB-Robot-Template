@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface VisionSource<T extends RawVisionData> {
 
-	void updateEstimation();
+	void update();
 
-	Optional<T> getRawVisionEstimation();
+	Optional<T> getRawEstimation();
 
 }

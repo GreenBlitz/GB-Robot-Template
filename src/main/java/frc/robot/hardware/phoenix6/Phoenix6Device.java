@@ -28,8 +28,6 @@ public abstract class Phoenix6Device implements IDevice {
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
-	public abstract ParentDevice getDevice();
-
 	public String getLogPath() {
 		return logPath;
 	}
@@ -90,5 +88,7 @@ public abstract class Phoenix6Device implements IDevice {
 		Logger.processInputs(logPath, connectedInput);
 		logSignals(validSignals);
 	}
+
+	public abstract ParentDevice getDevice();
 
 }

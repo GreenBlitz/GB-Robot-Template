@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ObservationCountHelper<T> {
+public class objectListOrganizer<T> {
 
 	private final Supplier<List<T>> observationSupplier;
 	private final int maxDataIntakeRepeats;
 	private List<T> stackedObservations;
 	private int dataIntakeCounter;
 
-	public ObservationCountHelper(Supplier<List<T>> observationSupplier, int maxCount) {
+	public objectListOrganizer(Supplier<List<T>> observationSupplier, int maxCount) {
 		this.observationSupplier = observationSupplier;
 		this.maxDataIntakeRepeats = maxCount;
 		stackedObservations = new ArrayList<>();

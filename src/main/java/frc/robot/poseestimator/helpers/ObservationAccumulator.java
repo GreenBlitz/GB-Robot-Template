@@ -12,10 +12,10 @@ public class ObservationAccumulator<T> {
 	private int dataIntakeCounter;
 
 	public ObservationAccumulator(Supplier<List<T>> observationSupplier, int maxCount) {
-		this.observationsSupplier = observationSupplier;
+		this .observationsSupplier = observationSupplier;
 		this.maxDataIntakes = maxCount;
-		accumulatedObservations = new ArrayList<>();
-		dataIntakeCounter = 0;
+		this .accumulatedObservations = new ArrayList<>();
+		this .dataIntakeCounter = 0;
 	}
 
 	public List<T> getDataIntakeList() {

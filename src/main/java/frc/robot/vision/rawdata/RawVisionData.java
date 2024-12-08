@@ -5,8 +5,8 @@ import frc.robot.poseestimator.observations.VisionObservation;
 
 public class RawVisionData implements VisionObservation {
 
-	protected final Pose3d estimatedPose;
-	protected final double timestamp;
+	private final Pose3d estimatedPose;
+	private final double timestamp;
 
 	public RawVisionData(Pose3d estimatedPose, double timestamp) {
 		this.estimatedPose = estimatedPose;

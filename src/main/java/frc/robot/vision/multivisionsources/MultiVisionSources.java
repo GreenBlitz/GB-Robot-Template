@@ -30,8 +30,8 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		return visionSources;
 	}
 
-	public List<VisionObservation> getAllAvailablePoseData() {
-		List<VisionObservation> rawPoseData = new ArrayList<>();
+	public ArrayList<VisionObservation> getAllAvailablePoseData() {
+		ArrayList<VisionObservation> rawPoseData = new ArrayList<>();
 		visionSources.forEach(visionSource -> {
 			visionSource.updateEstimation();
 			Optional<VisionObservation> rawData = visionSource.getRawVisionEstimation();
@@ -40,25 +40,28 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		return rawPoseData;
 	}
 
-	public List<VisionObservation> getFilteredVisionObservations() {
+	public ArrayList<VisionObservation> getFilteredVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
 		for (VisionSource<? extends RawVisionData> visionSource : visionSources) {
 			if (!visionSource.shallBeFiltered()) {
 				Optional<VisionObservation> observation = visionSource.getRawVisionEstimation();
-				estimates.add()
-			}
+				observation.ifPresent(estimates::add);
+ 			}
 		}
 		return estimates;
 	}
 
 
-	private void logEstimatedPositions() {
-		List<VisionObservation> observations = getFilteredVisionObservations();
+	private void logObservations(String logPathAddition, List<VisionObservation> observations) {
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_ESTIMATION_LOGPATH_ADDITION + i, observations.get(i).robotPose());
+			Logger.recordOutput(super.getLogPath() + logPathAddition + i, observations.get(i).getEstimatedPose());
 		}
 	}
 
-
+	@Override
+	protected void subsystemPeriodic() {
+		logObservations(VisionConstants.FILTERED_ESTIMATION_LOGPATH_ADDITION, getFilteredVisionObservations());
+		logObservations(VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION, getAllAvailablePoseData());
+	}
 }

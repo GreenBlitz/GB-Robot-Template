@@ -13,4 +13,3 @@ public interface RobotPoseEstimatingVisionSource extends VisionSource<RawVisionA
 	Optional<Rotation2d> getRobotHeading();
 
 }
-

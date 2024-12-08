@@ -1,5 +1,11 @@
 package frc.robot.poseestimator.observations;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 
-public record VisionObservation(Pose2d robotPose, double[] standardDeviations, double timestamp) {}
+public interface VisionObservation {
+
+	Pose3d getEstimatedPose();
+
+	double getTimestamp();
+
+}

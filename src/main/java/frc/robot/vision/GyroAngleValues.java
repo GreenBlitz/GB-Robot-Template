@@ -7,4 +7,3 @@ import edu.wpi.first.math.geometry.Rotation2d;
  * were found in limelightlib sourcecode. The limelight is using it to calculate the BotPose2 position.Rotation2d shall be used in degrees.
  */
 public record GyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, double pitchRate, Rotation2d roll, double rollRate) {}
-

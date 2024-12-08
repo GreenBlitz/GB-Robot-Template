@@ -14,9 +14,9 @@ public class VisionConstants {
 	public static final String SOURCE_LOGPATH_ADDITION = "VisionSource/";
 
 
-	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
+	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH  = 6;
 
-	public static final int NO_APRILTAG_ID = -1;
+	public static final int NO_APRILTAG_ID  = -1;
 
 	public static final Rotation2d ROLL_TOLERANCE = Rotation2d.fromDegrees(10);
 

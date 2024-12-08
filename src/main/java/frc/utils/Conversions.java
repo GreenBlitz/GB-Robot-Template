@@ -126,8 +126,6 @@ public class Conversions {
 		return microSeconds / 1e6;
 	}
 
-
-
 	/**
 	 * Converts a time from milliseconds to seconds
 	 *

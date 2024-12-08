@@ -16,10 +16,4 @@ public class VisionConstants {
 
 	public static final double ROBOT_DISTANCE_FROM_GROUND_TOLERANCE_METERS = 0.2;
 
-	public static final VisionFiltersTolerances DEFAULT_VISION_FILTERS_TOLERANCES = new VisionFiltersTolerances(
-		ROLL_TOLERANCE,
-		PITCH_TOLERANCE,
-		ROBOT_DISTANCE_FROM_GROUND_TOLERANCE_METERS
-	);
-
 }

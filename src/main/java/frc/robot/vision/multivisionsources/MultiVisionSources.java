@@ -31,27 +31,33 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 	}
 
 	public ArrayList<VisionObservation> getAllAvailablePoseData() {
-		ArrayList<VisionObservation> rawPoseData = new ArrayList<>();
+		ArrayList<VisionObservation> rawPoseData = new ArrayList<VisionObservation>();
 		visionSources.forEach(visionSource -> {
 			visionSource.updateEstimation();
-			Optional<VisionObservation> rawData = visionSource.getRawVisionEstimation();
-			rawData.ifPresent(rawPoseData::add);
+			Optional<VisionObservation> observation = extractVisionObservation(visionSource.getRawVisionEstimation());
+			observation.ifPresent(rawPoseData::add);
 		});
 		return rawPoseData;
 	}
 
 	public ArrayList<VisionObservation> getFilteredVisionObservations() {
-		ArrayList<VisionObservation> estimates = new ArrayList<>();
+		ArrayList<VisionObservation> estimates = new ArrayList<VisionObservation>();
 
 		for (VisionSource<? extends RawVisionData> visionSource : visionSources) {
 			if (!visionSource.shallBeFiltered()) {
-				Optional<VisionObservation> observation = visionSource.getRawVisionEstimation();
+				Optional<VisionObservation> observation = extractVisionObservation(visionSource.getRawVisionEstimation());
 				observation.ifPresent(estimates::add);
  			}
 		}
 		return estimates;
 	}
 
+	private Optional<VisionObservation> extractVisionObservation(Optional<? extends RawVisionData> optionalRawVisionData) {
+		if (optionalRawVisionData.isPresent()) {
+			return Optional.of(optionalRawVisionData.get());
+		}
+ 		return Optional.empty();
+	}
 
 	private void logObservations(String logPathAddition, List<VisionObservation> observations) {
 		for (int i = 0; i < observations.size(); i++) {

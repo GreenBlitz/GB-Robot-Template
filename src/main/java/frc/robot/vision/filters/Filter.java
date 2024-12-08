@@ -2,6 +2,7 @@ package frc.robot.vision.filters;
 
 import frc.robot.vision.rawdata.RawVisionData;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 public class Filter<T extends RawVisionData> {
@@ -22,6 +23,11 @@ public class Filter<T extends RawVisionData> {
 
 	public Filter<T> orThen(Filter<T> anotherFilter) {
 		return new Filter<>((T data) -> anotherFilter.doesFilterPasses(data) || doesFilterPasses(data));
+	}
+
+	@SafeVarargs
+	public static<T extends RawVisionData> Filter<T> combineFilters(Filter<T>... filters) {
+		return new Filter<>((T data) -> Arrays.stream(filters).allMatch((Filter<T> filer) -> filer.doesFilterPasses(data)));
 	}
 
 }

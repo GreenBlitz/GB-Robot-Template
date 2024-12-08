@@ -52,6 +52,12 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		return estimates;
 	}
 
+	/**
+	 * Returns the same optional but extract the object out of the Optional since java doesn't support polymorphism of generics inside optional
+	 *
+	 * @param optionalRawVisionData: the optional to be converted
+	 * @return: new instance that has the same data but java is happier with it
+	 */
 	private Optional<VisionObservation> convertToOptionalObservation(Optional<? extends RawVisionData> optionalRawVisionData) {
 		if (optionalRawVisionData.isPresent()) {
 			return Optional.of(optionalRawVisionData.get());

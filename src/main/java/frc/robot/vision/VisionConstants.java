@@ -48,3 +48,4 @@ public class VisionConstants {
 	public static final double VISION_ANGLE_STANDARD_DEVIATION = 0.6;
 
 }
+

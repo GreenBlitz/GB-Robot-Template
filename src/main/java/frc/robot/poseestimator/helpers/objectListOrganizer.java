@@ -26,9 +26,9 @@ public class objectListOrganizer<T> {
 			List<T> copyOfStackedObservations = stackedObservations;
 			stackedObservations = new ArrayList<>();
 			return copyOfStackedObservations;
-		} else {
-			return new ArrayList<>();
 		}
+		return new ArrayList<>();
+
 	}
 
 	public int getCount() {

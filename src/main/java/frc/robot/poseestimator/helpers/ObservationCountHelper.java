@@ -18,15 +18,15 @@ public class ObservationCountHelper<T> {
 		dataIntakeCounter = 0;
 	}
 
-	public List<T> getStackedObservations() {
+	public List<T> getDataIntakelist() {
+		dataIntakeCounter++;
+		stackedObservations.addAll(observationSupplier.get());
 		if (dataIntakeCounter == maxDataIntakeRepeats) {
 			dataIntakeCounter = 0;
 			List<T> copyOfStackedObservations = stackedObservations;
 			stackedObservations = new ArrayList<>();
 			return copyOfStackedObservations;
 		} else {
-			dataIntakeCounter++;
-			stackedObservations.addAll(observationSupplier.get());
 			return new ArrayList<>();
 		}
 	}

@@ -14,4 +14,12 @@ public interface InputSignal<T> extends LoggableInputs {
 
 	double[] getTimestamps();
 
+	boolean isNear(T value, T tolerance);
+
+	boolean isFarBy(T value, T distance);
+
+	boolean isMore(T value);
+
+	boolean isLess(T value);
+
 }

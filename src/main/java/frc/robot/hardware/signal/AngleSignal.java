@@ -1,5 +1,6 @@
 package frc.robot.hardware.signal;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.AngleUnit;
@@ -41,6 +42,26 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	@Override
 	public double[] getTimestamps() {
 		return new double[] {timestamp};
+	}
+
+	@Override
+	public boolean isNear(Rotation2d value, Rotation2d tolerance) {
+		return MathUtil.isNear(value.getRotations(), getLatestValue().getRotations(), tolerance.getRotations());
+	}
+
+	@Override
+	public boolean isFarBy(Rotation2d value, Rotation2d distance) {
+		return !MathUtil.isNear(value.getRotations(), getLatestValue().getRotations(), distance.getRotations());
+	}
+
+	@Override
+	public boolean isMore(Rotation2d value) {
+		return getLatestValue().getRotations() > value.getRotations();
+	}
+
+	@Override
+	public boolean isLess(Rotation2d value) {
+		return getLatestValue().getRotations() < value.getRotations();
 	}
 
 	@Override

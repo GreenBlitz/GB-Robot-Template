@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.filters.Filter;
 import frc.robot.vision.rawdata.RawVisionAprilTagData;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.limelights.LimelightEntryValue;
@@ -27,16 +28,18 @@ public class LimeLightSource extends GBSubsystem implements RobotPoseEstimatingV
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
 	private final String name;
+	private Filter<RawVisionAprilTagData> filter;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
 	private GyroAngleValues gyroAngleValues;
 	private boolean useOldRobotPoseEntry;
 
-	public LimeLightSource(String name, String parentLogPath) {
+	public LimeLightSource(String name, String parentLogPath, Filter<RawVisionAprilTagData> filter) {
 		super(parentLogPath + name + "/");
 
 		this.name = name;
+		this.filter = filter;
 		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.oldRobotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
@@ -122,6 +125,16 @@ public class LimeLightSource extends GBSubsystem implements RobotPoseEstimatingV
 				pose3dDoublePair.getSecond()
 			)
 		);
+	}
+
+	@Override
+	public boolean shallBeFiltered() {
+		return getRawVisionEstimation().map(filter::doesFilterPasses).orElseGet(() -> false);
+	}
+
+	@Override
+	public Filter<RawVisionAprilTagData> changeFilter(Filter<RawVisionAprilTagData> newFilter) {
+		return this.filter = newFilter;
 	}
 
 	@Override

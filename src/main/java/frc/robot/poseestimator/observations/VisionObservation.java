@@ -7,6 +7,6 @@ public interface VisionObservation {
 
 	Pose3d getEstimatedPose();
 
- 	double getTimeStamp();
+ 	double getTimestamp();
 
 }

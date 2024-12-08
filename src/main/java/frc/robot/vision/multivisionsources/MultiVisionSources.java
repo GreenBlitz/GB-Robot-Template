@@ -47,7 +47,7 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 			if (!visionSource.shallBeFiltered()) {
 				Optional<VisionObservation> observation = convertToOptionalObservation(visionSource.getRawVisionEstimation());
 				observation.ifPresent(estimates::add);
- 			}
+			}
 		}
 		return estimates;
 	}
@@ -56,7 +56,7 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		if (optionalRawVisionData.isPresent()) {
 			return Optional.of(optionalRawVisionData.get());
 		}
- 		return Optional.empty();
+		return Optional.empty();
 	}
 
 	private void logObservations(String logPathAddition, List<VisionObservation> observations) {
@@ -70,4 +70,5 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		logObservations(VisionConstants.FILTERED_ESTIMATION_LOGPATH_ADDITION, getFilteredVisionObservations());
 		logObservations(VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION, getAllAvailablePoseData());
 	}
+
 }

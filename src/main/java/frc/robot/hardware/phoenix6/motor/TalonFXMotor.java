@@ -103,7 +103,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	}
 
 	@Override
-	public TalonFX getDevice() {
+	public TalonFXWrapper getDevice() {
 		return motor;
 	}
 

@@ -21,7 +21,7 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 	}
 
 	@Override
-	public Pigeon2 getDevice() {
+	public Pigeon2Wrapper getDevice() {
 		return gyro;
 	}
 

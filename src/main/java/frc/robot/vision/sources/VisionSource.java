@@ -10,4 +10,8 @@ public interface VisionSource<T extends RawVisionData> {
 
 	Optional<T> getRawVisionEstimation();
 
+	boolean shallBeFiltered();
+
+	Filter changeFilter();
+
 }

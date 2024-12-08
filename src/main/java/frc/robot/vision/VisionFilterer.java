@@ -32,19 +32,6 @@ public class VisionFilterer<T extends VisionSource<? extends RawVisionData>> ext
 		this.getEstimatedPoseAtTimestamp = getEstimatedPoseAtTimestamp;
 	}
 
-	public List<VisionObservation> getFilteredVisionObservations() {
-		ArrayList<VisionObservation> estimates = new ArrayList<>();
-
-		for (RawVisionData rawVisionData : multiVisionSources.getAllAvailablePoseData()) {
-			if (config.filters().apply(rawVisionData, config.VisionFiltersTolerances())) {
-				estimates.add(rawDataToObservation(rawVisionData));
-			} else {
-				logFilteredOutRawData(rawVisionData);
-			}
-		}
-		return estimates;
-	}
-
 	public List<VisionObservation> getAllAvailableVisionObservations() {
 		ArrayList<VisionObservation> estimates = new ArrayList<>();
 
@@ -64,13 +51,6 @@ public class VisionFilterer<T extends VisionSource<? extends RawVisionData>> ext
 			VisionConstants.VISION_ANGLE_STANDARD_DEVIATION};
 
 		return new VisionObservation(rawVisionData.getEstimatedPose().toPose2d(), standardDeviations, rawVisionData.getTimestamp());
-	}
-
-	private void logEstimatedPositions() {
-		List<VisionObservation> observations = getFilteredVisionObservations();
-		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(super.getLogPath() + VisionConstants.FILTERED_ESTIMATION_LOGPATH_ADDITION + i, observations.get(i).robotPose());
-		}
 	}
 
 	private void logNonFilteredEstimatedPositions() {

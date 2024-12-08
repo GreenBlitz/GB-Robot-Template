@@ -1,11 +1,13 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionObservation;
+
+import java.util.ArrayList;
 import frc.robot.vision.rawdata.RawVisionData;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class PoseEstimationMath {
 
@@ -68,14 +70,54 @@ public class PoseEstimationMath {
 		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
 	}
 
+	public static double[] calculateStandardDeviationOfPose(List<Pose2d> dataset) {
+		return applyFunctionOnPoseElements(dataset, PoseEstimationMath::calculateStandardDeviation);
+	}
+
+	private static double[] applyFunctionOnPoseElements(List<Pose2d> dataset, Function<List<Double>, Double> function) {
+		List<Double> XSet = new ArrayList<>();
+		List<Double> YSet = new ArrayList<>();
+		List<Double> AngleSet = new ArrayList<>();
+		for (Pose2d data : dataset) {
+			XSet.add(data.getX());
+			YSet.add(data.getY());
+			AngleSet.add(data.getRotation().getRadians());
+		}
+		return new double[] {function.apply(XSet), function.apply(YSet), function.apply(AngleSet)};
+	}
+
 	public static double[] calculateStandardDeviationOfPose(RawVisionData rawVisionData, Pose2d currentEstimatedPose) {
-		double normalizedLimelightX = rawVisionData.getEstimatedPose().getX() / Field.LENGTH_METERS;
-		double normalizedLimelightY = rawVisionData.getEstimatedPose().getY() / Field.WIDTH_METERS;
-		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
-		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
-		return new double[] {
-			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
-			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
+		double visionX = rawVisionData.getEstimatedPose().getX();
+		double visionY = rawVisionData.getEstimatedPose().getY();
+		double estimatedX = currentEstimatedPose.getX();
+		double estimatedY = currentEstimatedPose.getY();
+		return new double[] {calculateStandardDeviation(visionX, estimatedX), calculateStandardDeviation(visionY, estimatedY)};
+	}
+
+	public static Pose2d meanOfPose(List<Pose2d> dataset) {
+		double[] deconstructedPose = applyFunctionOnPoseElements(dataset, PoseEstimationMath::mean);
+		return new Pose2d(
+			deconstructedPose[Pose2dArrayEntryValue.X_VALUE.getEntryValue()],
+			deconstructedPose[Pose2dArrayEntryValue.Y_VALUE.getEntryValue()],
+			Rotation2d.fromRadians(deconstructedPose[Pose2dArrayEntryValue.ROTATION_VALUE.getEntryValue()])
+		);
+	}
+
+	public static double mean(List<Double> dataset) {
+		double sum = 0;
+		for (double data : dataset) {
+			sum += data;
+		}
+		return sum / dataset.size();
+	}
+
+	public static double calculateStandardDeviation(List<Double> dataset) {
+		double mean = mean(dataset);
+		double squaredDeviation = 0;
+		for (double data : dataset) {
+			squaredDeviation += Math.pow(data - mean, 2);
+		}
+		return Math.sqrt(squaredDeviation / dataset.size());
 	}
 
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {
@@ -147,6 +189,14 @@ public class PoseEstimationMath {
 
 	public static double distanceBetweenPosesMeters(Pose3d first, Pose3d second) {
 		return first.minus(second).getTranslation().getNorm();
+	}
+
+	public static double sigmoid(double x) {
+		return Math.pow(1 + Math.pow(Math.E, -x), -1);
+	}
+
+	public static double hacovercosin(double x) {
+		return (Math.sin(x) + 1) / 2.0;
 	}
 
 }

@@ -12,6 +12,7 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -95,6 +96,16 @@ public class PathPlannerUtils {
 
 	public static Command pathfindThenFollowPath(String pathName, PathConstraints pathfindingConstraints) {
 		return safelyApplyPathToCommandFunction((path) -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints), pathName);
+	}
+
+	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Translation2d currentRobotPosition, double toleranceMeters) {
+		return Math.abs(path.getPathPoses().get(0).getTranslation().getDistance(currentRobotPosition)) <= toleranceMeters;
+	}
+
+	public static Pose2d getFlippedLastPathPose(PathPlannerPath path, boolean shouldFlipPath) {
+		if (shouldFlipPath)
+			path = path.flipPath();
+		return path.getPathPoses().get(path.getPathPoses().size() - 1);
 	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {

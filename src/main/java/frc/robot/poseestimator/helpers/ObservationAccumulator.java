@@ -3,7 +3,6 @@ package frc.robot.poseestimator.helpers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-
 public class ObservationAccumulator<T> {
 
 	private final Supplier<List<T>> observationsSupplier;
@@ -18,7 +17,7 @@ public class ObservationAccumulator<T> {
 		this .dataIntakeCounter = 0;
 	}
 
-	public List<T> getDataIntakeList() {
+	public List<T> getAccumulatedList() {
 		accumulatedObservations.addAll(observationsSupplier.get());
 		dataIntakeCounter++;
 

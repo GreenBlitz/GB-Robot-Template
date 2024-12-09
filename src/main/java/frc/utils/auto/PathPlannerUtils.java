@@ -12,7 +12,6 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,6 +19,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.subsystems.GBSubsystem;
 
 import java.util.ArrayList;
@@ -98,14 +98,27 @@ public class PathPlannerUtils {
 		return safelyApplyPathToCommandFunction((path) -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints), pathName);
 	}
 
-	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Translation2d currentRobotPosition, double toleranceMeters) {
+	static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Translation2d currentRobotPosition, double toleranceMeters) {
 		return Math.abs(path.getPathPoses().get(0).getTranslation().getDistance(currentRobotPosition)) <= toleranceMeters;
 	}
 
-	public static Pose2d getFlippedLastPathPose(PathPlannerPath path, boolean shouldFlipPath) {
-		if (shouldFlipPath)
+	static Pose2d getFlippedLastPathPose(PathPlannerPath path) {
+		if (AutoBuilder.shouldFlip())
 			path = path.flipPath();
 		return path.getPathPoses().get(path.getPathPoses().size() - 1);
+	}
+
+	static Command pathfindOrFollowPath(
+		String pathName,
+		Function<Pose2d, Command> pathfindingCommand,
+		double pathfindInsteadOfPathFollowingToleranceMeters
+	) {
+		Function<PathPlannerPath, Command> pathToCommandFunction = (path) -> new ConditionalCommand(
+			followPath(pathName),
+			pathfindingCommand.apply(getFlippedLastPathPose(path)),
+			() -> isRobotCloseToPathBeginning(path, AutoBuilder.getCurrentPose().getTranslation(), pathfindInsteadOfPathFollowingToleranceMeters)
+		);
+		return safelyApplyPathToCommandFunction(pathToCommandFunction, pathName);
 	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {

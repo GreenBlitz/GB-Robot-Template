@@ -36,8 +36,8 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 		flywheelSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
 		Rotation2d lastVelocity = currentVelocity;
 		currentVelocity = getSystemVelocityAnglesPerSecond();
-		Rotation2d averageVelocity = Rotation2d.fromRotations(currentVelocity.getRotations() + lastVelocity.getRotations() / 2);
-		updatePositionRelatedData(averageVelocity);
+		Rotation2d averageVelocity = Rotation2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
+		updatePosition(averageVelocity);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 		return flywheelSimulation.getGearing();
 	}
 
-	private void updatePositionRelatedData(Rotation2d velocity) {
+	private void updatePosition(Rotation2d velocity) {
 		Rotation2d deltaDistance = velocity.times(TimeUtils.getCurrentCycleTimeSeconds());
 		position = Rotation2d.fromRotations(position.getRotations() + deltaDistance.getRotations());
 	}

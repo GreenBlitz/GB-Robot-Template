@@ -29,7 +29,7 @@ public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		motorSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+		motorSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
 	}
 
 	@Override

@@ -10,6 +10,8 @@ import frc.utils.battery.BatteryUtils;
 
 public class TalonFXSimulation {
 
+	private final double DEFAULT_ROTOR_TO_SENSOR_RATIO = 1.0;
+
 	private final TalonFXSimState motorSimState;
 	private final MechanismSimulation mechanismSimulation;
 
@@ -24,9 +26,9 @@ public class TalonFXSimulation {
 	public void ensureMotorConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {
 		configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 		configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-		if (configuration.Feedback.RotorToSensorRatio != 1.0) {
+		if (configuration.Feedback.RotorToSensorRatio != DEFAULT_ROTOR_TO_SENSOR_RATIO) {
 			configuration.Feedback.SensorToMechanismRatio *= configuration.Feedback.RotorToSensorRatio;
-			configuration.Feedback.RotorToSensorRatio = 1.0;
+			configuration.Feedback.RotorToSensorRatio = DEFAULT_ROTOR_TO_SENSOR_RATIO;
 		}
 		talonFXWrapper.applyConfiguration(configuration);
 	}

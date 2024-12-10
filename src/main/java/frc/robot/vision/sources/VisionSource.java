@@ -13,6 +13,6 @@ public interface VisionSource<T extends RawVisionData> {
 
 	boolean shallBeFiltered();
 
-	Filter<T> changeFilter(Filter<T> newFilter);
+	Filter<T> setFilter(Filter<T> newFilter);
 
 }

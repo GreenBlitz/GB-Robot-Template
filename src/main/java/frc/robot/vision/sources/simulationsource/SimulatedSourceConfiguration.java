@@ -11,3 +11,4 @@ public record SimulatedSourceConfiguration(
 	double detectionRangeMeters,
 	Rotation2d fieldOfView
 ) {}
+

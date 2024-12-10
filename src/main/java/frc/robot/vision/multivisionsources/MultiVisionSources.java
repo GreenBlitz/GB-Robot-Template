@@ -1,9 +1,12 @@
 package frc.robot.vision.multivisionsources;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.observations.VisionRobotPoseObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.rawdata.RawVisionData;
+import frc.robot.vision.sources.LimeLightSource;
+import frc.robot.vision.sources.LimelightGyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
 
@@ -74,6 +77,15 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 	private void logOutputs() {
 		logRobotPose(super.getLogPath(), VisionConstants.FILTERED_ESTIMATION_LOGPATH_ADDITION, getFilteredVisionObservations());
 		logRobotPose(super.getLogPath(), VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION, getUnFilteredVisionObservation());
+	}
+
+	private void updateYawInLimelights(Rotation2d yaw) {
+		for (T visionSource : visionSources) {
+			if (visionSource instanceof LimeLightSource limelightSource) {
+				limelightSource
+					.updateGyroAngles(new LimelightGyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
+			}
+		}
 	}
 
 	@Override

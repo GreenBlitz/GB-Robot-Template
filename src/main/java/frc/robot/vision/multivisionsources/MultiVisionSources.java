@@ -33,7 +33,7 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		return visionSources;
 	}
 
-	public ArrayList<VisionRobotPoseObservation> getUnFilteredVisionObservation() {
+	public ArrayList<VisionRobotPoseObservation> getUnfilteredVisionObservation() {
 		ArrayList<VisionRobotPoseObservation> rawPoseData = new ArrayList<>();
 		visionSources.forEach(visionSource -> {
 			visionSource.updateEstimation();
@@ -74,9 +74,9 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		}
 	}
 
-	private void logOutputs() {
+	private void log() {
 		logRobotPose(super.getLogPath(), VisionConstants.FILTERED_ESTIMATION_LOGPATH_ADDITION, getFilteredVisionObservations());
-		logRobotPose(super.getLogPath(), VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION, getUnFilteredVisionObservation());
+		logRobotPose(super.getLogPath(), VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION, getUnfilteredVisionObservation());
 	}
 
 	private void updateYawInLimelights(Rotation2d yaw) {
@@ -105,7 +105,7 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 
 	@Override
 	protected void subsystemPeriodic() {
-		logOutputs();
+		log();
 	}
 
 }

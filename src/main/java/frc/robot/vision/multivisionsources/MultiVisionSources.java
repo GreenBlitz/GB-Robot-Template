@@ -88,6 +88,21 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		}
 	}
 
+	public ArrayList<Rotation2d> getRawEstimatedAngles() {
+		ArrayList<Rotation2d> output = new ArrayList<>();
+		for (T visionSource : visionSources) {
+			if (visionSource instanceof LimeLightSource limeLightSource) {
+				limeLightSource.getRobotHeading().ifPresent(output::add);
+			} else {
+				visionSource.getRawVisionEstimation()
+					.ifPresent(
+						(RawVisionData visionData) -> output.add(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()))
+					);
+			}
+		}
+		return output;
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		logOutputs();

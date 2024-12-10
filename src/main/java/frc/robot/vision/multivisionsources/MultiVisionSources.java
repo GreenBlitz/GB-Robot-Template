@@ -79,7 +79,7 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 		logRobotPose(super.getLogPath(), VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION, getUnFilteredVisionObservation());
 	}
 
-	private void updateYawInLimelights(Rotation2d yaw) {
+	public void updateYawInLimelights(Rotation2d yaw) {
 		for (T visionSource : visionSources) {
 			if (visionSource instanceof LimeLightSource limelightSource) {
 				limelightSource

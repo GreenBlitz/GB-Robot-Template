@@ -8,7 +8,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
 import frc.robot.poseestimator.observations.VisionRobotPoseObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.vision.multivisionsources.MultiPoseEstimatingVisionSources;
@@ -30,7 +29,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final ObservationCountHelper<Rotation2d> headingCountHelper;
 	private final ObservationCountHelper<VisionRobotPoseObservation> poseCountHelper;
-	private final MultiVisionSources<VisionSource<RawVisionData>> robotVisionSources;
+	private final MultiVisionSources<VisionSource<RawVisionData>> multiVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
@@ -43,20 +42,20 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		MultiVisionSources multiVisionSources,
+		MultiVisionSources<VisionSource<RawVisionData>> multiVisionSources,
 		OdometryValues odometryValues,
 		double[] odometryStandardDeviations
 	) {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.robotVisionSources = multiVisionSources;
+		this.multiVisionSources = multiVisionSources;
 		this.headingCountHelper = new ObservationCountHelper<>(
-			multiVisionSources::getUnFilteredVisionObservation,
+			multiVisionSources::getRawEstimatedAngles,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
 		this.poseCountHelper = new ObservationCountHelper<>(
-			visionFilterer::getAllAvailableVisionObservations,
+			multiVisionSources::getUnFilteredVisionObservation,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
 		this.lastOdometryValues = odometryValues;
@@ -117,7 +116,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		List<VisionObservation> stackedObservations = poseCountHelper.getStackedObservations();
+		List<VisionRobotPoseObservation> stackedObservations = poseCountHelper.getStackedObservations();
 		if (stackedObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -145,8 +144,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<VisionObservation> visionObservations) {
-		for (VisionObservation visionObservation : visionObservations) {
+	public void updateVision(List<VisionRobotPoseObservation> visionObservations) {
+		for (VisionRobotPoseObservation visionObservation : visionObservations) {
 			if (!isObservationTooOld(visionObservation)) {
 				addVisionObservation(visionObservation);
 			}
@@ -160,17 +159,17 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	private boolean isObservationTooOld(VisionObservation visionObservation) {
+	private boolean isObservationTooOld(VisionRobotPoseObservation visionObservation) {
 		try {
 			return odometryPoseInterpolator.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS
-				> visionObservation.timestamp();
+				> visionObservation.getTimestamp();
 		} catch (NoSuchElementException ignored) {
 			return true;
 		}
 	}
 
-	private void addVisionObservation(VisionObservation observation) {
-		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
+	private void addVisionObservation(VisionRobotPoseObservation observation) {
+		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.getTimestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			Pose2d currentEstimation = PoseEstimationMath
 				.combineVisionToOdometry(observation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
@@ -183,7 +182,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (!hasHeadingOffsetBeenInitialized) {
 			calculateHeadingOffset(observation.gyroAngle());
 		}
-		updateGyroAnglesInVisionSources(observation.gyroAngle());
+		multiVisionSources.updateYawInLimelights(observation.gyroAngle());
 		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions(), observation.wheelPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastOdometryValues.gyroAngle());
 		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelPositions(), observation.gyroAngle());
@@ -191,14 +190,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		estimatedPose = estimatedPose.exp(twist);
 		odometryPoseRelativeToInitialPose = odometryPoseRelativeToInitialPose.exp(twist);
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
-	}
-
-	private void updateGyroAnglesInVisionSources(Rotation2d gyroAngle) {
-		if (gyroAngle != null) {
-			Rotation2d headingWithOffset = gyroAngle.plus(headingOffset);
-			robotVisionSources
-				.updateGyroAngles(new GyroAngleValues(headingWithOffset, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
-		}
 	}
 
 	public void log() {
@@ -232,7 +223,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (!hasEstimatedPoseBeenInitialized) {
 			calculateEstimatedPoseByVision();
 		}
-		updateVision(visionFilterer.getFilteredVisionObservations());
+		updateVision(multiVisionSources.getFilteredVisionObservations());
 		log();
 	}
 

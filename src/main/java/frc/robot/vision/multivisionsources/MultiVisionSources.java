@@ -1,6 +1,5 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.robot.poseestimator.observations.VisionObservation;
 import frc.robot.poseestimator.observations.VisionRobotPoseObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;

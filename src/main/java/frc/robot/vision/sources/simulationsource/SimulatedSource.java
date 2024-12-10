@@ -2,12 +2,11 @@ package frc.robot.vision.sources.simulationsource;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
-import frc.robot.poseestimator.PoseEstimationMath;
-import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.GyroAngleValues;
-import frc.robot.vision.rawdata.RawVisionAprilTagData;
-import frc.robot.vision.sources.RobotPoseEstimatingVisionSource;
+import frc.robot.vision.VisionConstants;
+import frc.robot.vision.filters.Filter;
+import frc.robot.vision.rawdata.RawAprilTagVisionData;
+import frc.robot.vision.sources.VisionSource;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,7 +16,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingVisionSource {
+public class SimulatedSource extends GBSubsystem implements VisionSource<RawAprilTagVisionData> {
 
 	private final Random randomValuesGenerator;
 	private final Rotation2d fieldOfView;
@@ -25,18 +24,21 @@ public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingV
 	private final double detectionRangeMeters;
 	private final double spikesProbability;
 	private final double maximumSpikeMeters;
-	private final List<RawVisionAprilTagData> currentObservations;
+	private final List<RawAprilTagVisionData> currentObservations;
 
 	private final Supplier<Pose3d> cameraPose;
 	private final Supplier<Pose2d> simulateRobotPose;
 	private final Supplier<Double> transformNoise;
 	private final Supplier<Double> angleNoise;
 
+	private Filter<RawAprilTagVisionData> filter;
+
 	public SimulatedSource(
 		String cameraName,
 		Supplier<Pose2d> simulateRobotPose,
 		Pose3d camerasRelativeToRobot,
-		SimulatedSourceConfiguration config
+		SimulatedSourceConfiguration config,
+		Filter<RawAprilTagVisionData> filter
 	) {
 		super(cameraName + "Simulated/");
 
@@ -53,25 +55,23 @@ public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingV
 		this.transformNoise = () -> randomValuesGenerator.nextGaussian() * config.transformNoiseScaling();
 
 		this.cameraPose = () -> new Pose3d(simulateRobotPose.get()).relativeTo(camerasRelativeToRobot);
+		this.filter = filter;
 	}
-
-	@Override
-	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {}
 
 	@Override
 	public void updateEstimation() {
 		Pose2d simulatedPose = simulateRobotPose.get();
 		currentObservations.clear();
 
-		for (AprilTag aprilTag : PoseEstimatorConstants.APRIL_TAG_FIELD.loadAprilTagLayoutField().getTags()) {
+		for (AprilTag aprilTag : VisionConstants.APRIL_TAG_FIELD_LAYOUT.loadAprilTagLayoutField().getTags()) {
 			Pose3d aprilTagPose = aprilTag.pose;
 			String logPath = super.getLogPath() + "IDs/" + aprilTag.ID;
 
-			double distanceMeters = PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose, cameraPose.get());
+			double distanceMeters = distanceBetweenPosesMeters(aprilTagPose, cameraPose.get());
 			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();
-					RawVisionAprilTagData visionInput = constructRawVisionData(noisedPose, aprilTagPose);
+					RawAprilTagVisionData visionInput = constructRawVisionData(noisedPose, aprilTagPose);
 					currentObservations.add(visionInput);
 					Logger.recordOutput(logPath + "state", "returning");
 					Logger.recordOutput(logPath + "latestOutputPose", visionInput.getEstimatedPose());
@@ -84,11 +84,11 @@ public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingV
 		}
 	}
 
-	public RawVisionAprilTagData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose) {
-		return new RawVisionAprilTagData(
+	public RawAprilTagVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose) {
+		return new RawAprilTagVisionData(
 			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
 			aprilTagPose.getZ(),
-			PoseEstimationMath.distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
+			distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
 			TimeUtils.getCurrentTimeSeconds()
 		);
 	}
@@ -116,7 +116,7 @@ public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingV
 		);
 	}
 
-	public Optional<RawVisionAprilTagData> getLatestObservation() {
+	public Optional<RawAprilTagVisionData> getLatestObservation() {
 		if (currentObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -124,20 +124,23 @@ public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingV
 		return Optional.of(output);
 	}
 
-	public Optional<RawVisionAprilTagData> getRawVisionEstimation() {
+	public Optional<RawAprilTagVisionData> getRawVisionEstimation() {
 		return getLatestObservation();
 	}
 
 	@Override
-	public Optional<Rotation2d> getRobotHeading() {
-		Optional<Rotation2d> heading = getLatestObservation().map(rawVisionData -> rawVisionData.getEstimatedPose().toPose2d().getRotation());
-		heading.ifPresent((Rotation2d robotHeading) -> Logger.recordOutput(getLogPath() + "heading", robotHeading));
-		return heading;
+	public boolean shallBeFiltered() {
+		return getLatestObservation().map(filter::doesFilterPasses).orElseGet(() -> true);
+	}
+
+	@Override
+	public Filter<RawAprilTagVisionData> setFilter(Filter<RawAprilTagVisionData> newFilter) {
+		return this.filter = newFilter;
 	}
 
 	private void logMovingData() {
 		getLatestObservation().ifPresent(
-			(RawVisionAprilTagData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.getEstimatedPose())
+			(RawAprilTagVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.getEstimatedPose())
 		);
 		Logger.recordOutput(getLogPath() + "cameraPose", cameraPose.get());
 	}
@@ -147,5 +150,13 @@ public class SimulatedSource extends GBSubsystem implements RobotPoseEstimatingV
 		logMovingData();
 	}
 
-}
+	// Would be replaced by PoseEstimationMath.distanceBetweenPosesMeters once it'll get merged
+	private double distanceBetweenPosesMeters(Pose3d pose1, Pose3d pose2) {
+		return pose1.minus(pose2).getTranslation().getNorm();
+	}
 
+	private double distanceBetweenPosesMeters(Pose2d pose1, Pose2d pose2) {
+		return pose1.minus(pose2).getTranslation().getNorm();
+	}
+
+}

@@ -1,6 +1,6 @@
 package frc.robot.poseestimator;
 
-public enum Pose2dArrayEntryValue {
+public enum Pose2dArrayValue {
 
 	X_VALUE(0),
 	Y_VALUE(1),
@@ -8,7 +8,7 @@ public enum Pose2dArrayEntryValue {
 
 	private final int entryValue;
 
-	Pose2dArrayEntryValue(int entryValue) {
+	Pose2dArrayValue(int entryValue) {
 		this.entryValue = entryValue;
 	}
 

@@ -2,7 +2,7 @@ package frc.robot.poseestimator.observations;
 
 import edu.wpi.first.math.geometry.Pose3d;
 
-public interface VisionObservation {
+public interface VisionRobotPoseObservation {
 
 	Pose3d getEstimatedPose();
 

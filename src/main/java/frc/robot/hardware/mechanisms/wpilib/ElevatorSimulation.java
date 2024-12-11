@@ -18,12 +18,12 @@ public class ElevatorSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getSystemPosition() {
+	public Rotation2d getMechanismPosition() {
 		return Conversions.distanceToAngle(elevatorSimulation.getPositionMeters(), drumDiameter);
 	}
 
 	@Override
-	public Rotation2d getSystemVelocityAnglesPerSecond() {
+	public Rotation2d getMechanismVelocityAnglesPerSecond() {
 		return Conversions.distanceToAngle(elevatorSimulation.getVelocityMetersPerSecond(), drumDiameter);
 	}
 
@@ -34,7 +34,7 @@ public class ElevatorSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		elevatorSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+		elevatorSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
 	}
 
 	@Override

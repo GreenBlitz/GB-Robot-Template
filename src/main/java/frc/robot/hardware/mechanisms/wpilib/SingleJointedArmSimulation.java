@@ -15,12 +15,12 @@ public class SingleJointedArmSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getSystemPosition() {
+	public Rotation2d getMechanismPosition() {
 		return Rotation2d.fromRadians(singleJointedArmSimulation.getAngleRads());
 	}
 
 	@Override
-	public Rotation2d getSystemVelocityAnglesPerSecond() {
+	public Rotation2d getMechanismVelocityAnglesPerSecond() {
 		return Rotation2d.fromRadians(singleJointedArmSimulation.getVelocityRadPerSec());
 	}
 
@@ -31,7 +31,7 @@ public class SingleJointedArmSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		singleJointedArmSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+		singleJointedArmSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
 	}
 
 	@Override

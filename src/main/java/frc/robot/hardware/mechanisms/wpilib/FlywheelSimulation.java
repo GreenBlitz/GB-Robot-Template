@@ -13,16 +13,16 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
 		this.flywheelSimulation = flywheelSimulation;
 		this.position = Rotation2d.fromDegrees(0);
-		this.currentVelocity = getSystemVelocityAnglesPerSecond();
+		this.currentVelocity = getMechanismVelocityAnglesPerSecond();
 	}
 
 	@Override
-	public Rotation2d getSystemPosition() {
+	public Rotation2d getMechanismPosition() {
 		return position;
 	}
 
 	@Override
-	public Rotation2d getSystemVelocityAnglesPerSecond() {
+	public Rotation2d getMechanismVelocityAnglesPerSecond() {
 		return Rotation2d.fromRadians(flywheelSimulation.getAngularVelocityRadPerSec());
 	}
 
@@ -33,9 +33,9 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		flywheelSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+		flywheelSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
 		Rotation2d lastVelocity = currentVelocity;
-		currentVelocity = getSystemVelocityAnglesPerSecond();
+		currentVelocity = getMechanismVelocityAnglesPerSecond();
 		Rotation2d averageVelocity = Rotation2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
 		updatePosition(averageVelocity);
 	}
@@ -46,7 +46,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	}
 
 	private void updatePosition(Rotation2d velocity) {
-		Rotation2d deltaDistance = velocity.times(TimeUtils.getCurrentCycleTimeSeconds());
+		Rotation2d deltaDistance = velocity.times(TimeUtils.getLatestCycleTimeSeconds());
 		position = Rotation2d.fromRotations(position.getRotations() + deltaDistance.getRotations());
 	}
 

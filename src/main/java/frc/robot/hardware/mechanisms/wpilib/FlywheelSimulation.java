@@ -7,18 +7,18 @@ import frc.utils.time.TimeUtils;
 public class FlywheelSimulation implements WPILibMechanismSimulation {
 
 	private final FlywheelSim flywheelSimulation;
-	private Rotation2d position;
+	private Rotation2d currentPosition;
 	private Rotation2d currentVelocity;
 
 	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
 		this.flywheelSimulation = flywheelSimulation;
-		this.position = Rotation2d.fromDegrees(0);
+		this.currentPosition = Rotation2d.fromDegrees(0);
 		this.currentVelocity = getMechanismVelocityAnglesPerSecond();
 	}
 
 	@Override
 	public Rotation2d getMechanismPosition() {
-		return position;
+		return currentPosition;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 
 	private void updatePosition(Rotation2d velocity) {
 		Rotation2d deltaDistance = velocity.times(TimeUtils.getLatestCycleTimeSeconds());
-		position = Rotation2d.fromRotations(position.getRotations() + deltaDistance.getRotations());
+		currentPosition = Rotation2d.fromRotations(currentPosition.getRotations() + deltaDistance.getRotations());
 	}
 
 }

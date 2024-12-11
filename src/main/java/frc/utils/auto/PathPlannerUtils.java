@@ -114,11 +114,11 @@ public class PathPlannerUtils {
 		return safelyApplyPathToCommandFunction((path) -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints), pathName);
 	}
 
-	static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Translation2d currentRobotPosition, double toleranceMeters) {
+	private static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Translation2d currentRobotPosition, double toleranceMeters) {
 		return Math.abs(path.getPathPoses().get(0).getTranslation().getDistance(currentRobotPosition)) <= toleranceMeters;
 	}
 
-	static Pose2d getFlippedLastPathPose(PathPlannerPath path) {
+	private static Pose2d getFlippedLastPathPose(PathPlannerPath path) {
 		if (AutoBuilder.shouldFlip())
 			path = path.flipPath();
 		return path.getPathPoses().get(path.getPathPoses().size() - 1);

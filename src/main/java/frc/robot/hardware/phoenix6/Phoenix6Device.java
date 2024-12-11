@@ -65,7 +65,7 @@ public abstract class Phoenix6Device implements IDevice {
 			if (signal instanceof SignalGetter signalGetter) {
 				signalsSet.add(signalGetter.getSignal());
 				if (signal instanceof Phoenix6LatencyAndSlopeSignal bothLatencySignal) {
-					signalsSet.add(bothLatencySignal.getSignalSlope());
+					signalsSet.add(bothLatencySignal.getSlopeSignal());
 				}
 			}
 		}

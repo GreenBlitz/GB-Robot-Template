@@ -14,31 +14,31 @@ public class Filter<T extends RawVisionData> {
 		this.filteringFunction = filteringFunction;
 	}
 
-	public boolean doesFilterPasses(T data) {
+	public boolean doesFilterPass(T data) {
 		return filteringFunction.apply(data);
 	}
 
 	public Filter<T> andThen(Filter<T> anotherFilter) {
-		return new Filter<>((T data) -> anotherFilter.doesFilterPasses(data) && doesFilterPasses(data));
+		return new Filter<>((T data) -> anotherFilter.doesFilterPass(data) && doesFilterPass(data));
 	}
 
-	public Filter<T> orThen(Filter<T> anotherFilter) {
-		return new Filter<>((T data) -> anotherFilter.doesFilterPasses(data) || doesFilterPasses(data));
+	public Filter<T> or(Filter<T> anotherFilter) {
+		return new Filter<>((T data) -> anotherFilter.doesFilterPass(data) || doesFilterPass(data));
 	}
 
-	public void logFilterState(String logPath, T data) {
-		Logger.recordOutput(logPath, doesFilterPasses(data));
+	public void logFilterStatus(String logPath, T data) {
+		Logger.recordOutput(logPath, doesFilterPass(data));
 	}
 
 	@SafeVarargs
 	public static <T extends RawVisionData> Filter<T> combineFilters(Filter<T>... filters) {
-		return new Filter<>((T data) -> Arrays.stream(filters).allMatch((Filter<T> filer) -> filer.doesFilterPasses(data)));
+		return new Filter<>((T data) -> Arrays.stream(filters).allMatch((Filter<T> filer) -> filer.doesFilterPass(data)));
 	}
 
 	@SafeVarargs
-	public static <T extends RawVisionData> void logFiltersState(String logPath, T data, Filter<T>... filters) {
+	public static <T extends RawVisionData> void logFiltersStatus(String logPath, T data, Filter<T>... filters) {
 		for (int i = 0; i < filters.length; i++) {
-			filters[i].logFilterState(logPath + "/" + i, data);
+			filters[i].logFilterStatus(logPath + "/" + i, data);
 		}
 	}
 

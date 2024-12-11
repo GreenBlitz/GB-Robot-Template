@@ -91,7 +91,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 	//@formatter:on
-	
+
 	@Override
 	public void setHeading(Rotation2d newHeading) {
 		if (latestGyroAngle != null) {
@@ -118,7 +118,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 		return PoseEstimationMath.calculateAngleAverage(stackedHeadingEstimations);
 	}
-	
+
 	public void setOdometryStandardDeviations(double[] newStandardDeviations) {
 		for (int i = 0; i < newStandardDeviations.length; i++) {
 			odometryStandardDeviations[i] = newStandardDeviations[i] * newStandardDeviations[i];
@@ -148,7 +148,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public Pose2d getOdometryPose() {
 		return odometryPose;
 	}
-	
+
 	@Override
 	public Optional<Pose2d> getVisionPose() {
 		List<VisionObservation> stackedVisionObservations = limelightFilterer.getAllAvailableVisionObservations();
@@ -174,7 +174,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public Pose2d getEstimatedPose() {
 		return estimatedPose;
 	}
-	
+
 	@Override
 	public Pose2d getEstimatedPoseAtTimestamp(double timeStamp) {
 		Optional<Pose2d> estimatedPoseAtTimestamp = estimatedPoseInterpolator.getSample(timeStamp);

@@ -13,12 +13,12 @@ public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getSystemPosition() {
+	public Rotation2d getMechanismPosition() {
 		return Rotation2d.fromRadians(motorSimulation.getAngularPositionRad());
 	}
 
 	@Override
-	public Rotation2d getSystemVelocityAnglesPerSecond() {
+	public Rotation2d getMechanismVelocityAnglesPerSecond() {
 		return Rotation2d.fromRadians(motorSimulation.getAngularVelocityRadPerSec());
 	}
 
@@ -29,7 +29,7 @@ public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		motorSimulation.update(TimeUtils.getCurrentCycleTimeSeconds());
+		motorSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
 	}
 
 	@Override

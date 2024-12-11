@@ -124,14 +124,14 @@ public class PathPlannerUtils {
 		return path.getPathPoses().get(path.getPathPoses().size() - 1);
 	}
 
-	static Command pathfindOrFollowPath(
+	public static Command pathfindOrFollowPath(
 		String pathName,
-		Function<Pose2d, Command> pathfindingCommand,
+		Function<Supplier<Pose2d>, Command> pathfindingCommand,
 		double pathfindInsteadOfPathFollowingToleranceMeters
 	) {
 		Function<PathPlannerPath, Command> pathToCommandFunction = (path) -> new ConditionalCommand(
 			followPath(pathName),
-			pathfindingCommand.apply(getFlippedLastPathPose(path)),
+			pathfindingCommand.apply(() -> getFlippedLastPathPose(path)),
 			() -> isRobotCloseToPathBeginning(path, AutoBuilder.getCurrentPose().getTranslation(), pathfindInsteadOfPathFollowingToleranceMeters)
 		);
 		return safelyApplyPathToCommandFunction(pathToCommandFunction, pathName);

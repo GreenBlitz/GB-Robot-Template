@@ -11,7 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.MathConstants;
-import frc.utils.GBSubsystem;
+import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
@@ -27,8 +27,8 @@ public class WheelRadiusCharacterization extends Command {
 	private final double driveRadiusMeters;
 
 	private Rotation2d[] startWheelPositions;
-	private double lastGyroYawRads = 0.0;
-	private double accumGyroYawRads = 0.0;
+	private double lastGyroYawRadians = 0.0;
+	private double accumulateGyroYawRadians = 0.0;
 	private double wheelRadiusMeters = 0.0;
 
 	public WheelRadiusCharacterization(
@@ -50,28 +50,28 @@ public class WheelRadiusCharacterization extends Command {
 	}
 
 	private void updateAnglePassedFromStart() {
-		double currentGyroYawRads = gyroAngleSupplier.get().getRadians();
-		accumGyroYawRads += MathUtil.angleModulus(currentGyroYawRads - lastGyroYawRads);
-		lastGyroYawRads = currentGyroYawRads;
+		double currentGyroYawRadians = gyroAngleSupplier.get().getRadians();
+		accumulateGyroYawRadians += MathUtil.angleModulus(currentGyroYawRadians - lastGyroYawRadians);
+		lastGyroYawRadians = currentGyroYawRadians;
 	}
 
 	private double getDriveDistanceMeters() {
-		return accumGyroYawRads * driveRadiusMeters;
+		return accumulateGyroYawRadians * driveRadiusMeters;
 	}
 
-	private double getAverageDriveDistanceRads() {
+	private double getAverageDriveDistanceRadians() {
 		Rotation2d[] wheelPositions = wheelDriveDistanceSupplier.get();
-		double averageDriveDistanceRads = 0.0;
+		double averageDriveDistanceRadians = 0.0;
 		for (int i = 0; i < WheelRadiusConstants.NUMBER_OF_MODULES; i++) {
-			averageDriveDistanceRads += Math.abs(wheelPositions[i].getRadians() - startWheelPositions[i].getRadians());
+			averageDriveDistanceRadians += Math.abs(wheelPositions[i].getRadians() - startWheelPositions[i].getRadians());
 		}
-		return averageDriveDistanceRads / WheelRadiusConstants.NUMBER_OF_MODULES;
+		return averageDriveDistanceRadians / WheelRadiusConstants.NUMBER_OF_MODULES;
 	}
 
 	@Override
 	public void initialize() {
-		lastGyroYawRads = gyroAngleSupplier.get().getRadians();
-		accumGyroYawRads = 0.0;
+		lastGyroYawRadians = gyroAngleSupplier.get().getRadians();
+		accumulateGyroYawRadians = 0.0;
 
 		startWheelPositions = wheelDriveDistanceSupplier.get();
 	}
@@ -83,13 +83,13 @@ public class WheelRadiusCharacterization extends Command {
 		updateAnglePassedFromStart();
 
 		// Distance meters / Distance Radians = Radius Meters
-		wheelRadiusMeters = getDriveDistanceMeters() / getAverageDriveDistanceRads();
+		wheelRadiusMeters = getDriveDistanceMeters() / getAverageDriveDistanceRadians();
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		onEnd.run();
-		String output = accumGyroYawRads <= MathConstants.FULL_CIRCLE.getRadians()
+		String output = accumulateGyroYawRadians <= MathConstants.FULL_CIRCLE.getRadians()
 			? "Not enough data for characterization"
 			: wheelRadiusMeters + " meters";
 		Logger.recordOutput(WheelRadiusConstants.LOG_PATH, output);

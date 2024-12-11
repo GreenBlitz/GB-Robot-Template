@@ -62,7 +62,7 @@ class SteerRealConstants {
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
 
 		TalonFXConfiguration configuration = generateMotorConfig(inverted);
-		configuration.Feedback.FeedbackRemoteSensorID = encoderID.ID();
+		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
 
 		TalonFXMotor steer = new TalonFXMotor(logPath, deviceID, configuration, generateSysidConfig());
 

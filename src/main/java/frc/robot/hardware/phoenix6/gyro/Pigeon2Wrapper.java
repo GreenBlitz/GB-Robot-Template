@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Utils;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 public class Pigeon2Wrapper extends Pigeon2 {
 
 	//@formatter:off
@@ -103,7 +105,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	public Pigeon2Wrapper(Phoenix6DeviceID deviceID) {
-		super(deviceID.ID(), deviceID.busChain().getChainName());
+		super(deviceID.id(), deviceID.busChain().getChainName());
 		this.rollOffSetDegrees = 0;
 		this.pitchOffSetDegrees = 0;
 	}
@@ -121,7 +123,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	public Rotation2d getRotation2dYaw() {
-		return Rotation2d.fromDegrees(getYaw().getValue());
+		return Rotation2d.fromDegrees(getYaw().getValue().in(Degrees));
 	}
 
 	/**
@@ -132,7 +134,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	 * @param newRoll - the wanted roll of the gyro to have
 	 */
 	public void setRoll(Rotation2d newRoll) {
-		rollOffSetDegrees = calculateOffset(newRoll.getDegrees(), getRoll().getValue());
+		rollOffSetDegrees = calculateOffset(newRoll.getDegrees(), getRoll().getValue().in(Degrees));
 	}
 
 	/**
@@ -143,7 +145,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	 * @param newPitch - the wanted pitch of the gyro to have
 	 */
 	public void setPitch(Rotation2d newPitch) {
-		pitchOffSetDegrees = calculateOffset(newPitch.getDegrees(), getPitch().getValue());
+		pitchOffSetDegrees = calculateOffset(newPitch.getDegrees(), getPitch().getValue().in(Degrees));
 	}
 
 	public Rotation2d getRollOffSet() {
@@ -155,32 +157,32 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	public Rotation2d getAdjustedRoll() {
-		return Rotation2d.fromDegrees(getRoll().getValue() + rollOffSetDegrees);
+		return Rotation2d.fromDegrees(getRoll().getValue().in(Degrees) + rollOffSetDegrees);
 	}
 
 	public Rotation2d getAdjustedPitch() {
-		return Rotation2d.fromDegrees(getPitch().getValue() + pitchOffSetDegrees);
+		return Rotation2d.fromDegrees(getPitch().getValue().in(Degrees) + pitchOffSetDegrees);
 	}
 
 	/**
 	 * @return - the yaw value ranged between -180 , 180
 	 */
 	public Rotation2d getRangedYaw() {
-		return rangeAngle(Rotation2d.fromDegrees(getYaw().getValue()));
+		return rangeAngle(Rotation2d.fromDegrees(getYaw().getValue().in(Degrees)));
 	}
 
 	/**
 	 * @return - the unadjusted roll value ranged between -180 , 180
 	 */
 	public Rotation2d getRangedRoll() {
-		return rangeAngle(Rotation2d.fromDegrees(getRoll().getValue()));
+		return rangeAngle(Rotation2d.fromDegrees(getRoll().getValue().in(Degrees)));
 	}
 
 	/**
 	 * @return - the unadjusted pitch value ranged between -180 , 180
 	 */
 	public Rotation2d getRangedPitch() {
-		return rangeAngle(Rotation2d.fromDegrees(getPitch().getValue()));
+		return rangeAngle(Rotation2d.fromDegrees(getPitch().getValue().in(Degrees)));
 	}
 
 	/**

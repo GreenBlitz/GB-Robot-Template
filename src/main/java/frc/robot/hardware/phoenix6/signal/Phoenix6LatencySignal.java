@@ -7,12 +7,12 @@ import frc.robot.hardware.signal.TimedValue;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtils;
 
-public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6SignalBuilder.SignalGetter {
+public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {
 
-	private final StatusSignal<Double> signal;
-	protected final StatusSignal<Double> slopeSignal;
+	private final StatusSignal<?> signal;
+	protected final StatusSignal<?> slopeSignal;
 
-	protected Phoenix6LatencySignal(String name, StatusSignal<Double> signal, StatusSignal<Double> slopeSignal, AngleUnit angleUnit) {
+	protected Phoenix6LatencySignal(String name, StatusSignal<?> signal, StatusSignal<?> slopeSignal, AngleUnit angleUnit) {
 		super(name, angleUnit);
 		this.signal = signal;
 		this.slopeSignal = slopeSignal;
@@ -20,12 +20,14 @@ public class Phoenix6LatencySignal extends AngleSignal implements Phoenix6Signal
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValue(signal, slopeSignal), TimeUtils.getCurrentTimeSeconds());
+		return new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal), TimeUtils.getCurrentTimeSeconds());
 	}
 
+	/**
+	 * For using refresh all with more signals...
+	 */
 	@Override
-	public StatusSignal<Double> getSignal() {
-		// For using refresh all with more signals...
+	public StatusSignal<?> getSignal() {
 		return signal;
 	}
 

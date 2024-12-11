@@ -14,9 +14,7 @@ public interface IOdometryEstimator {
 	void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose);
 
 	Pose2d getOdometryPose();
-
-	void setOdometryStandardDeviations(double[] standardDeviations);
-
-	void resetHeadingOffset(Rotation2d newHeading);
-
+	
+	void setHeading(Rotation2d newHeading);
+	
 }

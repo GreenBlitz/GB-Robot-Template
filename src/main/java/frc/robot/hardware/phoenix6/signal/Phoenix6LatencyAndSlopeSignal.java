@@ -12,7 +12,7 @@ public class Phoenix6LatencyAndSlopeSignal extends Phoenix6LatencySignal {
 	/**
 	 * For using refresh all with more signals...
 	 */
-	public StatusSignal<?> getSignalSlope() {
+	public StatusSignal<?> getSlopeSignal() {
 		return slopeSignal;
 	}
 

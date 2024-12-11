@@ -27,7 +27,7 @@ public class TalonFXSimulation {
 		configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 		configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 		if (configuration.Feedback.RotorToSensorRatio != ROTOR_TO_SENSOR_RATIO) {
-			configuration.Feedback.SensorToMechanismRatio *= configuration.Feedback.RotorToSensorRatio;
+			configuration.Feedback.SensorToMechanismRatio *= configuration.Feedback.RotorToSensorRatio / ROTOR_TO_SENSOR_RATIO;
 			configuration.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
 		}
 		talonFXWrapper.applyConfiguration(configuration);

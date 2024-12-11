@@ -92,7 +92,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 	//@formatter:on
 	
-	public void resetHeadingOffset(Rotation2d newHeading) {
+	@Override
+	public void setHeading(Rotation2d newHeading) {
 		if (latestGyroAngle != null) {
 			headingOffset = newHeading.minus(latestGyroAngle);
 			updateGyroOffsetInPose();
@@ -146,11 +147,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public Pose2d getOdometryPose() {
 		return odometryPose;
-	}
-	
-	@Override
-	public void setHeading(Rotation2d newHeading) {
-	
 	}
 	
 	@Override

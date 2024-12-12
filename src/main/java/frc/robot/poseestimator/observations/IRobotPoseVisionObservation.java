@@ -11,3 +11,4 @@ public interface IRobotPoseVisionObservation {
 	double getAprilTagHeight();
 
 }
+

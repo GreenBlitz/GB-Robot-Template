@@ -1,6 +1,9 @@
 package frc.robot.poseestimator;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import java.util.List;
@@ -84,6 +87,10 @@ public class PoseEstimationMath {
 		return new double[] {
 			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
+	}
+	
+	public static Matrix<N3, N1> convertStandardDeviationsArrayToMatrix(double[] standardDeviationsArray){
+	
 	}
 
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {

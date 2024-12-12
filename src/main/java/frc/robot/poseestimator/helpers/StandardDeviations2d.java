@@ -1,23 +1,27 @@
 package frc.robot.poseestimator.helpers;
 
-import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
-public class WPILibStandardDeviations {
+public class StandardDeviations2d {
 	
 	private double xStandardDeviationsMeters;
 	private double yStandardDeviationsMeters;
 	private Rotation2d thetaStandardDeviations;
 	
-	public WPILibStandardDeviations() {
+	public StandardDeviations2d() {
 		xStandardDeviationsMeters = 0;
 		yStandardDeviationsMeters = 0;
 		thetaStandardDeviations = new Rotation2d();
+	}
+	
+	public StandardDeviations2d(double xStandardDeviationsMeters, double yStandardDeviationsMeters, Rotation2d thetaStandardDeviations) {
+		this.xStandardDeviationsMeters = xStandardDeviationsMeters;
+		this.yStandardDeviationsMeters = yStandardDeviationsMeters;
+		this.thetaStandardDeviations = thetaStandardDeviations;
 	}
 	
 	public double getxStandardDeviationsMeters() {
@@ -44,17 +48,17 @@ public class WPILibStandardDeviations {
 		this.thetaStandardDeviations = thetaStandardDeviations;
 	}
 	
-	public WPILibStandardDeviations withThetaStandardDeviations(Rotation2d thetaStandardDeviations){
+	public StandardDeviations2d withThetaStandardDeviations(Rotation2d thetaStandardDeviations){
 		this.thetaStandardDeviations = thetaStandardDeviations;
 		return this;
 	}
 	
-	public WPILibStandardDeviations withXStandardDeviations(double xStandardDeviationsMeters){
+	public StandardDeviations2d withXStandardDeviations(double xStandardDeviationsMeters){
 		this.xStandardDeviationsMeters = xStandardDeviationsMeters;
 		return this;
 	}
 	
-	public WPILibStandardDeviations withYStandardDeviations(double yStandardDeviationsMeters){
+	public StandardDeviations2d withYStandardDeviations(double yStandardDeviationsMeters){
 		this.yStandardDeviationsMeters = yStandardDeviationsMeters;
 		return this;
 	}

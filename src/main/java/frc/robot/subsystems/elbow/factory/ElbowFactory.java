@@ -8,7 +8,7 @@ public class ElbowFactory {
 	public static ElbowStuff create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealElbowConstants.generateElbowStuff(logPath);
-			case SIMULATION -> null;
+			case SIMULATION -> RealElbowConstants.generateSimulationElbowStuff(logPath);
 		};
 	}
 

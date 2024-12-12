@@ -8,7 +8,7 @@ public class FlywheelFactory {
 	public static FlywheelStuff create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealFlywheelConstants.generateFlywheelStuff(logPath);
-			case SIMULATION -> null;
+			case SIMULATION -> RealFlywheelConstants.generateSimulationFlywheelStuff(logPath);
 		};
 	}
 

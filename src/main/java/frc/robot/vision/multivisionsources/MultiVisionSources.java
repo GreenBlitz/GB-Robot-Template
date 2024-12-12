@@ -1,9 +1,7 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.rawdata.RawAprilTagVisionData;
 import frc.robot.vision.rawdata.RawVisionData;
 import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
@@ -32,7 +30,10 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 		return visionSources;
 	}
 
-	private <ReturnType> ArrayList<ReturnType> createMappedCopyOfSources(List<VisionSourceType> list, Function<Optional<? extends RawVisionData>, Optional<ReturnType>> mapping) {
+	private <ReturnType> ArrayList<ReturnType> createMappedCopyOfSources(
+		List<VisionSourceType> list,
+		Function<Optional<? extends RawVisionData>, Optional<ReturnType>> mapping
+	) {
 		ArrayList<ReturnType> output = new ArrayList<>();
 		list.forEach(visionSource -> {
 			visionSource.update();

@@ -72,7 +72,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public void updateEstimation() {
+	public void update() {
 		robotOrientationEntry.setDoubleArray(
 			new double[] {
 				gyroAngleValues.yaw().getDegrees(),
@@ -120,7 +120,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public Optional<RawAprilTagVisionData> getRawVisionEstimation() {
+	public Optional<RawAprilTagVisionData> getRawVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
 			pose3dDoublePair -> new RawAprilTagVisionData(
@@ -133,8 +133,8 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public boolean shallBeFiltered() {
-		return getRawVisionEstimation().map(filter::doesFilterPasses).orElseGet(() -> true);
+	public boolean shouldDataBeFiltered() {
+		return getRawVisionData().map(filter::doesFilterPasses).orElseGet(() -> true);
 	}
 
 	@Override

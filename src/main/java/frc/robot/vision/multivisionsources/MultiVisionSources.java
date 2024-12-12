@@ -1,7 +1,7 @@
 package frc.robot.vision.multivisionsources;
 
+import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimator.observations.VisionRobotPoseObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.rawdata.RawVisionData;
@@ -14,41 +14,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>> extends GBSubsystem {
+public class MultiVisionSources<VisionSourceType extends VisionSource<? extends RawVisionData>> extends GBSubsystem {
 
-	private final List<T> visionSources;
+	private final List<VisionSourceType> visionSources;
 
 	@SafeVarargs
-	public MultiVisionSources(String logPath, T... visionSources) {
+	public MultiVisionSources(String logPath, VisionSourceType... visionSources) {
 		super(logPath);
 		this.visionSources = List.of(visionSources);
 	}
 
-	public MultiVisionSources(String logPath, List<T> visionSources) {
+	public MultiVisionSources(String logPath, List<VisionSourceType> visionSources) {
 		super(logPath);
 		this.visionSources = visionSources;
 	}
 
-	protected List<T> getVisionSources() {
+	protected List<VisionSourceType> getVisionSources() {
 		return visionSources;
 	}
 
-	public ArrayList<VisionRobotPoseObservation> getUnfilteredVisionObservation() {
-		ArrayList<VisionRobotPoseObservation> rawPoseData = new ArrayList<>();
+	public ArrayList<IRobotPoseVisionObservation> getUnfilteredVisionObservation() {
+		ArrayList<IRobotPoseVisionObservation> rawPoseData = new ArrayList<>();
 		visionSources.forEach(visionSource -> {
-			visionSource.updateEstimation();
-			Optional<VisionRobotPoseObservation> observation = convertToOptionalObservation(visionSource.getRawVisionEstimation());
+			visionSource.update();
+			Optional<IRobotPoseVisionObservation> observation = convertToOptionalObservation(visionSource.getRawVisionData());
 			observation.ifPresent(rawPoseData::add);
 		});
 		return rawPoseData;
 	}
 
-	public ArrayList<VisionRobotPoseObservation> getFilteredVisionObservations() {
-		ArrayList<VisionRobotPoseObservation> estimates = new ArrayList<>();
+	public ArrayList<IRobotPoseVisionObservation> getFilteredVisionObservations() {
+		ArrayList<IRobotPoseVisionObservation> estimates = new ArrayList<>();
 
 		for (VisionSource<? extends RawVisionData> visionSource : visionSources) {
-			if (!visionSource.shallBeFiltered()) {
-				Optional<VisionRobotPoseObservation> observation = convertToOptionalObservation(visionSource.getRawVisionEstimation());
+			if (!visionSource.shouldDataBeFiltered()) {
+				Optional<IRobotPoseVisionObservation> observation = convertToOptionalObservation(visionSource.getRawVisionData());
 				observation.ifPresent(estimates::add);
 			}
 		}
@@ -61,26 +61,26 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 	 * @param optionalRawVisionData: the optional to be converted
 	 * @return: new instance that has the same data but java is happier with it
 	 */
-	private Optional<VisionRobotPoseObservation> convertToOptionalObservation(Optional<? extends RawVisionData> optionalRawVisionData) {
+	private Optional<IRobotPoseVisionObservation> convertToOptionalObservation(Optional<? extends RawVisionData> optionalRawVisionData) {
 		if (optionalRawVisionData.isPresent()) {
 			return Optional.of(optionalRawVisionData.get());
 		}
 		return Optional.empty();
 	}
 
-	private static void logRobotPose(String logPath, String logPathAddition, List<VisionRobotPoseObservation> observations) {
+	private static void logRobotPose(String logPath, String logPathAddition, List<IRobotPoseVisionObservation> observations) {
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(logPath + logPathAddition + i, observations.get(i).getEstimatedPose());
 		}
 	}
 
 	private void log() {
-		logRobotPose(super.getLogPath(), VisionConstants.FILTERED_ESTIMATION_LOGPATH_ADDITION, getFilteredVisionObservations());
-		logRobotPose(super.getLogPath(), VisionConstants.NON_FILTERED_ESTIMATION_LOGPATH_ADDITION, getUnfilteredVisionObservation());
+		logRobotPose(getLogPath(), VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionObservations());
+		logRobotPose(getLogPath(), VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionObservation());
 	}
 
 	private void updateYawInLimelights(Rotation2d yaw) {
-		for (T visionSource : visionSources) {
+		for (VisionSourceType visionSource : visionSources) {
 			if (visionSource instanceof LimeLightSource limelightSource) {
 				limelightSource
 					.updateGyroAngles(new LimelightGyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
@@ -90,11 +90,11 @@ public class MultiVisionSources<T extends VisionSource<? extends RawVisionData>>
 
 	public ArrayList<Rotation2d> getRawEstimatedAngles() {
 		ArrayList<Rotation2d> output = new ArrayList<>();
-		for (T visionSource : visionSources) {
+		for (VisionSourceType visionSource : visionSources) {
 			if (visionSource instanceof LimeLightSource limeLightSource) {
 				limeLightSource.getRobotHeading().ifPresent(output::add);
 			} else {
-				visionSource.getRawVisionEstimation()
+				visionSource.getRawVisionData()
 					.ifPresent(
 						(RawVisionData visionData) -> output.add(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()))
 					);

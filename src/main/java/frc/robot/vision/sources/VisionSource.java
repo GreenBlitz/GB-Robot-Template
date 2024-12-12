@@ -9,7 +9,7 @@ public interface VisionSource<ReturnType extends RawVisionData> {
 
 	void update();
 
-	Optional<RawVisionData> getRawVisionData();
+	Optional<ReturnType> getRawVisionData();
 
 	Filter<ReturnType> setFilter(Filter<ReturnType> newFilter);
 

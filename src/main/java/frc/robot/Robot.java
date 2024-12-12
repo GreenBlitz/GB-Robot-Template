@@ -21,6 +21,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.filters.Filter;
 import frc.robot.vision.multivisionsources.MultiVisionSourcesWithExtendedLimelightSupport;
 import frc.robot.vision.sources.simulationsource.SimulatedSource;
 import frc.robot.vision.sources.simulationsource.SimulatedSourceConfiguration;
@@ -56,6 +57,7 @@ public class Robot {
 		this.poseEstimator = new GBPoseEstimator(
 			PoseEstimatorConstants.LOG_PATH,
 			new MultiVisionSourcesWithExtendedLimelightSupport(
+				"multivisionsource",
 				new SimulatedSource(
 					"limelight-front",
 					() -> swerve.getSimulatedPose(),
@@ -67,7 +69,8 @@ public class Robot {
 						0,
 						100,
 						Rotation2d.fromDegrees(359)
-					)
+					),
+					new Filter<>((data) -> false)
 				)
 			),
 			new OdometryValues(swerve.getConstants().kinematics(), swerve.getModules().getWheelsPositions(0), swerve.getAbsoluteHeading()),

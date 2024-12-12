@@ -196,8 +196,8 @@ public class Swerve extends GBSubsystem {
 		);
 	}
 
-	public Optional<Pose2d> getSimulatedPose() {
-		return swervePhysicsSimulation.map(AbstractDriveTrainSimulation::getSimulatedDriveTrainPose);
+	public Pose2d getSimulatedPose() {
+		return swervePhysicsSimulation.map(AbstractDriveTrainSimulation::getSimulatedDriveTrainPose).orElse(null);
 	}
 
 

@@ -1,4 +1,4 @@
-package frc.robot.poseestimator;
+package frc.robot.poseestimator.WPILibPoseEstimator;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.rawdata.RawAprilTagVisionData;

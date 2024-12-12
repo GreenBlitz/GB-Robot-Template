@@ -7,39 +7,39 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class Filter {
+public class Filter<T extends IRawVisionData> {
 
-	private final Function<IRawVisionData, Boolean> filteringFunction;
+	private final Function<T, Boolean> filteringFunction;
 
-	public Filter(Function<IRawVisionData, Boolean> filteringFunction) {
+	public Filter(Function<T, Boolean> filteringFunction) {
 		this.filteringFunction = filteringFunction;
 	}
 
-	public boolean doesFilterPasses(IRawVisionData data) {
+	public boolean doesFilterPass(T data) {
 		return filteringFunction.apply(data);
 	}
 
-	public Filter andThen(Filter anotherFilter) {
-		return new Filter((IRawVisionData data) -> anotherFilter.doesFilterPasses(data) && doesFilterPasses(data));
+	public Filter<T> andThen(Filter<T> anotherFilter) {
+		return new Filter<>((T data) -> anotherFilter.doesFilterPass(data) && doesFilterPass(data));
 	}
 
-	public Filter orThen(Filter anotherFilter) {
-		return new Filter((IRawVisionData data) -> anotherFilter.doesFilterPasses(data) || doesFilterPasses(data));
+	public Filter<T> or(Filter<T> anotherFilter) {
+		return new Filter<>((T data) -> anotherFilter.doesFilterPass(data) || doesFilterPass(data));
 	}
 
-	public void logFilterState(String logPath, IRawVisionData data) {
-		Logger.recordOutput(logPath, doesFilterPasses(data));
-	}
-
-	@SafeVarargs
-	public static <T extends RawVisionData> Filter combineFilters(Filter... filters) {
-		return new Filter((IRawVisionData data) -> Arrays.stream(filters).allMatch((Filter filer) -> filer.doesFilterPasses(data)));
+	public void logFilterStatus(String logPath, T data) {
+		Logger.recordOutput(logPath, doesFilterPass(data));
 	}
 
 	@SafeVarargs
-	public static <T extends RawVisionData> void logFiltersState(String logPath, IRawVisionData data, Filter... filters) {
+	public static <T extends RawVisionData> Filter<T> combineFilters(Filter<T>... filters) {
+		return new Filter<>((T data) -> Arrays.stream(filters).allMatch((Filter<T> filer) -> filer.doesFilterPass(data)));
+	}
+
+	@SafeVarargs
+	public static <T extends RawVisionData> void logFiltersStatus(String logPath, T data, Filter<T>... filters) {
 		for (int i = 0; i < filters.length; i++) {
-			filters[i].logFilterState(logPath + "/" + i, data);
+			filters[i].logFilterStatus(logPath + "/" + i, data);
 		}
 	}
 

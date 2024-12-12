@@ -58,7 +58,7 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 		}));
 	}
 
-	private static void logRobotPose(String logPath, String logPathAddition, List<RawVisionData> observations) {
+	private static void logRobotPose(String logPath, String logPathAddition, List<? extends RawVisionData> observations) {
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(logPath + logPathAddition + i, observations.get(i).getEstimatedPose());
 		}

@@ -87,9 +87,10 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 	public RawAprilTagVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose, AprilTag aprilTag) {
 		return new RawAprilTagVisionData(
 			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
+			TimeUtils.getCurrentTimeSeconds(),
+			getLatestObservation().map(filter::doesFilterPass).orElseGet(() -> true),
 			aprilTagPose.getZ(),
 			distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
-			TimeUtils.getCurrentTimeSeconds(),
 			aprilTag
 		);
 	}
@@ -128,11 +129,6 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 	@Override
 	public Optional<RawAprilTagVisionData> getRawVisionData() {
 		return getLatestObservation();
-	}
-
-	@Override
-	public boolean shouldDataBeFiltered() {
-		return getLatestObservation().map(filter::doesFilterPasses).orElseGet(() -> true);
 	}
 
 	@Override

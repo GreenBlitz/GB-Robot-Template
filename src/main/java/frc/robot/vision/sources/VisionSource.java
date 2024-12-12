@@ -5,14 +5,12 @@ import frc.robot.vision.rawdata.RawVisionData;
 
 import java.util.Optional;
 
-public interface VisionSource<ReturnedData extends RawVisionData> {
+public interface VisionSource<ReturnType extends RawVisionData> {
 
 	void update();
 
-	Optional<ReturnedData> getRawVisionData();
+	Optional<ReturnType> getRawVisionData();
 
-	boolean shouldDataBeFiltered();
-
-	Filter<ReturnedData> setFilter(Filter<ReturnedData> newFilter);
+	Filter<ReturnType> setFilter(Filter<ReturnType> newFilter);
 
 }

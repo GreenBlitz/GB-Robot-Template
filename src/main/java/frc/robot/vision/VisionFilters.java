@@ -2,6 +2,7 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.filters.Filter;
+import frc.robot.vision.rawdata.RawAprilTagVisionData;
 import frc.robot.vision.rawdata.RawVisionData;
 
 public class VisionFilters {
@@ -20,6 +21,16 @@ public class VisionFilters {
 
 	protected static Filter<RawVisionData> isRobotOnGround(double robotToGroundToleranceMeters) {
 		return new Filter<>((RawVisionData rawVisionData) -> rawVisionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters);
+	}
+
+	protected static Filter<RawAprilTagVisionData> isAprilTagHeightInTolerance(
+		double aprilTagMaxHeightToleranceMeters,
+		double aprilTagMinimumHeightToleranceMeters
+	) {
+		return new Filter<>(
+			(RawAprilTagVisionData rawAprilTagVisionData) -> rawAprilTagVisionData.getAprilTagHeight() <= aprilTagMaxHeightToleranceMeters
+				&& aprilTagMinimumHeightToleranceMeters <= rawAprilTagVisionData.getAprilTagHeight()
+		);
 	}
 
 }

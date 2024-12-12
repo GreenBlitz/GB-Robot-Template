@@ -125,17 +125,17 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 		return poseEstimation.map(
 			pose3dDoublePair -> new RawAprilTagVisionData(
 				pose3dDoublePair.getFirst(),
+				pose3dDoublePair.getSecond(),
+				shouldDataBeFiltered(),
 				getAprilTagValue(LimelightEntryValue.Y_AXIS),
 				getAprilTagValue(LimelightEntryValue.Z_AXIS),
-				pose3dDoublePair.getSecond(),
 				VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().get((int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID))
 			)
 		);
 	}
 
-	@Override
-	public boolean shouldDataBeFiltered() {
-		return getRawVisionData().map(filter::doesFilterPasses).orElseGet(() -> true);
+	private boolean shouldDataBeFiltered() {
+		return getRawVisionData().map(filter::doesFilterPass).orElseGet(() -> true);
 	}
 
 	@Override

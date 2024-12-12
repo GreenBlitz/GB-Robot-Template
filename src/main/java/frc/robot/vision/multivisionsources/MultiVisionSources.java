@@ -79,30 +79,6 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 		logRobotPose(getLogPath(), VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionObservation());
 	}
 
-	private void updateYawInLimelights(Rotation2d yaw) {
-		for (VisionSourceType visionSource : visionSources) {
-			if (visionSource instanceof LimeLightSource limelightSource) {
-				limelightSource
-					.updateGyroAngles(new LimelightGyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
-			}
-		}
-	}
-
-	public ArrayList<Rotation2d> getRawEstimatedAngles() {
-		ArrayList<Rotation2d> output = new ArrayList<>();
-		for (VisionSourceType visionSource : visionSources) {
-			if (visionSource instanceof LimeLightSource limeLightSource) {
-				limeLightSource.getRobotHeading().ifPresent(output::add);
-			} else {
-				visionSource.getRawVisionData()
-					.ifPresent(
-						(RawVisionData visionData) -> output.add(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()))
-					);
-			}
-		}
-		return output;
-	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		log();

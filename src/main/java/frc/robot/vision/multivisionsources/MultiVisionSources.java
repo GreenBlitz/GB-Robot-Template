@@ -30,7 +30,7 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 		return visionSources;
 	}
 
-	private <ReturnType> ArrayList<ReturnType> createMappedCopyOfSources(
+	protected <ReturnType> ArrayList<ReturnType> createMappedCopyOfSources(
 		List<VisionSourceType> list,
 		Function<Optional<? extends RawVisionData>, Optional<ReturnType>> mapping
 	) {

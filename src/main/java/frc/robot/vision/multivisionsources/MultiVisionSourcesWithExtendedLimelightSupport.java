@@ -1,6 +1,7 @@
 package frc.robot.vision.multivisionsources;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.vision.rawdata.IRawVisionData;
 import frc.robot.vision.rawdata.RawAprilTagVisionData;
 import frc.robot.vision.rawdata.RawVisionData;
@@ -10,6 +11,7 @@ import frc.robot.vision.sources.VisionSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MultiVisionSourcesWithExtendedLimelightSupport extends MultiVisionSources<VisionSource> {
 
@@ -30,6 +32,35 @@ public class MultiVisionSourcesWithExtendedLimelightSupport extends MultiVisionS
 		}
 	}
 
+	public ArrayList<IRobotPoseVisionObservation> getUnfilteredVisionObservation() {
+		return createMappedCopyOfSources(getVisionSources(), this::convertToOptionalObservation);
+	}
+
+	public ArrayList<IRobotPoseVisionObservation> getFilteredVisionObservations() {
+		return createMappedCopyOfSources(getVisionSources(), (rawVisionData -> {
+			if (rawVisionData.isPresent()) {
+				if (!rawVisionData.get().getIsDataValid()) {
+					return Optional.empty();
+				}
+				return convertToOptionalObservation(rawVisionData);
+			}
+			return Optional.empty();
+		}));
+	}
+
+	/**
+	 * Returns the same optional but extract the object out of the Optional since java doesn't support polymorphism of generics inside optional
+	 *
+	 * @param optionalRawVisionData: the optional to be converted
+	 * @return: new instance that has the same data but java is happier with it
+	 */
+	private Optional<IRobotPoseVisionObservation> convertToOptionalObservation(Optional<? extends RawAprilTagVisionData> optionalRawVisionData) {
+		if (optionalRawVisionData.isPresent()) {
+			return Optional.of(optionalRawVisionData.get());
+		}
+		return Optional.empty();
+	}
+
 	public ArrayList<Rotation2d> getRawEstimatedAngles() {
 		ArrayList<Rotation2d> output = new ArrayList<>();
 		for (VisionSource visionSource : getVisionSources()) {
@@ -38,7 +69,7 @@ public class MultiVisionSourcesWithExtendedLimelightSupport extends MultiVisionS
 			} else {
 				visionSource.getRawVisionData()
 					.ifPresent(
-						(IRawVisionData visionData) -> output.add(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()))
+						(RawAprilTagVisionData visionData) -> output.add(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()))
 					);
 			}
 		}

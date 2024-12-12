@@ -12,6 +12,7 @@ import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.robot.subsystems.swerve.module.records.EncoderSignals;
+import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.Conversions;
@@ -22,7 +23,7 @@ import java.util.Arrays;
 
 public class Module {
 
-	private final ModuleConstants constants;
+	private final ModuleSpecificConstants constants;
 
 	private final IAngleEncoder encoder;
 	private final EncoderSignals encoderSignals;
@@ -44,7 +45,7 @@ public class Module {
 	private boolean isClosedLoop;
 
 	public Module(
-		ModuleConstants constants,
+		ModuleSpecificConstants constants,
 		IAngleEncoder encoder,
 		EncoderSignals encoderSignals,
 		ControllableMotor steer,

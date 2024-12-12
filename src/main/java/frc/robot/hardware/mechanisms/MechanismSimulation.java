@@ -8,9 +8,9 @@ public interface MechanismSimulation {
 
 	Rotation2d getRotorVelocityAnglesPerSecond();
 
-	Rotation2d getSystemPosition();
+	Rotation2d getMechanismPosition();
 
-	Rotation2d getSystemVelocityAnglesPerSecond();
+	Rotation2d getMechanismVelocityAnglesPerSecond();
 
 	void setInputVoltage(double voltage);
 

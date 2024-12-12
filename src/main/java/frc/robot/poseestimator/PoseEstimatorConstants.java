@@ -5,7 +5,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 
 public class PoseEstimatorConstants {
 
-	protected static final String LOG_PATH = "PoseEstimator/";
+	public static final String LOG_PATH = "PoseEstimator/";
 
 	public static final int VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION = 25;
 

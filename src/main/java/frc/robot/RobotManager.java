@@ -32,7 +32,7 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 
 	private Command autonomousCommand;
-	private Robot robot;
+	private RobotOld robot;
 
 	@Override
 	public void robotInit() {
@@ -41,7 +41,7 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 		this.roborioCycles = 0;
 
-		this.robot = new Robot();
+		this.robot = new RobotOld();
 	}
 
 	@Override

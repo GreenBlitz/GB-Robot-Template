@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.gyro;
 
-import frc.robot.Robot;
+import frc.robot.RobotOld;
 import frc.robot.hardware.gyro.maple.MapleGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
@@ -10,7 +10,7 @@ import frc.robot.subsystems.swerve.SwerveType;
 public class GyroFactory {
 
 	private static IGyro createSwerveGyro(String logPath, boolean isMaple) {
-		return switch (Robot.ROBOT_TYPE) {
+		return switch (RobotOld.ROBOT_TYPE) {
 			case REAL -> RealGyroConstants.generateGyro(logPath);
 			case SIMULATION -> isMaple ? MapleGyroConstants.generateGyro(logPath) : SimulationGyroConstants.generateGyro(logPath);
 		};
@@ -23,7 +23,7 @@ public class GyroFactory {
 	}
 
 	private static GyroSignals createSwerveGyroSignals(IGyro gyro) {
-		return switch (Robot.ROBOT_TYPE) {
+		return switch (RobotOld.ROBOT_TYPE) {
 			case REAL -> RealGyroConstants.generateSignals((Pigeon2Gyro) gyro);
 			case SIMULATION ->
 				gyro instanceof MapleGyro ? MapleGyroConstants.generateSignals((MapleGyro) gyro) : SimulationGyroConstants.generateSignals();

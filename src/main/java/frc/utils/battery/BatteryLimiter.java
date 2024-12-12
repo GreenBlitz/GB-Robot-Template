@@ -4,7 +4,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
+import frc.robot.RobotOld;
 import frc.robot.constants.IPs;
 import frc.utils.CMDHandler;
 import frc.utils.DriverStationUtils;
@@ -37,7 +37,7 @@ class BatteryLimiter extends Command {
 			)
 		);
 
-		if (Robot.ROBOT_TYPE.isSimulation()) {
+		if (RobotOld.ROBOT_TYPE.isSimulation()) {
 			CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPs.SIMULATION_IP);
 		}
 	}

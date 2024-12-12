@@ -22,7 +22,7 @@ public class JoysticksBindings {
 	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
-	public static void configureBindings(Robot robot) {
+	public static void configureBindings(RobotOld robot) {
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);
 		thirdJoystickButtons(robot);
@@ -31,7 +31,7 @@ public class JoysticksBindings {
 		sixthJoystickButtons(robot);
 	}
 
-	private static void mainJoystickButtons(Robot robot) {
+	private static void mainJoystickButtons(RobotOld robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeading(new Rotation2d())));
@@ -135,7 +135,7 @@ public class JoysticksBindings {
 		);
 	}
 
-	private static void secondJoystickButtons(Robot robot) {
+	private static void secondJoystickButtons(RobotOld robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
@@ -143,7 +143,7 @@ public class JoysticksBindings {
 		usedJoystick.Y.whileTrue(robot.getSwerve().getModules().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
 	}
 
-	private static void thirdJoystickButtons(Robot robot) {
+	private static void thirdJoystickButtons(RobotOld robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 		usedJoystick.A.whileTrue(
@@ -183,7 +183,7 @@ public class JoysticksBindings {
 		);
 	}
 
-	private static void fourthJoystickButtons(Robot robot) {
+	private static void fourthJoystickButtons(RobotOld robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> 0.2, () -> 0, () -> 0));
@@ -192,12 +192,12 @@ public class JoysticksBindings {
 		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> -0.5, () -> 0, () -> 0));
 	}
 
-	private static void fifthJoystickButtons(Robot robot) {
+	private static void fifthJoystickButtons(RobotOld robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
 	}
 
-	private static void sixthJoystickButtons(Robot robot) {
+	private static void sixthJoystickButtons(RobotOld robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 		// bindings...
 	}

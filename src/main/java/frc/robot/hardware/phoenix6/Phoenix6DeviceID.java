@@ -1,6 +1,6 @@
 package frc.robot.hardware.phoenix6;
 
-import frc.robot.Robot;
+import frc.robot.RobotOld;
 
 public record Phoenix6DeviceID(int id, BusChain busChain) {
 
@@ -14,7 +14,7 @@ public record Phoenix6DeviceID(int id, BusChain busChain) {
 	}
 
 	public static BusChain determineBusChain(BusChain busChain) {
-		return Robot.ROBOT_TYPE.isSimulation() ? BusChain.ROBORIO : busChain;
+		return RobotOld.ROBOT_TYPE.isSimulation() ? BusChain.ROBORIO : busChain;
 	}
 
 }

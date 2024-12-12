@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Robot;
+import frc.robot.RobotOld;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.interfaces.IRequest;
@@ -51,7 +51,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	}
 
 	private Optional<TalonFXSimulation> createSimulation(MechanismSimulation simulation, TalonFXConfiguration configuration) {
-		return Robot.ROBOT_TYPE.isSimulation() && simulation != null
+		return RobotOld.ROBOT_TYPE.isSimulation() && simulation != null
 			? Optional.of(new TalonFXSimulation(motor, configuration, simulation))
 			: Optional.empty();
 	}

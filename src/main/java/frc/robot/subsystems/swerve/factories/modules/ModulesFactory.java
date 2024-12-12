@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules;
 
-import frc.robot.Robot;
+import frc.robot.RobotOld;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -44,7 +44,7 @@ public class ModulesFactory {
 	}
 
 	private static Module createModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition, boolean isMaple) {
-		return switch (Robot.ROBOT_TYPE) {
+		return switch (RobotOld.ROBOT_TYPE) {
 			case REAL -> createHardwareModule(swerveType, modulePosition);
 			case SIMULATION -> isMaple ? createMapleModule(swerveType, modulePosition) : createHardwareModule(swerveType, modulePosition);
 		};

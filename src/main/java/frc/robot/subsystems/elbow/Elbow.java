@@ -4,6 +4,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
@@ -16,6 +19,8 @@ public class Elbow extends GBSubsystem {
 	private final ElbowStuff elbowStuff;
 	private final ElbowCommandsBuilder commandsBuilder;
 
+	private final MechanismLigament2d elbowLigament2d;
+
 	public Elbow(ElbowStuff elbowStuff) {
 		super(elbowStuff.logPath());
 		this.motor = elbowStuff.elbow();
@@ -23,6 +28,9 @@ public class Elbow extends GBSubsystem {
 		this.voltageRequest = elbowStuff.voltageRequest();
 		this.elbowStuff = elbowStuff;
 		this.commandsBuilder = new ElbowCommandsBuilder(this);
+
+		Robot.mechanism2d.getRoot("ELBOW", 10, 0);
+		this.elbowLigament2d = new MechanismLigament2d("elbowL", 4.4, elbowStuff.positionSignal().getLatestValue().getDegrees());
 
 		motor.resetPosition(ElbowConstants.MINIMUM_ACHIEVABLE_POSITION);
 		updateInputs();
@@ -43,6 +51,7 @@ public class Elbow extends GBSubsystem {
 	private void updateInputs() {
 		motor.updateInputs(elbowStuff.positionSignal(), elbowStuff.velocitySignal(), elbowStuff.currentSignal(), elbowStuff.voltageSignal());
 		motor.updateSimulation();
+		elbowLigament2d.setAngle(elbowStuff.positionSignal().getLatestValue().getDegrees());
 	}
 
 	public void setBrake(boolean brake) {

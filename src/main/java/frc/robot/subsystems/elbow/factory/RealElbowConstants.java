@@ -1,6 +1,8 @@
 package frc.robot.subsystems.elbow.factory;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -13,6 +15,8 @@ import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
 import frc.robot.hardware.phoenix6.motor.TalonFXWrapper;
+import frc.robot.hardware.phoenix6.request.Phoenix6Request;
+import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -83,6 +87,9 @@ public class RealElbowConstants {
 
 	private static TalonFXConfiguration generateConfiguration(){
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
+		configuration.Slot0.kP = 1;
+		configuration.Slot0.kI = 1;
+		configuration.Slot0.kD = 1;
 		return configuration;
 	}
 
@@ -96,7 +103,7 @@ public class RealElbowConstants {
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getPosition(), 60, AngleUnit.DEGREES);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getVelocity(), 60, AngleUnit.ROTATIONS);
-		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getSupplyCurrent(), 60);
+		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getStatorCurrent(), 60);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getMotorVoltage(), 60);
 
 		SingleJointedArmSim armSim = new SingleJointedArmSim(
@@ -118,6 +125,9 @@ public class RealElbowConstants {
 				ElbowConstants.GEAR_RATIO
 		);
 
+		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0));
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0));
+
 		TalonFXMotor motor = new TalonFXMotor(
 				logPath,
 				new Phoenix6DeviceID(0),
@@ -128,8 +138,13 @@ public class RealElbowConstants {
 		return new ElbowStuff(
 				logPath,
 				motor,
-
-		)
+				positionRequest,
+				voltageRequest,
+				positionSignal,
+				velocitySignal,
+				currentSignal,
+				voltageSignal
+		);
 	}
 
 }

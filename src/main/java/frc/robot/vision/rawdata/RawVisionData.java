@@ -1,9 +1,8 @@
 package frc.robot.vision.rawdata;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.robot.poseestimator.observations.VisionRobotPoseObservation;
 
-public class RawVisionData implements VisionRobotPoseObservation {
+public class RawVisionData implements IRawVisionData {
 
 	private final Pose3d estimatedPose;
 	private final double timestamp;
@@ -13,10 +12,12 @@ public class RawVisionData implements VisionRobotPoseObservation {
 		this.timestamp = timestamp;
 	}
 
+	@Override
 	public Pose3d getEstimatedPose() {
 		return estimatedPose;
 	}
 
+	@Override
 	public double getTimestamp() {
 		return timestamp;
 	}

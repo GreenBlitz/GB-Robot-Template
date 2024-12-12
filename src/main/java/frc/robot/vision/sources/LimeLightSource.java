@@ -127,7 +127,8 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 				pose3dDoublePair.getFirst(),
 				getAprilTagValue(LimelightEntryValue.Y_AXIS),
 				getAprilTagValue(LimelightEntryValue.Z_AXIS),
-				pose3dDoublePair.getSecond()
+				pose3dDoublePair.getSecond(),
+				VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().get((int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID))
 			)
 		);
 	}

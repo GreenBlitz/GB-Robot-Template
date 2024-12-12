@@ -6,6 +6,19 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.structures.Superstructure;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.utils.auto.PathPlannerUtils;
+
+import java.util.Optional;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -16,16 +29,54 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Swerve swerve;
+	private final PoseEstimator poseEstimator;
+	private final Superstructure superStructure;
+
 	public Robot() {
+		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			gyro,
+			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
+		);
+
+		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+
+		this.superStructure = new Superstructure(swerve, poseEstimator);
+
+		buildPathPlannerForAuto();
 		configureBindings();
+	}
+
+	private void buildPathPlannerForAuto() {
+		// Register commands...
+		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 	}
 
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}
 
+
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Superstructure getSuperStructure() {
+		return superStructure;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
+	}
+
+	public PoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 
 }

@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.WPILibPoseEstimator;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -30,7 +33,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final WPILibPoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
 	public Robot() {
@@ -42,10 +45,13 @@ public class Robot {
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
 		);
 
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+		this.poseEstimator = new WPILibPoseEstimator(
+				"WPILibPoseEstimator/",
+				swerve.getConstants().kinematics()
+		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -55,7 +61,7 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 	}
 
 	private void configureBindings() {
@@ -75,7 +81,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public PoseEstimator getPoseEstimator() {
+	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

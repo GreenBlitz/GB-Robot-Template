@@ -8,10 +8,16 @@ import frc.robot.vision.sources.LimelightGyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MultiVisionSourcesWithExtendedLimelightSupport extends MultiVisionSources<VisionSource<? extends RawAprilTagVisionData>> {
 
-	public MultiVisionSourcesWithExtendedLimelightSupport(String logPath, VisionSource<? extends RawAprilTagVisionData>[] visionSources) {
+	@SafeVarargs
+	public MultiVisionSourcesWithExtendedLimelightSupport(String logPath, VisionSource<? extends RawAprilTagVisionData>... visionSources) {
+		super(logPath, visionSources);
+	}
+
+	public MultiVisionSourcesWithExtendedLimelightSupport(String logPath, List<VisionSource<? extends RawAprilTagVisionData>> visionSources) {
 		super(logPath, visionSources);
 	}
 

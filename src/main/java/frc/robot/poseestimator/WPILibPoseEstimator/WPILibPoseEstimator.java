@@ -1,4 +1,4 @@
-package frc.robot.poseestimator;
+package frc.robot.poseestimator.WPILibPoseEstimator;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
@@ -9,6 +9,8 @@ import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.rawdata.RawAprilTagVisionData;
@@ -35,17 +37,17 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
 			odometry,
-			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
-			PoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
+			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
+			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
 		);
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
-			PoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
+			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
 			modulePositions,
-			PoseEstimatorConstants.STARTING_ODOMETRY_POSE
+			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
 
-		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		;
 	}
 
@@ -91,7 +93,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<RawAprilTagVisionData> robotPoseVisionData) {}
+	public void updateVision(List<IRobotPoseVisionObservation> robotPoseVisionData) {}
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {

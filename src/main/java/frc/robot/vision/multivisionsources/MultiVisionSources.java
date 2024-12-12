@@ -1,12 +1,9 @@
 package frc.robot.vision.multivisionsources;
 
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.rawdata.RawVisionData;
-import frc.robot.vision.sources.LimeLightSource;
-import frc.robot.vision.sources.LimelightGyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
 

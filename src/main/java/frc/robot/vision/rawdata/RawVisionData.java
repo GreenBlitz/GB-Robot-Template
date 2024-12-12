@@ -2,7 +2,7 @@ package frc.robot.vision.rawdata;
 
 import edu.wpi.first.math.geometry.Pose3d;
 
-public class RawVisionData implements IRawVisionData {
+public class RawVisionData {
 
 	private final Pose3d estimatedPose;
 	private final double timestamp;
@@ -12,12 +12,10 @@ public class RawVisionData implements IRawVisionData {
 		this.timestamp = timestamp;
 	}
 
-	@Override
 	public Pose3d getEstimatedPose() {
 		return estimatedPose;
 	}
 
-	@Override
 	public double getTimestamp() {
 		return timestamp;
 	}

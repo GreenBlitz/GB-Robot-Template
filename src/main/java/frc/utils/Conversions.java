@@ -127,6 +127,16 @@ public class Conversions {
 	}
 
 	/**
+	 * Converts a time from milliseconds to seconds
+	 *
+	 * @param milliSeconds the milliseconds
+	 * @return the seconds
+	 */
+	public static double milliSecondsToSeconds(double milliSeconds) {
+		return milliSeconds / 1e3;
+	}
+
+	/**
 	 * Converts angle to distance.
 	 *
 	 * @param angle         the angle

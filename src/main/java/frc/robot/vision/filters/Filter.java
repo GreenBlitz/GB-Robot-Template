@@ -1,13 +1,12 @@
 package frc.robot.vision.filters;
 
-import frc.robot.vision.rawdata.IRawVisionData;
 import frc.robot.vision.rawdata.RawVisionData;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class Filter<T extends IRawVisionData> {
+public class Filter<T extends RawVisionData> {
 
 	private final Function<T, Boolean> filteringFunction;
 

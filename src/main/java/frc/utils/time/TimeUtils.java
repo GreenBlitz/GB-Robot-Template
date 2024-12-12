@@ -19,7 +19,7 @@ public class TimeUtils {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				TimeConstants.LOG_PATH + "CycleOverrunAt",
-				() -> getCurrentCycleTimeSeconds() > DEFAULT_CYCLE_TIME_SECONDS + TimeConstants.TIME_STEP_TOLERANCE_SECONDS
+				() -> getLatestCycleTimeSeconds() > DEFAULT_CYCLE_TIME_SECONDS + TimeConstants.TIME_STEP_TOLERANCE_SECONDS
 			)
 		);
 	}
@@ -32,7 +32,7 @@ public class TimeUtils {
 	}
 
 	private static void logStatus(int roborioCycles) {
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getCurrentCycleTimeSeconds());
+		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getLatestCycleTimeSeconds());
 		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentCycleStartingTimeSeconds);
 		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentCycleStartingTimeSeconds / roborioCycles);
 	}
@@ -41,7 +41,7 @@ public class TimeUtils {
 		return Conversions.microSecondsToSeconds(HALUtil.getFPGATime());
 	}
 
-	public static double getCurrentCycleTimeSeconds() {
+	public static double getLatestCycleTimeSeconds() {
 		return currentCycleStartingTimeSeconds - lastCycleStartingTimeSeconds;
 	}
 

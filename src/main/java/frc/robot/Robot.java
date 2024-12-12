@@ -21,10 +21,9 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-import frc.robot.vision.VisionConstants;
-import frc.robot.vision.multivisionsources.MultiPoseEstimatingVisionSources;
 import frc.robot.vision.multivisionsources.MultiVisionSourcesWithExtendedLimelightSupport;
 import frc.robot.vision.sources.simulationsource.SimulatedSource;
+import frc.robot.vision.sources.simulationsource.SimulatedSourceConfiguration;
 import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;
@@ -61,10 +60,16 @@ public class Robot {
 					"limelight-front",
 					() -> swerve.getSimulatedPose(),
 					new Pose3d(),
-					VisionConstants.LIMELIGHT_3_SIMULATED_SOURCE_CONFIGURATION
+					new SimulatedSourceConfiguration(
+						0.1,
+						0.1,
+						0,
+						0,
+						100,
+						Rotation2d.fromDegrees(359)
+					)
 				)
 			),
-			VisionConstants.DEFAULT_VISION_FILTERER_CONFIG,
 			new OdometryValues(swerve.getConstants().kinematics(), swerve.getModules().getWheelsPositions(0), swerve.getAbsoluteHeading()),
 			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS
 		);

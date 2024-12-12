@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules.drive;
 
-import frc.robot.RobotOld;
+import frc.robot.Robot;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
@@ -13,7 +13,7 @@ import frc.robot.subsystems.swerve.module.records.DriveSignals;
 public class DriveFactory {
 
 	private static ControllableMotor createSwerveDrive(String logPath, ModuleUtils.ModulePosition modulePosition) {
-		return switch (RobotOld.ROBOT_TYPE) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR, false);
 				case FRONT_RIGHT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR, true);
@@ -31,7 +31,7 @@ public class DriveFactory {
 	}
 
 	private static DriveRequests createDriveRequests() {
-		return switch (RobotOld.ROBOT_TYPE) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> TalonFXDriveConstants.generateRequests();
 		};
 	}
@@ -43,7 +43,7 @@ public class DriveFactory {
 	}
 
 	private static DriveSignals createDriveSignals(ControllableMotor steer) {
-		return switch (RobotOld.ROBOT_TYPE) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> TalonFXDriveConstants.generateSignals((TalonFXMotor) steer);
 		};
 	}

@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules.steer;
 
-import frc.robot.RobotOld;
+import frc.robot.Robot;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
@@ -13,7 +13,7 @@ import frc.robot.subsystems.swerve.module.records.SteerSignals;
 public class SteerFactory {
 
 	private static ControllableMotor createSwerveSteer(String logPath, ModuleUtils.ModulePosition modulePosition) {
-		return switch (RobotOld.ROBOT_TYPE) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT ->
 					TalonFXSteerConstants
@@ -39,7 +39,7 @@ public class SteerFactory {
 	}
 
 	private static SteerRequests createSteerRequests() {
-		return switch (RobotOld.ROBOT_TYPE) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> TalonFXSteerConstants.generateRequests();
 		};
 	}
@@ -51,7 +51,7 @@ public class SteerFactory {
 	}
 
 	private static SteerSignals createSteerSignals(ControllableMotor steer) {
-		return switch (RobotOld.ROBOT_TYPE) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> TalonFXSteerConstants.generateSignals((TalonFXMotor) steer);
 		};
 	}

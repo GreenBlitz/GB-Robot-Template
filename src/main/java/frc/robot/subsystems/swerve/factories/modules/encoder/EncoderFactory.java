@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules.encoder;
 
-import frc.robot.RobotOld;
+import frc.robot.Robot;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
@@ -12,7 +12,7 @@ import frc.robot.subsystems.swerve.module.records.EncoderSignals;
 public class EncoderFactory {
 
 	private static IAngleEncoder createSwerveEncoder(String logPath, ModuleUtils.ModulePosition modulePosition) {
-		return switch (RobotOld.ROBOT_TYPE) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
 				case FRONT_LEFT -> RealEncoderConstants.generateEncoder(logPath, IDs.CANCodersIDs.FRONT_LEFT_ENCODER);
 				case FRONT_RIGHT -> RealEncoderConstants.generateEncoder(logPath, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER);
@@ -31,7 +31,7 @@ public class EncoderFactory {
 	}
 
 	private static EncoderSignals createEncoderSignals(IAngleEncoder angleEncoder) {
-		return switch (RobotOld.ROBOT_TYPE) {
+		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealEncoderConstants.generateSignals((CANCoderEncoder) angleEncoder);
 			case SIMULATION -> SimulationEncoderConstants.generateSignals();
 		};

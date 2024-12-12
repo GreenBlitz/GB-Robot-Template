@@ -1,7 +1,7 @@
 package frc.utils.logger;
 
 import com.ctre.phoenix6.SignalLogger;
-import frc.robot.RobotOld;
+import frc.robot.Robot;
 import frc.utils.alerts.Alert;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -14,7 +14,7 @@ public class LoggerFactory {
 	private static final String LOG_PATH = "Logger/";
 
 	public static void initializeLogger() {
-		switch (RobotOld.ROBOT_TYPE) {
+		switch (Robot.ROBOT_TYPE) {
 			case REAL -> startRealLogger();
 			case SIMULATION -> startSimulationLogger();
 		}

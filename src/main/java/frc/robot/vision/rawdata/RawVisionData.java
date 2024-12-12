@@ -3,7 +3,7 @@ package frc.robot.vision.rawdata;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 
-public class RawVisionData implements IRobotPoseVisionObservation {
+public class RawVisionData implements IRobotPoseVisionObservation, IRawVisionData {
 
 	private final Pose3d estimatedPose;
 	private final double timestamp;

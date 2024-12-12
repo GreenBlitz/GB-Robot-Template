@@ -1,8 +1,6 @@
 package frc.robot.vision.rawdata;
 
 import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 
 public class RawAprilTagVisionData extends RawVisionData {
@@ -26,6 +24,8 @@ public class RawAprilTagVisionData extends RawVisionData {
 		return distanceFromAprilTag;
 	}
 
-	public AprilTag getTrackedAprilTag() { return aprilTag; }
+	public AprilTag getTrackedAprilTag() {
+		return aprilTag;
+	}
 
 }

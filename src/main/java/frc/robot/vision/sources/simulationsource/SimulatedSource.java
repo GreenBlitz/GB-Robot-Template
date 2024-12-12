@@ -125,7 +125,8 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 		return Optional.of(output);
 	}
 
-	public Optional<RawAprilTagVisionData> getRawVisionEstimation() {
+	@Override
+	public Optional<RawAprilTagVisionData> getRawVisionData() {
 		return getLatestObservation();
 	}
 

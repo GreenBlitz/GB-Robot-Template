@@ -10,8 +10,8 @@ public class RawAprilTagVisionData extends RawVisionData implements IRobotPoseVi
 	private final double distanceFromAprilTag;
 	private final AprilTag aprilTag;
 
-	public RawAprilTagVisionData(Pose3d estimatedPose, double aprilTagHeight, double distanceFromAprilTag, double timestamp, AprilTag aprilTag) {
-		super(estimatedPose, timestamp);
+	public RawAprilTagVisionData(Pose3d estimatedPose, double timestamp, boolean isDataValid, double aprilTagHeight, double distanceFromAprilTag, AprilTag aprilTag) {
+		super(estimatedPose, timestamp, isDataValid);
 		this.aprilTagHeight = aprilTagHeight;
 		this.distanceFromAprilTag = distanceFromAprilTag;
 		this.aprilTag = aprilTag;

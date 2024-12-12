@@ -1,6 +1,6 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.robot.poseestimator.observations.VisionRobotPoseObservation;
+import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.rawdata.RawVisionData;
@@ -30,22 +30,22 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 		return visionSources;
 	}
 
-	public ArrayList<VisionRobotPoseObservation> getUnfilteredVisionObservation() {
-		ArrayList<VisionRobotPoseObservation> rawPoseData = new ArrayList<>();
+	public ArrayList<IRobotPoseVisionObservation> getUnfilteredVisionObservation() {
+		ArrayList<IRobotPoseVisionObservation> rawPoseData = new ArrayList<>();
 		visionSources.forEach(visionSource -> {
 			visionSource.update();
-			Optional<VisionRobotPoseObservation> observation = convertToOptionalObservation(visionSource.getRawVisionData());
+			Optional<IRobotPoseVisionObservation> observation = convertToOptionalObservation(visionSource.getRawVisionData());
 			observation.ifPresent(rawPoseData::add);
 		});
 		return rawPoseData;
 	}
 
-	public ArrayList<VisionRobotPoseObservation> getFilteredVisionObservations() {
-		ArrayList<VisionRobotPoseObservation> estimates = new ArrayList<>();
+	public ArrayList<IRobotPoseVisionObservation> getFilteredVisionObservations() {
+		ArrayList<IRobotPoseVisionObservation> estimates = new ArrayList<>();
 
 		for (VisionSource<? extends RawVisionData> visionSource : visionSources) {
 			if (!visionSource.shouldDataBeFiltered()) {
-				Optional<VisionRobotPoseObservation> observation = convertToOptionalObservation(visionSource.getRawVisionData());
+				Optional<IRobotPoseVisionObservation> observation = convertToOptionalObservation(visionSource.getRawVisionData());
 				observation.ifPresent(estimates::add);
 			}
 		}
@@ -58,14 +58,14 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 	 * @param optionalRawVisionData: the optional to be converted
 	 * @return: new instance that has the same data but java is happier with it
 	 */
-	private Optional<VisionRobotPoseObservation> convertToOptionalObservation(Optional<? extends RawVisionData> optionalRawVisionData) {
+	private Optional<IRobotPoseVisionObservation> convertToOptionalObservation(Optional<? extends RawVisionData> optionalRawVisionData) {
 		if (optionalRawVisionData.isPresent()) {
 			return Optional.of(optionalRawVisionData.get());
 		}
 		return Optional.empty();
 	}
 
-	private static void logRobotPose(String logPath, String logPathAddition, List<VisionRobotPoseObservation> observations) {
+	private static void logRobotPose(String logPath, String logPathAddition, List<IRobotPoseVisionObservation> observations) {
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(logPath + logPathAddition + i, observations.get(i).getEstimatedPose());
 		}

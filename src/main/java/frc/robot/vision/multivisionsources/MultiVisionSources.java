@@ -3,7 +3,6 @@ package frc.robot.vision.multivisionsources;
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.rawdata.IRawVisionData;
 import frc.robot.vision.rawdata.RawVisionData;
 import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
@@ -11,8 +10,9 @@ import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
-public class MultiVisionSources<VisionSourceType extends VisionSource> extends GBSubsystem {
+public class MultiVisionSources<VisionSourceType extends VisionSource<? extends RawVisionData>> extends GBSubsystem {
 
 	private final List<VisionSourceType> visionSources;
 
@@ -31,26 +31,22 @@ public class MultiVisionSources<VisionSourceType extends VisionSource> extends G
 		return visionSources;
 	}
 
-	public ArrayList<IRobotPoseVisionObservation> getUnfilteredVisionObservation() {
-		ArrayList<IRobotPoseVisionObservation> rawPoseData = new ArrayList<>();
-		visionSources.forEach(visionSource -> {
+	private <ReturnType> ArrayList<ReturnType> createMappedCopyOfSources(List<VisionSourceType> list, Function<Optional<? extends RawVisionData>, Optional<ReturnType>> mapping) {
+		ArrayList<ReturnType> output = new ArrayList<>();
+		list.forEach(visionSource -> {
 			visionSource.update();
-			Optional<IRobotPoseVisionObservation> observation = convertToOptionalObservation(visionSource.getRawVisionData());
-			observation.ifPresent(rawPoseData::add);
+			Optional<ReturnType> observation = mapping.apply(visionSource.getRawVisionData());
+			observation.ifPresent(output::add);
 		});
-		return rawPoseData;
+		return output;
+	}
+
+	public ArrayList<IRobotPoseVisionObservation> getUnfilteredVisionObservation() {
+		return createMappedCopyOfSources(visionSources, this::convertToOptionalObservation);
 	}
 
 	public ArrayList<IRobotPoseVisionObservation> getFilteredVisionObservations() {
-		ArrayList<IRobotPoseVisionObservation> estimates = new ArrayList<>();
-
-		for (VisionSource visionSource : visionSources) {
-			if (!visionSource.shouldDataBeFiltered()) {
-				Optional<IRobotPoseVisionObservation> observation = convertToOptionalObservation(visionSource.getRawVisionData());
-				observation.ifPresent(estimates::add);
-			}
-		}
-		return estimates;
+		return createMappedCopyOfSources(visionSources, (rawVisionData -> {}));;
 	}
 
 	/**
@@ -59,7 +55,7 @@ public class MultiVisionSources<VisionSourceType extends VisionSource> extends G
 	 * @param optionalRawVisionData: the optional to be converted
 	 * @return: new instance that has the same data but java is happier with it
 	 */
-	private Optional<IRobotPoseVisionObservation> convertToOptionalObservation(Optional<IRawVisionData> optionalRawVisionData) {
+	private Optional<IRobotPoseVisionObservation> convertToOptionalObservation(Optional<? extends RawVisionData> optionalRawVisionData) {
 		if (optionalRawVisionData.isPresent()) {
 			return Optional.of(optionalRawVisionData.get());
 		}

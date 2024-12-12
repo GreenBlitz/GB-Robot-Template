@@ -3,6 +3,8 @@ package frc.robot.poseestimator;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,7 +85,11 @@ public class PoseEstimationMath {
 		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
 		return new double[] {
 			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
-			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
+			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY),
+			calculateStandardDeviation(
+				rawVisionData.getEstimatedPose().toPose2d().getRotation().getRadians(),
+				currentEstimatedPose.getRotation().getRadians()
+			)};
 	}
 
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {

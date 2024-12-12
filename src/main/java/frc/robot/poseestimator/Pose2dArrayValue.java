@@ -19,4 +19,3 @@ public enum Pose2dArrayValue {
 	public static final int POSE_ARRAY_LENGTH = 3;
 
 }
-

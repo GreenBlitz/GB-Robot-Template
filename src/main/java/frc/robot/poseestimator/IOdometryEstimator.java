@@ -16,4 +16,3 @@ public interface IOdometryEstimator {
 	void setHeading(Rotation2d newHeading);
 
 }
-

@@ -13,4 +13,3 @@ public interface IVisionEstimator {
 	Optional<Pose2d> getVisionPose();
 
 }
-

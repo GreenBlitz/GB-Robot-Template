@@ -9,7 +9,7 @@ import frc.robot.poseestimator.helpers.ObservationAccumulator;
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.poseestimator.observations.OdometryObservation;
-import frc.robot.vision.multivisionsources.MultiVisionSourcesWithExtendedLimelightSupport;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -24,7 +24,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final ObservationAccumulator<Rotation2d> headingCountHelper;
 	private final ObservationAccumulator<IRobotPoseVisionObservation> poseCountHelper;
-	private final MultiVisionSourcesWithExtendedLimelightSupport multiVisionSources;
+	private final MultiAprilTagVisionSource multiVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
@@ -37,7 +37,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		MultiVisionSourcesWithExtendedLimelightSupport multiVisionSources,
+		MultiAprilTagVisionSource multiVisionSources,
 		OdometryValues odometryValues,
 		double[] odometryStandardDeviations
 	) {

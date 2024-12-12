@@ -12,16 +12,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class MultiVisionSourcesWithExtendedLimelightSupport extends MultiVisionSources<VisionSource<RawAprilTagVisionData>> {
+public class MultiAprilTagVisionSource extends MultiVisionSources<VisionSource<RawAprilTagVisionData>> {
 
 	private final List<VisionSource<RawAprilTagVisionData>> visionSources;
 
-	public MultiVisionSourcesWithExtendedLimelightSupport(String logPath, VisionSource<RawAprilTagVisionData>... visionSources) {
+	@SafeVarargs
+	public MultiAprilTagVisionSource(String logPath, VisionSource<RawAprilTagVisionData>... visionSources) {
 		super(logPath, visionSources);
 		this.visionSources = List.of(visionSources);
 	}
 
-	public MultiVisionSourcesWithExtendedLimelightSupport(String logPath, List<VisionSource<RawAprilTagVisionData>> visionSources) {
+	public MultiAprilTagVisionSource(String logPath, List<VisionSource<RawAprilTagVisionData>> visionSources) {
 		super(logPath, visionSources);
 		this.visionSources = visionSources;
 	}

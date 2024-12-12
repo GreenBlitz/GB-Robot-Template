@@ -3,7 +3,6 @@ package frc.robot.poseestimator;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
 import frc.robot.poseestimator.observations.VisionRobotPoseObservation;
-import frc.robot.vision.rawdata.RawVisionData;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,9 +38,10 @@ public class PoseEstimationMath {
 	public static Transform2d applyKalmanOnTransform(
 		VisionRobotPoseObservation observation,
 		Pose2d appliedVisionObservation,
-		double[] odometryStandardDeviations
+		double[] odometryStandardDeviations,
+		double[] visionStandardDeviations
 	) {
-		double[] combinedStandardDeviations = getKalmanRatio(odometryStandardDeviations, observation.standardDeviations());
+		double[] combinedStandardDeviations = getKalmanRatio(odometryStandardDeviations, visionStandardDeviations);
 		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.getEstimatedPose().toPose2d());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
@@ -62,13 +62,21 @@ public class PoseEstimationMath {
 		Pose2d odometryInterpolatedPoseSample,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
-		double[] odometryStandardDeviations
+		double[] odometryStandardDeviations,
+		double[] visionStandardDeviations
 	) {
 		Transform2d sampleDifferenceFromPose = new Transform2d(odometryPose, odometryInterpolatedPoseSample);
-		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
+		return estimatedPose.plus(
+			applyKalmanOnTransform(
+				observation,
+				estimatedPose.plus(sampleDifferenceFromPose),
+				odometryStandardDeviations,
+				visionStandardDeviations
+			)
+		);
 	}
 
-	public static double[] calculateStandardDeviationOfPose(RawVisionData rawVisionData, Pose2d currentEstimatedPose) {
+	public static double[] calculateStandardDeviationOfPose(VisionRobotPoseObservation rawVisionData, Pose2d currentEstimatedPose) {
 		double normalizedLimelightX = rawVisionData.getEstimatedPose().getX() / Field.LENGTH_METERS;
 		double normalizedLimelightY = rawVisionData.getEstimatedPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
@@ -83,16 +91,16 @@ public class PoseEstimationMath {
 		return Math.sqrt((Math.pow(estimatedValue - mean, 2) + Math.pow(currentValue - mean, 2)) / 2);
 	}
 
-	public static Pose2d weightedPoseMean(List<VisionRobotPoseObservation> observations) {
+	public static Pose2d weightedPoseMean(List<VisionRobotPoseObservation> observations, double[] visionStandardDeviations) {
 		Pose2d poseMean = new Pose2d();
 		double xWeightsSum = 0;
 		double yWeightsSum = 0;
 		double rotationDeviationSum = 0;
 
 		for (VisionRobotPoseObservation observation : observations) {
-			double xWeight = 1 / observation.standardDeviations()[Pose2dArrayValue.X_VALUE.getEntryValue()];
-			double yWeight = 1 / observation.standardDeviations()[Pose2dArrayValue.Y_VALUE.getEntryValue()];
-			double rotationWeight = 1 / observation.standardDeviations()[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()];
+			double xWeight = 1 / visionStandardDeviations[Pose2dArrayValue.X_VALUE.getEntryValue()];
+			double yWeight = 1 / visionStandardDeviations[Pose2dArrayValue.Y_VALUE.getEntryValue()];
+			double rotationWeight = 1 / visionStandardDeviations[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()];
 			xWeightsSum += xWeight;
 			yWeightsSum += yWeight;
 			rotationDeviationSum += rotationWeight;

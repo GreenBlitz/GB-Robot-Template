@@ -11,8 +11,6 @@ public interface VisionSource<ReturnType extends RawVisionData> {
 
 	Optional<RawVisionData> getRawVisionData();
 
-	boolean shouldDataBeFiltered();
-
 	Filter<ReturnType> setFilter(Filter<ReturnType> newFilter);
 
 }

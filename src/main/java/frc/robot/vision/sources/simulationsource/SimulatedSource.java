@@ -59,11 +59,11 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public void updateEstimation() {
+	public void update() {
 		Pose2d simulatedPose = simulateRobotPose.get();
 		currentObservations.clear();
 
-		for (AprilTag aprilTag : VisionConstants.APRIL_TAG_FIELD_LAYOUT.loadAprilTagLayoutField().getTags()) {
+		for (AprilTag aprilTag : VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags()) {
 			Pose3d aprilTagPose = aprilTag.pose;
 			String logPath = super.getLogPath() + "IDs/" + aprilTag.ID;
 
@@ -71,7 +71,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();
-					RawAprilTagVisionData visionInput = constructRawVisionData(noisedPose, aprilTagPose);
+					RawAprilTagVisionData visionInput = constructRawVisionData(noisedPose, aprilTagPose, aprilTag);
 					currentObservations.add(visionInput);
 					Logger.recordOutput(logPath + "state", "returning");
 					Logger.recordOutput(logPath + "latestOutputPose", visionInput.getEstimatedPose());
@@ -84,12 +84,13 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 		}
 	}
 
-	public RawAprilTagVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose) {
+	public RawAprilTagVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose, AprilTag aprilTag) {
 		return new RawAprilTagVisionData(
 			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
 			aprilTagPose.getZ(),
 			distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
-			TimeUtils.getCurrentTimeSeconds()
+			TimeUtils.getCurrentTimeSeconds(),
+			aprilTag
 		);
 	}
 
@@ -129,7 +130,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public boolean shallBeFiltered() {
+	public boolean shouldDataBeFiltered() {
 		return getLatestObservation().map(filter::doesFilterPasses).orElseGet(() -> true);
 	}
 

@@ -10,6 +10,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.filters.Filter;
 import frc.robot.vision.limelights.LimelightEntryValue;
+import frc.robot.vision.rawdata.IRawVisionData;
 import frc.robot.vision.rawdata.RawAprilTagVisionData;
 import frc.utils.Conversions;
 import frc.utils.alerts.Alert;
@@ -19,7 +20,7 @@ import frc.utils.time.TimeUtils;
 
 import java.util.Optional;
 
-public class LimeLightSource extends GBSubsystem implements VisionSource<RawAprilTagVisionData> {
+public class LimeLightSource extends GBSubsystem implements VisionSource {
 
 	private final NetworkTableEntry robotPoseEntryBotPose2;
 	private final NetworkTableEntry RobotPoseEntryBotPose1;
@@ -27,14 +28,14 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
 	private final String name;
-	private Filter<RawAprilTagVisionData> filter;
+	private Filter filter;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
 	private LimelightGyroAngleValues gyroAngleValues;
 	private boolean useOldRobotPoseEntry;
 
-	public LimeLightSource(String name, String parentLogPath, Filter<RawAprilTagVisionData> filter) {
+	public LimeLightSource(String name, String parentLogPath, Filter filter) {
 		super(parentLogPath + name + "/");
 
 		this.name = name;
@@ -120,7 +121,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public Optional<RawAprilTagVisionData> getRawVisionData() {
+	public Optional<IRawVisionData> getRawVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
 			pose3dDoublePair -> new RawAprilTagVisionData(
@@ -139,7 +140,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public Filter<RawAprilTagVisionData> setFilter(Filter<RawAprilTagVisionData> newFilter) {
+	public Filter setFilter(Filter newFilter) {
 		return this.filter = newFilter;
 	}
 

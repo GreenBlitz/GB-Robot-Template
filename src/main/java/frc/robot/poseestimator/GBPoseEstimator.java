@@ -6,12 +6,10 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.helpers.ObservationCountHelper;
-import frc.robot.poseestimator.observations.VisionRobotPoseObservation;
+import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.poseestimator.observations.OdometryObservation;
-import frc.robot.vision.multivisionsources.MultiVisionSources;
-import frc.robot.vision.rawdata.RawVisionData;
-import frc.robot.vision.sources.VisionSource;
+import frc.robot.vision.multivisionsources.MultiVisionSourcesWithExtendedLimelightSupport;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -25,8 +23,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final ObservationCountHelper<Rotation2d> headingCountHelper;
-	private final ObservationCountHelper<VisionRobotPoseObservation> poseCountHelper;
-	private final MultiVisionSources<VisionSource<RawVisionData>> multiVisionSources;
+	private final ObservationCountHelper<IRobotPoseVisionObservation> poseCountHelper;
+	private final MultiVisionSourcesWithExtendedLimelightSupport multiVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
@@ -39,7 +37,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		MultiVisionSources<VisionSource<RawVisionData>> multiVisionSources,
+		MultiVisionSourcesWithExtendedLimelightSupport multiVisionSources,
 		OdometryValues odometryValues,
 		double[] odometryStandardDeviations
 	) {
@@ -52,7 +50,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
 		this.poseCountHelper = new ObservationCountHelper<>(
-			multiVisionSources::getUnFilteredVisionObservation,
+			multiVisionSources::getUnfilteredVisionObservation,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
 		this.lastOdometryValues = odometryValues;
@@ -113,7 +111,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		List<VisionRobotPoseObservation> stackedObservations = poseCountHelper.getStackedObservations();
+		List<IRobotPoseVisionObservation> stackedObservations = poseCountHelper.getStackedObservations();
 		if (stackedObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -141,8 +139,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<VisionRobotPoseObservation> visionObservations) {
-		for (VisionRobotPoseObservation visionObservation : visionObservations) {
+	public void updateVision(List<IRobotPoseVisionObservation> visionObservations) {
+		for (IRobotPoseVisionObservation visionObservation : visionObservations) {
 			if (!isObservationTooOld(visionObservation)) {
 				addVisionObservation(visionObservation);
 			}
@@ -156,7 +154,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	private boolean isObservationTooOld(VisionRobotPoseObservation visionObservation) {
+	private boolean isObservationTooOld(IRobotPoseVisionObservation visionObservation) {
 		try {
 			return odometryPoseInterpolator.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS
 				> visionObservation.getTimestamp();
@@ -165,7 +163,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	private void addVisionObservation(VisionRobotPoseObservation observation) {
+	private void addVisionObservation(IRobotPoseVisionObservation observation) {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.getTimestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			Pose2d currentEstimation = PoseEstimationMath.combineVisionToOdometry(

@@ -19,7 +19,7 @@ public class SwerveMath {
 	}
 
 	public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-		return ChassisSpeeds.discretize(chassisSpeeds, TimeUtils.getCurrentCycleTimeSeconds());
+		return ChassisSpeeds.discretize(chassisSpeeds, TimeUtils.getLatestCycleTimeSeconds());
 	}
 
 	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, SwerveConstants constants) {

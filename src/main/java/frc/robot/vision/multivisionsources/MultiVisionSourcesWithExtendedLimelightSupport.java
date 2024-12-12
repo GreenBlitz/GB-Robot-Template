@@ -3,7 +3,6 @@ package frc.robot.vision.multivisionsources;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.vision.rawdata.RawAprilTagVisionData;
-import frc.robot.vision.rawdata.RawVisionData;
 import frc.robot.vision.sources.LimeLightSource;
 import frc.robot.vision.sources.LimelightGyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
@@ -86,7 +85,8 @@ public class MultiVisionSourcesWithExtendedLimelightSupport extends MultiVisionS
 			} else {
 				visionSource.getRawVisionData()
 					.ifPresent(
-						(RawAprilTagVisionData visionData) -> output.add(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()))
+						(RawAprilTagVisionData visionData) -> output
+							.add(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()))
 					);
 			}
 		}

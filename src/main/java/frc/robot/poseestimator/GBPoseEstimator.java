@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import frc.robot.poseestimator.helpers.ObservationCountHelper;
+import frc.robot.poseestimator.helpers.ObservationAccumulator;
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -22,8 +22,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
-	private final ObservationCountHelper<Rotation2d> headingCountHelper;
-	private final ObservationCountHelper<IRobotPoseVisionObservation> poseCountHelper;
+	private final ObservationAccumulator<Rotation2d> headingCountHelper;
+	private final ObservationAccumulator<IRobotPoseVisionObservation> poseCountHelper;
 	private final MultiVisionSourcesWithExtendedLimelightSupport multiVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
@@ -45,11 +45,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.multiVisionSources = multiVisionSources;
-		this.headingCountHelper = new ObservationCountHelper<>(
+		this.headingCountHelper = new ObservationAccumulator<>(
 			multiVisionSources::getRawEstimatedAngles,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
-		this.poseCountHelper = new ObservationCountHelper<>(
+		this.poseCountHelper = new ObservationAccumulator<>(
 			multiVisionSources::getUnfilteredVisionObservation,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
@@ -89,7 +89,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private Optional<Rotation2d> getEstimatedRobotHeadingByVision() {
-		List<Rotation2d> stackedHeadings = headingCountHelper.getStackedObservations();
+		List<Rotation2d> stackedHeadings = headingCountHelper.getAccumulatedList();
 		if (stackedHeadings.isEmpty()) {
 			return Optional.empty();
 		}
@@ -111,7 +111,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		List<IRobotPoseVisionObservation> stackedObservations = poseCountHelper.getStackedObservations();
+		List<IRobotPoseVisionObservation> stackedObservations = poseCountHelper.getAccumulatedList();
 		if (stackedObservations.isEmpty()) {
 			return Optional.empty();
 		}

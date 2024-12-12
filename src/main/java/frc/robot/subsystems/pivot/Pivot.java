@@ -42,6 +42,7 @@ public class Pivot extends GBSubsystem {
 	private void updateInputs() {
 		motor.updateInputs(pivotStuff.positionSignal());
 		motor.updateInputs(pivotStuff.inputSignals());
+		motor.updateSimulation();
 	}
 
 	@Override

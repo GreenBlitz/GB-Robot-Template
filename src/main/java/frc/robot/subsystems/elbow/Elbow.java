@@ -42,6 +42,7 @@ public class Elbow extends GBSubsystem {
 
 	private void updateInputs() {
 		motor.updateInputs(elbowStuff.positionSignal(), elbowStuff.velocitySignal(), elbowStuff.currentSignal(), elbowStuff.voltageSignal());
+		motor.updateSimulation();
 	}
 
 	public void setBrake(boolean brake) {

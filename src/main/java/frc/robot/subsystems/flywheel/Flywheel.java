@@ -48,8 +48,10 @@ public class Flywheel extends GBSubsystem {
 	private void updateInputs() {
 		rightMotor.updateInputs(flywheelStuff.rightSignals());
 		rightMotor.updateInputs(flywheelStuff.rightVelocitySignal());
+		rightMotor.updateSimulation();
 		leftMotor.updateInputs(flywheelStuff.leftSignals());
 		leftMotor.updateInputs(flywheelStuff.leftVelocitySignal());
+		leftMotor.updateSimulation();
 	}
 
 	@Override

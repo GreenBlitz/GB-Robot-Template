@@ -1,11 +1,21 @@
 package frc.robot.subsystems.elbow.factory;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IDs;
+import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
+import frc.robot.hardware.phoenix6.motor.TalonFXWrapper;
+import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.robot.hardware.rev.request.SparkMaxRequest;
@@ -69,6 +79,57 @@ public class RealElbowConstants {
 			currentSignal,
 			voltageSignal
 		);
+	}
+
+	private static TalonFXConfiguration generateConfiguration(){
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
+		return configuration;
+	}
+
+	private static SysIdRoutine.Config generateConfig(){
+		SysIdRoutine.Config config = new SysIdRoutine.Config();
+		return config;
+	}
+
+	protected static ElbowStuff generateSimulationElbowStuff(String logPath){
+		TalonFXWrapper wrapper = new TalonFXWrapper(0);
+
+		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getPosition(), 60, AngleUnit.DEGREES);
+		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getVelocity(), 60, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getSupplyCurrent(), 60);
+		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getMotorVoltage(), 60);
+
+		SingleJointedArmSim armSim = new SingleJointedArmSim(
+				DCMotor.getFalcon500(1),
+				ElbowConstants.GEAR_RATIO,
+				SingleJointedArmSim.estimateMOI(
+						0.44,
+						0.44
+				),
+				0.44,
+				Rotation2d.fromDegrees(-81).getRadians(),
+				Rotation2d.fromDegrees(90).getRadians(),
+				false,
+				Rotation2d.fromDegrees(0).getRadians()
+		);
+
+		SingleJointedArmSimulation simulation = new SingleJointedArmSimulation(
+				armSim,
+				ElbowConstants.GEAR_RATIO
+		);
+
+		TalonFXMotor motor = new TalonFXMotor(
+				logPath,
+				new Phoenix6DeviceID(0),
+				generateConfiguration(),
+				generateConfig(),
+				simulation
+		);
+		return new ElbowStuff(
+				logPath,
+				motor,
+
+		)
 	}
 
 }

@@ -88,10 +88,6 @@ public class PoseEstimationMath {
 			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY)};
 	}
-	
-	public static Matrix<N3, N1> convertStandardDeviationsArrayToMatrix(double[] standardDeviationsArray){
-	
-	}
 
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {
 		double mean = (estimatedValue + currentValue) / 2;

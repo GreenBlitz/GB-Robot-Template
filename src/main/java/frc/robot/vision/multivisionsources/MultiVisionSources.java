@@ -71,14 +71,14 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 		}
 	}
 
-	private void logOutputs() {
+	private void log() {
 		logRobotPose(getLogPath(), VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionObservations());
 		logRobotPose(getLogPath(), VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionObservation());
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
-		logOutputs();
+		log();
 	}
 
 }

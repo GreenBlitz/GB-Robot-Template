@@ -57,6 +57,21 @@ public class RealFlywheelConstants {
 		return configuration;
 	}
 
+	private static TalonFXConfiguration generateSimulationMotorConfig() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
+
+		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+		configuration.CurrentLimits.StatorCurrentLimit = 40;
+		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+		configuration.CurrentLimits.SupplyCurrentLimit = 40;
+		configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+		configuration.Feedback.SensorToMechanismRatio = FlyWheelConstants.GEAR_RATIO;
+
+		return configuration;
+	}
+
 
 	public static FlywheelStuff generateFlywheelStuff(String logPath) {
 		String rightLogPath = logPath + "right/";
@@ -123,10 +138,13 @@ public class RealFlywheelConstants {
 
 		FlywheelSimulation rightFlywheelSimulation = new FlywheelSimulation(rightSim);
 
+		TalonFXConfiguration rightConfiguration = generateSimulationMotorConfig();
+		rightConfiguration.Slot0.withKP(9).withKI(6).withKD(0);
+
 		TalonFXMotor rightFlywheel = new TalonFXMotor(
 				rightLogPath,
 				IDs.TalonFXIDs.RIGHT_FLYWHEEL,
-				generateMotorConfig(),
+				rightConfiguration,
 				generateSysidConfig(),
 				rightFlywheelSimulation
 		);
@@ -152,9 +170,12 @@ public class RealFlywheelConstants {
 
 		FlywheelSimulation leftFlywheelSimulation = new FlywheelSimulation(leftSim);
 
+		TalonFXConfiguration leftConfiguration = generateSimulationMotorConfig();
+		leftConfiguration.Slot0.withKP(9).withKI(6).withKD(0);
+
 		TalonFXMotor leftFlywheel = new TalonFXMotor(
 				leftLogPath, IDs.TalonFXIDs.LEFT_FLYWHEEL,
-				generateMotorConfig(),
+				leftConfiguration,
 				generateSysidConfig(),
 				leftFlywheelSimulation
 		);

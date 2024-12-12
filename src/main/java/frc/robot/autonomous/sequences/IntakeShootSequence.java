@@ -7,7 +7,7 @@ import frc.robot.autonomous.AutonomousConstants;
 public class IntakeShootSequence extends SequentialCommandGroup {
 
 	public IntakeShootSequence(Robot robot, String pathName) {
-		super(new IntakeSequence(robot, pathName), AutonomousConstants.SHOOTING_COMMAND);
+		super(new IntakeSequence(robot, pathName), AutonomousConstants.SHOOTING_COMMAND.get());
 	}
 
 }

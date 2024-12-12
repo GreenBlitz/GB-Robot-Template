@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.autonomous.autos.M231Auto;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.Superstructure;
@@ -55,6 +59,9 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
+		NamedCommands.registerCommand("wait", new WaitCommand(3));
+		NamedCommands.registerCommand("they don't love you", new WaitCommand(1));
+		NamedCommands.registerCommand("like I love you", new WaitCommand(1.5));
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 	}
 
@@ -64,7 +71,8 @@ public class Robot {
 
 
 	public Command getAutonomousCommand() {
-		return new InstantCommand();
+		PathPlannerAuto auto = new M231Auto(this);
+		return AutoBuilder.resetOdom(auto.getStartingPose()).andThen(auto);
 	}
 
 	public Superstructure getSuperStructure() {

@@ -21,7 +21,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import frc.robot.Robot;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.GBSubsystem;
 
 import java.util.ArrayList;
@@ -89,13 +90,21 @@ public class PathPlannerUtils {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
-	private static Optional<PathPlannerPath> getPathFromPathFile(String pathName) {
+	public static Optional<PathPlannerPath> getPathFromPathFile(String pathName) {
 		try {
 			return Optional.of(PathPlannerPath.fromPathFile(pathName));
 		} catch (Exception exception) {
 			DriverStation.reportError(exception.getMessage(), exception.getStackTrace());
 		}
 		return Optional.empty();
+	}
+
+	public static Pose2d getPathStartingPose(String pathName) {
+		Optional<PathPlannerPath> path = getPathFromPathFile(pathName);
+		if (path.isPresent()) {
+			return new Pose2d(path.get().getPathPoses().get(0).getTranslation(), path.get().getIdealStartingState().rotation());
+		}
+		return Pose2d.kZero;
 	}
 
 	private static Command safelyApplyPathToCommandFunction(Function<PathPlannerPath, Command> pathToCommandFunction, String pathName) {
@@ -114,27 +123,24 @@ public class PathPlannerUtils {
 		return safelyApplyPathToCommandFunction((path) -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints), pathName);
 	}
 
-	private static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Translation2d currentRobotPosition, double toleranceMeters) {
-		return Math.abs(path.getPathPoses().get(0).getTranslation().getDistance(currentRobotPosition)) <= toleranceMeters;
+	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
+		return path.getPathPoses().get(0).getTranslation().getDistance(currentPose.get().getTranslation()) <= toleranceMeters;
 	}
 
-	private static Pose2d getFlippedLastPathPose(PathPlannerPath path) {
+	public static Pose2d getFlippedLastPathPose(PathPlannerPath path) {
 		if (AutoBuilder.shouldFlip())
 			path = path.flipPath();
-		return path.getPathPoses().get(path.getPathPoses().size() - 1);
+		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
 	}
 
-	public static Command pathfindOrFollowPath(
-		String pathName,
-		Function<Supplier<Pose2d>, Command> pathfindingCommand,
-		double pathfindInsteadOfPathFollowingToleranceMeters
-	) {
-		Function<PathPlannerPath, Command> pathToCommandFunction = (path) -> new ConditionalCommand(
-			followPath(pathName),
-			pathfindingCommand.apply(() -> getFlippedLastPathPose(path)),
-			() -> isRobotCloseToPathBeginning(path, AutoBuilder.getCurrentPose().getTranslation(), pathfindInsteadOfPathFollowingToleranceMeters)
-		);
-		return safelyApplyPathToCommandFunction(pathToCommandFunction, pathName);
+	public static Command followPathOrDriveToPathEnd(Robot robot, String pathName) {
+		return robot.getSwerve()
+			.getCommandsBuilder()
+			.followPathOrDriveToPathEnd(
+				robot.getPoseEstimator()::getCurrentPose,
+				PathPlannerUtils.getPathFromPathFile(pathName),
+				AutonomousConstants.PATHFIND_OR_FOLLOW_PATH_TOLERANCE_METERS
+			);
 	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {

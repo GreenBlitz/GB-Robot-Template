@@ -1,18 +1,17 @@
 package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.utilcommands.InitExecuteCommand;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -88,6 +87,21 @@ public class SwerveCommandsBuilder {
 				() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), state)
 			)
 		).withName("Drive with state");
+	}
+
+	public Command followPathOrDriveToPathEnd(
+		Supplier<Pose2d> currentPose,
+		Optional<PathPlannerPath> path,
+		double pathfindOrFollowPathToleranceMeters
+	) {
+		if (path.isPresent()) {
+			return new ConditionalCommand(
+				AutoBuilder.followPath(path.get()),
+				driveToPose(currentPose, () -> PathPlannerUtils.getFlippedLastPathPose(path.get())),
+				() -> PathPlannerUtils.isRobotCloseToPathBeginning(path.get(), currentPose, pathfindOrFollowPathToleranceMeters)
+			);
+		}
+		return Commands.none();
 	}
 
 

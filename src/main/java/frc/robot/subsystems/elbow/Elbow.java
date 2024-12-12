@@ -1,7 +1,9 @@
 package frc.robot.subsystems.elbow;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
@@ -64,6 +66,13 @@ public class Elbow extends GBSubsystem {
 
 	public boolean isAtAngle(Rotation2d angle, Rotation2d tolerance) {
 		return MathUtil.isNear(angle.getDegrees(), elbowStuff.positionSignal().getLatestValue().getDegrees(), tolerance.getDegrees());
+	}
+
+	public Pose3d getPose3D() {
+		return new Pose3d(
+				ElbowConstants.ELBOW_POSITION_RELATIVE_TO_ROBOT,
+				new Rotation3d(0, elbowStuff.positionSignal().getLatestValue().getRadians() , 0)
+		);
 	}
 
 }

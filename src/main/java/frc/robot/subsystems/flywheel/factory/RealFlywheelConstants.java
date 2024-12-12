@@ -114,7 +114,7 @@ public class RealFlywheelConstants {
 
 		FlywheelSim rightSim = new FlywheelSim(
 				LinearSystemId.createFlywheelSystem(
-						DCMotor.getFalcon500(1),
+						DCMotor.getFalcon500Foc(1),
 						0.01,
 						FlyWheelConstants.GEAR_RATIO
 				),
@@ -143,7 +143,7 @@ public class RealFlywheelConstants {
 
 		FlywheelSim leftSim = new FlywheelSim(
 				LinearSystemId.createFlywheelSystem(
-						DCMotor.getFalcon500(1),
+						DCMotor.getFalcon500Foc(1),
 						0.01,
 						FlyWheelConstants.GEAR_RATIO
 				),

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elbow.factory;
 
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -10,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
@@ -90,32 +92,41 @@ public class RealElbowConstants {
 		configuration.Slot0.kP = 1;
 		configuration.Slot0.kI = 1;
 		configuration.Slot0.kD = 1;
+		SoftwareLimitSwitchConfigs limitSwitchConfigs = new SoftwareLimitSwitchConfigs();
+		limitSwitchConfigs.withReverseSoftLimitThreshold(ElbowConstants.BACKWARD_LIMIT.getRotations());
+		limitSwitchConfigs.withForwardSoftLimitThreshold(ElbowConstants.FORWARD_LIMIT.getRotations());
+		limitSwitchConfigs.ForwardSoftLimitEnable = true;
+		limitSwitchConfigs.ReverseSoftLimitEnable = true;
+		configuration.withSoftwareLimitSwitch(limitSwitchConfigs);
+		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+		configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+		configuration.CurrentLimits.StatorCurrentLimit = 40;
+		configuration.CurrentLimits.SupplyCurrentLimit = 40;
 		return configuration;
 	}
 
 	private static SysIdRoutine.Config generateConfig(){
-		SysIdRoutine.Config config = new SysIdRoutine.Config();
-		return config;
+        return new SysIdRoutine.Config();
 	}
 
 	protected static ElbowStuff generateSimulationElbowStuff(String logPath){
 		TalonFXWrapper wrapper = new TalonFXWrapper(0);
 
-		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getPosition(), 60, AngleUnit.DEGREES);
-		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getVelocity(), 60, AngleUnit.ROTATIONS);
-		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getStatorCurrent(), 60);
-		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getMotorVoltage(), 60);
+		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES);
+		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(wrapper.getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		SingleJointedArmSim armSim = new SingleJointedArmSim(
-				DCMotor.getFalcon500(1),
+				DCMotor.getNEO(1),
 				ElbowConstants.GEAR_RATIO,
 				SingleJointedArmSim.estimateMOI(
 						0.44,
 						0.44
 				),
 				0.44,
-				Rotation2d.fromDegrees(-81).getRadians(),
-				Rotation2d.fromDegrees(90).getRadians(),
+				ElbowConstants.BACKWARD_LIMIT.getRadians(),
+				ElbowConstants.FORWARD_LIMIT.getRadians(),
 				false,
 				Rotation2d.fromDegrees(0).getRadians()
 		);

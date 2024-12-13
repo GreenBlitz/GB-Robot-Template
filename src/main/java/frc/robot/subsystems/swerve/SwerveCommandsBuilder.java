@@ -95,10 +95,12 @@ public class SwerveCommandsBuilder {
 		double pathfindOrFollowPathToleranceMeters
 	) {
 		if (path.isPresent()) {
-			return new ConditionalCommand(
-				AutoBuilder.followPath(path.get()),
-				driveToPose(currentPose, () -> PathPlannerUtils.getFlippedPose(PathPlannerUtils.getLastPathPose(path.get()))),
-				() -> PathPlannerUtils.isRobotCloseToPathBeginning(path.get(), currentPose, pathfindOrFollowPathToleranceMeters)
+			return toSwerveCommand(
+				new ConditionalCommand(
+					AutoBuilder.followPath(path.get()),
+					driveToPose(currentPose, () -> PathPlannerUtils.getFlippedPose(PathPlannerUtils.getLastPathPose(path.get()))),
+					() -> PathPlannerUtils.isRobotCloseToPathBeginning(path.get(), currentPose, pathfindOrFollowPathToleranceMeters)
+				)
 			);
 		}
 		return Commands.none();

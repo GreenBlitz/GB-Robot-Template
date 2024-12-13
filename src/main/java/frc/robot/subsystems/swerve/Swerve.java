@@ -13,7 +13,6 @@ import frc.robot.constants.MathConstants;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
@@ -25,7 +24,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class Swerve extends GBSubsystem {
+public class Swerve {
 
 	private final SwerveConstants constants;
 	private final Modules modules;
@@ -41,7 +40,6 @@ public class Swerve extends GBSubsystem {
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
-		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
@@ -53,9 +51,12 @@ public class Swerve extends GBSubsystem {
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
-		modules.getCommandsBuilder().withSubsystemsToRequire(this);
 
 		updateInputs();
+	}
+
+	public String getLogPath() {
+		return constants.logPath();
 	}
 
 	public Modules getModules() {
@@ -89,7 +90,7 @@ public class Swerve extends GBSubsystem {
 				constants.ppHolonomicDriveController(),
 				robotConfig,
 				() -> !Field.isFieldConventionAlliance(),
-				this,
+				getModules(),
 				modules
 			);
 		}

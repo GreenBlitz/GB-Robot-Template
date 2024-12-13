@@ -25,34 +25,26 @@ public class SwerveCommandsBuilder {
 		this.swerve = swerve;
 	}
 
-	private Command toSwerveCommand(Command command) {
-		command.addRequirements(swerve, swerve.getModules());
-		return command;
-	}
-
 	public Command wheelRadiusCalibration() {
-		return toSwerveCommand(
-			new SequentialCommandGroup(
-				swerve.getModules()
-					.getCommandsBuilder()
-					.pointWheelsInCircle()
-					.until(
-						() -> swerve.getModules()
-							.isSteersAtTargetPositions(
-								SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-								SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
-							)
-					),
-				new WheelRadiusCharacterization(
-					swerve,
-					swerve.getConstants().driveRadiusMeters(),
-					SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND,
-					swerve.getModules()::getDrivesPositions,
-					swerve::getAbsoluteHeading,
-					rotationsPerSecond -> swerve
-						.driveByState(new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()), SwerveState.DEFAULT_DRIVE),
-					swerve.getModules()::stop
-				)
+		return new SequentialCommandGroup(
+			swerve.getModules()
+				.getCommandsBuilder()
+				.pointWheelsInCircle()
+				.until(
+					() -> swerve.getModules()
+						.isSteersAtTargetPositions(
+							SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
+							SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+						)
+				),
+			new WheelRadiusCharacterization(
+				swerve.getModules(),
+				swerve.getConstants().driveRadiusMeters(),
+				SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND,
+				swerve.getModules()::getDrivesPositions,
+				swerve::getAbsoluteHeading,
+				rotationsPerSecond -> swerve.driveByState(new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()), SwerveState.DEFAULT_DRIVE),
+				swerve.getModules()::stop
 			)
 		).withName("Wheel radius calibration");
 	}
@@ -63,11 +55,10 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command turnToHeading(Rotation2d targetHeading, RotateAxis rotateAxis) {
-		return toSwerveCommand(
-			new InitExecuteCommand(
-				swerve::resetPIDControllers,
-				() -> swerve.turnToHeading(targetHeading, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis))
-			)
+		return new InitExecuteCommand(
+			swerve::resetPIDControllers,
+			() -> swerve.turnToHeading(targetHeading, SwerveState.DEFAULT_DRIVE.withRotateAxis(rotateAxis)),
+			swerve.getModules()
 		).withName("Rotate around " + rotateAxis.name() + " to " + targetHeading);
 	}
 
@@ -77,16 +68,15 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, Supplier<SwerveState> state) {
-		return toSwerveCommand(new DeferredCommand(() -> driveState(xSupplier, ySupplier, rotationSupplier, state.get()), Set.of(swerve)))
+		return new DeferredCommand(() -> driveState(xSupplier, ySupplier, rotationSupplier, state.get()), Set.of(swerve.getModules()))
 			.withName("Drive with supplier state");
 	}
 
 	public Command driveState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, SwerveState state) {
-		return toSwerveCommand(
-			new InitExecuteCommand(
-				swerve::resetPIDControllers,
-				() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), state)
-			)
+		return new InitExecuteCommand(
+			swerve::resetPIDControllers,
+			() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), state),
+			swerve.getModules()
 		).withName("Drive with state");
 	}
 
@@ -94,7 +84,7 @@ public class SwerveCommandsBuilder {
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), pidToPose(currentPose, targetPose.get())),
-			Set.of(swerve, swerve.getModules())
+			Set.of(swerve.getModules())
 		).withName("Drive to pose");
 	}
 
@@ -107,14 +97,12 @@ public class SwerveCommandsBuilder {
 			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
 		}
 
-		return toSwerveCommand(
-			new SequentialCommandGroup(new InstantCommand(swerve::resetPIDControllers), pathFollowingCommand)
-				.withName("Path to pose: " + targetPose)
-		);
+		return new SequentialCommandGroup(new InstantCommand(swerve::resetPIDControllers, swerve.getModules()), pathFollowingCommand)
+			.withName("Path to pose: " + targetPose);
 	}
 
 	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
-		return toSwerveCommand(new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.pidToPose(currentPose.get(), targetPose)))
+		return new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.pidToPose(currentPose.get(), targetPose), swerve.getModules())
 			.withName("PID to pose: " + targetPose);
 	}
 

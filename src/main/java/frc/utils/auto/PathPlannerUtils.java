@@ -13,6 +13,7 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -90,6 +91,13 @@ public class PathPlannerUtils {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
+	public static Pose2d getFlippedPose(Pose2d bluePose) {
+		if (AutoBuilder.shouldFlip()) {
+			return FlippingUtil.flipFieldPose(bluePose);
+		}
+		return bluePose;
+	}
+
 	public static Optional<PathPlannerPath> getPathFromPathFile(String pathName) {
 		try {
 			return Optional.of(PathPlannerPath.fromPathFile(pathName));
@@ -124,12 +132,10 @@ public class PathPlannerUtils {
 	}
 
 	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
-		return path.getPathPoses().get(0).getTranslation().getDistance(currentPose.get().getTranslation()) <= toleranceMeters;
+		return getFlippedPose(path.getPathPoses().get(0)).getTranslation().getDistance(currentPose.get().getTranslation()) <= toleranceMeters;
 	}
 
-	public static Pose2d getFlippedLastPathPose(PathPlannerPath path) {
-		if (AutoBuilder.shouldFlip())
-			path = path.flipPath();
+	public static Pose2d getLastPathPose(PathPlannerPath path) {
 		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
 	}
 

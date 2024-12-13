@@ -1,6 +1,5 @@
 package frc.robot.hardware.interfaces;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface InputSignal<T> extends LoggableInputs {

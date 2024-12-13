@@ -1,7 +1,6 @@
 package frc.robot.hardware.signal;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.InputSignal;
 import org.littletonrobotics.junction.LogTable;
 
@@ -50,6 +49,7 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	public boolean isFarBy(Double value, Double distance) {
 		return !isNear(value, distance);
 	}
+
 	@Override
 	public boolean isMore(Double value) {
 		return getLatestValue() > value;

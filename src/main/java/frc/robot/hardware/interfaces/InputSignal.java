@@ -1,5 +1,6 @@
 package frc.robot.hardware.interfaces;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface InputSignal<T> extends LoggableInputs {
@@ -16,7 +17,7 @@ public interface InputSignal<T> extends LoggableInputs {
 
 	boolean isNear(T value, T tolerance);
 
-	boolean isFarBy(T distance);
+	boolean isFarBy(T value, T distance);
 
 	boolean isMore(T value);
 

@@ -46,12 +46,13 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public boolean isNear(Rotation2d value, Rotation2d tolerance) {
+		// double expected, double actual, double tolerance
 		return MathUtil.isNear(value.getRotations(), getLatestValue().getRotations(), tolerance.getRotations());
 	}
 
 	@Override
-	public boolean isFarBy(Rotation2d distance) {
-		return !isNear(distance, Rotation2d.fromRotations(0));
+	public boolean isFarBy(Rotation2d value, Rotation2d distance) {
+		return !isNear(value, distance);
 	}
 
 	@Override

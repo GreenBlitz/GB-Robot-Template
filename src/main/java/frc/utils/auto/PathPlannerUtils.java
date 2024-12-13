@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.alerts.Alert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,25 +99,28 @@ public class PathPlannerUtils {
 		return bluePose;
 	}
 
-	public static Optional<PathPlannerPath> getPathFromPathFile(String pathName) {
+	public static Optional<PathPlannerPath> getPathFromFile(String pathName) {
 		try {
 			return Optional.of(PathPlannerPath.fromPathFile(pathName));
 		} catch (Exception exception) {
 			DriverStation.reportError(exception.getMessage(), exception.getStackTrace());
+			new Alert(Alert.AlertType.ERROR, exception.getMessage()).report();
 		}
 		return Optional.empty();
 	}
 
 	public static Pose2d getPathStartingPose(String pathName) {
-		Optional<PathPlannerPath> path = getPathFromPathFile(pathName);
+		Optional<PathPlannerPath> path = getPathFromFile(pathName);
 		if (path.isPresent()) {
 			return new Pose2d(path.get().getPathPoses().get(0).getTranslation(), path.get().getIdealStartingState().rotation());
 		}
 		return Pose2d.kZero;
 	}
 
-	private static Command safelyApplyPathToCommandFunction(Function<PathPlannerPath, Command> pathToCommandFunction, String pathName) {
-		Optional<PathPlannerPath> path = getPathFromPathFile(pathName);
+	private static Command safelyApplyPathToCommandFunction(
+		Function<PathPlannerPath, Command> pathToCommandFunction,
+		Optional<PathPlannerPath> path
+	) {
 		if (path.isPresent()) {
 			return pathToCommandFunction.apply(path.get());
 		}
@@ -124,11 +128,14 @@ public class PathPlannerUtils {
 	}
 
 	public static Command followPath(String pathName) {
-		return safelyApplyPathToCommandFunction(AutoBuilder::followPath, pathName);
+		return safelyApplyPathToCommandFunction(AutoBuilder::followPath, getPathFromFile(pathName));
 	}
 
 	public static Command pathfindThenFollowPath(String pathName, PathConstraints pathfindingConstraints) {
-		return safelyApplyPathToCommandFunction((path) -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints), pathName);
+		return safelyApplyPathToCommandFunction(
+			(path) -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints),
+			getPathFromFile(pathName)
+		);
 	}
 
 	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
@@ -144,7 +151,7 @@ public class PathPlannerUtils {
 			.getCommandsBuilder()
 			.followPathOrDriveToPathEnd(
 				robot.getPoseEstimator()::getCurrentPose,
-				PathPlannerUtils.getPathFromPathFile(pathName),
+				PathPlannerUtils.getPathFromFile(pathName),
 				AutonomousConstants.PATHFIND_OR_FOLLOW_PATH_TOLERANCE_METERS
 			);
 	}

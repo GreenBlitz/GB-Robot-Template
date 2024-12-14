@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 
 public class AutonomousConstants {
 
+	public static final String LOG_PATH_PREFIX = "Autonomous/";
+
 	public static final double PATHFIND_OR_FOLLOW_PATH_TOLERANCE_METERS = 0.2;
 
 	public static final Supplier<Command> INTAKE_COMMAND = () -> NamedCommands.getCommand("wait");

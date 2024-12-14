@@ -4,12 +4,10 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.autonomous.autos.M231Auto;
+import frc.robot.autonomous.AutonomousBuilder;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.Superstructure;
@@ -19,6 +17,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;
@@ -36,6 +35,8 @@ public class Robot {
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
+
+	private AutonomousChooser autonomousChooser;
 
 	public Robot() {
 		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
@@ -63,6 +64,7 @@ public class Robot {
 		NamedCommands.registerCommand("they don't love you", new WaitCommand(1));
 		NamedCommands.registerCommand("like I love you", new WaitCommand(1.5));
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+		autonomousChooser = new AutonomousChooser("autonomousChooser", AutonomousBuilder.getAllAutos(this));
 	}
 
 	private void configureBindings() {
@@ -71,8 +73,7 @@ public class Robot {
 
 
 	public Command getAutonomousCommand() {
-		PathPlannerAuto auto = new M231Auto(this);
-		return AutoBuilder.resetOdom(auto.getStartingPose()).andThen(auto);
+		return autonomousChooser.getChosenValue();
 	}
 
 	public Superstructure getSuperStructure() {

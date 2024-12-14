@@ -19,7 +19,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
@@ -99,18 +98,16 @@ public class PathPlannerUtils {
 		return bluePose;
 	}
 
-	public static Optional<PathPlannerPath> getPathFromFile(String pathName) {
+	public static Optional<PathPlannerPath> getPathFromFile(String pathName, String logPath) {
 		try {
 			return Optional.of(PathPlannerPath.fromPathFile(pathName));
 		} catch (Exception exception) {
-			DriverStation.reportError(exception.getMessage(), exception.getStackTrace());
-			new Alert(Alert.AlertType.ERROR, exception.getMessage()).report();
+			new Alert(Alert.AlertType.ERROR, logPath + exception.getMessage()).report();
 		}
 		return Optional.empty();
 	}
 
-	public static Pose2d getPathStartingPose(String pathName) {
-		Optional<PathPlannerPath> path = getPathFromFile(pathName);
+	public static Pose2d getPathStartingPose(Optional<PathPlannerPath> path) {
 		if (path.isPresent()) {
 			return new Pose2d(path.get().getPathPoses().get(0).getTranslation(), path.get().getIdealStartingState().rotation());
 		}
@@ -127,14 +124,14 @@ public class PathPlannerUtils {
 		return Commands.none();
 	}
 
-	public static Command followPath(String pathName) {
-		return safelyApplyPathToCommandFunction(AutoBuilder::followPath, getPathFromFile(pathName));
+	public static Command followPath(String pathName, String logPath) {
+		return safelyApplyPathToCommandFunction(AutoBuilder::followPath, getPathFromFile(pathName, logPath));
 	}
 
-	public static Command pathfindThenFollowPath(String pathName, PathConstraints pathfindingConstraints) {
+	public static Command pathfindThenFollowPath(String pathName, PathConstraints pathfindingConstraints, String logPath) {
 		return safelyApplyPathToCommandFunction(
-			(path) -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints),
-			getPathFromFile(pathName)
+			path -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints),
+			getPathFromFile(pathName, logPath)
 		);
 	}
 
@@ -146,12 +143,12 @@ public class PathPlannerUtils {
 		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
 	}
 
-	public static Command followPathOrDriveToPathEnd(Robot robot, String pathName) {
+	public static Command followPathOrDriveToPathEnd(Robot robot, String pathName, String logPath) {
 		return robot.getSwerve()
 			.getCommandsBuilder()
 			.followPathOrDriveToPathEnd(
 				robot.getPoseEstimator()::getCurrentPose,
-				PathPlannerUtils.getPathFromFile(pathName),
+				PathPlannerUtils.getPathFromFile(pathName, logPath),
 				AutonomousConstants.PATHFIND_OR_FOLLOW_PATH_TOLERANCE_METERS
 			);
 	}

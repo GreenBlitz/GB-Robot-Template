@@ -4,14 +4,13 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface InputSignal<T> extends LoggableInputs {
 
-	String getName();
+    String getName();
 
-	T getLatestValue();
+    T getLatestValue();
 
-	T[] asArray();
+    T[] asArray();
 
-	double getTimestamp();
+    double getTimestamp();
 
-	double[] getTimestamps();
-
+    double[] getTimestamps();
 }

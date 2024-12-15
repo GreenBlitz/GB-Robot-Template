@@ -4,16 +4,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface MechanismSimulation {
 
-	Rotation2d getRotorPosition();
+    Rotation2d getRotorPosition();
 
-	Rotation2d getRotorVelocityAnglesPerSecond();
+    Rotation2d getRotorVelocityAnglesPerSecond();
 
-	Rotation2d getMechanismPosition();
+    Rotation2d getMechanismPosition();
 
-	Rotation2d getMechanismVelocityAnglesPerSecond();
+    Rotation2d getMechanismVelocityAnglesPerSecond();
 
-	void setInputVoltage(double voltage);
+    void setInputVoltage(double voltage);
 
-	void updateMotor();
-
+    void updateMotor();
 }

@@ -9,26 +9,26 @@ import frc.utils.time.TimeUtils;
 
 public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {
 
-	private final StatusSignal<?> signal;
-	protected final StatusSignal<?> slopeSignal;
+    private final StatusSignal<?> signal;
+    protected final StatusSignal<?> slopeSignal;
 
-	protected Phoenix6LatencySignal(String name, StatusSignal<?> signal, StatusSignal<?> slopeSignal, AngleUnit angleUnit) {
-		super(name, angleUnit);
-		this.signal = signal;
-		this.slopeSignal = slopeSignal;
-	}
+    protected Phoenix6LatencySignal(
+            String name, StatusSignal<?> signal, StatusSignal<?> slopeSignal, AngleUnit angleUnit) {
+        super(name, angleUnit);
+        this.signal = signal;
+        this.slopeSignal = slopeSignal;
+    }
 
-	@Override
-	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal), TimeUtils.getCurrentTimeSeconds());
-	}
+    @Override
+    protected TimedValue<Double> getNewValue() {
+        return new TimedValue<>(
+                BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal),
+                TimeUtils.getCurrentTimeSeconds());
+    }
 
-	/**
-	 * For using refresh all with more signals...
-	 */
-	@Override
-	public StatusSignal<?> getSignal() {
-		return signal;
-	}
-
+    /** For using refresh all with more signals... */
+    @Override
+    public StatusSignal<?> getSignal() {
+        return signal;
+    }
 }

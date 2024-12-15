@@ -8,24 +8,23 @@ import frc.utils.time.TimeUtils;
 
 public class Phoenix6AngleSignal extends AngleSignal implements SignalGetter {
 
-	private final StatusSignal<?> statusSignal;
+    private final StatusSignal<?> statusSignal;
 
-	protected Phoenix6AngleSignal(String name, StatusSignal<?> statusSignal, AngleUnit angleUnit) {
-		super(name, angleUnit);
-		this.statusSignal = statusSignal;
-	}
+    protected Phoenix6AngleSignal(String name, StatusSignal<?> statusSignal, AngleUnit angleUnit) {
+        super(name, angleUnit);
+        this.statusSignal = statusSignal;
+    }
 
-	@Override
-	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
-	}
+    @Override
+    protected TimedValue<Double> getNewValue() {
+        return new TimedValue<>(
+                statusSignal.getValueAsDouble(),
+                TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
+    }
 
-	/**
-	 * For using refresh all with more signals...
-	 */
-	@Override
-	public StatusSignal<?> getSignal() {
-		return statusSignal;
-	}
-
+    /** For using refresh all with more signals... */
+    @Override
+    public StatusSignal<?> getSignal() {
+        return statusSignal;
+    }
 }

@@ -4,9 +4,6 @@ import com.ctre.phoenix6.StatusSignal;
 
 public interface SignalGetter {
 
-	/**
-	 * For using refresh all with more signals...
-	 */
-	StatusSignal<?> getSignal();
-
+    /** For using refresh all with more signals... */
+    StatusSignal<?> getSignal();
 }

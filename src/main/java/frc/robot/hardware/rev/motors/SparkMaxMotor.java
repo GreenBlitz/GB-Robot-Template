@@ -13,70 +13,71 @@ import org.littletonrobotics.junction.Logger;
 
 public abstract class SparkMaxMotor implements IMotor {
 
-	protected final SparkMaxWrapper motor;
-	private final String logPath;
-	private final ConnectedInputAutoLogged connectedInput;
+    protected final SparkMaxWrapper motor;
+    private final String logPath;
+    private final ConnectedInputAutoLogged connectedInput;
 
-	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
-		this.logPath = logPath;
-		this.motor = motor;
+    public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
+        this.logPath = logPath;
+        this.motor = motor;
 
-		this.connectedInput = new ConnectedInputAutoLogged();
-		connectedInput.connected = true;
+        this.connectedInput = new ConnectedInputAutoLogged();
+        connectedInput.connected = true;
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
-	}
+        AlertManager.addAlert(
+                new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
+    }
 
-	@Override
-	public void updateSimulation() {}
+    @Override
+    public void updateSimulation() {}
 
-	public String getLogPath() {
-		return logPath;
-	}
+    public String getLogPath() {
+        return logPath;
+    }
 
-	@Override
-	public boolean isConnected() {
-		return connectedInput.connected;
-	}
+    @Override
+    public boolean isConnected() {
+        return connectedInput.connected;
+    }
 
-	private boolean isValid(InputSignal<?> signal) {
-		return signal instanceof SuppliedDoubleSignal || signal instanceof SuppliedAngleSignal;
-	}
+    private boolean isValid(InputSignal<?> signal) {
+        return signal instanceof SuppliedDoubleSignal || signal instanceof SuppliedAngleSignal;
+    }
 
-	private void reportInvalidSignal(InputSignal<?> invalidSignal) {
-		new Alert(
-			Alert.AlertType.WARNING,
-			logPath + "signal named " + invalidSignal.getName() + " has invalid type " + invalidSignal.getClass().getSimpleName()
-		).report();
-	}
+    private void reportInvalidSignal(InputSignal<?> invalidSignal) {
+        new Alert(
+                        Alert.AlertType.WARNING,
+                        logPath + "signal named " + invalidSignal.getName() + " has invalid type "
+                                + invalidSignal.getClass().getSimpleName())
+                .report();
+    }
 
-	@Override
-	public void updateInputs(InputSignal<?>... inputSignals) {
-		for (InputSignal<?> signal : inputSignals) {
-			if (isValid(signal)) {
-				Logger.processInputs(logPath, signal);
-			} else {
-				reportInvalidSignal(signal);
-			}
-		}
+    @Override
+    public void updateInputs(InputSignal<?>... inputSignals) {
+        for (InputSignal<?> signal : inputSignals) {
+            if (isValid(signal)) {
+                Logger.processInputs(logPath, signal);
+            } else {
+                reportInvalidSignal(signal);
+            }
+        }
 
-		Logger.processInputs(logPath, connectedInput);
-	}
+        Logger.processInputs(logPath, connectedInput);
+    }
 
-	@Override
-	public void setBrake(boolean brake) {
-		CANSparkBase.IdleMode idleMode = brake ? CANSparkBase.IdleMode.kBrake : CANSparkBase.IdleMode.kCoast;
-		motor.setIdleMode(idleMode);
-	}
+    @Override
+    public void setBrake(boolean brake) {
+        CANSparkBase.IdleMode idleMode = brake ? CANSparkBase.IdleMode.kBrake : CANSparkBase.IdleMode.kCoast;
+        motor.setIdleMode(idleMode);
+    }
 
-	@Override
-	public void stop() {
-		motor.stopMotor();
-	}
+    @Override
+    public void stop() {
+        motor.stopMotor();
+    }
 
-	@Override
-	public void setPower(double power) {
-		motor.set(power);
-	}
-
+    @Override
+    public void setPower(double power) {
+        motor.set(power);
+    }
 }

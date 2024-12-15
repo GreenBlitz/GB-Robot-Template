@@ -1,4 +1,3 @@
 package frc.robot.hardware.interfaces;
 
-public interface ControllableMotor extends IMotor, Controllable {
-}
+public interface ControllableMotor extends IMotor, Controllable {}

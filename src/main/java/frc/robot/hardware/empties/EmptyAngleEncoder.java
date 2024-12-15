@@ -5,11 +5,10 @@ import frc.robot.hardware.interfaces.IAngleEncoder;
 
 public class EmptyAngleEncoder extends EmptyDevice implements IAngleEncoder {
 
-	public EmptyAngleEncoder(String logPath) {
-		super(logPath);
-	}
+    public EmptyAngleEncoder(String logPath) {
+        super(logPath);
+    }
 
-	@Override
-	public void setPosition(Rotation2d position) {}
-
+    @Override
+    public void setPosition(Rotation2d position) {}
 }

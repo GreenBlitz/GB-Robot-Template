@@ -5,11 +5,10 @@ import frc.robot.hardware.interfaces.IGyro;
 
 public class EmptyGyro extends EmptyDevice implements IGyro {
 
-	public EmptyGyro(String logPath) {
-		super(logPath);
-	}
+    public EmptyGyro(String logPath) {
+        super(logPath);
+    }
 
-	@Override
-	public void setYaw(Rotation2d yaw) {}
-
+    @Override
+    public void setYaw(Rotation2d yaw) {}
 }

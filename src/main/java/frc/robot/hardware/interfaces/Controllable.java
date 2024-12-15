@@ -5,10 +5,9 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface Controllable {
 
-	SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
+    SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
 
-	void resetPosition(Rotation2d position);
+    void resetPosition(Rotation2d position);
 
-	void applyRequest(IRequest<?> request);
-
+    void applyRequest(IRequest<?> request);
 }

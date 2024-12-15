@@ -6,35 +6,34 @@ import frc.utils.time.TimeUtils;
 
 public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 
-	private final DCMotorSim motorSimulation;
+    private final DCMotorSim motorSimulation;
 
-	public SimpleMotorSimulation(DCMotorSim motorSimulation) {
-		this.motorSimulation = motorSimulation;
-	}
+    public SimpleMotorSimulation(DCMotorSim motorSimulation) {
+        this.motorSimulation = motorSimulation;
+    }
 
-	@Override
-	public Rotation2d getMechanismPosition() {
-		return Rotation2d.fromRadians(motorSimulation.getAngularPositionRad());
-	}
+    @Override
+    public Rotation2d getMechanismPosition() {
+        return Rotation2d.fromRadians(motorSimulation.getAngularPositionRad());
+    }
 
-	@Override
-	public Rotation2d getMechanismVelocityAnglesPerSecond() {
-		return Rotation2d.fromRadians(motorSimulation.getAngularVelocityRadPerSec());
-	}
+    @Override
+    public Rotation2d getMechanismVelocityAnglesPerSecond() {
+        return Rotation2d.fromRadians(motorSimulation.getAngularVelocityRadPerSec());
+    }
 
-	@Override
-	public void setInputVoltage(double voltage) {
-		motorSimulation.setInputVoltage(voltage);
-	}
+    @Override
+    public void setInputVoltage(double voltage) {
+        motorSimulation.setInputVoltage(voltage);
+    }
 
-	@Override
-	public void updateMotor() {
-		motorSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
-	}
+    @Override
+    public void updateMotor() {
+        motorSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
+    }
 
-	@Override
-	public double getGearRatio() {
-		return motorSimulation.getGearing();
-	}
-
+    @Override
+    public double getGearRatio() {
+        return motorSimulation.getGearing();
+    }
 }

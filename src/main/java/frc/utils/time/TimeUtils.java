@@ -9,40 +9,38 @@ import org.littletonrobotics.junction.Logger;
 
 public class TimeUtils {
 
-	public static final double DEFAULT_CYCLE_TIME_SECONDS = 0.02;
+    public static final double DEFAULT_CYCLE_TIME_SECONDS = 0.02;
 
-	private static double lastCycleStartingTimeSeconds = 0;
-	private static double currentCycleStartingTimeSeconds = 0;
+    private static double lastCycleStartingTimeSeconds = 0;
+    private static double currentCycleStartingTimeSeconds = 0;
 
-	static {
-		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.WARNING,
-				TimeConstants.LOG_PATH + "CycleOverrunAt",
-				() -> getLatestCycleTimeSeconds() > DEFAULT_CYCLE_TIME_SECONDS + TimeConstants.TIME_STEP_TOLERANCE_SECONDS
-			)
-		);
-	}
+    static {
+        AlertManager.addAlert(new PeriodicAlert(
+                Alert.AlertType.WARNING,
+                TimeConstants.LOG_PATH + "CycleOverrunAt",
+                () -> getLatestCycleTimeSeconds()
+                        > DEFAULT_CYCLE_TIME_SECONDS + TimeConstants.TIME_STEP_TOLERANCE_SECONDS));
+    }
 
-	public static void updateCycleTime(int roborioCycles) {
-		lastCycleStartingTimeSeconds = currentCycleStartingTimeSeconds;
-		currentCycleStartingTimeSeconds = getCurrentTimeSeconds();
+    public static void updateCycleTime(int roborioCycles) {
+        lastCycleStartingTimeSeconds = currentCycleStartingTimeSeconds;
+        currentCycleStartingTimeSeconds = getCurrentTimeSeconds();
 
-		logStatus(roborioCycles);
-	}
+        logStatus(roborioCycles);
+    }
 
-	private static void logStatus(int roborioCycles) {
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getLatestCycleTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentCycleStartingTimeSeconds);
-		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentCycleStartingTimeSeconds / roborioCycles);
-	}
+    private static void logStatus(int roborioCycles) {
+        Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getLatestCycleTimeSeconds());
+        Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentCycleStartingTimeSeconds);
+        Logger.recordOutput(
+                TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentCycleStartingTimeSeconds / roborioCycles);
+    }
 
-	public static double getCurrentTimeSeconds() {
-		return Conversions.microSecondsToSeconds(HALUtil.getFPGATime());
-	}
+    public static double getCurrentTimeSeconds() {
+        return Conversions.microSecondsToSeconds(HALUtil.getFPGATime());
+    }
 
-	public static double getLatestCycleTimeSeconds() {
-		return currentCycleStartingTimeSeconds - lastCycleStartingTimeSeconds;
-	}
-
+    public static double getLatestCycleTimeSeconds() {
+        return currentCycleStartingTimeSeconds - lastCycleStartingTimeSeconds;
+    }
 }

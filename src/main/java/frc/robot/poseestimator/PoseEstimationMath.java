@@ -10,16 +10,11 @@ import java.util.Optional;
 public class PoseEstimationMath {
 
 	public static Twist2d addGyroToTwist(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
-		boolean hasGyroUpdated = currentGyroAngle != null;
-		if (hasGyroUpdated && lastGyroAngle != null) {
-			return updateChangeInAngle(twist, currentGyroAngle, lastGyroAngle);
+		if (currentGyroAngle != null && lastGyroAngle != null) {
+			Rotation2d rotationDifference = currentGyroAngle.minus(lastGyroAngle);
+			return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 		}
 		return twist;
-	}
-
-	public static Twist2d updateChangeInAngle(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
-		Rotation2d rotationDifference = currentGyroAngle.minus(lastGyroAngle);
-		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 	}
 
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
@@ -33,7 +28,7 @@ public class PoseEstimationMath {
 	}
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
-		return odometryStandardDeviation == 0 ? 0 : odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
+		return odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
 	}
 
 	public static Transform2d applyKalmanOnTransform(

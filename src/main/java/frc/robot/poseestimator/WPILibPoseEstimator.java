@@ -117,7 +117,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		lastVisionPose = observation.robotPose();
 	}
 
-	private Matrix<N3, N1> standardDeviationsToMatrix(double[] standardDeviation) {
+	public static Matrix<N3, N1> standardDeviationsToMatrix(double[] standardDeviation) {
 		return VecBuilder.fill(
 			standardDeviation[PoseArrayEntryValue.X_VALUE.getEntryValue()],
 			standardDeviation[PoseArrayEntryValue.Y_VALUE.getEntryValue()],

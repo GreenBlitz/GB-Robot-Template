@@ -4,10 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.poseestimator.*;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -15,6 +20,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.MultiVisionSources;
 import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;
@@ -30,7 +36,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final IPoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
 	public Robot() {
@@ -42,10 +48,23 @@ public class Robot {
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
 		);
 
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+		MultiVisionSources multiVisionSources = new MultiVisionSources(
+//			new Limel
+		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		this.poseEstimator = new WPILibPoseEstimator(
+			"wpilibPoseEstimator/",
+			multiVisionSources,
+			new OdometryValues(swerve.getConstants().kinematics(), swerve.getModulePositions(), Rotation2d.fromDegrees(0)),
+			new Odometry<>(swerve.getConstants().kinematics(), Rotation2d.fromDegrees(0), swerve.getModulePositions(), new Pose2d()),
+			WPILibPoseEstimator.standardDeviationsToMatrix(PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS),
+			VecBuilder.fill(
+				0.01, 0.01, 0.01
+			)
+		);
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -55,7 +74,7 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 	}
 
 	private void configureBindings() {
@@ -75,7 +94,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public PoseEstimator getPoseEstimator() {
+	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

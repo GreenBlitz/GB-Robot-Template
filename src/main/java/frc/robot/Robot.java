@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.hardware.interfaces.IGyro;
@@ -45,10 +43,7 @@ public class Robot {
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
 		);
 
-		this.poseEstimator = new WPILibPoseEstimator(
-				"WPILibPoseEstimator/",
-				swerve.getConstants().kinematics()
-		);
+		this.poseEstimator = new WPILibPoseEstimator("WPILibPoseEstimator/", swerve.getConstants().kinematics());
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));

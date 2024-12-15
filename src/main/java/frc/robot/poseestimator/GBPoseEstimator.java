@@ -224,7 +224,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (!hasEstimatedPoseBeenInitialized) {
 			calculateEstimatedPoseByVision();
 		}
-		updateVision(multiVisionSources.getFilteredVisionObservations());
+		updateVision(multiVisionSources.getFilteredVisionData());
 		log();
 	}
 

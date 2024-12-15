@@ -9,7 +9,7 @@ import frc.robot.vision.sources.VisionSource;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiAprilTagVisionSource extends MultiVisionSources<VisionSource<RawAprilTagVisionData>> {
+public class MultiAprilTagVisionSource extends MultiVisionSources<RawAprilTagVisionData> {
 
 	private final List<VisionSource<RawAprilTagVisionData>> visionSources;
 

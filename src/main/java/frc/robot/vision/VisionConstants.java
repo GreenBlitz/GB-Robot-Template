@@ -14,7 +14,7 @@ public class VisionConstants {
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
 
-	public static final int NO_APRILTAG_ID = -2;
+	public static final int NO_APRILTAG_ID = -1;
 
 	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
 

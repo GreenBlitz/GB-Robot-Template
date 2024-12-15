@@ -10,7 +10,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
-import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.rawdata.RawAprilTagVisionData;
@@ -93,7 +92,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<IRobotPoseVisionObservation> robotPoseVisionData) {}
+	public void updateVision(List<RawAprilTagVisionData> robotPoseVisionData) {}
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {

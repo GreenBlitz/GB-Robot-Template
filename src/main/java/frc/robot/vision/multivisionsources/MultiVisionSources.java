@@ -11,28 +11,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class MultiVisionSources<VisionSourceType extends VisionSource<? extends RawVisionData>> extends GBSubsystem {
+public class MultiVisionSources<ReturnType extends RawVisionData> extends GBSubsystem {
 
-	private final List<VisionSourceType> visionSources;
+	private final List<VisionSource<ReturnType>> visionSources;
 
 	@SafeVarargs
-	public MultiVisionSources(String logPath, VisionSourceType... visionSources) {
+	public MultiVisionSources(String logPath, VisionSource<ReturnType>... visionSources) {
 		super(logPath);
 		this.visionSources = List.of(visionSources);
 	}
 
-	public MultiVisionSources(String logPath, List<VisionSourceType> visionSources) {
+	public MultiVisionSources(String logPath, List<VisionSource<ReturnType>> visionSources) {
 		super(logPath);
 		this.visionSources = visionSources;
 	}
 
-	protected List<VisionSourceType> getVisionSources() {
+	protected List<VisionSource<ReturnType>> getVisionSources() {
 		return visionSources;
 	}
 
-	protected <ReturnType> ArrayList<ReturnType> createMappedCopyOfSources(
-		List<VisionSourceType> list,
-		Function<Optional<? extends RawVisionData>, Optional<ReturnType>> mapping
+	protected ArrayList<ReturnType> createMappedCopyOfSources(
+		List<VisionSource<ReturnType>> list,
+		Function<Optional<ReturnType>, Optional<ReturnType>> mapping
 	) {
 		ArrayList<ReturnType> output = new ArrayList<>();
 		list.forEach(visionSource -> {
@@ -43,14 +43,14 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 		return output;
 	}
 
-	public ArrayList<? extends RawVisionData> getUnfilteredVisionData() {
+	public ArrayList<ReturnType> getUnfilteredVisionData() {
 		return createMappedCopyOfSources(visionSources, (data) -> data);
 	}
 
-	public ArrayList<? extends RawVisionData> getFilteredVisionData() {
+	public ArrayList<ReturnType> getFilteredVisionData() {
 		return createMappedCopyOfSources(visionSources, (rawVisionData -> {
 			if (rawVisionData.isPresent()) {
-				if (!rawVisionData.get().getIsDataValid()) {
+				if (!rawVisionData.get().shallDataBeFiltered()) {
 					return Optional.empty();
 				}
 				return rawVisionData;
@@ -59,7 +59,7 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 		}));
 	}
 
-	private static void logRobotPose(String logPath, String logPathAddition, List<? extends RawVisionData> observations) {
+	private static <ReturnType extends RawVisionData> void logRobotPose(String logPath, String logPathAddition, List<ReturnType> observations) {
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(logPath + logPathAddition + i, observations.get(i).getEstimatedPose());
 		}

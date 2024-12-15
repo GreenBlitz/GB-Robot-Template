@@ -118,7 +118,7 @@ public class RealFlywheelConstants {
 		);
 	}
 
-	public static FlywheelStuff generateSimulationFlywheelStuff(String logPath){
+	public static FlywheelStuff generateSimulationFlywheelStuff(String logPath) {
 		String rightLogPath = logPath + "right/";
 		String leftLogPath = logPath + "left/";
 
@@ -128,12 +128,8 @@ public class RealFlywheelConstants {
 		Phoenix6Request<Double> leftVoltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
 
 		FlywheelSim rightSim = new FlywheelSim(
-				LinearSystemId.createFlywheelSystem(
-						DCMotor.getFalcon500Foc(1),
-						0.01,
-						FlyWheelConstants.GEAR_RATIO
-				),
-				DCMotor.getFalcon500(1)
+			LinearSystemId.createFlywheelSystem(DCMotor.getFalcon500Foc(1), 0.01, FlyWheelConstants.GEAR_RATIO),
+			DCMotor.getFalcon500(1)
 		);
 
 		FlywheelSimulation rightFlywheelSimulation = new FlywheelSimulation(rightSim);
@@ -142,30 +138,26 @@ public class RealFlywheelConstants {
 		rightConfiguration.Slot0.withKP(9).withKI(6).withKD(0);
 
 		TalonFXMotor rightFlywheel = new TalonFXMotor(
-				rightLogPath,
-				IDs.TalonFXIDs.RIGHT_FLYWHEEL,
-				rightConfiguration,
-				generateSysidConfig(),
-				rightFlywheelSimulation
+			rightLogPath,
+			IDs.TalonFXIDs.RIGHT_FLYWHEEL,
+			rightConfiguration,
+			generateSysidConfig(),
+			rightFlywheelSimulation
 		);
 
 		Phoenix6AngleSignal rightVelocitySignal = Phoenix6SignalBuilder.generatePhoenix6Signal(
-				rightFlywheel.getMotor().getVelocity(),
-				GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-				AngleUnit.ROTATIONS
+			rightFlywheel.getMotor().getVelocity(),
+			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS
 		);
 		Phoenix6DoubleSignal rightCurrentSignal = Phoenix6SignalBuilder
-				.generatePhoenix6Signal(rightFlywheel.getMotor().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(rightFlywheel.getMotor().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal rightVoltageSignal = Phoenix6SignalBuilder
-				.generatePhoenix6Signal(rightFlywheel.getMotor().getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(rightFlywheel.getMotor().getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		FlywheelSim leftSim = new FlywheelSim(
-				LinearSystemId.createFlywheelSystem(
-						DCMotor.getFalcon500Foc(1),
-						0.01,
-						FlyWheelConstants.GEAR_RATIO
-				),
-				DCMotor.getFalcon500(1)
+			LinearSystemId.createFlywheelSystem(DCMotor.getFalcon500Foc(1), 0.01, FlyWheelConstants.GEAR_RATIO),
+			DCMotor.getFalcon500(1)
 		);
 
 		FlywheelSimulation leftFlywheelSimulation = new FlywheelSimulation(leftSim);
@@ -174,31 +166,32 @@ public class RealFlywheelConstants {
 		leftConfiguration.Slot0.withKP(9).withKI(6).withKD(0);
 
 		TalonFXMotor leftFlywheel = new TalonFXMotor(
-				leftLogPath, IDs.TalonFXIDs.LEFT_FLYWHEEL,
-				leftConfiguration,
-				generateSysidConfig(),
-				leftFlywheelSimulation
+			leftLogPath,
+			IDs.TalonFXIDs.LEFT_FLYWHEEL,
+			leftConfiguration,
+			generateSysidConfig(),
+			leftFlywheelSimulation
 		);
 
 		Phoenix6AngleSignal leftVelocitySignal = Phoenix6SignalBuilder
-				.generatePhoenix6Signal(leftFlywheel.getMotor().getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.generatePhoenix6Signal(leftFlywheel.getMotor().getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal leftCurrentSignal = Phoenix6SignalBuilder
-				.generatePhoenix6Signal(leftFlywheel.getMotor().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(leftFlywheel.getMotor().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal leftVoltageSignal = Phoenix6SignalBuilder
-				.generatePhoenix6Signal(leftFlywheel.getMotor().getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(leftFlywheel.getMotor().getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		return new FlywheelStuff(
-				logPath,
-				rightFlywheel,
-				leftFlywheel,
-				rightVelocityRequest,
-				leftVelocityRequest,
-				rightVoltageRequest,
-				leftVoltageRequest,
-				rightVelocitySignal,
-				leftVelocitySignal,
-				new InputSignal[] {rightCurrentSignal, rightVoltageSignal},
-				new InputSignal[] {leftCurrentSignal, leftVoltageSignal}
+			logPath,
+			rightFlywheel,
+			leftFlywheel,
+			rightVelocityRequest,
+			leftVelocityRequest,
+			rightVoltageRequest,
+			leftVoltageRequest,
+			rightVelocitySignal,
+			leftVelocitySignal,
+			new InputSignal[] {rightCurrentSignal, rightVoltageSignal},
+			new InputSignal[] {leftCurrentSignal, leftVoltageSignal}
 		);
 	}
 

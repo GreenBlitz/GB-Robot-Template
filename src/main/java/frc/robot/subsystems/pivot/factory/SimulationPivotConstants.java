@@ -5,10 +5,13 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.GlobalConstants;
 import frc.robot.constants.IDs;
+import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -22,7 +25,7 @@ import frc.utils.AngleUnit;
 
 import static edu.wpi.first.units.Units.Second;
 
-public class RealPivotConstants {
+public class SimulationPivotConstants {
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -36,11 +39,7 @@ public class RealPivotConstants {
 	private static TalonFXConfiguration generateMotorConfig() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-		configuration.Slot0.kP = 230;
-		configuration.Slot0.kD = 10;
-		configuration.Slot0.kV = 18.57;
-		configuration.Slot0.kS = 0.26;
-		configuration.Slot0.kA = 0.7702;
+		configuration.Slot0.withKP(80);
 		configuration.Feedback.SensorToMechanismRatio = PivotConstants.GEAR_RATIO;
 
 		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
@@ -57,10 +56,23 @@ public class RealPivotConstants {
 		return configuration;
 	}
 
-	protected static PivotStuff generatePivotStuff(String logPath) {
+	protected static PivotStuff generateSimulationPivotStuff(String logPath) {
 		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true));
 
-		TalonFXMotor pivot = new TalonFXMotor(logPath, IDs.TalonFXIDs.PIVOT, generateMotorConfig(), generateSysidConfig());
+		SingleJointedArmSim pivotSim = new SingleJointedArmSim(
+			DCMotor.getFalcon500Foc(1),
+			PivotConstants.GEAR_RATIO,
+			SingleJointedArmSim.estimateMOI(0.418, 3),
+			0.418,
+			PivotConstants.BACKWARD_ANGLE_LIMIT.getRadians(),
+			PivotConstants.FORWARD_ANGLE_LIMIT.getRadians(),
+			false,
+			Rotation2d.fromDegrees(16).getRadians()
+		);
+
+		SingleJointedArmSimulation pivotSimulation = new SingleJointedArmSimulation(pivotSim, PivotConstants.GEAR_RATIO);
+
+		TalonFXMotor pivot = new TalonFXMotor(logPath, IDs.TalonFXIDs.PIVOT, generateMotorConfig(), generateSysidConfig(), pivotSimulation);
 
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(pivot.getMotor().getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);

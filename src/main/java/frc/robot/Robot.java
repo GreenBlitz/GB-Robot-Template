@@ -84,7 +84,7 @@ public class Robot {
 	private final Superstructure superstructure;
 	private final StatesMotionPlanner statesMotionPlanner;
 
-	public static final Mechanism2d mechanism2d = new Mechanism2d(20,20);
+	public static final Mechanism2d mechanism2d = new Mechanism2d(20, 20);
 
 	public Robot() {
 		this.swerve = new Swerve(

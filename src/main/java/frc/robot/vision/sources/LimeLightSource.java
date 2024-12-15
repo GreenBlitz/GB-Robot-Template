@@ -22,7 +22,7 @@ import java.util.Optional;
 public class LimeLightSource extends GBSubsystem implements VisionSource<RawAprilTagVisionData> {
 
 	private final NetworkTableEntry robotPoseEntryBotPose2;
-	private final NetworkTableEntry RobotPoseEntryBotPose1;
+	private final NetworkTableEntry robotPoseEntryBotPose1;
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
@@ -32,7 +32,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
 	private LimelightGyroAngleValues gyroAngleValues;
-	private boolean useOldRobotPoseEntry;
+	private boolean useBotPose1PoseEntry;
 
 	public LimeLightSource(String name, String parentLogPath, Filter<RawAprilTagVisionData> filter) {
 		super(parentLogPath + name + "/");
@@ -40,7 +40,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 		this.name = name;
 		this.filter = filter;
 		this.robotPoseEntryBotPose2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
-		this.RobotPoseEntryBotPose1 = getLimelightNetworkTableEntry("botpose_wpiblue");
+		this.robotPoseEntryBotPose1 = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
@@ -52,7 +52,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 			Rotation2d.fromDegrees(0),
 			0
 		);
-		this.useOldRobotPoseEntry = false;
+		this.useBotPose1PoseEntry = false;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(
@@ -63,8 +63,8 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 		);
 	}
 
-	public void switchToOldBotPose(boolean useOldRobotPose) {
-		useOldRobotPoseEntry = useOldRobotPose;
+	public void changedUsedBotPoseVersion(boolean useBotPose1) {
+		useBotPose1PoseEntry = useBotPose1;
 	}
 
 	public void updateGyroAngles(LimelightGyroAngleValues gyroAngleValues) {
@@ -82,10 +82,10 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 				gyroAngleValues.roll().getDegrees(),
 				gyroAngleValues.rollRate()}
 		);
-		robotPoseArray = (useOldRobotPoseEntry ? RobotPoseEntryBotPose1 : robotPoseEntryBotPose2)
+		robotPoseArray = (useBotPose1PoseEntry ? robotPoseEntryBotPose1 : robotPoseEntryBotPose2)
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		double[] robotPoseWithoutGyroInput = RobotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		double[] robotPoseWithoutGyroInput = robotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 
@@ -144,7 +144,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	/**
-	 * the robot heading is calculated by the botpose1 algorithm, which does not the current yaw unlike botpose2.
+	 * the robot heading is calculated by the botpose1 algorithm, which does not have the current yaw unlike botpose2.
 	 *
 	 * @return optional of the heading, empty iff apriltags are not visible to the camera.
 	 */

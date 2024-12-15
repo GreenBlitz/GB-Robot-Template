@@ -49,25 +49,22 @@ public class MultiVisionSources<ReturnType extends RawVisionData> extends GBSubs
 
 	public ArrayList<ReturnType> getFilteredVisionData() {
 		return createMappedCopyOfSources(visionSources, (rawVisionData -> {
-			if (rawVisionData.isPresent()) {
-				if (!rawVisionData.get().shallDataBeFiltered()) {
-					return Optional.empty();
-				}
-				return rawVisionData;
+			if (rawVisionData.isEmpty() || !rawVisionData.get().shallDataBeFiltered()) {
+				return Optional.empty();
 			}
-			return Optional.empty();
+			return rawVisionData;
 		}));
 	}
 
-	private static <ReturnType extends RawVisionData> void logRobotPose(String logPath, String logPathAddition, List<ReturnType> observations) {
+	private static <ReturnType extends RawVisionData> void logPoses(String logPath, String logPathAddition, List<ReturnType> observations) {
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(logPath + logPathAddition + i, observations.get(i).getEstimatedPose());
 		}
 	}
 
 	private void log() {
-		logRobotPose(getLogPath(), VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
-		logRobotPose(getLogPath(), VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
+		logPoses(getLogPath(), VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
+		logPoses(getLogPath(), VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
 	}
 
 	@Override

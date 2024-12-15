@@ -22,16 +22,18 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> timeInterpolatableBuffer;
 
-	public WPILibPoseEstimator(String logPath, SwerveDriveKinematics kinematics) {
+	public WPILibPoseEstimator(String logPath, SwerveDriveKinematics kinematics, SwerveModulePosition[] mp) {
 		super(logPath);
 
+//		System.out.println(mp.length);
 
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
 			new Odometry<>(
 				kinematics,
 				PoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
-				new SwerveModulePosition[] {},
+				mp,
+//				new SwerveModulePosition[4],
 				PoseEstimatorConstants.STARTING_ODOMETRY_POSE
 			),
 			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
@@ -40,12 +42,12 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
 			PoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
-			new SwerveModulePosition[] {},
+			mp,
+//			new SwerveModulePosition[] {},
 			PoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
 
 		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		;
 	}
 
 
@@ -90,7 +92,8 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<RawAprilTagVisionData> robotPoseVisionData) {}
+	public void updateVision(List<RawAprilTagVisionData> robotPoseVisionData) {
+	}
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {

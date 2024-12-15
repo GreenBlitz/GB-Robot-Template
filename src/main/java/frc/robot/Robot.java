@@ -15,6 +15,7 @@ import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.auto.PathPlannerUtils;
 
@@ -36,14 +37,15 @@ public class Robot {
 
 	public Robot() {
 		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
+		Modules modules = ModulesFactory.create(SwerveType.SWERVE);
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
-			ModulesFactory.create(SwerveType.SWERVE),
+			modules,
 			gyro,
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
 		);
 
-		this.poseEstimator = new WPILibPoseEstimator("WPILibPoseEstimator/", swerve.getConstants().kinematics());
+		this.poseEstimator = new WPILibPoseEstimator("WPILibPoseEstimator/", swerve.getConstants().kinematics(), swerve.getAllOdometryObservations()[0].wheelPositions());
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));

@@ -50,7 +50,7 @@ public class MultiVisionSources<VisionSourceType extends VisionSource<? extends 
 	public ArrayList<? extends RawVisionData> getFilteredVisionData() {
 		return createMappedCopyOfSources(visionSources, (rawVisionData -> {
 			if (rawVisionData.isPresent()) {
-				if (!rawVisionData.get().getIsDataValid()) {
+				if (!rawVisionData.get().shallDataBeFiltered()) {
 					return Optional.empty();
 				}
 				return rawVisionData;

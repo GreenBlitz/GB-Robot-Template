@@ -76,7 +76,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 					Logger.recordOutput(logPath + "state", "returning");
 					Logger.recordOutput(logPath + "latestOutputPose", visionInput.getEstimatedPose());
 				} else {
-					Logger.recordOutput(logPath + "state", "not facing");
+					Logger.recordOutput(logPath + "state", "notFacingTags");
 				}
 			} else {
 				Logger.recordOutput(logPath + "state", "d=" + distanceMeters + "m");

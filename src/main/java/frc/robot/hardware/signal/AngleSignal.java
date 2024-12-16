@@ -50,8 +50,8 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	}
 
 	@Override
-	public boolean isFurthur(Rotation2d value, Rotation2d distance) {
-		return !isNear(value, distance);
+	public boolean isFurther(Rotation2d value, Rotation2d tolerance) {
+		return !isNear(value, tolerance);
 	}
 
 	@Override

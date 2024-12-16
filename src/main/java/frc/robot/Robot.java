@@ -59,10 +59,6 @@ public class Robot {
 	}
 
 	private void buildPathPlannerForAuto() {
-		// Register commands...
-		NamedCommands.registerCommand("wait", new WaitCommand(3));
-		NamedCommands.registerCommand("they don't love you", new WaitCommand(1));
-		NamedCommands.registerCommand("like I love you", new WaitCommand(1.5));
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 		autonomousChooser = new AutonomousChooser("autonomousChooser", AutonomousBuilder.getAllAutos(this));
 	}

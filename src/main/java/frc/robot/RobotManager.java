@@ -11,6 +11,8 @@ import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
 import frc.utils.battery.BatteryUtils;
+import frc.utils.joysticks.JoystickPorts;
+import frc.utils.joysticks.SmartJoystick;
 import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -29,6 +31,7 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 
 	private Robot robot;
+	public SmartJoystick joystick = new SmartJoystick(JoystickPorts.MAIN);
 
 	@Override
 	public void robotInit() {
@@ -37,7 +40,8 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.scheduleLimiter();
 		this.roborioCycles = 0;
 
-		this.robot = new Robot();
+		//this.robot = new Robot();
+		Logger.recordOutput("is connected", joystick.isConnected() );
 	}
 
 	@Override

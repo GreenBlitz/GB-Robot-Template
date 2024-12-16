@@ -28,7 +28,7 @@ public class RobotManager extends LoggedRobot {
 
 	private Command autonomousCommand;
 
-	private Robot robot;
+	private final Robot robot;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();

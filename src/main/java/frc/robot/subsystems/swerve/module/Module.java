@@ -113,6 +113,7 @@ public class Module {
 		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
 		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
 
+
 		fixDriveInputsCoupling();
 
 		driveInputs.velocityMetersPerSecond = toDriveMeters(driveCouplingInputs.uncoupledVelocityAnglesPerSecond);

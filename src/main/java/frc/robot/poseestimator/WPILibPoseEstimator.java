@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.rawdata.RawAprilTagVisionData;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,22 +28,14 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 //		System.out.println(mp.length);
 
-		this.poseEstimator = new PoseEstimator<>(
-			kinematics,
-			new Odometry<>(
-				kinematics,
-				PoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
-				mp,
+		this.poseEstimator = new PoseEstimator<>(kinematics, new Odometry<>(kinematics, PoseEstimatorConstants.STARTING_ODOMETRY_ANGLE, mp,
 //				new SwerveModulePosition[4],
-				PoseEstimatorConstants.STARTING_ODOMETRY_POSE
-			),
+			PoseEstimatorConstants.STARTING_ODOMETRY_POSE
+		),
 			PoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
 			PoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
 		);
-		this.odometryEstimator = new Odometry<>(
-			kinematics,
-			PoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
-			mp,
+		this.odometryEstimator = new Odometry<>(kinematics, PoseEstimatorConstants.STARTING_ODOMETRY_ANGLE, mp,
 //			new SwerveModulePosition[] {},
 			PoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
@@ -94,7 +86,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void updateVision(List<IRobotPoseVisionObservation> robotPoseVisionData) {
-		for(IRobotPoseVisionObservation observation : robotPoseVisionData) {
+		for (IRobotPoseVisionObservation observation : robotPoseVisionData) {
 			addVisionMeasurement(observation);
 		}
 	}
@@ -111,9 +103,14 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void addVisionMeasurement(IRobotPoseVisionObservation visionObservation) {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
-			visionObservation.getTimestamp(),
-			VecBuilder.fill(0, 0, 0) // todo change to funciton that calculats
+			visionObservation.getTimestamp()
+//			VecBuilder.fill(0, 0, 0) // todo change to funciton that calculats
 		);
+	}
+
+	@Override
+	public void subsystemPeriodic() {
+		Logger.recordOutput(getLogPath() + "PoseEstimatingPoseEstimator", getEstimatedPose());
 	}
 
 }

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.multivisionsources.MultiVisionSources;
+import frc.robot.vision.multivisionsources.MultiVisionSourcesWithExtendedLimelightSupport;
 import frc.robot.vision.rawdata.RawAprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
 
@@ -13,18 +14,19 @@ public class Superstructure {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
-	private final MultiVisionSources<VisionSource<RawAprilTagVisionData>> multiVisionSources;
+	private final MultiVisionSourcesWithExtendedLimelightSupport multiVisionSources;
 
-	public Superstructure(Swerve swerve, IPoseEstimator poseEstimator, MultiVisionSources<VisionSource<RawAprilTagVisionData>> multi) {
+	public Superstructure(Swerve swerve, IPoseEstimator poseEstimator, MultiVisionSourcesWithExtendedLimelightSupport multi) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
 		this.multiVisionSources = multi;
+//		multi.switchLimelightsToOldBotPos();
 	}
 
 	public void periodic() {
 		swerve.updateStatus();
 		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
-		poseEstimator.updateVision(multiVisionSources.getFilteredVisionObservations());
+		poseEstimator.updateVision(multiVisionSources.getUnfilteredVisionObservation());
 	}
 
 

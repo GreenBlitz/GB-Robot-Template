@@ -19,6 +19,7 @@ import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.robot.vision.filters.Filter;
 import frc.robot.vision.multivisionsources.MultiVisionSources;
+import frc.robot.vision.multivisionsources.MultiVisionSourcesWithExtendedLimelightSupport;
 import frc.robot.vision.sources.LimeLightSource;
 import frc.utils.auto.PathPlannerUtils;
 
@@ -48,15 +49,20 @@ public class Robot {
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
 		);
 
-		this.poseEstimator = new WPILibPoseEstimator("WPILibPoseEstimator/", swerve.getConstants().kinematics(), swerve.getAllOdometryObservations()[0].wheelPositions());
+		this.poseEstimator = new WPILibPoseEstimator(
+			"WPILibPoseEstimator/",
+			swerve.getConstants().kinematics(),
+			swerve.getAllOdometryObservations()[0].wheelPositions()
+		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
-		this.superStructure = new Superstructure(swerve, poseEstimator, new MultiVisionSources<>(
-			"MultiVisionSources/",
-			new LimeLightSource("front", "MultiVisionSources/", new Filter<>((pose) -> true))
-		));
+		this.superStructure = new Superstructure(
+			swerve,
+			poseEstimator,
+			new MultiVisionSourcesWithExtendedLimelightSupport("MultiVisionSources/", new LimeLightSource("limelight-back", "MultiVisionSources/", new Filter<>((pose) -> true)))
+		);
 
 		buildPathPlannerForAuto();
 		configureBindings();

@@ -30,6 +30,14 @@ public class MultiVisionSourcesWithExtendedLimelightSupport extends MultiVisionS
 		}
 	}
 
+	public void switchLimelightsToOldBotPos() {
+		for (VisionSource<? extends RawAprilTagVisionData> visionSource : getVisionSources()) {
+			if (visionSource instanceof LimeLightSource limelightSource) {
+				limelightSource.switchToOldBotPose(true);
+			}
+		}
+	}
+
 	public ArrayList<Rotation2d> getRawEstimatedAngles() {
 		ArrayList<Rotation2d> output = new ArrayList<>();
 		for (VisionSource<? extends RawAprilTagVisionData> visionSource : getVisionSources()) {

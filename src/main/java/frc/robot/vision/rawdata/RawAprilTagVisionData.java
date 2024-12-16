@@ -7,13 +7,13 @@ public class RawAprilTagVisionData extends RawVisionData {
 
 	private final double aprilTagHeight;
 	private final double distanceFromAprilTag;
-	private final AprilTag aprilTag;
+//	private final AprilTag aprilTag;
 
-	public RawAprilTagVisionData(Pose3d estimatedPose, double aprilTagHeight, double distanceFromAprilTag, double timestamp, AprilTag aprilTag) {
+	public RawAprilTagVisionData(Pose3d estimatedPose, double aprilTagHeight, double distanceFromAprilTag, double timestamp) {
 		super(estimatedPose, timestamp);
 		this.aprilTagHeight = aprilTagHeight;
 		this.distanceFromAprilTag = distanceFromAprilTag;
-		this.aprilTag = aprilTag;
+//		this.aprilTag = aprilTag;
 	}
 
 	public double getAprilTagHeight() {
@@ -24,8 +24,8 @@ public class RawAprilTagVisionData extends RawVisionData {
 		return distanceFromAprilTag;
 	}
 
-	public AprilTag getTrackedAprilTag() {
-		return aprilTag;
-	}
+//	public AprilTag getTrackedAprilTag() {
+//		return aprilTag;
+//	}
 
 }

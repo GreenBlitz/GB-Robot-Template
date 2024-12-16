@@ -91,4 +91,8 @@ public class SmartJoystick {
 		return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
 	}
 
+	public boolean isConnected(){
+		return joystick.isConnected();
+	}
+
 }

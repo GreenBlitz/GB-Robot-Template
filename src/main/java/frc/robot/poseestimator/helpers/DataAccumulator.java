@@ -28,7 +28,6 @@ public class DataAccumulator<T> {
 			return accumulatedDataCopy ;
 		}
 		return new ArrayList<>();
-
 	}
 
 	public int getCount() {

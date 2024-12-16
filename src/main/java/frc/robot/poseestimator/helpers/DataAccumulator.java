@@ -27,6 +27,7 @@ public class DataAccumulator<T> {
 			List<T> accumulatedDataCopy = accumulatedData;
 			accumulatedData = new ArrayList<>();
 			return accumulatedDataCopy;
+
 		}
 		return new ArrayList<>();
 	}

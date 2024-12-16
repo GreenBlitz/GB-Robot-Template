@@ -7,7 +7,7 @@ import frc.utils.Conversions;
 public class SparkMaxWrapper extends CANSparkMax {
 
 	public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
-		super(deviceID.ID(), deviceID.type());
+		super(deviceID.id(), deviceID.type());
 		super.restoreFactoryDefaults();
 	}
 

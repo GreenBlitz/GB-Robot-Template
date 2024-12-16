@@ -4,18 +4,9 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
-import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
-import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
-import frc.robot.hardware.phoenix6.gyro.Pigeon2Wrapper;
-import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -33,10 +24,6 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RobotManager extends LoggedRobot {
 
-	private CANCoderEncoder canCoderEncoder;
-	private Pigeon2Gyro gyro;
-	private TalonFXMotor motor;
-
 	private int roborioCycles;
 
 	private Command autonomousCommand;
@@ -49,21 +36,6 @@ public class RobotManager extends LoggedRobot {
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 		this.roborioCycles = 0;
-
-		canCoderEncoder = new CANCoderEncoder(
-				"cancoder/",
-				new CANcoder(0, BusChain.CANIVORE.getChainName())
-		);
-		gyro = new Pigeon2Gyro(
-				"gyro/",
-				new Pigeon2Wrapper(0)
-		);
-		motor = new TalonFXMotor(
-				"motor/",
-				new Phoenix6DeviceID(16, BusChain.ROBORIO),
-				new TalonFXConfiguration(),
-				new SysIdRoutine.Config()
-		);
 
 		this.robot = new Robot();
 	}
@@ -105,10 +77,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-
-		Logger.recordOutput(canCoderEncoder.getLogPath() + "isconnected", canCoderEncoder.isConnected());
-		Logger.recordOutput(gyro.getLogPath() + "isconnected", gyro.isConnected());
-		Logger.recordOutput(motor.getLogPath() + "isconnected", motor.isConnected());
 	}
 
 	private void updateTimeRelatedData() {

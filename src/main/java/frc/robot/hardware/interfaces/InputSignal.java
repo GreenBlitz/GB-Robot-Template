@@ -16,9 +16,9 @@ public interface InputSignal<T> extends LoggableInputs {
 
 	boolean isNear(T value, T tolerance);
 
-	boolean isFarBy(T value, T distance);
+	boolean isFar(T value, T distance);
 
-	boolean isMore(T value);
+	boolean isGreater(T value);
 
 	boolean isLess(T value);
 

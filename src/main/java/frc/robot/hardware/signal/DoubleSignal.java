@@ -46,12 +46,12 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	}
 
 	@Override
-	public boolean isFarBy(Double value, Double distance) {
+	public boolean isFar(Double value, Double distance) {
 		return !isNear(value, distance);
 	}
 
 	@Override
-	public boolean isMore(Double value) {
+	public boolean isGreater(Double value) {
 		return getLatestValue() > value;
 	}
 

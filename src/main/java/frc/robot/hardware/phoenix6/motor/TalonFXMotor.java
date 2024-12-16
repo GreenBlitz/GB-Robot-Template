@@ -56,7 +56,8 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 			: Optional.empty();
 	}
 
-	public TalonFXWrapper getMotor() {
+	@Override
+	public TalonFXWrapper getDevice() {
 		return motor;
 	}
 
@@ -99,11 +100,6 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "Got invalid type of request " + request.getClass().getSimpleName()).report();
 		}
-	}
-
-	@Override
-	public TalonFXWrapper getDevice() {
-		return motor;
 	}
 
 }

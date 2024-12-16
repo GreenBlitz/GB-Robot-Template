@@ -17,6 +17,9 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.filters.Filter;
+import frc.robot.vision.multivisionsources.MultiVisionSources;
+import frc.robot.vision.sources.LimeLightSource;
 import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;
@@ -50,7 +53,10 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
-		this.superStructure = new Superstructure(swerve, poseEstimator);
+		this.superStructure = new Superstructure(swerve, poseEstimator, new MultiVisionSources<>(
+			"MultiVisionSources/",
+			new LimeLightSource("front", "MultiVisionSources/", new Filter<>((pose) -> true))
+		));
 
 		buildPathPlannerForAuto();
 		configureBindings();

@@ -8,6 +8,7 @@ import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.rawdata.RawAprilTagVisionData;
@@ -92,7 +93,10 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<RawAprilTagVisionData> robotPoseVisionData) {
+	public void updateVision(List<IRobotPoseVisionObservation> robotPoseVisionData) {
+		for(IRobotPoseVisionObservation observation : robotPoseVisionData) {
+			addVisionMeasurement(observation);
+		}
 	}
 
 	@Override
@@ -104,7 +108,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		odometryEstimator.update(observation.gyroAngle(), observation.wheelPositions());
 	}
 
-	private void addVisionMeasurement(RawAprilTagVisionData visionObservation) {
+	private void addVisionMeasurement(IRobotPoseVisionObservation visionObservation) {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp(),

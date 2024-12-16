@@ -7,7 +7,7 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IDevice;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6BothLatencySignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6LatencyAndSlopeSignal;
 import frc.robot.hardware.phoenix6.signal.SignalGetter;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
@@ -65,8 +65,8 @@ public abstract class Phoenix6Device implements IDevice {
 		for (InputSignal<?> signal : signals) {
 			if (signal instanceof SignalGetter signalGetter) {
 				signalsSet.add(signalGetter.getSignal());
-				if (signal instanceof Phoenix6BothLatencySignal bothLatencySignal) {
-					signalsSet.add(bothLatencySignal.getSignalSlope());
+				if (signal instanceof Phoenix6LatencyAndSlopeSignal bothLatencySignal) {
+					signalsSet.add(bothLatencySignal.getSlopeSignal());
 				}
 			}
 		}

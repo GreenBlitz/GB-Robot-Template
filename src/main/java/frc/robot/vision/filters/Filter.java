@@ -19,11 +19,11 @@ public class Filter<T extends RawVisionData> {
 	}
 
 	public Filter<T> andThen(Filter<T> anotherFilter) {
-		return new Filter<>((T data) -> anotherFilter.doesFilterPass(data) && doesFilterPass(data));
+		return new Filter<>(data -> anotherFilter.doesFilterPass(data) && doesFilterPass(data));
 	}
 
 	public Filter<T> or(Filter<T> anotherFilter) {
-		return new Filter<>((T data) -> anotherFilter.doesFilterPass(data) || doesFilterPass(data));
+		return new Filter<>(data -> anotherFilter.doesFilterPass(data) || doesFilterPass(data));
 	}
 
 	public void logFilterStatus(String logPath, T data) {
@@ -32,7 +32,7 @@ public class Filter<T extends RawVisionData> {
 
 	@SafeVarargs
 	public static <T extends RawVisionData> Filter<T> combineFilters(Filter<T>... filters) {
-		return new Filter<>((T data) -> Arrays.stream(filters).allMatch((Filter<T> filer) -> filer.doesFilterPass(data)));
+		return new Filter<>(data -> Arrays.stream(filters).allMatch(filter -> filter.doesFilterPass(data)));
 	}
 
 	@SafeVarargs

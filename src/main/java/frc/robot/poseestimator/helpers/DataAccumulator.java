@@ -11,9 +11,9 @@ public class DataAccumulator<T> {
 	private List<T> accumulatedData;
 	private int dataIntakeCounter;
 
-	public DataAccumulator(Supplier<List<T>> dataSupplier, int maxCount) {
+	public DataAccumulator(Supplier<List<T>> dataSupplier, int maxDataIntakes) {
 		this.dataSupplier = dataSupplier;
-		this.maxDataIntakes = maxCount;
+		this.maxDataIntakes = maxDataIntakes;
 		this.accumulatedData = new ArrayList<>();
 		this.dataIntakeCounter = 0;
 	}
@@ -32,7 +32,7 @@ public class DataAccumulator<T> {
 		return new ArrayList<>();
 	}
 
-	public int getCount() {
+	public int getIntakeCount() {
 		return dataIntakeCounter;
 	}
 

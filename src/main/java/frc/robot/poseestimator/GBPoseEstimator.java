@@ -5,11 +5,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import frc.robot.poseestimator.helpers.ObservationAccumulator;
+import frc.robot.poseestimator.helpers.DataAccumulator;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
-import frc.robot.vision.rawdata.RawAprilTagVisionData;
+import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -22,8 +22,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
-	private final ObservationAccumulator<Rotation2d> headingCountHelper;
-	private final ObservationAccumulator<RawAprilTagVisionData> poseCountHelper;
+	private final DataAccumulator<Rotation2d> headingCountHelper;
+	private final DataAccumulator<AprilTagVisionData> poseCountHelper;
 	private final MultiAprilTagVisionSource multiVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
@@ -45,11 +45,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.multiVisionSources = multiVisionSources;
-		this.headingCountHelper = new ObservationAccumulator<>(
+		this.headingCountHelper = new DataAccumulator<>(
 			multiVisionSources::getRawEstimatedAngles,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
-		this.poseCountHelper = new ObservationAccumulator<>(
+		this.poseCountHelper = new DataAccumulator<>(
 			multiVisionSources::getUnfilteredVisionData,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
@@ -111,7 +111,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		List<RawAprilTagVisionData> stackedObservations = poseCountHelper.getAccumulatedList();
+		List<AprilTagVisionData> stackedObservations = poseCountHelper.getAccumulatedList();
 		if (stackedObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -139,8 +139,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<RawAprilTagVisionData> visionObservations) {
-		for (RawAprilTagVisionData visionObservation : visionObservations) {
+	public void updateVision(List<AprilTagVisionData> visionObservations) {
+		for (AprilTagVisionData visionObservation : visionObservations) {
 			if (!isObservationTooOld(visionObservation)) {
 				addVisionObservation(visionObservation);
 			}
@@ -154,7 +154,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	private boolean isObservationTooOld(RawAprilTagVisionData visionObservation) {
+	private boolean isObservationTooOld(AprilTagVisionData visionObservation) {
 		try {
 			return odometryPoseInterpolator.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS
 				> visionObservation.getTimestamp();
@@ -163,7 +163,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	private void addVisionObservation(RawAprilTagVisionData observation) {
+	private void addVisionObservation(AprilTagVisionData observation) {
 		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.getTimestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			Pose2d currentEstimation = PoseEstimationMath.combineVisionToOdometry(
@@ -196,8 +196,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void log() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
 		Logger.recordOutput(super.getLogPath() + "OdometryPose/", getOdometryPose());
-		Logger.recordOutput(super.getLogPath() + "HeadingAveragingCount/", headingCountHelper.getCount());
-		Logger.recordOutput(super.getLogPath() + "PoseAveragingCount/", poseCountHelper.getCount());
+		Logger.recordOutput(super.getLogPath() + "HeadingAveragingCount/", headingCountHelper.getIntakeCount());
+		Logger.recordOutput(super.getLogPath() + "PoseAveragingCount/", poseCountHelper.getIntakeCount());
 		Logger.recordOutput(super.getLogPath() + "HeadingOffset/", headingOffset.getDegrees());
 		Logger.recordOutput(super.getLogPath() + "hasHeadingOffsetBeenInitialized/", hasHeadingOffsetBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "hasEstimatedPoseBeenInitialized/", hasEstimatedPoseBeenInitialized);

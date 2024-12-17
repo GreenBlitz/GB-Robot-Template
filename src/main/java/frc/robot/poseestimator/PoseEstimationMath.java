@@ -2,7 +2,7 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
-import frc.robot.vision.rawdata.RawAprilTagVisionData;
+import frc.robot.vision.rawdata.AprilTagVisionData;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class PoseEstimationMath {
 	}
 
 	public static Transform2d applyKalmanOnTransform(
-		RawAprilTagVisionData observation,
+		AprilTagVisionData observation,
 		Pose2d appliedVisionObservation,
 		double[] odometryStandardDeviations,
 		double[] visionStandardDeviations
@@ -54,7 +54,7 @@ public class PoseEstimationMath {
 	}
 
 	public static Pose2d combineVisionToOdometry(
-		RawAprilTagVisionData observation,
+		AprilTagVisionData observation,
 		Pose2d odometryInterpolatedPoseSample,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
@@ -72,7 +72,7 @@ public class PoseEstimationMath {
 		);
 	}
 
-	public static double[] calculateStandardDeviationOfPose(RawAprilTagVisionData rawVisionData, Pose2d currentEstimatedPose) {
+	public static double[] calculateStandardDeviationOfPose(AprilTagVisionData rawVisionData, Pose2d currentEstimatedPose) {
 		double normalizedLimelightX = rawVisionData.getEstimatedPose().getX() / Field.LENGTH_METERS;
 		double normalizedLimelightY = rawVisionData.getEstimatedPose().getY() / Field.WIDTH_METERS;
 		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
@@ -91,13 +91,13 @@ public class PoseEstimationMath {
 		return Math.sqrt((Math.pow(estimatedValue - mean, 2) + Math.pow(currentValue - mean, 2)) / 2);
 	}
 
-	public static Pose2d weightedPoseMean(List<RawAprilTagVisionData> observations, double[] visionStandardDeviations) {
+	public static Pose2d weightedPoseMean(List<AprilTagVisionData> observations, double[] visionStandardDeviations) {
 		Pose2d poseMean = new Pose2d();
 		double xWeightsSum = 0;
 		double yWeightsSum = 0;
 		double rotationDeviationSum = 0;
 
-		for (RawAprilTagVisionData observation : observations) {
+		for (AprilTagVisionData observation : observations) {
 			double xWeight = 1 / visionStandardDeviations[Pose2dArrayValue.X_VALUE.getEntryValue()];
 			double yWeight = 1 / visionStandardDeviations[Pose2dArrayValue.Y_VALUE.getEntryValue()];
 			double rotationWeight = 1 / visionStandardDeviations[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()];
@@ -119,10 +119,10 @@ public class PoseEstimationMath {
 		return poseMean;
 	}
 
-	public static Pose2d poseMean(List<RawAprilTagVisionData> observations) {
+	public static Pose2d poseMean(List<AprilTagVisionData> observations) {
 		Pose2d poseMean = new Pose2d();
 
-		for (RawAprilTagVisionData observation : observations) {
+		for (AprilTagVisionData observation : observations) {
 			poseMean = new Pose2d(
 				poseMean.getX() + observation.getEstimatedPose().getX(),
 				poseMean.getY() + observation.getEstimatedPose().getY(),

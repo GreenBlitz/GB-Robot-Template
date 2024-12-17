@@ -56,7 +56,8 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 			: Optional.empty();
 	}
 
-	public TalonFXWrapper getMotor() {
+	@Override
+	public TalonFXWrapper getDevice() {
 		return motor;
 	}
 

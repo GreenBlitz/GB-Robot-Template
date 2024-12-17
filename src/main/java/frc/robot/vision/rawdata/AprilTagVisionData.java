@@ -9,13 +9,7 @@ public class AprilTagVisionData extends VisionData {
 	private final double distanceFromAprilTag;
 	private final AprilTag aprilTag;
 
-	public AprilTagVisionData(
-		Pose3d estimatedPose,
-		double timestamp,
-		double aprilTagHeight,
-		double distanceFromAprilTag,
-		AprilTag aprilTag
-	) {
+	public AprilTagVisionData(Pose3d estimatedPose, double timestamp, double aprilTagHeight, double distanceFromAprilTag, AprilTag aprilTag) {
 		super(estimatedPose, timestamp);
 		this.aprilTagHeight = aprilTagHeight;
 		this.distanceFromAprilTag = distanceFromAprilTag;

@@ -35,6 +35,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
+	private final MultiAprilTagVisionSource multiAprilTagVisionSources;
 	private final WPILibPoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
@@ -46,6 +47,11 @@ public class Robot {
 			modules,
 			gyro,
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
+		);
+		
+		this.multiAprilTagVisionSources = new MultiAprilTagVisionSource(
+				"MultiVisionSources/",
+				new LimeLightSource("limelight-back", "MultiVisionSources/", new Filter<>((pose) -> true))
 		);
 
 		this.poseEstimator = new WPILibPoseEstimator(
@@ -60,12 +66,9 @@ public class Robot {
 		this.superStructure = new Superstructure(
 			swerve,
 			poseEstimator,
-			new MultiAprilTagVisionSource(
-				"MultiVisionSources/",
-				new LimeLightSource("limelight-back", "MultiVisionSources/", new Filter<>((pose) -> true))
-			)
+				multiAprilTagVisionSources
 		);
-
+		
 		buildPathPlannerForAuto();
 		configureBindings();
 	}
@@ -95,5 +98,8 @@ public class Robot {
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
-
+	
+	public MultiAprilTagVisionSource getMultiAprilTagVisionSources() {
+		return multiAprilTagVisionSources;
+	}
 }

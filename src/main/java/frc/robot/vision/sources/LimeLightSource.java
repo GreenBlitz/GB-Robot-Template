@@ -16,6 +16,7 @@ import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -167,5 +168,15 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
 	}
-
+	
+	@Override
+	protected void subsystemPeriodic() {
+		getVisionData().ifPresent(data -> {
+			Logger.recordOutput(getLogPath() + "estimatedPose/", data.getEstimatedPose());
+			Logger.recordOutput(getLogPath() + "filterResult/", filter.applyFilter(data));
+			Logger.recordOutput(getLogPath() + "tagPose", data.getTrackedAprilTag().pose);
+		});
+		Logger.recordOutput(getLogPath() + "visionDataPresent/", getVisionData().isPresent());
+		Logger.recordOutput(getLogPath() + "filteredDataPresent/", getFilteredData().isPresent());
+	}
 }

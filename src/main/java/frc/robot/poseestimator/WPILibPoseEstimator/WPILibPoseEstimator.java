@@ -12,7 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.rawdata.RawAprilTagVisionData;
+import frc.robot.vision.rawdata.AprilTagVisionData;
 
 import java.util.List;
 import java.util.Optional;
@@ -92,7 +92,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<RawAprilTagVisionData> robotPoseVisionData) {}
+	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {}
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
@@ -103,7 +103,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		odometryEstimator.update(observation.gyroAngle(), observation.wheelPositions());
 	}
 
-	private void addVisionMeasurement(RawAprilTagVisionData visionObservation) {
+	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp(),

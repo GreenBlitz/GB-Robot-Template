@@ -10,7 +10,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.filters.Filter;
 import frc.robot.vision.limelights.LimelightEntryValue;
-import frc.robot.vision.rawdata.RawAprilTagVisionData;
+import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.utils.Conversions;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
@@ -19,28 +19,28 @@ import frc.utils.time.TimeUtils;
 
 import java.util.Optional;
 
-public class LimeLightSource extends GBSubsystem implements VisionSource<RawAprilTagVisionData> {
+public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTagVisionData> {
 
 	private final NetworkTableEntry robotPoseEntryBotPose2;
-	private final NetworkTableEntry RobotPoseEntryBotPose1;
+	private final NetworkTableEntry robotPoseEntryBotPose1;
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
 	private final String name;
-	private Filter<RawAprilTagVisionData> filter;
+	private Filter<AprilTagVisionData> filter;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
 	private LimelightGyroAngleValues gyroAngleValues;
-	private boolean useOldRobotPoseEntry;
+	private boolean useBotPose1PoseEntry;
 
-	public LimeLightSource(String name, String parentLogPath, Filter<RawAprilTagVisionData> filter) {
+	public LimeLightSource(String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
 		super(parentLogPath + name + "/");
 
 		this.name = name;
 		this.filter = filter;
 		this.robotPoseEntryBotPose2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
-		this.RobotPoseEntryBotPose1 = getLimelightNetworkTableEntry("botpose_wpiblue");
+		this.robotPoseEntryBotPose1 = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
@@ -52,7 +52,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 			Rotation2d.fromDegrees(0),
 			0
 		);
-		this.useOldRobotPoseEntry = false;
+		this.useBotPose1PoseEntry = false;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(
@@ -63,8 +63,8 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 		);
 	}
 
-	public void switchToOldBotPose(boolean useOldRobotPose) {
-		useOldRobotPoseEntry = useOldRobotPose;
+	public void changedUsedBotPoseVersion(boolean useBotPose1) {
+		useBotPose1PoseEntry = useBotPose1;
 	}
 
 	public void updateGyroAngles(LimelightGyroAngleValues gyroAngleValues) {
@@ -82,10 +82,10 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 				gyroAngleValues.roll().getDegrees(),
 				gyroAngleValues.rollRate()}
 		);
-		robotPoseArray = (useOldRobotPoseEntry ? RobotPoseEntryBotPose1 : robotPoseEntryBotPose2)
+		robotPoseArray = (useBotPose1PoseEntry ? robotPoseEntryBotPose1 : robotPoseEntryBotPose2)
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		double[] robotPoseWithoutGyroInput = RobotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		double[] robotPoseWithoutGyroInput = robotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 
@@ -120,13 +120,12 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public Optional<RawAprilTagVisionData> getRawVisionData() {
+	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
-			pose3dDoublePair -> new RawAprilTagVisionData(
+			pose3dDoublePair -> new AprilTagVisionData(
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
-				shouldDataBeFiltered(),
 				getAprilTagValue(LimelightEntryValue.Y_AXIS),
 				getAprilTagValue(LimelightEntryValue.Z_AXIS),
 				VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().get((int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID))
@@ -134,17 +133,26 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 		);
 	}
 
-	private boolean shouldDataBeFiltered() {
-		return getRawVisionData().map(filter::doesFilterPass).orElseGet(() -> true);
+	@Override
+	public Optional<AprilTagVisionData> getFilteredData() {
+		if (shouldDataBeFiltered(getVisionData())) {
+			return getVisionData();
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	private boolean shouldDataBeFiltered(Optional<AprilTagVisionData> data) {
+		return data.map(filter::applyFilter).orElseGet(() -> true);
 	}
 
 	@Override
-	public Filter<RawAprilTagVisionData> setFilter(Filter<RawAprilTagVisionData> newFilter) {
+	public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
 		return this.filter = newFilter;
 	}
 
 	/**
-	 * the robot heading is calculated by the botpose1 algorithm, which does not the current yaw unlike botpose2.
+	 * the robot heading is calculated by the botpose1 algorithm, which does not have the current yaw unlike botpose2.
 	 *
 	 * @return optional of the heading, empty iff apriltags are not visible to the camera.
 	 */

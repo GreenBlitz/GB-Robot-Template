@@ -1,6 +1,5 @@
 package frc.robot.vision.filters;
 
-
 import frc.robot.vision.rawdata.VisionData;
 import org.littletonrobotics.junction.Logger;
 

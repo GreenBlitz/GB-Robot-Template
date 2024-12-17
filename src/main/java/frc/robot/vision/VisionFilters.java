@@ -19,12 +19,16 @@ public class VisionFilters {
 		return new Filter<>(rawVisionData -> rawVisionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters);
 	}
 
-	protected static Filter<
-		AprilTagVisionData> isAprilTagHeightInTolerance(double aprilTagHeightToleranceMeters, double aprilTagRealHeightMeters) {
+	//@formatter:off
+	protected static Filter<AprilTagVisionData> isAprilTagHeightInTolerance(
+			double aprilTagHeightToleranceMeters,
+			double aprilTagRealHeightMeters
+	) {
 		return new Filter<>(
 			rawAprilTagVisionData -> Math.abs(rawAprilTagVisionData.getAprilTagHeight() - aprilTagRealHeightMeters)
 				<= aprilTagHeightToleranceMeters
 		);
 	}
+	//@formatter:on
 
 }

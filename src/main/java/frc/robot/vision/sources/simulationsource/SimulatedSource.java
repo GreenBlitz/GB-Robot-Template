@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.*;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.filters.Filter;
-import frc.robot.vision.rawdata.RawAprilTagVisionData;
+import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class SimulatedSource extends GBSubsystem implements VisionSource<RawAprilTagVisionData> {
+public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTagVisionData> {
 
 	private final Random randomValuesGenerator;
 	private final Rotation2d fieldOfView;
@@ -24,21 +24,21 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 	private final double detectionRangeMeters;
 	private final double spikesProbability;
 	private final double maximumSpikeMeters;
-	private final List<RawAprilTagVisionData> currentObservations;
+	private final List<AprilTagVisionData> currentObservations;
 
 	private final Supplier<Pose3d> cameraPose;
 	private final Supplier<Pose2d> simulateRobotPose;
 	private final Supplier<Double> transformNoise;
 	private final Supplier<Double> angleNoise;
 
-	private Filter<RawAprilTagVisionData> filter;
+	private Filter<AprilTagVisionData> filter;
 
 	public SimulatedSource(
 		String cameraName,
 		Supplier<Pose2d> simulateRobotPose,
 		Pose3d camerasRelativeToRobot,
 		SimulatedSourceConfiguration config,
-		Filter<RawAprilTagVisionData> filter
+		Filter<AprilTagVisionData> filter
 	) {
 		super(cameraName + "Simulated/");
 
@@ -71,7 +71,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pose2d noisedPose = calculateNoisedPose();
-					RawAprilTagVisionData visionInput = constructRawVisionData(noisedPose, aprilTagPose, aprilTag);
+					AprilTagVisionData visionInput = constructRawVisionData(noisedPose, aprilTagPose, aprilTag);
 					currentObservations.add(visionInput);
 					Logger.recordOutput(logPath + "state", "returning");
 					Logger.recordOutput(logPath + "latestOutputPose", visionInput.getEstimatedPose());
@@ -84,11 +84,10 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 		}
 	}
 
-	public RawAprilTagVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose, AprilTag aprilTag) {
-		return new RawAprilTagVisionData(
+	public AprilTagVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose, AprilTag aprilTag) {
+		return new AprilTagVisionData(
 			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
 			TimeUtils.getCurrentTimeSeconds(),
-			getLatestObservation().map(filter::doesFilterPass).orElseGet(() -> true),
 			aprilTagPose.getZ(),
 			distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
 			aprilTag
@@ -118,7 +117,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 		);
 	}
 
-	public Optional<RawAprilTagVisionData> getLatestObservation() {
+	public Optional<AprilTagVisionData> getLatestObservation() {
 		if (currentObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -127,18 +126,28 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public Optional<RawAprilTagVisionData> getRawVisionData() {
+	public Optional<AprilTagVisionData> getVisionData() {
 		return getLatestObservation();
 	}
 
 	@Override
-	public Filter<RawAprilTagVisionData> setFilter(Filter<RawAprilTagVisionData> newFilter) {
+	public Optional<AprilTagVisionData> getFilteredData() {
+		var data = getVisionData();
+		if (data.isEmpty() || filter.applyFilter(data.get())) {
+			return data;
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	@Override
+	public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
 		return this.filter = newFilter;
 	}
 
 	private void logMovingData() {
 		getLatestObservation().ifPresent(
-			(RawAprilTagVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.getEstimatedPose())
+			(AprilTagVisionData rawVisionData) -> Logger.recordOutput(super.getLogPath() + "position", rawVisionData.getEstimatedPose())
 		);
 		Logger.recordOutput(getLogPath() + "cameraPose", cameraPose.get());
 	}

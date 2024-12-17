@@ -1,15 +1,17 @@
 package frc.robot.vision.sources;
 
 import frc.robot.vision.filters.Filter;
-import frc.robot.vision.rawdata.RawVisionData;
+import frc.robot.vision.rawdata.VisionData;
 
 import java.util.Optional;
 
-public interface VisionSource<ReturnType extends RawVisionData> {
+public interface VisionSource<ReturnType extends VisionData> {
 
 	void update();
 
-	Optional<ReturnType> getRawVisionData();
+	Optional<ReturnType> getVisionData();
+
+	Optional<ReturnType> getFilteredData();
 
 	Filter<ReturnType> setFilter(Filter<ReturnType> newFilter);
 

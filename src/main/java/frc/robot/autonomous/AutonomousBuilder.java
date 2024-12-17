@@ -15,6 +15,9 @@ public class AutonomousBuilder {
 	public static Map<String, Command> getAllAutos(Robot robot) {
 		Map<String, Command> autoMap = new HashMap<>();
 		autoMap.put("M231", withResetOdometry(M231(robot)));
+		autoMap.put("Rotate", new PathPlannerAuto("Rotate"));
+		autoMap.put("Rotate 2m", new PathPlannerAuto("Rotate 2m"));
+		autoMap.put("Straight 2m", new PathPlannerAuto("Straight 2m"));
 		return autoMap;
 	}
 

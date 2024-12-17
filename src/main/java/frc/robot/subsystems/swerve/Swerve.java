@@ -90,7 +90,6 @@ public class Swerve {
 				constants.ppHolonomicDriveController(),
 				robotConfig,
 				() -> !Field.isFieldConventionAlliance(),
-				getModules(),
 				modules
 			);
 		}

@@ -10,7 +10,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.filters.Filter;
 import frc.robot.vision.limelights.LimelightEntryValue;
-import frc.robot.vision.rawdata.RawAprilTagVisionData;
+import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.utils.Conversions;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
@@ -19,7 +19,7 @@ import frc.utils.time.TimeUtils;
 
 import java.util.Optional;
 
-public class LimeLightSource extends GBSubsystem implements VisionSource<RawAprilTagVisionData> {
+public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTagVisionData> {
 
 	private final NetworkTableEntry robotPoseEntryBotPose2;
 	private final NetworkTableEntry robotPoseEntryBotPose1;
@@ -27,14 +27,14 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
 	private final String name;
-	private Filter<RawAprilTagVisionData> filter;
+	private Filter<AprilTagVisionData> filter;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
 	private LimelightGyroAngleValues gyroAngleValues;
 	private boolean useBotPose1PoseEntry;
 
-	public LimeLightSource(String name, String parentLogPath, Filter<RawAprilTagVisionData> filter) {
+	public LimeLightSource(String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
 		super(parentLogPath + name + "/");
 
 		this.name = name;
@@ -120,13 +120,12 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 	}
 
 	@Override
-	public Optional<RawAprilTagVisionData> getRawVisionData() {
+	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
-			pose3dDoublePair -> new RawAprilTagVisionData(
+			pose3dDoublePair -> new AprilTagVisionData(
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
-				shouldDataBeFiltered(),
 				getAprilTagValue(LimelightEntryValue.Y_AXIS),
 				getAprilTagValue(LimelightEntryValue.Z_AXIS),
 				VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().get((int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID))
@@ -134,12 +133,21 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<RawApri
 		);
 	}
 
-	private boolean shouldDataBeFiltered() {
-		return getRawVisionData().map(filter::doesFilterPass).orElseGet(() -> true);
+	@Override
+	public Optional<AprilTagVisionData> getFilteredData() {
+		if (shouldDataBeFiltered(getVisionData())) {
+			return getVisionData();
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	private boolean shouldDataBeFiltered(Optional<AprilTagVisionData> data) {
+		return data.map(filter::applyFilter).orElseGet(() -> true);
 	}
 
 	@Override
-	public Filter<RawAprilTagVisionData> setFilter(Filter<RawAprilTagVisionData> newFilter) {
+	public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
 		return this.filter = newFilter;
 	}
 

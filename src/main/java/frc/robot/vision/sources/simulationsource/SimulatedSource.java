@@ -90,7 +90,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 			TimeUtils.getCurrentTimeSeconds(),
 			aprilTagPose.getZ(),
 			distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
-			aprilTag
+			aprilTag.ID
 		);
 	}
 
@@ -131,7 +131,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 	}
 
 	@Override
-	public Optional<AprilTagVisionData> getFilteredData() {
+	public Optional<AprilTagVisionData> getFilteredVisionData() {
 		var data = getVisionData();
 		if (data.isEmpty() || filter.applyFilter(data.get())) {
 			return data;

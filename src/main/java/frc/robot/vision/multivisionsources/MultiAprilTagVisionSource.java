@@ -5,9 +5,11 @@ import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.robot.vision.sources.LimeLightSource;
 import frc.robot.vision.sources.LimelightGyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVisionData> {
 
@@ -17,11 +19,13 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	public MultiAprilTagVisionSource(String logPath, VisionSource<AprilTagVisionData>... visionSources) {
 		super(logPath, visionSources);
 		this.visionSources = List.of(visionSources);
+		logBotPose(false);
 	}
 
 	public MultiAprilTagVisionSource(String logPath, List<VisionSource<AprilTagVisionData>> visionSources) {
 		super(logPath, visionSources);
 		this.visionSources = visionSources;
+		logBotPose(false);
 	}
 
 	public void updateYawInLimelights(Rotation2d yaw) {
@@ -46,6 +50,20 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 			}
 		}
 		return output;
+	}
+
+	public void switchToBotPose(boolean useBotPose1) {
+		for (VisionSource<? extends AprilTagVisionData> visionSource : getVisionSources()) {
+			if (visionSource instanceof LimeLightSource limelightSource) {
+				limelightSource.changedUsedBotPoseVersion(useBotPose1);
+			}
+		}
+		logBotPose(useBotPose1);
+	}
+
+	private void logBotPose(boolean useBotPose1) {
+		Logger.recordOutput(getLogPath() + "botPose1", useBotPose1);
+		Logger.recordOutput(getLogPath() + "botPose2", !useBotPose1);
 	}
 
 }

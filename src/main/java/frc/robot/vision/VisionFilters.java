@@ -8,29 +8,27 @@ import frc.robot.vision.rawdata.RawVisionData;
 public class VisionFilters {
 
 	protected static Filter<RawVisionData> isPitchInTolerance(Rotation2d pitchTolerance) {
-		return new Filter<>(
-			(RawVisionData rawVisionData) -> Math.abs(rawVisionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians()
-		);
+		return new Filter<>(rawVisionData -> Math.abs(rawVisionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians());
 	}
 
 	protected static Filter<RawVisionData> isRollInTolerance(Rotation2d rollTolerance) {
-		return new Filter<>(
-			(RawVisionData rawVisionData) -> Math.abs(rawVisionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians()
-		);
+		return new Filter<>(rawVisionData -> Math.abs(rawVisionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians());
 	}
 
 	protected static Filter<RawVisionData> isRobotOnGround(double robotToGroundToleranceMeters) {
-		return new Filter<>((RawVisionData rawVisionData) -> rawVisionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters);
+		return new Filter<>(rawVisionData -> rawVisionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters);
 	}
 
+	//@formatter:off
 	protected static Filter<RawAprilTagVisionData> isAprilTagHeightInTolerance(
-		double aprilTagMaxHeightToleranceMeters,
-		double aprilTagMinimumHeightToleranceMeters
+			double aprilTagHeightToleranceMeters,
+			double aprilTagRealHeightMeters
 	) {
 		return new Filter<>(
-			(RawAprilTagVisionData rawAprilTagVisionData) -> rawAprilTagVisionData.getAprilTagHeight() <= aprilTagMaxHeightToleranceMeters
-				&& aprilTagMinimumHeightToleranceMeters <= rawAprilTagVisionData.getAprilTagHeight()
+			rawAprilTagVisionData -> Math.abs(rawAprilTagVisionData.getAprilTagHeight() - aprilTagRealHeightMeters)
+				<= aprilTagHeightToleranceMeters
 		);
 	}
+	//@formatter:on
 
 }

@@ -2,7 +2,7 @@ package frc.robot.vision.multivisionsources;
 
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.rawdata.RawVisionData;
+import frc.robot.vision.rawdata.VisionData;
 import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class MultiVisionSources<ReturnType extends RawVisionData> extends GBSubsystem {
+public class MultiVisionSources<ReturnType extends VisionData> extends GBSubsystem {
 
 	private final List<VisionSource<ReturnType>> visionSources;
 
@@ -32,31 +32,26 @@ public class MultiVisionSources<ReturnType extends RawVisionData> extends GBSubs
 
 	protected ArrayList<ReturnType> createMappedCopyOfSources(
 		List<VisionSource<ReturnType>> list,
-		Function<Optional<ReturnType>, Optional<ReturnType>> mapping
+		Function<VisionSource<ReturnType>, Optional<ReturnType>> mapping
 	) {
 		ArrayList<ReturnType> output = new ArrayList<>();
 		list.forEach(visionSource -> {
 			visionSource.update();
-			Optional<ReturnType> observation = mapping.apply(visionSource.getRawVisionData());
+			Optional<ReturnType> observation = mapping.apply(visionSource);
 			observation.ifPresent(output::add);
 		});
 		return output;
 	}
 
 	public ArrayList<ReturnType> getUnfilteredVisionData() {
-		return createMappedCopyOfSources(visionSources, (data) -> data);
+		return createMappedCopyOfSources(visionSources, VisionSource::getVisionData);
 	}
 
 	public ArrayList<ReturnType> getFilteredVisionData() {
-		return createMappedCopyOfSources(visionSources, (rawVisionData -> {
-			if (rawVisionData.isEmpty() || !rawVisionData.get().shallDataBeFiltered()) {
-				return Optional.empty();
-			}
-			return rawVisionData;
-		}));
+		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredData);
 	}
 
-	private static <ReturnType extends RawVisionData> void logPoses(String logPath, String logPathAddition, List<ReturnType> observations) {
+	private static <ReturnType extends VisionData> void logPoses(String logPath, String logPathAddition, List<ReturnType> observations) {
 		for (int i = 0; i < observations.size(); i++) {
 			Logger.recordOutput(logPath + logPathAddition + i, observations.get(i).getEstimatedPose());
 		}

@@ -1,12 +1,13 @@
 package frc.robot.vision.filters;
 
-import frc.robot.vision.rawdata.RawVisionData;
+
+import frc.robot.vision.rawdata.VisionData;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class Filter<T extends RawVisionData> {
+public class Filter<T extends VisionData> {
 
 	private final Function<T, Boolean> filteringFunction;
 
@@ -31,12 +32,12 @@ public class Filter<T extends RawVisionData> {
 	}
 
 	@SafeVarargs
-	public static <T extends RawVisionData> Filter<T> combineFilters(Filter<T>... filters) {
+	public static <T extends VisionData> Filter<T> combineFilters(Filter<T>... filters) {
 		return new Filter<>(data -> Arrays.stream(filters).allMatch(filter -> filter.applyFilter(data)));
 	}
 
 	@SafeVarargs
-	public static <T extends RawVisionData> void logFilters(String logPath, T data, Filter<T>... filters) {
+	public static <T extends VisionData> void logFilters(String logPath, T data, Filter<T>... filters) {
 		for (int i = 0; i < filters.length; i++) {
 			filters[i].logFilter(logPath + "/" + i, data);
 		}

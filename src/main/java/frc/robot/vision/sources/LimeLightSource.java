@@ -134,7 +134,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 	}
 
 	@Override
-	public Optional<AprilTagVisionData> getFilteredData() {
+	public Optional<AprilTagVisionData> getFilteredVisionData() {
 		if (shouldDataBeFiltered(getVisionData())) {
 			return getVisionData();
 		} else {

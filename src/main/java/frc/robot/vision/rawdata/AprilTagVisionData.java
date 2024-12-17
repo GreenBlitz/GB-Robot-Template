@@ -2,29 +2,26 @@ package frc.robot.vision.rawdata;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.robot.poseestimator.observations.IRobotPoseVisionObservation;
 
-public class RawAprilTagVisionData extends RawVisionData implements IRobotPoseVisionObservation {
+public class AprilTagVisionData extends VisionData {
 
 	private final double aprilTagHeight;
 	private final double distanceFromAprilTag;
 	private final AprilTag aprilTag;
 
-	public RawAprilTagVisionData(
+	public AprilTagVisionData(
 		Pose3d estimatedPose,
 		double timestamp,
-		boolean isDataValid,
 		double aprilTagHeight,
 		double distanceFromAprilTag,
 		AprilTag aprilTag
 	) {
-		super(estimatedPose, timestamp, isDataValid);
+		super(estimatedPose, timestamp);
 		this.aprilTagHeight = aprilTagHeight;
 		this.distanceFromAprilTag = distanceFromAprilTag;
 		this.aprilTag = aprilTag;
 	}
 
-	@Override
 	public double getAprilTagHeight() {
 		return aprilTagHeight;
 	}

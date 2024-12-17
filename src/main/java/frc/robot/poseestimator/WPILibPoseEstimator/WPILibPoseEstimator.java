@@ -7,12 +7,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.vision.rawdata.AprilTagVisionData;
 import org.littletonrobotics.junction.Logger;
 
@@ -30,15 +28,21 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		super(logPath);
 
 
-		this.poseEstimator = new PoseEstimator<>(kinematics, new Odometry<>(kinematics, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE, modulePositions,
-//				new SwerveModulePosition[4],
-			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
-		),
+		this.poseEstimator = new PoseEstimator<>(
+			kinematics,
+			new Odometry<>(
+				kinematics,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
+				modulePositions,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+			),
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
 		);
-		this.odometryEstimator = new Odometry<>(kinematics, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE, modulePositions,
-//			new SwerveModulePosition[] {},
+		this.odometryEstimator = new Odometry<>(
+			kinematics,
+			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
+			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
 

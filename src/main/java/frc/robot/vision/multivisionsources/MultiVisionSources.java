@@ -48,7 +48,7 @@ public class MultiVisionSources<ReturnType extends VisionData> extends GBSubsyst
 	}
 
 	public ArrayList<ReturnType> getFilteredVisionData() {
-		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredData);
+		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
 	}
 
 	private static <ReturnType extends VisionData> void logPoses(String logPath, String logPathAddition, List<ReturnType> observations) {

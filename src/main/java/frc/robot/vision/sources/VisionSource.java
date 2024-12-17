@@ -11,7 +11,7 @@ public interface VisionSource<ReturnType extends VisionData> {
 
 	Optional<ReturnType> getVisionData();
 
-	Optional<ReturnType> getFilteredData();
+	Optional<ReturnType> getFilteredVisionData();
 
 	Filter<ReturnType> setFilter(Filter<ReturnType> newFilter);
 

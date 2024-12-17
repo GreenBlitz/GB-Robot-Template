@@ -128,7 +128,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 				pose3dDoublePair.getSecond(),
 				getAprilTagValue(LimelightEntryValue.Y_AXIS),
 				getAprilTagValue(LimelightEntryValue.Z_AXIS),
-				VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().get((int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID))
+				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs
 			)
 		);
 	}

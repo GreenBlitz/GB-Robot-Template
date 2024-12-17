@@ -12,7 +12,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.vision.rawdata.AprilTagVisionData;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,30 +26,23 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> timeInterpolatableBuffer;
 
-	public WPILibPoseEstimator(
-		String logPath,
-		SwerveDriveKinematics kinematics,
-		SwerveDriveOdometry odometry,
-		SwerveModulePosition[] modulePositions
-	) {
+	public WPILibPoseEstimator(String logPath, SwerveDriveKinematics kinematics, SwerveModulePosition[] modulePositions) {
 		super(logPath);
 
 
-		this.poseEstimator = new PoseEstimator<>(
-			kinematics,
-			odometry,
+		this.poseEstimator = new PoseEstimator<>(kinematics, new Odometry<>(kinematics, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE, modulePositions,
+//				new SwerveModulePosition[4],
+			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+		),
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
 		);
-		this.odometryEstimator = new Odometry<>(
-			kinematics,
-			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
-			modulePositions,
+		this.odometryEstimator = new Odometry<>(kinematics, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE, modulePositions,
+//			new SwerveModulePosition[] {},
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
 
 		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		;
 	}
 
 
@@ -109,6 +104,11 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			visionObservation.getTimestamp(),
 			VecBuilder.fill(0, 0, 0) // todo change to funciton that calculats
 		);
+	}
+
+	@Override
+	public void subsystemPeriodic() {
+		Logger.recordOutput(getLogPath() + "PoseEstimatingPoseEstimator", getEstimatedPose());
 	}
 
 }

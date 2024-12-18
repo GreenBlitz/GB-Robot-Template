@@ -114,7 +114,7 @@ public class PathPlannerUtils {
 		return Pose2d.kZero;
 	}
 
-	private static Command safelyApplyPathToCommandFunction(
+	public static Command safelyApplyPathToCommandFunction(
 		Function<PathPlannerPath, Command> pathToCommandFunction,
 		Optional<PathPlannerPath> path
 	) {
@@ -124,15 +124,12 @@ public class PathPlannerUtils {
 		return Commands.none();
 	}
 
-	public static Command followPath(String pathName, String logPath) {
-		return safelyApplyPathToCommandFunction(AutoBuilder::followPath, getPathFromFile(pathName, logPath));
+	public static Command followPath(PathPlannerPath path) {
+		return AutoBuilder.followPath(path);
 	}
 
-	public static Command pathfindThenFollowPath(String pathName, PathConstraints pathfindingConstraints, String logPath) {
-		return safelyApplyPathToCommandFunction(
-			path -> AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints),
-			getPathFromFile(pathName, logPath)
-		);
+	public static Command pathfindThenFollowPath(PathPlannerPath path, PathConstraints pathfindingConstraints) {
+		return AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints);
 	}
 
 	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
@@ -143,12 +140,12 @@ public class PathPlannerUtils {
 		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
 	}
 
-	public static Command followPathOrDriveToPathEnd(Robot robot, String pathName, String logPath) {
+	public static Command followPathOrDriveToPathEnd(Robot robot, PathPlannerPath path) {
 		return robot.getSwerve()
 			.getCommandsBuilder()
 			.followPathOrDriveToPathEnd(
 				robot.getPoseEstimator()::getCurrentPose,
-				PathPlannerUtils.getPathFromFile(pathName, logPath),
+				path,
 				AutonomousConstants.PATHFIND_OR_FOLLOW_PATH_TOLERANCE_METERS
 			);
 	}

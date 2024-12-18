@@ -1,4 +1,4 @@
-package frc.utils.joysticks;
+package frc.utils.controllers.joysticks;
 
 public enum JoystickPorts {
 

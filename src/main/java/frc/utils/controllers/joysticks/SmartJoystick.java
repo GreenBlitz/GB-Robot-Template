@@ -1,4 +1,4 @@
-package frc.utils.joysticks;
+package frc.utils.controllers.joysticks;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;

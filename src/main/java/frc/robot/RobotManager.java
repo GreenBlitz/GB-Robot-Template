@@ -26,9 +26,9 @@ public class RobotManager extends LoggedRobot {
 
 	private int roborioCycles;
 
-	private Command autonomousCommand;
-
 	private final Robot robot;
+
+	private Command autonomousCommand;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();

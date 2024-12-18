@@ -7,34 +7,37 @@ import frc.robot.vision.rawdata.VisionData;
 
 public class VisionFilters {
 
-	protected static Filter<VisionData> isPitchInTolerance(Rotation2d pitchTolerance) {
-		return new Filter<>(rawVisionData -> Math.abs(rawVisionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians());
+	public static Filter<VisionData> isPitchInTolerance(Rotation2d pitchTolerance) {
+		return new Filter<>(visionData -> Math.abs(visionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians());
 	}
 
-	protected static Filter<VisionData> isRollInTolerance(Rotation2d rollTolerance) {
-		return new Filter<>(rawVisionData -> Math.abs(rawVisionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians());
+	public static Filter<VisionData> isRollInTolerance(Rotation2d rollTolerance) {
+		return new Filter<>(visionData -> Math.abs(visionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians());
 	}
 
-	protected static Filter<VisionData> isRobotOnGround(double robotToGroundToleranceMeters) {
-		return new Filter<>(rawVisionData -> rawVisionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters);
+	public static Filter<VisionData> isRobotOnGround(double robotToGroundToleranceMeters) {
+		return new Filter<>(visionData -> visionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters);
 	}
 
-	protected static Filter<AprilTagVisionData> isAprilTagHeightInTolerance(
-		double aprilTagHeightToleranceMeters,
-		double aprilTagRealHeightMeters
-	) {
+	public static Filter<AprilTagVisionData> isAprilTagHeightInTolerance(double aprilTagHeightToleranceMeters, double aprilTagRealHeightMeters) {
 		return new Filter<>(
-			rawAprilTagVisionData -> Math.abs(rawAprilTagVisionData.getAprilTagHeight() - aprilTagRealHeightMeters)
-				<= aprilTagHeightToleranceMeters
+			aprilTagVisionData -> Math.abs(aprilTagVisionData.getAprilTagHeight() - aprilTagRealHeightMeters) <= aprilTagHeightToleranceMeters
 		);
 	}
 
-	protected static Filter<VisionData> isRobotXInField(double robotXPositionTolerance) {
-		return new Filter<>(rawVisionData -> Math.abs(Field.WIDTH_METERS - rawVisionData.getEstimatedPose().getX()) <= robotXPositionTolerance);
+	public static Filter<VisionData> isRobotXWithinFieldBorders(double robotXPositionTolerance) {
+		return new Filter<>(visionData -> Math.abs(Field.WIDTH_METERS - visionData.getEstimatedPose().getX()) <= robotXPositionTolerance);
 	}
 
-	protected static Filter<VisionData> isRobotYInField(double robotYPositionTolerance) {
-		return new Filter<>(rawVisionData -> Math.abs(Field.LENGTH_METERS - rawVisionData.getEstimatedPose().getY()) <= robotYPositionTolerance);
+	public static Filter<VisionData> isRobotYWithinFieldBorders(double robotYPositionTolerance) {
+		return new Filter<>(visionData -> Math.abs(Field.LENGTH_METERS - visionData.getEstimatedPose().getY()) <= robotYPositionTolerance);
+	}
+
+	public static Filter<VisionData> isRobotWithinFieldBorders(double robotPositionTolerance) {
+		return new Filter<>(
+			visionData -> isRobotXWithinFieldBorders(robotPositionTolerance).apply(visionData)
+				&& isRobotYWithinFieldBorders(robotPositionTolerance).apply(visionData)
+		);
 	}
 
 }

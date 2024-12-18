@@ -4,22 +4,22 @@ import java.util.function.Function;
 
 public class Filter<T> {
 
-	private final Function<T, Boolean> filteringFunction;
+	private final Function<T, Boolean> filterer;
 
-	public Filter(Function<T, Boolean> filteringFunction) {
-		this.filteringFunction = filteringFunction;
+	public Filter(Function<T, Boolean> filterer) {
+		this.filterer = filterer;
 	}
 
-	public boolean applyFilter(T data) {
-		return filteringFunction.apply(data);
+	public boolean apply(T data) {
+		return filterer.apply(data);
 	}
 
-	public Filter<T> and(Filter<T> secondFilter) {
-		return new Filter<>(data -> secondFilter.applyFilter(data) && applyFilter(data));
+	public Filter<T> and(Filter<T> otherFilter) {
+		return new Filter<>(data -> otherFilter.apply(data) && apply(data));
 	}
 
-	public Filter<T> or(Filter<T> anotherFilter) {
-		return new Filter<>(data -> anotherFilter.applyFilter(data) || applyFilter(data));
+	public Filter<T> or(Filter<T> otherFilter) {
+		return new Filter<>(data -> otherFilter.apply(data) || apply(data));
 	}
 
 }

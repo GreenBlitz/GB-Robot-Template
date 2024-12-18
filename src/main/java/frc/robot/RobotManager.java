@@ -41,7 +41,7 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 
 		//this.robot = new Robot();
-		Logger.recordOutput("is connected", joystick.isConnected() );
+		Logger.recordOutput("AdvantageKit/is connected", joystick.isConnected());
 	}
 
 	@Override

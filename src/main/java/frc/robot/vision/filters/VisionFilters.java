@@ -35,8 +35,8 @@ public class VisionFilters {
 
 	public static Filter<VisionData> isRobotWithinFieldBorders(double robotPositionTolerance) {
 		return new Filter<>(
-			visionData -> isRobotXWithinFieldBorders(robotPositionTolerance).apply(visionData)
-				&& isRobotYWithinFieldBorders(robotPositionTolerance).apply(visionData)
+			visionData -> isRobotXWithinFieldBorders(robotPositionTolerance).and(isRobotYWithinFieldBorders(robotPositionTolerance))
+				.apply(visionData)
 		);
 	}
 

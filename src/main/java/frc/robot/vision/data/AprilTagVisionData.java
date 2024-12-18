@@ -4,23 +4,23 @@ import edu.wpi.first.math.geometry.Pose3d;
 
 public class AprilTagVisionData extends VisionData {
 
-	private final double aprilTagHeight;
-	private final double distanceFromAprilTag;
+	private final double aprilTagHeightMeters;
+	private final double distanceFromAprilTagMeters;
 	private final int aprilTagId;
 
-	public AprilTagVisionData(Pose3d estimatedPose, double timestamp, double aprilTagHeight, double distanceFromAprilTag, int aprilTagId) {
+	public AprilTagVisionData(Pose3d estimatedPose, double timestamp, double aprilTagHeightMeters, double distanceFromAprilTagMeters, int aprilTagId) {
 		super(estimatedPose, timestamp);
-		this.aprilTagHeight = aprilTagHeight;
-		this.distanceFromAprilTag = distanceFromAprilTag;
+		this.aprilTagHeightMeters = aprilTagHeightMeters;
+		this.distanceFromAprilTagMeters = distanceFromAprilTagMeters;
 		this.aprilTagId = aprilTagId;
 	}
 
-	public double getAprilTagHeight() {
-		return aprilTagHeight;
+	public double getAprilTagHeightMeters() {
+		return aprilTagHeightMeters;
 	}
 
-	public double getDistanceFromAprilTag() {
-		return distanceFromAprilTag;
+	public double getDistanceFromAprilTagMeters() {
+		return distanceFromAprilTagMeters;
 	}
 
 	public int getTrackedAprilTagId() {

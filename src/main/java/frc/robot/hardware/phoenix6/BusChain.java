@@ -28,7 +28,7 @@ public enum BusChain {
 		this.canBus = new CANBus(chainName);
 		this.logPath = LOG_PATH_PREFIX + getChainName() + "/";
 		this.currentBusStatus = canBus.getStatus();
-		this.lastBusStatus = currentBusStatus;
+		this.lastBusStatus = new CANBusStatus();
 
 		createAlerts();
 	}

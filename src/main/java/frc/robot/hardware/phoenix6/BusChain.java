@@ -95,7 +95,6 @@ public enum BusChain {
 		Logger.recordOutput(logPath + "Utilization", currentBusStatus.BusUtilization);
 		Logger.recordOutput(logPath + "TimesDisconnected", currentBusStatus.BusOffCount);
 		Logger.recordOutput(logPath + "FullCount", currentBusStatus.TxFullCount);
-		Logger.recordOutput(logPath + "FullCount2", lastBusStatus.TxFullCount);
 		Logger.recordOutput(logPath + "ReceiveError", currentBusStatus.REC);
 		Logger.recordOutput(logPath + "TransmitError", currentBusStatus.TEC);
 	}

@@ -53,7 +53,7 @@ public class SmartJoystick {
 		this.POV_DOWN = new POVButton(this.joystick, ButtonID.POV_DOWN.getId());
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + " disconnected", () -> !isConnected()));
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + " DisconnectedAt", () -> !isConnected()));
 	}
 
 	public String getLogPath() {

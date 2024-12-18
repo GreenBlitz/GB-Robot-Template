@@ -30,6 +30,8 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private static final String AUTONOMOUS_CHOOSER_NAME = "autonomousChooser";
+
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
@@ -58,7 +60,7 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
-		autonomousChooser = new AutonomousChooser("autonomousChooser", AutonomousBuilder.getAllAutos(this));
+		autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutonomousBuilder.getAllAutos(this));
 	}
 
 	private void configureBindings() {

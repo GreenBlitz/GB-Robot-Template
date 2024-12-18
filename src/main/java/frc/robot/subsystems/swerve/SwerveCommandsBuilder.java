@@ -11,7 +11,6 @@ import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.utilcommands.InitExecuteCommand;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -79,19 +78,12 @@ public class SwerveCommandsBuilder {
 		).withName("Drive with state");
 	}
 
-	public Command followPathOrDriveToPathEnd(
-		Supplier<Pose2d> currentPose,
-		Optional<PathPlannerPath> path,
-		double pathfindOrFollowPathToleranceMeters
-	) {
-		if (path.isPresent()) {
-			return new ConditionalCommand(
-				AutoBuilder.followPath(path.get()),
-				driveToPose(currentPose, () -> PathPlannerUtils.getFlippedPose(PathPlannerUtils.getLastPathPose(path.get()))),
-				() -> PathPlannerUtils.isRobotCloseToPathBeginning(path.get(), currentPose, pathfindOrFollowPathToleranceMeters)
-			);
-		}
-		return Commands.none();
+	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path, double pathfindOrFollowPathToleranceMeters) {
+		return new ConditionalCommand(
+			PathPlannerUtils.followPath(path),
+			driveToPose(currentPose, () -> PathPlannerUtils.getFlippedPose(PathPlannerUtils.getLastPathPose(path))),
+			() -> PathPlannerUtils.isRobotCloseToPathBeginning(path, currentPose, pathfindOrFollowPathToleranceMeters)
+		);
 	}
 
 

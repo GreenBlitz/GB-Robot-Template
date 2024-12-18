@@ -52,7 +52,7 @@ public class SmartJoystick {
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
 		AlertManager
-			.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, "joystick " + joystick.getName() + " is not connected", () -> !isConnected()));
+				.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, "joystick " + joystick.getPort() + " is not connected", () -> !isConnected()));
 	}
 
 	/**

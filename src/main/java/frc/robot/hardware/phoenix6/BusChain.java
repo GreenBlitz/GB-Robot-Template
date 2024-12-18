@@ -15,8 +15,6 @@ public enum BusChain {
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
 	private static final int PERMITTED_RECEIVE_ERRORS = 0;
 	private static final int PERMITTED_TRANSMIT_ERRORS = 0;
-	private static final int PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT = 0;
-	private static final int PERMITTED_BUS_OFF_COUNT = 0;
 	private static final String LOG_PATH_PREFIX = "Bus/";
 
 	private final CANBus canBus;
@@ -85,16 +83,21 @@ public enum BusChain {
 	}
 
 	public void updateStatus() {
-		lastBusStatus = currentBusStatus;
+		if (count % 10000 == 0) {
+			lastBusStatus = currentBusStatus;
+		}
+		count++;
 		currentBusStatus = canBus.getStatus();
 		logStatus();
 	}
 
+	int count = 0;
 	public void logStatus() {
 		Logger.recordOutput(logPath + "Status", currentBusStatus.Status.getName());
 		Logger.recordOutput(logPath + "Utilization", currentBusStatus.BusUtilization);
 		Logger.recordOutput(logPath + "TimesDisconnected", currentBusStatus.BusOffCount);
 		Logger.recordOutput(logPath + "FullCount", currentBusStatus.TxFullCount);
+		Logger.recordOutput(logPath + "FullCount2", lastBusStatus.TxFullCount);
 		Logger.recordOutput(logPath + "ReceiveError", currentBusStatus.REC);
 		Logger.recordOutput(logPath + "TransmitError", currentBusStatus.TEC);
 	}

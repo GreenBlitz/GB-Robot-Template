@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -29,7 +32,9 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 
 	private Robot robot;
-
+	
+	private final TalonFX sparkMax = new TalonFX(16, "");
+	
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
@@ -77,6 +82,10 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+		
+		for (int i = 0; i <10000 ; i++) {
+			sparkMax.getAcceleration().refresh();
+		}
 	}
 
 	private void updateTimeRelatedData() {

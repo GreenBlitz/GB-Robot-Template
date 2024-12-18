@@ -21,12 +21,14 @@ public enum BusChain {
 
 	private final CANBus canBus;
 	private final String logPath;
-	private CANBusStatus busStatus;
+	private CANBusStatus currentBusStatus;
+	private CANBusStatus lastBusStatus;
 
 	BusChain(String chainName) {
 		this.canBus = new CANBus(chainName);
 		this.logPath = LOG_PATH_PREFIX + getChainName() + "/";
-		this.busStatus = canBus.getStatus();
+		this.currentBusStatus = canBus.getStatus();
+		this.lastBusStatus = currentBusStatus;
 
 		createAlerts();
 	}
@@ -37,42 +39,42 @@ public enum BusChain {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "StatusErrorAt",
-				() -> !busStatus.Status.isOK()
+				() -> !currentBusStatus.Status.isOK()
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "ReceiveErrorAt",
-				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
+				() -> currentBusStatus.REC > PERMITTED_RECEIVE_ERRORS
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "FloodedAt",
-				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
+				() -> currentBusStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "TransmitErrorsAt",
-				() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
+				() -> currentBusStatus.TEC > PERMITTED_TRANSMIT_ERRORS
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "DisconnectedAt",
-				() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
+				() -> currentBusStatus.BusOffCount > lastBusStatus.BusOffCount
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "FullAt",
-				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
+				() -> currentBusStatus.TxFullCount > lastBusStatus.TxFullCount
 			)
 		);
 		//@formatter:on
@@ -83,17 +85,18 @@ public enum BusChain {
 	}
 
 	public void updateStatus() {
-		busStatus = canBus.getStatus();
+		currentBusStatus = canBus.getStatus();
 		logStatus();
+		lastBusStatus = currentBusStatus;
 	}
 
 	public void logStatus() {
-		Logger.recordOutput(logPath + "Status", busStatus.Status.getName());
-		Logger.recordOutput(logPath + "Utilization", busStatus.BusUtilization);
-		Logger.recordOutput(logPath + "TimesDisconnected", busStatus.BusOffCount);
-		Logger.recordOutput(logPath + "FullCount", busStatus.TxFullCount);
-		Logger.recordOutput(logPath + "ReceiveError", busStatus.REC);
-		Logger.recordOutput(logPath + "TransmitError", busStatus.TEC);
+		Logger.recordOutput(logPath + "Status", currentBusStatus.Status.getName());
+		Logger.recordOutput(logPath + "Utilization", currentBusStatus.BusUtilization);
+		Logger.recordOutput(logPath + "TimesDisconnected", currentBusStatus.BusOffCount);
+		Logger.recordOutput(logPath + "FullCount", currentBusStatus.TxFullCount);
+		Logger.recordOutput(logPath + "ReceiveError", currentBusStatus.REC);
+		Logger.recordOutput(logPath + "TransmitError", currentBusStatus.TEC);
 	}
 
 	public static void logChainsStatuses() {

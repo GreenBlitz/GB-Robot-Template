@@ -1,4 +1,4 @@
-package frc.robot.vision;
+package frc.robot.vision.filters;
 
 import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.filters.Filter;

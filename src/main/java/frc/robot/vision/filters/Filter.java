@@ -26,20 +26,4 @@ public class Filter<T extends RawVisionData> {
 		return new Filter<>(data -> anotherFilter.applyFilter(data) || applyFilter(data));
 	}
 
-	public void logFilter(String logPath, T data) {
-		Logger.recordOutput(logPath, applyFilter(data));
-	}
-
-	@SafeVarargs
-	public static <T extends RawVisionData> Filter<T> combineFilters(Filter<T>... filters) {
-		return new Filter<>(data -> Arrays.stream(filters).allMatch(filter -> filter.applyFilter(data)));
-	}
-
-	@SafeVarargs
-	public static <T extends RawVisionData> void logFilters(String logPath, T data, Filter<T>... filters) {
-		for (int i = 0; i < filters.length; i++) {
-			filters[i].logFilter(logPath + "/" + i, data);
-		}
-	}
-
 }

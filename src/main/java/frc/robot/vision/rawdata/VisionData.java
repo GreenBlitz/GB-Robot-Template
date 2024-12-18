@@ -2,16 +2,14 @@ package frc.robot.vision.rawdata;
 
 import edu.wpi.first.math.geometry.Pose3d;
 
-public class RawVisionData {
+public class VisionData {
 
 	private final Pose3d estimatedPose;
 	private final double timestamp;
-	private final boolean isDataValid;
 
-	public RawVisionData(Pose3d estimatedPose, double timestamp, boolean isDataValid) {
+	public VisionData(Pose3d estimatedPose, double timestamp) {
 		this.estimatedPose = estimatedPose;
 		this.timestamp = timestamp;
-		this.isDataValid = isDataValid;
 	}
 
 	public Pose3d getEstimatedPose() {
@@ -20,10 +18,6 @@ public class RawVisionData {
 
 	public double getTimestamp() {
 		return timestamp;
-	}
-
-	public boolean getIsDataValid() {
-		return isDataValid;
 	}
 
 }

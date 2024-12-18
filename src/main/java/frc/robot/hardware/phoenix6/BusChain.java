@@ -85,9 +85,9 @@ public enum BusChain {
 	}
 
 	public void updateStatus() {
+		lastBusStatus = currentBusStatus;
 		currentBusStatus = canBus.getStatus();
 		logStatus();
-		lastBusStatus = currentBusStatus;
 	}
 
 	public void logStatus() {

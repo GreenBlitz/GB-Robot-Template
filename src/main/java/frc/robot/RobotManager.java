@@ -82,10 +82,6 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
-		
-		for (int i = 0; i <10000 ; i++) {
-			sparkMax.getAcceleration().refresh();
-		}
 	}
 
 	private void updateTimeRelatedData() {

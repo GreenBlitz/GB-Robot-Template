@@ -61,20 +61,22 @@ public enum BusChain {
 				() -> currentBusStatus.TEC > PERMITTED_TRANSMIT_ERRORS
 			)
 		);
-		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.ERROR,
-				logPath + "DisconnectedAt",
-				() -> currentBusStatus.BusOffCount > lastBusStatus.BusOffCount
-			)
+
+		PeriodicAlert busOffAlert = new PeriodicAlert(
+			Alert.AlertType.ERROR,
+			logPath + "BusOffAt",
+			() -> currentBusStatus.BusOffCount > lastBusStatus.BusOffCount
 		);
-		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.ERROR,
-				logPath + "FullAt",
-				() -> currentBusStatus.TxFullCount > lastBusStatus.TxFullCount
-			)
+		busOffAlert.report();
+		AlertManager.addAlert(busOffAlert);
+
+		PeriodicAlert busFullAlert = new PeriodicAlert(
+			Alert.AlertType.ERROR,
+		logPath + "FullAt",
+			() -> currentBusStatus.TxFullCount > lastBusStatus.TxFullCount
 		);
+		busFullAlert.report();
+		AlertManager.addAlert(busFullAlert);
 		//@formatter:on
 	}
 
@@ -83,15 +85,11 @@ public enum BusChain {
 	}
 
 	public void updateStatus() {
-		if (count % 10000 == 0) {
-			lastBusStatus = currentBusStatus;
-		}
-		count++;
+		lastBusStatus = copyStatus(currentBusStatus);
 		currentBusStatus = canBus.getStatus();
 		logStatus();
 	}
 
-	int count = 0;
 	public void logStatus() {
 		Logger.recordOutput(logPath + "Status", currentBusStatus.Status.getName());
 		Logger.recordOutput(logPath + "Utilization", currentBusStatus.BusUtilization);
@@ -106,6 +104,17 @@ public enum BusChain {
 		for (BusChain chain : BusChain.values()) {
 			chain.updateStatus();
 		}
+	}
+
+	public static CANBusStatus copyStatus(CANBusStatus toCopy) {
+		CANBusStatus copiedBusStatus = new CANBusStatus();
+		copiedBusStatus.Status = toCopy.Status;
+		copiedBusStatus.BusUtilization = toCopy.BusUtilization;
+		copiedBusStatus.BusOffCount = toCopy.BusOffCount;
+		copiedBusStatus.TxFullCount = toCopy.TxFullCount;
+		copiedBusStatus.REC = toCopy.REC;
+		copiedBusStatus.TEC = toCopy.TEC;
+		return copiedBusStatus;
 	}
 
 }

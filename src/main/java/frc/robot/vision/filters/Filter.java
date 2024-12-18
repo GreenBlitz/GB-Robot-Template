@@ -1,6 +1,5 @@
 package frc.robot.vision.filters;
 
-
 import java.util.function.Function;
 
 public class Filter<T> {

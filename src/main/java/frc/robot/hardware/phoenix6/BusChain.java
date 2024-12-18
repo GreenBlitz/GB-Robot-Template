@@ -67,7 +67,7 @@ public enum BusChain {
 			logPath + "BusOffAt",
 			() -> currentBusStatus.BusOffCount > lastBusStatus.BusOffCount
 		);
-		busOffAlert.report();
+		busOffAlert.reportByCondition();
 		AlertManager.addAlert(busOffAlert);
 
 		PeriodicAlert busFullAlert = new PeriodicAlert(
@@ -75,7 +75,7 @@ public enum BusChain {
 			logPath + "FullAt",
 			() -> currentBusStatus.TxFullCount > lastBusStatus.TxFullCount
 		);
-		busFullAlert.report();
+		busFullAlert.reportByCondition();
 		AlertManager.addAlert(busFullAlert);
 		//@formatter:on
 	}

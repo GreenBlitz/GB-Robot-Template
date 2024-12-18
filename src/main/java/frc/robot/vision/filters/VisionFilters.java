@@ -1,6 +1,7 @@
 package frc.robot.vision.filters;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.constants.Field;
 import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.robot.vision.rawdata.VisionData;
 
@@ -26,6 +27,14 @@ public class VisionFilters {
 			rawAprilTagVisionData -> Math.abs(rawAprilTagVisionData.getAprilTagHeight() - aprilTagRealHeightMeters)
 				<= aprilTagHeightToleranceMeters
 		);
+	}
+
+	protected static Filter<VisionData> isRobotXInField(double robotXPositionTolerance) {
+		return new Filter<>(rawVisionData -> Math.abs(Field.WIDTH_METERS - rawVisionData.getEstimatedPose().getX()) <= robotXPositionTolerance);
+	}
+
+	protected static Filter<VisionData> isRobotYInField(double robotYPositionTolerance) {
+		return new Filter<>(rawVisionData -> Math.abs(Field.LENGTH_METERS - rawVisionData.getEstimatedPose().getY()) <= robotYPositionTolerance);
 	}
 
 }

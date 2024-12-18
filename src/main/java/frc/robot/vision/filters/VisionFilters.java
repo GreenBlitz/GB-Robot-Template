@@ -1,6 +1,6 @@
 package frc.robot.vision.filters;
 
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.robot.vision.rawdata.VisionData;
 

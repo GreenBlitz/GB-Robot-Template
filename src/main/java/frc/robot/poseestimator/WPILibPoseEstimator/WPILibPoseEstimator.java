@@ -19,20 +19,22 @@ import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
 import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.utils.time.TimeUtils;
 
 import java.util.List;
 import java.util.Optional;
 
 public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
+	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
+	private final TimeInterpolatableBuffer<Pose2d> timeInterpolatableBuffer;
+	private final TimeInterpolatableBuffer<Double> accelerationInterpolator;
+
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
-	private final TimeInterpolatableBuffer<Double> accelerationInterpolator;
 	private final MultiAprilTagVisionSource multiVisionSources;
 	private final VisionDenoiser visionDenoiser;
 	private final VisionObservationSwitcher visionObservationSwitcher;
-
-	private final TimeInterpolatableBuffer<Pose2d> timeInterpolatableBuffer;
 
 	public WPILibPoseEstimator(
 		String logPath,
@@ -44,9 +46,12 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	) {
 		super(logPath);
 		this.accelerationInterpolator = TimeInterpolatableBuffer.createDoubleBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
+
 		this.visionDenoiser = visionDenoiser;
 		this.visionObservationSwitcher = new VisionObservationSwitcher(
-			() -> visionDenoiser.calculateFixedObservationByOdometryLinearFilter(odometryPose, odometryPoseInterpolator),
+			() -> visionDenoiser.calculateFixedObservationByOdometryLinearFilter(getOdometryPose(), odometryPoseInterpolator),
 			visionDenoiser::calculateLinearFilterResult,
 			PoseEstimatorConstants.DATA_CHANGE_RATE,
 			PoseEstimatorConstants.DATA_SWITCHING_DURATION
@@ -64,8 +69,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-
-		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		;
 	}
 
@@ -124,6 +127,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private void updateOdometryPose(OdometryObservation observation) {
 		odometryEstimator.update(observation.gyroAngle(), observation.wheelPositions());
+		odometryPoseInterpolator.addSample(observation.timestamp(), getOdometryPose());
 	}
 
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
@@ -137,6 +141,11 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 		ProcessedVisionData fixedObservation = visionObservationSwitcher.getValue(visionObservation.getTimestamp())
 			.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
+		poseEstimator.addVisionMeasurement(fixedObservation.getEstimatedPose(), fixedObservation.getTimestamp(), fixedObservation.getStdDev().getWPILibStandardDeviations());
 	}
 
+	@Override
+	protected void subsystemPeriodic() {
+		updateVision(multiVisionSources.getFilteredVisionData());
+	}
 }

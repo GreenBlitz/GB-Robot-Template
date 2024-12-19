@@ -63,7 +63,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Pose2d getEstimatedPoseAtTimestamp(double timestamp) {
-		return timeInterpolatableBuffer.getSample(timestamp).orElseGet(this::getEstimatedPose);
+		return poseEstimator.sampleAt(timestamp).orElseGet(this::getEstimatedPose);
 	}
 
 	@Override

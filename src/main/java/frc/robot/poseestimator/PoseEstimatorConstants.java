@@ -11,9 +11,9 @@ public class PoseEstimatorConstants {
 
 	public static final int VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION = 25;
 
-	protected static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
+	public static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 
-	protected static final double ACCELERATION_TOLERANCE = 0.1;
+	public static final double ACCELERATION_TOLERANCE = 0.1;
 
 	public static final AprilTagFields APRIL_TAG_FIELD = AprilTagFields.k2024Crescendo;
 

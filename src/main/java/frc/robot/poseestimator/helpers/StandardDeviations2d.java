@@ -18,6 +18,12 @@ public class StandardDeviations2d {
 		thetaStandardDeviations = new Rotation2d();
 	}
 
+	public StandardDeviations2d(double[] stdDevs) {
+		this.xStandardDeviationsMeters = stdDevs[0];
+		this.yStandardDeviationsMeters = stdDevs[1];
+		this.thetaStandardDeviations = Rotation2d.fromRadians(stdDevs[2]);
+	}
+
 	public StandardDeviations2d(double xStandardDeviationsMeters, double yStandardDeviationsMeters, Rotation2d thetaStandardDeviations) {
 		this.xStandardDeviationsMeters = xStandardDeviationsMeters;
 		this.yStandardDeviationsMeters = yStandardDeviationsMeters;
@@ -65,6 +71,10 @@ public class StandardDeviations2d {
 
 	public Matrix<N3, N1> getWPILibStandardDeviations() {
 		return VecBuilder.fill(xStandardDeviationsMeters, yStandardDeviationsMeters, thetaStandardDeviations.getRadians());
+	}
+
+	public double getDeviationByPoseIndex(int index) {
+		return new double[] {xStandardDeviationsMeters, yStandardDeviationsMeters, thetaStandardDeviations.getRadians()}[index];
 	}
 
 }

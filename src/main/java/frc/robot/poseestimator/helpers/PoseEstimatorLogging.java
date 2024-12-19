@@ -4,11 +4,11 @@ import org.littletonrobotics.junction.Logger;
 
 public class PoseEstimatorLogging {
 
-	public static void logStandardDeviations(String logPath, double[] standardDeviations) {
+	public static void logStandardDeviations(String logPath, StandardDeviations2d standardDeviations) {
 		var newLogPath = logPath + "stdDevs/";
-		Logger.recordOutput(newLogPath + "X/", standardDeviations[0]);
-		Logger.recordOutput(newLogPath + "Y/", standardDeviations[1]);
-		Logger.recordOutput(newLogPath + "Angle/", standardDeviations[2]);
+		Logger.recordOutput(newLogPath + "X/", standardDeviations.getxStandardDeviationsMeters());
+		Logger.recordOutput(newLogPath + "Y/", standardDeviations.getyStandardDeviationsMeters());
+		Logger.recordOutput(newLogPath + "Angle/", standardDeviations.getThetaStandardDeviations());
 	}
 
 }

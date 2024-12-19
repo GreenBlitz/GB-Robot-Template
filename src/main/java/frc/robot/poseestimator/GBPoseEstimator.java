@@ -31,7 +31,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final MultiAprilTagVisionSource multiVisionSources;
 	private final VisionDenoiser visionDenoiser;
 	private final VisionObservationSwitcher visionObservationSwitcher;
-	private final double[] odometryStandardDeviations;
+	private final StandardDeviations2d odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
 	private Pose2d odometryPoseRelativeToInitialPose;
@@ -45,7 +45,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		String logPath,
 		MultiAprilTagVisionSource multiVisionSources,
 		OdometryValues odometryValues,
-		double[] odometryStandardDeviations,
+		StandardDeviations2d odometryStandardDeviations,
 		VisionDenoiser visionDenoiser
 	) {
 		super(logPath);

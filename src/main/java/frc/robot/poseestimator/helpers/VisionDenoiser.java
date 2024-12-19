@@ -135,7 +135,7 @@ public class VisionDenoiser {
 			odometryPose,
 			odometryPoseInterpolator
 		);
-		Logger.recordOutput(logPath + "stdDevs", calculatedFixedPoseByOdometryLinearFilter.getStdDev());
+		PoseEstimatorLogging.logStandardDeviations(logPath, calculatedFixedPoseByOdometryLinearFilter.getStdDev());
 		return Optional.of(
 			new ProcessedVisionData(
 				calculatedFixedPoseByOdometryLinearFilter.getEstimatedPose(),

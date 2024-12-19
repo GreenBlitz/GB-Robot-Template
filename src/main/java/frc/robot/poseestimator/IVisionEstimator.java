@@ -1,14 +1,14 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.vision.data.AprilTagVisionData;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IVisionEstimator {
 
-	void updateVision(List<VisionObservation> visionObservation);
+	void updateVision(List<AprilTagVisionData> robotPoseVisionObservation);
 
 	Optional<Pose2d> getVisionPose();
 

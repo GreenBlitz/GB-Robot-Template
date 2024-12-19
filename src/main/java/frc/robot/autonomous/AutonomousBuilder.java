@@ -18,7 +18,6 @@ public class AutonomousBuilder {
 		autoMap.put("Rotate", new PathPlannerAuto("Rotate"));
 		autoMap.put("Rotate 2m", new PathPlannerAuto("Rotate 2m"));
 		autoMap.put("Straight 2m", new PathPlannerAuto("Straight 2m"));
-		autoMap.put("long test", withResetOdometry(new PathPlannerAuto("long test")));
 		return autoMap;
 	}
 

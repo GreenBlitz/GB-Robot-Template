@@ -2,11 +2,14 @@ package frc.robot.autonomous;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+import frc.utils.auto.Autonomous;
 import frc.utils.auto.PathPlannerUtils;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,10 +17,18 @@ public class AutonomousBuilder {
 
 	public static Map<String, Command> getAllAutos(Robot robot) {
 		Map<String, Command> autoMap = new HashMap<>();
-		autoMap.put("M231", withResetOdometry(M231(robot)));
 		autoMap.put("Rotate", new PathPlannerAuto("Rotate"));
 		autoMap.put("Rotate 2m", new PathPlannerAuto("Rotate 2m"));
 		autoMap.put("Straight 2m", new PathPlannerAuto("Straight 2m"));
+
+		for (Method method : AutonomousBuilder.class.getDeclaredMethods()) {
+			if (method.isAnnotationPresent(Autonomous.class))
+				try {
+					autoMap.put(method.getAnnotation(Autonomous.class).name(), withResetOdometry((PathPlannerAuto) method.invoke(null, robot)));
+				} catch (Exception exception) {
+					DriverStation.reportError(exception.getMessage(), exception.getStackTrace());
+				}
+		}
 		return autoMap;
 	}
 
@@ -25,6 +36,7 @@ public class AutonomousBuilder {
 		return AutoBuilder.resetOdom(auto.getStartingPose()).andThen(auto);
 	}
 
+	@Autonomous(name = "M231")
 	private static PathPlannerAuto M231(Robot robot) {
 		String logPath = AutonomousConstants.LOG_PATH_PREFIX + "M231/";
 		return new PathPlannerAuto(

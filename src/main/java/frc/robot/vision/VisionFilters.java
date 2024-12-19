@@ -1,26 +1,34 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.vision.rawdata.RawVisionData;
+import frc.robot.vision.filters.Filter;
+import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.robot.vision.rawdata.VisionData;
 
 public class VisionFilters {
 
-	public static boolean doesRawDataPassAllFilters(RawVisionData rawVisionData, VisionFiltersTolerances tolerances) {
-		return VisionFilters.isRollInTolerance(rawVisionData, tolerances.rollTolerance())
-			&& VisionFilters.isPitchInTolerance(rawVisionData, tolerances.pitchTolerance())
-			&& VisionFilters.isRobotOnGround(rawVisionData, tolerances.robotDistanceFromGroundToleranceMeters());
+	protected static Filter<VisionData> isPitchInTolerance(Rotation2d pitchTolerance) {
+		return new Filter<>(rawVisionData -> Math.abs(rawVisionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians());
 	}
 
-	protected static boolean isPitchInTolerance(RawVisionData rawVisionData, Rotation2d pitchTolerance) {
-		return Math.abs(rawVisionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians();
+	protected static Filter<VisionData> isRollInTolerance(Rotation2d rollTolerance) {
+		return new Filter<>(rawVisionData -> Math.abs(rawVisionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians());
 	}
 
-	protected static boolean isRollInTolerance(RawVisionData rawVisionData, Rotation2d rollTolerance) {
-		return Math.abs(rawVisionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians();
+	protected static Filter<VisionData> isRobotOnGround(double robotToGroundToleranceMeters) {
+		return new Filter<>(rawVisionData -> rawVisionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters);
 	}
 
-	protected static boolean isRobotOnGround(RawVisionData rawVisionData, double robotToGroundToleranceMeters) {
-		return rawVisionData.getEstimatedPose().getZ() <= robotToGroundToleranceMeters;
+	//@formatter:off
+	protected static Filter<AprilTagVisionData> isAprilTagHeightInTolerance(
+			double aprilTagHeightToleranceMeters,
+			double aprilTagRealHeightMeters
+	) {
+		return new Filter<>(
+			rawAprilTagVisionData -> Math.abs(rawAprilTagVisionData.getAprilTagHeight() - aprilTagRealHeightMeters)
+				<= aprilTagHeightToleranceMeters
+		);
 	}
+	//@formatter:on
 
 }

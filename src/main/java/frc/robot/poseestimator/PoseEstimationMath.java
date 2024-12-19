@@ -1,10 +1,11 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.constants.Field;
+import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.robot.vision.rawdata.VisionData;
 
 import java.util.ArrayList;
-import frc.robot.vision.rawdata.RawVisionData;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -12,20 +13,15 @@ import java.util.function.Function;
 public class PoseEstimationMath {
 
 	public static Twist2d addGyroToTwist(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
-		boolean hasGyroUpdated = currentGyroAngle != null;
-		if (hasGyroUpdated && lastGyroAngle != null) {
-			return updateChangeInAngle(twist, currentGyroAngle, lastGyroAngle);
+		if (currentGyroAngle != null && lastGyroAngle != null) {
+			Rotation2d rotationDifference = currentGyroAngle.minus(lastGyroAngle);
+			return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
 		}
 		return twist;
 	}
 
-	public static Twist2d updateChangeInAngle(Twist2d twist, Rotation2d currentGyroAngle, Rotation2d lastGyroAngle) {
-		Rotation2d rotationDifference = currentGyroAngle.minus(lastGyroAngle);
-		return new Twist2d(twist.dx, twist.dy, rotationDifference.getRadians());
-	}
-
 	public static double[] getKalmanRatio(double[] odometryStandardDeviations, double[] visionStandardDeviations) {
-		double[] combinedStandardDeviations = new double[Pose2dArrayEntryValue.POSE_ARRAY_LENGTH];
+		double[] combinedStandardDeviations = new double[Pose2dArrayValue.POSE_ARRAY_LENGTH];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations[i];
 			double visionStandardDeviation = visionStandardDeviations[i];
@@ -35,39 +31,48 @@ public class PoseEstimationMath {
 	}
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
-		return odometryStandardDeviation == 0 ? 0 : odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
+		return odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
 	}
 
 	public static Transform2d applyKalmanOnTransform(
-		VisionObservation observation,
+		AprilTagVisionData observation,
 		Pose2d appliedVisionObservation,
-		double[] odometryStandardDeviations
+		double[] odometryStandardDeviations,
+		double[] visionStandardDeviations
 	) {
-		double[] combinedStandardDeviations = getKalmanRatio(odometryStandardDeviations, observation.standardDeviations());
-		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.robotPose());
+		double[] combinedStandardDeviations = getKalmanRatio(odometryStandardDeviations, visionStandardDeviations);
+		Transform2d visionDifferenceFromOdometry = new Transform2d(appliedVisionObservation, observation.getEstimatedPose().toPose2d());
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
 	public static Transform2d scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
 		return new Transform2d(
-			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[Pose2dArrayEntryValue.X_VALUE.getEntryValue()],
-			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[Pose2dArrayEntryValue.Y_VALUE.getEntryValue()],
+			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[Pose2dArrayValue.X_VALUE.getEntryValue()],
+			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[Pose2dArrayValue.Y_VALUE.getEntryValue()],
 			Rotation2d.fromRadians(
 				visionDifferenceFromOdometry.getRotation().getRadians()
-					* combinedStandardDeviations[Pose2dArrayEntryValue.ROTATION_VALUE.getEntryValue()]
+					* combinedStandardDeviations[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()]
 			)
 		);
 	}
 
 	public static Pose2d combineVisionToOdometry(
-		VisionObservation observation,
+		AprilTagVisionData observation,
 		Pose2d odometryInterpolatedPoseSample,
 		Pose2d estimatedPose,
 		Pose2d odometryPose,
-		double[] odometryStandardDeviations
+		double[] odometryStandardDeviations,
+		double[] visionStandardDeviations
 	) {
 		Transform2d sampleDifferenceFromPose = new Transform2d(odometryPose, odometryInterpolatedPoseSample);
-		return estimatedPose.plus(applyKalmanOnTransform(observation, estimatedPose.plus(sampleDifferenceFromPose), odometryStandardDeviations));
+		return estimatedPose.plus(
+			applyKalmanOnTransform(
+				observation,
+				estimatedPose.plus(sampleDifferenceFromPose),
+				odometryStandardDeviations,
+				visionStandardDeviations
+			)
+		);
 	}
 
 	public static double[] calculateStandardDeviationOfPose(List<Pose2d> dataset) {
@@ -86,7 +91,7 @@ public class PoseEstimationMath {
 		return new double[] {function.apply(XSet), function.apply(YSet), function.apply(AngleSet)};
 	}
 
-	public static double[] calculateStandardDeviationOfPose(RawVisionData rawVisionData, Pose2d currentEstimatedPose) {
+	public static double[] calculateStandardDeviationOfPose(VisionData rawVisionData, Pose2d currentEstimatedPose) {
 		double visionX = rawVisionData.getEstimatedPose().getX();
 		double visionY = rawVisionData.getEstimatedPose().getY();
 		double estimatedX = currentEstimatedPose.getX();
@@ -97,9 +102,9 @@ public class PoseEstimationMath {
 	public static Pose2d meanOfPose(List<Pose2d> dataset) {
 		double[] deconstructedPose = applyFunctionOnPoseElements(dataset, PoseEstimationMath::mean);
 		return new Pose2d(
-			deconstructedPose[Pose2dArrayEntryValue.X_VALUE.getEntryValue()],
-			deconstructedPose[Pose2dArrayEntryValue.Y_VALUE.getEntryValue()],
-			Rotation2d.fromRadians(deconstructedPose[Pose2dArrayEntryValue.ROTATION_VALUE.getEntryValue()])
+			deconstructedPose[Pose2dArrayValue.X_VALUE.getEntryValue()],
+			deconstructedPose[Pose2dArrayValue.Y_VALUE.getEntryValue()],
+			Rotation2d.fromRadians(deconstructedPose[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()])
 		);
 	}
 
@@ -125,23 +130,23 @@ public class PoseEstimationMath {
 		return Math.sqrt((Math.pow(estimatedValue - mean, 2) + Math.pow(currentValue - mean, 2)) / 2);
 	}
 
-	public static Pose2d weightedPoseMean(List<VisionObservation> observations) {
+	public static Pose2d weightedPoseMean(List<AprilTagVisionData> observations, double[] visionStandardDeviations) {
 		Pose2d poseMean = new Pose2d();
 		double xWeightsSum = 0;
 		double yWeightsSum = 0;
 		double rotationDeviationSum = 0;
 
-		for (VisionObservation observation : observations) {
-			double xWeight = 1 / observation.standardDeviations()[Pose2dArrayEntryValue.X_VALUE.getEntryValue()];
-			double yWeight = 1 / observation.standardDeviations()[Pose2dArrayEntryValue.Y_VALUE.getEntryValue()];
-			double rotationWeight = 1 / observation.standardDeviations()[Pose2dArrayEntryValue.ROTATION_VALUE.getEntryValue()];
+		for (AprilTagVisionData observation : observations) {
+			double xWeight = 1 / visionStandardDeviations[Pose2dArrayValue.X_VALUE.getEntryValue()];
+			double yWeight = 1 / visionStandardDeviations[Pose2dArrayValue.Y_VALUE.getEntryValue()];
+			double rotationWeight = 1 / visionStandardDeviations[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()];
 			xWeightsSum += xWeight;
 			yWeightsSum += yWeight;
 			rotationDeviationSum += rotationWeight;
 			poseMean = new Pose2d(
-				poseMean.getX() + observation.robotPose().getX() * xWeight,
-				poseMean.getY() + observation.robotPose().getY() * yWeight,
-				poseMean.getRotation().plus(observation.robotPose().getRotation()).times(rotationWeight)
+				poseMean.getX() + observation.getEstimatedPose().getX() * xWeight,
+				poseMean.getY() + observation.getEstimatedPose().getY() * yWeight,
+				poseMean.getRotation().plus(observation.getEstimatedPose().toPose2d().getRotation()).times(rotationWeight)
 			);
 		}
 
@@ -153,14 +158,14 @@ public class PoseEstimationMath {
 		return poseMean;
 	}
 
-	public static Pose2d poseMean(List<VisionObservation> observations) {
+	public static Pose2d poseMean(List<AprilTagVisionData> observations) {
 		Pose2d poseMean = new Pose2d();
 
-		for (VisionObservation observation : observations) {
+		for (AprilTagVisionData observation : observations) {
 			poseMean = new Pose2d(
-				poseMean.getX() + observation.robotPose().getX(),
-				poseMean.getY() + observation.robotPose().getY(),
-				poseMean.getRotation().plus(observation.robotPose().getRotation())
+				poseMean.getX() + observation.getEstimatedPose().getX(),
+				poseMean.getY() + observation.getEstimatedPose().getY(),
+				poseMean.getRotation().plus(observation.getEstimatedPose().toPose2d().getRotation())
 			);
 		}
 

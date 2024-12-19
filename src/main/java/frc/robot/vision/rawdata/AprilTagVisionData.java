@@ -2,15 +2,17 @@ package frc.robot.vision.rawdata;
 
 import edu.wpi.first.math.geometry.Pose3d;
 
-public class RawVisionAprilTagData extends RawVisionData {
+public class AprilTagVisionData extends VisionData {
 
 	private final double aprilTagHeight;
 	private final double distanceFromAprilTag;
+	private final int aprilTag;
 
-	public RawVisionAprilTagData(Pose3d estimatedPose, double aprilTagHeight, double distanceFromAprilTag, double timestamp) {
+	public AprilTagVisionData(Pose3d estimatedPose, double timestamp, double aprilTagHeight, double distanceFromAprilTag, int aprilTag) {
 		super(estimatedPose, timestamp);
 		this.aprilTagHeight = aprilTagHeight;
 		this.distanceFromAprilTag = distanceFromAprilTag;
+		this.aprilTag = aprilTag;
 	}
 
 	public double getAprilTagHeight() {
@@ -19,6 +21,10 @@ public class RawVisionAprilTagData extends RawVisionData {
 
 	public double getDistanceFromAprilTag() {
 		return distanceFromAprilTag;
+	}
+
+	public int getTrackedAprilTagID() {
+		return aprilTag;
 	}
 
 }

@@ -7,10 +7,10 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.GyroAngleValues;
-import frc.robot.vision.rawdata.RawVisionAprilTagData;
 import frc.robot.vision.VisionConstants;
+import frc.robot.vision.filters.Filter;
 import frc.robot.vision.limelights.LimelightEntryValue;
+import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.utils.Conversions;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
@@ -19,31 +19,40 @@ import frc.utils.time.TimeUtils;
 
 import java.util.Optional;
 
-public class LimeLightSource extends GBSubsystem implements RobotPoseEstimatingVisionSource {
+public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTagVisionData> {
 
-	private final NetworkTableEntry robotPoseEntry;
-	private final NetworkTableEntry oldRobotPoseEntry;
+	private final NetworkTableEntry robotPoseEntryBotPose2;
+	private final NetworkTableEntry robotPoseEntryBotPose1;
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
 	private final String name;
+	private Filter<AprilTagVisionData> filter;
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
-	private GyroAngleValues gyroAngleValues;
-	private boolean useOldRobotPoseEntry;
+	private LimelightGyroAngleValues gyroAngleValues;
+	private boolean useBotPose1PoseEntry;
 
-	public LimeLightSource(String name, String parentLogPath) {
+	public LimeLightSource(String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
 		super(parentLogPath + name + "/");
 
 		this.name = name;
-		this.robotPoseEntry = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
-		this.oldRobotPoseEntry = getLimelightNetworkTableEntry("botpose_wpiblue");
+		this.filter = filter;
+		this.robotPoseEntryBotPose2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
+		this.robotPoseEntryBotPose1 = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
-		this.gyroAngleValues = new GyroAngleValues(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0);
-		this.useOldRobotPoseEntry = false;
+		this.gyroAngleValues = new LimelightGyroAngleValues(
+			Rotation2d.fromDegrees(0),
+			0,
+			Rotation2d.fromDegrees(0),
+			0,
+			Rotation2d.fromDegrees(0),
+			0
+		);
+		this.useBotPose1PoseEntry = false;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(
@@ -54,17 +63,16 @@ public class LimeLightSource extends GBSubsystem implements RobotPoseEstimatingV
 		);
 	}
 
-	public void switchToOldBotPose(boolean useOldRobotPose) {
-		useOldRobotPoseEntry = useOldRobotPose;
+	public void changedUsedBotPoseVersion(boolean useBotPose1) {
+		useBotPose1PoseEntry = useBotPose1;
 	}
 
-	@Override
-	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
+	public void updateGyroAngles(LimelightGyroAngleValues gyroAngleValues) {
 		this.gyroAngleValues = gyroAngleValues;
 	}
 
 	@Override
-	public void updateEstimation() {
+	public void update() {
 		robotOrientationEntry.setDoubleArray(
 			new double[] {
 				gyroAngleValues.yaw().getDegrees(),
@@ -74,10 +82,10 @@ public class LimeLightSource extends GBSubsystem implements RobotPoseEstimatingV
 				gyroAngleValues.roll().getDegrees(),
 				gyroAngleValues.rollRate()}
 		);
-		robotPoseArray = (useOldRobotPoseEntry ? oldRobotPoseEntry : robotPoseEntry)
+		robotPoseArray = (useBotPose1PoseEntry ? robotPoseEntryBotPose1 : robotPoseEntryBotPose2)
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		double[] robotPoseWithoutGyroInput = oldRobotPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		double[] robotPoseWithoutGyroInput = robotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
 	}
 
@@ -112,19 +120,42 @@ public class LimeLightSource extends GBSubsystem implements RobotPoseEstimatingV
 	}
 
 	@Override
-	public Optional<RawVisionAprilTagData> getRawVisionEstimation() {
+	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
-			pose3dDoublePair -> new RawVisionAprilTagData(
+			pose3dDoublePair -> new AprilTagVisionData(
 				pose3dDoublePair.getFirst(),
+				pose3dDoublePair.getSecond(),
 				getAprilTagValue(LimelightEntryValue.Y_AXIS),
 				getAprilTagValue(LimelightEntryValue.Z_AXIS),
-				pose3dDoublePair.getSecond()
+				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs
 			)
 		);
 	}
 
 	@Override
+	public Optional<AprilTagVisionData> getFilteredVisionData() {
+		if (shouldDataBeFiltered(getVisionData())) {
+			return getVisionData();
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	private boolean shouldDataBeFiltered(Optional<AprilTagVisionData> data) {
+		return data.map(filter::applyFilter).orElseGet(() -> true);
+	}
+
+	@Override
+	public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
+		return this.filter = newFilter;
+	}
+
+	/**
+	 * the robot heading is calculated by the botpose1 algorithm, which does not have the current yaw unlike botpose2.
+	 *
+	 * @return optional of the heading, empty iff apriltags are not visible to the camera.
+	 */
 	public Optional<Rotation2d> getRobotHeading() {
 		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
 		if (id == VisionConstants.NO_APRILTAG_ID) {

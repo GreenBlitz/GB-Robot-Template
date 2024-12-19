@@ -5,15 +5,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import frc.robot.poseestimator.helpers.ObservationCountHelper;
 import frc.robot.poseestimator.helpers.PoseEstimatorLogging;
 import frc.robot.poseestimator.helpers.VisionDenoiser;
 import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
+import frc.robot.poseestimator.helpers.DataAccumulator;
+import frc.robot.poseestimator.helpers.VisionDenoiser;
+import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.*;
 import frc.robot.poseestimator.observations.OdometryObservation;
-import frc.robot.poseestimator.observations.VisionObservation;
-import frc.robot.vision.multivisionsources.MultiPoseEstimatingVisionSources;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
+import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.robot.vision.rawdata.VisionData;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -27,12 +29,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
 	private final TimeInterpolatableBuffer<Double> accelerationInterpolator;
-	private final ObservationCountHelper<Rotation2d> headingCountHelper;
-	private final ObservationCountHelper<VisionObservation> poseCountHelper;
-	private final VisionFilterer visionFilterer;
+	private final DataAccumulator<Rotation2d> headingCountHelper;
+	private final DataAccumulator<AprilTagVisionData> poseCountHelper;
+	private final MultiAprilTagVisionSource multiVisionSources;
 	private final VisionDenoiser visionDenoiser;
 	private final VisionObservationSwitcher visionObservationSwitcher;
-	private final MultiPoseEstimatingVisionSources robotVisionSources;
 	private final double[] odometryStandardDeviations;
 	private OdometryValues lastOdometryValues;
 	private Pose2d odometryPose;
@@ -45,8 +46,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public GBPoseEstimator(
 		String logPath,
-		MultiPoseEstimatingVisionSources multiVisionSources,
-		VisionFiltererConfig visionFiltererConfig,
+		MultiAprilTagVisionSource multiVisionSources,
 		OdometryValues odometryValues,
 		double[] odometryStandardDeviations,
 		VisionDenoiser visionDenoiser
@@ -54,8 +54,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		super(logPath);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.visionFilterer = new VisionFilterer<>(visionFiltererConfig, multiVisionSources, this::getEstimatedPoseAtTimestamp);
-		this.robotVisionSources = multiVisionSources;
 		this.accelerationInterpolator = TimeInterpolatableBuffer.createDoubleBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.visionDenoiser = visionDenoiser;
 		this.visionObservationSwitcher = new VisionObservationSwitcher(
@@ -64,12 +62,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			PoseEstimatorConstants.DATA_CHANGE_RATE,
 			PoseEstimatorConstants.DATA_SWITCHING_DURATION
 		);
-		this.headingCountHelper = new ObservationCountHelper<>(
-			multiVisionSources::getAllRobotHeadingEstimations,
+		this.multiVisionSources = multiVisionSources;
+		this.headingCountHelper = new DataAccumulator<>(
+			multiVisionSources::getRawEstimatedAngles,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
-		this.poseCountHelper = new ObservationCountHelper<>(
-			visionFilterer::getAllAvailableVisionObservations,
+		this.poseCountHelper = new DataAccumulator<>(
+			multiVisionSources::getUnfilteredVisionData,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
 		);
 		this.lastOdometryValues = odometryValues;
@@ -108,7 +107,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private Optional<Rotation2d> getEstimatedRobotHeadingByVision() {
-		List<Rotation2d> stackedHeadings = headingCountHelper.getStackedObservations();
+		List<Rotation2d> stackedHeadings = headingCountHelper.getAccumulatedList();
 		if (stackedHeadings.isEmpty()) {
 			return Optional.empty();
 		}
@@ -130,7 +129,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Optional<Pose2d> getVisionPose() {
-		List<VisionObservation> stackedObservations = poseCountHelper.getStackedObservations();
+		List<AprilTagVisionData> stackedObservations = poseCountHelper.getAccumulatedList();
 		if (stackedObservations.isEmpty()) {
 			return Optional.empty();
 		}
@@ -158,8 +157,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<VisionObservation> visionObservations) {
-		for (VisionObservation visionObservation : visionObservations) {
+	public void updateVision(List<AprilTagVisionData> visionObservations) {
+		for (AprilTagVisionData visionObservation : visionObservations) {
 			if (!isObservationTooOld(visionObservation)) {
 				addVisionObservation(visionObservation);
 			}
@@ -173,29 +172,35 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	private boolean isObservationTooOld(VisionObservation visionObservation) {
+	private boolean isObservationTooOld(AprilTagVisionData visionObservation) {
 		try {
 			return odometryPoseInterpolator.getInternalBuffer().lastKey() - PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS
-				> visionObservation.timestamp();
+				> visionObservation.getTimestamp();
 		} catch (NoSuchElementException ignored) {
 			return true;
 		}
 	}
 
-	private void addVisionObservation(VisionObservation observation) {
-		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.timestamp());
+	private void addVisionObservation(AprilTagVisionData observation) {
+		Optional<Pose2d> odometryInterpolatedPoseSample = odometryPoseInterpolator.getSample(observation.getTimestamp());
 		odometryInterpolatedPoseSample.ifPresent(odometryPoseSample -> {
 			visionDenoiser.addVisionObservation(observation);
 
-			if (accelerationInterpolator.getSample(observation.timestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
+			if (accelerationInterpolator.getSample(observation.getTimestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
 				visionObservationSwitcher.switchToFirstSource();
 			} else {
 				visionObservationSwitcher.switchToSecondsSource();
 			}
 
-			VisionObservation fixedObservation = visionObservationSwitcher.getValue(observation.timestamp()).orElse(observation);
-			Pose2d currentEstimation = PoseEstimationMath
-				.combineVisionToOdometry(fixedObservation, odometryPoseSample, estimatedPose, odometryPose, odometryStandardDeviations);
+			AprilTagVisionData fixedObservation = visionObservationSwitcher.getValue(observation.getTimestamp()).orElse(observation);
+			Pose2d currentEstimation = PoseEstimationMath.combineVisionToOdometry(
+				fixedObservation,
+				odometryPoseSample,
+				estimatedPose,
+				odometryPose,
+				odometryStandardDeviations,
+				PoseEstimationMath.calculateStandardDeviationOfPose(observation, estimatedPose)
+			);
 			estimatedPose = new Pose2d(currentEstimation.getTranslation(), estimatedPose.getRotation());
 			estimatedPoseInterpolator.addSample(TimeUtils.getCurrentTimeSeconds(), estimatedPose);
 		});
@@ -205,7 +210,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (!hasHeadingOffsetBeenInitialized) {
 			calculateHeadingOffset(observation.gyroAngle());
 		}
-		updateGyroAnglesInVisionSources(observation.gyroAngle());
+		multiVisionSources.updateYawInLimelights(observation.gyroAngle());
 		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions(), observation.wheelPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastOdometryValues.gyroAngle());
 		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelPositions(), observation.gyroAngle());
@@ -215,19 +220,11 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		odometryPoseInterpolator.addSample(observation.timestamp(), odometryPose);
 	}
 
-	private void updateGyroAnglesInVisionSources(Rotation2d gyroAngle) {
-		if (gyroAngle != null) {
-			Rotation2d headingWithOffset = gyroAngle.plus(headingOffset);
-			robotVisionSources
-				.updateGyroAngles(new GyroAngleValues(headingWithOffset, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
-		}
-	}
-
 	public void log() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
 		Logger.recordOutput(super.getLogPath() + "OdometryPose/", getOdometryPose());
-		Logger.recordOutput(super.getLogPath() + "HeadingAveragingCount/", headingCountHelper.getCount());
-		Logger.recordOutput(super.getLogPath() + "PoseAveragingCount/", poseCountHelper.getCount());
+		Logger.recordOutput(super.getLogPath() + "HeadingAveragingCount/", headingCountHelper.getIntakeCount());
+		Logger.recordOutput(super.getLogPath() + "PoseAveragingCount/", poseCountHelper.getIntakeCount());
 		Logger.recordOutput(super.getLogPath() + "HeadingOffset/", headingOffset.getDegrees());
 		Logger.recordOutput(super.getLogPath() + "hasHeadingOffsetBeenInitialized/", hasHeadingOffsetBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "hasEstimatedPoseBeenInitialized/", hasEstimatedPoseBeenInitialized);
@@ -255,7 +252,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (!hasEstimatedPoseBeenInitialized) {
 			calculateEstimatedPoseByVision();
 		}
-		updateVision(visionFilterer.getFilteredVisionObservations());
+		updateVision(multiVisionSources.getFilteredVisionData());
 		log();
 	}
 

@@ -2,12 +2,12 @@ package frc.robot.vision.rawdata;
 
 import edu.wpi.first.math.geometry.Pose3d;
 
-public class RawVisionData {
+public class VisionData {
 
-	protected final Pose3d estimatedPose;
-	protected final double timestamp;
+	private final Pose3d estimatedPose;
+	private final double timestamp;
 
-	public RawVisionData(Pose3d estimatedPose, double timestamp) {
+	public VisionData(Pose3d estimatedPose, double timestamp) {
 		this.estimatedPose = estimatedPose;
 		this.timestamp = timestamp;
 	}

@@ -75,7 +75,7 @@ public class VisionObservationSwitcher implements IDataSwitcher<ProcessedVisionD
 	}
 
 	private static Supplier<Optional<Double>> extractStdDevFromVisionObservation(Supplier<Optional<ProcessedVisionData>> source, int index) {
-		return () -> source.get().isPresent() ? Optional.of(source.get().get().getStdDev().getyStandardDeviationsMeters()) : Optional.empty();
+		return () -> source.get().isPresent() ? Optional.of(source.get().get().getStdDev().getYStandardDeviationsMeters()) : Optional.empty();
 	}
 
 	@Override

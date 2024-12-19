@@ -54,10 +54,10 @@ public class PoseEstimationMath {
 		StandardDeviations2d combinedStandardDeviations
 	) {
 		return new Transform2d(
-			visionDifferenceFromOdometry.getX() * combinedStandardDeviations.getxStandardDeviationsMeters(),
-			visionDifferenceFromOdometry.getY() * combinedStandardDeviations.getyStandardDeviationsMeters(),
+			visionDifferenceFromOdometry.getX() * combinedStandardDeviations.getXStandardDeviationsMeters(),
+			visionDifferenceFromOdometry.getY() * combinedStandardDeviations.getYStandardDeviationsMeters(),
 			Rotation2d.fromRadians(
-				visionDifferenceFromOdometry.getRotation().getRadians() * combinedStandardDeviations.getThetaStandardDeviations().getRadians()
+				visionDifferenceFromOdometry.getRotation().getRadians() * combinedStandardDeviations.getAngleStandardDeviations().getRadians()
 			)
 		);
 	}
@@ -154,9 +154,9 @@ public class PoseEstimationMath {
 		double rotationDeviationSum = 0;
 
 		for (ProcessedVisionData observation : observations) {
-			double xWeight = 1 / observation.getStdDev().getxStandardDeviationsMeters();
-			double yWeight = 1 / observation.getStdDev().getyStandardDeviationsMeters();
-			double rotationWeight = 1 / observation.getStdDev().getThetaStandardDeviations().getRadians();
+			double xWeight = 1 / observation.getStdDev().getXStandardDeviationsMeters();
+			double yWeight = 1 / observation.getStdDev().getYStandardDeviationsMeters();
+			double rotationWeight = 1 / observation.getStdDev().getAngleStandardDeviations().getRadians();
 			xWeightsSum += xWeight;
 			yWeightsSum += yWeight;
 			rotationDeviationSum += rotationWeight;

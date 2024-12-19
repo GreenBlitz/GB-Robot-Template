@@ -74,7 +74,7 @@ public class StandardDeviations2d {
 	}
 
 	public double getDeviationByPoseIndex(int index) {
-		return new double[] {xStandardDeviationsMeters, yStandardDeviationsMeters, thetaStandardDeviations.getRadians()}[index];
+		return new double[] {xStandardDeviationsMeters, yStandardDeviationsMeters, angleStandardDeviations.getRadians()}[index];
 	}
 
 }

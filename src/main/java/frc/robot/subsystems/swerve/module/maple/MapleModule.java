@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.module.Module;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.littletonrobotics.junction.AutoLog;
@@ -35,7 +36,7 @@ public class MapleModule extends Module {
 	private final PIDController drivePIDControllerRadiansPerSecond;
 	private final SimpleMotorFeedforward driveFeedForwardRadiansPerSecond;
 
-	public MapleModule(ModuleConstants constants, MapleModuleConstants mapleModuleConstants, SwerveModuleSimulation moduleSimulation) {
+	public MapleModule(ModuleSpecificConstants constants, MapleModuleConstants mapleModuleConstants, SwerveModuleSimulation moduleSimulation) {
 		super(constants);
 		this.moduleSimulation = moduleSimulation;
 		this.moduleIOInputs = new ModuleIOInputsAutoLogged();

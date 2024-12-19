@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
@@ -14,13 +15,13 @@ import java.util.Arrays;
 
 public abstract class Module {
 
-	protected final ModuleConstants constants;
+	protected final ModuleSpecificConstants constants;
 	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
 	private boolean isClosedLoop;
 	protected SwerveModuleState targetState;
 
-	public Module(ModuleConstants constants) {
+	public Module(ModuleSpecificConstants constants) {
 		this.constants = constants;
 		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
 		this.moduleInputs = new ModuleInputsAutoLogged();

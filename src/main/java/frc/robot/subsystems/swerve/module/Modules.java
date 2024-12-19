@@ -121,7 +121,7 @@ public class Modules extends GBSubsystem {
 		return Arrays.stream(modules).map(Module::getDriveLatestPosition).toArray(Rotation2d[]::new);
 	}
 
-	public SwerveModulePosition[] getWheelsPositions(int odometrySampleIndex) {
+	public SwerveModulePosition[] getModulePositions(int odometrySampleIndex) {
 		SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
 		for (int i = 0; i < modules.length; i++) {
 			swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);

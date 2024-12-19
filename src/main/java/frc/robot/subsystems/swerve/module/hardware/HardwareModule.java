@@ -11,6 +11,7 @@ import frc.robot.subsystems.swerve.module.extrainputs.DriveCouplingInputsAutoLog
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.robot.subsystems.swerve.module.records.EncoderSignals;
+import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.Conversions;
@@ -45,7 +46,7 @@ public class HardwareModule extends Module {
 	private Rotation2d startingSteerPosition;
 
 	public HardwareModule(
-		ModuleConstants constants,
+		ModuleSpecificConstants constants,
 		IAngleEncoder encoder,
 		EncoderSignals encoderSignals,
 		ControllableMotor steer,

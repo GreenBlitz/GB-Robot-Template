@@ -24,7 +24,7 @@ public class SuppliedDigitalInput implements IDigitalInput {
 
 	@Override
 	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
-		inputs.nonDebouncedValue = inverted ? !booleanSupplier.getAsBoolean() : booleanSupplier.getAsBoolean();
+		inputs.nonDebouncedValue = inverted ^ booleanSupplier.getAsBoolean();
 		inputs.debouncedValue = debouncer.calculate(inputs.nonDebouncedValue);
 	}
 

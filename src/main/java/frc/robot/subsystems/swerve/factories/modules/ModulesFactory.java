@@ -4,7 +4,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.swerve.SwerveType;
-import frc.robot.subsystems.swerve.factories.modules.constants.ModuleConstantsFactory;
+import frc.robot.subsystems.swerve.factories.modules.constants.ModuleSpecificConstantsFactory;
 import frc.robot.subsystems.swerve.factories.modules.drive.DriveFactory;
 import frc.robot.subsystems.swerve.factories.modules.encoder.EncoderFactory;
 import frc.robot.subsystems.swerve.factories.modules.steer.SteerFactory;
@@ -31,7 +31,7 @@ public class ModulesFactory {
 		ControllableMotor drive = DriveFactory.createDrive(swerveType, modulePosition);
 
 		return new HardwareModule(
-			ModuleConstantsFactory.create(swerveType, modulePosition),
+			ModuleSpecificConstantsFactory.create(swerveType, modulePosition),
 			angleEncoder,
 			EncoderFactory.createSignals(swerveType, angleEncoder),
 			steer,

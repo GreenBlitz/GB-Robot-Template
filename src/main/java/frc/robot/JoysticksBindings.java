@@ -111,6 +111,7 @@ public class JoysticksBindings {
 			);
 
 		robot.getSwerve()
+			.getModules()
 			.setDefaultCommand(
 				robot.getSwerve()
 					.getCommandsBuilder()

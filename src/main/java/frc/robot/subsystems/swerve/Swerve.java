@@ -14,7 +14,7 @@ import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.gyro.maple.MapleGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
-import frc.robot.subsystems.GBSubsystem;
+
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.module.maple.MapleModule;
@@ -23,17 +23,13 @@ import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.alerts.Alert;
 import frc.utils.auto.PathPlannerUtils;
-import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.drivesims.GyroSimulation;
-import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class Swerve extends GBSubsystem {
+public class Swerve {
 
 	private final SwerveConstants constants;
 	private final Modules modules;
@@ -50,7 +46,6 @@ public class Swerve extends GBSubsystem {
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
-		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
@@ -63,9 +58,12 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 		this.swervePhysicsSimulation = Optional.empty();
-		modules.getCommandsBuilder().withSubsystemsToRequire(this);
 
 		updateInputs();
+	}
+
+	public String getLogPath() {
+		return constants.logPath();
 	}
 
 	public Modules getModules() {
@@ -99,7 +97,6 @@ public class Swerve extends GBSubsystem {
 				constants.ppHolonomicDriveController(),
 				robotConfig,
 				() -> !Field.isFieldConventionAlliance(),
-				this,
 				modules
 			);
 		}
@@ -206,7 +203,7 @@ public class Swerve extends GBSubsystem {
 		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
-				modules.getWheelsPositions(i),
+				modules.getModulePositions(i),
 				gyro instanceof EmptyGyro ? null : gyroSignals.yawSignal().asArray()[i],
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);

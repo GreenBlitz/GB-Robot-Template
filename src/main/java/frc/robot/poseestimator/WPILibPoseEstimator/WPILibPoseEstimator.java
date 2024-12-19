@@ -31,6 +31,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
+
 	private final MultiAprilTagVisionSource multiVisionSources;
 	private final VisionDenoiser visionDenoiser;
 	private final VisionObservationSwitcher visionObservationSwitcher;
@@ -89,7 +90,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public Pose2d getEstimatedPoseAtTimestamp(double timestamp) {
-		return timeInterpolatableBuffer.getSample(timestamp).orElseGet(this::getEstimatedPose);
+		return poseEstimator.sampleAt(timestamp).orElseGet(this::getEstimatedPose);
 	}
 
 	@Override

@@ -10,52 +10,52 @@ public class StandardDeviations2d {
 
 	private double xStandardDeviationsMeters;
 	private double yStandardDeviationsMeters;
-	private Rotation2d thetaStandardDeviations;
+	private Rotation2d angleStandardDeviations;
 
 	public StandardDeviations2d() {
 		xStandardDeviationsMeters = 0;
 		yStandardDeviationsMeters = 0;
-		thetaStandardDeviations = new Rotation2d();
+		angleStandardDeviations = new Rotation2d();
 	}
 
 	public StandardDeviations2d(double[] stdDevs) {
 		this.xStandardDeviationsMeters = stdDevs[0];
 		this.yStandardDeviationsMeters = stdDevs[1];
-		this.thetaStandardDeviations = Rotation2d.fromRadians(stdDevs[2]);
+		this.angleStandardDeviations = Rotation2d.fromRadians(stdDevs[2]);
 	}
 
-	public StandardDeviations2d(double xStandardDeviationsMeters, double yStandardDeviationsMeters, Rotation2d thetaStandardDeviations) {
+	public StandardDeviations2d(double xStandardDeviationsMeters, double yStandardDeviationsMeters, Rotation2d angleStandardDeviations) {
 		this.xStandardDeviationsMeters = xStandardDeviationsMeters;
 		this.yStandardDeviationsMeters = yStandardDeviationsMeters;
-		this.thetaStandardDeviations = thetaStandardDeviations;
+		this.angleStandardDeviations = angleStandardDeviations;
 	}
 
-	public double getxStandardDeviationsMeters() {
+	public double getXStandardDeviationsMeters() {
 		return xStandardDeviationsMeters;
 	}
 
-	public void setxStandardDeviationsMeters(double xStandardDeviationsMeters) {
+	public void setXStandardDeviationsMeters(double xStandardDeviationsMeters) {
 		this.xStandardDeviationsMeters = xStandardDeviationsMeters;
 	}
 
-	public double getyStandardDeviationsMeters() {
+	public double getYStandardDeviationsMeters() {
 		return yStandardDeviationsMeters;
 	}
 
-	public void setyStandardDeviationsMeters(double yStandardDeviationsMeters) {
+	public void setYStandardDeviationsMeters(double yStandardDeviationsMeters) {
 		this.yStandardDeviationsMeters = yStandardDeviationsMeters;
 	}
 
-	public Rotation2d getThetaStandardDeviations() {
-		return thetaStandardDeviations;
+	public Rotation2d getAngleStandardDeviations() {
+		return angleStandardDeviations;
 	}
 
-	public void setThetaStandardDeviations(Rotation2d thetaStandardDeviations) {
-		this.thetaStandardDeviations = thetaStandardDeviations;
+	public void setAngleStandardDeviations(Rotation2d angleStandardDeviations) {
+		this.angleStandardDeviations = angleStandardDeviations;
 	}
 
-	public StandardDeviations2d withThetaStandardDeviations(Rotation2d thetaStandardDeviations) {
-		this.thetaStandardDeviations = thetaStandardDeviations;
+	public StandardDeviations2d withAngleStandardDeviations(Rotation2d angleStandardDeviations) {
+		this.angleStandardDeviations = angleStandardDeviations;
 		return this;
 	}
 
@@ -70,7 +70,7 @@ public class StandardDeviations2d {
 	}
 
 	public Matrix<N3, N1> getWPILibStandardDeviations() {
-		return VecBuilder.fill(xStandardDeviationsMeters, yStandardDeviationsMeters, thetaStandardDeviations.getRadians());
+		return VecBuilder.fill(xStandardDeviationsMeters, yStandardDeviationsMeters, angleStandardDeviations.getRadians());
 	}
 
 	public double getDeviationByPoseIndex(int index) {

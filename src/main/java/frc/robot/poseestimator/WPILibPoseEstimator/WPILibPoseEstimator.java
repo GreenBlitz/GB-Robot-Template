@@ -22,8 +22,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 
-	private final TimeInterpolatableBuffer<Pose2d> timeInterpolatableBuffer;
-
 	public WPILibPoseEstimator(
 		String logPath,
 		SwerveDriveKinematics kinematics,
@@ -45,9 +43,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-
-		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		;
 	}
 
 

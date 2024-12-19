@@ -1,13 +1,11 @@
 package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
@@ -78,6 +76,14 @@ public class SwerveCommandsBuilder {
 			() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), state),
 			swerve.getModules()
 		).withName("Drive with state");
+	}
+
+	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path, double pathfindOrFollowPathToleranceMeters) {
+		return new ConditionalCommand(
+			PathPlannerUtils.followPath(path),
+			driveToPose(currentPose, () -> PathPlannerUtils.getFlippedPose(PathPlannerUtils.getLastPathPose(path))),
+			() -> PathPlannerUtils.isRobotCloseToPathBeginning(path, currentPose, pathfindOrFollowPathToleranceMeters)
+		);
 	}
 
 

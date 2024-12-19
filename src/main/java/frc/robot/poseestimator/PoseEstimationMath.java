@@ -21,7 +21,10 @@ public class PoseEstimationMath {
 		return twist;
 	}
 
-	public static StandardDeviations2d getKalmanRatio(StandardDeviations2d odometryStandardDeviations, StandardDeviations2d visionStandardDeviations) {
+	public static StandardDeviations2d getKalmanRatio(
+		StandardDeviations2d odometryStandardDeviations,
+		StandardDeviations2d visionStandardDeviations
+	) {
 		double[] combinedStandardDeviations = new double[Pose2dArrayValue.POSE_ARRAY_LENGTH];
 		for (int i = 0; i < combinedStandardDeviations.length; i++) {
 			double odometryStandardDeviation = odometryStandardDeviations.getDeviationByPoseIndex(i);
@@ -46,13 +49,15 @@ public class PoseEstimationMath {
 		return scaleDifferenceFromKalman(visionDifferenceFromOdometry, combinedStandardDeviations);
 	}
 
-	public static Transform2d scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, StandardDeviations2d combinedStandardDeviations) {
+	public static Transform2d scaleDifferenceFromKalman(
+		Transform2d visionDifferenceFromOdometry,
+		StandardDeviations2d combinedStandardDeviations
+	) {
 		return new Transform2d(
 			visionDifferenceFromOdometry.getX() * combinedStandardDeviations.getxStandardDeviationsMeters(),
 			visionDifferenceFromOdometry.getY() * combinedStandardDeviations.getyStandardDeviationsMeters(),
 			Rotation2d.fromRadians(
-				visionDifferenceFromOdometry.getRotation().getRadians()
-					* combinedStandardDeviations.getThetaStandardDeviations().getRadians()
+				visionDifferenceFromOdometry.getRotation().getRadians() * combinedStandardDeviations.getThetaStandardDeviations().getRadians()
 			)
 		);
 	}
@@ -104,7 +109,11 @@ public class PoseEstimationMath {
 		double estimatedX = refrencePose.getX();
 		double estimatedY = refrencePose.getY();
 		double estimatedAng = refrencePose.getRotation().getRotations();
-		return new StandardDeviations2d(calculateStandardDeviation(visionX, estimatedX), calculateStandardDeviation(visionY, estimatedY), Rotation2d.fromRadians(calculateStandardDeviation(visionAng, estimatedAng)));
+		return new StandardDeviations2d(
+			calculateStandardDeviation(visionX, estimatedX),
+			calculateStandardDeviation(visionY, estimatedY),
+			Rotation2d.fromRadians(calculateStandardDeviation(visionAng, estimatedAng))
+		);
 	}
 
 	public static Pose2d meanOfPose(List<Pose2d> dataset) {

@@ -1,6 +1,5 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,7 +18,6 @@ import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
 import frc.robot.vision.rawdata.AprilTagVisionData;
-import frc.utils.time.TimeUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -141,11 +139,16 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 		ProcessedVisionData fixedObservation = visionObservationSwitcher.getValue(visionObservation.getTimestamp())
 			.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
-		poseEstimator.addVisionMeasurement(fixedObservation.getEstimatedPose(), fixedObservation.getTimestamp(), fixedObservation.getStdDev().getWPILibStandardDeviations());
+		poseEstimator.addVisionMeasurement(
+			fixedObservation.getEstimatedPose(),
+			fixedObservation.getTimestamp(),
+			fixedObservation.getStdDev().getWPILibStandardDeviations()
+		);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateVision(multiVisionSources.getFilteredVisionData());
 	}
+
 }

@@ -5,6 +5,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import org.littletonrobotics.junction.Logger;
 
 public class StandardDeviations2d {
 
@@ -75,6 +76,13 @@ public class StandardDeviations2d {
 
 	public double getDeviationByPoseIndex(int index) {
 		return new double[] {xStandardDeviationsMeters, yStandardDeviationsMeters, angleStandardDeviations.getRadians()}[index];
+	}
+
+	public void logStandardDeviations(String logPath) {
+		var newLogPath = logPath + "stdDevs/";
+		Logger.recordOutput(newLogPath + "X/", getXStandardDeviationsMeters());
+		Logger.recordOutput(newLogPath + "Y/", getYStandardDeviationsMeters());
+		Logger.recordOutput(newLogPath + "Angle/", getAngleStandardDeviations());
 	}
 
 }

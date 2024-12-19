@@ -8,7 +8,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.helpers.*;
 import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
 import frc.robot.poseestimator.helpers.VisionDenoiser;
-import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
@@ -227,7 +226,7 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Logger.recordOutput(super.getLogPath() + "hasHeadingOffsetBeenInitialized/", hasHeadingOffsetBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "hasEstimatedPoseBeenInitialized/", hasEstimatedPoseBeenInitialized);
 		Logger.recordOutput(super.getLogPath() + "latestGyroAngle/", lastOdometryValues.gyroAngle());
-		PoseEstimatorLogging.logStandardDeviations(getLogPath() + "odometry/", odometryStandardDeviations);
+		odometryStandardDeviations.logStandardDeviations(getLogPath() + "odometry/");
 	}
 
 	private void onEnabled() {

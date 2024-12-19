@@ -168,7 +168,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
 	}
-	
+
 	@Override
 	protected void subsystemPeriodic() {
 		getVisionData().ifPresent(data -> {
@@ -178,4 +178,5 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 		Logger.recordOutput(getLogPath() + "visionDataPresent/", getVisionData().isPresent());
 		Logger.recordOutput(getLogPath() + "filteredDataPresent/", getFilteredVisionData().isPresent());
 	}
+
 }

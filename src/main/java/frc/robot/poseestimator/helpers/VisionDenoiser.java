@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.robot.poseestimator.PoseEstimationMath;
+import frc.robot.poseestimator.ProcessedVisionData;
 import frc.robot.vision.rawdata.VisionData;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -106,8 +107,7 @@ public class VisionDenoiser {
 			Optional<Pose2d> odometryFix = odometryPoseInterpolator.getSample(observationTime);
 			if (odometryFix.isPresent()) {
 				odometryPoses.add(odometryFix.get());
-				PoseEstimatorLogging
-					.logStandardDeviations(logPath + "odometry/", PoseEstimationMath.calculateStandardDeviationOfPose(odometryPoses));
+				PoseEstimationMath.calculateStandardDeviationOfPose(odometryPoses).logStandardDeviations(logPath + "odometry/");
 
 				Transform2d sampleDifferenceFromPose = new Transform2d(odometryFix.get(), odometryPose);
 				Pose2d fixedPose = observation.getEstimatedPose().toPose2d().plus(sampleDifferenceFromPose);
@@ -135,7 +135,7 @@ public class VisionDenoiser {
 			odometryPose,
 			odometryPoseInterpolator
 		);
-		PoseEstimatorLogging.logStandardDeviations(logPath, calculatedFixedPoseByOdometryLinearFilter.getStdDev());
+		calculatedFixedPoseByOdometryLinearFilter.getStdDev().logStandardDeviations(logPath);
 		return Optional.of(
 			new ProcessedVisionData(
 				calculatedFixedPoseByOdometryLinearFilter.getEstimatedPose(),

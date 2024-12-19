@@ -6,12 +6,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.PoseEstimatorConstants;
-import frc.robot.poseestimator.helpers.ProcessedVisionData;
+import frc.robot.poseestimator.ProcessedVisionData;
 import frc.robot.poseestimator.helpers.VisionDenoiser;
 import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -141,11 +140,14 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 //		if (accelerationInterpolator.getSample(visionObservation.getTimestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
 		if (forceDenosingMode == 1) {
 //			visionObservationSwitcher.switchToFirstSource();
-			fixedObservation = visionObservationSwitcher.getFirstSourceOutput().orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
+			fixedObservation = visionObservationSwitcher.getFirstSourceOutput()
+				.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
 		} else if (forceDenosingMode == 2) {
 //			visionObservationSwitcher.switchToSecondsSource();
-			fixedObservation = visionObservationSwitcher.getSeocndsSourceOutput().orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
-		} if (forceDenosingMode == 0) {
+			fixedObservation = visionObservationSwitcher.getSeocndsSourceOutput()
+				.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
+		}
+		if (forceDenosingMode == 0) {
 			fixedObservation = PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose());
 		} else {
 //			fixedObservation = visionObservationSwitcher.getValue(visionObservation.getTimestamp())

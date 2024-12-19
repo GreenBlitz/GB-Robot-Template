@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimator;
 import frc.robot.poseestimator.helpers.VisionDenoiser;
 import frc.robot.structures.Superstructure;
@@ -49,10 +48,10 @@ public class Robot {
 			gyro,
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
 		);
-		
+
 		this.multiAprilTagVisionSources = new MultiAprilTagVisionSource(
-				"MultiVisionSources/",
-				new LimeLightSource("limelight-back", "MultiVisionSources/", new Filter<>((pose) -> true))
+			"MultiVisionSources/",
+			new LimeLightSource("limelight-back", "MultiVisionSources/", new Filter<>((pose) -> true))
 		);
 
 		this.poseEstimator = new WPILibPoseEstimator(
@@ -66,12 +65,8 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
-		this.superStructure = new Superstructure(
-			swerve,
-			poseEstimator,
-				multiAprilTagVisionSources
-		);
-		
+		this.superStructure = new Superstructure(swerve, poseEstimator, multiAprilTagVisionSources);
+
 		buildPathPlannerForAuto();
 		configureBindings();
 	}
@@ -101,8 +96,9 @@ public class Robot {
 	public WPILibPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
-	
+
 	public MultiAprilTagVisionSource getMultiAprilTagVisionSources() {
 		return multiAprilTagVisionSources;
 	}
+
 }

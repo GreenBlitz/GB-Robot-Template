@@ -1,6 +1,7 @@
-package frc.robot.poseestimator.helpers;
+package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.poseestimator.helpers.StandardDeviations2d;
 
 public class ProcessedVisionData {
 

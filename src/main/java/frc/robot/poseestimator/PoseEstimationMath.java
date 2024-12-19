@@ -1,7 +1,6 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.poseestimator.helpers.ProcessedVisionData;
 import frc.robot.poseestimator.helpers.StandardDeviations2d;
 import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.robot.vision.rawdata.VisionData;

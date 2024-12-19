@@ -2,7 +2,7 @@ package frc.robot.poseestimator.helpers.dataswitcher;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimator.helpers.ProcessedVisionData;
+import frc.robot.poseestimator.ProcessedVisionData;
 import frc.robot.poseestimator.helpers.StandardDeviations2d;
 
 import java.util.Optional;

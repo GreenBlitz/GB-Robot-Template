@@ -19,4 +19,3 @@ Please provide videos/photos if needed.
 ## Checklist
 
 - [ ] I have performed a self-review of my code
-- [ ] My changes generate no new warnings

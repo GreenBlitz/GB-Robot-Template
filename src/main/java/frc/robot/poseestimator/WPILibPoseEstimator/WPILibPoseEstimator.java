@@ -18,6 +18,7 @@ import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
 import frc.robot.vision.rawdata.AprilTagVisionData;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final MultiAprilTagVisionSource multiVisionSources;
 	private final VisionDenoiser visionDenoiser;
 	private final VisionObservationSwitcher visionObservationSwitcher;
+	private int forceDenosingMode;
 
 	public WPILibPoseEstimator(
 		String logPath,
@@ -71,7 +73,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-		;
+		this.forceDenosingMode = 0;
 	}
 
 
@@ -134,15 +136,19 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
 		visionDenoiser.addVisionObservation(visionObservation);
-
-		if (accelerationInterpolator.getSample(visionObservation.getTimestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
+		ProcessedVisionData fixedObservation;
+//		if (accelerationInterpolator.getSample(visionObservation.getTimestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
+		if (forceDenosingMode == 1) {
 			visionObservationSwitcher.switchToFirstSource();
-		} else {
+		} else if (forceDenosingMode == 2) {
 			visionObservationSwitcher.switchToSecondsSource();
+		} if (forceDenosingMode == 0) {
+			fixedObservation = PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose());
+		} else {
+			fixedObservation = visionObservationSwitcher.getValue(visionObservation.getTimestamp())
+					.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
 		}
 
-		ProcessedVisionData fixedObservation = visionObservationSwitcher.getValue(visionObservation.getTimestamp())
-			.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
 		poseEstimator.addVisionMeasurement(
 			fixedObservation.getEstimatedPose(),
 			fixedObservation.getTimestamp(),
@@ -153,6 +159,13 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	protected void subsystemPeriodic() {
 		updateVision(multiVisionSources.getFilteredVisionData());
+		Logger.recordOutput(getLogPath() + "estimatedPose", getEstimatedPose());
+		Logger.recordOutput(getLogPath() + "odometryPose", getOdometryPose());
+		Logger.recordOutput(getLogPath() + "denoisingMode", forceDenosingMode);
+	}
+
+	public void changeDenoising(int mode) {
+		forceDenosingMode = mode;
 	}
 
 }

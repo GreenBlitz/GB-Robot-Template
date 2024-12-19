@@ -18,8 +18,8 @@ public class DoubleSwitcher implements IDataSwitcher<Double> {
 	/**
 	 * Constructor method for the <code>DataSwitcher</code>` class.
 	 *
-	 * @param firstSource:         A function time → ℝ. First and default source of continues data (till switchSource()).
-	 * @param secondSource:        A function dom time → ℝ. First source of continues data.
+	 * @param firstSource:         A function time → R . First and default source of continues data (till switchSource()).
+	 * @param secondSource:        A function dom time → R. First source of continues data.
 	 * @param timeToWeights:       A surjective function time → [0, 1) that returns the weights in between the switches.
 	 * @param timeToSwitchSeconds: The time required to switch.
 	 */

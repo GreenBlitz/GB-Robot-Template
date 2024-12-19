@@ -98,7 +98,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public IPoseEstimator getPoseEstimator() {
+	public WPILibPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 	

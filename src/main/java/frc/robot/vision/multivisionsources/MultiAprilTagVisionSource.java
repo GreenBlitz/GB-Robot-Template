@@ -13,18 +13,19 @@ import java.util.List;
 public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVisionData> {
 
 	private final List<VisionSource<AprilTagVisionData>> visionSources;
+	private boolean useBotPose1;
 
 	@SafeVarargs
 	public MultiAprilTagVisionSource(String logPath, VisionSource<AprilTagVisionData>... visionSources) {
-		super(logPath, visionSources);
-		this.visionSources = List.of(visionSources);
-		logBotPose(false);
+		this(logPath, List.of(visionSources));
 	}
 
 	public MultiAprilTagVisionSource(String logPath, List<VisionSource<AprilTagVisionData>> visionSources) {
 		super(logPath, visionSources);
 		this.visionSources = visionSources;
 		logBotPose(false);
+		useBotPose1 = false;
+		logBotPose(useBotPose1);
 	}
 
 	public void updateYawInLimelights(Rotation2d yaw) {
@@ -57,7 +58,12 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 				limelightSource.changedUsedBotPoseVersion(useBotPose1);
 			}
 		}
+		this.useBotPose1 = useBotPose1;
 		logBotPose(useBotPose1);
+	}
+
+	public void switchBotPose() {
+		switchToBotPose(!useBotPose1);
 	}
 
 	private void logBotPose(boolean useBotPose1) {

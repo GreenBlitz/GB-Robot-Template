@@ -2,13 +2,13 @@ package frc.robot.poseestimator.helpers.dataswitcher;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimator.observations.VisionObservation;
+import frc.robot.poseestimator.helpers.ProcessedVisionData;
 
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class VisionObservationSwitcher implements IDataSwitcher<VisionObservation> {
+public class VisionObservationSwitcher implements IDataSwitcher<ProcessedVisionData> {
 
 	private final Function<Double, Double> timeToWeights;
 	private final double timeToSwitchSeconds;
@@ -24,8 +24,8 @@ public class VisionObservationSwitcher implements IDataSwitcher<VisionObservatio
 	private final DoubleSwitcher timestampSwitcher;
 
 	public VisionObservationSwitcher(
-		Supplier<Optional<VisionObservation>> firstSource,
-		Supplier<Optional<VisionObservation>> secondSource,
+		Supplier<Optional<ProcessedVisionData>> firstSource,
+		Supplier<Optional<ProcessedVisionData>> secondSource,
 		Function<Double, Double> timeToWeights,
 		double timeToSwitchSeconds
 	) {
@@ -33,19 +33,19 @@ public class VisionObservationSwitcher implements IDataSwitcher<VisionObservatio
 		this.timeToSwitchSeconds = timeToSwitchSeconds;
 
 		this.XSwitcher = createDataSwitcher(
-			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().robotPose().getX()) : Optional.empty()),
-			() -> (secondSource.get().isPresent() ? Optional.of(secondSource.get().get().robotPose().getX()) : Optional.empty())
+			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().getEstimatedPose().getX()) : Optional.empty()),
+			() -> (secondSource.get().isPresent() ? Optional.of(secondSource.get().get().getEstimatedPose().getX()) : Optional.empty())
 		);
 		this.YSwitcher = createDataSwitcher(
-			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().robotPose().getY()) : Optional.empty()),
-			() -> (secondSource.get().isPresent() ? Optional.of(secondSource.get().get().robotPose().getY()) : Optional.empty())
+			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().getEstimatedPose().getY()) : Optional.empty()),
+			() -> (secondSource.get().isPresent() ? Optional.of(secondSource.get().get().getEstimatedPose().getY()) : Optional.empty())
 		);
 		this.AngleSwitcherRadians = createDataSwitcher(
 			() -> (firstSource.get().isPresent()
-				? Optional.of(firstSource.get().get().robotPose().getRotation().getRadians())
+				? Optional.of(firstSource.get().get().getEstimatedPose().getRotation().getRadians())
 				: Optional.empty()),
 			() -> (secondSource.get().isPresent()
-				? Optional.of(secondSource.get().get().robotPose().getRotation().getRadians())
+				? Optional.of(secondSource.get().get().getEstimatedPose().getRotation().getRadians())
 				: Optional.empty())
 		);
 		this.XStaDevsSwitcher = createDataSwitcher(
@@ -62,8 +62,8 @@ public class VisionObservationSwitcher implements IDataSwitcher<VisionObservatio
 		);
 
 		this.timestampSwitcher = new DoubleSwitcher(
-			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().timestamp()) : Optional.empty()),
-			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().timestamp()) : Optional.empty()),
+			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().getTimestamp()) : Optional.empty()),
+			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().getTimestamp()) : Optional.empty()),
 			timeToWeights,
 			timeToSwitchSeconds
 		);
@@ -73,12 +73,12 @@ public class VisionObservationSwitcher implements IDataSwitcher<VisionObservatio
 		return new DoubleSwitcher(firstSource, secondSource, timeToWeights, timeToSwitchSeconds);
 	}
 
-	private static Supplier<Optional<Double>> extractStdDevFromVisionObservation(Supplier<Optional<VisionObservation>> source, int index) {
-		return () -> source.get().isPresent() ? Optional.of(source.get().get().standardDeviations()[index]) : Optional.empty();
+	private static Supplier<Optional<Double>> extractStdDevFromVisionObservation(Supplier<Optional<ProcessedVisionData>> source, int index) {
+		return () -> source.get().isPresent() ? Optional.of(source.get().get().getStdDev()[index]) : Optional.empty();
 	}
 
 	@Override
-	public Optional<VisionObservation> getValue(double time) {
+	public Optional<ProcessedVisionData> getValue(double time) {
 		var x = XSwitcher.getValue(time);
 		var y = YSwitcher.getValue(time);
 		var angle = AngleSwitcherRadians.getValue(time);
@@ -100,10 +100,10 @@ public class VisionObservationSwitcher implements IDataSwitcher<VisionObservatio
 		}
 
 		return Optional.of(
-			new VisionObservation(
+			new ProcessedVisionData(
 				new Pose2d(x.get(), y.get(), Rotation2d.fromRadians(angle.get())),
-				new double[] {xStdDev.get(), yStdDev.get(), angleStdDev.get()},
-				timestamp.get()
+				timestamp.get(),
+				new double[] {xStdDev.get(), yStdDev.get(), angleStdDev.get()}
 			)
 		);
 	}

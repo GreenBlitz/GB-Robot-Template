@@ -41,7 +41,7 @@ public class DoubleSwitcher implements IDataSwitcher<Double> {
 		if (firstSource.get().isEmpty() || secondSource.get().isEmpty()) {
 			return Optional.empty();
 		}
-		double timeDelta = TimeUtils.getCurrentCycleTimeSeconds() - switchingTime;
+		double timeDelta = TimeUtils.getCurrentTimeSeconds() - switchingTime;
 		if (timeDelta == 1) {
 			return useFirstSource ? firstSource.get() : secondSource.get();
 		}

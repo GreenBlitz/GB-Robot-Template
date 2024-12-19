@@ -5,17 +5,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import frc.robot.poseestimator.helpers.PoseEstimatorLogging;
-import frc.robot.poseestimator.helpers.VisionDenoiser;
+import frc.robot.poseestimator.helpers.*;
 import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
-import frc.robot.poseestimator.helpers.DataAccumulator;
 import frc.robot.poseestimator.helpers.VisionDenoiser;
 import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
 import frc.robot.vision.rawdata.AprilTagVisionData;
-import frc.robot.vision.rawdata.VisionData;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -192,7 +189,8 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 				visionObservationSwitcher.switchToSecondsSource();
 			}
 
-			AprilTagVisionData fixedObservation = visionObservationSwitcher.getValue(observation.getTimestamp()).orElse(observation);
+			ProcessedVisionData fixedObservation = visionObservationSwitcher.getValue(observation.getTimestamp())
+				.orElse(PoseEstimationMath.processVisionData(observation, estimatedPose));
 			Pose2d currentEstimation = PoseEstimationMath.combineVisionToOdometry(
 				fixedObservation,
 				odometryPoseSample,

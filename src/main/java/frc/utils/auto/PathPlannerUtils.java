@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.GBSubsystem;
 
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ import java.util.function.Supplier;
 public class PathPlannerUtils {
 
 	public static final RobotConfig SYNCOPA_ROBOT_CONFIG = new RobotConfig(
-		74,
-		8.6,
+		RobotConstants.ROBOT_MASS_WITH_BUMPERS_KG,
+		RobotConstants.ROBOT_MOI,
 		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500Foc(1), 60, 1),
 		0.577
 	);

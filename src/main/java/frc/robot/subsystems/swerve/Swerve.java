@@ -23,11 +23,19 @@ import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.alerts.Alert;
 import frc.utils.auto.PathPlannerUtils;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.GyroSimulation;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
 
 public class Swerve {
 
@@ -109,23 +117,16 @@ public class Swerve {
 	public void applyPhysicsSimulation(double robotMassWithBumpersKg, double bumperWidthMeters, double bumperLengthMeters, Pose2d startingPose) {
 		if (gyro instanceof MapleGyro && modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT) instanceof MapleModule) {
 			GyroSimulation gyroSimulation = ((MapleGyro) gyro).getGyroSimulation();
-			SwerveModuleSimulation[] moduleSimulations = {
-				((MapleModule) modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT)).getModuleSimulation(),
-				((MapleModule) modules.getModule(ModuleUtils.ModulePosition.FRONT_RIGHT)).getModuleSimulation(),
-				((MapleModule) modules.getModule(ModuleUtils.ModulePosition.BACK_LEFT)).getModuleSimulation(),
-				((MapleModule) modules.getModule(ModuleUtils.ModulePosition.BACK_RIGHT)).getModuleSimulation()};
+			SwerveModuleSimulation moduleSimulations = ((MapleModule) modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT))
+				.getModuleSimulation();
 
-			swervePhysicsSimulation = Optional.of(
-				new SwerveDriveSimulation(
-					robotMassWithBumpersKg,
-					bumperWidthMeters,
-					bumperLengthMeters,
-					moduleSimulations,
-					constants.modulesLocations(),
-					gyroSimulation,
-					startingPose
-				)
-			);
+			DriveTrainSimulationConfig config = DriveTrainSimulationConfig.Default()
+				.withBumperSize(Meters.of(bumperLengthMeters), Meters.of(bumperWidthMeters))
+				.withRobotMass(Kilograms.of(robotMassWithBumpersKg))
+				.withGyro(() -> gyroSimulation)
+				.withSwerveModule(() -> moduleSimulations);
+
+			swervePhysicsSimulation = Optional.of(new SwerveDriveSimulation(config, startingPose));
 			SimulatedArena.getInstance().addDriveTrainSimulation(swervePhysicsSimulation.get());
 		} else {
 			new Alert(Alert.AlertType.ERROR, constants.logPath() + "Tried to use MAPLE-SIM without MapleGyro and/or MapleModules!!!").report();
@@ -186,10 +187,10 @@ public class Swerve {
 	}
 
 	private void logPhysicsSimulationPose() {
-		swervePhysicsSimulation.ifPresent(
-			swerveDriveSimulation -> Logger
-				.recordOutput(constants.logPath() + "SimulationRobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose())
-		);
+//		swervePhysicsSimulation.ifPresent(
+//			swerveDriveSimulation -> Logger
+//				.recordOutput(constants.logPath() + "SimulationRobotPosition", swerveDriveSimulation.getSimulatedDriveTrainPose())
+//		);
 	}
 
 

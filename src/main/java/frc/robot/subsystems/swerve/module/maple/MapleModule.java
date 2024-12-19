@@ -5,7 +5,6 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.module.Module;
-import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
@@ -61,17 +60,17 @@ public class MapleModule extends Module {
 
 	@Override
 	public void updateInputs() {
-		moduleIOInputs.drivePosition = Rotation2d.fromRadians(moduleSimulation.getDriveWheelFinalPositionRad());
-		moduleIOInputs.driveVelocityPositionPerSecond = Rotation2d.fromRadians(moduleSimulation.getDriveWheelFinalSpeedRadPerSec());
-		moduleIOInputs.driveAppliedVolts = moduleSimulation.getDriveMotorAppliedVolts();
-		moduleIOInputs.driveCurrentAmps = new double[] {Math.abs(moduleSimulation.getDriveMotorSupplyCurrentAmps())};
-
-		moduleIOInputs.turnAbsolutePosition = moduleSimulation.getSteerAbsoluteFacing();
-		moduleIOInputs.turnPosition = Rotation2d.fromRadians(moduleSimulation.getSteerRelativeEncoderPositionRad());
-		moduleIOInputs.turnVelocityPositionPerSecond = Rotation2d.fromRadians(moduleSimulation.getSteerRelativeEncoderSpeedRadPerSec());
-		moduleIOInputs.turnAppliedVolts = moduleSimulation.getSteerMotorAppliedVolts();
-		moduleIOInputs.turnCurrentAmps = new double[] {Math.abs(moduleSimulation.getSteerMotorSupplyCurrentAmps())};
-
+//		moduleIOInputs.drivePosition = Rotation2d.fromRadians(moduleSimulation.getDriveWheelFinalPositionRad());
+//		moduleIOInputs.driveVelocityPositionPerSecond = Rotation2d.fromRadians(moduleSimulation.getDriveWheelFinalSpeedRadPerSec());
+//		moduleIOInputs.driveAppliedVolts = moduleSimulation.getDriveMotorAppliedVolts();
+//		moduleIOInputs.driveCurrentAmps = new double[] {Math.abs(moduleSimulation.getDriveMotorSupplyCurrentAmps())};
+//
+//		moduleIOInputs.turnAbsolutePosition = moduleSimulation.getSteerAbsoluteFacing();
+//		moduleIOInputs.turnPosition = Rotation2d.fromRadians(moduleSimulation.getSteerRelativeEncoderPositionRad());
+//		moduleIOInputs.turnVelocityPositionPerSecond = Rotation2d.fromRadians(moduleSimulation.getSteerRelativeEncoderSpeedRadPerSec());
+//		moduleIOInputs.turnAppliedVolts = moduleSimulation.getSteerMotorAppliedVolts();
+//		moduleIOInputs.turnCurrentAmps = new double[] {Math.abs(moduleSimulation.getSteerMotorSupplyCurrentAmps())};
+//
 		Logger.processInputs(constants.logPath() + "/moduleIO", moduleIOInputs);
 	}
 
@@ -84,12 +83,12 @@ public class MapleModule extends Module {
 	@Override
 	public void setDriveVoltage(double voltage) {
 		setClosedLoop(false);
-		moduleSimulation.requestDriveVoltageOut(voltage);
+//		moduleSimulation.requestDriveVoltageOut(voltage);
 	}
 
 	@Override
 	public void setSteerVoltage(double voltage) {
-		moduleSimulation.requestSteerVoltageOut(voltage);
+//		moduleSimulation.requestSteerVoltageOut(voltage);
 	}
 
 	@Override

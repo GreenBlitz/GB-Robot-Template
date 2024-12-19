@@ -5,12 +5,12 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.AngleUnit;
-import org.ironmaple.simulation.drivesims.GyroSimulation;
+import org.ironmaple.simulation.drivesims.COTS;
 
 public class MapleGyroConstants {
 
 	protected static IGyro generateGyro(String logPath) {
-		return new MapleGyro(logPath, GyroSimulation.createPigeon2());
+		return new MapleGyro(logPath, COTS.ofPigeon2().get());
 	}
 
 	protected static GyroSignals generateSignals(MapleGyro mapleGyro) {

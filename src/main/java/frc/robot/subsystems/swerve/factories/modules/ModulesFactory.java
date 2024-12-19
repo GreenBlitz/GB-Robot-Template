@@ -19,7 +19,7 @@ public class ModulesFactory {
 
 	private static MapleModule createMapleModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
 		return new MapleModule(
-			ModuleConstantsFactory.create(swerveType, modulePosition),
+			ModuleSpecificConstantsFactory.create(swerveType, modulePosition),
 			MapleModuleGenerator.generateMapleModuleConstants(),
 			MapleModuleGenerator.generate()
 		);

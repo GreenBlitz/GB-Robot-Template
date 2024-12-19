@@ -49,7 +49,7 @@ public class Robot {
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
 
 		swerve.applyPhysicsSimulation(
-			RobotConstants.ROBOT_MASS_WIDTH_BUMPERS_KG,
+			RobotConstants.ROBOT_MASS_WITH_BUMPERS_KG,
 			RobotConstants.BUMPER_WIDTH_METERS,
 			RobotConstants.BUMPER_LENGTH_METERS,
 			PoseEstimatorConstants.DEFAULT_POSE

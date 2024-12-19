@@ -3,20 +3,39 @@ package frc.robot.subsystems.swerve.factories.modules;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.swerve.module.maple.MapleModuleConstants;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
+
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Volts;
 
 
 public class MapleModuleGenerator {
 
 	private static final DCMotor DRIVE_MOTOR = DCMotor.getFalcon500(1);
 	private static final DCMotor STEER_MOTOR = DCMotor.getFalcon500(1);
-	private static final double DRIVE_CURRENT_LIMIT_AMPS = 60;
-	private static final SwerveModuleSimulation.DRIVE_WHEEL_TYPE DRIVE_WHEEL_TYPE = SwerveModuleSimulation.DRIVE_WHEEL_TYPE.RUBBER;
-	private static final int GEAR_RATIO_LEVEL = 3; // L3 gear ratio
+	private static final double WHEEL_COF = 1.2;
+	private static final Voltage kSteerFrictionVoltage = Volts.of(0.25);
+	private static final Voltage kDriveFrictionVoltage = Volts.of(0.25);
+	private static final double kSteerInertia = 0.01;
+	private static final Distance kWheelRadius = Inches.of(2.167);
+
 
 	public static SwerveModuleSimulation generate() {
-		return SwerveModuleSimulation.getMark4i(DRIVE_MOTOR, STEER_MOTOR, DRIVE_CURRENT_LIMIT_AMPS, DRIVE_WHEEL_TYPE, GEAR_RATIO_LEVEL).get();
+		return new SwerveModuleSimulation(
+			DRIVE_MOTOR,
+			STEER_MOTOR,
+			6.12,
+			150.0 / 7.0,
+			kDriveFrictionVoltage,
+			kSteerFrictionVoltage,
+			kWheelRadius,
+			KilogramSquareMeters.of(kSteerInertia),
+			WHEEL_COF
+		);
 	}
 
 	private static final PIDConstants STEER_PID_RADIANS = new PIDConstants(7);

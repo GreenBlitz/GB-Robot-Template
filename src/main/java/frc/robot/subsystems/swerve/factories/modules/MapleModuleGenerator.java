@@ -28,8 +28,8 @@ public class MapleModuleGenerator {
 		return new SwerveModuleSimulation(
 			DRIVE_MOTOR,
 			STEER_MOTOR,
-			6.12,
-			150.0 / 7.0,
+			7.363636364,
+			12.8,
 			kDriveFrictionVoltage,
 			kSteerFrictionVoltage,
 			kWheelRadius,

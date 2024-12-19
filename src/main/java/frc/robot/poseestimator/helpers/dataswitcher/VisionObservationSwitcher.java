@@ -14,6 +14,9 @@ public class VisionObservationSwitcher implements IDataSwitcher<ProcessedVisionD
 	private final Function<Double, Double> timeToWeights;
 	private final double timeToSwitchSeconds;
 
+	private final Supplier<Optional<ProcessedVisionData>> firstSource;
+	private final Supplier<Optional<ProcessedVisionData>> secondsSource;
+
 	private final DoubleSwitcher XSwitcher;
 	private final DoubleSwitcher YSwitcher;
 	private final DoubleSwitcher AngleSwitcherRadians;
@@ -32,6 +35,9 @@ public class VisionObservationSwitcher implements IDataSwitcher<ProcessedVisionD
 	) {
 		this.timeToWeights = timeToWeights;
 		this.timeToSwitchSeconds = timeToSwitchSeconds;
+
+		this.firstSource = firstSource;
+		this.secondsSource = secondSource;
 
 		this.XSwitcher = createDataSwitcher(
 			() -> (firstSource.get().isPresent() ? Optional.of(firstSource.get().get().getEstimatedPose().getX()) : Optional.empty()),
@@ -107,6 +113,14 @@ public class VisionObservationSwitcher implements IDataSwitcher<ProcessedVisionD
 				new StandardDeviations2d(xStdDev.get(), yStdDev.get(), Rotation2d.fromRadians(angleStdDev.get()))
 			)
 		);
+	}
+
+	public Optional<ProcessedVisionData> getFirstSourceOutput() {
+		return firstSource.get();
+	}
+
+	public Optional<ProcessedVisionData> getSeocndsSourceOutput() {
+		return secondsSource.get();
 	}
 
 	@Override

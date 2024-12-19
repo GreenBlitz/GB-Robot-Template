@@ -140,14 +140,18 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		ProcessedVisionData fixedObservation;
 //		if (accelerationInterpolator.getSample(visionObservation.getTimestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
 		if (forceDenosingMode == 1) {
-			visionObservationSwitcher.switchToFirstSource();
+//			visionObservationSwitcher.switchToFirstSource();
+			fixedObservation = visionObservationSwitcher.getFirstSourceOutput().orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
 		} else if (forceDenosingMode == 2) {
-			visionObservationSwitcher.switchToSecondsSource();
+//			visionObservationSwitcher.switchToSecondsSource();
+			fixedObservation = visionObservationSwitcher.getSeocndsSourceOutput().orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
 		} if (forceDenosingMode == 0) {
 			fixedObservation = PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose());
 		} else {
-			fixedObservation = visionObservationSwitcher.getValue(visionObservation.getTimestamp())
-					.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
+//			fixedObservation = visionObservationSwitcher.getValue(visionObservation.getTimestamp())
+//					.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
+//		}
+			fixedObservation = null;
 		}
 
 		poseEstimator.addVisionMeasurement(

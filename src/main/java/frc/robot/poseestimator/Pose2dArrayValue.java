@@ -12,7 +12,7 @@ public enum Pose2dArrayValue {
 		this.entryValue = entryValue;
 	}
 
-	public int getEntryValue() {
+	public int getValue() {
 		return entryValue;
 	}
 

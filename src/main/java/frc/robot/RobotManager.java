@@ -26,12 +26,11 @@ public class RobotManager extends LoggedRobot {
 
 	private int roborioCycles;
 
+	private final Robot robot;
+
 	private Command autonomousCommand;
 
-	private Robot robot;
-
-	@Override
-	public void robotInit() {
+	public RobotManager() {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();

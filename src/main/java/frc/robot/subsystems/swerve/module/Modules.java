@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve.module;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.constants.MathConstants;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;

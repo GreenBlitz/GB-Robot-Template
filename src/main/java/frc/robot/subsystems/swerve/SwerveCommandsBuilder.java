@@ -77,7 +77,7 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command pointWheelsInX() {
-		return new RunCommand(() -> modules.pointWheelsInX(ModuleConstants.DEFAULT_IS_CLOSE_LOOP), swerve).withName("Point wheels in X");
+		return new RunCommand(modules::pointWheelsInX, swerve).withName("Point wheels in X");
 	}
 
 

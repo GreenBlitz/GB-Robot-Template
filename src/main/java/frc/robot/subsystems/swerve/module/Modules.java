@@ -55,7 +55,7 @@ public class Modules {
 		Arrays.stream(modules).forEach(Module::pointInCircle);
 	}
 
-	public void pointWheelsInX(boolean isClosedLoop) {
+	public void pointWheelsInX() {
 		Arrays.stream(modules).forEach(Module::pointToCenter);
 	}
 

@@ -13,6 +13,7 @@ import frc.robot.constants.MathConstants;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class Swerve {
+public class Swerve extends GBSubsystem {
 
 	private final SwerveConstants constants;
 	private final Modules modules;
@@ -40,6 +41,7 @@ public class Swerve {
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
+		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
@@ -90,8 +92,7 @@ public class Swerve {
 				constants.ppHolonomicDriveController(),
 				robotConfig,
 				() -> !Field.isFieldConventionAlliance(),
-				getModules(),
-				modules
+				this
 			);
 		}
 	}

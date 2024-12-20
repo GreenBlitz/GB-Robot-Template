@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.Logger;
@@ -84,6 +85,10 @@ public class Modules {
 	}
 
 
+	public Translation2d[] getModulePositionsFromCenterMeters() {
+		return Arrays.stream(modules).map(Module::getPositionFromCenterMeters).toArray(Translation2d[]::new);
+	}
+
 	public int getNumberOfOdometrySamples() {
 		int numberOfOdometrySamples = modules[0].getNumberOfOdometrySamples();
 		for (int i = 1; i < modules.length; i++) {
@@ -104,7 +109,7 @@ public class Modules {
 		return Arrays.stream(modules).map(Module::getDrivePosition).toArray(Rotation2d[]::new);
 	}
 
-	public SwerveModulePosition[] getModulePositions(int odometrySampleIndex) {
+	public SwerveModulePosition[] getWheelPositions(int odometrySampleIndex) {
 		SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[modules.length];
 		for (int i = 0; i < modules.length; i++) {
 			swerveModulePositions[i] = modules[i].getOdometryPosition(odometrySampleIndex);

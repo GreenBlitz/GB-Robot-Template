@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
@@ -77,7 +76,7 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command pointWheelsInX() {
-		return new RunCommand(() -> modules.pointWheelsInX(ModuleConstants.DEFAULT_IS_CLOSE_LOOP), swerve).withName("Point wheels in X");
+		return new RunCommand(modules::pointWheelsInX, swerve).withName("Point wheels in X");
 	}
 
 
@@ -97,7 +96,7 @@ public class SwerveCommandsBuilder {
 			),
 			new WheelRadiusCharacterization(
 				swerve,
-				swerve.getConstants().driveRadiusMeters(),
+				swerve.getDriveRadiusMeters(),
 				SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND,
 				swerve.getModules()::getDrivesPositions,
 				swerve::getAbsoluteHeading,

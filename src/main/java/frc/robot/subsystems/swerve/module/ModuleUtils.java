@@ -24,6 +24,25 @@ public class ModuleUtils {
 
 	}
 
+	public enum ControlMode {
+
+		NONE("NONE (target states not being used)"),
+		CUSTOM("CUSTOM (target states not being used)"),
+		TARGET_STATE("TARGET_STATE");
+
+
+		private final String toLog;
+
+		ControlMode(String toLog) {
+			this.toLog = toLog;
+		}
+
+		public String toLog() {
+			return toLog;
+		}
+
+	}
+
 	public static double velocityToOpenLoopVoltage(
 		double velocityMetersPerSecond,
 		Rotation2d steerVelocityPerSecond,

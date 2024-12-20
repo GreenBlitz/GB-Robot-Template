@@ -4,6 +4,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -13,6 +14,7 @@ import frc.robot.constants.MathConstants;
 import frc.robot.poseestimation.OdometryObservation;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
 import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
@@ -24,13 +26,14 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class Swerve {
+public class Swerve extends GBSubsystem {
 
 	private final SwerveConstants constants;
 	private final Modules modules;
 	private final IGyro gyro;
 	private final GyroSignals gyroSignals;
 
+	private final SwerveDriveKinematics kinematics;
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
 
@@ -40,6 +43,7 @@ public class Swerve {
 
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
+		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
@@ -47,6 +51,7 @@ public class Swerve {
 		this.gyro = gyro;
 		this.gyroSignals = gyroSignals;
 
+		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = this::getGyroAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
@@ -61,6 +66,10 @@ public class Swerve {
 
 	public Modules getModules() {
 		return modules;
+	}
+
+	public SwerveDriveKinematics getKinematics() {
+		return kinematics;
 	}
 
 	public SwerveCommandsBuilder getCommandsBuilder() {
@@ -90,8 +99,7 @@ public class Swerve {
 				constants.ppHolonomicDriveController(),
 				robotConfig,
 				() -> !Field.isFieldConventionAlliance(),
-				getModules(),
-				modules
+				this
 			);
 		}
 	}
@@ -162,13 +170,22 @@ public class Swerve {
 		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
-				modules.getModulePositions(i),
+				modules.getWheelPositions(i),
 				gyro instanceof EmptyGyro ? null : gyroSignals.yawSignal().asArray()[i],
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}
 
 		return odometryObservations;
+	}
+
+	public double getDriveRadiusMeters() {
+		Translation2d[] modulePositionsFromCenterMeters = modules.getModulePositionsFromCenterMeters();
+		double sum = 0;
+		for (Translation2d modulePositionFromCenterMeters : modulePositionsFromCenterMeters) {
+			sum += modulePositionFromCenterMeters.getDistance(new Translation2d());
+		}
+		return sum / modulePositionsFromCenterMeters.length;
 	}
 
 	public Rotation2d getGyroAbsoluteYaw() {
@@ -187,7 +204,7 @@ public class Swerve {
 	}
 
 	public ChassisSpeeds getRobotRelativeVelocity() {
-		return constants.kinematics().toChassisSpeeds(modules.getCurrentStates());
+		return kinematics.toChassisSpeeds(modules.getCurrentStates());
 	}
 
 	public ChassisSpeeds getFieldRelativeVelocity() {
@@ -273,7 +290,7 @@ public class Swerve {
 	}
 
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		SwerveModuleState[] swerveModuleStates = constants.kinematics()
+		SwerveModuleState[] swerveModuleStates = kinematics
 			.toSwerveModuleStates(speeds, stateHelper.getRotationAxis(swerveState.getRotateAxis()));
 		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop);
 	}

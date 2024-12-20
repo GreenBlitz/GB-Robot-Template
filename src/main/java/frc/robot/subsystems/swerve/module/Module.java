@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -87,6 +88,10 @@ public class Module {
 		return drive.getSysidConfigInfo();
 	}
 
+	public Translation2d getPositionFromCenterMeters() {
+		return constants.positionFromCenterMeters();
+	}
+
 	public double toDriveMeters(Rotation2d angle) {
 		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
@@ -167,6 +172,16 @@ public class Module {
 		steer.applyRequest(steerRequests.voltage().withSetPoint(voltage));
 	}
 
+
+	public void pointToCenter() {
+		double angleRadians = Math.atan(constants.positionFromCenterMeters().getY() / constants.positionFromCenterMeters().getX());
+		pointSteer(Rotation2d.fromRadians(angleRadians), true);
+	}
+
+	public void pointInCircle() {
+		double angleRadians = Math.atan(constants.positionFromCenterMeters().getX() / constants.positionFromCenterMeters().getY());
+		pointSteer(Rotation2d.fromRadians(angleRadians), true);
+	}
 
 	public void pointSteer(Rotation2d steerTargetPosition, boolean optimize) {
 		SwerveModuleState moduleState = new SwerveModuleState(0, steerTargetPosition);

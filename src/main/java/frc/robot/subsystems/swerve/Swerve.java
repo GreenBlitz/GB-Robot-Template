@@ -4,6 +4,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -32,6 +33,7 @@ public class Swerve extends GBSubsystem {
 	private final IGyro gyro;
 	private final GyroSignals gyroSignals;
 
+	private final SwerveDriveKinematics kinematics;
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
 
@@ -49,6 +51,7 @@ public class Swerve extends GBSubsystem {
 		this.gyro = gyro;
 		this.gyroSignals = gyroSignals;
 
+		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = this::getGyroAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
@@ -63,6 +66,10 @@ public class Swerve extends GBSubsystem {
 
 	public Modules getModules() {
 		return modules;
+	}
+
+	public SwerveDriveKinematics getKinematics() {
+		return kinematics;
 	}
 
 	public SwerveCommandsBuilder getCommandsBuilder() {
@@ -163,13 +170,22 @@ public class Swerve extends GBSubsystem {
 		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
 		for (int i = 0; i < odometrySamples; i++) {
 			odometryObservations[i] = new OdometryObservation(
-				modules.getModulePositions(i),
+				modules.getWheelPositions(i),
 				gyro instanceof EmptyGyro ? null : gyroSignals.yawSignal().asArray()[i],
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}
 
 		return odometryObservations;
+	}
+
+	public double getDriveRadiusMeters() {
+		Translation2d[] modulePositionsFromCenterMeters = modules.getModulePositionsFromCenterMeters();
+		double sum = 0;
+		for (Translation2d modulePositionFromCenterMeters : modulePositionsFromCenterMeters) {
+			sum += modulePositionFromCenterMeters.getDistance(new Translation2d());
+		}
+		return sum / modulePositionsFromCenterMeters.length;
 	}
 
 	public Rotation2d getGyroAbsoluteYaw() {
@@ -188,7 +204,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public ChassisSpeeds getRobotRelativeVelocity() {
-		return constants.kinematics().toChassisSpeeds(modules.getCurrentStates());
+		return kinematics.toChassisSpeeds(modules.getCurrentStates());
 	}
 
 	public ChassisSpeeds getFieldRelativeVelocity() {
@@ -274,7 +290,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		SwerveModuleState[] swerveModuleStates = constants.kinematics()
+		SwerveModuleState[] swerveModuleStates = kinematics
 			.toSwerveModuleStates(speeds, stateHelper.getRotationAxis(swerveState.getRotateAxis()));
 		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop);
 	}

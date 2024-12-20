@@ -15,7 +15,6 @@ import frc.robot.subsystems.swerve.module.ModuleUtils;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-
 public class SwerveStateHelper {
 
 	private final Swerve swerve;

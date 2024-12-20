@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve.module;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.constants.MathConstants;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -34,7 +33,7 @@ public class Modules {
 
 	public void resetModulesAngleByEncoder() {
 		for (Module module : modules) {
-			module.resetByEncoder();
+			module.resetSteerByEncoder();
 		}
 	}
 
@@ -52,21 +51,11 @@ public class Modules {
 	}
 
 	public void pointWheelsInCircle() {
-		boolean optimizeAngle = true;
-		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
-		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
-		modules[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE, optimizeAngle);
-		modules[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
+		Arrays.stream(modules).forEach(Module::pointInCircle);
 	}
 
-	public void pointWheelsInX(boolean isClosedLoop) {
-		SwerveModuleState frontLeftBackRight = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE);
-		SwerveModuleState frontRightBackLeft = new SwerveModuleState(0, MathConstants.EIGHTH_CIRCLE.unaryMinus());
-
-		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].setTargetState(frontLeftBackRight, isClosedLoop);
-		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].setTargetState(frontRightBackLeft, isClosedLoop);
-		modules[ModuleUtils.ModulePosition.BACK_LEFT.getIndex()].setTargetState(frontRightBackLeft, isClosedLoop);
-		modules[ModuleUtils.ModulePosition.BACK_RIGHT.getIndex()].setTargetState(frontLeftBackRight, isClosedLoop);
+	public void pointWheelsInX() {
+		Arrays.stream(modules).forEach(Module::pointToCenter);
 	}
 
 

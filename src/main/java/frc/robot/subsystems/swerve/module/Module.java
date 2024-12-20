@@ -144,17 +144,26 @@ public class Module {
 
 	public void stop() {
 		targetState = new SwerveModuleState(0, getSteerPosition());
+		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
 		steer.stop();
 		drive.stop();
 	}
 
 
 	public void setDriveVoltage(double voltage) {
+		setDriveVoltage(voltage, false);
+	}
+
+	private void setDriveVoltage(double voltage, boolean usingTargetState) {
 		setClosedLoop(false);
+		if (!usingTargetState) {
+			moduleInputs.controlMode = ModuleUtils.ControlMode.CUSTOM.toLog();
+		}
 		drive.applyRequest(driveRequests.voltage().withSetPoint(voltage));
 	}
 
 	public void setSteerVoltage(double voltage) {
+		moduleInputs.controlMode = ModuleUtils.ControlMode.CUSTOM.toLog();
 		steer.applyRequest(steerRequests.voltage().withSetPoint(voltage));
 	}
 
@@ -165,6 +174,7 @@ public class Module {
 			moduleState.optimize(getSteerPosition());
 		}
 		targetState.angle = moduleState.angle;
+		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
 		setTargetSteerPosition(targetState.angle);
 	}
 
@@ -172,6 +182,7 @@ public class Module {
 	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
 		targetState.optimize(getSteerPosition());
 		this.targetState = targetState;
+		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
 		setTargetSteerPosition(this.targetState.angle);
 		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
 	}
@@ -207,7 +218,7 @@ public class Module {
 			constants.wheelDiameterMeters(),
 			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
 		);
-		setDriveVoltage(voltage);
+		setDriveVoltage(voltage, true);
 	}
 
 

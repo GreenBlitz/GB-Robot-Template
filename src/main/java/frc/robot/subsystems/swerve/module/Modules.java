@@ -34,7 +34,7 @@ public class Modules {
 
 	public void resetModulesAngleByEncoder() {
 		for (Module module : modules) {
-			module.resetByEncoder();
+			module.resetSteerByEncoder();
 		}
 	}
 

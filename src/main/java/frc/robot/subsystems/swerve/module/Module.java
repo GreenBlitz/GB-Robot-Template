@@ -76,7 +76,7 @@ public class Module {
 		this.driveCouplingInputs = new DriveCouplingInputsAutoLogged();
 
 		updateInputs();
-		resetByEncoder();
+		resetSteerByEncoder();
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
@@ -136,7 +136,7 @@ public class Module {
 		drive.setBrake(brake);
 	}
 
-	public void resetByEncoder() {
+	public void resetSteerByEncoder() {
 		startingSteerPosition = encoderSignals.position().getLatestValue();
 		steer.resetPosition(startingSteerPosition);
 	}

@@ -1,6 +1,5 @@
 package frc.robot.constants;
 
-
 import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.utils.battery.PowerDistributionDeviceID;
 

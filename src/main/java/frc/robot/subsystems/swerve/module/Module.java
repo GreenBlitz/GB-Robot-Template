@@ -150,11 +150,19 @@ public class Module {
 
 
 	public void setDriveVoltage(double voltage) {
+		setDriveVoltage(voltage, false);
+	}
+
+	private void setDriveVoltage(double voltage, boolean usingTargetState) {
 		setClosedLoop(false);
+		if (!usingTargetState) {
+			targetState = null;
+		}
 		drive.applyRequest(driveRequests.voltage().withSetPoint(voltage));
 	}
 
 	public void setSteerVoltage(double voltage) {
+		targetState = null;
 		steer.applyRequest(steerRequests.voltage().withSetPoint(voltage));
 	}
 
@@ -207,7 +215,7 @@ public class Module {
 			constants.wheelDiameterMeters(),
 			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
 		);
-		setDriveVoltage(voltage);
+		setDriveVoltage(voltage, true);
 	}
 
 

@@ -24,11 +24,9 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RobotManager extends LoggedRobot {
 
-	private int roborioCycles;
-
 	private final Robot robot;
-
 	private Command autonomousCommand;
+	private int roborioCycles;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();

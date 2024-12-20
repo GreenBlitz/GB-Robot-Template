@@ -4,36 +4,31 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.MathConstants;
-import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 
-public class Modules extends GBSubsystem {
+public class Modules {
 
 	private final Module[] modules;
-	private final ModulesCommandsBuilder commandsBuilder;
+	private final String logPath;
 
 	public Modules(String logPath, Module... modules) {
-		super(logPath + ModuleConstants.LOG_PATH_ADDITION);
+		this.logPath = logPath + ModuleConstants.LOG_PATH_ADDITION;
 		this.modules = modules;
-		this.commandsBuilder = new ModulesCommandsBuilder(this);
 	}
 
 	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 
-	public ModulesCommandsBuilder getCommandsBuilder() {
-		return commandsBuilder;
-	}
 
 	public void updateInputs() {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
-		Logger.recordOutput(getLogPath() + "CurrentStates", getCurrentStates());
-		Logger.recordOutput(getLogPath() + "TargetStates", getTargetStates());
+		Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
+		Logger.recordOutput(logPath + "TargetStates", getTargetStates());
 	}
 
 
@@ -50,13 +45,13 @@ public class Modules extends GBSubsystem {
 	}
 
 
-	protected void pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
+	public void pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
 		for (Module module : modules) {
 			module.pointSteer(targetSteerPosition, optimize);
 		}
 	}
 
-	protected void pointWheelsInCircle() {
+	public void pointWheelsInCircle() {
 		boolean optimizeAngle = true;
 		modules[ModuleUtils.ModulePosition.FRONT_LEFT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE.unaryMinus(), optimizeAngle);
 		modules[ModuleUtils.ModulePosition.FRONT_RIGHT.getIndex()].pointSteer(MathConstants.EIGHTH_CIRCLE, optimizeAngle);

@@ -174,7 +174,7 @@ public class PathPlannerUtils {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
-		return PathPlannerUtils.followPath(path);
+		return followPath(path);
 	}
 
 }

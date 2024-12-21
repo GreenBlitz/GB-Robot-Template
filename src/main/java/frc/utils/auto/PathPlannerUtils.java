@@ -128,6 +128,10 @@ public class PathPlannerUtils {
 		return AutoBuilder.followPath(path);
 	}
 
+	public static Command pathfindToPose(Pose2d targetPose, PathConstraints pathfindingConstraints) {
+		return AutoBuilder.pathfindToPose(targetPose, pathfindingConstraints);
+	}
+
 	public static Command pathfindThenFollowPath(PathPlannerPath path, PathConstraints pathfindingConstraints) {
 		return AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints);
 	}
@@ -170,7 +174,7 @@ public class PathPlannerUtils {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
-		return AutoBuilder.followPath(path);
+		return PathPlannerUtils.followPath(path);
 	}
 
 }

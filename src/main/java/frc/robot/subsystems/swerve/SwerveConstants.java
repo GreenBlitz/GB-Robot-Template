@@ -4,8 +4,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.constants.MathConstants;
 
 public record SwerveConstants(
@@ -17,9 +15,6 @@ public record SwerveConstants(
 	PIDController xMetersPIDController,
 	PIDController yMetersPIDController,
 	PIDController rotationDegreesPIDController,
-	Translation2d[] modulesLocations,
-	double driveRadiusMeters,
-	SwerveDriveKinematics kinematics,
 	PPHolonomicDriveController ppHolonomicDriveController
 ) {
 
@@ -28,9 +23,7 @@ public record SwerveConstants(
 		double velocityAt12VoltsMetersPerSecond,
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
-		PIDConstants rotationDegreesPIDConstants,
-		Translation2d[] modulesLocations,
-		double driveRadiusMeters
+		PIDConstants rotationDegreesPIDConstants
 	) {
 		this(
 			swerveType.getLogPath(),
@@ -41,9 +34,6 @@ public record SwerveConstants(
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),
-			modulesLocations,
-			driveRadiusMeters,
-			new SwerveDriveKinematics(modulesLocations),
 			new PPHolonomicDriveController(translationMetersPIDConstants, rotationDegreesPIDConstants)
 		);
 

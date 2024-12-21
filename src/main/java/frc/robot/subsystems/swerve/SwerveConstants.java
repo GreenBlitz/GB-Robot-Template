@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -59,8 +58,5 @@ public record SwerveConstants(
 	static final Rotation2d ROTATION_NEUTRAL_DEADBAND = Rotation2d.fromRadians(0.05);
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
-
-	static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
-	static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
 
 }

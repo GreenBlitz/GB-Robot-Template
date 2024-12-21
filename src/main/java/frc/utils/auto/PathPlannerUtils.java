@@ -146,7 +146,7 @@ public class PathPlannerUtils {
 			.followPathOrDriveToPathEnd(
 				robot.getPoseEstimator()::getCurrentPose,
 				path,
-				AutonomousConstants.PATHFIND_OR_FOLLOW_PATH_TOLERANCE_METERS
+				AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS
 			);
 	}
 

@@ -13,18 +13,25 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Robot;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.alerts.Alert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class PathPlannerUtils {
@@ -84,6 +91,69 @@ public class PathPlannerUtils {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
+	public static Pose2d getFlippedPose(Pose2d bluePose) {
+		if (AutoBuilder.shouldFlip()) {
+			return FlippingUtil.flipFieldPose(bluePose);
+		}
+		return bluePose;
+	}
+
+	public static Optional<PathPlannerPath> getPathFromFile(String pathName, String logPath) {
+		try {
+			return Optional.of(PathPlannerPath.fromPathFile(pathName));
+		} catch (Exception exception) {
+			new Alert(Alert.AlertType.ERROR, logPath + exception.getMessage()).report();
+		}
+		return Optional.empty();
+	}
+
+	public static Pose2d getPathStartingPose(Optional<PathPlannerPath> path) {
+		if (path.isPresent()) {
+			return new Pose2d(path.get().getPathPoses().get(0).getTranslation(), path.get().getIdealStartingState().rotation());
+		}
+		return Pose2d.kZero;
+	}
+
+	public static Command safelyApplyPathToCommandFunction(
+		Function<PathPlannerPath, Command> pathToCommandFunction,
+		Optional<PathPlannerPath> path
+	) {
+		if (path.isPresent()) {
+			return pathToCommandFunction.apply(path.get());
+		}
+		return Commands.none();
+	}
+
+	public static Command followPath(PathPlannerPath path) {
+		return AutoBuilder.followPath(path);
+	}
+
+	public static Command pathfindToPose(Pose2d targetPose, PathConstraints pathfindingConstraints) {
+		return AutoBuilder.pathfindToPose(targetPose, pathfindingConstraints);
+	}
+
+	public static Command pathfindThenFollowPath(PathPlannerPath path, PathConstraints pathfindingConstraints) {
+		return AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints);
+	}
+
+	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
+		return getFlippedPose(path.getPathPoses().get(0)).getTranslation().getDistance(currentPose.get().getTranslation()) <= toleranceMeters;
+	}
+
+	public static Pose2d getLastPathPose(PathPlannerPath path) {
+		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
+	}
+
+	public static Command followPathOrDriveToPathEnd(Robot robot, PathPlannerPath path) {
+		return robot.getSwerve()
+			.getCommandsBuilder()
+			.followPathOrDriveToPathEnd(
+				robot.getPoseEstimator()::getCurrentPose,
+				path,
+				AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS
+			);
+	}
+
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
 		dynamicObstacles = obstacles;
 		Pathfinding.setDynamicObstacles(obstacles, currentPose.getTranslation());
@@ -104,7 +174,7 @@ public class PathPlannerUtils {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
-		return AutoBuilder.followPath(path);
+		return followPath(path);
 	}
 
 }

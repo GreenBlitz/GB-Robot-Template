@@ -5,7 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.autonomous.AutonomousBuilder;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.Superstructure;
@@ -15,6 +15,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;
@@ -29,9 +30,13 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private static final String AUTONOMOUS_CHOOSER_NAME = "autonomousChooser";
+
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
+
+	private AutonomousChooser autonomousChooser;
 
 	public Robot() {
 		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
@@ -54,8 +59,8 @@ public class Robot {
 	}
 
 	private void buildPathPlannerForAuto() {
-		// Register commands...
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+		autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutonomousBuilder.getAllAutos(this));
 	}
 
 	private void configureBindings() {
@@ -64,7 +69,7 @@ public class Robot {
 
 
 	public Command getAutonomousCommand() {
-		return new InstantCommand();
+		return autonomousChooser.getChosenValue();
 	}
 
 	public Superstructure getSuperStructure() {

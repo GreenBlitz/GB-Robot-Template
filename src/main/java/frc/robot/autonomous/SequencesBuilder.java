@@ -15,13 +15,19 @@ public class SequencesBuilder {
 	public static Command Intake(Robot robot, String pathName, String logPathPrefix) {
 		Optional<PathPlannerPath> pathOptional = PathPlannerUtils.getPathFromFile(pathName, logPathPrefix + "Intake/");
 		return PathPlannerUtils.safelyApplyPathToCommandFunction(
-			path -> new ParallelCommandGroup(PathPlannerUtils.followPathOrDriveToPathEnd(robot, path), AutonomousConstants.INTAKE_COMMAND.get()),
+			path -> new ParallelCommandGroup(
+				PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
+				AutonomousConstants.INTAKE_COMMAND.apply(robot)
+			),
 			pathOptional
 		);
 	}
 
 	public static Command IntakeShoot(Robot robot, String pathName, String logPathPrefix) {
-		return new SequentialCommandGroup(Intake(robot, pathName, logPathPrefix + "IntakeShoot/"), AutonomousConstants.SHOOTING_COMMAND.get());
+		return new SequentialCommandGroup(
+			Intake(robot, pathName, logPathPrefix + "IntakeShoot/"),
+			AutonomousConstants.SHOOTING_COMMAND.apply(robot)
+		);
 	}
 
 	public static Command Shooting(Robot robot, String pathName, String logPathPrefix) {
@@ -30,9 +36,9 @@ public class SequencesBuilder {
 			path -> new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
-					AutonomousConstants.BEFORE_SHOOTING_COMMAND.get()
+					AutonomousConstants.BEFORE_SHOOTING_COMMAND.apply(robot)
 				),
-				AutonomousConstants.SHOOTING_COMMAND.get()
+				AutonomousConstants.SHOOTING_COMMAND.apply(robot)
 			),
 			pathOptional
 		);
@@ -43,7 +49,7 @@ public class SequencesBuilder {
 		return PathPlannerUtils.safelyApplyPathToCommandFunction(
 			path -> new ParallelCommandGroup(
 				PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
-				AutonomousConstants.SHOOTING_COMMAND.get()
+				AutonomousConstants.SHOOTING_COMMAND.apply(robot)
 			),
 			pathOptional
 		);

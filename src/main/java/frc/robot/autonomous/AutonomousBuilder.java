@@ -29,7 +29,7 @@ public class AutonomousBuilder {
 		String logPath = AutonomousConstants.LOG_PATH_PREFIX + "M231/";
 		return new PathPlannerAuto(
 			new SequentialCommandGroup(
-				AutonomousConstants.SHOOTING_COMMAND.get(),
+				AutonomousConstants.SHOOTING_COMMAND.apply(robot),
 				SequencesBuilder.IntakeShoot(robot, "M2", logPath),
 				SequencesBuilder.IntakeShoot(robot, "23", logPath),
 				SequencesBuilder.IntakeShoot(robot, "31", logPath)

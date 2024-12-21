@@ -1,9 +1,10 @@
 package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Robot;
+import frc.robot.RobotState;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 
 public class AutonomousConstants {
@@ -12,10 +13,10 @@ public class AutonomousConstants {
 
 	public static final double PATHFIND_OR_FOLLOW_PATH_TOLERANCE_METERS = 0.2;
 
-	public static final Supplier<Command> INTAKE_COMMAND = () -> new WaitCommand(3);
+	public static final Function<Robot, Command> INTAKE_COMMAND = robot -> robot.getSuperStructure().setState(RobotState.INTAKE);
 
-	public static final Supplier<Command> BEFORE_SHOOTING_COMMAND = () -> new WaitCommand(1);
+	public static final Function<Robot, Command> BEFORE_SHOOTING_COMMAND = robot -> robot.getSuperStructure().setState(RobotState.PRE_SPEAKER);
 
-	public static final Supplier<Command> SHOOTING_COMMAND = () -> new WaitCommand(1.5);
+	public static final Function<Robot, Command> SHOOTING_COMMAND = robot -> robot.getSuperStructure().setState(RobotState.SPEKER);
 
 }

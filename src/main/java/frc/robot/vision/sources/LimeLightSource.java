@@ -148,8 +148,8 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 	}
 
 	@Override
-	public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
-		return this.filter = newFilter;
+	public void setFilter(Filter<AprilTagVisionData> newFilter) {
+		this.filter = newFilter;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package frc.robot.vision.multivisionsources;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.LimeLightSource;
 import frc.robot.vision.sources.LimelightGyroAngleValues;
 import frc.robot.vision.sources.VisionSource;

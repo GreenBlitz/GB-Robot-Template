@@ -1,11 +1,11 @@
-package frc.robot.poseestimator;
+package frc.utils;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.constants.Field;
+
 import java.util.List;
 import java.util.Optional;
 
-public class PoseEstimationMath {
+public class GBMath {
 
 	public static Optional<Rotation2d> calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
 		double summedXComponent = 0;

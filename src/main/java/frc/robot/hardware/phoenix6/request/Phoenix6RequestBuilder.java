@@ -29,8 +29,8 @@ public class Phoenix6RequestBuilder {
 		return new Phoenix6Request<>(torqueCurrentFOC.Output, torqueCurrentFOC, torqueCurrentFOC::withOutput);
 	}
 
-	public static Phoenix6Request<Double> build(DutyCycleOut dutyCycle) {
-		return new Phoenix6Request<>(dutyCycle.Output, dutyCycle, dutyCycle::withOutput);
+	public static Phoenix6Request<Double> build(DutyCycleOut dutyCycleOut) {
+		return new Phoenix6Request<>(dutyCycleOut.Output, dutyCycleOut, dutyCycleOut::withOutput);
 	}
 
 }

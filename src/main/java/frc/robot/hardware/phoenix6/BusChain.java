@@ -15,18 +15,18 @@ public enum BusChain {
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
 	private static final int PERMITTED_RECEIVE_ERRORS = 0;
 	private static final int PERMITTED_TRANSMIT_ERRORS = 0;
-	private static final int PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT = 0;
-	private static final int PERMITTED_BUS_OFF_COUNT = 0;
 	private static final String LOG_PATH_PREFIX = "Bus/";
 
 	private final CANBus canBus;
 	private final String logPath;
-	private CANBusStatus busStatus;
+	private CANBusStatus currentBusStatus;
+	private CANBusStatus lastBusStatus;
 
 	BusChain(String chainName) {
 		this.canBus = new CANBus(chainName);
 		this.logPath = LOG_PATH_PREFIX + getChainName() + "/";
-		this.busStatus = canBus.getStatus();
+		this.currentBusStatus = canBus.getStatus();
+		this.lastBusStatus = new CANBusStatus();
 
 		createAlerts();
 	}
@@ -37,44 +37,46 @@ public enum BusChain {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "StatusErrorAt",
-				() -> !busStatus.Status.isOK()
+				() -> !currentBusStatus.Status.isOK()
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "ReceiveErrorAt",
-				() -> busStatus.REC > PERMITTED_RECEIVE_ERRORS
+				() -> currentBusStatus.REC > PERMITTED_RECEIVE_ERRORS
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "FloodedAt",
-				() -> busStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
+				() -> currentBusStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "TransmitErrorsAt",
-				() -> busStatus.TEC > PERMITTED_TRANSMIT_ERRORS
+				() -> currentBusStatus.TEC > PERMITTED_TRANSMIT_ERRORS
 			)
 		);
-		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.ERROR,
-				logPath + "DisconnectedAt",
-				() -> busStatus.BusOffCount > PERMITTED_BUS_OFF_COUNT
-			)
+
+		PeriodicAlert busOffAlert = new PeriodicAlert(
+			Alert.AlertType.ERROR,
+			logPath + "BusOffAt",
+			() -> currentBusStatus.BusOffCount > lastBusStatus.BusOffCount
 		);
-		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.ERROR,
-				logPath + "FullAt",
-				() -> busStatus.TxFullCount > PERMITTED_TRANSMISSION_BUFFER_FULL_COUNT
-			)
+		busOffAlert.reportByCondition();
+		AlertManager.addAlert(busOffAlert);
+
+		PeriodicAlert busFullAlert = new PeriodicAlert(
+			Alert.AlertType.ERROR,
+			logPath + "FullAt",
+			() -> currentBusStatus.TxFullCount > lastBusStatus.TxFullCount
 		);
+		busFullAlert.reportByCondition();
+		AlertManager.addAlert(busFullAlert);
 		//@formatter:on
 	}
 
@@ -83,23 +85,35 @@ public enum BusChain {
 	}
 
 	public void updateStatus() {
-		busStatus = canBus.getStatus();
+		lastBusStatus = copyStatus(currentBusStatus);
+		currentBusStatus = canBus.getStatus();
 		logStatus();
 	}
 
 	public void logStatus() {
-		Logger.recordOutput(logPath + "Status", busStatus.Status.getName());
-		Logger.recordOutput(logPath + "Utilization", busStatus.BusUtilization);
-		Logger.recordOutput(logPath + "TimesDisconnected", busStatus.BusOffCount);
-		Logger.recordOutput(logPath + "FullCount", busStatus.TxFullCount);
-		Logger.recordOutput(logPath + "ReceiveError", busStatus.REC);
-		Logger.recordOutput(logPath + "TransmitError", busStatus.TEC);
+		Logger.recordOutput(logPath + "Status", currentBusStatus.Status.getName());
+		Logger.recordOutput(logPath + "Utilization", currentBusStatus.BusUtilization);
+		Logger.recordOutput(logPath + "TimesDisconnected", currentBusStatus.BusOffCount);
+		Logger.recordOutput(logPath + "FullCount", currentBusStatus.TxFullCount);
+		Logger.recordOutput(logPath + "ReceiveError", currentBusStatus.REC);
+		Logger.recordOutput(logPath + "TransmitError", currentBusStatus.TEC);
 	}
 
 	public static void logChainsStatuses() {
 		for (BusChain chain : BusChain.values()) {
 			chain.updateStatus();
 		}
+	}
+
+	public static CANBusStatus copyStatus(CANBusStatus toCopy) {
+		CANBusStatus copiedBusStatus = new CANBusStatus();
+		copiedBusStatus.Status = toCopy.Status;
+		copiedBusStatus.BusUtilization = toCopy.BusUtilization;
+		copiedBusStatus.BusOffCount = toCopy.BusOffCount;
+		copiedBusStatus.TxFullCount = toCopy.TxFullCount;
+		copiedBusStatus.REC = toCopy.REC;
+		copiedBusStatus.TEC = toCopy.TEC;
+		return copiedBusStatus;
 	}
 
 }

@@ -1,4 +1,4 @@
-package frc.robot.vision.rawdata;
+package frc.robot.vision.data;
 
 import edu.wpi.first.math.geometry.Pose3d;
 

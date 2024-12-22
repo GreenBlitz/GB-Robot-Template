@@ -1,6 +1,12 @@
 package frc.robot.hardware.phoenix6.request;
 
-import com.ctre.phoenix6.controls.*;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+
+
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Phoenix6RequestBuilder {

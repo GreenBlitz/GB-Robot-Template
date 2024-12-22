@@ -42,7 +42,7 @@ public class Robot {
 			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
 		);
 
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getConstants().kinematics());
+		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));

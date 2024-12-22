@@ -2,8 +2,10 @@ package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.constants.MathConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveCouplingInputsAutoLogged;
@@ -76,7 +78,7 @@ public class Module {
 		this.driveCouplingInputs = new DriveCouplingInputsAutoLogged();
 
 		updateInputs();
-		resetByEncoder();
+		resetSteerByEncoder();
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
@@ -85,6 +87,10 @@ public class Module {
 
 	public SysIdCalibrator.SysIdConfigInfo getDriveSysIdConfigInfo() {
 		return drive.getSysidConfigInfo();
+	}
+
+	public Translation2d getPositionFromCenterMeters() {
+		return constants.positionFromCenterMeters();
 	}
 
 	public double toDriveMeters(Rotation2d angle) {
@@ -136,7 +142,7 @@ public class Module {
 		drive.setBrake(brake);
 	}
 
-	public void resetByEncoder() {
+	public void resetSteerByEncoder() {
 		startingSteerPosition = encoderSignals.position().getLatestValue();
 		steer.resetPosition(startingSteerPosition);
 	}
@@ -144,20 +150,40 @@ public class Module {
 
 	public void stop() {
 		targetState = new SwerveModuleState(0, getSteerPosition());
+		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
 		steer.stop();
 		drive.stop();
 	}
 
 
 	public void setDriveVoltage(double voltage) {
+		setDriveVoltage(voltage, false);
+	}
+
+	private void setDriveVoltage(double voltage, boolean usingTargetState) {
 		setClosedLoop(false);
+		if (!usingTargetState) {
+			moduleInputs.controlMode = ModuleUtils.ControlMode.CUSTOM.toLog();
+		}
 		drive.applyRequest(driveRequests.voltage().withSetPoint(voltage));
 	}
 
 	public void setSteerVoltage(double voltage) {
+		moduleInputs.controlMode = ModuleUtils.ControlMode.CUSTOM.toLog();
 		steer.applyRequest(steerRequests.voltage().withSetPoint(voltage));
 	}
 
+
+	public void pointToCenter() {
+		double angleRadians = Math.atan(constants.positionFromCenterMeters().getY() / constants.positionFromCenterMeters().getX());
+		pointSteer(Rotation2d.fromRadians(angleRadians), true);
+	}
+
+	public void pointInCircle() {
+		double angleRadians = Math.atan(constants.positionFromCenterMeters().getY() / constants.positionFromCenterMeters().getX());
+		angleRadians -= (MathConstants.HALF_CIRCLE.getRadians() / 2);
+		pointSteer(Rotation2d.fromRadians(angleRadians), true);
+	}
 
 	public void pointSteer(Rotation2d steerTargetPosition, boolean optimize) {
 		SwerveModuleState moduleState = new SwerveModuleState(0, steerTargetPosition);
@@ -165,6 +191,7 @@ public class Module {
 			moduleState.optimize(getSteerPosition());
 		}
 		targetState.angle = moduleState.angle;
+		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
 		setTargetSteerPosition(targetState.angle);
 	}
 
@@ -172,6 +199,7 @@ public class Module {
 	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
 		targetState.optimize(getSteerPosition());
 		this.targetState = targetState;
+		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
 		setTargetSteerPosition(this.targetState.angle);
 		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
 	}
@@ -207,7 +235,7 @@ public class Module {
 			constants.wheelDiameterMeters(),
 			ModuleConstants.VOLTAGE_COMPENSATION_SATURATION
 		);
-		setDriveVoltage(voltage);
+		setDriveVoltage(voltage, true);
 	}
 
 

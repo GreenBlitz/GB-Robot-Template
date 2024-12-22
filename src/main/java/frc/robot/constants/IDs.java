@@ -1,6 +1,5 @@
 package frc.robot.constants;
 
-
 import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;

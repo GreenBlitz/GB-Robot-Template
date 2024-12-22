@@ -11,7 +11,7 @@ public class PeriodicAlert extends Alert {
 		this.reportCondition = reportCondition;
 	}
 
-	protected void reportByCondition() {
+	public void reportByCondition() {
 		if (reportCondition.getAsBoolean()) {
 			report();
 		}

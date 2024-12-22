@@ -1,5 +1,6 @@
 package frc.robot.hardware.signal;
 
+import edu.wpi.first.math.MathUtil;
 import frc.robot.hardware.interfaces.InputSignal;
 import org.littletonrobotics.junction.LogTable;
 
@@ -37,6 +38,26 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	@Override
 	public double[] getTimestamps() {
 		return new double[] {timestamp};
+	}
+
+	@Override
+	public boolean isNear(Double value, Double tolerance) {
+		return MathUtil.isNear(value, getLatestValue(), tolerance);
+	}
+
+	@Override
+	public boolean isFurther(Double value, Double tolerance) {
+		return !isNear(value, tolerance);
+	}
+
+	@Override
+	public boolean isGreater(Double value) {
+		return getLatestValue() > value;
+	}
+
+	@Override
+	public boolean isLess(Double value) {
+		return getLatestValue() < value;
 	}
 
 	@Override

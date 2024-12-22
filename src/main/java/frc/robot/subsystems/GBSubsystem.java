@@ -4,17 +4,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.Supplier;
+
 public abstract class GBSubsystem extends SubsystemBase {
 
+	private final Supplier<String> currentCommandNameSupplier;
 	private final String logPath;
 
-	public GBSubsystem(String logPath) {
+	public GBSubsystem(String logPath, Supplier<String> currentCommandNameSupplier) {
+		this.currentCommandNameSupplier = currentCommandNameSupplier;
 		this.logPath = logPath;
-	}
-
-	private String getCurrentCommandName() {
-		Command currentCommand = getCurrentCommand();
-		return currentCommand != null ? currentCommand.getName() : "no command is currently running on the subsystem";
 	}
 
 	public String getLogPath() {
@@ -23,7 +22,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	@Override
 	public final void periodic() {
-		Logger.recordOutput(getLogPath() + "CurrentCommand", getCurrentCommandName());
+		Logger.recordOutput(getLogPath() + "CurrentCommand", currentCommandNameSupplier.get());
 		subsystemPeriodic();
 	}
 

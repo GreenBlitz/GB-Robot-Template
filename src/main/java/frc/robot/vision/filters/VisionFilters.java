@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Field;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
+import frc.utils.Filter;
 
 public class VisionFilters {
 
@@ -21,7 +22,8 @@ public class VisionFilters {
 
 	public static Filter<AprilTagVisionData> isAprilTagHeightInTolerance(double aprilTagHeightToleranceMeters, double aprilTagRealHeightMeters) {
 		return new Filter<>(
-			aprilTagVisionData -> Math.abs(aprilTagVisionData.getAprilTagHeightMeters() - aprilTagRealHeightMeters) <= aprilTagHeightToleranceMeters
+			aprilTagVisionData -> Math.abs(aprilTagVisionData.getAprilTagHeightMeters() - aprilTagRealHeightMeters)
+				<= aprilTagHeightToleranceMeters
 		);
 	}
 

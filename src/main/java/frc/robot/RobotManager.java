@@ -124,6 +124,8 @@ public class RobotManager extends LoggedRobot {
 		steerConfig.Slot0.kI = 0;
 		steerConfig.Slot0.kD = 1.5;
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
+		
+		talonFXMotor.applyConfiguration(steerConfig);
 	}
 
 	@Override

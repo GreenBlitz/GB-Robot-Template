@@ -4,9 +4,9 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.filters.Filter;
-import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
+import frc.utils.Filter;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -133,7 +133,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 	@Override
 	public Optional<AprilTagVisionData> getFilteredVisionData() {
 		var data = getVisionData();
-		if (data.isEmpty() || filter.applyFilter(data.get())) {
+		if (data.isEmpty() || filter.apply(data.get())) {
 			return data;
 		} else {
 			return Optional.empty();

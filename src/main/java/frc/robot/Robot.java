@@ -17,9 +17,9 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
-import frc.robot.vision.filters.Filter;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
 import frc.robot.vision.sources.LimeLightSource;
+import frc.utils.Filter;
 import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;

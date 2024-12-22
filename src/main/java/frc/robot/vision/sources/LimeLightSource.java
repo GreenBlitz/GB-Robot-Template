@@ -8,10 +8,10 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.filters.Filter;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.limelights.LimelightEntryValue;
-import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.utils.Conversions;
+import frc.utils.Filter;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -144,7 +144,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 	}
 
 	private boolean shouldDataBeFiltered(Optional<AprilTagVisionData> data) {
-		return data.map(filter::applyFilter).orElseGet(() -> true);
+		return data.map(filter::apply).orElseGet(() -> true);
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 	protected void subsystemPeriodic() {
 		getVisionData().ifPresent(data -> {
 			Logger.recordOutput(getLogPath() + "estimatedPose/", data.getEstimatedPose());
-			Logger.recordOutput(getLogPath() + "filterResult/", filter.applyFilter(data));
+			Logger.recordOutput(getLogPath() + "filterResult/", filter.apply(data));
 		});
 		Logger.recordOutput(getLogPath() + "visionDataPresent/", getVisionData().isPresent());
 		Logger.recordOutput(getLogPath() + "filteredDataPresent/", getFilteredVisionData().isPresent());

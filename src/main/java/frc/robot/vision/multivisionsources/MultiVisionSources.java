@@ -2,7 +2,7 @@ package frc.robot.vision.multivisionsources;
 
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.rawdata.VisionData;
+import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
 

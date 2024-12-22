@@ -12,7 +12,6 @@ public class Field {
 	}
 
 	public static final double LENGTH_METERS = 16.54175;
-
 	public static final double WIDTH_METERS = 8.0137;
 
 }

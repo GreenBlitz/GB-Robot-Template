@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.*;
 import java.util.List;
 import java.util.Optional;
 
-public class GBMath {
+public class GBMeth {
 
 	public static Optional<Rotation2d> calculateAngleAverage(List<Rotation2d> estimatedHeadings) {
 		double summedXComponent = 0;

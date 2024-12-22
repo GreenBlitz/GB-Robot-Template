@@ -5,44 +5,64 @@ import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.robot.vision.sources.LimeLightSource;
 import frc.robot.vision.sources.LimelightGyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
+import frc.utils.GBMeth;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Supplier;
 
 public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVisionData> {
 
 	private final Supplier<Rotation2d> gyroSupplier;
-	private final List<VisionSource<AprilTagVisionData>> visionSources;
-	private final ArrayBlockingQueue<Rotation2d> rotationsCountHelper;
+	private final ArrayBlockingQueue<Rotation2d> rotationAccumulator;
+	private final int angleInitializationSamplesCount;
 	private boolean useBotPose1;
+	private Rotation2d headingOffset;
+	private boolean hasHeadingOffsetBeenInitialized;
 
 	@SafeVarargs
-	public MultiAprilTagVisionSource(String logPath, Supplier<Rotation2d> gyroSupplier, int angleInitializationSamplesCount, VisionSource<AprilTagVisionData>... visionSources) {
+	public MultiAprilTagVisionSource(
+		String logPath,
+		Supplier<Rotation2d> gyroSupplier,
+		int angleInitializationSamplesCount,
+		VisionSource<AprilTagVisionData>... visionSources
+	) {
+		this(logPath, gyroSupplier, angleInitializationSamplesCount, List.of(visionSources));
+	}
+
+	public MultiAprilTagVisionSource(
+		String logPath,
+		Supplier<Rotation2d> gyroSupplier,
+		int angleInitializationSamplesCount,
+		List<VisionSource<AprilTagVisionData>> visionSources
+	) {
 		super(logPath, visionSources);
 		this.gyroSupplier = gyroSupplier;
-		this.visionSources = List.of(visionSources);
-		this.rotationsCountHelper = new ArrayBlockingQueue<>(angleInitializationSamplesCount);
+		this.rotationAccumulator = new ArrayBlockingQueue<>(angleInitializationSamplesCount);
 		this.useBotPose1 = false;
+		this.angleInitializationSamplesCount = angleInitializationSamplesCount;
+		this.headingOffset = Rotation2d.fromDegrees(0);
+		this.hasHeadingOffsetBeenInitialized = false;
 		logBotPose();
 	}
 
-	public MultiAprilTagVisionSource(String logPath, Supplier<Rotation2d> gyroSupplier, int angleInitializationSamplesCount, List<VisionSource<AprilTagVisionData>> visionSources) {
-		super(logPath, visionSources);
-		this.gyroSupplier = gyroSupplier;
-		this.visionSources = visionSources;
-		this.rotationsCountHelper = new ArrayBlockingQueue<>(angleInitializationSamplesCount);
-		this.useBotPose1 = false;
-		logBotPose();
+	private void calculateHeadingOffset() {
+		Optional<Rotation2d> yaw = GBMeth.calculateAngleAverage(rotationAccumulator.stream().toList());
+		if (yaw.isPresent()) {
+			headingOffset = yaw.get().minus(gyroSupplier.get());
+			hasHeadingOffsetBeenInitialized = false;
+		}
 	}
 
 	private void updateYawInLimelights(Rotation2d yaw) {
 		for (VisionSource<AprilTagVisionData> visionSource : getVisionSources()) {
 			if (visionSource instanceof LimeLightSource limelightSource) {
-				limelightSource
-					.updateGyroAngles(new LimelightGyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
+				limelightSource.updateGyroAngles(
+					new LimelightGyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0)
+				);
 			}
 		}
 	}
@@ -80,6 +100,18 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	private void logBotPose() {
 		Logger.recordOutput(getLogPath() + "botPose1", useBotPose1);
 		Logger.recordOutput(getLogPath() + "botPose2", !useBotPose1);
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		super.subsystemPeriodic();
+		if (rotationAccumulator.size() <= angleInitializationSamplesCount && !hasHeadingOffsetBeenInitialized) {
+			for (Rotation2d angle : getRawEstimatedAngles()) {
+				rotationAccumulator.offer(angle);
+			}
+			calculateHeadingOffset();
+			updateYawInLimelights(gyroSupplier.get().plus(headingOffset));
+		}
 	}
 
 }

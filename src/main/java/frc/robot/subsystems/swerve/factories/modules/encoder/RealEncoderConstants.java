@@ -3,9 +3,9 @@ package frc.robot.subsystems.swerve.factories.modules.encoder;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
-//import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.constants.GlobalConstants;
+import frc.robot.constants.MathConstants;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Utils;
@@ -23,7 +23,7 @@ class RealEncoderConstants {
 		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
 		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-//		encoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+		encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = MathConstants.HALF_CIRCLE.getRotations();
 
 		return encoderConfig;
 	}

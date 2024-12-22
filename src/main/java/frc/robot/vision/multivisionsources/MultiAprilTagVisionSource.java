@@ -49,7 +49,7 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 		logBotPose();
 	}
 
-	private void calculateHeadingOffset() {
+	private void attemptToCalculateHeadingOffset() {
 		Optional<Rotation2d> yaw = GBMeth.calculateAngleAverage(rotationAccumulator.stream().toList());
 		if (yaw.isPresent()) {
 			headingOffset = yaw.get().minus(gyroSupplier.get());
@@ -105,11 +105,11 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	@Override
 	protected void subsystemPeriodic() {
 		super.subsystemPeriodic();
-		if (rotationAccumulator.size() <= angleInitializationSamplesCount && !hasHeadingOffsetBeenInitialized) {
+		if (rotationAccumulator.size() >= angleInitializationSamplesCount && !hasHeadingOffsetBeenInitialized) {
 			for (Rotation2d angle : getRawEstimatedAngles()) {
 				rotationAccumulator.offer(angle);
 			}
-			calculateHeadingOffset();
+			attemptToCalculateHeadingOffset();
 			updateYawInLimelights(gyroSupplier.get().plus(headingOffset));
 		}
 	}

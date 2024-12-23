@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import org.littletonrobotics.junction.Logger;
@@ -11,7 +12,7 @@ import org.littletonrobotics.junction.Logger;
 public class WPILibOdometryEstimator implements IOdometryEstimator {
 
 	private final String logPath;
-	private final Odometry<SwerveModulePosition[]> odometryEstimator;
+	private final SwerveDriveOdometry odometryEstimator;
 
 	public WPILibOdometryEstimator(
 		String logPath,
@@ -21,7 +22,7 @@ public class WPILibOdometryEstimator implements IOdometryEstimator {
 		Pose2d initialPose
 	) {
 		this.logPath = logPath;
-		this.odometryEstimator = new Odometry<>(kinematics, initialGyroAngle, initialWheelPositions, initialPose);
+		this.odometryEstimator = new SwerveDriveOdometry(kinematics, initialGyroAngle, initialWheelPositions, initialPose);
 	}
 
 	@Override
@@ -46,12 +47,8 @@ public class WPILibOdometryEstimator implements IOdometryEstimator {
 		odometryEstimator.resetRotation(newHeading);
 	}
 
-	private void log() {
-		Logger.recordOutput(logPath + "estimatedOdometryPose", odometryEstimator.getPoseMeters());
-	}
-
 	public void periodic() {
-		log();
+		Logger.recordOutput(logPath + "estimatedOdometryPose", odometryEstimator.getPoseMeters());
 	}
 
 }

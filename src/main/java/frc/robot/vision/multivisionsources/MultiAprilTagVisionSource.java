@@ -2,7 +2,7 @@ package frc.robot.vision.multivisionsources;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.limelights.LimeLightSource;
+import frc.robot.vision.sources.GyroRequiringVisionSource;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.GBMeth;
@@ -19,7 +19,7 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	private final Supplier<Rotation2d> gyroSupplier;
 	private final ArrayBlockingQueue<Rotation2d> rotationAccumulator;
 	private final int angleInitializationSamplesCount;
-	private boolean useBotPose1;
+	private boolean useGyroForPoseEstimating;
 	private Rotation2d headingOffset;
 	private boolean hasHeadingOffsetBeenInitialized;
 
@@ -42,7 +42,7 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 		super(logPath, visionSources);
 		this.gyroSupplier = gyroSupplier;
 		this.rotationAccumulator = new ArrayBlockingQueue<>(angleInitializationSamplesCount);
-		this.useBotPose1 = false;
+		this.useGyroForPoseEstimating = true;
 		this.angleInitializationSamplesCount = angleInitializationSamplesCount;
 		this.headingOffset = Rotation2d.fromDegrees(0);
 		this.hasHeadingOffsetBeenInitialized = false;
@@ -59,8 +59,8 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 
 	private void updateYawInLimelights(Rotation2d yaw) {
 		for (VisionSource<AprilTagVisionData> visionSource : getVisionSources()) {
-			if (visionSource instanceof LimeLightSource limelightSource) {
-				limelightSource.updateGyroAngles(new GyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
+			if (visionSource instanceof GyroRequiringVisionSource gyroRequiringVisionSource) {
+				gyroRequiringVisionSource.updateGyroAngleValues(new GyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
 			}
 		}
 	}
@@ -68,8 +68,8 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	public ArrayList<Rotation2d> getRawEstimatedAngles() {
 		ArrayList<Rotation2d> output = new ArrayList<>();
 		for (VisionSource<AprilTagVisionData> visionSource : getVisionSources()) {
-			if (visionSource instanceof LimeLightSource limeLightSource) {
-				limeLightSource.getRobotHeading().ifPresent(output::add);
+			if (visionSource instanceof GyroRequiringVisionSource gyroRequiringVisionSource) {
+				gyroRequiringVisionSource.getRobotHeading().ifPresent(output::add);
 			} else {
 				visionSource.getVisionData()
 					.ifPresent(
@@ -80,24 +80,24 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 		return output;
 	}
 
-	public void setUsedBotPose(boolean useBotPose1) {
-		this.useBotPose1 = useBotPose1;
+	public void setUseGyroForPoseEstimating(boolean useGyroForPoseEstimating) {
+		this.useGyroForPoseEstimating = useGyroForPoseEstimating;
 		for (VisionSource<? extends AprilTagVisionData> visionSource : getVisionSources()) {
-			if (visionSource instanceof LimeLightSource limelightSource) {
-				limelightSource.changedUsedBotPoseVersion(useBotPose1);
+			if (visionSource instanceof GyroRequiringVisionSource gyroRequiringVisionSource) {
+				gyroRequiringVisionSource.useGyroForPoseEstimating(useGyroForPoseEstimating);
 			}
 		}
 		logBotPose();
 	}
 
 	public void switchBotPoses() {
-		this.useBotPose1 = !useBotPose1;
+		this.useGyroForPoseEstimating = !useGyroForPoseEstimating;
 		logBotPose();
 	}
 
 	private void logBotPose() {
-		Logger.recordOutput(logPath + "botPose1", useBotPose1);
-		Logger.recordOutput(logPath + "botPose2", !useBotPose1);
+		Logger.recordOutput(logPath + "botPose2", useGyroForPoseEstimating);
+		Logger.recordOutput(logPath + "botPose1", !useGyroForPoseEstimating);
 	}
 
 	public void periodic() {

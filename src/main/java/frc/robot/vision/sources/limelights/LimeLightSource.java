@@ -6,11 +6,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.VisionSource;
+import frc.robot.vision.sources.GyroRequiringVisionSource;
 import frc.utils.Conversions;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
@@ -20,7 +19,7 @@ import frc.utils.time.TimeUtils;
 
 import java.util.Optional;
 
-public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTagVisionData> {
+public class LimeLightSource implements GyroRequiringVisionSource {
 
 	private final NetworkTableEntry robotPoseEntryBotPose2;
 	private final NetworkTableEntry robotPoseEntryBotPose1;
@@ -33,11 +32,10 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
 	private GyroAngleValues gyroAngleValues;
-	private boolean useBotPose1PoseEntry;
+	private boolean useGyroForPoseEstimating;
 
 	public LimeLightSource(String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
-		super(parentLogPath + name + "/");
-
+		String logPath = parentLogPath + name + "/";
 		this.name = name;
 		this.filter = filter;
 		this.robotPoseEntryBotPose2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
@@ -46,23 +44,15 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
 		this.gyroAngleValues = new GyroAngleValues(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0);
-		this.useBotPose1PoseEntry = false;
+		this.useGyroForPoseEstimating = true;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				this.getLogPath() + "DisconnectedAt",
+				logPath + "DisconnectedAt",
 				() -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1
 			)
 		);
-	}
-
-	public void changedUsedBotPoseVersion(boolean useBotPose1) {
-		useBotPose1PoseEntry = useBotPose1;
-	}
-
-	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
-		this.gyroAngleValues = gyroAngleValues;
 	}
 
 	@Override
@@ -76,7 +66,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 				gyroAngleValues.roll().getDegrees(),
 				gyroAngleValues.rollRate()}
 		);
-		robotPoseArray = (useBotPose1PoseEntry ? robotPoseEntryBotPose1 : robotPoseEntryBotPose2)
+		robotPoseArray = (useGyroForPoseEstimating ? robotPoseEntryBotPose2 : robotPoseEntryBotPose1)
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		double[] robotPoseWithoutGyroInput = robotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
@@ -145,17 +135,28 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 		return this.filter = newFilter;
 	}
 
+	@Override
+	public void useGyroForPoseEstimating(boolean useGyroForPoseEstimating) {
+		this.useGyroForPoseEstimating = useGyroForPoseEstimating;
+	}
+
 	/**
 	 * the robot heading is calculated by the botpose1 algorithm, which does not have the current yaw unlike botpose2.
 	 *
 	 * @return optional of the heading, empty iff apriltags are not visible to the camera.
 	 */
+	@Override
 	public Optional<Rotation2d> getRobotHeading() {
 		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
 		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
 		return Optional.of(robotHeading);
+	}
+
+	@Override
+	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
+		this.gyroAngleValues = gyroAngleValues;
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {

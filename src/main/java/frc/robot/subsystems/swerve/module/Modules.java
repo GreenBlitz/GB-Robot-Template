@@ -14,7 +14,7 @@ public class Modules {
 	private final String logPath;
 
 	public Modules(String logPath, Module... modules) {
-		this.logPath = logPath + ModuleConstants.LOG_PATH_ADDITION;
+		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
 		this.modules = modules;
 	}
 

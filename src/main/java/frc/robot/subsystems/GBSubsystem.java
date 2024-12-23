@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.*;
 import org.littletonrobotics.junction.Logger;
 
 public abstract class GBSubsystem extends SubsystemBase {
@@ -12,7 +10,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	public GBSubsystem(String logPath) {
 		this.logPath = logPath;
-		this.currentCommand = new InstantCommand().withName("None");
+		this.currentCommand = Commands.none().withName("No command is currently running on the subsystem");
 	}
 
 	@Override
@@ -32,8 +30,13 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	protected void subsystemPeriodic() {}
 
-	public Command asSubsystemCommand(String commandName) {
-		return this.currentCommand.withName(commandName);
+	public Command asSubsystemCommand(Command command, String commandName) {
+		SequentialCommandGroup subsystemCommand = new SequentialCommandGroup(
+				new InstantCommand(() -> currentCommand = command.withName(commandName)),
+				command
+		);
+		subsystemCommand.addRequirements(this);
+		return subsystemCommand;
 	}
 
 }

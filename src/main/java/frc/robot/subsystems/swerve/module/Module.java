@@ -296,8 +296,13 @@ public class Module {
 		return isAtSteerPosition;
 	}
 
-	public boolean isAtTargetState(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
-		return isSteerAtTargetPosition(steerPositionTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocity(speedToleranceMetersPerSecond);
+	public boolean isAtTargetState(
+		Rotation2d steerPositionTolerance,
+		Rotation2d steerVelocityPerSecondDeadband,
+		double speedToleranceMetersPerSecond
+	) {
+		return isSteerAtTargetPosition(steerPositionTolerance, steerVelocityPerSecondDeadband)
+			&& isAtTargetVelocity(speedToleranceMetersPerSecond);
 	}
 
 }

@@ -73,16 +73,13 @@ class TalonFXSteerConstants {
 		return steerConfig;
 	}
 
-	protected static ControllableMotor generateSteerStuff(
-		String logPath,
-		Phoenix6DeviceID deviceID,
-		Phoenix6DeviceID encoderID,
-		boolean inverted
-	) {
+	protected static ControllableMotor generateSteer(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID, boolean inverted) {
 		TalonFXConfiguration configuration = generateMotorConfig(inverted);
 		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
 
-		return new TalonFXMotor(logPath, deviceID, configuration, generateSysidConfig(), generateMechanismSimulation());
+		TalonFXMotor steer = new TalonFXMotor(logPath, deviceID, generateSysidConfig(), generateMechanismSimulation());
+		steer.applyConfiguration(configuration);
+		return steer;
 	}
 
 	protected static SteerRequests generateRequests() {

@@ -17,16 +17,16 @@ public class SteerFactory {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT ->
 					TalonFXSteerConstants
-						.generateSteerStuff(logPath, IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR, IDs.CANCodersIDs.FRONT_LEFT_ENCODER, true);
+						.generateSteer(logPath, IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR, IDs.CANCodersIDs.FRONT_LEFT_ENCODER, true);
 				case FRONT_RIGHT ->
 					TalonFXSteerConstants
-						.generateSteerStuff(logPath, IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, true);
+						.generateSteer(logPath, IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, true);
 				case BACK_LEFT ->
 					TalonFXSteerConstants
-						.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR, IDs.CANCodersIDs.BACK_LEFT_ENCODER, false);
+						.generateSteer(logPath, IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR, IDs.CANCodersIDs.BACK_LEFT_ENCODER, false);
 				case BACK_RIGHT ->
 					TalonFXSteerConstants
-						.generateSteerStuff(logPath, IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.BACK_RIGHT_ENCODER, true);
+						.generateSteer(logPath, IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.BACK_RIGHT_ENCODER, true);
 			};
 		};
 	}

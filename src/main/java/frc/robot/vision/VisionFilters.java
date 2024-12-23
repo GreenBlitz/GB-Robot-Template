@@ -1,4 +1,4 @@
-package frc.robot.vision.filters;
+package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.Field;

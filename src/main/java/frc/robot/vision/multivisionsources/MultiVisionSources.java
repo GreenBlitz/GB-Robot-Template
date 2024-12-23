@@ -51,9 +51,9 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
 	}
 
-	private static <ReturnType extends VisionData> void logPoses(String logPath, String logPathAddition, List<ReturnType> observations) {
+	private static <ReturnType extends VisionData> void logPoses(String logPath, String logPathSuffix, List<ReturnType> observations) {
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(logPath + logPathAddition + i, observations.get(i).getEstimatedPose());
+			Logger.recordOutput(logPath + logPathSuffix + i, observations.get(i).getEstimatedPose());
 		}
 	}
 

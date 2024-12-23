@@ -33,7 +33,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 	protected void subsystemPeriodic() {}
 
 	public Command asSubsystemCommand(String commandName) {
-		return new InstantCommand(() -> this.currentCommand.withName(commandName));
+		return this.currentCommand.withName(commandName);
 	}
 
 }

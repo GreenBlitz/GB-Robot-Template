@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.utils.Conversions;
 
 public class ModuleUtils {
@@ -78,17 +80,6 @@ public class ModuleUtils {
 
 	public static Rotation2d coupleSteerAngle(Rotation2d steerAngle, double couplingRatio) {
 		return Rotation2d.fromRotations(steerAngle.getRotations() * couplingRatio);
-	}
-
-
-	/**
-	 * When changing direction, the module will skew since the angle motor is not at its target angle. This method will counter that by reducing
-	 * the target velocity according to the angle motor's error cosine.
-	 */
-	public static double reduceSkew(double targetDriveVelocityMetersPerSecond, Rotation2d targetSteerPosition, Rotation2d currentSteerPosition) {
-		double steerDeltaRadians = targetSteerPosition.getRadians() - currentSteerPosition.getRadians();
-		double cosineScalar = Math.abs(Math.cos(steerDeltaRadians));
-		return targetDriveVelocityMetersPerSecond * cosineScalar;
 	}
 
 }

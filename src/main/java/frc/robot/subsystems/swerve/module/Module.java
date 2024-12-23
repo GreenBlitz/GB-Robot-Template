@@ -198,19 +198,20 @@ public class Module {
 
 	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
 		targetState.optimize(getSteerPosition());
+		targetState.cosineScale(getSteerPosition());
+
 		this.targetState = targetState;
 		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
+
 		setTargetSteerPosition(this.targetState.angle);
-		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
+		setTargetVelocity(this.targetState.speedMetersPerSecond, isClosedLoop);
 	}
 
 	private void setTargetSteerPosition(Rotation2d targetSteerPosition) {
 		steer.applyRequest(steerRequests.position().withSetPoint(targetSteerPosition));
 	}
 
-	public void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerPosition, boolean isClosedLoop) {
-		targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerPosition, getSteerPosition());
-
+	public void setTargetVelocity(double targetVelocityMetersPerSecond, boolean isClosedLoop) {
 		if (isClosedLoop) {
 			setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
 		} else {

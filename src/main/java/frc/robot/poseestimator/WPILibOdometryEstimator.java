@@ -3,9 +3,7 @@ package frc.robot.poseestimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import org.littletonrobotics.junction.Logger;
@@ -29,7 +27,7 @@ public class WPILibOdometryEstimator implements IOdometryEstimator {
 	@Override
 	public void updateOdometry(OdometryObservation[] odometryObservations) {
 		for (OdometryObservation observation : odometryObservations) {
-			odometryEstimator.updateWithTime(observation.timestamp(),observation.gyroAngle(), observation.wheelPositions());
+			odometryEstimator.updateWithTime(observation.timestamp(), observation.gyroAngle(), observation.wheelPositions());
 		}
 	}
 

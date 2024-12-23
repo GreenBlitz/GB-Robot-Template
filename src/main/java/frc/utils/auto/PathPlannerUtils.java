@@ -91,7 +91,7 @@ public class PathPlannerUtils {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
-	public static Pose2d getFlippedPose(Pose2d bluePose) {
+	public static Pose2d getAllianceRelativePose(Pose2d bluePose) {
 		if (AutoBuilder.shouldFlip()) {
 			return FlippingUtil.flipFieldPose(bluePose);
 		}
@@ -137,7 +137,7 @@ public class PathPlannerUtils {
 	}
 
 	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
-		return getFlippedPose(path.getPathPoses().get(0)).getTranslation().getDistance(currentPose.get().getTranslation()) <= toleranceMeters;
+		return getAllianceRelativePose(path.getPathPoses().get(0)).getTranslation().getDistance(currentPose.get().getTranslation()) <= toleranceMeters;
 	}
 
 	public static Pose2d getLastPathPose(PathPlannerPath path) {

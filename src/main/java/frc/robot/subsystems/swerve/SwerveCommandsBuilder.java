@@ -142,7 +142,7 @@ public class SwerveCommandsBuilder {
 	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path, double closeToPathBeginningDeadbandMeters) {
 		return new ConditionalCommand(
 			PathPlannerUtils.followPath(path),
-			driveToPose(currentPose, () -> PathPlannerUtils.getFlippedPose(PathPlannerUtils.getLastPathPose(path))),
+			driveToPose(currentPose, () -> PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
 			() -> PathPlannerUtils.isRobotCloseToPathBeginning(path, currentPose, closeToPathBeginningDeadbandMeters)
 		);
 	}

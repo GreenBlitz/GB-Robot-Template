@@ -1,4 +1,4 @@
-package frc.robot.vision.sources;
+package frc.robot.vision.sources.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -7,9 +7,10 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.limelights.LimelightEntryValue;
+import frc.robot.vision.sources.VisionSource;
 import frc.utils.Conversions;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
@@ -31,7 +32,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 	private Rotation2d robotHeading;
-	private LimelightGyroAngleValues gyroAngleValues;
+	private GyroAngleValues gyroAngleValues;
 	private boolean useBotPose1PoseEntry;
 
 	public LimeLightSource(String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
@@ -44,7 +45,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
-		this.gyroAngleValues = new LimelightGyroAngleValues(
+		this.gyroAngleValues = new GyroAngleValues(
 			Rotation2d.fromDegrees(0),
 			0,
 			Rotation2d.fromDegrees(0),
@@ -67,7 +68,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 		useBotPose1PoseEntry = useBotPose1;
 	}
 
-	public void updateGyroAngles(LimelightGyroAngleValues gyroAngleValues) {
+	public void updateGyroAngles(GyroAngleValues gyroAngleValues) {
 		this.gyroAngleValues = gyroAngleValues;
 	}
 

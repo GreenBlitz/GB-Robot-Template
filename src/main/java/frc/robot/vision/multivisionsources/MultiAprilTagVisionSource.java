@@ -2,8 +2,8 @@ package frc.robot.vision.multivisionsources;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.LimeLightSource;
-import frc.robot.vision.sources.LimelightGyroAngleValues;
+import frc.robot.vision.sources.limelights.LimeLightSource;
+import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.GBMeth;
 import org.littletonrobotics.junction.Logger;
@@ -61,7 +61,7 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 		for (VisionSource<AprilTagVisionData> visionSource : getVisionSources()) {
 			if (visionSource instanceof LimeLightSource limelightSource) {
 				limelightSource
-					.updateGyroAngles(new LimelightGyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
+					.updateGyroAngles(new GyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
 			}
 		}
 	}
@@ -97,13 +97,11 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	}
 
 	private void logBotPose() {
-		Logger.recordOutput(getLogPath() + "botPose1", useBotPose1);
-		Logger.recordOutput(getLogPath() + "botPose2", !useBotPose1);
+		Logger.recordOutput(logPath + "botPose1", useBotPose1);
+		Logger.recordOutput(logPath + "botPose2", !useBotPose1);
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		super.subsystemPeriodic();
+	public void periodic() {
 		if (rotationAccumulator.size() >= angleInitializationSamplesCount && !hasHeadingOffsetBeenInitialized) {
 			for (Rotation2d angle : getRawEstimatedAngles()) {
 				rotationAccumulator.offer(angle);

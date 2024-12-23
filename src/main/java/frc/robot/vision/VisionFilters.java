@@ -12,14 +12,14 @@ public class VisionFilters {
 	public static Filter<VisionData> isPitchInTolerance(Rotation2d pitchTolerance, Rotation2d wantedPitch) {
 		return new Filter<>(
 			visionData -> ToleranceCalculations
-				.isRotation2dInTolerance(pitchTolerance, visionData.getEstimatedPose().getY(), wantedPitch.getRadians())
+				.isRotation2dInTolerance(pitchTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), wantedPitch)
 		);
 	}
 
 	public static Filter<VisionData> isRollInTolerance(Rotation2d rollTolerance, Rotation2d wantedRoll) {
 		return new Filter<>(
 			visionData -> ToleranceCalculations
-				.isRotation2dInTolerance(rollTolerance, visionData.getEstimatedPose().getX(), wantedRoll.getRadians())
+				.isRotation2dInTolerance(rollTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), wantedRoll)
 		);
 	}
 

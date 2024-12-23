@@ -39,12 +39,5 @@ public abstract class GBSubsystem extends SubsystemBase {
 				command
 		);
 	}
-	
-	//EXAMPLE
-	public Command setPower(double power){
-		return withSetCurrentCommand(
-				new InstantCommand(() -> Logger.recordOutput("setpower")).withName("Set power to " + power)
-		);
-	}
 
 }

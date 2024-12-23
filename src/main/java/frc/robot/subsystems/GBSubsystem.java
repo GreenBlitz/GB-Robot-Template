@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-
 public abstract class GBSubsystem extends SubsystemBase {
 
 	private final String logPath;

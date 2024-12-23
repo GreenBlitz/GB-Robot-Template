@@ -8,11 +8,9 @@ import java.util.function.Supplier;
 
 public abstract class GBSubsystem extends SubsystemBase {
 
-	private final Supplier<String> currentCommandNameSupplier;
 	private final String logPath;
 
-	public GBSubsystem(String logPath, Supplier<String> currentCommandNameSupplier) {
-		this.currentCommandNameSupplier = currentCommandNameSupplier;
+	public GBSubsystem(String logPath) {
 		this.logPath = logPath;
 	}
 
@@ -22,10 +20,12 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	@Override
 	public final void periodic() {
-		Logger.recordOutput(getLogPath() + "CurrentCommand", currentCommandNameSupplier.get());
+		Logger.recordOutput(getLogPath() + "CurrentCommand", getCurrentCommandName());
 		subsystemPeriodic();
 	}
 
 	protected void subsystemPeriodic() {}
+
+	public abstract String getCurrentCommandName();
 
 }

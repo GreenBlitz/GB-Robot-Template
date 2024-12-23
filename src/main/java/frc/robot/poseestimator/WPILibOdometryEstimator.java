@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class WPILibOdometryEstimator extends GBSubsystem implements IOdometryEstimator {
 
@@ -43,6 +44,15 @@ public class WPILibOdometryEstimator extends GBSubsystem implements IOdometryEst
 	@Override
 	public void setHeading(Rotation2d newHeading) {
 		odometryEstimator.resetRotation(newHeading);
+	}
+
+	private void log() {
+		Logger.recordOutput(getLogPath() + "estimatedOdometryPose", odometryEstimator.getPoseMeters());
+	}
+
+	@Override
+	public void subsystemPeriodic() {
+		log();
 	}
 
 }

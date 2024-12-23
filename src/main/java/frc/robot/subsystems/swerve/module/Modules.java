@@ -127,17 +127,17 @@ public class Modules {
 		return true;
 	}
 
-	public boolean isSteersAtTargetPositions(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
+	public boolean isSteersAtTargetPositions(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband) {
 		for (Module module : modules) {
-			if (!module.isSteerAtTargetPosition(steerTolerance, steerVelocityPerSecondDeadband)) {
+			if (!module.isSteerAtTargetPosition(steerPositionTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public boolean isAtTargetStates(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
-		return isSteersAtTargetPositions(steerTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
+	public boolean isAtTargetStates(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
+		return isSteersAtTargetPositions(steerPositionTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocities(speedToleranceMetersPerSecond);
 	}
 
 }

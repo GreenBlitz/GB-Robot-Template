@@ -44,16 +44,16 @@ public class ModuleUtils {
 	}
 
 	public static double velocityToOpenLoopVoltage(
-		double velocityMetersPerSecond,
+		double driveVelocityMetersPerSecond,
 		Rotation2d steerVelocityPerSecond,
 		double couplingRatio,
-		Rotation2d maxVelocityPerSecond,
+		Rotation2d maxDriveVelocityPerSecond,
 		double wheelDiameterMeters,
 		double voltageCompensationSaturation
 	) {
-		Rotation2d velocityPerSecond = Conversions.distanceToAngle(velocityMetersPerSecond, wheelDiameterMeters);
-		Rotation2d coupledVelocityPerSecond = coupleDriveAngle(velocityPerSecond, steerVelocityPerSecond, couplingRatio);
-		return velocityToVoltage(coupledVelocityPerSecond, maxVelocityPerSecond, voltageCompensationSaturation);
+		Rotation2d driveVelocityPerSecond = Conversions.distanceToAngle(driveVelocityMetersPerSecond, wheelDiameterMeters);
+		Rotation2d coupledVelocityPerSecond = coupleDriveAngle(driveVelocityPerSecond, steerVelocityPerSecond, couplingRatio);
+		return velocityToVoltage(coupledVelocityPerSecond, maxDriveVelocityPerSecond, voltageCompensationSaturation);
 	}
 
 	public static double velocityToVoltage(Rotation2d velocityPerSecond, Rotation2d maxVelocityPerSecond, double voltageCompensationSaturation) {

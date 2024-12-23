@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.GBSubsystem;
@@ -31,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class PathPlannerUtils {
@@ -107,21 +105,8 @@ public class PathPlannerUtils {
 		return Optional.empty();
 	}
 
-	public static Pose2d getPathStartingPose(Optional<PathPlannerPath> path) {
-		if (path.isPresent()) {
-			return new Pose2d(path.get().getPathPoses().get(0).getTranslation(), path.get().getIdealStartingState().rotation());
-		}
-		return Pose2d.kZero;
-	}
-
-	public static Command safelyApplyPathToCommandFunction(
-		Function<PathPlannerPath, Command> pathToCommandFunction,
-		Optional<PathPlannerPath> path
-	) {
-		if (path.isPresent()) {
-			return pathToCommandFunction.apply(path.get());
-		}
-		return Commands.none();
+	public static Pose2d getPathStartingPose(PathPlannerPath path) {
+		return new Pose2d(path.getPathPoses().get(0).getTranslation(), path.getIdealStartingState().rotation());
 	}
 
 	public static Command followPath(PathPlannerPath path) {
@@ -137,7 +122,8 @@ public class PathPlannerUtils {
 	}
 
 	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
-		return getAllianceRelativePose(path.getPathPoses().get(0)).getTranslation().getDistance(currentPose.get().getTranslation()) <= toleranceMeters;
+		return getAllianceRelativePose(path.getPathPoses().get(0)).getTranslation().getDistance(currentPose.get().getTranslation())
+			<= toleranceMeters;
 	}
 
 	public static Pose2d getLastPathPose(PathPlannerPath path) {

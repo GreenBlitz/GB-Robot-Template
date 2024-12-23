@@ -8,50 +8,34 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;
 
-import java.util.Optional;
 
 public class SequencesBuilder {
 
-	public static Command Intake(Robot robot, String pathName, String logPathPrefix) {
-		Optional<PathPlannerPath> pathOptional = PathPlannerUtils.getPathFromFile(pathName, logPathPrefix + "Intake/");
-		return PathPlannerUtils.safelyApplyPathToCommandFunction(
-			path -> new ParallelCommandGroup(
-				PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
-				AutonomousConstants.INTAKE_COMMAND.apply(robot)
-			),
-			pathOptional
+	public static Command Intake(Robot robot, PathPlannerPath path) {
+		return new ParallelCommandGroup(
+			PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
+			AutonomousConstants.INTAKE_COMMAND.apply(robot)
 		);
 	}
 
-	public static Command IntakeShoot(Robot robot, String pathName, String logPathPrefix) {
+	public static Command IntakeShoot(Robot robot, PathPlannerPath path) {
+		return new SequentialCommandGroup(Intake(robot, path), AutonomousConstants.SHOOTING_COMMAND.apply(robot));
+	}
+
+	public static Command Shooting(Robot robot, PathPlannerPath path) {
 		return new SequentialCommandGroup(
-			Intake(robot, pathName, logPathPrefix + "IntakeShoot/"),
+			new ParallelDeadlineGroup(
+				PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
+				AutonomousConstants.BEFORE_SHOOTING_COMMAND.apply(robot)
+			),
 			AutonomousConstants.SHOOTING_COMMAND.apply(robot)
 		);
 	}
 
-	public static Command Shooting(Robot robot, String pathName, String logPathPrefix) {
-		Optional<PathPlannerPath> pathOptional = PathPlannerUtils.getPathFromFile(pathName, logPathPrefix + "Shoot/");
-		return PathPlannerUtils.safelyApplyPathToCommandFunction(
-			path -> new SequentialCommandGroup(
-				new ParallelDeadlineGroup(
-					PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
-					AutonomousConstants.BEFORE_SHOOTING_COMMAND.apply(robot)
-				),
-				AutonomousConstants.SHOOTING_COMMAND.apply(robot)
-			),
-			pathOptional
-		);
-	}
-
-	public static Command ShootOnMove(Robot robot, String pathName, String logPathPrefix) {
-		Optional<PathPlannerPath> pathOptional = PathPlannerUtils.getPathFromFile(pathName, logPathPrefix + "ShootOnMove/");
-		return PathPlannerUtils.safelyApplyPathToCommandFunction(
-			path -> new ParallelCommandGroup(
-				PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
-				AutonomousConstants.SHOOTING_COMMAND.apply(robot)
-			),
-			pathOptional
+	public static Command ShootOnMove(Robot robot, PathPlannerPath path) {
+		return new ParallelCommandGroup(
+			PathPlannerUtils.followPathOrDriveToPathEnd(robot, path),
+			AutonomousConstants.SHOOTING_COMMAND.apply(robot)
 		);
 	}
 

@@ -9,11 +9,16 @@ import org.littletonrobotics.junction.Logger;
 public abstract class GBSubsystem extends SubsystemBase {
 
 	private final String logPath;
-	private String currentCommandName;
+	private Command currentCommand;
 
 	public GBSubsystem(String logPath) {
 		this.logPath = logPath;
-		this.currentCommandName = "No command is currently running on the"
+		this.currentCommand = new InstantCommand().withName("No Command");
+	}
+	
+	@Override
+	public Command getCurrentCommand() {
+		return currentCommand;
 	}
 	
 	public String getLogPath() {
@@ -22,22 +27,22 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	@Override
 	public final void periodic() {
-		Logger.recordOutput(getLogPath() + "CurrentCommand", currentCommandName);
+		Logger.recordOutput(getLogPath() + "CurrentCommand", getCurrentCommand().getName());
 		subsystemPeriodic();
 	}
 
 	protected void subsystemPeriodic() {}
 
-	protected Command addNameToCommand(Command command){
+	protected Command withSetCurrentCommand(Command command){
 		return new SequentialCommandGroup(
-				new InstantCommand(() -> currentCommandName = command.getName()),
+				new InstantCommand(() -> currentCommand = command),
 				command
 		);
 	}
 	
 	//EXAMPLE
 	public Command setPower(double power){
-		return addNameToCommand(
+		return withSetCurrentCommand(
 				new InstantCommand(() -> Logger.recordOutput("setpower")).withName("Set power to " + power)
 		);
 	}

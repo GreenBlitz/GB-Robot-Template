@@ -1,6 +1,5 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
@@ -11,18 +10,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class MultiVisionSources<ReturnType extends VisionData> extends GBSubsystem {
+public class MultiVisionSources<ReturnType extends VisionData> {
 
+	private final String logPath;
 	private final List<VisionSource<ReturnType>> visionSources;
 
 	@SafeVarargs
 	public MultiVisionSources(String logPath, VisionSource<ReturnType>... visionSources) {
-		super(logPath);
+		this.logPath = logPath;
 		this.visionSources = List.of(visionSources);
 	}
 
 	public MultiVisionSources(String logPath, List<VisionSource<ReturnType>> visionSources) {
-		super(logPath);
+		this.logPath = logPath;
 		this.visionSources = visionSources;
 	}
 
@@ -51,19 +51,18 @@ public class MultiVisionSources<ReturnType extends VisionData> extends GBSubsyst
 		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
 	}
 
-	private static <ReturnType extends VisionData> void logPoses(String logPath, String logPathAddition, List<ReturnType> observations) {
+	private static <ReturnType extends VisionData> void logPoses(String logPath, String logPathSuffix, List<ReturnType> observations) {
 		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(logPath + logPathAddition + i, observations.get(i).getEstimatedPose());
+			Logger.recordOutput(logPath + logPathSuffix + i, observations.get(i).getEstimatedPose());
 		}
 	}
 
 	private void log() {
-		logPoses(getLogPath(), VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
-		logPoses(getLogPath(), VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
+		logPoses(logPath, VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
+		logPoses(logPath, VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
+	public void periodic() {
 		log();
 	}
 

@@ -7,7 +7,6 @@ import frc.robot.RobotState;
 
 import java.util.function.Function;
 
-
 public class AutonomousConstants {
 
 	public static final String LOG_PATH_PREFIX = "Autonomous/";

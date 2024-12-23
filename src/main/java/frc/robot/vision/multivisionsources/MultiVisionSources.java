@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class MultiVisionSources<ReturnType extends VisionData> {
 
-	private final String logPath;
+	protected final String logPath;
 	private final List<VisionSource<ReturnType>> visionSources;
 
 	@SafeVarargs

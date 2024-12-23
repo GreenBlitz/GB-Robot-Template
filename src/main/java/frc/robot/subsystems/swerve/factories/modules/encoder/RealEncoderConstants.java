@@ -45,7 +45,7 @@ class RealEncoderConstants {
 	protected static EncoderSignals generateSignals(CANCoderEncoder encoder) {
 		return new EncoderSignals(
 			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(encoder.getEncoder().getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
+				.generatePhoenix6Signal(encoder.getEncoder().getAbsolutePosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
 		);
 	}
 

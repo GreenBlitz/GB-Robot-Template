@@ -9,11 +9,17 @@ import frc.utils.Filter;
 public class VisionFilters {
 
 	public static Filter<VisionData> isPitchInTolerance(Rotation2d pitchTolerance) {
-		return new Filter<>(visionData -> Math.abs(visionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians());
+		return new Filter<>(
+			visionData -> Math.abs(visionData.getEstimatedPose().getRotation().getY()) <= pitchTolerance.getRadians()
+				|| Math.abs(visionData.getEstimatedPose().getRotation().getY()) >= Math.toRadians(360) - pitchTolerance.getRadians()
+		);
 	}
 
 	public static Filter<VisionData> isRollInTolerance(Rotation2d rollTolerance) {
-		return new Filter<>(visionData -> Math.abs(visionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians());
+		return new Filter<>(
+			visionData -> Math.abs(visionData.getEstimatedPose().getRotation().getX()) <= rollTolerance.getRadians()
+				|| Math.abs(visionData.getEstimatedPose().getRotation().getX()) >= Math.toRadians(360) - rollTolerance.getRadians()
+		);
 	}
 
 	public static Filter<VisionData> isRobotOnGround(double robotToGroundToleranceMeters) {
@@ -27,24 +33,23 @@ public class VisionFilters {
 		);
 	}
 
-	public static Filter<VisionData> isRobotXWithinFieldBorders(double robotXPositionTolerance) {
+	public static Filter<VisionData> isXWithinFieldBorders(double robotXPositionTolerance) {
 		return new Filter<>(
 			visionData -> (Field.LENGTH_METERS + robotXPositionTolerance) >= visionData.getEstimatedPose().getX()
 				&& -robotXPositionTolerance <= visionData.getEstimatedPose().getX()
 		);
 	}
 
-	public static Filter<VisionData> isRobotYWithinFieldBorders(double robotYPositionTolerance) {
+	public static Filter<VisionData> isYWithinFieldBorders(double robotYPositionTolerance) {
 		return new Filter<>(
 			visionData -> (Field.WIDTH_METERS + robotYPositionTolerance) >= visionData.getEstimatedPose().getY()
 				&& -robotYPositionTolerance <= visionData.getEstimatedPose().getY()
 		);
 	}
 
-	public static Filter<VisionData> isRobotWithinFieldBorders(double robotPositionTolerance) {
+	public static Filter<VisionData> isWithinFieldBorders(double robotPositionTolerance) {
 		return new Filter<>(
-			visionData -> isRobotXWithinFieldBorders(robotPositionTolerance).and(isRobotYWithinFieldBorders(robotPositionTolerance))
-				.apply(visionData)
+			visionData -> isXWithinFieldBorders(robotPositionTolerance).and(isYWithinFieldBorders(robotPositionTolerance)).apply(visionData)
 		);
 	}
 

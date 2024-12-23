@@ -181,7 +181,7 @@ public class Module {
 
 	public void pointInCircle() {
 		double angleRadians = Math.atan(constants.positionFromCenterMeters().getY() / constants.positionFromCenterMeters().getX());
-		angleRadians -= (MathConstants.HALF_CIRCLE.getRadians() / 2);
+		angleRadians -= MathConstants.QUARTER_CIRCLE.getRadians();
 		pointSteer(Rotation2d.fromRadians(angleRadians), true);
 	}
 

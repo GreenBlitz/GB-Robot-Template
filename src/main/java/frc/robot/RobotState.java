@@ -2,6 +2,6 @@ package frc.robot;
 
 public enum RobotState {
 	INTAKE,
-	SPEKER,
+	SPEAKER,
 	PRE_SPEAKER
 }

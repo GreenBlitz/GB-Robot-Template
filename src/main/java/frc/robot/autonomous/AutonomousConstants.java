@@ -20,6 +20,6 @@ public class AutonomousConstants {
 
 	public static final Function<Robot, Command> BEFORE_SHOOTING_COMMAND = robot -> robot.getSuperStructure().setState(RobotState.PRE_SPEAKER);
 
-	public static final Function<Robot, Command> SHOOTING_COMMAND = robot -> robot.getSuperStructure().setState(RobotState.SPEKER);
+	public static final Function<Robot, Command> SHOOTING_COMMAND = robot -> robot.getSuperStructure().setState(RobotState.SPEAKER);
 
 }

@@ -74,7 +74,9 @@ class TalonFXDriveConstants {
 	}
 
 	protected static ControllableMotor generateDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
-		return new TalonFXMotor(logPath, deviceID, generateMotorConfig(inverted), generateSysidConfig(), generateMechanismSimulation());
+		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, generateSysidConfig(), generateMechanismSimulation());
+		drive.applyConfiguration(generateMotorConfig(inverted));
+		return drive;
 	}
 
 	protected static DriveRequests generateRequests() {

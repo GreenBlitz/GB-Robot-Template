@@ -60,7 +60,8 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	private void updateYawInLimelights(Rotation2d yaw) {
 		for (VisionSource<AprilTagVisionData> visionSource : getVisionSources()) {
 			if (visionSource instanceof GyroRequiringVisionSource gyroRequiringVisionSource) {
-				gyroRequiringVisionSource.updateGyroAngleValues(new GyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
+				gyroRequiringVisionSource
+					.updateGyroAngleValues(new GyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
 			}
 		}
 	}

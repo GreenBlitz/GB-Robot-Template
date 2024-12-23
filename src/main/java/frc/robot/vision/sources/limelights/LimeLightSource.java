@@ -45,14 +45,7 @@ public class LimeLightSource extends GBSubsystem implements VisionSource<AprilTa
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
-		this.gyroAngleValues = new GyroAngleValues(
-			Rotation2d.fromDegrees(0),
-			0,
-			Rotation2d.fromDegrees(0),
-			0,
-			Rotation2d.fromDegrees(0),
-			0
-		);
+		this.gyroAngleValues = new GyroAngleValues(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0);
 		this.useBotPose1PoseEntry = false;
 
 		AlertManager.addAlert(

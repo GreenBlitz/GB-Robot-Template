@@ -69,14 +69,4 @@ public abstract class SparkMaxMotor implements IMotor {
 		motor.setIdleMode(idleMode);
 	}
 
-	@Override
-	public void stop() {
-		motor.stopMotor();
-	}
-
-	@Override
-	public void setPower(double power) {
-		motor.set(power);
-	}
-
 }

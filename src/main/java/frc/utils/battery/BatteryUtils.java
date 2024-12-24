@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.littletonrobotics.junction.Logger;
 
-import static frc.robot.constants.IDs.POWER_DISTRIBUTION_DEVICE_ID;
+import static frc.robot.IDs.POWER_DISTRIBUTION_DEVICE_ID;
 
 public class BatteryUtils {
 

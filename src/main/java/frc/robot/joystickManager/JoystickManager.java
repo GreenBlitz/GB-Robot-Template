@@ -26,29 +26,22 @@ public class JoystickManager {
 	public JoystickManager(){
 
 		mainStateChooser = new SendableChooser<>();
-		addOptions(mainStateChooser);
+		addOptions(mainStateChooser, "Main joystick");
 
 		secondStateChooser = new SendableChooser<>();
-		addOptions(secondStateChooser);
+		addOptions(secondStateChooser, "Second joystick");
 
 		thirdStateChooser = new SendableChooser<>();
-		addOptions(thirdStateChooser);
+		addOptions(thirdStateChooser, "Third joystick");
 
 		forthStateChooser = new SendableChooser<>();
-		addOptions(forthStateChooser);
+		addOptions(forthStateChooser, "Forth joystick");
 
 		fifthStateChooser = new SendableChooser<>();
-		addOptions(fifthStateChooser);
+		addOptions(fifthStateChooser, "Fifth joystick");
 
 		sixthStateChooser = new SendableChooser<>();
-		addOptions(sixthStateChooser);
-
-		SmartDashboard.putData("main joystick", mainStateChooser);
-		SmartDashboard.putData("second joystick", mainStateChooser);
-		SmartDashboard.putData("third joystick", mainStateChooser);
-		SmartDashboard.putData("forth joystick", mainStateChooser);
-		SmartDashboard.putData("fifth joystick", mainStateChooser);
-		SmartDashboard.putData("sixth joystick", mainStateChooser);
+		addOptions(sixthStateChooser, "Sixth joystick");
 
 	}
 
@@ -154,12 +147,14 @@ public class JoystickManager {
 		return sixthJoystick;
 	}
 
-	private void addOptions(SendableChooser<JoystickState> chooser){
+	private void addOptions(SendableChooser<JoystickState> chooser, String name){
 		chooser.setDefaultOption("NONE", JoystickState.NONE);
 		for (JoystickState option : JoystickState.values()){
 			chooser.addOption(String.valueOf(option), option);
 		}
 		chooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
+		SmartDashboard.putData(name, chooser);
+
 
 	}
 

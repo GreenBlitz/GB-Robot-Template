@@ -181,7 +181,7 @@ public class Module {
 
 	public void pointInCircle() {
 		double angleRadians = Math.atan(constants.positionFromCenterMeters().getY() / constants.positionFromCenterMeters().getX());
-		angleRadians -= (MathConstants.HALF_CIRCLE.getRadians() / 2);
+		angleRadians -= MathConstants.QUARTER_CIRCLE.getRadians();
 		pointSteer(Rotation2d.fromRadians(angleRadians), true);
 	}
 
@@ -198,19 +198,20 @@ public class Module {
 
 	public void setTargetState(SwerveModuleState targetState, boolean isClosedLoop) {
 		targetState.optimize(getSteerPosition());
+		targetState.cosineScale(getSteerPosition());
+
 		this.targetState = targetState;
 		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
+
 		setTargetSteerPosition(this.targetState.angle);
-		setTargetVelocity(this.targetState.speedMetersPerSecond, this.targetState.angle, isClosedLoop);
+		setTargetVelocity(this.targetState.speedMetersPerSecond, isClosedLoop);
 	}
 
 	private void setTargetSteerPosition(Rotation2d targetSteerPosition) {
 		steer.applyRequest(steerRequests.position().withSetPoint(targetSteerPosition));
 	}
 
-	public void setTargetVelocity(double targetVelocityMetersPerSecond, Rotation2d targetSteerPosition, boolean isClosedLoop) {
-		targetVelocityMetersPerSecond = ModuleUtils.reduceSkew(targetVelocityMetersPerSecond, targetSteerPosition, getSteerPosition());
-
+	public void setTargetVelocity(double targetVelocityMetersPerSecond, boolean isClosedLoop) {
 		if (isClosedLoop) {
 			setTargetClosedLoopVelocity(targetVelocityMetersPerSecond);
 		} else {
@@ -282,7 +283,7 @@ public class Module {
 		return MathUtil.isNear(getTargetState().speedMetersPerSecond, getDriveVelocityMetersPerSecond(), speedToleranceMetersPerSecond);
 	}
 
-	public boolean isSteerAtTargetPosition(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband) {
+	public boolean isSteerAtTargetPosition(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband) {
 		boolean isStopping = steerSignals.velocity().getLatestValue().getRadians() <= steerVelocityPerSecondDeadband.getRadians();
 		if (!isStopping) {
 			return false;
@@ -290,13 +291,18 @@ public class Module {
 		boolean isAtSteerPosition = MathUtil.isNear(
 			MathUtil.angleModulus(getTargetState().angle.getRadians()),
 			MathUtil.angleModulus(getSteerPosition().getRadians()),
-			steerTolerance.getRadians()
+			steerPositionTolerance.getRadians()
 		);
 		return isAtSteerPosition;
 	}
 
-	public boolean isAtTargetState(Rotation2d steerTolerance, Rotation2d steerVelocityPerSecondDeadband, double speedToleranceMetersPerSecond) {
-		return isSteerAtTargetPosition(steerTolerance, steerVelocityPerSecondDeadband) && isAtTargetVelocity(speedToleranceMetersPerSecond);
+	public boolean isAtTargetState(
+		Rotation2d steerPositionTolerance,
+		Rotation2d steerVelocityPerSecondDeadband,
+		double speedToleranceMetersPerSecond
+	) {
+		return isSteerAtTargetPosition(steerPositionTolerance, steerVelocityPerSecondDeadband)
+			&& isAtTargetVelocity(speedToleranceMetersPerSecond);
 	}
 
 }

@@ -1,6 +1,5 @@
 package frc.robot.joystickManager;
 
-import com.fasterxml.jackson.databind.JsonSerializer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.joysticks.JoystickPorts;
@@ -23,8 +22,7 @@ public class JoystickManager {
 	private SendableChooser<JoystickState> sixthStateChooser;
 
 
-	public JoystickManager(){
-
+	public JoystickManager() {
 		mainStateChooser = new SendableChooser<>();
 		addOptions(mainStateChooser);
 
@@ -49,7 +47,6 @@ public class JoystickManager {
 		SmartDashboard.putData("forth joystick", mainStateChooser);
 		SmartDashboard.putData("fifth joystick", mainStateChooser);
 		SmartDashboard.putData("sixth joystick", mainStateChooser);
-
 	}
 
 	public void setMainJoystickState(JoystickState state) {
@@ -154,13 +151,12 @@ public class JoystickManager {
 		return sixthJoystick;
 	}
 
-	private void addOptions(SendableChooser<JoystickState> chooser){
+	private void addOptions(SendableChooser<JoystickState> chooser) {
 		chooser.setDefaultOption("NONE", JoystickState.NONE);
-		for (JoystickState option : JoystickState.values()){
+		for (JoystickState option : JoystickState.values()) {
 			chooser.addOption(String.valueOf(option), option);
 		}
-		chooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
-
+		chooser.onChange(((joystickState) -> setMainJoystickState((mainStateChooser.getSelected()))));
 	}
 
 }

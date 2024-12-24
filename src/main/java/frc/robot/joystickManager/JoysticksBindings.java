@@ -6,7 +6,6 @@ import frc.utils.joysticks.SmartJoystick;
 public class JoysticksBindings {
 
 
-	public static void configureBindings(SmartJoystick joystick, Robot robot) {
-	}
+	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
 
 }

@@ -33,9 +33,11 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
-		this.roborioCycles = 0;
 
+		this.roborioCycles = 0;
 		this.robot = new Robot();
+
+		JoysticksBindings.configureBindings(robot);
 	}
 
 	@Override
@@ -71,9 +73,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
-		CommandScheduler.getInstance().run();
-		BatteryUtils.logStatus();
-		BusChain.logChainsStatuses();
+		robot.periodic();
 		AlertManager.reportAlerts();
 	}
 

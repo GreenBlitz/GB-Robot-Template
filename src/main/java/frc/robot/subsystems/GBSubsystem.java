@@ -31,7 +31,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 	protected void subsystemPeriodic() {}
 
 	public Command asSubsystemCommand(Command command, String commandName) {
-		currentCommand =  command.withName(commandName);
+		currentCommand = command.withName(commandName);
 		currentCommand.addRequirements(this);
 		return currentCommand;
 	}

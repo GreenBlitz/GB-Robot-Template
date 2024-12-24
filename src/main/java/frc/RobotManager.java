@@ -32,7 +32,6 @@ public class RobotManager extends LoggedRobot {
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
-		BatteryUtils.scheduleLimiter();
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();

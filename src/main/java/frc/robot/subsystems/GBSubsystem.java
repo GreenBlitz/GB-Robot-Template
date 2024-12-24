@@ -10,7 +10,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	public GBSubsystem(String logPath) {
 		this.logPath = logPath;
-		this.currentCommand = Commands.none().withName("No command is currently running on the subsystem");
+		this.currentCommand = Commands.none().withName("None");
 	}
 
 	@Override

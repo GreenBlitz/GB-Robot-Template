@@ -16,13 +16,7 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	public Robot() {
-		configureBindings();
-	}
-
-	private void configureBindings() {
-		JoysticksBindings.configureBindings(this);
-	}
+	public Robot() {}
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();

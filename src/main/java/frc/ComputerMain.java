@@ -1,4 +1,4 @@
-package frc.robot;
+package frc;
 
 import frc.utils.CMDHandler;
 import java.nio.file.Path;

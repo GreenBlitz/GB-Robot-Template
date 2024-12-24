@@ -2,7 +2,7 @@ package frc.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
-import frc.robot.constants.GlobalConstants;
+import frc.constants.GlobalConstants;
 
 public class DriverStationUtils {
 

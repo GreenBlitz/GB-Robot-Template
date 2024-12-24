@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.constants;
 
 import java.nio.file.Path;
 

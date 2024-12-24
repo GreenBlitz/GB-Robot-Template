@@ -2,7 +2,7 @@ package frc.utils;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.constants.MathConstants;
+import frc.constants.MathConstants;
 
 public class Conversions {
 

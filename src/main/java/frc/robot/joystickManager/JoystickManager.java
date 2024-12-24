@@ -8,7 +8,7 @@ import frc.utils.joysticks.SmartJoystick;
 
 public class JoystickManager {
 
-	private static SmartJoystick mainJoystick = null;
+	private SmartJoystick mainJoystick = null;
 	private SmartJoystick secondJoystick = null;
 	private SmartJoystick thirdJoystick = null;
 	private SmartJoystick fourthJoystick = null;
@@ -52,7 +52,7 @@ public class JoystickManager {
 
 	}
 
-	public static void setMainJoystickState(JoystickState state) {
+	public void setMainJoystickState(JoystickState state) {
 		if (state == JoystickState.NONE) {
 			mainJoystick = null;
 		} else if (mainJoystick == null) {

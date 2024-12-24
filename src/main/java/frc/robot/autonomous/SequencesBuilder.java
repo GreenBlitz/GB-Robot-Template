@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;
 
-
 public class SequencesBuilder {
 
 	public static Command Intake(Robot robot, PathPlannerPath path) {

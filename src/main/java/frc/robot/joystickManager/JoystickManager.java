@@ -26,31 +26,30 @@ public class JoystickManager {
 	public JoystickManager(){
 
 		mainStateChooser = new SendableChooser<>();
-		mainStateChooser.setDefaultOption("NONE", JoystickState.NONE);
-		mainStateChooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
+		addOptions(mainStateChooser);
 
 		secondStateChooser = new SendableChooser<>();
-		secondStateChooser.setDefaultOption("NONE", JoystickState.NONE);
-		secondStateChooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
+		addOptions(secondStateChooser);
 
 		thirdStateChooser = new SendableChooser<>();
-		thirdStateChooser.setDefaultOption("NONE", JoystickState.NONE);
-		thirdStateChooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
+		addOptions(thirdStateChooser);
 
 		forthStateChooser = new SendableChooser<>();
-		forthStateChooser.setDefaultOption("NONE", JoystickState.NONE);
-		forthStateChooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
+		addOptions(forthStateChooser);
 
 		fifthStateChooser = new SendableChooser<>();
-		fifthStateChooser.setDefaultOption("NONE", JoystickState.NONE);
-		fifthStateChooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
+		addOptions(fifthStateChooser);
 
 		sixthStateChooser = new SendableChooser<>();
-		sixthStateChooser.setDefaultOption("NONE", JoystickState.NONE);
-		sixthStateChooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
+		addOptions(sixthStateChooser);
 
+		SmartDashboard.putData("main joystick", mainStateChooser);
+		SmartDashboard.putData("second joystick", mainStateChooser);
+		SmartDashboard.putData("third joystick", mainStateChooser);
+		SmartDashboard.putData("forth joystick", mainStateChooser);
+		SmartDashboard.putData("fifth joystick", mainStateChooser);
+		SmartDashboard.putData("sixth joystick", mainStateChooser);
 
-		SmartDashboard.putData("joysticks/main joystick", mainStateChooser);
 	}
 
 	public static void setMainJoystickState(JoystickState state) {
@@ -153,6 +152,15 @@ public class JoystickManager {
 			setSixthJoystickState(JoystickState.EMPTY);
 		}
 		return sixthJoystick;
+	}
+
+	private void addOptions(SendableChooser<JoystickState> chooser){
+		chooser.setDefaultOption("NONE", JoystickState.NONE);
+		for (JoystickState option : JoystickState.values()){
+			chooser.addOption(String.valueOf(option), option);
+		}
+		chooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
+
 	}
 
 }

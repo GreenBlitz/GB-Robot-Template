@@ -155,7 +155,6 @@ public class JoystickManager {
 		chooser.onChange(((joystickState)->setMainJoystickState((mainStateChooser.getSelected()))));
 		SmartDashboard.putData(name, chooser);
 
-
 	}
 
 }

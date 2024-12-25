@@ -6,10 +6,8 @@ public enum JoystickState {
 	EMPTY("EMPTY"),
 	SWERVE("SWERVE"),
 	SECOND("SECOND"),
-	TEST("TEST"),
-	;
+	TEST("TEST"),;
 
-	JoystickState(String state) {
+	JoystickState(String state) {}
 
-	}
 }

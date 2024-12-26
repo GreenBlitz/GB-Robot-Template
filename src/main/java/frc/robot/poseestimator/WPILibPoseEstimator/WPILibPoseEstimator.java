@@ -1,14 +1,13 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -21,18 +20,16 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 
-	public WPILibPoseEstimator(
-		String logPath,
-		SwerveDriveKinematics kinematics,
-		SwerveDriveOdometry odometry,
-		SwerveModulePosition[] modulePositions
-	) {
+	public WPILibPoseEstimator(String logPath, SwerveDriveKinematics kinematics, SwerveModulePosition[] modulePositions) {
 		super(logPath);
-
-
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
-			odometry,
+			new Odometry<>(
+				kinematics,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
+				modulePositions,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+			),
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
 		);
@@ -101,7 +98,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp(),
-			VecBuilder.fill(0, 0, 0) // todo change to funciton that calculats
+			PoseEstimationMath.calculateStandardDeviationOfPose(visionObservation, getEstimatedPose()).getWPILibStandardDeviations()
 		);
 	}
 

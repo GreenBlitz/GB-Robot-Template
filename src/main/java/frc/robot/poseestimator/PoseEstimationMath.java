@@ -8,10 +8,10 @@ import frc.robot.vision.data.AprilTagVisionData;
 public class PoseEstimationMath {
 
 	public static StandardDeviations2d calculateStandardDeviationOfPose(AprilTagVisionData rawVisionData, Pose2d currentEstimatedPose) {
-		double normalizedLimelightX = rawVisionData.getEstimatedPose().getX() / Field.LENGTH_METERS;
-		double normalizedLimelightY = rawVisionData.getEstimatedPose().getY() / Field.WIDTH_METERS;
-		double normalizedEstimatedX = currentEstimatedPose.getX() / Field.LENGTH_METERS;
-		double normalizedEstimatedY = currentEstimatedPose.getY() / Field.WIDTH_METERS;
+		double normalizedLimelightX = rawVisionData.getEstimatedPose().getX();
+		double normalizedLimelightY = rawVisionData.getEstimatedPose().getY();
+		double normalizedEstimatedX = currentEstimatedPose.getX();
+		double normalizedEstimatedY = currentEstimatedPose.getY();
 		return new StandardDeviations2d (
 			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY),

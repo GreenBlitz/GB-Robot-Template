@@ -5,56 +5,39 @@ import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.GyroRequiringVisionSource;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
-import frc.utils.GBMeth;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Supplier;
 
 public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVisionData> {
 
 	private final Supplier<Rotation2d> gyroSupplier;
-	private final ArrayBlockingQueue<Rotation2d> rotationAccumulator;
-	private final int angleInitializationSamplesCount;
+	private final Supplier<Rotation2d> headingOffsetSupplier;
 	private boolean useGyroForPoseEstimating;
-	private Rotation2d headingOffset;
-	private boolean hasHeadingOffsetBeenInitialized;
 
 	@SafeVarargs
 	public MultiAprilTagVisionSource(
 		String logPath,
 		Supplier<Rotation2d> gyroSupplier,
-		int angleInitializationSamplesCount,
+		Supplier<Rotation2d> headingOffsetSupplier,
 		VisionSource<AprilTagVisionData>... visionSources
 	) {
-		this(logPath, gyroSupplier, angleInitializationSamplesCount, List.of(visionSources));
+		this(logPath, gyroSupplier, headingOffsetSupplier, List.of(visionSources));
 	}
 
 	public MultiAprilTagVisionSource(
 		String logPath,
 		Supplier<Rotation2d> gyroSupplier,
-		int angleInitializationSamplesCount,
+		Supplier<Rotation2d> headingOffsetSupplier,
 		List<VisionSource<AprilTagVisionData>> visionSources
 	) {
 		super(logPath, visionSources);
 		this.gyroSupplier = gyroSupplier;
-		this.rotationAccumulator = new ArrayBlockingQueue<>(angleInitializationSamplesCount);
+		this.headingOffsetSupplier = headingOffsetSupplier;
 		this.useGyroForPoseEstimating = true;
-		this.angleInitializationSamplesCount = angleInitializationSamplesCount;
-		this.headingOffset = Rotation2d.fromDegrees(0);
-		this.hasHeadingOffsetBeenInitialized = false;
 		logBotPose();
-	}
-
-	private void attemptToCalculateHeadingOffset() {
-		Optional<Rotation2d> yaw = GBMeth.calculateAngleAverage(rotationAccumulator.stream().toList());
-		if (yaw.isPresent()) {
-			headingOffset = yaw.get().minus(gyroSupplier.get());
-			hasHeadingOffsetBeenInitialized = false;
-		}
 	}
 
 	private void updateYawInLimelights(Rotation2d yaw) {
@@ -102,13 +85,7 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	}
 
 	public void periodic() {
-		if (rotationAccumulator.size() >= angleInitializationSamplesCount && !hasHeadingOffsetBeenInitialized) {
-			for (Rotation2d angle : getRawEstimatedAngles()) {
-				rotationAccumulator.offer(angle);
-			}
-			attemptToCalculateHeadingOffset();
-			updateYawInLimelights(gyroSupplier.get().plus(headingOffset));
-		}
+		updateYawInLimelights(gyroSupplier.get().plus(headingOffsetSupplier.get()));
 	}
 
 }

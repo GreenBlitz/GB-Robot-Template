@@ -1,6 +1,8 @@
 package frc.robot.hardware.rev.motors;
 
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -67,8 +69,11 @@ public abstract class SparkMaxMotor implements IMotor {
 	public void setBrake(boolean brake) {
 		SparkBaseConfig.IdleMode idleMode = brake ? SparkBaseConfig.IdleMode.kBrake : SparkBaseConfig.IdleMode.kCoast;
 
-		// TODO motor.configure()
-//		motor.setIdleMode(idleMode);
+		motor.configure(
+				new SparkMaxConfig().idleMode(idleMode),
+				SparkBase.ResetMode.kNoResetSafeParameters,
+				SparkBase.PersistMode.kNoPersistParameters
+		);
 	}
 
 	@Override

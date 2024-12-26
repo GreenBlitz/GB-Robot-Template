@@ -8,8 +8,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.helpers.DataAccumulator;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.poseestimator.observations.OdometryObservation;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
-import frc.robot.vision.rawdata.AprilTagVisionData;
 import frc.utils.DriverStationUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -22,7 +22,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
 	private final TimeInterpolatableBuffer<Pose2d> estimatedPoseInterpolator;
-	private final DataAccumulator<Rotation2d> headingCountHelper;
 	private final DataAccumulator<AprilTagVisionData> poseCountHelper;
 	private final MultiAprilTagVisionSource multiVisionSources;
 	private final double[] odometryStandardDeviations;
@@ -45,10 +44,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.estimatedPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.multiVisionSources = multiVisionSources;
-		this.headingCountHelper = new DataAccumulator<>(
-			multiVisionSources::getRawEstimatedAngles,
-			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
-		);
 		this.poseCountHelper = new DataAccumulator<>(
 			multiVisionSources::getUnfilteredVisionData,
 			PoseEstimatorConstants.VISION_OBSERVATION_COUNT_FOR_AVERAGED_POSE_CALCULATION
@@ -58,18 +53,9 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.hasEstimatedPoseBeenInitialized = false;
 		this.isRobotDisabled = false;
 		this.odometryStandardDeviations = odometryStandardDeviations;
-		calculateHeadingOffset(lastOdometryValues.gyroAngle());
 		this.estimatedPose = new Pose2d();
 		this.odometryPose = new Pose2d();
 		this.odometryPoseRelativeToInitialPose = new Pose2d();
-	}
-
-	private void calculateHeadingOffset(Rotation2d gyroAngle) {
-		getEstimatedRobotHeadingByVision().ifPresentOrElse(estimatedHeading -> {
-			headingOffset = estimatedHeading.minus(gyroAngle);
-			hasHeadingOffsetBeenInitialized = true;
-			estimatedPose = new Pose2d(estimatedPose.getTranslation(), estimatedHeading);
-		}, () -> headingOffset = new Rotation2d());
 	}
 
 	//@formatter:off
@@ -86,14 +72,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		if (lastOdometryValues.gyroAngle() != null) {
 			headingOffset = newHeading.minus(lastOdometryValues.gyroAngle());
 		}
-	}
-
-	private Optional<Rotation2d> getEstimatedRobotHeadingByVision() {
-		List<Rotation2d> stackedHeadings = headingCountHelper.getAccumulatedList();
-		if (stackedHeadings.isEmpty()) {
-			return Optional.empty();
-		}
-		return PoseEstimationMath.calculateAngleAverage(stackedHeadings);
 	}
 
 	@Override
@@ -180,10 +158,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	private void addOdometryObservation(OdometryObservation observation) {
-		if (!hasHeadingOffsetBeenInitialized) {
-			calculateHeadingOffset(observation.gyroAngle());
-		}
-		multiVisionSources.updateYawInLimelights(observation.gyroAngle());
 		Twist2d twist = lastOdometryValues.kinematics().toTwist2d(lastOdometryValues.wheelPositions(), observation.wheelPositions());
 		twist = PoseEstimationMath.addGyroToTwist(twist, observation.gyroAngle(), lastOdometryValues.gyroAngle());
 		lastOdometryValues = new OdometryValues(lastOdometryValues.kinematics(), observation.wheelPositions(), observation.gyroAngle());
@@ -196,7 +170,6 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public void log() {
 		Logger.recordOutput(super.getLogPath() + "EstimatedPose/", getEstimatedPose());
 		Logger.recordOutput(super.getLogPath() + "OdometryPose/", getOdometryPose());
-		Logger.recordOutput(super.getLogPath() + "HeadingAveragingCount/", headingCountHelper.getIntakeCount());
 		Logger.recordOutput(super.getLogPath() + "PoseAveragingCount/", poseCountHelper.getIntakeCount());
 		Logger.recordOutput(super.getLogPath() + "HeadingOffset/", headingOffset.getDegrees());
 		Logger.recordOutput(super.getLogPath() + "hasHeadingOffsetBeenInitialized/", hasHeadingOffsetBeenInitialized);

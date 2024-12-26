@@ -2,7 +2,7 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
 import frc.robot.constants.Field;
-import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.robot.vision.data.AprilTagVisionData;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,11 +44,11 @@ public class PoseEstimationMath {
 
 	public static Transform2d scaleDifferenceFromKalman(Transform2d visionDifferenceFromOdometry, double[] combinedStandardDeviations) {
 		return new Transform2d(
-			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[Pose2dArrayValue.X_VALUE.getEntryValue()],
-			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[Pose2dArrayValue.Y_VALUE.getEntryValue()],
+			visionDifferenceFromOdometry.getX() * combinedStandardDeviations[Pose2dArrayValue.X_VALUE.getValue()],
+			visionDifferenceFromOdometry.getY() * combinedStandardDeviations[Pose2dArrayValue.Y_VALUE.getValue()],
 			Rotation2d.fromRadians(
 				visionDifferenceFromOdometry.getRotation().getRadians()
-					* combinedStandardDeviations[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()]
+					* combinedStandardDeviations[Pose2dArrayValue.ROTATION_VALUE.getValue()]
 			)
 		);
 	}
@@ -98,9 +98,9 @@ public class PoseEstimationMath {
 		double rotationDeviationSum = 0;
 
 		for (AprilTagVisionData observation : observations) {
-			double xWeight = 1 / visionStandardDeviations[Pose2dArrayValue.X_VALUE.getEntryValue()];
-			double yWeight = 1 / visionStandardDeviations[Pose2dArrayValue.Y_VALUE.getEntryValue()];
-			double rotationWeight = 1 / visionStandardDeviations[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()];
+			double xWeight = 1 / visionStandardDeviations[Pose2dArrayValue.X_VALUE.getValue()];
+			double yWeight = 1 / visionStandardDeviations[Pose2dArrayValue.Y_VALUE.getValue()];
+			double rotationWeight = 1 / visionStandardDeviations[Pose2dArrayValue.ROTATION_VALUE.getValue()];
 			xWeightsSum += xWeight;
 			yWeightsSum += yWeight;
 			rotationDeviationSum += rotationWeight;

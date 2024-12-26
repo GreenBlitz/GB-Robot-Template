@@ -21,17 +21,17 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 	public MultiAprilTagVisionSource(
 		String logPath,
 		Supplier<Rotation2d> gyroSupplier,
-		int angleInitializationSamplesCount, Supplier<Rotation2d> headingOffsetSupplier,
+		Supplier<Rotation2d> headingOffsetSupplier,
 		VisionSource<AprilTagVisionData>... visionSources
 	) {
-		this(logPath, gyroSupplier, angleInitializationSamplesCount, List.of(visionSources), headingOffsetSupplier);
+		this(logPath, gyroSupplier, headingOffsetSupplier, List.of(visionSources));
 	}
 
 	public MultiAprilTagVisionSource(
 		String logPath,
 		Supplier<Rotation2d> gyroSupplier,
-		int angleInitializationSamplesCount,
-		List<VisionSource<AprilTagVisionData>> visionSources, Supplier<Rotation2d> headingOffsetSupplier
+		Supplier<Rotation2d> headingOffsetSupplier,
+		List<VisionSource<AprilTagVisionData>> visionSources
 	) {
 		super(logPath, visionSources);
 		this.gyroSupplier = gyroSupplier;

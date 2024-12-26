@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVisionData> {
+public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
 
 	private final Supplier<Rotation2d> gyroSupplier;
 	private final Supplier<Rotation2d> headingOffsetSupplier;
 	private boolean useGyroForPoseEstimating;
 
 	@SafeVarargs
-	public MultiAprilTagVisionSource(
+	public MultiAprilTagVisionSources(
 		String logPath,
 		Supplier<Rotation2d> gyroSupplier,
 		Supplier<Rotation2d> headingOffsetSupplier,
@@ -27,7 +27,7 @@ public class MultiAprilTagVisionSource extends MultiVisionSources<AprilTagVision
 		this(logPath, gyroSupplier, headingOffsetSupplier, List.of(visionSources));
 	}
 
-	public MultiAprilTagVisionSource(
+	public MultiAprilTagVisionSources(
 		String logPath,
 		Supplier<Rotation2d> gyroSupplier,
 		Supplier<Rotation2d> headingOffsetSupplier,

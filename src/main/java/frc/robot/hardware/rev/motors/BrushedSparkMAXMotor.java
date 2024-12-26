@@ -6,7 +6,7 @@ public class BrushedSparkMAXMotor extends SparkMaxMotor {
 
 	public BrushedSparkMAXMotor(String logPath, SparkMaxWrapper motor) {
 		super(logPath, motor);
-		if (motor.getMotorType() != SparkLowLevel.MotorType.kBrushless) {
+		if (motor.getMotorType() != SparkLowLevel.MotorType.kBrushed) {
 			throw new IllegalArgumentException("inserted BrushlessSparkMAXMotor to BrushedSparkMAXMotor!");
 		}
 	}

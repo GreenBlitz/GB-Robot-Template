@@ -3,7 +3,7 @@ package frc.robot.vision.sources.simulationsource;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.VisionConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;

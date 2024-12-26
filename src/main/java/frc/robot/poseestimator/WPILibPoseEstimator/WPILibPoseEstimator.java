@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -103,7 +104,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp(),
-			VecBuilder.fill(0, 0, 0) // todo change to funciton that calculats
+			PoseEstimationMath.calculateStandardDeviationOfPose(visionObservation, getEstimatedPose()).getWPILibStandardDeviations()
 		);
 	}
 

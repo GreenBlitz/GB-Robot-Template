@@ -1,7 +1,7 @@
 package frc.robot.vision.sources;
 
-import frc.robot.vision.filters.Filter;
-import frc.robot.vision.rawdata.VisionData;
+import frc.robot.vision.data.VisionData;
+import frc.utils.Filter;
 
 import java.util.Optional;
 

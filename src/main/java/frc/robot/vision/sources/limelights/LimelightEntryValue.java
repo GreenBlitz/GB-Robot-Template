@@ -1,4 +1,4 @@
-package frc.robot.vision.limelights;
+package frc.robot.vision.sources.limelights;
 
 public enum LimelightEntryValue {
 

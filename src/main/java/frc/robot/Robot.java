@@ -47,8 +47,7 @@ public class Robot {
 		this.poseEstimator = new WPILibPoseEstimator(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
-			swerve.get,
-			swerve.getModules()
+			swerve.getAllOdometryObservations()[0].wheelPositions()
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

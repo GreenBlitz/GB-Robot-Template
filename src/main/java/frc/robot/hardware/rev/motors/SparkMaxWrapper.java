@@ -10,11 +10,7 @@ public class SparkMaxWrapper extends SparkMax {
 	public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
 		super(deviceID.id(), deviceID.type());
 
-		super.configure(
-				new SparkMaxConfig(),
-				ResetMode.kResetSafeParameters,
-				PersistMode.kNoPersistParameters
-		);
+		super.configure(new SparkMaxConfig(), ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 	}
 
 	public double getVoltage() {

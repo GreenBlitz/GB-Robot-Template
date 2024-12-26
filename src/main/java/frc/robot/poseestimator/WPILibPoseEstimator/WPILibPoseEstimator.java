@@ -4,7 +4,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -12,7 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.robot.vision.data.AprilTagVisionData;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.factories.modules.steer;
 
 import frc.robot.Robot;
-import frc.robot.constants.IDs;
+import frc.robot.IDs;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -32,7 +32,7 @@ public class SteerFactory {
 	}
 
 	public static ControllableMotor createSteer(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
-		String logPath = SwerveType.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Steer/";
+		String logPath = SwerveType.SWERVE.getLogPath() + ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Steer/";
 		return switch (swerveType) {
 			case SWERVE -> createSwerveSteer(logPath, modulePosition);
 		};

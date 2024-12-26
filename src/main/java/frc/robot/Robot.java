@@ -5,8 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
@@ -16,9 +19,9 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.auto.PathPlannerUtils;
+import frc.utils.battery.BatteryUtils;
 
 import java.util.Optional;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -34,6 +37,8 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	public Robot() {
+		BatteryUtils.scheduleLimiter();
+
 		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(SwerveType.SWERVE),
@@ -50,18 +55,21 @@ public class Robot {
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
 		buildPathPlannerForAuto();
-		configureBindings();
 	}
+
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 	}
 
-	private void configureBindings() {
-		JoysticksBindings.configureBindings(this);
-	}
 
+	public void periodic() {
+		BatteryUtils.logStatus();
+		BusChain.logChainsStatuses();
+		superStructure.periodic();
+		CommandScheduler.getInstance().run();
+	}
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();

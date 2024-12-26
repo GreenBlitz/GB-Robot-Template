@@ -52,8 +52,8 @@ public class ModuleUtils {
 		double voltageCompensationSaturation
 	) {
 		Rotation2d driveVelocityPerSecond = Conversions.distanceToAngle(driveVelocityMetersPerSecond, wheelDiameterMeters);
-		Rotation2d coupledVelocityPerSecond = coupleDriveAngle(driveVelocityPerSecond, steerVelocityPerSecond, couplingRatio);
-		return velocityToVoltage(coupledVelocityPerSecond, maxDriveVelocityPerSecond, voltageCompensationSaturation);
+		Rotation2d driveCoupledVelocityPerSecond = coupleDriveAngle(driveVelocityPerSecond, steerVelocityPerSecond, couplingRatio);
+		return velocityToVoltage(driveCoupledVelocityPerSecond, maxDriveVelocityPerSecond, voltageCompensationSaturation);
 	}
 
 	public static double velocityToVoltage(Rotation2d velocityPerSecond, Rotation2d maxVelocityPerSecond, double voltageCompensationSaturation) {

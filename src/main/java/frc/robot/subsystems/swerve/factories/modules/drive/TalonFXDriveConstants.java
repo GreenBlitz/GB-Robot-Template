@@ -10,7 +10,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.GlobalConstants;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
@@ -88,15 +88,15 @@ class TalonFXDriveConstants {
 
 	protected static DriveSignals generateSignals(TalonFXMotor drive) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(drive.getDevice().getMotorVoltage(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(drive.getDevice().getStatorCurrent(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(drive.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(drive.getDevice().getVelocity(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.generatePhoenix6Signal(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(
 			drive.getDevice().getPosition(),
 			velocitySignal,
-			GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS
 		);
 

@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.MathConstants;
+import frc.constants.MathConstants;
 
 public class HeadingStabilizer {
 

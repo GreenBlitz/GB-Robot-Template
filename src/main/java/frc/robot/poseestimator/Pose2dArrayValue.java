@@ -6,14 +6,14 @@ public enum Pose2dArrayValue {
 	Y_VALUE(1),
 	ROTATION_VALUE(2);
 
-	private final int entryValue;
+	private final int index;
 
 	Pose2dArrayValue(int entryValue) {
-		this.entryValue = entryValue;
+		this.index = entryValue;
 	}
 
-	public int getValue() {
-		return entryValue;
+	public int getIndex() {
+		return index;
 	}
 
 	public static final int POSE_ARRAY_LENGTH = 3;

@@ -1,4 +1,4 @@
-package frc.robot.vision.sources;
+package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -8,4 +8,4 @@ import edu.wpi.first.math.geometry.Rotation2d;
  * limelight is using it to calculate the BotPose2 position.Rotation2d shall be used in degrees (and for rates, degrees per second). Everything
  * except the yaw is unnecessary.
  */
-public record LimelightGyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, double pitchRate, Rotation2d roll, double rollRate) {}
+public record GyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, double pitchRate, Rotation2d roll, double rollRate) {}

@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.auto.PathPlannerUtils;
 
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final MultiAprilTagVisionSources aprilTagVisionSources;
 	private final Superstructure superStructure;
 
 	public Robot() {
@@ -52,6 +54,12 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
+
+		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
+			"",
+			swerve::getGyroAbsoluteYaw,
+			() -> poseEstimator.getEstimatedPose().getRotation()
+		);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -83,6 +91,10 @@ public class Robot {
 
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
+	}
+
+	public MultiAprilTagVisionSources getAprilTagVisionSources() {
+		return aprilTagVisionSources;
 	}
 
 }

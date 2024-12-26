@@ -75,6 +75,8 @@ public class RobotManager extends LoggedRobot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		AlertManager.reportAlerts();
+		robot.getPoseEstimator().updateOdometry(robot.getSwerve().getAllOdometryObservations());
+		robot.getPoseEstimator().updateVision(robot.getAprilTagVisionSources().getFilteredVisionData());
 	}
 
 	private void updateTimeRelatedData() {

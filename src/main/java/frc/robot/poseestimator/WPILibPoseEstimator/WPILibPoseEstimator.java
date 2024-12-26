@@ -1,12 +1,10 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseEstimationMath;
@@ -22,11 +20,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 
-	public WPILibPoseEstimator(
-		String logPath,
-		SwerveDriveKinematics kinematics,
-		SwerveModulePosition[] modulePositions
-	) {
+	public WPILibPoseEstimator(String logPath, SwerveDriveKinematics kinematics, SwerveModulePosition[] modulePositions) {
 		super(logPath);
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,

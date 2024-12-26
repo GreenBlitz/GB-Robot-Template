@@ -24,15 +24,17 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	public WPILibPoseEstimator(
 		String logPath,
 		SwerveDriveKinematics kinematics,
-		SwerveDriveOdometry odometry,
 		SwerveModulePosition[] modulePositions
 	) {
 		super(logPath);
-
-
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
-			odometry,
+			new Odometry<>(
+				kinematics,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
+				modulePositions,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+			),
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
 		);

@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.vision.GyroAngleValues;
-import frc.robot.vision.VisionConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.GyroRequiringVisionSource;
 import frc.utils.Conversions;

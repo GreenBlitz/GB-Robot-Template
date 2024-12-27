@@ -1,5 +1,6 @@
 package frc.robot.hardware.rev.motors;
 
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IMotor;
@@ -24,8 +25,87 @@ public abstract class SparkMaxMotor implements IMotor {
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
+
+	public void createAlerts() {
+		SparkBase.Warnings warnings = motor.getWarnings();
+
+		//@formatter:off
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "disconnectedAt",
+						() -> !isConnected()
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "BrownoutAt",
+						() -> warnings.brownout
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "OverCurrentAt",
+						() -> warnings.overcurrent
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "EscEepromAt",
+						() -> warnings.escEeprom
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "ExtEepromAt",
+						() -> warnings.extEeprom
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "SensorAt",
+						() -> warnings.sensor
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "StallAt",
+						() -> warnings.stall
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "HasResetAt",
+						() -> warnings.hasReset
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "OtherAt",
+						() -> warnings.other
+				)
+		);
+		//@formatter:on
+	}
+
 
 	@Override
 	public void updateSimulation() {}

@@ -38,7 +38,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		return logPath;
 	}
 
-	public void applyConfiguration(SparkMaxConfiguration configuration){
+	public void applyConfiguration(SparkMaxConfiguration configuration) {
 		if (motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES) != REVLibError.kOk) {
 			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
 		}

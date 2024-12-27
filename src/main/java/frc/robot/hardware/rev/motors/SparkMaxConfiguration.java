@@ -1,4 +1,4 @@
-package frc.robot.hardware.rev;
+package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -10,9 +10,9 @@ public class SparkMaxConfiguration {
 	private SparkBase.PersistMode persistMode;
 
 	public SparkMaxConfiguration() {
-		sparkMaxConfig = new SparkMaxConfig();
-		resetMode = SparkBase.ResetMode.kNoResetSafeParameters;
-		persistMode = SparkBase.PersistMode.kNoPersistParameters;
+		this.sparkMaxConfig = new SparkMaxConfig();
+		this.resetMode = SparkBase.ResetMode.kNoResetSafeParameters;
+		this.persistMode = SparkBase.PersistMode.kNoPersistParameters;
 	}
 
 	public SparkMaxConfig getSparkMaxConfig() {

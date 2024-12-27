@@ -4,7 +4,6 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.rev.REVUtils;
-import frc.robot.hardware.rev.SparkMaxConfiguration;
 import frc.utils.Conversions;
 
 public class SparkMaxWrapper extends SparkMax {

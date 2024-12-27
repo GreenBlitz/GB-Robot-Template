@@ -5,7 +5,6 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.rev.SparkMaxConfiguration;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.utils.alerts.Alert;

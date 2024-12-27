@@ -69,11 +69,13 @@ public abstract class SparkMaxMotor implements IMotor {
 	public void setBrake(boolean brake) {
 		SparkBaseConfig.IdleMode idleMode = brake ? SparkBaseConfig.IdleMode.kBrake : SparkBaseConfig.IdleMode.kCoast;
 
+		Logger.recordOutput("Before idleMode", motor.configAccessor.getIdleMode());
 		motor.configure(
 			new SparkMaxConfig().idleMode(idleMode),
 			SparkBase.ResetMode.kNoResetSafeParameters,
 			SparkBase.PersistMode.kNoPersistParameters
 		);
+		Logger.recordOutput("After idleMode", motor.configAccessor.getIdleMode());
 	}
 
 	@Override

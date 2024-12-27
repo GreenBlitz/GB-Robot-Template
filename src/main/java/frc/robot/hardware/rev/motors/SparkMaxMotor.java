@@ -1,6 +1,5 @@
 package frc.robot.hardware.rev.motors;
 
-import com.revrobotics.spark.SparkBase;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -78,11 +77,7 @@ public abstract class SparkMaxMotor implements IMotor {
 	public void setBrake(boolean brake) {
 		SparkBaseConfig.IdleMode idleMode = brake ? SparkBaseConfig.IdleMode.kBrake : SparkBaseConfig.IdleMode.kCoast;
 
-		motor.applyConfiguration(
-				new SparkMaxConfiguration().withSparkMaxConfig(
-                        (SparkMaxConfig) new SparkMaxConfig().idleMode(idleMode)
-                )
-		);
+		motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig((SparkMaxConfig) new SparkMaxConfig().idleMode(idleMode)));
 	}
 
 	@Override

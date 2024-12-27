@@ -2,7 +2,6 @@ package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.rev.REVUtils;
 import frc.utils.Conversions;

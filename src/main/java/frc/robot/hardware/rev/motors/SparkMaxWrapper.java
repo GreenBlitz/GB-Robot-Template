@@ -24,9 +24,10 @@ public class SparkMaxWrapper extends SparkMax {
 		return Rotation2d.fromRotations(Conversions.perMinuteToPerSecond(getEncoder().getVelocity()));
 	}
 
-	public void reportWarnings(String logPath){
+	public void reportWarnings(String logPath) {
 		Warnings warnings = getWarnings();
 
+		//@formatter:off
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
@@ -90,7 +91,7 @@ public class SparkMaxWrapper extends SparkMax {
 						() -> warnings.other
 				)
 		);
-
+		//@formatter:on
 	}
 
 }

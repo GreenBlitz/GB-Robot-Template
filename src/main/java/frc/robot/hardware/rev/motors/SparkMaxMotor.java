@@ -104,7 +104,6 @@ public abstract class SparkMaxMotor implements IMotor {
 		//@formatter:on
 	}
 
-
 	@Override
 	public void updateSimulation() {}
 

@@ -3,9 +3,6 @@ package frc.robot.hardware.rev.motors;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.Conversions;
-import frc.utils.alerts.Alert;
-import frc.utils.alerts.AlertManager;
-import frc.utils.alerts.PeriodicAlert;
 
 public class SparkMaxWrapper extends SparkMax {
 

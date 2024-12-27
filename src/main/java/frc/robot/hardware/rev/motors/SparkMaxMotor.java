@@ -24,7 +24,6 @@ public abstract class SparkMaxMotor implements IMotor {
 
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
-
 	}
 
 	public void createAlerts() {

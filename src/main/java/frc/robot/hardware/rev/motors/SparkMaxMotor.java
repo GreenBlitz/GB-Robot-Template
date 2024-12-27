@@ -30,7 +30,6 @@ public abstract class SparkMaxMotor implements IMotor {
 		SparkBase.Warnings warnings = motor.getWarnings();
 
 		//@formatter:off
-
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,

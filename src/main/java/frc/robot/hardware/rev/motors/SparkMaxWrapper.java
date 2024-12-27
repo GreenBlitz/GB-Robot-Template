@@ -2,6 +2,7 @@ package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.rev.REVUtils;
 import frc.utils.Conversions;
@@ -13,8 +14,7 @@ public class SparkMaxWrapper extends SparkMax {
 	public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
 		super(deviceID.id(), deviceID.type());
 
-		// TODO super.configure()
-//		super.restoreFactoryDefaults();
+		super.configure(new SparkMaxConfig(), ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 	}
 
 	public double getVoltage() {

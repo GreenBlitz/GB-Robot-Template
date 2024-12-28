@@ -31,7 +31,6 @@ public abstract class SparkMaxMotor implements IMotor {
 	}
 
 	public void createFaultAlerts(){
-
 		//@formatter:off
 		AlertManager.addAlert(
 				new PeriodicAlert(
@@ -108,7 +107,6 @@ public abstract class SparkMaxMotor implements IMotor {
 	}
 
 	public void createWarningAlerts() {
-
 		//@formatter:off
 
 		AlertManager.addAlert(

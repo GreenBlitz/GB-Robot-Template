@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
+import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
 import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
 import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.robot.hardware.rev.request.SparkMaxRequestBuilder;
@@ -19,7 +20,6 @@ public class Imagine extends GBSubsystem{
 
     private final BrushlessSparkMAXMotor motor;
     private final SuppliedAngleSignal position;
-    private final SparkMaxWrapper wrapper;
 
     public Imagine(String logPath) {
         super(logPath);
@@ -33,12 +33,12 @@ public class Imagine extends GBSubsystem{
                         DCMotor.getNEO(1)
                 )
         );
-        wrapper = new SparkMaxWrapper(new SparkMaxDeviceID(1));
+        SparkMaxWrapper wrapper = new SparkMaxWrapper(new SparkMaxDeviceID(1));
         motor = new BrushlessSparkMAXMotor(logPath, wrapper, motorSimulation, new SysIdRoutine.Config());
 
         SparkMaxConfig config = new SparkMaxConfig();
         config.closedLoop.p(10);
-        wrapper.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+        motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 
         position = new SuppliedAngleSignal(logPath + "pos", () -> wrapper.getEncoder().getPosition(), AngleUnit.ROTATIONS);
     }

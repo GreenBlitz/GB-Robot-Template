@@ -33,7 +33,7 @@ public class HeadingStabilizer {
 		}
 	}
 
-	public Rotation2d calculate(Rotation2d currentHeading) {
+	public Rotation2d calculatePIDOutput(Rotation2d currentHeading) {
 		return Rotation2d.fromDegrees(headingController.calculate(currentHeading.getDegrees()));
 	}
 

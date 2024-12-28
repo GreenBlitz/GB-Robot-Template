@@ -20,24 +20,24 @@ public class SwerveStateHelper {
 	private final Swerve swerve;
 	private final SwerveConstants swerveConstants;
 	private final Supplier<Optional<Pose2d>> robotPoseSupplier;
-	private final Supplier<Optional<Translation2d>> noteTranslationSupplier;
+	private final Supplier<Optional<Translation2d>> objectTranslationSupplier;
 
 	public SwerveStateHelper(
 		Supplier<Optional<Pose2d>> robotPoseSupplier,
-		Supplier<Optional<Translation2d>> noteTranslationSupplier,
+		Supplier<Optional<Translation2d>> objectTranslationSupplier,
 		Swerve swerve
 	) {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = robotPoseSupplier;
-		this.noteTranslationSupplier = noteTranslationSupplier;
+		this.objectTranslationSupplier = objectTranslationSupplier;
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		return switch (swerveState.getAimAssist()) {
 			case NONE -> speeds;
 			case SPEAKER -> handleSpeakerAssist(speeds, robotPoseSupplier.get());
-			case NOTE -> handleNoteAimAssist(speeds, robotPoseSupplier.get(), noteTranslationSupplier.get(), swerveState);
+			case NOTE -> handleNoteAimAssist(speeds, robotPoseSupplier.get(), objectTranslationSupplier.get(), swerveState);
 			case AMP -> handleAmpAssist(speeds, robotPoseSupplier.get());
 		};
 	}
@@ -45,14 +45,14 @@ public class SwerveStateHelper {
 	private ChassisSpeeds handleNoteAimAssist(
 		ChassisSpeeds speeds,
 		Optional<Pose2d> optionalRobotPose,
-		Optional<Translation2d> optionalNoteTranslation,
+		Optional<Translation2d> optionalObjectTranslation,
 		SwerveState swerveState
 	) {
-		if (optionalRobotPose.isEmpty() || optionalNoteTranslation.isEmpty()) {
+		if (optionalRobotPose.isEmpty() || optionalObjectTranslation.isEmpty()) {
 			return speeds;
 		}
 		return AimAssistMath
-			.getObjectAssistedSpeeds(speeds, optionalRobotPose.get(), optionalNoteTranslation.get(), swerveConstants, swerveState);
+			.getObjectAssistedSpeeds(speeds, optionalRobotPose.get(), optionalObjectTranslation.get(), swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Optional<Pose2d> optionalRobotPose) {

@@ -60,7 +60,7 @@ public class JoysticksBindings {
 		usedJoystick.L3.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveState(
+				.driveByState(
 					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
@@ -70,7 +70,7 @@ public class JoysticksBindings {
 		usedJoystick.L1.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveState(
+				.driveByState(
 					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
@@ -80,7 +80,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveState(
+				.driveByState(
 					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
@@ -92,7 +92,7 @@ public class JoysticksBindings {
 			.whileTrue(
 				robot.getSwerve()
 					.getCommandsBuilder()
-					.driveState(
+					.driveByState(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
@@ -103,7 +103,7 @@ public class JoysticksBindings {
 			.whileTrue(
 				robot.getSwerve()
 					.getCommandsBuilder()
-					.driveState(
+					.driveByState(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
 						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),

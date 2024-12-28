@@ -165,10 +165,9 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public OdometryObservation[] getAllOdometryObservations() {
-		int odometrySamples = getNumberOfOdometrySamples();
+		OdometryObservation[] odometryObservations = new OdometryObservation[getNumberOfOdometrySamples()];
 
-		OdometryObservation[] odometryObservations = new OdometryObservation[odometrySamples];
-		for (int i = 0; i < odometrySamples; i++) {
+		for (int i = 0; i < odometryObservations.length; i++) {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelPositions(i),
 				gyro instanceof EmptyGyro ? null : gyroSignals.yawSignal().asArray()[i],
@@ -208,18 +207,18 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public ChassisSpeeds getFieldRelativeVelocity() {
-		return SwerveMath.robotRelativeToFieldRelativeSpeeds(getRobotRelativeVelocity(), headingSupplier.get());
+		return SwerveMath.robotToFieldRelativeSpeeds(getRobotRelativeVelocity(), headingSupplier.get());
 	}
 
 	private ChassisSpeeds getDriveModeRelativeSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getDriveMode() == DriveRelative.ROBOT_RELATIVE) {
 			return speeds;
 		}
-		return SwerveMath.fieldRelativeToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
+		return SwerveMath.fieldToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
 	}
 
 
-	protected void pidToPose(Pose2d currentPose, Pose2d targetPose) {
+	protected void moveToPoseByPID(Pose2d currentPose, Pose2d targetPose) {
 		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
 		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
 		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
@@ -285,7 +284,7 @@ public class Swerve extends GBSubsystem {
 		return new ChassisSpeeds(
 			speeds.vxMetersPerSecond,
 			speeds.vyMetersPerSecond,
-			headingStabilizer.calculate(headingSupplier.get()).getRadians()
+			headingStabilizer.calculatePIDOutput(headingSupplier.get()).getRadians()
 		);
 	}
 

@@ -30,9 +30,15 @@ public abstract class SparkMaxMotor implements IMotor {
 		connectedInput.connected = true;
 
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
+		createAlerts();
 	}
 
-	public void createFaultAlerts() {
+	public void createAlerts() {
+		createFaultAlerts();
+		createWarningAlerts();
+	}
+
+	private void createFaultAlerts() {
 		//@formatter:off
 		AlertManager.addAlert(
 				new PeriodicAlert(
@@ -100,7 +106,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		//@formatter:on
 	}
 
-	public void createWarningAlerts() {
+	private void createWarningAlerts() {
 		//@formatter:off
 		AlertManager.addAlert(
 				new PeriodicAlert(

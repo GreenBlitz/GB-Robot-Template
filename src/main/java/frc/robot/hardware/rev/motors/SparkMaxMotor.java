@@ -36,8 +36,10 @@ public abstract class SparkMaxMotor implements IMotor {
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
-	private Optional<SparkMaxSimulation> createSimulation(MechanismSimulation mechanismSimulation){
-		return Robot.ROBOT_TYPE.isSimulation() && mechanismSimulation != null ? Optional.of(new SparkMaxSimulation(motor, mechanismSimulation)) : Optional.empty();
+	private Optional<SparkMaxSimulation> createSimulation(MechanismSimulation mechanismSimulation) {
+		return Robot.ROBOT_TYPE.isSimulation() && mechanismSimulation != null
+			? Optional.of(new SparkMaxSimulation(motor, mechanismSimulation))
+			: Optional.empty();
 	}
 
 	@Override

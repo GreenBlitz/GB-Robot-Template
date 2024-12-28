@@ -12,19 +12,19 @@ public class VisionFilters {
 	public static Filter<VisionData> isPitchInTolerance(Rotation2d pitchTolerance, Rotation2d wantedPitch) {
 		return new Filter<>(
 			visionData -> ToleranceUtils
-				.isRotation2dInTolerance(pitchTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), wantedPitch)
+				.wrappedIsNear(pitchTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), wantedPitch)
 		);
 	}
 
 	public static Filter<VisionData> isRollInTolerance(Rotation2d rollTolerance, Rotation2d wantedRoll) {
 		return new Filter<>(
 			visionData -> ToleranceUtils
-				.isRotation2dInTolerance(rollTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), wantedRoll)
+				.wrappedIsNear(rollTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), wantedRoll)
 		);
 	}
 
-	public static Filter<VisionData> isRobotOnGround(double robotToGroundToleranceMeters) {
-		return new Filter<>(visionData -> Math.abs(visionData.getEstimatedPose().getZ()) <= robotToGroundToleranceMeters);
+	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {
+		return new Filter<>(visionData -> Math.abs(visionData.getEstimatedPose().getZ()) <= distanceFromGroundToleranceMeters);
 	}
 
 	public static Filter<AprilTagVisionData> isAprilTagHeightInTolerance(double aprilTagHeightToleranceMeters, double aprilTagRealHeightMeters) {

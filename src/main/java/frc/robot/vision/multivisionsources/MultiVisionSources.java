@@ -35,11 +35,11 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		Function<VisionSource<ReturnType>, Optional<ReturnType>> mapping
 	) {
 		ArrayList<ReturnType> output = new ArrayList<>();
-		list.forEach(visionSource -> {
+		for (VisionSource<ReturnType> visionSource : list) {
 			visionSource.update();
 			Optional<ReturnType> observation = mapping.apply(visionSource);
 			observation.ifPresent(output::add);
-		});
+		}
 		return output;
 	}
 

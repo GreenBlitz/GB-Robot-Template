@@ -12,7 +12,7 @@ public class BrushedSparkMAXMotor extends SparkMaxMotor {
 		}
 	}
 
-	public BrushedSparkMAXMotor(String logPath, SparkMaxWrapper motor){
+	public BrushedSparkMAXMotor(String logPath, SparkMaxWrapper motor) {
 		this(logPath, motor, null);
 	}
 

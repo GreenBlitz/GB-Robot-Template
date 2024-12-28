@@ -14,7 +14,12 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 
 	private final SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo;
 
-	public BrushlessSparkMAXMotor(String logPath, SparkMaxWrapper motor, MechanismSimulation mechanismSimulation, SysIdRoutine.Config sysidConfig) {
+	public BrushlessSparkMAXMotor(
+		String logPath,
+		SparkMaxWrapper motor,
+		MechanismSimulation mechanismSimulation,
+		SysIdRoutine.Config sysidConfig
+	) {
 		super(logPath, motor, mechanismSimulation);
 		if (motor.getMotorType() != SparkLowLevel.MotorType.kBrushless) {
 			throw new IllegalArgumentException("inserted BrushedSparkMAXMotor to BrushlessSparkMAXMotor!");
@@ -22,7 +27,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 		this.sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, false);
 	}
 
-	public BrushlessSparkMAXMotor(String logPath, SparkMaxWrapper motor, SysIdRoutine.Config sysidConfig){
+	public BrushlessSparkMAXMotor(String logPath, SparkMaxWrapper motor, SysIdRoutine.Config sysidConfig) {
 		this(logPath, motor, null, sysidConfig);
 	}
 

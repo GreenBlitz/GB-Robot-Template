@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.constants;
 
 public class IPs {
 

@@ -8,7 +8,7 @@ import frc.utils.Conversions;
 
 public class SparkMaxWrapper extends SparkMax {
 
-	private static final int DEFAULT_CONFIG_NUMBER_OF_TRIES = 1;
+	private static final int DEFAULT_APPLY_CONFIG_RETRIES = 1;
 
 	public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
 		super(deviceID.id(), deviceID.type());
@@ -32,7 +32,7 @@ public class SparkMaxWrapper extends SparkMax {
 	}
 
 	public REVLibError applyConfiguration(SparkMaxConfiguration configuration) {
-		return applyConfiguration(configuration, DEFAULT_CONFIG_NUMBER_OF_TRIES);
+		return applyConfiguration(configuration, DEFAULT_APPLY_CONFIG_RETRIES);
 	}
 
 }

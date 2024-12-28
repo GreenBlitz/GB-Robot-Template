@@ -291,7 +291,9 @@ public class Module {
 		boolean isAtSteerPosition = MathUtil.isNear(
 			MathUtil.angleModulus(getTargetState().angle.getRadians()),
 			MathUtil.angleModulus(getSteerPosition().getRadians()),
-			steerPositionTolerance.getRadians()
+			steerPositionTolerance.getRadians(),
+			-MathConstants.HALF_CIRCLE.getRadians(),
+			MathConstants.HALF_CIRCLE.getRadians()
 		);
 		return isAtSteerPosition;
 	}

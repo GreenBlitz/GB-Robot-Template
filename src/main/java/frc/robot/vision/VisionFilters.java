@@ -5,20 +5,20 @@ import frc.robot.constants.Field;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
-import frc.utils.ToleranceCalculations;
+import frc.utils.ToleranceUtils;
 
 public class VisionFilters {
 
 	public static Filter<VisionData> isPitchInTolerance(Rotation2d pitchTolerance, Rotation2d wantedPitch) {
 		return new Filter<>(
-			visionData -> ToleranceCalculations
+			visionData -> ToleranceUtils
 				.isRotation2dInTolerance(pitchTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), wantedPitch)
 		);
 	}
 
 	public static Filter<VisionData> isRollInTolerance(Rotation2d rollTolerance, Rotation2d wantedRoll) {
 		return new Filter<>(
-			visionData -> ToleranceCalculations
+			visionData -> ToleranceUtils
 				.isRotation2dInTolerance(rollTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), wantedRoll)
 		);
 	}
@@ -34,22 +34,20 @@ public class VisionFilters {
 		);
 	}
 
-	public static Filter<VisionData> isXWithinFieldBorders(double robotXPositionTolerance) {
+	public static Filter<VisionData> isXOnField(double xToleranceMeters) {
 		return new Filter<>(
-			visionData -> ToleranceCalculations
-				.isDoubleInRange(robotXPositionTolerance, visionData.getEstimatedPose().getX(), Field.LENGTH_METERS, 0)
+			visionData -> ToleranceUtils.isInRange(xToleranceMeters, visionData.getEstimatedPose().getX(), Field.LENGTH_METERS, 0)
 		);
 	}
 
-	public static Filter<VisionData> isYWithinFieldBorders(double robotYPositionTolerance) {
+	public static Filter<VisionData> isYOnField(double yToleranceMeters) {
 		return new Filter<>(
-			visionData -> ToleranceCalculations
-				.isDoubleInRange(robotYPositionTolerance, visionData.getEstimatedPose().getY(), Field.WIDTH_METERS, 0)
+			visionData -> ToleranceUtils.isInRange(yToleranceMeters, visionData.getEstimatedPose().getY(), Field.WIDTH_METERS, 0)
 		);
 	}
 
-	public static Filter<VisionData> isWithinFieldBorders(double robotPositionTolerance) {
-		return isXWithinFieldBorders(robotPositionTolerance).and(isYWithinFieldBorders(robotPositionTolerance));
+	public static Filter<VisionData> isOnField(double positionToleranceMeters) {
+		return isXOnField(positionToleranceMeters).and(isYOnField(positionToleranceMeters));
 	}
 
 }

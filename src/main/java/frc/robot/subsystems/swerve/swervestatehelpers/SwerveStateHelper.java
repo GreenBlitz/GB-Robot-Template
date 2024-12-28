@@ -86,16 +86,20 @@ public class SwerveStateHelper {
 
 	public RotateAxis getFarRotateAxis(boolean isLeft) {
 		Rotation2d currentAllianceHeading = swerve.getAllianceRelativeHeading();
-		if (Math.abs(currentAllianceHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45
+		// -45 <= x <= 45
+		if (Math.abs(currentAllianceHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) {
 			return isLeft ? RotateAxis.FRONT_LEFT_MODULE : RotateAxis.FRONT_RIGHT_MODULE;
 		}
-		if (Math.abs(currentAllianceHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) { // -135 - x - 135
+		// -180 <= x <= -135 || 135 <= x <= 180
+		if (Math.abs(currentAllianceHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) {
 			return isLeft ? RotateAxis.BACK_RIGHT_MODULE : RotateAxis.BACK_LEFT_MODULE;
 		}
-		if (currentAllianceHeading.getDegrees() > 0) { // 45 <= x <= 135
+		// 45 <= x <= 135
+		if (currentAllianceHeading.getDegrees() > 0) {
 			return isLeft ? RotateAxis.FRONT_RIGHT_MODULE : RotateAxis.BACK_RIGHT_MODULE;
 		}
-		return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE; // -45 >= x >= -135
+		// -45 >= x >= -135
+		return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE;
 	}
 
 	public RotateAxis getFarRightRotateAxis() {

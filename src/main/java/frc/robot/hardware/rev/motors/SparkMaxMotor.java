@@ -20,7 +20,6 @@ public abstract class SparkMaxMotor implements IMotor {
 
 	protected final SparkMaxWrapper motor;
 	private final Optional<SparkMaxSimulation> sparkMaxSimulationOptional;
-	private final MechanismSimulation mechanismSimulation;
 	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
 
@@ -28,12 +27,15 @@ public abstract class SparkMaxMotor implements IMotor {
 		this.logPath = logPath;
 		this.motor = motor;
 		this.sparkMaxSimulationOptional = createSimulation(mechanismSimulation);
-		this.mechanismSimulation = mechanismSimulation;
 
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
+	}
+
+	public SparkMaxMotor(String logPath, SparkMaxWrapper motor){
+		this(logPath, motor, null);
 	}
 
 	private Optional<SparkMaxSimulation> createSimulation(MechanismSimulation mechanismSimulation) {

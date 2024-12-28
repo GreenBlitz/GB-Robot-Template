@@ -15,15 +15,14 @@ public class TalonFXSimulation {
 	private final TalonFXSimState motorSimState;
 	private final MechanismSimulation mechanismSimulation;
 
-	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration, MechanismSimulation simulation) {
+	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, MechanismSimulation simulation) {
 		this.mechanismSimulation = simulation;
 		this.motorSimState = talonFXWrapper.getSimState();
-		ensureMotorConfig(talonFXWrapper, configuration);
 
 		motorSimState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
 	}
 
-	public void ensureMotorConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {
+	public void applyConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {
 		configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 		configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 		if (configuration.Feedback.RotorToSensorRatio != ROTOR_TO_SENSOR_RATIO) {

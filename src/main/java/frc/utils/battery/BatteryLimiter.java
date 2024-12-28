@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.constants.IPs;
+import frc.constants.IPs;
 import frc.utils.CMDHandler;
 import frc.utils.DriverStationUtils;
 import frc.utils.alerts.Alert;

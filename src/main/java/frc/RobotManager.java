@@ -4,8 +4,10 @@
 
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.subsystems.Imagine;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -26,12 +28,17 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 	private int roborioCycles;
 
+	private final Imagine imagine;
+
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
+
+		imagine = new Imagine("Imagine/");
+
 
 		JoysticksBindings.configureBindings(robot);
 	}
@@ -64,6 +71,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
+		imagine.setPosotiom(Rotation2d.fromRotations(50));
 	}
 
 	@Override

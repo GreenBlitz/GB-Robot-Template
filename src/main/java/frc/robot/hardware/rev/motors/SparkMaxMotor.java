@@ -18,17 +18,19 @@ public abstract class SparkMaxMotor implements IMotor {
 	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
 	private SparkBase.Warnings motorWarnings;
+	private SparkBase.Faults motorFaults;
 
 	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
 		this.logPath = logPath;
 		this.motor = motor;
 		this.motorWarnings = motor.getWarnings();
+		this.motorFaults = motor.getFaults();
 
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 	}
 
-	public void createAlerts() {
+	public void createFaultAlerts(){
 
 		//@formatter:off
 		AlertManager.addAlert(
@@ -38,6 +40,76 @@ public abstract class SparkMaxMotor implements IMotor {
 						() -> !isConnected()
 				)
 		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "OtherErrorAt",
+						() -> motorFaults.other
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "MotorTypeAt",
+						() -> motorFaults.motorType
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "SensorAt",
+						() -> motorFaults.sensor
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "CANAt",
+						() -> motorFaults.can
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "TemperatureAt",
+						() -> motorFaults.temperature
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "GateDriveAt",
+						() -> motorFaults.gateDriver
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "EscEepromAt",
+						() -> motorFaults.escEeprom
+				)
+		);
+
+		AlertManager.addAlert(
+				new PeriodicAlert(
+						Alert.AlertType.ERROR,
+						logPath + "FirmwareAt",
+						() -> motorFaults.firmware
+				)
+		);
+		//@formatter:on
+	}
+
+	public void createWarningAlerts() {
+
+		//@formatter:off
 
 		AlertManager.addAlert(
 				new PeriodicAlert(
@@ -139,6 +211,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		}
 
 		motorWarnings = motor.getWarnings();
+		motorFaults = motor.getFaults();
 		Logger.processInputs(logPath, connectedInput);
 	}
 

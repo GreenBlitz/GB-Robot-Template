@@ -168,7 +168,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "OtherAt",
+						logPath + "OtherWarningAt",
 						() -> motorWarnings.other
 				)
 		);

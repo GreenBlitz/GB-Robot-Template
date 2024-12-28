@@ -40,7 +40,6 @@ public abstract class SparkMaxMotor implements IMotor {
 				)
 		);
 
-		// The controller had detected a fault condition that doesn’t fall into any of the specific predefined fault categories.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
@@ -49,50 +48,42 @@ public abstract class SparkMaxMotor implements IMotor {
 				)
 		);
 
-		// The controller has detected there is a mismatch between the expected and actual motor type configuration in the controller.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
-						logPath + "MotorTypeAt",
+						logPath + "MotorTypeMismatchAt",
 						() -> motorFaults.motorType
 				)
 		);
 
-		/*
-		 The controller has detected an issue with one of the connected sensors,
-		 such as an encoder, Hall effect sensor, or other feedback devices.
-		 */
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
-						logPath + "SensorAt",
+						logPath + "ConnectedSensorFaultAt",
 						() -> motorFaults.sensor
 				)
 		);
 
-		// The controller has detected a fatal fault with the CANBus
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
-						logPath + "CANAt",
+						logPath + "CANFatalFaultAt",
 						() -> motorFaults.can
 				)
 		);
 
-		// Indicates the internal temperature of the motor controller exceeds its safe operating limits.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
-						logPath + "TemperatureAt",
+						logPath + "OverHeatingAt",
 						() -> motorFaults.temperature
 				)
 		);
 
-		// Indicated there is an issue with the gate driver circuitry in the controller.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
-						logPath + "GateDriveAt",
+						logPath + "GateDriveCircuitryFaultAt",
 						() -> motorFaults.gateDriver
 				)
 		);
@@ -106,11 +97,10 @@ public abstract class SparkMaxMotor implements IMotor {
 				)
 		);
 
-		// Indicates a fault or a malfunction related to the motor controller’s firmware
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
-						logPath + "FirmwareAt",
+						logPath + "FirmwareFaultAt",
 						() -> motorFaults.firmware
 				)
 		);
@@ -120,20 +110,18 @@ public abstract class SparkMaxMotor implements IMotor {
 	public void createWarningAlerts() {
 		//@formatter:off
 
-		// Indicates a significant drop in the input voltage.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "SignificantDropInInputVoltage",
+						logPath + "SignificantVoltageDropAt",
 						() -> motorWarnings.brownout
 				)
 		);
 
-		// Current draw is nearing or exceeding the controller’s configured or safe operating limits.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "OverCurrentAt",
+						logPath + "OverCurrentDrawAt",
 						() -> motorWarnings.overcurrent
 				)
 		);
@@ -156,38 +144,30 @@ public abstract class SparkMaxMotor implements IMotor {
 				)
 		);
 
-		// The controller has detected an issue with a connected sensor, such as an encoder or other feedback device.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "SensorAt",
+						logPath + "ConnectedSensorWarningAt",
 						() -> motorWarnings.sensor
 				)
 		);
 
-		// The controller has detected conditions consistent with a motor being stalled.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "StallAt",
+						logPath + "MotorStalledAt",
 						() -> motorWarnings.stall
 				)
 		);
 
-		/*
-		 The controller has experienced a reset event since the last time it was checked.
-		 This reset could be the result of several factors, such as power loss, firmware issues,
-		 or intentional user actions like rebooting the controller.
-		 */
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "HasResetAt",
+						logPath + "MotorHasResetEventAt",
 						() -> motorWarnings.hasReset
 				)
 		);
 
-		// The controller has detected a generic warning that doesn’t fall into specific predefined categories.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,

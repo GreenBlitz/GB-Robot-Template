@@ -8,7 +8,6 @@ public class SparkMaxWrapper extends SparkMax {
 
 	public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
 		super(deviceID.id(), deviceID.type());
-
 		// TODO super.configure()
 //		super.restoreFactoryDefaults();
 	}

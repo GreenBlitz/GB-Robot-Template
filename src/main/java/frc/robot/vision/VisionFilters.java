@@ -34,20 +34,20 @@ public class VisionFilters {
 		);
 	}
 
-	public static Filter<VisionData> isXOnField(double xToleranceMeters) {
+	public static Filter<VisionData> isXInField(double xToleranceMeters) {
 		return new Filter<>(
 			visionData -> ToleranceUtils.isInRange(xToleranceMeters, visionData.getEstimatedPose().getX(), Field.LENGTH_METERS, 0)
 		);
 	}
 
-	public static Filter<VisionData> isYOnField(double yToleranceMeters) {
+	public static Filter<VisionData> isYInField(double yToleranceMeters) {
 		return new Filter<>(
 			visionData -> ToleranceUtils.isInRange(yToleranceMeters, visionData.getEstimatedPose().getY(), Field.WIDTH_METERS, 0)
 		);
 	}
 
-	public static Filter<VisionData> isOnField(double positionToleranceMeters) {
-		return isXOnField(positionToleranceMeters).and(isYOnField(positionToleranceMeters));
+	public static Filter<VisionData> isInField(double positionToleranceMeters) {
+		return isXInField(positionToleranceMeters).and(isYInField(positionToleranceMeters));
 	}
 
 }

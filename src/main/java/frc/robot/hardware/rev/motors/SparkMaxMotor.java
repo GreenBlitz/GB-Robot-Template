@@ -17,21 +17,18 @@ public abstract class SparkMaxMotor implements IMotor {
 	protected final SparkMaxWrapper motor;
 	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
-	private SparkBase.Warnings motorWarnings;
-	private SparkBase.Faults motorFaults;
+	private SparkBase.Warnings warnings;
+	private SparkBase.Faults faults;
 
 	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
 		this.logPath = logPath;
 		this.motor = motor;
-		this.motorWarnings = motor.getWarnings();
-		this.motorFaults = motor.getFaults();
+		this.warnings = motor.getWarnings();
+		this.faults = motor.getFaults();
 
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
-	}
 
-	public void createFaultAlerts() {
-		//@formatter:off
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
@@ -39,12 +36,15 @@ public abstract class SparkMaxMotor implements IMotor {
 						() -> !isConnected()
 				)
 		);
+	}
 
+	public void createFaultAlerts() {
+		//@formatter:off
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
 						logPath + "OtherErrorAt",
-						() -> motorFaults.other
+						() -> faults.other
 				)
 		);
 
@@ -52,7 +52,7 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
 						logPath + "MotorTypeMismatchAt",
-						() -> motorFaults.motorType
+						() -> faults.motorType
 				)
 		);
 
@@ -60,7 +60,7 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
 						logPath + "ConnectedSensorFaultAt",
-						() -> motorFaults.sensor
+						() -> faults.sensor
 				)
 		);
 
@@ -68,7 +68,7 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
 						logPath + "CANFatalFaultAt",
-						() -> motorFaults.can
+						() -> faults.can
 				)
 		);
 
@@ -76,7 +76,7 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
 						logPath + "OverHeatingAt",
-						() -> motorFaults.temperature
+						() -> faults.temperature
 				)
 		);
 
@@ -84,16 +84,15 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
 						logPath + "GateDriveCircuitryFaultAt",
-						() -> motorFaults.gateDriver
+						() -> faults.gateDriver
 				)
 		);
 
-		// A fatal fault logged by the Electronic Speed Controller Electrically Erasable Programmable Read-Only Memory.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
-						logPath + "EscEepromAt",
-						() -> motorFaults.escEeprom
+						logPath + "EscEepromFaultAt",
+						() -> faults.escEeprom
 				)
 		);
 
@@ -101,7 +100,7 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.ERROR,
 						logPath + "FirmwareFaultAt",
-						() -> motorFaults.firmware
+						() -> faults.firmware
 				)
 		);
 		//@formatter:on
@@ -109,12 +108,11 @@ public abstract class SparkMaxMotor implements IMotor {
 
 	public void createWarningAlerts() {
 		//@formatter:off
-
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
 						logPath + "SignificantVoltageDropAt",
-						() -> motorWarnings.brownout
+						() -> warnings.brownout
 				)
 		);
 
@@ -122,25 +120,23 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
 						logPath + "OverCurrentDrawAt",
-						() -> motorWarnings.overcurrent
+						() -> warnings.overcurrent
 				)
 		);
 
-		// A warning logged by the Electronic Speed Controller Electrically Erasable Programmable Read-Only Memory.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "EscEepromAt",
-						() -> motorWarnings.escEeprom
+						logPath + "EscEepromWarningAt",
+						() -> warnings.escEeprom
 				)
 		);
 
-		// A warning logged by the External Electrically Erasable Programmable Read-Only Memory.
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "ExtEepromAt",
-						() -> motorWarnings.extEeprom
+						logPath + "ExtEepromWarningAt",
+						() -> warnings.extEeprom
 				)
 		);
 
@@ -148,7 +144,7 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
 						logPath + "ConnectedSensorWarningAt",
-						() -> motorWarnings.sensor
+						() -> warnings.sensor
 				)
 		);
 
@@ -156,15 +152,15 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
 						logPath + "MotorStalledAt",
-						() -> motorWarnings.stall
+						() -> warnings.stall
 				)
 		);
 
 		AlertManager.addAlert(
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						logPath + "MotorHasResetEventAt",
-						() -> motorWarnings.hasReset
+						logPath + "MotorHasResetAt",
+						() -> warnings.hasReset
 				)
 		);
 
@@ -172,7 +168,7 @@ public abstract class SparkMaxMotor implements IMotor {
 				new PeriodicAlert(
 						Alert.AlertType.WARNING,
 						logPath + "OtherWarningAt",
-						() -> motorWarnings.other
+						() -> warnings.other
 				)
 		);
 		//@formatter:on
@@ -211,8 +207,8 @@ public abstract class SparkMaxMotor implements IMotor {
 			}
 		}
 
-		motorWarnings = motor.getWarnings();
-		motorFaults = motor.getFaults();
+		warnings = motor.getWarnings();
+		faults = motor.getFaults();
 		Logger.processInputs(logPath, connectedInput);
 	}
 

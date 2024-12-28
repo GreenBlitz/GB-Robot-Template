@@ -30,7 +30,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		connectedInput.connected = true;
 	}
 
-	public void createFaultAlerts(){
+	public void createFaultAlerts() {
 		//@formatter:off
 		AlertManager.addAlert(
 				new PeriodicAlert(

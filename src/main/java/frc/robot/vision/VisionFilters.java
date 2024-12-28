@@ -1,7 +1,7 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.Field;
+import frc.constants.Field;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;

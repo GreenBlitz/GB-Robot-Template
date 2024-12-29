@@ -4,11 +4,8 @@
 
 package frc;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;

@@ -43,8 +43,8 @@ public class JoystickManager {
 	}
 
 	public void setMainJoystickState(JoystickState state) {
-		if (state == JoystickState.NONE) {
-			mainJoystick = null;
+		if (state == JoystickState.NONE && mainJoystick != null) {
+			mainJoystick.setState(JoystickState.NONE);
 		} else if (mainJoystick == null) {
 			mainJoystick = new SmartJoystick(JoystickPorts.MAIN, state);
 		} else {
@@ -53,8 +53,8 @@ public class JoystickManager {
 	}
 
 	public void setSecondJoystickState(JoystickState state) {
-		if (state == JoystickState.NONE) {
-			secondJoystick = null;
+		if (state == JoystickState.NONE && secondJoystick != null) {
+			secondJoystick.setState(JoystickState.NONE);
 		} else if (secondJoystick == null) {
 			secondJoystick = new SmartJoystick(JoystickPorts.SECOND, state);
 		} else {
@@ -63,8 +63,8 @@ public class JoystickManager {
 	}
 
 	public void setThirdJoystickState(JoystickState state) {
-		if (state == JoystickState.NONE) {
-			thirdJoystick = null;
+		if (state == JoystickState.NONE && thirdJoystick != null) {
+			thirdJoystick.setState(JoystickState.NONE);
 		} else if (thirdJoystick == null) {
 			thirdJoystick = new SmartJoystick(JoystickPorts.THIRD, state);
 		} else {
@@ -73,8 +73,8 @@ public class JoystickManager {
 	}
 
 	public void setFourthJoystickState(JoystickState state) {
-		if (state == JoystickState.NONE) {
-			fourthJoystick = null;
+		if (state == JoystickState.NONE && fourthJoystick != null) {
+			fourthJoystick.setState(JoystickState.NONE);
 		} else if (fourthJoystick == null) {
 			fourthJoystick = new SmartJoystick(JoystickPorts.FOURTH, state);
 		} else {
@@ -83,8 +83,8 @@ public class JoystickManager {
 	}
 
 	public void setFifthJoystickState(JoystickState state) {
-		if (state == JoystickState.NONE) {
-			fifthJoystick = null;
+		if (state == JoystickState.NONE && fifthJoystick != null) {
+			fifthJoystick.setState(JoystickState.NONE);
 		} else if (fifthJoystick == null) {
 			fifthJoystick = new SmartJoystick(JoystickPorts.FIFTH, state);
 		} else {
@@ -93,8 +93,8 @@ public class JoystickManager {
 	}
 
 	public void setSixthJoystickState(JoystickState state) {
-		if (state == JoystickState.NONE) {
-			sixthJoystick = null;
+		if (state == JoystickState.NONE && sixthJoystick != null) {
+			sixthJoystick.setState(JoystickState.NONE);
 		} else if (sixthJoystick == null) {
 			sixthJoystick = new SmartJoystick(JoystickPorts.SIXTH, state);
 		} else {

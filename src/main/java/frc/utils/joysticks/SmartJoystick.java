@@ -3,12 +3,14 @@ package frc.utils.joysticks;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.joystickManager.JoystickState;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
+import org.littletonrobotics.junction.Logger;
 
 public class SmartJoystick {
 
@@ -58,7 +60,8 @@ public class SmartJoystick {
 
 		this.state = state;
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> !isConnected() && state != JoystickState.NONE));
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt, state = " + state, () -> (!isConnected() && this.state != JoystickState.NONE)));
+		Logger.recordOutput(joystick.getPort()+" state", state);
 	}
 
 	public String getLogPath() {

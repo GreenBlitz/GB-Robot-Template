@@ -3,7 +3,7 @@ package frc.robot.subsystems.swerve.factories.modules.steer;
 import frc.robot.Robot;
 import frc.robot.IDs;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
+import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;

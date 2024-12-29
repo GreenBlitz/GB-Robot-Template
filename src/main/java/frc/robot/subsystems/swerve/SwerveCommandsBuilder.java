@@ -56,7 +56,7 @@ public class SwerveCommandsBuilder {
 
 		return new SequentialCommandGroup(
 			pointWheels(new Rotation2d(), false).until(
-				() -> modules.isSteersAtTargetPositions(
+				() -> modules.isSteerAtTargetPositions(
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
 				)
@@ -89,7 +89,7 @@ public class SwerveCommandsBuilder {
 		return new SequentialCommandGroup(
 			pointWheelsInCircle().until(
 				() -> swerve.getModules()
-					.isSteersAtTargetPositions(
+					.isSteerAtTargetPositions(
 						SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
 						SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
 					)
@@ -124,7 +124,12 @@ public class SwerveCommandsBuilder {
 		return driveByState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE).withName("Default drive");
 	}
 
-	public Command driveByState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, Supplier<SwerveState> state) {
+	public Command driveByState(
+		DoubleSupplier xSupplier,
+		DoubleSupplier ySupplier,
+		DoubleSupplier rotationSupplier,
+		Supplier<SwerveState> state
+	) {
 		return new DeferredCommand(() -> driveByState(xSupplier, ySupplier, rotationSupplier, state.get()), Set.of(swerve))
 			.withName("Drive with supplier state");
 	}

@@ -36,7 +36,7 @@ public class VisionFilters {
 	}
 
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {
-		return new Filter<>(visionData -> Math.abs(visionData.getEstimatedPose().getZ()) <= distanceFromGroundToleranceMeters);
+		return new Filter<>(visionData -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters));
 	}
 
 	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagRealHeightMeters, double aprilTagHeightToleranceMeters) {

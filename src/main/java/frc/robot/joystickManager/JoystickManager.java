@@ -3,10 +3,10 @@ package frc.robot.joystickManager;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.utils.joysticks.JoystickPorts;
-import frc.utils.joysticks.SmartJoystick;
+import frc.joysticks.JoystickPorts;
+import frc.joysticks.SmartJoystick;
 
-import static frc.utils.joysticks.JoystickPorts.*;
+import static frc.joysticks.JoystickPorts.*;
 
 public class JoystickManager {
 

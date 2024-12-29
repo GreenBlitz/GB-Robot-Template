@@ -4,10 +4,15 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
+import frc.robot.vision.sources.limelights.LimeLightSource;
+import frc.utils.Filter;
 import frc.utils.alerts.Alert;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class VisionConstants {
 
@@ -37,7 +42,22 @@ public class VisionConstants {
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
 
 	public static final int NO_APRILTAG_ID = -1;
-	
-	public static List<VisionSource<AprilTagVisionData>> defaultVisionSources = List.of();
+
+	public static<T> Function<T, Boolean> CreateTrueFunction() {
+		return (T iDontCare) -> true;
+	}
+
+	public static List<VisionSource<AprilTagVisionData>> defaultVisionSources = List.of(
+		new LimeLightSource(
+			"limelight-front",
+			MULTI_VISION_SOURCES_LOGPATH,
+			new Filter<>(CreateTrueFunction())
+		),
+		new LimeLightSource(
+			"limelight-back",
+			MULTI_VISION_SOURCES_LOGPATH,
+			new Filter<>(CreateTrueFunction())
+		)
+	);
 
 }

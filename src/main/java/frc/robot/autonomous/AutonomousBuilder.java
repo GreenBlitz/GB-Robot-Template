@@ -15,17 +15,13 @@ import java.util.Optional;
 
 public class AutonomousBuilder {
 
-	public static List<Command> getAllAutos(Robot robot) {
+	public static List<PathPlannerAuto> getAllAutos(Robot robot) {
 		return List.of(
-			withResetOdometry(M231(robot)),
-			new PathPlannerAuto("Rotate"),
-			new PathPlannerAuto("Rotate 2m"),
-			new PathPlannerAuto("Straight 2m")
+				M231(robot),
+				new PathPlannerAuto("Rotate"),
+				new PathPlannerAuto("Rotate 2m"),
+				new PathPlannerAuto("Straight 2m")
 		);
-	}
-
-	private static Command withResetOdometry(PathPlannerAuto auto) {
-		return AutoBuilder.resetOdom(auto.getStartingPose()).andThen(auto).withName(auto.getName());
 	}
 
 	private static PathPlannerAuto M231(Robot robot) {

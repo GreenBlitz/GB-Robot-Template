@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import frc.robot.autonomous.AutonomousBuilder;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.PoseEstimator;
@@ -68,7 +68,7 @@ public class Robot {
 	}
 
 
-	public Command getAutonomousCommand() {
+	public PathPlannerAuto getAutonomous() {
 		return autonomousChooser.getChosenValue();
 	}
 

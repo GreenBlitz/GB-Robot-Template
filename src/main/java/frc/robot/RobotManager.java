@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.auto.PathPlannerUtils;
@@ -25,7 +25,7 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-	private Command autonomousCommand;
+	private PathPlannerAuto autonomous;
 	private int roborioCycles;
 
 	public RobotManager() {
@@ -53,17 +53,18 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		this.autonomousCommand = robot.getAutonomousCommand();
+		this.autonomous = robot.getAutonomous();
 
-		if (autonomousCommand != null) {
-			autonomousCommand.schedule();
+		if (autonomous != null) {
+			robot.getPoseEstimator().resetPose(autonomous.getStartingPose());
+			autonomous.schedule();
 		}
 	}
 
 	@Override
 	public void teleopInit() {
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
+		if (autonomous != null) {
+			autonomous.cancel();
 		}
 	}
 

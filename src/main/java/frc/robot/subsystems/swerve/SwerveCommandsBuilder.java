@@ -56,7 +56,7 @@ public class SwerveCommandsBuilder {
 
 		return new SequentialCommandGroup(
 			pointWheels(new Rotation2d(), false).until(
-				() -> modules.isSteersAtTargetPositions(
+				() -> modules.isSteerAtTargetPositions(
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
 				)
@@ -89,7 +89,7 @@ public class SwerveCommandsBuilder {
 		return new SequentialCommandGroup(
 			pointWheelsInCircle().until(
 				() -> swerve.getModules()
-					.isSteersAtTargetPositions(
+					.isSteerAtTargetPositions(
 						SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
 						SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
 					)

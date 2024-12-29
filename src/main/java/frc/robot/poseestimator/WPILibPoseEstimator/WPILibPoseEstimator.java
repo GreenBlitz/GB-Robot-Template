@@ -14,7 +14,6 @@ import frc.robot.vision.data.AprilTagVisionData;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
-import java.util.Optional;
 
 public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 

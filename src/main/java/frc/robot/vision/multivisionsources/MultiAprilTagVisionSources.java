@@ -88,9 +88,9 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		super.periodic();
 		updateYawInLimelights(getRobotAngle());
 	}
-	
+
 	private Rotation2d getRobotAngle() {
 		return gyroSupplier.get().plus(headingOffsetSupplier.get());
 	}
-	
+
 }

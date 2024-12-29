@@ -6,4 +6,4 @@ Things To Do When Getting Template
 
 Field:
 -----------------------
-[See field calibrations file](src/main/java/frc/constants/field/FieldCalibrations.md)
+[See field calibrations file](field/FieldCalibrations.md)

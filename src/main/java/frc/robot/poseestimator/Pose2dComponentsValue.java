@@ -1,6 +1,6 @@
 package frc.robot.poseestimator;
 
-public enum Pose2dArrayValue {
+public enum Pose2dComponentsValue {
 
 	X_VALUE(0),
 	Y_VALUE(1),
@@ -8,14 +8,14 @@ public enum Pose2dArrayValue {
 
 	private final int index;
 
-	Pose2dArrayValue(int entryValue) {
-		this.index = entryValue;
+	Pose2dComponentsValue(int entryIndex) {
+		this.index = entryIndex;
 	}
 
 	public int getIndex() {
 		return index;
 	}
 
-	public static final int POSE_ARRAY_LENGTH = 3;
+	public static final int POSE2D_COMPONENTS_AMOUNT = 3;
 
 }

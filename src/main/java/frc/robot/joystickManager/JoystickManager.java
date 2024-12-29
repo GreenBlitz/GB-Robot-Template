@@ -6,8 +6,7 @@ import frc.robot.Robot;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
 
-import static frc.utils.joysticks.JoystickPorts.MAIN;
-import static frc.utils.joysticks.JoystickPorts.THIRD;
+import static frc.utils.joysticks.JoystickPorts.*;
 
 public class JoystickManager {
 
@@ -18,34 +17,26 @@ public class JoystickManager {
 	private SmartJoystick fifthJoystick = null;
 	private SmartJoystick sixthJoystick = null;
 
-	private final SendableChooser<JoystickState> mainStateChooser;
-	private final SendableChooser<JoystickState> secondStateChooser;
-	private final SendableChooser<JoystickState> thirdStateChooser;
-	private final SendableChooser<JoystickState> forthStateChooser;
-	private final SendableChooser<JoystickState> fifthStateChooser;
-	private final SendableChooser<JoystickState> sixthStateChooser;
-
-	private final Robot robot;
-
+    private final Robot robot;
 
 	public JoystickManager(Robot robot) {
-		mainStateChooser = new SendableChooser<>();
-		addOptions(mainStateChooser, "Main joystick", mainJoystick);
+        SendableChooser<JoystickState> mainStateChooser = new SendableChooser<>();
+		addOptions(mainStateChooser, "Main joystick", MAIN);
 
-		secondStateChooser = new SendableChooser<>();
-		addOptions(secondStateChooser, "Second joystick", secondJoystick);
+        SendableChooser<JoystickState> secondStateChooser = new SendableChooser<>();
+		addOptions(secondStateChooser, "Second joystick", SECOND);
 
-		thirdStateChooser = new SendableChooser<>();
-		addOptions(thirdStateChooser, "Third joystick", thirdJoystick);
+        SendableChooser<JoystickState> thirdStateChooser = new SendableChooser<>();
+		addOptions(thirdStateChooser, "Third joystick", THIRD);
 
-		forthStateChooser = new SendableChooser<>();
-		addOptions(forthStateChooser, "Forth joystick", fourthJoystick);
+        SendableChooser<JoystickState> forthStateChooser = new SendableChooser<>();
+		addOptions(forthStateChooser, "Forth joystick", FOURTH);
 
-		fifthStateChooser = new SendableChooser<>();
-		addOptions(fifthStateChooser, "Fifth joystick", fifthJoystick);
+        SendableChooser<JoystickState> fifthStateChooser = new SendableChooser<>();
+		addOptions(fifthStateChooser, "Fifth joystick", FIFTH);
 
-		sixthStateChooser = new SendableChooser<>();
-		addOptions(sixthStateChooser, "Sixth joystick", sixthJoystick);
+        SendableChooser<JoystickState> sixthStateChooser = new SendableChooser<>();
+		addOptions(sixthStateChooser, "Sixth joystick", SIXTH);
 
 		this.robot = robot;
 	}
@@ -125,13 +116,13 @@ public class JoystickManager {
 		return null;
 	}
 
-	private void addOptions(SendableChooser<JoystickState> chooser, String name, SmartJoystick joystick) {
+	private void addOptions(SendableChooser<JoystickState> chooser, String name, JoystickPorts port) {
 		chooser.setDefaultOption("NONE", JoystickState.NONE);
 		for (JoystickState option : JoystickState.values()) {
 			chooser.addOption(String.valueOf(option), option);
 		}
 
-		chooser.onChange((joystickState) -> setJoystickState(joystick.getPort(), (mainStateChooser.getSelected()) ));
+		chooser.onChange((joystickState) -> setJoystickState(port, (chooser.getSelected()) ));
 		SmartDashboard.putData(name, chooser);
 	}
 

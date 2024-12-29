@@ -3,7 +3,6 @@ package frc.robot.vision;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.Field;
-import frc.constants.MathConstants;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
@@ -13,25 +12,15 @@ public class VisionFilters {
 
 	public static Filter<VisionData> isPitchAtAngle(Rotation2d wantedPitch, Rotation2d pitchTolerance) {
 		return new Filter<>(
-			visionData -> MathUtil.isNear(
-				wantedPitch.getRadians(),
-				visionData.getEstimatedPose().getRotation().getY(),
-				pitchTolerance.getRadians(),
-				0,
-				MathConstants.FULL_CIRCLE.getRadians()
-			)
+			visionData -> ToleranceUtils
+				.isNearWrapped(wantedPitch, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), pitchTolerance)
 		);
 	}
 
 	public static Filter<VisionData> isRollAtAngle(Rotation2d wantedRoll, Rotation2d rollTolerance) {
 		return new Filter<>(
-			visionData -> MathUtil.isNear(
-				wantedRoll.getRadians(),
-				visionData.getEstimatedPose().getRotation().getX(),
-				rollTolerance.getRadians(),
-				0,
-				MathConstants.FULL_CIRCLE.getRadians()
-			)
+			visionData -> ToleranceUtils
+				.isNearWrapped(wantedRoll, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), rollTolerance)
 		);
 	}
 
@@ -41,8 +30,8 @@ public class VisionFilters {
 
 	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagRealHeightMeters, double aprilTagHeightToleranceMeters) {
 		return new Filter<>(
-			aprilTagVisionData -> Math.abs(aprilTagVisionData.getAprilTagHeightMeters() - aprilTagRealHeightMeters)
-				<= aprilTagHeightToleranceMeters
+			aprilTagVisionData -> MathUtil
+				.isNear(aprilTagRealHeightMeters, aprilTagVisionData.getAprilTagHeightMeters(), aprilTagHeightToleranceMeters)
 		);
 	}
 

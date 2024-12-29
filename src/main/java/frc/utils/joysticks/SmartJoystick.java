@@ -25,6 +25,7 @@ public class SmartJoystick {
 	private final String logPath;
 
 	private JoystickState state;
+	private JoystickPorts port;
 
 	public SmartJoystick(JoystickPorts joystickPort, JoystickState state) {
 		this(joystickPort, DEADZONE, state);
@@ -60,6 +61,21 @@ public class SmartJoystick {
 
 		this.state = state;
 
+		switch (joystick.getPort()){
+			case 0:
+				port = JoystickPorts.MAIN;
+			case 1:
+				port = JoystickPorts.SECOND;
+			case 2:
+				port = JoystickPorts.THIRD;
+			case 3:
+				port = JoystickPorts.FOURTH;
+			case 4:
+				port = JoystickPorts.FIFTH;
+			case 5:
+				port = JoystickPorts.SIXTH;
+		}
+
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt, state = " + state, () -> (!isConnected() && this.state != JoystickState.NONE)));
 		Logger.recordOutput(joystick.getPort()+" state", state);
 	}
@@ -67,6 +83,8 @@ public class SmartJoystick {
 	public String getLogPath() {
 		return logPath;
 	}
+
+	public JoystickPorts getPort(){return port;}
 
 	public boolean isConnected() {
 		return joystick.isConnected();

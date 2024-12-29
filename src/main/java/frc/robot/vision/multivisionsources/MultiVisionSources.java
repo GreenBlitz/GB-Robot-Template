@@ -55,7 +55,6 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		return output;
 	}
 
-
 	private static <ReturnType extends VisionData> void logPoses(String logPath, List<ReturnType> observations) {
 		for (ReturnType observation : observations) {
 			Logger.recordOutput(logPath + observation.getSourceName(), observation.getEstimatedPose());

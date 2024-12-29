@@ -1,6 +1,6 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.robot.constants.VisionConstants;
+import frc.constants.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
@@ -17,8 +17,7 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 
 	@SafeVarargs
 	public MultiVisionSources(String logPath, VisionSource<ReturnType>... visionSources) {
-		this.logPath = logPath;
-		this.visionSources = List.of(visionSources);
+		this(logPath, List.of(visionSources));
 	}
 
 	public MultiVisionSources(String logPath, List<VisionSource<ReturnType>> visionSources) {
@@ -35,11 +34,11 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		Function<VisionSource<ReturnType>, Optional<ReturnType>> mapping
 	) {
 		ArrayList<ReturnType> output = new ArrayList<>();
-		list.forEach(visionSource -> {
+		for (VisionSource<ReturnType> visionSource : list) {
 			visionSource.update();
 			Optional<ReturnType> observation = mapping.apply(visionSource);
 			observation.ifPresent(output::add);
-		});
+		}
 		return output;
 	}
 
@@ -52,8 +51,8 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 	}
 
 	private static <ReturnType extends VisionData> void logPoses(String logPath, List<ReturnType> observations) {
-		for (int i = 0; i < observations.size(); i++) {
-			Logger.recordOutput(logPath + i, observations.get(i).getEstimatedPose());
+		for (ReturnType observation : observations) {
+			Logger.recordOutput(logPath + observation.getSourceName(), observation.getEstimatedPose());
 		}
 	}
 

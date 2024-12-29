@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.constants.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -61,7 +62,7 @@ public class Robot {
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
-			frc.robot.constants.VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 			swerve::getGyroAbsoluteYaw,
 			() -> poseEstimator.getEstimatedPose().getRotation()
 		);

@@ -9,17 +9,17 @@ import frc.utils.ToleranceUtils;
 
 public class VisionFilters {
 
-	public static Filter<VisionData> isPitchInTolerance(Rotation2d pitchTolerance, Rotation2d wantedPitch) {
+	public static Filter<VisionData> isPitchAtGoal(Rotation2d wantedPitch, Rotation2d pitchTolerance) {
 		return new Filter<>(
 			visionData -> ToleranceUtils
-				.wrappedIsNear(pitchTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), wantedPitch)
+				.isNearWrapped(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), wantedPitch, pitchTolerance)
 		);
 	}
 
-	public static Filter<VisionData> isRollInTolerance(Rotation2d rollTolerance, Rotation2d wantedRoll) {
+	public static Filter<VisionData> isRollAtGoal(Rotation2d wantedRoll, Rotation2d rollTolerance) {
 		return new Filter<>(
 			visionData -> ToleranceUtils
-				.wrappedIsNear(rollTolerance, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), wantedRoll)
+				.isNearWrapped(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), wantedRoll, rollTolerance)
 		);
 	}
 
@@ -27,7 +27,7 @@ public class VisionFilters {
 		return new Filter<>(visionData -> Math.abs(visionData.getEstimatedPose().getZ()) <= distanceFromGroundToleranceMeters);
 	}
 
-	public static Filter<AprilTagVisionData> isAprilTagHeightInTolerance(double aprilTagHeightToleranceMeters, double aprilTagRealHeightMeters) {
+	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagRealHeightMeters, double aprilTagHeightToleranceMeters) {
 		return new Filter<>(
 			aprilTagVisionData -> Math.abs(aprilTagVisionData.getAprilTagHeightMeters() - aprilTagRealHeightMeters)
 				<= aprilTagHeightToleranceMeters

@@ -5,18 +5,18 @@ import frc.constants.MathConstants;
 
 public class ToleranceUtils {
 
-	public static boolean wrappedIsNear(Rotation2d tolerance, Rotation2d rotation, Rotation2d wantedRotation) {
+	public static boolean isNearWrapped(Rotation2d rotation, Rotation2d wantedRotation, Rotation2d tolerance) {
 		double rotationDifferenceRadians = Math.abs(wantedRotation.getRadians() - rotation.getRadians());
 		return rotationDifferenceRadians <= tolerance.getRadians()
 			|| rotationDifferenceRadians >= MathConstants.FULL_CIRCLE.getRadians() - tolerance.getRadians();
 	}
 
-	public static boolean isInRange(double value, double tolerance, double maxValue, double minValue) {
+	public static boolean isInRange(double value, double maxValue, double minValue, double tolerance) {
 		return (minValue - tolerance) <= value && value <= (maxValue + tolerance);
 	}
 
 	public static boolean isInRange(double value, double maxValue, double minValue) {
-		return maxValue >= value && minValue <= value;
+		return isInRange(value, maxValue, minValue, 0);
 	}
 
 }

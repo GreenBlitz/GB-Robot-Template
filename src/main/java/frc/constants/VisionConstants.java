@@ -7,6 +7,7 @@ import frc.robot.vision.sources.VisionSource;
 import frc.utils.alerts.Alert;
 
 import java.io.IOException;
+import java.util.List;
 
 public class VisionConstants {
 
@@ -39,8 +40,6 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 	
-	public static VisionSource<AprilTagVisionData>[] defaultVisionSources = new VisionSource[] {
-			new
-	}
-	
+	public static List<VisionSource<AprilTagVisionData>> defaultVisionSources = List.of();
+
 }

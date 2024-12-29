@@ -44,37 +44,39 @@ public class JoystickManager {
 	public void setJoystickState(JoystickPorts port, JoystickState joystickState) {
 		if (joystickState == JoystickState.NONE && portToJoystick(port) != null) {
 			portToJoystick(port).setState(joystickState);
-		}
-		else if (portToJoystick(port) == null) {
+		} else if (portToJoystick(port) == null) {
 			switch (port) {
 				case MAIN:
 					mainJoystick = new SmartJoystick(port, joystickState);
 					JoystickBindings.configureBindings(mainJoystick, robot);
 					break;
+
 				case SECOND:
 					secondJoystick = new SmartJoystick(port, joystickState);
 					JoystickBindings.configureBindings(secondJoystick, robot);
 					break;
+
 				case THIRD:
 					thirdJoystick = new SmartJoystick(port, joystickState);
 					JoystickBindings.configureBindings(thirdJoystick, robot);
 					break;
+
 				case FOURTH:
 					fourthJoystick = new SmartJoystick(port, joystickState);
 					JoystickBindings.configureBindings(fourthJoystick, robot);
 					break;
+
 				case FIFTH:
 					fifthJoystick = new SmartJoystick(port, joystickState);
 					JoystickBindings.configureBindings(fifthJoystick, robot);
 					break;
+
 				case SIXTH:
 					sixthJoystick = new SmartJoystick(port, joystickState);
 					JoystickBindings.configureBindings(sixthJoystick, robot);
 					break;
 			}
-
-		}
-		else {
+		} else {
 			portToJoystick(port).setState(joystickState);
 		}
 	}
@@ -105,15 +107,15 @@ public class JoystickManager {
 	}
 
 	private SmartJoystick portToJoystick(JoystickPorts port) {
-        return switch (port) {
-            case MAIN -> mainJoystick;
-            case SECOND -> secondJoystick;
-            case THIRD -> thirdJoystick;
-            case FOURTH -> fourthJoystick;
-            case FIFTH -> fifthJoystick;
-            case SIXTH -> sixthJoystick;
-        };
-    }
+		return switch (port) {
+			case MAIN -> mainJoystick;
+			case SECOND -> secondJoystick;
+			case THIRD -> thirdJoystick;
+			case FOURTH -> fourthJoystick;
+			case FIFTH -> fifthJoystick;
+			case SIXTH -> sixthJoystick;
+		};
+	}
 
 	private void addOptions(SendableChooser<JoystickState> chooser, String name, JoystickPorts port) {
 		chooser.setDefaultOption("NONE", JoystickState.NONE);

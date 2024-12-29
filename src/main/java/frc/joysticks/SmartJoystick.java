@@ -9,7 +9,6 @@ import frc.robot.joystickManager.JoystickState;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
-import org.littletonrobotics.junction.Logger;
 
 public class SmartJoystick {
 
@@ -76,11 +75,7 @@ public class SmartJoystick {
 		}
 
 		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.ERROR,
-				logPath + "DisconnectedAt",
-				() -> (!isConnected() && this.state != JoystickState.NONE)
-			)
+			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> (!isConnected() && this.state != JoystickState.NONE))
 		);
 	}
 

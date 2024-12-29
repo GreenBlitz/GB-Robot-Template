@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.vision.GyroAngleValues;
-import frc.robot.constants.VisionConstants;
+import frc.constants.VisionConstants;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.GyroRequiringVisionSource;
 import frc.utils.Conversions;
@@ -108,6 +108,7 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
 			pose3dDoublePair -> new AprilTagVisionData(
+				name,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				getAprilTagValue(LimelightEntryValue.Y_AXIS),

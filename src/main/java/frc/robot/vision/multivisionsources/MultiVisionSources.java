@@ -17,8 +17,7 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 
 	@SafeVarargs
 	public MultiVisionSources(String logPath, VisionSource<ReturnType>... visionSources) {
-		this.logPath = logPath;
-		this.visionSources = List.of(visionSources);
+		this(logPath, List.of(visionSources));
 	}
 
 	public MultiVisionSources(String logPath, List<VisionSource<ReturnType>> visionSources) {

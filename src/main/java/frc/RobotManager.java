@@ -5,13 +5,8 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
-<<<<<<< HEAD:src/main/java/frc/robot/RobotManager.java
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.joystickManager.JoystickManager;
-=======
 import frc.robot.Robot;
->>>>>>> master:src/main/java/frc/RobotManager.java
+import frc.robot.joystickManager.JoystickManager;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;

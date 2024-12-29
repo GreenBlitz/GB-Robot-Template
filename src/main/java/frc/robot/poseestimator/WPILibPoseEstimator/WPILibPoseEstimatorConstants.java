@@ -14,8 +14,8 @@ public class WPILibPoseEstimatorConstants {
 		Rotation2d.fromRadians(0.003)
 	);
 	public static final StandardDeviations2d DEFAULT_VISION_STANDARD_DEVIATIONS = new StandardDeviations2d(
-		0.0003,
-		0.00003,
+		0.3,
+		0.3,
 		Rotation2d.fromRadians(0.003)
 	);
 

@@ -45,7 +45,7 @@ public class VisionConstants {
 		return (T iDontCare) -> true;
 	}
 
-	public static List<VisionSource<AprilTagVisionData>> defaultVisionSources = List.of(
+	public static List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_SOURCES = List.of(
 		new LimeLightSource("limelight-front", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(CreateTrueFunction())),
 		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(CreateTrueFunction()))
 	);

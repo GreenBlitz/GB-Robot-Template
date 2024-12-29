@@ -73,6 +73,7 @@ public class RobotManager extends LoggedRobot {
 		AlertManager.reportAlerts();
 		robot.getPoseEstimator().updateOdometry(robot.getSwerve().getAllOdometryObservations());
 		robot.getPoseEstimator().updateVision(robot.getAprilTagVisionSources().getFilteredVisionData());
+		robot.getAprilTagVisionSources().periodic();
 	}
 
 	private void updateTimeRelatedData() {

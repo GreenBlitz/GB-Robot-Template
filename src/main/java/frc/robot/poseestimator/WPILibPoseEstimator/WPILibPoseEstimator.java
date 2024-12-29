@@ -11,6 +11,7 @@ import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -101,5 +102,9 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			PoseEstimationMath.calculateStandardDeviationOfPose(visionObservation, getEstimatedPose()).getWPILibStandardDeviations()
 		);
 	}
-
+	
+	@Override
+	protected void subsystemPeriodic() {
+		Logger.recordOutput(getLogPath() + "estimatedPose", getEstimatedPose());
+	}
 }

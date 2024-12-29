@@ -26,8 +26,8 @@ public class ModuleUtils {
 
 	public enum ControlMode {
 
-		NONE("NONE (target states not being used)"),
-		CUSTOM("CUSTOM (target states not being used)"),
+		NONE("NONE (Target states are not being used)"),
+		CUSTOM("CUSTOM (Target states are not being used)"),
 		TARGET_STATE("TARGET_STATE");
 
 

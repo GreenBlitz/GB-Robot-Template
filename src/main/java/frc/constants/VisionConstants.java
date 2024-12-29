@@ -10,9 +10,7 @@ import frc.utils.alerts.Alert;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class VisionConstants {
 
@@ -21,7 +19,7 @@ public class VisionConstants {
 	public static final String NON_FILTERED_DATA_LOGPATH_ADDITION = "NonFilteredData/";
 
 	public static final String SOURCE_LOGPATH_ADDITION = "VisionSource/";
-	
+
 	public static final String MULTI_VISION_SOURCES_LOGPATH = "MultiVisionSources/";
 
 
@@ -43,21 +41,13 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
-	public static<T> Function<T, Boolean> CreateTrueFunction() {
+	public static <T> Function<T, Boolean> CreateTrueFunction() {
 		return (T iDontCare) -> true;
 	}
 
 	public static List<VisionSource<AprilTagVisionData>> defaultVisionSources = List.of(
-		new LimeLightSource(
-			"limelight-front",
-			MULTI_VISION_SOURCES_LOGPATH,
-			new Filter<>(CreateTrueFunction())
-		),
-		new LimeLightSource(
-			"limelight-back",
-			MULTI_VISION_SOURCES_LOGPATH,
-			new Filter<>(CreateTrueFunction())
-		)
+		new LimeLightSource("limelight-front", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(CreateTrueFunction())),
+		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(CreateTrueFunction()))
 	);
 
 }

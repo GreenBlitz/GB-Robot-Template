@@ -37,13 +37,13 @@ public class VisionFilters {
 
 	public static Filter<VisionData> isXInField(double xToleranceMeters) {
 		return new Filter<>(
-			visionData -> ToleranceUtils.isInRange(visionData.getEstimatedPose().getX(), Field.LENGTH_METERS, 0, xToleranceMeters)
+			visionData -> ToleranceUtils.isInRange(visionData.getEstimatedPose().getX(), 0, Field.LENGTH_METERS, xToleranceMeters)
 		);
 	}
 
 	public static Filter<VisionData> isYInField(double yToleranceMeters) {
 		return new Filter<>(
-			visionData -> ToleranceUtils.isInRange(visionData.getEstimatedPose().getY(), Field.WIDTH_METERS, 0, yToleranceMeters)
+			visionData -> ToleranceUtils.isInRange(visionData.getEstimatedPose().getY(), 0, Field.WIDTH_METERS, yToleranceMeters)
 		);
 	}
 

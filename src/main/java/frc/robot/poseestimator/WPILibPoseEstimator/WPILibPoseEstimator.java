@@ -84,11 +84,10 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {}
-
-	@Override
-	public Optional<Pose2d> getVisionPose() {
-		return Optional.empty();
+	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {
+		for (AprilTagVisionData visionData : robotPoseVisionData) {
+			addVisionMeasurement(visionData);
+		}
 	}
 
 	private void updateOdometryPose(OdometryObservation observation) {
@@ -102,9 +101,11 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			PoseEstimationMath.calculateStandardDeviationOfPose(visionObservation, getEstimatedPose()).getWPILibStandardDeviations()
 		);
 	}
-	
+
 	@Override
 	protected void subsystemPeriodic() {
 		Logger.recordOutput(getLogPath() + "estimatedPose", getEstimatedPose());
+		Logger.recordOutput(getLogPath() + "odometryPose", getOdometryPose());
 	}
+
 }

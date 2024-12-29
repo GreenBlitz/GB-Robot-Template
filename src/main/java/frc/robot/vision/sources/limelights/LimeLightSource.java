@@ -40,7 +40,7 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 		this.filter = filter;
 		this.robotPoseEntryBotPose2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryBotPose1 = getLimelightNetworkTableEntry("botpose_wpiblue");
-		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
+		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_robotspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
 		this.gyroAngleValues = new GyroAngleValues(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0);

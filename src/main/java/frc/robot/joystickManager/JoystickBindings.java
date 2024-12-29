@@ -3,7 +3,7 @@ package frc.robot.joystickManager;
 import frc.robot.Robot;
 import frc.joysticks.SmartJoystick;
 
-public class JoysticksBindings {
+public class JoystickBindings {
 
 	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
 

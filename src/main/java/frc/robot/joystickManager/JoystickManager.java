@@ -50,22 +50,22 @@ public class JoystickManager {
 			switch (port){
 				case MAIN:
 					mainJoystick = new SmartJoystick(port, state);
-					JoysticksBindings.configureBindings(mainJoystick, robot);
+					JoystickBindings.configureBindings(mainJoystick, robot);
 				case SECOND:
 					secondJoystick = new SmartJoystick(port, state);
-					JoysticksBindings.configureBindings(secondJoystick, robot);
+					JoystickBindings.configureBindings(secondJoystick, robot);
 				case THIRD:
 					thirdJoystick = new SmartJoystick(port, state);
-					JoysticksBindings.configureBindings(thirdJoystick, robot);
+					JoystickBindings.configureBindings(thirdJoystick, robot);
 				case FOURTH:
 					fourthJoystick = new SmartJoystick(port, state);
-					JoysticksBindings.configureBindings(fourthJoystick, robot);
+					JoystickBindings.configureBindings(fourthJoystick, robot);
 				case FIFTH:
 					fifthJoystick = new SmartJoystick(port, state);
-					JoysticksBindings.configureBindings(fifthJoystick, robot);
+					JoystickBindings.configureBindings(fifthJoystick, robot);
 				case SIXTH:
 					sixthJoystick = new SmartJoystick(port, state);
-					JoysticksBindings.configureBindings(sixthJoystick, robot);
+					JoystickBindings.configureBindings(sixthJoystick, robot);
 			}
 
 		} else {

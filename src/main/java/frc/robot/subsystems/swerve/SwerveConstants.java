@@ -20,16 +20,16 @@ public record SwerveConstants(
 ) {
 
 	public SwerveConstants(
-		SwerveType swerveType,
+		String logPath,
 		double velocityAt12VoltsMetersPerSecond,
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
 		PIDConstants rotationDegreesPIDConstants
 	) {
 		this(
-			swerveType.getLogPath(),
-			swerveType.getLogPath() + "State/",
-			swerveType.getLogPath() + "Velocity/",
+			logPath,
+			logPath + "State/",
+			logPath + "Velocity/",
 			velocityAt12VoltsMetersPerSecond,
 			maxRotationalVelocityPerSecond,
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),

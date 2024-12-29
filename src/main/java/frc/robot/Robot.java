@@ -13,7 +13,6 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
@@ -39,12 +38,12 @@ public class Robot {
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
+		IGyro gyro = GyroFactory.createGyro("Subsystems/Swerve/");
 		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(SwerveType.SWERVE),
-			ModulesFactory.create(SwerveType.SWERVE),
+			SwerveConstantsFactory.create("Subsystems/Swerve/"),
+			ModulesFactory.create("Subsystems/Swerve/"),
 			gyro,
-			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
+			GyroFactory.createSignals(gyro)
 		);
 
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());

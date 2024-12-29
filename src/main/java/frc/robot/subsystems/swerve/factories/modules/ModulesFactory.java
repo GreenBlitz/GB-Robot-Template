@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve.factories.modules;
 
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
-import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.modules.constants.ModuleSpecificConstantsFactory;
 import frc.robot.subsystems.swerve.factories.modules.drive.DriveFactory;
 import frc.robot.subsystems.swerve.factories.modules.encoder.EncoderFactory;
@@ -14,31 +13,31 @@ import frc.robot.subsystems.swerve.module.Modules;
 
 public class ModulesFactory {
 
-	private static Module createModule(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
-		IAngleEncoder angleEncoder = EncoderFactory.createEncoder(swerveType, modulePosition);
-		ControllableMotor steer = SteerFactory.createSteer(swerveType, modulePosition);
-		ControllableMotor drive = DriveFactory.createDrive(swerveType, modulePosition);
+	private static Module createModule(String logPath, ModuleUtils.ModulePosition modulePosition) {
+		IAngleEncoder angleEncoder = EncoderFactory.createEncoder(logPath, modulePosition);
+		ControllableMotor steer = SteerFactory.createSteer(logPath, modulePosition);
+		ControllableMotor drive = DriveFactory.createDrive(logPath, modulePosition);
 
 		return new Module(
-			ModuleSpecificConstantsFactory.create(swerveType, modulePosition),
+			ModuleSpecificConstantsFactory.create(logPath, modulePosition),
 			angleEncoder,
-			EncoderFactory.createSignals(swerveType, angleEncoder),
+			EncoderFactory.createSignals(angleEncoder),
 			steer,
-			SteerFactory.createRequests(swerveType),
-			SteerFactory.createSignals(swerveType, steer),
+			SteerFactory.createRequests(),
+			SteerFactory.createSignals(steer),
 			drive,
-			DriveFactory.createRequests(swerveType),
-			DriveFactory.createSignals(swerveType, drive)
+			DriveFactory.createRequests(),
+			DriveFactory.createSignals(drive)
 		);
 	}
 
-	public static Modules create(SwerveType swerveType) {
+	public static Modules create(String logPath) {
 		return new Modules(
-			swerveType.getLogPath(),
-			createModule(swerveType, ModuleUtils.ModulePosition.FRONT_LEFT),
-			createModule(swerveType, ModuleUtils.ModulePosition.FRONT_RIGHT),
-			createModule(swerveType, ModuleUtils.ModulePosition.BACK_LEFT),
-			createModule(swerveType, ModuleUtils.ModulePosition.BACK_RIGHT)
+			logPath,
+			createModule(logPath, ModuleUtils.ModulePosition.FRONT_LEFT),
+			createModule(logPath, ModuleUtils.ModulePosition.FRONT_RIGHT),
+			createModule(logPath, ModuleUtils.ModulePosition.BACK_LEFT),
+			createModule(logPath, ModuleUtils.ModulePosition.BACK_RIGHT)
 		);
 	}
 

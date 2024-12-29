@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -64,7 +65,7 @@ public class Robot {
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 			swerve::getGyroAbsoluteYaw,
-			() -> poseEstimator.getEstimatedPose().getRotation(),
+			() -> poseEstimator.getEstimatedPose().getRotation().plus(Rotation2d.k180deg),
 			VisionConstants.DEFAULT_VISION_SOURCES
 		);
 

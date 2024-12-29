@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.factories.gyro;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
-import frc.robot.RobotConstants;;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Wrapper;
@@ -40,6 +40,5 @@ class RealGyroConstants {
 				.generatePhoenix6Signal(pigeon2Gyro.getGyro().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
 		);
 	}
-
 
 }

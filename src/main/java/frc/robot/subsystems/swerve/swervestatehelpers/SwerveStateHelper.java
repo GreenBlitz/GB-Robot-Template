@@ -4,8 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.constants.Field;
-import frc.robot.constants.MathConstants;
+import frc.constants.Field;
+import frc.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
@@ -20,24 +20,24 @@ public class SwerveStateHelper {
 	private final Swerve swerve;
 	private final SwerveConstants swerveConstants;
 	private final Supplier<Optional<Pose2d>> robotPoseSupplier;
-	private final Supplier<Optional<Translation2d>> noteTranslationSupplier;
+	private final Supplier<Optional<Translation2d>> objectTranslationSupplier;
 
 	public SwerveStateHelper(
 		Supplier<Optional<Pose2d>> robotPoseSupplier,
-		Supplier<Optional<Translation2d>> noteTranslationSupplier,
+		Supplier<Optional<Translation2d>> objectTranslationSupplier,
 		Swerve swerve
 	) {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = robotPoseSupplier;
-		this.noteTranslationSupplier = noteTranslationSupplier;
+		this.objectTranslationSupplier = objectTranslationSupplier;
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		return switch (swerveState.getAimAssist()) {
 			case NONE -> speeds;
 			case SPEAKER -> handleSpeakerAssist(speeds, robotPoseSupplier.get());
-			case NOTE -> handleNoteAimAssist(speeds, robotPoseSupplier.get(), noteTranslationSupplier.get(), swerveState);
+			case NOTE -> handleNoteAimAssist(speeds, robotPoseSupplier.get(), objectTranslationSupplier.get(), swerveState);
 			case AMP -> handleAmpAssist(speeds, robotPoseSupplier.get());
 		};
 	}
@@ -45,14 +45,14 @@ public class SwerveStateHelper {
 	private ChassisSpeeds handleNoteAimAssist(
 		ChassisSpeeds speeds,
 		Optional<Pose2d> optionalRobotPose,
-		Optional<Translation2d> optionalNoteTranslation,
+		Optional<Translation2d> optionalObjectTranslation,
 		SwerveState swerveState
 	) {
-		if (optionalRobotPose.isEmpty() || optionalNoteTranslation.isEmpty()) {
+		if (optionalRobotPose.isEmpty() || optionalObjectTranslation.isEmpty()) {
 			return speeds;
 		}
 		return AimAssistMath
-			.getObjectAssistedSpeeds(speeds, optionalRobotPose.get(), optionalNoteTranslation.get(), swerveConstants, swerveState);
+			.getObjectAssistedSpeeds(speeds, optionalRobotPose.get(), optionalObjectTranslation.get(), swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Optional<Pose2d> optionalRobotPose) {
@@ -86,16 +86,20 @@ public class SwerveStateHelper {
 
 	public RotateAxis getFarRotateAxis(boolean isLeft) {
 		Rotation2d currentAllianceHeading = swerve.getAllianceRelativeHeading();
-		if (Math.abs(currentAllianceHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) { // -45 <= x <= 45
+		// -45 <= x <= 45
+		if (Math.abs(currentAllianceHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) {
 			return isLeft ? RotateAxis.FRONT_LEFT_MODULE : RotateAxis.FRONT_RIGHT_MODULE;
 		}
-		if (Math.abs(currentAllianceHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) { // -135 - x - 135
+		// -180 <= x <= -135 || 135 <= x <= 180
+		if (Math.abs(currentAllianceHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) {
 			return isLeft ? RotateAxis.BACK_RIGHT_MODULE : RotateAxis.BACK_LEFT_MODULE;
 		}
-		if (currentAllianceHeading.getDegrees() > 0) { // 45 <= x <= 135
+		// 45 <= x <= 135
+		if (currentAllianceHeading.getDegrees() > 0) {
 			return isLeft ? RotateAxis.FRONT_RIGHT_MODULE : RotateAxis.BACK_RIGHT_MODULE;
 		}
-		return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE; // -45 >= x >= -135
+		// -45 >= x >= -135
+		return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE;
 	}
 
 	public RotateAxis getFarRightRotateAxis() {

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.factories.modules.drive;
 
 import frc.robot.Robot;
-import frc.robot.constants.IDs;
+import frc.robot.IDs;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -24,7 +24,7 @@ public class DriveFactory {
 	}
 
 	public static ControllableMotor createDrive(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
-		String logPath = SwerveType.SWERVE.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Drive/";
+		String logPath = SwerveType.SWERVE.getLogPath() + ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Drive/";
 		return switch (swerveType) {
 			case SWERVE -> createSwerveDrive(logPath, modulePosition);
 		};

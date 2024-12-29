@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.MathConstants;
+import frc.constants.MathConstants;
 
 public class HeadingStabilizer {
 
@@ -33,7 +33,7 @@ public class HeadingStabilizer {
 		}
 	}
 
-	public Rotation2d calculate(Rotation2d currentHeading) {
+	public Rotation2d calculatePIDOutput(Rotation2d currentHeading) {
 		return Rotation2d.fromDegrees(headingController.calculate(currentHeading.getDegrees()));
 	}
 

@@ -1,6 +1,6 @@
 package frc.utils;
 
-import frc.robot.constants.DirectoryPaths;
+import frc.constants.DirectoryPaths;
 
 import java.awt.Desktop;
 import java.nio.file.Files;

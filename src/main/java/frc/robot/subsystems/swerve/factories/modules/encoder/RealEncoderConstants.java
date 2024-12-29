@@ -4,8 +4,8 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import frc.robot.constants.GlobalConstants;
-import frc.robot.constants.MathConstants;
+import frc.robot.RobotConstants;
+import frc.constants.MathConstants;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Utils;
@@ -44,7 +44,7 @@ class RealEncoderConstants {
 	protected static EncoderSignals generateSignals(CANCoderEncoder encoder) {
 		return new EncoderSignals(
 			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(encoder.getEncoder().getPosition(), GlobalConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
+				.generatePhoenix6Signal(encoder.getEncoder().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
 		);
 	}
 

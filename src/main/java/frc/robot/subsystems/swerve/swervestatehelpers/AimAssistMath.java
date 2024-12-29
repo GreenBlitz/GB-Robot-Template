@@ -18,10 +18,10 @@ public class AimAssistMath {
 		Rotation2d targetHeading,
 		SwerveConstants swerveConstants
 	) {
-		Rotation2d pidVelocityPerSecond = Rotation2d
+		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		double angularVelocityRadiansPerSecond = applyMagnitudeCompensation(pidVelocityPerSecond, getDriveMagnitude(speeds));
+		double angularVelocityRadiansPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, getDriveMagnitude(speeds));
 		double combinedAngularVelocityRadiansPerSecond = angularVelocityRadiansPerSecond + speeds.omegaRadiansPerSecond;
 		Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(
 			Rotation2d.fromRadians(combinedAngularVelocityRadiansPerSecond),
@@ -39,22 +39,22 @@ public class AimAssistMath {
 		SwerveState swerveState
 	) {
 		Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
-		double pidHorizontalVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
+		double pidHorizontalOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
 		double xVelocityMetersPerSecond = speeds.vxMetersPerSecond;
 		double yVelocityMetersPerSecond = speeds.vyMetersPerSecond;
 
 		switch (swerveState.getDriveMode()) {
 			case FIELD_RELATIVE -> {
-				double xFieldRelativeVelocityAddition = pidHorizontalVelocityMetersPerSecond
+				double xFieldRelativeVelocityAddition = pidHorizontalOutputVelocityMetersPerSecond
 					* Math.sin(robotPose.getRotation().unaryMinus().getRadians());
-				double yFieldRelativeVelocityAddition = pidHorizontalVelocityMetersPerSecond
+				double yFieldRelativeVelocityAddition = pidHorizontalOutputVelocityMetersPerSecond
 					* Math.cos(robotPose.getRotation().unaryMinus().getRadians());
 
 				xVelocityMetersPerSecond += xFieldRelativeVelocityAddition;
 				yVelocityMetersPerSecond += yFieldRelativeVelocityAddition;
 			}
 			case ROBOT_RELATIVE -> {
-				yVelocityMetersPerSecond += pidHorizontalVelocityMetersPerSecond;
+				yVelocityMetersPerSecond += pidHorizontalOutputVelocityMetersPerSecond;
 			}
 		}
 

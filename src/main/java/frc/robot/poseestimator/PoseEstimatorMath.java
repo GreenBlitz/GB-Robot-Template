@@ -10,19 +10,19 @@ public class PoseEstimatorMath {
 
 	public static Rotation2d combineVisionHeadingToGyro(
 		Rotation2d visionEstimatedHeading,
-		Rotation2d sampleDifferenceFromHeading,
+		Rotation2d changeInAngleSinceVisionObservationWasTaken,
 		Rotation2d currentEstimatedHeading,
 		double gyroStandardDeviation,
 		double visionStandardDeviation
 	) {
-		double combinedStandardDeviation = getKalmanRatio(gyroStandardDeviation, visionStandardDeviation);
-		Rotation2d estimatedHeadingAtSampleTime = currentEstimatedHeading.plus(sampleDifferenceFromHeading);
-		Rotation2d differenceFromVisionAndEstimatedHeading = getShortestAngleDifference(visionEstimatedHeading, estimatedHeadingAtSampleTime);
-		Rotation2d scaledDifferenceToAddToEstimatedHeading = differenceFromVisionAndEstimatedHeading.times(combinedStandardDeviation);
+		double visionAndGyroRatio = getKalmanRatio(gyroStandardDeviation, visionStandardDeviation);
+		Rotation2d estimatedHeadingAtSampleTime = currentEstimatedHeading.plus(changeInAngleSinceVisionObservationWasTaken);
+		Rotation2d differenceFromVisionAndEstimatedHeading = getAngleDistance(visionEstimatedHeading, estimatedHeadingAtSampleTime);
+		Rotation2d scaledDifferenceToAddToEstimatedHeading = differenceFromVisionAndEstimatedHeading.times(visionAndGyroRatio);
 		return currentEstimatedHeading.plus(scaledDifferenceToAddToEstimatedHeading);
 	}
 
-	public static Rotation2d getShortestAngleDifference(Rotation2d angle1, Rotation2d angle2) {
+	public static Rotation2d getAngleDistance(Rotation2d angle1, Rotation2d angle2) {
 		Rotation2d difference = angle1.minus(angle2);
 		if (difference.getRadians() > Math.PI) {
 			return Rotation2d.fromRadians(2 * Math.PI - difference.getRadians());

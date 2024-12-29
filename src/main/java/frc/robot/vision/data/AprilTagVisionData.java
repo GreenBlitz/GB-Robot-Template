@@ -9,13 +9,14 @@ public class AprilTagVisionData extends VisionData {
 	private final int aprilTagId;
 
 	public AprilTagVisionData(
+		String sourceName,
 		Pose3d estimatedRobotPosition,
 		double timestamp,
 		double aprilTagHeightMeters,
 		double distanceFromAprilTagMeters,
 		int aprilTagId
 	) {
-		super(estimatedRobotPosition, timestamp);
+		super(sourceName, estimatedRobotPosition, timestamp);
 		this.aprilTagHeightMeters = aprilTagHeightMeters;
 		this.distanceFromAprilTagMeters = distanceFromAprilTagMeters;
 		this.aprilTagId = aprilTagId;

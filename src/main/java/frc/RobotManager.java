@@ -23,7 +23,7 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-	private PathPlannerAuto autonomous;
+	private PathPlannerAuto auto;
 	private int roborioCycles;
 
 	public RobotManager() {
@@ -52,18 +52,18 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		this.autonomous = robot.getAutonomous();
+		this.auto = robot.getAuto();
 
-		if (autonomous != null) {
-			robot.getPoseEstimator().resetPose(autonomous.getStartingPose());
-			autonomous.schedule();
+		if (auto != null) {
+			robot.getPoseEstimator().resetPose(auto.getStartingPose());
+			auto.schedule();
 		}
 	}
 
 	@Override
 	public void teleopInit() {
-		if (autonomous != null) {
-			autonomous.cancel();
+		if (auto != null) {
+			auto.cancel();
 		}
 	}
 

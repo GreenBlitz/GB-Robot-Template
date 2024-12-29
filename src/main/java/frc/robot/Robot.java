@@ -81,7 +81,7 @@ public class Robot {
 		CommandScheduler.getInstance().run();
 	}
 
-	public PathPlannerAuto getAutonomous() {
+	public PathPlannerAuto getAuto() {
 		return autonomousChooser.getChosenValue();
 	}
 

@@ -61,7 +61,7 @@ public class Robot {
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
-			"",
+			frc.robot.constants.VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 			swerve::getGyroAbsoluteYaw,
 			() -> poseEstimator.getEstimatedPose().getRotation()
 		);

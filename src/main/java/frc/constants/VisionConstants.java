@@ -2,6 +2,8 @@ package frc.robot.constants;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import frc.robot.vision.data.AprilTagVisionData;
+import frc.robot.vision.sources.VisionSource;
 import frc.utils.alerts.Alert;
 
 import java.io.IOException;
@@ -13,6 +15,8 @@ public class VisionConstants {
 	public static final String NON_FILTERED_DATA_LOGPATH_ADDITION = "NonFilteredData/";
 
 	public static final String SOURCE_LOGPATH_ADDITION = "VisionSource/";
+	
+	public static final String MULTI_VISION_SOURCES_LOGPATH = "MultiVisionSources/";
 
 
 	private static final String APRIL_TAG_FIELD_CONFIG_FILE_PATH = "april_tag_field_config.json";
@@ -34,5 +38,9 @@ public class VisionConstants {
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
 
 	public static final int NO_APRILTAG_ID = -1;
-
+	
+	public static VisionSource<AprilTagVisionData>[] defaultVisionSources = new VisionSource[] {
+			new
+	}
+	
 }

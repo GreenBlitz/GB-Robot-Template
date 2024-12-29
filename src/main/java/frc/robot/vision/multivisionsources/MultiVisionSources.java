@@ -37,10 +37,6 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		log();
 	}
 
-	protected List<VisionSource<ReturnType>> getVisionSources() {
-		return visionSources;
-	}
-
 	private void log() {
 		logPoses(logPath + VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
 		logPoses(logPath + VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());

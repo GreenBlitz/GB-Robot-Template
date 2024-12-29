@@ -12,7 +12,7 @@ public class ToleranceUtils {
 			wantedAngle.getRadians(),
 			angle.getRadians(),
 			tolerance.getRadians(),
-			-MathConstants.HALF_CIRCLE.getRadians(),
+			MathConstants.HALF_CIRCLE.unaryMinus().getRadians(),
 			MathConstants.HALF_CIRCLE.getRadians()
 		);
 	}

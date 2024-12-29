@@ -3,12 +3,9 @@ package frc.joysticks;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.Robot;
 import frc.robot.joystickManager.JoystickState;
-import frc.robot.joystickManager.JoysticksBindings;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -63,7 +60,7 @@ public class SmartJoystick {
 
 		this.state = state;
 
-		switch (joystick.getPort()){
+		switch (joystick.getPort()) {
 			case 0:
 				port = JoystickPorts.MAIN;
 			case 1:
@@ -78,15 +75,23 @@ public class SmartJoystick {
 				port = JoystickPorts.SIXTH;
 		}
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt, state = " + state, () -> (!isConnected() && this.state != JoystickState.NONE)));
-		Logger.recordOutput(joystick.getPort()+" state", state);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "DisconnectedAt, state = " + state,
+				() -> (!isConnected() && this.state != JoystickState.NONE)
+			)
+		);
+		Logger.recordOutput(joystick.getPort() + " state", state);
 	}
 
 	public String getLogPath() {
 		return logPath;
 	}
 
-	public JoystickPorts getPort(){return port;}
+	public JoystickPorts getPort() {
+		return port;
+	}
 
 	public boolean isConnected() {
 		return joystick.isConnected();

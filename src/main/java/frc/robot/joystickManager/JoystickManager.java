@@ -17,25 +17,25 @@ public class JoystickManager {
 	private SmartJoystick fifthJoystick = null;
 	private SmartJoystick sixthJoystick = null;
 
-    private final Robot robot;
+	private final Robot robot;
 
 	public JoystickManager(Robot robot) {
-        SendableChooser<JoystickState> mainStateChooser = new SendableChooser<>();
+		SendableChooser<JoystickState> mainStateChooser = new SendableChooser<>();
 		addOptions(mainStateChooser, "Main joystick", MAIN);
 
-        SendableChooser<JoystickState> secondStateChooser = new SendableChooser<>();
+		SendableChooser<JoystickState> secondStateChooser = new SendableChooser<>();
 		addOptions(secondStateChooser, "Second joystick", SECOND);
 
-        SendableChooser<JoystickState> thirdStateChooser = new SendableChooser<>();
+		SendableChooser<JoystickState> thirdStateChooser = new SendableChooser<>();
 		addOptions(thirdStateChooser, "Third joystick", THIRD);
 
-        SendableChooser<JoystickState> forthStateChooser = new SendableChooser<>();
+		SendableChooser<JoystickState> forthStateChooser = new SendableChooser<>();
 		addOptions(forthStateChooser, "Forth joystick", FOURTH);
 
-        SendableChooser<JoystickState> fifthStateChooser = new SendableChooser<>();
+		SendableChooser<JoystickState> fifthStateChooser = new SendableChooser<>();
 		addOptions(fifthStateChooser, "Fifth joystick", FIFTH);
 
-        SendableChooser<JoystickState> sixthStateChooser = new SendableChooser<>();
+		SendableChooser<JoystickState> sixthStateChooser = new SendableChooser<>();
 		addOptions(sixthStateChooser, "Sixth joystick", SIXTH);
 
 		this.robot = robot;
@@ -44,10 +44,8 @@ public class JoystickManager {
 	public void setJoystickState(JoystickPorts port, JoystickState state) {
 		if (state == JoystickState.NONE && portToJoystick(port) != null) {
 			portToJoystick(port).setState(JoystickState.NONE);
-		}
-		else if (portToJoystick(port) == null) {
-
-			switch (port){
+		} else if (portToJoystick(port) == null) {
+			switch (port) {
 				case MAIN:
 					mainJoystick = new SmartJoystick(port, state);
 					JoystickBindings.configureBindings(mainJoystick, robot);
@@ -67,7 +65,6 @@ public class JoystickManager {
 					sixthJoystick = new SmartJoystick(port, state);
 					JoystickBindings.configureBindings(sixthJoystick, robot);
 			}
-
 		} else {
 			portToJoystick(port).setState(state);
 		}
@@ -77,7 +74,7 @@ public class JoystickManager {
 	public SmartJoystick getJoystick(JoystickPorts port) {
 		SmartJoystick joystick = null;
 
-		switch (port){
+		switch (port) {
 			case MAIN:
 				joystick = mainJoystick;
 			case SECOND:
@@ -98,18 +95,23 @@ public class JoystickManager {
 		return joystick;
 	}
 
-	private SmartJoystick portToJoystick(JoystickPorts port){
-		switch (port){
+	private SmartJoystick portToJoystick(JoystickPorts port) {
+		switch (port) {
 			case MAIN:
 				return mainJoystick;
+
 			case SECOND:
 				return secondJoystick;
+
 			case THIRD:
 				return thirdJoystick;
+
 			case FOURTH:
 				return fourthJoystick;
+
 			case FIFTH:
 				return fifthJoystick;
+
 			case SIXTH:
 				return sixthJoystick;
 		}
@@ -122,7 +124,7 @@ public class JoystickManager {
 			chooser.addOption(String.valueOf(option), option);
 		}
 
-		chooser.onChange((joystickState) -> setJoystickState(port, (chooser.getSelected()) ));
+		chooser.onChange((joystickState) -> setJoystickState(port, (chooser.getSelected())));
 		SmartDashboard.putData(name, chooser);
 	}
 

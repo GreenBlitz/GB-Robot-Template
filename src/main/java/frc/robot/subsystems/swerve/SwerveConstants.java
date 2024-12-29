@@ -4,7 +4,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.MathConstants;
+import frc.constants.MathConstants;
 
 public record SwerveConstants(
 	String logPath,

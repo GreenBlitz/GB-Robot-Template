@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.factories.modules.encoder;
 
 import frc.robot.Robot;
-import frc.robot.constants.IDs;
+import frc.robot.IDs;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.subsystems.swerve.SwerveType;
@@ -24,7 +24,7 @@ public class EncoderFactory {
 	}
 
 	public static IAngleEncoder createEncoder(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
-		String logPath = swerveType.getLogPath() + ModuleConstants.LOG_PATH_ADDITION + modulePosition + "/Encoder/";
+		String logPath = swerveType.getLogPath() + ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Encoder/";
 		return switch (swerveType) {
 			case SWERVE -> createSwerveEncoder(logPath, modulePosition);
 		};

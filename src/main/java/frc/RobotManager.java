@@ -2,15 +2,16 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
-import frc.utils.battery.BatteryUtils;
 import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -31,10 +32,11 @@ public class RobotManager extends LoggedRobot {
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
-		BatteryUtils.scheduleLimiter();
-		this.roborioCycles = 0;
 
+		this.roborioCycles = 0;
 		this.robot = new Robot();
+
+		JoysticksBindings.configureBindings(robot);
 	}
 
 	@Override
@@ -71,10 +73,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
-		robot.getSuperStructure().periodic();
-		CommandScheduler.getInstance().run();
-		BatteryUtils.logStatus();
-		BusChain.logChainsStatuses();
+		robot.periodic();
 		AlertManager.reportAlerts();
 	}
 

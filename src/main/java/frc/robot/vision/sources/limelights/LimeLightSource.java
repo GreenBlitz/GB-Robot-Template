@@ -16,6 +16,7 @@ import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
+	private final String logPath;
 	private final String name;
 	private Filter<AprilTagVisionData> filter;
 	private double[] robotPoseArray;
@@ -35,7 +37,7 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 	private boolean useGyroForPoseEstimating;
 
 	public LimeLightSource(String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
-		String logPath = parentLogPath + name + "/";
+		this.logPath = parentLogPath + name + "/";
 		this.name = name;
 		this.filter = filter;
 		this.robotPoseEntryBotPose2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
@@ -162,6 +164,15 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
+	}
+	
+	public void periodic() {
+		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered(getVisionData()));
+		getRobotHeading().ifPresent((heading) -> Logger.recordOutput(logPath + "robotBotPose1Heading", heading));
+		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose()));
+		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "unfilteredVisionProjected/", visionData.getEstimatedPose().toPose2d()));
+		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "aprilTagHeightMeters", visionData.getAprilTagHeightMeters()));
+		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "lastUpdate", visionData.getTimestamp()));
 	}
 
 }

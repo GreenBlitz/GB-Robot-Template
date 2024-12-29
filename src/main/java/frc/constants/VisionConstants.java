@@ -2,6 +2,7 @@ package frc.constants;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.LimeLightSource;
@@ -44,7 +45,9 @@ public class VisionConstants {
 	public static <T> Function<T, Boolean> CreateTrueFunction() {
 		return (T iDontCare) -> true;
 	}
-
+	
+	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = VisionFilters.doPolymorphismBecauseJavaCanʼt(VisionFilters.isOnGround(0.01)).and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
+	
 	public static List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_SOURCES = List.of(
 		new LimeLightSource("limelight-front", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(CreateTrueFunction())),
 		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(CreateTrueFunction()))

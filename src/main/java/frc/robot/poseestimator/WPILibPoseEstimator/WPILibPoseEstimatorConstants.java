@@ -9,13 +9,13 @@ public class WPILibPoseEstimatorConstants {
 	public static final int POSE_BUFFER_SIZE_SECONDS = 2;
 
 	public static final StandardDeviations2d DEFAULT_ODOMETRY_STANDARD_DEVIATIONS = new StandardDeviations2d(
-		0.0003,
-		0.00003,
+		0.003,
+		0.003,
 		Rotation2d.fromRadians(0.003)
 	);
 	public static final StandardDeviations2d DEFAULT_VISION_STANDARD_DEVIATIONS = new StandardDeviations2d(
-		0.3,
-		0.3,
+		0.0003,
+		0.0003,
 		Rotation2d.fromRadians(0.003)
 	);
 

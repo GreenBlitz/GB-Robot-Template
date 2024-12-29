@@ -49,5 +49,9 @@ public class VisionFilters {
 	public static Filter<VisionData> isInField(double positionToleranceMeters) {
 		return isXInField(positionToleranceMeters).and(isYInField(positionToleranceMeters));
 	}
+	
+	public static Filter<AprilTagVisionData> doPolymorphismBecauseJavaCanʼt(Filter<VisionData> filter) {
+		return new Filter<>(filter::apply);
+	}
 
 }

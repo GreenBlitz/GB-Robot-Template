@@ -5,6 +5,7 @@ import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.GyroRequiringVisionSource;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
+import frc.robot.vision.sources.limelights.LimeLightSource;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		this.gyroSupplier = gyroSupplier;
 		this.headingOffsetSupplier = headingOffsetSupplier;
 		this.useGyroForPoseEstimating = true;
+		updateBotPoseInLimelight();
 		logBotPose();
 	}
 
@@ -71,11 +73,13 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 				gyroRequiringVisionSource.useGyroForPoseEstimating(useGyroForPoseEstimating);
 			}
 		}
+		updateBotPoseInLimelight();
 		logBotPose();
 	}
 
 	public void switchBotPoses() {
 		this.useGyroForPoseEstimating = !useGyroForPoseEstimating;
+		updateBotPoseInLimelight();
 		logBotPose();
 	}
 
@@ -87,6 +91,14 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	public void periodic() {
 		super.periodic();
 		updateYawInLimelights(getRobotAngle());
+	}
+	
+	private void updateBotPoseInLimelight() {
+		for (VisionSource<AprilTagVisionData> visionSource : getVisionSources()) {
+			if (visionSource instanceof LimeLightSource limeLightSource) {
+				limeLightSource.useGyroForPoseEstimating(useGyroForPoseEstimating);
+			}
+		}
 	}
 
 	private Rotation2d getRobotAngle() {

@@ -1,6 +1,6 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.robot.constants.VisionConstants;
+import frc.constants.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;

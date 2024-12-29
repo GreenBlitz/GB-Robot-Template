@@ -124,7 +124,12 @@ public class SwerveCommandsBuilder {
 		return driveByState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE).withName("Default drive");
 	}
 
-	public Command driveByState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, Supplier<SwerveState> state) {
+	public Command driveByState(
+		DoubleSupplier xSupplier,
+		DoubleSupplier ySupplier,
+		DoubleSupplier rotationSupplier,
+		Supplier<SwerveState> state
+	) {
 		return new DeferredCommand(() -> driveByState(xSupplier, ySupplier, rotationSupplier, state.get()), Set.of(swerve))
 			.withName("Drive with supplier state");
 	}

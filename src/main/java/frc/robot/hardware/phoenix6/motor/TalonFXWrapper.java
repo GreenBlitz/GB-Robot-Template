@@ -1,4 +1,4 @@
-package frc.robot.hardware.phoenix6.motors;
+package frc.robot.hardware.phoenix6.motor;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;

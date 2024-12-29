@@ -25,8 +25,25 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		this.visionSources = visionSources;
 	}
 
+	public ArrayList<ReturnType> getUnfilteredVisionData() {
+		return createMappedCopyOfSources(visionSources, VisionSource::getVisionData);
+	}
+
+	public ArrayList<ReturnType> getFilteredVisionData() {
+		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
+	}
+
+	public void periodic() {
+		log();
+	}
+
 	protected List<VisionSource<ReturnType>> getVisionSources() {
 		return visionSources;
+	}
+
+	private void log() {
+		logPoses(logPath + VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
+		logPoses(logPath + VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
 	}
 
 	protected static <ReturnType extends VisionData> ArrayList<ReturnType> createMappedCopyOfSources(
@@ -42,27 +59,11 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		return output;
 	}
 
-	public ArrayList<ReturnType> getUnfilteredVisionData() {
-		return createMappedCopyOfSources(visionSources, VisionSource::getVisionData);
-	}
-
-	public ArrayList<ReturnType> getFilteredVisionData() {
-		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
-	}
 
 	private static <ReturnType extends VisionData> void logPoses(String logPath, List<ReturnType> observations) {
 		for (ReturnType observation : observations) {
 			Logger.recordOutput(logPath + observation.getSourceName(), observation.getEstimatedPose());
 		}
-	}
-
-	private void log() {
-		logPoses(logPath + VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
-		logPoses(logPath + VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
-	}
-
-	public void periodic() {
-		log();
 	}
 
 }

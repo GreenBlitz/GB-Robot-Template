@@ -64,7 +64,8 @@ public class Robot {
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 			swerve::getGyroAbsoluteYaw,
-			() -> poseEstimator.getEstimatedPose().getRotation()
+			() -> poseEstimator.getEstimatedPose().getRotation(),
+			VisionConstants.DEFAULT_VISION_SOURCES
 		);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);

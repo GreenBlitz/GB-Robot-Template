@@ -6,8 +6,9 @@ import frc.constants.MathConstants;
 public class ToleranceUtils {
 
 	public static boolean wrappedIsNear(Rotation2d tolerance, Rotation2d rotation, Rotation2d wantedRotation) {
-		return Math.abs(wantedRotation.getRadians() - rotation.getRadians()) <= tolerance.getRadians()
-			|| Math.abs(wantedRotation.getRadians() - rotation.getRadians()) >= MathConstants.FULL_CIRCLE.getRadians() - tolerance.getRadians();
+		double rotationDifferenceRadians = Math.abs(wantedRotation.getRadians() - rotation.getRadians());
+		return rotationDifferenceRadians <= tolerance.getRadians()
+			|| rotationDifferenceRadians >= MathConstants.FULL_CIRCLE.getRadians() - tolerance.getRadians();
 	}
 
 	public static boolean isInRange(double value, double tolerance, double maxValue, double minValue) {

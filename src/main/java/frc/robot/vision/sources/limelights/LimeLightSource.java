@@ -73,6 +73,7 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		double[] robotPoseWithoutGyroInput = robotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
+		log();
 	}
 
 	private Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
@@ -113,8 +114,8 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 				name,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
-				getAprilTagValue(LimelightEntryValue.Y_AXIS),
 				getAprilTagValue(LimelightEntryValue.Z_AXIS),
+				getAprilTagValue(LimelightEntryValue.Y_AXIS),
 				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs
 			)
 		);
@@ -166,7 +167,7 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
 	}
 	
-	public void periodic() {
+	public void log() {
 		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered(getVisionData()));
 		getRobotHeading().ifPresent((heading) -> Logger.recordOutput(logPath + "robotBotPose1Heading", heading));
 		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose()));

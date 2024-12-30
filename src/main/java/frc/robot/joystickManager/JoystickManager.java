@@ -7,7 +7,7 @@ import frc.joysticks.SmartJoystick;
 
 public class JoystickManager {
 
-	private SmartJoystick[] joysticks;
+	private final SmartJoystick[] joysticks;
 
 	private final Robot robot;
 
@@ -17,30 +17,30 @@ public class JoystickManager {
 		int currentPort = 0;
 
 		for (SmartJoystick joystick : joysticks) {
-			SendableChooser<JoystickState> stateChooser = new SendableChooser<>();
-			addOptions(stateChooser, currentPort);
+			SendableChooser<JoystickBindSet> bindSetChooser = new SendableChooser<>();
+			addOptions(bindSetChooser, currentPort);
 			currentPort++;
 		}
 
 		this.robot = robot;
 	}
 
-	public void setJoystickState(int port, JoystickState joystickState) {
+	public void setJoystickBindSet(int port, JoystickBindSet joystickBindSet) {
 		if (joysticks[port] != null) {
-			joysticks[port].setState(joystickState);
+			joysticks[port].setBindSet(joystickBindSet);
 		} else if (joysticks[port] == null) {
-			joysticks[port] = new SmartJoystick(port, joystickState);
+			joysticks[port] = new SmartJoystick(port, joystickBindSet);
 			JoystickBindings.configureBindings(joysticks[port], robot);
 		}
 	}
 
-	private void addOptions(SendableChooser<JoystickState> chooser, int port) {
-		chooser.setDefaultOption("NONE", JoystickState.NONE);
-		for (JoystickState option : JoystickState.values()) {
+	private void addOptions(SendableChooser<JoystickBindSet> chooser, int port) {
+		chooser.setDefaultOption("NONE", JoystickBindSet.NONE);
+		for (JoystickBindSet option : JoystickBindSet.values()) {
 			chooser.addOption(String.valueOf(option), option);
 		}
 
-		chooser.onChange((joystickState) -> setJoystickState(port, (chooser.getSelected())));
+		chooser.onChange((joystickBindSet) -> setJoystickBindSet(port, (chooser.getSelected())));
 		SmartDashboard.putData(port + " joystick", chooser);
 	}
 

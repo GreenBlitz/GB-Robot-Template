@@ -1,6 +1,6 @@
 package frc.robot.joystickManager;
 
-public enum JoystickState {
+public enum JoystickBindSet {
 
 	NONE,
 	EMPTY,

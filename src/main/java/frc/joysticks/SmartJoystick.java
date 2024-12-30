@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.joystickManager.JoystickState;
+import frc.robot.joystickManager.JoystickBindSet;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -22,14 +22,14 @@ public class SmartJoystick {
 	private final double deadzone;
 	private final String logPath;
 
-	private JoystickState state;
+	private JoystickBindSet bindSet;
 	private int port;
 
-	public SmartJoystick(int port, JoystickState state) {
-		this(port, DEADZONE, state);
+	public SmartJoystick(int port, JoystickBindSet bindSet) {
+		this(port, DEADZONE, bindSet);
 	}
 
-	private SmartJoystick(int port, double deadzone, JoystickState state) {
+	private SmartJoystick(int port, double deadzone, JoystickBindSet bindSet) {
 		this.deadzone = deadzone;
 		this.joystick = new Joystick(port);
 		this.logPath = "Joysticks/" + joystick.getPort() + "/";
@@ -53,11 +53,11 @@ public class SmartJoystick {
 		this.POV_DOWN = new POVButton(this.joystick, ButtonID.POV_DOWN.getId());
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
-		this.state = state;
+		this.bindSet = bindSet;
 		this.port = port;
 
 		AlertManager.addAlert(
-			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> (!isConnected() && this.state != JoystickState.NONE))
+			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> (!isConnected() && this.bindSet != JoystickBindSet.NONE))
 		);
 	}
 
@@ -69,12 +69,12 @@ public class SmartJoystick {
 		return port;
 	}
 
-	public JoystickState getState() {
-		return state;
+	public JoystickBindSet getBindSet() {
+		return bindSet;
 	}
 
-	public void setState(JoystickState state) {
-		this.state = state;
+	public void setBindSet(JoystickBindSet bindSet) {
+		this.bindSet = bindSet;
 	}
 
 	public boolean isConnected() {

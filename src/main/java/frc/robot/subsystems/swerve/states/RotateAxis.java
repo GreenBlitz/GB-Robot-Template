@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.swervestatehelpers;
+package frc.robot.subsystems.swerve.states;
 
 public enum RotateAxis {
 

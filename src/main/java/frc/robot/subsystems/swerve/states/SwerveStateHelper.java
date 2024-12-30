@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.swervestatehelpers;
+package frc.robot.subsystems.swerve.states;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 
 import java.util.Optional;

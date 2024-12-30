@@ -16,6 +16,7 @@ import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.utils.auto.AutonomousConstants;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -154,10 +155,10 @@ public class SwerveCommandsBuilder {
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-		if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
+		if (distanceFromTarget < AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
+			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
-			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}
 
 		return new SequentialCommandGroup(new InstantCommand(swerve::resetPIDControllers, swerve), pathFollowingCommand)

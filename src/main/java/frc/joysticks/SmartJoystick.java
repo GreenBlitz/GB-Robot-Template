@@ -23,15 +23,15 @@ public class SmartJoystick {
 	private final String logPath;
 
 	private JoystickState state;
-	private JoystickPorts port;
+	private int port;
 
-	public SmartJoystick(JoystickPorts port, JoystickState state) {
+	public SmartJoystick(int port, JoystickState state) {
 		this(port, DEADZONE, state);
 	}
 
-	private SmartJoystick(JoystickPorts port, double deadzone, JoystickState state) {
+	private SmartJoystick(int port, double deadzone, JoystickState state) {
 		this.deadzone = deadzone;
-		this.joystick = new Joystick(port.getPort());
+		this.joystick = new Joystick(port);
 		this.logPath = "Joysticks/" + joystick.getPort() + "/";
 
 		this.A = new JoystickButton(this.joystick, ButtonID.A.getId());
@@ -65,7 +65,7 @@ public class SmartJoystick {
 		return logPath;
 	}
 
-	public JoystickPorts getPort() {
+	public int getPort() {
 		return port;
 	}
 

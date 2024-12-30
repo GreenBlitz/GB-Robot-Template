@@ -71,6 +71,7 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		robot.periodic();
 		AlertManager.reportAlerts();
+		robot.getAprilTagVisionSources().periodic();
 	}
 
 	private void updateTimeRelatedData() {

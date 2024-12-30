@@ -5,6 +5,7 @@ import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.GyroRequiringVisionSource;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.sources.VisionSource;
+import frc.robot.vision.sources.limelights.LimeLightSource;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		this.headingOffsetSupplier = headingOffsetSupplier;
 		this.useGyroForPoseEstimating = true;
 		logBotPose();
+		updateBotPoseInLimelight();
 	}
 
 	private void updateYawInLimelights(Rotation2d yaw) {
@@ -64,6 +66,14 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		return output;
 	}
 
+	private void updateBotPoseInLimelight() {
+		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
+			if (visionSource instanceof LimeLightSource limeLightSource) {
+				limeLightSource.useGyroForPoseEstimating(useGyroForPoseEstimating);
+			}
+		}
+	}
+
 	public void setUseGyroForPoseEstimating(boolean useGyroForPoseEstimating) {
 		this.useGyroForPoseEstimating = useGyroForPoseEstimating;
 		for (VisionSource<? extends AprilTagVisionData> visionSource : visionSources) {
@@ -72,20 +82,28 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 			}
 		}
 		logBotPose();
+		updateBotPoseInLimelight();
 	}
 
 	public void switchBotPoses() {
 		this.useGyroForPoseEstimating = !useGyroForPoseEstimating;
 		logBotPose();
+		updateBotPoseInLimelight();
 	}
 
 	private void logBotPose() {
 		Logger.recordOutput(logPath + "botPose2", useGyroForPoseEstimating);
 		Logger.recordOutput(logPath + "botPose1", !useGyroForPoseEstimating);
+		Logger.recordOutput(logPath + "offsetedRobotHeading", getRobotHeading());
 	}
 
 	public void periodic() {
-		updateYawInLimelights(gyroSupplier.get().plus(headingOffsetSupplier.get()));
+		super.log();
+		updateYawInLimelights(getRobotHeading());
+	}
+
+	private Rotation2d getRobotHeading() {
+		return gyroSupplier.get().plus(headingOffsetSupplier.get());
 	}
 
 }

@@ -50,4 +50,12 @@ public class VisionFilters {
 		return isXInField(positionToleranceMeters).and(isYInField(positionToleranceMeters));
 	}
 
+	/**
+	 * a method required to convert generics. Creating a new instance of the same thing. Exists due to limitations of java of preforming
+	 * polymorphism packed on generics.
+	 */
+	public static Filter<AprilTagVisionData> extractFilterToPreformPolymorphism(Filter<VisionData> filter) {
+		return new Filter<>(filter::apply);
+	}
+
 }

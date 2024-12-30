@@ -11,14 +11,17 @@ import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
+import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
-import java.util.Optional;
 
 public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
+	double lastVisionUpdate;
+	double lastOdometryUpdate;
 
 	public WPILibPoseEstimator(String logPath, SwerveDriveKinematics kinematics, SwerveModulePosition[] modulePositions) {
 		super(logPath);
@@ -63,12 +66,14 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			poseEstimator.update(odometryObservation.gyroAngle(), odometryObservation.wheelPositions());
 			updateOdometryPose(odometryObservation);
 		}
+		this.lastOdometryUpdate = TimeUtils.getCurrentTimeSeconds();
 	}
 
 	@Override
 	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
 		odometryEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
+		this.lastOdometryUpdate = TimeUtils.getCurrentTimeSeconds();
 	}
 
 	@Override
@@ -83,7 +88,12 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {}
+	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {
+		for (AprilTagVisionData visionData : robotPoseVisionData) {
+			addVisionMeasurement(visionData);
+		}
+		this.lastVisionUpdate = TimeUtils.getCurrentTimeSeconds();
+	}
 
 	private void updateOdometryPose(OdometryObservation observation) {
 		odometryEstimator.update(observation.gyroAngle(), observation.wheelPositions());
@@ -95,6 +105,14 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			visionObservation.getTimestamp(),
 			PoseEstimationMath.calculateStandardDeviationOfPose(visionObservation, getEstimatedPose()).getWPILibStandardDeviations()
 		);
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
+		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
+		Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionUpdate);
+		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryUpdate);
 	}
 
 }

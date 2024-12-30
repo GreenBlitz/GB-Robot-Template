@@ -6,6 +6,7 @@ SwerveConstants:
 - Rotational degrees PID 
 - Modules locations (in meters)
 - Drive radius meters
+- PathPlanner RealTimeConstraints
 
 Gyro:
 -----------------------

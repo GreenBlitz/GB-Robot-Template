@@ -1,11 +1,4 @@
-package frc.robot.subsystems.swerve;
-
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
-import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
-import frc.robot.subsystems.swerve.swervestatehelpers.LoopMode;
-import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
+package frc.robot.subsystems.swerve.states;
 
 public class SwerveState {
 

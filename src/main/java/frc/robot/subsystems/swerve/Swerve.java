@@ -16,9 +16,10 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
-import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.HeadingControl;
+import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.subsystems.swerve.states.SwerveStateHelper;
 import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 

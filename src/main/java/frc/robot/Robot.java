@@ -17,7 +17,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.subsystems.swerve.states.SwerveStateHelper;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.module.extrainputs;
+package frc.robot.swerve.module.extrainputs;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.swerve.module.ModuleConstants;

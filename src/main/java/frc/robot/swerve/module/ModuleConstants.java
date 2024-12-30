@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.module;
+package frc.robot.swerve.module;
 
 import frc.utils.battery.BatteryUtils;
 

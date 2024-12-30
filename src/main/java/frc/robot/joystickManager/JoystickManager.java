@@ -31,8 +31,7 @@ public class JoystickManager {
 	public void setJoystickState(JoystickPorts port, JoystickState joystickState) {
 		if (portToJoystick(port) != null) {
 			portToJoystick(port).setState(joystickState);
-		}
-		else if (portToJoystick(port) == null) {
+		} else if (portToJoystick(port) == null) {
 			joysticks[port.getPort()] = new SmartJoystick(port, joystickState);
 			JoystickBindings.configureBindings(joysticks[port.getPort()], robot);
 		}

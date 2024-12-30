@@ -10,13 +10,6 @@ import frc.joysticks.JoystickPorts.*;
 
 public class JoystickManager {
 
-	private SmartJoystick mainJoystick;
-	private SmartJoystick secondJoystick;
-	private SmartJoystick thirdJoystick;
-	private SmartJoystick fourthJoystick;
-	private SmartJoystick fifthJoystick;
-	private SmartJoystick sixthJoystick;
-
 	private SmartJoystick[] joysticks;
 
 	private final Robot robot;
@@ -27,8 +20,8 @@ public class JoystickManager {
 		int currentPort = 0;
 
 		for (SmartJoystick joystick : joysticks) {
-			SendableChooser<JoystickState> stateChooset = new SendableChooser<>();
-			addOptions(stateChooset, intToPort(currentPort));
+			SendableChooser<JoystickState> stateChooser = new SendableChooser<>();
+			addOptions(stateChooser, intToPort(currentPort));
 			currentPort++;
 		}
 
@@ -36,78 +29,23 @@ public class JoystickManager {
 	}
 
 	public void setJoystickState(JoystickPorts port, JoystickState joystickState) {
-		if (joystickState == JoystickState.NONE && portToJoystick(port) != null) {
-			portToJoystick(port).setState(joystickState);
-		} else if (portToJoystick(port) == null) {
-			switch (port) {
-				case MAIN:
-					mainJoystick = new SmartJoystick(port, joystickState);
-					JoystickBindings.configureBindings(mainJoystick, robot);
-					break;
-
-				case SECOND:
-					secondJoystick = new SmartJoystick(port, joystickState);
-					JoystickBindings.configureBindings(secondJoystick, robot);
-					break;
-
-				case THIRD:
-					thirdJoystick = new SmartJoystick(port, joystickState);
-					JoystickBindings.configureBindings(thirdJoystick, robot);
-					break;
-
-				case FOURTH:
-					fourthJoystick = new SmartJoystick(port, joystickState);
-					JoystickBindings.configureBindings(fourthJoystick, robot);
-					break;
-
-				case FIFTH:
-					fifthJoystick = new SmartJoystick(port, joystickState);
-					JoystickBindings.configureBindings(fifthJoystick, robot);
-					break;
-
-				case SIXTH:
-					sixthJoystick = new SmartJoystick(port, joystickState);
-					JoystickBindings.configureBindings(sixthJoystick, robot);
-					break;
-			}
-		} else {
+		if (portToJoystick(port) != null) {
 			portToJoystick(port).setState(joystickState);
 		}
-	}
-
-
-	public SmartJoystick getJoystick(JoystickPorts port) {
-		SmartJoystick joystick = null;
-
-		switch (port) {
-			case MAIN:
-				joystick = mainJoystick;
-			case SECOND:
-				joystick = secondJoystick;
-			case THIRD:
-				joystick = thirdJoystick;
-			case FOURTH:
-				joystick = fourthJoystick;
-			case FIFTH:
-				joystick = fifthJoystick;
-			case SIXTH:
-				joystick = sixthJoystick;
+		else if (portToJoystick(port) == null) {
+			joysticks[port.getPort()] = new SmartJoystick(port, joystickState);
+			JoystickBindings.configureBindings(joysticks[port.getPort()], robot);
 		}
-
-		if (joystick == null) {
-			setJoystickState(port, JoystickState.EMPTY);
-		}
-		return joystick;
 	}
 
 	private SmartJoystick portToJoystick(JoystickPorts port) {
 		return switch (port) {
-			case MAIN -> mainJoystick;
-			case SECOND -> secondJoystick;
-			case THIRD -> thirdJoystick;
-			case FOURTH -> fourthJoystick;
-			case FIFTH -> fifthJoystick;
-			case SIXTH -> sixthJoystick;
+			case MAIN -> joysticks[0];
+			case SECOND -> joysticks[1];
+			case THIRD -> joysticks[2];
+			case FOURTH -> joysticks[3];
+			case FIFTH -> joysticks[4];
+			case SIXTH -> joysticks[5];
 		};
 	}
 

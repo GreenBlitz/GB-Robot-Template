@@ -10,21 +10,21 @@ import java.util.Arrays;
 
 public class Modules {
 
-	private final java.lang.Module[] modules;
+	private final Module[] modules;
 	private final String logPath;
 
-	public Modules(String logPath, java.lang.Module... modules) {
+	public Modules(String logPath, Module... modules) {
 		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
 		this.modules = modules;
 	}
 
-	public java.lang.Module getModule(ModuleUtils.ModulePosition modulePosition) {
+	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 
 
 	public void updateInputs() {
-		for (java.lang.Module currentModule : modules) {
+		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
 		Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
@@ -33,47 +33,47 @@ public class Modules {
 
 
 	public void resetModulesAngleByEncoder() {
-		for (java.lang.Module module : modules) {
+		for (Module module : modules) {
 			module.resetSteerByEncoder();
 		}
 	}
 
 	public void setBrake(boolean brake) {
-		for (java.lang.Module currentModule : modules) {
+		for (Module currentModule : modules) {
 			currentModule.setBrake(brake);
 		}
 	}
 
 
 	public void pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
-		for (java.lang.Module module : modules) {
+		for (Module module : modules) {
 			module.pointSteer(targetSteerPosition, optimize);
 		}
 	}
 
 	public void pointWheelsInCircle() {
-		Arrays.stream(modules).forEach(java.lang.Module::pointInCircle);
+		Arrays.stream(modules).forEach(Module::pointInCircle);
 	}
 
 	public void pointWheelsInX() {
-		Arrays.stream(modules).forEach(java.lang.Module::pointToCenter);
+		Arrays.stream(modules).forEach(Module::pointToCenter);
 	}
 
 
 	public void stop() {
-		for (java.lang.Module currentModule : modules) {
+		for (Module currentModule : modules) {
 			currentModule.stop();
 		}
 	}
 
 	public void setSteersVoltage(double voltage) {
-		for (java.lang.Module module : modules) {
+		for (Module module : modules) {
 			module.setSteerVoltage(voltage);
 		}
 	}
 
 	public void setDrivesVoltage(double voltage) {
-		for (java.lang.Module module : modules) {
+		for (Module module : modules) {
 			module.setDriveVoltage(voltage);
 		}
 	}
@@ -86,7 +86,7 @@ public class Modules {
 
 
 	public Translation2d[] getModulePositionsFromCenterMeters() {
-		return Arrays.stream(modules).map(java.lang.Module::getPositionFromCenterMeters).toArray(Translation2d[]::new);
+		return Arrays.stream(modules).map(Module::getPositionFromCenterMeters).toArray(Translation2d[]::new);
 	}
 
 	public int getNumberOfOdometrySamples() {
@@ -98,15 +98,15 @@ public class Modules {
 	}
 
 	public SwerveModuleState[] getTargetStates() {
-		return Arrays.stream(modules).map(java.lang.Module::getTargetState).toArray(SwerveModuleState[]::new);
+		return Arrays.stream(modules).map(Module::getTargetState).toArray(SwerveModuleState[]::new);
 	}
 
 	public SwerveModuleState[] getCurrentStates() {
-		return Arrays.stream(modules).map(java.lang.Module::getCurrentState).toArray(SwerveModuleState[]::new);
+		return Arrays.stream(modules).map(Module::getCurrentState).toArray(SwerveModuleState[]::new);
 	}
 
 	public Rotation2d[] getDrivesPositions() {
-		return Arrays.stream(modules).map(java.lang.Module::getDrivePosition).toArray(Rotation2d[]::new);
+		return Arrays.stream(modules).map(Module::getDrivePosition).toArray(Rotation2d[]::new);
 	}
 
 	public SwerveModulePosition[] getWheelPositions(int odometrySampleIndex) {
@@ -119,7 +119,7 @@ public class Modules {
 
 
 	public boolean isAtTargetVelocities(double speedToleranceMetersPerSecond) {
-		for (java.lang.Module module : modules) {
+		for (Module module : modules) {
 			if (!module.isAtTargetVelocity(speedToleranceMetersPerSecond)) {
 				return false;
 			}
@@ -128,7 +128,7 @@ public class Modules {
 	}
 
 	public boolean isSteerAtTargetPositions(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband) {
-		for (java.lang.Module module : modules) {
+		for (Module module : modules) {
 			if (!module.isSteerAtTargetPosition(steerPositionTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
 			}

@@ -5,6 +5,8 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.constants.Field;
 import frc.robot.Robot;
@@ -35,8 +37,8 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
-//		Logger.recordOutput("try", Field.getSourceClimb());
-		Logger.recordOutput("try", new Pose2d(2,2, Field.ANGLE_TO_AMP));
+
+		Logger.recordOutput("try", new Pose3d(Field.getSpeaker(), new Rotation3d()));
 
 		JoysticksBindings.configureBindings(robot);
 	}

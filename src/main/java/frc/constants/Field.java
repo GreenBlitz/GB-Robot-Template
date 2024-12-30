@@ -2,6 +2,7 @@ package frc.constants;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtils;
 import frc.utils.mirror.MirrorMath;
@@ -41,5 +42,11 @@ public class Field {
 
 	public static Pose2d getSourceClimb(){
 		return isFieldConventionAlliance() ? SOURCE_CLIMB : MirrorMath.getMirroredPose(SOURCE_CLIMB);
+	}
+
+	private static final Translation3d SPEAKER = new Translation3d(0.4572, 1.1176, 1.9812);
+
+	public static Translation3d getSpeaker(){
+		return isFieldConventionAlliance() ? SPEAKER : MirrorMath.getMirroredTranslation3d(SPEAKER);
 	}
 }

@@ -2,6 +2,7 @@ package frc.utils.mirror;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import frc.constants.Field;
 import frc.constants.MathConstants;
 
@@ -24,6 +25,14 @@ public class MirrorMath {
 				getMirroredX(pose.getX()),
 				getMirroredY(pose.getY()),
 				getMirroredAngle(pose.getRotation())
+		);
+	}
+
+	public static Translation3d getMirroredTranslation3d(Translation3d translation){
+		return new Translation3d(
+				getMirroredX(translation.getX()),
+				getMirroredY(translation.getY()),
+				translation.getZ()
 		);
 	}
 

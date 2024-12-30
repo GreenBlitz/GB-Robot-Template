@@ -85,11 +85,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {}
 
-	@Override
-	public Optional<Pose2d> getVisionPose() {
-		return Optional.empty();
-	}
-
 	private void updateOdometryPose(OdometryObservation observation) {
 		odometryEstimator.update(observation.gyroAngle(), observation.wheelPositions());
 	}

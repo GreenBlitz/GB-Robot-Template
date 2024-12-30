@@ -10,6 +10,4 @@ public interface IVisionEstimator {
 
 	void updateVision(List<AprilTagVisionData> robotPoseVisionObservation);
 
-	Optional<Pose2d> getVisionPose();
-
 }

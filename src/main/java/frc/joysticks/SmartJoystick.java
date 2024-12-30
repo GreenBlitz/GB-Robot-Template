@@ -25,17 +25,13 @@ public class SmartJoystick {
 	private JoystickState state;
 	private JoystickPorts port;
 
-	public SmartJoystick(JoystickPorts joystickPort, JoystickState state) {
-		this(joystickPort, DEADZONE, state);
+	public SmartJoystick(JoystickPorts port, JoystickState state) {
+		this(port, DEADZONE, state);
 	}
 
-	public SmartJoystick(JoystickPorts joystickPort, double deadzone, JoystickState state) {
-		this(new Joystick(joystickPort.getPort()), deadzone, state);
-	}
-
-	private SmartJoystick(Joystick joystick, double deadzone, JoystickState state) {
+	private SmartJoystick(JoystickPorts port, double deadzone, JoystickState state) {
 		this.deadzone = deadzone;
-		this.joystick = joystick;
+		this.joystick = new Joystick(port.getPort());
 		this.logPath = "Joysticks/" + joystick.getPort() + "/";
 
 		this.A = new JoystickButton(this.joystick, ButtonID.A.getId());
@@ -58,21 +54,7 @@ public class SmartJoystick {
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
 		this.state = state;
-
-		switch (joystick.getPort()) {
-			case 0:
-				port = JoystickPorts.MAIN;
-			case 1:
-				port = JoystickPorts.SECOND;
-			case 2:
-				port = JoystickPorts.THIRD;
-			case 3:
-				port = JoystickPorts.FOURTH;
-			case 4:
-				port = JoystickPorts.FIFTH;
-			case 5:
-				port = JoystickPorts.SIXTH;
-		}
+		this.port = port;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> (!isConnected() && this.state != JoystickState.NONE))
@@ -87,17 +69,18 @@ public class SmartJoystick {
 		return port;
 	}
 
-	public boolean isConnected() {
-		return joystick.isConnected();
+	public JoystickState getState() {
+		return state;
 	}
 
 	public void setState(JoystickState state) {
 		this.state = state;
 	}
 
-	public JoystickState getState() {
-		return state;
+	public boolean isConnected() {
+		return joystick.isConnected();
 	}
+
 
 	/**
 	 * @param power the power to rumble the joystick between [-1, 1]

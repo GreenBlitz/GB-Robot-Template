@@ -6,7 +6,7 @@ import frc.robot.Robot;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 
-import static frc.joysticks.JoystickPorts.*;
+import frc.joysticks.JoystickPorts.*;
 
 public class JoystickManager {
 
@@ -17,26 +17,20 @@ public class JoystickManager {
 	private SmartJoystick fifthJoystick;
 	private SmartJoystick sixthJoystick;
 
+	private SmartJoystick[] joysticks;
+
 	private final Robot robot;
 
 	public JoystickManager(Robot robot) {
-		SendableChooser<JoystickState> mainStateChooser = new SendableChooser<>();
-		addOptions(mainStateChooser, "Main joystick", MAIN);
+		joysticks = new SmartJoystick[6];
 
-		SendableChooser<JoystickState> secondStateChooser = new SendableChooser<>();
-		addOptions(secondStateChooser, "Second joystick", SECOND);
+		int currentPort = 0;
 
-		SendableChooser<JoystickState> thirdStateChooser = new SendableChooser<>();
-		addOptions(thirdStateChooser, "Third joystick", THIRD);
-
-		SendableChooser<JoystickState> forthStateChooser = new SendableChooser<>();
-		addOptions(forthStateChooser, "Forth joystick", FOURTH);
-
-		SendableChooser<JoystickState> fifthStateChooser = new SendableChooser<>();
-		addOptions(fifthStateChooser, "Fifth joystick", FIFTH);
-
-		SendableChooser<JoystickState> sixthStateChooser = new SendableChooser<>();
-		addOptions(sixthStateChooser, "Sixth joystick", SIXTH);
+		for (SmartJoystick joystick : joysticks) {
+			SendableChooser<JoystickState> stateChooset = new SendableChooser<>();
+			addOptions(stateChooset, intToPort(currentPort));
+			currentPort++;
+		}
 
 		this.robot = robot;
 	}
@@ -117,14 +111,26 @@ public class JoystickManager {
 		};
 	}
 
-	private void addOptions(SendableChooser<JoystickState> chooser, String name, JoystickPorts port) {
+	private JoystickPorts intToPort(int port) {
+		return switch (port) {
+			case 0 -> JoystickPorts.MAIN;
+			case 1 -> JoystickPorts.SECOND;
+			case 2 -> JoystickPorts.THIRD;
+			case 3 -> JoystickPorts.FOURTH;
+			case 4 -> JoystickPorts.FIFTH;
+			case 5 -> JoystickPorts.SIXTH;
+			default -> throw new IllegalStateException("Unexpected value: " + port);
+		};
+	}
+
+	private void addOptions(SendableChooser<JoystickState> chooser, JoystickPorts port) {
 		chooser.setDefaultOption("NONE", JoystickState.NONE);
 		for (JoystickState option : JoystickState.values()) {
 			chooser.addOption(String.valueOf(option), option);
 		}
 
 		chooser.onChange((joystickState) -> setJoystickState(port, (chooser.getSelected())));
-		SmartDashboard.putData(name, chooser);
+		SmartDashboard.putData(port + " joystick", chooser);
 	}
 
 }

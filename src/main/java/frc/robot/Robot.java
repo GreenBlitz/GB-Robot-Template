@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -24,7 +23,6 @@ import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -66,11 +64,8 @@ public class Robot {
 
 
 	private void buildPathPlannerForAuto() {
-		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
-		Supplier<Command> shootingCommand = () -> superStructure.setState(RobotState.SPEAKER);
-
 		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
-		autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutonomousBuilder.getAllAutos(this, intakeCommand, shootingCommand));
+		autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutonomousBuilder.getAllAutos(this));
 	}
 
 

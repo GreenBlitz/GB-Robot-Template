@@ -97,7 +97,7 @@ public class Swerve extends GBSubsystem {
 				resetPoseConsumer,
 				this::getRobotRelativeVelocity,
 				(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
-				constants.ppHolonomicDriveController(),
+				constants.pathPlannerHolonomicDriveController(),
 				robotConfig,
 				() -> !Field.isFieldConventionAlliance(),
 				this

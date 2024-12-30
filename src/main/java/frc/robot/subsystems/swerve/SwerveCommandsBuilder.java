@@ -60,7 +60,7 @@ public class SwerveCommandsBuilder {
 			pointWheels(new Rotation2d(), false).until(
 				() -> modules.isSteerAtTargetPositions(
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+					SwerveConstants.CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND
 				)
 			),
 			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false))
@@ -93,7 +93,7 @@ public class SwerveCommandsBuilder {
 				() -> swerve.getModules()
 					.isSteerAtTargetPositions(
 						SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-						SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+						SwerveConstants.CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND
 					)
 			),
 			new WheelRadiusCharacterization(

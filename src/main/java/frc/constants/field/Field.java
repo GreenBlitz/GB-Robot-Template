@@ -1,4 +1,4 @@
-package frc.constants;
+package frc.constants.field;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtils;

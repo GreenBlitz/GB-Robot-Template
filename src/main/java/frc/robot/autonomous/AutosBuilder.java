@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class AutonomousBuilder {
+public class AutosBuilder {
 
 	public static List<PathPlannerAuto> getAllAutos(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
 		return List.of(

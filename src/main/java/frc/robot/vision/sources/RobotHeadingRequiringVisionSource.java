@@ -8,10 +8,10 @@ import java.util.Optional;
 
 public interface RobotHeadingRequiringVisionSource extends VisionSource<AprilTagVisionData> {
 
-	public void useRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating);
+	void useRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating);
 
-	public Optional<Rotation2d> getRobotHeading();
+	Optional<Rotation2d> getRobotHeading();
 
-	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues);
+	void updateGyroAngleValues(GyroAngleValues gyroAngleValues);
 
 }

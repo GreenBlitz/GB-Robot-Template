@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import frc.robot.autonomous.AutosBuilder;
 import frc.constants.GlobalConstants;
 import frc.robot.hardware.interfaces.IGyro;
@@ -20,6 +19,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.states.SwerveStateHelper;
 import frc.utils.auto.AutonomousChooser;
+import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
@@ -81,8 +81,8 @@ public class Robot {
 		CommandScheduler.getInstance().run();
 	}
 
-	public PathPlannerAuto getAuto() {
-		return autonomousChooser.getChosenValue();
+	public GBAuto getAuto() {
+		return autonomousChooser.getChosenValue().withResetPose(poseEstimator::resetPose);
 	}
 
 	public Superstructure getSuperStructure() {

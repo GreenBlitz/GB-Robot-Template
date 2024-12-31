@@ -5,7 +5,7 @@
 package frc;
 
 import frc.robot.Robot;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -23,7 +23,7 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-	private PathPlannerAuto auto;
+	private GBAuto auto;
 	private int roborioCycles;
 
 	public RobotManager() {
@@ -55,7 +55,6 @@ public class RobotManager extends LoggedRobot {
 		this.auto = robot.getAuto();
 
 		if (auto != null) {
-			robot.getPoseEstimator().resetPose(auto.getStartingPose());
 			auto.schedule();
 		}
 	}

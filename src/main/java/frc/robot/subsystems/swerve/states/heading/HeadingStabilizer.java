@@ -11,13 +11,14 @@ public class HeadingStabilizer {
 	private boolean targetLocked;
 
 	public HeadingStabilizer(SwerveConstants constants) {
-		this.targetLocked = false;
 		this.headingController = new PIDController(
 			constants.rotationDegreesPIDController().getP(),
 			constants.rotationDegreesPIDController().getI(),
 			constants.rotationDegreesPIDController().getD()
 		);
 		headingController.enableContinuousInput(MathConstants.HALF_CIRCLE.unaryMinus().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
+
+		this.targetLocked = false;
 	}
 
 	public void lockTarget() {

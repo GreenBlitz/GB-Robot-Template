@@ -18,6 +18,7 @@ import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.Conversions;
+import frc.utils.ToleranceUtils;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
@@ -288,13 +289,7 @@ public class Module {
 		if (!isStopping) {
 			return false;
 		}
-		boolean isAtSteerPosition = MathUtil.isNear(
-			MathUtil.angleModulus(getTargetState().angle.getRadians()),
-			MathUtil.angleModulus(getSteerPosition().getRadians()),
-			steerPositionTolerance.getRadians(),
-			-MathConstants.HALF_CIRCLE.getRadians(),
-			MathConstants.HALF_CIRCLE.getRadians()
-		);
+		boolean isAtSteerPosition = ToleranceUtils.isNearWrapped(getTargetState().angle, getSteerPosition(), steerPositionTolerance);
 		return isAtSteerPosition;
 	}
 

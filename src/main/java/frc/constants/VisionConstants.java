@@ -42,6 +42,8 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
+	public static final int LATENCY_BOTPOSE_INDEX = 6;
+
 	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE = false;
 
 

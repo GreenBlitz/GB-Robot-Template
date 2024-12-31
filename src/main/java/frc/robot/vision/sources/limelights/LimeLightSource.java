@@ -22,6 +22,8 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
+import static frc.constants.VisionConstants.LATENCY_BOTPOSE_INDEX;
+
 public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 	private final String logPath;
@@ -81,7 +83,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotPoseWithoutGyroInput = robotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryIndex.YAW_ANGLE.getIndex()]);
+		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[Pose3dComponentsValue.YAW_VALUE.getIndex()]);
 		standardDeviationsArray = standardDeviations.getDoubleArray(new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT]);
 
 		log();
@@ -93,27 +95,27 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 			return Optional.empty();
 		}
 
-		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LimelightEntryIndex.TOTAL_LATENCY.getIndex()]);
+		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LATENCY_BOTPOSE_INDEX]);
 		double timestamp = TimeUtils.getCurrentTimeSeconds() - processingLatencySeconds;
 
 		Pose3d robotPose = new Pose3d(
-			getPoseValue(LimelightEntryIndex.X_AXIS),
-			getPoseValue(LimelightEntryIndex.Y_AXIS),
-			getPoseValue(LimelightEntryIndex.Z_AXIS),
+			getPoseValue(Pose3dComponentsValue.X_VALUE),
+			getPoseValue(Pose3dComponentsValue.Y_VALUE),
+			getPoseValue(Pose3dComponentsValue.Z_VALUE),
 			new Rotation3d(
-				Math.toRadians(getPoseValue(LimelightEntryIndex.ROLL_ANGLE)),
-				Math.toRadians(getPoseValue(LimelightEntryIndex.PITCH_ANGLE)),
-				Math.toRadians(getPoseValue(LimelightEntryIndex.YAW_ANGLE))
+				Math.toRadians(getPoseValue(Pose3dComponentsValue.ROLL_VALUE)),
+				Math.toRadians(getPoseValue(Pose3dComponentsValue.PITCH_VALUE)),
+				Math.toRadians(getPoseValue(Pose3dComponentsValue.YAW_VALUE))
 			)
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 
-	public double getPoseValue(LimelightEntryIndex entryValue) {
+	public double getPoseValue(Pose3dComponentsValue entryValue) {
 		return robotPoseArray[entryValue.getIndex()];
 	}
 
-	public double getAprilTagValueInRobotSpace(LimelightEntryIndex entryValue) {
+	public double getAprilTagValueInRobotSpace(Pose3dComponentsValue entryValue) {
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
@@ -126,8 +128,8 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				standardDeviationsArray,
-				getAprilTagValueInRobotSpace(LimelightEntryIndex.Z_AXIS),
-				getAprilTagValueInRobotSpace(LimelightEntryIndex.Y_AXIS),
+				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
+				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE),
 				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs
 			)
 		);

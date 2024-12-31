@@ -25,15 +25,12 @@ import java.util.List;
 public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final TimeInterpolatableBuffer<Pose2d> odometryPoseInterpolator;
-	private final TimeInterpolatableBuffer<Pose2d> timeInterpolatableBuffer;
-	private final TimeInterpolatableBuffer<Double> accelerationInterpolator;
 
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 	double lastVisionUpdate;
 	double lastOdometryUpdate;
 	private final VisionDenoiser visionDenoiser;
-	private final VisionObservationSwitcher visionObservationSwitcher;
 
 	public WPILibPoseEstimator(
 		String logPath,
@@ -43,17 +40,9 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	) {
 		super(logPath);
 
-		this.accelerationInterpolator = TimeInterpolatableBuffer.createDoubleBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 
 		this.visionDenoiser = visionDenoiser;
-		this.visionObservationSwitcher = new VisionObservationSwitcher(
-			() -> visionDenoiser.calculateFixedObservationByOdometryLinearFilter(getOdometryPose(), odometryPoseInterpolator),
-			visionDenoiser::calculateLinearFilterResult,
-			PoseEstimatorConstants.DATA_CHANGE_RATE,
-			PoseEstimatorConstants.DATA_SWITCHING_DURATION
-		);
 
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
@@ -133,13 +122,10 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
 		visionDenoiser.addVisionObservation(visionObservation);
 
-		if (accelerationInterpolator.getSample(visionObservation.getTimestamp()).orElse(0.0) < PoseEstimatorConstants.ACCELERATION_TOLERANCE) {
-			visionObservationSwitcher.switchToFirstSource();
-		} else {
-			visionObservationSwitcher.switchToSecondsSource();
-		}
-
-		ProcessedVisionData fixedObservation = visionObservationSwitcher.getValue(visionObservation.getTimestamp())
+		ProcessedVisionData fixedObservation = visionDenoiser.calculateFixedObservationByOdometryLinearFilter(
+			getOdometryPose(),
+			odometryPoseInterpolator
+			)
 			.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
 		poseEstimator.addVisionMeasurement(
 			fixedObservation.getEstimatedPose(),

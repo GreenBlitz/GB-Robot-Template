@@ -1,8 +1,9 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.states.heading;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.MathConstants;
+import frc.robot.subsystems.swerve.SwerveConstants;
 
 public class HeadingStabilizer {
 
@@ -15,7 +16,7 @@ public class HeadingStabilizer {
 			constants.rotationDegreesPIDController().getI(),
 			constants.rotationDegreesPIDController().getD()
 		);
-		headingController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
+		headingController.enableContinuousInput(MathConstants.HALF_CIRCLE.unaryMinus().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
 	}
 
 	public void lockTarget() {

@@ -9,10 +9,10 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.structures.Tolerances;
-import frc.robot.subsystems.swerve.SwerveState;
-import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
+import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.RotateAxis;
 
 public class JoysticksBindings {
 

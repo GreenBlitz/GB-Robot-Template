@@ -9,15 +9,16 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import frc.robot.autonomous.AutonomousBuilder;
+import frc.constants.GlobalConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.states.SwerveStateHelper;
 import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtils;
@@ -46,12 +47,12 @@ public class Robot {
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		IGyro gyro = GyroFactory.createGyro(SwerveType.SWERVE);
+		IGyro gyro = GyroFactory.createGyro(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/");
 		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(SwerveType.SWERVE),
-			ModulesFactory.create(SwerveType.SWERVE),
+			SwerveConstantsFactory.create(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
+			ModulesFactory.create(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
 			gyro,
-			GyroFactory.createSignals(SwerveType.SWERVE, gyro)
+			GyroFactory.createSignals(gyro)
 		);
 
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());

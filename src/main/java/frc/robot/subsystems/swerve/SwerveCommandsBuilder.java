@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -14,9 +15,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
-import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
+import frc.robot.subsystems.swerve.states.RotateAxis;
+import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.utils.auto.AutonomousConstants;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -58,9 +61,9 @@ public class SwerveCommandsBuilder {
 
 		return new SequentialCommandGroup(
 			pointWheels(new Rotation2d(), false).until(
-				() -> modules.isSteersAtTargetPositions(
+				() -> modules.isSteerAtTargetPositions(
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+					SwerveConstants.CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND
 				)
 			),
 			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false))
@@ -91,9 +94,9 @@ public class SwerveCommandsBuilder {
 		return new SequentialCommandGroup(
 			pointWheelsInCircle().until(
 				() -> swerve.getModules()
-					.isSteersAtTargetPositions(
+					.isSteerAtTargetPositions(
 						SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-						SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+						SwerveConstants.CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND
 					)
 			),
 			new WheelRadiusCharacterization(

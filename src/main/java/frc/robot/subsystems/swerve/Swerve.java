@@ -9,16 +9,18 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.constants.Field;
 import frc.constants.MathConstants;
+import frc.constants.field.Field;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveRelative;
-import frc.robot.subsystems.swerve.swervestatehelpers.HeadingControl;
-import frc.robot.subsystems.swerve.swervestatehelpers.SwerveStateHelper;
+import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.heading.HeadingControl;
+import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
+import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.subsystems.swerve.states.SwerveStateHelper;
 import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -96,7 +98,7 @@ public class Swerve extends GBSubsystem {
 				resetPoseConsumer,
 				this::getRobotRelativeVelocity,
 				(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
-				constants.ppHolonomicDriveController(),
+				constants.pathPlannerHolonomicDriveController(),
 				robotConfig,
 				() -> !Field.isFieldConventionAlliance(),
 				this
@@ -274,7 +276,7 @@ public class Swerve extends GBSubsystem {
 			return speeds;
 		}
 
-		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()) {
+		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.ROTATIONAL_VELOCITY_DEADBAND.getRadians()) {
 			headingStabilizer.unlockTarget();
 			return speeds;
 		}

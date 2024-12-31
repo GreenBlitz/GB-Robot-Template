@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules.constants;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SimulationSwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
@@ -35,10 +34,10 @@ public class SimulationModuleConstants {
 		BACK_LEFT_TRANSLATION2D,
 		BACK_RIGHT_TRANSLATION2D,};
 
-	protected static ModuleSpecificConstants getModuleSpecificConstants(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
+	protected static ModuleSpecificConstants getModuleSpecificConstants(String logPath, ModuleUtils.ModulePosition modulePosition) {
 		return new ModuleSpecificConstants(
 			modulePosition,
-			swerveType.getLogPath(),
+			logPath,
 			WHEEL_DIAMETER_METERS,
 			COUPLING_RATIO,
 			SimulationSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,

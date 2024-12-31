@@ -3,8 +3,7 @@ package frc.robot.subsystems.swerve.factories.modules.steer;
 import frc.robot.Robot;
 import frc.robot.IDs;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.phoenix6.motor.TalonFXMotor;
-import frc.robot.subsystems.swerve.SwerveType;
+import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
@@ -12,7 +11,8 @@ import frc.robot.subsystems.swerve.module.records.SteerSignals;
 
 public class SteerFactory {
 
-	private static ControllableMotor createSwerveSteer(String logPath, ModuleUtils.ModulePosition modulePosition) {
+	public static ControllableMotor createSteer(String logPath, ModuleUtils.ModulePosition modulePosition) {
+		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Steer/";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT ->
@@ -31,34 +31,15 @@ public class SteerFactory {
 		};
 	}
 
-	public static ControllableMotor createSteer(SwerveType swerveType, ModuleUtils.ModulePosition modulePosition) {
-		String logPath = SwerveType.SWERVE.getLogPath() + ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Steer/";
-		return switch (swerveType) {
-			case SWERVE -> createSwerveSteer(logPath, modulePosition);
-		};
-	}
-
-	private static SteerRequests createSteerRequests() {
+	public static SteerRequests createRequests() {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> TalonFXSteerConstants.generateRequests();
 		};
 	}
 
-	public static SteerRequests createRequests(SwerveType swerveType) {
-		return switch (swerveType) {
-			case SWERVE -> createSteerRequests();
-		};
-	}
-
-	private static SteerSignals createSteerSignals(ControllableMotor steer) {
+	public static SteerSignals createSignals(ControllableMotor steer) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> TalonFXSteerConstants.generateSignals((TalonFXMotor) steer);
-		};
-	}
-
-	public static SteerSignals createSignals(SwerveType swerveType, ControllableMotor steer) {
-		return switch (swerveType) {
-			case SWERVE -> createSteerSignals(steer);
 		};
 	}
 

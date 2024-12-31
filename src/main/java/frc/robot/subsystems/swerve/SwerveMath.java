@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.subsystems.swerve.swervestatehelpers.DriveSpeed;
+import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.utils.time.TimeUtils;
 
 public class SwerveMath {
@@ -39,20 +39,23 @@ public class SwerveMath {
 	}
 
 	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
-		double xVelocityMetersPerSecond = getDeadbandSpeed(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
-		double yVelocityPerSecond = getDeadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_NEUTRAL_DEADBAND);
+		double xVelocityMetersPerSecond = getDeadbandSpeed(
+			chassisSpeeds.vxMetersPerSecond,
+			SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
+		);
+		double yVelocityPerSecond = getDeadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND);
 		double rotationVelocityPerSecond = getDeadbandSpeed(
 			chassisSpeeds.omegaRadiansPerSecond,
-			SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians()
+			SwerveConstants.ROTATIONAL_VELOCITY_DEADBAND.getRadians()
 		);
 
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityPerSecond, rotationVelocityPerSecond);
 	}
 
 	public static boolean isStill(ChassisSpeeds chassisSpeeds) {
-		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_NEUTRAL_DEADBAND
-			&& Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATION_NEUTRAL_DEADBAND.getRadians();
+		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
+			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
+			&& Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATIONAL_VELOCITY_DEADBAND.getRadians();
 	}
 
 	public static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {

@@ -1,6 +1,6 @@
 package frc.robot.hardware.rev.request;
 
-import com.revrobotics.CANSparkBase;
+import com.revrobotics.spark.SparkBase;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.utils.Conversions;
@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class SparkMaxRequest<T> implements IRequest<T> {
 
-	private final CANSparkBase.ControlType controlType;
+	private final SparkBase.ControlType controlType;
 	private final int pidSlot;
 	private final Function<T, Double> feedforwardCalculator;
 	private final Function<T, Double> setPointToDoubleConverter;
@@ -17,7 +17,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 
 	SparkMaxRequest(
 		T setPoint,
-		CANSparkBase.ControlType controlType,
+		SparkBase.ControlType controlType,
 		int pidSlot,
 		Function<T, Double> feedforwardCalculator,
 		Function<T, Double> setPointToDoubleConverter
@@ -29,7 +29,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 		this.setPointToDoubleConverter = setPointToDoubleConverter;
 	}
 
-	SparkMaxRequest(T setPoint, CANSparkBase.ControlType controlType, int pidSlot, Function<T, Double> setPointToDoubleConverter) {
+	SparkMaxRequest(T setPoint, SparkBase.ControlType controlType, int pidSlot, Function<T, Double> setPointToDoubleConverter) {
 		this(setPoint, controlType, pidSlot, CANSparkMAX -> 0.0, setPointToDoubleConverter);
 	}
 
@@ -45,14 +45,13 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 	}
 
 	public Double getSparkMaxCompatibleSetPoint() {
+		boolean isVelocity = controlType == SparkBase.ControlType.kMAXMotionVelocityControl || controlType == SparkBase.ControlType.kVelocity;
 		return setPointToDoubleConverter.apply(
-			controlType == CANSparkBase.ControlType.kVelocity
-				? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations()))
-				: setPoint
+			isVelocity ? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations())) : setPoint
 		);
 	}
 
-	public CANSparkBase.ControlType getControlType() {
+	public SparkBase.ControlType getControlType() {
 		return controlType;
 	}
 

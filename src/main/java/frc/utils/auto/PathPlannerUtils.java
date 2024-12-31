@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.ToleranceUtils;
 import frc.utils.alerts.Alert;
@@ -128,10 +127,6 @@ public class PathPlannerUtils {
 
 	public static Pose2d getLastPathPose(PathPlannerPath path) {
 		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
-	}
-
-	public static Command followPathOrDriveToPathEnd(Robot robot, PathPlannerPath path) {
-		return robot.getSwerve().getCommandsBuilder().followPathOrDriveToPathEnd(robot.getPoseEstimator()::getCurrentPose, path);
 	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {

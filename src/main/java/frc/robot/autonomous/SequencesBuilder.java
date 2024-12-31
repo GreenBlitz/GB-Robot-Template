@@ -7,14 +7,13 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.utils.auto.PathPlannerUtils;
 
 import java.util.function.Supplier;
 
 public class SequencesBuilder {
 
 	public static Command Intake(Robot robot, PathPlannerPath path, Supplier<Command> intakeCommand) {
-		return new ParallelRaceGroup(PathPlannerUtils.followPathOrDriveToPathEnd(robot, path), intakeCommand.get());
+		return new ParallelRaceGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), intakeCommand.get());
 	}
 
 	public static Command IntakeShoot(Robot robot, PathPlannerPath path, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
@@ -23,13 +22,13 @@ public class SequencesBuilder {
 
 	public static Command Shooting(Robot robot, PathPlannerPath path, Supplier<Command> preShootingCommand, Supplier<Command> shootingCommand) {
 		return new SequentialCommandGroup(
-			new ParallelDeadlineGroup(PathPlannerUtils.followPathOrDriveToPathEnd(robot, path), preShootingCommand.get()),
+			new ParallelDeadlineGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), preShootingCommand.get()),
 			shootingCommand.get()
 		);
 	}
 
 	public static Command ShootOnMove(Robot robot, PathPlannerPath path, Supplier<Command> shootingCommand) {
-		return new ParallelCommandGroup(PathPlannerUtils.followPathOrDriveToPathEnd(robot, path), shootingCommand.get());
+		return new ParallelCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), shootingCommand.get());
 	}
 
 }

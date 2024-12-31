@@ -11,6 +11,7 @@ public class HeadingStabilizer {
 	private boolean targetLocked;
 
 	public HeadingStabilizer(SwerveConstants constants) {
+		this.targetLocked = false;
 		this.headingController = new PIDController(
 			constants.rotationDegreesPIDController().getP(),
 			constants.rotationDegreesPIDController().getI(),

@@ -20,8 +20,15 @@ import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
 public class LimeLightSource implements RobotHeadingRequiringVisionSource {
+
+	private final String logPath;
+	private final String name;
+	private Filter<AprilTagVisionData> filter;
+	private final BooleanSupplier shouldDataBeFiltered;
 
 	private final NetworkTableEntry robotPoseEntryBotPose2;
 	private final NetworkTableEntry robotPoseEntryBotPose1;
@@ -29,9 +36,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry robotOrientationEntry;
 	private final NetworkTableEntry standardDeviations;
-	private final String name;
-	private final String logPath;
-	private Filter<AprilTagVisionData> filter;
+
 	private double[] robotPoseArray;
 	private double[] aprilTagPoseArray;
 	private double[] robotPoseWithoutGyroInput;
@@ -44,6 +49,8 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 		this.logPath = parentLogPath + name + "/";
 		this.name = name;
 		this.filter = filter;
+		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
+
 		this.robotPoseEntryBotPose2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryBotPose1 = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
@@ -55,7 +62,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 		AlertManager.addAlert(
 			new PeriodicAlert(
-				Alert.AlertType.WARNING,
+				Alert.AlertType.ERROR,
 				logPath + "DisconnectedAt",
 				() -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1
 			)
@@ -133,15 +140,11 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 	@Override
 	public Optional<AprilTagVisionData> getFilteredVisionData() {
-		if (shouldDataBeFiltered(getVisionData())) {
+		if (shouldDataBeFiltered.getAsBoolean()) {
 			return getVisionData();
 		} else {
 			return Optional.empty();
 		}
-	}
-
-	private boolean shouldDataBeFiltered(Optional<AprilTagVisionData> data) {
-		return data.map(filter::apply).orElseGet(() -> true);
 	}
 
 	@Override
@@ -179,7 +182,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 
 	public void log() {
-		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered(getVisionData()));
+		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered.getAsBoolean());
 		Logger.recordOutput(logPath + "botPose1Output", robotPoseWithoutGyroInput);
 		getRobotHeading().ifPresent((heading) -> Logger.recordOutput(logPath + "robotBotPose1Heading", heading));
 		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose()));

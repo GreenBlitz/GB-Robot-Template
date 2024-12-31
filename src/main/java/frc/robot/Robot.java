@@ -39,6 +39,7 @@ public class Robot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run();
+		aprilTagVisionSources.periodic();
 	}
 
 	public Command getAutonomousCommand() {

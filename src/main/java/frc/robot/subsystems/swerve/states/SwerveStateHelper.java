@@ -10,6 +10,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 
 import java.util.Optional;
 import java.util.function.Supplier;

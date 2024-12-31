@@ -1,5 +1,8 @@
 package frc.robot.subsystems.swerve.states;
 
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.robot.subsystems.swerve.states.heading.HeadingControl;
+
 public class SwerveState {
 
 	private static final DriveRelative DEFAULT_DRIVE_RELATIVE = DriveRelative.FIELD_RELATIVE;

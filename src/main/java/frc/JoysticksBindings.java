@@ -10,7 +10,7 @@ import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.structures.Tolerances;
 import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.robot.subsystems.swerve.states.AimAssist;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 

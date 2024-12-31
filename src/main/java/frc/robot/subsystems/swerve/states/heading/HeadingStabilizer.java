@@ -16,7 +16,7 @@ public class HeadingStabilizer {
 			constants.rotationDegreesPIDController().getI(),
 			constants.rotationDegreesPIDController().getD()
 		);
-		headingController.enableContinuousInput(-MathConstants.HALF_CIRCLE.getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
+		headingController.enableContinuousInput(MathConstants.HALF_CIRCLE.unaryMinus().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
 	}
 
 	public void lockTarget() {

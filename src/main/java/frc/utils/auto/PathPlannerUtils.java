@@ -21,8 +21,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.ToleranceUtils;
 import frc.utils.alerts.Alert;
 
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class PathPlannerUtils {
 		return bluePose;
 	}
 
-	public static Optional<PathPlannerPath> getPathFromFile(String pathName, String logPath) {
+	static Optional<PathPlannerPath> getPathFromFile(String pathName, String logPath) {
 		try {
 			return Optional.of(PathPlannerPath.fromPathFile(pathName));
 		} catch (Exception exception) {
@@ -122,8 +122,8 @@ public class PathPlannerUtils {
 	}
 
 	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
-		return getAllianceRelativePose(path.getPathPoses().get(0)).getTranslation().getDistance(currentPose.get().getTranslation())
-			<= toleranceMeters;
+		return ToleranceUtils
+			.isNear(getAllianceRelativePose(path.getPathPoses().get(0)).getTranslation(), currentPose.get().getTranslation(), toleranceMeters);
 	}
 
 	public static Pose2d getLastPathPose(PathPlannerPath path) {
@@ -131,13 +131,7 @@ public class PathPlannerUtils {
 	}
 
 	public static Command followPathOrDriveToPathEnd(Robot robot, PathPlannerPath path) {
-		return robot.getSwerve()
-			.getCommandsBuilder()
-			.followPathOrDriveToPathEnd(
-				robot.getPoseEstimator()::getCurrentPose,
-				path,
-				AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS
-			);
+		return robot.getSwerve().getCommandsBuilder().followPathOrDriveToPathEnd(robot.getPoseEstimator()::getCurrentPose, path);
 	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
@@ -161,6 +155,16 @@ public class PathPlannerUtils {
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
 		return followPath(path);
+	}
+
+	@SafeVarargs
+	public static String getAutoName(String autoName, Optional<PathPlannerPath>... paths) {
+		for (Optional<PathPlannerPath> path : paths) {
+			if (path.isEmpty()) {
+				return autoName + " (partial)";
+			}
+		}
+		return autoName;
 	}
 
 }

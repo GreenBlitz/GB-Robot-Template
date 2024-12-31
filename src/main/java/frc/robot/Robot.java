@@ -61,11 +61,11 @@ public class Robot {
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
-		buildPathPlannerForAuto();
+		configureAuto();
 	}
 
 
-	private void buildPathPlannerForAuto() {
+	private void configureAuto() {
 		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
 		Supplier<Command> shootingCommand = () -> superStructure.setState(RobotState.SPEAKER);
 

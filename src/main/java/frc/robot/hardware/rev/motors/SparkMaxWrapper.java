@@ -1,14 +1,15 @@
 package frc.robot.hardware.rev.motors;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.Conversions;
 
-public class SparkMaxWrapper extends CANSparkMax {
+public class SparkMaxWrapper extends SparkMax {
 
 	public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
 		super(deviceID.id(), deviceID.type());
-		super.restoreFactoryDefaults();
+		// TODO super.configure()
+//		super.restoreFactoryDefaults();
 	}
 
 	public double getVoltage() {

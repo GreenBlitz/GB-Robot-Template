@@ -59,7 +59,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
-		updateStatus();
+		update();
 	}
 
 	public String getLogPath() {
@@ -128,7 +128,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public void updateStatus() {
+	public void update() {
 		gyro.updateInputs(gyroSignals.yawSignal());
 		modules.updateInputs();
 

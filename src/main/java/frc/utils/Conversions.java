@@ -134,6 +134,7 @@ public class Conversions {
 	 */
 	public static double milliSecondsToSeconds(double milliSeconds) {
 		return milliSeconds / 1e3;
+
 	}
 
 	/**
@@ -195,4 +196,3 @@ public class Conversions {
 	}
 
 }
-

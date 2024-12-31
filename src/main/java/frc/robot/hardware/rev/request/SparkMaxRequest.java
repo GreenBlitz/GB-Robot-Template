@@ -45,10 +45,9 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 	}
 
 	public Double getSparkMaxCompatibleSetPoint() {
+		boolean isVelocity = controlType == SparkBase.ControlType.kMAXMotionVelocityControl || controlType == SparkBase.ControlType.kVelocity;
 		return setPointToDoubleConverter.apply(
-			controlType == SparkBase.ControlType.kVelocity
-				? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations()))
-				: setPoint
+			isVelocity ? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations())) : setPoint
 		);
 	}
 

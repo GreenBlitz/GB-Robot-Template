@@ -4,17 +4,17 @@ import edu.wpi.first.math.geometry.Pose2d;
 
 public class ProcessedVisionData {
 
-	StandardDeviations2d stdDev;
+	StandardDeviations2D stdDev;
 	double timestamp;
 	Pose2d estimatedPose;
 
-	public ProcessedVisionData(Pose2d estimatedPose, double timestamp, StandardDeviations2d stdDev) {
+	public ProcessedVisionData(Pose2d estimatedPose, double timestamp, StandardDeviations2D stdDev) {
 		this.estimatedPose = estimatedPose;
 		this.timestamp = timestamp;
 		this.stdDev = stdDev;
 	}
 
-	public StandardDeviations2d getStdDev() {
+	public StandardDeviations2D getStdDev() {
 		return stdDev;
 	}
 

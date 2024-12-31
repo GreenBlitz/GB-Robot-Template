@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.robot.poseestimator.PoseEstimationMath;
-import frc.robot.vision.rawdata.VisionData;
+import frc.robot.vision.data.VisionData;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 

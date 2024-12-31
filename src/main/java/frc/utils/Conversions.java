@@ -2,7 +2,7 @@ package frc.utils;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.constants.MathConstants;
+import frc.constants.MathConstants;
 
 public class Conversions {
 
@@ -124,16 +124,6 @@ public class Conversions {
 	 */
 	public static double microSecondsToSeconds(double microSeconds) {
 		return microSeconds / 1e6;
-	}
-
-	/**
-	 * Converts a time from milliseconds to seconds
-	 *
-	 * @param milliSeconds the milliseconds
-	 * @return the seconds
-	 */
-	public static double milliSecondsToSeconds(double milliSeconds) {
-		return milliSeconds / 1e3;
 	}
 
 	/**

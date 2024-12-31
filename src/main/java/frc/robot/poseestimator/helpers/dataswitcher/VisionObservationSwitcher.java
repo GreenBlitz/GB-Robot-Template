@@ -3,7 +3,7 @@ package frc.robot.poseestimator.helpers.dataswitcher;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.helpers.ProcessedVisionData;
-import frc.robot.poseestimator.helpers.StandardDeviations2d;
+import frc.robot.poseestimator.helpers.StandardDeviations2D;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -75,7 +75,7 @@ public class VisionObservationSwitcher implements IDataSwitcher<ProcessedVisionD
 	}
 
 	private static Supplier<Optional<Double>> extractStdDevFromVisionObservation(Supplier<Optional<ProcessedVisionData>> source, int index) {
-		return () -> source.get().isPresent() ? Optional.of(source.get().get().getStdDev().getyStandardDeviationsMeters()) : Optional.empty();
+		return () -> source.get().isPresent() ? Optional.of(source.get().get().getStdDev().yStandardDeviations()) : Optional.empty();
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class VisionObservationSwitcher implements IDataSwitcher<ProcessedVisionD
 			new ProcessedVisionData(
 				new Pose2d(x.get(), y.get(), Rotation2d.fromRadians(angle.get())),
 				timestamp.get(),
-				new StandardDeviations2d(xStdDev.get(), yStdDev.get(), Rotation2d.fromRadians(angleStdDev.get()))
+				new StandardDeviations2D(xStdDev.get(), yStdDev.get(), angleStdDev.get())
 			)
 		);
 	}

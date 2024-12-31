@@ -1,4 +1,4 @@
-package frc.robot.constants;
+package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.utils.battery.PowerDistributionDeviceID;

@@ -6,9 +6,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.poseestimator.helpers.ProcessedVisionData;
@@ -16,11 +16,11 @@ import frc.robot.poseestimator.helpers.VisionDenoiser;
 import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.multivisionsources.MultiAprilTagVisionSource;
-import frc.robot.vision.rawdata.AprilTagVisionData;
+import frc.robot.vision.data.AprilTagVisionData;
+import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
-import java.util.Optional;
 
 public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
@@ -30,19 +30,19 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
-	private final MultiAprilTagVisionSource multiVisionSources;
+	double lastVisionUpdate;
+	double lastOdometryUpdate;
 	private final VisionDenoiser visionDenoiser;
 	private final VisionObservationSwitcher visionObservationSwitcher;
 
 	public WPILibPoseEstimator(
 		String logPath,
 		SwerveDriveKinematics kinematics,
-		SwerveDriveOdometry odometry,
 		SwerveModulePosition[] modulePositions,
-		MultiAprilTagVisionSource multiAprilTagVisionSource,
 		VisionDenoiser visionDenoiser
 	) {
 		super(logPath);
+
 		this.accelerationInterpolator = TimeInterpolatableBuffer.createDoubleBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.odometryPoseInterpolator = TimeInterpolatableBuffer.createBuffer(PoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.timeInterpolatableBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
@@ -54,10 +54,15 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			PoseEstimatorConstants.DATA_CHANGE_RATE,
 			PoseEstimatorConstants.DATA_SWITCHING_DURATION
 		);
-		this.multiVisionSources = multiAprilTagVisionSource;
+
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
-			odometry,
+			new Odometry<>(
+				kinematics,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
+				modulePositions,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+			),
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
 		);
@@ -67,7 +72,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-		;
 	}
 
 
@@ -92,12 +96,14 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			poseEstimator.update(odometryObservation.gyroAngle(), odometryObservation.wheelPositions());
 			updateOdometryPose(odometryObservation);
 		}
+		this.lastOdometryUpdate = TimeUtils.getCurrentTimeSeconds();
 	}
 
 	@Override
 	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
 		odometryEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
+		this.lastOdometryUpdate = TimeUtils.getCurrentTimeSeconds();
 	}
 
 	@Override
@@ -116,11 +122,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		for (AprilTagVisionData visionData : robotPoseVisionData) {
 			addVisionMeasurement(visionData);
 		}
-	}
-
-	@Override
-	public Optional<Pose2d> getVisionPose() {
-		return Optional.empty();
+		this.lastVisionUpdate = TimeUtils.getCurrentTimeSeconds();
 	}
 
 	private void updateOdometryPose(OdometryObservation observation) {
@@ -148,7 +150,10 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	protected void subsystemPeriodic() {
-		updateVision(multiVisionSources.getFilteredVisionData());
+		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
+		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
+		Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionUpdate);
+		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryUpdate);
 	}
 
 }

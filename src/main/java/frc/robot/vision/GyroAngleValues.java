@@ -9,3 +9,4 @@ import edu.wpi.first.math.geometry.Rotation2d;
  * except the yaw is unnecessary.
  */
 public record GyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, double pitchRate, Rotation2d roll, double rollRate) {}
+

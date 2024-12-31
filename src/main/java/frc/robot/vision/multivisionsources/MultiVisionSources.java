@@ -62,3 +62,4 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 	}
 
 }
+

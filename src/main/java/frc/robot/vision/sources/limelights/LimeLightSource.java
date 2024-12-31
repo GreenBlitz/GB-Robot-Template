@@ -21,7 +21,6 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
-import java.util.function.Function;
 
 public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
@@ -61,11 +60,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 		this.useGyroForPoseEstimating = true;
 
 		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.ERROR,
-				logPath + "DisconnectedAt",
-				() -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1
-			)
+			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
 
 		log();
@@ -185,12 +180,13 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered.getAsBoolean());
 		Logger.recordOutput(logPath + "botPose1Output", robotPoseWithoutGyroInput);
 		getRobotHeading().ifPresent((heading) -> Logger.recordOutput(logPath + "robotBotPose1Heading", heading));
-		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose()));
-		getVisionData()
-			.ifPresent((visionData) -> Logger.recordOutput(logPath + "unfilteredVisionProjected/", visionData.getEstimatedPose().toPose2d()));
-		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "aprilTagHeightMeters", visionData.getAprilTagHeightMeters()));
-		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "lastUpdate", visionData.getTimestamp()));
-		getVisionData().ifPresent((visionData) -> Logger.recordOutput(logPath + "stdDevs", standardDeviationsArray));
+		getVisionData().ifPresent((visionData) -> {
+			Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose());
+			Logger.recordOutput(logPath + "unfilteredVisionProjected/", visionData.getEstimatedPose().toPose2d());
+			Logger.recordOutput(logPath + "aprilTagHeightMeters", visionData.getAprilTagHeightMeters());
+			Logger.recordOutput(logPath + "lastUpdate", visionData.getTimestamp());
+			Logger.recordOutput(logPath + "stdDevs", standardDeviationsArray);
+		});
 	}
 
 }

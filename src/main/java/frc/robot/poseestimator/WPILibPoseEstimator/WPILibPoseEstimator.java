@@ -9,11 +9,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseEstimationMath;
-import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.PoseEstimatorConstants;
 import frc.robot.poseestimator.helpers.ProcessedVisionData;
 import frc.robot.poseestimator.helpers.VisionDenoiser;
-import frc.robot.poseestimator.helpers.dataswitcher.VisionObservationSwitcher;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -122,10 +120,8 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
 		visionDenoiser.addVisionObservation(visionObservation);
 
-		ProcessedVisionData fixedObservation = visionDenoiser.calculateFixedObservationByOdometryLinearFilter(
-			getOdometryPose(),
-			odometryPoseInterpolator
-			)
+		ProcessedVisionData fixedObservation = visionDenoiser
+			.calculateFixedObservationByOdometryLinearFilter(getOdometryPose(), odometryPoseInterpolator)
 			.orElse(PoseEstimationMath.processVisionData(visionObservation, getEstimatedPose()));
 		poseEstimator.addVisionMeasurement(
 			fixedObservation.getEstimatedPose(),

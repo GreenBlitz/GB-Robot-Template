@@ -26,11 +26,11 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
-		// waiting for swerve and poseestimator to have botpose2 working
+		// waiting for swerve and poseestimator to be merged in order to have botpose2 working
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-			() -> Rotation2d.fromDegrees(0),    // swerve::getGyroAbsoluteYaw,
-			() -> Rotation2d.fromDegrees(0),    // () -> poseEstimator.getEstimatedPose().getRotation().plus(Rotation2d.k180deg),
+			() -> Rotation2d.fromDegrees(0), // swerve::getGyroAbsoluteYaw,
+			() -> Rotation2d.fromDegrees(0), // () -> poseEstimator.getEstimatedPose().getRotation().plus(Rotation2d.k180deg),
 			VisionConstants.DEFAULT_VISION_SOURCES
 		);
 	}
@@ -39,7 +39,6 @@ public class Robot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run();
-
 	}
 
 	public Command getAutonomousCommand() {

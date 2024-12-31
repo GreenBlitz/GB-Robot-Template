@@ -6,9 +6,9 @@ import frc.robot.vision.data.AprilTagVisionData;
 
 import java.util.Optional;
 
-public interface GyroRequiringVisionSource extends VisionSource<AprilTagVisionData> {
+public interface RobotHeadingRequiringVisionSource extends VisionSource<AprilTagVisionData> {
 
-	public void useGyroForPoseEstimating(boolean useGyroForPoseEstimating);
+	public void useRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating);
 
 	public Optional<Rotation2d> getRobotHeading();
 

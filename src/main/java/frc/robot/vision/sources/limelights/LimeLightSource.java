@@ -10,7 +10,7 @@ import frc.robot.poseestimator.Pose3dComponentsValue;
 import frc.robot.vision.GyroAngleValues;
 import frc.constants.VisionConstants;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.GyroRequiringVisionSource;
+import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.utils.Conversions;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
@@ -21,7 +21,7 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
-public class LimeLightSource implements GyroRequiringVisionSource {
+public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 	private final NetworkTableEntry robotPoseEntryBotPose2;
 	private final NetworkTableEntry robotPoseEntryBotPose1;
@@ -150,7 +150,7 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 	}
 
 	@Override
-	public void useGyroForPoseEstimating(boolean useGyroForPoseEstimating) {
+	public void useRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {
 		this.useGyroForPoseEstimating = useGyroForPoseEstimating;
 	}
 

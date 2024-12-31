@@ -42,6 +42,9 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
+	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE = false;
+
+
 	public static <T> Function<T, Boolean> CreateTrueFunction() {
 		return (T generic) -> true;
 	}

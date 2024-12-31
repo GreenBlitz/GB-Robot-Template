@@ -45,10 +45,6 @@ public class VisionConstants {
 	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE = false;
 
 
-	public static <T> Function<T, Boolean> CreateTrueFunction() {
-		return (T generic) -> true;
-	}
-
 	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = VisionFilters
 		.extractFilterToPreformPolymorphism(VisionFilters.isOnGround(0.2)); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
 

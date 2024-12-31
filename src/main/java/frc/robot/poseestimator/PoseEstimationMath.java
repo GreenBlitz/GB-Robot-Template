@@ -1,24 +1,22 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.poseestimator.helpers.StandardDeviations2d;
+import frc.robot.poseestimator.helpers.StandardDeviations2D;
 import frc.robot.vision.data.AprilTagVisionData;
 
 public class PoseEstimationMath {
 
-	public static StandardDeviations2d calculateStandardDeviationOfPose(AprilTagVisionData rawVisionData, Pose2d currentEstimatedPose) {
+	public static StandardDeviations2D calculateStandardDeviationOfPose(AprilTagVisionData rawVisionData, Pose2d currentEstimatedPose) {
 		double normalizedLimelightX = rawVisionData.getEstimatedPose().getX();
 		double normalizedLimelightY = rawVisionData.getEstimatedPose().getY();
 		double normalizedEstimatedX = currentEstimatedPose.getX();
 		double normalizedEstimatedY = currentEstimatedPose.getY();
-		return new StandardDeviations2d(
+		return new StandardDeviations2D(
 			calculateStandardDeviation(normalizedLimelightX, normalizedEstimatedX),
 			calculateStandardDeviation(normalizedLimelightY, normalizedEstimatedY),
-			Rotation2d.fromRadians(
-				calculateStandardDeviation(
-					rawVisionData.getEstimatedPose().toPose2d().getRotation().getRadians(),
-					currentEstimatedPose.getRotation().getRadians()
-				)
+			calculateStandardDeviation(
+				rawVisionData.getEstimatedPose().toPose2d().getRotation().getRadians(),
+				currentEstimatedPose.getRotation().getRadians()
 			)
 		);
 	}

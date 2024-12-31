@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.states;
+package frc.robot.subsystems.swerve.states.heading;
 
 public enum HeadingControl {
 

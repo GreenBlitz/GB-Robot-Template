@@ -1,3 +1,7 @@
+States:
+-----------------------
+- [ ] Aim assist modes + Add in state helper handling
+
 SwerveConstants:
 -----------------------
 - [ ] Velocity at 12 volts (meters per second)

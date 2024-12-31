@@ -79,7 +79,7 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		robotPoseWithoutGyroInput = robotPoseEntryBotPose1.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryValue.YAW_ANGLE.getIndex()]);
+		robotHeading = Rotation2d.fromDegrees(robotPoseWithoutGyroInput[LimelightEntryIndex.YAW_ANGLE.getIndex()]);
 		standardDeviationsArray = standardDeviations.getDoubleArray(new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT]);
 
 		log();
@@ -91,27 +91,27 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 			return Optional.empty();
 		}
 
-		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LimelightEntryValue.TOTAL_LATENCY.getIndex()]);
+		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LimelightEntryIndex.TOTAL_LATENCY.getIndex()]);
 		double timestamp = TimeUtils.getCurrentTimeSeconds() - processingLatencySeconds;
 
 		Pose3d robotPose = new Pose3d(
-			getPoseValue(LimelightEntryValue.X_AXIS),
-			getPoseValue(LimelightEntryValue.Y_AXIS),
-			getPoseValue(LimelightEntryValue.Z_AXIS),
+			getPoseValue(LimelightEntryIndex.X_AXIS),
+			getPoseValue(LimelightEntryIndex.Y_AXIS),
+			getPoseValue(LimelightEntryIndex.Z_AXIS),
 			new Rotation3d(
-				Math.toRadians(getPoseValue(LimelightEntryValue.ROLL_ANGLE)),
-				Math.toRadians(getPoseValue(LimelightEntryValue.PITCH_ANGLE)),
-				Math.toRadians(getPoseValue(LimelightEntryValue.YAW_ANGLE))
+				Math.toRadians(getPoseValue(LimelightEntryIndex.ROLL_ANGLE)),
+				Math.toRadians(getPoseValue(LimelightEntryIndex.PITCH_ANGLE)),
+				Math.toRadians(getPoseValue(LimelightEntryIndex.YAW_ANGLE))
 			)
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 
-	public double getPoseValue(LimelightEntryValue entryValue) {
+	public double getPoseValue(LimelightEntryIndex entryValue) {
 		return robotPoseArray[entryValue.getIndex()];
 	}
 
-	public double getAprilTagValueInRobotSpace(LimelightEntryValue entryValue) {
+	public double getAprilTagValueInRobotSpace(LimelightEntryIndex entryValue) {
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
@@ -124,8 +124,8 @@ public class LimeLightSource implements GyroRequiringVisionSource {
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				standardDeviationsArray,
-				getAprilTagValueInRobotSpace(LimelightEntryValue.Z_AXIS),
-				getAprilTagValueInRobotSpace(LimelightEntryValue.Y_AXIS),
+				getAprilTagValueInRobotSpace(LimelightEntryIndex.Z_AXIS),
+				getAprilTagValueInRobotSpace(LimelightEntryIndex.Y_AXIS),
 				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs
 			)
 		);

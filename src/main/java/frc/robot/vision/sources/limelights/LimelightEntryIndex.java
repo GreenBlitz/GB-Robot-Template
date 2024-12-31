@@ -1,6 +1,6 @@
 package frc.robot.vision.sources.limelights;
 
-public enum LimelightEntryValue {
+public enum LimelightEntryIndex {
 
 	X_AXIS(0),
 	Y_AXIS(1),
@@ -12,7 +12,7 @@ public enum LimelightEntryValue {
 
 	private final int limelightIndexValue;
 
-	LimelightEntryValue(int limelightIndexValue) {
+	LimelightEntryIndex(int limelightIndexValue) {
 		this.limelightIndexValue = limelightIndexValue;
 	}
 

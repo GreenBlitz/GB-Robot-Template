@@ -30,7 +30,7 @@ public class Robot {
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 			() -> Rotation2d.fromDegrees(0), // swerve::getGyroAbsoluteYaw,
-			() -> Rotation2d.fromDegrees(0), // () -> poseEstimator.getEstimatedPose().getRotation().plus(Rotation2d.k180deg),
+			() -> Rotation2d.fromDegrees(0), // () -> poseEstimator.getEstimatedPose().getRotation(),
 			VisionConstants.DEFAULT_VISION_SOURCES
 		);
 	}

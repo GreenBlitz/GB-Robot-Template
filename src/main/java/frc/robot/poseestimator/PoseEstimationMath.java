@@ -31,9 +31,9 @@ public class PoseEstimationMath {
 	public static StandardDeviations2D calculateStandardDeviationOfPose(List<Pose2d> dataset) {
 		double[] deconstructedStdDevs = applyFunctionOnPoseElements(dataset, PoseEstimationMath::calculateStandardDeviation);
 		return new StandardDeviations2D(
-			deconstructedStdDevs[Pose2dArrayValue.Y_VALUE.getEntryValue()],
-			deconstructedStdDevs[Pose2dArrayValue.X_VALUE.getEntryValue()],
-			deconstructedStdDevs[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()]
+			deconstructedStdDevs[Pose2dComponentsValue.Y_VALUE.getIndex()],
+			deconstructedStdDevs[Pose2dComponentsValue.X_VALUE.getIndex()],
+			deconstructedStdDevs[Pose2dComponentsValue.ROTATION_VALUE.getIndex()]
 		);
 	}
 
@@ -66,9 +66,9 @@ public class PoseEstimationMath {
 	public static Pose2d meanOfPose(List<Pose2d> dataset) {
 		double[] deconstructedPose = applyFunctionOnPoseElements(dataset, PoseEstimationMath::mean);
 		return new Pose2d(
-			deconstructedPose[Pose2dArrayValue.X_VALUE.getEntryValue()],
-			deconstructedPose[Pose2dArrayValue.Y_VALUE.getEntryValue()],
-			Rotation2d.fromRadians(deconstructedPose[Pose2dArrayValue.ROTATION_VALUE.getEntryValue()])
+			deconstructedPose[Pose2dComponentsValue.X_VALUE.getIndex()],
+			deconstructedPose[Pose2dComponentsValue.Y_VALUE.getIndex()],
+			Rotation2d.fromRadians(deconstructedPose[Pose2dComponentsValue.ROTATION_VALUE.getIndex()])
 		);
 	}
 

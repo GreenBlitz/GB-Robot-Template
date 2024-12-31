@@ -110,7 +110,7 @@ public class SwerveCommandsBuilder {
 
 
 	public Command turnToHeading(Rotation2d targetHeading) {
-		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_ROBOT);
+		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_CHASSIS);
 	}
 
 	public Command turnToHeading(Rotation2d targetHeading, RotateAxis rotateAxis) {

@@ -5,10 +5,14 @@ public enum LoopMode {
 	CLOSED(true),
 	OPEN(false);
 
-	public final boolean isClosedLoop;
+	private final boolean isClosedLoop;
 
 	LoopMode(boolean isClosedLoop) {
 		this.isClosedLoop = isClosedLoop;
+	}
+
+	public boolean isClosedLoop() {
+		return isClosedLoop;
 	}
 
 }

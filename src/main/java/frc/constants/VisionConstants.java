@@ -11,7 +11,6 @@ import frc.utils.alerts.Alert;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
 
 public class VisionConstants {
 

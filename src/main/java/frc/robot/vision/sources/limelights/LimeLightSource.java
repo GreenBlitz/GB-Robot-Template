@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import frc.robot.vision.GyroAngleValues;
 import frc.constants.VisionConstants;
+import frc.robot.vision.data.AprilTagStandardDeviations;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.utils.Conversions;
@@ -127,7 +128,14 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 				name,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
-				standardDeviationsArray,
+				new AprilTagStandardDeviations(
+					standardDeviationsArray[Pose3dComponentsValue.X_VALUE.getIndex()],
+					standardDeviationsArray[Pose3dComponentsValue.Y_VALUE.getIndex()],
+					standardDeviationsArray[Pose3dComponentsValue.Z_VALUE.getIndex()],
+					standardDeviationsArray[Pose3dComponentsValue.ROLL_VALUE.getIndex()],
+					standardDeviationsArray[Pose3dComponentsValue.PITCH_VALUE.getIndex()],
+					standardDeviationsArray[Pose3dComponentsValue.YAW_VALUE.getIndex()]
+				),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE),
 				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs

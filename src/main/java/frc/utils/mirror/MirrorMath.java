@@ -1,8 +1,8 @@
 package frc.utils.mirror;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.Field;
-import frc.robot.constants.MathConstants;
+import frc.constants.field.Field;
+import frc.constants.MathConstants;
 
 public class MirrorMath {
 

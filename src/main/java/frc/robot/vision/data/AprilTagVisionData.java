@@ -4,21 +4,29 @@ import edu.wpi.first.math.geometry.Pose3d;
 
 public class AprilTagVisionData extends VisionData {
 
+	private final AprilTagStandardDeviations standardDeviations;
 	private final double aprilTagHeightMeters;
 	private final double distanceFromAprilTagMeters;
 	private final int aprilTagId;
 
 	public AprilTagVisionData(
+		String sourceName,
 		Pose3d estimatedRobotPosition,
 		double timestamp,
+		AprilTagStandardDeviations standardDeviations,
 		double aprilTagHeightMeters,
 		double distanceFromAprilTagMeters,
 		int aprilTagId
 	) {
-		super(estimatedRobotPosition, timestamp);
+		super(sourceName, estimatedRobotPosition, timestamp);
+		this.standardDeviations = standardDeviations;
 		this.aprilTagHeightMeters = aprilTagHeightMeters;
 		this.distanceFromAprilTagMeters = distanceFromAprilTagMeters;
 		this.aprilTagId = aprilTagId;
+	}
+
+	public AprilTagStandardDeviations getStandardDeviations() {
+		return standardDeviations;
 	}
 
 	public double getAprilTagHeightMeters() {

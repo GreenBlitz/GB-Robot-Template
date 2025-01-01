@@ -27,7 +27,7 @@ public class Robot {
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
-		CommandScheduler.getInstance().run();
+		CommandScheduler.getInstance().run(); // should be last
 	}
 
 	public Command getAutonomousCommand() {

@@ -19,12 +19,11 @@ public class AimAssistMath {
 		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		double rotationalVelocityRadiansPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
-		double combinedAngularVelocityRadiansPerSecond = rotationalVelocityRadiansPerSecond + speeds.omegaRadiansPerSecond;
-		Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(
-			Rotation2d.fromRadians(combinedAngularVelocityRadiansPerSecond),
-			swerveConstants.maxRotationalVelocityPerSecond()
-		);
+		Rotation2d rotationalVelocitySeconds = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		Rotation2d combinedRotationalVelocitySeconds = Rotation2d
+			.fromRadians(rotationalVelocitySeconds.getRadians() + speeds.omegaRadiansPerSecond);
+		Rotation2d clampedAngularVelocityPerSecond = SwerveMath
+			.clampRotationalVelocity(combinedRotationalVelocitySeconds, swerveConstants.maxRotationalVelocityPerSecond());
 
 		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
 	}
@@ -59,10 +58,8 @@ public class AimAssistMath {
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 	}
 
-	public static double applyMagnitudeCompensation(Rotation2d velocitySeconds, double magnitude) {
-		return velocitySeconds.getRadians()
-			* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
-			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+	public static Rotation2d applyMagnitudeCompensation(Rotation2d velocitySeconds, double magnitude) {
+		return velocitySeconds.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
 }

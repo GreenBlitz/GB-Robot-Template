@@ -191,7 +191,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public ChassisSpeeds getFieldRelativeVelocity() {
-		return SwerveMath.robotToFieldRelativeSpeeds(getRobotRelativeVelocity(), headingSupplier.get());
+		return SwerveMath.robotToFieldRelativeSpeeds(getRobotRelativeVelocity(), getAllianceRelativeHeading());
 	}
 
 	private ChassisSpeeds getDriveModeRelativeSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
@@ -258,7 +258,7 @@ public class Swerve extends GBSubsystem {
 			return speeds;
 		}
 
-		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.ROTATIONAL_VELOCITY_DEADBAND.getRadians()) {
+		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.ROTATIONAL_VELOCITY_SECONDS_DEADBAND.getRadians()) {
 			headingStabilizer.unlockTarget();
 			return speeds;
 		}

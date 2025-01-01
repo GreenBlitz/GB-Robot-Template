@@ -8,8 +8,6 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 
-import static frc.robot.subsystems.swerve.SwerveMath.getDriveMagnitude;
-
 public class AimAssistMath {
 
 	public static ChassisSpeeds getRotationAssistedChassisSpeeds(
@@ -21,12 +19,11 @@ public class AimAssistMath {
 		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		double angularVelocityRadiansPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, getDriveMagnitude(speeds));
-		double combinedAngularVelocityRadiansPerSecond = angularVelocityRadiansPerSecond + speeds.omegaRadiansPerSecond;
-		Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(
-			Rotation2d.fromRadians(combinedAngularVelocityRadiansPerSecond),
-			swerveConstants.maxRotationalVelocityPerSecond()
-		);
+		Rotation2d rotationalVelocitySeconds = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		Rotation2d combinedRotationalVelocitySeconds = Rotation2d
+			.fromRadians(rotationalVelocitySeconds.getRadians() + speeds.omegaRadiansPerSecond);
+		Rotation2d clampedAngularVelocityPerSecond = SwerveMath
+			.clampRotationalVelocity(combinedRotationalVelocitySeconds, swerveConstants.maxRotationalVelocityPerSecond());
 
 		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
 	}
@@ -38,33 +35,32 @@ public class AimAssistMath {
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
 	) {
-		Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
-		double pidHorizontalOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
+		Translation2d objectRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
+		double pidHorizontalToObjectOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController()
+			.calculate(0, objectRelativeToRobot.getY());
 		double xVelocityMetersPerSecond = speeds.vxMetersPerSecond;
 		double yVelocityMetersPerSecond = speeds.vyMetersPerSecond;
 
 		switch (swerveState.getDriveMode()) {
 			case FIELD_RELATIVE -> {
-				double xFieldRelativeVelocityAddition = pidHorizontalOutputVelocityMetersPerSecond
-					* Math.sin(robotPose.getRotation().unaryMinus().getRadians());
-				double yFieldRelativeVelocityAddition = pidHorizontalOutputVelocityMetersPerSecond
-					* Math.cos(robotPose.getRotation().unaryMinus().getRadians());
+				double xFieldRelativeVelocityAddition = pidHorizontalToObjectOutputVelocityMetersPerSecond
+					* robotPose.getRotation().unaryMinus().getSin();
+				double yFieldRelativeVelocityAddition = pidHorizontalToObjectOutputVelocityMetersPerSecond
+					* robotPose.getRotation().unaryMinus().getCos();
 
 				xVelocityMetersPerSecond += xFieldRelativeVelocityAddition;
 				yVelocityMetersPerSecond += yFieldRelativeVelocityAddition;
 			}
 			case ROBOT_RELATIVE -> {
-				yVelocityMetersPerSecond += pidHorizontalOutputVelocityMetersPerSecond;
+				yVelocityMetersPerSecond += pidHorizontalToObjectOutputVelocityMetersPerSecond;
 			}
 		}
 
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 	}
 
-	public static double applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
-		return velocityPerSecond.getRadians()
-			* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
-			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+	public static Rotation2d applyMagnitudeCompensation(Rotation2d velocitySeconds, double magnitude) {
+		return velocitySeconds.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
 }

@@ -43,19 +43,22 @@ public class SwerveMath {
 			chassisSpeeds.vxMetersPerSecond,
 			SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
 		);
-		double yVelocityPerSecond = getDeadbandSpeed(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND);
-		double rotationVelocityPerSecond = getDeadbandSpeed(
+		double yVelocityMetersPerSecond = getDeadbandSpeed(
+			chassisSpeeds.vyMetersPerSecond,
+			SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
+		);
+		double rotationalVelocityRadiansPerSecond = getDeadbandSpeed(
 			chassisSpeeds.omegaRadiansPerSecond,
-			SwerveConstants.ROTATIONAL_VELOCITY_DEADBAND.getRadians()
+			SwerveConstants.ROTATIONAL_VELOCITY_SECONDS_DEADBAND.getRadians()
 		);
 
-		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityPerSecond, rotationVelocityPerSecond);
+		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityRadiansPerSecond);
 	}
 
 	public static boolean isStill(ChassisSpeeds chassisSpeeds) {
 		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
 			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
-			&& Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATIONAL_VELOCITY_DEADBAND.getRadians();
+			&& Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATIONAL_VELOCITY_SECONDS_DEADBAND.getRadians();
 	}
 
 	public static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {

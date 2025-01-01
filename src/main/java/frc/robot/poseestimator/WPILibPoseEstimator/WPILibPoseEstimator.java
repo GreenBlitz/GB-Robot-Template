@@ -23,13 +23,13 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	double lastVisionUpdate;
 	double lastOdometryUpdate;
 
-	public WPILibPoseEstimator(String logPath, SwerveDriveKinematics kinematics, SwerveModulePosition[] modulePositions) {
+	public WPILibPoseEstimator(String logPath, SwerveDriveKinematics kinematics, SwerveModulePosition[] modulePositions, Rotation2d initialGyroAngle) {
 		super(logPath);
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
 			new Odometry<>(
 				kinematics,
-				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
+				initialGyroAngle,
 				modulePositions,
 				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 			),
@@ -38,7 +38,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		);
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
-			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_ANGLE,
+			initialGyroAngle,
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
@@ -107,12 +107,16 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		);
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
+	private void log() {
 		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
 		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
-		Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionUpdate);
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryUpdate);
+		Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionUpdate);
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		log();
 	}
 
 }

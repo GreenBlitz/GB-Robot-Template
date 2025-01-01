@@ -9,5 +9,6 @@ public record SimulatedSourceConfiguration(
 	double spikesProbability,
 	double maximumSpikeMeters,
 	double detectionRangeMeters,
+	double deviationsFactor,
 	Rotation2d fieldOfView
 ) {}

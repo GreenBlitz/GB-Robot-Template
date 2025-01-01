@@ -1,9 +1,12 @@
 package frc.robot.vision.sources.simulationsource;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.*;
+import frc.constants.VisionConstants;
+import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.constants.VisionConstants;
+import frc.robot.vision.data.AprilTagStandardDeviations;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
@@ -24,6 +27,8 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 	private final double detectionRangeMeters;
 	private final double spikesProbability;
 	private final double maximumSpikeMeters;
+	private final double deviationsFactor;
+
 	private final List<AprilTagVisionData> currentObservations;
 
 	private final Supplier<Pose3d> cameraPose;
@@ -48,6 +53,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 		this.detectionRangeMeters = config.detectionRangeMeters();
 		this.spikesProbability = config.spikesProbability();
 		this.maximumSpikeMeters = config.maximumSpikeMeters();
+		this.deviationsFactor = config.deviationsFactor();
 		this.fieldOfView = config.fieldOfView();
 
 		this.simulateRobotPose = simulateRobotPose;
@@ -70,8 +76,13 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 			double distanceMeters = distanceBetweenPosesMeters(aprilTagPose, cameraPose.get());
 			if (distanceMeters <= detectionRangeMeters) {
 				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
-					Pose2d noisedPose = calculateNoisedPose();
-					AprilTagVisionData visionInput = constructRawVisionData(noisedPose, aprilTagPose, aprilTag);
+					Pair<Pose2d, Double[]> noisedPose = calculateNoisedPose();
+					AprilTagVisionData visionInput = constructRawVisionData(
+						noisedPose.getFirst(),
+						noisedPose.getSecond(),
+						aprilTagPose,
+						aprilTag
+					);
 					currentObservations.add(visionInput);
 					Logger.recordOutput(logPath + "state", "returning");
 					Logger.recordOutput(logPath + "latestOutputPose", visionInput.getEstimatedPose());
@@ -84,12 +95,21 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 		}
 	}
 
-	public AprilTagVisionData constructRawVisionData(Pose2d noisedPose, Pose3d aprilTagPose, AprilTag aprilTag) {
+	public AprilTagVisionData constructRawVisionData(Pose2d noisedPose, Double[] noiseAmount, Pose3d aprilTagPose, AprilTag aprilTag) {
 		return new AprilTagVisionData(
+			getName(),
 			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
 			TimeUtils.getCurrentTimeSeconds(),
+			new AprilTagStandardDeviations(
+				noiseAmount[Pose2dComponentsValue.X_VALUE.getIndex()] + transformNoise.get() * deviationsFactor,
+				noiseAmount[Pose2dComponentsValue.Y_VALUE.getIndex()] + transformNoise.get() * deviationsFactor,
+				0,
+				0,
+				0,
+				noiseAmount[Pose2dComponentsValue.ROTATION_VALUE.getIndex()] + angleNoise.get() * deviationsFactor
+			),
 			aprilTagPose.getZ(),
-			distanceBetweenPosesMeters(aprilTagPose.toPose2d(), calculateNoisedPose()),
+			distanceBetweenPosesMeters(aprilTagPose.toPose2d(), noisedPose),
 			aprilTag.ID
 		);
 	}
@@ -100,7 +120,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 		return (angleDeltaRadians) < (fieldOfView.getRadians() / 2);
 	}
 
-	public Pose2d calculateNoisedPose() {
+	public Pair<Pose2d, Double[]> calculateNoisedPose() {
 		Pose2d simulatedPose = simulateRobotPose.get();
 
 		double xSpike = 0;
@@ -110,10 +130,12 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 			ySpike = randomValuesGenerator.nextDouble() * maximumSpikeMeters;
 		}
 
-		return new Pose2d(
-			simulatedPose.getX() + transformNoise.get() + xSpike,
-			simulatedPose.getY() + transformNoise.get() + ySpike,
-			Rotation2d.fromRadians(simulatedPose.getRotation().getRadians() + angleNoise.get())
+		double xNoise = transformNoise.get() + xSpike;
+		double yNoise = transformNoise.get() + ySpike;
+		double angularNoise = simulatedPose.getRotation().getRadians() + angleNoise.get();
+		return new Pair<>(
+			new Pose2d(simulatedPose.getX() + xNoise, simulatedPose.getY() + yNoise, Rotation2d.fromRadians(angularNoise)),
+			new Double[] {xNoise, yNoise, angularNoise}
 		);
 	}
 

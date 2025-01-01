@@ -36,22 +36,22 @@ public class AimAssistMath {
 		SwerveState swerveState
 	) {
 		Translation2d objectRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
-		double pidHorizontalOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, objectRelativeToRobot.getY());
+		double pidHorizontalToObjectOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, objectRelativeToRobot.getY());
 		double xVelocityMetersPerSecond = speeds.vxMetersPerSecond;
 		double yVelocityMetersPerSecond = speeds.vyMetersPerSecond;
 
 		switch (swerveState.getDriveMode()) {
 			case FIELD_RELATIVE -> {
-				double xFieldRelativeVelocityAddition = pidHorizontalOutputVelocityMetersPerSecond
+				double xFieldRelativeVelocityAddition = pidHorizontalToObjectOutputVelocityMetersPerSecond
 					* robotPose.getRotation().unaryMinus().getSin();
-				double yFieldRelativeVelocityAddition = pidHorizontalOutputVelocityMetersPerSecond
+				double yFieldRelativeVelocityAddition = pidHorizontalToObjectOutputVelocityMetersPerSecond
 					* robotPose.getRotation().unaryMinus().getCos();
 
 				xVelocityMetersPerSecond += xFieldRelativeVelocityAddition;
 				yVelocityMetersPerSecond += yFieldRelativeVelocityAddition;
 			}
 			case ROBOT_RELATIVE -> {
-				yVelocityMetersPerSecond += pidHorizontalOutputVelocityMetersPerSecond;
+				yVelocityMetersPerSecond += pidHorizontalToObjectOutputVelocityMetersPerSecond;
 			}
 		}
 

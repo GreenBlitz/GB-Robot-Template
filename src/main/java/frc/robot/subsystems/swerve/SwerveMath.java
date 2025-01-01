@@ -14,8 +14,8 @@ public class SwerveMath {
 		return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeHeading);
 	}
 
-	public static ChassisSpeeds robotToFieldRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Rotation2d robotHeading) {
-		return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeSpeeds, robotHeading);
+	public static ChassisSpeeds robotToFieldRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Rotation2d allianceRelativeHeading) {
+		return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeSpeeds, allianceRelativeHeading);
 	}
 
 	public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {

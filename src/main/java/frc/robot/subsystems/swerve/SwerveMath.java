@@ -47,12 +47,12 @@ public class SwerveMath {
 			chassisSpeeds.vyMetersPerSecond,
 			SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
 		);
-		double rotationalVelocityPerSecond = getDeadbandSpeed(
+		double rotationalVelocityRadiansPerSecond = getDeadbandSpeed(
 			chassisSpeeds.omegaRadiansPerSecond,
 			SwerveConstants.ROTATIONAL_VELOCITY_DEADBAND.getRadians()
 		);
 
-		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityPerSecond);
+		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityRadiansPerSecond);
 	}
 
 	public static boolean isStill(ChassisSpeeds chassisSpeeds) {

@@ -46,9 +46,9 @@ public class AimAssistMath {
 		switch (swerveState.getDriveMode()) {
 			case FIELD_RELATIVE -> {
 				double xFieldRelativeVelocityAddition = pidHorizontalOutputVelocityMetersPerSecond
-					* Math.sin(robotPose.getRotation().unaryMinus().getRadians());
+					* robotPose.getRotation().unaryMinus().getSin();
 				double yFieldRelativeVelocityAddition = pidHorizontalOutputVelocityMetersPerSecond
-					* Math.cos(robotPose.getRotation().unaryMinus().getRadians());
+					* robotPose.getRotation().unaryMinus().getCos();
 
 				xVelocityMetersPerSecond += xFieldRelativeVelocityAddition;
 				yVelocityMetersPerSecond += yFieldRelativeVelocityAddition;

@@ -15,4 +15,8 @@ public interface VisionSource<ReturnType extends VisionData> {
 
 	Filter<ReturnType> setFilter(Filter<ReturnType> newFilter);
 
+	default Filter<ReturnType> clearFilter() {
+		return setFilter(new Filter<>(data -> true));
+	}
+
 }

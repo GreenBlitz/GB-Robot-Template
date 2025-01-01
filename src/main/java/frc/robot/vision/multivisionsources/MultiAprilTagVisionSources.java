@@ -97,13 +97,12 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logBotPose() {
-		super.log();
 		Logger.recordOutput(logPath + "botPose2", useRobotHeadingForPoseEstimating);
 		Logger.recordOutput(logPath + "botPose1", !useRobotHeadingForPoseEstimating);
 	}
 
 	@Override
-	protected void log() {
+	public void log() {
 		super.log();
 		Logger.recordOutput(logPath + "offsetedRobotHeading", getRobotHeading());
 		Logger.recordOutput(logPath + "headingOffset", headingOffsetSupplier.get());

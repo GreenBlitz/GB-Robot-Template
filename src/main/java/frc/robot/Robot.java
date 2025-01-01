@@ -38,7 +38,7 @@ public class Robot {
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
-		aprilTagVisionSources.periodic();
+		aprilTagVisionSources.log();
 		CommandScheduler.getInstance().run();
 	}
 

@@ -8,8 +8,6 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 
-import static frc.robot.subsystems.swerve.SwerveMath.getDriveMagnitude;
-
 public class AimAssistMath {
 
 	public static ChassisSpeeds getRotationAssistedChassisSpeeds(
@@ -21,8 +19,8 @@ public class AimAssistMath {
 		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		double angularVelocityRadiansPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, getDriveMagnitude(speeds));
-		double combinedAngularVelocityRadiansPerSecond = angularVelocityRadiansPerSecond + speeds.omegaRadiansPerSecond;
+		double rotationalVelocityRadiansPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		double combinedAngularVelocityRadiansPerSecond = rotationalVelocityRadiansPerSecond + speeds.omegaRadiansPerSecond;
 		Rotation2d clampedAngularVelocityPerSecond = SwerveMath.clampRotationalVelocity(
 			Rotation2d.fromRadians(combinedAngularVelocityRadiansPerSecond),
 			swerveConstants.maxRotationalVelocityPerSecond()
@@ -38,8 +36,8 @@ public class AimAssistMath {
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
 	) {
-		Translation2d noteRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
-		double pidHorizontalOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, noteRelativeToRobot.getY());
+		Translation2d objectRelativeToRobot = SwerveMath.getRelativeTranslation(robotPose, objectTranslation);
+		double pidHorizontalOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, objectRelativeToRobot.getY());
 		double xVelocityMetersPerSecond = speeds.vxMetersPerSecond;
 		double yVelocityMetersPerSecond = speeds.vyMetersPerSecond;
 
@@ -61,8 +59,8 @@ public class AimAssistMath {
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 	}
 
-	public static double applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
-		return velocityPerSecond.getRadians()
+	public static double applyMagnitudeCompensation(Rotation2d velocitySeconds, double magnitude) {
+		return velocitySeconds.getRadians()
 			* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
 			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}

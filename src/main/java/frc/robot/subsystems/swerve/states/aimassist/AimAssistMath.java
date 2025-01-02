@@ -16,18 +16,32 @@ public class AimAssistMath {
 		Rotation2d targetHeading,
 		SwerveConstants swerveConstants
 	) {
-		Rotation2d pidOutputVelocityPerSecond = Rotation2d
+		Rotation2d pidOutputVelocitySeconds = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		Rotation2d rotationalVelocitySeconds = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		Rotation2d rotationalVelocitySeconds = applyMagnitudeCompensation(pidOutputVelocitySeconds, SwerveMath.getDriveMagnitude(speeds));
 		Rotation2d combinedRotationalVelocitySeconds = Rotation2d
 			.fromRadians(rotationalVelocitySeconds.getRadians() + speeds.omegaRadiansPerSecond);
-		Rotation2d clampedAngularVelocityPerSecond = SwerveMath
+		Rotation2d clampedAngularVelocitySeconds = SwerveMath
 			.clampRotationalVelocity(combinedRotationalVelocitySeconds, swerveConstants.maxRotationalVelocityPerSecond());
 
-		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
+		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocitySeconds.getRadians());
 	}
 
+	/**
+	 * @formatter:off
+	 * Returns {@link ChassisSpeeds} that aligns you to do object.
+	 * The returned chassis speeds will move you horizontally to the object so your current heading will point to it.
+	 * Example (0 is object, R is robot, > is heading):
+	 * Current Pose:              Ending Pose:
+	 * |            0          |   |   R>       0          |
+	 * |                       |   |                       |
+	 * |   R>                  |   |                       |
+	 * |                       |   |                       |
+	 * |                       |   |                       |
+	 * |                       |   |                       |
+	 * @formatter:on
+	 */
 	public static ChassisSpeeds getObjectAssistedSpeeds(
 		ChassisSpeeds speeds,
 		Pose2d robotPose,

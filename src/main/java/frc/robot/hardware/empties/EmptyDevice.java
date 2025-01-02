@@ -1,5 +1,6 @@
 package frc.robot.hardware.empties;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IDevice;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -17,6 +18,7 @@ public abstract class EmptyDevice implements IDevice {
 
 	@Override
 	public boolean isConnected() {
+
 		Logger.processInputs(logPath, connectedInput);
 		return connectedInput.connected;
 	}

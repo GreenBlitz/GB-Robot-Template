@@ -2,13 +2,14 @@ package frc.robot.subsystems.swerve.states;
 
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveState {
 
 	private static final DriveRelative DEFAULT_DRIVE_RELATIVE = DriveRelative.FIELD_RELATIVE;
 	private static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.NORMAL;
 	private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.CLOSED;
-	private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_ROBOT;
+	private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_CHASSIS;
 	private static final AimAssist DEFAULT_AIM_ASSIST = AimAssist.NONE;
 	private static final HeadingControl DEFAULT_HEADING_CONTROL = HeadingControl.NONE;
 
@@ -54,6 +55,14 @@ public class SwerveState {
 		this.headingControl = headingControl;
 	}
 
+	public void log(String logPath) {
+		Logger.recordOutput(logPath + "DriveMode", driveRelative);
+		Logger.recordOutput(logPath + "DriveSpeed", driveSpeed);
+		Logger.recordOutput(logPath + "LoopMode", loopMode);
+		Logger.recordOutput(logPath + "RotateAxis", rotateAxis);
+		Logger.recordOutput(logPath + "AimAssist", aimAssist);
+		Logger.recordOutput(logPath + "HeadingControl", headingControl);
+	}
 
 	public SwerveState withDriveRelative(DriveRelative driveRelative) {
 		SwerveState swerveState = new SwerveState(this);

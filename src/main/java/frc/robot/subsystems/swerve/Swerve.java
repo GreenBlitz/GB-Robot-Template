@@ -59,7 +59,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHelper = new SwerveStateHelper(Optional::empty, Optional::empty, this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
-		updateInputs();
+		update();
 	}
 
 	public String getLogPath() {
@@ -128,36 +128,18 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public void updateStatus() {
-		updateInputs();
-		logState();
-		logFieldRelativeVelocities();
-		logNumberOfOdometrySamples();
-	}
-
-	private void updateInputs() {
+	public void update() {
 		gyro.updateInputs(gyroSignals.yawSignal());
 		modules.updateInputs();
-	}
 
-	private void logState() {
-		Logger.recordOutput(constants.stateLogPath() + "DriveMode", currentState.getDriveMode());
-		Logger.recordOutput(constants.stateLogPath() + "DriveSpeed", currentState.getDriveSpeed());
-		Logger.recordOutput(constants.stateLogPath() + "LoopMode", currentState.getLoopMode());
-		Logger.recordOutput(constants.stateLogPath() + "RotateAxis", currentState.getRotateAxis());
-		Logger.recordOutput(constants.stateLogPath() + "AimAssist", currentState.getAimAssist());
-		Logger.recordOutput(constants.stateLogPath() + "HeadingControl", currentState.getHeadingControl());
-	}
+		currentState.log(constants.stateLogPath());
 
-	private void logFieldRelativeVelocities() {
 		ChassisSpeeds fieldRelativeSpeeds = getFieldRelativeVelocity();
 		Logger.recordOutput(constants.velocityLogPath() + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "X", fieldRelativeSpeeds.vxMetersPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "Magnitude", SwerveMath.getDriveMagnitude(fieldRelativeSpeeds));
-	}
 
-	private void logNumberOfOdometrySamples() {
 		Logger.recordOutput(getLogPath() + "OdometrySamples", getNumberOfOdometrySamples());
 	}
 
@@ -209,7 +191,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public ChassisSpeeds getFieldRelativeVelocity() {
-		return SwerveMath.robotToFieldRelativeSpeeds(getRobotRelativeVelocity(), headingSupplier.get());
+		return SwerveMath.robotToFieldRelativeSpeeds(getRobotRelativeVelocity(), getAllianceRelativeHeading());
 	}
 
 	private ChassisSpeeds getDriveModeRelativeSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
@@ -276,7 +258,7 @@ public class Swerve extends GBSubsystem {
 			return speeds;
 		}
 
-		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.ROTATIONAL_VELOCITY_DEADBAND.getRadians()) {
+		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.ROTATIONAL_VELOCITY_SECONDS_DEADBAND.getRadians()) {
 			headingStabilizer.unlockTarget();
 			return speeds;
 		}
@@ -293,7 +275,7 @@ public class Swerve extends GBSubsystem {
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		SwerveModuleState[] swerveModuleStates = kinematics
 			.toSwerveModuleStates(speeds, stateHelper.getRotationAxis(swerveState.getRotateAxis()));
-		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop);
+		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop());
 	}
 
 	private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {

@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
-import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.ToleranceUtils;
@@ -112,7 +112,7 @@ public class SwerveCommandsBuilder {
 
 
 	public Command turnToHeading(Rotation2d targetHeading) {
-		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_ROBOT);
+		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_CHASSIS);
 	}
 
 	public Command turnToHeading(Rotation2d targetHeading, RotateAxis rotateAxis) {

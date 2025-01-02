@@ -76,7 +76,7 @@ public class SwerveStateHelper {
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
 		return switch (rotationAxisState) {
-			case MIDDLE_OF_ROBOT -> new Translation2d();
+			case MIDDLE_OF_CHASSIS -> new Translation2d();
 			case FRONT_LEFT_MODULE -> swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getPositionFromCenterMeters();
 			case FRONT_RIGHT_MODULE -> swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_RIGHT).getPositionFromCenterMeters();
 			case BACK_LEFT_MODULE -> swerve.getModules().getModule(ModuleUtils.ModulePosition.BACK_LEFT).getPositionFromCenterMeters();
@@ -85,17 +85,17 @@ public class SwerveStateHelper {
 	}
 
 	public RotateAxis getFarRotateAxis(boolean isLeft) {
-		Rotation2d currentAllianceHeading = swerve.getAllianceRelativeHeading();
+		Rotation2d currentAllianceRelativeHeading = swerve.getAllianceRelativeHeading();
 		// -45 <= x <= 45
-		if (Math.abs(currentAllianceHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) {
+		if (Math.abs(currentAllianceRelativeHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) {
 			return isLeft ? RotateAxis.FRONT_LEFT_MODULE : RotateAxis.FRONT_RIGHT_MODULE;
 		}
 		// -180 <= x <= -135 || 135 <= x <= 180
-		if (Math.abs(currentAllianceHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) {
+		if (Math.abs(currentAllianceRelativeHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) {
 			return isLeft ? RotateAxis.BACK_RIGHT_MODULE : RotateAxis.BACK_LEFT_MODULE;
 		}
 		// 45 <= x <= 135
-		if (currentAllianceHeading.getDegrees() > 0) {
+		if (currentAllianceRelativeHeading.getDegrees() > 0) {
 			return isLeft ? RotateAxis.FRONT_RIGHT_MODULE : RotateAxis.BACK_RIGHT_MODULE;
 		}
 		// -45 >= x >= -135

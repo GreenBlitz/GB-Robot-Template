@@ -19,10 +19,10 @@ public class Arm extends GBSubsystem {
     private final InputSignal<Rotation2d> positionSignal;
     private final InputSignal<Double> voltageSignal;
 
-    public Arm(String logPath, ControllableMotor motor, ArmCommandBuilder commandBuilder, IRequest<Rotation2d> positionRequest, IRequest<Double> voltageRequest, InputSignal<Rotation2d> positionSignal, InputSignal<Double> voltageSignal) {
+    public Arm(String logPath, ControllableMotor motor, IRequest<Rotation2d> positionRequest, IRequest<Double> voltageRequest, InputSignal<Rotation2d> positionSignal, InputSignal<Double> voltageSignal) {
         super(logPath);
         this.motor = motor;
-        this.commandBuilder = commandBuilder;
+        this.commandBuilder = new ArmCommandBuilder(this);
         this.positionRequest = positionRequest;
         this.voltageRequest = voltageRequest;
         this.positionSignal = positionSignal;

@@ -23,7 +23,6 @@ public class SmartJoystick {
 	private final String logPath;
 
 	private JoystickBindSet bindSet;
-	private int port;
 
 	public SmartJoystick(int port, JoystickBindSet bindSet) {
 		this(port, DEADZONE, bindSet);
@@ -54,7 +53,6 @@ public class SmartJoystick {
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
 		this.bindSet = bindSet;
-		this.port = port;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> (!isConnected() && this.bindSet != JoystickBindSet.NONE))
@@ -66,7 +64,7 @@ public class SmartJoystick {
 	}
 
 	public int getPort() {
-		return port;
+		return joystick.getPort();
 	}
 
 	public JoystickBindSet getBindSet() {

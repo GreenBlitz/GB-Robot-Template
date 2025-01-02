@@ -16,20 +16,20 @@ public class ArmStateHandler {
 		}
 		return arm.getCommandBuilder().moveToPosition(state.getPosition());
 	}
-
-	public Command endSate(ArmState state){
-		switch (state){
-            case INTAKE -> {
-                return setState(ArmState.SAFE_HOLD);
-            }
-			case SAFE_HOLD -> {
-				return setState(ArmState.STAY_IN_PLACE);
-			}
-			//need to be completed
-
-
-        }
-	}
+//
+//	public Command endSate(ArmState state){
+//		switch (state){
+//            case INTAKE -> {
+//                return setState(ArmState.SAFE_HOLD);
+//            }
+//			case SAFE_HOLD -> {
+//				return setState(ArmState.STAY_IN_PLACE);
+//			}
+//			//need to be completed
+//
+//
+//        }
+//	}
 
 
 }

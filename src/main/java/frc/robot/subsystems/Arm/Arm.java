@@ -32,6 +32,11 @@ public class Arm extends GBSubsystem {
         updateInputs();
     }
 
+    @Override
+    protected void subsystemPeriodic(){
+        updateInputs();
+    }
+
     public ControllableMotor getMotor() {
         return motor;
     }
@@ -48,12 +53,12 @@ public class Arm extends GBSubsystem {
         return voltageRequest;
     }
 
-    public InputSignal<Rotation2d> getPosition() {
-        return positionSignal;
+    public Rotation2d getPosition() {
+        return positionSignal.getLatestValue();
     }
 
-    public InputSignal<Double> getVoltage() {
-        return voltageSignal;
+    public Double getVoltage() {
+        return voltageSignal.getLatestValue();
     }
 
     private void updateInputs() {
@@ -62,6 +67,10 @@ public class Arm extends GBSubsystem {
 
     public void setBrake(boolean brake){
         motor.setBrake(brake);
+    }
+
+    protected void setPower(double power){
+        motor.setPower(power);
     }
 
     protected void setVoltage(double voltage) {

@@ -29,6 +29,7 @@ public class AimAssistMath {
 	}
 
 	/**
+	 * @formatter:off
 	 * Returns {@link ChassisSpeeds} that aligns you to do object.
 	 * The returned chassis speeds will move you horizontally to the object so your current heading will point to it.
 	 * Example (0 is object, R is robot, > is heading):
@@ -39,6 +40,7 @@ public class AimAssistMath {
 	 * |                       |   |                       |
 	 * |                       |   |                       |
 	 * |                       |   |                       |
+	 * @formatter:on
 	 */
 	public static ChassisSpeeds getObjectAssistedSpeeds(
 		ChassisSpeeds speeds,

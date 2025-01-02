@@ -9,10 +9,10 @@
     "test"
   ],
   "defaultMaxVel": 4.2,
-  "defaultMaxAccel": 2.0,
+  "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
-  "robotMass": 74.08797700309194,
+  "robotMass": 60.0,
   "robotMOI": 8.599752252,
   "robotWheelbase": 0.5778496879611685,
   "robotTrackwidth": 0.5778496879611685,

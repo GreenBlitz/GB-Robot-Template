@@ -39,27 +39,19 @@ public class PathPlannerUtils {
 		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500Foc(1), 60, 1),
 		0.577
 	);
-	public static final RobotConfig RAFUL_ROBOT_CONFIG = new RobotConfig(
-		60,
-		6,
-		new ModuleConfig(0.0234, 7.98, 1.1, DCMotor.getKrakenX60Foc(1), 60, 1),
-		0.6946,
-		0.556
-	);
 
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
 	public static void startPathfinder() {
 		setPathfinder(new LocalADStar());
-		scheduleWarmup();
 	}
 
 	public static void setPathfinder(Pathfinder pathfinder) {
 		Pathfinding.setPathfinder(pathfinder);
 	}
 
-	public static void scheduleWarmup() {
-		PathfindingCommand.warmupCommand().schedule();
+	public static Command getWarmupCommand() {
+		return PathfindingCommand.warmupCommand();
 	}
 
 	public static void configPathPlanner(

@@ -4,6 +4,7 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
@@ -24,11 +25,14 @@ public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
 	private GBAuto auto;
+	private Command warmupCommand;
 	private int roborioCycles;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
+		warmupCommand = PathPlannerUtils.getWarmupCommand();
+		warmupCommand.schedule();
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
@@ -55,6 +59,7 @@ public class RobotManager extends LoggedRobot {
 		this.auto = robot.getAuto();
 
 		if (auto != null) {
+			warmupCommand.cancel();
 			auto.schedule();
 		}
 	}

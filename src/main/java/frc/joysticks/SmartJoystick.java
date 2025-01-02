@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.joystickManager.JoystickBindSet;
+import frc.JoystickBindings.JoystickBindSet;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -73,14 +73,13 @@ public class SmartJoystick {
 		return bindSet;
 	}
 
-	public void setBindSet(JoystickBindSet bindSet) {
-		this.bindSet = bindSet;
-	}
-
 	public boolean isConnected() {
 		return joystick.isConnected();
 	}
 
+	public void setBindSet(JoystickBindSet bindSet) {
+		this.bindSet = bindSet;
+	}
 
 	/**
 	 * @param power the power to rumble the joystick between [-1, 1]

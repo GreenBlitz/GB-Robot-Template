@@ -1,26 +1,21 @@
-package frc.robot.joystickManager;
+package frc.joysticks;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.joysticks.SmartJoystick;
+import frc.JoystickBindings;
+import frc.JoystickBindings.JoystickBindSet;
 
 public class JoystickManager {
 
 	private final SmartJoystick[] joysticks;
-
 	private final Robot robot;
+	private final int NUMBER_OF_JOYSTICKS = 6;
 
 	public JoystickManager(Robot robot) {
-		joysticks = new SmartJoystick[6];
+		this.joysticks = new SmartJoystick[NUMBER_OF_JOYSTICKS];
 
-		int currentPort = 0;
-
-		for (SmartJoystick joystick : joysticks) {
-			SendableChooser<JoystickBindSet> bindSetChooser = new SendableChooser<>();
-			addOptions(bindSetChooser, currentPort);
-			currentPort++;
-		}
+		putChoosersToDashboard();
 
 		this.robot = robot;
 	}
@@ -42,6 +37,15 @@ public class JoystickManager {
 
 		chooser.onChange((joystickBindSet) -> setJoystickBindSet(port, (chooser.getSelected())));
 		SmartDashboard.putData(port + " joystick", chooser);
+	}
+
+	private void putChoosersToDashboard() {
+		int currentPort = 0;
+		for (SmartJoystick joystick : joysticks) {
+			SendableChooser<JoystickBindSet> bindSetChooser = new SendableChooser<>();
+			addOptions(bindSetChooser, currentPort);
+			currentPort++;
+		}
 	}
 
 }

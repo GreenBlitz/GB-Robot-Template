@@ -8,85 +8,93 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.utils.ToleranceUtils;
 
 public class Arm extends GBSubsystem {
-    public final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(130);
-    public final Rotation2d MINIMUM_POSITION = Rotation2d.fromDegrees(-130);
-    public final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
 
-    private final ControllableMotor motor;
-    private final ArmCommandBuilder commandBuilder;
-    private final IRequest<Rotation2d> positionRequest;
-    private final IRequest<Double> voltageRequest;
-    private final InputSignal<Rotation2d> positionSignal;
-    private final InputSignal<Double> voltageSignal;
+	public final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(130);
+	public final Rotation2d MINIMUM_POSITION = Rotation2d.fromDegrees(-130);
+	public final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
 
-    public Arm(String logPath, ControllableMotor motor, IRequest<Rotation2d> positionRequest, IRequest<Double> voltageRequest, InputSignal<Rotation2d> positionSignal, InputSignal<Double> voltageSignal) {
-        super(logPath);
-        this.motor = motor;
-        this.commandBuilder = new ArmCommandBuilder(this);
-        this.positionRequest = positionRequest;
-        this.voltageRequest = voltageRequest;
-        this.positionSignal = positionSignal;
-        this.voltageSignal = voltageSignal;
+	private final ControllableMotor motor;
+	private final ArmCommandBuilder commandBuilder;
+	private final IRequest<Rotation2d> positionRequest;
+	private final IRequest<Double> voltageRequest;
+	private final InputSignal<Rotation2d> positionSignal;
+	private final InputSignal<Double> voltageSignal;
 
-        motor.resetPosition(STARTING_POSITION);
-        updateInputs();
-    }
+	public Arm(
+		String logPath,
+		ControllableMotor motor,
+		IRequest<Rotation2d> positionRequest,
+		IRequest<Double> voltageRequest,
+		InputSignal<Rotation2d> positionSignal,
+		InputSignal<Double> voltageSignal
+	) {
+		super(logPath);
+		this.motor = motor;
+		this.commandBuilder = new ArmCommandBuilder(this);
+		this.positionRequest = positionRequest;
+		this.voltageRequest = voltageRequest;
+		this.positionSignal = positionSignal;
+		this.voltageSignal = voltageSignal;
 
-    @Override
-    protected void subsystemPeriodic(){
-        updateInputs();
-    }
+		motor.resetPosition(STARTING_POSITION);
+		updateInputs();
+	}
 
-    public ControllableMotor getMotor() {
-        return motor;
-    }
+	@Override
+	protected void subsystemPeriodic() {
+		updateInputs();
+	}
 
-    public ArmCommandBuilder getCommandBuilder() {
-        return commandBuilder;
-    }
+	public ControllableMotor getMotor() {
+		return motor;
+	}
 
-    public IRequest<Rotation2d> getPositionRequest() {
-        return positionRequest;
-    }
+	public ArmCommandBuilder getCommandBuilder() {
+		return commandBuilder;
+	}
 
-    public IRequest<Double> getVoltageRequest() {
-        return voltageRequest;
-    }
+	public IRequest<Rotation2d> getPositionRequest() {
+		return positionRequest;
+	}
 
-    public Rotation2d getPosition() {
-        return positionSignal.getLatestValue();
-    }
+	public IRequest<Double> getVoltageRequest() {
+		return voltageRequest;
+	}
 
-    public Double getVoltage() {
-        return voltageSignal.getLatestValue();
-    }
+	public Rotation2d getPosition() {
+		return positionSignal.getLatestValue();
+	}
 
-    private void updateInputs() {
-        motor.updateInputs(positionSignal, voltageSignal);
-    }
+	public Double getVoltage() {
+		return voltageSignal.getLatestValue();
+	}
 
-    public void setBrake(boolean brake){
-        motor.setBrake(brake);
-    }
+	private void updateInputs() {
+		motor.updateInputs(positionSignal, voltageSignal);
+	}
 
-    protected void setPower(double power){
-        motor.setPower(power);
-    }
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
+	}
 
-    protected void setVoltage(double voltage) {
-        motor.applyRequest(voltageRequest.withSetPoint(voltage));
-    }
+	protected void setPower(double power) {
+		motor.setPower(power);
+	}
 
-    protected void setTargetPosition(Rotation2d angle) {
-        motor.applyRequest(positionRequest.withSetPoint(angle));
-    }
+	protected void setVoltage(double voltage) {
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
+	}
 
-    protected void stayInPlace(){
-        setTargetPosition(positionSignal.getLatestValue());
-    }
+	protected void setTargetPosition(Rotation2d angle) {
+		motor.applyRequest(positionRequest.withSetPoint(angle));
+	}
 
-    public boolean isAtPosition(Rotation2d angle, Rotation2d tolerance) {
-        return ToleranceUtils.isNearWrapped(angle, positionSignal.getLatestValue(), tolerance);
-    }
+	protected void stayInPlace() {
+		setTargetPosition(positionSignal.getLatestValue());
+	}
+
+	public boolean isAtPosition(Rotation2d angle, Rotation2d tolerance) {
+		return ToleranceUtils.isNearWrapped(angle, positionSignal.getLatestValue(), tolerance);
+	}
 
 }

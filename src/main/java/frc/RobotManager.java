@@ -6,7 +6,6 @@ package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.joysticks.JoystickManager;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -24,7 +23,6 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-	private final JoystickManager joystickManager;
 	private Command autonomousCommand;
 	private int roborioCycles;
 
@@ -34,7 +32,6 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-		this.joystickManager = new JoystickManager(robot);
 	}
 
 	@Override

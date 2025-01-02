@@ -16,8 +16,13 @@ import java.util.function.Supplier;
 
 public class AutosBuilder {
 
-	public static List<GBAuto> getAllAutos(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
-		return List.of(M231(robot, intakeCommand, shootingCommand), new GBAuto("Rotate"), new GBAuto("Rotate 2m"), new GBAuto("Straight 2m"));
+	public static List<Supplier<GBAuto>> getAllAutos(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
+		return List.of(
+			() -> M231(robot, intakeCommand, shootingCommand),
+			() -> new GBAuto("Rotate"),
+			() -> new GBAuto("Rotate 2m"),
+			() -> new GBAuto("Straight 2m")
+		);
 	}
 
 	private static GBAuto M231(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {

@@ -10,7 +10,7 @@ public enum AutoPath {
 	NOTE_2_TO_NOTE_3("23"),
 	NOTE_3_TO_NOTE_1("31");
 
-	final String pathName;
+	private final String pathName;
 
 	AutoPath(String pathName) {
 		this.pathName = pathName;

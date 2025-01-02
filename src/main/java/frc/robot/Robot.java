@@ -82,7 +82,7 @@ public class Robot {
 	}
 
 	public GBAuto getAuto() {
-		return autonomousChooser.getChosenValue().withResetPose(poseEstimator::resetPose);
+		return autonomousChooser.getChosenValue();//.withResetPose(poseEstimator::resetPose);
 	}
 
 	public Superstructure getSuperStructure() {

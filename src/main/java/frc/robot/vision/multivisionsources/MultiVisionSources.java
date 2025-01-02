@@ -6,6 +6,7 @@ import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -17,7 +18,7 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 
 	@SafeVarargs
 	public MultiVisionSources(String logPath, VisionSource<ReturnType>... visionSources) {
-		this(logPath, List.of(visionSources));
+		this(logPath, Arrays.asList(visionSources));
 	}
 
 	public MultiVisionSources(String logPath, List<VisionSource<ReturnType>> visionSources) {

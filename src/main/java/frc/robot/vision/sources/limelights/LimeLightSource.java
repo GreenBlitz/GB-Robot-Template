@@ -72,15 +72,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 	@Override
 	public void update() {
-		robotOrientationEntry.setDoubleArray(
-			new double[] {
-				gyroAngleValues.yaw().getDegrees(),
-				gyroAngleValues.yawRate(),
-				gyroAngleValues.pitch().getDegrees(),
-				gyroAngleValues.pitchRate(),
-				gyroAngleValues.roll().getDegrees(),
-				gyroAngleValues.rollRate()}
-		);
+		robotOrientationEntry.setDoubleArray(gyroAngleValues.asArray());
 		robotPoseArray = (useGyroForPoseEstimating ? robotPoseEntryBotPose2 : robotPoseEntryBotPose1)
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);

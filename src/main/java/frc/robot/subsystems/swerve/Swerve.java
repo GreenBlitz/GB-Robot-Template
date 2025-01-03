@@ -13,7 +13,7 @@ import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.poseestimation.observations.OdometryObservation;
+import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
@@ -154,7 +154,7 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometryObservations.length; i++) {
 			odometryObservations[i] = new OdometryObservation(
 				modules.getWheelPositions(i),
-				gyro instanceof EmptyGyro ? null : gyroSignals.yawSignal().asArray()[i],
+				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().asArray()[i]),
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}

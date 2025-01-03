@@ -3,8 +3,8 @@ package frc.robot.poseestimation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.poseestimation.posecalculation.PoseCalculator;
+import frc.robot.poseestimator.observations.OdometryObservation;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;

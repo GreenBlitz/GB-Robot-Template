@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.revrobotics.sim.SparkMaxSim;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.utils.ToleranceUtils;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -151,7 +153,14 @@ public class SwerveCommandsBuilder {
 				.andThen(pidToPose(currentPose, PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
 			driveToPose(currentPose, () -> PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
 			() -> PathPlannerUtils.isRobotCloseToPathBeginning(path, currentPose, AutonomousConstants.PATHFINDING_DEADBAND_METERS)
-		);
+		).until(
+			() -> ToleranceUtils.isNear(
+				PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)),
+				currentPose.get(),
+				AutonomousConstants.TARGET_ANGLE_TOLERANCE,
+				AutonomousConstants.DISTANCE_FROM_TARGET_TOLERANCE_METERS
+			)
+		).andThen(new InstantCommand(() -> swerve.driveByState(0,0,0, SwerveState.DEFAULT_PATH_PLANNER), swerve));
 	}
 
 

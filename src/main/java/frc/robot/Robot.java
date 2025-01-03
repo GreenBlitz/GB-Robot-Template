@@ -17,11 +17,9 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.states.SwerveStateHelper;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
-import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -50,7 +48,7 @@ public class Robot {
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getCurrentPose);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 

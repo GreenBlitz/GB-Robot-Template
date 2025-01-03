@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.JoystickBindings.JoystickBindSet;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -21,17 +22,15 @@ public class SmartJoystick {
 	private final double deadzone;
 	private final String logPath;
 
-	public SmartJoystick(JoystickPorts joystickPort) {
-		this(joystickPort, DEADZONE);
+	private JoystickBindSet bindSet;
+
+	public SmartJoystick(int port, JoystickBindSet bindSet) {
+		this(port, DEADZONE, bindSet);
 	}
 
-	public SmartJoystick(JoystickPorts joystickPort, double deadzone) {
-		this(new Joystick(joystickPort.getPort()), deadzone);
-	}
-
-	private SmartJoystick(Joystick joystick, double deadzone) {
+	private SmartJoystick(int port, double deadzone, JoystickBindSet bindSet) {
 		this.deadzone = deadzone;
-		this.joystick = joystick;
+		this.joystick = new Joystick(port);
 		this.logPath = "Joysticks/" + joystick.getPort() + "/";
 
 		this.A = new JoystickButton(this.joystick, ButtonID.A.getId());
@@ -53,15 +52,31 @@ public class SmartJoystick {
 		this.POV_DOWN = new POVButton(this.joystick, ButtonID.POV_DOWN.getId());
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> !isConnected()));
+		this.bindSet = bindSet;
+
+		AlertManager.addAlert(
+			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> (!isConnected() && this.bindSet != JoystickBindSet.NONE))
+		);
 	}
 
 	public String getLogPath() {
 		return logPath;
 	}
 
+	public int getPort() {
+		return joystick.getPort();
+	}
+
+	public JoystickBindSet getBindSet() {
+		return bindSet;
+	}
+
 	public boolean isConnected() {
 		return joystick.isConnected();
+	}
+
+	public void setBindSet(JoystickBindSet bindSet) {
+		this.bindSet = bindSet;
 	}
 
 	/**

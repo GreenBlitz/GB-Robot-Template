@@ -16,16 +16,16 @@ public class AimAssistMath {
 		Rotation2d targetHeading,
 		SwerveConstants swerveConstants
 	) {
-		Rotation2d pidOutputVelocitySeconds = Rotation2d
+		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		Rotation2d rotationalVelocitySeconds = applyMagnitudeCompensation(pidOutputVelocitySeconds, SwerveMath.getDriveMagnitude(speeds));
-		Rotation2d combinedRotationalVelocitySeconds = Rotation2d
-			.fromRadians(rotationalVelocitySeconds.getRadians() + speeds.omegaRadiansPerSecond);
-		Rotation2d clampedAngularVelocitySeconds = SwerveMath
-			.clampRotationalVelocity(combinedRotationalVelocitySeconds, swerveConstants.maxRotationalVelocityPerSecond());
+		Rotation2d rotationalVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		Rotation2d combinedRotationalVelocityPerSecond = Rotation2d
+			.fromRadians(rotationalVelocityPerSecond.getRadians() + speeds.omegaRadiansPerSecond);
+		Rotation2d clampedRotationalVelocityPerSecond = SwerveMath
+			.clampRotationalVelocity(combinedRotationalVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
 
-		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocitySeconds.getRadians());
+		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedRotationalVelocityPerSecond.getRadians());
 	}
 
 	/**
@@ -73,8 +73,8 @@ public class AimAssistMath {
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 	}
 
-	public static Rotation2d applyMagnitudeCompensation(Rotation2d velocitySeconds, double magnitude) {
-		return velocitySeconds.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+	public static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
+		return velocityPerSecond.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
 }

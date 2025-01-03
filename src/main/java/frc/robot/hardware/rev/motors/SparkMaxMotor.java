@@ -95,7 +95,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
-				logPath + "ElectronicSpeedControllerElectricallyErasableProgrammableReadOnlyMemoryFaultAt",
+				logPath + "ClosedLoopControllerMemoryFaultAt",
 				() -> faults.escEeprom
 			)
 		);
@@ -131,7 +131,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				logPath + "ElectronicSpeedControllerElectricallyErasableProgrammableReadOnlyMemoryWarningAt",
+				logPath + "ClosedLoopControllerMemoryWarningAt",
 				() -> warnings.escEeprom
 			)
 		);
@@ -139,7 +139,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				logPath + "ExternalElectricallyErasableProgrammableReadOnlyMemoryWarningAt",
+				logPath + "ExternalMemoryWarningAt",
 				() -> warnings.extEeprom
 			)
 		);

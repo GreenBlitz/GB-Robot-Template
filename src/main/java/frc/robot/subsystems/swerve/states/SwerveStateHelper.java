@@ -8,9 +8,9 @@ import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
+import frc.utils.math.PoseMath;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -68,7 +68,7 @@ public class SwerveStateHelper {
 		return AimAssistMath.getRotationAssistedChassisSpeeds(
 			speeds,
 			robotPose.getRotation(),
-			SwerveMath.getRelativeTranslation(robotPose.getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle(),
+			PoseMath.getRelativeTranslation(robotPose.getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle(),
 			swerveConstants
 		);
 	}

@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtils;
-import frc.utils.mirror.MirrorMath;
+import frc.utils.math.MirrorMath;
 
 public class Field {
 

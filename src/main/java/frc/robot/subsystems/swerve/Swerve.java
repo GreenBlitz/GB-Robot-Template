@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.autonomous.AutonomousConstants;
@@ -93,7 +92,7 @@ public class Swerve extends GBSubsystem {
 		try {
 			robotConfig = RobotConfig.fromGUISettings();
 		} catch (Exception exception) {
-			new Alert(Alert.AlertType.ERROR,AutonomousConstants.LOG_PATH_PREFIX + "GetGuiSettingsFailedAt").report();
+			new Alert(Alert.AlertType.ERROR, AutonomousConstants.LOG_PATH_PREFIX + "GetGuiSettingsFailedAt").report();
 		} finally {
 			PathPlannerUtils.configPathPlanner(
 				currentPoseSupplier,

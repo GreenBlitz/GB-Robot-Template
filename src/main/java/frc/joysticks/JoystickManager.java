@@ -11,13 +11,17 @@ public class JoystickManager {
 	private static final int NUMBER_OF_JOYSTICKS = 6;
 	private static final SmartJoystick[] joysticks = new SmartJoystick[NUMBER_OF_JOYSTICKS];
 
-	public static void setJoystickBindSet(int port, JoystickBindSet joystickBindSet, Robot robot) {
+	private static void setJoystickBindSet(int port, JoystickBindSet joystickBindSet, Robot robot) {
 		if (joysticks[port] != null) {
 			joysticks[port].setBindSet(joystickBindSet);
 		} else if (joysticks[port] == null) {
-			joysticks[port] = new SmartJoystick(port, joystickBindSet);
-			JoystickBindings.configureBindings(joysticks[port], robot);
+			createJoystick(port, joystickBindSet, robot);
 		}
+	}
+
+	private static void createJoystick(int port, JoystickBindSet joystickBindSet, Robot robot) {
+		joysticks[port] = new SmartJoystick(port, joystickBindSet);
+		JoystickBindings.configureBindings(joysticks[port], robot);
 	}
 
 	private static void addOptions(SendableChooser<JoystickBindSet> chooser, int port, Robot robot) {

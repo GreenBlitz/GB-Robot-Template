@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
-import frc.joysticks.JoystickManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.battery.BatteryUtils;
 
@@ -23,7 +22,6 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
-		JoystickManager.putChoosersToDashboard(this);
 	}
 
 	public void periodic() {

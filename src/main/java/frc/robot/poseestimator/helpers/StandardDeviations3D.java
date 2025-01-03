@@ -30,7 +30,7 @@ public record StandardDeviations3D(
 		this(0, 0, 0, 0, 0, 0);
 	}
 
-	public Matrix<N6, N1> getStandardDeviations3D() {
+	public Matrix<N6, N1> getAsColumnVector() {
 		return VecBuilder.fill(
 			xAxisStandardDeviations,
 			yAxisStandardDeviations,

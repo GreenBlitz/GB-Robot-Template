@@ -14,13 +14,13 @@ public interface VisionSource<ReturnType extends VisionData> {
 
 	Optional<ReturnType> getFilteredVisionData();
 
-	Filter<ReturnType> setFilter(Filter<ReturnType> newFilter);
+	void setFilter(Filter<ReturnType> newFilter);
 
-	default Filter<ReturnType> clearFilter() {
-		return setFilter(new Filter<>(data -> true));
+	default void clearFilter() {
+		setFilter(new Filter<>(data -> true));
 	}
 
-	Filter<ReturnType> applyOnFilter(
+	void applyOnFilter(
 		BiFunction<Filter<ReturnType>, Filter<ReturnType>, Filter<ReturnType>> applicationFunction,
 		Filter<ReturnType> filterToApplyWith
 	);

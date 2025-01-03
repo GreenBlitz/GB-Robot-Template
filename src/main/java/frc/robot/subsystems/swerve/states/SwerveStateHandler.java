@@ -15,21 +15,25 @@ import frc.utils.math.PoseMath;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class SwerveStateHelper {
+public class SwerveStateHandler {
 
 	private final Swerve swerve;
 	private final SwerveConstants swerveConstants;
-	private final Supplier<Optional<Pose2d>> robotPoseSupplier;
-	private final Supplier<Optional<Translation2d>> objectTranslationSupplier;
+	private Supplier<Optional<Pose2d>> robotPoseSupplier;
+	private Supplier<Optional<Translation2d>> objectTranslationSupplier;
 
-	public SwerveStateHelper(
-		Supplier<Optional<Pose2d>> robotPoseSupplier,
-		Supplier<Optional<Translation2d>> objectTranslationSupplier,
-		Swerve swerve
-	) {
+	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
+		this.robotPoseSupplier = Optional::empty;
+		this.objectTranslationSupplier = Optional::empty;
+	}
+
+	public void setRobotPoseSupplier(Supplier<Optional<Pose2d>> robotPoseSupplier) {
 		this.robotPoseSupplier = robotPoseSupplier;
+	}
+
+	public void setObjectTranslationSupplier(Supplier<Optional<Translation2d>> objectTranslationSupplier) {
 		this.objectTranslationSupplier = objectTranslationSupplier;
 	}
 

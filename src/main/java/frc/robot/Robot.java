@@ -17,7 +17,6 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.states.SwerveStateHelper;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
@@ -50,7 +49,7 @@ public class Robot {
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		swerve.getStateHandler().setRobotPoseSupplier(() -> Optional.of(poseEstimator.getCurrentPose()));
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 

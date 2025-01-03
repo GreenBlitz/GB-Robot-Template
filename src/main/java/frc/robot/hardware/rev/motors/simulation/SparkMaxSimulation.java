@@ -20,6 +20,11 @@ public class SparkMaxSimulation {
 		this.mechanismSimulation = mechanismSimulation;
 	}
 
+	public SparkMaxSimulation(SparkMaxWrapper sparkMaxWrapper, MechanismSimulation mechanismSimulation, DCMotor simulationMotor) {
+		this.simulation = new SparkMaxSim(sparkMaxWrapper, simulationMotor);
+		this.mechanismSimulation = mechanismSimulation;
+	}
+
 	public double getVoltage() {
 		return simulation.getAppliedOutput() * simulation.getBusVoltage();
 	}

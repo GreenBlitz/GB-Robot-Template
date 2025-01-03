@@ -1,11 +1,11 @@
-package frc.utils;
+package frc.utils.math;
 
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.MathConstants;
 
-public class ToleranceUtils {
+public class ToleranceMath {
 
 	public static boolean isNearWrapped(Rotation2d wantedAngle, Rotation2d angle, Rotation2d tolerance) {
 		return MathUtil.isNear(
@@ -23,6 +23,10 @@ public class ToleranceUtils {
 
 	public static boolean isInRange(double value, double min, double max) {
 		return isInRange(value, min, max, 0);
+	}
+
+	public static double applyDeadband(double value, double deadband) {
+		return Math.abs(value) <= deadband ? 0 : value;
 	}
 
 }

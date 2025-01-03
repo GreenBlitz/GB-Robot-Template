@@ -1,11 +1,10 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
+import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtils;
 
 public class SwerveMath {
@@ -39,15 +38,15 @@ public class SwerveMath {
 	}
 
 	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
-		double xVelocityMetersPerSecond = getDeadbandSpeed(
+		double xVelocityMetersPerSecond = ToleranceMath.applyDeadband(
 			chassisSpeeds.vxMetersPerSecond,
 			SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
 		);
-		double yVelocityMetersPerSecond = getDeadbandSpeed(
+		double yVelocityMetersPerSecond = ToleranceMath.applyDeadband(
 			chassisSpeeds.vyMetersPerSecond,
 			SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
 		);
-		double rotationalVelocityRadiansPerSecond = getDeadbandSpeed(
+		double rotationalVelocityRadiansPerSecond = ToleranceMath.applyDeadband(
 			chassisSpeeds.omegaRadiansPerSecond,
 			SwerveConstants.ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND.getRadians()
 		);
@@ -63,18 +62,6 @@ public class SwerveMath {
 
 	public static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
 		return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
-	}
-
-	public static double getDeadbandSpeed(double speed, double deadband) {
-		return Math.abs(speed) <= deadband ? 0 : speed;
-	}
-
-	public static Translation2d getRelativeTranslation(Translation2d relativeTo, Translation2d toRelative) {
-		return toRelative.minus(relativeTo);
-	}
-
-	public static Translation2d getRelativeTranslation(Pose2d relativeTo, Translation2d toRelative) {
-		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
 	public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity) {

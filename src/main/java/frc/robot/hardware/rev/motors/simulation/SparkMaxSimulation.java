@@ -16,8 +16,7 @@ public class SparkMaxSimulation {
 	private final MechanismSimulation mechanismSimulation;
 
 	public SparkMaxSimulation(SparkMaxWrapper sparkMaxWrapper, MechanismSimulation mechanismSimulation) {
-		this.simulation = new SparkMaxSim(sparkMaxWrapper, DCMotor.getNEO(DEFAULT_NUMBER_OF_MOTORS));
-		this.mechanismSimulation = mechanismSimulation;
+		this(sparkMaxWrapper, mechanismSimulation, DCMotor.getNEO(DEFAULT_NUMBER_OF_MOTORS));
 	}
 
 	public SparkMaxSimulation(SparkMaxWrapper sparkMaxWrapper, MechanismSimulation mechanismSimulation, DCMotor simulationMotor) {

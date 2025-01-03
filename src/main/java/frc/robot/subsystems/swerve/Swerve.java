@@ -8,9 +8,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -21,6 +21,7 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.SwerveStateHelper;
+import frc.utils.alerts.Alert;
 import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -91,7 +92,7 @@ public class Swerve extends GBSubsystem {
 		try {
 			robotConfig = RobotConfig.fromGUISettings();
 		} catch (Exception exception) {
-			DriverStation.reportError(exception.getMessage(), exception.getStackTrace());
+			new Alert(Alert.AlertType.ERROR, AutonomousConstants.LOG_PATH_PREFIX + "GetGuiSettingsFailedAt").report();
 		} finally {
 			PathPlannerUtils.configPathPlanner(
 				currentPoseSupplier,

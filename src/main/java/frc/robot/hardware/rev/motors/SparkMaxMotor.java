@@ -1,7 +1,9 @@
 package frc.robot.hardware.rev.motors;
 
+import com.revrobotics.REVLibError;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import frc.robot.Robot;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -17,6 +19,8 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Optional;
 
 public abstract class SparkMaxMotor implements IMotor {
+
+	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	protected final SparkMaxWrapper motor;
 	private final Optional<SparkMaxSimulation> sparkMaxSimulationOptional;
@@ -53,6 +57,12 @@ public abstract class SparkMaxMotor implements IMotor {
 		return logPath;
 	}
 
+	public void applyConfiguration(SparkMaxConfiguration configuration) {
+		if (motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES) != REVLibError.kOk) {
+			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
+		}
+	}
+
 	@Override
 	public boolean isConnected() {
 		return connectedInput.connected;
@@ -85,8 +95,7 @@ public abstract class SparkMaxMotor implements IMotor {
 	@Override
 	public void setBrake(boolean brake) {
 		SparkBaseConfig.IdleMode idleMode = brake ? SparkBaseConfig.IdleMode.kBrake : SparkBaseConfig.IdleMode.kCoast;
-		// TODO motor.configure()
-//		motor.setIdleMode(idleMode);
+		motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig((SparkMaxConfig) new SparkMaxConfig().idleMode(idleMode)));
 	}
 
 	@Override

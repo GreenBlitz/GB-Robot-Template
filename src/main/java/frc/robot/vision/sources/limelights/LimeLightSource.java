@@ -92,7 +92,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	}
 
 	private Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
-		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
+		int id = getAprilTagID();
 		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
@@ -121,6 +121,17 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
+
+	/**
+	 * return the aprilTagIt
+	 *
+	 * @return the current april tag ID. In case of dual-target mode or if no apriltag is detected, returns
+	 *         {@code VisionConstants.NO_APRILTAG_ID}
+	 */
+	private int getAprilTagID() {
+		return (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID); // a "safe" cast as long as limelight doesn't break APIs
+	}
+
 	@Override
 	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
@@ -132,7 +143,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 				new StandardDeviations3D(standardDeviationsArray),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE),
-				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs
+				getAprilTagID()
 			)
 		);
 	}
@@ -171,7 +182,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	 */
 	@Override
 	public Optional<Rotation2d> getRobotHeading() {
-		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
+		int id = getAprilTagID();
 		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}

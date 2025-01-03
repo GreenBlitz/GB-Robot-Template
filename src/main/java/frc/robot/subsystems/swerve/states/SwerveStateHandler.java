@@ -8,32 +8,38 @@ import frc.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class SwerveStateHelper {
+public class SwerveStateHandler {
 
 	private final Swerve swerve;
 	private final SwerveConstants swerveConstants;
-	private final Supplier<Optional<Pose2d>> robotPoseSupplier;
-	private final Supplier<Optional<Translation2d>> objectTranslationSupplier;
+	private Optional<Supplier<Pose2d>> robotPoseSupplier;
+	private Supplier<Optional<Translation2d>> objectTranslationSupplier;
 
-	public SwerveStateHelper(
-		Supplier<Optional<Pose2d>> robotPoseSupplier,
-		Supplier<Optional<Translation2d>> objectTranslationSupplier,
-		Swerve swerve
-	) {
+	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
-		this.robotPoseSupplier = robotPoseSupplier;
+		this.robotPoseSupplier = Optional.empty();
+		this.objectTranslationSupplier = Optional::empty;
+	}
+
+	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
+		this.robotPoseSupplier = Optional.of(robotPoseSupplier);
+	}
+
+	public void setObjectTranslationSupplier(Supplier<Optional<Translation2d>> objectTranslationSupplier) {
 		this.objectTranslationSupplier = objectTranslationSupplier;
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		return switch (swerveState.getAimAssist()) {
-			case NONE -> speeds;
-		};
+		if (swerveState.getAimAssist() == AimAssist.NONE) {
+			return speeds;
+		}
+		return speeds;
 	}
 
 

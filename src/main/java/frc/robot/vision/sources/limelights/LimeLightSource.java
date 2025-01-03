@@ -7,9 +7,9 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
+import frc.robot.poseestimator.helpers.StandardDeviations3D;
 import frc.robot.vision.GyroAngleValues;
 import frc.constants.VisionConstants;
-import frc.robot.vision.data.AprilTagStandardDeviations;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.utils.Conversions;
@@ -21,6 +21,7 @@ import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.BooleanSupplier;
 
 import static frc.constants.VisionConstants.LATENCY_BOTPOSE_INDEX;
@@ -128,14 +129,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 				name,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
-				new AprilTagStandardDeviations(
-					standardDeviationsArray[Pose3dComponentsValue.X_VALUE.getIndex()],
-					standardDeviationsArray[Pose3dComponentsValue.Y_VALUE.getIndex()],
-					standardDeviationsArray[Pose3dComponentsValue.Z_VALUE.getIndex()],
-					standardDeviationsArray[Pose3dComponentsValue.ROLL_VALUE.getIndex()],
-					standardDeviationsArray[Pose3dComponentsValue.PITCH_VALUE.getIndex()],
-					standardDeviationsArray[Pose3dComponentsValue.YAW_VALUE.getIndex()]
-				),
+				new StandardDeviations3D(standardDeviationsArray),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE),
 				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs
@@ -155,6 +149,14 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	@Override
 	public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
 		return this.filter = newFilter;
+	}
+
+	@Override
+	public Filter<AprilTagVisionData> applyOnFilter(
+		BiFunction<Filter<AprilTagVisionData>, Filter<AprilTagVisionData>, Filter<AprilTagVisionData>> applicationFunction,
+		Filter<AprilTagVisionData> filterToApplyWith
+	) {
+		return this.filter = applicationFunction.apply(this.filter, filterToApplyWith);
 	}
 
 	@Override

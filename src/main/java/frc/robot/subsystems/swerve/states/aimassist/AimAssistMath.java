@@ -30,15 +30,13 @@ public class AimAssistMath {
 
 	/**
 	 * @formatter:off
-	 * Returns {@link ChassisSpeeds} that aligns you to do object.
+	 * Returns {@link ChassisSpeeds} that aligns you to the object.
 	 * The returned chassis speeds will move you horizontally to the object so your current heading will point to it.
 	 * Example (0 is object, R is robot, > is heading):
 	 * Current Pose:              Ending Pose:
 	 * |            0          |   |   R>       0          |
 	 * |                       |   |                       |
 	 * |   R>                  |   |                       |
-	 * |                       |   |                       |
-	 * |                       |   |                       |
 	 * |                       |   |                       |
 	 * @formatter:on
 	 */

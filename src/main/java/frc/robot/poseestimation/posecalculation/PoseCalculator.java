@@ -58,7 +58,7 @@ public class PoseCalculator {
 		// Set the created values to starting values
 		if (isFirstOdometryUpdate) {// todo - make it happen once
 			lastWheelPositions = observation.wheelPositions();
-			lastGyroAngle = observation.gyroAngle().get();
+			lastGyroAngle = observation.gyroAngle().orElse(new Rotation2d());
 			isFirstOdometryUpdate = false;
 		}
 

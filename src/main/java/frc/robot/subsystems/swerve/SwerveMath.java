@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
@@ -38,18 +37,12 @@ public class SwerveMath {
 	}
 
 	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
-		double xVelocityMetersPerSecond = ToleranceMath.applyDeadband(
-			chassisSpeeds.vxMetersPerSecond,
-			SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
-		);
-		double yVelocityMetersPerSecond = ToleranceMath.applyDeadband(
-			chassisSpeeds.vyMetersPerSecond,
-			SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
-		);
-		double rotationalVelocityRadiansPerSecond = ToleranceMath.applyDeadband(
-			chassisSpeeds.omegaRadiansPerSecond,
-			SwerveConstants.ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND.getRadians()
-		);
+		double xVelocityMetersPerSecond = ToleranceMath
+			.applyDeadband(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND);
+		double yVelocityMetersPerSecond = ToleranceMath
+			.applyDeadband(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND);
+		double rotationalVelocityRadiansPerSecond = ToleranceMath
+			.applyDeadband(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND.getRadians());
 
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityRadiansPerSecond);
 	}
@@ -62,11 +55,6 @@ public class SwerveMath {
 
 	public static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {
 		return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
-	}
-
-	public static Rotation2d clampRotationalVelocity(Rotation2d velocity, Rotation2d maxRotationalVelocity) {
-		return Rotation2d
-			.fromRadians(MathUtil.clamp(velocity.getRadians(), -maxRotationalVelocity.getRadians(), maxRotationalVelocity.getRadians()));
 	}
 
 }

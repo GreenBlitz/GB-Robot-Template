@@ -8,6 +8,7 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.math.PoseMath;
+import frc.utils.math.ToleranceMath;
 
 public class AimAssistMath {
 
@@ -23,8 +24,8 @@ public class AimAssistMath {
 		Rotation2d rotationalVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
 		Rotation2d combinedRotationalVelocityPerSecond = Rotation2d
 			.fromRadians(rotationalVelocityPerSecond.getRadians() + speeds.omegaRadiansPerSecond);
-		Rotation2d clampedRotationalVelocityPerSecond = SwerveMath
-			.clampRotationalVelocity(combinedRotationalVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
+		Rotation2d clampedRotationalVelocityPerSecond = ToleranceMath
+			.clamp(combinedRotationalVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
 
 		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedRotationalVelocityPerSecond.getRadians());
 	}

@@ -29,4 +29,12 @@ public class ToleranceMath {
 		return Math.abs(value) <= deadband ? 0 : value;
 	}
 
+	public static Rotation2d clamp(Rotation2d angle, Rotation2d maxAngle) {
+		return Rotation2d.fromRadians(MathUtil.clamp(angle.getRadians(), -maxAngle.getRadians(), maxAngle.getRadians()));
+	}
+
+	public static Rotation2d clamp(Rotation2d angle, Rotation2d minAngle, Rotation2d maxAngle) {
+		return Rotation2d.fromRadians(MathUtil.clamp(angle.getRadians(), minAngle.getRadians(), maxAngle.getRadians()));
+	}
+
 }

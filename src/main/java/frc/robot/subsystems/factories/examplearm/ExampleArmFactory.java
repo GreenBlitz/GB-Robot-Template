@@ -6,11 +6,12 @@ import frc.robot.subsystems.arm.ExampleArm;
 
 public class ExampleArmFactory {
 
-    public static ExampleArm create(String logPath){
-        return switch (Robot.ROBOT_TYPE){
-            case REAL -> ExampleTalonFXArmBuilder.build(logPath);
+	public static ExampleArm create(String logPath) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> ExampleTalonFXArmBuilder.build(logPath);
 
-            case SIMULATION -> null;
-        };
-    }
+			case SIMULATION -> null;
+		};
+	}
+
 }

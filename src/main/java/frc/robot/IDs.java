@@ -11,8 +11,9 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static class TalonFXIDs{
-		public static final Phoenix6DeviceID ARM_DEVICE_ID = new Phoenix6DeviceID(2); //ToDo: change before merge
+	public static class TalonFXIDs {
+
+		public static final Phoenix6DeviceID ARM_DEVICE_ID = new Phoenix6DeviceID(2); // ToDo: change before merge
 
 
 	}

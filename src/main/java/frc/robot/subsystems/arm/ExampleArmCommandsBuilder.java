@@ -25,7 +25,7 @@ public class ExampleArmCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set voltage to: " + voltage);
 	}
 
-	public Command setPower(double power){
+	public Command setPower(double power) {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
 	}
 

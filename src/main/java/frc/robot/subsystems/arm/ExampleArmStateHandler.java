@@ -17,18 +17,12 @@ public class ExampleArmStateHandler {
 		return arm.getCommandBuilder().moveToPosition(state.getPosition());
 	}
 
-	public Command endSate(ExampleArmState state){
-		switch (state){
-			case HIGH_DROP, MID_DROP -> {
-				return setState((ExampleArmState.LOW_DROP));
-			}
-            case SAFE_HOLD -> {
-				return setState(ExampleArmState.STAY_IN_PLACE);
-			}
-			default -> {
-				return setState(ExampleArmState.SAFE_HOLD);
-			}
-        }
+	public Command endSate(ExampleArmState state) {
+		return switch (state) {
+			case HIGH_DROP, MID_DROP -> setState(ExampleArmState.LOW_DROP);
+			case SAFE_HOLD -> setState(ExampleArmState.STAY_IN_PLACE);
+			case INTAKE, STAY_IN_PLACE, LOW_DROP -> setState(ExampleArmState.SAFE_HOLD);
+		};
 	}
 
 

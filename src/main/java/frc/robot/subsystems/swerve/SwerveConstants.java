@@ -46,7 +46,7 @@ public record SwerveConstants(
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
 	static final double DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND = 0.05;
-	static final Rotation2d ROTATIONAL_VELOCITY_DEADBAND = Rotation2d.fromRadians(0.05);
+	static final Rotation2d ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromRadians(0.05);
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
 	static final Rotation2d CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
 

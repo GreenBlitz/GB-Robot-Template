@@ -1,5 +1,6 @@
 package frc.robot.hardware.rev.motors;
 
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import frc.robot.Robot;
@@ -26,16 +27,20 @@ public abstract class SparkMaxMotor implements IMotor {
 	private final Optional<SparkMaxSimulation> sparkMaxSimulationOptional;
 	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
+	private SparkBase.Warnings warnings;
+	private SparkBase.Faults faults;
 
 	public SparkMaxMotor(String logPath, SparkMaxWrapper motor, MechanismSimulation mechanismSimulation) {
 		this.logPath = logPath;
 		this.motor = motor;
 		this.sparkMaxSimulationOptional = createSimulation(mechanismSimulation);
+		this.warnings = motor.getWarnings();
+		this.faults = motor.getFaults();
 
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
+		createAlerts();
 	}
 
 	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
@@ -46,6 +51,148 @@ public abstract class SparkMaxMotor implements IMotor {
 		return Robot.ROBOT_TYPE.isSimulation() && mechanismSimulation != null
 			? Optional.of(new SparkMaxSimulation(motor, mechanismSimulation))
 			: Optional.empty();
+	}
+
+	public void createAlerts() {
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
+		createFaultAlerts();
+		createWarningAlerts();
+	}
+
+	private void createFaultAlerts() {
+		//@formatter:off
+		AlertManager.addAlert(
+			new PeriodicAlert(
+					Alert.AlertType.ERROR,
+					logPath + "OtherErrorAt",
+					() -> faults.other
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "MotorTypeMismatchAt",
+				() -> faults.motorType
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "ConnectedSensorFaultAt",
+				() -> faults.sensor
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "CANFatalFaultAt",
+				() -> faults.can
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "OverHeatingAt",
+				() -> faults.temperature
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "GateDriveCircuitryFaultAt",
+				() -> faults.gateDriver
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "ClosedLoopControllerMemoryFaultAt",
+				() -> faults.escEeprom
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				logPath + "FirmwareFaultAt",
+				() -> faults.firmware
+			)
+		);
+		//@formatter:on
+	}
+
+	private void createWarningAlerts() {
+		//@formatter:off
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "SignificantVoltageDropAt",
+				() -> warnings.brownout
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "OverCurrentDrawAt",
+				() -> warnings.overcurrent
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "ClosedLoopControllerMemoryWarningAt",
+				() -> warnings.escEeprom
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "ExternalMemoryWarningAt",
+				() -> warnings.extEeprom
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "ConnectedSensorWarningAt",
+				() -> warnings.sensor
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "MotorStalledAt",
+				() -> warnings.stall
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "MotorHasResetAt",
+				() -> warnings.hasReset
+			)
+		);
+
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "OtherWarningAt",
+				() -> warnings.other
+			)
+		);
+		//@formatter:on
 	}
 
 	@Override
@@ -89,6 +236,8 @@ public abstract class SparkMaxMotor implements IMotor {
 			}
 		}
 
+		warnings = motor.getWarnings();
+		faults = motor.getFaults();
 		Logger.processInputs(logPath, connectedInput);
 	}
 

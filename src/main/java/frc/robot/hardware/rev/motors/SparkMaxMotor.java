@@ -3,10 +3,13 @@ package frc.robot.hardware.rev.motors;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.config.SparkBaseConfig;
+import frc.robot.Robot;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.rev.motors.simulation.SparkMaxSimulation;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.utils.alerts.Alert;
@@ -14,19 +17,23 @@ import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Optional;
+
 public abstract class SparkMaxMotor implements IMotor {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	protected final SparkMaxWrapper motor;
+	private final Optional<SparkMaxSimulation> sparkMaxSimulationOptional;
 	private final String logPath;
 	private final ConnectedInputAutoLogged connectedInput;
 	private SparkBase.Warnings warnings;
 	private SparkBase.Faults faults;
 
-	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
+	public SparkMaxMotor(String logPath, SparkMaxWrapper motor, MechanismSimulation mechanismSimulation) {
 		this.logPath = logPath;
 		this.motor = motor;
+		this.sparkMaxSimulationOptional = createSimulation(mechanismSimulation);
 		this.warnings = motor.getWarnings();
 		this.faults = motor.getFaults();
 
@@ -34,6 +41,16 @@ public abstract class SparkMaxMotor implements IMotor {
 		connectedInput.connected = true;
 
 		createAlerts();
+	}
+
+	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
+		this(logPath, motor, null);
+	}
+
+	private Optional<SparkMaxSimulation> createSimulation(MechanismSimulation mechanismSimulation) {
+		return Robot.ROBOT_TYPE.isSimulation() && mechanismSimulation != null
+			? Optional.of(new SparkMaxSimulation(motor, mechanismSimulation))
+			: Optional.empty();
 	}
 
 	public void createAlerts() {
@@ -179,7 +196,9 @@ public abstract class SparkMaxMotor implements IMotor {
 	}
 
 	@Override
-	public void updateSimulation() {}
+	public void updateSimulation() {
+		sparkMaxSimulationOptional.ifPresent(SparkMaxSimulation::updateMotor);
+	}
 
 	public String getLogPath() {
 		return logPath;

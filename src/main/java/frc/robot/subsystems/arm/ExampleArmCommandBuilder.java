@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
 
-public class ArmCommandBuilder {
+public class ExampleArmCommandBuilder {
 
-	private final Arm arm;
+	private final ExampleArm arm;
 
-	public ArmCommandBuilder(Arm arm) {
+	public ExampleArmCommandBuilder(ExampleArm arm) {
 		this.arm = arm;
 	}
 
@@ -18,11 +18,15 @@ public class ArmCommandBuilder {
 	}
 
 	public Command stayInPlace() {
-		return new RunCommand(arm::stayInPlace, arm).withName("Stay in place");
+		return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace), "Stay in place");
 	}
 
 	public Command setVoltage(double voltage) {
-		return new RunCommand(() -> arm.setVoltage(voltage), arm).withName("Set voltage to: " + voltage);
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set voltage to: " + voltage);
+	}
+
+	public Command setPower(double power){
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
 	}
 
 

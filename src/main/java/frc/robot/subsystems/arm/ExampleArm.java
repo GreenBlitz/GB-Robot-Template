@@ -7,20 +7,20 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.ToleranceUtils;
 
-public class Arm extends GBSubsystem {
+public class ExampleArm extends GBSubsystem {
 
 	public final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(130);
 	public final Rotation2d MINIMUM_POSITION = Rotation2d.fromDegrees(-130);
 	public final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
 
 	private final ControllableMotor motor;
-	private final ArmCommandBuilder commandBuilder;
+	private final ExampleArmCommandBuilder commandBuilder;
 	private final IRequest<Rotation2d> positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> voltageSignal;
 
-	public Arm(
+	public ExampleArm(
 		String logPath,
 		ControllableMotor motor,
 		IRequest<Rotation2d> positionRequest,
@@ -30,11 +30,11 @@ public class Arm extends GBSubsystem {
 	) {
 		super(logPath);
 		this.motor = motor;
-		this.commandBuilder = new ArmCommandBuilder(this);
 		this.positionRequest = positionRequest;
 		this.voltageRequest = voltageRequest;
 		this.positionSignal = positionSignal;
 		this.voltageSignal = voltageSignal;
+		this.commandBuilder = new ExampleArmCommandBuilder(this);
 
 		motor.resetPosition(STARTING_POSITION);
 		updateInputs();
@@ -45,20 +45,12 @@ public class Arm extends GBSubsystem {
 		updateInputs();
 	}
 
-	public ControllableMotor getMotor() {
-		return motor;
+	private void updateInputs() {
+		motor.updateInputs(positionSignal, voltageSignal);
 	}
 
-	public ArmCommandBuilder getCommandBuilder() {
+	public ExampleArmCommandBuilder getCommandBuilder() {
 		return commandBuilder;
-	}
-
-	public IRequest<Rotation2d> getPositionRequest() {
-		return positionRequest;
-	}
-
-	public IRequest<Double> getVoltageRequest() {
-		return voltageRequest;
 	}
 
 	public Rotation2d getPosition() {
@@ -67,10 +59,6 @@ public class Arm extends GBSubsystem {
 
 	public Double getVoltage() {
 		return voltageSignal.getLatestValue();
-	}
-
-	private void updateInputs() {
-		motor.updateInputs(positionSignal, voltageSignal);
 	}
 
 	public void setBrake(boolean brake) {

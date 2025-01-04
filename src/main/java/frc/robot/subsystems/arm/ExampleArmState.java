@@ -2,7 +2,7 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public enum ArmState {
+public enum ExampleArmState {
 
 	INTAKE(Rotation2d.fromDegrees(-115)),
 	LOW_DROP(Rotation2d.fromDegrees(-10)),
@@ -14,7 +14,7 @@ public enum ArmState {
 
 	private final Rotation2d position;
 
-	ArmState(Rotation2d position) {
+	ExampleArmState(Rotation2d position) {
 		this.position = position;
 	}
 

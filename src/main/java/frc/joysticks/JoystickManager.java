@@ -8,8 +8,7 @@ import frc.JoystickBindings.JoystickBindSet;
 
 public class JoystickManager {
 
-	private static final int NUMBER_OF_JOYSTICKS = 6;
-	private static final SmartJoystick[] joysticks = new SmartJoystick[NUMBER_OF_JOYSTICKS];
+	private static final SmartJoystick[] joysticks = new SmartJoystick[JoystickConstants.NUMBER_OF_JOYSTICK_PORTS];
 
 	private static void setJoystickBindSet(int port, JoystickBindSet joystickBindSet, Robot robot) {
 		if (joysticks[port] != null) {

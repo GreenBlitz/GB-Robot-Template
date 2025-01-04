@@ -54,9 +54,15 @@ public class SmartJoystick {
 
 		this.bindSet = bindSet;
 
+		//@formatter:off
 		AlertManager.addAlert(
-			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> (!isConnected() && this.bindSet != JoystickBindSet.NONE))
+			new PeriodicAlert(
+					Alert.AlertType.ERROR,
+					logPath + "DisconnectedAt",
+					() -> (!isConnected() && this.bindSet != JoystickBindSet.NONE
+					))
 		);
+		//@formatter:on
 	}
 
 	public String getLogPath() {

@@ -14,7 +14,8 @@ public class JoystickBindings {
 		EMPTY,
 		SWERVE,
 		SECOND,
-		TEST;
+		TESTING
+
 	}
 
 	public static void configureBindings(SmartJoystick joystick, Robot robot) {}

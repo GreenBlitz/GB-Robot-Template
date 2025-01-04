@@ -1,6 +1,5 @@
 package frc.robot.subsystems.factories.examplearm;
 
-
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,10 +22,13 @@ public class ExampleTalonFXArmBuilder {
         Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(0).withEnableFOC(true));
         Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
 
-        Phoenix6DeviceID deviceID = new Phoenix6DeviceID(ARM_DEVICE_ID.id());
-        SysIdRoutine.Config config = new SysIdRoutine.Config();
-        TalonFXMotor motor = new TalonFXMotor(logPath, deviceID, config);
-        Phoenix6AngleSignal positionSignal = new Phoenix6AngleSignal("Arm position", null, AngleUnit.ROTATIONS);
+        SysIdRoutine.Config config = buildSysidConfig();
+        TalonFXMotor motor = new TalonFXMotor(logPath, ARM_DEVICE_ID, config);
+        Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getDevice().getPosition(), 1, AngleUnit.ROTATIONS);
+    }
+
+    private static SysIdRoutine.Config buildSysidConfig(){
+
     }
 
 }

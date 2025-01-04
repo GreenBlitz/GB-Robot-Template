@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
 
-public class ExampleArmCommandBuilder {
+public class ExampleArmCommandsBuilder {
 
 	private final ExampleArm arm;
 
-	public ExampleArmCommandBuilder(ExampleArm arm) {
+	public ExampleArmCommandsBuilder(ExampleArm arm) {
 		this.arm = arm;
 	}
 

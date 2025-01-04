@@ -14,7 +14,7 @@ public class ExampleArm extends GBSubsystem {
 	public final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
 
 	private final ControllableMotor motor;
-	private final ExampleArmCommandBuilder commandBuilder;
+	private final ExampleArmCommandsBuilder commandBuilder;
 	private final IRequest<Rotation2d> positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final InputSignal<Rotation2d> positionSignal;
@@ -34,7 +34,7 @@ public class ExampleArm extends GBSubsystem {
 		this.voltageRequest = voltageRequest;
 		this.positionSignal = positionSignal;
 		this.voltageSignal = voltageSignal;
-		this.commandBuilder = new ExampleArmCommandBuilder(this);
+		this.commandBuilder = new ExampleArmCommandsBuilder(this);
 
 		motor.resetPosition(STARTING_POSITION);
 		updateInputs();
@@ -49,7 +49,7 @@ public class ExampleArm extends GBSubsystem {
 		motor.updateInputs(positionSignal, voltageSignal);
 	}
 
-	public ExampleArmCommandBuilder getCommandBuilder() {
+	public ExampleArmCommandsBuilder getCommandBuilder() {
 		return commandBuilder;
 	}
 
@@ -81,8 +81,8 @@ public class ExampleArm extends GBSubsystem {
 		setTargetPosition(positionSignal.getLatestValue());
 	}
 
-	public boolean isAtPosition(Rotation2d angle, Rotation2d tolerance) {
-		return ToleranceUtils.isNearWrapped(angle, positionSignal.getLatestValue(), tolerance);
+	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
+		return ToleranceUtils.isNearWrapped(position, positionSignal.getLatestValue(), tolerance);
 	}
 
 }

@@ -21,12 +21,4 @@ public class AutonomousConstants {
 		0.577
 	);
 
-	public static final RobotConfig RAFUL_ROBOT_CONFIG = new RobotConfig(
-		60,
-		6,
-		new ModuleConfig(0.0234, 7.98, 1.1, DCMotor.getKrakenX60Foc(1), 60, 1),
-		0.6946,
-		0.556
-	);
-
 }

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.constants.GlobalConstants;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimation.PoseEstimator;
@@ -58,7 +59,11 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+		swerve.configPathPlanner(
+			poseEstimator::getCurrentPose,
+			poseEstimator::resetPose,
+			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
+		);
 	}
 
 

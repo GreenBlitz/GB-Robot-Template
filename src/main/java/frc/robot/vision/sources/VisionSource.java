@@ -5,7 +5,7 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public interface VisionSource<ReturnType extends VisionData> {
 
@@ -23,11 +23,8 @@ public interface VisionSource<ReturnType extends VisionData> {
 		setFilter(VisionFilters.getNonFilteringFilter());
 	}
 
-	default void applyOnExistingFilterWithNewFilter(
-		BiFunction<Filter<ReturnType>, Filter<ReturnType>, Filter<ReturnType>> applicationFunction,
-		Filter<ReturnType> filterToApplyWith
-	) {
-		setFilter(applicationFunction.apply(getFilter(), filterToApplyWith));
+	default void applyOnFilter(Function<Filter<ReturnType>, Filter<ReturnType>> applicationFunction) {
+		setFilter(applicationFunction.apply(getFilter()));
 	}
 
 }

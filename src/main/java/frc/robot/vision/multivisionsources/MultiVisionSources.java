@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MultiVisionSources<ReturnType extends VisionData> {
@@ -36,12 +35,9 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
 	}
 
-	public void applyOnExistingFiltersWithNewFilter(
-		BiFunction<Filter<ReturnType>, Filter<ReturnType>, Filter<ReturnType>> applicationFunction,
-		Filter<ReturnType> filterToApplyWith
-	) {
+	public void applyOnFilters(Function<Filter<ReturnType>, Filter<ReturnType>> applicationFunction) {
 		for (VisionSource<ReturnType> visionSource : visionSources) {
-			visionSource.applyOnExistingFilterWithNewFilter(applicationFunction, filterToApplyWith);
+			visionSource.applyOnFilter(applicationFunction);
 		}
 	}
 

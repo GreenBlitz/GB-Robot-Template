@@ -1,6 +1,7 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.joysticks.SmartJoystick;
@@ -40,6 +41,14 @@ public class JoystickBindings {
 		Function<Command, Trigger> function
 	) {
 		function.apply(new InitExecuteCommand(initRun, executeRun)).and(() -> joystick.getBindSet() == bindSetRequirement);
+	}
+
+	private static void applySwerveBindings(SmartJoystick joystick){
+		bind(joystick, joystick.A, BindSet.SWERVE, new RunCommand(() -> System.out.println("seeeerve")), joystick.A::whileTrue);
+	}
+
+	private static void applySecondBindings(SmartJoystick joystick){
+		bind(joystick, joystick.A, BindSet.SECOND, new RunCommand(() -> System.out.println("secoooonde")), joystick.A::whileTrue);
 	}
 
 }

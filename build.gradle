@@ -12,7 +12,8 @@ java {
 	targetCompatibility = JavaVersion.VERSION_17
 }
 
-def ROBOT_MAIN_CLASS = "frc.robot.Main"
+def ROBOT_MAIN_CLASS = "frc.Main"
+def COMPUTER_MAIN_CLASS = "frc.ComputerMain"
 def ROUTER_IP = "10.45.90.2"
 def USB_B_IP = "172.22.11.2"
 def IPS = [ROUTER_IP, USB_B_IP]
@@ -202,7 +203,7 @@ tasks.register('runComputerPrograms', JavaExec) {
 	dependsOn('setReachableIP')
 	description = "Run the main class in ComputerMain"
 	classpath = sourceSets.main.runtimeClasspath
-	mainClass = "frc.robot.ComputerMain"
+	mainClass = COMPUTER_MAIN_CLASS
 	doFirst {
 		if (reachableIP == null || reachableIP.isEmpty()) {
 			throw new GradleException("reachableIP is null or empty. Please set a valid IP address.")

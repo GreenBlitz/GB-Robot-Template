@@ -57,7 +57,7 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getAllOdometryObservations()[0].wheelPositions(),
 			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE,
-			new VisionDenoiser(10, "VisionDenoiser/")
+			new VisionDenoiser(VisionConstants.DENOISING_SAMPLES, "VisionDenoiser/")
 		);
 
 

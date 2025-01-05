@@ -41,6 +41,7 @@ public class VisionConstants {
 		}
 	}
 
+
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
 
 	public static final int NO_APRILTAG_ID = -1;
@@ -60,5 +61,7 @@ public class VisionConstants {
 		new LimeLightSource("limelight-front", MULTI_VISION_SOURCES_LOGPATH, DEFAULT_VISION_FILTER),
 		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, DEFAULT_VISION_FILTER)
 	);
+
+	public static final int DENOISING_SAMPLES = 10;
 
 }

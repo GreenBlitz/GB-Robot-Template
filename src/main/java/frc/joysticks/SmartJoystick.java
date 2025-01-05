@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.JoystickBindings.JoystickBindSet;
+import frc.JoystickBindings.BindSet;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -22,13 +22,13 @@ public class SmartJoystick {
 	private final double deadzone;
 	private final String logPath;
 
-	private JoystickBindSet bindSet;
+	private BindSet bindSet;
 
-	public SmartJoystick(int port, JoystickBindSet bindSet) {
+	public SmartJoystick(int port, BindSet bindSet) {
 		this(port, DEADZONE, bindSet);
 	}
 
-	private SmartJoystick(int port, double deadzone, JoystickBindSet bindSet) {
+	private SmartJoystick(int port, double deadzone, BindSet bindSet) {
 		this.deadzone = deadzone;
 		this.joystick = new Joystick(port);
 		this.logPath = "Joysticks/" + joystick.getPort() + "/";
@@ -59,7 +59,7 @@ public class SmartJoystick {
 			new PeriodicAlert(
 					Alert.AlertType.ERROR,
 					logPath + "DisconnectedAt",
-					() -> (!isConnected() && this.bindSet != JoystickBindSet.NONE
+					() -> (!isConnected() && this.bindSet != BindSet.NONE
 					))
 		);
 		//@formatter:on
@@ -73,7 +73,7 @@ public class SmartJoystick {
 		return joystick.getPort();
 	}
 
-	public JoystickBindSet getBindSet() {
+	public BindSet getBindSet() {
 		return bindSet;
 	}
 
@@ -81,7 +81,7 @@ public class SmartJoystick {
 		return joystick.isConnected();
 	}
 
-	public void setBindSet(JoystickBindSet bindSet) {
+	public void setBindSet(BindSet bindSet) {
 		this.bindSet = bindSet;
 	}
 

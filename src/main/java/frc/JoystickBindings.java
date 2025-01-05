@@ -6,9 +6,11 @@ import frc.robot.Robot;
 import frc.joysticks.SmartJoystick;
 import frc.utils.utilcommands.InitExecuteCommand;
 
+import java.util.function.Function;
+
 public class JoystickBindings {
 
-	public enum JoystickBindSet {
+	public enum BindSet {
 
 		NONE,
 		EMPTY,
@@ -20,12 +22,24 @@ public class JoystickBindings {
 
 	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
 
-	private static void bind(SmartJoystick joystick, Trigger bind, JoystickBindSet bindSetRequirement, Command command) {
-		bind.and(() -> joystick.getBindSet() == bindSetRequirement).onTrue(command);
+	private static void bind(
+		SmartJoystick joystick,
+		Trigger bind,
+		BindSet bindSetRequirement,
+		Command command,
+		Function<Command, Trigger> function
+	) {
+		function.apply(command).and(() -> joystick.getBindSet() == bindSetRequirement);
 	}
 
-	private static void bind(SmartJoystick joystick, JoystickBindSet bindSetRequirement, Runnable initRun, Runnable executeRun) {
-		new InitExecuteCommand(initRun, executeRun).onlyWhile(() -> bindSetRequirement == joystick.getBindSet());
+	private static void bind(
+		SmartJoystick joystick,
+		BindSet bindSetRequirement,
+		Runnable initRun,
+		Runnable executeRun,
+		Function<Command, Trigger> function
+	) {
+		function.apply(new InitExecuteCommand(initRun, executeRun)).and(() -> joystick.getBindSet() == bindSetRequirement);
 	}
 
 }

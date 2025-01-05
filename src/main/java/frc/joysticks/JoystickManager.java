@@ -4,39 +4,40 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.JoystickBindings;
-import frc.JoystickBindings.JoystickBindSet;
+import frc.JoystickBindings.BindSet;
 
 public class JoystickManager {
 
 	private static final SmartJoystick[] joysticks = new SmartJoystick[JoystickConstants.NUMBER_OF_JOYSTICK_PORTS];
 
-	private static void setJoystickBindSet(int port, JoystickBindSet joystickBindSet, Robot robot) {
+	private static void setBindSet(int port, BindSet bindSet, Robot robot) {
 		if (joysticks[port] != null) {
-			joysticks[port].setBindSet(joystickBindSet);
+			joysticks[port].setBindSet(bindSet);
 		} else if (joysticks[port] == null) {
-			createJoystick(port, joystickBindSet, robot);
+			createJoystick(port, robot);
+			joysticks[port].setBindSet(bindSet);
 		}
 	}
 
-	private static void createJoystick(int port, JoystickBindSet joystickBindSet, Robot robot) {
-		joysticks[port] = new SmartJoystick(port, joystickBindSet);
+	private static void createJoystick(int port, Robot robot) {
+		joysticks[port] = new SmartJoystick(port, BindSet.NONE);
 		JoystickBindings.configureBindings(joysticks[port], robot);
 	}
 
-	private static void addOptions(SendableChooser<JoystickBindSet> chooser, int port, Robot robot) {
-		chooser.setDefaultOption("NONE", JoystickBindSet.NONE);
-		for (JoystickBindSet option : JoystickBindSet.values()) {
+	private static void addOptions(SendableChooser<BindSet> chooser, int port, Robot robot) {
+		chooser.setDefaultOption("NONE", BindSet.NONE);
+		for (BindSet option : BindSet.values()) {
 			chooser.addOption(String.valueOf(option), option);
 		}
 
-		chooser.onChange((joystickBindSet) -> setJoystickBindSet(port, (chooser.getSelected()), robot));
+		chooser.onChange((bindSet) -> setBindSet(port, (chooser.getSelected()), robot));
 		SmartDashboard.putData(port + " joystick", chooser);
 	}
 
 	public static void putChoosersToDashboard(Robot robot) {
 		int currentPort = 0;
 		for (SmartJoystick joystick : joysticks) {
-			SendableChooser<JoystickBindSet> bindSetChooser = new SendableChooser<>();
+			SendableChooser<BindSet> bindSetChooser = new SendableChooser<>();
 			addOptions(bindSetChooser, currentPort, robot);
 			currentPort++;
 		}

@@ -6,6 +6,7 @@ import frc.robot.vision.sources.VisionSource;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -13,11 +14,11 @@ import java.util.function.Function;
 public class MultiVisionSources<ReturnType extends VisionData> {
 
 	protected final String logPath;
-	private final List<VisionSource<ReturnType>> visionSources;
+	protected final List<VisionSource<ReturnType>> visionSources;
 
 	@SafeVarargs
 	public MultiVisionSources(String logPath, VisionSource<ReturnType>... visionSources) {
-		this(logPath, List.of(visionSources));
+		this(logPath, Arrays.asList(visionSources));
 	}
 
 	public MultiVisionSources(String logPath, List<VisionSource<ReturnType>> visionSources) {
@@ -25,8 +26,17 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		this.visionSources = visionSources;
 	}
 
-	protected List<VisionSource<ReturnType>> getVisionSources() {
-		return visionSources;
+	public ArrayList<ReturnType> getUnfilteredVisionData() {
+		return createMappedCopyOfSources(visionSources, VisionSource::getVisionData);
+	}
+
+	public ArrayList<ReturnType> getFilteredVisionData() {
+		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
+	}
+
+	public void log() {
+		logPoses(logPath + VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
+		logPoses(logPath + VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
 	}
 
 	protected static <ReturnType extends VisionData> ArrayList<ReturnType> createMappedCopyOfSources(
@@ -42,27 +52,10 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		return output;
 	}
 
-	public ArrayList<ReturnType> getUnfilteredVisionData() {
-		return createMappedCopyOfSources(visionSources, VisionSource::getVisionData);
-	}
-
-	public ArrayList<ReturnType> getFilteredVisionData() {
-		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
-	}
-
-	private static <ReturnType extends VisionData> void logPoses(String logPath, List<ReturnType> observations) {
+	protected static <ReturnType extends VisionData> void logPoses(String logPath, List<ReturnType> observations) {
 		for (ReturnType observation : observations) {
 			Logger.recordOutput(logPath + observation.getSourceName(), observation.getEstimatedPose());
 		}
-	}
-
-	private void log() {
-		logPoses(logPath + VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
-		logPoses(logPath + VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
-	}
-
-	public void periodic() {
-		log();
 	}
 
 }

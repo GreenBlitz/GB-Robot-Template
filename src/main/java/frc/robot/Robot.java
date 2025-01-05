@@ -54,7 +54,8 @@ public class Robot {
 		this.poseEstimator = new WPILibPoseEstimator(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
-			swerve.getAllOdometryObservations()[0].wheelPositions()
+			swerve.getAllOdometryObservations()[0].wheelPositions(),
+			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE
 		);
 
 
@@ -65,7 +66,7 @@ public class Robot {
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 			swerve::getGyroAbsoluteYaw,
 			() -> poseEstimator.getEstimatedPose().getRotation().plus(Rotation2d.k180deg),
-			VisionConstants.DEFAULT_VISION_SOURCES
+			VisionConstants.DEFAULT_VISION_POSEESTIMATING_SOURCES
 		);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
@@ -84,6 +85,7 @@ public class Robot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		superStructure.periodic();
+		aprilTagVisionSources.log();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

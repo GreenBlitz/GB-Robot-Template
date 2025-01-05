@@ -17,7 +17,7 @@ public interface VisionSource<ReturnType extends VisionData> {
 	void setFilter(Filter<ReturnType> newFilter);
 
 	default void clearFilter() {
-		setFilter(new Filter<>(data -> true));
+		setFilter(VisionSourceConstants.NON_FILTERING_FILTER());
 	}
 
 	void applyOnFilter(

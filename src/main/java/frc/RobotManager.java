@@ -33,7 +33,7 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-		JoystickManager.putChoosersToDashboard(robot);
+		JoystickManager.createDashboardChoosers(robot);
 	}
 
 	@Override

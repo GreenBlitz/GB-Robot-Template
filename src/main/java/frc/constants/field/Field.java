@@ -1,7 +1,9 @@
 package frc.constants.field;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtils;
 import frc.utils.math.MirrorMath;
@@ -26,6 +28,8 @@ public class Field {
 		}
 		return new Translation3d(MirrorMath.getMirroredX(SPEAKER.getX()), SPEAKER.getY(), SPEAKER.getZ());
 	}
+
+	public static Translation2d kAmpCenter = new Translation2d(Units.inchesToMeters(72.455), Units.inchesToMeters(322.996));
 
 	private static final Rotation2d ANGLE_TO_AMP = Rotation2d.fromDegrees(90);
 

@@ -53,7 +53,8 @@ public class VisionConstants {
 		return (T iDontCare) -> true;
 	}
 
-	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = VisionFilters.doPolymorphismBecauseJavaCanʼt(VisionFilters.isOnGround(0.2)); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
+	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = VisionFilters
+		.doPolymorphismBecauseJavaCanʼt(VisionFilters.isOnGround(0.2)); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
 
 	public static List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES = List.of(
 		new LimeLightSource("limelight-front", MULTI_VISION_SOURCES_LOGPATH, DEFAULT_VISION_FILTER),

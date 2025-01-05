@@ -54,9 +54,9 @@ public class simulatedAccelerometer extends GBSubsystem implements IAcceleromete
 	@Override
 	protected void subsystemPeriodic() {
 		accelerationX = (previousVelocity.vxMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vxMetersPerSecond)
-			/ TimeUtils.getCurrentCycleTimeSeconds();
+			/ TimeUtils.getCurrentTimeSeconds();
 		accelerationY = (previousVelocity.vyMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vyMetersPerSecond)
-			/ TimeUtils.getCurrentCycleTimeSeconds();
+			/ TimeUtils.getCurrentTimeSeconds();
 		previousVelocity = robotSimulatedVelocityRelativeToRobot.get();
 	}
 

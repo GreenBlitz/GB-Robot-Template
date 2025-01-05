@@ -21,7 +21,7 @@ public class JoystickManager {
 		if (joysticks[port].getBindSet().getBindSet() == BindSet.values().length - 1) {
 			joysticks[port].setBindSet(BindSet.EMPTY);
 		} else {
-			setBindSet(port, BindSet.intToBindSet(joysticks[port].getBindSet().getBindSet() + 1), robot);
+			setBindSet(port, BindSet.getBindSetByIndex(joysticks[port].getBindSet().getBindSet() + 1), robot);
 		}
 	}
 

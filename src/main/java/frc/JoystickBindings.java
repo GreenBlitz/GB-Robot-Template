@@ -15,18 +15,18 @@ public class JoystickBindings {
 		SECOND(3),
 		TESTING(4);
 
-		private final int bindSet;
+		private final int index;
 
 		BindSet(int bindSet) {
-			this.bindSet = bindSet;
+			this.index = bindSet;
 		}
 
 		public int getBindSet() {
-			return bindSet;
+			return index;
 		}
 
-		public static BindSet intToBindSet(int bindSet) {
-			return switch (bindSet) {
+		public static BindSet getBindSetByIndex(int index) {
+			return switch (index) {
 				case 0 -> NONE;
 				case 1 -> EMPTY;
 				case 2 -> SWERVE;

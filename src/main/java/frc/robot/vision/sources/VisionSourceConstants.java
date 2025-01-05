@@ -4,7 +4,7 @@ import frc.utils.Filter;
 
 public class VisionSourceConstants {
 
-	public static <T> Filter<T> NON_FILTERING_FILTER() {
+	public static <T> Filter<T> getNonFilteringFilter() {
 		return new Filter<>(data -> true);
 	}
 

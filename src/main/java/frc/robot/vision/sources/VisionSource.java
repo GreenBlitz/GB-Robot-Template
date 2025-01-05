@@ -22,7 +22,7 @@ public interface VisionSource<ReturnType extends VisionData> {
 		setFilter(VisionSourceConstants.getNonFilteringFilter());
 	}
 
-	default void applyOnFilter(
+	default void applyOnExistingFilterWithNewFilter(
 		BiFunction<Filter<ReturnType>, Filter<ReturnType>, Filter<ReturnType>> applicationFunction,
 		Filter<ReturnType> filterToApplyWith
 	) {

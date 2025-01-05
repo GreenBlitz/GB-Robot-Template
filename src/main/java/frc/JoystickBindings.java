@@ -1,13 +1,9 @@
 package frc;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.joysticks.SmartJoystick;
-import frc.utils.utilcommands.InitExecuteCommand;
-
-import java.util.function.Function;
 
 public class JoystickBindings {
 
@@ -26,7 +22,7 @@ public class JoystickBindings {
 		applySwerveBindings(joystick);
 	}
 
-	private static Trigger bind(
+	private static Trigger bindSetTrigger(
 		SmartJoystick joystick,
 		Trigger bind,
 		BindSet bindSetRequirement
@@ -34,7 +30,7 @@ public class JoystickBindings {
 		return bind.and(() -> joystick.getBindSet() == bindSetRequirement);
 	}
 
-	private static Trigger bind(
+	private static Trigger bindSetTrigger(
 		SmartJoystick joystick,
 		BindSet bindSetRequirement
 	) {
@@ -42,11 +38,11 @@ public class JoystickBindings {
 	}
 
 	private static void applySwerveBindings(SmartJoystick joystick){
-		bind(joystick, joystick.A, BindSet.SWERVE).whileTrue(new RunCommand(() -> System.out.println("sweeeeeerve")));
+		bindSetTrigger(joystick, BindSet.SWERVE).whileTrue(new RunCommand(() -> System.out.println(joystick.getLogPath())));
 	}
 
 	private static void applySecondBindings(SmartJoystick joystick){
-		bind(joystick, joystick.A, BindSet.SECOND).whileTrue(new RunCommand(() -> System.out.println("secoooond")));
+		bindSetTrigger(joystick, BindSet.SWERVE).whileTrue(new RunCommand(() -> System.out.println(joystick.getLogPath())));
 
 	}
 

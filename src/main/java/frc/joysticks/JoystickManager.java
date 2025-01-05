@@ -18,10 +18,10 @@ public class JoystickManager {
 	}
 
 	public static void cycleBindSet(int port, Robot robot) {
-		if (joysticks[port].getBindSet().getBindSet() == BindSet.values().length - 1) {
+		if (joysticks[port].getBindSet().getIndex() == BindSet.values().length - 1) {
 			joysticks[port].setBindSet(BindSet.EMPTY);
 		} else {
-			setBindSet(port, BindSet.getBindSetByIndex(joysticks[port].getBindSet().getBindSet() + 1), robot);
+			setBindSet(port, BindSet.getBindSetByIndex(joysticks[port].getBindSet().getIndex() + 1), robot);
 		}
 	}
 

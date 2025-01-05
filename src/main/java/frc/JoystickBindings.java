@@ -17,11 +17,11 @@ public class JoystickBindings {
 
 		private final int index;
 
-		BindSet(int bindSet) {
-			this.index = bindSet;
+		BindSet(int index) {
+			this.index = index;
 		}
 
-		public int getBindSet() {
+		public int getIndex() {
 			return index;
 		}
 
@@ -41,7 +41,7 @@ public class JoystickBindings {
 	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
 
 	private static Trigger bindSetTrigger(SmartJoystick joystick, Trigger bind, BindSet bindSetRequirement) {
-		return bind.and(() -> joystick.getBindSet() == bindSetRequirement);
+		return bind.and(() -> bindSetRequirement == joystick.getBindSet());
 	}
 
 	private static Trigger bindSetTrigger(SmartJoystick joystick, BindSet bindSetRequirement) {

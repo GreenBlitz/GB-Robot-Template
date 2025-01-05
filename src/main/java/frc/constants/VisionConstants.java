@@ -4,7 +4,6 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.LimeLightSource;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;

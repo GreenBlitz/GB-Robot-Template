@@ -60,9 +60,10 @@ public class SwerveStateHandler {
 	}
 
 	public ChassisSpeeds ampCool(ChassisSpeeds speeds, SwerveState swerveState) {
+		Pose2d rp = robotPoseSupplier.get().get();
 		return AimAssistMath.getObjectAssistedSpeeds(
 			speeds,
-			robotPoseSupplier.get().get(),
+			new Pose2d(rp.getX(), rp.getY(), Field.getAngleToAmp()),
 			Field.kAmpCenter,
 			swerveConstants,
 			swerveState

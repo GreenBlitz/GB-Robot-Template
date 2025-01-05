@@ -4,7 +4,6 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
 
 public interface VisionSource<ReturnType extends VisionData> {
 
@@ -16,13 +15,10 @@ public interface VisionSource<ReturnType extends VisionData> {
 
 	void setFilter(Filter<ReturnType> newFilter);
 
+	Filter<ReturnType> getFilter();
+
 	default void clearFilter() {
 		setFilter(VisionSourceConstants.NON_FILTERING_FILTER());
 	}
-
-	void applyOnFilter(
-		BiFunction<Filter<ReturnType>, Filter<ReturnType>, Filter<ReturnType>> applicationFunction,
-		Filter<ReturnType> filterToApplyWith
-	);
 
 }

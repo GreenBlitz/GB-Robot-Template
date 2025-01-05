@@ -26,32 +26,28 @@ public class JoystickBindings {
 		applySwerveBindings(joystick);
 	}
 
-	private static void bind(
+	private static Trigger bind(
 		SmartJoystick joystick,
 		Trigger bind,
-		BindSet bindSetRequirement,
-		Command command,
-		Function<Command, Trigger> function
+		BindSet bindSetRequirement
 	) {
-		function.apply(command).and(() -> joystick.getBindSet() == bindSetRequirement);
+		return bind.and(() -> joystick.getBindSet() == bindSetRequirement);
 	}
 
-	private static void bind(
+	private static Trigger bind(
 		SmartJoystick joystick,
-		BindSet bindSetRequirement,
-		Runnable initRun,
-		Runnable executeRun,
-		Function<Command, Trigger> function
+		BindSet bindSetRequirement
 	) {
-		function.apply(new InitExecuteCommand(initRun, executeRun)).and(() -> joystick.getBindSet() == bindSetRequirement);
+		return new Trigger(() -> bindSetRequirement == joystick.getBindSet());
 	}
 
 	private static void applySwerveBindings(SmartJoystick joystick){
-		bind(joystick, joystick.A, BindSet.SWERVE, new RunCommand(() -> System.out.println("seeeerve")), joystick.A::whileTrue);
+		bind(joystick, joystick.A, BindSet.SWERVE).whileTrue(new RunCommand(() -> System.out.println("sweeeeeerve")));
 	}
 
 	private static void applySecondBindings(SmartJoystick joystick){
-		bind(joystick, joystick.A, BindSet.SECOND, new RunCommand(() -> System.out.println("secoooonde")), joystick.A::whileTrue);
+		bind(joystick, joystick.A, BindSet.SECOND).whileTrue(new RunCommand(() -> System.out.println("secoooond")));
+
 	}
 
 }

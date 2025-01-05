@@ -21,7 +21,10 @@ public class JoystickBindings {
 
 	}
 
-	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
+	public static void configureBindings(SmartJoystick joystick, Robot robot) {
+		applySecondBindings(joystick);
+		applySwerveBindings(joystick);
+	}
 
 	private static void bind(
 		SmartJoystick joystick,

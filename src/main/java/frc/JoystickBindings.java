@@ -22,24 +22,19 @@ public class JoystickBindings {
 
 	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
 
-	private static void bind(
-		SmartJoystick joystick,
-		Trigger bind,
-		BindSet bindSetRequirement,
-		Command command,
-		Function<Command, Trigger> function
+	private static Trigger bind(
+			SmartJoystick joystick,
+			Trigger bind,
+			BindSet bindSetRequirement
 	) {
-		function.apply(command).and(() -> joystick.getBindSet() == bindSetRequirement);
+		return bind.and(() -> joystick.getBindSet() == bindSetRequirement);
 	}
 
-	private static void bind(
-		SmartJoystick joystick,
-		BindSet bindSetRequirement,
-		Runnable initRun,
-		Runnable executeRun,
-		Function<Command, Trigger> function
+	private static Trigger bind(
+			SmartJoystick joystick,
+			BindSet bindSetRequirement
 	) {
-		function.apply(new InitExecuteCommand(initRun, executeRun)).and(() -> joystick.getBindSet() == bindSetRequirement);
+		return new Trigger(() -> bindSetRequirement == joystick.getBindSet());
 	}
 
 }

@@ -16,13 +16,17 @@ public interface VisionSource<ReturnType extends VisionData> {
 
 	void setFilter(Filter<ReturnType> newFilter);
 
+	Filter<ReturnType> getFilter();
+
 	default void clearFilter() {
 		setFilter(VisionSourceConstants.getNonFilteringFilter());
 	}
 
-	void applyOnFilter(
+	default void applyOnFilter(
 		BiFunction<Filter<ReturnType>, Filter<ReturnType>, Filter<ReturnType>> applicationFunction,
 		Filter<ReturnType> filterToApplyWith
-	);
+	) {
+		setFilter(applicationFunction.apply(getFilter(), filterToApplyWith));
+	}
 
 }

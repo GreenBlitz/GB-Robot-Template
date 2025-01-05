@@ -11,7 +11,7 @@ import org.ejml.simple.SimpleMatrix;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class simulatedAccelerometer extends GBSubsystem implements IAccelerometer {
+public class SimulatedAccelerometer extends GBSubsystem implements IAccelerometer {
 
 	private final Supplier<ChassisSpeeds> robotSimulatedVelocityRelativeToRobot;
 	private final Supplier<Double> noise;
@@ -19,7 +19,7 @@ public class simulatedAccelerometer extends GBSubsystem implements IAcceleromete
 	private double accelerationY;
 	private ChassisSpeeds previousVelocity;
 
-	public simulatedAccelerometer(String logPath, Supplier<ChassisSpeeds> robotSimulatedVelocityRelativeToRobot, double noiseAmount) {
+	public SimulatedAccelerometer(String logPath, Supplier<ChassisSpeeds> robotSimulatedVelocityRelativeToRobot, double noiseAmount) {
 		super(logPath);
 		Random randomNumbersGenerator = new Random();
 

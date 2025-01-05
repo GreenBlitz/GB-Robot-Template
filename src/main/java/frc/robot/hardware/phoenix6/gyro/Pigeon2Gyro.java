@@ -3,6 +3,7 @@ package frc.robot.hardware.phoenix6.gyro;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
+import frc.robot.hardware.phoenix6.Pigeon2Wrapper;
 
 public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 

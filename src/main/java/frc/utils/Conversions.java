@@ -194,4 +194,11 @@ public class Conversions {
 		return new TrapezoidProfile.Constraints(constraints.maxVelocity * (percentage / 100), constraints.maxAcceleration * (percentage / 100));
 	}
 
+	/**
+	 * Converts a time from milliseconds to seconds
+	 *
+	 * @param milliSeconds the milliseconds
+	 * @return the seconds
+	 */
+
 }

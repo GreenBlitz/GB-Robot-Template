@@ -1,10 +1,10 @@
-package frc.robot.hardware.phoenix6.motor.simulation;
+package frc.robot.hardware.phoenix6.motors.simulation;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import frc.robot.hardware.phoenix6.motor.TalonFXWrapper;
+import frc.robot.hardware.phoenix6.motors.TalonFXWrapper;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.utils.battery.BatteryUtils;
 

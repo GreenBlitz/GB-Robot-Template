@@ -9,10 +9,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.constants.GlobalConstants;
 import frc.constants.VisionConstants;
+import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimator;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
+import frc.robot.poseestimator.helpers.VisionDenoiser;
+import frc.robot.structures.Superstructure;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -22,28 +35,76 @@ import frc.utils.battery.BatteryUtils;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+
+	private final Swerve swerve;
+	private final IPoseEstimator poseEstimator;
 	private final MultiAprilTagVisionSources aprilTagVisionSources;
+	private final Superstructure superStructure;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
-		// waiting for swerve and poseestimator to be merged in order to have botpose2 working
+
+		IGyro gyro = GyroFactory.createGyro(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/");
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
+			ModulesFactory.create(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
+			gyro,
+			GyroFactory.createSignals(gyro)
+		);
+
+		this.poseEstimator = new WPILibPoseEstimator(
+			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
+			swerve.getKinematics(),
+			swerve.getAllOdometryObservations()[0].wheelPositions(),
+			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE,
+			new VisionDenoiser(10, "VisionDenoiser/")
+		);
+
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
+
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-			() -> Rotation2d.fromDegrees(0), // swerve::getGyroAbsoluteYaw,
-			() -> Rotation2d.fromDegrees(0), // () -> poseEstimator.getEstimatedPose().getRotation(),
-			VisionConstants.DEFAULT_VISION_SOURCES
+			swerve::getGyroAbsoluteYaw,
+			() -> poseEstimator.getEstimatedPose().getRotation().plus(Rotation2d.k180deg),
+			VisionConstants.DEFAULT_VISION_POSEESTIMATING_SOURCES
 		);
+
+		this.superStructure = new Superstructure(swerve, poseEstimator);
+
+		buildPathPlannerForAuto();
 	}
+
+
+	private void buildPathPlannerForAuto() {
+		// Register commands...
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+	}
+
 
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
-		aprilTagVisionSources.periodic();
-		CommandScheduler.getInstance().run();
+		superStructure.periodic();
+		aprilTagVisionSources.log();
+		CommandScheduler.getInstance().run(); // Should be last
 	}
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Superstructure getSuperStructure() {
+		return superStructure;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
+	}
+
+	public IPoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 
 	public MultiAprilTagVisionSources getAprilTagVisionSources() {

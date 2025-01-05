@@ -21,7 +21,7 @@ public class WPILibPoseEstimatorConstants {
 	);
 	//formatter:on
 
-	public static final Rotation2d STARTING_ODOMETRY_ANGLE = new Rotation2d();
+	public static final Rotation2d INITIAL_GYRO_ANGLE = new Rotation2d();
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
 	public static final String WPILIB_POSEESTIMATOR_LOGPATH = "WPILibPoseEstimator/";

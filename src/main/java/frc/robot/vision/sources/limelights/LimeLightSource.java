@@ -4,9 +4,11 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
+import frc.robot.poseestimator.helpers.StandardDeviations3D;
 import frc.robot.vision.GyroAngleValues;
 import frc.constants.VisionConstants;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -20,6 +22,7 @@ import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.BooleanSupplier;
 
 import static frc.constants.VisionConstants.LATENCY_BOTPOSE_INDEX;
@@ -70,15 +73,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 	@Override
 	public void update() {
-		robotOrientationEntry.setDoubleArray(
-			new double[] {
-				gyroAngleValues.yaw().getDegrees(),
-				gyroAngleValues.yawRate(),
-				gyroAngleValues.pitch().getDegrees(),
-				gyroAngleValues.pitchRate(),
-				gyroAngleValues.roll().getDegrees(),
-				gyroAngleValues.rollRate()}
-		);
+		robotOrientationEntry.setDoubleArray(gyroAngleValues.asArray());
 		robotPoseArray = (useGyroForPoseEstimating ? robotPoseEntryBotPose2 : robotPoseEntryBotPose1)
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
@@ -90,7 +85,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	}
 
 	private Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
-		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
+		int id = getAprilTagID();
 		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
@@ -119,6 +114,17 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
+
+	/**
+	 * return the aprilTagID
+	 *
+	 * @return the current april tag ID. In case of dual-target mode or if no apriltag is detected, returns
+	 *         {@code VisionConstants.NO_APRILTAG_ID}
+	 */
+	private int getAprilTagID() {
+		return (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID); // a "safe" cast as long as limelight doesn't break APIs
+	}
+
 	@Override
 	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
@@ -127,10 +133,10 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 				name,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
-				standardDeviationsArray,
+				new StandardDeviations3D(standardDeviationsArray),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE),
-				(int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID) // a safe cast as long as limelight doesn't break APIs
+				getAprilTagID()
 			)
 		);
 	}
@@ -150,6 +156,14 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	}
 
 	@Override
+	public Filter<AprilTagVisionData> applyOnFilter(
+		BiFunction<Filter<AprilTagVisionData>, Filter<AprilTagVisionData>, Filter<AprilTagVisionData>> applicationFunction,
+		Filter<AprilTagVisionData> filterToApplyWith
+	) {
+		return this.filter = applicationFunction.apply(this.filter, filterToApplyWith);
+	}
+
+	@Override
 	public void useRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {
 		this.useGyroForPoseEstimating = useGyroForPoseEstimating;
 	}
@@ -161,7 +175,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	 */
 	@Override
 	public Optional<Rotation2d> getRobotHeading() {
-		int id = (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID);
+		int id = getAprilTagID();
 		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
@@ -180,7 +194,21 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered.getAsBoolean());
-		Logger.recordOutput(logPath + "botPose1Output", robotPoseWithoutGyroInput);
+		Logger.recordOutput(
+			logPath + "botPose1Output",
+			new Pose3d(
+				new Translation3d(
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.X_VALUE.getIndex()],
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.Y_VALUE.getIndex()],
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.Z_VALUE.getIndex()]
+				),
+				new Rotation3d(
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.ROLL_VALUE.getIndex()],
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.PITCH_VALUE.getIndex()],
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.YAW_VALUE.getIndex()]
+				)
+			)
+		);
 		getRobotHeading().ifPresent((heading) -> Logger.recordOutput(logPath + "robotBotPose1Heading", heading));
 		getVisionData().ifPresent((visionData) -> {
 			Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose());

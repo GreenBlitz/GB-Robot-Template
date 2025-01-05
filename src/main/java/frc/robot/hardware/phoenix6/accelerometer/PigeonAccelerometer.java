@@ -1,10 +1,7 @@
 package frc.robot.hardware.phoenix6.accelerometer;
 
 import com.ctre.phoenix6.hardware.ParentDevice;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IAccelerometer;
-import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.phoenix6.Pigeon2Wrapper;
 

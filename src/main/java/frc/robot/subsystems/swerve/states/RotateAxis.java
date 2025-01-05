@@ -1,8 +1,8 @@
-package frc.robot.subsystems.swerve.swervestatehelpers;
+package frc.robot.subsystems.swerve.states;
 
 public enum RotateAxis {
 
-	MIDDLE_OF_ROBOT,
+	MIDDLE_OF_CHASSIS,
 	FRONT_LEFT_MODULE,
 	FRONT_RIGHT_MODULE,
 	BACK_LEFT_MODULE,

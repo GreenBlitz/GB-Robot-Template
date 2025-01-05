@@ -15,11 +15,11 @@ public class Filter<T> {
 	}
 
 	public Filter<T> and(Filter<T> otherFilter) {
-		return new Filter<>(data -> otherFilter.apply(data) && apply(data));
+		return new Filter<>(data -> apply(data) && otherFilter.apply(data));
 	}
 
 	public Filter<T> or(Filter<T> otherFilter) {
-		return new Filter<>(data -> otherFilter.apply(data) || apply(data));
+		return new Filter<>(data -> apply(data) || otherFilter.apply(data));
 	}
 
 }

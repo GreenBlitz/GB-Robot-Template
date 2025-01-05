@@ -127,7 +127,7 @@ public class Modules {
 		return true;
 	}
 
-	public boolean isSteersAtTargetPositions(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband) {
+	public boolean isSteerAtTargetPositions(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband) {
 		for (Module module : modules) {
 			if (!module.isSteerAtTargetPosition(steerPositionTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
@@ -141,7 +141,7 @@ public class Modules {
 		Rotation2d steerVelocityPerSecondDeadband,
 		double speedToleranceMetersPerSecond
 	) {
-		return isSteersAtTargetPositions(steerPositionTolerance, steerVelocityPerSecondDeadband)
+		return isSteerAtTargetPositions(steerPositionTolerance, steerVelocityPerSecondDeadband)
 			&& isAtTargetVelocities(speedToleranceMetersPerSecond);
 	}
 

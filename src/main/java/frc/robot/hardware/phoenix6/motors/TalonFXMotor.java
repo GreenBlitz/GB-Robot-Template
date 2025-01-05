@@ -1,4 +1,4 @@
-package frc.robot.hardware.phoenix6.motor;
+package frc.robot.hardware.phoenix6.motors;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -9,7 +9,7 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
-import frc.robot.hardware.phoenix6.motor.simulation.TalonFXSimulation;
+import frc.robot.hardware.phoenix6.motors.simulation.TalonFXSimulation;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.utils.alerts.Alert;

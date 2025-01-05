@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
-import frc.robot.subsystems.swerve.swervestatehelpers.RotateAxis;
+import frc.robot.subsystems.swerve.states.RotateAxis;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -56,9 +58,9 @@ public class SwerveCommandsBuilder {
 
 		return new SequentialCommandGroup(
 			pointWheels(new Rotation2d(), false).until(
-				() -> modules.isSteersAtTargetPositions(
+				() -> modules.isSteerAtTargetPositions(
 					SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-					SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+					SwerveConstants.CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND
 				)
 			),
 			new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false))
@@ -89,9 +91,9 @@ public class SwerveCommandsBuilder {
 		return new SequentialCommandGroup(
 			pointWheelsInCircle().until(
 				() -> swerve.getModules()
-					.isSteersAtTargetPositions(
+					.isSteerAtTargetPositions(
 						SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
-						SwerveConstants.CALIBRATION_MODULE_ANGLE_VELOCITY_PER_SECOND_DEADBAND
+						SwerveConstants.CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND
 					)
 			),
 			new WheelRadiusCharacterization(
@@ -108,7 +110,7 @@ public class SwerveCommandsBuilder {
 
 
 	public Command turnToHeading(Rotation2d targetHeading) {
-		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_ROBOT);
+		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_CHASSIS);
 	}
 
 	public Command turnToHeading(Rotation2d targetHeading, RotateAxis rotateAxis) {
@@ -153,10 +155,10 @@ public class SwerveCommandsBuilder {
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-		if (distanceFromTarget < SwerveConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
+		if (distanceFromTarget < AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
+			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
-			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, SwerveConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}
 
 		return new SequentialCommandGroup(new InstantCommand(swerve::resetPIDControllers, swerve), pathFollowingCommand)

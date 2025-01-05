@@ -4,6 +4,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
@@ -115,7 +116,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 
 	/**
-	 * return the aprilTagIt
+	 * return the aprilTagID
 	 *
 	 * @return the current april tag ID. In case of dual-target mode or if no apriltag is detected, returns
 	 *         {@code VisionConstants.NO_APRILTAG_ID}
@@ -193,7 +194,21 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered.getAsBoolean());
-		Logger.recordOutput(logPath + "botPose1Output", robotPoseWithoutGyroInput);
+		Logger.recordOutput(
+			logPath + "botPose1Output",
+			new Pose3d(
+				new Translation3d(
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.X_VALUE.getIndex()],
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.Y_VALUE.getIndex()],
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.Z_VALUE.getIndex()]
+				),
+				new Rotation3d(
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.ROLL_VALUE.getIndex()],
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.PITCH_VALUE.getIndex()],
+					robotPoseWithoutGyroInput[Pose3dComponentsValue.YAW_VALUE.getIndex()]
+				)
+			)
+		);
 		getRobotHeading().ifPresent((heading) -> Logger.recordOutput(logPath + "robotBotPose1Heading", heading));
 		getVisionData().ifPresent((visionData) -> {
 			Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose());

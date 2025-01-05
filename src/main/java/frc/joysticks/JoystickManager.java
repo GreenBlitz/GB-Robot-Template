@@ -17,6 +17,14 @@ public class JoystickManager {
 		joysticks[port].setBindSet(bindSet);
 	}
 
+	public static void cycleBindSet(int port, Robot robot) {
+		if (joysticks[port].getBindSet().getBindSet() == BindSet.values().length - 1) {
+			joysticks[port].setBindSet(BindSet.EMPTY);
+		} else {
+			setBindSet(port, BindSet.intToBindSet(joysticks[port].getBindSet().getBindSet() + 1), robot);
+		}
+	}
+
 	private static void createJoystick(int port, Robot robot) {
 		joysticks[port] = new SmartJoystick(port, BindSet.NONE);
 		JoystickBindings.configureBindings(joysticks[port], robot);

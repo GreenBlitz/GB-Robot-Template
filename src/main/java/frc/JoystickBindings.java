@@ -9,22 +9,44 @@ public class JoystickBindings {
 
 	public enum BindSet {
 
-		NONE,
-		EMPTY,
-		SWERVE,
-		SECOND,
-		TESTING
+		NONE(0),
+		EMPTY(1),
+		SWERVE(2),
+		SECOND(3),
+		TESTING(4);
+
+		private final int bindSet;
+
+		BindSet(int bindSet) {
+			this.bindSet = bindSet;
+		}
+
+		public int getBindSet() {
+			return bindSet;
+		}
+
+		public static BindSet intToBindSet(int bindSet) {
+			return switch (bindSet) {
+				case 0 -> NONE;
+				case 1 -> EMPTY;
+				case 2 -> SWERVE;
+				case 3 -> SECOND;
+				case 4 -> TESTING;
+				default -> EMPTY;
+			};
+		}
 
 	}
 
 	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
 
-	private static Trigger bindSetTrigger(SmartJoystick joystick, Trigger bind, BindSet requiredBindSet) {
-		return bind.and(() -> joystick.getBindSet() == requiredBindSet);
+	private static Trigger bindSetTrigger(SmartJoystick joystick, Trigger bind, BindSet bindSetRequirement) {
+		return bind.and(() -> joystick.getBindSet() == bindSetRequirement);
 	}
 
-	private static Trigger bindSetTrigger(SmartJoystick joystick, BindSet requiredBindSet) {
-		return new Trigger(() -> requiredBindSet == joystick.getBindSet());
+	private static Trigger bindSetTrigger(SmartJoystick joystick, BindSet bindSetRequirement) {
+		return new Trigger(() -> bindSetRequirement == joystick.getBindSet());
 	}
+
 
 }

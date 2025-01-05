@@ -1,12 +1,9 @@
 package frc;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.joysticks.SmartJoystick;
-import frc.utils.utilcommands.InitExecuteCommand;
 
-import java.util.function.Function;
 
 public class JoystickBindings {
 
@@ -22,19 +19,12 @@ public class JoystickBindings {
 
 	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
 
-	private static Trigger bind(
-			SmartJoystick joystick,
-			Trigger bind,
-			BindSet bindSetRequirement
-	) {
-		return bind.and(() -> joystick.getBindSet() == bindSetRequirement);
+	private static Trigger bindSetTrigger(SmartJoystick joystick, Trigger bind, BindSet requiredBindSet) {
+		return bind.and(() -> joystick.getBindSet() == requiredBindSet);
 	}
 
-	private static Trigger bind(
-			SmartJoystick joystick,
-			BindSet bindSetRequirement
-	) {
-		return new Trigger(() -> bindSetRequirement == joystick.getBindSet());
+	private static Trigger bindSetTrigger(SmartJoystick joystick, BindSet requiredBindSet) {
+		return new Trigger(() -> requiredBindSet == joystick.getBindSet());
 	}
 
 }

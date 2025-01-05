@@ -11,12 +11,10 @@ public class JoystickManager {
 	private static final SmartJoystick[] joysticks = new SmartJoystick[JoystickConstants.NUMBER_OF_JOYSTICK_PORTS];
 
 	private static void setBindSet(int port, BindSet bindSet, Robot robot) {
-		if (joysticks[port] != null) {
-			joysticks[port].setBindSet(bindSet);
-		} else if (joysticks[port] == null) {
+		if (joysticks[port] == null) {
 			createJoystick(port, robot);
-			joysticks[port].setBindSet(bindSet);
 		}
+		joysticks[port].setBindSet(bindSet);
 	}
 
 	private static void createJoystick(int port, Robot robot) {
@@ -34,12 +32,10 @@ public class JoystickManager {
 		SmartDashboard.putData(port + " joystick", chooser);
 	}
 
-	public static void putChoosersToDashboard(Robot robot) {
-		int currentPort = 0;
-		for (SmartJoystick joystick : joysticks) {
+	public static void createDashboardChoosers(Robot robot) {
+		for (int i = 0; i < joysticks.length; i++) {
 			SendableChooser<BindSet> bindSetChooser = new SendableChooser<>();
-			addOptions(bindSetChooser, currentPort, robot);
-			currentPort++;
+			addOptions(bindSetChooser, i, robot);
 		}
 	}
 

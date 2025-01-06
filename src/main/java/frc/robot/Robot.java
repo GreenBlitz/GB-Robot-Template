@@ -25,6 +25,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.utils.auto.AutonomousChooser;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
@@ -48,6 +49,8 @@ public class Robot {
 	private final MultiAprilTagVisionSources aprilTagVisionSources;
 	private final Superstructure superStructure;
 	private RobotHeadingEstimator headingEstimator = null;
+
+	private AutonomousChooser autonomousChooser;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -92,6 +95,7 @@ public class Robot {
 			poseEstimator.resetPose(pose);
 			headingEstimator.reset(pose.getRotation());
 		}, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+		autonomousChooser = new AutonomousChooser("autonomousChooser");
 	}
 
 
@@ -108,12 +112,11 @@ public class Robot {
 //			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), TimeUtils.getCurrentTimeSeconds());
 		}
 		Logger.recordOutput("Robot Heading By Estimator", new Pose2d(new Translation2d(0, 0), headingEstimator.getEstimatedHeading()));
-//		aprilTagVisionSources
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
 	public Command getAutonomousCommand() {
-		return new InstantCommand();
+		return autonomousChooser.getChosenValue();
 	}
 
 	public Superstructure getSuperStructure() {

@@ -15,9 +15,9 @@ public class WPILibPoseEstimatorConstants {
 		0.003
 	);
 	public static final StandardDeviations2D DEFAULT_VISION_STANDARD_DEVIATIONS = new StandardDeviations2D(
-		0.0003,
-		0.0003,
-		0.003
+		0.03,
+		0.03,
+		0.03
 	);
 	//formatter:on
 

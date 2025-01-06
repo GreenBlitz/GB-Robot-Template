@@ -68,7 +68,7 @@ public class Robot {
 		);
 
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setHeadingSupplier(swerve::getGyroAbsoluteYaw);
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		headingEstimator = new RobotHeadingEstimator(WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE, 0.003);

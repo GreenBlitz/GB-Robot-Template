@@ -40,7 +40,7 @@ public class RobotHeadingEstimator {
 				PoseEstimatorMath.getAngleDistance(gyroSampleAtTimestamp, lastGyroAngle),
 				estimatedHeading,
 				gyroStandardDeviation,
-				0.01
+				0.03
 //				PoseEstimatorMath.calculateStandardDeviation(heading.getRadians(), estimatedHeading.getRadians())
 			)
 		);

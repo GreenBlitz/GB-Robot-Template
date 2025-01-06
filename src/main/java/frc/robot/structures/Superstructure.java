@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.helpers.RobotHeadingEstimator;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class Superstructure {

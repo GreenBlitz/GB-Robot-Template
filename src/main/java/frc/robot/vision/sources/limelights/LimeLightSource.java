@@ -75,6 +75,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	@Override
 	public void update() {
 		robotOrientationEntry.setDoubleArray(gyroAngleValues.asArray());
+		Logger.recordOutput(logPath + "Robot Heading1", gyroAngleValues.asArray());
 		robotPoseArray = (useGyroForPoseEstimating ? robotPoseEntryBotPose2 : robotPoseEntryBotPose1)
 			.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
@@ -175,12 +176,12 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	 * @return optional of the heading, empty iff apriltags are not visible to the camera.
 	 */
 	@Override
-	public Optional<Rotation2d> getRobotHeading() {
+	public Optional<Pair<Rotation2d, Double>> getRobotHeading() {
 		int id = getAprilTagID();
 		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
-		return Optional.of(robotHeading);
+		return Optional.of(new Pair<>(robotHeading, Conversions.milliSecondsToSeconds(robotPoseArray[LATENCY_BOTPOSE_INDEX])));
 	}
 
 	@Override
@@ -210,7 +211,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 				)
 			)
 		);
-		getRobotHeading().ifPresent((heading) -> Logger.recordOutput(logPath + "robotBotPose1Heading", heading));
+		getRobotHeading().ifPresent((heading) -> Logger.recordOutput(logPath + "robotBotPose1Heading", heading.getFirst()));
 		getVisionData().ifPresent((visionData) -> {
 			Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose());
 			Logger.recordOutput(logPath + "unfilteredVisionProjected/", visionData.getEstimatedPose().toPose2d());

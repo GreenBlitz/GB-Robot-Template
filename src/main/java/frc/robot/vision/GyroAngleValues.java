@@ -12,7 +12,7 @@ public record GyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, 
 
 	public double[] asArray() {
 		return new double[] {
-			this.yaw().getDegrees(),
+			this.yaw().getDegrees() % 360 + 360,
 			this.yawRate(),
 			this.pitch().getDegrees(),
 			this.pitchRate(),

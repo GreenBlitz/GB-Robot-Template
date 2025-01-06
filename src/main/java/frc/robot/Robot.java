@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -16,6 +19,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
+import frc.robot.poseestimator.helpers.RobotHeadingEstimator;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -24,6 +28,10 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
+import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.List;
 
 
 /**
@@ -39,6 +47,7 @@ public class Robot {
 	private final IPoseEstimator poseEstimator;
 	private final MultiAprilTagVisionSources aprilTagVisionSources;
 	private final Superstructure superStructure;
+	private RobotHeadingEstimator headingEstimator = null;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -62,10 +71,15 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
+		headingEstimator = new RobotHeadingEstimator(
+			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE,
+			0.003
+		);
+
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-			swerve::getGyroAbsoluteYaw,
-			() -> Rotation2d.fromRotations(0),
+			() -> (headingEstimator.getEstimatedHeading()),
+			() -> Rotation2d.fromDegrees(0),
 			VisionConstants.DEFAULT_VISION_POSEESTIMATING_SOURCES
 		);
 
@@ -86,6 +100,14 @@ public class Robot {
 		BusChain.logChainsStatuses();
 		superStructure.periodic();
 		aprilTagVisionSources.log();
+		headingEstimator.updateGyroAngle(swerve.getGyroAbsoluteYaw(), TimeUtils.getCurrentTimeSeconds());
+		List<Pair<Rotation2d, Double>> headingAndTime = aprilTagVisionSources.getRawEstimatedAngles();
+		if(!headingAndTime.isEmpty()) {
+			Logger.recordOutput("Robot Heading", headingAndTime.get(0).getFirst());
+			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), headingAndTime.get(0).getSecond());
+		}
+		Logger.recordOutput("Robot Heading By Estimator", new Pose2d(new Translation2d(0, 0), headingEstimator.getEstimatedHeading()));
+//		aprilTagVisionSources
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

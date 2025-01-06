@@ -1,5 +1,6 @@
 package frc.robot.vision.sources;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -10,7 +11,7 @@ public interface RobotHeadingRequiringVisionSource extends VisionSource<AprilTag
 
 	void useRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating);
 
-	Optional<Rotation2d> getRobotHeading();
+	Optional<Pair<Rotation2d, Double>> getRobotHeading();
 
 	void updateGyroAngleValues(GyroAngleValues gyroAngleValues);
 

@@ -1,5 +1,6 @@
 package frc.robot.vision.multivisionsources;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.VisionConstants;
@@ -46,14 +47,15 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	private void updateYawInLimelights(Rotation2d yaw) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource gyroRequiringVisionSource) {
+//				Logger.recordOutput(logPath + "Robot Heading", gyroSupplier.get());
 				gyroRequiringVisionSource
 					.updateGyroAngleValues(new GyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
 			}
 		}
 	}
 
-	public ArrayList<Rotation2d> getRawEstimatedAngles() {
-		ArrayList<Rotation2d> output = new ArrayList<>();
+	public ArrayList<Pair<Rotation2d, Double>> getRawEstimatedAngles() {
+		ArrayList<Pair<Rotation2d, Double>> output = new ArrayList<>();
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource gyroRequiringVisionSource) {
 				gyroRequiringVisionSource.getRobotHeading().ifPresent(output::add);
@@ -61,7 +63,10 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 				visionSource.update();
 				visionSource.getVisionData()
 					.ifPresent(
-						(AprilTagVisionData visionData) -> output.add(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()))
+						(AprilTagVisionData visionData) -> output.add(new Pair<>(
+							Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()),
+							visionData.getTimestamp()
+						))
 					);
 			}
 		}
@@ -99,8 +104,8 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logBotPose() {
-		Logger.recordOutput(logPath + "botPose2", useRobotHeadingForPoseEstimating);
-		Logger.recordOutput(logPath + "botPose1", !useRobotHeadingForPoseEstimating);
+		Logger.recordOutput(logPath + "usingBotPose2", useRobotHeadingForPoseEstimating);
+		Logger.recordOutput(logPath + "usingBotPose1", !useRobotHeadingForPoseEstimating);
 	}
 
 	private void logObservationData() {

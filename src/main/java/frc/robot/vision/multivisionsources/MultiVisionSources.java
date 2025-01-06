@@ -35,9 +35,9 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
 	}
 
-	public void applyOnFilters(Function<Filter<ReturnType>, Filter<ReturnType>> applicationFunction) {
+	public void applyFunctionOnAllFilters(Function<Filter<ReturnType>, Filter<ReturnType>> filterChangingFunction) {
 		for (VisionSource<ReturnType> visionSource : visionSources) {
-			visionSource.applyOnFilter(applicationFunction);
+			visionSource.applyFunctionOnFilter(filterChangingFunction);
 		}
 	}
 

@@ -23,8 +23,8 @@ public interface VisionSource<ReturnType extends VisionData> {
 		setFilter(VisionFilters.nonFilteringFilter());
 	}
 
-	default void applyOnFilter(Function<Filter<ReturnType>, Filter<ReturnType>> applicationFunction) {
-		setFilter(applicationFunction.apply(getFilter()));
+	default void applyFunctionOnFilter(Function<Filter<ReturnType>, Filter<ReturnType>> filterChangingFunction) {
+		setFilter(filterChangingFunction.apply(getFilter()));
 	}
 
 }

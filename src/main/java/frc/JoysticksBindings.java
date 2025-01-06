@@ -35,6 +35,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getAprilTagVisionSources().switchBotPoses()));
 		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
 
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheelsInX());

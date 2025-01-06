@@ -62,12 +62,12 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
 		this.standardDeviations = getLimelightNetworkTableEntry("stddevs");
 		this.gyroAngleValues = new GyroAngleValues(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0);
-		this.useGyroForPoseEstimating = true;
+		this.useGyroForPoseEstimating = false;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
-
+		update();
 		log();
 	}
 

@@ -1,6 +1,5 @@
 package frc.robot.vision.multivisionsources;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.VisionConstants;
@@ -41,7 +40,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		super(logPath, visionSources);
 		this.gyroSupplier = gyroSupplier;
 		this.headingOffsetSupplier = headingOffsetSupplier;
-		setUseRobotHeadingForPoseEstimating(!VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE);
+		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE);
 	}
 
 	private void updateYawInLimelights(Rotation2d yaw) {
@@ -104,18 +103,18 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		Logger.recordOutput(logPath + "botPose1", !useRobotHeadingForPoseEstimating);
 	}
 
-	private void logTargets() {
+	private void logObservationData() {
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
-			aprilTag.ifPresent((pose) ->  Logger.recordOutput(logPath + "seesTarget" + aprilTagID, pose));
+			aprilTag.ifPresent((pose) ->  Logger.recordOutput(logPath + "targets/" + aprilTagID, pose));
 		}
 	}
 
 	@Override
 	public void log() {
 		super.log();
-		logTargets();
+		logObservationData();
 		Logger.recordOutput(logPath + "offsetedRobotHeading", getRobotHeading());
 		Logger.recordOutput(logPath + "headingOffset", headingOffsetSupplier.get());
 		Logger.recordOutput(logPath + "gyroInput", gyroSupplier.get());

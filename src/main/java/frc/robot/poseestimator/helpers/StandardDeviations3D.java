@@ -41,4 +41,12 @@ public record StandardDeviations3D(
 		);
 	}
 
+	public StandardDeviations2D getAs2DDeviations() {
+		return new StandardDeviations2D(
+				xAxisStandardDeviations,
+				yAxisStandardDeviations,
+				yawStandardDeviations
+		);
+	}
+
 }

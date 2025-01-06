@@ -65,7 +65,7 @@ public class Robot {
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 			swerve::getGyroAbsoluteYaw,
-			() -> poseEstimator.getEstimatedPose().getRotation().plus(Rotation2d.k180deg),
+				() -> Rotation2d.fromRotations(0),
 			VisionConstants.DEFAULT_VISION_POSEESTIMATING_SOURCES
 		);
 

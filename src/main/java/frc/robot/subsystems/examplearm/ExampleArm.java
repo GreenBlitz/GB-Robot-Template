@@ -9,8 +9,6 @@ import frc.utils.ToleranceUtils;
 
 public class ExampleArm extends GBSubsystem {
 
-	public final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(130);
-	public final Rotation2d MINIMUM_POSITION = Rotation2d.fromDegrees(-130);
 	public final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
 
 	private final ControllableMotor motor;
@@ -58,8 +56,16 @@ public class ExampleArm extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
+	protected void setTargetPosition(Rotation2d angle) {
+		motor.applyRequest(positionRequest.withSetPoint(angle));
+	}
+
 	public Double getVoltage() {
 		return voltageSignal.getLatestValue();
+	}
+
+	protected void setVoltage(double voltage) {
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	public void setBrake(boolean brake) {
@@ -68,14 +74,6 @@ public class ExampleArm extends GBSubsystem {
 
 	protected void setPower(double power) {
 		motor.setPower(power);
-	}
-
-	protected void setVoltage(double voltage) {
-		motor.applyRequest(voltageRequest.withSetPoint(voltage));
-	}
-
-	protected void setTargetPosition(Rotation2d angle) {
-		motor.applyRequest(positionRequest.withSetPoint(angle));
 	}
 
 	protected void stayInPlace() {

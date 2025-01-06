@@ -51,8 +51,4 @@ public class VisionFilters {
 		return isXInField(positionToleranceMeters).and(isYInField(positionToleranceMeters));
 	}
 
-	public static <T> Filter<T> nonFilteringFilter() {
-		return new Filter<>(data -> true);
-	}
-
 }

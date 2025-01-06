@@ -1,6 +1,5 @@
 package frc.robot.vision.sources;
 
-import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 
@@ -20,7 +19,7 @@ public interface VisionSource<ReturnType extends VisionData> {
 	Filter<ReturnType> getFilter();
 
 	default void clearFilter() {
-		setFilter(VisionFilters.nonFilteringFilter());
+		setFilter(Filter.nonFilteringFilter());
 	}
 
 	default void applyFunctionOnFilter(Function<Filter<ReturnType>, Filter<ReturnType>> filterChangingFunction) {

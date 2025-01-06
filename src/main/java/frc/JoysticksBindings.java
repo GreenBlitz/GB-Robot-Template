@@ -56,7 +56,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_RIGHT
 			.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE));
 
-		usedJoystick.L3.whileTrue(
+		usedJoystick.Y.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
 				.driveByState(

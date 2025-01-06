@@ -2,8 +2,8 @@ package frc.joysticks;
 
 public enum BindSet {
 
-	NONE(0),
-	EMPTY(1),
+	NO_JOYSTICK(0),
+	NO_BINDINGS(1),
 	SWERVE(2),
 	SECOND(3),
 	TESTING(4);
@@ -20,12 +20,12 @@ public enum BindSet {
 
 	public static BindSet getBindSetByIndex(int index) {
 		return switch (index) {
-			case 0 -> NONE;
-			case 1 -> EMPTY;
+			case 0 -> NO_JOYSTICK;
+			case 1 -> NO_BINDINGS;
 			case 2 -> SWERVE;
 			case 3 -> SECOND;
 			case 4 -> TESTING;
-			default -> EMPTY;
+			default -> NO_BINDINGS;
 		};
 	}
 

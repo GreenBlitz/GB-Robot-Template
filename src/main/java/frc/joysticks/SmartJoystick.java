@@ -56,9 +56,9 @@ public class SmartJoystick {
 		//@formatter:off
 		AlertManager.addAlert(
 			new PeriodicAlert(
-					Alert.AlertType.ERROR,
-					logPath + "DisconnectedAt",
-					() -> (!isConnected() && this.bindSet != BindSet.NONE)
+				Alert.AlertType.ERROR,
+				logPath + "DisconnectedAt",
+				() -> (!isConnected() && this.bindSet != BindSet.NO_JOYSTICK)
 			)
 		);
 		//@formatter:on

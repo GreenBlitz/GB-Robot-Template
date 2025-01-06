@@ -12,41 +12,41 @@ public class JoystickManager {
 
 	private static void setBindSet(int port, BindSet bindSet, Robot robot) {
 		if (port < 0 || port >= JoystickConstants.NUMBER_OF_JOYSTICK_PORTS) {
-			new Alert(Alert.AlertType.ERROR, "you tried to create a joystick for a port that doesn't exist");
-			return;
+			new Alert(Alert.AlertType.ERROR, "you cannot create a joystick for a port that doesn't exist").report();
 		} else if (joysticks[port] == null) {
 			createJoystick(port, robot);
+		} else {
+			joysticks[port].setBindSet(bindSet);
 		}
-		joysticks[port].setBindSet(bindSet);
 	}
 
 	public static void cycleBindSet(int port, Robot robot) {
 		if (joysticks[port].getBindSet().getIndex() == BindSet.values().length - 1) {
-			setBindSet(port, BindSet.getBindSetByIndex(1), robot);
+			setBindSet(port, BindSet.NO_BINDINGS, robot);
 		} else {
 			setBindSet(port, BindSet.getBindSetByIndex(joysticks[port].getBindSet().getIndex() + 1), robot);
 		}
 	}
 
 	private static void createJoystick(int port, Robot robot) {
-		joysticks[port] = new SmartJoystick(port, BindSet.NONE);
+		joysticks[port] = new SmartJoystick(port, BindSet.NO_JOYSTICK);
 		JoystickBindings.configureBindings(joysticks[port], robot);
 	}
 
 	private static void addOptions(SendableChooser<BindSet> chooser, int port, Robot robot) {
-		chooser.setDefaultOption("NONE", BindSet.NONE);
-		for (BindSet option : BindSet.values()) {
-			chooser.addOption(String.valueOf(option), option);
+		chooser.setDefaultOption(BindSet.NO_JOYSTICK.name(), BindSet.NO_JOYSTICK);
+		for (BindSet bindSet : BindSet.values()) {
+			chooser.addOption(String.valueOf(bindSet), bindSet);
 		}
 
 		chooser.onChange((bindSet) -> setBindSet(port, (chooser.getSelected()), robot));
-		SmartDashboard.putData(port + " joystick", chooser);
 	}
 
 	public static void createDashboardChoosers(Robot robot) {
 		for (int i = 0; i < joysticks.length; i++) {
 			SendableChooser<BindSet> bindSetChooser = new SendableChooser<>();
 			addOptions(bindSetChooser, i, robot);
+			SmartDashboard.putData(i + " joystick", bindSetChooser);
 		}
 	}
 

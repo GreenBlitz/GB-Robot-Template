@@ -57,7 +57,7 @@ public class PathPlannerUtils {
 			RobotConfig robotConfig = RobotConfig.fromGUISettings();
 			return Optional.of(robotConfig);
 		} catch (IOException ioException) {
-			reportAlert(Alert.AlertType.ERROR, "GetGuiSettingsIOFailAt");
+			reportAlert(Alert.AlertType.ERROR, "GetGuiSettingsFailNotFoundAt");
 		} catch (ParseException parseException) {
 			reportAlert(Alert.AlertType.ERROR, "GuiSettingsParseFailedAt");
 		}

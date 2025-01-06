@@ -68,6 +68,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
 
+		update();
 		log();
 	}
 

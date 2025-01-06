@@ -6,8 +6,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
+import frc.constants.VisionConstants;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseEstimationMath;
+import frc.robot.poseestimator.helpers.StandardDeviations2D;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -41,8 +43,8 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
 			new Odometry<>(kinematics, initialGyroAngle, modulePositions, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE),
-			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
-			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
+			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
+			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
@@ -52,7 +54,11 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		);
 		this.visionSpeed = 0;
 		this.odometrySpeed = 0;
-		this.lastOdometryObservation = new OdometryObservation(modulePositions, Optional.of(initialGyroAngle), TimeUtils.getCurrentTimeSeconds());
+		this.lastOdometryObservation = new OdometryObservation(
+			modulePositions,
+			Optional.of(initialGyroAngle),
+			TimeUtils.getCurrentTimeSeconds()
+		);
 		this.lastVisionObservation = new VisionData("", new Pose3d(), TimeUtils.getCurrentTimeSeconds());
 	}
 
@@ -125,8 +131,8 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
-			visionObservation.getTimestamp()
-//			PoseEstimationMath.calculateStandardDeviationOfPose(visionObservation, getEstimatedPose()).getWPILibStandardDeviations()
+			visionObservation.getTimestamp(),
+			new StandardDeviations2D(visionObservation.getDistanceFromAprilTagMeters() * VisionConstants.VISION_STDEVS_FACTOR).asColumnVector()
 		);
 		this.visionSpeed = PoseEstimationMath.deriveVisionData(lastVisionObservation, visionObservation);
 		this.lastVisionObservation = visionObservation;

@@ -63,10 +63,9 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 				visionSource.update();
 				visionSource.getVisionData()
 					.ifPresent(
-						(AprilTagVisionData visionData) -> output.add(new Pair<>(
-							Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()),
-							visionData.getTimestamp()
-						))
+						(AprilTagVisionData visionData) -> output.add(
+							new Pair<>(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), visionData.getTimestamp())
+						)
 					);
 			}
 		}

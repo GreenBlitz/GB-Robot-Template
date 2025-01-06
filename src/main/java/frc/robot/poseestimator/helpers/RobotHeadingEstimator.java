@@ -1,8 +1,11 @@
 package frc.robot.poseestimator.helpers;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.robot.poseestimator.PoseEstimatorMath;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -37,7 +40,8 @@ public class RobotHeadingEstimator {
 				PoseEstimatorMath.getAngleDistance(gyroSampleAtTimestamp, lastGyroAngle),
 				estimatedHeading,
 				gyroStandardDeviation,
-				PoseEstimatorMath.calculateStandardDeviation(heading.getRadians(), estimatedHeading.getRadians())
+				0.01
+//				PoseEstimatorMath.calculateStandardDeviation(heading.getRadians(), estimatedHeading.getRadians())
 			)
 		);
 	}
@@ -46,6 +50,8 @@ public class RobotHeadingEstimator {
 		unOffsetedGyroAngleInterpolator.addSample(timestamp, heading);
 		estimatedHeading = estimatedHeading.plus(PoseEstimatorMath.getAngleDistance(heading, lastGyroAngle));
 		lastGyroAngle = heading;
+		Logger.recordOutput("RobotHeadingEstimator/gyro", new Pose2d(new Translation2d(0, 0), heading));
+		Logger.recordOutput("RobotHeadingEstimator/estimate", new Pose2d(new Translation2d(0, 0), estimatedHeading));
 	}
 
 }

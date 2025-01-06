@@ -181,7 +181,9 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 		if (id == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
-		return Optional.of(new Pair<>(robotHeading, Conversions.milliSecondsToSeconds(robotPoseArray[LATENCY_BOTPOSE_INDEX])));
+		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LATENCY_BOTPOSE_INDEX]);
+		double timestamp = TimeUtils.getCurrentTimeSeconds() - processingLatencySeconds;
+		return Optional.of(new Pair<>(robotHeading, timestamp));
 	}
 
 	@Override

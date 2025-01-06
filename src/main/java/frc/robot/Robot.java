@@ -71,10 +71,7 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
-		headingEstimator = new RobotHeadingEstimator(
-			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE,
-			0.003
-		);
+		headingEstimator = new RobotHeadingEstimator(WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE, 0.003);
 
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
@@ -91,7 +88,10 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose -> {
+			poseEstimator.resetPose(pose);
+			headingEstimator.reset(pose.getRotation());
+		}, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 	}
 
 
@@ -102,9 +102,10 @@ public class Robot {
 		aprilTagVisionSources.log();
 		headingEstimator.updateGyroAngle(swerve.getGyroAbsoluteYaw(), TimeUtils.getCurrentTimeSeconds());
 		List<Pair<Rotation2d, Double>> headingAndTime = aprilTagVisionSources.getRawEstimatedAngles();
-		if(!headingAndTime.isEmpty()) {
+		if (!headingAndTime.isEmpty()) {
 			Logger.recordOutput("Robot Heading", headingAndTime.get(0).getFirst());
 			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), headingAndTime.get(0).getSecond());
+//			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), TimeUtils.getCurrentTimeSeconds());
 		}
 		Logger.recordOutput("Robot Heading By Estimator", new Pose2d(new Translation2d(0, 0), headingEstimator.getEstimatedHeading()));
 //		aprilTagVisionSources

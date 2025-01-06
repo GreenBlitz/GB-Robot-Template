@@ -47,7 +47,7 @@ public class VisionConstants {
 
 	public static final int LATENCY_BOTPOSE_INDEX = 6;
 
-	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE = false;
+	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE = true;
 
 	public static <T> Function<T, Boolean> CreateTrueFunction() {
 		return (T iDontCare) -> true;

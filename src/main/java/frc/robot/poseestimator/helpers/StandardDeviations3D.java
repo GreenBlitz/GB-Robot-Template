@@ -3,7 +3,7 @@ package frc.robot.poseestimator.helpers;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N6;
+import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 
 public record StandardDeviations3D(
@@ -30,23 +30,16 @@ public record StandardDeviations3D(
 		this(0, 0, 0, 0, 0, 0);
 	}
 
-	public Matrix<N6, N1> getAsColumnVector() {
-		return VecBuilder.fill(
-			xAxisStandardDeviations,
-			yAxisStandardDeviations,
-			zAxisStandardDeviations,
-			rollStandardDeviations,
-			pitchStandardDeviations,
-			yawStandardDeviations
-		);
+	public Matrix<N3, N1> getAsColumnVector() {
+		return VecBuilder.fill(xAxisStandardDeviations, yAxisStandardDeviations, zAxisStandardDeviations);
+	}
+
+	public Matrix<N3, N1> get2dStandardDeviations() {
+		return VecBuilder.fill(xAxisStandardDeviations, yAxisStandardDeviations, yawStandardDeviations);
 	}
 
 	public StandardDeviations2D getAs2DDeviations() {
-		return new StandardDeviations2D(
-				xAxisStandardDeviations,
-				yAxisStandardDeviations,
-				yawStandardDeviations
-		);
+		return new StandardDeviations2D(xAxisStandardDeviations, yAxisStandardDeviations, yawStandardDeviations);
 	}
 
 }

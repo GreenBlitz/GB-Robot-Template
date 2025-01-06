@@ -107,7 +107,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
-			aprilTag.ifPresent((pose) ->  Logger.recordOutput(logPath + "targets/" + aprilTagID, pose));
+			aprilTag.ifPresent((pose) -> Logger.recordOutput(logPath + "targets/" + aprilTagID, pose));
 		}
 	}
 

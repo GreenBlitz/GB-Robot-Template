@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.JoystickBindings;
-import frc.JoystickBindings.BindSet;
 
 public class JoystickManager {
 

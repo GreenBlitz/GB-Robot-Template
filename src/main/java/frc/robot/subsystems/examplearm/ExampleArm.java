@@ -1,4 +1,4 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.examplearm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -46,6 +46,7 @@ public class ExampleArm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
+		motor.updateSimulation();
 		motor.updateInputs(positionSignal, voltageSignal);
 	}
 

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.examplearm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

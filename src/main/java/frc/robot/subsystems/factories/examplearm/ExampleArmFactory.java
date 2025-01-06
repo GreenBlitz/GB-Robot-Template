@@ -2,7 +2,7 @@ package frc.robot.subsystems.factories.examplearm;
 
 
 import frc.robot.Robot;
-import frc.robot.subsystems.arm.ExampleArm;
+import frc.robot.subsystems.examplearm.ExampleArm;
 
 public class ExampleArmFactory {
 

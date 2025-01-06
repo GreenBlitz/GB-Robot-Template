@@ -4,13 +4,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.JoystickBindings;
+import frc.utils.alerts.Alert;
 
 public class JoystickManager {
 
 	private static final SmartJoystick[] joysticks = new SmartJoystick[JoystickConstants.NUMBER_OF_JOYSTICK_PORTS];
 
 	private static void setBindSet(int port, BindSet bindSet, Robot robot) {
-		if (joysticks[port] == null) {
+		if (port < 0 || port >= JoystickConstants.NUMBER_OF_JOYSTICK_PORTS) {
+			new Alert(Alert.AlertType.ERROR, "you tried to create a joystick for a port that doesn't exist");
+			return;
+		} else if (joysticks[port] == null) {
 			createJoystick(port, robot);
 		}
 		joysticks[port].setBindSet(bindSet);
@@ -18,7 +22,7 @@ public class JoystickManager {
 
 	public static void cycleBindSet(int port, Robot robot) {
 		if (joysticks[port].getBindSet().getIndex() == BindSet.values().length - 1) {
-			joysticks[port].setBindSet(BindSet.EMPTY);
+			setBindSet(port, BindSet.getBindSetByIndex(1), robot);
 		} else {
 			setBindSet(port, BindSet.getBindSetByIndex(joysticks[port].getBindSet().getIndex() + 1), robot);
 		}

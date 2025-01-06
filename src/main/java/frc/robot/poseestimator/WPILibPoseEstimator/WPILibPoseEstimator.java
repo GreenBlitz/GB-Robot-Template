@@ -50,10 +50,10 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-		this.lastOdometryObservation = new OdometryObservation(
-			modulePositions, Optional.of(initialGyroAngle), TimeUtils.getCurrentTimeSeconds()
-		);
-		this.lastVisionObservation = new VisionData("aa", new Pose3d(), TimeUtils.getCurrentTimeSeconds());
+		this.visionSpeed = 0;
+		this.odometrySpeed = 0;
+		this.lastOdometryObservation = new OdometryObservation(modulePositions, Optional.of(initialGyroAngle), TimeUtils.getCurrentTimeSeconds());
+		this.lastVisionObservation = new VisionData("", new Pose3d(), TimeUtils.getCurrentTimeSeconds());
 	}
 
 
@@ -126,8 +126,8 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp()
+
 //			visionObservation.getStandardDeviations().get2dStandardDeviations()
-//			PoseEstimationMath.calculateStandardDeviationOfPose(visionObservation, getEstimatedPose()).getWPILibStandardDeviations()
 		);
 		this.visionSpeed = PoseEstimationMath.deriveVisionData(lastVisionObservation, visionObservation);
 		this.lastVisionObservation = visionObservation;

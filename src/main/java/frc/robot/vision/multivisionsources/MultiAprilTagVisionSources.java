@@ -1,5 +1,7 @@
 package frc.robot.vision.multivisionsources;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.VisionConstants;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -11,6 +13,7 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
@@ -101,9 +104,18 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		Logger.recordOutput(logPath + "botPose1", !useRobotHeadingForPoseEstimating);
 	}
 
+	private void logTargets() {
+		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
+			int aprilTagID = visionData.getTrackedAprilTagId();
+			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
+			aprilTag.ifPresent((pose) ->  Logger.recordOutput(logPath + "seesTarget" + aprilTagID, pose));
+		}
+	}
+
 	@Override
 	public void log() {
 		super.log();
+		logTargets();
 		Logger.recordOutput(logPath + "offsetedRobotHeading", getRobotHeading());
 		Logger.recordOutput(logPath + "headingOffset", headingOffsetSupplier.get());
 		Logger.recordOutput(logPath + "gyroInput", gyroSupplier.get());

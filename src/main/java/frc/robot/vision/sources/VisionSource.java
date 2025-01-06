@@ -20,7 +20,7 @@ public interface VisionSource<ReturnType extends VisionData> {
 	Filter<ReturnType> getFilter();
 
 	default void clearFilter() {
-		setFilter(VisionFilters.getNonFilteringFilter());
+		setFilter(VisionFilters.nonFilteringFilter());
 	}
 
 	default void applyOnFilter(Function<Filter<ReturnType>, Filter<ReturnType>> applicationFunction) {

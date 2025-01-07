@@ -54,11 +54,11 @@ public class VisionConstants {
 	}
 
 	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = VisionFilters
-		.extractFilterToPreformPolymorphism(VisionFilters.isOnGround(0.2)); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
+		.extractFilterToPreformPolymorphism(VisionFilters.isOnGround(0.2).and(VisionFilters.isInField(0.1))); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
 
 	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES = List.of(
-		new LimeLightSource("limelight-front", MULTI_VISION_SOURCES_LOGPATH, new Filter<>((data) -> true)),
-		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>((data) -> true))
+		new LimeLightSource("limelight-front", MULTI_VISION_SOURCES_LOGPATH, DEFAULT_VISION_FILTER),
+		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, DEFAULT_VISION_FILTER)
 	);
 
 	public static final double VISION_STDEVS_FACTOR = 0.1;

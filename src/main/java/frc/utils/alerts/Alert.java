@@ -25,7 +25,7 @@ public class Alert {
 	}
 
 	public void report() {
-		if (!DriverStationUtils.isMatch()) {
+		if (!DriverStationUtils.isMatch() && false) {
 			switch (type) {
 				case ERROR -> DriverStation.reportError(logPath, LOG_TRACE);
 			}

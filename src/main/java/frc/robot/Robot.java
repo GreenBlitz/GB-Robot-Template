@@ -71,10 +71,10 @@ public class Robot {
 		);
 
 
-		swerve.setHeadingSupplier(swerve::getGyroAbsoluteYaw);
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
-		headingEstimator = new RobotHeadingEstimator(WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE, 0.003);
+		headingEstimator = new RobotHeadingEstimator(swerve.getGyroAbsoluteYaw(), 0.0001);
 
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
@@ -133,6 +133,10 @@ public class Robot {
 
 	public MultiAprilTagVisionSources getAprilTagVisionSources() {
 		return aprilTagVisionSources;
+	}
+
+	public RobotHeadingEstimator getHeadingEstimator() {
+		return headingEstimator;
 	}
 
 }

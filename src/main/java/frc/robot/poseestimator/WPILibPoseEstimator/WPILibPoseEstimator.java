@@ -65,7 +65,8 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	@Override
 	public void resetPose(Pose2d newPose) {
-		poseEstimator.resetPose(newPose);
+		Logger.recordOutput(getLogPath() + "the pose of the reset/", newPose);
+		poseEstimator.resetPosition(newPose.getRotation(),lastOdometryObservation.wheelPositions(),newPose);
 	}
 
 	@Override

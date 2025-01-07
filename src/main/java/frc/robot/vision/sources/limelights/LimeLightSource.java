@@ -121,7 +121,7 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 	 * return the aprilTagID
 	 *
 	 * @return the current april tag ID. In case of dual-target mode or if no apriltag is detected, returns
-	 *         {@code VisionConstants.NO_APRILTAG_ID}
+	 * {@code VisionConstants.NO_APRILTAG_ID}
 	 */
 	private int getAprilTagID() {
 		return (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID); // a "safe" cast as long as limelight doesn't break APIs
@@ -207,9 +207,9 @@ public class LimeLightSource implements RobotHeadingRequiringVisionSource {
 					robotPoseWithoutGyroInput[Pose3dComponentsValue.Z_VALUE.getIndex()]
 				),
 				new Rotation3d(
-					robotPoseWithoutGyroInput[Pose3dComponentsValue.ROLL_VALUE.getIndex()],
-					robotPoseWithoutGyroInput[Pose3dComponentsValue.PITCH_VALUE.getIndex()],
-					robotPoseWithoutGyroInput[Pose3dComponentsValue.YAW_VALUE.getIndex()]
+					Math.toRadians(robotPoseWithoutGyroInput[Pose3dComponentsValue.ROLL_VALUE.getIndex()]),
+					Math.toRadians(robotPoseWithoutGyroInput[Pose3dComponentsValue.PITCH_VALUE.getIndex()]),
+					Math.toRadians(robotPoseWithoutGyroInput[Pose3dComponentsValue.YAW_VALUE.getIndex()])
 				)
 			)
 		);

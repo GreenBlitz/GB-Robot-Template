@@ -61,7 +61,8 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 				gyroRequiringVisionSource.getRobotHeading().ifPresent(output::add);
 			} else {
 				visionSource.update();
-				visionSource.getVisionData()
+				// ! needs to be changed (testing)
+				visionSource.getFilteredVisionData()
 					.ifPresent(
 						(AprilTagVisionData visionData) -> output.add(
 							new Pair<>(Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), visionData.getTimestamp())

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.robot.poseestimator.PoseEstimatorMath;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class RobotHeadingEstimator {
 		this.lastGyroAngle = initialGyroAngle;
 		this.gyroStandardDeviation = gyroStandardDeviation;
 		this.unOffsetedGyroAngleInterpolator = TimeInterpolatableBuffer.createBuffer(RobotHeadingEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.estimatedHeading = new Rotation2d();
+		this.estimatedHeading = WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE;
 	}
 
 	public void reset(Rotation2d newHeading) {

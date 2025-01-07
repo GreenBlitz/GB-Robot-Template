@@ -36,9 +36,13 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getAprilTagVisionSources().switchBotPoses()));
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
+//		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getSwerve().getCommandsBuilder());
 
-		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheelsInX());
+		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
+			() -> robot.getPoseEstimator().getEstimatedPose(),
+			() -> new Pose2d(0.501,5.248, Rotation2d.fromDegrees(0))
+		));
+		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().reset(Rotation2d.fromDegrees(0))));
 		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true));
 
 		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));

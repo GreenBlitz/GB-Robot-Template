@@ -7,6 +7,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "amp4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "amp1"
           }
         },

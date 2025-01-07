@@ -91,9 +91,15 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose -> {
-			poseEstimator.resetPose(pose);
-			headingEstimator.reset(pose.getRotation());
+//		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose -> {
+//			poseEstimator.resetPose(pose);
+//			headingEstimator.reset(pose.getRotation());
+//		}, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+//		autonomousChooser = new AutonomousChooser("autonomousChooser");
+		// ! testing
+		swerve.configPathPlanner(() -> new Pose2d(poseEstimator.getEstimatedPose().getTranslation(), headingEstimator.getEstimatedHeading()), pose -> {
+			poseEstimator.resetPose(new Pose2d(pose.getTranslation(), headingEstimator.getEstimatedHeading()));
+//			headingEstimator.reset(pose.getRotation());
 		}, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 		autonomousChooser = new AutonomousChooser("autonomousChooser");
 	}

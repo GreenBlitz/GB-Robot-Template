@@ -20,7 +20,10 @@ public class StandardDeviations3D {
 		if (standardDeviations.length != Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT) {
 			new Alert(
 				Alert.AlertType.ERROR,
-				"When constructing StandardDeviations record: array length expected to be 6 but is " + standardDeviations.length
+				"When constructing StandardDeviations record: array length expected to be "
+					+ Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT
+					+ " but is "
+					+ standardDeviations.length
 			).report();
 		}
 

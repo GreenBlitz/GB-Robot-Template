@@ -1,5 +1,6 @@
 package frc.robot.subsystems.examplearm;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ExampleArmStateHandler {
@@ -11,17 +12,15 @@ public class ExampleArmStateHandler {
 	}
 
 	public Command setState(ExampleArmState state) {
-		if (state.equals(ExampleArmState.STAY_IN_PLACE)) {
-			return arm.getCommandBuilder().stayInPlace();
-		}
-		return arm.getCommandBuilder().moveToPosition(state.getPosition());
+		return switch (state){
+			case STAY_IN_PLACE -> arm.getCommandBuilder().stayInPlace();
+			case INTAKE, SAFE_HOLD, LOW_DROP,MID_DROP, HIGH_DROP -> arm.getCommandBuilder().moveToPosition(state.getPosition());
+		};
 	}
 
 	public Command endSate(ExampleArmState state) {
 		return switch (state) {
-			case HIGH_DROP, MID_DROP -> setState(ExampleArmState.LOW_DROP);
-			case SAFE_HOLD -> setState(ExampleArmState.STAY_IN_PLACE);
-			case INTAKE, STAY_IN_PLACE, LOW_DROP -> setState(ExampleArmState.SAFE_HOLD);
+			case SAFE_HOLD, HIGH_DROP, MID_DROP, LOW_DROP, INTAKE, STAY_IN_PLACE  -> setState(ExampleArmState.STAY_IN_PLACE);
 		};
 	}
 

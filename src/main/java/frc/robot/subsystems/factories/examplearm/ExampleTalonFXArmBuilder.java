@@ -70,11 +70,11 @@ public class ExampleTalonFXArmBuilder {
 		config.Slot0.kG = 0;
 
 		config.CurrentLimits.withSupplyCurrentLimit(30);
-		config.Feedback.withSensorToMechanismRatio(1);
 		config.MotorOutput.withPeakForwardDutyCycle(0.9);
 		config.MotorOutput.withPeakReverseDutyCycle(-0.9);
 		config.SoftwareLimitSwitch.withForwardSoftLimitThreshold(90);
 		config.SoftwareLimitSwitch.withReverseSoftLimitThreshold(-90);
+		config.Feedback.withSensorToMechanismRatio(1);
 
 		return config;
 	}

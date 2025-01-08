@@ -71,7 +71,8 @@ public class Robot {
 		);
 
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+//		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setHeadingSupplier(() -> swerve.getGyroAbsoluteYaw());
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		headingEstimator = new RobotHeadingEstimator(swerve.getGyroAbsoluteYaw(), 0.0001);
@@ -98,8 +99,8 @@ public class Robot {
 //		autonomousChooser = new AutonomousChooser("autonomousChooser");
 		// ! testing
 		swerve.configPathPlanner(() -> new Pose2d(poseEstimator.getEstimatedPose().getTranslation(), headingEstimator.getEstimatedHeading()), pose -> {
-			poseEstimator.resetPose(new Pose2d(pose.getTranslation(), headingEstimator.getEstimatedHeading()));
-//			headingEstimator.reset(pose.getRotation());
+			poseEstimator.resetPose(pose);
+			headingEstimator.reset(pose.getRotation());
 		}, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 		autonomousChooser = new AutonomousChooser("autonomousChooser");
 	}

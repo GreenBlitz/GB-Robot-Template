@@ -2,6 +2,7 @@ package frc;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.joysticks.Axis;
@@ -13,6 +14,8 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.RotateAxis;
+
+import java.util.logging.Logger;
 
 public class JoysticksBindings {
 
@@ -40,10 +43,20 @@ public class JoysticksBindings {
 
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
 			() -> robot.getPoseEstimator().getEstimatedPose(),
-			() -> new Pose2d(0.501,5.248, Rotation2d.fromDegrees(0))
+			() -> new Pose2d(0.501, 5.248, Rotation2d.fromDegrees(0))
 		));
 		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().reset(Rotation2d.fromDegrees(0))));
-		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true));
+		usedJoystick.X.whileTrue(
+//			robot.getSwerve().getCommandsBuilder().driveToPose(() -> robot.getPoseEstimator().getEstimatedPose(), () -> new Pose2d(
+//				new Translation2d(13.969, 4.375), Rotation2d.fromRadians(-3.114)
+//			))
+			robot.getSwerve().getCommandsBuilder().driveToPose(
+				() -> new Pose2d(robot.getPoseEstimator().getEstimatedPose().getTranslation(), robot.getHeadingEstimator().getEstimatedHeading()),
+				() -> new Pose2d(
+					new Translation2d(15.794, 2.917), Rotation2d.fromRadians(2.675)
+				))
+		);
+//		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true));
 
 		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
 		usedJoystick.POV_DOWN.whileTrue(

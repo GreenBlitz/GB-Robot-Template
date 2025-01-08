@@ -84,6 +84,10 @@ public class SmartJoystick {
 		return bindSet;
 	}
 
+	public void setBindSet(BindSet bindSet) {
+		this.bindSet = bindSet;
+	}
+
 	public boolean isConnected() {
 		return joystick.isConnected();
 	}
@@ -111,8 +115,8 @@ public class SmartJoystick {
 		return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
 	}
 
-	public void setBindSet(BindSet bindSet) {
-		this.bindSet = bindSet;
+	private static double sensitiveValue(double axisValue, double power) {
+		return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
 	}
 
 	/**
@@ -122,16 +126,12 @@ public class SmartJoystick {
 		joystick.setRumble(rumbleSide, power);
 	}
 
-	private static double applyDeadzone(double power, double deadzone) {
-		return MathUtil.applyDeadband(power, deadzone);
-	}
-
 	public void stopRumble(GenericHID.RumbleType rumbleSide) {
 		setRumble(rumbleSide, 0);
 	}
 
-	private static double sensitiveValue(double axisValue, double power) {
-		return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
+	private static double applyDeadzone(double power, double deadzone) {
+		return MathUtil.applyDeadband(power, deadzone);
 	}
 
 }

@@ -88,10 +88,6 @@ public class Limelight extends GBSubsystem {
         return getAprilTagValue(LimelightEntryValue.Z_AXIS);
     }
 
-    public double[] getRobotPoseRelativeToApriltag() {
-         return this.getLimelightNetworkTableEntry("botpose_targetspace").getDoubleArray(new double[6]);
-    }
-
     public double getAprilTagValue(LimelightEntryValue entryValue) {
         return aprilTagPoseArray[entryValue.getIndex()];
     }

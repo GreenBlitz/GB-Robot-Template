@@ -31,18 +31,15 @@ public class ExampleTalonFXArmBuilder {
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
 
 		SingleJointedArmSim armSim = new SingleJointedArmSim(
-				LinearSystemId.createDCMotorSystem(
-					DCMotor.getKrakenX60Foc(1),
-					0.001,
-					kGEAR_RATIO),
-				DCMotor.getKrakenX60(1),
-				1,
-				1.5,
-				Rotation2d.fromDegrees(-90).getRadians(),
-				Rotation2d.fromDegrees(90).getRadians(),
-				false,
-				Rotation2d.fromDegrees(0).getRadians()
-				);
+			LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001, kGEAR_RATIO),
+			DCMotor.getKrakenX60(1),
+			1,
+			1.5,
+			Rotation2d.fromDegrees(-90).getRadians(),
+			Rotation2d.fromDegrees(90).getRadians(),
+			false,
+			Rotation2d.fromDegrees(0).getRadians()
+		);
 		SingleJointedArmSimulation armSimulation = new SingleJointedArmSimulation(armSim, 1);
 
 		SysIdRoutine.Config sysIdConfig = buildSysidConfig();

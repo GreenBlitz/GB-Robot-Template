@@ -15,7 +15,6 @@ public class IDs {
 
 		public static final Phoenix6DeviceID ARM_DEVICE_ID = new Phoenix6DeviceID(2); // Todo: change before merge
 
-
 	}
 
 }

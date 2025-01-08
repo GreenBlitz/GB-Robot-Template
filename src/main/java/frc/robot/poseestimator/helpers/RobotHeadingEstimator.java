@@ -13,11 +13,11 @@ public class RobotHeadingEstimator {
 	private Rotation2d lastGyroAngle;
 	private Rotation2d estimatedHeading;
 
-	public RobotHeadingEstimator(Rotation2d initialGyroAngle, double gyroStandardDeviation) {
+	public RobotHeadingEstimator(Rotation2d initialGyroAngle, Rotation2d initialHeading, double gyroStandardDeviation) {
 		this.lastGyroAngle = initialGyroAngle;
+		this.estimatedHeading = initialHeading;
 		this.gyroStandardDeviation = gyroStandardDeviation;
 		this.unOffsetedGyroAngleInterpolator = TimeInterpolatableBuffer.createBuffer(RobotHeadingEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
-		this.estimatedHeading = new Rotation2d();
 	}
 
 	public void reset(Rotation2d newHeading) {
@@ -29,7 +29,7 @@ public class RobotHeadingEstimator {
 		return estimatedHeading;
 	}
 
-	public void updateVisionHeading(Rotation2d heading, double timestamp) {
+	public void updateVisionHeading(Rotation2d heading, double visionStandardDeviation, double timestamp) {
 		Optional<Rotation2d> gyroAtTimestamp = unOffsetedGyroAngleInterpolator.getSample(timestamp);
 		gyroAtTimestamp.ifPresent(
 			gyroSampleAtTimestamp -> estimatedHeading = PoseEstimatorMath.combineVisionHeadingToGyro(
@@ -37,7 +37,7 @@ public class RobotHeadingEstimator {
 				PoseEstimatorMath.getAngleDistance(gyroSampleAtTimestamp, lastGyroAngle),
 				estimatedHeading,
 				gyroStandardDeviation,
-				PoseEstimatorMath.calculateStandardDeviation(heading.getRadians(), estimatedHeading.getRadians())
+				visionStandardDeviation
 			)
 		);
 	}

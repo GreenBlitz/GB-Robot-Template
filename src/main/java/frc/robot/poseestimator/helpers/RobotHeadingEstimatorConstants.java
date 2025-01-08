@@ -6,4 +6,6 @@ public class RobotHeadingEstimatorConstants {
 
 	protected static final double DEFAULT_GYRO_STANDARD_DEVIATION = 0.0001;
 
+	protected static final double DEFAULT_VISION_STANDARD_DEVIATION = 0.03;
+
 }

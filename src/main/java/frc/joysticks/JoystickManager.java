@@ -4,46 +4,42 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.JoystickBindings;
-import frc.JoystickBindings.BindSet;
+import frc.utils.alerts.Alert;
 
 public class JoystickManager {
 
 	private static final SmartJoystick[] joysticks = new SmartJoystick[JoystickConstants.NUMBER_OF_JOYSTICK_PORTS];
 
 	private static void setBindSet(int port, BindSet bindSet, Robot robot) {
-		if (joysticks[port] == null) {
+		if (port < 0 || port >= JoystickConstants.NUMBER_OF_JOYSTICK_PORTS) {
+			new Alert(Alert.AlertType.ERROR, "You cannot create a joystick for a port that doesn't exist (" + port + ")").report();
+		} else if (joysticks[port] == null) {
 			createJoystick(port, robot);
-		}
-		joysticks[port].setBindSet(bindSet);
-	}
-
-	public static void cycleBindSet(int port, Robot robot) {
-		if (joysticks[port].getBindSet().getBindSet() == BindSet.values().length - 1) {
-			joysticks[port].setBindSet(BindSet.EMPTY);
+			joysticks[port].setBindSet(bindSet);
 		} else {
-			setBindSet(port, BindSet.intToBindSet(joysticks[port].getBindSet().getBindSet() + 1), robot);
+			joysticks[port].setBindSet(bindSet);
 		}
 	}
 
 	private static void createJoystick(int port, Robot robot) {
-		joysticks[port] = new SmartJoystick(port, BindSet.NONE);
+		joysticks[port] = new SmartJoystick(port, BindSet.NO_BINDINGS);
 		JoystickBindings.configureBindings(joysticks[port], robot);
 	}
 
 	private static void addOptions(SendableChooser<BindSet> chooser, int port, Robot robot) {
-		chooser.setDefaultOption("NONE", BindSet.NONE);
-		for (BindSet option : BindSet.values()) {
-			chooser.addOption(String.valueOf(option), option);
+		chooser.setDefaultOption(BindSet.NO_JOYSTICK.name(), BindSet.NO_JOYSTICK);
+		for (BindSet bindSet : BindSet.values()) {
+			chooser.addOption(String.valueOf(bindSet), bindSet);
 		}
 
 		chooser.onChange((bindSet) -> setBindSet(port, (chooser.getSelected()), robot));
-		SmartDashboard.putData(port + " joystick", chooser);
 	}
 
 	public static void createDashboardChoosers(Robot robot) {
 		for (int i = 0; i < joysticks.length; i++) {
 			SendableChooser<BindSet> bindSetChooser = new SendableChooser<>();
 			addOptions(bindSetChooser, i, robot);
+			SmartDashboard.putData("joystick " + i, bindSetChooser);
 		}
 	}
 

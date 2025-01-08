@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.JoystickBindings.BindSet;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -23,6 +22,14 @@ public class SmartJoystick {
 	private final String logPath;
 
 	private BindSet bindSet;
+
+	public SmartJoystick(SmartJoystick joystick, BindSet bindSet) {
+		this(joystick.getPort(), DEADZONE, bindSet);
+	}
+
+	public SmartJoystick(SmartJoystick joystick, double deadzone, BindSet bindSet) {
+		this(joystick.getPort(), deadzone, bindSet);
+	}
 
 	public SmartJoystick(int port, BindSet bindSet) {
 		this(port, DEADZONE, bindSet);
@@ -57,10 +64,10 @@ public class SmartJoystick {
 		//@formatter:off
 		AlertManager.addAlert(
 			new PeriodicAlert(
-					Alert.AlertType.ERROR,
-					logPath + "DisconnectedAt",
-					() -> (!isConnected() && this.bindSet != BindSet.NONE
-					))
+				Alert.AlertType.ERROR,
+				logPath + "DisconnectedAt",
+				() -> (!isConnected() && this.bindSet != BindSet.NO_JOYSTICK)
+			)
 		);
 		//@formatter:on
 	}
@@ -77,12 +84,39 @@ public class SmartJoystick {
 		return bindSet;
 	}
 
+	public void setBindSet(BindSet bindSet) {
+		this.bindSet = bindSet;
+	}
+
 	public boolean isConnected() {
 		return joystick.isConnected();
 	}
 
-	public void setBindSet(BindSet bindSet) {
-		this.bindSet = bindSet;
+	/**
+	 * Sample axis value with parabolic curve, allowing for finer control for smaller values.
+	 */
+	public double getSensitiveAxisValue(Axis axis) {
+		return sensitiveValue(getAxisValue(axis), SENSITIVE_AXIS_VALUE_POWER);
+	}
+
+	public double getAxisValue(Axis axis) {
+		return isStickAxis(axis) ? applyDeadzone(axis.getValue(joystick), deadzone) : axis.getValue(joystick);
+	}
+
+	public AxisButton getAxisAsButton(Axis axis) {
+		return getAxisAsButton(axis, DEFAULT_THRESHOLD_FOR_AXIS_BUTTON);
+	}
+
+	public AxisButton getAxisAsButton(Axis axis, double threshold) {
+		return axis.getAsButton(joystick, threshold);
+	}
+
+	private static boolean isStickAxis(Axis axis) {
+		return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
+	}
+
+	private static double sensitiveValue(double axisValue, double power) {
+		return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
 	}
 
 	/**
@@ -96,35 +130,8 @@ public class SmartJoystick {
 		setRumble(rumbleSide, 0);
 	}
 
-	/**
-	 * Sample axis value with parabolic curve, allowing for finer control for smaller values.
-	 */
-	public double getSensitiveAxisValue(Axis axis) {
-		return sensitiveValue(getAxisValue(axis), SENSITIVE_AXIS_VALUE_POWER);
-	}
-
-	private static double sensitiveValue(double axisValue, double power) {
-		return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
-	}
-
-	public double getAxisValue(Axis axis) {
-		return isStickAxis(axis) ? applyDeadzone(axis.getValue(joystick), deadzone) : axis.getValue(joystick);
-	}
-
 	private static double applyDeadzone(double power, double deadzone) {
 		return MathUtil.applyDeadband(power, deadzone);
-	}
-
-	public AxisButton getAxisAsButton(Axis axis) {
-		return getAxisAsButton(axis, DEFAULT_THRESHOLD_FOR_AXIS_BUTTON);
-	}
-
-	public AxisButton getAxisAsButton(Axis axis, double threshold) {
-		return axis.getAsButton(joystick, threshold);
-	}
-
-	private static boolean isStickAxis(Axis axis) {
-		return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
 	}
 
 }

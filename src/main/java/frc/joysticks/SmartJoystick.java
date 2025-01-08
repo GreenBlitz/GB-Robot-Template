@@ -88,30 +88,11 @@ public class SmartJoystick {
 		return joystick.isConnected();
 	}
 
-	public void setBindSet(BindSet bindSet) {
-		this.bindSet = bindSet;
-	}
-
-	/**
-	 * @param power the power to rumble the joystick between [-1, 1]
-	 */
-	public void setRumble(GenericHID.RumbleType rumbleSide, double power) {
-		joystick.setRumble(rumbleSide, power);
-	}
-
-	public void stopRumble(GenericHID.RumbleType rumbleSide) {
-		setRumble(rumbleSide, 0);
-	}
-
 	/**
 	 * Sample axis value with parabolic curve, allowing for finer control for smaller values.
 	 */
 	public double getSensitiveAxisValue(Axis axis) {
 		return sensitiveValue(getAxisValue(axis), SENSITIVE_AXIS_VALUE_POWER);
-	}
-
-	private static double sensitiveValue(double axisValue, double power) {
-		return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
 	}
 
 	public double getAxisValue(Axis axis) {
@@ -132,6 +113,25 @@ public class SmartJoystick {
 
 	private static boolean isStickAxis(Axis axis) {
 		return (axis != Axis.LEFT_TRIGGER) && (axis != Axis.RIGHT_TRIGGER);
+	}
+
+	public void setBindSet(BindSet bindSet) {
+		this.bindSet = bindSet;
+	}
+
+	/**
+	 * @param power the power to rumble the joystick between [-1, 1]
+	 */
+	public void setRumble(GenericHID.RumbleType rumbleSide, double power) {
+		joystick.setRumble(rumbleSide, power);
+	}
+
+	public void stopRumble(GenericHID.RumbleType rumbleSide) {
+		setRumble(rumbleSide, 0);
+	}
+
+	private static double sensitiveValue(double axisValue, double power) {
+		return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
 	}
 
 }

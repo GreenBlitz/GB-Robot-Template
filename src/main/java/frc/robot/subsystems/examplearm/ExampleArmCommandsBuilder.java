@@ -30,10 +30,10 @@ public class ExampleArmCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
 	}
 
-	public Command loggedDashboardSetVoltage(double voltage) {
+	public Command loggedDashboardSetVoltage() {
 		return arm.asSubsystemCommand(
-			new LoggedDashboardCommand("Set Arm Voltage", (x) -> arm.setVoltage(voltage)),
-			"Set voltage through dashboard, set voltage to: " + voltage
+			new LoggedDashboardCommand("Set Arm Voltage", (voltage) -> arm.setVoltage(voltage)),
+			"Set voltage through dashboard, set voltage to: " + arm.getVoltage()
 		);
 	}
 

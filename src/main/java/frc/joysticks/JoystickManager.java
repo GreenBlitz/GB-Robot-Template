@@ -38,7 +38,7 @@ public class JoystickManager {
 		for (int i = 0; i < joysticks.length; i++) {
 			SendableChooser<BindSet> bindSetChooser = new SendableChooser<>();
 			addOptions(bindSetChooser, i, robot);
-			SmartDashboard.putData(i + " joystick", bindSetChooser);
+			SmartDashboard.putData("joystick " + i, bindSetChooser);
 		}
 	}
 

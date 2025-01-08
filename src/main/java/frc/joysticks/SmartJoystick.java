@@ -24,7 +24,7 @@ public class SmartJoystick {
 	private BindSet bindSet;
 
 	public SmartJoystick(SmartJoystick joystick, BindSet bindSet) {
-		this(joystick.getPort(), DEADZONE, bindSet);
+		this(joystick, DEADZONE, bindSet);
 	}
 
 	public SmartJoystick(SmartJoystick joystick, double deadzone, BindSet bindSet) {

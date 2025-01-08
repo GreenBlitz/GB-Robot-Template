@@ -4,18 +4,19 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.structures.Tolerances;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.RotateAxis;
-
-import java.util.logging.Logger;
+import org.littletonrobotics.junction.Logger;
 
 public class JoysticksBindings {
 
@@ -25,6 +26,7 @@ public class JoysticksBindings {
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
 	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+
 
 	public static void configureBindings(Robot robot) {
 		mainJoystickButtons(robot);
@@ -43,19 +45,32 @@ public class JoysticksBindings {
 
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
 			() -> robot.getPoseEstimator().getEstimatedPose(),
-			() -> new Pose2d(0.501, 5.248, Rotation2d.fromDegrees(0))
+			() -> new Pose2d(13.970, 4.344, Rotation2d.fromRadians(-3.125))
 		));
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().reset(Rotation2d.fromDegrees(0))));
+
+		double y = 4.3;
+		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().reset(Rotation2d.fromDegrees(180))));
 		usedJoystick.X.whileTrue(
-//			robot.getSwerve().getCommandsBuilder().driveToPose(() -> robot.getPoseEstimator().getEstimatedPose(), () -> new Pose2d(
-//				new Translation2d(13.969, 4.375), Rotation2d.fromRadians(-3.114)
-//			))
-			robot.getSwerve().getCommandsBuilder().driveToPose(
-				() -> new Pose2d(robot.getPoseEstimator().getEstimatedPose().getTranslation(), robot.getHeadingEstimator().getEstimatedHeading()),
-				() -> new Pose2d(
-					new Translation2d(15.794, 2.917), Rotation2d.fromRadians(2.675)
-				))
+			(
+				new SequentialCommandGroup(
+					robot.getSwerve().getCommandsBuilder().driveToPose(
+						() -> robot.getPoseEstimator().getEstimatedPose(),
+						() -> new Pose2d(new Translation2d(15, y), Rotation2d.fromDegrees(180))
+					),
+					robot.getSwerve().getCommandsBuilder().driveToPose(
+						() -> robot.getPoseEstimator().getEstimatedPose(),
+						() -> new Pose2d(new Translation2d(14.05, /*4.3*/y), Rotation2d.fromDegrees(180))
+					)
+				)
+			)
 		);
+
+//			robot.getSwerve().getCommandsBuilder().driveToPose(
+//				() -> new Pose2d(robot.getPoseEstimator().getEstimatedPose().getTranslation(), robot.getHeadingEstimator().getEstimatedHeading()),
+//				() -> new Pose2d(
+//					new Translation2d(15.794, 2.917), Rotation2d.fromRadians(2.675)
+//				))
+
 //		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true));
 
 		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));

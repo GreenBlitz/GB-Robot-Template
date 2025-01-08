@@ -72,7 +72,7 @@ public class Robot {
 
 
 //		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
-		swerve.setHeadingSupplier(() -> swerve.getGyroAbsoluteYaw());
+		swerve.setHeadingSupplier(() -> headingEstimator.getEstimatedHeading());
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		headingEstimator = new RobotHeadingEstimator(swerve.getGyroAbsoluteYaw(), 0.0001);

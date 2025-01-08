@@ -5,12 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
@@ -166,8 +161,14 @@ public class SwerveCommandsBuilder {
 	}
 
 	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
-		return new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose), swerve)
-			.withName("PID to pose: " + targetPose);
+		return new FunctionalCommand(
+			swerve::resetPIDControllers,
+			() -> swerve.moveToPoseByPID(currentPose.get(), targetPose),
+			(interrupted) -> {},
+			() -> swerve.isAtTranslation(currentPose.get().getTranslation(),targetPose.getTranslation()));
+
+//		return new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose), swerve)
+//			.withName("PID to pose: " + targetPose);
 	}
 
 }

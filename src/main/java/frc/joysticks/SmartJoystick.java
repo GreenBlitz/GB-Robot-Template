@@ -99,10 +99,6 @@ public class SmartJoystick {
 		return isStickAxis(axis) ? applyDeadzone(axis.getValue(joystick), deadzone) : axis.getValue(joystick);
 	}
 
-	private static double applyDeadzone(double power, double deadzone) {
-		return MathUtil.applyDeadband(power, deadzone);
-	}
-
 	public AxisButton getAxisAsButton(Axis axis) {
 		return getAxisAsButton(axis, DEFAULT_THRESHOLD_FOR_AXIS_BUTTON);
 	}
@@ -124,6 +120,10 @@ public class SmartJoystick {
 	 */
 	public void setRumble(GenericHID.RumbleType rumbleSide, double power) {
 		joystick.setRumble(rumbleSide, power);
+	}
+
+	private static double applyDeadzone(double power, double deadzone) {
+		return MathUtil.applyDeadband(power, deadzone);
 	}
 
 	public void stopRumble(GenericHID.RumbleType rumbleSide) {

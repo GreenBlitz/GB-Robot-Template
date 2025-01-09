@@ -2,14 +2,13 @@ package frc.joysticks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public enum BindSet {
 
 	NO_JOYSTICK(0),
 	NO_BINDINGS(1);
 
-	private static final ArrayList<BindSet> bindSets = new ArrayList<BindSet>();
+	private static final ArrayList<BindSet> bindSets = new ArrayList<>();
 	private final int index;
 
 	BindSet(int index) {

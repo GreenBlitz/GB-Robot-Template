@@ -1,5 +1,7 @@
 package frc.joysticks;
 
+import java.util.HashMap;
+
 public enum BindSet {
 
 	NO_JOYSTICK(0),
@@ -10,23 +12,26 @@ public enum BindSet {
 
 	private final int index;
 
-	BindSet(int index) {
-		this.index = index;
-	}
+	BindSet(int index) {this.index = index;}
 
 	public int getIndex() {
 		return index;
 	}
 
+	public static HashMap<Integer, BindSet> bindSets = new HashMap<Integer, BindSet>();
+
 	public static BindSet getBindSetByIndex(int index) {
 		return switch (index) {
 			case 0 -> NO_JOYSTICK;
 			case 1 -> NO_BINDINGS;
-			case 2 -> SWERVE;
-			case 3 -> SECOND;
-			case 4 -> TESTING;
 			default -> NO_BINDINGS;
 		};
+	}
+
+	public static void main(String[] args) {
+		for (BindSet bindSet : BindSet.values()) {
+			bindSets.put(bindSet.getIndex(), bindSet);
+		}
 	}
 
 }

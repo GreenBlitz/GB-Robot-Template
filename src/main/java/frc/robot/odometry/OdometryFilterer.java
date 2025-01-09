@@ -7,10 +7,18 @@ import java.util.Optional;
 
 public class OdometryFilterer {
 
-    private final Filter<OdometryObservation> filter;
+    private Filter<OdometryObservation> filter;
 
     public OdometryFilterer(Filter<OdometryObservation> filter) {
         this.filter = filter;
+    }
+
+    public void addFilter(Filter<OdometryObservation> filter) {
+        this.filter.and(filter);
+    }
+
+    public void clearFilter() {
+        this.filter = new Filter<>(data -> true);
     }
 
     public Optional<OdometryObservation> getFilteredObservation(OdometryObservation observation) {

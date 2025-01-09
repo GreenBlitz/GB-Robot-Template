@@ -1,7 +1,5 @@
 package frc.joysticks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public enum BindSet {
 

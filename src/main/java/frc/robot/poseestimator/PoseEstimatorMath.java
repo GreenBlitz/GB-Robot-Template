@@ -17,7 +17,7 @@ public class PoseEstimatorMath {
 		double visionStandardDeviation
 	) {
 		double visionAndGyroRatio = getKalmanRatio(gyroStandardDeviation, visionStandardDeviation);
-		Rotation2d estimatedHeadingAtSampleTime = currentEstimatedHeading.plus(changeInAngleSinceVisionObservationWasTaken);
+		Rotation2d estimatedHeadingAtSampleTime = currentEstimatedHeading.minus(changeInAngleSinceVisionObservationWasTaken);
 		Rotation2d differenceFromVisionAndEstimatedHeading = getAngleDistance(visionEstimatedHeading, estimatedHeadingAtSampleTime);
 		Rotation2d scaledDifferenceToAddToEstimatedHeading = differenceFromVisionAndEstimatedHeading.times(visionAndGyroRatio);
 		return currentEstimatedHeading.plus(scaledDifferenceToAddToEstimatedHeading);

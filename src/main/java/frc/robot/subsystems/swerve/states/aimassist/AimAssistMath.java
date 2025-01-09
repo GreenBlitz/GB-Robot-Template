@@ -65,6 +65,7 @@ public class AimAssistMath {
 
 				if (!Field.isFieldConventionAlliance()) {
 					xFieldRelativeVelocityAddition = -xFieldRelativeVelocityAddition;
+					yFieldRelativeVelocityAddition = -yFieldRelativeVelocityAddition;
 				}
 
 				xVelocityMetersPerSecond += xFieldRelativeVelocityAddition;

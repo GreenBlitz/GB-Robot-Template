@@ -26,19 +26,19 @@ public class JoystickManager {
 		JoystickBindings.configureBindings(joysticks[port], robot);
 	}
 
-	private static void addOptions(SendableChooser<BindSet> chooser, int port, Robot robot) {
+	private static void addChooserOptions(SendableChooser<BindSet> chooser, int port, Robot robot) {
 		chooser.setDefaultOption(BindSet.NO_JOYSTICK.name(), BindSet.NO_JOYSTICK);
 		for (BindSet bindSet : BindSet.values()) {
 			chooser.addOption(String.valueOf(bindSet), bindSet);
 		}
 
-		chooser.onChange((bindSet) -> setBindSet(port, (chooser.getSelected()), robot));
+		chooser.onChange(bindSet -> setBindSet(port, chooser.getSelected(), robot));
 	}
 
 	public static void createDashboardChoosers(Robot robot) {
 		for (int i = 0; i < joysticks.length; i++) {
 			SendableChooser<BindSet> bindSetChooser = new SendableChooser<>();
-			addOptions(bindSetChooser, i, robot);
+			addChooserOptions(bindSetChooser, i, robot);
 			SmartDashboard.putData("joystick " + i, bindSetChooser);
 		}
 	}

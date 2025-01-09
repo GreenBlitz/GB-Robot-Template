@@ -1,5 +1,7 @@
 package frc.joysticks;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public enum BindSet {
@@ -7,6 +9,7 @@ public enum BindSet {
 	NO_JOYSTICK(0),
 	NO_BINDINGS(1);
 
+	private static final ArrayList<BindSet> bindSets = new ArrayList<BindSet>();
 	private final int index;
 
 	BindSet(int index) {
@@ -17,12 +20,12 @@ public enum BindSet {
 		return index;
 	}
 
-	public static HashMap<Integer, BindSet> bindSets = new HashMap<Integer, BindSet>();
+	public static ArrayList<BindSet> getBindSets() {
+		return bindSets;
+	}
 
 	public static void addBindSetsToHashMap() {
-		for (BindSet bindSet : BindSet.values()) {
-			bindSets.put(bindSet.getIndex(), bindSet);
-		}
+		bindSets.addAll(Arrays.asList(BindSet.values()));
 	}
 
 }

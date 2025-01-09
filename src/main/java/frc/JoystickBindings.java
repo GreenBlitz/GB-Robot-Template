@@ -8,7 +8,10 @@ import frc.joysticks.SmartJoystick;
 
 public class JoystickBindings {
 
-	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
+	public static void configureBindings(SmartJoystick joystick, Robot robot) {
+		applySwerveBindings(joystick);
+		applySecondBindings(joystick);
+	}
 
 	private static Trigger bindSetTrigger(SmartJoystick joystick, Trigger bind, BindSet bindSetRequirement) {
 		return bind.and(bindSetTrigger(joystick, bindSetRequirement));
@@ -20,10 +23,11 @@ public class JoystickBindings {
 
 	private static void applySwerveBindings(SmartJoystick joystick) {
 		bindSetTrigger(joystick, BindSet.SWERVE).whileTrue(new RunCommand(() -> System.out.println(joystick.getLogPath())));
+		bindSetTrigger(joystick, joystick.A, BindSet.SWERVE).whileTrue(new RunCommand(() -> System.out.println("sweeeerv")));
 	}
 
 	private static void applySecondBindings(SmartJoystick joystick) {
-		bindSetTrigger(joystick, BindSet.SWERVE).whileTrue(new RunCommand(() -> System.out.println(joystick.getLogPath())));
+		bindSetTrigger(joystick, joystick.A, BindSet.SECOND).whileTrue(new RunCommand(() -> System.out.println("Secoooond")));
 	}
 
 

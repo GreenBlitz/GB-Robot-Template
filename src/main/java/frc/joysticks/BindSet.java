@@ -6,7 +6,9 @@ import java.util.Arrays;
 public enum BindSet {
 
 	NO_JOYSTICK(0),
-	NO_BINDINGS(1);
+	NO_BINDINGS(1),
+	SWERVE(2),
+	SECOND(3);
 
 	private static final ArrayList<BindSet> bindSets = new ArrayList<>();
 	private final int index;

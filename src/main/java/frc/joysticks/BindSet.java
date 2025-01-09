@@ -1,6 +1,5 @@
 package frc.joysticks;
 
-
 public enum BindSet {
 
 	NO_JOYSTICK(0),

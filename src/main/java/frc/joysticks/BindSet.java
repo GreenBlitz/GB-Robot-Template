@@ -28,7 +28,7 @@ public enum BindSet {
 		};
 	}
 
-	public static void main(String[] args) {
+	public static void addBindSetsToHashMap() {
 		for (BindSet bindSet : BindSet.values()) {
 			bindSets.put(bindSet.getIndex(), bindSet);
 		}

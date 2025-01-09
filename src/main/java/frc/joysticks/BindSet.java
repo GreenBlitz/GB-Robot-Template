@@ -23,7 +23,7 @@ public enum BindSet {
 		return bindSets;
 	}
 
-	public static void addBindSetsToHashMap() {
+	public static void addBindSetsToArrayList() {
 		bindSets.addAll(Arrays.asList(BindSet.values()));
 	}
 

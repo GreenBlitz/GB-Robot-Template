@@ -8,7 +8,6 @@ public enum BindSet {
 	NO_JOYSTICK(0),
 	NO_BINDINGS(1);
 
-	private static final ArrayList<BindSet> bindSets = new ArrayList<>(Arrays.asList(BindSet.values()));
 	private final int index;
 
 	BindSet(int index) {
@@ -17,10 +16,6 @@ public enum BindSet {
 
 	public int getIndex() {
 		return index;
-	}
-
-	public static ArrayList<BindSet> getBindSets() {
-		return bindSets;
 	}
 
 }

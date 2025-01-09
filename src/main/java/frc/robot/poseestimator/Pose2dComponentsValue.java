@@ -8,8 +8,8 @@ public enum Pose2dComponentsValue {
 
 	private final int index;
 
-	Pose2dComponentsValue(int entryIndex) {
-		this.index = entryIndex;
+	Pose2dComponentsValue(int index) {
+		this.index = index;
 	}
 
 	public int getIndex() {

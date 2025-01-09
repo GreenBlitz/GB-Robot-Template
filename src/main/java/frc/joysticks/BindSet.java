@@ -27,4 +27,16 @@ public enum BindSet {
 		bindSets.addAll(Arrays.asList(BindSet.values()));
 	}
 
+	public BindSet cycleBindSet(BindSet current, int jump) {
+		int index = current.getIndex();
+
+		if (index + jump > bindSets.size() - 1) {
+			return bindSets.get(NO_BINDINGS.getIndex() + (index + jump - bindSets.size()) % (bindSets.size() - NO_BINDINGS.getIndex()));
+		} else if (index + jump < NO_BINDINGS.getIndex()) {
+			return bindSets.get(bindSets.size() + ((index + jump - NO_BINDINGS.getIndex()) % (bindSets.size() - NO_BINDINGS.getIndex())));
+		} else {
+			return bindSets.get(index + jump);
+		}
+	}
+
 }

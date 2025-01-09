@@ -16,6 +16,6 @@ public enum Pose2dComponentsValue {
 		return index;
 	}
 
-	public static final int POSE2D_COMPONENTS_AMOUNT = 3;
+	public static final int POSE2D_COMPONENTS_AMOUNT = values().length;
 
 }

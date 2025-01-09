@@ -137,7 +137,7 @@ public class SwerveCommandsBuilder {
 
 
 	public Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
-		return swerve.asSubsystemCommand(driveByState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE), "Default drive");
+		return driveByState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE);
 	}
 
 	public Command driveByState(

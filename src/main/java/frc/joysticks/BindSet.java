@@ -1,13 +1,14 @@
 package frc.joysticks;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public enum BindSet {
 
 	NO_JOYSTICK(0),
-	NO_BINDINGS(1),
-	SWERVE(2),
-	SECOND(3),
-	TESTING(4);
+	NO_BINDINGS(1);
 
+	private static final ArrayList<BindSet> bindSets = new ArrayList<>();
 	private final int index;
 
 	BindSet(int index) {
@@ -18,15 +19,12 @@ public enum BindSet {
 		return index;
 	}
 
-	public static BindSet getBindSetByIndex(int index) {
-		return switch (index) {
-			case 0 -> NO_JOYSTICK;
-			case 1 -> NO_BINDINGS;
-			case 2 -> SWERVE;
-			case 3 -> SECOND;
-			case 4 -> TESTING;
-			default -> NO_BINDINGS;
-		};
+	public static ArrayList<BindSet> getBindSets() {
+		return bindSets;
+	}
+
+	public static void addBindSetsToHashMap() {
+		bindSets.addAll(Arrays.asList(BindSet.values()));
 	}
 
 }

@@ -13,10 +13,10 @@ public class JoystickManager {
 	private static void setBindSet(int port, BindSet bindSet, Robot robot) {
 		if (port < 0 || port >= JoystickConstants.NUMBER_OF_JOYSTICK_PORTS) {
 			new Alert(Alert.AlertType.ERROR, "You cannot create a joystick for a port that doesn't exist (" + port + ")").report();
-		} else if (joysticks[port] == null) {
-			createJoystick(port, robot);
-			joysticks[port].setBindSet(bindSet);
 		} else {
+			if (joysticks[port] == null) {
+				createJoystick(port, robot);
+			}
 			joysticks[port].setBindSet(bindSet);
 		}
 	}

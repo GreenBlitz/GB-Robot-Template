@@ -1,5 +1,6 @@
-package frc.robot.poseestimator.observations;
+package frc.robot.odometry;
 
+import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.utils.Filter;
 
 import java.util.Optional;
@@ -13,9 +14,7 @@ public class OdometryFilterer {
     }
 
     public Optional<OdometryObservation> getFilteredObservation(OdometryObservation observation) {
-        if (!filter.apply(observation)) {
-            observation = null;
-        }
-        return Optional.ofNullable(observation);
+        return !filter.apply(observation) ? Optional.empty() : Optional.of(observation);
     }
+
 }

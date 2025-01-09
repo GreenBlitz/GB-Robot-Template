@@ -1,6 +1,7 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
+import frc.robot.constants.MathConstants;
 
 public class PoseEstimatorMath {
 
@@ -25,14 +26,9 @@ public class PoseEstimatorMath {
 	public static Rotation2d getAngleDistance(Rotation2d angle1, Rotation2d angle2) {
 		Rotation2d difference = angle1.minus(angle2);
 		if (difference.getRadians() > Math.PI) {
-			return Rotation2d.fromRadians(2 * Math.PI - difference.getRadians());
+			return Rotation2d.fromRadians(MathConstants.FULL_CIRCLE.getRadians() - difference.getRadians());
 		}
 		return difference;
-	}
-
-	public static double calculateStandardDeviation(double estimatedValue, double currentValue) {
-		double mean = (estimatedValue + currentValue) / 2;
-		return Math.sqrt((Math.pow(estimatedValue - mean, 2) + Math.pow(currentValue - mean, 2)) / 2);
 	}
 
 }

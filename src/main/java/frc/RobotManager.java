@@ -5,7 +5,6 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.joysticks.BindSet;
 import frc.joysticks.JoystickManager;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;

@@ -32,7 +32,7 @@ public class JoystickManager {
 			chooser.addOption(String.valueOf(bindSet), bindSet);
 		}
 
-		chooser.onChange((bindSet) -> setBindSet(port, (chooser.getSelected()), robot));
+		chooser.onChange(bindSet -> setBindSet(port, chooser.getSelected(), robot));
 	}
 
 	public static void createDashboardChoosers(Robot robot) {

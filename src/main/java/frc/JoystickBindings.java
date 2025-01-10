@@ -101,16 +101,15 @@ public class JoystickBindings {
 				)
 		);
 
-		robot.getSwerve()
-			.setDefaultCommand(
-				robot.getSwerve()
-					.getCommandsBuilder()
-					.drive(
-						() -> joystick.getAxisValue(Axis.LEFT_Y),
-						() -> joystick.getAxisValue(Axis.LEFT_X),
-						() -> joystick.getSensitiveAxisValue(Axis.RIGHT_X)
-					)
-			);
+		bindSetTrigger(joystick, BindSet.SWERVE_TEST).whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.drive(
+					() -> joystick.getAxisValue(Axis.LEFT_Y),
+					() -> joystick.getAxisValue(Axis.LEFT_X),
+					() -> joystick.getSensitiveAxisValue(Axis.RIGHT_X)
+				)
+		);
 
 		bindSetTrigger(joystick, joystick.BACK, BindSet.SWERVE_TEST).whileTrue(
 			robot.getSwerve()
@@ -127,19 +126,20 @@ public class JoystickBindings {
 	}
 
 	private static void swerveCalibration(SmartJoystick joystick, Robot robot) {
-		bindSetTrigger(joystick, joystick.A, BindSet.SWERVE_TEST).whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
-		bindSetTrigger(joystick, joystick.B, BindSet.SWERVE_TEST)
+		bindSetTrigger(joystick, joystick.A, BindSet.SWERVE_CALIBRATION)
+			.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
+		bindSetTrigger(joystick, joystick.B, BindSet.SWERVE_CALIBRATION)
 			.whileTrue(robot.getSwerve().getCommandsBuilder().steerCalibration(true, SysIdRoutine.Direction.kForward));
-		bindSetTrigger(joystick, joystick.Y, BindSet.SWERVE_TEST)
+		bindSetTrigger(joystick, joystick.Y, BindSet.SWERVE_CALIBRATION)
 			.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
 
-		bindSetTrigger(joystick, joystick.POV_DOWN, BindSet.SWERVE_TEST)
+		bindSetTrigger(joystick, joystick.POV_DOWN, BindSet.SWERVE_CALIBRATION)
 			.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> 0.2, () -> 0, () -> 0));
-		bindSetTrigger(joystick, joystick.POV_LEFT, BindSet.SWERVE_TEST)
+		bindSetTrigger(joystick, joystick.POV_LEFT, BindSet.SWERVE_CALIBRATION)
 			.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> 0.5, () -> 0, () -> 0));
-		bindSetTrigger(joystick, joystick.POV_RIGHT, BindSet.SWERVE_TEST)
+		bindSetTrigger(joystick, joystick.POV_RIGHT, BindSet.SWERVE_CALIBRATION)
 			.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> -0.2, () -> 0, () -> 0));
-		bindSetTrigger(joystick, joystick.POV_UP, BindSet.SWERVE_TEST)
+		bindSetTrigger(joystick, joystick.POV_UP, BindSet.SWERVE_CALIBRATION)
 			.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> -0.5, () -> 0, () -> 0));
 	}
 

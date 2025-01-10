@@ -21,7 +21,6 @@ import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.BooleanSupplier;
 
 import static frc.constants.VisionConstants.LATENCY_BOTPOSE_INDEX;

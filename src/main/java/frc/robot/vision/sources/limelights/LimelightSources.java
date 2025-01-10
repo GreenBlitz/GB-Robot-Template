@@ -12,7 +12,6 @@ import frc.utils.Filter;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
 
 public class LimelightSources {
 

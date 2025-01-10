@@ -2,11 +2,13 @@ package frc.robot.poseestimator.WPILibPoseEstimator;
 
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseEstimationMath;
+import frc.robot.poseestimator.helpers.StandardDeviations2D;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -40,8 +42,8 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
 			new Odometry<>(kinematics, initialGyroAngle, modulePositions, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE),
-			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.getWPILibStandardDeviations(),
-			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.getWPILibStandardDeviations()
+			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
+			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
@@ -49,17 +51,27 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
+		this.visionSpeed = 0;
+		this.odometrySpeed = 0;
+		this.lastOdometryObservation = new OdometryObservation(
+			modulePositions,
+			Optional.of(initialGyroAngle),
+			TimeUtils.getCurrentTimeSeconds()
+		);
+		this.lastVisionObservation = new VisionData(new Pose3d(), TimeUtils.getCurrentTimeSeconds());
 	}
 
 
 	@Override
 	public void resetPose(Pose2d newPose) {
-		poseEstimator.resetPose(newPose);
+		Logger.recordOutput(getLogPath() + "lastPoseResetedTo/", newPose);
+		poseEstimator.resetPosition(lastGyroAngle, lastOdometryObservation.wheelPositions(), newPose);
 	}
 
 	@Override
 	public Pose2d getEstimatedPose() {
 		return poseEstimator.getEstimatedPosition();
+//		return new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), lastGyroAngle);
 	}
 
 	@Override
@@ -121,7 +133,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp(),
-			PoseEstimationMath.calculateStandardDeviationOfPose(visionObservation, getEstimatedPose()).getWPILibStandardDeviations()
+			new StandardDeviations2D(visionObservation.getDistanceFromAprilTagMeters() * WPILibPoseEstimatorConstants.VISION_STDEVS_FACTOR).asColumnVector()
 		);
 		this.visionSpeed = PoseEstimationMath.deriveVisionData(lastVisionObservation, visionObservation);
 		this.lastVisionObservation = visionObservation;

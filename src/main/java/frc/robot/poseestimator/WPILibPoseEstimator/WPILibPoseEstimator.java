@@ -24,8 +24,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final SwerveDriveKinematics kinematics;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
-	private double visionSpeed;
-	private double odometrySpeed;
+	private double odometryAcceleeration;
 	private VisionData lastVisionObservation;
 	private OdometryObservation lastOdometryObservation;
 	private Rotation2d lastOdometryAngle;
@@ -51,8 +50,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-		this.visionSpeed = 0;
-		this.odometrySpeed = 0;
+		this.odometryAcceleeration = 0;
 		this.lastOdometryObservation = new OdometryObservation(
 			modulePositions,
 			Optional.of(initialGyroAngle),
@@ -97,7 +95,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 			double dt = odometryObservation.timestamp() - lastOdometryObservation.timestamp();
 			this.lastOdometryAngle = odometryAngle;
-			this.odometrySpeed = PoseEstimationMath.deriveTwist(changeInPose, dt);
+			this.odometryAcceleeration = PoseEstimationMath.deriveTwist(changeInPose, dt);
 			this.lastOdometryObservation = odometryObservation;
 		}
 	}
@@ -138,16 +136,13 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			new StandardDeviations2D(visionObservation.getDistanceFromAprilTagMeters() * WPILibPoseEstimatorConstants.VISION_STDEVS_FACTOR)
 				.asColumnVector()
 		);
-		this.visionSpeed = PoseEstimationMath.deriveVisionData(lastVisionObservation, visionObservation);
 		this.lastVisionObservation = visionObservation;
 	}
 
 	private void log() {
 		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
 		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
-		Logger.recordOutput(getLogPath() + "visionSpeed/", visionSpeed);
-		Logger.recordOutput(getLogPath() + "odometrySpeed/", odometrySpeed);
-		Logger.recordOutput(getLogPath() + "speedsDifferance", odometrySpeed - visionSpeed);
+		Logger.recordOutput(getLogPath() + "odometrySpeed/", odometryAcceleeration);
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryObservation.timestamp());
 		Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionObservation.getTimestamp());
 	}

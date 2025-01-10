@@ -4,11 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N3;
-import org.ejml.simple.SimpleMatrix;
 
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -126,13 +122,6 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
 	public Rotation2d getRotation2dYaw() {
 		return Rotation2d.fromDegrees(getYaw().getValue().in(Degrees));
-	}
-
-	public double getAccelerationMagnitude() {
-		Vector<N3> accelerationVector = new Vector<>(
-			new SimpleMatrix(new double[][] {{getAccelerationX().getValue().magnitude(), getAccelerationY().getValue().magnitude(), getAccelerationZ().getValue().magnitude()}})
-		);
-		return accelerationVector.norm();
 	}
 
 	/**

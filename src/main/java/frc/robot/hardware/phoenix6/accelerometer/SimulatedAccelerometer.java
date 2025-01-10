@@ -1,40 +1,44 @@
 package frc.robot.hardware.phoenix6.accelerometer;
 
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.N3;
 import frc.robot.hardware.interfaces.IAccelerometer;
-import frc.robot.subsystems.GBSubsystem;
+import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtils;
-import org.ejml.simple.SimpleMatrix;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class SimulatedAccelerometer extends GBSubsystem implements IAccelerometer {
+public class SimulatedAccelerometer implements IAccelerometer {
 
 	private final Supplier<ChassisSpeeds> robotSimulatedVelocityRelativeToRobot;
 	private final Supplier<Double> noise;
+	private final String logPath;
+
 	private double accelerationX;
 	private double accelerationY;
-	private ChassisSpeeds previousVelocity;
+	private ChassisSpeeds previousRobotVelocities;
+	private double lastUpdateTimestamp;
 
-	public SimulatedAccelerometer(String logPath, Supplier<ChassisSpeeds> robotSimulatedVelocityRelativeToRobot, double noiseAmount) {
-		super(logPath);
+	public SimulatedAccelerometer(String logPath, Supplier<ChassisSpeeds> robotSimulatedVelocity, double noiseAmount) {
 		Random randomNumbersGenerator = new Random();
-
-		this.robotSimulatedVelocityRelativeToRobot = robotSimulatedVelocityRelativeToRobot;
+		this.logPath = logPath;
+		this.robotSimulatedVelocityRelativeToRobot = robotSimulatedVelocity;
 		this.noise = () -> randomNumbersGenerator.nextGaussian() * noiseAmount;
-	}
+		this.previousRobotVelocities = robotSimulatedVelocity.get();
+		this.lastUpdateTimestamp = TimeUtils.getCurrentTimeSeconds();
 
-
-	@Override
-	public double getAccelerationMagnitude() {
-		Vector<N3> accelerationVector = new Vector<>(
-			new SimpleMatrix(new double[][] {{getAccelerationX(), getAccelerationY(), getAccelerationZ()}})
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				"simulatedAccelerationIsNotUpdated",
+				() -> lastUpdateTimestamp < TimeUtils.getCurrentTimeSeconds()
+			)
 		);
-		return accelerationVector.norm();
 	}
+
 
 	@Override
 	public double getAccelerationX() {
@@ -51,13 +55,23 @@ public class SimulatedAccelerometer extends GBSubsystem implements IAcceleromete
 		return 0 + noise.get();
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		accelerationX = (previousVelocity.vxMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vxMetersPerSecond)
-			/ TimeUtils.getCurrentTimeSeconds();
-		accelerationY = (previousVelocity.vyMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vyMetersPerSecond)
-			/ TimeUtils.getCurrentTimeSeconds();
-		previousVelocity = robotSimulatedVelocityRelativeToRobot.get();
+	private void log() {
+		Logger.recordOutput(logPath + "simulatedAccelerationX", getAccelerationX());
+		Logger.recordOutput(logPath + "simulatedAccelerationY", getAccelerationY());
+		Logger.recordOutput(logPath + "simulatedAccelerationZ", getAccelerationZ());
+		Logger.recordOutput(logPath + "AccelerationX", accelerationX);
+		Logger.recordOutput(logPath + "AccelerationY", accelerationY);
+		Logger.recordOutput(logPath + "AccelerationZ", 0);
+	}
+
+	private void update() {
+		double currentTime = TimeUtils.getCurrentTimeSeconds();
+		double dt = lastUpdateTimestamp - currentTime;
+		accelerationX = (previousRobotVelocities.vxMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vxMetersPerSecond) / dt;
+		accelerationY = (previousRobotVelocities.vyMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vyMetersPerSecond) / dt;
+		this.previousRobotVelocities = robotSimulatedVelocityRelativeToRobot.get();
+		this.lastUpdateTimestamp = currentTime;
+		log();
 	}
 
 }

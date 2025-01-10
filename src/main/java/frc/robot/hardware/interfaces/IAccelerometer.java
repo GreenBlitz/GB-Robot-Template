@@ -1,8 +1,17 @@
 package frc.robot.hardware.interfaces;
 
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.numbers.N3;
+import org.ejml.simple.SimpleMatrix;
+
 public interface IAccelerometer {
 
-	double getAccelerationMagnitude();
+	default double getAccelerationMagnitude() {
+		Vector<N3> accelerationVector = new Vector<>(
+			new SimpleMatrix(new double[][] {{getAccelerationX(), getAccelerationY(), getAccelerationZ()}})
+		);
+		return accelerationVector.norm();
+	};
 
 	double getAccelerationX();
 

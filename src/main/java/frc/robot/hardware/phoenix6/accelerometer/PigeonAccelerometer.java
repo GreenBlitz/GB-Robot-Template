@@ -15,11 +15,6 @@ public class PigeonAccelerometer extends Phoenix6Device implements IAcceleromete
 	}
 
 	@Override
-	public double getAccelerationMagnitude() {
-		return accelerometer.getAccelerationMagnitude();
-	}
-
-	@Override
 	public double getAccelerationX() {
 		return accelerometer.getAccelerationX().getValue().magnitude();
 	}

@@ -18,13 +18,11 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.states.SwerveStateHelper;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -70,12 +68,12 @@ public class Robot {
 		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
 		Supplier<Command> shootingCommand = () -> superStructure.setState(RobotState.SPEAKER);
 
-        swerve.configPathPlanner(
-                poseEstimator::getCurrentPose,
-                poseEstimator::resetPose,
-                PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
-        );
-        autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutosBuilder.getAllAutos(this, intakeCommand, shootingCommand));
+		swerve.configPathPlanner(
+			poseEstimator::getCurrentPose,
+			poseEstimator::resetPose,
+			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
+		);
+		autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutosBuilder.getAllAutos(this, intakeCommand, shootingCommand));
 	}
 
 

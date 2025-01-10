@@ -10,6 +10,7 @@ import frc.utils.auto.AutoPath;
 import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -17,19 +18,19 @@ import java.util.function.Supplier;
 public class AutosBuilder {
 
 	public static List<Supplier<GBAuto>> getAllAutos(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
-		return List.of(
-			() -> M231(robot, intakeCommand, shootingCommand),
-			() -> new GBAuto("Rotate"),
-			() -> new GBAuto("Rotate 2m"),
-			() -> new GBAuto("Straight 2m")
-		);
+		ArrayList<Supplier<GBAuto>> autoList = new ArrayList<>(getAllGUIAutos());
+		autoList.add(() -> M231(robot, intakeCommand, shootingCommand));
+		return autoList;
+	}
+
+	private static List<Supplier<GBAuto>> getAllGUIAutos() {
+		return List.of(() -> new GBAuto("Rotate"), () -> new GBAuto("Rotate 2m"), () -> new GBAuto("Straight 2m"));
 	}
 
 	private static GBAuto M231(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
-		String logPath = AutonomousConstants.LOG_PATH_PREFIX + "M231/";
-		Optional<PathPlannerPath> pathM2 = AutoPath.MIDDLE_OF_SUBWOOFER_TO_NOTE_2.getPathOptional(logPath);
-		Optional<PathPlannerPath> path23 = AutoPath.NOTE_2_TO_NOTE_3.getPathOptional(logPath);
-		Optional<PathPlannerPath> path31 = AutoPath.NOTE_3_TO_NOTE_1.getPathOptional(logPath);
+		Optional<PathPlannerPath> pathM2 = AutoPath.MIDDLE_OF_SUBWOOFER_TO_NOTE_2.getPathOptional();
+		Optional<PathPlannerPath> path23 = AutoPath.NOTE_2_TO_NOTE_3.getPathOptional();
+		Optional<PathPlannerPath> path31 = AutoPath.NOTE_3_TO_NOTE_1.getPathOptional();
 		Pose2d startingPoint = pathM2.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero);
 
 		return new GBAuto(

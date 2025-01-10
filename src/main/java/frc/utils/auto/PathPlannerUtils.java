@@ -22,7 +22,7 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
 import org.json.simple.parser.ParseException;
-import frc.utils.ToleranceUtils;
+import frc.utils.math.ToleranceMath;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public class PathPlannerUtils {
 	}
 
 	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
-		return ToleranceUtils
+		return ToleranceMath
 			.isNear(getAllianceRelativePose(path.getPathPoses().get(0)).getTranslation(), currentPose.get().getTranslation(), toleranceMeters);
 	}
 

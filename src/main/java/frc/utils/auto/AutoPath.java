@@ -16,8 +16,8 @@ public enum AutoPath {
 		this.pathName = pathName;
 	}
 
-	public Optional<PathPlannerPath> getPathOptional(String logPath) {
-		return PathPlannerUtils.getPathFromFile(pathName, logPath);
+	public Optional<PathPlannerPath> getPathOptional() {
+		return PathPlannerUtils.getPathFromFile(pathName);
 	}
 
 }

@@ -9,7 +9,6 @@ import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
-import frc.utils.pose.PoseUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -53,16 +52,6 @@ public class LimelightSources {
 			getVisionData().ifPresent(
 				(heading) -> Logger.recordOutput(super.logPath + "robotBotPose1Heading", heading.getEstimatedPose().getRotation().toRotation2d())
 			);
-		}
-
-		@Override
-		public Optional<HeadingData> getRawHeadingData() {
-			return getVisionData().map(PoseUtils::VisionDataToHeadingData);
-		}
-
-		@Override
-		public Optional<HeadingData> getFilteredHeadingData() {
-			return getFilteredVisionData().map(PoseUtils::VisionDataToHeadingData);
 		}
 
 	}

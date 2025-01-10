@@ -154,16 +154,13 @@ public class LimeLightSource implements VisionSource<AprilTagVisionData> {
 	}
 
 	@Override
-	public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
-		return this.filter = newFilter;
+	public void setFilter(Filter<AprilTagVisionData> newFilter) {
+		this.filter = newFilter;
 	}
 
 	@Override
-	public Filter<AprilTagVisionData> applyOnFilter(
-		BiFunction<Filter<AprilTagVisionData>, Filter<AprilTagVisionData>, Filter<AprilTagVisionData>> applicationFunction,
-		Filter<AprilTagVisionData> filterToApplyWith
-	) {
-		return this.filter = applicationFunction.apply(this.filter, filterToApplyWith);
+	public Filter<AprilTagVisionData> getFilter() {
+		return filter;
 	}
 
 	protected NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {

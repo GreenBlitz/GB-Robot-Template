@@ -94,18 +94,14 @@ public class LimelightSources {
 		}
 
 		@Override
-		public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
+		public void setFilter(Filter<AprilTagVisionData> newFilter) {
 			noisyLimelight.setFilter(newFilter);
-			return gyroSupportingLimelight.setFilter(newFilter);
+			gyroSupportingLimelight.setFilter(newFilter);
 		}
 
 		@Override
-		public Filter<AprilTagVisionData> applyOnFilter(
-			BiFunction<Filter<AprilTagVisionData>, Filter<AprilTagVisionData>, Filter<AprilTagVisionData>> applicationFunction,
-			Filter<AprilTagVisionData> filterToApplyWith
-		) {
-			noisyLimelight.applyOnFilter(applicationFunction, filterToApplyWith);
-			return gyroSupportingLimelight.applyOnFilter(applicationFunction, filterToApplyWith);
+		public Filter<AprilTagVisionData> getFilter() {
+			return noisyLimelight.filter; // same filter for both sources
 		}
 
 		@Override

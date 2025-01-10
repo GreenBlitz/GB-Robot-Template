@@ -7,6 +7,7 @@ import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.HeadingData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.LimelightSources;
 import frc.utils.alerts.Alert;
@@ -48,8 +49,8 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	private void updateYawInLimelights(Rotation2d yaw) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
-			if (visionSource instanceof LimelightSources.GyroSupportingLimelight gyroRequiringVisionSource) {
-				gyroRequiringVisionSource
+			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
+				robotHeadingRequiringVisionSource
 					.updateGyroAngleValues(new GyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
 			}
 		}

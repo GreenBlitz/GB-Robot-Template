@@ -65,7 +65,6 @@ public class LimelightSources {
 			return getFilteredVisionData().map(PoseUtils::VisionDataToHeadingData);
 		}
 
-
 	}
 
 	public static class DynamicLimelight

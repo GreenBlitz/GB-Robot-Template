@@ -1,4 +1,4 @@
-package frc.utils;
+package frc.utils.math;
 
 
 import edu.wpi.first.math.MathUtil;
@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.MathConstants;
 
-public class ToleranceUtils {
+public class ToleranceMath {
 
 	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Rotation2d angleTolerance, double translationalToleranceMeters) {
 		return isNear(wantedPose.getTranslation(), pose.getTranslation(), translationalToleranceMeters)
@@ -34,6 +34,18 @@ public class ToleranceUtils {
 
 	public static boolean isInRange(double value, double min, double max) {
 		return isInRange(value, min, max, 0);
+	}
+
+	public static double applyDeadband(double value, double deadband) {
+		return Math.abs(value) <= deadband ? 0 : value;
+	}
+
+	public static Rotation2d clamp(Rotation2d angle, Rotation2d maxAngle) {
+		return Rotation2d.fromRadians(MathUtil.clamp(angle.getRadians(), -maxAngle.getRadians(), maxAngle.getRadians()));
+	}
+
+	public static Rotation2d clamp(Rotation2d angle, Rotation2d minAngle, Rotation2d maxAngle) {
+		return Rotation2d.fromRadians(MathUtil.clamp(angle.getRadians(), minAngle.getRadians(), maxAngle.getRadians()));
 	}
 
 }

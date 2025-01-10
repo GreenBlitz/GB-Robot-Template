@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.autonomous.AutosBuilder;
 import frc.constants.GlobalConstants;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimation.PoseEstimator;
@@ -57,7 +58,7 @@ public class Robot {
 		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getCurrentPose()), Optional::empty, swerve));
+		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getCurrentPose);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -69,8 +70,12 @@ public class Robot {
 		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
 		Supplier<Command> shootingCommand = () -> superStructure.setState(RobotState.SPEAKER);
 
-		swerve.configPathPlanner(poseEstimator::getCurrentPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
-		autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutosBuilder.getAllAutos(this, intakeCommand, shootingCommand));
+        swerve.configPathPlanner(
+                poseEstimator::getCurrentPose,
+                poseEstimator::resetPose,
+                PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
+        );
+        autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutosBuilder.getAllAutos(this, intakeCommand, shootingCommand));
 	}
 
 

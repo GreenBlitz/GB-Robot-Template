@@ -3,7 +3,6 @@ package frc.utils.auto;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.GoalEndState;
@@ -18,12 +17,14 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.ToleranceUtils;
 import frc.utils.alerts.Alert;
+import org.json.simple.parser.ParseException;
+import frc.utils.ToleranceUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,20 +33,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PathPlannerUtils {
-
-	public static final RobotConfig SYNCOPA_ROBOT_CONFIG = new RobotConfig(
-		74,
-		8.6,
-		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500Foc(1), 60, 1),
-		0.577
-	);
-	public static final RobotConfig RAFUL_ROBOT_CONFIG = new RobotConfig(
-		60,
-		6,
-		new ModuleConfig(0.0234, 7.98, 1.1, DCMotor.getKrakenX60Foc(1), 60, 1),
-		0.6946,
-		0.556
-	);
 
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
@@ -60,6 +47,23 @@ public class PathPlannerUtils {
 
 	public static void scheduleWarmup() {
 		PathfindingCommand.warmupCommand().schedule();
+	}
+
+
+	private static void reportAlert(Alert.AlertType alertType, String message) {
+		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + message).report();
+	}
+
+	public static Optional<RobotConfig> getGuiRobotConfig() {
+		try {
+			RobotConfig robotConfig = RobotConfig.fromGUISettings();
+			return Optional.of(robotConfig);
+		} catch (IOException ioException) {
+			reportAlert(Alert.AlertType.ERROR, "GetGuiSettingsFailNotFoundAt");
+		} catch (ParseException parseException) {
+			reportAlert(Alert.AlertType.ERROR, "GuiSettingsParseFailedAt");
+		}
+		return Optional.empty();
 	}
 
 	public static void configPathPlanner(
@@ -95,11 +99,11 @@ public class PathPlannerUtils {
 		return bluePose;
 	}
 
-	static Optional<PathPlannerPath> getPathFromFile(String pathName, String logPath) {
+	static Optional<PathPlannerPath> getPathFromFile(String pathName) {
 		try {
 			return Optional.of(PathPlannerPath.fromPathFile(pathName));
 		} catch (Exception exception) {
-			new Alert(Alert.AlertType.ERROR, logPath + exception.getMessage()).report();
+			reportAlert(Alert.AlertType.ERROR, exception.getMessage());
 		}
 		return Optional.empty();
 	}

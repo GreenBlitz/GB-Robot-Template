@@ -4,6 +4,7 @@
 
 package frc;
 
+import frc.joysticks.JoystickManager;
 import frc.robot.Robot;
 import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
@@ -32,8 +33,7 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-
-		JoysticksBindings.configureBindings(robot);
+		JoystickManager.createDashboardChoosers(robot);
 	}
 
 	@Override

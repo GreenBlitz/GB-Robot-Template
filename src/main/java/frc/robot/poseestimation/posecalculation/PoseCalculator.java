@@ -19,8 +19,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.poseestimation.observations.OdometryObservation;
 import frc.robot.poseestimation.observations.VisionObservation;
+import frc.robot.poseestimator.observations.OdometryObservation;
 
 import java.util.NoSuchElementException;
 
@@ -58,17 +58,17 @@ public class PoseCalculator {
 		// Set the created values to starting values
 		if (isFirstOdometryUpdate) {// todo - make it happen once
 			lastWheelPositions = observation.wheelPositions();
-			lastGyroAngle = observation.gyroAngle();
+			lastGyroAngle = observation.gyroAngle().orElse(new Rotation2d());
 			isFirstOdometryUpdate = false;
 		}
 
 		Twist2d twist = kinematics.toTwist2d(lastWheelPositions, observation.wheelPositions());
 		lastWheelPositions = observation.wheelPositions();
 		// Check gyro connected
-		if (observation.gyroAngle() != null) {
+		if (observation.gyroAngle().isPresent()) {
 			// Update dtheta for twist if gyro connected
-			twist = new Twist2d(twist.dx, twist.dy, observation.gyroAngle().minus(lastGyroAngle).getRadians());
-			lastGyroAngle = observation.gyroAngle();
+			twist = new Twist2d(twist.dx, twist.dy, observation.gyroAngle().get().minus(lastGyroAngle).getRadians());
+			lastGyroAngle = observation.gyroAngle().get();
 		}
 		// Add twist to odometry pose
 		odometryPose = odometryPose.exp(twist);

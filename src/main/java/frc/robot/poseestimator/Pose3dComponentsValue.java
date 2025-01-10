@@ -11,8 +11,8 @@ public enum Pose3dComponentsValue {
 
 	private final int index;
 
-	Pose3dComponentsValue(int entryIndex) {
-		this.index = entryIndex;
+	Pose3dComponentsValue(int index) {
+		this.index = index;
 	}
 
 	public int getIndex() {

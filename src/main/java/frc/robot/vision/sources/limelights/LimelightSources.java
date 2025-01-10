@@ -15,12 +15,12 @@ import java.util.Optional;
 
 public class LimelightSources {
 
-	public static class GyroSupportingLimelight extends LimeLightSource implements RobotHeadingRequiringVisionSource {
+	public static class HeadingRequiredLimelight extends LimeLightSource implements RobotHeadingRequiringVisionSource {
 
 		private GyroAngleValues gyroAngleValues;
 		private final NetworkTableEntry robotOrientationEntry;
 
-		public GyroSupportingLimelight(String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
+		public HeadingRequiredLimelight(String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
 			super(name, parentLogPath, filter, LimelightPoseEstimatingMethod.BOTPOSE_2);
 			this.gyroAngleValues = new GyroAngleValues(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0);
 			this.robotOrientationEntry = super.getLimelightNetworkTableEntry("robot_orientation_set");
@@ -63,13 +63,13 @@ public class LimelightSources {
 	{
 
 		private final NoisyLimelight noisyLimelight;
-		private final GyroSupportingLimelight gyroSupportingLimelight;
+		private final HeadingRequiredLimelight headingRequiredLimelight;
 		private boolean useGyroForPoseEstimating;
 
 		public DynamicLimelight(boolean defaultUseGyroForPoseEstimating, String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
 			this.useGyroForPoseEstimating = defaultUseGyroForPoseEstimating;
 			this.noisyLimelight = new NoisyLimelight(name, parentLogPath, filter);
-			this.gyroSupportingLimelight = new GyroSupportingLimelight(name, parentLogPath, filter);
+			this.headingRequiredLimelight = new HeadingRequiredLimelight(name, parentLogPath, filter);
 		}
 
 		public void useRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {
@@ -79,23 +79,23 @@ public class LimelightSources {
 		@Override
 		public void update() {
 			noisyLimelight.update();
-			gyroSupportingLimelight.update();
+			headingRequiredLimelight.update();
 		}
 
 		@Override
 		public Optional<AprilTagVisionData> getVisionData() {
-			return useGyroForPoseEstimating ? noisyLimelight.getVisionData() : gyroSupportingLimelight.getVisionData();
+			return useGyroForPoseEstimating ? noisyLimelight.getVisionData() : headingRequiredLimelight.getVisionData();
 		}
 
 		@Override
 		public Optional<AprilTagVisionData> getFilteredVisionData() {
-			return useGyroForPoseEstimating ? noisyLimelight.getFilteredVisionData() : gyroSupportingLimelight.getFilteredVisionData();
+			return useGyroForPoseEstimating ? noisyLimelight.getFilteredVisionData() : headingRequiredLimelight.getFilteredVisionData();
 		}
 
 		@Override
 		public void setFilter(Filter<AprilTagVisionData> newFilter) {
 			noisyLimelight.setFilter(newFilter);
-			gyroSupportingLimelight.setFilter(newFilter);
+			headingRequiredLimelight.setFilter(newFilter);
 		}
 
 		@Override
@@ -115,7 +115,7 @@ public class LimelightSources {
 
 		@Override
 		public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
-			gyroSupportingLimelight.updateGyroAngleValues(gyroAngleValues);
+			headingRequiredLimelight.updateGyroAngleValues(gyroAngleValues);
 		}
 
 	}

@@ -11,6 +11,8 @@ import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.LimelightSources;
 import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -85,10 +87,22 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof LimelightSources.DynamicLimelight dynamicLimelight) {
 				dynamicLimelight.useRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
-			} else if (
-				visionSource instanceof LimelightSources.GyroSupportingLimelight || visionSource instanceof LimelightSources.NoisyLimelight
-			) {
-				new Alert(Alert.AlertType.WARNING, "unableToSwitchBotPoseOnNonDynamicLimelight");
+			} else if (visionSource instanceof LimelightSources.HeadingRequiredLimelight) {
+				AlertManager.addAlert(
+					new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						"unableToSwitchBotPoseOnNonDynamicLimelight",
+						() -> useRobotHeadingForPoseEstimating
+					)
+				);
+			} else if (visionSource instanceof LimelightSources.NoisyLimelight) {
+				AlertManager.addAlert(
+					new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						"unableToSwitchBotPoseOnNonDynamicLimelight",
+						() -> !useRobotHeadingForPoseEstimating
+					)
+				);
 			}
 		}
 	}

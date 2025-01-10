@@ -3,9 +3,7 @@ package frc.joysticks;
 public enum BindSet {
 
 	NO_JOYSTICK(0),
-	NO_BINDINGS(1),
-	SWERVE_TEST(2),
-	SWERVE_CALIBRATION(3);
+	NO_BINDINGS(1);
 
 	private final int index;
 

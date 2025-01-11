@@ -1,13 +1,10 @@
 package frc.utils.pose;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
+import frc.robot.hardware.signal.TimedValue;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import frc.robot.vision.data.VisionData;
-import frc.robot.vision.data.HeadingData;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
@@ -42,8 +39,8 @@ public class PoseUtils {
 		);
 	}
 
-	public static HeadingData VisionDataToHeadingData(VisionData visionData) {
-		return new HeadingData(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
+	public static TimedValue<Rotation2d> VisionDataToHeadingData(VisionData visionData) {
+		return new TimedValue<Rotation2d>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
 	}
 
 }

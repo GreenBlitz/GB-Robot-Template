@@ -2,9 +2,9 @@ package frc.robot.vision.sources.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import frc.robot.hardware.signal.TimedValue;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.data.HeadingData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
@@ -104,12 +104,12 @@ public class LimelightSources {
 		}
 
 		@Override
-		public Optional<HeadingData> getRawHeadingData() {
+		public Optional<TimedValue<Rotation2d>> getRawHeadingData() {
 			return noisyLimelight.getRawHeadingData();
 		}
 
 		@Override
-		public Optional<HeadingData> getFilteredHeadingData() {
+		public Optional<TimedValue<Rotation2d>> getFilteredHeadingData() {
 			return noisyLimelight.getFilteredHeadingData();
 		}
 

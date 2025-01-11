@@ -3,8 +3,8 @@ package frc.robot.vision.multivisionsources;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.VisionConstants;
+import frc.robot.hardware.signal.TimedValue;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.data.HeadingData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
@@ -58,28 +58,28 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		}
 	}
 
-	protected ArrayList<HeadingData> extractHeadingDataFromMappedSources(
+	protected ArrayList<TimedValue<Rotation2d>> extractHeadingDataFromMappedSources(
 		List<VisionSource<AprilTagVisionData>> sources,
 		Function<IndpendentHeadingVisionSource, Optional<AprilTagVisionData>> mapping
 	) {
-		ArrayList<HeadingData> output = new ArrayList<>();
+		ArrayList<TimedValue<Rotation2d>> output = new ArrayList<>();
 		for (VisionSource<AprilTagVisionData> visionSource : sources) {
 			if (visionSource instanceof IndpendentHeadingVisionSource indpendentHeadingVisionSource) {
 				mapping.apply(indpendentHeadingVisionSource)
 					.ifPresent(
 						(visionData) -> output
-							.add(new HeadingData(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp()))
+							.add(new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp()))
 					);
 			}
 		}
 		return output;
 	}
 
-	public ArrayList<HeadingData> getRawRobotHeadings() {
+	public ArrayList<TimedValue<Rotation2d>> getRawRobotHeadings() {
 		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getVisionData);
 	}
 
-	public ArrayList<HeadingData> getFilteredRobotHeading() {
+	public ArrayList<TimedValue<Rotation2d>> getFilteredRobotHeading() {
 		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getFilteredVisionData);
 	}
 

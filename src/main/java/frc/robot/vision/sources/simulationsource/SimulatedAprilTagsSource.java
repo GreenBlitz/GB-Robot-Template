@@ -5,8 +5,8 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.*;
 import frc.constants.VisionConstants;
 import frc.robot.poseestimator.Pose2dComponentsValue;
+import frc.robot.poseestimator.helpers.StandardDeviations3D;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.data.AprilTagStandardDeviations;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTagVisionData> {
+public class SimulatedAprilTagsSource extends GBSubsystem implements VisionSource<AprilTagVisionData> {
 
 	private final Random randomValuesGenerator;
 	private final Rotation2d fieldOfView;
@@ -38,7 +38,7 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 
 	private Filter<AprilTagVisionData> filter;
 
-	public SimulatedSource(
+	public SimulatedAprilTagsSource(
 		String cameraName,
 		Supplier<Pose2d> simulateRobotPose,
 		Pose3d camerasRelativeToRobot,
@@ -100,13 +100,14 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 			getName(),
 			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
 			TimeUtils.getCurrentTimeSeconds(),
-			new AprilTagStandardDeviations(
-				noiseAmount[Pose2dComponentsValue.X_VALUE.getIndex()] + transformNoise.get() * deviationsFactor,
-				noiseAmount[Pose2dComponentsValue.Y_VALUE.getIndex()] + transformNoise.get() * deviationsFactor,
-				0,
-				0,
-				0,
-				noiseAmount[Pose2dComponentsValue.ROTATION_VALUE.getIndex()] + angleNoise.get() * deviationsFactor
+			new StandardDeviations3D(
+				new double[] {
+					noiseAmount[Pose2dComponentsValue.X_VALUE.getIndex()] + transformNoise.get() * deviationsFactor,
+					noiseAmount[Pose2dComponentsValue.Y_VALUE.getIndex()] + transformNoise.get() * deviationsFactor,
+					0D,
+					0D,
+					0D,
+					noiseAmount[Pose2dComponentsValue.ROTATION_VALUE.getIndex()] + angleNoise.get() * deviationsFactor}
 			),
 			aprilTagPose.getZ(),
 			distanceBetweenPosesMeters(aprilTagPose.toPose2d(), noisedPose),
@@ -163,8 +164,13 @@ public class SimulatedSource extends GBSubsystem implements VisionSource<AprilTa
 	}
 
 	@Override
-	public Filter<AprilTagVisionData> setFilter(Filter<AprilTagVisionData> newFilter) {
-		return this.filter = newFilter;
+	public void setFilter(Filter<AprilTagVisionData> newFilter) {
+		this.filter = newFilter;
+	}
+
+	@Override
+	public Filter<AprilTagVisionData> getFilter() {
+		return filter;
 	}
 
 	private void logMovingData() {

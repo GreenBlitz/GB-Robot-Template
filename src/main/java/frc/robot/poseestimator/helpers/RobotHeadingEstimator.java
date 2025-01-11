@@ -34,7 +34,7 @@ public class RobotHeadingEstimator {
 	}
 
 	public void updateVisionHeading(HeadingData visionHeadingData, double visionStandardDeviation) {
-		if(!hasFirstVisionUpdateArrived) {
+		if (!hasFirstVisionUpdateArrived) {
 			hasFirstVisionUpdateArrived = true;
 			estimatedHeading = visionHeadingData.heading();
 		}
@@ -42,7 +42,7 @@ public class RobotHeadingEstimator {
 		gyroAtTimestamp.ifPresent(
 			gyroSampleAtTimestamp -> estimatedHeading = PoseEstimatorMath.combineVisionHeadingToGyro(
 				visionHeadingData.heading(),
-				PoseEstimatorMath.getAngleDistance(lastGyroAngle, gyroSampleAtTimestamp),
+				PoseEstimatorMath.getAngleDistance(gyroSampleAtTimestamp, lastGyroAngle),
 				estimatedHeading,
 				gyroStandardDeviation,
 				visionStandardDeviation

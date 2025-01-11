@@ -2,14 +2,17 @@ package frc.robot.vision.sources.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import frc.robot.poseestimator.helpers.StandardDeviations3D;
 import frc.constants.VisionConstants;
+import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.VisionSource;
+import frc.robot.vision.sources.IndpendentHeadingVisionSource;
+import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.utils.AngleUnit;
 import frc.utils.Conversions;
 import frc.utils.Filter;
@@ -25,42 +28,45 @@ import java.util.function.BooleanSupplier;
 
 import static frc.constants.VisionConstants.LATENCY_BOTPOSE_INDEX;
 
-public class LimeLightSource implements VisionSource<AprilTagVisionData> {
+public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
 	protected final String logPath;
 	protected final String name;
 	protected final BooleanSupplier shouldDataBeFiltered;
-	protected final LimelightPoseEstimatingMethod useGyroForPoseEstimating;
+	protected final LimelightPoseEstimationMethod poseEstimationMethod;
 
 	protected final NetworkTableEntry robotPoseEntryBotPose2;
 	protected final NetworkTableEntry robotPoseEntryBotPose1;
 	protected final NetworkTableEntry aprilTagIdEntry;
 	protected final NetworkTableEntry aprilTagPoseEntry;
 	protected final NetworkTableEntry standardDeviations;
+	protected final NetworkTableEntry robotOrientationEntry;
 
 	protected double[] aprilTagPoseArray;
 	protected double[] robotPoseArray;
 	protected double[] standardDeviationsArray;
 	protected Filter<AprilTagVisionData> filter;
+	private GyroAngleValues gyroAngleValues;
 
 	protected LimeLightSource(
 		String name,
 		String parentLogPath,
 		Filter<AprilTagVisionData> filter,
-		LimelightPoseEstimatingMethod useGyroForPoseEstimating
+		LimelightPoseEstimationMethod poseEstimationMethod
 	) {
 		this.logPath = parentLogPath + name + "/";
 		this.name = name;
 		this.filter = filter;
 		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
-		this.useGyroForPoseEstimating = useGyroForPoseEstimating;
+		this.poseEstimationMethod = poseEstimationMethod;
 
 		this.robotPoseEntryBotPose2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryBotPose1 = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.standardDeviations = getLimelightNetworkTableEntry("stddevs");
-
+		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
+		this.gyroAngleValues = new GyroAngleValues(new Rotation2d(), 0, new Rotation2d(), 0, new Rotation2d(), 0);
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -71,8 +77,10 @@ public class LimeLightSource implements VisionSource<AprilTagVisionData> {
 
 	@Override
 	public void update() {
+		robotOrientationEntry.setDoubleArray(gyroAngleValues.asArray());
+		Logger.recordOutput(logPath + "gyroAngleValues", gyroAngleValues.asArray());
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		NetworkTableEntry entry = switch (useGyroForPoseEstimating) {
+		NetworkTableEntry entry = switch (poseEstimationMethod) {
 			case BOTPOSE_1 -> robotPoseEntryBotPose1;
 			case BOTPOSE_2 -> robotPoseEntryBotPose2;
 		};
@@ -177,6 +185,11 @@ public class LimeLightSource implements VisionSource<AprilTagVisionData> {
 			Logger.recordOutput(logPath + "lastUpdate", visionData.getTimestamp());
 			Logger.recordOutput(logPath + "stdDevs", standardDeviationsArray);
 		});
+	}
+
+	@Override
+	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
+		this.gyroAngleValues = gyroAngleValues;
 	}
 
 }

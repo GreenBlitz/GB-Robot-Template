@@ -1,6 +1,6 @@
 package frc.robot.vision.sources.limelights;
 
-public enum LimelightPoseEstimatingMethod {
+public enum LimelightPoseEstimationMethod {
 
 	BOTPOSE_1,
 	BOTPOSE_2;

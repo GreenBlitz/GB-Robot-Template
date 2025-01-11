@@ -30,22 +30,22 @@ import static frc.constants.VisionConstants.LATENCY_BOTPOSE_INDEX;
 
 public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
-	protected final String logPath;
-	protected final String name;
-	protected final BooleanSupplier shouldDataBeFiltered;
-	protected final LimelightPoseEstimationMethod poseEstimationMethod;
+	private final String logPath;
+	private final String name;
+	private final BooleanSupplier shouldDataBeFiltered;
+	private final LimelightPoseEstimationMethod poseEstimationMethod;
 
-	protected final NetworkTableEntry robotPoseEntryBotPose2;
-	protected final NetworkTableEntry robotPoseEntryBotPose1;
-	protected final NetworkTableEntry aprilTagIdEntry;
-	protected final NetworkTableEntry aprilTagPoseEntry;
-	protected final NetworkTableEntry standardDeviations;
-	protected final NetworkTableEntry robotOrientationEntry;
+	private final NetworkTableEntry robotPoseEntryBotPose2;
+	private final NetworkTableEntry robotPoseEntryBotPose1;
+	private final NetworkTableEntry aprilTagIdEntry;
+	private final NetworkTableEntry aprilTagPoseEntry;
+	private final NetworkTableEntry standardDeviations;
+	private final NetworkTableEntry robotOrientationEntry;
 
-	protected double[] aprilTagPoseArray;
-	protected double[] robotPoseArray;
-	protected double[] standardDeviationsArray;
-	protected Filter<AprilTagVisionData> filter;
+	private double[] aprilTagPoseArray;
+	private double[] robotPoseArray;
+	private double[] standardDeviationsArray;
+	private Filter<AprilTagVisionData> filter;
 	private GyroAngleValues gyroAngleValues;
 
 	protected LimeLightSource(
@@ -178,12 +178,15 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered.getAsBoolean());
 		Logger.recordOutput(logPath + "botPoseDirectOutput", PoseUtils.poseArrayToPose3D(robotPoseArray, AngleUnit.DEGREES));
-		getVisionData().ifPresent((visionData) -> {
+		getVisionData().ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose());
 			Logger.recordOutput(logPath + "unfilteredVisionProjected/", visionData.getEstimatedPose().toPose2d());
 			Logger.recordOutput(logPath + "aprilTagHeightMeters", visionData.getAprilTagHeightMeters());
 			Logger.recordOutput(logPath + "lastUpdate", visionData.getTimestamp());
 			Logger.recordOutput(logPath + "stdDevs", standardDeviationsArray);
+			if (poseEstimationMethod == LimelightPoseEstimationMethod.BOTPOSE_1) {
+				Logger.recordOutput(logPath + "robotBotPose1Heading", visionData.getEstimatedPose().getRotation().toRotation2d());
+			}
 		});
 	}
 

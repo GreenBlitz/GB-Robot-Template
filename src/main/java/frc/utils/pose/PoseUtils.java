@@ -39,8 +39,8 @@ public class PoseUtils {
 		);
 	}
 
-	public static TimedValue<Rotation2d> VisionDataToHeadingData(VisionData visionData) {
-		return new TimedValue<Rotation2d>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
+	public static TimedValue<Rotation2d> visionDataToHeadingData(VisionData visionData) {
+		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
 	}
 
 }

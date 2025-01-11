@@ -3,9 +3,11 @@ package frc.robot.vision.multivisionsources;
 import frc.constants.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
+import frc.utils.Filter;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -17,7 +19,7 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 
 	@SafeVarargs
 	public MultiVisionSources(String logPath, VisionSource<ReturnType>... visionSources) {
-		this(logPath, List.of(visionSources));
+		this(logPath, Arrays.asList(visionSources));
 	}
 
 	public MultiVisionSources(String logPath, List<VisionSource<ReturnType>> visionSources) {
@@ -31,6 +33,18 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 
 	public ArrayList<ReturnType> getFilteredVisionData() {
 		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
+	}
+
+	public void applyFunctionOnAllFilters(Function<Filter<ReturnType>, Filter<ReturnType>> filterChangingFunction) {
+		for (VisionSource<ReturnType> visionSource : visionSources) {
+			visionSource.applyFunctionOnFilter(filterChangingFunction);
+		}
+	}
+
+	public void clearFilters() {
+		for (VisionSource<ReturnType> visionSource : visionSources) {
+			visionSource.clearFilter();
+		}
 	}
 
 	public void log() {

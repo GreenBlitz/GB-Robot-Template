@@ -56,21 +56,20 @@ public class SimulatedAccelerometer implements IAccelerometer {
 	}
 
 	private void log() {
-		Logger.recordOutput(logPath + "simulatedAccelerationX", getAccelerationX());
-		Logger.recordOutput(logPath + "simulatedAccelerationY", getAccelerationY());
-		Logger.recordOutput(logPath + "simulatedAccelerationZ", getAccelerationZ());
+		Logger.recordOutput(logPath + "noisedAccelerationX", getAccelerationX());
+		Logger.recordOutput(logPath + "noisedAccelerationY", getAccelerationY());
+		Logger.recordOutput(logPath + "noisedAccelerationZ", getAccelerationZ());
 		Logger.recordOutput(logPath + "AccelerationX", accelerationX);
 		Logger.recordOutput(logPath + "AccelerationY", accelerationY);
 		Logger.recordOutput(logPath + "AccelerationZ", 0);
 	}
 
 	private void update() {
-		double currentTime = TimeUtils.getCurrentTimeSeconds();
-		double dt = lastUpdateTimestamp - currentTime;
+		double dt = TimeUtils.getLatestCycleTimeSeconds();
 		accelerationX = (previousRobotVelocities.vxMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vxMetersPerSecond) / dt;
 		accelerationY = (previousRobotVelocities.vyMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vyMetersPerSecond) / dt;
 		this.previousRobotVelocities = robotSimulatedVelocityRelativeToRobot.get();
-		this.lastUpdateTimestamp = currentTime;
+		this.lastUpdateTimestamp = dt;
 		log();
 	}
 

@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.constants.VisionConstants;
 import frc.constants.GlobalConstants;
 import frc.constants.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -26,7 +28,6 @@ import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
  * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
@@ -35,6 +36,7 @@ import frc.utils.battery.BatteryUtils;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	private final MultiAprilTagVisionSources aprilTagVisionSources;
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
@@ -43,6 +45,7 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
+		// waiting for swerve and poseestimator to be merged in order to have botpose2 working
 
 		IGyro gyro = GyroFactory.createGyro(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/");
 		this.swerve = new Swerve(

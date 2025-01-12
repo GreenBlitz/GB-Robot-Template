@@ -5,6 +5,7 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.joysticks.JoystickManager;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
@@ -32,8 +33,7 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-
-		JoysticksBindings.configureBindings(robot);
+		JoystickManager.createDashboardChoosers(robot);
 	}
 
 	@Override

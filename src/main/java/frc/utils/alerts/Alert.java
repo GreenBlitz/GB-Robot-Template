@@ -19,31 +19,31 @@ public class Alert {
 	private static final double SECONDS_BETWEEN_REPORTS = 3;
 	private final AlertType type;
 	private final String logPath;
-	private double lastReportedTime;
-	private int timesHappenedBetweenReports;
+	private double lastReportedTimeSeconds;
+	private int timesOccurredSinceLastReport;
 
 	public Alert(AlertType type, String name) {
 		this.type = type;
 		this.logPath = ALERT_LOG_PATH + type.toString() + "/" + name;
-		this.lastReportedTime = 0;
-		this.timesHappenedBetweenReports = 0;
+		this.lastReportedTimeSeconds = 0;
+		this.timesOccurredSinceLastReport = 0;
 	}
 	
 	private boolean shouldReportToDriverStation() {
-		return lastReportedTime <= TimeUtils.getCurrentTimeSeconds() - SECONDS_BETWEEN_REPORTS;
+		return lastReportedTimeSeconds <= TimeUtils.getCurrentTimeSeconds() - SECONDS_BETWEEN_REPORTS;
 	}
 	
 	private void reportToDriverStation() {
 		DriverStation.reportError(
-				logPath + " happened " + timesHappenedBetweenReports + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
+				logPath + " happened " + timesOccurredSinceLastReport + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
 				LOG_TRACE
 		);
-		lastReportedTime = TimeUtils.getCurrentTimeSeconds();
-		timesHappenedBetweenReports = 0;
+		lastReportedTimeSeconds = TimeUtils.getCurrentTimeSeconds();
+		timesOccurredSinceLastReport = 0;
 	}
 
 	public void report() {
-		timesHappenedBetweenReports++;
+		timesOccurredSinceLastReport++;
 		if (!DriverStationUtils.isMatch()) {
 			switch (type) {
 				case ERROR:

@@ -19,31 +19,31 @@ public class Alert {
 	private static final double SECONDS_BETWEEN_REPORTS = 3;
 	private final AlertType type;
 	private final String logPath;
-	private double lastReportedTimeSeconds;
-	private int timesOccurredSinceLastReport;
+	private double lastTimeReportedToDriveStationSeconds;
+	private int timesOccurredSinceLastReportToDriverStation;
 
 	public Alert(AlertType type, String name) {
 		this.type = type;
 		this.logPath = ALERT_LOG_PATH + type.toString() + "/" + name;
-		this.lastReportedTimeSeconds = 0;
-		this.timesOccurredSinceLastReport = 0;
+		this.lastTimeReportedToDriveStationSeconds = 0;
+		this.timesOccurredSinceLastReportToDriverStation = 0;
 	}
 	
 	private boolean shouldReportToDriverStation() {
-		return lastReportedTimeSeconds <= TimeUtils.getCurrentTimeSeconds() - SECONDS_BETWEEN_REPORTS;
+		return lastTimeReportedToDriveStationSeconds <= TimeUtils.getCurrentTimeSeconds() - SECONDS_BETWEEN_REPORTS;
 	}
 	
 	private void reportToDriverStation() {
 		DriverStation.reportError(
-				logPath + " happened " + timesOccurredSinceLastReport + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
+				logPath + " happened " + timesOccurredSinceLastReportToDriverStation + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
 				LOG_TRACE
 		);
-		lastReportedTimeSeconds = TimeUtils.getCurrentTimeSeconds();
-		timesOccurredSinceLastReport = 0;
+		lastTimeReportedToDriveStationSeconds = TimeUtils.getCurrentTimeSeconds();
+		timesOccurredSinceLastReportToDriverStation = 0;
 	}
 
 	public void report() {
-		timesOccurredSinceLastReport++;
+		timesOccurredSinceLastReportToDriverStation++;
 		if (!DriverStationUtils.isMatch()) {
 			switch (type) {
 				case ERROR:

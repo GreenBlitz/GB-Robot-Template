@@ -4,7 +4,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -30,6 +29,7 @@ import java.util.function.Supplier;
 public class Swerve extends GBSubsystem {
 
 	private final SwerveConstants constants;
+	private final double driveRadiusMeters;
 	private final Modules modules;
 	private final IGyro gyro;
 	private final GyroSignals gyroSignals;
@@ -42,12 +42,12 @@ public class Swerve extends GBSubsystem {
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 
-
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
 		this.constants = constants;
+		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
 		this.gyro = gyro;
 		this.gyroSignals = gyroSignals;
@@ -152,12 +152,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public double getDriveRadiusMeters() {
-		Translation2d[] modulePositionsFromCenterMeters = modules.getModulePositionsFromCenterMeters();
-		double sum = 0;
-		for (Translation2d modulePositionFromCenterMeters : modulePositionsFromCenterMeters) {
-			sum += modulePositionFromCenterMeters.getDistance(new Translation2d());
-		}
-		return sum / modulePositionsFromCenterMeters.length;
+		return driveRadiusMeters;
 	}
 
 	public Rotation2d getGyroAbsoluteYaw() {

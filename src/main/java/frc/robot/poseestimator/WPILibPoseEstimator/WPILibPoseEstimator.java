@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseEstimationMath;
-import frc.robot.poseestimator.helpers.StandardDeviations2D;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -133,8 +132,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp(),
-			new StandardDeviations2D(visionObservation.getDistanceFromAprilTagMeters() * WPILibPoseEstimatorConstants.VISION_STDEVS_FACTOR)
-				.asColumnVector()
+			WPILibPoseEstimatorConstants.VISION_STDDEVS_TRANSFORM.apply(visionObservation).asColumnVector()
 		);
 		this.lastVisionObservation = visionObservation;
 	}

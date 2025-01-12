@@ -34,9 +34,9 @@ public class PoseEstimationMath {
 		return startingPose.minus(finishingPose).getTranslation().getNorm() / dTime;
 	}
 
-	public static double deriveTwist(Twist2d dPose, double dTime) {
-		double d2D = Math.sqrt((Math.pow(dPose.dx, 2) + Math.pow(dPose.dy, 2)));
-		return d2D / dTime;
+	public static double deriveTwist(Twist2d twist, double dt) {
+		double d2D = Math.sqrt((Math.pow(twist.dx, 2) + Math.pow(twist.dy, 2)));
+		return d2D / dt;
 	}
 
 }

@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
-import frc.constants.VisionConstants;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.PoseEstimationMath;
 import frc.robot.poseestimator.helpers.StandardDeviations2D;
@@ -25,11 +24,10 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final SwerveDriveKinematics kinematics;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
-	private double visionSpeed;
-	private double odometrySpeed;
+	private double odometryAcceleeration;
 	private VisionData lastVisionObservation;
 	private OdometryObservation lastOdometryObservation;
-	private Rotation2d lastGyroAngle;
+	private Rotation2d lastOdometryAngle;
 
 	public WPILibPoseEstimator(
 		String logPath,
@@ -39,7 +37,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	) {
 		super(logPath);
 		this.kinematics = kinematics;
-		this.lastGyroAngle = initialGyroAngle;
+		this.lastOdometryAngle = initialGyroAngle;
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
 			new Odometry<>(kinematics, initialGyroAngle, modulePositions, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE),
@@ -52,21 +50,20 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-		this.visionSpeed = 0;
-		this.odometrySpeed = 0;
+		this.odometryAcceleeration = 0;
 		this.lastOdometryObservation = new OdometryObservation(
 			modulePositions,
 			Optional.of(initialGyroAngle),
 			TimeUtils.getCurrentTimeSeconds()
 		);
-		this.lastVisionObservation = new VisionData("", new Pose3d(), TimeUtils.getCurrentTimeSeconds());
+		this.lastVisionObservation = new VisionData(new Pose3d(), TimeUtils.getCurrentTimeSeconds());
 	}
 
 
 	@Override
 	public void resetPose(Pose2d newPose) {
-		Logger.recordOutput(getLogPath() + "the pose of the reset/", newPose);
-		poseEstimator.resetPosition(lastGyroAngle,lastOdometryObservation.wheelPositions(),newPose);
+		Logger.recordOutput(getLogPath() + "lastPoseResetedTo/", newPose);
+		poseEstimator.resetPosition(lastOdometryAngle, lastOdometryObservation.wheelPositions(), newPose);
 	}
 
 	@Override
@@ -82,7 +79,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 	public Rotation2d getOdometryAngle(OdometryObservation odometryObservation, Twist2d changeInPose) {
 		if (odometryObservation.gyroAngle().isEmpty()) {
-			return lastGyroAngle.plus(Rotation2d.fromRadians(changeInPose.dtheta));
+			return lastOdometryAngle.plus(Rotation2d.fromRadians(changeInPose.dtheta));
 		} else {
 			return odometryObservation.gyroAngle().get();
 		}
@@ -91,12 +88,14 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public void updateOdometry(OdometryObservation[] odometryObservations) {
 		for (OdometryObservation odometryObservation : odometryObservations) {
-			Twist2d dPose = kinematics.toTwist2d(lastOdometryObservation.wheelPositions(), odometryObservation.wheelPositions());
-			Rotation2d odometryAngle = getOdometryAngle(odometryObservation, dPose);
+			Twist2d changeInPose = kinematics.toTwist2d(lastOdometryObservation.wheelPositions(), odometryObservation.wheelPositions());
+			Rotation2d odometryAngle = getOdometryAngle(odometryObservation, changeInPose);
 			poseEstimator.updateWithTime(odometryObservation.timestamp(), odometryAngle, odometryObservation.wheelPositions());
-			updateOdometryPose(odometryObservation, dPose);
-			this.lastGyroAngle = odometryAngle;
-			this.odometrySpeed = PoseEstimationMath.deriveTwist(dPose, odometryObservation.timestamp() - lastOdometryObservation.timestamp());
+			updateOdometryPose(odometryObservation, changeInPose);
+
+			double dt = odometryObservation.timestamp() - lastOdometryObservation.timestamp();
+			this.lastOdometryAngle = odometryAngle;
+			this.odometryAcceleeration = PoseEstimationMath.deriveTwist(changeInPose, dt);
 			this.lastOdometryObservation = odometryObservation;
 		}
 	}
@@ -126,26 +125,24 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		}
 	}
 
-	private void updateOdometryPose(OdometryObservation observation, Twist2d dPose) {
-		odometryEstimator.update(getOdometryAngle(observation, dPose), observation.wheelPositions());
+	private void updateOdometryPose(OdometryObservation observation, Twist2d changeInPose) {
+		odometryEstimator.update(getOdometryAngle(observation, changeInPose), observation.wheelPositions());
 	}
 
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp(),
-			new StandardDeviations2D(visionObservation.getDistanceFromAprilTagMeters() * VisionConstants.VISION_STDEVS_FACTOR).asColumnVector()
+			new StandardDeviations2D(visionObservation.getDistanceFromAprilTagMeters() * WPILibPoseEstimatorConstants.VISION_STDEVS_FACTOR)
+				.asColumnVector()
 		);
-		this.visionSpeed = PoseEstimationMath.deriveVisionData(lastVisionObservation, visionObservation);
 		this.lastVisionObservation = visionObservation;
 	}
 
 	private void log() {
 		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
 		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
-		Logger.recordOutput(getLogPath() + "visionSpeed/", visionSpeed);
-		Logger.recordOutput(getLogPath() + "odometrySpeed/", odometrySpeed);
-		Logger.recordOutput(getLogPath() + "speedsDifferance", odometrySpeed - visionSpeed);
+		Logger.recordOutput(getLogPath() + "odometrySpeed/", odometryAcceleeration);
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryObservation.timestamp());
 		Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionObservation.getTimestamp());
 	}

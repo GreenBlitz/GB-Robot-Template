@@ -31,7 +31,7 @@ public class Alert {
 	
 	private void reportToDriverStation() {
 		DriverStation.reportError(
-				logPath + " happened " + timesHappenedBetweenReports + 1 + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
+				logPath + " happened " + timesHappenedBetweenReports + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
 				LOG_TRACE
 		);
 		lastReportedTime = TimeUtils.getCurrentTimeSeconds();

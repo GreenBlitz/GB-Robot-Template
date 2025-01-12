@@ -22,7 +22,7 @@ public class WPILibPoseEstimatorConstants {
 		0.0003,
 		0.003
 	);
-	//formatter:on
+	//@formatter:on
 
 	public static final double VISION_STDEVS_FACTOR = 0.1;
 
@@ -31,7 +31,9 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
-	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STDDEVS_TRANSFORM = aprilTagVisionData -> new StandardDeviations2D(aprilTagVisionData.getDistanceFromAprilTagMeters() * WPILibPoseEstimatorConstants.VISION_STDEVS_FACTOR);
+	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STDDEVS_TRANSFORM = aprilTagVisionData -> new StandardDeviations2D(
+		aprilTagVisionData.getDistanceFromAprilTagMeters() * WPILibPoseEstimatorConstants.VISION_STDEVS_FACTOR
+	);
 
 
 }

@@ -29,6 +29,10 @@ public class Alert {
 		this.timesHappenedBetweenReports = 0;
 	}
 	
+	private boolean shouldReportToDriverStation() {
+		return lastReportedTime <= TimeUtils.getCurrentTimeSeconds() - SECONDS_BETWEEN_REPORTS;
+	}
+	
 	private void reportToDriverStation() {
 		DriverStation.reportError(
 				logPath + " happened " + timesHappenedBetweenReports + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
@@ -43,7 +47,7 @@ public class Alert {
 		if (!DriverStationUtils.isMatch()) {
 			switch (type) {
 				case ERROR:
-					if (lastReportedTime <= TimeUtils.getCurrentTimeSeconds() - SECONDS_BETWEEN_REPORTS) {
+					if (shouldReportToDriverStation()) {
 						reportToDriverStation();
 					}
 			}

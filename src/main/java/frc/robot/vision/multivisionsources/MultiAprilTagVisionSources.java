@@ -9,7 +9,7 @@ import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
-import frc.robot.vision.sources.limelights.LimelightSources;
+import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -85,17 +85,9 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	private void updateBotPoseInDynamicLimelights() {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
-			if (visionSource instanceof LimelightSources.DynamicLimelight dynamicLimelight) {
-				dynamicLimelight.useRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
-			} else if (visionSource instanceof LimelightSources.HeadingRequiredLimelight) {
-				AlertManager.addAlert(
-					new PeriodicAlert(
-						Alert.AlertType.WARNING,
-						"unableToSwitchBotPoseOnNonDynamicLimelight",
-						() -> useRobotHeadingForPoseEstimating
-					)
-				);
-			} else if (visionSource instanceof LimelightSources.NoisyLimelight) {
+			if (visionSource instanceof DynamicSwitchingLimelight dynamicSwitchingLimelight) {
+				dynamicSwitchingLimelight.useRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
+			} else {
 				AlertManager.addAlert(
 					new PeriodicAlert(
 						Alert.AlertType.WARNING,

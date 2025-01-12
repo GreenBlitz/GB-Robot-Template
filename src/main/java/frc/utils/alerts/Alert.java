@@ -25,7 +25,7 @@ public class Alert {
 	public Alert(AlertType type, String name) {
 		this.type = type;
 		this.logPath = ALERT_LOG_PATH + type.toString() + "/" + name;
-		this.lastReportedTime = -SECONDS_BETWEEN_REPORTS;
+		this.lastReportedTime = 0;
 		this.timesHappenedBetweenReports = 0;
 	}
 	

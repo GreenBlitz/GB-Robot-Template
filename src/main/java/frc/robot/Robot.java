@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.constants.VisionConstants;
 import frc.constants.GlobalConstants;
-import frc.constants.VisionConstants;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
@@ -40,7 +40,6 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
-	private final MultiAprilTagVisionSources aprilTagVisionSources;
 	private final Superstructure superStructure;
 
 	public Robot() {
@@ -82,7 +81,11 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
+		swerve.configPathPlanner(
+			poseEstimator::getEstimatedPose,
+			poseEstimator::resetPose,
+			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
+		);
 	}
 
 

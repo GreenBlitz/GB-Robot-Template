@@ -28,20 +28,23 @@ public class Alert {
 		this.lastReportedTime = -SECONDS_BETWEEN_REPORTS;
 		this.timesHappenedBetweenReports = 0;
 	}
+	
+	private void reportToDriverStation() {
+		DriverStation.reportError(
+				logPath + " happened " + timesHappenedBetweenReports + 1 + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
+				LOG_TRACE
+		);
+		lastReportedTime = TimeUtils.getCurrentTimeSeconds();
+		timesHappenedBetweenReports = 0;
+	}
 
 	public void report() {
+		timesHappenedBetweenReports++;
 		if (!DriverStationUtils.isMatch()) {
 			switch (type) {
 				case ERROR:
 					if (lastReportedTime <= TimeUtils.getCurrentTimeSeconds() - SECONDS_BETWEEN_REPORTS) {
-						DriverStation.reportError(
-							logPath + " happened " + timesHappenedBetweenReports + 1 + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
-							LOG_TRACE
-						);
-						lastReportedTime = TimeUtils.getCurrentTimeSeconds();
-						timesHappenedBetweenReports = 0;
-					} else {
-						timesHappenedBetweenReports++;
+						reportToDriverStation();
 					}
 			}
 		}

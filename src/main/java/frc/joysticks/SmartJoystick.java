@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -15,8 +16,8 @@ public class SmartJoystick {
 	private static final double DEFAULT_THRESHOLD_FOR_AXIS_BUTTON = 0.1;
 	private static final double SENSITIVE_AXIS_VALUE_POWER = 2;
 
-	public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
-	public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
+	private final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
+	private final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 	private final Joystick joystick;
 	private final double deadzone;
 	private final String logPath;
@@ -132,6 +133,66 @@ public class SmartJoystick {
 
 	private static double applyDeadzone(double power, double deadzone) {
 		return MathUtil.applyDeadband(power, deadzone);
+	}
+
+	public Trigger A(BindSet bindSet) {
+		return A.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger B(BindSet bindSet) {
+		return B.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger X(BindSet bindSet) {
+		return X.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger Y(BindSet bindSet) {
+		return Y.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger L1(BindSet bindSet) {
+		return L1.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger R1(BindSet bindSet) {
+		return R1.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger START(BindSet bindSet) {
+		return START.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger BACK(BindSet bindSet) {
+		return START.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger L3(BindSet bindSet) {
+		return START.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger R3(BindSet bindSet) {
+		return START.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger POV_UP(BindSet bindSet) {
+		return POV_UP.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger POV_RIGHT(BindSet bindSet) {
+		return POV_RIGHT.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger POV_DOWN(BindSet bindSet) {
+		return POV_DOWN.and(() -> this.bindSet == bindSet);
+	}
+
+	public Trigger POV_LEFT(BindSet bindSet) {
+		return POV_LEFT.and(() -> this.bindSet == bindSet);
+	}
+
+	private Trigger getBindSetTrigger(BindSet bindSetRequirement) {
+		return new Trigger(() -> bindSetRequirement == getBindSet());
 	}
 
 }

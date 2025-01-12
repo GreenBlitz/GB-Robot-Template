@@ -9,6 +9,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
@@ -19,8 +20,6 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.examplearm.ExampleArm;
 import frc.utils.AngleUnit;
-
-import static frc.robot.IDs.TalonFXIDs.ARM_DEVICE_ID;
 
 public class ExampleTalonFXArmBuilder {
 
@@ -43,7 +42,7 @@ public class ExampleTalonFXArmBuilder {
 		SingleJointedArmSimulation armSimulation = new SingleJointedArmSimulation(armSim, 1);
 
 		SysIdRoutine.Config sysIdConfig = buildSysidConfig();
-		TalonFXMotor motor = new TalonFXMotor(logPath, ARM_DEVICE_ID, sysIdConfig, armSimulation);
+		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.EXAMPLE_ARM_DEVICE_ID, sysIdConfig, armSimulation);
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
@@ -60,7 +59,7 @@ public class ExampleTalonFXArmBuilder {
 
 	private static TalonFXConfiguration buildTalonFXConfiguration() {
 		TalonFXConfiguration config = new TalonFXConfiguration();
-		config.Slot0.kP = 0;
+		config.Slot0.kP = 1;
 		config.Slot0.kI = 0;
 		config.Slot0.kD = 0;
 		config.Slot0.kS = 0;
@@ -71,7 +70,8 @@ public class ExampleTalonFXArmBuilder {
 		config.MotorOutput.withPeakReverseDutyCycle(-0.9);
 		config.SoftwareLimitSwitch.withForwardSoftLimitThreshold(90);
 		config.SoftwareLimitSwitch.withReverseSoftLimitThreshold(-90);
-		config.Feedback.withSensorToMechanismRatio(1);
+		config.Feedback.withSensorToMechanismRatio(kGEAR_RATIO);
+		config.Feedback.withRotorToSensorRatio(1);
 
 		return config;
 	}

@@ -9,14 +9,14 @@ import frc.utils.ToleranceUtils;
 
 public class ExampleArm extends GBSubsystem {
 
-	public final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
+	public static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
 
 	private final ControllableMotor motor;
-	private final ExampleArmCommandsBuilder commandBuilder;
 	private final IRequest<Rotation2d> positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> voltageSignal;
+	private final ExampleArmCommandsBuilder commandsBuilder;
 
 	public ExampleArm(
 		String logPath,
@@ -32,7 +32,7 @@ public class ExampleArm extends GBSubsystem {
 		this.voltageRequest = voltageRequest;
 		this.positionSignal = positionSignal;
 		this.voltageSignal = voltageSignal;
-		this.commandBuilder = new ExampleArmCommandsBuilder(this);
+		this.commandsBuilder = new ExampleArmCommandsBuilder(this);
 
 		motor.resetPosition(STARTING_POSITION);
 		updateInputs();
@@ -48,8 +48,8 @@ public class ExampleArm extends GBSubsystem {
 		motor.updateInputs(positionSignal, voltageSignal);
 	}
 
-	public ExampleArmCommandsBuilder getCommandBuilder() {
-		return commandBuilder;
+	public ExampleArmCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	public Rotation2d getPosition() {

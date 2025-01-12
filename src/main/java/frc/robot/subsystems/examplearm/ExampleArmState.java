@@ -11,7 +11,6 @@ public enum ExampleArmState {
 	SAFE_HOLD(Rotation2d.fromDegrees(-80)),
 	STAY_IN_PLACE(null);
 
-
 	private final Rotation2d position;
 
 	ExampleArmState(Rotation2d position) {

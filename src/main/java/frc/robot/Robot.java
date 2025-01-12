@@ -39,7 +39,7 @@ public class Robot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		aprilTagVisionSources.periodic();
-		CommandScheduler.getInstance().run();
+		CommandScheduler.getInstance().run(); // Should be last
 	}
 
 	public Command getAutonomousCommand() {

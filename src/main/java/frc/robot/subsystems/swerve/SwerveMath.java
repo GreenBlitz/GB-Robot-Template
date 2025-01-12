@@ -9,14 +9,6 @@ import frc.utils.time.TimeUtils;
 
 public class SwerveMath {
 
-	public static double calculateDriveRadiusMeters(Translation2d[] modulePositionsFromCenterMeters) {
-		double sum = 0;
-		for (Translation2d modulePositionFromCenterMeters : modulePositionsFromCenterMeters) {
-			sum += modulePositionFromCenterMeters.getDistance(new Translation2d());
-		}
-		return sum / modulePositionsFromCenterMeters.length;
-	}
-
 	public static ChassisSpeeds fieldToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeHeading) {
 		return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeHeading);
 	}

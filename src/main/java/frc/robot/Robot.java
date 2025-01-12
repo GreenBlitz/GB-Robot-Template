@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.constants.GlobalConstants;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.constants.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -92,17 +93,17 @@ public class Robot {
 
 	private void buildPathPlannerForAuto() {
 		// Register commands...
-//		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose -> {
+		swerve.configPathPlanner(
+			poseEstimator::getEstimatedPose,
+			poseEstimator::resetPose,
+			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
+		);
+		// testing:
+//		swerve.configPathPlanner(() -> new Pose2d(poseEstimator.getEstimatedPose().getTranslation(), headingEstimator.getEstimatedHeading()), pose -> {
 //			poseEstimator.resetPose(pose);
 //			headingEstimator.reset(pose.getRotation());
 //		}, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
 //		autonomousChooser = new AutonomousChooser("autonomousChooser");
-		// ! testing
-		swerve.configPathPlanner(() -> new Pose2d(poseEstimator.getEstimatedPose().getTranslation(), headingEstimator.getEstimatedHeading()), pose -> {
-			poseEstimator.resetPose(pose);
-			headingEstimator.reset(pose.getRotation());
-		}, PathPlannerUtils.SYNCOPA_ROBOT_CONFIG);
-		autonomousChooser = new AutonomousChooser("autonomousChooser");
 	}
 
 

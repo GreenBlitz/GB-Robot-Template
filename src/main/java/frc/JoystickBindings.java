@@ -24,7 +24,7 @@ public class JoystickBindings {
 
 	private static void swerveTest(SmartJoystick joystick, Robot robot) {
 		bindSetTrigger(joystick, joystick.Y, BindSet.SWERVE_TEST)
-			.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeading(new Rotation2d())));
+			.onTrue(new InstantCommand(() -> robot.getAprilTagVisionSources().switchBotPoses()));
 		bindSetTrigger(joystick, joystick.B, BindSet.SWERVE_TEST)
 			.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
 
@@ -114,13 +114,13 @@ public class JoystickBindings {
 		bindSetTrigger(joystick, joystick.BACK, BindSet.SWERVE_TEST).whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)))
+				.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)))
 				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))))
 		);
 		bindSetTrigger(joystick, joystick.START, BindSet.SWERVE_TEST).whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)))
+				.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)))
 				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(6, 6, Rotation2d.fromDegrees(90))))
 		);
 	}

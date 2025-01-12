@@ -56,7 +56,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			Optional.of(initialGyroAngle),
 			TimeUtils.getCurrentTimeSeconds()
 		);
-		this.lastVisionObservation = new VisionData(new Pose3d(), TimeUtils.getCurrentTimeSeconds());
+		this.lastVisionObservation = new VisionData("", new Pose3d(), TimeUtils.getCurrentTimeSeconds());
 	}
 
 

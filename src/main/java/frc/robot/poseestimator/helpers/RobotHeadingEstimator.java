@@ -12,16 +12,18 @@ public class RobotHeadingEstimator {
 
 	private final TimeInterpolatableBuffer<Rotation2d> unOffsetedGyroAngleInterpolator;
 	private final double gyroStandardDeviation;
+	private final SlidingWindowAngleAccumulator slidingWindowAngleAccumulator;
 	private Rotation2d lastGyroAngle;
 	private Rotation2d estimatedHeading;
 	private boolean hasFirstVisionUpdateArrived;
 
 	public RobotHeadingEstimator(Rotation2d initialGyroAngle, Rotation2d initialHeading, double gyroStandardDeviation) {
+		this.unOffsetedGyroAngleInterpolator = TimeInterpolatableBuffer.createBuffer(RobotHeadingEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.gyroStandardDeviation = gyroStandardDeviation;
+		this.slidingWindowAngleAccumulator = new SlidingWindowAngleAccumulator(RobotHeadingEstimatorConstants.ANGLE_ACCUMULATOR_SIZE);
 		this.lastGyroAngle = initialGyroAngle;
 		this.estimatedHeading = initialHeading;
 		this.hasFirstVisionUpdateArrived = false;
-		this.unOffsetedGyroAngleInterpolator = TimeInterpolatableBuffer.createBuffer(RobotHeadingEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 	}
 
 	public void reset(Rotation2d newHeading) {
@@ -34,6 +36,17 @@ public class RobotHeadingEstimator {
 	}
 
 	public void updateVisionHeading(HeadingData visionHeadingData, double visionStandardDeviation) {
+		slidingWindowAngleAccumulator.addAngle(visionHeadingData.heading());
+
+		Optional<Rotation2d> slidingWindowAngleAccumulatorAverage = slidingWindowAngleAccumulator.average();
+		if (
+			slidingWindowAngleAccumulatorAverage.isPresent()
+				&& PoseEstimatorMath.getAngleDistance(slidingWindowAngleAccumulatorAverage.get(), visionHeadingData.heading()).getRadians()
+					< RobotHeadingEstimatorConstants.VISION_HEADING_AVERAGE_COMPARISON_TOLERANCE.getRadians()
+		) {
+			return;
+		}
+
 		if (!hasFirstVisionUpdateArrived) {
 			hasFirstVisionUpdateArrived = true;
 			estimatedHeading = visionHeadingData.heading();

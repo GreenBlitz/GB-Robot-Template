@@ -6,29 +6,29 @@ import frc.utils.Filter;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface VisionSource<ReturnType extends VisionData> {
+public interface VisionSource<T extends VisionData> {
 
 	void update();
 
-	Optional<ReturnType> getVisionData();
+	Optional<T> getVisionData();
 
-	default Optional<ReturnType> getFilteredVisionData() {
-		Optional<ReturnType> visionData = getVisionData();
+	default Optional<T> getFilteredVisionData() {
+		Optional<T> visionData = getVisionData();
 		if (getVisionData().isPresent() && getFilter().apply(visionData.get())) {
 			return visionData;
 		}
 		return Optional.empty();
 	}
 
-	void setFilter(Filter<ReturnType> newFilter);
+	void setFilter(Filter<T> newFilter);
 
-	Filter<ReturnType> getFilter();
+	Filter<T> getFilter();
 
 	default void clearFilter() {
 		setFilter(Filter.nonFilteringFilter());
 	}
 
-	default void applyFunctionOnFilter(Function<Filter<ReturnType>, Filter<ReturnType>> filterChangingFunction) {
+	default void applyFunctionOnFilter(Function<Filter<T>, Filter<T>> filterChangingFunction) {
 		setFilter(filterChangingFunction.apply(getFilter()));
 	}
 

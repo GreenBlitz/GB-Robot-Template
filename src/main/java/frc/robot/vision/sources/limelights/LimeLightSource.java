@@ -110,6 +110,10 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
+	
+	protected double[] getRobotPoseFromTag() {
+		return getLimelightNetworkTableEntry("botpose_targetspace").getDoubleArray(new double[6]);
+	}
 
 	protected double getTimestamp() {
 		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LATENCY_BOTPOSE_INDEX]);

@@ -23,7 +23,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private final SwerveDriveKinematics kinematics;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
-	private double odometryAcceleeration;
+	private double odometryAcceleration;
 	private VisionData lastVisionObservation;
 	private OdometryObservation lastOdometryObservation;
 	private Rotation2d lastOdometryAngle;
@@ -49,13 +49,13 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-		this.odometryAcceleeration = 0;
+		this.odometryAcceleration = 0;
+		this.lastVisionObservation = new VisionData(new Pose3d(), TimeUtils.getCurrentTimeSeconds());
 		this.lastOdometryObservation = new OdometryObservation(
 			modulePositions,
 			Optional.of(initialGyroAngle),
 			TimeUtils.getCurrentTimeSeconds()
 		);
-		this.lastVisionObservation = new VisionData(new Pose3d(), TimeUtils.getCurrentTimeSeconds());
 	}
 
 
@@ -93,7 +93,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 			double deltaTime = odometryObservation.timestamp() - lastOdometryObservation.timestamp();
 			this.lastOdometryAngle = odometryAngle;
-			this.odometryAcceleeration = PoseEstimationMath.deriveTwist(changeInPose, deltaTime);
+			this.odometryAcceleration = PoseEstimationMath.deriveTwist(changeInPose, deltaTime);
 			this.lastOdometryObservation = odometryObservation;
 		}
 	}
@@ -139,7 +139,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void log() {
 		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
 		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
-		Logger.recordOutput(getLogPath() + "odometrySpeed/", odometryAcceleeration);
+		Logger.recordOutput(getLogPath() + "odometrySpeed/", odometryAcceleration);
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryObservation.timestamp());
 		Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionObservation.getTimestamp());
 	}

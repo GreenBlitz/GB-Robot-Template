@@ -17,6 +17,7 @@ public class WPILibPoseEstimatorConstants {
 		0.003,
 		0.003
 	);
+
 	public static final StandardDeviations2D DEFAULT_VISION_STANDARD_DEVIATIONS = new StandardDeviations2D(
 		0.0003,
 		0.0003,
@@ -25,7 +26,6 @@ public class WPILibPoseEstimatorConstants {
 	//formatter:on
 
 	public static final double VISION_STDEVS_FACTOR = 0.1;
-
 
 	public static final Rotation2d INITIAL_GYRO_ANGLE = new Rotation2d();
 

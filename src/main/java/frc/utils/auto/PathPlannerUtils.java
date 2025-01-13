@@ -49,11 +49,6 @@ public class PathPlannerUtils {
 		PathfindingCommand.warmupCommand().schedule();
 	}
 
-
-	private static void reportAlert(Alert.AlertType alertType, String message) {
-		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + message).report();
-	}
-
 	public static Optional<RobotConfig> getGuiRobotConfig() {
 		try {
 			RobotConfig robotConfig = RobotConfig.fromGUISettings();
@@ -156,14 +151,8 @@ public class PathPlannerUtils {
 		return followPath(path);
 	}
 
-	@SafeVarargs
-	public static String getAutoName(String autoName, Optional<PathPlannerPath>... paths) {
-		for (Optional<PathPlannerPath> path : paths) {
-			if (path.isEmpty()) {
-				return autoName + " (partial)";
-			}
-		}
-		return autoName;
+	private static void reportAlert(Alert.AlertType alertType, String message) {
+		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + message).report();
 	}
 
 }

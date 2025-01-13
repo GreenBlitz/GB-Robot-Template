@@ -20,7 +20,7 @@ public class AutonomousConstants {
 	public static final Rotation2d TARGET_ANGLE_TOLERANCE = Rotation2d.fromDegrees(5);
 
 	public static final RobotConfig SYNCOPA_ROBOT_CONFIG = new RobotConfig(
-		74,
+		60,
 		8.6,
 		new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500Foc(1), 60, 1),
 		0.577

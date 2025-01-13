@@ -33,5 +33,4 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STDDEVS_TRANSFORM = aprilTagVisionData -> new StandardDeviations2D(aprilTagVisionData.getDistanceFromAprilTagMeters() * WPILibPoseEstimatorConstants.VISION_STDEVS_FACTOR);
 
-
 }

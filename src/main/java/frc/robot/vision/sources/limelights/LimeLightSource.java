@@ -43,8 +43,10 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private final NetworkTableEntry robotOrientationEntry;
 
 	private double[] aprilTagPoseArray;
-	private double[] robotPoseArray;
+	private double[] robotPoseInFieldSpaceArray;
+	private double[] robotPoseInTargetSpaceArray;
 	private double[] standardDeviationsArray;
+	
 	private Filter<AprilTagVisionData> filter;
 	private GyroAngleValues gyroAngleValues;
 
@@ -84,7 +86,8 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 			case BOTPOSE_1 -> robotPoseEntryBotPose1;
 			case BOTPOSE_2 -> robotPoseEntryBotPose2;
 		};
-		robotPoseArray = entry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		robotPoseInFieldSpaceArray = entry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		robotPoseInTargetSpaceArray = getLimelightNetworkTableEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
 		standardDeviationsArray = standardDeviations.getDoubleArray(new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT]);
 
 		log();
@@ -97,31 +100,43 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		}
 
 		double timestamp = getTimestamp();
-
-		Pose3d robotPose = new Pose3d(
-			getPoseValue(Pose3dComponentsValue.X_VALUE),
-			getPoseValue(Pose3dComponentsValue.Y_VALUE),
-			getPoseValue(Pose3dComponentsValue.Z_VALUE),
-			new Rotation3d(
-				Math.toRadians(getPoseValue(Pose3dComponentsValue.ROLL_VALUE)),
-				Math.toRadians(getPoseValue(Pose3dComponentsValue.PITCH_VALUE)),
-				Math.toRadians(getPoseValue(Pose3dComponentsValue.YAW_VALUE))
-			)
-		);
+		
+		Pose3d robotPose = convertArrayToPose3d(robotPoseInFieldSpaceArray);
 		return Optional.of(new Pair<>(robotPose, timestamp));
 	}
 	
-	protected double[] getRobotPoseFromTag() {
-		return getLimelightNetworkTableEntry("botpose_targetspace").getDoubleArray(new double[6]);
+	protected Optional<Pair<Pose3d, Double>> getRobotPoseInTargetSpace() {
+		int id = getAprilTagID();
+		if (id == VisionConstants.NO_APRILTAG_ID) {
+			return Optional.empty();
+		}
+		
+		double timestamp = getTimestamp();
+		
+		Pose3d robotPose = convertArrayToPose3d(robotPoseInTargetSpaceArray);
+		return Optional.of(new Pair<>(robotPose, timestamp));
+	}
+	
+	private Pose3d convertArrayToPose3d(double[] robotPose) {
+		return new Pose3d(
+				robotPose[Pose3dComponentsValue.X_VALUE.getIndex()],
+				robotPose[Pose3dComponentsValue.Y_VALUE.getIndex()],
+				robotPose[Pose3dComponentsValue.Z_VALUE.getIndex()],
+				new Rotation3d(
+						Math.toRadians(robotPose[Pose3dComponentsValue.ROLL_VALUE.getIndex()]),
+						Math.toRadians(robotPose[Pose3dComponentsValue.PITCH_VALUE.getIndex()]),
+						Math.toRadians(robotPose[Pose3dComponentsValue.YAW_VALUE.getIndex()])
+				)
+		);
 	}
 
 	protected double getTimestamp() {
-		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LATENCY_BOTPOSE_INDEX]);
+		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseInFieldSpaceArray[LATENCY_BOTPOSE_INDEX]);
 		return TimeUtils.getCurrentTimeSeconds() - processingLatencySeconds;
 	}
 
-	public double getPoseValue(Pose3dComponentsValue entryValue) {
-		return robotPoseArray[entryValue.getIndex()];
+	public double getPoseInFieldSpaceValue(Pose3dComponentsValue entryValue) {
+		return robotPoseInFieldSpaceArray[entryValue.getIndex()];
 	}
 
 	public double getAprilTagValueInRobotSpace(Pose3dComponentsValue entryValue) {
@@ -181,7 +196,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult/", shouldDataBeFiltered.getAsBoolean());
-		Logger.recordOutput(logPath + "botPoseDirectOutput", PoseUtils.poseArrayToPose3D(robotPoseArray, AngleUnit.DEGREES));
+		Logger.recordOutput(logPath + "botPoseDirectOutput", PoseUtils.poseArrayToPose3D(robotPoseInFieldSpaceArray, AngleUnit.DEGREES));
 		getVisionData().ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfilteredVision/", visionData.getEstimatedPose());
 			Logger.recordOutput(logPath + "unfilteredVisionProjected/", visionData.getEstimatedPose().toPose2d());

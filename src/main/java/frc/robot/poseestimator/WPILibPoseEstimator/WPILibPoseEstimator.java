@@ -68,7 +68,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	@Override
 	public Pose2d getEstimatedPose() {
 		return poseEstimator.getEstimatedPosition();
-//		return new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), lastGyroAngle);
 	}
 
 	@Override
@@ -92,9 +91,9 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			poseEstimator.updateWithTime(odometryObservation.timestamp(), odometryAngle, odometryObservation.wheelPositions());
 			updateOdometryPose(odometryObservation, changeInPose);
 
-			double dt = odometryObservation.timestamp() - lastOdometryObservation.timestamp();
+			double deltaTime = odometryObservation.timestamp() - lastOdometryObservation.timestamp();
 			this.lastOdometryAngle = odometryAngle;
-			this.odometryAcceleeration = PoseEstimationMath.deriveTwist(changeInPose, dt);
+			this.odometryAcceleeration = PoseEstimationMath.deriveTwist(changeInPose, deltaTime);
 			this.lastOdometryObservation = odometryObservation;
 		}
 	}

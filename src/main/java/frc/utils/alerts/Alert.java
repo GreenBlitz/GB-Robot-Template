@@ -17,6 +17,7 @@ public class Alert {
 	private static final boolean LOG_TRACE = false;
 	private static final String ALERT_LOG_PATH = "Alerts/";
 	private static final double SECONDS_BETWEEN_REPORTS = 3;
+	
 	private final AlertType type;
 	private final String logPath;
 	private double lastTimeReportedToDriveStationSeconds;
@@ -30,7 +31,7 @@ public class Alert {
 	}
 	
 	private boolean shouldReportToDriverStation() {
-		return lastTimeReportedToDriveStationSeconds <= TimeUtils.getCurrentTimeSeconds() - SECONDS_BETWEEN_REPORTS;
+		return lastTimeReportedToDriveStationSeconds + SECONDS_BETWEEN_REPORTS <= TimeUtils.getCurrentTimeSeconds();
 	}
 	
 	private void reportToDriverStation() {

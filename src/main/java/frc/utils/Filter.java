@@ -10,7 +10,7 @@ public class Filter<T> {
 		this.filter = filter;
 	}
 
-	public static <filteredType> Filter<filteredType> nonFilteringFilter() {
+	public static <T> Filter<T> nonFilteringFilter() {
 		return new Filter<>(data -> true);
 	}
 

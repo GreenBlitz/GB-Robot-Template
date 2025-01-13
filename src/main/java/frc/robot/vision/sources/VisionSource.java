@@ -12,9 +12,9 @@ public interface VisionSource<ReturnType extends VisionData> {
 
 	Optional<ReturnType> getVisionData();
 
-	default Optional<ReturnType> getFilteredVisionData(){
+	default Optional<ReturnType> getFilteredVisionData() {
 		Optional<ReturnType> visionData = getVisionData();
-		if (getVisionData().isPresent() && getFilter().apply(visionData.get())){
+		if (getVisionData().isPresent() && getFilter().apply(visionData.get())) {
 			return visionData;
 		}
 		return Optional.empty();

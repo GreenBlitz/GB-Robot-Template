@@ -6,9 +6,10 @@ import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
+
 	public static final PowerDistributionDeviceID POWER_DISTRIBUTION_DEVICE_ID = new PowerDistributionDeviceID(
-			-1,
-			PowerDistribution.ModuleType.kRev
+		-1,
+		PowerDistribution.ModuleType.kRev
 	);
 
 	public static final Phoenix6DeviceID PIGEON_2_DEVICE_ID = new Phoenix6DeviceID(0, BusChain.CANIVORE);

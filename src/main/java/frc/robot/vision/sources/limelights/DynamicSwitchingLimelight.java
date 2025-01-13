@@ -22,7 +22,12 @@ public class DynamicSwitchingLimelight
 	private final RobotHeadingRequiringVisionSource headingRequiredLimelight;
 	private boolean useGyroForPoseEstimating;
 
-	public DynamicSwitchingLimelight(boolean defaultUseGyroForPoseEstimating, String name, String parentLogPath, Filter<AprilTagVisionData> filter) {
+	public DynamicSwitchingLimelight(
+		boolean defaultUseGyroForPoseEstimating,
+		String name,
+		String parentLogPath,
+		Filter<AprilTagVisionData> filter
+	) {
 		this.useGyroForPoseEstimating = defaultUseGyroForPoseEstimating;
 		this.noisyLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(name, parentLogPath, filter);
 		this.headingRequiredLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(name, parentLogPath, filter);

@@ -32,7 +32,7 @@ public class ExampleTalonFXArmBuilder {
 		SingleJointedArmSim armSim = new SingleJointedArmSim(
 			LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001, kGEAR_RATIO),
 			DCMotor.getKrakenX60(1),
-				kGEAR_RATIO,
+			kGEAR_RATIO,
 			1.5,
 			Rotation2d.fromDegrees(-90).getRadians(),
 			Rotation2d.fromDegrees(90).getRadians(),
@@ -66,13 +66,13 @@ public class ExampleTalonFXArmBuilder {
 		config.Slot0.kS = 0;
 		config.Slot0.kG = 0;
 
-		config.CurrentLimits.withSupplyCurrentLimit(30);
+//		config.CurrentLimits.withSupplyCurrentLimit(30);
 //		config.MotorOutput.withPeakForwardDutyCycle(0.9);
 //		config.MotorOutput.withPeakReverseDutyCycle(-0.9);
-		config.SoftwareLimitSwitch.withForwardSoftLimitThreshold(90);
-		config.SoftwareLimitSwitch.withReverseSoftLimitThreshold(-90);
-		config.Feedback.withSensorToMechanismRatio(kGEAR_RATIO);
-		config.Feedback.withRotorToSensorRatio(1);
+//		config.SoftwareLimitSwitch.withForwardSoftLimitThreshold(Rotation2d.fromDegrees(90).getRotations());
+//		config.SoftwareLimitSwitch.withReverseSoftLimitThreshold(Rotation2d.fromDegrees(-90).getRotations());
+//		config.Feedback.withSensorToMechanismRatio(kGEAR_RATIO);
+//		config.Feedback.withRotorToSensorRatio(1);
 
 		return config;
 	}

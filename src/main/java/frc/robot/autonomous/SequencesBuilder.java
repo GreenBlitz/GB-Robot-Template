@@ -12,22 +12,22 @@ import java.util.function.Supplier;
 
 public class SequencesBuilder {
 
-	public static Command Intake(Robot robot, PathPlannerPath path, Supplier<Command> intakeCommand) {
+	public static Command intake(Robot robot, PathPlannerPath path, Supplier<Command> intakeCommand) {
 		return new ParallelRaceGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), intakeCommand.get());
 	}
 
-	public static Command IntakeShoot(Robot robot, PathPlannerPath path, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
-		return new SequentialCommandGroup(Intake(robot, path, intakeCommand), shootingCommand.get());
+	public static Command intakeShoot(Robot robot, PathPlannerPath path, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
+		return new SequentialCommandGroup(intake(robot, path, intakeCommand), shootingCommand.get());
 	}
 
-	public static Command Shooting(Robot robot, PathPlannerPath path, Supplier<Command> preShootingCommand, Supplier<Command> shootingCommand) {
+	public static Command shooting(Robot robot, PathPlannerPath path, Supplier<Command> preShootingCommand, Supplier<Command> shootingCommand) {
 		return new SequentialCommandGroup(
 			new ParallelDeadlineGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), preShootingCommand.get()),
 			shootingCommand.get()
 		);
 	}
 
-	public static Command ShootOnMove(Robot robot, PathPlannerPath path, Supplier<Command> shootingCommand) {
+	public static Command shootOnMove(Robot robot, PathPlannerPath path, Supplier<Command> shootingCommand) {
 		return new ParallelCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), shootingCommand.get());
 	}
 

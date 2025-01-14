@@ -36,9 +36,9 @@ public class AutosBuilder {
 		return new GBAuto(
 			new SequentialCommandGroup(
 				shootingCommand.get(),
-				pathM2.map(path -> SequencesBuilder.IntakeShoot(robot, path, intakeCommand, shootingCommand)).orElseGet(Commands::none),
-				path23.map(path -> SequencesBuilder.IntakeShoot(robot, path, intakeCommand, shootingCommand)).orElseGet(Commands::none),
-				path31.map(path -> SequencesBuilder.IntakeShoot(robot, path, intakeCommand, shootingCommand)).orElseGet(Commands::none)
+				pathM2.map(path -> SequencesBuilder.intakeShoot(robot, path, intakeCommand, shootingCommand)).orElseGet(Commands::none),
+				path23.map(path -> SequencesBuilder.intakeShoot(robot, path, intakeCommand, shootingCommand)).orElseGet(Commands::none),
+				path31.map(path -> SequencesBuilder.intakeShoot(robot, path, intakeCommand, shootingCommand)).orElseGet(Commands::none)
 			),
 			startingPoint,
 			"M231",

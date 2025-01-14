@@ -22,21 +22,22 @@ public class PoseEstimationMath {
 		);
 	}
 
+	@Deprecated
 	private static double calculateStandardDeviation(double estimatedValue, double currentValue) {
 		double mean = (estimatedValue + currentValue) / 2;
 		return Math.sqrt((Math.pow(estimatedValue - mean, 2) + Math.pow(currentValue - mean, 2)) / 2);
 	}
 
 	public static double deriveVisionData(VisionData starting, VisionData finish) {
-		double dTime = finish.getTimestamp() - starting.getTimestamp();
+		double deltaTime = finish.getTimestamp() - starting.getTimestamp();
 		Pose2d startingPose = starting.getEstimatedPose().toPose2d();
 		Pose2d finishingPose = finish.getEstimatedPose().toPose2d();
-		return startingPose.minus(finishingPose).getTranslation().getNorm() / dTime;
+		return startingPose.minus(finishingPose).getTranslation().getNorm() / deltaTime;
 	}
 
-	public static double deriveTwist(Twist2d twist, double dt) {
-		double d2D = Math.sqrt((Math.pow(twist.dx, 2) + Math.pow(twist.dy, 2)));
-		return d2D / dt;
+	public static double deriveTwist(Twist2d twist, double deltaTime) {
+		double distance = Math.sqrt((Math.pow(twist.dx, 2) + Math.pow(twist.dy, 2)));
+		return distance / deltaTime;
 	}
 
 }

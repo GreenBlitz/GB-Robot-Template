@@ -2,7 +2,6 @@ package frc.robot.poseestimator.WPILibPoseEstimator;
 
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
@@ -50,7 +49,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
 		this.odometryAcceleration = 0;
-		this.lastVisionObservation = new VisionData(new Pose3d(), TimeUtils.getCurrentTimeSeconds());
 		this.lastOdometryObservation = new OdometryObservation(
 			modulePositions,
 			Optional.of(initialGyroAngle),
@@ -141,7 +139,9 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
 		Logger.recordOutput(getLogPath() + "odometrySpeed/", odometryAcceleration);
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryObservation.timestamp());
-		Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionObservation.getTimestamp());
+		if (lastVisionObservation != null) {
+			Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionObservation.getTimestamp());
+		}
 	}
 
 	@Override

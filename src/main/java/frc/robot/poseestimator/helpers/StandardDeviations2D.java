@@ -24,12 +24,8 @@ public record StandardDeviations2D(double xStandardDeviations, double yStandardD
 		);
 	}
 
-	public StandardDeviations2D (StandardDeviations2D standardDeviations2D) {
-		this(
-			standardDeviations2D.xStandardDeviations,
-			standardDeviations2D.yStandardDeviations,
-			standardDeviations2D.angleStandardDeviations
-		);
+	public StandardDeviations2D(StandardDeviations2D standardDeviations2D) {
+		this(standardDeviations2D.xStandardDeviations, standardDeviations2D.yStandardDeviations, standardDeviations2D.angleStandardDeviations);
 	}
 
 	public Matrix<N3, N1> asColumnVector() {

@@ -46,7 +46,4 @@ public class VisionConstants {
 
 	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = new Filter<>((data) -> true);
 
-	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES = List.of(); // add pose estimating cameras
-	// here...
-
 }

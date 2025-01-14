@@ -23,32 +23,18 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	private final MultiAprilTagVisionSources aprilTagVisionSources;
-
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
-		// waiting for swerve and poseestimator to be merged in order to have botpose2 working
-		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
-			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-			() -> Rotation2d.fromDegrees(0), // swerve::getGyroAbsoluteYaw,
-			() -> Rotation2d.fromDegrees(0), // () -> poseEstimator.getEstimatedPose().getRotation(),
-			VisionConstants.DEFAULT_VISION_POSEESTIMATING_SOURCES
-		);
 	}
 
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
-		aprilTagVisionSources.log();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
-	}
-
-	public MultiAprilTagVisionSources getAprilTagVisionSources() {
-		return aprilTagVisionSources;
 	}
 
 }

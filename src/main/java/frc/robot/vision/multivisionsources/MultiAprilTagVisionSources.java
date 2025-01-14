@@ -91,7 +91,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 				AlertManager.addAlert(
 					new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						"unableToSwitchBotPoseOnNonDynamicLimelight",
+						"unableToSwitchBotPoseInNonDynamicLimelight",
 						() -> !useRobotHeadingForPoseEstimating
 					)
 				);

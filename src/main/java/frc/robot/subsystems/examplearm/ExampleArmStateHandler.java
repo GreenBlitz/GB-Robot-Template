@@ -11,15 +11,15 @@ public class ExampleArmStateHandler {
 	}
 
 	public Command setState(ExampleArmState state) {
-		return switch (state){
+		return switch (state) {
 			case STAY_IN_PLACE -> arm.getCommandsBuilder().stayInPlace();
-			case INTAKE, SAFE_HOLD, LOW_DROP,MID_DROP, HIGH_DROP -> arm.getCommandsBuilder().moveToPosition(state.getPosition());
+			case INTAKE, SAFE_HOLD, LOW_DROP, MID_DROP, HIGH_DROP -> arm.getCommandsBuilder().moveToPosition(state.getPosition());
 		};
 	}
 
 	public Command endSate(ExampleArmState state) {
 		return switch (state) {
-			case SAFE_HOLD, HIGH_DROP, MID_DROP, LOW_DROP, INTAKE, STAY_IN_PLACE  -> setState(ExampleArmState.STAY_IN_PLACE);
+			case SAFE_HOLD, HIGH_DROP, MID_DROP, LOW_DROP, INTAKE, STAY_IN_PLACE -> setState(ExampleArmState.STAY_IN_PLACE);
 		};
 	}
 

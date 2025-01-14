@@ -32,7 +32,7 @@ public class ExampleTalonFXArmBuilder {
 		SingleJointedArmSim armSim = new SingleJointedArmSim(
 			LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001, kGEAR_RATIO),
 			DCMotor.getKrakenX60(1),
-			1,
+				kGEAR_RATIO,
 			1.5,
 			Rotation2d.fromDegrees(-90).getRadians(),
 			Rotation2d.fromDegrees(90).getRadians(),
@@ -48,10 +48,11 @@ public class ExampleTalonFXArmBuilder {
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		return new ExampleArm(logPath, motor, positionRequest, voltageRequest, positionSignal, voltageSignal);
 	}
+
 
 	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(null, null, null, state -> SignalLogger.writeString("state", state.toString()));
@@ -66,8 +67,8 @@ public class ExampleTalonFXArmBuilder {
 		config.Slot0.kG = 0;
 
 		config.CurrentLimits.withSupplyCurrentLimit(30);
-		config.MotorOutput.withPeakForwardDutyCycle(0.9);
-		config.MotorOutput.withPeakReverseDutyCycle(-0.9);
+//		config.MotorOutput.withPeakForwardDutyCycle(0.9);
+//		config.MotorOutput.withPeakReverseDutyCycle(-0.9);
 		config.SoftwareLimitSwitch.withForwardSoftLimitThreshold(90);
 		config.SoftwareLimitSwitch.withReverseSoftLimitThreshold(-90);
 		config.Feedback.withSensorToMechanismRatio(kGEAR_RATIO);

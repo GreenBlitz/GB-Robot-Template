@@ -33,7 +33,7 @@ public class ExampleArmCommandsBuilder {
 	public Command loggedDashboardSetVoltage() {
 		return arm.asSubsystemCommand(
 			new LoggedDashboardCommand("Set Example Arm Voltage", (voltage) -> arm.setVoltage(voltage)),
-			"Set example arm voltage through dashboard, set voltage to the value give"
+			"Set example arm voltage through dashboard, set voltage to the given value"
 		);
 	}
 

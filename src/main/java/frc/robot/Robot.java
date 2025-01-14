@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.examplearm.ExampleArm;
+import frc.robot.subsystems.examplearm.ExampleArmStateHandler;
+import frc.robot.subsystems.factories.examplearm.ExampleArmFactory;
 import frc.utils.battery.BatteryUtils;
 
 /**
@@ -18,7 +21,9 @@ import frc.utils.battery.BatteryUtils;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static final RobotType ROBOT_TYPE = RobotType.REAL; //RobotType.determineRobotType();
+	public static final ExampleArm exampleArm = ExampleArmFactory.create("Subsystems/ExampleArm/");
+	public static final ExampleArmStateHandler exampleArmStateHandler = new ExampleArmStateHandler(exampleArm);
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();

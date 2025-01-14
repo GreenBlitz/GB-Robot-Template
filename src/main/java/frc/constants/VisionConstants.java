@@ -3,12 +3,10 @@ package frc.constants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
 
 import java.io.IOException;
-import java.util.List;
 
 public class VisionConstants {
 
@@ -39,9 +37,7 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
-	public static final int LATENCY_BOTPOSE_INDEX = 6;
-
-	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE = false;
+	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE = false;
 
 
 	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = new Filter<>((data) -> true);

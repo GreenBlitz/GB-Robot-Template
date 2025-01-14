@@ -46,7 +46,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		super(logPath, visionSources);
 		this.gyroSupplier = gyroSupplier;
 		this.headingOffsetSupplier = headingOffsetSupplier;
-		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE);
+		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE);
 	}
 
 	private void updateYawInLimelights(Rotation2d yaw) {

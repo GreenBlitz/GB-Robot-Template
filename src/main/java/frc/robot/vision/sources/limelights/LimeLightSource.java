@@ -26,8 +26,6 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
-import static frc.constants.VisionConstants.LATENCY_BOTPOSE_INDEX;
-
 public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
 	private final String logPath;
@@ -41,10 +39,14 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry standardDeviations;
 	private final NetworkTableEntry robotOrientationEntry;
+	private final NetworkTableEntry computingPipelineLatencyEntry;
+	private final NetworkTableEntry captureLatencyEntry;
 
 	private double[] aprilTagPoseArray;
 	private double[] robotPoseArray;
 	private double[] standardDeviationsArray;
+	private double computingPipeLineLatency;
+	private double captureLatency;
 	private Filter<AprilTagVisionData> filter;
 	private GyroAngleValues gyroAngleValues;
 
@@ -66,6 +68,9 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.standardDeviations = getLimelightNetworkTableEntry("stddevs");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
+		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
+		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
+
 		this.gyroAngleValues = new GyroAngleValues(new Rotation2d(), 0, new Rotation2d(), 0, new Rotation2d(), 0);
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
@@ -86,8 +91,14 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		};
 		robotPoseArray = entry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		standardDeviationsArray = standardDeviations.getDoubleArray(new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT]);
+		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
+		captureLatency = captureLatencyEntry.getDouble(0D);
 
 		log();
+	}
+
+	protected double getLatency() {
+		return computingPipeLineLatency + captureLatency;
 	}
 
 	protected Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
@@ -112,7 +123,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	protected double getTimestamp() {
-		double processingLatencySeconds = Conversions.milliSecondsToSeconds(robotPoseArray[LATENCY_BOTPOSE_INDEX]);
+		double processingLatencySeconds = Conversions.milliSecondsToSeconds(getLatency());
 		return TimeUtils.getCurrentTimeSeconds() - processingLatencySeconds;
 	}
 

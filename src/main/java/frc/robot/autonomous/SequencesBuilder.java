@@ -27,8 +27,16 @@ public class SequencesBuilder {
 		);
 	}
 
-	public static Command shootOnMove(Robot robot, PathPlannerPath path, Supplier<Command> shootingCommand) {
-		return new ParallelCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), shootingCommand.get());
+	public static Command commandDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
+		return new ParallelCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
+	}
+
+	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
+		return new SequentialCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
+	}
+
+	public static Command feedAndScore(Robot robot, PathPlannerPath pathToSource, PathPlannerPath pathFromSource, Supplier<Command> feedingCommand, Supplier<Command> scoringCommand) {
+		return new SequentialCommandGroup(commandAfterPath(robot, pathToSource, feedingCommand), commandAfterPath(robot, pathFromSource, scoringCommand));
 	}
 
 }

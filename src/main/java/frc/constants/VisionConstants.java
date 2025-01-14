@@ -20,7 +20,8 @@ public class VisionConstants {
 	private static AprilTagFieldLayout getAprilTagFieldLayout() {
 		try {
 			return AprilTagFieldLayout.loadFromResource(DirectoryPaths.APRIL_TAG_FIELD_CONFIG_FILE_PATH.toString());
-		} catch (IOException ioException) {
+		}
+		catch (IOException ioException) {
 			new Alert(
 				Alert.AlertType.WARNING,
 				"Cannot read april tag field layout from " + DirectoryPaths.APRIL_TAG_FIELD_CONFIG_FILE_PATH + ", using default field layout"

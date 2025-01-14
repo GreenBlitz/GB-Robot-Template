@@ -28,10 +28,12 @@ public class MultiVisionSources<T extends VisionData> {
 	}
 
 	public ArrayList<T> getUnfilteredVisionData() {
+		log();
 		return createMappedCopyOfSources(visionSources, VisionSource::getVisionData);
 	}
 
 	public ArrayList<T> getFilteredVisionData() {
+		log();
 		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
 	}
 

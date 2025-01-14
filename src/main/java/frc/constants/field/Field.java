@@ -21,8 +21,6 @@ public class Field {
 	public static final double LENGTH_METERS = 17.548225;
 	public static final double WIDTH_METERS = 8.0518;
 
-	private static final Translation2d MIDDLE_OF_REEF = new Translation2d(4.48934, 4.03225);
-
 	public static final double LENGTH_OF_REEF_SIDE_METERS = 0.96;
 
 	private static final Pose2d[] MIDDLE_OF_REEF_SIDES = new Pose2d[] {
@@ -85,10 +83,6 @@ public class Field {
 	private static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorY, boolean mirrorAngle) {
 		Translation3d translation3d = getAllianceRelative(pose.getTranslation(), mirrorY, true, false);
 		return mirrorAngle ? new Pose3d(translation3d, getAllianceRelative(pose.getRotation())) : new Pose3d(translation3d, pose.getRotation());
-	}
-
-	public static Translation2d getMiddleOfReef() {
-		return isFieldConventionAlliance() ? MIDDLE_OF_REEF : FieldMath.getMirrored(MIDDLE_OF_REEF, false, true);
 	}
 
 	public static Pose2d getMiddleOfReefSide(ReefSide side) {

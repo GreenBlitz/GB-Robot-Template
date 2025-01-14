@@ -14,18 +14,14 @@ public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
 		gyro.optimizeBusUtilization();
 	}
 
-	public Pigeon2Wrapper getGyro() {
+	@Override
+	public Pigeon2Wrapper getDevice() {
 		return gyro;
 	}
 
 	@Override
 	public void setYaw(Rotation2d yaw) {
 		gyro.setYaw(yaw);
-	}
-
-	@Override
-	public Pigeon2Wrapper getDevice() {
-		return gyro;
 	}
 
 }

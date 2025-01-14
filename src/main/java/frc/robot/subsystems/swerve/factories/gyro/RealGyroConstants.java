@@ -37,7 +37,7 @@ class RealGyroConstants {
 	protected static GyroSignals generateSignals(Pigeon2Gyro pigeon2Gyro) {
 		return new GyroSignals(
 			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(pigeon2Gyro.getGyro().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
+				.generatePhoenix6Signal(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
 		);
 	}
 

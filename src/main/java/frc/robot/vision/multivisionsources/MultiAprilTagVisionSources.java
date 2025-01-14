@@ -105,7 +105,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		logBotPose();
 	}
 
-	public void switchBotPoses() {
+	public void switchMegaTagCalculationMethod() {
 		setUseRobotHeadingForPoseEstimating(!useRobotHeadingForPoseEstimating);
 	}
 
@@ -126,7 +126,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		Logger.recordOutput(logPath + "isBotPose1InUse", !useRobotHeadingForPoseEstimating);
 	}
 
-	private void logTargetData() {
+	private void logApriltagPoseData() {
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
@@ -137,7 +137,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	@Override
 	public void log() {
 		super.log();
-		logTargetData();
+		logApriltagPoseData();
 		Logger.recordOutput(logPath + "offsettedRobotHeading", getRobotHeading());
 		Logger.recordOutput(logPath + "headingOffset", headingOffsetSupplier.get());
 		Logger.recordOutput(logPath + "gyroInput", gyroSupplier.get());

@@ -6,19 +6,13 @@ import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
-import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
 
 import java.util.Optional;
 
-public class DynamicSwitchingLimelight
-	implements
-		VisionSource<AprilTagVisionData>,
-		IndpendentHeadingVisionSource,
-		RobotHeadingRequiringVisionSource
-{
+public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
-	private final IndpendentHeadingVisionSource noisyLimelight;
+	private final IndpendentHeadingVisionSource independentPoseEstimatingLimelight;
 	private final RobotHeadingRequiringVisionSource headingRequiredLimelight;
 	private boolean useGyroForPoseEstimating;
 
@@ -29,7 +23,7 @@ public class DynamicSwitchingLimelight
 		Filter<AprilTagVisionData> filter
 	) {
 		this.useGyroForPoseEstimating = defaultUseGyroForPoseEstimating;
-		this.noisyLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(name, parentLogPath, filter);
+		this.independentPoseEstimatingLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(name, parentLogPath, filter);
 		this.headingRequiredLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(name, parentLogPath, filter);
 	}
 
@@ -39,39 +33,41 @@ public class DynamicSwitchingLimelight
 
 	@Override
 	public void update() {
-		noisyLimelight.update();
+		independentPoseEstimatingLimelight.update();
 		headingRequiredLimelight.update();
 	}
 
 	@Override
 	public Optional<AprilTagVisionData> getVisionData() {
-		return useGyroForPoseEstimating ? noisyLimelight.getVisionData() : headingRequiredLimelight.getVisionData();
+		return useGyroForPoseEstimating ? independentPoseEstimatingLimelight.getVisionData() : headingRequiredLimelight.getVisionData();
 	}
 
 	@Override
 	public Optional<AprilTagVisionData> getFilteredVisionData() {
-		return useGyroForPoseEstimating ? noisyLimelight.getFilteredVisionData() : headingRequiredLimelight.getFilteredVisionData();
+		return useGyroForPoseEstimating
+			? independentPoseEstimatingLimelight.getFilteredVisionData()
+			: headingRequiredLimelight.getFilteredVisionData();
 	}
 
 	@Override
 	public void setFilter(Filter<AprilTagVisionData> newFilter) {
-		noisyLimelight.setFilter(newFilter);
+		independentPoseEstimatingLimelight.setFilter(newFilter);
 		headingRequiredLimelight.setFilter(newFilter);
 	}
 
 	@Override
 	public Filter<AprilTagVisionData> getFilter() {
-		return noisyLimelight.getFilter(); // same filter for both sources
+		return independentPoseEstimatingLimelight.getFilter(); // same filter for both sources
 	}
 
 	@Override
 	public Optional<TimedValue<Rotation2d>> getRawHeadingData() {
-		return noisyLimelight.getRawHeadingData();
+		return independentPoseEstimatingLimelight.getRawHeadingData();
 	}
 
 	@Override
 	public Optional<TimedValue<Rotation2d>> getFilteredHeadingData() {
-		return noisyLimelight.getFilteredHeadingData();
+		return independentPoseEstimatingLimelight.getFilteredHeadingData();
 	}
 
 	@Override

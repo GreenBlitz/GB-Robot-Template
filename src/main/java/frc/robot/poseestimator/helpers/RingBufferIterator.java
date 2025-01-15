@@ -12,15 +12,15 @@ public class RingBufferIterator<T> implements Iterator<T> {
 	RingBufferIterator(RingBuffer<T> ringBuffer) {
 		this.ringBuffer = ringBuffer;
 		int index = ringBuffer.getCurrentIndex();
-		while(true) {
+		while (true) {
 			if (--index < 0) {
 				index = ringBuffer.size() - 1;
 			}
-			if (!ringBuffer.existsAtIndex(index)){
-				index=ringBuffer.incWrapIndex(index);
+			if (!ringBuffer.existsAtIndex(index)) {
+				index = ringBuffer.incWrapIndex(index);
 				break;
 			}
-			if (index == ringBuffer.getCurrentIndex()){
+			if (index == ringBuffer.getCurrentIndex()) {
 				break;
 			}
 		}

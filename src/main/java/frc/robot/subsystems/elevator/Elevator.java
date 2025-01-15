@@ -43,6 +43,8 @@ public class Elevator extends GBSubsystem {
 		this.digitalInputInputsAutoLogged = new DigitalInputInputsAutoLogged();
 		hasBeenResetBySwitch = false;
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
+
+		updateInputs();
 	}
 
 	public ElevatorCommandsBuilder getCommandsBuilder() {
@@ -57,58 +59,11 @@ public class Elevator extends GBSubsystem {
 		return digitalInputInputsAutoLogged.debouncedValue;
 	}
 
-	public void setBrake(boolean brake) {
-		firstMotor.setBrake(brake);
-		secondMotor.setBrake(brake);
-	}
-
-	protected void setPower(double power) {
-		firstMotor.setPower(power);
-		secondMotor.setPower(power);
-	}
-
-	protected void stop() {
-		firstMotor.stop();
-		secondMotor.stop();
-	}
-
-	protected void setVoltage(double voltage) {
-		firstMotor.applyRequest(firstMotorStuff.requests().voltageRequest().withSetPoint(voltage));
-		secondMotor.applyRequest(secondMotorStuff.requests().voltageRequest().withSetPoint(voltage));
-	}
-
-	protected void setTargetPositionMeters(double targetPositionMeters) {
-		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
-		firstMotor.applyRequest(firstMotorStuff.requests().positionRequest().withSetPoint(targetPosition));
-		secondMotor.applyRequest(secondMotorStuff.requests().positionRequest().withSetPoint(targetPosition));
-	}
-
-	public void resetMotors(double positionMeters) {
-		Rotation2d convertedPosition = convertMetersToRotations(positionMeters);
-		firstMotor.resetPosition(convertedPosition);
-		secondMotor.resetPosition(convertedPosition);
-	}
-
-	public double getElevatorPositionMeters() {
-		return convertRotationsToMeters(firstMotorStuff.signals().positionSignal().getLatestValue());
-	}
-
-	private void dynamicReset() {
-		if (getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_ACHIEVABLE_ANGLE_METERS) {
-			resetMotors(ElevatorConstants.MINIMUM_ACHIEVABLE_ANGLE_METERS);
-		}
-	}
-
-	private void limitSwitchReset() {
-		if (digitalInputInputsAutoLogged.debouncedValue && DriverStation.isDisabled() && !hasBeenResetBySwitch) {
-			resetMotors(ElevatorConstants.MINIMUM_ACHIEVABLE_ANGLE_METERS);
-			hasBeenResetBySwitch = true;
-		}
-	}
-
-	private void handleReset() {
-		dynamicReset();
-		limitSwitchReset();
+	@Override
+	protected void subsystemPeriodic() {
+		updateInputs();
+		handleReset();
+		log();
 	}
 
 	private void updateInputs() {
@@ -126,12 +81,66 @@ public class Elevator extends GBSubsystem {
 		Logger.processInputs(limitSwitchLogPath, digitalInputInputsAutoLogged);
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		updateInputs();
-		handleReset();
-		log();
+	public void setBrake(boolean brake) {
+		firstMotor.setBrake(brake);
+		secondMotor.setBrake(brake);
 	}
+
+	protected void stop() {
+		firstMotor.stop();
+		secondMotor.stop();
+	}
+
+	protected void setPower(double power) {
+		firstMotor.setPower(power);
+		secondMotor.setPower(power);
+	}
+
+	protected void setVoltage(double voltage) {
+		firstMotor.applyRequest(firstMotorStuff.requests().voltageRequest().withSetPoint(voltage));
+		secondMotor.applyRequest(secondMotorStuff.requests().voltageRequest().withSetPoint(voltage));
+	}
+
+	protected void setTargetPositionMeters(double targetPositionMeters) {
+		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
+		firstMotor.applyRequest(firstMotorStuff.requests().positionRequest().withSetPoint(targetPosition));
+		secondMotor.applyRequest(secondMotorStuff.requests().positionRequest().withSetPoint(targetPosition));
+	}
+
+	protected void stayInPlace(){
+		stop();
+	}
+
+	public void resetMotors(double positionMeters) {
+		Rotation2d convertedPosition = convertMetersToRotations(positionMeters);
+		firstMotor.resetPosition(convertedPosition);
+		secondMotor.resetPosition(convertedPosition);
+	}
+
+	public double getElevatorPositionMeters() {
+		return convertRotationsToMeters(firstMotorStuff.signals().positionSignal().getLatestValue());
+	}
+
+	private void dynamicReset() {
+		if (getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS) {
+			resetMotors(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS);
+		}
+	}
+
+	private void limitSwitchReset() {
+		if (isAtBackwardsLimit() && DriverStation.isDisabled() && !hasBeenResetBySwitch) {
+			resetMotors(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS);
+			hasBeenResetBySwitch = true;
+		}
+	}
+
+	private void handleReset() {
+		dynamicReset();
+		limitSwitchReset();
+	}
+
+
+
 
 	private double convertRotationsToMeters(Rotation2d position) {
 		return Conversions.angleToDistance(position, ElevatorConstants.DRUM_RADIUS);

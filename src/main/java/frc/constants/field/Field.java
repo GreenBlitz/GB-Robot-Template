@@ -88,7 +88,7 @@ public class Field {
 	}
 
 	public static Translation2d getMiddleOfReef() {
-		return isFieldConventionAlliance() ? MIDDLE_OF_REEF : FieldMath.getMirrored(MIDDLE_OF_REEF, false, true);
+		return getAllianceRelative(MIDDLE_OF_REEF, false, true);
 	}
 
 	public static Pose2d getMiddleOfReefSide(ReefSide side) {
@@ -96,7 +96,7 @@ public class Field {
 	}
 
 	public static Translation2d getCoralPlacement(ReefBranch branch) {
-		return CORAL_BRANCHES[branch.getIndex()];
+		return getAllianceRelative(CORAL_BRANCHES[branch.getIndex()], true, true);
 	}
 
 	public static Translation2d getCage(CagePosition cagePosition) {

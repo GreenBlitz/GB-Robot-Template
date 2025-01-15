@@ -29,6 +29,9 @@ public class SlidingWindowAngleAccumulator {
 			this.nextAngleSlot++,
 			Optional.of((angle.getRadians() + MathConstants.FULL_CIRCLE.getRadians()) % MathConstants.FULL_CIRCLE.getRadians())
 		);
+		if (nextAngleSlot >= angleAccumulatorRad.size()) {
+			nextAngleSlot = 0;
+		}
 	}
 
 	public void clear() {

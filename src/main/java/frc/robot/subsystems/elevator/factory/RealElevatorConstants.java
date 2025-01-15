@@ -7,6 +7,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -21,7 +22,6 @@ public class RealElevatorConstants {
 
     private static final int LIMIT_SWITCH_CHANNEL = 0;
     private static final double LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;
-    private static final int DEFAULT_SIGNALS_FREQUENCY_HERTZ = 60;
     private static final SysIdRoutine.Config FIRST_MOTOR_CONFIG = new SysIdRoutine.Config();
     private static final SysIdRoutine.Config SECOND_MOTOR_CONFIG = new SysIdRoutine.Config();
 
@@ -33,15 +33,24 @@ public class RealElevatorConstants {
         configuration.Slot0.
     }
 
+    private static ElevatorRequests createRequests(){
+        return new ElevatorRequests(
+                Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true)),
+                Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true))
+        );
+    }
+
+    private static ElevatorSignals createSignals(TalonFXMotor motor){
+        return new ElevatorSignals(
+                Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
+                Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ)
+        );
+    }
+
     public static Elevator generate(String logPath){
         TalonFXMotor firstMotor = new TalonFXMotor(logPath + "FirstMotor/", IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID, FIRST_MOTOR_CONFIG);
-        ElevatorRequests firstMotorRequests = new ElevatorRequests(
-                Phoenix6RequestBuilder.build(new PositionVoltage(0)),
-                Phoenix6RequestBuilder.build(new VoltageOut(0))
-        );
-        ElevatorSignals firstMotorSignals = new ElevatorSignals(
-                Phoenix6SignalBuilder.generatePhoenix6Signal(firstMotor.getDevice().getPosition(), DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-                Phoenix6SignalBuilder.generatePhoenix6Signal(firstMotor.getDevice().getMotorVoltage(), DEFAULT_SIGNALS_FREQUENCY_HERTZ)
+        ElevatorRequests firstMotorRequests = createRequests();
+        ElevatorSignals firstMotorSignals = createSignals(firstMotor);
         );
         ElevatorMotorStuff firstMotorStuff = new ElevatorMotorStuff(
                 firstMotor,
@@ -50,14 +59,8 @@ public class RealElevatorConstants {
         );
 
         TalonFXMotor secondMotor = new TalonFXMotor(logPath + "SecondMotor/", IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, SECOND_MOTOR_CONFIG);
-        ElevatorRequests secondMotorRequests = new ElevatorRequests(
-                Phoenix6RequestBuilder.build(new PositionVoltage(0)),
-                Phoenix6RequestBuilder.build(new VoltageOut(0))
-        );
-        ElevatorSignals secondMotorSignals = new ElevatorSignals(
-                Phoenix6SignalBuilder.generatePhoenix6Signal(secondMotor.getDevice().getPosition(), DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-                Phoenix6SignalBuilder.generatePhoenix6Signal(secondMotor.getDevice().getMotorVoltage(), DEFAULT_SIGNALS_FREQUENCY_HERTZ)
-        );
+        ElevatorRequests secondMotorRequests = createRequests();
+        ElevatorSignals secondMotorSignals = createSignals(secondMotor);
         ElevatorMotorStuff secondMotorStuff = new ElevatorMotorStuff(
                 secondMotor,
                 secondMotorRequests,

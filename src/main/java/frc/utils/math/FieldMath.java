@@ -35,46 +35,38 @@ public class FieldMath {
 		return Field.WIDTH_METERS - y;
 	}
 
-	public static Pose2d getMirrored(Pose2d pose2d, boolean mirrorY, boolean mirrorX, boolean invertAngle, boolean mirrorAngle) {
-		Pose2d output = pose2d;
-		if (mirrorY) {
-			output = new Pose2d(output.getX(), getMirroredY(output.getY()), output.getRotation());
-		}
-		if (mirrorX) {
-			output = new Pose2d(getMirroredX(output.getX()), output.getY(), output.getRotation());
-		}
+	public static Pose2d getMirrored(Pose2d pose2d, boolean mirrorX, boolean mirrorY, boolean invertAngle, boolean mirrorAngle) {
+		pose2d = new Pose2d(getMirrored(pose2d.getTranslation(), mirrorX, mirrorY), pose2d.getRotation());
 		if (invertAngle) {
-			output = new Pose2d(output.getX(), output.getY(), getInvertedAngle(output.getRotation()));
+			pose2d = new Pose2d(pose2d.getX(), pose2d.getY(), getInvertedAngle(pose2d.getRotation()));
 		}
 		if (mirrorAngle) {
-			output = new Pose2d(output.getX(), output.getY(), getMirroredAngle(output.getRotation()));
+			pose2d = new Pose2d(pose2d.getX(), pose2d.getY(), getMirroredAngle(pose2d.getRotation()));
 		}
-		return output;
+		return pose2d;
 	}
 
-	public static Translation3d getMirrored(Translation3d translation3d, boolean mirrorY, boolean mirrorX, boolean invertZ) {
-		Translation3d output = translation3d;
-		if (mirrorY) {
-			output = new Translation3d(output.getX(), getMirroredY(output.getY()), output.getZ());
-		}
+	public static Translation3d getMirrored(Translation3d translation3d, boolean mirrorX, boolean mirrorY, boolean invertZ) {
 		if (mirrorX) {
-			output = new Translation3d(getMirroredX(output.getX()), output.getY(), output.getZ());
+			translation3d = new Translation3d(getMirroredX(translation3d.getX()), translation3d.getY(), translation3d.getZ());
+		}
+		if (mirrorY) {
+			translation3d = new Translation3d(translation3d.getX(), getMirroredY(translation3d.getY()), translation3d.getZ());
 		}
 		if (invertZ) {
-			output = new Translation3d(output.getX(), output.getY(), 0 - output.getZ());
+			translation3d = new Translation3d(translation3d.getX(), translation3d.getY(), 0 - translation3d.getZ());
 		}
-		return output;
+		return translation3d;
 	}
 
-	public static Translation2d getMirrored(Translation2d translation2d, boolean mirrorY, boolean mirrorX) {
-		Translation2d output = translation2d;
+	public static Translation2d getMirrored(Translation2d translation2d, boolean mirrorX, boolean mirrorY) {
 		if (mirrorY) {
-			output = new Translation2d(output.getX(), getMirroredY(output.getY()));
+			translation2d = new Translation2d(translation2d.getX(), getMirroredY(translation2d.getY()));
 		}
 		if (mirrorX) {
-			output = new Translation2d(getMirroredX(output.getX()), output.getY());
+			translation2d = new Translation2d(getMirroredX(translation2d.getX()), translation2d.getY());
 		}
-		return output;
+		return translation2d;
 	}
 
 	public static Rotation3d getMirroredAngle(Rotation3d rotation) {

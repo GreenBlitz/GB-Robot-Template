@@ -66,29 +66,29 @@ public class Field {
 		return DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
 
-	private static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorY, boolean mirrorX, boolean invertAngle, boolean mirrorAngle) {
-		return isFieldConventionAlliance() ? pose : FieldMath.getMirrored(pose, mirrorY, mirrorX, invertAngle, mirrorAngle);
+	private static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, boolean invertAngle, boolean mirrorAngle) {
+		return isFieldConventionAlliance() ? pose : FieldMath.getMirrored(pose, mirrorX, mirrorY, invertAngle, mirrorAngle);
 	}
 
-	private static Translation2d getAllianceRelative(Translation2d translation, boolean mirrorY, boolean mirrorX) {
-		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorY, mirrorX);
+	private static Translation2d getAllianceRelative(Translation2d translation, boolean mirrorX, boolean mirrorY) {
+		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorX, mirrorY);
 	}
 
-	private static Translation3d getAllianceRelative(Translation3d translation, boolean mirrorY, boolean mirrorX, boolean invertZ) {
-		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorY, mirrorX, invertZ);
+	private static Translation3d getAllianceRelative(Translation3d translation, boolean mirrorX, boolean mirrorY, boolean invertZ) {
+		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorX, mirrorY, invertZ);
 	}
 
 	private static Rotation3d getAllianceRelative(Rotation3d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.getMirroredAngle(rotation);
 	}
 
-	private static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorY, boolean mirrorAngle) {
-		Translation3d translation3d = getAllianceRelative(pose.getTranslation(), mirrorY, true, false);
+	private static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorX, boolean mirrorY, boolean mirrorAngle) {
+		Translation3d translation3d = getAllianceRelative(pose.getTranslation(), mirrorX, mirrorY, false);
 		return mirrorAngle ? new Pose3d(translation3d, getAllianceRelative(pose.getRotation())) : new Pose3d(translation3d, pose.getRotation());
 	}
 
 	public static Translation2d getMiddleOfReef() {
-		return getAllianceRelative(MIDDLE_OF_REEF, false, true);
+		return getAllianceRelative(MIDDLE_OF_REEF, true, false);
 	}
 
 	public static Pose2d getMiddleOfReefSide(ReefSide side) {
@@ -100,7 +100,7 @@ public class Field {
 	}
 
 	public static Translation2d getCage(CagePosition cagePosition) {
-		return getAllianceRelative(CAGES[cagePosition.getIndex()], true, false);
+		return getAllianceRelative(CAGES[cagePosition.getIndex()], false, true);
 	}
 
 	public static Pose2d getProcessor() {
@@ -108,7 +108,7 @@ public class Field {
 	}
 
 	public static Pose2d getMiddleOfCoralStation(CoralStationPosition coralStationPosition) {
-		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], false, true, false, true);
+		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], true, false, false, true);
 	}
 
 }

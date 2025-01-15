@@ -11,6 +11,9 @@ public class ElevatorStateHandler {
     }
 
     public Command setState(ElevatorState state){
+        if (state == ElevatorState.IDLE) {
+            return elevator.getCommandsBuilder().stop();
+        }
         return elevator.getCommandsBuilder().setTargetPositionMeters(state.getMeters());
     }
 

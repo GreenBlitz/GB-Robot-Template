@@ -7,7 +7,7 @@ public enum ElevatorState {
     L2(2),
     L3(3),
     L4(4),
-    CLOSED(-1),
+    CLOSED(0.05),
     IDLE(0);
 
     private double meters;

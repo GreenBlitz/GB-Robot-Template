@@ -10,14 +10,14 @@ public enum ElevatorState {
     CLOSED(0.05),
     IDLE(0);
 
-    private double meters;
+    private double heightMeters;
 
-    ElevatorState(double meters) {
-        this.meters = meters;
+    ElevatorState(double heightMeters) {
+        this.heightMeters = heightMeters;
     }
 
-    public double getMeters() {
-        return meters;
+    public double getHeightMeters() {
+        return heightMeters;
     }
 
 }

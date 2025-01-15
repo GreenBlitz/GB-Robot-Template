@@ -16,14 +16,14 @@ public class ElevatorCommandsBuilder {
 
 	public Command setPower(double power) {
 		return elevator.asSubsystemCommand(
-			new ExecuteEndCommand(() -> elevator.setPower(power), () -> elevator.setPower(0), elevator),
+			new ExecuteEndCommand(() -> elevator.setPower(power), elevator::stop, elevator),
 			"Set Power To " + power
 		);
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
 		return elevator.asSubsystemCommand(
-			new ExecuteEndCommand(() -> elevator.setPower(powerSupplier.getAsDouble()), () -> elevator.setPower(0), elevator),
+			new ExecuteEndCommand(() -> elevator.setPower(powerSupplier.getAsDouble()), elevator::stop, elevator),
 			"Set Power By Supplier"
 		);
 	}

@@ -49,6 +49,10 @@ public class Elevator extends GBSubsystem {
 		return commandsBuilder;
 	}
 
+	public boolean hasBeenResetBySwitch() {
+		return hasBeenResetBySwitch;
+	}
+
 	public boolean isAtBackwardsLimit() {
 		return digitalInputInputsAutoLogged.debouncedValue;
 	}
@@ -97,7 +101,7 @@ public class Elevator extends GBSubsystem {
 
 	private void limitSwitchReset() {
 		if (digitalInputInputsAutoLogged.debouncedValue && DriverStation.isDisabled() && !hasBeenResetBySwitch) {
-			resetMotors(0);
+			resetMotors(ElevatorConstants.MINIMUM_ACHIEVABLE_ANGLE_METERS);
 			hasBeenResetBySwitch = true;
 		}
 	}

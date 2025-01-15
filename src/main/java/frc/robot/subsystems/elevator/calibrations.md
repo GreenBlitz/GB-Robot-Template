@@ -1,0 +1,8 @@
+- Min Position
+- Max Position
+- Drum Diameter
+- Motor Type
+- Motor Ids
+- kS
+- kG
+- PID

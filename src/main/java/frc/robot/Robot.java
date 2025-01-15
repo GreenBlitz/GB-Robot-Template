@@ -4,15 +4,29 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
+import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
+import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.examplearm.ExampleArm;
 import frc.robot.subsystems.examplearm.ExampleArmStateHandler;
 import frc.robot.subsystems.factories.examplearm.ExampleArmFactory;
+import frc.utils.AngleUnit;
 import frc.utils.battery.BatteryUtils;
+
+import static frc.robot.subsystems.factories.examplearm.ExampleTalonFXArmBuilder.kGEAR_RATIO;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should

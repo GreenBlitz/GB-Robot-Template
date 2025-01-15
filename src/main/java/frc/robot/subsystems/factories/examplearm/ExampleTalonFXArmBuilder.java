@@ -54,7 +54,7 @@ public class ExampleTalonFXArmBuilder {
 	}
 
 
-	private static SysIdRoutine.Config buildSysidConfig() {
+	public static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(null, null, null, state -> SignalLogger.writeString("state", state.toString()));
 	}
 
@@ -66,13 +66,13 @@ public class ExampleTalonFXArmBuilder {
 		config.Slot0.kS = 0;
 		config.Slot0.kG = 0;
 
-//		config.CurrentLimits.withSupplyCurrentLimit(30);
+		config.CurrentLimits.withSupplyCurrentLimit(30);
 //		config.MotorOutput.withPeakForwardDutyCycle(0.9);
 //		config.MotorOutput.withPeakReverseDutyCycle(-0.9);
-//		config.SoftwareLimitSwitch.withForwardSoftLimitThreshold(Rotation2d.fromDegrees(90).getRotations());
-//		config.SoftwareLimitSwitch.withReverseSoftLimitThreshold(Rotation2d.fromDegrees(-90).getRotations());
-//		config.Feedback.withSensorToMechanismRatio(kGEAR_RATIO);
-//		config.Feedback.withRotorToSensorRatio(1);
+		config.SoftwareLimitSwitch.withForwardSoftLimitThreshold(Rotation2d.fromDegrees(90).getRotations());
+		config.SoftwareLimitSwitch.withReverseSoftLimitThreshold(Rotation2d.fromDegrees(-90).getRotations());
+		config.Feedback.withSensorToMechanismRatio(kGEAR_RATIO);
+		config.Feedback.withRotorToSensorRatio(1);
 
 		return config;
 	}

@@ -13,7 +13,7 @@ public class IDs {
 
 	public static class TalonFXIDs {
 
-		public static final Phoenix6DeviceID EXAMPLE_ARM_DEVICE_ID = new Phoenix6DeviceID(2); // Todo: change before merge
+		public static final Phoenix6DeviceID EXAMPLE_ARM_DEVICE_ID = new Phoenix6DeviceID(0); // Todo: change before merge
 
 	}
 

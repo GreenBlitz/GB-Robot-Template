@@ -1,5 +1,6 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
@@ -25,8 +26,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(Robot.exampleArmStateHandler.setState(ExampleArmState.HIGH_DROP));
-		usedJoystick.B.onTrue(Robot.exampleArm.getM);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

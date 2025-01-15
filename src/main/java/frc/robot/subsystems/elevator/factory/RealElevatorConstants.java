@@ -25,12 +25,12 @@ public class RealElevatorConstants {
     private static final SysIdRoutine.Config FIRST_MOTOR_CONFIG = new SysIdRoutine.Config();
     private static final SysIdRoutine.Config SECOND_MOTOR_CONFIG = new SysIdRoutine.Config();
 
-    private void configMotor(TalonFXMotor motor){
+    private static void configMotor(TalonFXMotor motor){
         TalonFXConfiguration configuration = new TalonFXConfiguration();
         configuration.Slot0.withKP(1).withKI(1).withKD(1);
         configuration.CurrentLimits.StatorCurrentLimit = 40;
         configuration.CurrentLimits.StatorCurrentLimitEnable = true;
-        configuration.Slot0.
+        configuration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS);
     }
 
     private static ElevatorRequests createRequests(){
@@ -49,6 +49,7 @@ public class RealElevatorConstants {
 
     public static Elevator generate(String logPath){
         TalonFXMotor firstMotor = new TalonFXMotor(logPath + "FirstMotor/", IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID, FIRST_MOTOR_CONFIG);
+        configMotor(firstMotor);
         ElevatorRequests firstMotorRequests = createRequests();
         ElevatorSignals firstMotorSignals = createSignals(firstMotor);
         );
@@ -59,6 +60,7 @@ public class RealElevatorConstants {
         );
 
         TalonFXMotor secondMotor = new TalonFXMotor(logPath + "SecondMotor/", IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, SECOND_MOTOR_CONFIG);
+        configMotor(secondMotor);
         ElevatorRequests secondMotorRequests = createRequests();
         ElevatorSignals secondMotorSignals = createSignals(secondMotor);
         ElevatorMotorStuff secondMotorStuff = new ElevatorMotorStuff(

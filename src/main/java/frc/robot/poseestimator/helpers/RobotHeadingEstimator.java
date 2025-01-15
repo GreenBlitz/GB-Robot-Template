@@ -69,4 +69,13 @@ public class RobotHeadingEstimator {
 		lastGyroAngle = gyroHeadingData.heading();
 	}
 
+	public void updateGyroAndVision(
+		Optional<HeadingData> gyroHeadingData,
+		Optional<HeadingData> visionHeadingData,
+		double visionStandardDeviation
+	) {
+		gyroHeadingData.ifPresent(this::updateGyroAngle);
+		visionHeadingData.ifPresent(visionData -> updateVisionHeading(visionData, visionStandardDeviation));
+	}
+
 }

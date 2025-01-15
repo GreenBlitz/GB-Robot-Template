@@ -141,9 +141,6 @@ public class Elevator extends GBSubsystem {
 		limitSwitchReset();
 	}
 
-
-
-
 	private double convertRotationsToMeters(Rotation2d position) {
 		return Conversions.angleToDistance(position, ElevatorConstants.DRUM_RADIUS);
 	}

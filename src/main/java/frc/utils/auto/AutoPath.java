@@ -11,7 +11,11 @@ public enum AutoPath {
 	NOTE_3_TO_NOTE_1("31"),
 	AUTO_LINE_2_TO_I("AL2-I"),
 	AUTO_LINE_4_TO_H("AL4-H"),
-	AUTO_LINE_6_TO_F("AL6-F");
+	AUTO_LINE_6_TO_F("AL6-F"),
+	I_TO_UPPER_CORAL_STATION("I-US"),
+	F_TO_LOWER_CORAL_STATION("F-LS"),
+	LOWER_CORAL_STATION_TO_C("LS-C"),
+	UPPER_CORAL_STATION_TO_L("US-L");
 
 	private final String pathName;
 

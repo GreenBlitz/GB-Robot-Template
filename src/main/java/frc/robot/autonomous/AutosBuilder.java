@@ -54,6 +54,50 @@ public class AutosBuilder {
 		);
 	}
 
+	public static List<Supplier<GBAuto>> getAllFeedScoreSequences(
+		Robot robot,
+		Supplier<Command> feedingCommand,
+		Supplier<Command> scoringCommand
+	) {
+		Optional<PathPlannerPath> pathIToUpperCoralStation = AutoPath.I_TO_UPPER_CORAL_STATION.getPathOptional();
+		Optional<PathPlannerPath> pathUpperCoralStationToL = AutoPath.UPPER_CORAL_STATION_TO_L.getPathOptional();
+		Optional<PathPlannerPath> pathFToLowerCoralStation = AutoPath.F_TO_LOWER_CORAL_STATION.getPathOptional();
+		Optional<PathPlannerPath> pathLowerCoralStationToC = AutoPath.LOWER_CORAL_STATION_TO_C.getPathOptional();
+
+		return List.of(
+			() -> new GBAuto(
+				pathIToUpperCoralStation
+					.map(
+						pathToCoralStation -> pathUpperCoralStationToL
+							.map(
+								pathFromCoralStation -> SequencesBuilder
+									.feedAndScore(robot, pathToCoralStation, pathFromCoralStation, feedingCommand, scoringCommand)
+							)
+							.orElseGet(Commands::none)
+					)
+					.orElseGet(Commands::none),
+				pathIToUpperCoralStation.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
+				"US-L",
+				pathIToUpperCoralStation.isPresent() && pathUpperCoralStationToL.isPresent()
+			),
+				() -> new GBAuto(
+						pathFToLowerCoralStation
+								.map(
+										pathToCoralStation -> pathLowerCoralStationToC
+												.map(
+														pathFromCoralStation -> SequencesBuilder
+																.feedAndScore(robot, pathToCoralStation, pathFromCoralStation, feedingCommand, scoringCommand)
+												)
+												.orElseGet(Commands::none)
+								)
+								.orElseGet(Commands::none),
+						pathFToLowerCoralStation.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
+						"LS-C",
+						pathFToLowerCoralStation.isPresent() && pathLowerCoralStationToC.isPresent()
+				)
+		);
+	}
+
 	private static GBAuto M231(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
 		Optional<PathPlannerPath> pathM2 = AutoPath.MIDDLE_OF_SUBWOOFER_TO_NOTE_2.getPathOptional();
 		Optional<PathPlannerPath> path23 = AutoPath.NOTE_2_TO_NOTE_3.getPathOptional();

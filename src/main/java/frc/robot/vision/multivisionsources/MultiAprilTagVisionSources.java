@@ -11,8 +11,6 @@ import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
 import frc.utils.alerts.Alert;
-import frc.utils.alerts.AlertManager;
-import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -83,26 +81,20 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getFilteredVisionData);
 	}
 
-	private void updateBotPoseInDynamicLimelights() {
+	private void updateMegaTagInDynamicLimelights() {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof DynamicSwitchingLimelight dynamicSwitchingLimelight) {
 				dynamicSwitchingLimelight.useRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
-			} else {
-				AlertManager.addAlert(
-					new PeriodicAlert(
-						Alert.AlertType.WARNING,
-						"unableToSwitchBotPoseInNonDynamicLimelight",
-						() -> !useRobotHeadingForPoseEstimating
-					)
-				);
+			} else if (!useRobotHeadingForPoseEstimating) {
+				new Alert(Alert.AlertType.WARNING, "unableToSwitchMegaTagsInNonDynamicLimelight").report();
 			}
 		}
 	}
 
 	public void setUseRobotHeadingForPoseEstimating(boolean useRobotHeadingForPoseEstimating) {
 		this.useRobotHeadingForPoseEstimating = useRobotHeadingForPoseEstimating;
-		updateBotPoseInDynamicLimelights();
-		logBotPose();
+		updateMegaTagInDynamicLimelights();
+		logMegaTagMethod();
 	}
 
 	public void switchMegaTagCalculationMethod() {
@@ -121,9 +113,9 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		return super.getUnfilteredVisionData();
 	}
 
-	private void logBotPose() {
-		Logger.recordOutput(logPath + "isBotPose2InUse", useRobotHeadingForPoseEstimating);
-		Logger.recordOutput(logPath + "isBotPose1InUse", !useRobotHeadingForPoseEstimating);
+	private void logMegaTagMethod() {
+		Logger.recordOutput(logPath + "isMegaTag2InUse", useRobotHeadingForPoseEstimating);
+		Logger.recordOutput(logPath + "isMegaTag1InUse", !useRobotHeadingForPoseEstimating);
 	}
 
 	private void logApriltagPoseData() {

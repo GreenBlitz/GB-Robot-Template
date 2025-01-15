@@ -84,7 +84,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	private void updateMegaTagInDynamicLimelights() {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof DynamicSwitchingLimelight dynamicSwitchingLimelight) {
-				dynamicSwitchingLimelight.useRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
+				dynamicSwitchingLimelight.setUseRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
 			} else if (!useRobotHeadingForPoseEstimating) {
 				new Alert(Alert.AlertType.WARNING, "unableToSwitchMegaTagsInNonDynamicLimelight").report();
 			}

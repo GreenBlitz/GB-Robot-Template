@@ -27,7 +27,7 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 		this.headingRequiredLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(name, parentLogPath, filter);
 	}
 
-	public void useRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {
+	public void setUseRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {
 		this.useGyroForPoseEstimating = useGyroForPoseEstimating;
 	}
 

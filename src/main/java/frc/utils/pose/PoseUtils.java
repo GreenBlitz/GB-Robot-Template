@@ -12,7 +12,7 @@ public class PoseUtils {
 
 	public static Pose3d poseArrayToPose3D(double[] poseArray, AngleUnit angleUnit) {
 		if (poseArray.length != Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT) {
-			new Alert(Alert.AlertType.WARNING, "gotBadPoseArray");
+			new Alert(Alert.AlertType.WARNING, "gotBadPoseArrayWith" + poseArray.length + "Elements");
 		}
 		return new Pose3d(
 			new Translation3d(
@@ -30,7 +30,7 @@ public class PoseUtils {
 
 	public static Pose2d poseArrayToPose2D(double[] poseArray, AngleUnit angleUnit) {
 		if (poseArray.length != Pose2dComponentsValue.POSE2D_COMPONENTS_AMOUNT) {
-			new Alert(Alert.AlertType.WARNING, "gotBadPoseArray");
+			new Alert(Alert.AlertType.WARNING, "gotBadPoseArrayWith" + poseArray.length + "Elements");
 		}
 		return new Pose2d(
 			poseArray[Pose2dComponentsValue.X_VALUE.getIndex()],

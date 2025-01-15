@@ -1,5 +1,6 @@
 
 - Motor: Id, Type
+- Buschain
 - Min Position
 - Max Position
 - Drum Diameter

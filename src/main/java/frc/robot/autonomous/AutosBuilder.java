@@ -23,8 +23,35 @@ public class AutosBuilder {
 		return autoList;
 	}
 
-	private static List<Supplier<GBAuto>> getAllGUIAutos() {
+	public static List<Supplier<GBAuto>> getAllGUIAutos() {
 		return List.of(() -> new GBAuto("Rotate"), () -> new GBAuto("Rotate 2m"), () -> new GBAuto("Straight 2m"));
+	}
+
+	public static List<Supplier<GBAuto>> getAllAutoLineAutos(Robot robot, Supplier<Command> scoringCommand) {
+		Optional<PathPlannerPath> pathAutoLine2ToI = AutoPath.AUTO_LINE_2_TO_I.getPathOptional();
+		Optional<PathPlannerPath> pathAutoLine4ToH = AutoPath.AUTO_LINE_4_TO_H.getPathOptional();
+		Optional<PathPlannerPath> pathAutoLine6ToF = AutoPath.AUTO_LINE_6_TO_F.getPathOptional();
+
+		return List.of(
+			() -> new GBAuto(
+				pathAutoLine2ToI.map(path -> SequencesBuilder.commandAfterPath(robot, path, scoringCommand)).orElseGet(Commands::none),
+				pathAutoLine2ToI.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
+				AutoPath.AUTO_LINE_2_TO_I.getPathName(),
+				pathAutoLine2ToI.isPresent()
+			),
+			() -> new GBAuto(
+				pathAutoLine4ToH.map(path -> SequencesBuilder.commandAfterPath(robot, path, scoringCommand)).orElseGet(Commands::none),
+				pathAutoLine4ToH.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
+				AutoPath.AUTO_LINE_4_TO_H.getPathName(),
+				pathAutoLine4ToH.isPresent()
+			),
+			() -> new GBAuto(
+				pathAutoLine6ToF.map(path -> SequencesBuilder.commandAfterPath(robot, path, scoringCommand)).orElseGet(Commands::none),
+				pathAutoLine6ToF.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
+				AutoPath.AUTO_LINE_6_TO_F.getPathName(),
+				pathAutoLine6ToF.isPresent()
+			)
+		);
 	}
 
 	private static GBAuto M231(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {

@@ -35,8 +35,17 @@ public class SequencesBuilder {
 		return new SequentialCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
 	}
 
-	public static Command feedAndScore(Robot robot, PathPlannerPath pathToSource, PathPlannerPath pathFromSource, Supplier<Command> feedingCommand, Supplier<Command> scoringCommand) {
-		return new SequentialCommandGroup(commandAfterPath(robot, pathToSource, feedingCommand), commandAfterPath(robot, pathFromSource, scoringCommand));
+	public static Command feedAndScore(
+		Robot robot,
+		PathPlannerPath pathToSource,
+		PathPlannerPath pathFromSource,
+		Supplier<Command> feedingCommand,
+		Supplier<Command> scoringCommand
+	) {
+		return new SequentialCommandGroup(
+			commandAfterPath(robot, pathToSource, feedingCommand),
+			commandAfterPath(robot, pathFromSource, scoringCommand)
+		);
 	}
 
 }

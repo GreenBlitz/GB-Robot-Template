@@ -19,6 +19,10 @@ public enum AutoPath {
 		this.pathName = pathName;
 	}
 
+	public String getPathName() {
+		return pathName;
+	}
+
 	public Optional<PathPlannerPath> getPathOptional() {
 		return PathPlannerUtils.getPathFromFile(pathName);
 	}

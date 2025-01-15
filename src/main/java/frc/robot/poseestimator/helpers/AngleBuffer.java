@@ -1,53 +1,33 @@
 package frc.robot.poseestimator.helpers;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.MathConstants;
 
-public class SlidingWindowAngleAccumulator {
+public class AngleBuffer {
 
-	private final ArrayList<Optional<Double>> angleAccumulatorRad;
-	private int nextAngleSlot;
+	private final RingBuffer<Double> angleRadBuffer;
 
-	public SlidingWindowAngleAccumulator(int angleAccumulatorSize) {
-		this.angleAccumulatorRad = new ArrayList<>(angleAccumulatorSize);
-		for (int i = 0; i < angleAccumulatorSize; i++) {
-			angleAccumulatorRad.add(Optional.empty());
-		}
-		this.nextAngleSlot = 0;
+	public AngleBuffer(int angleBufferSize) {
+		this.angleRadBuffer = new RingBuffer<>(angleBufferSize);
 	}
 
 	public int size() {
-		return angleAccumulatorRad.size();
+		return angleRadBuffer.size();
 	}
 
 	public void addAngle(Rotation2d angle) {
-		angleAccumulatorRad.set(
-			this.nextAngleSlot++,
-			Optional.of((angle.getRadians() + MathConstants.FULL_CIRCLE.getRadians()) % MathConstants.FULL_CIRCLE.getRadians())
-		);
-		if (nextAngleSlot >= angleAccumulatorRad.size()) {
-			nextAngleSlot = 0;
-		}
+		angleRadBuffer.insert((angle.getRadians() + MathConstants.FULL_CIRCLE.getRadians()) % MathConstants.FULL_CIRCLE.getRadians());
 	}
 
 	public void clear() {
-		for (int i = 0; i < size(); i++) {
-			angleAccumulatorRad.add(Optional.empty());
-		}
+		angleRadBuffer.clear();
 	}
 
 	public int filledAngleSlots() {
-		int filledSlots = 0;
-		for (Optional<Double> data : angleAccumulatorRad) {
-			if (data.isPresent()) {
-				filledSlots++;
-			}
-		}
-		return filledSlots;
+		return angleRadBuffer.valuesAmount();
 	}
 
 	public Optional<Rotation2d> average() {
@@ -58,13 +38,13 @@ public class SlidingWindowAngleAccumulator {
 		Predicate<Double> predicateRad = (angleRad) -> predicate.test(Rotation2d.fromRadians(angleRad));
 		double totalUnderPi = 0, totalAbovePi = 0;
 		double underPiCount = 0, abovePiCount = 0;
-		for (Optional<Double> data : angleAccumulatorRad) {
-			if (data.isPresent() && predicateRad.test(data.get())) {
-				if (data.get() < MathConstants.HALF_CIRCLE.getRadians()) {
-					totalUnderPi += data.get();
+		for (Double data : angleRadBuffer) {
+			if (predicateRad.test(data)) {
+				if (data < MathConstants.HALF_CIRCLE.getRadians()) {
+					totalUnderPi += data;
 					underPiCount++;
 				} else {
-					totalAbovePi += data.get();
+					totalAbovePi += data;
 					abovePiCount++;
 				}
 			}

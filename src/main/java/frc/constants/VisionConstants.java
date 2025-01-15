@@ -40,6 +40,6 @@ public class VisionConstants {
 	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE = false;
 
 
-	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = new Filter<>((data) -> true);
+	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
 
 }

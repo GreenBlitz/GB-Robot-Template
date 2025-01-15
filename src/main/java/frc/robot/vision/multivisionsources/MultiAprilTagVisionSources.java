@@ -83,7 +83,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getFilteredVisionData);
 	}
 
-	private void updateBotPoseInDynamicLimelights() {
+	private void updateMegaTagInDynamicLimelights() {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof DynamicSwitchingLimelight dynamicSwitchingLimelight) {
 				dynamicSwitchingLimelight.useRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
@@ -91,7 +91,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 				AlertManager.addAlert(
 					new PeriodicAlert(
 						Alert.AlertType.WARNING,
-						"unableToSwitchBotPoseInNonDynamicLimelight",
+						"unableToSwitchMegaTagsInNonDynamicLimelight",
 						() -> !useRobotHeadingForPoseEstimating
 					)
 				);
@@ -101,8 +101,8 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	public void setUseRobotHeadingForPoseEstimating(boolean useRobotHeadingForPoseEstimating) {
 		this.useRobotHeadingForPoseEstimating = useRobotHeadingForPoseEstimating;
-		updateBotPoseInDynamicLimelights();
-		logBotPose();
+		updateMegaTagInDynamicLimelights();
+		logMegaTagMethod();
 	}
 
 	public void switchMegaTagCalculationMethod() {
@@ -121,9 +121,9 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		return super.getUnfilteredVisionData();
 	}
 
-	private void logBotPose() {
-		Logger.recordOutput(logPath + "isBotPose2InUse", useRobotHeadingForPoseEstimating);
-		Logger.recordOutput(logPath + "isBotPose1InUse", !useRobotHeadingForPoseEstimating);
+	private void logMegaTagMethod() {
+		Logger.recordOutput(logPath + "isMegaTag2InUse", useRobotHeadingForPoseEstimating);
+		Logger.recordOutput(logPath + "isMegaTag1InUse", !useRobotHeadingForPoseEstimating);
 	}
 
 	private void logApriltagPoseData() {

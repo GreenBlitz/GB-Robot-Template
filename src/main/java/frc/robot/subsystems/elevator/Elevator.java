@@ -51,6 +51,10 @@ public class Elevator extends GBSubsystem {
 		return commandsBuilder;
 	}
 
+	public double getElevatorPositionMeters() {
+		return convertRotationsToMeters(firstMotorStuff.signals().positionSignal().getLatestValue());
+	}
+
 	public boolean hasBeenResetBySwitch() {
 		return hasBeenResetBySwitch;
 	}
@@ -69,8 +73,10 @@ public class Elevator extends GBSubsystem {
 	private void updateInputs() {
 		firstMotor.updateInputs(firstMotorStuff.signals().positionSignal(), firstMotorStuff.signals().voltageSignal());
 		firstMotor.updateInputs(firstMotorStuff.signals().otherSignals());
+
 		secondMotor.updateInputs(secondMotorStuff.signals().positionSignal(), firstMotorStuff.signals().voltageSignal());
 		secondMotor.updateInputs(secondMotorStuff.signals().otherSignals());
+
 		limitSwitch.updateInputs(digitalInputInputsAutoLogged);
 	}
 
@@ -79,6 +85,12 @@ public class Elevator extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "isAtBackwardsLimit", isAtBackwardsLimit());
 		Logger.recordOutput(getLogPath() + "hasBeenResetBySwitch", hasBeenResetBySwitch);
 		Logger.processInputs(limitSwitchLogPath, digitalInputInputsAutoLogged);
+	}
+
+	public void resetMotors(double positionMeters) {
+		Rotation2d convertedPosition = convertMetersToRotations(positionMeters);
+		firstMotor.resetPosition(convertedPosition);
+		secondMotor.resetPosition(convertedPosition);
 	}
 
 	public void setBrake(boolean brake) {
@@ -109,16 +121,6 @@ public class Elevator extends GBSubsystem {
 
 	protected void stayInPlace(){
 		stop();
-	}
-
-	public void resetMotors(double positionMeters) {
-		Rotation2d convertedPosition = convertMetersToRotations(positionMeters);
-		firstMotor.resetPosition(convertedPosition);
-		secondMotor.resetPosition(convertedPosition);
-	}
-
-	public double getElevatorPositionMeters() {
-		return convertRotationsToMeters(firstMotorStuff.signals().positionSignal().getLatestValue());
 	}
 
 	private void dynamicReset() {

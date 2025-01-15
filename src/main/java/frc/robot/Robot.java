@@ -32,13 +32,13 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	private static final String AUTONOMOUS_CHOOSER_NAME = "autonomousChooser";
-
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
-	private AutonomousChooser autonomousChooser;
+	private AutonomousChooser GUIAutosChooser;
+	private AutonomousChooser autoLineAutosChooser;
+	private AutonomousChooser feedScoreAutosChooser;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -65,13 +65,17 @@ public class Robot {
 	private void configureAuto() {
 		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
 		Supplier<Command> shootingCommand = () -> superStructure.setState(RobotState.SPEAKER);
+		Supplier<Command> scoreL4Command = () -> superStructure.setState(RobotState.SCORE_L4);
+		Supplier<Command> feedingCommand = () -> superStructure.setState(RobotState.FEED).withTimeout(2);
 
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
 			poseEstimator::resetPose,
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
-		autonomousChooser = new AutonomousChooser(AUTONOMOUS_CHOOSER_NAME, AutosBuilder.getAllAutos(this, intakeCommand, shootingCommand));
+		GUIAutosChooser = new AutonomousChooser("GUIAutosChooser", AutosBuilder.getAllGUIAutos());
+		autoLineAutosChooser = new AutonomousChooser("AutoLineAutosChooser", AutosBuilder.getAllAutoLineAutos(this, scoreL4Command));
+		feedScoreAutosChooser = new AutonomousChooser("FeedScoreAutosChooser", AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command));
 	}
 
 
@@ -83,7 +87,10 @@ public class Robot {
 	}
 
 	public GBAuto getAuto() {
-		return autonomousChooser.getChosenValue().withResetPose(poseEstimator::resetPose);
+		if (autoLineAutosChooser.isDefaultOption() && feedScoreAutosChooser.isDefaultOption()) {
+			return GUIAutosChooser.getChosenValue();
+		}
+		return new GBAuto(autoLineAutosChooser.getChosenValue(), feedScoreAutosChooser.getChosenValue()).withResetPose(poseEstimator::resetPose);
 	}
 
 	public Superstructure getSuperStructure() {

@@ -25,8 +25,20 @@ public class GBAuto extends PathPlannerAuto {
 		setName(autoName);
 	}
 
+	public GBAuto(GBAuto... autos) {
+		this(Commands.none().andThen(autos), autos[0].getStartingPose(), chainAutoNames(autos), true);
+	}
+
 	public GBAuto withResetPose(Consumer<Pose2d> resetPose) {
 		return new GBAuto(this.beforeStarting(() -> resetPose.accept(this.getStartingPose())), this.getStartingPose(), this.getName(), true);
+	}
+
+	private static String chainAutoNames(GBAuto... autos) {
+		StringBuilder autoName = new StringBuilder();
+		for (GBAuto auto : autos) {
+			autoName.append(auto.getName()).append("-");
+		}
+		return autoName.deleteCharAt(autoName.length()-1).toString();
 	}
 
 }

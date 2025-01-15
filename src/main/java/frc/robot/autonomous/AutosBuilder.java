@@ -10,17 +10,14 @@ import frc.utils.auto.AutoPath;
 import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public class AutosBuilder {
 
-	public static List<Supplier<GBAuto>> getAllAutos(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
-		ArrayList<Supplier<GBAuto>> autoList = new ArrayList<>(getAllGUIAutos());
-		autoList.add(() -> M231(robot, intakeCommand, shootingCommand));
-		return autoList;
+	public static List<Supplier<GBAuto>> getAllPreBuiltAutos(Robot robot, Supplier<Command> intakeCommand, Supplier<Command> shootingCommand) {
+		return List.of(() -> M231(robot, intakeCommand, shootingCommand));
 	}
 
 	public static List<Supplier<GBAuto>> getAllGUIAutos() {
@@ -80,21 +77,21 @@ public class AutosBuilder {
 				"US-L",
 				pathIToUpperCoralStation.isPresent() && pathUpperCoralStationToL.isPresent()
 			),
-				() -> new GBAuto(
-						pathFToLowerCoralStation
-								.map(
-										pathToCoralStation -> pathLowerCoralStationToC
-												.map(
-														pathFromCoralStation -> SequencesBuilder
-																.feedAndScore(robot, pathToCoralStation, pathFromCoralStation, feedingCommand, scoringCommand)
-												)
-												.orElseGet(Commands::none)
-								)
-								.orElseGet(Commands::none),
-						pathFToLowerCoralStation.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
-						"LS-C",
-						pathFToLowerCoralStation.isPresent() && pathLowerCoralStationToC.isPresent()
-				)
+			() -> new GBAuto(
+				pathFToLowerCoralStation
+					.map(
+						pathToCoralStation -> pathLowerCoralStationToC
+							.map(
+								pathFromCoralStation -> SequencesBuilder
+									.feedAndScore(robot, pathToCoralStation, pathFromCoralStation, feedingCommand, scoringCommand)
+							)
+							.orElseGet(Commands::none)
+					)
+					.orElseGet(Commands::none),
+				pathFToLowerCoralStation.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
+				"LS-C",
+				pathFToLowerCoralStation.isPresent() && pathLowerCoralStationToC.isPresent()
+			)
 		);
 	}
 

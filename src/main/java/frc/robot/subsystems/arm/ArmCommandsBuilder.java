@@ -15,25 +15,25 @@ public class ArmCommandsBuilder {
     }
 
     public Command moveToPosition(Rotation2d position) {
-        return arm.asSubsystemCommand(new InstantCommand(() -> arm.setTargetPosition(position)), "Move example arm to position: " + position);
+        return arm.asSubsystemCommand(new InstantCommand(() -> arm.setTargetPosition(position)), "Move arm to position: " + position);
     }
 
     public Command stayInPlace() {
-        return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace), "Example arm stay in place");
+        return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace), "Arm stay in place");
     }
 
     public Command setVoltage(double voltage) {
-        return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set example arm voltage to: " + voltage);
+        return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set arm voltage to: " + voltage);
     }
 
     public Command setPower(double power) {
-        return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set example arm power to: " + power);
+        return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set arm power to: " + power);
     }
 
     public Command loggedDashboardSetVoltage() {
         return arm.asSubsystemCommand(
                 new LoggedDashboardCommand("Set Example Arm Voltage", (voltage) -> arm.setVoltage(voltage)),
-                "Set example arm voltage through dashboard, set voltage to the given value"
+                "Set arm voltage through dashboard, set voltage to the given value"
         );
     }
 

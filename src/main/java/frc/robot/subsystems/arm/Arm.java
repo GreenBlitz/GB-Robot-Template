@@ -9,8 +9,6 @@ import frc.utils.math.ToleranceMath;
 
 public class Arm extends GBSubsystem {
 
-    public static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
-
     private final ControllableMotor motor;
     private final IRequest<Rotation2d> positionRequest;
     private final IRequest<Double> voltageRequest;
@@ -34,18 +32,7 @@ public class Arm extends GBSubsystem {
         this.voltageSignal = voltageSignal;
         this.commandsBuilder = new ArmCommandsBuilder(this);
 
-        motor.resetPosition(STARTING_POSITION);
         updateInputs();
-    }
-
-    @Override
-    protected void subsystemPeriodic() {
-        updateInputs();
-    }
-
-    private void updateInputs() {
-        motor.updateSimulation();
-        motor.updateInputs(positionSignal, voltageSignal);
     }
 
     public ArmCommandsBuilder getCommandsBuilder() {
@@ -82,6 +69,16 @@ public class Arm extends GBSubsystem {
 
     public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
         return ToleranceMath.isNearWrapped(position, positionSignal.getLatestValue(), tolerance);
+    }
+
+    @Override
+    protected void subsystemPeriodic() {
+        updateInputs();
+    }
+
+    private void updateInputs() {
+        motor.updateSimulation();
+        motor.updateInputs(positionSignal, voltageSignal);
     }
 
 }

@@ -2,6 +2,7 @@ package frc.robot.vision.multivisionsources;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import frc.constants.VisionConstants;
 import frc.robot.hardware.signal.TimedValue;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -52,26 +53,30 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void updateAngleInHeadingRequiringLimelights(
-		Rotation2d yaw,
-		double yawRate,
-		Rotation2d pitch,
-		double pitchRate,
-		Rotation2d roll,
-		double rollRate
+		GyroAngleValues gyroAngleValues
 	) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
-				robotHeadingRequiringVisionSource.updateGyroAngleValues(new GyroAngleValues(yaw, yawRate, pitch, pitchRate, roll, rollRate));
+				robotHeadingRequiringVisionSource.updateGyroAngleValues(gyroAngleValues);
 			}
 		}
 	}
 
-	private void updateAngleInHeadingRequiringLimelights(Rotation2d yaw, Rotation2d pitch, Rotation2d roll) {
-		updateAngleInHeadingRequiringLimelights(yaw, 0, pitch, 0, roll, 0);
+	private void updateAngleInHeadingRequiringLimelights(
+		Rotation3d angle,
+		double yawRate,
+		double pitchRate,
+		double rollRate
+	) {
+		updateAngleInHeadingRequiringLimelights(new GyroAngleValues(angle, yawRate, pitchRate, rollRate));
+	}
+
+	private void updateAngleInHeadingRequiringLimelights(Rotation3d angle) {
+		updateAngleInHeadingRequiringLimelights(new GyroAngleValues(angle));
 	}
 
 	private void updateAngleInHeadingRequiringLimelights(Rotation2d yaw) {
-		updateAngleInHeadingRequiringLimelights(yaw, Rotation2d.kZero, Rotation2d.kZero);
+		updateAngleInHeadingRequiringLimelights(new Rotation3d(yaw.getRadians(), 0, 0));
 	}
 
 	protected ArrayList<TimedValue<Rotation2d>> extractHeadingDataFromMappedSources(

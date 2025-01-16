@@ -1,6 +1,7 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 
 /**
  * A record that represents the gyro's angle which is passed into the limelight's network tables, to the robot_orientation_set entry. Its values
@@ -18,6 +19,14 @@ public record GyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, 
 			this.pitchRate(),
 			this.roll().getDegrees(),
 			this.rollRate()};
+	}
+
+	public GyroAngleValues(Rotation3d angle) {
+		this(angle, 0, 0, 0);
+	}
+
+	public GyroAngleValues(Rotation3d angle, double yawRate, double pitchRate, double rollRate) {
+		this(Rotation2d.fromRadians(angle.getZ()), yawRate, Rotation2d.fromRadians(angle.getX()), pitchRate, Rotation2d.fromRadians(angle.getZ()), rollRate);
 	}
 
 }

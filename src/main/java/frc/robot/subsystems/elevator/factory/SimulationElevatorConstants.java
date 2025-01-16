@@ -25,8 +25,6 @@ import frc.utils.AngleUnit;
 public class SimulationElevatorConstants {
 
     private static final double LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;
-    private static final int DEFAULT_SIGNALS_FREQUENCY_HERTZ = 60;
-
     private static final double RADIUS_METERS = 0.025;
     private static final int NUMBER_OF_MOTORS = 2;
     private static final double MIN_HEIGHT_METERS = 0;

@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
+import frc.robot.RobotType;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
@@ -35,14 +37,7 @@ public class RealEndEffectorConstants {
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 	}
 
-	private static BrushlessSparkMAXMotor generateRealMotor(String logPath, SparkMaxDeviceID id) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
-		motorConfig(motor);
-		return motor;
-	}
-
-	private static BrushlessSparkMAXMotor generateSimMotor(String logPath) {
+	private static BrushlessSparkMAXMotor generateMotor(String logPath, SparkMaxDeviceID id) {
 		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
 			new DCMotorSim(
 				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(NUMBER_OF_MOTORS), MOMENT_OF_INERTIA, POSITION_CONVERSION_FACTOR),
@@ -50,33 +45,25 @@ public class RealEndEffectorConstants {
 			)
 		);
 
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, simulation, new SysIdRoutine.Config());
 		motorConfig(motor);
 		return motor;
 	}
 
-	public static EndEffector generateReal(String logPath, String motorLogPath) {
-		BrushlessSparkMAXMotor motor = generateRealMotor(motorLogPath, IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
+	public static EndEffector generate(String logPath, String motorLogPath) {
+		BrushlessSparkMAXMotor motor = generateMotor(motorLogPath, IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
 
-		ChanneledDigitalInput frontDigitalInput = new ChanneledDigitalInput(
-			new DigitalInput(FRONT_DIGITAL_INPUT_CHANNEL),
-			new Debouncer(DEBOUNCE_TIME)
-		);
-		ChanneledDigitalInput backDigitalInput = new ChanneledDigitalInput(
-			new DigitalInput(BACK_DIGITAL_INPUT_CHANNEL),
-			new Debouncer(DEBOUNCE_TIME)
-		);
+		IDigitalInput frontDigitalInput;
+		IDigitalInput backDigitalInput;
 
-		return new EndEffector(motor, frontDigitalInput, backDigitalInput, logPath);
-	}
-
-	public static EndEffector generateSim(String logPath, String motorLogPath) {
-		BrushlessSparkMAXMotor motor = generateSimMotor(motorLogPath);
-
-		ChooserDigitalInput frontDigitalInput = new ChooserDigitalInput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker");
-		ChooserDigitalInput backDigitalInput = new ChooserDigitalInput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker");
-
+		if (RobotType.REAL.isReal()) {
+			frontDigitalInput = new ChanneledDigitalInput(new DigitalInput(FRONT_DIGITAL_INPUT_CHANNEL), new Debouncer(DEBOUNCE_TIME));
+			backDigitalInput = new ChanneledDigitalInput(new DigitalInput(BACK_DIGITAL_INPUT_CHANNEL), new Debouncer(DEBOUNCE_TIME));
+		} else {
+			frontDigitalInput = new ChooserDigitalInput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker");
+			backDigitalInput = new ChooserDigitalInput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker");
+		}
 
 		return new EndEffector(motor, frontDigitalInput, backDigitalInput, logPath);
 	}

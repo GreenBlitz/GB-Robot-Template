@@ -13,7 +13,8 @@ public class EndEffectorStateHandler {
 	public Command setState(EndEffectorState state) {
 		return switch (state) {
 			case IDLE -> endEffector.getCommandsBuilder().stop();
-			case INTAKE, OUTTAKE -> endEffector.getCommandsBuilder().setPower(state.getPower());
+			case INTAKE -> endEffector.getCommandsBuilder().setPower(state.getPower()).until(endEffector::isCoralInBack);
+			case OUTTAKE -> endEffector.getCommandsBuilder().setPower(state.getPower()).until(() -> !endEffector.isCoralInFront());
 		};
 	}
 

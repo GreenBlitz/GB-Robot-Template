@@ -3,6 +3,7 @@ package frc;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.endEffector.EndEffectorState;
 
 public class JoysticksBindings {
 
@@ -25,6 +26,9 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.A.onTrue(robot.getEndEffectorStateHandler().setState(EndEffectorState.INTAKE));
+		usedJoystick.B.onTrue(robot.getEndEffectorStateHandler().setState(EndEffectorState.OUTTAKE));
+		usedJoystick.X.onTrue(robot.getEndEffectorStateHandler().setState(EndEffectorState.IDLE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

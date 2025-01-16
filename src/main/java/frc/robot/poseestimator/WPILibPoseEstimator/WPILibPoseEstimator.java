@@ -91,7 +91,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 			double deltaTime = odometryObservation.timestamp() - lastOdometryObservation.timestamp();
 			this.lastOdometryAngle = odometryAngle;
-			this.odometryAcceleration = PoseEstimationMath.deriveTwist(changeInPose, deltaTime);
+			this.odometryAcceleration = PoseEstimationMath.deriveProjectedTwist(changeInPose, deltaTime);
 			this.lastOdometryObservation = odometryObservation;
 		}
 	}

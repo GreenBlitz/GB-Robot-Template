@@ -19,6 +19,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Extended MultiVisionSources that supplies methods that takes care of using, updating and extracting data from special interfaces related
+ * specifically to source that detects april tags, e.g. `IndpendentHeadingVisionSource`. Assumes that the robot has zero pitch and roll.
+ */
 public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
 
 	private final Supplier<Rotation2d> gyroSupplier;
@@ -47,13 +51,27 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE);
 	}
 
-	private void updateYawInLimelights(Rotation2d yaw) {
+	private void updateAngleInHeadingRequiringLimelights(
+		Rotation2d yaw,
+		double yawRate,
+		Rotation2d pitch,
+		double pitchRate,
+		Rotation2d roll,
+		double rollRate
+	) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
-				robotHeadingRequiringVisionSource
-					.updateGyroAngleValues(new GyroAngleValues(yaw, 0, Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(0), 0));
+				robotHeadingRequiringVisionSource.updateGyroAngleValues(new GyroAngleValues(yaw, yawRate, pitch, pitchRate, roll, rollRate));
 			}
 		}
+	}
+
+	private void updateAngleInHeadingRequiringLimelights(Rotation2d yaw, Rotation2d pitch, Rotation2d roll) {
+		updateAngleInHeadingRequiringLimelights(yaw, 0, pitch, 0, roll, 0);
+	}
+
+	private void updateAngleInHeadingRequiringLimelights(Rotation2d yaw) {
+		updateAngleInHeadingRequiringLimelights(yaw, Rotation2d.kZero, Rotation2d.kZero);
 	}
 
 	protected ArrayList<TimedValue<Rotation2d>> extractHeadingDataFromMappedSources(
@@ -103,13 +121,13 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	@Override
 	public ArrayList<AprilTagVisionData> getFilteredVisionData() {
-		updateYawInLimelights(getRobotHeading());
+		updateAngleInHeadingRequiringLimelights(getRobotHeading());
 		return super.getFilteredVisionData();
 	}
 
 	@Override
 	public ArrayList<AprilTagVisionData> getUnfilteredVisionData() {
-		updateYawInLimelights(getRobotHeading());
+		updateAngleInHeadingRequiringLimelights(getRobotHeading());
 		return super.getUnfilteredVisionData();
 	}
 

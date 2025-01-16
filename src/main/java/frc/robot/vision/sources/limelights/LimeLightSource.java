@@ -185,6 +185,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
 	}
 
+	@Override
+	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
+		this.gyroAngleValues = gyroAngleValues;
+	}
+
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
@@ -199,11 +204,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				Logger.recordOutput(logPath + "robotMegaTag1Heading", visionData.getEstimatedPose().getRotation().toRotation2d());
 			}
 		});
-	}
-
-	@Override
-	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
-		this.gyroAngleValues = gyroAngleValues;
 	}
 
 }

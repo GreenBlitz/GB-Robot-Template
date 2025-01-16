@@ -195,8 +195,8 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
 		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtils.poseArrayToPose3D(robotPoseArray, AngleUnit.DEGREES));
 		getVisionData().ifPresent(visionData -> {
-			Logger.recordOutput(logPath + "unfilteredVision", visionData.getEstimatedPose());
-			Logger.recordOutput(logPath + "unfilteredVisionProjected", visionData.getEstimatedPose().toPose2d());
+			Logger.recordOutput(logPath + "unfiltered3DVision", visionData.getEstimatedPose());
+			Logger.recordOutput(logPath + "unfiltered2DVision(Projected)", visionData.getEstimatedPose().toPose2d());
 			Logger.recordOutput(logPath + "aprilTagHeightMeters", visionData.getAprilTagHeightMeters());
 			Logger.recordOutput(logPath + "lastUpdate", visionData.getTimestamp());
 			Logger.recordOutput(logPath + "stdDevs", standardDeviationsArray);

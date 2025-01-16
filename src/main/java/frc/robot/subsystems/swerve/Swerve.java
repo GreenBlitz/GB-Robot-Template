@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.robot.autonomous.RobotAutoHelper;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -19,7 +20,6 @@ import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.utils.auto.PathPlannerUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -87,7 +87,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer, RobotConfig robotConfig) {
-		PathPlannerUtils.configPathPlanner(
+		RobotAutoHelper.configPathPlanner(
 			currentPoseSupplier,
 			resetPoseConsumer,
 			this::getRobotRelativeVelocity,

@@ -63,8 +63,6 @@ public class Robot {
 
 
 	private void configureAuto() {
-		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
-		Supplier<Command> shootingCommand = () -> superStructure.setState(RobotState.SPEAKER);
 		Supplier<Command> scoreL4Command = () -> superStructure.setState(RobotState.SCORE_L4);
 		Supplier<Command> feedingCommand = () -> superStructure.setState(RobotState.FEED).withTimeout(2);
 
@@ -75,7 +73,10 @@ public class Robot {
 		);
 		GUIAutosChooser = new AutonomousChooser("GUIAutosChooser", AutosBuilder.getAllGUIAutos());
 		autoLineAutosChooser = new AutonomousChooser("AutoLineAutosChooser", AutosBuilder.getAllAutoLineAutos(this, scoreL4Command));
-		feedScoreAutosChooser = new AutonomousChooser("FeedScoreAutosChooser", AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command));
+		feedScoreAutosChooser = new AutonomousChooser(
+			"FeedScoreAutosChooser",
+			AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command)
+		);
 	}
 
 
@@ -87,7 +88,7 @@ public class Robot {
 	}
 
 	public GBAuto getAuto() {
-		if (autoLineAutosChooser.isDefaultOption() && feedScoreAutosChooser.isDefaultOption()) {
+		if (autoLineAutosChooser.isDefaultOptionChosen() && feedScoreAutosChooser.isDefaultOptionChosen()) {
 			return GUIAutosChooser.getChosenValue();
 		}
 		return new GBAuto(autoLineAutosChooser.getChosenValue(), feedScoreAutosChooser.getChosenValue()).withResetPose(poseEstimator::resetPose);

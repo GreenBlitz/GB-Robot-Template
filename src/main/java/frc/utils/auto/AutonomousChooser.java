@@ -19,7 +19,7 @@ public class AutonomousChooser {
 		return chooser.get().get();
 	}
 
-	public boolean isDefaultOption() {
+	public boolean isDefaultOptionChosen() {
 		return chooser.getSendableChooser().getSelected().equals("None");
 	}
 

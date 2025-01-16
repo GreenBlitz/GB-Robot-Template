@@ -38,7 +38,7 @@ public class GBAuto extends PathPlannerAuto {
 		for (GBAuto auto : autos) {
 			autoName.append(auto.getName()).append("-");
 		}
-		return autoName.deleteCharAt(autoName.length()-1).toString();
+		return autoName.deleteCharAt(autoName.length() - 1).toString();
 	}
 
 }

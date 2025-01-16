@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.autonomous.RobotAutoHelper;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.utils.math.ToleranceMath;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -166,17 +166,10 @@ public class SwerveCommandsBuilder {
 
 	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path) {
 		return new ConditionalCommand(
-			PathPlannerUtils.followPath(path)
-				.andThen(pidToPose(currentPose, PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
-			driveToPose(currentPose, () -> PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
-			() -> PathPlannerUtils.isRobotCloseToPathBeginning(path, currentPose, AutonomousConstants.PATHFINDING_DEADBAND_METERS)
-		).until(
-			() -> ToleranceMath.isNear(
-				PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)),
-				currentPose.get(),
-				AutonomousConstants.TARGET_ANGLE_TOLERANCE,
-				AutonomousConstants.DISTANCE_FROM_TARGET_TOLERANCE_METERS
-			)
+			RobotAutoHelper.followPath(path)
+				.andThen(pidToPose(currentPose, RobotAutoHelper.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
+			driveToPose(currentPose, () -> RobotAutoHelper.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
+			() -> RobotAutoHelper.isRobotCloseToPathBeginning(path, currentPose, AutonomousConstants.PATHFINDING_DEADBAND_METERS)
 		).andThen(new InstantCommand(() -> swerve.driveByState(0, 0, 0, SwerveState.DEFAULT_PATH_PLANNER), swerve));
 	}
 
@@ -195,9 +188,9 @@ public class SwerveCommandsBuilder {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 		if (distanceFromTarget < AutonomousConstants.PATHFINDING_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = RobotAutoHelper.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
-			pathFollowingCommand = PathPlannerUtils.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = RobotAutoHelper.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}
 
 		return swerve.asSubsystemCommand(

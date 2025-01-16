@@ -22,15 +22,24 @@ public class RealElevatorConstants {
 
     private static final int LIMIT_SWITCH_CHANNEL = 0;
     private static final double LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;
+    private static final double CURRENT_LIMIT = 40;
+    private static final boolean CURRENT_LIMIT_ENABLE = true;
+    private static final boolean SOFT_LIMIT_ENABLE = true;
     private static final SysIdRoutine.Config FIRST_MOTOR_CONFIG = new SysIdRoutine.Config();
     private static final SysIdRoutine.Config SECOND_MOTOR_CONFIG = new SysIdRoutine.Config();
 
+    private static final double KP = 1;
+    private static final double KI = 1;
+    private static final double KD = 1;
+
     private static void configMotor(TalonFXMotor motor){
         TalonFXConfiguration configuration = new TalonFXConfiguration();
-        configuration.Slot0.withKP(1).withKI(1).withKD(1);
-        configuration.CurrentLimits.StatorCurrentLimit = 40;
-        configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+        configuration.Slot0.withKP(KP).withKI(KI).withKD(KD);
+        configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
+        configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
         configuration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS);
+        configuration.SoftwareLimitSwitch.withReverseSoftLimitEnable(SOFT_LIMIT_ENABLE);
+        motor.applyConfiguration(configuration);
     }
 
     private static ElevatorRequests createRequests(){
@@ -50,23 +59,18 @@ public class RealElevatorConstants {
     public static Elevator generate(String logPath){
         TalonFXMotor firstMotor = new TalonFXMotor(logPath + "FirstMotor/", IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID, FIRST_MOTOR_CONFIG);
         configMotor(firstMotor);
-        ElevatorRequests firstMotorRequests = createRequests();
-        ElevatorSignals firstMotorSignals = createSignals(firstMotor);
-        );
         ElevatorMotorStuff firstMotorStuff = new ElevatorMotorStuff(
                 firstMotor,
-                firstMotorRequests,
-                firstMotorSignals
+                createRequests(),
+                createSignals(firstMotor)
         );
 
         TalonFXMotor secondMotor = new TalonFXMotor(logPath + "SecondMotor/", IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, SECOND_MOTOR_CONFIG);
         configMotor(secondMotor);
-        ElevatorRequests secondMotorRequests = createRequests();
-        ElevatorSignals secondMotorSignals = createSignals(secondMotor);
         ElevatorMotorStuff secondMotorStuff = new ElevatorMotorStuff(
                 secondMotor,
-                secondMotorRequests,
-                secondMotorSignals
+                createRequests(),
+                createSignals(secondMotor)
         );
 
         ChanneledDigitalInput limitSwitch = new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME));

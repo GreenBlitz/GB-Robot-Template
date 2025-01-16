@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator.factory;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.filter.Debouncer;
@@ -8,9 +9,9 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.ElevatorSimulation;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -32,6 +33,38 @@ public class SimulationElevatorConstants {
     private static final double MAX_HEIGHT_METERS = 2;
     private static final double STARTING_HEIGHT_METERS = 0;
     private static final double GEAR_RATIO = 1.0 / 5.0;
+    private static final double CURRENT_LIMIT = 40;
+    private static final boolean CURRENT_LIMIT_ENABLE = true;
+    private static final boolean SOFT_LIMIT_ENABLE = true;
+    private static final SysIdRoutine.Config MOTOR_CONFIG = new SysIdRoutine.Config();
+
+    private static final double KP = 1;
+    private static final double KI = 1;
+    private static final double KD = 1;
+
+    private static void configMotor(TalonFXMotor motor){
+        TalonFXConfiguration configuration = new TalonFXConfiguration();
+        configuration.Slot0.withKP(KP).withKI(KI).withKD(KD);
+        configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
+        configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
+        configuration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(frc.robot.subsystems.elevator.factory.ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS);
+        configuration.SoftwareLimitSwitch.withReverseSoftLimitEnable(SOFT_LIMIT_ENABLE);
+        motor.applyConfiguration(configuration);
+    }
+
+    private static ElevatorRequests createRequests(){
+        return new ElevatorRequests(
+                Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true)),
+                Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true))
+        );
+    }
+
+    private static ElevatorSignals createSignals(TalonFXMotor motor){
+        return new ElevatorSignals(
+                Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
+                Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ)
+        );
+    }
 
     public static Elevator generate(String logPath){
         ElevatorSimulation elevatorSimulation = new ElevatorSimulation(
@@ -51,15 +84,10 @@ public class SimulationElevatorConstants {
                 ElevatorConstants.DRUM_RADIUS,
                 GEAR_RATIO
         );
-        TalonFXMotor firstMotor = new TalonFXMotor(logPath + "FirstMotor/", IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID, new SysIdRoutine.Config(), elevatorSimulation);
-        ElevatorRequests firstMotorRequests = new ElevatorRequests(
-                Phoenix6RequestBuilder.build(new PositionVoltage(0)),
-                Phoenix6RequestBuilder.build(new VoltageOut(0))
-        );
-        ElevatorSignals firstMotorSignals = new ElevatorSignals(
-                Phoenix6SignalBuilder.generatePhoenix6Signal(firstMotor.getDevice().getPosition(), DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-                Phoenix6SignalBuilder.generatePhoenix6Signal(firstMotor.getDevice().getMotorVoltage(), DEFAULT_SIGNALS_FREQUENCY_HERTZ)
-        );
+        TalonFXMotor firstMotor = new TalonFXMotor(logPath + "FirstMotor/", IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID, MOTOR_CONFIG, elevatorSimulation);
+        ElevatorRequests firstMotorRequests = createRequests();
+        ElevatorSignals firstMotorSignals = createSignals(firstMotor);
+        configMotor(firstMotor);
         ElevatorMotorStuff firstMotorStuff = new ElevatorMotorStuff(
                 firstMotor,
                 firstMotorRequests,

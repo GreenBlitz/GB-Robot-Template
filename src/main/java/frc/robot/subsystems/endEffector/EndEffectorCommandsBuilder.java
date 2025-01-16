@@ -1,7 +1,6 @@
 package frc.robot.subsystems.endEffector;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
@@ -26,30 +25,5 @@ public class EndEffectorCommandsBuilder {
 	public Command stop() {
 		return new InstantCommand(endEffector::stop, endEffector);
 	}
-
-	public Command intake() {
-		Command command = new FunctionalCommand(
-			() -> endEffector.setPower(EndEffectorConstants.INTAKE_POWER),
-			() -> {},
-			interrupted -> endEffector.stop(),
-			endEffector::isCoralInBackBeamBreaker,
-			endEffector
-		);
-
-		return endEffector.asSubsystemCommand(command, "end effector intake");
-	}
-
-	public Command outtake() {
-		Command command = new FunctionalCommand(
-			() -> endEffector.setPower(EndEffectorConstants.OUTTAKE_POWER),
-			() -> {},
-			interrupted -> endEffector.stop(),
-			endEffector::isCoralInFrontBeamBreaker,
-			endEffector
-		);
-
-		return endEffector.asSubsystemCommand(command, "end effector outtake");
-	}
-
 
 }

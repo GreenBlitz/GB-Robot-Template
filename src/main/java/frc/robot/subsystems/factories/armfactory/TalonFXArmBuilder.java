@@ -23,6 +23,7 @@ import frc.utils.AngleUnit;
 
 public class TalonFXArmBuilder {
 
+	public static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(0);
 	public static final double kGEAR_RATIO = 1;
 
 	static Arm build(String logPath) {
@@ -44,6 +45,7 @@ public class TalonFXArmBuilder {
 		SysIdRoutine.Config sysIdConfig = buildSysidConfig();
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM_DEVICE_ID, sysIdConfig, armSimulation);
 		motor.applyConfiguration(buildTalonFXConfiguration());
+		motor.resetPosition(STARTING_POSITION);
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);

@@ -11,11 +11,10 @@ public class EndEffectorStateHandler {
 	}
 
 	public Command setState(EndEffectorState state) {
-		if (state == EndEffectorState.IDLE) {
-			return endEffector.getCommandsBuilder().stop();
-		} else {
-			return endEffector.getCommandsBuilder().setPower(state.getPower());
-		}
+		return switch (state) {
+			case IDLE -> endEffector.getCommandsBuilder().stop();
+			case INTAKE, OUTTAKE -> endEffector.getCommandsBuilder().setPower(state.getPower());
+		};
 	}
 
 }

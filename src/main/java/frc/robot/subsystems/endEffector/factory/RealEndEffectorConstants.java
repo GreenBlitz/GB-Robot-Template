@@ -51,19 +51,19 @@ public class RealEndEffectorConstants {
 		return motor;
 	}
 
+	private static IDigitalInput generateBeamBreaker(int channel, String logPath) {
+		if (RobotType.REAL.isReal()) {
+			return new ChanneledDigitalInput(new DigitalInput(channel), new Debouncer(DEBOUNCE_TIME));
+		} else {
+			return new ChooserDigitalInput(logPath);
+		}
+	}
+
 	public static EndEffector generate(String logPath, String motorLogPath) {
 		BrushlessSparkMAXMotor motor = generateMotor(motorLogPath, IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
 
-		IDigitalInput frontDigitalInput;
-		IDigitalInput backDigitalInput;
-
-		if (RobotType.REAL.isReal()) {
-			frontDigitalInput = new ChanneledDigitalInput(new DigitalInput(FRONT_DIGITAL_INPUT_CHANNEL), new Debouncer(DEBOUNCE_TIME));
-			backDigitalInput = new ChanneledDigitalInput(new DigitalInput(BACK_DIGITAL_INPUT_CHANNEL), new Debouncer(DEBOUNCE_TIME));
-		} else {
-			frontDigitalInput = new ChooserDigitalInput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker");
-			backDigitalInput = new ChooserDigitalInput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker");
-		}
+		IDigitalInput frontDigitalInput = generateBeamBreaker(FRONT_DIGITAL_INPUT_CHANNEL, EndEffectorConstants.LOG_PATH + "FrontBeamBreaker");
+		IDigitalInput backDigitalInput = generateBeamBreaker(BACK_DIGITAL_INPUT_CHANNEL, EndEffectorConstants.LOG_PATH + "BackBeamBreaker");
 
 		return new EndEffector(motor, frontDigitalInput, backDigitalInput, logPath);
 	}

@@ -11,7 +11,7 @@ public class EndEffectorStateHandler {
 	}
 
 	public Command setState(EndEffectorState state) {
-		if (state.getPower() == 0) {
+		if (state == EndEffectorState.IDLE) {
 			return endEffector.getCommandsBuilder().stop();
 		} else {
 			return endEffector.getCommandsBuilder().setPower(state.getPower());

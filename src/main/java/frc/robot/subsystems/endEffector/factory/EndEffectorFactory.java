@@ -8,8 +8,8 @@ public class EndEffectorFactory {
 
 	public static EndEffector create() {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealEndEffectorConstants.generate(EndEffectorConstants.LOG_PATH, EndEffectorConstants.MOTOR_LOG_PATH);
-			case SIMULATION -> null;
+			case REAL -> RealEndEffectorConstants.generateReal(EndEffectorConstants.LOG_PATH, EndEffectorConstants.MOTOR_LOG_PATH);
+			case SIMULATION -> RealEndEffectorConstants.generateSim(EndEffectorConstants.LOG_PATH, EndEffectorConstants.MOTOR_LOG_PATH);
 		};
 	}
 

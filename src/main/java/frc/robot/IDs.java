@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
@@ -9,5 +10,11 @@ public class IDs {
 		-1,
 		PowerDistribution.ModuleType.kRev
 	);
+
+	public static class SparkMAXIDs {
+
+		public static final SparkMaxDeviceID END_EFFECTOR_ROLLER_ID = new SparkMaxDeviceID(-1);
+
+	}
 
 }

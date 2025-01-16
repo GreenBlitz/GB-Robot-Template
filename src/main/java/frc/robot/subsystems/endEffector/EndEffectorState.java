@@ -3,7 +3,7 @@ package frc.robot.subsystems.endEffector;
 
 public enum EndEffectorState {
 
-	DEFAULT(0),
+	IDLE(0),
 	INTAKE(0.5),
 	OUTTAKE(-0.5);
 

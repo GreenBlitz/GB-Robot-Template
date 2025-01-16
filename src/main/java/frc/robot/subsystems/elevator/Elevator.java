@@ -37,7 +37,7 @@ public class Elevator extends GBSubsystem {
 		this.firstMotor = firstMotorStuff.motor();
 
 		this.secondMotorStuff = secondMotorStuff;
-		this.secondMotor = firstMotorStuff.motor();
+		this.secondMotor = secondMotorStuff.motor();
 
 		this.limitSwitch = limitSwitch;
 		this.digitalInputInputsAutoLogged = new DigitalInputInputsAutoLogged();

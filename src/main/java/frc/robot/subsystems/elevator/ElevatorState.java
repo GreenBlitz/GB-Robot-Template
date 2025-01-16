@@ -10,7 +10,7 @@ public enum ElevatorState {
     CLOSED(0.05),
     IDLE(0);
 
-    private double heightMeters;
+    private final double heightMeters;
 
     ElevatorState(double heightMeters) {
         this.heightMeters = heightMeters;

@@ -29,7 +29,7 @@ import static edu.wpi.first.units.Units.*;
 class TalonFXDriveConstants {
 
 	private static final double SLIP_CURRENT = 60;
-	private static final double GEAR_RATIO = 6.12;
+	private static final double GEAR_RATIO = 7.13;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -63,10 +63,10 @@ class TalonFXDriveConstants {
 		driveConfig.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		driveConfig.Slot0.kS = 0.21549;
-		driveConfig.Slot0.kV = 0.72124;
-		driveConfig.Slot0.kA = 0.11218;
-		driveConfig.Slot0.kP = 1.5;
+		driveConfig.Slot0.kS = 0;
+		driveConfig.Slot0.kV = 0;
+		driveConfig.Slot0.kA = 0;
+		driveConfig.Slot0.kP = 0.2;
 		driveConfig.Slot0.kI = 0;
 		driveConfig.Slot0.kD = 0;
 

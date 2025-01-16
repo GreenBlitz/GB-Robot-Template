@@ -16,7 +16,7 @@ public class DriveFactory {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR, false);
-				case FRONT_RIGHT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR, true);
+				case FRONT_RIGHT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR, false);
 				case BACK_LEFT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR, false);
 				case BACK_RIGHT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR, false);
 			};

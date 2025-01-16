@@ -29,7 +29,7 @@ import static edu.wpi.first.units.Units.*;
 
 class TalonFXSteerConstants {
 
-	private static final double GEAR_RATIO = 150.0 / 7.0;
+	private static final double GEAR_RATIO = 12.8;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -55,19 +55,19 @@ class TalonFXSteerConstants {
 
 		steerConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
 		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
-		steerConfig.Slot0.kS = 0.19648;
-		steerConfig.Slot0.kV = 2.5763;
-		steerConfig.Slot0.kA = 0.50361;
-		steerConfig.Slot0.kP = 88;
+		steerConfig.Slot0.kS = 0;
+		steerConfig.Slot0.kV = 0;
+		steerConfig.Slot0.kA = 0;
+		steerConfig.Slot0.kP = 10;
 		steerConfig.Slot0.kI = 0;
-		steerConfig.Slot0.kD = 1.5;
+		steerConfig.Slot0.kD = 0;
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
 		return steerConfig;

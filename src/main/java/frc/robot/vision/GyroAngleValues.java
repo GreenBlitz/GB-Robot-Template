@@ -26,7 +26,14 @@ public record GyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, 
 	}
 
 	public GyroAngleValues(Rotation3d angle, double yawRate, double pitchRate, double rollRate) {
-		this(Rotation2d.fromRadians(angle.getZ()), yawRate, Rotation2d.fromRadians(angle.getX()), pitchRate, Rotation2d.fromRadians(angle.getZ()), rollRate);
+		this(
+			Rotation2d.fromRadians(angle.getZ()),
+			yawRate,
+			Rotation2d.fromRadians(angle.getX()),
+			pitchRate,
+			Rotation2d.fromRadians(angle.getZ()),
+			rollRate
+		);
 	}
 
 }

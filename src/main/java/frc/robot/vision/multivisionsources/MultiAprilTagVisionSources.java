@@ -22,7 +22,8 @@ import java.util.function.Supplier;
 
 /**
  * Extended MultiVisionSources that supplies methods that takes care of using, updating and extracting data from special interfaces related
- * specifically to source that detects april tags, e.g. `IndpendentHeadingVisionSource`. Assumes that the robot has zero pitch and roll.
+ * specifically to sources that detect april tags, e.g. `IndpendentHeadingVisionSource`. The class assumes that the robot has zero pitch and
+ * roll.
  */
 public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
 
@@ -52,9 +53,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE);
 	}
 
-	private void updateAngleInHeadingRequiringLimelights(
-		GyroAngleValues gyroAngleValues
-	) {
+	private void updateAngleInHeadingRequiringLimelights(GyroAngleValues gyroAngleValues) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
 				robotHeadingRequiringVisionSource.updateGyroAngleValues(gyroAngleValues);
@@ -62,12 +61,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		}
 	}
 
-	private void updateAngleInHeadingRequiringLimelights(
-		Rotation3d angle,
-		double yawRate,
-		double pitchRate,
-		double rollRate
-	) {
+	private void updateAngleInHeadingRequiringLimelights(Rotation3d angle, double yawRate, double pitchRate, double rollRate) {
 		updateAngleInHeadingRequiringLimelights(new GyroAngleValues(angle, yawRate, pitchRate, rollRate));
 	}
 
@@ -141,7 +135,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		Logger.recordOutput(logPath + "isMegaTag1InUse", !useRobotHeadingForPoseEstimating);
 	}
 
-	private void logApriltagPoseData() {
+	private void logAprilTagPoseData() {
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
@@ -152,7 +146,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	@Override
 	public void log() {
 		super.log();
-		logApriltagPoseData();
+		logAprilTagPoseData();
 		Logger.recordOutput(logPath + "offsettedRobotHeading", getRobotHeading());
 		Logger.recordOutput(logPath + "headingOffset", headingOffsetSupplier.get());
 		Logger.recordOutput(logPath + "gyroInput", gyroSupplier.get());

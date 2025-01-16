@@ -12,6 +12,7 @@ import frc.robot.RobotType;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
+import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.*;
 import frc.robot.subsystems.endEffector.EndEffector;
@@ -60,7 +61,7 @@ public class RealEndEffectorConstants {
 	}
 
 	public static EndEffector generate(String logPath, String motorLogPath) {
-		BrushlessSparkMAXMotor motor = generateMotor(motorLogPath, IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
+		IMotor motor = generateMotor(motorLogPath, IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
 
 		IDigitalInput frontDigitalInput = generateBeamBreaker(FRONT_DIGITAL_INPUT_CHANNEL, EndEffectorConstants.LOG_PATH + "FrontBeamBreaker");
 		IDigitalInput backDigitalInput = generateBeamBreaker(BACK_DIGITAL_INPUT_CHANNEL, EndEffectorConstants.LOG_PATH + "BackBeamBreaker");

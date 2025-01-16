@@ -2,7 +2,6 @@ package frc.robot.subsystems.endEffector;
 
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -16,7 +15,7 @@ public class EndEffector extends GBSubsystem {
 	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
 
-	public EndEffector(ControllableMotor roller, IDigitalInput frontBeamBreaker, IDigitalInput backBeamBreaker, String logPath) {
+	public EndEffector(IMotor roller, IDigitalInput frontBeamBreaker, IDigitalInput backBeamBreaker, String logPath) {
 		super(logPath);
 		this.roller = roller;
 

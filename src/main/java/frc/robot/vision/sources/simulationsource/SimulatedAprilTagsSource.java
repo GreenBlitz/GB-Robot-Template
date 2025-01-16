@@ -32,7 +32,7 @@ public class SimulatedAprilTagsSource extends GBSubsystem implements VisionSourc
 	private final List<AprilTagVisionData> currentObservations;
 
 	private final Supplier<Pose3d> cameraPose;
-	private final Supplier<Pose2d> simulateRobotPose;
+	private final Supplier<Pose2d> simulatedRobotPose;
 	private final Supplier<Double> transformNoise;
 	private final Supplier<Double> angleNoise;
 
@@ -40,7 +40,7 @@ public class SimulatedAprilTagsSource extends GBSubsystem implements VisionSourc
 
 	public SimulatedAprilTagsSource(
 		String cameraName,
-		Supplier<Pose2d> simulateRobotPose,
+		Supplier<Pose2d> simulatedRobotPose,
 		Pose3d camerasRelativeToRobot,
 		SimulatedSourceConfiguration config,
 		Filter<AprilTagVisionData> filter
@@ -56,17 +56,17 @@ public class SimulatedAprilTagsSource extends GBSubsystem implements VisionSourc
 		this.deviationsFactor = config.deviationsFactor();
 		this.fieldOfView = config.fieldOfView();
 
-		this.simulateRobotPose = simulateRobotPose;
+		this.simulatedRobotPose = simulatedRobotPose;
 		this.angleNoise = () -> randomValuesGenerator.nextGaussian() * config.angleNoiseScaling();
 		this.transformNoise = () -> randomValuesGenerator.nextGaussian() * config.transformNoiseScaling();
 
-		this.cameraPose = () -> new Pose3d(simulateRobotPose.get()).relativeTo(camerasRelativeToRobot);
+		this.cameraPose = () -> new Pose3d(simulatedRobotPose.get()).relativeTo(camerasRelativeToRobot);
 		this.filter = filter;
 	}
 
 	@Override
 	public void update() {
-		Pose2d simulatedPose = simulateRobotPose.get();
+		Pose2d simulatedPose = simulatedRobotPose.get();
 		currentObservations.clear();
 
 		for (AprilTag aprilTag : VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags()) {
@@ -75,27 +75,28 @@ public class SimulatedAprilTagsSource extends GBSubsystem implements VisionSourc
 
 			double distanceMeters = distanceBetweenPosesMeters(aprilTagPose, cameraPose.get());
 			if (distanceMeters <= detectionRangeMeters) {
-				if (isRobotPointingIntoAngle(aprilTagPose.getRotation().toRotation2d())) {
+				if (isRobotPointingToAngle(aprilTagPose.getRotation().toRotation2d())) {
 					Pair<Pose2d, Double[]> noisedPose = calculateNoisedPose();
-					AprilTagVisionData visionInput = constructRawVisionData(
+					AprilTagVisionData visionInput = constructAprilTagVisionData(
 						noisedPose.getFirst(),
 						noisedPose.getSecond(),
 						aprilTagPose,
 						aprilTag
 					);
 					currentObservations.add(visionInput);
-					Logger.recordOutput(logPath + "state", "returning");
+					Logger.recordOutput(logPath + "state", "returningNoisedPose");
 					Logger.recordOutput(logPath + "latestOutputPose", visionInput.getEstimatedPose());
 				} else {
 					Logger.recordOutput(logPath + "state", "notFacingTags");
 				}
 			} else {
-				Logger.recordOutput(logPath + "state", "d=" + distanceMeters + "m");
+				Logger.recordOutput(logPath + "state/distance", distanceMeters + "m");
+				Logger.recordOutput(logPath + "state", "OutOfRange");
 			}
 		}
 	}
 
-	public AprilTagVisionData constructRawVisionData(Pose2d noisedPose, Double[] noiseAmount, Pose3d aprilTagPose, AprilTag aprilTag) {
+	public AprilTagVisionData constructAprilTagVisionData(Pose2d noisedPose, Double[] noiseAmount, Pose3d aprilTagPose, AprilTag aprilTag) {
 		return new AprilTagVisionData(
 			getName(),
 			new Pose3d(new Translation3d(noisedPose.getX(), noisedPose.getY(), 0), new Rotation3d(0, 0, noisedPose.getRotation().getRadians())),
@@ -115,14 +116,14 @@ public class SimulatedAprilTagsSource extends GBSubsystem implements VisionSourc
 		);
 	}
 
-	public boolean isRobotPointingIntoAngle(Rotation2d angle) {
+	public boolean isRobotPointingToAngle(Rotation2d angle) {
 		Rotation2d cameraAngle = cameraPose.get().getRotation().toRotation2d();
 		double angleDeltaRadians = Math.abs(cameraAngle.minus(angle).getRadians());
 		return (angleDeltaRadians) < (fieldOfView.getRadians() / 2);
 	}
 
-	public Pair<Pose2d, Double[]> calculateNoisedPose() {
-		Pose2d simulatedPose = simulateRobotPose.get();
+	private Pair<Pose2d, Double[]> calculateNoisedPose() {
+		Pose2d simulatedPose = simulatedRobotPose.get();
 
 		double xSpike = 0;
 		double ySpike = 0;
@@ -133,10 +134,10 @@ public class SimulatedAprilTagsSource extends GBSubsystem implements VisionSourc
 
 		double xNoise = transformNoise.get() + xSpike;
 		double yNoise = transformNoise.get() + ySpike;
-		double angularNoise = simulatedPose.getRotation().getRadians() + angleNoise.get();
+		double angleNoise = simulatedPose.getRotation().getRadians();
 		return new Pair<>(
-			new Pose2d(simulatedPose.getX() + xNoise, simulatedPose.getY() + yNoise, Rotation2d.fromRadians(angularNoise)),
-			new Double[] {xNoise, yNoise, angularNoise}
+			new Pose2d(simulatedPose.getX() + xNoise, simulatedPose.getY() + yNoise, Rotation2d.fromRadians(angleNoise + this.angleNoise.get())),
+			new Double[] {xNoise, yNoise, angleNoise}
 		);
 	}
 

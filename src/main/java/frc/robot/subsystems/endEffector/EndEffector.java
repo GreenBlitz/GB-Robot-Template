@@ -3,12 +3,13 @@ package frc.robot.subsystems.endEffector;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends GBSubsystem {
 
-	private final ControllableMotor roller;
+	private final IMotor roller;
 	private final IDigitalInput frontBeamBreaker;
 	private final DigitalInputInputsAutoLogged frontBeamBreakerInputs;
 	private final IDigitalInput backBeamBreaker;
@@ -18,10 +19,13 @@ public class EndEffector extends GBSubsystem {
 	public EndEffector(ControllableMotor roller, IDigitalInput frontBeamBreaker, IDigitalInput backBeamBreaker, String logPath) {
 		super(logPath);
 		this.roller = roller;
+
 		this.frontBeamBreaker = frontBeamBreaker;
 		this.frontBeamBreakerInputs = new DigitalInputInputsAutoLogged();
+
 		this.backBeamBreaker = backBeamBreaker;
 		this.backBeamBreakerInputs = new DigitalInputInputsAutoLogged();
+
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
 	}
 
@@ -45,11 +49,15 @@ public class EndEffector extends GBSubsystem {
 		roller.stop();
 	}
 
+	private void log() {
+		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", isCoralInFront());
+		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", isCoralInBack());
+	}
+
 	private void updateInputs() {
 		frontBeamBreaker.updateInputs(frontBeamBreakerInputs);
 		backBeamBreaker.updateInputs(backBeamBreakerInputs);
-		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", isCoralInFront());
-		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", isCoralInBack());
+		log();
 	}
 
 	@Override

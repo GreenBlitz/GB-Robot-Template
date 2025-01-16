@@ -26,6 +26,8 @@ public class EndEffector extends GBSubsystem {
 		this.backBeamBreakerInputs = new DigitalInputInputsAutoLogged();
 
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
+
+		updateInputs();
 	}
 
 	public EndEffectorCommandsBuilder getCommandsBuilder() {

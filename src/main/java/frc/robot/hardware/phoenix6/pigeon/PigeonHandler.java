@@ -10,7 +10,7 @@ import frc.robot.hardware.phoenix6.Pigeon2Wrapper;
 public class PigeonHandler extends Phoenix6Device implements IGyro, IAccelerometer, IVibrationGyro {
 
 	private final Pigeon2Wrapper pigeon;
-	String logPath;
+	private final String logPath;
 
 	public PigeonHandler(String logPath, Pigeon2Wrapper pigeon) {
 		super(logPath);

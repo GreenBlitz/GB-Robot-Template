@@ -3,10 +3,11 @@ package frc.robot.hardware.phoenix6.pigeon;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IAccelerometer;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.interfaces.IVibrationGyro;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.phoenix6.Pigeon2Wrapper;
 
-public class PigeonHandler extends Phoenix6Device implements IGyro, IAccelerometer {
+public class PigeonHandler extends Phoenix6Device implements IGyro, IAccelerometer, IVibrationGyro {
 
 	private final Pigeon2Wrapper pigeon;
 	String logPath;
@@ -44,8 +45,28 @@ public class PigeonHandler extends Phoenix6Device implements IGyro, IAcceleromet
 	}
 
 	@Override
-	public void log() {
-		log(logPath);
+	public double getAngularVelocityYaw() {
+		return pigeon.getAngularVelocityZDevice().getValue().magnitude();
+	}
+
+	@Override
+	public double getAngularVelocityPitch() {
+		return pigeon.getAngularVelocityXDevice().getValue().magnitude();
+	}
+
+	@Override
+	public double getAngularVelocityRoll() {
+		return pigeon.getAngularVelocityYDevice().getValue().magnitude();
+	}
+
+	@Override
+	public void logAngularVelocities() {
+		logAngularVelocities(logPath);
+	}
+
+	@Override
+	public void logAcceleration() {
+		logAcceleration(logPath);
 	}
 
 }

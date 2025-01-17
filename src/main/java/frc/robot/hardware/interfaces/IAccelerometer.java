@@ -32,9 +32,9 @@ public interface IAccelerometer {
 		return Math.cos(getAccelerationY()) + Math.sin(getAccelerationZ());
 	};
 
-	void log();
+	void logAcceleration();
 
-	default void log(String logPath) {
+	default void logAcceleration(String logPath) {
 		Logger.recordOutput(logPath + "accelerationX", getAccelerationX());
 		Logger.recordOutput(logPath + "accelerationY", getAccelerationY());
 		Logger.recordOutput(logPath + "accelerationZ", getAccelerationZ());

@@ -60,11 +60,11 @@ public class SimulatedAccelerometer implements IAccelerometer {
 		accelerationY = (previousRobotVelocities.vyMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vyMetersPerSecond) / deltaTime;
 		this.previousRobotVelocities = robotSimulatedVelocityRelativeToRobot.get();
 		this.lastUpdateTimestamp = deltaTime;
-		log();
+		logAcceleration();
 	}
 
-	public void log() {
-		log(logPath);
+	public void logAcceleration() {
+		logAcceleration(logPath);
 	}
 
 }

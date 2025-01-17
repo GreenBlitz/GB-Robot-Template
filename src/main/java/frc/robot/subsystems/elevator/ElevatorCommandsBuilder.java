@@ -15,16 +15,14 @@ public class ElevatorCommandsBuilder {
 	}
 
 	public Command setPower(double power) {
-		return elevator.asSubsystemCommand(
-			new ExecuteEndCommand(() -> elevator.setPower(power), elevator::stayInPlace, elevator),
-			"Set power to " + power
-		);
+		return elevator
+				.asSubsystemCommand(new ExecuteEndCommand(() -> elevator.setPower(power), elevator::stayInPlace), "Set power to " + power);
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
 		return elevator.asSubsystemCommand(
-			new ExecuteEndCommand(() -> elevator.setPower(powerSupplier.getAsDouble()), elevator::stayInPlace, elevator),
-			"Set power by Supplier"
+				new ExecuteEndCommand(() -> elevator.setPower(powerSupplier.getAsDouble()), elevator::stayInPlace),
+				"Set power by Supplier"
 		);
 	}
 
@@ -34,15 +32,13 @@ public class ElevatorCommandsBuilder {
 
 	public Command setTargetPositionMeters(double targetPositionMeters) {
 		return elevator.asSubsystemCommand(
-			new RunCommand(() -> elevator.setTargetPositionMeters(targetPositionMeters)),
-			"Set Target Position To " + targetPositionMeters + " Meters"
+				new RunCommand(() -> elevator.setTargetPositionMeters(targetPositionMeters)),
+				"Set Target Position To " + targetPositionMeters + " Meters"
 		);
 	}
 
-	public Command stayInPlace(){
-		return elevator.asSubsystemCommand(
-				new RunCommand(elevator::stayInPlace), "Stay in place"
-		);
+	public Command stayInPlace() {
+		return elevator.asSubsystemCommand(new RunCommand(elevator::stayInPlace), "Stay in place");
 	}
 
 	public Command stop() {

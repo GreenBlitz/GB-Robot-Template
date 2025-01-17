@@ -7,21 +7,21 @@ import java.util.ArrayList;
  */
 public class LinearFiltersManager {
 
-	private static final ArrayList<PeriodicLinearFilter> periodicLinearFilters = new ArrayList<>();
+	private static final ArrayList<IPeriodicLinearFilter> periodicLinearFilters = new ArrayList<>();
 
 	public static void periodic(String logPath) {
-		for (PeriodicLinearFilter filter : periodicLinearFilters) {
+		for (IPeriodicLinearFilter filter : periodicLinearFilters) {
 			filter.update();
 			filter.log(logPath);
 		}
 	}
 
-	public static void addFilter(PeriodicLinearFilter filter) {
+	public static void addFilter(IPeriodicLinearFilter filter) {
 		periodicLinearFilters.add(filter);
 	}
 
 	public static void resetAllFilters() {
-		periodicLinearFilters.forEach(PeriodicLinearFilter::hardReset);
+		periodicLinearFilters.forEach(IPeriodicLinearFilter::hardReset);
 	}
 
 }

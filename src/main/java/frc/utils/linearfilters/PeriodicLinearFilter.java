@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 /**
  * A linear filter that support <code>LinearFiltersManager</code>, and that can be handled periodically by it.
  */
-public class PeriodicLinearFilter {
+public class PeriodicLinearFilter implements IPeriodicLinearFilter {
 
 	private final LinearFilter filter;
 	private final String name;

@@ -8,6 +8,6 @@ public class ElevatorConstants {
 
 	public static final double MINIMUM_ACHIEVABLE_POSITION_METERS = 0;
 
-	public static final double DRUM_RADIUS = 1;
+	public static final double DRUM_RADIUS = 0.05;
 
 }

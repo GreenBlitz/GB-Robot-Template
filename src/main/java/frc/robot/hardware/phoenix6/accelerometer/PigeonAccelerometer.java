@@ -8,9 +8,11 @@ import frc.robot.hardware.phoenix6.Pigeon2Wrapper;
 public class PigeonAccelerometer extends Phoenix6Device implements IAccelerometer {
 
 	Pigeon2Wrapper accelerometer;
+	String logPath;
 
 	public PigeonAccelerometer(String logPath, Pigeon2Wrapper accelerometer) {
 		super(logPath);
+		this.logPath = logPath;
 		this.accelerometer = accelerometer;
 	}
 
@@ -27,6 +29,11 @@ public class PigeonAccelerometer extends Phoenix6Device implements IAcceleromete
 	@Override
 	public double getAccelerationZ() {
 		return accelerometer.getAccelerationZ().getValue().magnitude();
+	}
+
+	@Override
+	public void log() {
+		log(logPath);
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtils;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Random;
 import java.util.function.Supplier;
@@ -55,15 +54,6 @@ public class SimulatedAccelerometer implements IAccelerometer {
 		return 0 + noise.get();
 	}
 
-	private void log() {
-		Logger.recordOutput(logPath + "noisedAccelerationX", getAccelerationX());
-		Logger.recordOutput(logPath + "noisedAccelerationY", getAccelerationY());
-		Logger.recordOutput(logPath + "noisedAccelerationZ", getAccelerationZ());
-		Logger.recordOutput(logPath + "AccelerationX", accelerationX);
-		Logger.recordOutput(logPath + "AccelerationY", accelerationY);
-		Logger.recordOutput(logPath + "AccelerationZ", 0);
-	}
-
 	private void update() {
 		double deltaTime = TimeUtils.getLatestCycleTimeSeconds();
 		accelerationX = (previousRobotVelocities.vxMetersPerSecond - robotSimulatedVelocityRelativeToRobot.get().vxMetersPerSecond) / deltaTime;
@@ -71,6 +61,10 @@ public class SimulatedAccelerometer implements IAccelerometer {
 		this.previousRobotVelocities = robotSimulatedVelocityRelativeToRobot.get();
 		this.lastUpdateTimestamp = deltaTime;
 		log();
+	}
+
+	public void log() {
+		log(logPath);
 	}
 
 }

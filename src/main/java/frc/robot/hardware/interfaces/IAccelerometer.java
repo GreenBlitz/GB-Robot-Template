@@ -3,6 +3,7 @@ package frc.robot.hardware.interfaces;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.numbers.N3;
 import org.ejml.simple.SimpleMatrix;
+import org.littletonrobotics.junction.Logger;
 
 public interface IAccelerometer {
 
@@ -30,5 +31,17 @@ public interface IAccelerometer {
 	default double getAccelerationRoll() {
 		return Math.cos(getAccelerationY()) + Math.sin(getAccelerationZ());
 	};
+
+	void log();
+
+	default void log(String logPath) {
+		Logger.recordOutput(logPath + "accelerationX", getAccelerationX());
+		Logger.recordOutput(logPath + "accelerationY", getAccelerationY());
+		Logger.recordOutput(logPath + "accelerationZ", getAccelerationZ());
+		Logger.recordOutput(logPath + "accelerationYaw", getAccelerationYaw());
+		Logger.recordOutput(logPath + "accelerationRoll", getAccelerationRoll());
+		Logger.recordOutput(logPath + "accelerationPitch", getAccelerationPitch());
+		Logger.recordOutput(logPath + "accelerationMagnitude", getAccelerationMagnitude());
+	}
 
 }

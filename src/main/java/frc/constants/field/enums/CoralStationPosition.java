@@ -2,8 +2,8 @@ package frc.constants.field.enums;
 
 public enum CoralStationPosition {
 
-	LOWER(0),
-	UPPER(1);
+	RIGHT(0),
+	LEFT(1);
 
 	private final int index;
 

@@ -74,16 +74,16 @@ public class Field {
 		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorX, mirrorY);
 	}
 
-	private static Translation3d getAllianceRelative(Translation3d translation, boolean mirrorX, boolean mirrorY, boolean invertZ) {
-		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorX, mirrorY, invertZ);
+	private static Translation3d getAllianceRelative(Translation3d translation, boolean mirrorX, boolean mirrorY) {
+		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorX, mirrorY);
 	}
 
 	private static Rotation3d getAllianceRelative(Rotation3d rotation) {
-		return isFieldConventionAlliance() ? rotation : FieldMath.getMirroredAngle(rotation);
+		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation);
 	}
 
 	private static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorX, boolean mirrorY, boolean mirrorAngle) {
-		Translation3d translation3d = getAllianceRelative(pose.getTranslation(), mirrorX, mirrorY, false);
+		Translation3d translation3d = getAllianceRelative(pose.getTranslation(), mirrorX, mirrorY);
 		return mirrorAngle ? new Pose3d(translation3d, getAllianceRelative(pose.getRotation())) : new Pose3d(translation3d, pose.getRotation());
 	}
 
@@ -108,7 +108,7 @@ public class Field {
 	}
 
 	public static Pose2d getMiddleOfCoralStation(CoralStationPosition coralStationPosition) {
-		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], true, false, false, true);
+		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], true, true, true, false);
 	}
 
 }

@@ -1,7 +1,6 @@
 package frc.utils.linearfilters;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A class for automatic updating of linear filters. Its periodic run first.

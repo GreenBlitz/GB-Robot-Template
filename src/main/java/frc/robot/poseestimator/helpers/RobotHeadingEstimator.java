@@ -41,8 +41,9 @@ public class RobotHeadingEstimator {
 		Optional<Rotation2d> slidingWindowAngleAccumulatorAverage = angleBuffer.average();
 		if (
 			slidingWindowAngleAccumulatorAverage.isPresent()
-				&& PoseEstimatorMath.getAngleDistance(slidingWindowAngleAccumulatorAverage.get(), visionHeadingData.heading()).getRadians()
-					< RobotHeadingEstimatorConstants.VISION_HEADING_AVERAGE_COMPARISON_TOLERANCE.getRadians()
+				&& Math.abs(
+					PoseEstimatorMath.getAngleDistance(slidingWindowAngleAccumulatorAverage.get(), visionHeadingData.heading()).getRadians()
+				) < RobotHeadingEstimatorConstants.VISION_HEADING_AVERAGE_COMPARISON_TOLERANCE.getRadians()
 		) {
 			return;
 		}

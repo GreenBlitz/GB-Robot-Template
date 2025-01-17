@@ -22,12 +22,12 @@ public class FieldMath {
 
 	/**
 	 *
-	 * @param angle The angle
+	 * @param angle     The angle
 	 * @param angleAxis The axis to mirror
 	 * @return The mirrored angle by the axis given
 	 */
 	public static Rotation2d mirrorAngle(Rotation2d angle, AngleAxis angleAxis) {
-		return switch (angleAxis){
+		return switch (angleAxis) {
 			case KEEP -> angle;
 			case MIRROR_X -> MathConstants.HALF_CIRCLE.minus(angle);
 			case MIRROR_Y -> MathConstants.FULL_CIRCLE.minus(angle);

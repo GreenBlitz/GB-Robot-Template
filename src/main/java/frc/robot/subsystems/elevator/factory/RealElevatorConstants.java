@@ -29,8 +29,8 @@ public class RealElevatorConstants {
     private static final SysIdRoutine.Config SECOND_MOTOR_CONFIG = new SysIdRoutine.Config();
 
     private static final double KP = 1;
-    private static final double KI = 1;
-    private static final double KD = 1;
+    private static final double KI = 0;
+    private static final double KD = 0;
 
     private static void configMotor(TalonFXMotor motor){
         TalonFXConfiguration configuration = new TalonFXConfiguration();

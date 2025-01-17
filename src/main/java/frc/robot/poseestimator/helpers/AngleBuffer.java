@@ -27,7 +27,7 @@ public class AngleBuffer {
 	}
 
 	public int filledAngleSlots() {
-		return angleRadBuffer.valuesAmount();
+		return angleRadBuffer.filledSlots();
 	}
 
 	public Optional<Rotation2d> average() {

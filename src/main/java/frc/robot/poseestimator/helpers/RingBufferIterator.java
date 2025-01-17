@@ -10,22 +10,13 @@ public class RingBufferIterator<T> implements Iterator<T> {
 	private boolean used;
 
 	RingBufferIterator(RingBuffer<T> ringBuffer) {
+		int insertions = ringBuffer.getInsertions();
+
 		this.ringBuffer = ringBuffer;
-		int index = ringBuffer.getCurrentIndex();
-		while (true) {
-			if (--index < 0) {
-				index = ringBuffer.size() - 1;
-			}
-			if (!ringBuffer.existsAtIndex(index)) {
-				index = ringBuffer.incWrapIndex(index);
-				break;
-			}
-			if (index == ringBuffer.getCurrentIndex()) {
-				break;
-			}
-		}
 		this.endIndex = ringBuffer.getCurrentIndex();
-		this.currentIndex = index;
+		this.currentIndex = insertions >= ringBuffer.size()
+			? ringBuffer.getCurrentIndex()
+			: ringBuffer.wrapIndex(ringBuffer.getCurrentIndex() - insertions);
 		this.used = false;
 	}
 
@@ -40,7 +31,7 @@ public class RingBufferIterator<T> implements Iterator<T> {
 			return null;
 		}
 		T value = ringBuffer.getAtIndex(currentIndex).get(); // the get operation is safe because we check if the value exists in hasNext()
-		currentIndex = ringBuffer.incWrapIndex(currentIndex);
+		currentIndex = ringBuffer.wrapIndex(currentIndex + 1);
 		this.used = true;
 		return value;
 	}

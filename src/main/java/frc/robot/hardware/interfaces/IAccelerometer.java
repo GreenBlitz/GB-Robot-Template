@@ -21,15 +21,15 @@ public interface IAccelerometer {
 	double getAccelerationZ();
 
 	default double getAccelerationYaw() {
-		return Math.cos(getAccelerationX()) + Math.sin(getAccelerationY());
+		return Math.atan2(getAccelerationY(), getAccelerationX());
 	};
 
 	default double getAccelerationPitch() {
-		return Math.cos(getAccelerationZ()) + Math.sin(getAccelerationY());
+		return Math.atan2(getAccelerationZ(), getAccelerationY());
 	};
 
 	default double getAccelerationRoll() {
-		return Math.cos(getAccelerationY()) + Math.sin(getAccelerationZ());
+		return Math.atan2(getAccelerationY(), getAccelerationZ());
 	};
 
 	void logAcceleration();

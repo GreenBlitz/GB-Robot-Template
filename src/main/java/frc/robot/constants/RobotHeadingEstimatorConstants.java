@@ -12,6 +12,6 @@ public class RobotHeadingEstimatorConstants {
 
 	public static final int ANGLE_ACCUMULATOR_SIZE = 30;
 
-	public static final Rotation2d VISION_HEADING_AVERAGE_COMPARISON_TOLERANCE = Rotation2d.fromDegrees(5);
+	public static final Rotation2d VISION_HEADING_AVERAGE_COMPARISON_TOLERANCE = Rotation2d.fromDegrees(1);
 
 }

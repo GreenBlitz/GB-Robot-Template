@@ -38,7 +38,7 @@ public class AngleBuffer {
 		Predicate<Double> predicateRad = (angleRad) -> predicate.test(Rotation2d.fromRadians(angleRad));
 		double totalUnderPi = 0, totalAbovePi = 0;
 		double underPiCount = 0, abovePiCount = 0;
-		for (Double data : angleRadBuffer) {
+		for (double data : angleRadBuffer) {
 			if (predicateRad.test(data)) {
 				if (data < MathConstants.HALF_CIRCLE.getRadians()) {
 					totalUnderPi += data;

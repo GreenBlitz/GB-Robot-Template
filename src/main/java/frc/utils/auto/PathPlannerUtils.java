@@ -17,10 +17,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.alerts.Alert;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -40,6 +45,23 @@ public class PathPlannerUtils {
 
 	public static void scheduleWarmup() {
 		PathfindingCommand.warmupCommand().schedule();
+	}
+
+
+	private static void reportAlert(Alert.AlertType alertType, String message) {
+		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + message).report();
+	}
+
+	public static Optional<RobotConfig> getGuiRobotConfig() {
+		try {
+			RobotConfig robotConfig = RobotConfig.fromGUISettings();
+			return Optional.of(robotConfig);
+		} catch (IOException ioException) {
+			reportAlert(Alert.AlertType.ERROR, "GetGuiSettingsFailNotFoundAt");
+		} catch (ParseException parseException) {
+			reportAlert(Alert.AlertType.ERROR, "GuiSettingsParseFailedAt");
+		}
+		return Optional.empty();
 	}
 
 	public static void configPathPlanner(

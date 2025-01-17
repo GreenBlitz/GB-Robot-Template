@@ -1,8 +1,10 @@
 package frc.robot.subsystems.elevator;
 
+import frc.robot.RobotConstants;
+
 public class ElevatorConstants {
 
-	public static final String LOG_PATH = "Subsystems/Elevator/";
+	public static final String LOG_PATH = RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "Elevator/";
 
 	public static final double GEAR_RATIO = 1.0;
 

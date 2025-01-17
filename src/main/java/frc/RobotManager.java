@@ -70,7 +70,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
-		LinearFiltersManager.periodic("/"); // Better to be second
+		LinearFiltersManager.periodic("LinearFiltersManager"); // Better to be second
 		robot.periodic();
 		AlertManager.reportAlerts();
 	}

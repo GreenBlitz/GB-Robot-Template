@@ -7,10 +7,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.constants.field.enums.CagePosition;
-import frc.constants.field.enums.CoralStationPosition;
-import frc.constants.field.enums.ReefBranch;
-import frc.constants.field.enums.ReefSide;
+import frc.constants.field.enums.*;
 import frc.utils.DriverStationUtils;
 import frc.utils.math.FieldMath;
 
@@ -66,16 +63,16 @@ public class Field {
 		return DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
 
-	private static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, boolean invertAngle, boolean mirrorAngle) {
-		return isFieldConventionAlliance() ? pose : FieldMath.getMirrored(pose, mirrorX, mirrorY, invertAngle, mirrorAngle);
+	private static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleAxis angleAxis) {
+		return isFieldConventionAlliance() ? pose : FieldMath.mirror(pose, mirrorX, mirrorY, angleAxis);
 	}
 
 	private static Translation2d getAllianceRelative(Translation2d translation, boolean mirrorX, boolean mirrorY) {
-		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorX, mirrorY);
+		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, mirrorX, mirrorY);
 	}
 
 	private static Translation3d getAllianceRelative(Translation3d translation, boolean mirrorX, boolean mirrorY) {
-		return isFieldConventionAlliance() ? translation : FieldMath.getMirrored(translation, mirrorX, mirrorY);
+		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, mirrorX, mirrorY);
 	}
 
 	private static Rotation3d getAllianceRelative(Rotation3d rotation) {
@@ -92,7 +89,7 @@ public class Field {
 	}
 
 	public static Pose2d getMiddleOfReefSide(ReefSide side) {
-		return getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, true, false);
+		return getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleAxis.INVERT);
 	}
 
 	public static Translation2d getCoralPlacement(ReefBranch branch) {
@@ -104,11 +101,11 @@ public class Field {
 	}
 
 	public static Pose2d getProcessor() {
-		return getAllianceRelative(PROCESSOR, true, true, true, false);
+		return getAllianceRelative(PROCESSOR, true, true, AngleAxis.INVERT);
 	}
 
 	public static Pose2d getMiddleOfCoralStation(CoralStationPosition coralStationPosition) {
-		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], true, true, true, false);
+		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], true, true, AngleAxis.INVERT);
 	}
 
 }

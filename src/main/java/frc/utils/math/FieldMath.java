@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.constants.field.enums.AngleAxis;
 
 public class FieldMath {
 
@@ -21,61 +22,47 @@ public class FieldMath {
 
 	/**
 	 *
-	 * @param angle The angle to mirror
-	 * @return The mirrored angle. For example: angle = 45 degrees, return = 135 degrees
+	 * @param angle The angle
+	 * @param angleAxis The axis to mirror
+	 * @return The mirrored angle by the axis given
 	 */
-	public static Rotation2d mirrorAngle(Rotation2d angle) {
-		return MathConstants.HALF_CIRCLE.minus(angle);
+	public static Rotation2d mirrorAngle(Rotation2d angle, AngleAxis angleAxis) {
+		return switch (angleAxis){
+			case KEEP -> angle;
+			case MIRROR_X -> MathConstants.HALF_CIRCLE.minus(angle);
+			case MIRROR_Y -> MathConstants.FULL_CIRCLE.minus(angle);
+			case INVERT -> MathConstants.HALF_CIRCLE.plus(angle);
+		};
 	}
 
 	public static Rotation3d mirrorAngle(Rotation3d rotation) {
 		return new Rotation3d(rotation.getX(), -rotation.getY(), rotation.getZ());
 	}
 
-	/**
-	 *
-	 * @param angle The angle to invert
-	 * @return The inverted angle. For example: angle = 45 degrees, return = -135 degrees
-	 */
-	public static Rotation2d invertAngle(Rotation2d angle) {
-		return MathConstants.HALF_CIRCLE.plus(angle);
-	}
-
-	public static double getMirroredX(double x) {
+	public static double mirrorX(double x) {
 		return Field.LENGTH_METERS - x;
 	}
 
-	public static double getMirroredY(double y) {
+	public static double mirrorY(double y) {
 		return Field.WIDTH_METERS - y;
 	}
 
-	public static Pose2d getMirrored(Pose2d pose2d, boolean mirrorX, boolean mirrorY, boolean invertAngle, boolean mirrorAngle) {
-		pose2d = new Pose2d(getMirrored(pose2d.getTranslation(), mirrorX, mirrorY), pose2d.getRotation());
-		if (invertAngle) {
-			pose2d = new Pose2d(pose2d.getX(), pose2d.getY(), invertAngle(pose2d.getRotation()));
-		}
-		if (mirrorAngle) {
-			pose2d = new Pose2d(pose2d.getX(), pose2d.getY(), mirrorAngle(pose2d.getRotation()));
-		}
-		return pose2d;
+	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleAxis angleAxis) {
+		pose2d = new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), pose2d.getRotation());
+		return new Pose2d(pose2d.getX(), pose2d.getY(), mirrorAngle(pose2d.getRotation(), angleAxis));
 	}
 
-	public static Translation3d getMirrored(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {
-		if (mirrorX) {
-			translation3d = new Translation3d(getMirroredX(translation3d.getX()), translation3d.getY(), translation3d.getZ());
-		}
-		if (mirrorY) {
-			translation3d = new Translation3d(translation3d.getX(), getMirroredY(translation3d.getY()), translation3d.getZ());
-		}
-		return translation3d;
+	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {
+		Translation2d mirrored = mirror(translation3d.toTranslation2d(), mirrorX, mirrorY);
+		return new Translation3d(mirrored.getX(), mirrored.getY(), translation3d.getZ());
 	}
 
-	public static Translation2d getMirrored(Translation2d translation2d, boolean mirrorX, boolean mirrorY) {
+	public static Translation2d mirror(Translation2d translation2d, boolean mirrorX, boolean mirrorY) {
 		if (mirrorY) {
-			translation2d = new Translation2d(translation2d.getX(), getMirroredY(translation2d.getY()));
+			translation2d = new Translation2d(translation2d.getX(), mirrorY(translation2d.getY()));
 		}
 		if (mirrorX) {
-			translation2d = new Translation2d(getMirroredX(translation2d.getX()), translation2d.getY());
+			translation2d = new Translation2d(mirrorX(translation2d.getX()), translation2d.getY());
 		}
 		return translation2d;
 	}

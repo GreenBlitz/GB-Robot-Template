@@ -1,4 +1,4 @@
-package frc.robot.hardware.phoenix6.accelerometer;
+package frc.robot.hardware.phoenix6.pigeon;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.hardware.interfaces.IAccelerometer;

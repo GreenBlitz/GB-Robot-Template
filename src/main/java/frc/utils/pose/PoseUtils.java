@@ -1,10 +1,10 @@
-package frc.robot.poseestimator;
+package frc.utils.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import frc.robot.vision.data.VisionData;
 
-public class PoseEstimationMath {
+public class PoseUtils {
 
 	public static double deriveProjectedVisionData(VisionData starting, VisionData finish) {
 		double deltaTime = finish.getTimestamp() - starting.getTimestamp();

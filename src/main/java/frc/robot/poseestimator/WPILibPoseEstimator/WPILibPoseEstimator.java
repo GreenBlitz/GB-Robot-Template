@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import frc.robot.poseestimator.IPoseEstimator;
-import frc.robot.poseestimator.PoseEstimationMath;
+import frc.utils.pose.PoseUtils;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -91,7 +91,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 			double deltaTime = odometryObservation.timestamp() - lastOdometryObservation.timestamp();
 			this.lastOdometryAngle = odometryAngle;
-			this.odometryAcceleration = PoseEstimationMath.deriveProjectedTwist(changeInPose, deltaTime);
+			this.odometryAcceleration = PoseUtils.deriveProjectedTwist(changeInPose, deltaTime);
 			this.lastOdometryObservation = odometryObservation;
 		}
 	}

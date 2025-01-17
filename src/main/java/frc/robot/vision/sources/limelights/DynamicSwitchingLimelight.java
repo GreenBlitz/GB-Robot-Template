@@ -10,6 +10,11 @@ import frc.utils.Filter;
 
 import java.util.Optional;
 
+/**
+ * <code>DynamicSwitchingLimelight</code> is a class that automatically handles the switching between megatag 1 and megatag 2. It means it can
+ * update the limelight, give the independent heading from the correct entry, switch between megatag 1 and 2 on runtime, and more.
+ * <code>MultiAprilTagVisionSources</code> can make use of special methods of this class.
+ */
 public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
 	private final IndpendentHeadingVisionSource independentPoseEstimatingLimelight;

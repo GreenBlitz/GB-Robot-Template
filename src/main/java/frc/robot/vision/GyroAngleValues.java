@@ -11,14 +11,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
  */
 public record GyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, double pitchRate, Rotation2d roll, double rollRate) {
 
-	public double[] asArray() {
-		return new double[] {
-			this.yaw().getDegrees(),
-			this.yawRate(),
-			this.pitch().getDegrees(),
-			this.pitchRate(),
-			this.roll().getDegrees(),
-			this.rollRate()};
+	public GyroAngleValues() {
+		this(Rotation3d.kZero);
 	}
 
 	public GyroAngleValues(Rotation3d angle) {
@@ -34,6 +28,16 @@ public record GyroAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, 
 			Rotation2d.fromRadians(angle.getZ()),
 			rollRate
 		);
+	}
+
+	public double[] asArray() {
+		return new double[] {
+			this.yaw().getDegrees(),
+			this.yawRate(),
+			this.pitch().getDegrees(),
+			this.pitchRate(),
+			this.roll().getDegrees(),
+			this.rollRate()};
 	}
 
 }

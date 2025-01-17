@@ -2,7 +2,6 @@ package frc.robot.vision.sources.limelights;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -71,7 +70,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 
-		this.gyroAngleValues = new GyroAngleValues(new Rotation2d(), 0, new Rotation2d(), 0, new Rotation2d(), 0);
+		this.gyroAngleValues = new GyroAngleValues();
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -135,13 +134,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		return aprilTagPoseArray[entryValue.getIndex()];
 	}
 
-
-	/**
-	 * return the aprilTagID
-	 *
-	 * @return the current april tag ID. In case of dual-target mode or if no apriltag is detected, returns
-	 *         {@code VisionConstants.NO_APRILTAG_ID}
-	 */
 	protected int getAprilTagID() {
 		return (int) aprilTagIdEntry.getInteger(VisionConstants.NO_APRILTAG_ID); // a "safe" cast as long as limelight doesn't break APIs
 	}

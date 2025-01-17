@@ -28,13 +28,13 @@ public class PeriodicLinearFilter implements IPeriodicLinearFilter {
 		filter.reset();
 	}
 
-	protected void log(String parentLogPath) {
+	public void log(String parentLogPath) {
 		String logPath = parentLogPath + name + "/";
 		Logger.recordOutput(logPath + "input", updateValue.get());
 		Logger.recordOutput(logPath + "output", getOutput());
 	}
 
-	protected void update() {
+	public void update() {
 		filter.calculate(updateValue.get());
 	}
 

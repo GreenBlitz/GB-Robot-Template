@@ -13,9 +13,11 @@ public class IDs {
 	);
 
 	public static class Phoenix6IDs {
+
 		public static final Phoenix6DeviceID ELEVATOR_FIRST_MOTOR_ID = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 
 		public static final Phoenix6DeviceID ELEVATOR_SECOND_MOTOR_ID = new Phoenix6DeviceID(1, BusChain.ROBORIO);
+
 	}
 
 }

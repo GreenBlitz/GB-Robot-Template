@@ -41,9 +41,7 @@ public class Periodic3DlLinearFilter implements IPeriodicLinearFilter {
 		Logger.recordOutput(logPath + "input/" + "x/", suppliers.get(0).get());
 		Logger.recordOutput(logPath + "input/" + "y/", suppliers.get(1).get());
 		Logger.recordOutput(logPath + "input/" + "z/", suppliers.get(2).get());
-		Logger.recordOutput(logPath + "output/" + "x/", linearFilters.get(0).lastValue());
-		Logger.recordOutput(logPath + "output/" + "y/", linearFilters.get(0).lastValue());
-		Logger.recordOutput(logPath + "output/" + "z/", linearFilters.get(0).lastValue());
+		Logger.recordOutput(logPath + "output/", getAsColumnVector());
 	}
 
 	@Override

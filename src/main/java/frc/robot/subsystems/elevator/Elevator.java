@@ -34,14 +34,14 @@ public class Elevator extends GBSubsystem {
 	private boolean hasBeenResetBySwitch;
 
 	public Elevator(
-			String logPath,
-			ControllableMotor firstMotor,
-			ElevatorMotorSignals firstMotorSignals,
-			ControllableMotor secondMotor,
-			ElevatorMotorSignals secondMotorSignals,
-			IRequest<Rotation2d> positionRequest,
-			IRequest<Double> voltageRequest,
-			IDigitalInput limitSwitch
+		String logPath,
+		ControllableMotor firstMotor,
+		ElevatorMotorSignals firstMotorSignals,
+		ControllableMotor secondMotor,
+		ElevatorMotorSignals secondMotorSignals,
+		IRequest<Rotation2d> positionRequest,
+		IRequest<Double> voltageRequest,
+		IDigitalInput limitSwitch
 	) {
 		super(logPath);
 
@@ -59,20 +59,14 @@ public class Elevator extends GBSubsystem {
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
 
 		this.firstMotorSysIdCalibrator = new SysIdCalibrator(
-				new SysIdCalibrator.SysIdConfigInfo(
-						firstMotor.getSysidConfigInfo().config(),
-						true
-				),
-				this,
-				this::setVoltage
+			new SysIdCalibrator.SysIdConfigInfo(firstMotor.getSysidConfigInfo().config(), true),
+			this,
+			this::setVoltage
 		);
 		this.secondMotorSysIdCalibrator = new SysIdCalibrator(
-				new SysIdCalibrator.SysIdConfigInfo(
-						secondMotor.getSysidConfigInfo().config(),
-						true
-				),
-				this,
-				this::setVoltage
+			new SysIdCalibrator.SysIdConfigInfo(secondMotor.getSysidConfigInfo().config(), true),
+			this,
+			this::setVoltage
 		);
 
 		updateInputs();
@@ -165,9 +159,9 @@ public class Elevator extends GBSubsystem {
 
 	public boolean isAtPosition(double positionMeters, double toleranceMeters) {
 		return ToleranceMath.isNearWrapped(
-				convertMetersToRotations(positionMeters),
-				convertMetersToRotations(getElevatorPositionMeters()),
-				convertMetersToRotations(toleranceMeters)
+			convertMetersToRotations(positionMeters),
+			convertMetersToRotations(getElevatorPositionMeters()),
+			convertMetersToRotations(toleranceMeters)
 		);
 	}
 

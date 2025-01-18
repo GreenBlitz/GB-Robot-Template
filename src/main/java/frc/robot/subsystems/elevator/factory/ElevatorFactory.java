@@ -26,8 +26,6 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.AngleUnit;
 
-import java.util.Optional;
-
 public class ElevatorFactory {
 
 	private static final int LIMIT_SWITCH_CHANNEL = 0;
@@ -62,52 +60,52 @@ public class ElevatorFactory {
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
 		configuration.SoftwareLimitSwitch
-			.withReverseSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.MINIMUM_HEIGHT_METERS).getRotations());
+				.withReverseSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.MINIMUM_HEIGHT_METERS).getRotations());
 		configuration.SoftwareLimitSwitch.withReverseSoftLimitEnable(SOFT_LIMIT_ENABLE);
 		configuration.SoftwareLimitSwitch
-			.withForwardSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.MAXIMUM_HEIGHT_METERS).getRotations());
+				.withForwardSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.MAXIMUM_HEIGHT_METERS).getRotations());
 		configuration.SoftwareLimitSwitch.withForwardSoftLimitEnable(SOFT_LIMIT_ENABLE);
 		return configuration;
 	}
 
 	private static IDigitalInput generateDigitalInput() {
 		return Robot.ROBOT_TYPE.isSimulation()
-			? new ChooserDigitalInput("ElevatorDigitalInput")
-			: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME));
+				? new ChooserDigitalInput("ElevatorDigitalInput")
+				: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME));
 	}
 
 	private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
 		return new ElevatorMotorSignals(
-			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-			Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ)
+				Phoenix6SignalBuilder
+						.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
+				Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ)
 		);
 	}
 
 	public static Elevator create(String logPath) {
 		ElevatorSimulation elevatorSimulation = new ElevatorSimulation(
-			new ElevatorSim(
-				LinearSystemId.createElevatorSystem(
-					DCMotor.getKrakenX60Foc(ElevatorConstants.NUMBER_OF_MOTORS),
-					ElevatorConstants.MASS_KG,
-					ElevatorConstants.RADIUS_METERS,
-					ElevatorConstants.GEAR_RATIO
+				new ElevatorSim(
+						LinearSystemId.createElevatorSystem(
+								DCMotor.getKrakenX60Foc(ElevatorConstants.NUMBER_OF_MOTORS),
+								ElevatorConstants.MASS_KG,
+								ElevatorConstants.RADIUS_METERS,
+								ElevatorConstants.GEAR_RATIO
+						),
+						DCMotor.getKrakenX60Foc(ElevatorConstants.NUMBER_OF_MOTORS),
+						ElevatorConstants.MINIMUM_HEIGHT_METERS,
+						ElevatorConstants.MAXIMUM_HEIGHT_METERS,
+						false,
+						ElevatorConstants.STARTING_HEIGHT_METERS
 				),
-				DCMotor.getKrakenX60Foc(ElevatorConstants.NUMBER_OF_MOTORS),
-				ElevatorConstants.MINIMUM_HEIGHT_METERS,
-				ElevatorConstants.MAXIMUM_HEIGHT_METERS,
-				false,
-				ElevatorConstants.STARTING_HEIGHT_METERS
-			),
-			ElevatorConstants.DRUM_RADIUS,
-			ElevatorConstants.GEAR_RATIO
+				ElevatorConstants.DRUM_RADIUS,
+				ElevatorConstants.GEAR_RATIO
 		);
 
 		TalonFXMotor firstMotor = new TalonFXMotor(
-			logPath + "FirstMotor/",
-			IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID,
-			FIRST_MOTOR_CONFIG,
-			elevatorSimulation
+				logPath + "FirstMotor/",
+				IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID,
+				FIRST_MOTOR_CONFIG,
+				elevatorSimulation
 		);
 		firstMotor.applyConfiguration(Robot.ROBOT_TYPE.isSimulation() ? generateSimulationConfiguration() : generateRealConfiguration());
 
@@ -119,29 +117,29 @@ public class ElevatorFactory {
 		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0));
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0));
 
-		ElevatorMotorSignals firstMotorSignals = createSignals(firstMotor);
-
-		return switch (Robot.ROBOT_TYPE){
-			case REAL -> new Elevator(
-					logPath,
-					firstMotor,
-					firstMotorSignals,
-					secondMotor,
-					createSignals(secondMotor),
-					positionRequest,
-					voltageRequest,
-					digitalInput
-			);
-			case SIMULATION -> new Elevator(
-					logPath,
-					firstMotor,
-					firstMotorSignals,
-					firstMotor,
-					firstMotorSignals,
-					positionRequest,
-					voltageRequest,
-					digitalInput
-			);
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL ->
+					new Elevator(
+							logPath,
+							firstMotor,
+							createSignals(firstMotor),
+							secondMotor,
+							createSignals(secondMotor),
+							positionRequest,
+							voltageRequest,
+							digitalInput
+					);
+			case SIMULATION ->
+					new Elevator(
+							logPath,
+							firstMotor,
+							createSignals(firstMotor),
+							firstMotor,
+							createSignals(firstMotor),
+							positionRequest,
+							voltageRequest,
+							digitalInput
+					);
 		};
 	}
 

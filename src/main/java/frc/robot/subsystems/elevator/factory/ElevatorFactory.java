@@ -26,6 +26,8 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.AngleUnit;
 
+import java.util.Optional;
+
 public class ElevatorFactory {
 
 	private static final int LIMIT_SWITCH_CHANNEL = 0;
@@ -117,16 +119,30 @@ public class ElevatorFactory {
 		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0));
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0));
 
-		return new Elevator(
-			logPath,
-			firstMotor,
-			createSignals(firstMotor),
-			secondMotor,
-			createSignals(secondMotor),
-			positionRequest,
-			voltageRequest,
-			digitalInput
-		);
+		ElevatorMotorSignals firstMotorSignals = createSignals(firstMotor);
+
+		return switch (Robot.ROBOT_TYPE){
+			case REAL -> new Elevator(
+					logPath,
+					firstMotor,
+					firstMotorSignals,
+					secondMotor,
+					createSignals(secondMotor),
+					positionRequest,
+					voltageRequest,
+					digitalInput
+			);
+			case SIMULATION -> new Elevator(
+					logPath,
+					firstMotor,
+					firstMotorSignals,
+					firstMotor,
+					firstMotorSignals,
+					positionRequest,
+					voltageRequest,
+					digitalInput
+			);
+		};
 	}
 
 }

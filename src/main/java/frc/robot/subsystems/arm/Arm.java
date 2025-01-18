@@ -9,76 +9,76 @@ import frc.utils.math.ToleranceMath;
 
 public class Arm extends GBSubsystem {
 
-    private final ControllableMotor motor;
-    private final IRequest<Rotation2d> positionRequest;
-    private final IRequest<Double> voltageRequest;
-    private final InputSignal<Rotation2d> positionSignal;
-    private final InputSignal<Double> voltageSignal;
-    private final ArmCommandsBuilder commandsBuilder;
+	private final ControllableMotor motor;
+	private final IRequest<Rotation2d> positionRequest;
+	private final IRequest<Double> voltageRequest;
+	private final InputSignal<Rotation2d> positionSignal;
+	private final InputSignal<Double> voltageSignal;
+	private final ArmCommandsBuilder commandsBuilder;
 
-    public Arm(
-            String logPath,
-            ControllableMotor motor,
-            IRequest<Rotation2d> positionRequest,
-            IRequest<Double> voltageRequest,
-            InputSignal<Rotation2d> positionSignal,
-            InputSignal<Double> voltageSignal
-    ) {
-        super(logPath);
-        this.motor = motor;
-        this.positionRequest = positionRequest;
-        this.voltageRequest = voltageRequest;
-        this.positionSignal = positionSignal;
-        this.voltageSignal = voltageSignal;
-        this.commandsBuilder = new ArmCommandsBuilder(this);
+	public Arm(
+		String logPath,
+		ControllableMotor motor,
+		IRequest<Rotation2d> positionRequest,
+		IRequest<Double> voltageRequest,
+		InputSignal<Rotation2d> positionSignal,
+		InputSignal<Double> voltageSignal
+	) {
+		super(logPath);
+		this.motor = motor;
+		this.positionRequest = positionRequest;
+		this.voltageRequest = voltageRequest;
+		this.positionSignal = positionSignal;
+		this.voltageSignal = voltageSignal;
+		this.commandsBuilder = new ArmCommandsBuilder(this);
 
-        updateInputs();
-    }
+		updateInputs();
+	}
 
-    public ArmCommandsBuilder getCommandsBuilder() {
-        return commandsBuilder;
-    }
+	public ArmCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
+	}
 
-    public Rotation2d getPosition() {
-        return positionSignal.getLatestValue();
-    }
+	public Rotation2d getPosition() {
+		return positionSignal.getLatestValue();
+	}
 
-    protected void setTargetPosition(Rotation2d angle) {
-        motor.applyRequest(positionRequest.withSetPoint(angle));
-    }
+	protected void setTargetPosition(Rotation2d position) {
+		motor.applyRequest(positionRequest.withSetPoint(position));
+	}
 
-    public Double getVoltage() {
-        return voltageSignal.getLatestValue();
-    }
+	public double getVoltage() {
+		return voltageSignal.getLatestValue();
+	}
 
-    protected void setVoltage(double voltage) {
-        motor.applyRequest(voltageRequest.withSetPoint(voltage));
-    }
+	protected void setVoltage(double voltage) {
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
+	}
 
-    public void setBrake(boolean brake) {
-        motor.setBrake(brake);
-    }
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
+	}
 
-    protected void setPower(double power) {
-        motor.setPower(power);
-    }
+	protected void setPower(double power) {
+		motor.setPower(power);
+	}
 
-    protected void stayInPlace() {
-        setTargetPosition(positionSignal.getLatestValue());
-    }
+	protected void stayInPlace() {
+		setTargetPosition(positionSignal.getLatestValue());
+	}
 
-    public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
-        return ToleranceMath.isNearWrapped(position, positionSignal.getLatestValue(), tolerance);
-    }
+	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
+		return ToleranceMath.isNearWrapped(position, positionSignal.getLatestValue(), tolerance);
+	}
 
-    @Override
-    protected void subsystemPeriodic() {
-        updateInputs();
-    }
+	@Override
+	protected void subsystemPeriodic() {
+		updateInputs();
+		motor.updateSimulation();
+	}
 
-    private void updateInputs() {
-        motor.updateSimulation();
-        motor.updateInputs(positionSignal, voltageSignal);
-    }
+	private void updateInputs() {
+		motor.updateInputs(positionSignal, voltageSignal);
+	}
 
 }

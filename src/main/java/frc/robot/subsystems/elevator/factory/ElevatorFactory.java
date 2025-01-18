@@ -25,6 +25,10 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.AngleUnit;
+import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 public class ElevatorFactory {
 
@@ -33,8 +37,6 @@ public class ElevatorFactory {
 	private static final double CURRENT_LIMIT = 40;
 	private static final boolean CURRENT_LIMIT_ENABLE = true;
 	private static final boolean SOFT_LIMIT_ENABLE = true;
-	private static final SysIdRoutine.Config FIRST_MOTOR_CONFIG = new SysIdRoutine.Config();
-	private static final SysIdRoutine.Config SECOND_MOTOR_CONFIG = new SysIdRoutine.Config();
 
 	private static final double REAL_KP = 1;
 	private static final double REAL_KI = 0;
@@ -43,6 +45,15 @@ public class ElevatorFactory {
 	private static final double SIMULATION_KP = 1;
 	private static final double SIMULATION_KI = 0;
 	private static final double SIMULATION_KD = 0;
+
+	private static SysIdRoutine.Config generateSysidConfig() {
+		return new SysIdRoutine.Config(
+			Volts.of(1).per(Seconds.of(1).baseUnit()),
+			Volts.of(7),
+			Seconds.of(10),
+			(state) -> Logger.recordOutput("state", state.toString())
+		);
+	}
 
 	private static TalonFXConfiguration generateRealConfiguration() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
@@ -104,12 +115,12 @@ public class ElevatorFactory {
 		TalonFXMotor firstMotor = new TalonFXMotor(
 			logPath + "FirstMotor/",
 			IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID,
-			FIRST_MOTOR_CONFIG,
+			generateSysidConfig(),
 			elevatorSimulation
 		);
 		firstMotor.applyConfiguration(Robot.ROBOT_TYPE.isSimulation() ? generateSimulationConfiguration() : generateRealConfiguration());
 
-		TalonFXMotor secondMotor = new TalonFXMotor(logPath + "SecondMotor/", IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, SECOND_MOTOR_CONFIG);
+		TalonFXMotor secondMotor = new TalonFXMotor(logPath + "SecondMotor/", IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, generateSysidConfig());
 		secondMotor.applyConfiguration(Robot.ROBOT_TYPE.isSimulation() ? generateSimulationConfiguration() : generateRealConfiguration());
 
 		IDigitalInput digitalInput = generateDigitalInput();

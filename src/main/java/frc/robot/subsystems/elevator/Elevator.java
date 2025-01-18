@@ -9,6 +9,7 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.Conversions;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,17 +28,20 @@ public class Elevator extends GBSubsystem {
 	private final IDigitalInput limitSwitch;
 	private final ElevatorCommandsBuilder commandsBuilder;
 
+	private final SysIdCalibrator firstMotorSysIdCalibrator;
+	private final SysIdCalibrator secondMotorSysIdCalibrator;
+
 	private boolean hasBeenResetBySwitch;
 
 	public Elevator(
-		String logPath,
-		ControllableMotor firstMotor,
-		ElevatorMotorSignals firstMotorSignals,
-		ControllableMotor secondMotor,
-		ElevatorMotorSignals secondMotorSignals,
-		IRequest<Rotation2d> positionRequest,
-		IRequest<Double> voltageRequest,
-		IDigitalInput limitSwitch
+			String logPath,
+			ControllableMotor firstMotor,
+			ElevatorMotorSignals firstMotorSignals,
+			ControllableMotor secondMotor,
+			ElevatorMotorSignals secondMotorSignals,
+			IRequest<Rotation2d> positionRequest,
+			IRequest<Double> voltageRequest,
+			IDigitalInput limitSwitch
 	) {
 		super(logPath);
 
@@ -54,11 +58,36 @@ public class Elevator extends GBSubsystem {
 		hasBeenResetBySwitch = false;
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
 
+		this.firstMotorSysIdCalibrator = new SysIdCalibrator(
+				new SysIdCalibrator.SysIdConfigInfo(
+						firstMotor.getSysidConfigInfo().config(),
+						true
+				),
+				this,
+				this::setVoltage
+		);
+		this.secondMotorSysIdCalibrator = new SysIdCalibrator(
+				new SysIdCalibrator.SysIdConfigInfo(
+						secondMotor.getSysidConfigInfo().config(),
+						true
+				),
+				this,
+				this::setVoltage
+		);
+
 		updateInputs();
 	}
 
 	public ElevatorCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
+	}
+
+	public SysIdCalibrator getFirstMotorSysIdCalibrator() {
+		return firstMotorSysIdCalibrator;
+	}
+
+	public SysIdCalibrator getSecondMotorSysIdCalibrator() {
+		return secondMotorSysIdCalibrator;
 	}
 
 	public double getElevatorPositionMeters() {
@@ -136,9 +165,9 @@ public class Elevator extends GBSubsystem {
 
 	public boolean isAtPosition(double positionMeters, double toleranceMeters) {
 		return ToleranceMath.isNearWrapped(
-			convertMetersToRotations(positionMeters),
-			convertMetersToRotations(getElevatorPositionMeters()),
-			convertMetersToRotations(toleranceMeters)
+				convertMetersToRotations(positionMeters),
+				convertMetersToRotations(getElevatorPositionMeters()),
+				convertMetersToRotations(toleranceMeters)
 		);
 	}
 

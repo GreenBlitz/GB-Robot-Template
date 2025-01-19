@@ -80,7 +80,8 @@ public class RobotHeadingEstimator {
 		gyroAtTimestamp.ifPresent(
 			gyroSampleAtTimestamp -> estimatedHeading = PoseEstimatorMath.combineVisionHeadingToGyro(
 				visionHeadingData.heading(),
-				PoseEstimatorMath.getAngleDistance(gyroSampleAtTimestamp, lastGyroAngle),
+				gyroSampleAtTimestamp,
+				lastGyroAngle,
 				estimatedHeading,
 				gyroStandardDeviation,
 				visionStandardDeviation

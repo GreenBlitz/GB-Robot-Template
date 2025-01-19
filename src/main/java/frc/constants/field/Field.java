@@ -1,5 +1,3 @@
-
-
 package frc.constants.field;
 
 import edu.wpi.first.math.geometry.Pose2d;

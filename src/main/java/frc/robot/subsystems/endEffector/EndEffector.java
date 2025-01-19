@@ -15,7 +15,7 @@ public class EndEffector extends GBSubsystem {
 	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
 
-	public EndEffector( String logPath, IMotor roller, IDigitalInput frontBeamBreaker, IDigitalInput backBeamBreaker) {
+	public EndEffector(String logPath, IMotor roller, IDigitalInput frontBeamBreaker, IDigitalInput backBeamBreaker) {
 		super(logPath);
 		this.roller = roller;
 

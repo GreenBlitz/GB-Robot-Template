@@ -32,16 +32,6 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	private final Supplier<Rotation2d> headingOffsetSupplier;
 	private boolean useRobotHeadingForPoseEstimating;
 
-	@SafeVarargs
-	public MultiAprilTagVisionSources(
-		String logPath,
-		Supplier<Rotation2d> gyroSupplier,
-		Supplier<Rotation2d> headingOffsetSupplier,
-		VisionSource<AprilTagVisionData>... visionSources
-	) {
-		this(logPath, gyroSupplier, headingOffsetSupplier, List.of(visionSources));
-	}
-
 	public MultiAprilTagVisionSources(
 		String logPath,
 		Supplier<Rotation2d> gyroSupplier,
@@ -52,6 +42,16 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		this.gyroSupplier = gyroSupplier;
 		this.headingOffsetSupplier = headingOffsetSupplier;
 		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE);
+	}
+
+	@SafeVarargs
+	public MultiAprilTagVisionSources(
+		String logPath,
+		Supplier<Rotation2d> gyroSupplier,
+		Supplier<Rotation2d> headingOffsetSupplier,
+		VisionSource<AprilTagVisionData>... visionSources
+	) {
+		this(logPath, gyroSupplier, headingOffsetSupplier, List.of(visionSources));
 	}
 
 	private void updateAngleInHeadingRequiringSources(GyroAngleValues gyroAngleValues) {
@@ -132,8 +132,8 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logMegaTagMethod() {
-		Logger.recordOutput(logPath + "isMegaTag2InUse", useRobotHeadingForPoseEstimating);
 		Logger.recordOutput(logPath + "isMegaTag1InUse", !useRobotHeadingForPoseEstimating);
+		Logger.recordOutput(logPath + "isMegaTag2InUse", useRobotHeadingForPoseEstimating);
 	}
 
 	private void logAprilTagPoseData() {

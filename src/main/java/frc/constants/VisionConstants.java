@@ -4,10 +4,11 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.AprilTagVisionData;
+import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.LimeLightSource;
+import frc.robot.vision.sources.limelights.LimelightFactory;
 import frc.utils.Filter;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
 
@@ -43,9 +44,9 @@ public class VisionConstants {
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
 
-	public static final int NO_APRILTAG_ID = -1;
+	public static final int NO_APRILTAG_ID = -2;
 
-	public static final int LATENCY_BOTPOSE_INDEX = 6;
+	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE = false;
 
 	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE = true;
 
@@ -53,12 +54,12 @@ public class VisionConstants {
 		return (T iDontCare) -> true;
 	}
 
-	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = VisionFilters
-		.extractFilterToPreformPolymorphism(VisionFilters.isOnGround(0.2).and(VisionFilters.isInField(0.1))); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
+	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = (VisionFilters.isOnGround(0.2).and(VisionFilters.isInField(0.1))).polymorphAs(); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
 
 	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES = List.of(
-		new LimeLightSource("limelight-front", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(data -> true)),
-		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(data -> true))
+		LimelightFactory.createRobotHeadingRequiringLimelight("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(data -> true)),
+		LimelightFactory.createRobotHeadingEstimatingLimelight("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(data -> true))
+//		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(data -> true))
 	);
 
 	public static final double VISION_STDEVS_FACTOR = 0.1;

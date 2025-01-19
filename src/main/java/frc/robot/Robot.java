@@ -15,6 +15,7 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.constants.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.signal.TimedValue;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 import frc.utils.auto.AutonomousChooser;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.auto.PathPlannerUtils;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -42,7 +44,6 @@ import java.util.List;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
 	private final MultiAprilTagVisionSources aprilTagVisionSources;
@@ -111,10 +112,10 @@ public class Robot {
 		superStructure.periodic();
 		aprilTagVisionSources.log();
 		headingEstimator.updateGyroAngle(swerve.getGyroAbsoluteYaw(), TimeUtils.getCurrentTimeSeconds());
-		List<Pair<Rotation2d, Double>> headingAndTime = aprilTagVisionSources.getRawEstimatedAngles();
+		List<TimedValue<Rotation2d>> headingAndTime = aprilTagVisionSources.getRawRobotHeadings();
 		if (!headingAndTime.isEmpty()) {
-			Logger.recordOutput("Robot Heading", headingAndTime.get(0).getFirst());
-			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), headingAndTime.get(0).getSecond());
+			Logger.recordOutput("Robot Heading", headingAndTime.get(0).value());
+			headingEstimator.updateVisionHeading(headingAndTime.get(0).value(), headingAndTime.get(0).timestamp());
 //			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), TimeUtils.getCurrentTimeSeconds());
 		}
 		Logger.recordOutput("Robot Heading By Estimator", new Pose2d(new Translation2d(0, 0), headingEstimator.getEstimatedHeading()));

@@ -62,7 +62,7 @@ class TalonFXSteerConstants {
 		steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
 		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
-		steerConfig.Slot0.kS = 0;
+		steerConfig.Slot0.kS = 0.295;
 		steerConfig.Slot0.kV = 0;
 		steerConfig.Slot0.kA = 0;
 		steerConfig.Slot0.kP = 30;

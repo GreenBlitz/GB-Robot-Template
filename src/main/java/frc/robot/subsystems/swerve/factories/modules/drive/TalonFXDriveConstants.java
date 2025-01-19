@@ -66,7 +66,7 @@ class TalonFXDriveConstants {
 		driveConfig.Slot0.kS = 0;
 		driveConfig.Slot0.kV = 0;
 		driveConfig.Slot0.kA = 0;
-		driveConfig.Slot0.kP = 0.2;
+		driveConfig.Slot0.kP = 0;
 		driveConfig.Slot0.kI = 0;
 		driveConfig.Slot0.kD = 0;
 

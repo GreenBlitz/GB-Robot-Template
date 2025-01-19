@@ -10,23 +10,23 @@ ModuleConstants:
 
 Encoder:
 ----------------------
-- [ ] Encoder ID
-- [ ] Sensor Range (should be PlusMinusHalf)
-- [ ] Sensor Direction (should be CounterClockwise in default sds module)
+- [x] Encoder ID
+- [x] Sensor Range (should be PlusMinusHalf)
+- [x] Sensor Direction (should be CounterClockwise in default sds module)
 
 Steer:
 -----------------------
-- [ ] Motor ID
-- [ ] Inverted
-- [ ] Neutral Mode
-- [ ] Current Limit
-- [ ] Gear Ratio (should use RotorToSensorRatio)
-- [ ] Encoder Usage and ID (should use fuse)
-- [ ] FF (ks, kv, ka)
+- [x] Motor ID
+- [x] Inverted
+- [x] Neutral Mode
+- [x] Current Limit
+- [x] Gear Ratio (should use RotorToSensorRatio)
+- [x] Encoder Usage and ID (should use fuse)
+- [x] FF (ks, kv, ka)
 - [ ] PID
-- [ ] Use ContinuousWrap
-- [ ] Control mode (motion magic, voltage, torque)
-- [ ] Enable/Disable FOC (only talonfx)
+- [x] Use ContinuousWrap
+- [x] Control mode (motion magic, voltage, torque)
+- [x] Enable/Disable FOC (only talonfx)
 
 SteerSimulation:
 -----------------------
@@ -35,15 +35,15 @@ SteerSimulation:
 
 Drive:
 -----------------------
-- [ ] Motor ID
-- [ ] Inverted
-- [ ] Neutral Mode
+- [x] Motor ID
+- [x] Inverted
+- [x] Neutral Mode
 - [ ] Current Limit
-- [ ] Gear Ratio (should use RotorToSensorRatio)
+- [x] Gear Ratio
 - [ ] FF (ks, kv, ka)
 - [ ] PID
 - [ ] Control mode (motion magic, voltage, torque)
-- [ ] Enable/Disable FOC (only talonfx)
+- [x] Enable/Disable FOC (only talonfx)
 
 DriveSimulation:
 -----------------------

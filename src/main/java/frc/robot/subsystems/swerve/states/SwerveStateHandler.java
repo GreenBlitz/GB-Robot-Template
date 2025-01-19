@@ -13,6 +13,7 @@ import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 import frc.utils.math.PoseMath;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -29,7 +30,7 @@ public class SwerveStateHandler {
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = Optional.empty();
 		Translation2d translation2d = new Translation2d(7, 3);
-		this.objectTranslationSupplier = ()->Optional.of(translation2d);
+		this.objectTranslationSupplier = () -> Optional.of(translation2d);
 	}
 
 	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
@@ -45,12 +46,13 @@ public class SwerveStateHandler {
 			return speeds;
 		}
 		if (swerveState.getAimAssist() == AimAssist.AMP) {
+			Logger.recordOutput("position", new Pose2d(objectTranslationSupplier.get().get(), new Rotation2d(0)));
 			return handleNoteAimAssist(speeds, robotPoseSupplier.get().get(), objectTranslationSupplier.get().get(), swerveState);
 		}
 		if (swerveState.getAimAssist() == AimAssist.SPEAKER && robotPoseSupplier.isPresent()) {
 			return handleSpeakerAssist(speeds, robotPoseSupplier.get().get());
 		}
-		if (swerveState.getAimAssist() == AimAssist.NONE && robotPoseSupplier.isPresent() && objectTranslationSupplier.get().isPresent()) {
+		if (swerveState.getAimAssist() == AimAssist.NOTE && robotPoseSupplier.isPresent() && objectTranslationSupplier.get().isPresent()) {
 			return handleNoteAimAssist(speeds, robotPoseSupplier.get().get(), objectTranslationSupplier.get().get(), swerveState);
 		}
 

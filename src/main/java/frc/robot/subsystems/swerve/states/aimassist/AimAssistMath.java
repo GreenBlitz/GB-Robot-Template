@@ -52,13 +52,17 @@ public class AimAssistMath {
 		double pidHorizontalToObjectOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController()
 			.calculate(0, objectRelativeToRobot.getY());
 
-		SwerveMath.fieldToRobotRelativeSpeeds(speeds, robotPose.getRotation());
+		ChassisSpeeds robotRelativeSpeeds = speeds;
+		if (swerveState.getDriveMode() == DriveRelative.FIELD_RELATIVE) {
+			robotRelativeSpeeds = SwerveMath.fieldToRobotRelativeSpeeds(speeds, robotPose.getRotation());
+		}
 
 		ChassisSpeeds newSpeed = new ChassisSpeeds(
-			speeds.vxMetersPerSecond,
+			robotRelativeSpeeds.vxMetersPerSecond,
 			pidHorizontalToObjectOutputVelocityMetersPerSecond,
-			speeds.omegaRadiansPerSecond
+			robotRelativeSpeeds.omegaRadiansPerSecond
 		);
+
 		if (swerveState.getDriveMode() == DriveRelative.FIELD_RELATIVE) {
 			newSpeed = SwerveMath.robotToFieldRelativeSpeeds(newSpeed, robotPose.getRotation());
 		}

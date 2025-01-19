@@ -23,7 +23,7 @@ Steer:
 - [x] Gear Ratio (should use RotorToSensorRatio)
 - [x] Encoder Usage and ID (should use fuse)
 - [x] FF (ks, kv, ka)
-- [ ] PID
+- [x] PID
 - [x] Use ContinuousWrap
 - [x] Control mode (motion magic, voltage, torque)
 - [x] Enable/Disable FOC (only talonfx)
@@ -42,7 +42,7 @@ Drive:
 - [x] Gear Ratio
 - [ ] FF (ks, kv, ka)
 - [ ] PID
-- [ ] Control mode (motion magic, voltage, torque)
+- [x] Control mode (motion magic, voltage, torque)
 - [x] Enable/Disable FOC (only talonfx)
 
 DriveSimulation:

@@ -154,9 +154,7 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 
-		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), false));
-		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(0), false));
-		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(180), false));
+		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().driveCalibration());
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

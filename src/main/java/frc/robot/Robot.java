@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.endEffector.EndEffector;
-import frc.robot.subsystems.endEffector.EndEffectorConstants;
-import frc.robot.subsystems.endEffector.factory.EndEffectorBuilder;
+import frc.robot.subsystems.endEffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
 
 /**
@@ -28,7 +27,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		this.endEffector = EndEffectorBuilder.generate(EndEffectorConstants.LOG_PATH, EndEffectorConstants.MOTOR_LOG_PATH);
+		this.endEffector = EndEffectorFactory.create();
 	}
 
 	public void periodic() {

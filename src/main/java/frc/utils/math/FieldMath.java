@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
-import frc.constants.field.enums.AngleAxis;
 
 public class FieldMath {
 
@@ -20,14 +19,9 @@ public class FieldMath {
 		return getRelativeTranslation(relativeTo.getTranslation(), reference).rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
-	/**
-	 *
-	 * @param angle     The angle
-	 * @param angleAxis The axis to mirror
-	 * @return The mirrored angle by the axis given
-	 */
-	public static Rotation2d mirrorAngle(Rotation2d angle, AngleAxis angleAxis) {
-		return switch (angleAxis) {
+
+	public static Rotation2d mirrorAngle(Rotation2d angle, AngleTransform angleTransform) {
+		return switch (angleTransform) {
 			case KEEP -> angle;
 			case MIRROR_X -> MathConstants.HALF_CIRCLE.minus(angle);
 			case MIRROR_Y -> MathConstants.FULL_CIRCLE.minus(angle);
@@ -47,9 +41,9 @@ public class FieldMath {
 		return Field.WIDTH_METERS - y;
 	}
 
-	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleAxis angleAxis) {
+	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
 		pose2d = new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), pose2d.getRotation());
-		return new Pose2d(pose2d.getX(), pose2d.getY(), mirrorAngle(pose2d.getRotation(), angleAxis));
+		return new Pose2d(pose2d.getX(), pose2d.getY(), mirrorAngle(pose2d.getRotation(), angleTransform));
 	}
 
 	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {

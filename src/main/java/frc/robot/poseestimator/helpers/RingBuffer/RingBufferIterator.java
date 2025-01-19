@@ -9,7 +9,7 @@ public class RingBufferIterator<T> implements Iterator<T> {
 	private int currentIndex;
 	private boolean used;
 
-	RingBufferIterator(RingBuffer<T> ringBuffer) {
+	protected RingBufferIterator(RingBuffer<T> ringBuffer) {
 		int insertions = ringBuffer.getInsertions();
 
 		this.ringBuffer = ringBuffer;

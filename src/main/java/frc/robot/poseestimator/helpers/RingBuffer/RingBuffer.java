@@ -43,11 +43,11 @@ public class RingBuffer<T> implements Iterable<T> {
 		}
 	}
 
-	int getCurrentIndex() {
+	protected int getCurrentIndex() {
 		return currentIndex;
 	}
 
-	int wrapIndex(int index) {
+	protected int wrapIndex(int index) {
 		index = index % size();
 		if (index < 0) {
 			index += size();
@@ -55,15 +55,15 @@ public class RingBuffer<T> implements Iterable<T> {
 		return index;
 	}
 
-	int getInsertions() {
+	protected int getInsertions() {
 		return insertions;
 	}
 
-	boolean existsAtIndex(int index) {
+	protected boolean existsAtIndex(int index) {
 		return buffer.get(index).isPresent();
 	}
 
-	Optional<T> getAtIndex(int index) {
+	protected Optional<T> getAtIndex(int index) {
 		return buffer.get(index);
 	}
 

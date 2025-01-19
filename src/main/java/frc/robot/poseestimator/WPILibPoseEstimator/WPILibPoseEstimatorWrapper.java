@@ -17,7 +17,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.List;
 import java.util.Optional;
 
-public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
+public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEstimator {
 
 	private final SwerveDriveKinematics kinematics;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
@@ -27,7 +27,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private OdometryObservation lastOdometryObservation;
 	private Rotation2d lastOdometryAngle;
 
-	public WPILibPoseEstimator(
+	public WPILibPoseEstimatorWrapper(
 		String logPath,
 		SwerveDriveKinematics kinematics,
 		SwerveModulePosition[] modulePositions,
@@ -137,7 +137,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void log() {
 		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
 		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
-		Logger.recordOutput(getLogPath() + "odometrySpeed/", odometryAcceleration);
+		Logger.recordOutput(getLogPath() + "odometryAcceleration/", odometryAcceleration);
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryObservation.timestamp());
 		if (lastVisionObservation != null) {
 			Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionObservation.getTimestamp());

@@ -12,15 +12,15 @@ public record StandardDeviations2D(double xStandardDeviations, double yStandardD
 		this(0, 0, 0);
 	}
 
-	public StandardDeviations2D(double stdDev) {
-		this(stdDev, stdDev, stdDev);
+	public StandardDeviations2D(double standardDeviation) {
+		this(standardDeviation, standardDeviation, standardDeviation);
 	}
 
-	public StandardDeviations2D(double[] stdDevs) {
+	public StandardDeviations2D(double[] standardDeviations) {
 		this(
-			stdDevs[Pose2dComponentsValue.X_VALUE.getIndex()],
-			stdDevs[Pose2dComponentsValue.Y_VALUE.getIndex()],
-			stdDevs[Pose2dComponentsValue.ROTATION_VALUE.getIndex()]
+			standardDeviations[Pose2dComponentsValue.X_VALUE.getIndex()],
+			standardDeviations[Pose2dComponentsValue.Y_VALUE.getIndex()],
+			standardDeviations[Pose2dComponentsValue.ROTATION_VALUE.getIndex()]
 		);
 	}
 

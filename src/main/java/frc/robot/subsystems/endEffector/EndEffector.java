@@ -42,17 +42,10 @@ public class EndEffector extends GBSubsystem {
 		return backBeamBreakerInputs.debouncedValue;
 	}
 
-	public void setPower(double power) {
-		roller.setPower(power);
-	}
-
-	public void stop() {
-		roller.stop();
-	}
-
-	private void log() {
-		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", isCoralInFront());
-		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", isCoralInBack());
+	@Override
+	protected void subsystemPeriodic() {
+		updateInputs();
+		log();
 	}
 
 	private void updateInputs() {
@@ -60,10 +53,17 @@ public class EndEffector extends GBSubsystem {
 		backBeamBreaker.updateInputs(backBeamBreakerInputs);
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		updateInputs();
-		log();
+	private void log() {
+		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", isCoralInFront());
+		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", isCoralInBack());
+	}
+
+	public void setPower(double power) {
+		roller.setPower(power);
+	}
+
+	public void stop() {
+		roller.stop();
 	}
 
 }

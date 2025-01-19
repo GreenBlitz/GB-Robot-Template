@@ -1,6 +1,7 @@
 package frc.robot.poseestimator.helpers.RingBuffer;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class RingBufferIterator<T> implements Iterator<T> {
 
@@ -26,9 +27,9 @@ public class RingBufferIterator<T> implements Iterator<T> {
 	}
 
 	@Override
-	public T next() {
+	public T next() throws NoSuchElementException {
 		if (!hasNext()) {
-			return null;
+			throw new NoSuchElementException("Ring buffer iterator exhausted");
 		}
 		T value = ringBuffer.getAtIndex(currentIndex).get(); // the get operation is safe because we check if the value exists in hasNext()
 		currentIndex = ringBuffer.wrapIndex(currentIndex + 1);

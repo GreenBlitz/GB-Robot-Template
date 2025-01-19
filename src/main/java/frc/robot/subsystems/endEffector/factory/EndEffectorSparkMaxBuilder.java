@@ -16,7 +16,7 @@ import frc.robot.hardware.rev.motors.*;
 import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.endEffector.EndEffectorConstants;
 
-public class EndEffectorBuilder {
+public class EndEffectorSparkMaxBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
 

@@ -76,27 +76,23 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	protected ArrayList<TimedValue<Rotation2d>> extractHeadingDataFromMappedSources(
 		List<VisionSource<AprilTagVisionData>> sources,
-		Function<IndpendentHeadingVisionSource, Optional<AprilTagVisionData>> mapping
+		Function<IndpendentHeadingVisionSource, Optional<TimedValue<Rotation2d>>> mapping
 	) {
 		ArrayList<TimedValue<Rotation2d>> output = new ArrayList<>();
 		for (VisionSource<AprilTagVisionData> visionSource : sources) {
 			if (visionSource instanceof IndpendentHeadingVisionSource indpendentHeadingVisionSource) {
-				mapping.apply(indpendentHeadingVisionSource)
-					.ifPresent(
-						(visionData) -> output
-							.add(new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp()))
-					);
+				mapping.apply(indpendentHeadingVisionSource).ifPresent(output::add);
 			}
 		}
 		return output;
 	}
 
 	public ArrayList<TimedValue<Rotation2d>> getRawRobotHeadings() {
-		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getVisionData);
+		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getRawHeadingData);
 	}
 
 	public ArrayList<TimedValue<Rotation2d>> getFilteredRobotHeading() {
-		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getFilteredVisionData);
+		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getFilteredHeadingData);
 	}
 
 	private void updateMegaTagInDynamicLimelights() {

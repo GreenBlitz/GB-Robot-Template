@@ -3,10 +3,11 @@ package frc.robot.poseestimator.helpers;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import frc.robot.constants.MathConstants;
 import frc.robot.constants.RobotHeadingEstimatorConstants;
 import frc.robot.poseestimator.PoseEstimatorMath;
+import frc.robot.poseestimator.helpers.RingBuffer.RingBuffer;
 import frc.robot.vision.data.HeadingData;
+import frc.utils.AngleUtils;
 
 import java.util.Optional;
 
@@ -48,11 +49,11 @@ public class RobotHeadingEstimator {
 		double visionComparedToEstimationStandardDeviation
 	) {
 		if (StandardDeviations.calculateStandardDeviations(estimationVisionBuffer, estimationVisionPair -> {
-			return Math.abs(estimationVisionPair.getFirst().getRotations() % MathConstants.FULL_CIRCLE.getRotations())
-				- Math.abs(estimationVisionPair.getSecond().getRotations() % MathConstants.FULL_CIRCLE.getRotations());
+			return AngleUtils.wrappingAbs(estimationVisionPair.getFirst()).getRotations()
+				- AngleUtils.wrappingAbs(estimationVisionPair.getSecond()).getRotations();
 		}) < visionComparedToEstimationStandardDeviation) {
 			updateVisionHeading(visionHeadingData, visionStandardDeviation);
-		}else {
+		} else {
 			lastVisionAngle = Optional.of(visionHeadingData.heading());
 		}
 	}
@@ -66,7 +67,7 @@ public class RobotHeadingEstimator {
 			slidingWindowAngleAccumulatorAverage.isPresent()
 				&& Math.abs(
 					PoseEstimatorMath.getAngleDistance(slidingWindowAngleAccumulatorAverage.get(), visionHeadingData.heading()).getRadians()
-				) < RobotHeadingEstimatorConstants.VISION_HEADING_AVERAGE_COMPARISON_TOLERANCE.getRadians()
+				) < RobotHeadingEstimatorConstants.VISION_HEADING_AVERAGE_COMPARISON_THRESHOLD.getRadians()
 		) {
 			return;
 		}
@@ -103,7 +104,7 @@ public class RobotHeadingEstimator {
 		visionHeadingData.ifPresent(visionData -> updateVisionHeading(visionData, visionStandardDeviation));
 	}
 
-	public void periodic(){
+	public void periodic() {
 		lastVisionAngle.ifPresent(rotation2d -> estimationVisionBuffer.insert(Pair.of(estimatedHeading, rotation2d)));
 	}
 

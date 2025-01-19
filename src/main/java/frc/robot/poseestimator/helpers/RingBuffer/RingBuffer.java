@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.helpers;
+package frc.robot.poseestimator.helpers.RingBuffer;
 
 
 import java.util.ArrayList;
@@ -36,6 +36,8 @@ public class RingBuffer<T> implements Iterable<T> {
 	}
 
 	public void clear() {
+		insertions = 0;
+		currentIndex = 0;
 		for (int i = 0; i < size(); i++) {
 			buffer.set(i, Optional.empty());
 		}

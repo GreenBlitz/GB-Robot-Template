@@ -5,6 +5,8 @@ import java.util.function.Predicate;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.constants.MathConstants;
+import frc.robot.poseestimator.helpers.RingBuffer.RingBuffer;
+import frc.utils.AngleUtils;
 
 public class AngleBuffer {
 
@@ -19,7 +21,7 @@ public class AngleBuffer {
 	}
 
 	public void addAngle(Rotation2d angle) {
-		angleRadBuffer.insert((angle.getRadians() + MathConstants.FULL_CIRCLE.getRadians()) % MathConstants.FULL_CIRCLE.getRadians());
+		angleRadBuffer.insert(AngleUtils.wrappingAbs(angle).getRadians());
 	}
 
 	public void clear() {

@@ -81,7 +81,7 @@ public class ElevatorFactory {
 
 	private static IDigitalInput generateDigitalInput() {
 		return Robot.ROBOT_TYPE.isSimulation()
-			? new ChooserDigitalInput("ElevatorDigitalInput")
+			? new ChooserDigitalInput("ElevatorLimitSwitch")
 			: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME));
 	}
 

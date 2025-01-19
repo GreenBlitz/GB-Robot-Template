@@ -65,7 +65,7 @@ class TalonFXSteerConstants {
 		steerConfig.Slot0.kS = 0.295;
 		steerConfig.Slot0.kV = 0;
 		steerConfig.Slot0.kA = 0;
-		steerConfig.Slot0.kP = 30;
+		steerConfig.Slot0.kP = 50;
 		steerConfig.Slot0.kI = 0;
 		steerConfig.Slot0.kD = 0;
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
@@ -92,6 +92,7 @@ class TalonFXSteerConstants {
 	protected static SteerSignals generateSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		steer.getDevice().getClosedLoopReference().setUpdateFrequency(60);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder

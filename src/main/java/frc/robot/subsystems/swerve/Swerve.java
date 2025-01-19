@@ -280,15 +280,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean isAtTranslation(Translation2d currentTranslation, Translation2d targetTranslation) {
-		return MathUtil.isNear(
-			targetTranslation.getX(),
-			currentTranslation.getX(),
-			0.1
-		) &&
-			MathUtil.isNear(
-				targetTranslation.getY(),
-				currentTranslation.getY(),
-				0.1
-			);
+		return MathUtil.isNear(targetTranslation.getX(), currentTranslation.getX(), 0.1)
+			&& MathUtil.isNear(targetTranslation.getY(), currentTranslation.getY(), 0.1);
 	}
+
 }

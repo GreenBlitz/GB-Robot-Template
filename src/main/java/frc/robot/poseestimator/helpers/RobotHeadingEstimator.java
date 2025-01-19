@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import frc.robot.Robot;
 import frc.robot.poseestimator.PoseEstimatorMath;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import org.littletonrobotics.junction.Logger;
@@ -38,21 +37,19 @@ public class RobotHeadingEstimator {
 
 	public void updateVisionHeading(Rotation2d heading, double timestamp) {
 		Optional<Rotation2d> gyroAtTimestamp = unOffsetedGyroAngleInterpolator.getSample(timestamp);
-		gyroAtTimestamp.ifPresent(
-			gyroSampleAtTimestamp -> {
+		gyroAtTimestamp.ifPresent(gyroSampleAtTimestamp -> {
 //				if(gyroSampleAtTimestamp.minus(lastGyroAngle).getDegrees() < 3 &&
 //					heading.getDegrees() < lastVisionAngle.getDegrees()
 //				)
-				estimatedHeading = PoseEstimatorMath.combineVisionHeadingToGyro(
-					heading,
-					PoseEstimatorMath.getAngleDistance(gyroSampleAtTimestamp, lastGyroAngle),
-					estimatedHeading,
-					gyroStandardDeviation,
-					0.03
+			estimatedHeading = PoseEstimatorMath.combineVisionHeadingToGyro(
+				heading,
+				PoseEstimatorMath.getAngleDistance(gyroSampleAtTimestamp, lastGyroAngle),
+				estimatedHeading,
+				gyroStandardDeviation,
+				0.03
 //				PoseEstimatorMath.calculateStandardDeviation(heading.getRadians(), estimatedHeading.getRadians())
-				);
-			}
-		);
+			);
+		});
 	}
 
 	public void updateGyroAngle(Rotation2d heading, double timestamp) {

@@ -71,12 +71,12 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation2d yaw) {
-		updateAngleInHeadingRequiringSources(new Rotation3d(yaw.getRadians(), 0, 0));
+		updateAngleInHeadingRequiringSources(new Rotation3d(0, 0, yaw.getRadians()));
 	}
 
 	protected ArrayList<TimedValue<Rotation2d>> extractHeadingDataFromMappedSources(
 		List<VisionSource<AprilTagVisionData>> sources,
-		Function<IndpendentHeadingVisionSource, Optional<AprilTagVisionData>> mapping
+		Function<IndpendentHeadingVisionSource, Optional<TimedValue<Rotation2d>>> mapping
 	) {
 		ArrayList<TimedValue<Rotation2d>> output = new ArrayList<>();
 		for (VisionSource<AprilTagVisionData> visionSource : sources) {
@@ -84,7 +84,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 				mapping.apply(indpendentHeadingVisionSource)
 					.ifPresent(
 						(visionData) -> output
-							.add(new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp()))
+							.add(new TimedValue<>(visionData.value(), visionData.timestamp()))
 					);
 			}
 		}
@@ -92,11 +92,11 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	public ArrayList<TimedValue<Rotation2d>> getRawRobotHeadings() {
-		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getVisionData);
+		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getFilteredHeadingData);
 	}
 
 	public ArrayList<TimedValue<Rotation2d>> getFilteredRobotHeading() {
-		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getFilteredVisionData);
+		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getRawHeadingData);
 	}
 
 	private void updateMegaTagInDynamicLimelights() {
@@ -148,7 +148,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	public void log() {
 		super.log();
 		logAprilTagPoseData();
-		Logger.recordOutput(logPath + "offsettedRobotHeading", getRobotHeading());
+		Logger.recordOutput(logPath + "offsettedRobotHeading", getRobotHeading().getDegrees());
 		Logger.recordOutput(logPath + "headingOffset", headingOffsetSupplier.get());
 		Logger.recordOutput(logPath + "gyroInput", gyroSupplier.get());
 	}

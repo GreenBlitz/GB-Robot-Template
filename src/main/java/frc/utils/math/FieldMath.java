@@ -11,12 +11,12 @@ import frc.constants.field.Field;
 
 public class FieldMath {
 
-	public static Translation2d getRelativeTranslation(Translation2d relativeTo, Translation2d reference) {
-		return reference.minus(relativeTo);
+	public static Translation2d getRelativeTranslation(Translation2d relativeTo, Translation2d toRelative) {
+		return toRelative.minus(relativeTo);
 	}
 
-	public static Translation2d getRelativeTranslation(Pose2d relativeTo, Translation2d reference) {
-		return getRelativeTranslation(relativeTo.getTranslation(), reference).rotateBy(relativeTo.getRotation().unaryMinus());
+	public static Translation2d getRelativeTranslation(Pose2d relativeTo, Translation2d toRelative) {
+		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
 

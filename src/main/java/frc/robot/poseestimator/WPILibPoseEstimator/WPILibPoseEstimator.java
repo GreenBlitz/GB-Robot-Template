@@ -58,12 +58,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 
 
 	@Override
-	public void resetPose(Pose2d newPose) {
-		Logger.recordOutput(getLogPath() + "lastPoseResetTo/", newPose);
-		poseEstimator.resetPosition(lastOdometryAngle, lastOdometryObservation.wheelPositions(), newPose);
-	}
-
-	@Override
 	public Pose2d getEstimatedPose() {
 		return poseEstimator.getEstimatedPosition();
 	}
@@ -79,6 +73,17 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		} else {
 			return odometryObservation.gyroAngle().get();
 		}
+	}
+
+	@Override
+	public Pose2d getOdometryPose() {
+		return odometryEstimator.getPoseMeters();
+	}
+
+	@Override
+	public void resetPose(Pose2d newPose) {
+		Logger.recordOutput(getLogPath() + "lastPoseResetTo/", newPose);
+		poseEstimator.resetPosition(lastOdometryAngle, lastOdometryObservation.wheelPositions(), newPose);
 	}
 
 	@Override
@@ -104,11 +109,6 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	}
 
 	@Override
-	public Pose2d getOdometryPose() {
-		return odometryEstimator.getPoseMeters();
-	}
-
-	@Override
 	public void setHeading(Rotation2d newHeading) {
 		poseEstimator.resetRotation(newHeading);
 		odometryEstimator.resetRotation(newHeading);
@@ -129,7 +129,7 @@ public class WPILibPoseEstimator extends GBSubsystem implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getEstimatedPose().toPose2d(),
 			visionObservation.getTimestamp(),
-			WPILibPoseEstimatorConstants.VISION_STDDEVS_TRANSFORM.apply(visionObservation).asColumnVector()
+			WPILibPoseEstimatorConstants.VISION_STANDARD_DEVIATIONS_TRANSFORM.apply(visionObservation).asColumnVector()
 		);
 		this.lastVisionObservation = visionObservation;
 	}

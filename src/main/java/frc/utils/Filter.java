@@ -10,6 +10,10 @@ public class Filter<T> {
 		this.filter = filter;
 	}
 
+	public static <T> Filter<T> nonFilteringFilter() {
+		return new Filter<>(data -> true);
+	}
+
 	public boolean apply(T data) {
 		return filter.apply(data);
 	}

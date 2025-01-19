@@ -3,6 +3,7 @@ package frc.robot.vision.multivisionsources;
 import frc.constants.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
+import frc.utils.Filter;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -11,27 +12,39 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class MultiVisionSources<ReturnType extends VisionData> {
+public class MultiVisionSources<T extends VisionData> {
 
 	protected final String logPath;
-	protected final List<VisionSource<ReturnType>> visionSources;
+	protected final List<VisionSource<T>> visionSources;
 
 	@SafeVarargs
-	public MultiVisionSources(String logPath, VisionSource<ReturnType>... visionSources) {
+	public MultiVisionSources(String logPath, VisionSource<T>... visionSources) {
 		this(logPath, Arrays.asList(visionSources));
 	}
 
-	public MultiVisionSources(String logPath, List<VisionSource<ReturnType>> visionSources) {
+	public MultiVisionSources(String logPath, List<VisionSource<T>> visionSources) {
 		this.logPath = logPath;
 		this.visionSources = visionSources;
 	}
 
-	public ArrayList<ReturnType> getUnfilteredVisionData() {
+	public ArrayList<T> getUnfilteredVisionData() {
 		return createMappedCopyOfSources(visionSources, VisionSource::getVisionData);
 	}
 
-	public ArrayList<ReturnType> getFilteredVisionData() {
+	public ArrayList<T> getFilteredVisionData() {
 		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
+	}
+
+	public void applyFunctionOnAllFilters(Function<Filter<T>, Filter<T>> filterChangingFunction) {
+		for (VisionSource<T> visionSource : visionSources) {
+			visionSource.applyFunctionOnFilter(filterChangingFunction);
+		}
+	}
+
+	public void clearFilters() {
+		for (VisionSource<T> visionSource : visionSources) {
+			visionSource.clearFilter();
+		}
 	}
 
 	public void log() {
@@ -39,21 +52,21 @@ public class MultiVisionSources<ReturnType extends VisionData> {
 		logPoses(logPath + VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
 	}
 
-	protected static <ReturnType extends VisionData> ArrayList<ReturnType> createMappedCopyOfSources(
-		List<VisionSource<ReturnType>> list,
-		Function<VisionSource<ReturnType>, Optional<ReturnType>> mapping
+	protected static <T extends VisionData> ArrayList<T> createMappedCopyOfSources(
+		List<VisionSource<T>> list,
+		Function<VisionSource<T>, Optional<T>> mapping
 	) {
-		ArrayList<ReturnType> output = new ArrayList<>();
-		for (VisionSource<ReturnType> visionSource : list) {
+		ArrayList<T> output = new ArrayList<>();
+		for (VisionSource<T> visionSource : list) {
 			visionSource.update();
-			Optional<ReturnType> observation = mapping.apply(visionSource);
+			Optional<T> observation = mapping.apply(visionSource);
 			observation.ifPresent(output::add);
 		}
 		return output;
 	}
 
-	protected static <ReturnType extends VisionData> void logPoses(String logPath, List<ReturnType> observations) {
-		for (ReturnType observation : observations) {
+	protected static <T extends VisionData> void logPoses(String logPath, List<T> observations) {
+		for (T observation : observations) {
 			Logger.recordOutput(logPath + observation.getSourceName(), observation.getEstimatedPose());
 		}
 	}

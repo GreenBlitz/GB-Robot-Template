@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.math.Pair;
@@ -12,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
-import frc.constants.GlobalConstants;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.constants.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
@@ -56,10 +54,10 @@ public class Robot {
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		IGyro gyro = GyroFactory.createGyro(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/");
+		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/");
 		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
-			ModulesFactory.create(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
+			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
 			gyro,
 			GyroFactory.createSignals(gyro)
 		);

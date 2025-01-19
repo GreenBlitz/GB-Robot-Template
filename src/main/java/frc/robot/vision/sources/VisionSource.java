@@ -4,25 +4,32 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
-public interface VisionSource<ReturnType extends VisionData> {
+public interface VisionSource<T extends VisionData> {
 
 	void update();
 
-	Optional<ReturnType> getVisionData();
+	Optional<T> getVisionData();
 
-	Optional<ReturnType> getFilteredVisionData();
-
-	Filter<ReturnType> setFilter(Filter<ReturnType> newFilter);
-
-	default Filter<ReturnType> clearFilter() {
-		return setFilter(new Filter<>(data -> true));
+	default Optional<T> getFilteredVisionData() {
+		Optional<T> visionData = getVisionData();
+		if (getVisionData().isPresent() && getFilter().apply(visionData.get())) {
+			return visionData;
+		}
+		return Optional.empty();
 	}
 
-	Filter<ReturnType> applyOnFilter(
-		BiFunction<Filter<ReturnType>, Filter<ReturnType>, Filter<ReturnType>> applicationFunction,
-		Filter<ReturnType> filterToApplyWith
-	);
+	void setFilter(Filter<T> newFilter);
+
+	Filter<T> getFilter();
+
+	default void clearFilter() {
+		setFilter(Filter.nonFilteringFilter());
+	}
+
+	default void applyFunctionOnFilter(Function<Filter<T>, Filter<T>> filterChangingFunction) {
+		setFilter(filterChangingFunction.apply(getFilter()));
+	}
 
 }

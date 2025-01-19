@@ -9,6 +9,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -38,6 +39,22 @@ public class SwerveStateHandler {
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
+		}
+		if (swerveState.getAimAssist() == AimAssist.ANGLE) {
+			return AimAssistMath.getRotationAssistedChassisSpeeds(
+				speeds,
+				robotPoseSupplier.get().get().getRotation(),
+				Rotation2d.fromDegrees(180),
+				swerveConstants);
+		}
+		if (swerveState.getAimAssist() == AimAssist.OBJECT) {
+			return AimAssistMath.getObjectAssistedSpeeds(
+				speeds,
+				robotPoseSupplier.get().get(),
+				objectTranslationSupplier.get().get(),
+				swerveConstants,
+				swerveState
+			);
 		}
 		return speeds;
 	}

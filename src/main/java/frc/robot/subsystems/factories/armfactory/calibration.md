@@ -26,4 +26,4 @@ software forward limit
 software reverse limit
 
 ##### Ratio
-sensor to mechanism ratio~~
+sensor to mechanism ratio

@@ -10,6 +10,8 @@ public class RobotHeadingEstimatorConstants {
 
 	public static final double DEFAULT_VISION_STANDARD_DEVIATION = 0.03;
 
+	public static final int ESTIMATION_VISION_PAIR_BUFFER_SIZE = 50;
+
 	public static final int ANGLE_ACCUMULATOR_SIZE = 30;
 
 	public static final Rotation2d VISION_HEADING_AVERAGE_COMPARISON_TOLERANCE = Rotation2d.fromDegrees(1);

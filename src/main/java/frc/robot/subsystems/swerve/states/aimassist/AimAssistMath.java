@@ -54,7 +54,11 @@ public class AimAssistMath {
 
 		SwerveMath.fieldToRobotRelativeSpeeds(speeds, robotPose.getRotation());
 
-		ChassisSpeeds newSpeed = new ChassisSpeeds(speeds.vxMetersPerSecond, pidHorizontalToObjectOutputVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
+		ChassisSpeeds newSpeed = new ChassisSpeeds(
+			speeds.vxMetersPerSecond,
+			pidHorizontalToObjectOutputVelocityMetersPerSecond,
+			speeds.omegaRadiansPerSecond
+		);
 		if (swerveState.getDriveMode() == DriveRelative.FIELD_RELATIVE) {
 			newSpeed = SwerveMath.robotToFieldRelativeSpeeds(newSpeed, robotPose.getRotation());
 		}

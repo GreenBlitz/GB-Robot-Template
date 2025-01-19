@@ -5,10 +5,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
+import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
+import frc.utils.math.PoseMath;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 
 import java.util.Optional;
@@ -25,7 +28,8 @@ public class SwerveStateHandler {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = Optional.empty();
-		this.objectTranslationSupplier = Optional::empty;
+		Translation2d translation2d = new Translation2d(7, 3);
+		this.objectTranslationSupplier = ()->Optional.of(translation2d);
 	}
 
 	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
@@ -40,23 +44,34 @@ public class SwerveStateHandler {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
-		if (swerveState.getAimAssist() == AimAssist.ANGLE) {
-			return AimAssistMath.getRotationAssistedChassisSpeeds(
-				speeds,
-				robotPoseSupplier.get().get().getRotation(),
-				Rotation2d.fromDegrees(180),
-				swerveConstants);
+		if (swerveState.getAimAssist() == AimAssist.AMP) {
+			return handleNoteAimAssist(speeds, robotPoseSupplier.get().get(), objectTranslationSupplier.get().get(), swerveState);
 		}
-		if (swerveState.getAimAssist() == AimAssist.OBJECT) {
-			return AimAssistMath.getObjectAssistedSpeeds(
-				speeds,
-				robotPoseSupplier.get().get(),
-				objectTranslationSupplier.get().get(),
-				swerveConstants,
-				swerveState
-			);
+		if (swerveState.getAimAssist() == AimAssist.SPEAKER && robotPoseSupplier.isPresent()) {
+			return handleSpeakerAssist(speeds, robotPoseSupplier.get().get());
 		}
+		if (swerveState.getAimAssist() == AimAssist.NONE && robotPoseSupplier.isPresent() && objectTranslationSupplier.get().isPresent()) {
+			return handleNoteAimAssist(speeds, robotPoseSupplier.get().get(), objectTranslationSupplier.get().get(), swerveState);
+		}
+
 		return speeds;
+	}
+
+	private ChassisSpeeds handleNoteAimAssist(ChassisSpeeds speeds, Pose2d robotPose, Translation2d objectTranslation, SwerveState swerveState) {
+		return AimAssistMath.getObjectAssistedSpeeds(speeds, robotPose, objectTranslation, swerveConstants, swerveState);
+	}
+
+	private ChassisSpeeds handleAmpAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
+		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, Field.getAngleToAmp(), swerveConstants);
+	}
+
+	private ChassisSpeeds handleSpeakerAssist(ChassisSpeeds speeds, Pose2d robotPose) {
+		return AimAssistMath.getRotationAssistedChassisSpeeds(
+			speeds,
+			robotPose.getRotation(),
+			PoseMath.getRelativeTranslation(robotPose.getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle(),
+			swerveConstants
+		);
 	}
 
 

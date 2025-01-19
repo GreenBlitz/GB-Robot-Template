@@ -35,7 +35,7 @@ public class VisionConstants {
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
 
-	public static final int NO_APRILTAG_ID = -2;
+	public static final int NO_APRILTAG_ID = -1;
 
 	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE = false;
 

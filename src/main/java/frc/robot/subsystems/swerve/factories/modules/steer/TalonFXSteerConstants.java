@@ -55,7 +55,7 @@ class TalonFXSteerConstants {
 
 		steerConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
@@ -65,7 +65,7 @@ class TalonFXSteerConstants {
 		steerConfig.Slot0.kS = 0;
 		steerConfig.Slot0.kV = 0;
 		steerConfig.Slot0.kA = 0;
-		steerConfig.Slot0.kP = 10;
+		steerConfig.Slot0.kP = 30;
 		steerConfig.Slot0.kI = 0;
 		steerConfig.Slot0.kD = 0;
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;

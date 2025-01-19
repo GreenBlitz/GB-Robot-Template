@@ -13,8 +13,11 @@ public class EndEffectorCommandsBuilder {
 		this.endEffector = endEffector;
 	}
 
+	//@formatter:off
 	public Command setPower(double power) {
-		return endEffector.asSubsystemCommand(new RunCommand(() -> endEffector.setPower(power)), "Set power to " + power);
+		return endEffector.asSubsystemCommand(new RunCommand(() -> endEffector.setPower(power)),
+				"Set power to " + power
+		);
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
@@ -23,5 +26,7 @@ public class EndEffectorCommandsBuilder {
 			"Set power by supplier, current power is " + powerSupplier.getAsDouble()
 		);
 	}
+	//@formatter:off
+
 
 }

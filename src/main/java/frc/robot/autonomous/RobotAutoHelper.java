@@ -67,8 +67,9 @@ public class RobotAutoHelper {
 	public static Command followPathOrDriveToPathEnd(Robot robot, PathPlannerPath path) {
 		return robot.getSwerve()
 			.getCommandsBuilder()
-			.followPathOrDriveToPathEnd(robot.getPoseEstimator()::getCurrentPose, path)
-			.until(
+			.followPathOrDriveToPathEnd(
+				robot.getPoseEstimator()::getCurrentPose,
+				path,
 				() -> ToleranceMath.isNear(
 					getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)),
 					robot.getPoseEstimator().getCurrentPose(),

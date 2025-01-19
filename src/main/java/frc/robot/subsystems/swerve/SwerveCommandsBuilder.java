@@ -25,6 +25,7 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -164,13 +165,13 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path) {
+	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path, BooleanSupplier endCondition) {
 		return new ConditionalCommand(
 			RobotAutoHelper.followPath(path)
 				.andThen(pidToPose(currentPose, RobotAutoHelper.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
 			driveToPose(currentPose, () -> RobotAutoHelper.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
 			() -> RobotAutoHelper.isRobotCloseToPathBeginning(path, currentPose, AutonomousConstants.PATHFINDING_DEADBAND_METERS)
-		).andThen(new InstantCommand(() -> swerve.driveByState(0, 0, 0, SwerveState.DEFAULT_PATH_PLANNER), swerve));
+		).until(endCondition).andThen(new InstantCommand(() -> swerve.driveByState(0, 0, 0, SwerveState.DEFAULT_PATH_PLANNER), swerve));
 	}
 
 

@@ -43,12 +43,12 @@ public class Arm extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
-	protected void setTargetPosition(Rotation2d position) {
-		motor.applyRequest(positionRequest.withSetPoint(position));
-	}
-
 	public double getVoltage() {
 		return voltageSignal.getLatestValue();
+	}
+
+	protected void setTargetPosition(Rotation2d position) {
+		motor.applyRequest(positionRequest.withSetPoint(position));
 	}
 
 	protected void setVoltage(double voltage) {
@@ -63,12 +63,8 @@ public class Arm extends GBSubsystem {
 		motor.setPower(power);
 	}
 
-	protected void stayInPlace() {
-		setTargetPosition(positionSignal.getLatestValue());
-	}
-
-	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
-		return ToleranceMath.isNearWrapped(position, positionSignal.getLatestValue(), tolerance);
+	private void updateInputs() {
+		motor.updateInputs(positionSignal, voltageSignal);
 	}
 
 	@Override
@@ -77,8 +73,12 @@ public class Arm extends GBSubsystem {
 		motor.updateSimulation();
 	}
 
-	private void updateInputs() {
-		motor.updateInputs(positionSignal, voltageSignal);
+	protected void stayInPlace() {
+		setTargetPosition(positionSignal.getLatestValue());
+	}
+
+	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
+		return ToleranceMath.isNearWrapped(position, positionSignal.getLatestValue(), tolerance);
 	}
 
 }

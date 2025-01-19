@@ -15,19 +15,14 @@ public class EndEffectorCommandsBuilder {
 	}
 
 	public Command setPower(double power) {
-		return endEffector
-			.asSubsystemCommand(new RunCommand(() -> endEffector.setPower(power), endEffector), "set end effector rollers power to: " + power);
+		return endEffector.asSubsystemCommand(new RunCommand(() -> endEffector.setPower(power)), "Set power to " + power);
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
 		return endEffector.asSubsystemCommand(
-			new RunCommand(() -> endEffector.setPower(powerSupplier.getAsDouble()), endEffector),
-			"set end effector rollers power by supplier, current power: " + powerSupplier.getAsDouble()
+			new RunCommand(() -> endEffector.setPower(powerSupplier.getAsDouble())),
+			"Set power by supplier, current power is " + powerSupplier.getAsDouble()
 		);
-	}
-
-	public Command stop() {
-		return endEffector.asSubsystemCommand(new InstantCommand(endEffector::stop, endEffector), "stopped end effector rollers");
 	}
 
 }

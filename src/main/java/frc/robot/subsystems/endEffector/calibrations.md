@@ -1,6 +1,5 @@
 calibrations:
 ----------------
 - [ ] Motor id
-- [ ] Motor Speeds
-- [ ] Beam breaker channels
-- [ ] Conversion factors
+- [ ] Motor powers
+- [ ] Which beam breaker is forward and Which is reversed

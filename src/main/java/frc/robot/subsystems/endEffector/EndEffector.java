@@ -15,7 +15,7 @@ public class EndEffector extends GBSubsystem {
 	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
 
-	public EndEffector(IMotor roller, IDigitalInput frontBeamBreaker, IDigitalInput backBeamBreaker, String logPath) {
+	public EndEffector( String logPath, IMotor roller, IDigitalInput frontBeamBreaker, IDigitalInput backBeamBreaker) {
 		super(logPath);
 		this.roller = roller;
 
@@ -58,12 +58,12 @@ public class EndEffector extends GBSubsystem {
 	private void updateInputs() {
 		frontBeamBreaker.updateInputs(frontBeamBreakerInputs);
 		backBeamBreaker.updateInputs(backBeamBreakerInputs);
-		log();
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
+		log();
 	}
 
 }

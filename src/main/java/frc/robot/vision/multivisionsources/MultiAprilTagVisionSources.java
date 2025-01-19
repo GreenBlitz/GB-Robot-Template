@@ -11,6 +11,7 @@ import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
+import frc.robot.vision.sources.limelights.LimeLightSource;
 import frc.utils.alerts.Alert;
 import org.littletonrobotics.junction.Logger;
 
@@ -95,19 +96,19 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		return extractHeadingDataFromMappedSources(visionSources, IndpendentHeadingVisionSource::getFilteredHeadingData);
 	}
 
-	private void updateMegaTagInDynamicLimelights() {
+	private void updateMegaTagMethodsUsedInDynamicLimelights() {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof DynamicSwitchingLimelight dynamicSwitchingLimelight) {
 				dynamicSwitchingLimelight.setUseRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
-			} else if (!useRobotHeadingForPoseEstimating) {
-				new Alert(Alert.AlertType.WARNING, "unableToSwitchMegaTagsInNonDynamicLimelight").report();
+			} else if (visionSource instanceof LimeLightSource) {
+				new Alert(Alert.AlertType.WARNING, "unableToSwitchMegaTagMethodInNonDynamicLimelight").report();
 			}
 		}
 	}
 
 	public void setUseRobotHeadingForPoseEstimating(boolean useRobotHeadingForPoseEstimating) {
 		this.useRobotHeadingForPoseEstimating = useRobotHeadingForPoseEstimating;
-		updateMegaTagInDynamicLimelights();
+		updateMegaTagMethodsUsedInDynamicLimelights();
 		logMegaTagMethod();
 	}
 

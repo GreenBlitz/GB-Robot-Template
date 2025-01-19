@@ -44,14 +44,14 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 
 	@Override
 	public Optional<AprilTagVisionData> getVisionData() {
-		return useGyroForPoseEstimating ? independentPoseEstimatingLimelight.getVisionData() : headingRequiredLimelight.getVisionData();
+		return useGyroForPoseEstimating ? headingRequiredLimelight.getVisionData() : independentPoseEstimatingLimelight.getVisionData();
 	}
 
 	@Override
 	public Optional<AprilTagVisionData> getFilteredVisionData() {
 		return useGyroForPoseEstimating
-			? independentPoseEstimatingLimelight.getFilteredVisionData()
-			: headingRequiredLimelight.getFilteredVisionData();
+			? headingRequiredLimelight.getFilteredVisionData()
+			: independentPoseEstimatingLimelight.getFilteredVisionData();
 	}
 
 	@Override

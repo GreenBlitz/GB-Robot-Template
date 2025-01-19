@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
@@ -20,7 +21,9 @@ import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
+import frc.utils.math.ToleranceMath;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -65,6 +68,7 @@ public class Robot {
 	private void configureAuto() {
 		Supplier<Command> scoreL4Command = () -> superStructure.setState(RobotState.SCORE_L4);
 		Supplier<Command> feedingCommand = () -> superStructure.setState(RobotState.FEED).withTimeout(2);
+		Function<Pose2d, Boolean> isCloseToPosition = pose2d -> ToleranceMath.isNear(pose2d.getTranslation(), getPoseEstimator().getCurrentPose().getTranslation(), 0.6);
 
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
@@ -75,7 +79,7 @@ public class Robot {
 		autoLineAutosChooser = new AutonomousChooser("AutoLineAutosChooser", AutosBuilder.getAllAutoLineAutos(this, scoreL4Command));
 		feedScoreAutosChooser = new AutonomousChooser(
 			"FeedScoreAutosChooser",
-			AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command)
+			AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command, isCloseToPosition, isCloseToPosition)
 		);
 	}
 

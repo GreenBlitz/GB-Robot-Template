@@ -15,9 +15,9 @@ public class AutonomousConstants {
 
 	public static final double PATHFINDING_DEADBAND_METERS = 0.5;
 
-	public static final double DISTANCE_FROM_TARGET_TOLERANCE_METERS = 0.1;
+	public static final double DISTANCE_FROM_TARGET_TOLERANCE_METERS = 0.02;
 
-	public static final Rotation2d TARGET_ANGLE_TOLERANCE = Rotation2d.fromDegrees(5);
+	public static final Rotation2d TARGET_ANGLE_TOLERANCE = Rotation2d.fromDegrees(1.5);
 
 	public static final RobotConfig SYNCOPA_ROBOT_CONFIG = new RobotConfig(
 		60,

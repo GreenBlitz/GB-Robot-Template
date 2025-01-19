@@ -68,7 +68,8 @@ public class Robot {
 	private void configureAuto() {
 		Supplier<Command> scoreL4Command = () -> superStructure.setState(RobotState.SCORE_L4);
 		Supplier<Command> feedingCommand = () -> superStructure.setState(RobotState.FEED).withTimeout(2);
-		Function<Pose2d, Boolean> isCloseToPosition = pose2d -> ToleranceMath.isNear(pose2d.getTranslation(), getPoseEstimator().getCurrentPose().getTranslation(), 0.6);
+		Function<Pose2d, Boolean> isCloseToPosition = pose2d -> ToleranceMath
+			.isNear(pose2d.getTranslation(), getPoseEstimator().getCurrentPose().getTranslation(), 0.6);
 
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,

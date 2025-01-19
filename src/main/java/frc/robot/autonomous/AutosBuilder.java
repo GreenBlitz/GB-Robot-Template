@@ -31,7 +31,10 @@ public class AutosBuilder {
 		Function<Pose2d, Boolean> feedingStartCondition,
 		Function<Pose2d, Boolean> scoringStartCondition
 	) {
-		return List.of(() -> US_L(robot, feedingCommand, scoringCommand, feedingStartCondition, scoringStartCondition), () -> LS_C(robot, feedingCommand, scoringCommand, feedingStartCondition, scoringStartCondition));
+		return List.of(
+			() -> US_L(robot, feedingCommand, scoringCommand, feedingStartCondition, scoringStartCondition),
+			() -> LS_C(robot, feedingCommand, scoringCommand, feedingStartCondition, scoringStartCondition)
+		);
 	}
 
 	private static GBAuto AL2I(Robot robot, Supplier<Command> scoringCommand) {
@@ -64,42 +67,64 @@ public class AutosBuilder {
 		);
 	}
 
-	private static GBAuto US_L(Robot robot, Supplier<Command> feedingCommand, Supplier<Command> scoringCommand, Function<Pose2d, Boolean> feedingStartCondition, Function<Pose2d, Boolean> scoringStartCondition) {
+	private static GBAuto US_L(
+		Robot robot,
+		Supplier<Command> feedingCommand,
+		Supplier<Command> scoringCommand,
+		Function<Pose2d, Boolean> feedingStartCondition,
+		Function<Pose2d, Boolean> scoringStartCondition
+	) {
 		Optional<PathPlannerPath> pathIToUpperCoralStation = AutoPath.I_TO_UPPER_CORAL_STATION.getPathOptional();
 		Optional<PathPlannerPath> pathUpperCoralStationToL = AutoPath.UPPER_CORAL_STATION_TO_L.getPathOptional();
 
 		return new GBAuto(
-			pathIToUpperCoralStation
-				.map(
-					pathToCoralStation -> pathUpperCoralStationToL
-						.map(
-							pathFromCoralStation -> SequencesBuilder
-								.feedAndScore(robot, pathToCoralStation, pathFromCoralStation, feedingCommand, scoringCommand, () -> feedingStartCondition.apply(PathPlannerUtils.getLastPathPose(pathToCoralStation)), () -> scoringStartCondition.apply(PathPlannerUtils.getLastPathPose(pathFromCoralStation)))
+			pathIToUpperCoralStation.map(
+				pathToCoralStation -> pathUpperCoralStationToL
+					.map(
+						pathFromCoralStation -> SequencesBuilder.feedAndScore(
+							robot,
+							pathToCoralStation,
+							pathFromCoralStation,
+							feedingCommand,
+							scoringCommand,
+							() -> feedingStartCondition.apply(PathPlannerUtils.getLastPathPose(pathToCoralStation)),
+							() -> scoringStartCondition.apply(PathPlannerUtils.getLastPathPose(pathFromCoralStation))
 						)
-						.orElseGet(Commands::none)
-				)
-				.orElseGet(Commands::none),
+					)
+					.orElseGet(Commands::none)
+			).orElseGet(Commands::none),
 			pathIToUpperCoralStation.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
 			"US-L",
 			pathIToUpperCoralStation.isPresent() && pathUpperCoralStationToL.isPresent()
 		);
 	}
 
-	private static GBAuto LS_C(Robot robot, Supplier<Command> feedingCommand, Supplier<Command> scoringCommand, Function<Pose2d, Boolean> feedingStartCondition, Function<Pose2d, Boolean> scoringStartCondition) {
+	private static GBAuto LS_C(
+		Robot robot,
+		Supplier<Command> feedingCommand,
+		Supplier<Command> scoringCommand,
+		Function<Pose2d, Boolean> feedingStartCondition,
+		Function<Pose2d, Boolean> scoringStartCondition
+	) {
 		Optional<PathPlannerPath> pathFToLowerCoralStation = AutoPath.F_TO_LOWER_CORAL_STATION.getPathOptional();
 		Optional<PathPlannerPath> pathLowerCoralStationToC = AutoPath.LOWER_CORAL_STATION_TO_C.getPathOptional();
 
 		return new GBAuto(
-			pathFToLowerCoralStation
-				.map(
-					pathToCoralStation -> pathLowerCoralStationToC
-						.map(
-							pathFromCoralStation -> SequencesBuilder
-								.feedAndScore(robot, pathToCoralStation, pathFromCoralStation, feedingCommand, scoringCommand, () -> feedingStartCondition.apply(PathPlannerUtils.getLastPathPose(pathToCoralStation)), () -> scoringStartCondition.apply(PathPlannerUtils.getLastPathPose(pathFromCoralStation)))
+			pathFToLowerCoralStation.map(
+				pathToCoralStation -> pathLowerCoralStationToC
+					.map(
+						pathFromCoralStation -> SequencesBuilder.feedAndScore(
+							robot,
+							pathToCoralStation,
+							pathFromCoralStation,
+							feedingCommand,
+							scoringCommand,
+							() -> feedingStartCondition.apply(PathPlannerUtils.getLastPathPose(pathToCoralStation)),
+							() -> scoringStartCondition.apply(PathPlannerUtils.getLastPathPose(pathFromCoralStation))
 						)
-						.orElseGet(Commands::none)
-				)
-				.orElseGet(Commands::none),
+					)
+					.orElseGet(Commands::none)
+			).orElseGet(Commands::none),
 			pathFToLowerCoralStation.map(PathPlannerUtils::getPathStartingPose).orElse(Pose2d.kZero),
 			"LS-C",
 			pathFToLowerCoralStation.isPresent() && pathLowerCoralStationToC.isPresent()

@@ -16,9 +16,15 @@ public class SequencesBuilder {
 		return new ParallelCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
 	}
 
-	public static Command commandWhenConditionIsMetDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, BooleanSupplier condition) {
+	public static Command commandWhenConditionIsMetDuringPath(
+		Robot robot,
+		PathPlannerPath path,
+		Supplier<Command> commandSupplier,
+		BooleanSupplier condition
+	) {
 		return commandDuringPath(robot, path, () -> new WaitUntilCommand(condition).andThen(commandSupplier.get()));
 	}
+
 	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
 		return new SequentialCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
 	}

@@ -22,8 +22,8 @@ public class EndEffector extends GBSubsystem {
 	public EndEffector(
 		String logPath,
 		ControllableMotor roller,
-		SuppliedDoubleSignal powerSignal,
-		SuppliedDoubleSignal currentSignal,
+		InputSignal<Double> powerSignal,
+		InputSignal<Double> currentSignal,
 		IDigitalInput frontBeamBreaker,
 		IDigitalInput backBeamBreaker
 	) {
@@ -83,12 +83,12 @@ public class EndEffector extends GBSubsystem {
 		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", isCoralInBack());
 	}
 
-	public void stop() {
-		roller.stop();
-	}
-
 	public void setBrake(boolean brake) {
 		roller.setBrake(brake);
+	}
+
+	public void stop() {
+		roller.stop();
 	}
 
 	public void setPower(double power) {

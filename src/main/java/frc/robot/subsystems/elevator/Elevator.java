@@ -28,7 +28,7 @@ public class Elevator extends GBSubsystem {
 	private final DigitalInputInputsAutoLogged digitalInputInputs;
 
 	private final ElevatorCommandsBuilder commandsBuilder;
-	private final SysIdCalibrator firstMotorSysIdCalibrator;
+	private final SysIdCalibrator sysIdCalibrator;
 
 	private boolean hasBeenResetBySwitch;
 
@@ -57,7 +57,7 @@ public class Elevator extends GBSubsystem {
 		hasBeenResetBySwitch = false;
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
 
-		this.firstMotorSysIdCalibrator = new SysIdCalibrator(
+		this.sysIdCalibrator = new SysIdCalibrator(
 			new SysIdCalibrator.SysIdConfigInfo(firstMotor.getSysidConfigInfo().config(), true),
 			this,
 			this::setVoltage
@@ -70,8 +70,8 @@ public class Elevator extends GBSubsystem {
 		return commandsBuilder;
 	}
 
-	public SysIdCalibrator getFirstMotorSysIdCalibrator() {
-		return firstMotorSysIdCalibrator;
+	public SysIdCalibrator getSysIdCalibrator() {
+		return sysIdCalibrator;
 	}
 
 	public double getElevatorPositionMeters() {

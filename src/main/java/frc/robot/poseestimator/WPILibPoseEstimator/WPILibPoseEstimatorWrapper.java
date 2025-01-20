@@ -81,12 +81,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	@Override
-	public void resetPose(Pose2d newPose) {
-		Logger.recordOutput(getLogPath() + "lastPoseResetTo/", newPose);
-		poseEstimator.resetPosition(lastOdometryAngle, lastOdometryObservation.wheelPositions(), newPose);
-	}
-
-	@Override
 	public void updateOdometry(OdometryObservation[] odometryObservations) {
 		for (OdometryObservation odometryObservation : odometryObservations) {
 			Twist2d changeInPose = kinematics.toTwist2d(lastOdometryObservation.wheelPositions(), odometryObservation.wheelPositions());
@@ -102,19 +96,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	@Override
-	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
-		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
-		odometryEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
-		this.lastOdometryObservation = new OdometryObservation(wheelPositions, Optional.of(gyroAngle), TimeUtils.getCurrentTimeSeconds());
-	}
-
-	@Override
-	public void setHeading(Rotation2d newHeading) {
-		poseEstimator.resetRotation(newHeading);
-		odometryEstimator.resetRotation(newHeading);
-	}
-
-	@Override
 	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {
 		for (AprilTagVisionData visionData : robotPoseVisionData) {
 			addVisionMeasurement(visionData);
@@ -123,6 +104,25 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 	private void updateOdometryPose(OdometryObservation observation, Twist2d changeInPose) {
 		odometryEstimator.update(getOdometryAngle(observation, changeInPose), observation.wheelPositions());
+	}
+
+	@Override
+	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
+		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
+		odometryEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
+		this.lastOdometryObservation = new OdometryObservation(wheelPositions, Optional.of(gyroAngle), TimeUtils.getCurrentTimeSeconds());
+	}
+
+	@Override
+	public void resetPose(Pose2d newPose) {
+		Logger.recordOutput(getLogPath() + "lastPoseResetTo/", newPose);
+		poseEstimator.resetPosition(lastOdometryAngle, lastOdometryObservation.wheelPositions(), newPose);
+	}
+
+	@Override
+	public void setHeading(Rotation2d newHeading) {
+		poseEstimator.resetRotation(newHeading);
+		odometryEstimator.resetRotation(newHeading);
 	}
 
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {

@@ -1,24 +1,37 @@
 package frc.utils.auto;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.autonomous.RobotAutoHelper;
+import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
+import frc.utils.math.ToleranceMath;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class PathPlannerUtils {
 
@@ -88,6 +101,44 @@ public class PathPlannerUtils {
 
 	private static void reportAlert(Alert.AlertType alertType, String message) {
 		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + message).report();
+	}
+
+	public static void configPathPlanner(
+		Supplier<Pose2d> poseSupplier,
+		Consumer<Pose2d> resetPose,
+		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+		Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
+		PPHolonomicDriveController holonomicDriveController,
+		RobotConfig robotConfig,
+		BooleanSupplier shouldFlipPath,
+		GBSubsystem... driveRequirements
+	) {
+		AutoBuilder.configure(
+			poseSupplier,
+			resetPose,
+			robotRelativeSpeedsSupplier,
+			robotRelativeSpeedsSetter,
+			holonomicDriveController,
+			robotConfig,
+			shouldFlipPath,
+			driveRequirements
+		);
+	}
+
+	public static Command createPathOnTheFly(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
+		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
+		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
+		path.preventFlipping = true;
+		return RobotAutoHelper.followPath(path);
+	}
+
+	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
+		return ToleranceMath
+			.isNear(getAllianceRelativePose(path.getPathPoses().get(0)).getTranslation(), currentPose.get().getTranslation(), toleranceMeters);
+	}
+
+	public static Pose2d getAllianceRelativePose(Pose2d bluePose) {
+		return AutoBuilder.shouldFlip() ? FlippingUtil.flipFieldPose(bluePose) : bluePose;
 	}
 
 }

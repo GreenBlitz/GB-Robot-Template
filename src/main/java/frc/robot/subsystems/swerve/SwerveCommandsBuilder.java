@@ -168,9 +168,9 @@ public class SwerveCommandsBuilder {
 	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path, BooleanSupplier endCondition) {
 		return new ConditionalCommand(
 			RobotAutoHelper.followPath(path)
-				.andThen(pidToPose(currentPose, RobotAutoHelper.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
-			driveToPose(currentPose, () -> RobotAutoHelper.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
-			() -> RobotAutoHelper.isRobotCloseToPathBeginning(path, currentPose, AutonomousConstants.PATHFINDING_DEADBAND_METERS)
+				.andThen(pidToPose(currentPose, PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
+			driveToPose(currentPose, () -> PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
+			() -> PathPlannerUtils.isRobotCloseToPathBeginning(path, currentPose, AutonomousConstants.PATHFINDING_DEADBAND_METERS)
 		).until(endCondition).andThen(new InstantCommand(() -> swerve.driveByState(0, 0, 0, SwerveState.DEFAULT_PATH_PLANNER), swerve));
 	}
 
@@ -189,7 +189,7 @@ public class SwerveCommandsBuilder {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 		if (distanceFromTarget < AutonomousConstants.PATHFINDING_DEADBAND_METERS) {
-			pathFollowingCommand = RobotAutoHelper.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
 			pathFollowingCommand = RobotAutoHelper.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}

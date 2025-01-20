@@ -48,10 +48,13 @@ public class RobotHeadingEstimator {
 		double visionStandardDeviation,
 		double visionComparedToEstimationStandardDeviation
 	) {
-		if (StandardDeviations.calculateStandardDeviations(estimationVisionBuffer, estimationVisionPair -> {
-			return AngleUtils.wrappingAbs(estimationVisionPair.getFirst()).getRotations()
-				- AngleUtils.wrappingAbs(estimationVisionPair.getSecond()).getRotations();
-		}) < visionComparedToEstimationStandardDeviation) {
+		if (
+			StandardDeviations.calculateStandardDeviations(
+				estimationVisionBuffer,
+				estimationVisionPair -> AngleUtils.wrappingAbs(estimationVisionPair.getFirst()).getRotations()
+					- AngleUtils.wrappingAbs(estimationVisionPair.getSecond()).getRotations()
+			) < visionComparedToEstimationStandardDeviation
+		) {
 			updateVisionHeading(visionHeadingData, visionStandardDeviation);
 		} else {
 			lastVisionAngle = Optional.of(visionHeadingData.heading());

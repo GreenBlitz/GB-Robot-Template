@@ -3,7 +3,7 @@ import groovy.json.JsonSlurper
 
 plugins {
 	id "java"
-	id "edu.wpi.first.GradleRIO" version "2025.1.1-beta-1"
+	id "edu.wpi.first.GradleRIO" version "2025.2.1"
 	id "com.diffplug.spotless" version "6.25.0"
 }
 
@@ -87,8 +87,8 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	def akitJson = new JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
-	annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
+	def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
+	annotationProcessor "org.littletonrobotics.akit:akit-autolog:$akitJson.version"
 }
 
 
@@ -101,11 +101,6 @@ repositories {
 		}
 	}
 	mavenLocal()
-}
-
-
-configurations.configureEach {
-	exclude group: "edu.wpi.first.wpilibj"
 }
 
 test {
@@ -189,13 +184,13 @@ tasks.register('setVisualVMHost') {
 	}
 }
 
-compileJava.finalizedBy('checkAkitInstall')
-tasks.register('checkAkitInstall', JavaExec) {
-	group = 'execution'
-	dependsOn('classes')
-	mainClass = "org.littletonrobotics.junction.CheckInstall"
-	classpath = sourceSets.main.runtimeClasspath
-}
+//compileJava.finalizedBy('checkAkitInstall')
+//tasks.register('checkAkitInstall', JavaExec) {
+//	group = 'execution'
+//	dependsOn('classes')
+//	mainClass = "org.littletonrobotics.junction.CheckInstall"
+//	classpath = sourceSets.main.runtimeClasspath
+//}
 
 tasks.named("deploy").configure { finalizedBy('runComputerPrograms') }
 tasks.register('runComputerPrograms', JavaExec) {

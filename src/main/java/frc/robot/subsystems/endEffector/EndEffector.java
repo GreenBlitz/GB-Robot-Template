@@ -3,6 +3,7 @@ package frc.robot.subsystems.endEffector;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -10,8 +11,8 @@ import org.littletonrobotics.junction.Logger;
 public class EndEffector extends GBSubsystem {
 
 	private final ControllableMotor roller;
-	private final SuppliedDoubleSignal powerSignal;
-	private final SuppliedDoubleSignal currentSignal;
+	private final InputSignal<Double> powerSignal;
+	private final InputSignal<Double> currentSignal;
 	private final IDigitalInput frontBeamBreaker;
 	private final DigitalInputInputsAutoLogged frontBeamBreakerInputs;
 	private final IDigitalInput backBeamBreaker;
@@ -69,9 +70,10 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	private void updateInputs() {
+		roller.updateSimulation();
+		roller.updateInputs(powerSignal, currentSignal);
 		frontBeamBreaker.updateInputs(frontBeamBreakerInputs);
 		backBeamBreaker.updateInputs(backBeamBreakerInputs);
-		roller.updateInputs(powerSignal, currentSignal);
 		Logger.processInputs(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", frontBeamBreakerInputs);
 		Logger.processInputs(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", backBeamBreakerInputs);
 	}
@@ -85,12 +87,12 @@ public class EndEffector extends GBSubsystem {
 		roller.stop();
 	}
 
-	public void setPower(double power) {
-		roller.setPower(power);
-	}
-
 	public void setBrake(boolean brake) {
 		roller.setBrake(brake);
+	}
+
+	public void setPower(double power) {
+		roller.setPower(power);
 	}
 
 }

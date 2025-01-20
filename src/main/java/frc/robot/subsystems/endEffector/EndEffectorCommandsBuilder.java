@@ -24,7 +24,7 @@ public class EndEffectorCommandsBuilder {
 	public Command setPower(DoubleSupplier powerSupplier) {
 		return endEffector.asSubsystemCommand(
 			new RunCommand(() -> endEffector.setPower(powerSupplier.getAsDouble())),
-			"Set power by supplier, power is " + powerSupplier.getAsDouble()
+			"Set power by supplier"
 		);
 	}
 	//@formatter:off

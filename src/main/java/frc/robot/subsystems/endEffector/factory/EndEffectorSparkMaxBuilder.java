@@ -20,12 +20,14 @@ import frc.robot.subsystems.endEffector.EndEffectorConstants;
 public class EndEffectorSparkMaxBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
-	public static final boolean IS_INVERTED = false;
+	private static final boolean IS_INVERTED = false;
+	private static final boolean SET_BRAKE = false;
+	private static final int CURRENT_LIMIT = 30;
 
 	private static final double POSITION_CONVERSION_FACTOR = 1;
-	private final static double MOMENT_OF_INERTIA = 0.001;
+	private static final double MOMENT_OF_INERTIA = 0.001;
 
-	private static final Double DEBOUNCE_TIME = 0.02;
+	private static final Double DEBOUNCE_TIME = 0.1;
 
 	private static enum LimitSwitchDirection {
 
@@ -37,8 +39,10 @@ public class EndEffectorSparkMaxBuilder {
 	private static void configMotor(SparkMaxMotor sparkMaxMotor) {
 		SparkMaxConfig config = new SparkMaxConfig();
 		config.inverted(IS_INVERTED);
+		config.smartCurrentLimit(CURRENT_LIMIT);
 
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
+		sparkMaxMotor.setBrake(SET_BRAKE);
 	}
 
 	private static BrushlessSparkMAXMotor generateMotor(String logPath, SparkMaxWrapper sparkMaxWrapper) {
@@ -70,11 +74,8 @@ public class EndEffectorSparkMaxBuilder {
 	public static EndEffector generate(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
 
-		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal(EndEffectorConstants.LOG_PATH + "Power/", sparkMaxWrapper::get);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal(
-			EndEffectorConstants.LOG_PATH + "Current/",
-			sparkMaxWrapper::getOutputCurrent
-		);
+		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("End effector power", sparkMaxWrapper::get);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("End effector current", sparkMaxWrapper::getOutputCurrent);
 
 		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "Roller/", sparkMaxWrapper);
 

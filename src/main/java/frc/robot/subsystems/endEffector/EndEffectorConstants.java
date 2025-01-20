@@ -1,6 +1,5 @@
 package frc.robot.subsystems.endEffector;
 
-
 import frc.robot.RobotConstants;
 
 public class EndEffectorConstants {

@@ -13,6 +13,7 @@ import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.*;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.endEffector.EndEffectorConstants;
 
@@ -66,6 +67,9 @@ public class EndEffectorSparkMaxBuilder {
 
 	public static EndEffector generate(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
+
+		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal(EndEffectorConstants.LOG_PATH + "Power/", sparkMaxWrapper::get);
+
 		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "Roller/", sparkMaxWrapper);
 
 		IDigitalInput frontDigitalInput = generateBeamBreaker(
@@ -79,7 +83,7 @@ public class EndEffectorSparkMaxBuilder {
 			LimitSwitchDirection.REVERSE
 		);
 
-		return new EndEffector(logPath, motor, frontDigitalInput, backDigitalInput);
+		return new EndEffector(logPath, motor, powerSignal, frontDigitalInput, backDigitalInput);
 	}
 
 }

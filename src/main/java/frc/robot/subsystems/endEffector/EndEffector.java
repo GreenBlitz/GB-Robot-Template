@@ -3,6 +3,7 @@ package frc.robot.subsystems.endEffector;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.IMotor;
+import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,7 +28,7 @@ public class EndEffector extends GBSubsystem {
 
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
 
-		updateInputs();
+		periodic();
 	}
 
 	public EndEffectorCommandsBuilder getCommandsBuilder() {
@@ -51,6 +52,8 @@ public class EndEffector extends GBSubsystem {
 	private void updateInputs() {
 		frontBeamBreaker.updateInputs(frontBeamBreakerInputs);
 		backBeamBreaker.updateInputs(backBeamBreakerInputs);
+		Logger.processInputs(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", frontBeamBreakerInputs);
+		Logger.processInputs(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", backBeamBreakerInputs);
 	}
 
 	private void log() {
@@ -58,12 +61,16 @@ public class EndEffector extends GBSubsystem {
 		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", isCoralInBack());
 	}
 
+	public void stop() {
+		roller.stop();
+	}
+
 	public void setPower(double power) {
 		roller.setPower(power);
 	}
 
-	public void stop() {
-		roller.stop();
+	public void setBrake(boolean brake) {
+		roller.setBrake(brake);
 	}
 
 }

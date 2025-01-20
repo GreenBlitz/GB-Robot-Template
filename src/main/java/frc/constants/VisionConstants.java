@@ -47,7 +47,7 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
-	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE = false;
+	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE = true;
 
 	public static final boolean REQUIRE_HEADING_TO_ESTIMATE_ANGLE = true;
 
@@ -59,13 +59,13 @@ public class VisionConstants {
 //		.polymorphAs(); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
 
 	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES = List.of(
-		new DynamicSwitchingLimelight(false, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionConstants.DEFAULT_VISION_FILTER)
+		new DynamicSwitchingLimelight(true, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionConstants.DEFAULT_VISION_FILTER)
 //		LimelightFactory.createRobotHeadingEstimatingLimelight("limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionConstants.DEFAULT_VISION_FILTER)
 //		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(data -> true))
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES2 = List.of(
-		new DynamicSwitchingLimelight(false, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionFilters.isPitchAtAngle(
+		new DynamicSwitchingLimelight(true, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionFilters.isPitchAtAngle(
 			Rotation2d.fromDegrees(0),
 			Rotation2d.fromDegrees(1)
 		).and(VisionFilters.isPitchAtAngle(
@@ -75,7 +75,7 @@ public class VisionConstants {
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES3 = List.of(
-		new DynamicSwitchingLimelight(false, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionFilters.isOnGround(0.06).polymorphAs())
+		new DynamicSwitchingLimelight(true, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionFilters.isOnGround(0.06).polymorphAs())
 	);
 
 	public static final double VISION_STDEVS_FACTOR = 0.1;

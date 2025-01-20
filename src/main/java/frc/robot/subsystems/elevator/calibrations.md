@@ -3,5 +3,12 @@
 - Min Position
 - Max Position
 - Drum Diameter
+- Gear Ratio
 - Control: kS, kG, PID
-- Profile Constants (Maybe): Max acceleration, cruse velocity 
+- Profile Constants (Maybe): Max acceleration, cruse velocity
+- Current Limit
+- Elevator Mass
+- Inverted
+- Neutral Mode
+- Enable FOC
+- 

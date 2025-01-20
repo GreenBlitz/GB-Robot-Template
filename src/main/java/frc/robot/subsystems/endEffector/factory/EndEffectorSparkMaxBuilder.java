@@ -19,6 +19,7 @@ import frc.robot.subsystems.endEffector.EndEffectorConstants;
 public class EndEffectorSparkMaxBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
+	public static final boolean IS_INVERTED = false;
 
 	private static final double POSITION_CONVERSION_FACTOR = 1;
 	private final static double MOMENT_OF_INERTIA = 0.001;
@@ -32,7 +33,7 @@ public class EndEffectorSparkMaxBuilder {
 
 	private static void configMotor(SparkMaxMotor sparkMaxMotor) {
 		SparkMaxConfig config = new SparkMaxConfig();
-		config.inverted(EndEffectorConstants.IS_INVERTED);
+		config.inverted(IS_INVERTED);
 
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 	}
@@ -40,7 +41,7 @@ public class EndEffectorSparkMaxBuilder {
 	private static BrushlessSparkMAXMotor generateMotor(String logPath, SparkMaxWrapper sparkMaxWrapper) {
 		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(NUMBER_OF_MOTORS), MOMENT_OF_INERTIA, POSITION_CONVERSION_FACTOR),
+				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(NUMBER_OF_MOTORS), MOMENT_OF_INERTIA, 1 / POSITION_CONVERSION_FACTOR),
 				DCMotor.getNEO(NUMBER_OF_MOTORS)
 			)
 		);
@@ -63,9 +64,9 @@ public class EndEffectorSparkMaxBuilder {
 		}
 	}
 
-	public static EndEffector generate(String logPath, String motorLogPath) {
+	public static EndEffector generate(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
-		BrushlessSparkMAXMotor motor = generateMotor(motorLogPath, sparkMaxWrapper);
+		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "Roller/", sparkMaxWrapper);
 
 		IDigitalInput frontDigitalInput = generateBeamBreaker(
 			sparkMaxWrapper,

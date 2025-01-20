@@ -9,17 +9,23 @@ import java.util.function.Consumer;
 
 public class GBAuto extends PathPlannerAuto {
 
+	private boolean isFullyCreated;
+
 	GBAuto() {
 		super(Commands.none());
+		this.isFullyCreated = true;
 	}
 
 	public GBAuto(String autoName) {
 		super(autoName);
+		this.isFullyCreated = true;
 	}
 
 	public GBAuto(Command autoCommand, Pose2d startingPose, String autoName, boolean isFullyCreated) {
 		super(autoCommand, startingPose);
-		if (!isFullyCreated) {
+		this.isFullyCreated = isFullyCreated;
+
+		if (!this.isFullyCreated) {
 			autoName += " (partial)";
 		}
 		setName(autoName);
@@ -31,6 +37,10 @@ public class GBAuto extends PathPlannerAuto {
 
 	public GBAuto withResetPose(Consumer<Pose2d> resetPose) {
 		return new GBAuto(this.beforeStarting(() -> resetPose.accept(this.getStartingPose())), this.getStartingPose(), this.getName(), true);
+	}
+
+	public boolean isFullyCreated() {
+		return isFullyCreated;
 	}
 
 	private static String chainAutoNames(GBAuto... autos) {

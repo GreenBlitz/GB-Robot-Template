@@ -29,19 +29,4 @@ public class SequencesBuilder {
 		return new SequentialCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
 	}
 
-	public static Command feedAndScore(
-		Robot robot,
-		PathPlannerPath pathToSource,
-		PathPlannerPath pathFromSource,
-		Supplier<Command> feedingCommand,
-		Supplier<Command> scoringCommand,
-		BooleanSupplier feedingStartCondition,
-		BooleanSupplier scoringStartCondition
-	) {
-		return new SequentialCommandGroup(
-			commandWhenConditionIsMetDuringPath(robot, pathToSource, feedingCommand, feedingStartCondition),
-			commandWhenConditionIsMetDuringPath(robot, pathFromSource, scoringCommand, scoringStartCondition)
-		);
-	}
-
 }

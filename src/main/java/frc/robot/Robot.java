@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
@@ -68,8 +68,11 @@ public class Robot {
 	private void configureAuto() {
 		Supplier<Command> scoreL4Command = () -> superStructure.setState(RobotState.SCORE_L4);
 		Supplier<Command> feedingCommand = () -> superStructure.setState(RobotState.FEED).withTimeout(2);
-		Function<Pose2d, Boolean> isCloseToPosition = pose2d -> ToleranceMath
-			.isNear(pose2d.getTranslation(), getPoseEstimator().getCurrentPose().getTranslation(), AutonomousConstants.DISTANCE_FROM_TARGET_TO_START_NEXT_COMMAND_METERS);
+		Function<Translation2d, Boolean> isCloseToTranslation = translation2d -> ToleranceMath.isNear(
+			translation2d,
+			getPoseEstimator().getCurrentPose().getTranslation(),
+			AutonomousConstants.DISTANCE_FROM_TARGET_TO_START_NEXT_COMMAND_METERS
+		);
 
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
@@ -77,10 +80,13 @@ public class Robot {
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
 		GUIAutosChooser = new AutonomousChooser("GUIAutosChooser", AutosBuilder.getAllGUIAutos());
-		autoLineAutosChooser = new AutonomousChooser("AutoLineAutosChooser", AutosBuilder.getAllAutoLineAutos(this, scoreL4Command));
+		autoLineAutosChooser = new AutonomousChooser(
+			"AutoLineAutosChooser",
+			AutosBuilder.getAllAutoLineAutos(this, scoreL4Command, isCloseToTranslation)
+		);
 		feedScoreAutosChooser = new AutonomousChooser(
 			"FeedScoreAutosChooser",
-			AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command, isCloseToPosition, isCloseToPosition)
+			AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command, isCloseToTranslation, isCloseToTranslation)
 		);
 	}
 

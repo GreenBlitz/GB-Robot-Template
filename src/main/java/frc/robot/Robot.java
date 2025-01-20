@@ -1,22 +1,19 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
-import frc.constants.GlobalConstants;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.constants.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.signal.TimedValue;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -29,6 +26,7 @@ import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFact
 import frc.utils.auto.AutonomousChooser;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.auto.PathPlannerUtils;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
@@ -44,10 +42,13 @@ import java.util.List;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final IPoseEstimator poseEstimator2;
+	private final IPoseEstimator poseEstimator3;
 	private final MultiAprilTagVisionSources aprilTagVisionSources;
+	private final MultiAprilTagVisionSources aprilTagVisionSources2;
+	private final MultiAprilTagVisionSources aprilTagVisionSources3;
 	private final Superstructure superStructure;
 	private RobotHeadingEstimator headingEstimator = null;
 
@@ -56,10 +57,10 @@ public class Robot {
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		IGyro gyro = GyroFactory.createGyro(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/");
+		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/");
 		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
-			ModulesFactory.create(GlobalConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
+			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
 			gyro,
 			GyroFactory.createSignals(gyro)
 		);
@@ -71,9 +72,23 @@ public class Robot {
 			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE
 		);
 
+		this.poseEstimator2 = new WPILibPoseEstimator(
+			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.substring(0, WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.length()-1) + "2/",
+			swerve.getKinematics(),
+			swerve.getAllOdometryObservations()[0].wheelPositions(),
+			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE
+		);
+
+		this.poseEstimator3 = new WPILibPoseEstimator(
+			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.substring(0, WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.length()-1) + "3/",
+			swerve.getKinematics(),
+			swerve.getAllOdometryObservations()[0].wheelPositions(),
+			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE
+		);
+
 
 //		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
-		swerve.setHeadingSupplier(() -> headingEstimator.getEstimatedHeading());
+		swerve.setHeadingSupplier(() -> headingEstimator.getEstimatedHeading().plus(Rotation2d.fromDegrees(60)));
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		headingEstimator = new RobotHeadingEstimator(swerve.getGyroAbsoluteYaw(), 0.0001);
@@ -83,6 +98,20 @@ public class Robot {
 			() -> (headingEstimator.getEstimatedHeading()),
 			() -> Rotation2d.fromDegrees(0),
 			VisionConstants.DEFAULT_VISION_POSEESTIMATING_SOURCES
+		);
+
+		this.aprilTagVisionSources2 = new MultiAprilTagVisionSources(
+			VisionConstants.MULTI_VISION_SOURCES_LOGPATH + "2",
+			() -> (headingEstimator.getEstimatedHeading()),
+			() -> Rotation2d.fromDegrees(0),
+			VisionConstants.DEFAULT_VISION_POSEESTIMATING_SOURCES2
+		);
+
+		this.aprilTagVisionSources3 = new MultiAprilTagVisionSources(
+			VisionConstants.MULTI_VISION_SOURCES_LOGPATH + "3",
+			() -> (headingEstimator.getEstimatedHeading()),
+			() -> Rotation2d.fromDegrees(0),
+			VisionConstants.DEFAULT_VISION_POSEESTIMATING_SOURCES3
 		);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
@@ -112,11 +141,13 @@ public class Robot {
 		BusChain.logChainsStatuses();
 		superStructure.periodic();
 		aprilTagVisionSources.log();
+		aprilTagVisionSources2.log();
+		aprilTagVisionSources3.log();
 		headingEstimator.updateGyroAngle(swerve.getGyroAbsoluteYaw(), TimeUtils.getCurrentTimeSeconds());
-		List<Pair<Rotation2d, Double>> headingAndTime = aprilTagVisionSources.getRawEstimatedAngles();
+		List<TimedValue<Rotation2d>> headingAndTime = aprilTagVisionSources.getRawRobotHeadings();
 		if (!headingAndTime.isEmpty()) {
-			Logger.recordOutput("Robot Heading", headingAndTime.get(0).getFirst());
-			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), headingAndTime.get(0).getSecond());
+			Logger.recordOutput("Robot Heading", headingAndTime.get(0).value());
+			headingEstimator.updateVisionHeading(headingAndTime.get(0).value(), headingAndTime.get(0).timestamp());
 //			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), TimeUtils.getCurrentTimeSeconds());
 		}
 		Logger.recordOutput("Robot Heading By Estimator", new Pose2d(new Translation2d(0, 0), headingEstimator.getEstimatedHeading()));
@@ -139,8 +170,12 @@ public class Robot {
 		return poseEstimator;
 	}
 
-	public MultiAprilTagVisionSources getAprilTagVisionSources() {
-		return aprilTagVisionSources;
+	public IPoseEstimator[] getPoseEstimators() {
+		return new IPoseEstimator[]{poseEstimator, poseEstimator2, poseEstimator3};
+	}
+
+	public MultiAprilTagVisionSources[] getAprilTagVisionSources() {
+		return new MultiAprilTagVisionSources[]{aprilTagVisionSources, aprilTagVisionSources2, aprilTagVisionSources3};
 	}
 
 	public RobotHeadingEstimator getHeadingEstimator() {

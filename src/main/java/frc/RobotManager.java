@@ -5,7 +5,6 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.joysticks.JoystickManager;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
@@ -33,7 +32,8 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-		JoystickManager.createDashboardChoosers(robot);
+
+		JoysticksBindings.configureBindings(robot);
 	}
 
 	@Override
@@ -72,8 +72,12 @@ public class RobotManager extends LoggedRobot {
 		robot.periodic();
 		AlertManager.reportAlerts();
 		Logger.recordOutput("swer ve cmd", robot.getSwerve().getCurrentCommand().getName());
-		robot.getPoseEstimator().updateOdometry(robot.getSwerve().getAllOdometryObservations());
-		robot.getPoseEstimator().updateVision(robot.getAprilTagVisionSources().getFilteredVisionData());
+		robot.getPoseEstimators()[0].updateOdometry(robot.getSwerve().getAllOdometryObservations());
+		robot.getPoseEstimators()[0].updateVision(robot.getAprilTagVisionSources()[0].getFilteredVisionData());
+		robot.getPoseEstimators()[1].updateOdometry(robot.getSwerve().getAllOdometryObservations());
+		robot.getPoseEstimators()[1].updateVision(robot.getAprilTagVisionSources()[1].getFilteredVisionData());
+		robot.getPoseEstimators()[2].updateOdometry(robot.getSwerve().getAllOdometryObservations());
+		robot.getPoseEstimators()[2].updateVision(robot.getAprilTagVisionSources()[2].getFilteredVisionData());
 	}
 
 	private void updateTimeRelatedData() {

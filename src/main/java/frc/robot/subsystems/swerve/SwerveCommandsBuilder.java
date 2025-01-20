@@ -194,7 +194,8 @@ public class SwerveCommandsBuilder {
 			swerve::resetPIDControllers,
 			() -> swerve.moveToPoseByPID(currentPose.get(), targetPose),
 			(interrupted) -> {},
-			() -> swerve.isAtTranslation(currentPose.get().getTranslation(),targetPose.getTranslation()));
+			() -> swerve.isAtTranslation(currentPose.get().getTranslation(), targetPose.getTranslation())
+		);
 
 //		return new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose), swerve)
 //			.withName("PID to pose: " + targetPose);

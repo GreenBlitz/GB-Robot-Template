@@ -69,7 +69,10 @@ public class EndEffectorSparkMaxBuilder {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
 
 		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal(EndEffectorConstants.LOG_PATH + "Power/", sparkMaxWrapper::get);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal(EndEffectorConstants.LOG_PATH + "Current/", sparkMaxWrapper::getOutputCurrent);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal(
+			EndEffectorConstants.LOG_PATH + "Current/",
+			sparkMaxWrapper::getOutputCurrent
+		);
 
 		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "Roller/", sparkMaxWrapper);
 

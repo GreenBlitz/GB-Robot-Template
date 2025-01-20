@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.MathConstants;
 import frc.robot.poseestimator.helpers.RingBuffer.RingBuffer;
 import frc.utils.AngleUtils;
+import frc.utils.Filter;
 
 public class AngleBuffer {
 
@@ -33,11 +34,11 @@ public class AngleBuffer {
 	}
 
 	public Optional<Rotation2d> average() {
-		return averageWithPredicate((angle) -> true);
+		return averageWithFilter(new Filter<>(angle -> true));
 	}
 
-	public Optional<Rotation2d> averageWithPredicate(Predicate<Rotation2d> predicate) {
-		Predicate<Double> predicateRad = (angleRad) -> predicate.test(Rotation2d.fromRadians(angleRad));
+	public Optional<Rotation2d> averageWithFilter(Filter<Rotation2d> filter) {
+		Predicate<Double> predicateRad = (angleRad) -> filter.apply(Rotation2d.fromRadians(angleRad));
 		double totalUnderPi = 0, totalAbovePi = 0;
 		double underPiCount = 0, abovePiCount = 0;
 		for (double data : angleRadBuffer) {

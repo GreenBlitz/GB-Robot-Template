@@ -38,6 +38,7 @@ public class EndEffector extends GBSubsystem {
 		this.backBeamBreakerInputs = new DigitalInputInputsAutoLogged();
 
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
+		this.setDefaultCommand(commandsBuilder.setPower(0));
 
 		periodic();
 	}
@@ -71,9 +72,11 @@ public class EndEffector extends GBSubsystem {
 	private void updateInputs() {
 		roller.updateSimulation();
 		roller.updateInputs(powerSignal, currentSignal);
+
 		frontBeamBreaker.updateInputs(frontBeamBreakerInputs);
-		backBeamBreaker.updateInputs(backBeamBreakerInputs);
 		Logger.processInputs(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", frontBeamBreakerInputs);
+
+		backBeamBreaker.updateInputs(backBeamBreakerInputs);
 		Logger.processInputs(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", backBeamBreakerInputs);
 	}
 
@@ -84,10 +87,6 @@ public class EndEffector extends GBSubsystem {
 
 	public void setBrake(boolean brake) {
 		roller.setBrake(brake);
-	}
-
-	public void stop() {
-		roller.stop();
 	}
 
 	public void setPower(double power) {

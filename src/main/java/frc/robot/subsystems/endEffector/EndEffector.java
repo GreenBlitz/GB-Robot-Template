@@ -3,7 +3,6 @@ package frc.robot.subsystems.endEffector;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.IMotor;
-import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 

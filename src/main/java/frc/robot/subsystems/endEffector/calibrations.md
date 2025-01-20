@@ -1,7 +1,8 @@
 calibrations:
 ----------------
 - [ ] Motor id
-- [ ] Motor powers
+- [ ] Motor states powers
 - [ ] Which beam breaker is forward and Which is reversed
-- [ ] Motors inverted
+- [ ] Motor inverted
 - [ ] Beam breakers inverted
+- [ ] Current limit

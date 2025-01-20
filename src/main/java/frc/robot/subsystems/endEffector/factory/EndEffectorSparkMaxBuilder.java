@@ -1,5 +1,6 @@
 package frc.robot.subsystems.endEffector.factory;
 
+import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -40,8 +41,12 @@ public class EndEffectorSparkMaxBuilder {
 		SparkMaxConfig config = new SparkMaxConfig();
 		config.inverted(IS_INVERTED);
 		config.smartCurrentLimit(CURRENT_LIMIT);
+
 		config.limitSwitch.forwardLimitSwitchEnabled(true);
+		config.limitSwitch.forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
+
 		config.limitSwitch.reverseLimitSwitchEnabled(true);
+		config.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
 
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 		sparkMaxMotor.setBrake(SET_BRAKE);

@@ -30,7 +30,7 @@ public class EndEffectorSparkMaxBuilder {
 		REVERSE;
 	}
 
-	private static void motorConfig(SparkMaxMotor sparkMaxMotor, SparkMaxWrapper sparkMaxWrapper) {
+	private static void configMotor(SparkMaxMotor sparkMaxMotor) {
 		SparkMaxConfig config = new SparkMaxConfig();
 		config.inverted(EndEffectorConstants.IS_INVERTED);
 
@@ -46,7 +46,7 @@ public class EndEffectorSparkMaxBuilder {
 		);
 
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, simulation, new SysIdRoutine.Config());
-		motorConfig(motor, sparkMaxWrapper);
+		configMotor(motor);
 		return motor;
 	}
 

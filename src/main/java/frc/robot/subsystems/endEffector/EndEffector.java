@@ -4,7 +4,6 @@ import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -22,8 +21,8 @@ public class EndEffector extends GBSubsystem {
 	public EndEffector(
 		String logPath,
 		ControllableMotor roller,
-		SuppliedDoubleSignal powerSignal,
-		SuppliedDoubleSignal currentSignal,
+		InputSignal<Double> powerSignal,
+		InputSignal<Double> currentSignal,
 		IDigitalInput frontBeamBreaker,
 		IDigitalInput backBeamBreaker
 	) {
@@ -39,6 +38,7 @@ public class EndEffector extends GBSubsystem {
 		this.backBeamBreakerInputs = new DigitalInputInputsAutoLogged();
 
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
+		this.setDefaultCommand(commandsBuilder.setPower(0));
 
 		periodic();
 	}
@@ -72,19 +72,17 @@ public class EndEffector extends GBSubsystem {
 	private void updateInputs() {
 		roller.updateSimulation();
 		roller.updateInputs(powerSignal, currentSignal);
+
 		frontBeamBreaker.updateInputs(frontBeamBreakerInputs);
-		backBeamBreaker.updateInputs(backBeamBreakerInputs);
 		Logger.processInputs(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", frontBeamBreakerInputs);
+
+		backBeamBreaker.updateInputs(backBeamBreakerInputs);
 		Logger.processInputs(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", backBeamBreakerInputs);
 	}
 
 	private void log() {
 		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", isCoralInFront());
 		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", isCoralInBack());
-	}
-
-	public void stop() {
-		roller.stop();
 	}
 
 	public void setBrake(boolean brake) {

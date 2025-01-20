@@ -1,5 +1,6 @@
 package frc.robot.subsystems.endEffector.factory;
 
+import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -41,6 +42,12 @@ public class EndEffectorSparkMaxBuilder {
 		config.inverted(IS_INVERTED);
 		config.smartCurrentLimit(CURRENT_LIMIT);
 
+		config.limitSwitch.forwardLimitSwitchEnabled(true);
+		config.limitSwitch.forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
+
+		config.limitSwitch.reverseLimitSwitchEnabled(true);
+		config.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
+
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 		sparkMaxMotor.setBrake(SET_BRAKE);
 	}
@@ -74,8 +81,8 @@ public class EndEffectorSparkMaxBuilder {
 	public static EndEffector generate(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
 
-		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("End effector power", sparkMaxWrapper::get);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("End effector current", sparkMaxWrapper::getOutputCurrent);
+		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("Power", sparkMaxWrapper::get);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("Current", sparkMaxWrapper::getOutputCurrent);
 
 		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "Roller/", sparkMaxWrapper);
 

@@ -15,7 +15,8 @@ public class EndEffectorCommandsBuilder {
 
 	//@formatter:off
 	public Command setPower(double power) {
-		return endEffector.asSubsystemCommand(new RunCommand(() -> endEffector.setPower(power)),
+		return endEffector.asSubsystemCommand(
+				new RunCommand(() -> endEffector.setPower(power)),
 				"Set power to " + power
 		);
 	}

@@ -2,9 +2,9 @@ package frc.robot.subsystems.endEffector;
 
 public enum EndEffectorState {
 
-	INTAKE(0.2),
-	OUTTAKE(-0.2),
-	IDLE(0);
+	INTAKE(0.4),
+	OUTTAKE(-0.4),
+	IDLE(0.1);
 
 	double power;
 

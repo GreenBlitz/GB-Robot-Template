@@ -45,6 +45,8 @@ public class ElevatorFactory {
 	private static final double SIMULATION_KP = 1;
 	private static final double SIMULATION_KI = 0;
 	private static final double SIMULATION_KD = 0;
+	public static final int NUMBER_OF_MOTORS = 2;
+	public static final double STARTING_HEIGHT_METERS = 0;
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -60,8 +62,12 @@ public class ElevatorFactory {
 		configuration.Slot0.withKP(REAL_KP).withKI(REAL_KI).withKD(REAL_KD);
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(ElevatorConstants.MINIMUM_HEIGHT_METERS);
+		configuration.SoftwareLimitSwitch
+			.withReverseSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS).getRotations());
 		configuration.SoftwareLimitSwitch.withReverseSoftLimitEnable(SOFT_LIMIT_ENABLE);
+		configuration.SoftwareLimitSwitch
+			.withForwardSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS).getRotations());
+		configuration.SoftwareLimitSwitch.withForwardSoftLimitEnable(SOFT_LIMIT_ENABLE);
 		return configuration;
 	}
 
@@ -71,10 +77,10 @@ public class ElevatorFactory {
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
 		configuration.SoftwareLimitSwitch
-			.withReverseSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.MINIMUM_HEIGHT_METERS).getRotations());
+			.withReverseSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS).getRotations());
 		configuration.SoftwareLimitSwitch.withReverseSoftLimitEnable(SOFT_LIMIT_ENABLE);
 		configuration.SoftwareLimitSwitch
-			.withForwardSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.MAXIMUM_HEIGHT_METERS).getRotations());
+			.withForwardSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS).getRotations());
 		configuration.SoftwareLimitSwitch.withForwardSoftLimitEnable(SOFT_LIMIT_ENABLE);
 		return configuration;
 	}
@@ -97,18 +103,18 @@ public class ElevatorFactory {
 		ElevatorSimulation elevatorSimulation = new ElevatorSimulation(
 			new ElevatorSim(
 				LinearSystemId.createElevatorSystem(
-					DCMotor.getKrakenX60Foc(ElevatorConstants.NUMBER_OF_MOTORS),
+					DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
 					ElevatorConstants.MASS_KG,
-					ElevatorConstants.RADIUS_METERS,
+					ElevatorConstants.ELEVATOR_RADIUS_METERS,
 					ElevatorConstants.GEAR_RATIO
 				),
-				DCMotor.getKrakenX60Foc(ElevatorConstants.NUMBER_OF_MOTORS),
+				DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
 				ElevatorConstants.MINIMUM_HEIGHT_METERS,
 				ElevatorConstants.MAXIMUM_HEIGHT_METERS,
 				false,
-				ElevatorConstants.STARTING_HEIGHT_METERS
+				STARTING_HEIGHT_METERS
 			),
-			ElevatorConstants.DRUM_RADIUS,
+			ElevatorConstants.DRUM_RADIUS_METERS,
 			ElevatorConstants.GEAR_RATIO
 		);
 

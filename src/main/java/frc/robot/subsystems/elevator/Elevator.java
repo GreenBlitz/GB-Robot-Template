@@ -107,8 +107,8 @@ public class Elevator extends GBSubsystem {
 		limitSwitch.updateInputs(digitalInputInputs);
 		Logger.processInputs(getLogPath() + "LimitSwitch/", digitalInputInputs);
 	}
-	
-	private void log(){
+
+	private void log() {
 		Logger.recordOutput(getLogPath() + "PositionMeters", getElevatorPositionMeters());
 		Logger.recordOutput(getLogPath() + "isAtBackwardsLimit", isAtBackwardsLimit());
 		Logger.recordOutput(getLogPath() + "hasBeenResetBySwitch", hasBeenResetBySwitch);

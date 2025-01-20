@@ -4,7 +4,6 @@ import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 

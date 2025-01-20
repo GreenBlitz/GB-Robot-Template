@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.constants.MathConstants;
+import frc.constants.MathConstants;
 import frc.robot.poseestimator.helpers.RingBuffer.RingBuffer;
 import frc.utils.AngleUtils;
 

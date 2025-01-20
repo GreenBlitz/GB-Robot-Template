@@ -1,7 +1,7 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.constants.MathConstants;
+import frc.constants.MathConstants;
 
 public class PoseEstimatorMath {
 

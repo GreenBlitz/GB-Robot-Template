@@ -3,7 +3,7 @@ package frc.robot.poseestimator.helpers;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import frc.robot.constants.RobotHeadingEstimatorConstants;
+import frc.constants.RobotHeadingEstimatorConstants;
 import frc.robot.poseestimator.PoseEstimatorMath;
 import frc.robot.poseestimator.helpers.RingBuffer.RingBuffer;
 import frc.robot.vision.data.HeadingData;

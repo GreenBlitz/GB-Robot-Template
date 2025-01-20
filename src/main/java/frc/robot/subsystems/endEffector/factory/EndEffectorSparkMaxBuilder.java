@@ -28,8 +28,10 @@ public class EndEffectorSparkMaxBuilder {
 	private static final Double DEBOUNCE_TIME = 0.02;
 
 	private static enum LimitSwitchDirection {
+
 		FORWARD,
 		REVERSE;
+
 	}
 
 	private static void configMotor(SparkMaxMotor sparkMaxMotor) {

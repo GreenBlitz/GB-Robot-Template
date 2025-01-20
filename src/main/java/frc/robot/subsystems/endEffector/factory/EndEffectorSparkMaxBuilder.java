@@ -40,6 +40,8 @@ public class EndEffectorSparkMaxBuilder {
 		SparkMaxConfig config = new SparkMaxConfig();
 		config.inverted(IS_INVERTED);
 		config.smartCurrentLimit(CURRENT_LIMIT);
+		config.limitSwitch.forwardLimitSwitchEnabled(true);
+		config.limitSwitch.reverseLimitSwitchEnabled(true);
 
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 		sparkMaxMotor.setBrake(SET_BRAKE);

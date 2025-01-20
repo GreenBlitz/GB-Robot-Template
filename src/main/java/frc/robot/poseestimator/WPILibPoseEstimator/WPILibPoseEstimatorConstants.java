@@ -24,14 +24,18 @@ public class WPILibPoseEstimatorConstants {
 	);
 	//@formatter:on
 
-	public static final double VISION_STDEVS_FACTOR = 0.1;
+	public static final double VISION_STDEVS_FACTOR = 1;
+
+	public static final double VISION_STDEVS_MIN = 0.0001;
 
 
 	public static final Rotation2d INITIAL_GYRO_ANGLE = new Rotation2d();
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
-	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STDDEVS_TRANSFORM = aprilTagVisionData -> new StandardDeviations2D(-aprilTagVisionData.getDistanceFromAprilTagMeters()*VISION_STDEVS_FACTOR);
+	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STDDEVS_TRANSFORM = aprilTagVisionData -> new StandardDeviations2D(
+			Math.max(Math.pow(aprilTagVisionData.getDistanceFromAprilTagMeters(),2)*VISION_STDEVS_FACTOR, VISION_STDEVS_MIN)
+	);
 
 
 }

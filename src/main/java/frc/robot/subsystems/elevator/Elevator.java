@@ -88,6 +88,7 @@ public class Elevator extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
+		//Update Simulation checks if ROBOT_TYPE.isSimulation() inside the function and acts accordingly.
 		firstMotor.updateSimulation();
 		secondMotor.updateSimulation();
 		updateInputs();

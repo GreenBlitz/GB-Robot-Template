@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
@@ -58,12 +59,14 @@ public class Elevator extends GBSubsystem {
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
 
 		this.sysIdCalibrator = new SysIdCalibrator(
-			new SysIdCalibrator.SysIdConfigInfo(firstMotor.getSysidConfigInfo().config(), true),
+			firstMotor.getSysidConfigInfo(),
 			this,
 			this::setVoltage
 		);
 
-		subsystemPeriodic();
+		periodic();
+
+		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
 	public ElevatorCommandsBuilder getCommandsBuilder() {
@@ -152,10 +155,10 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public boolean isAtPosition(double positionMeters, double toleranceMeters) {
-		return ToleranceMath.isNearWrapped(
-			convertMetersToRotations(positionMeters),
-			convertMetersToRotations(getElevatorPositionMeters()),
-			convertMetersToRotations(toleranceMeters)
+		return MathUtil.isNear(
+				positionMeters,
+				getElevatorPositionMeters(),
+				toleranceMeters
 		);
 	}
 

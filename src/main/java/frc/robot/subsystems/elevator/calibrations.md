@@ -1,14 +1,16 @@
-- Motor: Id, Type
-- Buschain
-- Min Position
-- Max Position
-- Drum Diameter
-- Gear Ratio
-- Control: kS, kG, PID
-- Profile Constants (Maybe): Max acceleration, cruse velocity
-- Current Limit
-- Elevator Mass
-- Inverted
-- Neutral Mode
-- Enable FOC
-- 
+Thing to do when getting the robot
+----------------------------------
+- [ ] Motor: Id, Type
+- [ ] Buschain
+- [ ] Min Position
+- [ ] Max Position
+- [ ] Drum Diameter
+- [ ] Gear Ratio
+- [ ] Limit Switch Channel
+- [ ] Control: kS, kG, PID
+- [ ] Profile Constants (Maybe): Max acceleration, cruse velocity
+- [ ] Current Limit
+- [ ] Elevator Mass
+- [ ] Inverted
+- [ ] Neutral Mode
+- [ ] Enable FOC

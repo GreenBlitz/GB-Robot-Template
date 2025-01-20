@@ -61,7 +61,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
 		this.poseEstimationMethod = poseEstimationMethod;
 
-		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_wpiblue");
+		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryMegaTag1 = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
@@ -81,7 +81,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	@Override
 	public void update() {
-		robotOrientationEntry.setDoubleArray(gyroAngleValues.asArray());
 		Logger.recordOutput(logPath + "gyroAngleValues", gyroAngleValues.asArray());
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		NetworkTableEntry entry = switch (poseEstimationMethod) {
@@ -180,6 +179,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
 		this.gyroAngleValues = gyroAngleValues;
+		robotOrientationEntry.setDoubleArray(gyroAngleValues.asArray());
 	}
 
 

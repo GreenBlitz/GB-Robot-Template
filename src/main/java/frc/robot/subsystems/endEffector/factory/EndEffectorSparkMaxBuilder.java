@@ -77,7 +77,7 @@ public class EndEffectorSparkMaxBuilder {
 		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("Power", sparkMaxWrapper::get);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("Current", sparkMaxWrapper::getOutputCurrent);
 
-		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "Roller", sparkMaxWrapper);
+		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "/Roller", sparkMaxWrapper);
 
 		IDigitalInput frontDigitalInput = generateBeamBreaker(sparkMaxWrapper, "FrontBeamBreaker", LimitSwitchPort.FORWARD);
 		IDigitalInput backDigitalInput = generateBeamBreaker(sparkMaxWrapper, "BackBeamBreaker", LimitSwitchPort.REVERSE);

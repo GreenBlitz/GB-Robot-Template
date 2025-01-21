@@ -6,7 +6,7 @@ public enum EndEffectorState {
 	OUTTAKE(-0.4),
 	IDLE(0.1);
 
-	double power;
+	private final double power;
 
 	EndEffectorState(double power) {
 		this.power = power;

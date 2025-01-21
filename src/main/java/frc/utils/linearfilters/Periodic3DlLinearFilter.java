@@ -12,12 +12,12 @@ import java.util.function.Supplier;
 
 public class Periodic3DlLinearFilter implements IPeriodicLinearFilter {
 
-	private final Supplier<ArrayList<Vector<N3>>> updateValues;
-	private final ArrayList<LinearFilter> linearFilters;
+	private final Supplier<List<Vector<N3>>> updateValues;
+	private final List<LinearFilter> linearFilters;
 	private final String name;
 
 	public Periodic3DlLinearFilter(
-		Supplier<ArrayList<Vector<N3>>> updateValues,
+		Supplier<List<Vector<N3>>> updateValues,
 		LinearFilter xFilter,
 		LinearFilter yFilter,
 		LinearFilter zFilter,

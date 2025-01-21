@@ -1,9 +1,11 @@
 package frc.utils.pose;
 
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.numbers.N3;
 import frc.robot.hardware.signal.TimedValue;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
@@ -11,6 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.vision.data.VisionData;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
+import org.ejml.simple.SimpleMatrix;
+
+import java.util.function.Function;
 
 public class PoseUtils {
 
@@ -48,5 +53,9 @@ public class PoseUtils {
 	public static TimedValue<Rotation2d> visionDataToHeadingData(VisionData visionData) {
 		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
 	}
+
+	public Function<Pose2d, Vector<N3>> poseToVector = pose -> new Vector<>(
+		new SimpleMatrix(new double[][] {{pose.getX(), pose.getY(), pose.getRotation().getRadians()}})
+	);
 
 }

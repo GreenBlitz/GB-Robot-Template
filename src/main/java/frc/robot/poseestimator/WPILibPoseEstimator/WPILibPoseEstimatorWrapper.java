@@ -34,17 +34,17 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		super(logPath);
 		this.kinematics = kinematics;
 		this.lastOdometryAngle = initialGyroAngle;
-		this.poseEstimator = new PoseEstimator<>(
-			kinematics,
-			new Odometry<>(kinematics, initialGyroAngle, modulePositions, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE),
-			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
-			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
-		);
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
 			initialGyroAngle,
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+		);
+		this.poseEstimator = new PoseEstimator<>(
+			kinematics,
+			odometryEstimator,
+			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
+			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
 		this.lastOdometryObservation = new OdometryObservation(
 			modulePositions,

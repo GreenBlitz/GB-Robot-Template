@@ -1,7 +1,8 @@
 Things To Do When Getting Template
 ----------------------------------
 - [ ] Power Distribution ID
-  @@ -6,8 +7,4 @@ Things To Do When Getting Template
+- [ ] Call swerve update status in robot periodic
+- [ ] Add subsystems to brake manager
 
 Field:
 -----------------------

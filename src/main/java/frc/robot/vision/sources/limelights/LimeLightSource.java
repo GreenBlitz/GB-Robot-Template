@@ -28,7 +28,8 @@ import java.util.function.BooleanSupplier;
 public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
 	private final String logPath;
-	private final String name;
+	private final String cameraNetworkTablesName;
+	private final String sourceName;
 	private final BooleanSupplier shouldDataBeFiltered;
 	private final LimelightPoseEstimationMethod poseEstimationMethod;
 
@@ -50,13 +51,15 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private GyroAngleValues gyroAngleValues;
 
 	protected LimeLightSource(
-		String name,
+		String cameraNetworkTablesName,
 		String parentLogPath,
+		String sourceName,
 		Filter<AprilTagVisionData> filter,
 		LimelightPoseEstimationMethod poseEstimationMethod
 	) {
-		this.logPath = parentLogPath + name + "/";
-		this.name = name;
+		this.logPath = parentLogPath + cameraNetworkTablesName + "/" + sourceName + "/";
+		this.cameraNetworkTablesName = cameraNetworkTablesName;
+		this.sourceName = sourceName;
 		this.filter = filter;
 		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
 		this.poseEstimationMethod = poseEstimationMethod;
@@ -143,7 +146,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
 			pose3dDoublePair -> new AprilTagVisionData(
-				name,
+				sourceName,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(standardDeviationsArray),
@@ -174,7 +177,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	protected NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
-		return NetworkTableInstance.getDefault().getTable(name).getEntry(entryName);
+		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
 	}
 
 	@Override

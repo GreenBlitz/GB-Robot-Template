@@ -18,6 +18,10 @@ public class VisionConstants {
 
 	public static final String MULTI_VISION_SOURCES_LOGPATH = "MultiVisionSources/";
 
+	public static final String DYNAMIC_LIMELIGHT_MEGATAG1_SOURCE_NAME = "independentPoseEstimatingLimelight";
+
+	public static final String DYNAMIC_LIMELIGHT_MEGATAG2_SOURCE_NAME = "headingRequiringLimelight";
+
 
 	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout();
 

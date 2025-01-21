@@ -38,9 +38,10 @@ public class EndEffector extends GBSubsystem {
 		this.backBeamBreakerInputs = new DigitalInputInputsAutoLogged();
 
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
-		this.setDefaultCommand(commandsBuilder.setPower(0));
 
 		periodic();
+
+		setDefaultCommand(commandsBuilder.setPower(0));
 	}
 
 	public EndEffectorCommandsBuilder getCommandsBuilder() {
@@ -74,15 +75,15 @@ public class EndEffector extends GBSubsystem {
 		roller.updateInputs(powerSignal, currentSignal);
 
 		frontBeamBreaker.updateInputs(frontBeamBreakerInputs);
-		Logger.processInputs(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", frontBeamBreakerInputs);
+		Logger.processInputs(getLogPath() + "/FrontBeamBreaker", frontBeamBreakerInputs);
 
 		backBeamBreaker.updateInputs(backBeamBreakerInputs);
-		Logger.processInputs(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", backBeamBreakerInputs);
+		Logger.processInputs(getLogPath() + "/BackBeamBreaker", backBeamBreakerInputs);
 	}
 
 	private void log() {
-		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "FrontBeamBreaker/", isCoralInFront());
-		Logger.recordOutput(EndEffectorConstants.LOG_PATH + "BackBeamBreaker/", isCoralInBack());
+		Logger.recordOutput(getLogPath() + "/FrontBeamBreaker", isCoralInFront());
+		Logger.recordOutput(getLogPath() + "/BackBeamBreaker", isCoralInBack());
 	}
 
 	public void setBrake(boolean brake) {

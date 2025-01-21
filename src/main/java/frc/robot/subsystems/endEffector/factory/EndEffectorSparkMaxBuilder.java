@@ -28,24 +28,17 @@ public class EndEffectorSparkMaxBuilder {
 	private static final double POSITION_CONVERSION_FACTOR = 1;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
-	private static final Double DEBOUNCE_TIME = 0.1;
-
-	private static enum LimitSwitchDirection {
-
-		FORWARD,
-		REVERSE;
-
-	}
+	private static final Double DEBOUNCE_TIME_SECONDS = 0.1;
 
 	private static void configMotor(SparkMaxMotor sparkMaxMotor) {
 		SparkMaxConfig config = new SparkMaxConfig();
 		config.inverted(IS_INVERTED);
 		config.smartCurrentLimit(CURRENT_LIMIT);
 
-		config.limitSwitch.forwardLimitSwitchEnabled(true);
+		config.limitSwitch.forwardLimitSwitchEnabled(false);
 		config.limitSwitch.forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
 
-		config.limitSwitch.reverseLimitSwitchEnabled(true);
+		config.limitSwitch.reverseLimitSwitchEnabled(false);
 		config.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
 
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
@@ -65,17 +58,17 @@ public class EndEffectorSparkMaxBuilder {
 		return motor;
 	}
 
-	private static IDigitalInput generateBeamBreaker(SparkMaxWrapper sparkMaxWrapper, String logPath, LimitSwitchDirection limitSwitch) {
-		if (Robot.ROBOT_TYPE.isReal()) {
-			return switch (limitSwitch) {
-				case FORWARD ->
-					new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME));
-				case REVERSE ->
-					new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME));
-			};
-		} else {
-			return new ChooserDigitalInput(logPath);
+	private static IDigitalInput generateBeamBreaker(SparkMaxWrapper sparkMaxWrapper, String name, LimitSwitchPort limitSwitch) {
+		if (Robot.ROBOT_TYPE.isSimulation()) {
+			return new ChooserDigitalInput(name);
 		}
+
+		return switch (limitSwitch) {
+			case FORWARD ->
+				new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
+			case REVERSE ->
+				new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
+		};
 	}
 
 	public static EndEffector generate(String logPath) {
@@ -84,18 +77,10 @@ public class EndEffectorSparkMaxBuilder {
 		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("Power", sparkMaxWrapper::get);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("Current", sparkMaxWrapper::getOutputCurrent);
 
-		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "Roller/", sparkMaxWrapper);
+		BrushlessSparkMAXMotor motor = generateMotor(EndEffectorConstants.LOG_PATH + "Roller", sparkMaxWrapper);
 
-		IDigitalInput frontDigitalInput = generateBeamBreaker(
-			sparkMaxWrapper,
-			EndEffectorConstants.LOG_PATH + "FrontBeamBreaker",
-			LimitSwitchDirection.FORWARD
-		);
-		IDigitalInput backDigitalInput = generateBeamBreaker(
-			sparkMaxWrapper,
-			EndEffectorConstants.LOG_PATH + "BackBeamBreaker",
-			LimitSwitchDirection.REVERSE
-		);
+		IDigitalInput frontDigitalInput = generateBeamBreaker(sparkMaxWrapper, "FrontBeamBreaker", LimitSwitchPort.FORWARD);
+		IDigitalInput backDigitalInput = generateBeamBreaker(sparkMaxWrapper, "BackBeamBreaker", LimitSwitchPort.REVERSE);
 
 		return new EndEffector(logPath, motor, powerSignal, currentSignal, frontDigitalInput, backDigitalInput);
 	}

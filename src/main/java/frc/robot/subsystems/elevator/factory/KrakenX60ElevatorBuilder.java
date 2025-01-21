@@ -61,7 +61,6 @@ public class KrakenX60ElevatorBuilder {
 	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(7);
 	private static final Time CONFIG_TIMEOUT = Seconds.of(10);
 
-
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
 			CONFIG_RAMP_RATE,

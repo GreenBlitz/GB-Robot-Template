@@ -7,7 +7,6 @@ import frc.constants.RobotHeadingEstimatorConstants;
 import frc.robot.poseestimator.PoseEstimatorMath;
 import frc.robot.poseestimator.helpers.RingBuffer.RingBuffer;
 import frc.robot.vision.data.HeadingData;
-import frc.utils.AngleUtils;
 
 import java.util.Optional;
 
@@ -15,8 +14,7 @@ public class RobotHeadingEstimator {
 
 	private final TimeInterpolatableBuffer<Rotation2d> unOffsetedGyroAngleInterpolator;
 	private final double gyroStandardDeviation;
-	private final AngleBuffer angleBuffer;
-	private final RingBuffer<Pair<Rotation2d, Rotation2d>> estimationGyroBuffer;
+	private final RingBuffer<Pair<Rotation2d, Rotation2d>> estimationAndGyroBuffer;
 	private Rotation2d lastGyroAngle;
 	private Rotation2d estimatedHeading;
 	private boolean hasFirstVisionUpdateArrived;
@@ -24,8 +22,7 @@ public class RobotHeadingEstimator {
 	public RobotHeadingEstimator(Rotation2d initialGyroAngle, Rotation2d initialHeading, double gyroStandardDeviation) {
 		this.unOffsetedGyroAngleInterpolator = TimeInterpolatableBuffer.createBuffer(RobotHeadingEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.gyroStandardDeviation = gyroStandardDeviation;
-		this.angleBuffer = new AngleBuffer(RobotHeadingEstimatorConstants.ANGLE_ACCUMULATOR_SIZE);
-		this.estimationGyroBuffer = new RingBuffer<>(RobotHeadingEstimatorConstants.ESTIMATION_GYRO_PAIR_BUFFER_SIZE);
+		this.estimationAndGyroBuffer = new RingBuffer<>(RobotHeadingEstimatorConstants.ESTIMATION_GYRO_PAIR_BUFFER_SIZE);
 		this.lastGyroAngle = initialGyroAngle;
 		this.estimatedHeading = initialHeading;
 		this.hasFirstVisionUpdateArrived = false;
@@ -43,33 +40,22 @@ public class RobotHeadingEstimator {
 	public void updateVisionIfNotCalibrated(
 		HeadingData visionHeadingData,
 		double visionStandardDeviation,
-		double visionComparedToEstimationStandardDeviation
+		double maximumStandardDeviationTolerance
 	) {
 		if (
 			StandardDeviations.calculateStandardDeviations(
-				estimationGyroBuffer,
-				estimationVisionPair -> AngleUtils.wrappingAbs(estimationVisionPair.getFirst()).getRotations()
-					- AngleUtils.wrappingAbs(estimationVisionPair.getSecond()).getRotations()
-			) < visionComparedToEstimationStandardDeviation
+				estimationAndGyroBuffer,
+				estimationVisionPair -> Math
+					.abs(PoseEstimatorMath.getAngleDistance(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())
+			) > maximumStandardDeviationTolerance || !estimationAndGyroBuffer.isFull()
 		) {
 			updateVisionHeading(visionHeadingData, visionStandardDeviation);
+			estimationAndGyroBuffer.insert(Pair.of(estimatedHeading, lastGyroAngle));
 		}
 	}
 
 
 	public void updateVisionHeading(HeadingData visionHeadingData, double visionStandardDeviation) {
-		angleBuffer.addAngle(visionHeadingData.heading());
-
-		Optional<Rotation2d> slidingWindowAngleAccumulatorAverage = angleBuffer.average();
-		if (
-			slidingWindowAngleAccumulatorAverage.isPresent()
-				&& Math.abs(
-					PoseEstimatorMath.getAngleDistance(slidingWindowAngleAccumulatorAverage.get(), visionHeadingData.heading()).getRadians()
-				) < RobotHeadingEstimatorConstants.VISION_HEADING_AVERAGE_COMPARISON_THRESHOLD.getRadians()
-		) {
-			return;
-		}
-
 		if (!hasFirstVisionUpdateArrived) {
 			hasFirstVisionUpdateArrived = true;
 			estimatedHeading = visionHeadingData.heading();
@@ -100,10 +86,6 @@ public class RobotHeadingEstimator {
 	) {
 		gyroHeadingData.ifPresent(this::updateGyroAngle);
 		visionHeadingData.ifPresent(visionData -> updateVisionHeading(visionData, visionStandardDeviation));
-	}
-
-	public void periodic() {
-		estimationGyroBuffer.insert(Pair.of(estimatedHeading, lastGyroAngle));
 	}
 
 }

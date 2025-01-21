@@ -19,6 +19,15 @@ public class RingBuffer<T> implements Iterable<T> {
 		this.currentIndex = 0;
 	}
 
+	public boolean isFull() {
+		for (Optional<T> value : buffer) {
+			if (value.isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public void insert(T data) {
 		insertions++;
 		buffer.set(this.currentIndex++, Optional.of(data));

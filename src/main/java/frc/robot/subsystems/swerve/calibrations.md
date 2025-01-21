@@ -1,3 +1,4 @@
+
 States:
 -----------------------
 - [ ] Aim assist modes + Add in state helper handling
@@ -7,7 +8,7 @@ SwerveConstants:
 - [ ] Velocity at 12 volts (meters per second)
 - [ ] Max rotational velocity (angle per second)
 - [ ] Translation PID (for x,y PID controllers)
-- [ ] Rotational degrees PID 
+- [ ] Rotational degrees PID
 - [ ] Modules locations (in meters)
 - [ ] Drive radius meters
 - [ ] PathPlanner RealTimeConstraints (in AutonomousConstants)
@@ -19,4 +20,4 @@ Gyro:
 
 Modules:
 -----------------------
-- [ ] [See module calibrations file](module/calibrations)
+- [ ] [See module calibrations file](module/Calibrations.md)

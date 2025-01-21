@@ -97,10 +97,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		}
 	}
 
-	private void updateOdometryPose(OdometryObservation observation, Twist2d changeInPose) {
-		odometryEstimator.update(getOdometryAngle(observation, changeInPose), observation.wheelPositions());
-	}
-
 	@Override
 	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
@@ -110,7 +106,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 	@Override
 	public void resetPose(Pose2d newPose) {
-		Logger.recordOutput(getLogPath() + "lastPoseResetTo/", newPose);
+		Logger.recordOutput(getLogPath() + "lastPoseResetTo", newPose);
 		poseEstimator.resetPosition(lastOdometryAngle, lastOdometryObservation.wheelPositions(), newPose);
 	}
 
@@ -118,6 +114,10 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	public void setHeading(Rotation2d newHeading) {
 		poseEstimator.resetRotation(newHeading);
 		odometryEstimator.resetRotation(newHeading);
+	}
+
+	private void updateOdometryPose(OdometryObservation observation, Twist2d changeInPose) {
+		odometryEstimator.update(getOdometryAngle(observation, changeInPose), observation.wheelPositions());
 	}
 
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
@@ -130,11 +130,11 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	private void log() {
-		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
-		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
-		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryObservation.timestamp());
+		Logger.recordOutput(getLogPath() + "estimatedPose", getEstimatedPose());
+		Logger.recordOutput(getLogPath() + "odometryPose", getOdometryPose());
+		Logger.recordOutput(getLogPath() + "lastOdometryUpdate", lastOdometryObservation.timestamp());
 		if (lastVisionObservation != null) {
-			Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionObservation.getTimestamp());
+			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionObservation.getTimestamp());
 		}
 	}
 

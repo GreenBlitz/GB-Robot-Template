@@ -83,9 +83,13 @@ public class KrakenX60ElevatorBuilder {
 		}
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS).getRotations();
+		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator
+			.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS)
+			.getRotations();
 		configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = SOFT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Elevator.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS).getRotations();
+		configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Elevator
+			.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS)
+			.getRotations();
 		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = SOFT_LIMIT_ENABLE;
 		configuration.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -134,7 +138,7 @@ public class KrakenX60ElevatorBuilder {
 		return new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_SECOND_MOTOR_ID, generateSysidConfig());
 	}
 
-	public static Elevator create(String logPath) {
+	public static Elevator createRealElevator(String logPath) {
 		ElevatorSimulation elevatorSimulation = generateSimulation();
 
 		TalonFXMotor firstMotor = generateFirstMotor(logPath + "FirstMotor", elevatorSimulation);
@@ -143,35 +147,34 @@ public class KrakenX60ElevatorBuilder {
 		TalonFXMotor secondMotor = generateSecondMotor(logPath + "SecondMotor");
 		secondMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
 
+		return create(logPath, firstMotor, secondMotor);
+	}
+
+	public static Elevator createSimulationElevator(String logPath) {
+		ElevatorSimulation elevatorSimulation = generateSimulation();
+
+		TalonFXMotor firstMotor = generateFirstMotor(logPath + "FirstMotor", elevatorSimulation);
+		firstMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
+
+		return create(logPath, firstMotor, firstMotor);
+	}
+
+	private static Elevator create(String logPath, TalonFXMotor firstMotor, TalonFXMotor secondMotor) {
 		IDigitalInput digitalInput = generateDigitalInput();
 
 		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true));
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
 
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL ->
-				new Elevator(
-					logPath,
-					firstMotor,
-					createSignals(firstMotor),
-					secondMotor,
-					createSignals(secondMotor),
-					positionRequest,
-					voltageRequest,
-					digitalInput
-				);
-			case SIMULATION ->
-				new Elevator(
-					logPath,
-					firstMotor,
-					createSignals(firstMotor),
-					firstMotor,
-					createSignals(firstMotor),
-					positionRequest,
-					voltageRequest,
-					digitalInput
-				);
-		};
+		return new Elevator(
+			logPath,
+			firstMotor,
+			createSignals(firstMotor),
+			secondMotor,
+			createSignals(secondMotor),
+			positionRequest,
+			voltageRequest,
+			digitalInput
+		);
 	}
 
 }

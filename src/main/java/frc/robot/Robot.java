@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.factory.KrakenX60ElevatorBuilder;
+import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.endEffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
@@ -30,7 +30,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		this.elevator = KrakenX60ElevatorBuilder.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/" + "Elevator");
+		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		this.endEffector = EndEffectorFactory.create();
 	}
 

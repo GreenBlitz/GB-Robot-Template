@@ -84,7 +84,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 			Twist2d changeInPose = kinematics.toTwist2d(lastOdometryObservation.wheelPositions(), odometryObservation.wheelPositions());
 			Rotation2d odometryAngle = getOdometryAngle(odometryObservation, changeInPose);
 			poseEstimator.updateWithTime(odometryObservation.timestamp(), odometryAngle, odometryObservation.wheelPositions());
-			updateOdometryPose(odometryObservation, changeInPose);
 			this.lastOdometryAngle = odometryAngle;
 			this.lastOdometryObservation = odometryObservation;
 		}
@@ -100,7 +99,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	@Override
 	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
-		odometryEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
 		this.lastOdometryObservation = new OdometryObservation(wheelPositions, Optional.of(gyroAngle), TimeUtils.getCurrentTimeSeconds());
 	}
 
@@ -113,11 +111,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	@Override
 	public void setHeading(Rotation2d newHeading) {
 		poseEstimator.resetRotation(newHeading);
-		odometryEstimator.resetRotation(newHeading);
-	}
-
-	private void updateOdometryPose(OdometryObservation observation, Twist2d changeInPose) {
-		odometryEstimator.update(getOdometryAngle(observation, changeInPose), observation.wheelPositions());
 	}
 
 	private void addVisionMeasurement(AprilTagVisionData visionObservation) {

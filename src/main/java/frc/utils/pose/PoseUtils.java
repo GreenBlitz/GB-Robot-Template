@@ -61,27 +61,24 @@ public class PoseUtils {
 	);
 
 
-
-
-	private static double[] applyFunctionOnPoseElements(List<Vector<N3>> dataset, Function<List<Double>, Double> function) {
+	private static Vector<N3> applyFunctionOnPoseElements(List<Vector<N3>> dataset, Function<List<Double>, Double> function) {
 		List<Double> XSet = new ArrayList<>();
 		List<Double> YSet = new ArrayList<>();
 		List<Double> AngleSet = new ArrayList<>();
 		for (Vector<N3> data : dataset) {
 			XSet.add(data.get(0));
 			YSet.add(data.get(1));
-			AngleSet.add(data.get(2)));
+			AngleSet.add(data.get(2));
 		}
-		return new double[] {function.apply(XSet), function.apply(YSet), function.apply(AngleSet)};
+		return poseToVector.apply(new Pose2d(function.apply(XSet), function.apply(YSet), Rotation2d.fromRadians(function.apply(AngleSet))));
 	}
 
 	public static Vector<N3> meanOfPose(List<Vector<N3>> dataset) {
-		double[] deconstructedPose = applyFunctionOnPoseElements(dataset, PoseUtils::mean);
-		return poseToVector.apply(new Pose2d(
-			deconstructedPose[Pose2dComponentsValue.X_VALUE.getIndex()],
-			deconstructedPose[Pose2dComponentsValue.Y_VALUE.getIndex()],
-			Rotation2d.fromRadians(deconstructedPose[Pose2dComponentsValue.ROTATION_VALUE.getIndex()])
-		));
+		return applyFunctionOnPoseElements(dataset, PoseUtils::mean);
+	}
+
+	public static Vector<N3> stdDevVector(List<Vector<N3>> dataset) {
+		return applyFunctionOnPoseElements(dataset, PoseUtils::calculateStandardDeviation);
 	}
 
 	public static double mean(List<Double> dataset) {

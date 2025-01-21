@@ -17,6 +17,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.ElevatorSimulation;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -27,8 +28,7 @@ import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.AngleUnit;
 import org.littletonrobotics.junction.Logger;
 
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 
 public class ElevatorFactory {
 
@@ -50,30 +50,20 @@ public class ElevatorFactory {
 
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
-			Volts.of(1).per(Seconds.of(1).baseUnit()),
+			Volts.of(1).per(Second),
 			Volts.of(7),
 			Seconds.of(10),
 			(state) -> Logger.recordOutput("state", state.toString())
 		);
 	}
 
-	private static TalonFXConfiguration generateRealConfiguration() {
+	private static TalonFXConfiguration generateConfiguration() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
-		configuration.Slot0.withKP(REAL_KP).withKI(REAL_KI).withKD(REAL_KD);
-		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
-		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch
-			.withReverseSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS).getRotations());
-		configuration.SoftwareLimitSwitch.withReverseSoftLimitEnable(SOFT_LIMIT_ENABLE);
-		configuration.SoftwareLimitSwitch
-			.withForwardSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS).getRotations());
-		configuration.SoftwareLimitSwitch.withForwardSoftLimitEnable(SOFT_LIMIT_ENABLE);
-		return configuration;
-	}
-
-	private static TalonFXConfiguration generateSimulationConfiguration() {
-		TalonFXConfiguration configuration = new TalonFXConfiguration();
-		configuration.Slot0.withKP(SIMULATION_KP).withKI(SIMULATION_KI).withKD(SIMULATION_KD);
+		if (Robot.ROBOT_TYPE.isReal()) {
+			configuration.Slot0.withKP(REAL_KP).withKI(REAL_KI).withKD(REAL_KD);
+		} else {
+			configuration.Slot0.withKP(SIMULATION_KP).withKI(SIMULATION_KI).withKD(SIMULATION_KD);
+		}
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
 		configuration.SoftwareLimitSwitch
@@ -99,8 +89,8 @@ public class ElevatorFactory {
 		);
 	}
 
-	public static Elevator create(String logPath) {
-		ElevatorSimulation elevatorSimulation = new ElevatorSimulation(
+	private static ElevatorSimulation generateSimulation(){
+		return new ElevatorSimulation(
 			new ElevatorSim(
 				LinearSystemId.createElevatorSystem(
 					DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
@@ -117,17 +107,29 @@ public class ElevatorFactory {
 			ElevatorConstants.DRUM_RADIUS_METERS,
 			ElevatorConstants.GEAR_RATIO
 		);
+	}
 
-		TalonFXMotor firstMotor = new TalonFXMotor(
-			logPath + "FirstMotor/",
+	private static TalonFXMotor generateFirstMotor(String logPath, ElevatorSimulation simulation){
+		return new TalonFXMotor(
+			logPath,
 			IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID,
 			generateSysidConfig(),
-			elevatorSimulation
+			simulation
 		);
-		firstMotor.applyConfiguration(Robot.ROBOT_TYPE.isSimulation() ? generateSimulationConfiguration() : generateRealConfiguration());
+	}
 
-		TalonFXMotor secondMotor = new TalonFXMotor(logPath + "SecondMotor/", IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, generateSysidConfig());
-		secondMotor.applyConfiguration(Robot.ROBOT_TYPE.isSimulation() ? generateSimulationConfiguration() : generateRealConfiguration());
+	private static TalonFXMotor generateSecondMotor(String logPath){
+		return new TalonFXMotor(logPath, IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, generateSysidConfig());
+	}
+
+	public static Elevator create(String logPath) {
+		ElevatorSimulation elevatorSimulation = generateSimulation();
+
+		TalonFXMotor firstMotor = generateFirstMotor(logPath + "FirstMotor/", elevatorSimulation);
+		firstMotor.applyConfiguration(generateConfiguration());
+
+		TalonFXMotor secondMotor = generateSecondMotor(logPath + "SecondMotor/");
+		secondMotor.applyConfiguration(generateConfiguration());
 
 		IDigitalInput digitalInput = generateDigitalInput();
 

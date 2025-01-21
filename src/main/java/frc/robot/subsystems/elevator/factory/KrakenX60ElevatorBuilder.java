@@ -37,8 +37,6 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.Second;
 
-
-
 public class KrakenX60ElevatorBuilder {
 
 	private static final int LIMIT_SWITCH_CHANNEL = 0;

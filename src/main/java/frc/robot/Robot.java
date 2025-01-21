@@ -11,6 +11,8 @@ import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.factory.KrakenX60ElevatorBuilder;
+import frc.robot.subsystems.endEffector.EndEffector;
+import frc.robot.subsystems.endEffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
 
 /**
@@ -23,11 +25,13 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Elevator elevator;
+	private final EndEffector endEffector;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
 		this.elevator = KrakenX60ElevatorBuilder.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "Elevator");
+		this.endEffector = EndEffectorFactory.create();
 	}
 
 	public void periodic() {
@@ -42,6 +46,10 @@ public class Robot {
 
 	public Elevator getElevator() {
 		return elevator;
+	}
+
+	public EndEffector getEndEffector() {
+		return endEffector;
 	}
 
 }

@@ -55,8 +55,8 @@ public class Elevator extends GBSubsystem {
 		this.limitSwitch = limitSwitch;
 		this.digitalInputInputs = new DigitalInputInputsAutoLogged();
 		hasBeenResetBySwitch = false;
+		
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
-
 		this.sysIdCalibrator = new SysIdCalibrator(firstMotor.getSysidConfigInfo(), this, this::setVoltage);
 
 		periodic();

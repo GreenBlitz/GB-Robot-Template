@@ -1,7 +1,7 @@
 package frc.robot.subsystems.factories.armfactory;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -25,31 +25,50 @@ import frc.utils.math.AngleUnit;
 
 public class TalonFXArmBuilder {
 
-	public static final double GEAR_RATIO = 15;
+	static final double KP = 1;
+	static final double KI = 0.8;
+	static final double KD = 0.8;
+	static final double KS = 0;
+	static final double KG = 0;
+	static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
+	static final int SUPPLY_CURRENT_LIMIT = 30;
+	static final boolean SUPPLY_CURRENT_LIMIT_ENABLE = true;
+	static final int STATOR_CURRENT_LIMIT = 40;
+	static final boolean STATOR_CURRENT_LIMIT_ENABLE = true;
+	static final double REVERSED_SOFTWARE_LIMIT_THRESHOLD = Rotation2d.fromDegrees(17).getRotations();
+	static final boolean REVERSED_SOFTWARE_LIMIT_THRESHOLD_ENABLE = true;
+	static final double FORWARD_SOFTWARE_LIMIT_THRESHOLD = Rotation2d.fromDegrees(50).getRotations();
+	static final boolean FORWARD_SOFTWARE_LIMIT_THRESHOLD_ENABLE = true;
 
 	public static Arm build(String logPath) {
-		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(0).withEnableFOC(true));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
+		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder
+			.build(new PositionVoltage(ArmConstants.STARTING_POSITION.getDegrees()).withSlot(0).withEnableFOC(true));
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(ArmConstants.STARTING_VOLTAGE).withEnableFOC(true));
 
 		SingleJointedArmSim armSim = new SingleJointedArmSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001, GEAR_RATIO),
-				DCMotor.getKrakenX60(1),
-				GEAR_RATIO,
-				1,
-				MathConstants.QUARTER_CIRCLE.unaryMinus().getRadians(),
-				MathConstants.QUARTER_CIRCLE.getRadians(),
-				false,
-				0
+			LinearSystemId.createDCMotorSystem(
+				DCMotor.getKrakenX60Foc(ArmConstants.NUMBER_OF_MOTORS),
+				SingleJointedArmSim.estimateMOI(ArmConstants.LENGTH_IN_METERS, ArmConstants.MASS_IN_KG),
+				ArmConstants.GEAR_RATIO
+			),
+			DCMotor.getKrakenX60(ArmConstants.NUMBER_OF_MOTORS),
+			ArmConstants.GEAR_RATIO,
+			ArmConstants.LENGTH_IN_METERS,
+			MathConstants.QUARTER_CIRCLE.unaryMinus().getRadians(),
+			MathConstants.QUARTER_CIRCLE.getRadians(),
+			false,
+			ArmConstants.STARTING_POSITION.getRadians()
 		);
-		SingleJointedArmSimulation armSimulation = new SingleJointedArmSimulation(armSim, GEAR_RATIO);
+
+		SingleJointedArmSimulation armSimulation = new SingleJointedArmSimulation(armSim, ArmConstants.GEAR_RATIO);
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM_DEVICE_ID, buildSysidConfig(), armSimulation);
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
-				.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-				.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		return new Arm(logPath, motor, positionRequest, voltageRequest, positionSignal, voltageSignal);
 	}
@@ -60,28 +79,24 @@ public class TalonFXArmBuilder {
 	}
 
 	private static TalonFXConfiguration buildTalonFXConfiguration() {
-		TalonFXConfiguration config = new TalonFXConfiguration();
-		config.Slot0.kP = 1;
-		config.Slot0.kI = 0.8;
-		config.Slot0.kD = 0.8;
-		config.Slot0.kS = 0;
-		config.Slot0.kG = 0;
-		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-
-		config.CurrentLimits.SupplyCurrentLimit = 30;
-		config.CurrentLimits.SupplyCurrentLimitEnable = true;
-		config.CurrentLimits.StatorCurrentLimit = 40;
-		config.CurrentLimits.StatorCurrentLimitEnable = true;
-
-		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MathConstants.QUARTER_CIRCLE.getRotations();
-		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MathConstants.QUARTER_CIRCLE.unaryMinus().getRotations();
-		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-
-		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
-		config.Feedback.SensorToMechanismRatio = 1;
-
-		return config;
+		return new TalonFXConfiguration()
+			.withSlot0(new Slot0Configs().withKP(KP).withKI(KI).withKD(KD).withKS(KS).withKS(KS).withGravityType(GRAVITY_TYPE))
+			.withCurrentLimits(
+				new CurrentLimitsConfigs().withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT)
+					.withSupplyCurrentLimitEnable(SUPPLY_CURRENT_LIMIT_ENABLE)
+					.withStatorCurrentLimit(STATOR_CURRENT_LIMIT)
+					.withStatorCurrentLimitEnable(STATOR_CURRENT_LIMIT_ENABLE)
+			)
+			.withSoftwareLimitSwitch(
+				new SoftwareLimitSwitchConfigs().withForwardSoftLimitThreshold(FORWARD_SOFTWARE_LIMIT_THRESHOLD)
+					.withForwardSoftLimitEnable(FORWARD_SOFTWARE_LIMIT_THRESHOLD_ENABLE)
+					.withReverseSoftLimitThreshold(REVERSED_SOFTWARE_LIMIT_THRESHOLD)
+					.withReverseSoftLimitEnable(REVERSED_SOFTWARE_LIMIT_THRESHOLD_ENABLE)
+			)
+			.withFeedback(
+				new FeedbackConfigs().withRotorToSensorRatio(ArmConstants.GEAR_RATIO)
+					.withSensorToMechanismRatio(ArmConstants.SENSOR_TO_MECHANISM_RATIO)
+			);
 	}
 
 }

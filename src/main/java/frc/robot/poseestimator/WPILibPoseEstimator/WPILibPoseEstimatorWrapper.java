@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import frc.robot.poseestimator.IPoseEstimator;
-import frc.utils.pose.PoseUtils;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -22,7 +21,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	private final SwerveDriveKinematics kinematics;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
-	private double odometryAcceleration;
 	private VisionData lastVisionObservation;
 	private OdometryObservation lastOdometryObservation;
 	private Rotation2d lastOdometryAngle;
@@ -48,7 +46,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
-		this.odometryAcceleration = 0;
 		this.lastOdometryObservation = new OdometryObservation(
 			modulePositions,
 			Optional.of(initialGyroAngle),
@@ -87,10 +84,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 			Rotation2d odometryAngle = getOdometryAngle(odometryObservation, changeInPose);
 			poseEstimator.updateWithTime(odometryObservation.timestamp(), odometryAngle, odometryObservation.wheelPositions());
 			updateOdometryPose(odometryObservation, changeInPose);
-
-			double deltaTime = odometryObservation.timestamp() - lastOdometryObservation.timestamp();
 			this.lastOdometryAngle = odometryAngle;
-			this.odometryAcceleration = PoseUtils.deriveProjectedTwist(changeInPose, deltaTime);
 			this.lastOdometryObservation = odometryObservation;
 		}
 	}
@@ -137,7 +131,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	private void log() {
 		Logger.recordOutput(getLogPath() + "estimatedPose/", getEstimatedPose());
 		Logger.recordOutput(getLogPath() + "odometryPose/", getOdometryPose());
-		Logger.recordOutput(getLogPath() + "odometryAcceleration/", odometryAcceleration);
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate/", lastOdometryObservation.timestamp());
 		if (lastVisionObservation != null) {
 			Logger.recordOutput(getLogPath() + "lastVisionUpdate/", lastVisionObservation.getTimestamp());

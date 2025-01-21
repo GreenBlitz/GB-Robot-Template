@@ -4,7 +4,9 @@ import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.Odometry;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
@@ -67,9 +69,8 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	public Rotation2d getOdometryAngle(OdometryObservation odometryObservation, Twist2d changeInPose) {
 		if (odometryObservation.gyroAngle().isEmpty()) {
 			return lastOdometryAngle.plus(Rotation2d.fromRadians(changeInPose.dtheta));
-		} else {
-			return odometryObservation.gyroAngle().get();
 		}
+		return odometryObservation.gyroAngle().get();
 	}
 
 	@Override

@@ -12,20 +12,18 @@ import java.util.function.Supplier;
 
 public class Periodic3DlLinearFilter implements IPeriodicLinearFilter {
 
-	private final ArrayList<Supplier<Double>> suppliers;
+	private final Supplier<ArrayList<Vector<N3>>> updateValues;
 	private final ArrayList<LinearFilter> linearFilters;
 	private final String name;
 
 	public Periodic3DlLinearFilter(
-		Supplier<Double> xSupplier,
-		Supplier<Double> ySupplier,
-		Supplier<Double> zSupplier,
+		Supplier<ArrayList<Vector<N3>>> updateValues,
 		LinearFilter xFilter,
 		LinearFilter yFilter,
 		LinearFilter zFilter,
 		String name
 	) {
-		this.suppliers = new ArrayList<>(List.of(xSupplier, ySupplier, zSupplier)); // safe casting
+		this.updateValues = updateValues;
 		this.linearFilters = new ArrayList<>(List.of(xFilter, yFilter, zFilter));
 		this.name = name;
 	}
@@ -38,16 +36,18 @@ public class Periodic3DlLinearFilter implements IPeriodicLinearFilter {
 	@Override
 	public void log(String parentLogPath) {
 		String logPath = parentLogPath + name + "/";
-		Logger.recordOutput(logPath + "input/" + "x/", suppliers.get(0).get());
-		Logger.recordOutput(logPath + "input/" + "y/", suppliers.get(1).get());
-		Logger.recordOutput(logPath + "input/" + "z/", suppliers.get(2).get());
-		Logger.recordOutput(logPath + "output/", getAsColumnVector());
+		for (int i = 0; i < updateValues.get().size(); i++) {
+			Logger.recordOutput(logPath + "input/" + i, updateValues.get().get(i));
+		}
+		Logger.recordOutput(logPath + "output", getAsColumnVector());
 	}
 
 	@Override
 	public void update() {
-		for (int i = 0; i < 3; i++) {
-			linearFilters.get(i).calculate(suppliers.get(i).get());
+		for (Vector<N3> data : updateValues.get()) {
+			for (int i = 0; i < 3; i++) {
+				linearFilters.get(i).calculate(data.get(i));
+			}
 		}
 	}
 

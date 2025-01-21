@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.endEffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
@@ -22,11 +24,13 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Elevator elevator;
 	private final EndEffector endEffector;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
+		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		this.endEffector = EndEffectorFactory.create();
 	}
 
@@ -38,6 +42,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Elevator getElevator() {
+		return elevator;
 	}
 
 	public EndEffector getEndEffector() {

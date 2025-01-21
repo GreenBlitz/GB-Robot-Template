@@ -8,21 +8,21 @@ import frc.utils.Filter;
 public class LimelightFactory {
 
 	public static RobotHeadingRequiringVisionSource createRobotHeadingRequiringLimelight(
-		String cameraName,
+		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
 		Filter<AprilTagVisionData> filter
 	) {
-		return new LimeLightSource(cameraName, parentLogPath, sourceName, filter, LimelightPoseEstimationMethod.MEGATAG_2);
+		return new LimeLightSource(cameraNetworkTablesName, parentLogPath, sourceName, filter, LimelightPoseEstimationMethod.MEGATAG_2);
 	}
 
 	public static IndpendentHeadingVisionSource createRobotHeadingEstimatingLimelight(
-		String cameraName,
+		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
 		Filter<AprilTagVisionData> filter
 	) {
-		return new LimeLightSource(cameraName, parentLogPath, sourceName, filter, LimelightPoseEstimationMethod.MEGATAG_1);
+		return new LimeLightSource(cameraNetworkTablesName, parentLogPath, sourceName, filter, LimelightPoseEstimationMethod.MEGATAG_1);
 	}
 
 }

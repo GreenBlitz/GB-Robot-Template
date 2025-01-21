@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
@@ -39,12 +40,14 @@ public class Arm extends GBSubsystem {
 		return commandsBuilder;
 	}
 
-	public Rotation2d getPosition() {
-		return positionSignal.getLatestValue();
+	private void updateInputs() {
+		motor.updateInputs(positionSignal, voltageSignal);
 	}
 
-	public double getVoltage() {
-		return voltageSignal.getLatestValue();
+	@Override
+	protected void subsystemPeriodic() {
+		motor.updateSimulation();
+		updateInputs();
 	}
 
 	protected void setTargetPosition(Rotation2d position) {
@@ -55,30 +58,24 @@ public class Arm extends GBSubsystem {
 		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
-	public void setBrake(boolean brake) {
-		motor.setBrake(brake);
-	}
-
 	protected void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	private void updateInputs() {
-		motor.updateInputs(positionSignal, voltageSignal);
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		updateInputs();
-		motor.updateSimulation();
+	protected void stop(){
+		motor.stop();
 	}
 
 	protected void stayInPlace() {
 		setTargetPosition(positionSignal.getLatestValue());
 	}
 
-	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
-		return ToleranceMath.isNearWrapped(position, positionSignal.getLatestValue(), tolerance);
+	public boolean isAtPosition(Rotation2d position, double tolerance) {
+		return MathUtil.isNear(position.getDegrees(), positionSignal.getLatestValue().getDegrees(), tolerance);
 	}
 
 }

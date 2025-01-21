@@ -32,9 +32,14 @@ public class ArmCommandsBuilder {
 			.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power to: " + powerSupplier.getAsDouble());
 	}
 
+	public Command stop(){
+		return arm
+			.asSubsystemCommand(new RunCommand(arm::stop), "Stopped");
+	}
+
 	public Command loggedDashboardSetVoltage() {
 		return arm.asSubsystemCommand(
-			new LoggedDashboardCommand("Set Arm Voltage", (voltage) -> arm.setVoltage(voltage)),
+			new LoggedDashboardCommand("Set Arm Voltage", arm::setVoltage),
 			"Set voltage via dashboard"
 		);
 	}

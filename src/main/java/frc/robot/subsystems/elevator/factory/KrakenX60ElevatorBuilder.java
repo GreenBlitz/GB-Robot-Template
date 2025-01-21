@@ -33,7 +33,7 @@ import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.*;
 
-public class KrakenElevatorBuilder {
+public class KrakenX60ElevatorBuilder {
 
 	private static final int LIMIT_SWITCH_CHANNEL = 0;
 	private static final double LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;

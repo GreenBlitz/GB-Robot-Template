@@ -29,8 +29,10 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 		Filter<AprilTagVisionData> filter
 	) {
 		this.useGyroForPoseEstimating = defaultUseGyroForPoseEstimating;
-		this.independentPoseEstimatingLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(name, parentLogPath, sourceLogPathAddition, filter);
-		this.headingRequiredLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(name, parentLogPath, sourceLogPathAddition, filter);
+		this.independentPoseEstimatingLimelight = LimelightFactory
+			.createRobotHeadingEstimatingLimelight(name, parentLogPath, sourceLogPathAddition, filter);
+		this.headingRequiredLimelight = LimelightFactory
+			.createRobotHeadingRequiringLimelight(name, parentLogPath, sourceLogPathAddition, filter);
 	}
 
 	public void setUseRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {

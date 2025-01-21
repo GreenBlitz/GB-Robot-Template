@@ -32,7 +32,7 @@ public class SmartJoystick {
 	private SmartJoystick(Joystick joystick, double deadzone) {
 		this.deadzone = deadzone;
 		this.joystick = joystick;
-		this.logPath = "Joysticks/" + joystick.getPort() + "/";
+		this.logPath = "Joysticks/" + joystick.getPort();
 
 		this.A = new JoystickButton(this.joystick, ButtonID.A.getId());
 		this.B = new JoystickButton(this.joystick, ButtonID.B.getId());
@@ -53,7 +53,7 @@ public class SmartJoystick {
 		this.POV_DOWN = new POVButton(this.joystick, ButtonID.POV_DOWN.getId());
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> !isConnected()));
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "/DisconnectedAt", () -> !isConnected()));
 	}
 
 	public String getLogPath() {

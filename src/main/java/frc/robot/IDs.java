@@ -13,7 +13,7 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static class Phoenix6IDs {
+	public static class TalonFXIDs {
 
 		public static final Phoenix6DeviceID ELEVATOR_FIRST_MOTOR_ID = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 

@@ -3,6 +3,8 @@ package frc.robot.subsystems.elevator.factory;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -31,7 +33,11 @@ import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.math.AngleUnit;
 import org.littletonrobotics.junction.Logger;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Second;
+
+
 
 public class KrakenX60ElevatorBuilder {
 
@@ -40,6 +46,8 @@ public class KrakenX60ElevatorBuilder {
 	private static final double CURRENT_LIMIT = 40;
 	private static final boolean CURRENT_LIMIT_ENABLE = true;
 	private static final boolean SOFT_LIMIT_ENABLE = true;
+	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
+	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
 
 	private static final double REAL_KP = 1;
 	private static final double REAL_KI = 0;
@@ -48,8 +56,8 @@ public class KrakenX60ElevatorBuilder {
 	private static final double SIMULATION_KP = 1;
 	private static final double SIMULATION_KI = 0;
 	private static final double SIMULATION_KD = 0;
-	public static final int NUMBER_OF_MOTORS = 2;
-	public static final double STARTING_HEIGHT_METERS = 0;
+	private static final int NUMBER_OF_MOTORS = 2;
+	private static final double STARTING_HEIGHT_METERS = 0;
 
 	private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(1).per(Second);
 	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(7);
@@ -65,21 +73,25 @@ public class KrakenX60ElevatorBuilder {
 		);
 	}
 
-	private static TalonFXConfiguration generateConfiguration() {
+	private static TalonFXConfiguration generateConfiguration(boolean inverted) {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 		if (Robot.ROBOT_TYPE.isReal()) {
-			configuration.Slot0.withKP(REAL_KP).withKI(REAL_KI).withKD(REAL_KD);
+			configuration.Slot0.kP = REAL_KP;
+			configuration.Slot0.kI = REAL_KI;
+			configuration.Slot0.kD = REAL_KD;
 		} else {
-			configuration.Slot0.withKP(SIMULATION_KP).withKI(SIMULATION_KI).withKD(SIMULATION_KD);
+			configuration.Slot0.kP = SIMULATION_KP;
+			configuration.Slot0.kI = SIMULATION_KI;
+			configuration.Slot0.kD = SIMULATION_KD;
 		}
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch
-			.withReverseSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS).getRotations());
-		configuration.SoftwareLimitSwitch.withReverseSoftLimitEnable(SOFT_LIMIT_ENABLE);
-		configuration.SoftwareLimitSwitch
-			.withForwardSoftLimitThreshold(Elevator.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS).getRotations());
-		configuration.SoftwareLimitSwitch.withForwardSoftLimitEnable(SOFT_LIMIT_ENABLE);
+		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS).getRotations();
+		configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = SOFT_LIMIT_ENABLE;
+		configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Elevator.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS).getRotations();
+		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = SOFT_LIMIT_ENABLE;
+		configuration.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 		return configuration;
 	}
 
@@ -118,26 +130,26 @@ public class KrakenX60ElevatorBuilder {
 	}
 
 	private static TalonFXMotor generateFirstMotor(String logPath, ElevatorSimulation simulation) {
-		return new TalonFXMotor(logPath, IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID, generateSysidConfig(), simulation);
+		return new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_FIRST_MOTOR_ID, generateSysidConfig(), simulation);
 	}
 
 	private static TalonFXMotor generateSecondMotor(String logPath) {
-		return new TalonFXMotor(logPath, IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, generateSysidConfig());
+		return new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_SECOND_MOTOR_ID, generateSysidConfig());
 	}
 
 	public static Elevator create(String logPath) {
 		ElevatorSimulation elevatorSimulation = generateSimulation();
 
-		TalonFXMotor firstMotor = generateFirstMotor(logPath + "FirstMotor/", elevatorSimulation);
-		firstMotor.applyConfiguration(generateConfiguration());
+		TalonFXMotor firstMotor = generateFirstMotor(logPath + "FirstMotor", elevatorSimulation);
+		firstMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
-		TalonFXMotor secondMotor = generateSecondMotor(logPath + "SecondMotor/");
-		secondMotor.applyConfiguration(generateConfiguration());
+		TalonFXMotor secondMotor = generateSecondMotor(logPath + "SecondMotor");
+		secondMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
 
 		IDigitalInput digitalInput = generateDigitalInput();
 
-		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0));
+		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true));
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
 
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->

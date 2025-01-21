@@ -30,7 +30,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		this.elevator = KrakenX60ElevatorBuilder.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "Elevator");
+		this.elevator = KrakenX60ElevatorBuilder.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/" + "Elevator");
 		this.endEffector = EndEffectorFactory.create();
 	}
 

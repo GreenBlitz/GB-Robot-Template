@@ -11,7 +11,7 @@ SwerveConstants:
 - [ ] Modules locations (in meters)
 - [ ] Drive radius meters
 - [ ] PathPlanner RealTimeConstraints (in AutonomousConstants)
-- 
+
 Gyro:
 -----------------------
 - [ ] ID

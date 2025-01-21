@@ -10,17 +10,19 @@ public class LimelightFactory {
 	public static RobotHeadingRequiringVisionSource createRobotHeadingRequiringLimelight(
 		String name,
 		String parentLogPath,
+		String sourceLogPathAddition,
 		Filter<AprilTagVisionData> filter
 	) {
-		return new LimeLightSource(name, parentLogPath, filter, LimelightPoseEstimationMethod.MEGATAG_2);
+		return new LimeLightSource(name, parentLogPath, sourceLogPathAddition, filter, LimelightPoseEstimationMethod.MEGATAG_2);
 	}
 
 	public static IndpendentHeadingVisionSource createRobotHeadingEstimatingLimelight(
 		String name,
 		String parentLogPath,
+		String sourceLogPathAddition,
 		Filter<AprilTagVisionData> filter
 	) {
-		return new LimeLightSource(name, parentLogPath, filter, LimelightPoseEstimationMethod.MEGATAG_1);
+		return new LimeLightSource(name, parentLogPath, sourceLogPathAddition, filter, LimelightPoseEstimationMethod.MEGATAG_1);
 	}
 
 }

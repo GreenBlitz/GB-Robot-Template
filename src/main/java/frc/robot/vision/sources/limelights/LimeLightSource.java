@@ -52,10 +52,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	protected LimeLightSource(
 		String name,
 		String parentLogPath,
+		String sourceLogPathAddition,
 		Filter<AprilTagVisionData> filter,
 		LimelightPoseEstimationMethod poseEstimationMethod
 	) {
-		this.logPath = parentLogPath + name + "/";
+		this.logPath = parentLogPath + name + "/" + sourceLogPathAddition;
 		this.name = name;
 		this.filter = filter;
 		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);

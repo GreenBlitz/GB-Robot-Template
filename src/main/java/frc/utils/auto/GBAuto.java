@@ -31,8 +31,8 @@ public class GBAuto extends PathPlannerAuto {
 		setName(autoName);
 	}
 
-	public GBAuto(GBAuto... autos) {
-		this(Commands.none().andThen(autos), autos[0].getStartingPose(), chainAutoNames(autos), true);
+	public static GBAuto chainAutos(GBAuto... autos) {
+		return new GBAuto(Commands.none().andThen(autos), autos[0].getStartingPose(), chainAutoNames(autos), true);
 	}
 
 	public GBAuto withResetPose(Consumer<Pose2d> resetPose) {

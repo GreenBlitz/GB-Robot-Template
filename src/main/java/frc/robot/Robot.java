@@ -39,9 +39,9 @@ public class Robot {
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
-	private AutonomousChooser GUIAutosChooser;
+	private AutonomousChooser pathPlannerAutosChooser;
 	private AutonomousChooser autoLineAutosChooser;
-	private AutonomousChooser feedScoreAutosChooser;
+	private AutonomousChooser feedScoreObject1AutosChooser;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -79,13 +79,13 @@ public class Robot {
 			poseEstimator::resetPose,
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
-		GUIAutosChooser = new AutonomousChooser("GUIAutosChooser", AutosBuilder.getAllGUIAutos());
+		pathPlannerAutosChooser = new AutonomousChooser("PathPlannerAutosChooser", AutosBuilder.getAllPathPlannerAutos());
 		autoLineAutosChooser = new AutonomousChooser(
 			"AutoLineAutosChooser",
 			AutosBuilder.getAllAutoLineAutos(this, scoreL4Command, isCloseToTranslation)
 		);
-		feedScoreAutosChooser = new AutonomousChooser(
-			"FeedScoreAutosChooser",
+		feedScoreObject1AutosChooser = new AutonomousChooser(
+			"FeedScoreObject1AutosChooser",
 			AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command, isCloseToTranslation, isCloseToTranslation)
 		);
 	}
@@ -99,10 +99,11 @@ public class Robot {
 	}
 
 	public GBAuto getAuto() {
-		if (autoLineAutosChooser.isDefaultOptionChosen() && feedScoreAutosChooser.isDefaultOptionChosen()) {
-			return GUIAutosChooser.getChosenValue();
+		boolean isAutoChosen  = !autoLineAutosChooser.isDefaultOptionChosen();
+		if (isAutoChosen) {
+			return GBAuto.chainAutos(autoLineAutosChooser.getChosenValue(), feedScoreObject1AutosChooser.getChosenValue()).withResetPose(getPoseEstimator()::resetPose);
 		}
-		return new GBAuto(autoLineAutosChooser.getChosenValue(), feedScoreAutosChooser.getChosenValue()).withResetPose(poseEstimator::resetPose);
+		return pathPlannerAutosChooser.getChosenValue();
 	}
 
 	public Superstructure getSuperStructure() {

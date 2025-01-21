@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class AutosBuilder {
 
-	public static List<Supplier<GBAuto>> getAllGUIAutos() {
+	public static List<Supplier<GBAuto>> getAllPathPlannerAutos() {
 		return List.of(() -> new GBAuto("Rotate"), () -> new GBAuto("Rotate 2m"), () -> new GBAuto("Straight 2m"));
 	}
 

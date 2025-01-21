@@ -25,12 +25,10 @@ public class WPILibPoseEstimatorConstants {
 	);
 	//formatter:on
 
-	public static final double VISION_STANDARD_DEVIATION_FACTOR = 0.1;
-
 	public static final Rotation2d INITIAL_GYRO_ANGLE = new Rotation2d();
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
-	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STANDARD_DEVIATIONS_TRANSFORM = aprilTagVisionData -> new StandardDeviations2D(aprilTagVisionData.getDistanceFromAprilTagMeters() * WPILibPoseEstimatorConstants.VISION_STANDARD_DEVIATION_FACTOR);
+	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STANDARD_DEVIATIONS_TRANSFORM = aprilTagVisionData -> new StandardDeviations2D(Math.pow(aprilTagVisionData.getDistanceFromAprilTagMeters(), 2));
 
 }

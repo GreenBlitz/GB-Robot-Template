@@ -7,6 +7,10 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.VoltageUnit;
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.units.measure.Velocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -47,11 +51,16 @@ public class KrakenElevatorBuilder {
 	public static final int NUMBER_OF_MOTORS = 2;
 	public static final double STARTING_HEIGHT_METERS = 0;
 
+	private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(1).per(Second);
+	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(7);
+	private static final Time CONFIG_TIMEOUT = Seconds.of(10);
+
+
 	private static SysIdRoutine.Config generateSysidConfig() {
 		return new SysIdRoutine.Config(
-			Volts.of(1).per(Second),
-			Volts.of(7),
-			Seconds.of(10),
+			CONFIG_RAMP_RATE,
+			CONFIG_STEP_VOLTAGE,
+			CONFIG_TIMEOUT,
 			(state) -> Logger.recordOutput("state", state.toString())
 		);
 	}

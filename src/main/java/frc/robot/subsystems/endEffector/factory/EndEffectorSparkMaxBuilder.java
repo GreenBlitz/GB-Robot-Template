@@ -41,13 +41,13 @@ public class EndEffectorSparkMaxBuilder {
 		SparkMaxConfig config = new SparkMaxConfig();
 		config.inverted(IS_INVERTED);
 		config.smartCurrentLimit(CURRENT_LIMIT);
-		config.limitSwitch.reverseLimitSwitchEnabled(true);
+
 		config.limitSwitch.forwardLimitSwitchEnabled(true);
-		
-		
-		config.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyClosed);
-		config.limitSwitch.forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyClosed);
-		
+		config.limitSwitch.forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
+
+		config.limitSwitch.reverseLimitSwitchEnabled(true);
+		config.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
+
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 		sparkMaxMotor.setBrake(SET_BRAKE);
 	}

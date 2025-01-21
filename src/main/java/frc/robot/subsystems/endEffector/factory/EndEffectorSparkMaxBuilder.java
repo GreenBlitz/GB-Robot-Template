@@ -28,7 +28,7 @@ public class EndEffectorSparkMaxBuilder {
 	private static final double POSITION_CONVERSION_FACTOR = 1;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
-	private static final Double DEBOUNCE_TIME = 0.0001;
+	private static final Double DEBOUNCE_TIME_SECONDS = 0.1;
 
 	private enum LimitSwitchDirection {
 
@@ -42,10 +42,10 @@ public class EndEffectorSparkMaxBuilder {
 		config.inverted(IS_INVERTED);
 		config.smartCurrentLimit(CURRENT_LIMIT);
 
-		config.limitSwitch.forwardLimitSwitchEnabled(true);
+		config.limitSwitch.forwardLimitSwitchEnabled(false);
 		config.limitSwitch.forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
 
-		config.limitSwitch.reverseLimitSwitchEnabled(true);
+		config.limitSwitch.reverseLimitSwitchEnabled(false);
 		config.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
 
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
@@ -69,9 +69,9 @@ public class EndEffectorSparkMaxBuilder {
 		if (Robot.ROBOT_TYPE.isReal()) {
 			return switch (limitSwitch) {
 				case FORWARD ->
-					new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME));
+					new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
 				case REVERSE ->
-					new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME));
+					new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
 			};
 		} else {
 			return new ChooserDigitalInput(logPath);

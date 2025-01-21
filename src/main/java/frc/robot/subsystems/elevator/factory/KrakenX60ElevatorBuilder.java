@@ -28,7 +28,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
-import frc.utils.AngleUnit;
+import frc.utils.math.AngleUnit;
 import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.*;

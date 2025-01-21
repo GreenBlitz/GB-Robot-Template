@@ -21,8 +21,8 @@ import java.util.Optional;
 public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEstimator {
 
 	private final SwerveDriveKinematics kinematics;
-	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
+	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private VisionData lastVisionObservation;
 	private OdometryObservation lastOdometryObservation;
 	private Rotation2d lastOdometryAngle;

@@ -1,6 +1,7 @@
 package frc.robot.vision.sources.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.constants.VisionConstants;
 import frc.robot.hardware.signal.TimedValue;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -23,16 +24,24 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 
 	public DynamicSwitchingLimelight(
 		boolean defaultUseGyroForPoseEstimating,
-		String name,
+		String cameraName,
 		String parentLogPath,
-		String sourceLogPathAddition,
+		String sourceName,
 		Filter<AprilTagVisionData> filter
 	) {
 		this.useGyroForPoseEstimating = defaultUseGyroForPoseEstimating;
-		this.independentPoseEstimatingLimelight = LimelightFactory
-			.createRobotHeadingEstimatingLimelight(name, parentLogPath, sourceLogPathAddition, filter);
-		this.headingRequiredLimelight = LimelightFactory
-			.createRobotHeadingRequiringLimelight(name, parentLogPath, sourceLogPathAddition, filter);
+		this.independentPoseEstimatingLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(
+			cameraName,
+			parentLogPath,
+			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG1_LOGPATH,
+			filter
+		);
+		this.headingRequiredLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(
+			cameraName,
+			parentLogPath,
+			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG2_LOGPATH,
+			filter
+		);
 	}
 
 	public void setUseRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {

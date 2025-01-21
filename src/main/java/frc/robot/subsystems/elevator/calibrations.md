@@ -1,4 +1,4 @@
-Thing to do when getting the robot
+Calibrations
 ----------------------------------
 - [ ] Rename Motor Names By Position On Robot
 - [ ] Motor: Id, Type

@@ -15,6 +15,8 @@ import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 import org.ejml.simple.SimpleMatrix;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class PoseUtils {
@@ -57,5 +59,37 @@ public class PoseUtils {
 	public Function<Pose2d, Vector<N3>> poseToVector = pose -> new Vector<>(
 		new SimpleMatrix(new double[][] {{pose.getX(), pose.getY(), pose.getRotation().getRadians()}})
 	);
+
+
+
+
+	private static double[] applyFunctionOnPoseElements(List<Vector<N3>> dataset, Function<List<Double>, Double> function) {
+		List<Double> XSet = new ArrayList<>();
+		List<Double> YSet = new ArrayList<>();
+		List<Double> AngleSet = new ArrayList<>();
+		for (Vector<N3> data : dataset) {
+			XSet.add(data.get(0));
+			YSet.add(data.get(1));
+			AngleSet.add(data.get(2)));
+		}
+		return new double[] {function.apply(XSet), function.apply(YSet), function.apply(AngleSet)};
+	}
+
+	public static Vector<N3> meanOfPose(List<Vector<N3>> dataset) {
+		double[] deconstructedPose = applyFunctionOnPoseElements(dataset, PoseUtils::mean);
+		return poseToVector.apply(new Pose2d(
+			deconstructedPose[Pose2dComponentsValue.X_VALUE.getIndex()],
+			deconstructedPose[Pose2dComponentsValue.Y_VALUE.getIndex()],
+			Rotation2d.fromRadians(deconstructedPose[Pose2dComponentsValue.ROTATION_VALUE.getIndex()])
+		));
+	}
+
+	public static double mean(List<Double> dataset) {
+		double sum = 0;
+		for (double data : dataset) {
+			sum += data;
+		}
+		return sum / dataset.size();
+	}
 
 }

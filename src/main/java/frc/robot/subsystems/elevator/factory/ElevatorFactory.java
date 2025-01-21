@@ -17,7 +17,6 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.ElevatorSimulation;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -89,7 +88,7 @@ public class ElevatorFactory {
 		);
 	}
 
-	private static ElevatorSimulation generateSimulation(){
+	private static ElevatorSimulation generateSimulation() {
 		return new ElevatorSimulation(
 			new ElevatorSim(
 				LinearSystemId.createElevatorSystem(
@@ -109,16 +108,11 @@ public class ElevatorFactory {
 		);
 	}
 
-	private static TalonFXMotor generateFirstMotor(String logPath, ElevatorSimulation simulation){
-		return new TalonFXMotor(
-			logPath,
-			IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID,
-			generateSysidConfig(),
-			simulation
-		);
+	private static TalonFXMotor generateFirstMotor(String logPath, ElevatorSimulation simulation) {
+		return new TalonFXMotor(logPath, IDs.Phoenix6IDs.ELEVATOR_FIRST_MOTOR_ID, generateSysidConfig(), simulation);
 	}
 
-	private static TalonFXMotor generateSecondMotor(String logPath){
+	private static TalonFXMotor generateSecondMotor(String logPath) {
 		return new TalonFXMotor(logPath, IDs.Phoenix6IDs.ELEVATOR_SECOND_MOTOR_ID, generateSysidConfig());
 	}
 

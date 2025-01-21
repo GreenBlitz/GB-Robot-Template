@@ -12,7 +12,7 @@ import frc.robot.subsystems.swerve.module.records.DriveSignals;
 public class DriveFactory {
 
 	public static ControllableMotor createDrive(String logPath, ModuleUtils.ModulePosition modulePosition) {
-		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Drive/";
+		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Drive";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR, false);

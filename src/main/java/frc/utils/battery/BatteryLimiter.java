@@ -32,7 +32,7 @@ class BatteryLimiter extends Command {
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				BatteryConstants.LOG_PATH + "LowVoltageAt",
+				BatteryConstants.LOG_PATH + "/LowVoltageAt",
 				() -> averageVoltage <= BatteryUtils.MIN_VOLTAGE
 			)
 		);

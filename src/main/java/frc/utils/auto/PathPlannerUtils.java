@@ -132,11 +132,6 @@ public class PathPlannerUtils {
 		return RobotAutoHelper.followPath(path);
 	}
 
-	public static boolean isRobotCloseToPathBeginning(PathPlannerPath path, Supplier<Pose2d> currentPose, double toleranceMeters) {
-		return ToleranceMath
-			.isNear(getAllianceRelativePose(path.getPathPoses().get(0)).getTranslation(), currentPose.get().getTranslation(), toleranceMeters);
-	}
-
 	public static Pose2d getAllianceRelativePose(Pose2d bluePose) {
 		return AutoBuilder.shouldFlip() ? FlippingUtil.flipFieldPose(bluePose) : bluePose;
 	}

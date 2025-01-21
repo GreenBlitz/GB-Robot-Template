@@ -22,6 +22,7 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import frc.utils.math.ToleranceMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
@@ -170,7 +171,7 @@ public class SwerveCommandsBuilder {
 			RobotAutoHelper.followPath(path)
 				.andThen(pidToPose(currentPose, PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
 			driveToPose(currentPose, () -> PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
-			() -> PathPlannerUtils.isRobotCloseToPathBeginning(path, currentPose, AutonomousConstants.PATHFINDING_DEADBAND_METERS)
+			() -> ToleranceMath.isNear(PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)).getTranslation(), currentPose.get().getTranslation(), AutonomousConstants.PATHFINDING_DEADBAND_METERS)
 		).until(endCondition).andThen(new InstantCommand(() -> swerve.driveByState(0, 0, 0, SwerveState.DEFAULT_PATH_PLANNER), swerve));
 	}
 

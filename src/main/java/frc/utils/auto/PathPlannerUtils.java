@@ -19,10 +19,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.autonomous.RobotAutoHelper;
+import frc.robot.autonomous.PathFollowingCommands;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
-import frc.utils.math.ToleranceMath;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -129,7 +128,7 @@ public class PathPlannerUtils {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
-		return RobotAutoHelper.followPath(path);
+		return PathFollowingCommands.followPath(path);
 	}
 
 	public static Pose2d getAllianceRelativePose(Pose2d bluePose) {

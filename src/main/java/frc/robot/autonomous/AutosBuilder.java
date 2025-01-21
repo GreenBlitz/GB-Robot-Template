@@ -104,7 +104,7 @@ public class AutosBuilder {
 		Supplier<Command> commandSupplier,
 		BooleanSupplier condition
 	) {
-		Optional<PathPlannerPath> pathOptional = path.getPathOptional();
+		Optional<PathPlannerPath> pathOptional = path.getPath();
 
 		return new GBAuto(
 			pathOptional

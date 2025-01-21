@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.autonomous.RobotAutoHelper;
+import frc.robot.autonomous.PathFollowingCommands;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
@@ -168,7 +168,7 @@ public class SwerveCommandsBuilder {
 
 	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path, BooleanSupplier endCondition) {
 		return new ConditionalCommand(
-			RobotAutoHelper.followPath(path)
+			PathFollowingCommands.followPath(path)
 				.andThen(pidToPose(currentPose, PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
 			driveToPose(currentPose, () -> PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
 			() -> ToleranceMath.isNear(PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)).getTranslation(), currentPose.get().getTranslation(), AutonomousConstants.PATHFINDING_DEADBAND_METERS)
@@ -192,7 +192,7 @@ public class SwerveCommandsBuilder {
 		if (distanceFromTarget < AutonomousConstants.PATHFINDING_DEADBAND_METERS) {
 			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
-			pathFollowingCommand = RobotAutoHelper.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = PathFollowingCommands.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}
 
 		return swerve.asSubsystemCommand(

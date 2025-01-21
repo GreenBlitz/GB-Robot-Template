@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 public class GBAuto extends PathPlannerAuto {
 
-	private boolean isFullyCreated;
+	private final boolean isFullyCreated;
 
 	GBAuto() {
 		super(Commands.none());

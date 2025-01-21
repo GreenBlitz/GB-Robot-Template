@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class SequencesBuilder {
 
 	public static Command commandDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new ParallelCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
+		return new ParallelCommandGroup(PathFollowingCommands.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
 	}
 
 	public static Command commandWhenConditionIsMetDuringPath(
@@ -26,7 +26,7 @@ public class SequencesBuilder {
 	}
 
 	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new SequentialCommandGroup(RobotAutoHelper.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
+		return new SequentialCommandGroup(PathFollowingCommands.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
 	}
 
 }

@@ -9,7 +9,7 @@ import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.math.ToleranceMath;
 
-public class RobotAutoHelper {
+public class PathFollowingCommands {
 
 	public static Command followPath(PathPlannerPath path) {
 		return AutoBuilder.followPath(path);

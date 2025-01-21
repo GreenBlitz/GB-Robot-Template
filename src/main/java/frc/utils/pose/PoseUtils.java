@@ -56,7 +56,7 @@ public class PoseUtils {
 		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
 	}
 
-	public Function<Pose2d, Vector<N3>> poseToVector = pose -> new Vector<>(
+	public static Function<Pose2d, Vector<N3>> poseToVector = pose -> new Vector<>(
 		new SimpleMatrix(new double[][] {{pose.getX(), pose.getY(), pose.getRotation().getRadians()}})
 	);
 
@@ -90,6 +90,15 @@ public class PoseUtils {
 			sum += data;
 		}
 		return sum / dataset.size();
+	}
+
+	public static double calculateStandardDeviation(List<Double> dataset) {
+		double mean = mean(dataset);
+		double squaredDeviation = 0;
+		for (double data : dataset) {
+			squaredDeviation += Math.pow(data - mean, 2);
+		}
+		return Math.sqrt(squaredDeviation / dataset.size());
 	}
 
 }

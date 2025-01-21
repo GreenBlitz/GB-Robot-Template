@@ -33,13 +33,13 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 		this.independentPoseEstimatingLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(
 			cameraNetworkTablesName,
 			parentLogPath,
-			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG1_LOGPATH,
+			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG1_SOURCE_NAME,
 			filter
 		);
 		this.headingRequiringLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(
 			cameraNetworkTablesName,
 			parentLogPath,
-			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG2_LOGPATH,
+			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG2_SOURCE_NAME,
 			filter
 		);
 	}

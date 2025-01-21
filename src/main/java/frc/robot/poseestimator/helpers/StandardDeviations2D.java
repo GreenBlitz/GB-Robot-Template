@@ -16,14 +16,6 @@ public record StandardDeviations2D(double xStandardDeviations, double yStandardD
 		this(standardDeviation, standardDeviation, standardDeviation);
 	}
 
-	public StandardDeviations2D(double[] standardDeviations) {
-		this(
-			standardDeviations[Pose2dComponentsValue.X_VALUE.getIndex()],
-			standardDeviations[Pose2dComponentsValue.Y_VALUE.getIndex()],
-			standardDeviations[Pose2dComponentsValue.ROTATION_VALUE.getIndex()]
-		);
-	}
-
 	public StandardDeviations2D(StandardDeviations2D standardDeviations2D) {
 		this(standardDeviations2D.xStandardDeviations, standardDeviations2D.yStandardDeviations, standardDeviations2D.angleStandardDeviations);
 	}

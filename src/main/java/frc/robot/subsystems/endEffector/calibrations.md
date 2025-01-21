@@ -3,7 +3,6 @@ Calibrations:
 - [ ] Motor id
 - [ ] Natural mode
 - [ ] Motor inverted
-- [ ] Gear ratio
 - [ ] Current limit
 - [ ] Beam breaker ports
 - [ ] Beam breakers inverted

@@ -11,7 +11,6 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GBSubsystem {
@@ -58,11 +57,7 @@ public class Elevator extends GBSubsystem {
 		hasBeenResetBySwitch = false;
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
 
-		this.sysIdCalibrator = new SysIdCalibrator(
-			firstMotor.getSysidConfigInfo(),
-			this,
-			this::setVoltage
-		);
+		this.sysIdCalibrator = new SysIdCalibrator(firstMotor.getSysidConfigInfo(), this, this::setVoltage);
 
 		periodic();
 
@@ -91,7 +86,7 @@ public class Elevator extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		//Update Simulation checks if ROBOT_TYPE.isSimulation() inside the function and acts accordingly.
+		// Update Simulation checks if ROBOT_TYPE.isSimulation() inside the function and acts accordingly.
 		firstMotor.updateSimulation();
 		secondMotor.updateSimulation();
 		updateInputs();
@@ -155,11 +150,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public boolean isAtPosition(double positionMeters, double toleranceMeters) {
-		return MathUtil.isNear(
-				positionMeters,
-				getElevatorPositionMeters(),
-				toleranceMeters
-		);
+		return MathUtil.isNear(positionMeters, getElevatorPositionMeters(), toleranceMeters);
 	}
 
 	private boolean shouldResetByMinimumPosition() {

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -23,8 +24,9 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.arm.Arm;
 import frc.utils.math.AngleUnit;
 
-public class TalonFXArmBuilder {
+public class KrakenX60Builder {
 
+	static final boolean IS_FOC = true;
 	static final double KP = 1;
 	static final double KI = 0.8;
 	static final double KD = 0.8;
@@ -40,10 +42,10 @@ public class TalonFXArmBuilder {
 	static final double FORWARD_SOFTWARE_LIMIT_THRESHOLD = Rotation2d.fromDegrees(50).getRotations();
 	static final boolean FORWARD_SOFTWARE_LIMIT_THRESHOLD_ENABLE = true;
 
-	public static Arm build(String logPath) {
+	protected static Arm build(String logPath) {
 		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder
-			.build(new PositionVoltage(ArmConstants.STARTING_POSITION.getDegrees()).withSlot(0).withEnableFOC(true));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(ArmConstants.STARTING_VOLTAGE).withEnableFOC(true));
+			.build(new PositionVoltage(ArmConstants.STARTING_POSITION.getDegrees()).withEnableFOC(IS_FOC));
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(ArmConstants.STARTING_VOLTAGE).withEnableFOC(IS_FOC));
 
 		SingleJointedArmSim armSim = new SingleJointedArmSim(
 			LinearSystemId.createDCMotorSystem(
@@ -96,6 +98,7 @@ public class TalonFXArmBuilder {
 			.withFeedback(
 				new FeedbackConfigs().withRotorToSensorRatio(ArmConstants.GEAR_RATIO)
 					.withSensorToMechanismRatio(ArmConstants.SENSOR_TO_MECHANISM_RATIO)
+					.withFusedCANcoder(new CoreCANcoder(IDs.CANCodersIDs.ARM_CAN_CODER.getDeviceID()))
 			);
 	}
 

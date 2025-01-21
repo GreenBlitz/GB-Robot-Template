@@ -15,8 +15,8 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.signal.TimedValue;
 import frc.robot.poseestimator.IPoseEstimator;
-import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
@@ -65,22 +65,26 @@ public class Robot {
 			GyroFactory.createSignals(gyro)
 		);
 
-		this.poseEstimator = new WPILibPoseEstimator(
+		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getAllOdometryObservations()[0].wheelPositions(),
 			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE
 		);
 
-		this.poseEstimator2 = new WPILibPoseEstimator(
-			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.substring(0, WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.length()-1) + "2/",
+		this.poseEstimator2 = new WPILibPoseEstimatorWrapper(
+			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH
+				.substring(0, WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.length() - 1)
+				+ "2/",
 			swerve.getKinematics(),
 			swerve.getAllOdometryObservations()[0].wheelPositions(),
 			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE
 		);
 
-		this.poseEstimator3 = new WPILibPoseEstimator(
-			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.substring(0, WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.length()-1) + "3/",
+		this.poseEstimator3 = new WPILibPoseEstimatorWrapper(
+			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH
+				.substring(0, WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH.length() - 1)
+				+ "3/",
 			swerve.getKinematics(),
 			swerve.getAllOdometryObservations()[0].wheelPositions(),
 			WPILibPoseEstimatorConstants.INITIAL_GYRO_ANGLE
@@ -171,11 +175,11 @@ public class Robot {
 	}
 
 	public IPoseEstimator[] getPoseEstimators() {
-		return new IPoseEstimator[]{poseEstimator, poseEstimator2, poseEstimator3};
+		return new IPoseEstimator[] {poseEstimator, poseEstimator2, poseEstimator3};
 	}
 
 	public MultiAprilTagVisionSources[] getAprilTagVisionSources() {
-		return new MultiAprilTagVisionSources[]{aprilTagVisionSources, aprilTagVisionSources2, aprilTagVisionSources3};
+		return new MultiAprilTagVisionSources[] {aprilTagVisionSources, aprilTagVisionSources2, aprilTagVisionSources3};
 	}
 
 	public RobotHeadingEstimator getHeadingEstimator() {

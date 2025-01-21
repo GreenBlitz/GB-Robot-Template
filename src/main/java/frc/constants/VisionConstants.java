@@ -7,7 +7,6 @@ import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
-import frc.robot.vision.sources.limelights.LimelightFactory;
 import frc.utils.Filter;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.utils.Filter;
@@ -58,25 +57,25 @@ public class VisionConstants {
 	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
 //		.polymorphAs(); // .and(VisionFilters.isAprilTagHeightInTolerance(0.5, 1.2));
 
-	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES = List.of(
-		new DynamicSwitchingLimelight(true, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionConstants.DEFAULT_VISION_FILTER)
+	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES = List
+		.of(new DynamicSwitchingLimelight(true, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionConstants.DEFAULT_VISION_FILTER)
 //		LimelightFactory.createRobotHeadingEstimatingLimelight("limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionConstants.DEFAULT_VISION_FILTER)
 //		new LimeLightSource("limelight-back", MULTI_VISION_SOURCES_LOGPATH, new Filter<>(data -> true))
-	);
+		);
 
 	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES2 = List.of(
-		new DynamicSwitchingLimelight(true, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionFilters.isPitchAtAngle(
-			Rotation2d.fromDegrees(0),
-			Rotation2d.fromDegrees(1)
-		).and(VisionFilters.isPitchAtAngle(
-			Rotation2d.fromDegrees(0),
-			Rotation2d.fromDegrees(1)
-		)).polymorphAs())
+		new DynamicSwitchingLimelight(
+			true,
+			"limelight-back",
+			MULTI_VISION_SOURCES_LOGPATH,
+			VisionFilters.isPitchAtAngle(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(1))
+				.and(VisionFilters.isPitchAtAngle(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(1)))
+				.polymorphAs()
+		)
 	);
 
-	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES3 = List.of(
-		new DynamicSwitchingLimelight(true, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionFilters.isOnGround(0.06).polymorphAs())
-	);
+	public static final List<VisionSource<AprilTagVisionData>> DEFAULT_VISION_POSEESTIMATING_SOURCES3 = List
+		.of(new DynamicSwitchingLimelight(true, "limelight-back", MULTI_VISION_SOURCES_LOGPATH, VisionFilters.isOnGround(0.06).polymorphAs()));
 
 	public static final double VISION_STDEVS_FACTOR = 0.1;
 

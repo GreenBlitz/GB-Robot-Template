@@ -83,10 +83,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		for (VisionSource<AprilTagVisionData> visionSource : sources) {
 			if (visionSource instanceof IndpendentHeadingVisionSource indpendentHeadingVisionSource) {
 				mapping.apply(indpendentHeadingVisionSource)
-					.ifPresent(
-						(visionData) -> output
-							.add(new TimedValue<>(visionData.value(), visionData.timestamp()))
-					);
+					.ifPresent((visionData) -> output.add(new TimedValue<>(visionData.value(), visionData.timestamp())));
 			}
 		}
 		return output;

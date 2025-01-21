@@ -1,13 +1,10 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.Odometry;
@@ -65,10 +62,10 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		return poseEstimator.getEstimatedPosition();
 	}
 
-    @Override
-    public Pose2d getEstimatedPoseAtTimestamp(double timestamp) {
-        return poseEstimator.sampleAt(timestamp).orElseGet(this::getEstimatedPose);
-    }
+	@Override
+	public Pose2d getEstimatedPoseAtTimestamp(double timestamp) {
+		return poseEstimator.sampleAt(timestamp).orElseGet(this::getEstimatedPose);
+	}
 
 	public Rotation2d getOdometryAngle(OdometryObservation odometryObservation, Twist2d changeInPose) {
 		if (odometryObservation.gyroAngle().isEmpty()) {
@@ -77,10 +74,10 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		return odometryObservation.gyroAngle().get();
 	}
 
-    @Override
-    public Pose2d getOdometryPose() {
-        return odometryEstimator.getPoseMeters();
-    }
+	@Override
+	public Pose2d getOdometryPose() {
+		return odometryEstimator.getPoseMeters();
+	}
 
 	@Override
 	public void updateOdometry(OdometryObservation[] odometryObservations) {
@@ -93,12 +90,12 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		}
 	}
 
-    @Override
-    public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {
-        for (AprilTagVisionData visionData : robotPoseVisionData) {
-            addVisionMeasurement(visionData);
-        }
-    }
+	@Override
+	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {
+		for (AprilTagVisionData visionData : robotPoseVisionData) {
+			addVisionMeasurement(visionData);
+		}
+	}
 
 	@Override
 	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
@@ -135,9 +132,9 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		}
 	}
 
-    @Override
-    protected void subsystemPeriodic() {
-        log();
-    }
+	@Override
+	protected void subsystemPeriodic() {
+		log();
+	}
 
 }

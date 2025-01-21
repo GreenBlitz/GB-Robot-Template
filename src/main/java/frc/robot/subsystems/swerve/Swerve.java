@@ -154,7 +154,7 @@ public class Swerve extends GBSubsystem {
 		Translation2d[] modulePositionsFromCenterMeters = modules.getModulePositionsFromCenterMeters();
 		double sum = 0;
 		for (Translation2d modulePositionFromCenterMeters : modulePositionsFromCenterMeters) {
-				sum += modulePositionFromCenterMeters.getDistance(new Translation2d());
+			sum += modulePositionFromCenterMeters.getDistance(new Translation2d());
 		}
 		return sum / modulePositionsFromCenterMeters.length;
 	}

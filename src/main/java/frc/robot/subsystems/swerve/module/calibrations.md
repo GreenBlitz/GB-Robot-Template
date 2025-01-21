@@ -47,5 +47,5 @@ Drive:
 
 DriveSimulation:
 -----------------------
- - [ ] Moment of inertia
- - [ ] DCMotor
+- [ ] Moment of inertia
+- [ ] DCMotor

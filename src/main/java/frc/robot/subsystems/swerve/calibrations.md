@@ -1,9 +1,7 @@
-
 States:
 -----------------------
 - [ ] Aim assist modes + Add in state helper handling
-
-SwerveConstants:
+  SwerveConstants:
 -----------------------
 - [ ] Velocity at 12 volts (meters per second)
 - [ ] Max rotational velocity (angle per second)
@@ -12,12 +10,11 @@ SwerveConstants:
 - [ ] Modules locations (in meters)
 - [ ] Drive radius meters
 - [ ] PathPlanner RealTimeConstraints (in AutonomousConstants)
-
-Gyro:
+  Gyro:
 -----------------------
 - [ ] ID
 - [ ] Mount pose
 
 Modules:
 -----------------------
-- [ ] [See module calibrations file](module/Calibrations.md)
+- [ ] [See module calibrations file](module/calibrations)

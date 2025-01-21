@@ -1,16 +1,17 @@
 Thing to do when getting the robot
 ----------------------------------
+- [ ] Rename Motor Names By Position On Robot
 - [ ] Motor: Id, Type
 - [ ] Buschain
-- [ ] Min Position
-- [ ] Max Position
-- [ ] Drum Diameter
-- [ ] Gear Ratio
-- [ ] Limit Switch Channel
-- [ ] Control: kS, kG, PID
-- [ ] Profile Constants (Maybe): Max acceleration, cruse velocity
-- [ ] Current Limit
-- [ ] Elevator Mass
 - [ ] Inverted
 - [ ] Neutral Mode
+- [ ] Gear Ratio
+- [ ] Drum Diameter
+- [ ] Min Position
+- [ ] Max Position
+- [ ] Current Limit
+- [ ] Limit Switch Channel
 - [ ] Enable FOC
+- [ ] Control: kS, kG, PID
+- [ ] Profile Constants (Maybe): Max acceleration, cruse velocity
+- [ ] Elevator Mass

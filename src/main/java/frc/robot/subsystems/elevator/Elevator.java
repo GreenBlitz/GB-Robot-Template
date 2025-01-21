@@ -104,13 +104,13 @@ public class Elevator extends GBSubsystem {
 		secondMotor.updateInputs(secondMotorSignals.otherSignals());
 
 		limitSwitch.updateInputs(digitalInputInputs);
-		Logger.processInputs(getLogPath() + "LimitSwitch/", digitalInputInputs);
+		Logger.processInputs(getLogPath() + "/LimitSwitch", digitalInputInputs);
 	}
 
 	private void log() {
-		Logger.recordOutput(getLogPath() + "PositionMeters", getElevatorPositionMeters());
-		Logger.recordOutput(getLogPath() + "isAtBackwardsLimit", isAtBackwardsLimit());
-		Logger.recordOutput(getLogPath() + "hasBeenResetBySwitch", hasBeenResetBySwitch);
+		Logger.recordOutput(getLogPath() + "/PositionMeters", getElevatorPositionMeters());
+		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
+		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
 	}
 
 	public void resetMotors(double positionMeters) {
@@ -154,7 +154,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private boolean shouldResetByMinimumPosition() {
-		return getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_HEIGHT_METERS;
+		return getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_HEIGHT_METERS && !hasBeenResetBySwitch;
 	}
 
 	private boolean shouldResetByLimitSwitch() {

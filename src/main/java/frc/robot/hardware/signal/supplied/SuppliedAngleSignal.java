@@ -2,7 +2,7 @@ package frc.robot.hardware.signal.supplied;
 
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.TimedValue;
-import frc.utils.AngleUnit;
+import frc.utils.math.AngleUnit;
 import frc.utils.time.TimeUtils;
 
 import java.util.function.Supplier;

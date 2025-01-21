@@ -16,7 +16,7 @@ public class IDs {
 
 	public static class CANCodersIDs {
 
-		public static final CoreCANcoder ARM_CAN_CODER = new CoreCANcoder(-1);
+		public static final CoreCANcoder ARM_CAN_CODER = new CoreCANcoder(-3);
 
 	}
 

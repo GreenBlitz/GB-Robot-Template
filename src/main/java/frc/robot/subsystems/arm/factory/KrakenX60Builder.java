@@ -1,4 +1,4 @@
-package frc.robot.subsystems.factories.armfactory;
+package frc.robot.subsystems.arm.factory;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.*;
@@ -91,7 +91,7 @@ public class KrakenX60Builder {
 
 	private static TalonFXConfiguration buildTalonFXConfiguration() {
 		return new TalonFXConfiguration()
-			.withSlot0(new Slot0Configs().withKP(KP).withKI(KI).withKD(KD).withKS(KS).withKS(KS).withGravityType(GRAVITY_TYPE))
+			.withSlot0(new Slot0Configs().withKP(KP).withKI(KI).withKD(KD).withKS(KS).withKS(KS).withKG(KG).withGravityType(GRAVITY_TYPE))
 			.withCurrentLimits(
 				new CurrentLimitsConfigs().withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT)
 					.withSupplyCurrentLimitEnable(SUPPLY_CURRENT_LIMIT_ENABLE)

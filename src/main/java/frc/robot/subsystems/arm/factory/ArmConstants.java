@@ -1,4 +1,4 @@
-package frc.robot.subsystems.factories.armfactory;
+package frc.robot.subsystems.arm.factory;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

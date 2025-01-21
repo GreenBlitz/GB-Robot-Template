@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
+import frc.constants.RobotHeadingEstimatorConstants;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.constants.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
@@ -23,6 +24,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.vision.data.HeadingData;
 import frc.utils.auto.AutonomousChooser;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.auto.PathPlannerUtils;
@@ -95,7 +97,7 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> headingEstimator.getEstimatedHeading().plus(Rotation2d.fromDegrees(150)));
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
-		headingEstimator = new RobotHeadingEstimator(swerve.getGyroAbsoluteYaw(), 0.0001);
+		headingEstimator = new RobotHeadingEstimator(swerve.getGyroAbsoluteYaw(), swerve.getGyroAbsoluteYaw(), 0.0001);
 
 		this.aprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
@@ -147,13 +149,15 @@ public class Robot {
 		aprilTagVisionSources.log();
 		aprilTagVisionSources2.log();
 		aprilTagVisionSources3.log();
-		headingEstimator.updateGyroAngle(swerve.getGyroAbsoluteYaw(), TimeUtils.getCurrentTimeSeconds());
+		headingEstimator.updateGyroAngle(new HeadingData(swerve.getGyroAbsoluteYaw(), TimeUtils.getCurrentTimeSeconds()));
 		List<TimedValue<Rotation2d>> headingAndTime = aprilTagVisionSources.getRawRobotHeadings();
 		if (!headingAndTime.isEmpty()) {
 			Logger.recordOutput("Robot Heading", headingAndTime.get(0).value());
-			headingEstimator.updateVisionHeading(headingAndTime.get(0).value(), headingAndTime.get(0).timestamp());
+			headingEstimator.updateVisionIfNotCalibrated(new HeadingData(headingAndTime.get(0).value(), headingAndTime.get(0).timestamp()), RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION, 0.001);
+//			headingEstimator.updateVisionHeading(headingAndTime.get(0).value(), headingAndTime.get(0).timestamp());
 //			headingEstimator.updateVisionHeading(headingAndTime.get(0).getFirst(), TimeUtils.getCurrentTimeSeconds());
 		}
+		headingEstimator.periodic();
 		Logger.recordOutput("Robot Heading By Estimator", new Pose2d(new Translation2d(0, 0), headingEstimator.getEstimatedHeading()));
 		CommandScheduler.getInstance().run(); // Should be last
 	}

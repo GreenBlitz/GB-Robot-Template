@@ -32,7 +32,7 @@ public class AutonomousConstants {
 
 	public static class LinkedWaypoints {
 
-		public static final Pair<String, Translation2d> AL1 = Pair.of("AL1", new Translation2d()); //todo real values for all
+		public static final Pair<String, Translation2d> AL1 = Pair.of("AL1", new Translation2d()); // todo real values for all
 
 		public static final Pair<String, Translation2d> AL2 = Pair.of("AL2", new Translation2d(7.6, 6.17));
 

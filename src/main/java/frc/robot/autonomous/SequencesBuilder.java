@@ -1,10 +1,7 @@
 package frc.robot.autonomous;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 
 import java.util.function.BooleanSupplier;
@@ -13,7 +10,7 @@ import java.util.function.Supplier;
 public class SequencesBuilder {
 
 	public static Command commandDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new ParallelCommandGroup(PathFollowingCommands.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
+		return new ParallelDeadlineGroup(commandSupplier.get(), PathFollowingCommands.followPathOrDriveToPathEnd(robot, path));
 	}
 
 	public static Command commandWhenConditionIsMetDuringPath(
@@ -23,10 +20,6 @@ public class SequencesBuilder {
 		BooleanSupplier condition
 	) {
 		return commandDuringPath(robot, path, () -> new WaitUntilCommand(condition).andThen(commandSupplier.get()));
-	}
-
-	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new SequentialCommandGroup(PathFollowingCommands.followPathOrDriveToPathEnd(robot, path), commandSupplier.get());
 	}
 
 }

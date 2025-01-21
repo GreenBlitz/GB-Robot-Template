@@ -26,7 +26,6 @@ import frc.utils.math.ToleranceMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -166,13 +165,17 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path, BooleanSupplier endCondition) {
+	public Command followPathOrDriveToPathEnd(Supplier<Pose2d> currentPose, PathPlannerPath path) {
 		return new ConditionalCommand(
 			PathFollowingCommands.followPath(path)
 				.andThen(pidToPose(currentPose, PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))),
 			driveToPose(currentPose, () -> PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))),
-			() -> ToleranceMath.isNear(PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)).getTranslation(), currentPose.get().getTranslation(), AutonomousConstants.PATHFINDING_DEADBAND_METERS)
-		).until(endCondition).andThen(new InstantCommand(() -> swerve.driveByState(0, 0, 0, SwerveState.DEFAULT_PATH_PLANNER), swerve));
+			() -> ToleranceMath.isNear(
+				PathPlannerUtils.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)).getTranslation(),
+				currentPose.get().getTranslation(),
+				AutonomousConstants.PATHFINDING_DEADBAND_METERS
+			)
+		);
 	}
 
 

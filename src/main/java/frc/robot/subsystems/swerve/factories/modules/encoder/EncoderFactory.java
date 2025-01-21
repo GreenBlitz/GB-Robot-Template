@@ -11,7 +11,7 @@ import frc.robot.subsystems.swerve.module.records.EncoderSignals;
 public class EncoderFactory {
 
 	public static IAngleEncoder createEncoder(String logPath, ModuleUtils.ModulePosition modulePosition) {
-		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Encoder/";
+		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Encoder";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
 				case FRONT_LEFT -> RealEncoderConstants.generateEncoder(logPath, IDs.CANCodersIDs.FRONT_LEFT_ENCODER);

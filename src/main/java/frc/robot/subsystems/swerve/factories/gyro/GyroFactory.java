@@ -8,7 +8,7 @@ import frc.robot.subsystems.swerve.GyroSignals;
 public class GyroFactory {
 
 	public static IGyro createGyro(String logPath) {
-		logPath += "Gyro/";
+		logPath += "/Gyro";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealGyroConstants.generateGyro(logPath);
 			case SIMULATION -> SimulationGyroConstants.generateGyro(logPath);

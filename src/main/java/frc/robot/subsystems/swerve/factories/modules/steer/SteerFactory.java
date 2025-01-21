@@ -12,7 +12,7 @@ import frc.robot.subsystems.swerve.module.records.SteerSignals;
 public class SteerFactory {
 
 	public static ControllableMotor createSteer(String logPath, ModuleUtils.ModulePosition modulePosition) {
-		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Steer/";
+		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Steer";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT ->

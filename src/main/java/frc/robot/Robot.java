@@ -36,10 +36,10 @@ public class Robot {
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/");
+		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve");
 		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
-			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve/"),
+			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOG_PREFIX + "Swerve"),
 			gyro,
 			GyroFactory.createSignals(gyro)
 		);

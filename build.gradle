@@ -185,14 +185,6 @@ tasks.register('setVisualVMHost') {
 	}
 }
 
-//compileJava.finalizedBy('checkAkitInstall')
-//tasks.register('checkAkitInstall', JavaExec) {
-//	group = 'execution'
-//	dependsOn('classes')
-//	mainClass = "org.littletonrobotics.junction.CheckInstall"
-//	classpath = sourceSets.main.runtimeClasspath
-//}
-
 tasks.named("deploy").configure { finalizedBy('runComputerPrograms') }
 tasks.register('runComputerPrograms', JavaExec) {
 	group = 'execution'

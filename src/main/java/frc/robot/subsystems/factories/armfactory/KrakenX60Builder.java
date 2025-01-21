@@ -24,6 +24,9 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.arm.Arm;
 import frc.utils.math.AngleUnit;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+
 public class KrakenX60Builder {
 
 	static final boolean IS_FOC = true;
@@ -45,7 +48,8 @@ public class KrakenX60Builder {
 	protected static Arm build(String logPath) {
 		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder
 			.build(new PositionVoltage(ArmConstants.STARTING_POSITION.getDegrees()).withEnableFOC(IS_FOC));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(ArmConstants.STARTING_VOLTAGE).withEnableFOC(IS_FOC));
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder
+			.build(new VoltageOut(ArmConstants.STARTING_VOLTAGE).withEnableFOC(IS_FOC));
 
 		SingleJointedArmSim armSim = new SingleJointedArmSim(
 			LinearSystemId.createDCMotorSystem(
@@ -77,7 +81,12 @@ public class KrakenX60Builder {
 
 
 	public static SysIdRoutine.Config buildSysidConfig() {
-		return new SysIdRoutine.Config(null, null, null, state -> SignalLogger.writeString("state", state.toString()));
+		return new SysIdRoutine.Config(
+			Volts.of(0.5).per(Second),
+			Volts.of(2),
+			null,
+			state -> SignalLogger.writeString("state", state.toString())
+		);
 	}
 
 	private static TalonFXConfiguration buildTalonFXConfiguration() {

@@ -29,30 +29,26 @@ import java.util.function.Supplier;
  */
 public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
 
-	private final Supplier<Rotation2d> gyroSupplier;
-	private final Supplier<Rotation2d> headingOffsetSupplier;
+	private final Supplier<Rotation2d> robotHeadingSupplier;
 	private boolean useRobotHeadingForPoseEstimating;
 
 	public MultiAprilTagVisionSources(
 		String logPath,
-		Supplier<Rotation2d> gyroSupplier,
-		Supplier<Rotation2d> headingOffsetSupplier,
+		Supplier<Rotation2d> robotHeadingSupplier,
 		List<VisionSource<AprilTagVisionData>> visionSources
 	) {
 		super(logPath, visionSources);
-		this.gyroSupplier = gyroSupplier;
-		this.headingOffsetSupplier = headingOffsetSupplier;
+		this.robotHeadingSupplier = robotHeadingSupplier;
 		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE);
 	}
 
 	@SafeVarargs
 	public MultiAprilTagVisionSources(
 		String logPath,
-		Supplier<Rotation2d> gyroSupplier,
-		Supplier<Rotation2d> headingOffsetSupplier,
+		Supplier<Rotation2d> robotHeadingSupplier,
 		VisionSource<AprilTagVisionData>... visionSources
 	) {
-		this(logPath, gyroSupplier, headingOffsetSupplier, List.of(visionSources));
+		this(logPath, robotHeadingSupplier, List.of(visionSources));
 	}
 
 	private void updateAngleInHeadingRequiringSources(GyroAngleValues gyroAngleValues) {
@@ -118,13 +114,13 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	@Override
 	public ArrayList<AprilTagVisionData> getFilteredVisionData() {
-		updateAngleInHeadingRequiringSources(getRobotHeading());
+		updateAngleInHeadingRequiringSources(robotHeadingSupplier.get());
 		return super.getFilteredVisionData();
 	}
 
 	@Override
 	public ArrayList<AprilTagVisionData> getUnfilteredVisionData() {
-		updateAngleInHeadingRequiringSources(getRobotHeading());
+		updateAngleInHeadingRequiringSources(robotHeadingSupplier.get());
 		return super.getUnfilteredVisionData();
 	}
 
@@ -145,13 +141,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	public void log() {
 		super.log();
 		logAprilTagPoseData();
-		Logger.recordOutput(logPath + "offsettedRobotHeading", getRobotHeading());
-		Logger.recordOutput(logPath + "headingOffset", headingOffsetSupplier.get());
-		Logger.recordOutput(logPath + "gyroInput", gyroSupplier.get());
-	}
-
-	private Rotation2d getRobotHeading() {
-		return gyroSupplier.get().plus(headingOffsetSupplier.get());
+		Logger.recordOutput(logPath + "inputtedRobotHeading", robotHeadingSupplier.get());
 	}
 
 }

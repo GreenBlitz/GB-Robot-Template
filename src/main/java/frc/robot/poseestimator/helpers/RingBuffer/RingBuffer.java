@@ -26,10 +26,8 @@ public class RingBuffer<T> implements Iterable<T> {
 
 	public void insert(T data) {
 		insertions++;
-		buffer.set(this.currentIndex++, Optional.of(data));
-		if (currentIndex >= buffer.size()) {
-			currentIndex = 0;
-		}
+		buffer.set(this.currentIndex, Optional.of(data));
+		currentIndex = wrapIndex(currentIndex + 1);
 	}
 
 	public int size() {

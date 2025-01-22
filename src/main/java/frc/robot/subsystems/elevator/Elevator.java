@@ -162,15 +162,13 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private boolean handleReset() {
-		if(DriverStation.isDisabled() || !hasBeenResetBySwitch){
+		if (DriverStation.isDisabled() || !hasBeenResetBySwitch()) {
 			return false;
 		}
 		if (shouldResetByLimitSwitch()) {
 			hasBeenResetBySwitch = true;
-			resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
-			return true;
 		}
-		if (shouldResetByMinimumPosition()) {
+		if (shouldResetByMinimumPosition() || shouldResetByLimitSwitch()) {
 			resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
 			return true;
 		}

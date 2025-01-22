@@ -45,7 +45,6 @@ public class Robot {
 		Logger.recordOutput("pose", new Pose2d());
 		Logger.recordOutput("first stafe", ElevatorSimulationHelper.getFirstElevatorStagePose(elevator.getElevatorPositionMeters()));
 		Logger.recordOutput("second stafe", ElevatorSimulationHelper.getSecondElevatorStagePose(elevator.getElevatorPositionMeters()));
-
 	}
 
 	public Command getAutonomousCommand() {

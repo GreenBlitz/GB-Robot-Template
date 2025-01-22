@@ -7,15 +7,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.constants.VisionConstants;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.robot.vision.data.AprilTagVisionData;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
+import frc.robot.vision.sources.limelights.LimelightFactory;
+import frc.utils.Filter;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
@@ -30,7 +38,8 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final IPoseEstimator poseEstimator;
+	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 	private final Superstructure superStructure;
 
 	public Robot() {
@@ -44,10 +53,26 @@ public class Robot {
 			GyroFactory.createSignals(gyro)
 		);
 
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());
+		this.poseEstimator = new WPILibPoseEstimatorWrapper("poseEstimator/",
+			swerve.getKinematics(),
+			swerve.getAllOdometryObservations()[0].wheelPositions(),
+			swerve.getGyroAbsoluteYaw()
+		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getCurrentPose);
+		this.multiAprilTagVisionSources = new MultiAprilTagVisionSources(
+			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+			swerve::getAbsoluteHeading,
+			new DynamicSwitchingLimelight(
+				false,
+				"limelight-back",
+				VisionConstants.VISION_SOURCE_LOGPATH_ADDITION,
+				"CameraOnTheRobot",
+				Filter.nonFilteringFilter()
+			)
+		);
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -58,7 +83,7 @@ public class Robot {
 	private void buildPathPlannerForAuto() {
 		// Register commands...
 		swerve.configPathPlanner(
-			poseEstimator::getCurrentPose,
+			poseEstimator::getEstimatedPose,
 			poseEstimator::resetPose,
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
@@ -69,6 +94,7 @@ public class Robot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		superStructure.periodic();
+		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
@@ -84,7 +110,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public PoseEstimator getPoseEstimator() {
+	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

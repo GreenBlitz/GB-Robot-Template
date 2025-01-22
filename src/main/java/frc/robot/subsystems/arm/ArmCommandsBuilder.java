@@ -27,26 +27,20 @@ public class ArmCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set voltage to: " + voltage);
 	}
 
-	public Command setPower(double power){
-		return arm
-			.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
+	public Command setPower(double power) {
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
-		return arm
-			.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
 	}
 
-	public Command stop(){
-		return arm
-			.asSubsystemCommand(new RunCommand(arm::stop), "Stopped");
+	public Command stop() {
+		return arm.asSubsystemCommand(new RunCommand(arm::stop), "Stopped");
 	}
 
 	public Command loggedDashboardSetVoltage() {
-		return arm.asSubsystemCommand(
-			new LoggedDashboardCommand("Set Arm Voltage", arm::setVoltage),
-			"Set voltage via dashboard"
-		);
+		return arm.asSubsystemCommand(new LoggedDashboardCommand("Set Arm Voltage", arm::setVoltage), "Set voltage via dashboard");
 	}
 
 }

@@ -4,12 +4,13 @@
 
 ##### IDs
 
-change the arm TalonFX ID to the correct one   
-change the arm CANCoder ID to the correct one
+Arm TalonFX ID 
+Arm CANCoder ID 
 
 ##### Physics
 
-
+length   
+mass
 
 ##### PID -
 

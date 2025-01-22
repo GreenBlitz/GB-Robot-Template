@@ -36,7 +36,6 @@ public class Robot {
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		this.endEffector = EndEffectorFactory.create();
 		this.arm = ArmFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm");
-
 	}
 
 	public void periodic() {
@@ -55,6 +54,10 @@ public class Robot {
 
 	public EndEffector getEndEffector() {
 		return endEffector;
+	}
+
+	public Arm getArm() {
+		return arm;
 	}
 
 }

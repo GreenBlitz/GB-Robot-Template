@@ -3,45 +3,48 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.math.ToleranceMath;
 
 public class Arm extends GBSubsystem {
 
 	private final ControllableMotor motor;
 	private final IRequest<Rotation2d> positionRequest;
 	private final IRequest<Double> voltageRequest;
-	private final InputSignal<Rotation2d> positionSignal;
+	private final InputSignal<Rotation2d> motorPositionSignal;
+	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final InputSignal<Double> voltageSignal;
 	private final ArmCommandsBuilder commandsBuilder;
+	private final IAngleEncoder encoder;
 
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
+		IAngleEncoder encoder,
 		IRequest<Rotation2d> positionRequest,
 		IRequest<Double> voltageRequest,
-		InputSignal<Rotation2d> positionSignal,
+		InputSignal<Rotation2d> motorPositionSignal,
+		InputSignal<Rotation2d> encoderPositionSignal,
 		InputSignal<Double> voltageSignal
 	) {
 		super(logPath);
 		this.motor = motor;
 		this.positionRequest = positionRequest;
 		this.voltageRequest = voltageRequest;
-		this.positionSignal = positionSignal;
+		this.motorPositionSignal = motorPositionSignal;
+		this.encoderPositionSignal = encoderPositionSignal;
 		this.voltageSignal = voltageSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
+		this.encoder = encoder;
 
-		subsystemPeriodic();
+		periodic();
+		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
 	public ArmCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
-	}
-
-	private void updateInputs() {
-		motor.updateInputs(positionSignal, voltageSignal);
 	}
 
 	@Override
@@ -50,8 +53,20 @@ public class Arm extends GBSubsystem {
 		updateInputs();
 	}
 
-	protected void setTargetPosition(Rotation2d position) {
-		motor.applyRequest(positionRequest.withSetPoint(position));
+	private void updateInputs() {
+		motor.updateInputs(motorPositionSignal, encoderPositionSignal, voltageSignal);
+	}
+
+	protected void resetPosition() {
+		motor.resetPosition(encoderPositionSignal.getLatestValue());
+	}
+
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
+	}
+
+	protected void stop() {
+		motor.stop();
 	}
 
 	protected void setVoltage(double voltage) {
@@ -62,20 +77,16 @@ public class Arm extends GBSubsystem {
 		motor.setPower(power);
 	}
 
-	public void setBrake(boolean brake) {
-		motor.setBrake(brake);
-	}
-
-	protected void stop(){
-		motor.stop();
+	protected void setTargetPosition(Rotation2d position) {
+		motor.applyRequest(positionRequest.withSetPoint(position));
 	}
 
 	protected void stayInPlace() {
-		setTargetPosition(positionSignal.getLatestValue());
+		setTargetPosition(motorPositionSignal.getLatestValue());
 	}
 
 	public boolean isAtPosition(Rotation2d position, double tolerance) {
-		return MathUtil.isNear(position.getDegrees(), positionSignal.getLatestValue().getDegrees(), tolerance);
+		return MathUtil.isNear(position.getDegrees(), motorPositionSignal.getLatestValue().getDegrees(), tolerance);
 	}
 
 }

@@ -10,7 +10,7 @@ public class ElevatorConstants {
 
 	public final static double GEAR_RATIO = 4;
 
-	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0;
+	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0.05;
 
 	public static final double FORWARD_SOFT_LIMIT_VALUE_METERS = 1.4;
 

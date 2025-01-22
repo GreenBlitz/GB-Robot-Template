@@ -64,7 +64,7 @@ public class Robot {
 
 		this.multiAprilTagVisionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-			swerve::getAbsoluteHeading,
+			() -> poseEstimator.getEstimatedPose().getRotation(),
 			new DynamicSwitchingLimelight(
 				false,
 				"limelight-back",

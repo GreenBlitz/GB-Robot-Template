@@ -82,7 +82,7 @@ public abstract class Phoenix6Device implements IDevice {
 
 	@Override
 	public void updateInputs(InputSignal<?>... inputSignals) {
-		if(inputSignals.length == 0){
+		if (inputSignals.length == 0) {
 			return;
 		}
 		InputSignal<?>[] validSignals = getValidSignals(inputSignals);

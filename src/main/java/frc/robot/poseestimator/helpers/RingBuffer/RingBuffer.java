@@ -35,7 +35,7 @@ public class RingBuffer<T> implements Iterable<T> {
 	}
 
 	public int filledSlots() {
-		return insertions >= size() ? size() - 1 : insertions;
+		return Math.min(insertions, size());
 	}
 
 	public void clear() {

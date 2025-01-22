@@ -7,19 +7,19 @@ import edu.wpi.first.math.geometry.Translation3d;
 public class ElevatorSimulationHelper {
 
 
-	public static Pose3d getFirstStagePose(double heightInMeters) {
-		if (heightInMeters > ElevatorConstants.MAXIMUM_FIRST_STAGE_HEIGHT_METERS) {
-			return get3dPoseFromHeight(heightInMeters - ElevatorConstants.MAXIMUM_FIRST_STAGE_HEIGHT_METERS);
+	public static Pose3d getFirstStagePose(double heightMeters) {
+		if (heightMeters > ElevatorConstants.MAXIMUM_FIRST_STAGE_HEIGHT_METERS) {
+			return getPose3dFromHeight(heightMeters - ElevatorConstants.MAXIMUM_FIRST_STAGE_HEIGHT_METERS);
 		}
-		return get3dPoseFromHeight(0);
+		return getPose3dFromHeight(0);
 	}
 
-	public static Pose3d getSecondStagePose(double heightInMeters) {
-		return get3dPoseFromHeight(heightInMeters);
+	public static Pose3d getSecondStagePose(double heightMeters) {
+		return getPose3dFromHeight(heightMeters);
 	}
 
-	private static Pose3d get3dPoseFromHeight(double heightInMeters) {
-		return new Pose3d(new Translation3d(0, 0, heightInMeters), new Rotation3d());
+	private static Pose3d getPose3dFromHeight(double heightMeters) {
+		return new Pose3d(new Translation3d(0, 0, heightMeters), new Rotation3d());
 	}
 
 }

@@ -13,6 +13,8 @@ public class AutonomousConstants {
 
 	public static final String LOG_PATH_PREFIX = "Autonomous/";
 
+	public static final int NUMBER_OF_OBJECTS_IN_AUTO = 2;
+
 	public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
 
 	public static final double PATHFINDING_DEADBAND_METERS = 0.5;

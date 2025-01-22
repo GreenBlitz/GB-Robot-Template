@@ -23,6 +23,7 @@ import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.math.ToleranceMath;
 
+import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -40,8 +41,8 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	private AutonomousChooser pathPlannerAutosChooser;
-	private AutonomousChooser autoLineAutosChooser;
-	private AutonomousChooser feedScoreObject1AutosChooser;
+	private AutonomousChooser autoStartingPointAntFirstObjectChooser;
+	private AutonomousChooser[] feedingAndScoringGameObjectsChoosers;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -79,15 +80,19 @@ public class Robot {
 			poseEstimator::resetPose,
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
+
 		pathPlannerAutosChooser = new AutonomousChooser("PathPlannerAutosChooser", AutosBuilder.getAllPathPlannerAutos());
-		autoLineAutosChooser = new AutonomousChooser(
+		autoStartingPointAntFirstObjectChooser = new AutonomousChooser(
 			"AutoLineAutosChooser",
 			AutosBuilder.getAllAutoLineAutos(this, scoreL4Command, isCloseToTranslation)
 		);
-		feedScoreObject1AutosChooser = new AutonomousChooser(
-			"FeedScoreObject1AutosChooser",
-			AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command, isCloseToTranslation, isCloseToTranslation)
-		);
+		feedingAndScoringGameObjectsChoosers = new AutonomousChooser[AutonomousConstants.NUMBER_OF_OBJECTS_IN_AUTO - 1];
+		for (int i = 0; i < feedingAndScoringGameObjectsChoosers.length; i++) {
+			feedingAndScoringGameObjectsChoosers[i] = new AutonomousChooser(
+					"FeedAndScoreGameObject" + (i + 2),
+					AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command, isCloseToTranslation, isCloseToTranslation)
+			);
+		}
 	}
 
 
@@ -99,9 +104,9 @@ public class Robot {
 	}
 
 	public GBAuto getAuto() {
-		boolean isAutoChosen  = !autoLineAutosChooser.isDefaultOptionChosen();
+		boolean isAutoChosen  = !autoStartingPointAntFirstObjectChooser.isDefaultOptionChosen();
 		if (isAutoChosen) {
-			return GBAuto.chainAutos(autoLineAutosChooser.getChosenValue(), feedScoreObject1AutosChooser.getChosenValue()).withResetPose(getPoseEstimator()::resetPose);
+			return GBAuto.chainAutos(Arrays.stream(feedingAndScoringGameObjectsChoosers).map(AutonomousChooser::getChosenValue).toArray(GBAuto[]::new)).withResetPose(getPoseEstimator()::resetPose);
 		}
 		return pathPlannerAutosChooser.getChosenValue();
 	}

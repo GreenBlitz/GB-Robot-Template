@@ -8,8 +8,8 @@ public class ElevatorSimulationHelper {
 
 
 	public static Pose3d getFirstStagePose(double heightMeters) {
-		if (heightMeters > ElevatorConstants.MAXIMUM_FIRST_STAGE_HEIGHT_METERS) {
-			return getPose3dFromHeight(heightMeters - ElevatorConstants.MAXIMUM_FIRST_STAGE_HEIGHT_METERS);
+		if (heightMeters > ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS) {
+			return getPose3dFromHeight(heightMeters - ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS);
 		}
 		return getPose3dFromHeight(0);
 	}

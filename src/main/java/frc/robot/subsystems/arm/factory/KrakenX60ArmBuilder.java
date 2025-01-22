@@ -132,7 +132,7 @@ public class KrakenX60ArmBuilder {
 					.generatePhoenix6Signal(((CANCoderEncoder) encoder).getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 			case SIMULATION -> new SuppliedAngleSignal("encoderPositionSignal", () -> 0.0, AngleUnit.ROTATIONS);
 
-		}
+		};
 	}
 
 }

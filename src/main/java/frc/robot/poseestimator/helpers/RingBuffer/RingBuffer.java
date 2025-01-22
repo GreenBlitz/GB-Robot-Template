@@ -20,12 +20,7 @@ public class RingBuffer<T> implements Iterable<T> {
 	}
 
 	public boolean isFull() {
-		for (Optional<T> value : buffer) {
-			if (value.isEmpty()) {
-				return false;
-			}
-		}
-		return true;
+		return insertions >= buffer.size();
 	}
 
 	public void insert(T data) {

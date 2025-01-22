@@ -16,6 +16,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
+import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
@@ -32,6 +33,8 @@ public class Robot {
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
+
+	private AutonomousChooser autonomousChooser;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -62,6 +65,7 @@ public class Robot {
 			poseEstimator::resetPose,
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
+		autonomousChooser = new AutonomousChooser("AutonomousChooser");
 	}
 
 
@@ -73,7 +77,7 @@ public class Robot {
 	}
 
 	public Command getAutonomousCommand() {
-		return new InstantCommand();
+		return autonomousChooser.getChosenValue();
 	}
 
 	public Superstructure getSuperStructure() {

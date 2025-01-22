@@ -30,6 +30,7 @@ import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.utils.math.AngleUnit;
@@ -53,7 +54,7 @@ public class KrakenX60ArmBuilder {
 
 		Phoenix6AngleSignal armPositionSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		InputSignal<Rotation2d> encoderPositionSignal = ;
+		InputSignal<Rotation2d> encoderPositionSignal = getEncoderPositionSignal(encoder);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
@@ -125,8 +126,13 @@ public class KrakenX60ArmBuilder {
         };
 	}
 
-	private static InputSignal<Rotation2d> getPositionSignal()
+	private static InputSignal<Rotation2d> getEncoderPositionSignal(IAngleEncoder encoder){
+		return switch (Robot.ROBOT_TYPE){
+			case REAL -> Phoenix6SignalBuilder
+					.generatePhoenix6Signal(((CANCoderEncoder) encoder).getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			case SIMULATION -> new SuppliedAngleSignal("encoderPositionSignal", () -> 0.0, AngleUnit.ROTATIONS);
 
-
+		}
+	}
 
 }

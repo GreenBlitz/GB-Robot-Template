@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 
 public class ElevatorSimulationHelper {
 
-
 	public static Pose3d getFirstStagePose(double heightMeters) {
 		if (heightMeters > ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS) {
 			return getPose3dFromHeight(heightMeters - ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS);

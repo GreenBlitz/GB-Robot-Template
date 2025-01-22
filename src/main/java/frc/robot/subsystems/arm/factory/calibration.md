@@ -2,9 +2,14 @@
 
 <br/>
 
-#### ID
+##### IDs
 
-change the ID to the correct one
+change the arm TalonFX ID to the correct one   
+change the arm CANCoder ID to the correct one
+
+##### Physics
+
+
 
 ##### PID -
 
@@ -26,4 +31,4 @@ software forward limit
 software reverse limit
 
 ##### Ratio
-sensor to mechanism ratio
+gear ratio

@@ -6,11 +6,7 @@ import frc.robot.subsystems.arm.Arm;
 public class ArmFactory {
 
 	public static Arm create(String logPath) {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> TalonFXArmBuilder.build(logPath);
-
-			case SIMULATION -> null;
-		};
+		return KrakenX60Builder.build(logPath);
 	}
 
 }

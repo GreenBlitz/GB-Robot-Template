@@ -27,9 +27,14 @@ public class ArmCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set voltage to: " + voltage);
 	}
 
+	public Command setPower(double power){
+		return arm
+			.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
+	}
+
 	public Command setPower(DoubleSupplier powerSupplier) {
 		return arm
-			.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power to: " + powerSupplier.getAsDouble());
+			.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
 	}
 
 	public Command stop(){

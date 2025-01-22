@@ -33,7 +33,7 @@ public class Arm extends GBSubsystem {
 		this.voltageSignal = voltageSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
 
-		updateInputs();
+		subsystemPeriodic();
 	}
 
 	public ArmCommandsBuilder getCommandsBuilder() {

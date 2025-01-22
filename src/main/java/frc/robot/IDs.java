@@ -16,13 +16,13 @@ public class IDs {
 
 	public static class CANCodersIDs {
 
-		public static final CoreCANcoder ARM_CAN_CODER = new CoreCANcoder(-3);
+		public static final CoreCANcoder ARM_CAN_CODER = new CoreCANcoder(-1);
 
 	}
 
 	public static class TalonFXIDs {
 
-		public static final Phoenix6DeviceID ARM_DEVICE_ID = new Phoenix6DeviceID(-2); // Todo: change before merge
+		public static final Phoenix6DeviceID ARM_DEVICE_ID = new Phoenix6DeviceID(-1);
 
 		public static final Phoenix6DeviceID ELEVATOR_FIRST_MOTOR_ID = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 

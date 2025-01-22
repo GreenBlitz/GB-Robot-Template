@@ -114,11 +114,11 @@ public class Elevator extends GBSubsystem {
 
 		Logger.recordOutput(
 			getLogPath() + "/First Stage Position",
-			ElevatorSimulationHelper.getFirstElevatorStagePose(getElevatorPositionMeters())
+			ElevatorSimulationHelper.getFirstStagePose(getElevatorPositionMeters())
 		);
 		Logger.recordOutput(
 			getLogPath() + "/Second Stage Position",
-			ElevatorSimulationHelper.getSecondElevatorStagePose(getElevatorPositionMeters())
+			ElevatorSimulationHelper.getSecondStagePose(getElevatorPositionMeters())
 		);
 	}
 

@@ -3,30 +3,39 @@ package frc.robot.vision;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.numbers.N3;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.utils.linearfilters.IPeriodicLinearFilter;
 import frc.utils.linearfilters.LinearFiltersManager;
 import frc.utils.linearfilters.Periodic3DlLinearFilter;
 import frc.utils.pose.PoseUtils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class JumpingDetector implements IPeriodicLinearFilter {
 
-	private final Supplier<ArrayList<Vector<N3>>> visionSupplier;
+	private final Supplier<ArrayList<AprilTagVisionData>> visionSupplier;
 	private final Periodic3DlLinearFilter filter;
 	private final String name;
 	public final int taps;
 	private final ArrayList<Vector<N3>> innerData;
 
+	private double dataStdDevs;
 	private int emptyCount = 0;
-	private ArrayList<Vector<N3>> visionOutputs;
+	private List<Vector<N3>> visionOutputs;
 
 	public static double STABLE_TOLERANCE = 0.07;
 	public static int MAX_COUNT_VALUE = 10;
 	public static double MAX_JUMP_SIZE = 0.05;
 
-	public JumpingDetector(ArrayList<Periodic3DlLinearFilter> filters, Supplier<ArrayList<Vector<N3>>> visionSupplier, int taps, String name) {
+	public JumpingDetector(
+		ArrayList<Periodic3DlLinearFilter> filters,
+		Supplier<ArrayList<AprilTagVisionData>> visionSupplier,
+		int taps,
+		String name
+	) {
 		this.visionSupplier = visionSupplier;
 		this.name = name;
 		this.visionOutputs = new ArrayList<>();
@@ -39,6 +48,7 @@ public class JumpingDetector implements IPeriodicLinearFilter {
 		);
 		this.innerData = new ArrayList<>();
 		this.taps = taps;
+		this.dataStdDevs = 0;
 
 		LinearFiltersManager.addFilter(filter);
 	}
@@ -49,12 +59,22 @@ public class JumpingDetector implements IPeriodicLinearFilter {
 	}
 
 	@Override
-	public void log(String parentLogPath) {}
+	public void log(String parentLogPath) {
+		String logPath = parentLogPath + name;
+		Logger.recordOutput(logPath + "stdDevs", dataStdDevs);
+		Logger.recordOutput(logPath + "distFromLast", getFilterResult().minus(innerData.get(innerData.size() - 1)).norm());
+		Logger.recordOutput(logPath + "filterResult", getFilterResult());
+		Logger.recordOutput(logPath + "idDeterminable", isDeterminable());
+	}
 
 	@Override
 	public void update() {
-		innerData.addAll(visionSupplier.get());
-		visionOutputs = visionSupplier.get();
+		List<Vector<N3>> asPose2D = visionSupplier.get()
+			.stream()
+			.map(x -> PoseUtils.poseToVector.apply(x.getEstimatedPose().toPose2d()))
+			.toList();
+		innerData.addAll(asPose2D);
+		visionOutputs = asPose2D;
 		if (visionSupplier.get().isEmpty()) {
 			emptyCount++;
 		} else {
@@ -67,18 +87,18 @@ public class JumpingDetector implements IPeriodicLinearFilter {
 		while (innerData.size() >= taps) {
 			innerData.remove(innerData.size() - 1);
 		}
+		dataStdDevs = PoseUtils.stdDevVector(innerData).norm();
 	}
 
-	private boolean isFilterStable() {
-		return !determinable() || getFilterResult().minus(innerData.get(innerData.size() - 1)).norm() > MAX_JUMP_SIZE;
+	private boolean isDeterminable() {
+		return dataStdDevs < STABLE_TOLERANCE && emptyCount > MAX_COUNT_VALUE && !innerData.isEmpty();
 	}
 
-	private boolean determinable() {
-		return PoseUtils.stdDevVector(innerData).norm() < STABLE_TOLERANCE;
-	}
-
-	public boolean filterData() {
-		return isFilterStable() && emptyCount > MAX_COUNT_VALUE && !innerData.isEmpty();
+	public List<AprilTagVisionData> getFilteredData() {
+		return visionSupplier.get()
+			.stream()
+			.filter(data -> getFilterResult().minus(PoseUtils.poseToVector.apply(data.getEstimatedPose().toPose2d())).norm() > MAX_JUMP_SIZE)
+			.toList();
 	}
 
 	public Vector<N3> getFilterResult() {

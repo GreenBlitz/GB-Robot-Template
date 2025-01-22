@@ -1,4 +1,4 @@
-package frc.robot.subsystems.endEffector;
+package frc.robot.subsystems.endeffector;
 
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;

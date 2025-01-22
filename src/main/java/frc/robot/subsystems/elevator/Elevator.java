@@ -154,20 +154,21 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private boolean shouldResetByMinimumPosition() {
-		return getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_HEIGHT_METERS && !hasBeenResetBySwitch;
+		return getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_HEIGHT_METERS;
 	}
 
 	private boolean shouldResetByLimitSwitch() {
-		return isAtBackwardsLimit() && DriverStation.isDisabled() && !hasBeenResetBySwitch;
+		return isAtBackwardsLimit();
 	}
 
 	private boolean handleReset() {
+		if (DriverStation.isDisabled() || !hasBeenResetBySwitch()) {
+			return false;
+		}
 		if (shouldResetByLimitSwitch()) {
 			hasBeenResetBySwitch = true;
-			resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
-			return true;
 		}
-		if (shouldResetByMinimumPosition()) {
+		if (shouldResetByMinimumPosition() || shouldResetByLimitSwitch()) {
 			resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
 			return true;
 		}

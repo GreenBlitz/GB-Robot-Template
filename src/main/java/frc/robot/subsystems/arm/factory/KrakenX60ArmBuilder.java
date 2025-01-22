@@ -120,18 +120,22 @@ public class KrakenX60ArmBuilder {
 	}
 
 	private static IAngleEncoder getEncoder(String logPath) {
-		return switch (Robot.ROBOT_TYPE){
-			case REAL -> new CANCoderEncoder(logPath + "/Encoder", new CANcoder(IDs.CANCoderIDs.ARM_CAN_CODER.id(), BusChain.ROBORIO.getChainName()));
-            case SIMULATION -> new EmptyAngleEncoder(logPath + "/Encoder");
-        };
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL ->
+				new CANCoderEncoder(logPath + "/Encoder", new CANcoder(IDs.CANCoderIDs.ARM_CAN_CODER.id(), BusChain.ROBORIO.getChainName()));
+			case SIMULATION -> new EmptyAngleEncoder(logPath + "/Encoder");
+		};
 	}
 
-	private static InputSignal<Rotation2d> getEncoderPositionSignal(IAngleEncoder encoder){
-		return switch (Robot.ROBOT_TYPE){
-			case REAL -> Phoenix6SignalBuilder
-					.generatePhoenix6Signal(((CANCoderEncoder) encoder).getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+	private static InputSignal<Rotation2d> getEncoderPositionSignal(IAngleEncoder encoder) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL ->
+				Phoenix6SignalBuilder.generatePhoenix6Signal(
+					((CANCoderEncoder) encoder).getDevice().getPosition(),
+					RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+					AngleUnit.ROTATIONS
+				);
 			case SIMULATION -> new SuppliedAngleSignal("encoderPositionSignal", () -> 0.0, AngleUnit.ROTATIONS);
-
 		};
 	}
 

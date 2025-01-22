@@ -116,7 +116,7 @@ public class KrakenX60ElevatorBuilder {
 				LinearSystemId.createElevatorSystem(
 					DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
 					ElevatorConstants.MASS_KG,
-					ElevatorConstants.DRUM_DIAMETER_METERS / 2,
+					ElevatorConstants.DRUM_RADIUS_METERS,
 					ElevatorConstants.GEAR_RATIO
 				),
 				DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),

@@ -175,11 +175,11 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public static double convertRotationsToMeters(Rotation2d position) {
-		return Conversions.angleToDistance(position, ElevatorConstants.DRUM_RADIUS_METERS);
+		return Conversions.angleToDistance(position, ElevatorConstants.DRUM_DIAMETER_METERS);
 	}
 
 	public static Rotation2d convertMetersToRotations(double meters) {
-		return Conversions.distanceToAngle(meters, ElevatorConstants.DRUM_RADIUS_METERS);
+		return Conversions.distanceToAngle(meters, ElevatorConstants.DRUM_DIAMETER_METERS);
 	}
 
 }

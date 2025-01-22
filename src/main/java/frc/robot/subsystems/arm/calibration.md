@@ -1,35 +1,46 @@
-### All the calibration you need in code order
+### Arm Calibrations
 
-<br/>
+-----------------------------
 
 ##### IDs
 
-Arm TalonFX ID 
-Arm CANCoder ID 
+- [ ] Arm TalonFX ID 
+- [ ] Arm CANCoder ID 
+
+##### Motor
+
+- [ ] number of motors
+- [ ] is foc
+- [ ] is inverted
+
+##### Simulation
+
+- [ ] starting position
 
 ##### Physics
 
-length   
-mass
+- [ ] length   
+- [ ] mass
 
 ##### PID -
 
-kP  
-kI   
-kD
+- [ ] kP  
+- [ ] kI   
+- [ ] kD
 
 ##### Feed Forward -
 
-kS   
-kG
+- [ ] kS   
+- [ ] kG
 
 ##### Limits -
 
-current limit
-peak forward duty cycle   
-peak reverse duty cycle   
-software forward limit   
-software reverse limit
+- [ ] current limit
+- [ ] peak forward duty cycle   
+- [ ] peak reverse duty cycle   
+- [ ] software forward limit   
+- [ ] software reverse limit
 
 ##### Ratio
-gear ratio
+- [ ] gear ratio
+- [ ] sensor to rotor ratio

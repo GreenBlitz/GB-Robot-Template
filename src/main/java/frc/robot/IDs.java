@@ -15,13 +15,13 @@ public class IDs {
 
 	public static class CANCoderIDs {
 
-		public static final Phoenix6DeviceID ARM_CAN_CODER = new Phoenix6DeviceID(2);
+		public static final Phoenix6DeviceID ARM_CAN_CODER_ID = new Phoenix6DeviceID(2);
 
 	}
 
 	public static class TalonFXIDs {
 
-		public static final Phoenix6DeviceID ARM_DEVICE_ID = new Phoenix6DeviceID(3);
+		public static final Phoenix6DeviceID ARM_DEVICE_ID = new Phoenix6DeviceID(3, BusChain.ROBORIO);
 
 		public static final Phoenix6DeviceID ELEVATOR_FIRST_MOTOR_ID = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 

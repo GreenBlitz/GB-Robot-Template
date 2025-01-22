@@ -5,8 +5,8 @@ import frc.robot.subsystems.endEffector.EndEffectorConstants;
 
 public class EndEffectorFactory {
 
-	public static EndEffector create() {
-		return EndEffectorSparkMaxBuilder.generate(EndEffectorConstants.LOG_PATH);
+	public static EndEffector create(String logPath) {
+		return EndEffectorSparkMaxBuilder.generate(logPath);
 	}
 
 }

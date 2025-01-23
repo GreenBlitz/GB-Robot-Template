@@ -1,6 +1,5 @@
 package frc;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;

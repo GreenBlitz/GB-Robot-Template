@@ -15,7 +15,7 @@ public class IDs {
 
 	public static class CANCoderIDs {
 
-		public static final Phoenix6DeviceID ARM_CAN_CODER_ID = new Phoenix6DeviceID(0,BusChain.CANIVORE);
+		public static final Phoenix6DeviceID ARM_CAN_CODER_ID = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 
 	}
 

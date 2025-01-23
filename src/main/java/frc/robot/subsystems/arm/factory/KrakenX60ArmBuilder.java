@@ -45,7 +45,7 @@ public class KrakenX60ArmBuilder {
 	private static final InvertedValue IS_INVERTED = InvertedValue.Clockwise_Positive;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	public static final int NUMBER_OF_MOTORS = 1;
-	public static final double GEAR_RATIO = 15;
+	public static final double GEAR_RATIO = 50;
 
 
 	protected static Arm build(String logPath) {
@@ -69,13 +69,12 @@ public class KrakenX60ArmBuilder {
 
 
 	public static SysIdRoutine.Config buildSysidConfig() {
-//		return new SysIdRoutine.Config(
-//			Volts.of(0.5).per(Second),
-//			Volts.of(2),
-//			null,
-//			state -> SignalLogger.writeString("state", state.toString())
-//		);
-		return new SysIdRoutine.Config();
+		return new SysIdRoutine.Config(
+			Volts.of(0.5).per(Second),
+			Volts.of(2),
+			null,
+			state -> SignalLogger.writeString("state", state.toString())
+		);
 	}
 
 	private static TalonFXConfiguration buildTalonFXConfiguration() {
@@ -83,7 +82,7 @@ public class KrakenX60ArmBuilder {
 
 		config.MotorOutput.Inverted = IS_INVERTED;
 
-		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 1 : 30;
+		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 15 : 30;
 		config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 0 : 4;
 		config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 0 : 23;
 		config.Slot0.kS = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
@@ -95,10 +94,11 @@ public class KrakenX60ArmBuilder {
 		config.CurrentLimits.StatorCurrentLimit = 40;
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-//		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRotations();
-//		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-//		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRotations();
-//		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRotations();
+		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+		config.ClosedLoopGeneral.ContinuousWrap = false;
 
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
 		config.Feedback.SensorToMechanismRatio = 1;
@@ -118,10 +118,10 @@ public class KrakenX60ArmBuilder {
 					GEAR_RATIO
 				),
 				DCMotor.getKrakenX60(NUMBER_OF_MOTORS),
-				GEAR_RATIO,
+				1 / GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
-				MathConstants.QUARTER_CIRCLE.unaryMinus().getRadians(),
-				MathConstants.QUARTER_CIRCLE.getRadians(),
+				MathConstants.FULL_CIRCLE.unaryMinus().getRadians(),
+				MathConstants.FULL_CIRCLE.getRadians(),
 				false,
 				STARTING_POSITION.getRadians()
 			),

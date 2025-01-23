@@ -12,7 +12,7 @@ public class ArmSimulationHelper {
     public static Pose3d getArmSimulationPose(Rotation2d armAngle, double elevatorHeightMeters){
         return new Pose3d(
                 new Translation3d(0,0, elevatorHeightMeters + ElevatorConstants.STAGE_HEIGHT),
-                new Rotation3d(0,armAngle.getRadians(),0)
+                new Rotation3d(0,armAngle.unaryMinus().getRadians(),0)
         );
     }
 

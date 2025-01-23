@@ -30,7 +30,6 @@ public class AutosBuilder {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,
-					scoringCommand,
 					pathPlannerPath -> SequencesBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand)
 				)
 			);

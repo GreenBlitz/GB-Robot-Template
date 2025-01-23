@@ -6,7 +6,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.constants.field.Field;
 import frc.robot.Robot;
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 public class SequencesBuilder {
 
 	public static Command commandDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new ParallelDeadlineGroup(commandSupplier.get(), followPathOrPathfindAndFollowPath(robot, path));
+		return new ParallelCommandGroup(commandSupplier.get(), followPathOrPathfindAndFollowPath(robot, path));
 	}
 
 	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
@@ -39,26 +39,33 @@ public class SequencesBuilder {
 
 	public static Command followPathOrPathfindAndFollowPath(Robot robot, PathPlannerPath path) {
 		return new ConditionalCommand(
-			SequencesBuilder.followPath(path),
-			SequencesBuilder.pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
+			followPath(path),
+			pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
 			() -> ToleranceMath.isNear(
 				Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)).getTranslation(),
 				robot.getPoseEstimator().getCurrentPose().getTranslation(),
 				AutonomousConstants.PATHFINDING_DEADBAND_METERS
 			)
-		).andThen(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.pidToPose(robot.getPoseEstimator()::getCurrentPose, Field.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path)))
-		)
+		);
+	}
+
+	public static Command pidToPose(Robot robot, Pose2d targetPose) {
+		return robot.getSwerve()
+			.getCommandsBuilder()
+			.pidToPose(robot.getPoseEstimator()::getCurrentPose, targetPose)
 			.until(
 				() -> ToleranceMath.isNear(
-					Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)),
+					targetPose,
 					robot.getPoseEstimator().getCurrentPose(),
 					AutonomousConstants.TARGET_ANGLE_TOLERANCE,
 					AutonomousConstants.DISTANCE_FROM_TARGET_TOLERANCE_METERS
 				)
 			);
+	}
+
+	public static Command followAdjustedPath(Robot robot, PathPlannerPath path) {
+		return followPathOrPathfindAndFollowPath(robot, path)
+			.andThen(pidToPose(robot, Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path))));
 	}
 
 }

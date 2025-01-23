@@ -1,19 +1,16 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.constants.field.Field;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.SequencesBuilder;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
@@ -23,7 +20,6 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.math.ToleranceMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
@@ -165,19 +161,6 @@ public class SwerveCommandsBuilder {
 			"Drive with state"
 		);
 	}
-
-	public Command followPathOrPathfindAndFollowPath(Supplier<Pose2d> currentPose, PathPlannerPath path) {
-		return new ConditionalCommand(
-			SequencesBuilder.followPath(path),
-			SequencesBuilder.pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
-			() -> ToleranceMath.isNear(
-				Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)).getTranslation(),
-				currentPose.get().getTranslation(),
-				AutonomousConstants.PATHFINDING_DEADBAND_METERS
-			)
-		).andThen(pidToPose(currentPose, Field.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))));
-	}
-
 
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return swerve.asSubsystemCommand(

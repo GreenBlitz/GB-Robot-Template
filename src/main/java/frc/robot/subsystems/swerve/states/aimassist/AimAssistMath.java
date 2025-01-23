@@ -53,21 +53,26 @@ public class AimAssistMath {
 			.calculate(0, objectRelativeToRobot.getY());
 
 		ChassisSpeeds robotRelativeSpeeds = speeds;
-		if (swerveState.getDriveMode() == DriveRelative.FIELD_RELATIVE) {
-			robotRelativeSpeeds = SwerveMath.fieldToRobotRelativeSpeeds(speeds, robotPose.getRotation());
-		}
 
-		ChassisSpeeds newSpeed = new ChassisSpeeds(
+		ChassisSpeeds assistedRobotRelativeSpeeds = new ChassisSpeeds(
 			robotRelativeSpeeds.vxMetersPerSecond,
 			pidHorizontalToObjectOutputVelocityMetersPerSecond,
 			robotRelativeSpeeds.omegaRadiansPerSecond
 		);
 
 		if (swerveState.getDriveMode() == DriveRelative.FIELD_RELATIVE) {
-			newSpeed = SwerveMath.robotToFieldRelativeSpeeds(newSpeed, robotPose.getRotation());
+			robotRelativeSpeeds = SwerveMath.fieldToRobotRelativeSpeeds(speeds, robotPose.getRotation());
+
+			assistedRobotRelativeSpeeds = new ChassisSpeeds(
+				robotRelativeSpeeds.vxMetersPerSecond,
+				pidHorizontalToObjectOutputVelocityMetersPerSecond,
+				robotRelativeSpeeds.omegaRadiansPerSecond
+			);
+
+			assistedRobotRelativeSpeeds = SwerveMath.robotToFieldRelativeSpeeds(assistedRobotRelativeSpeeds, robotPose.getRotation());
 		}
 
-		return newSpeed;
+		return assistedRobotRelativeSpeeds;
 	}
 
 	public static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {

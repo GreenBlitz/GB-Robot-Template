@@ -124,12 +124,12 @@ public class Swerve extends GBSubsystem {
 		currentState.log(constants.stateLogPath());
 
 		ChassisSpeeds fieldRelativeSpeeds = getFieldRelativeVelocity();
-		Logger.recordOutput(constants.velocityLogPath() + "Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
-		Logger.recordOutput(constants.velocityLogPath() + "X", fieldRelativeSpeeds.vxMetersPerSecond);
-		Logger.recordOutput(constants.velocityLogPath() + "Y", fieldRelativeSpeeds.vyMetersPerSecond);
-		Logger.recordOutput(constants.velocityLogPath() + "Magnitude", SwerveMath.getDriveMagnitude(fieldRelativeSpeeds));
+		Logger.recordOutput(constants.velocityLogPath() + "/Rotation", fieldRelativeSpeeds.omegaRadiansPerSecond);
+		Logger.recordOutput(constants.velocityLogPath() + "/X", fieldRelativeSpeeds.vxMetersPerSecond);
+		Logger.recordOutput(constants.velocityLogPath() + "/Y", fieldRelativeSpeeds.vyMetersPerSecond);
+		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", SwerveMath.getDriveMagnitude(fieldRelativeSpeeds));
 
-		Logger.recordOutput(getLogPath() + "OdometrySamples", getNumberOfOdometrySamples());
+		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 	}
 
 

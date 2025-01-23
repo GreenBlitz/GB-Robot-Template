@@ -23,9 +23,9 @@ import java.util.function.Supplier;
 
 /**
  * Extended MultiVisionSources that supplies methods that takes care of using, updating and extracting data from special interfaces related
- * specifically to sources that detect april tags, e.g. `IndpendentHeadingVisionSource`.
+ * specifically to sources that detect april tags, e.g. <code>IndependentHeadingVisionSource</code>.
  *
- * This class assumes that the robot has zero pitch and roll.
+ * <p>This class assumes that the robot has zero pitch and roll.
  */
 public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
 
@@ -35,20 +35,22 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	public MultiAprilTagVisionSources(
 		String logPath,
 		Supplier<Rotation2d> robotHeadingSupplier,
+		boolean useRobotHeadingForPoseEstimating,
 		List<VisionSource<AprilTagVisionData>> visionSources
 	) {
 		super(logPath, visionSources);
 		this.robotHeadingSupplier = robotHeadingSupplier;
-		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE);
+		setUseRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
 	}
 
 	@SafeVarargs
 	public MultiAprilTagVisionSources(
 		String logPath,
 		Supplier<Rotation2d> robotHeadingSupplier,
+		boolean useRobotHeadingForPoseEstimating,
 		VisionSource<AprilTagVisionData>... visionSources
 	) {
-		this(logPath, robotHeadingSupplier, List.of(visionSources));
+		this(logPath, robotHeadingSupplier, useRobotHeadingForPoseEstimating, List.of(visionSources));
 	}
 
 	private void updateAngleInHeadingRequiringSources(GyroAngleValues gyroAngleValues) {

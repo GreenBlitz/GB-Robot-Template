@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.brakestate.BrakeStateManager;
@@ -27,6 +29,7 @@ public class Robot {
 
 	private final Elevator elevator;
 	private final EndEffector endEffector;
+	public final EndEffectorStateHandler endEffectorStateHandler;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -35,6 +38,7 @@ public class Robot {
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
+		this.endEffectorStateHandler = new EndEffectorStateHandler(endEffector);
 	}
 
 	public void periodic() {

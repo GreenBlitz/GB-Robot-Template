@@ -71,7 +71,7 @@ public class Robot {
 		Function<Translation2d, Boolean> isCloseToTranslation = translation2d -> ToleranceMath.isNear(
 			translation2d,
 			getPoseEstimator().getCurrentPose().getTranslation(),
-			AutonomousConstants.DISTANCE_FROM_TARGET_TO_START_NEXT_COMMAND_METERS
+			AutonomousConstants.DISTANCE_TO_START_PRE_STATE_METERS
 		);
 
 		swerve.configPathPlanner(
@@ -117,5 +117,4 @@ public class Robot {
 	public PoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
-
 }

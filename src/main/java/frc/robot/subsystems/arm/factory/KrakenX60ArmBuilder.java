@@ -13,17 +13,14 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.constants.MathConstants;
 import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
-import frc.robot.RobotType;
 import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -41,7 +38,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class KrakenX60ArmBuilder {
 
-	private static final boolean IS_FOC = true;
+	private static final boolean ENABLE_FOC = true;
 	private static final InvertedValue IS_INVERTED = InvertedValue.Clockwise_Positive;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	public static final int NUMBER_OF_MOTORS = 1;
@@ -49,13 +46,13 @@ public class KrakenX60ArmBuilder {
 
 
 	protected static Arm build(String logPath) {
-		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(IS_FOC));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(IS_FOC));
+		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(ENABLE_FOC));
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(ENABLE_FOC));
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM_MOTOR_ID, buildSysidConfig(), buildArmSimulation());
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
-		Phoenix6AngleSignal armPositionSignal = Phoenix6SignalBuilder
+		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
@@ -64,7 +61,7 @@ public class KrakenX60ArmBuilder {
 
 		InputSignal<Rotation2d> encoderPositionSignal = getEncoderPositionSignal(encoder);
 
-		return new Arm(logPath, motor, positionRequest, voltageRequest, armPositionSignal, voltageSignal, encoder, encoderPositionSignal);
+		return new Arm(logPath, motor, positionRequest, voltageRequest, motorPositionSignal, voltageSignal, encoder, encoderPositionSignal);
 	}
 
 
@@ -120,7 +117,7 @@ public class KrakenX60ArmBuilder {
 				GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
 				Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRadians(),
-					Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRadians(),
+				Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRadians(),
 				false,
 				STARTING_POSITION.getRadians()
 			),

@@ -16,7 +16,7 @@ public class ArmCommandsBuilder {
 	}
 
 	public Command stop() {
-		return arm.asSubsystemCommand(new RunCommand(arm::stop), "Stopped");
+		return arm.asSubsystemCommand(new RunCommand(arm::stop), "Stop");
 	}
 
 	public Command setVoltage(double voltage) {

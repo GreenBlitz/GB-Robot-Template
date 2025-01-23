@@ -51,11 +51,11 @@ public class KrakenX60ElevatorBuilder {
 	private static final double REAL_KI = 0;
 	private static final double REAL_KD = 0;
 
-	private static final double SIMULATION_KP = 1;
+	private static final double SIMULATION_KP = 2.17;
 	private static final double SIMULATION_KI = 0;
 	private static final double SIMULATION_KD = 0;
 	private static final int NUMBER_OF_MOTORS = 2;
-	private static final double STARTING_HEIGHT_METERS = 0;
+	private static final double STARTING_HEIGHT_METERS = 0.05;
 
 	private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(1).per(Second);
 	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(7);

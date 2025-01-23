@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmSimulationHelper;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -41,6 +43,9 @@ public class Robot {
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+
+		Logger.recordOutput("ArmPose3d", ArmSimulationHelper.getArmSimulationPose(arm.getPosition(), elevator.getElevatorPositionMeters()));
+
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

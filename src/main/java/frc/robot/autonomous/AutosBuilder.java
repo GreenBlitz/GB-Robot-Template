@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.utils.auto.AutoPath;
-import frc.utils.auto.GBAuto;
+import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtils;
 
 import java.util.ArrayList;
@@ -16,12 +16,16 @@ import java.util.function.Supplier;
 
 public class AutosBuilder {
 
-	public static List<Supplier<GBAuto>> getAllPathPlannerAutos() {
-		return List.of(() -> new GBAuto("Rotate"), () -> new GBAuto("Rotate 2m"), () -> new GBAuto("Straight 2m"));
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllTestAutos() {
+		return List.of(
+			() -> new PathPlannerAutoWrapper("Rotate"),
+			() -> new PathPlannerAutoWrapper("Rotate 2m"),
+			() -> new PathPlannerAutoWrapper("Straight 2m")
+		);
 	}
 
-	public static List<Supplier<GBAuto>> getAllAutoLineAutos(Robot robot, Supplier<Command> scoringCommand) {
-		ArrayList<Supplier<GBAuto>> autos = new ArrayList<>();
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllAutoLineAutos(Robot robot, Supplier<Command> scoringCommand) {
+		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : AutoPath.getAllAutoLinePaths()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
@@ -34,8 +38,8 @@ public class AutosBuilder {
 		return autos;
 	}
 
-	public static List<Supplier<GBAuto>> getAllIntakeAutos(Robot robot, Supplier<Command> intakeCommand) {
-		ArrayList<Supplier<GBAuto>> autos = new ArrayList<>();
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakeAutos(Robot robot, Supplier<Command> intakeCommand) {
+		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : AutoPath.getAllPathsToCoralStations()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
@@ -47,8 +51,8 @@ public class AutosBuilder {
 		return autos;
 	}
 
-	public static List<Supplier<GBAuto>> getAllScoringAutos(Robot robot, Supplier<Command> scoringCommand) {
-		ArrayList<Supplier<GBAuto>> autos = new ArrayList<>();
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllScoringAutos(Robot robot, Supplier<Command> scoringCommand) {
+		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : AutoPath.getAllPathsToCoralStations()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
@@ -61,10 +65,10 @@ public class AutosBuilder {
 	}
 
 
-	private static GBAuto createAutoFromAutoPath(AutoPath path, Function<PathPlannerPath, Command> pathFollowingCommand) {
+	private static PathPlannerAutoWrapper createAutoFromAutoPath(AutoPath path, Function<PathPlannerPath, Command> pathFollowingCommand) {
 		Optional<PathPlannerPath> pathOptional = path.getPath();
 
-		return new GBAuto(
+		return new PathPlannerAutoWrapper(
 			pathOptional.map(pathFollowingCommand).orElse(Commands.none()),
 			pathOptional.map(PathPlannerUtils::getPathStartingPose).orElse(path.getStartingPoint().getSecond()),
 			path.getPathName(),

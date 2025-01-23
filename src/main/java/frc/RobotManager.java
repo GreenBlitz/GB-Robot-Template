@@ -5,7 +5,7 @@
 package frc;
 
 import frc.robot.Robot;
-import frc.utils.auto.GBAuto;
+import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -23,7 +23,7 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-	private GBAuto auto;
+	private PathPlannerAutoWrapper auto;
 	private int roborioCycles;
 
 	public RobotManager() {

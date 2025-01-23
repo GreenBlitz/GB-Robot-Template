@@ -193,7 +193,7 @@ public class SwerveCommandsBuilder {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 		if (distanceFromTarget < AutonomousConstants.PATHFINDING_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = PathPlannerUtils.createPathDuringRuntime(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
 			pathFollowingCommand = SequencesBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}
@@ -204,7 +204,7 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
+	public Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
 		return swerve.asSubsystemCommand(
 			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)),
 			"PID to pose: " + targetPose

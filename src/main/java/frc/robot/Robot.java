@@ -18,7 +18,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.utils.auto.AutonomousChooser;
-import frc.utils.auto.GBAuto;
+import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
@@ -37,7 +37,7 @@ public class Robot {
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
-	private AutonomousChooser pathPlannerAutosChooser;
+	private AutonomousChooser testAutosChooser;
 	private AutonomousChooser startingPointAndWhereToScoreFirstObjectChooser;
 	private AutonomousChooser whereToIntakeSecondObjectChooser;
 	private AutonomousChooser whereToScoreSecondObjectChooser;
@@ -78,7 +78,7 @@ public class Robot {
 
 		new EventTrigger("Intake").onTrue(preIntakeCommand);
 
-		pathPlannerAutosChooser = new AutonomousChooser("PathPlannerAutosChooser", AutosBuilder.getAllPathPlannerAutos());
+		testAutosChooser = new AutonomousChooser("TestAutosChooser", AutosBuilder.getAllTestAutos());
 		startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
 			"StartingPointAndWhereToScoreFirstObjectChooser",
 			AutosBuilder.getAllAutoLineAutos(this, scoreL4Command)
@@ -101,10 +101,10 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public GBAuto getAuto() {
+	public PathPlannerAutoWrapper getAuto() {
 		boolean isAutoChosen = !startingPointAndWhereToScoreFirstObjectChooser.isDefaultOptionChosen();
 		if (isAutoChosen) {
-			return GBAuto
+			return PathPlannerAutoWrapper
 				.chainAutos(
 					startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
 					whereToIntakeSecondObjectChooser.getChosenValue(),
@@ -112,7 +112,7 @@ public class Robot {
 				)
 				.withResetPose(getPoseEstimator()::resetPose);
 		}
-		return pathPlannerAutosChooser.getChosenValue();
+		return testAutosChooser.getChosenValue();
 	}
 
 	public Superstructure getSuperStructure() {

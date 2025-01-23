@@ -7,15 +7,15 @@ import java.util.function.Supplier;
 
 public class AutonomousChooser {
 
-	private final LoggedDashboardChooser<Supplier<GBAuto>> chooser;
+	private final LoggedDashboardChooser<Supplier<PathPlannerAutoWrapper>> chooser;
 
-	public AutonomousChooser(String name, List<Supplier<GBAuto>> autoList) {
+	public AutonomousChooser(String name, List<Supplier<PathPlannerAutoWrapper>> autoList) {
 		this.chooser = new LoggedDashboardChooser<>(name);
 		autoList.forEach(auto -> chooser.addOption(auto.get().getName(), auto));
-		chooser.addDefaultOption("None", GBAuto::new);
+		chooser.addDefaultOption("None", PathPlannerAutoWrapper::new);
 	}
 
-	public GBAuto getChosenValue() {
+	public PathPlannerAutoWrapper getChosenValue() {
 		return chooser.get().get();
 	}
 

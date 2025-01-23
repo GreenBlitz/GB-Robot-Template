@@ -123,7 +123,7 @@ public class PathPlannerUtils {
 		);
 	}
 
-	public static Command createPathOnTheFly(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
+	public static Command createPathDuringRuntime(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;

@@ -5,7 +5,9 @@
 ##### IDs
 
 - [ ] Arm TalonFX ID 
+- [ ] Motor Buschain
 - [ ] Arm CANCoder ID 
+- [ ] encoder Buschain
 
 ##### Motor
 

@@ -58,7 +58,7 @@ public class KrakenX60ArmBuilder {
 
 		IAngleEncoder encoder = getEncoder(logPath);
 
-		InputSignal<Rotation2d> encoderPositionSignal = getEncoderPositionSignal(encoder);
+		InputSignal<Rotation2d> encoderPositionSignal = generateEncoderPositionSignal(encoder);
 
 		return new Arm(logPath, motor, positionRequest, voltageRequest, motorPositionSignal, voltageSignal, encoder, encoderPositionSignal);
 	}
@@ -135,7 +135,7 @@ public class KrakenX60ArmBuilder {
 		};
 	}
 
-	private static InputSignal<Rotation2d> getEncoderPositionSignal(IAngleEncoder encoder) {
+	private static InputSignal<Rotation2d> generateEncoderPositionSignal(IAngleEncoder encoder) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->
 				Phoenix6SignalBuilder.generatePhoenix6Signal(

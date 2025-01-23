@@ -86,8 +86,8 @@ public class Arm extends GBSubsystem {
 		setTargetPosition(motorPositionSignal.getLatestValue());
 	}
 
-	public boolean isAtPosition(Rotation2d position, double tolerance) {
-		return MathUtil.isNear(position.getDegrees(), motorPositionSignal.getLatestValue().getDegrees(), tolerance);
+	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
+		return MathUtil.isNear(position.getDegrees(), motorPositionSignal.getLatestValue().getDegrees(), tolerance.getDegrees());
 	}
 
 }

@@ -6,7 +6,6 @@ package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.arm.ArmStateHandler;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -27,16 +26,12 @@ public class RobotManager extends LoggedRobot {
 	private Command autonomousCommand;
 	private int roborioCycles;
 
-	private final ArmStateHandler armStateHandler;
-
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtils.startPathfinder();
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-
-		armStateHandler = new ArmStateHandler(robot.getArm());
 
 		JoysticksBindings.configureBindings(robot);
 	}

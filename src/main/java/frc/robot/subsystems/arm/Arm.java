@@ -54,10 +54,11 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(motorPositionSignal, encoderPositionSignal, voltageSignal);
+		motor.updateInputs(motorPositionSignal, voltageSignal);
+		encoder.updateInputs(encoderPositionSignal);
 	}
 
-	protected void resetPosition() {
+	protected void resetByEncoderPosition() {
 		motor.resetPosition(encoderPositionSignal.getLatestValue());
 	}
 

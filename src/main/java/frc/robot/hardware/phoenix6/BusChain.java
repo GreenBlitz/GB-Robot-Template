@@ -15,7 +15,7 @@ public enum BusChain {
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
 	private static final int PERMITTED_RECEIVE_ERRORS = 0;
 	private static final int PERMITTED_TRANSMIT_ERRORS = 0;
-	private static final String LOG_PATH_PREFIX = "Bus/";
+	private static final String LOG_PATH_PREFIX = "Bus";
 
 	private final CANBus canBus;
 	private final String logPath;
@@ -24,7 +24,7 @@ public enum BusChain {
 
 	BusChain(String chainName) {
 		this.canBus = new CANBus(chainName);
-		this.logPath = LOG_PATH_PREFIX + getChainName() + "/";
+		this.logPath = LOG_PATH_PREFIX + "/" + getChainName();
 		this.currentBusStatus = canBus.getStatus();
 		this.lastBusStatus = new CANBusStatus();
 
@@ -36,35 +36,35 @@ public enum BusChain {
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				logPath + "StatusErrorAt",
+				logPath + "/StatusErrorAt",
 				() -> !currentBusStatus.Status.isOK()
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				logPath + "ReceiveErrorAt",
+				logPath + "/ReceiveErrorAt",
 				() -> currentBusStatus.REC > PERMITTED_RECEIVE_ERRORS
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				logPath + "FloodedAt",
+				logPath + "/FloodedAt",
 				() -> currentBusStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
 			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				logPath + "TransmitErrorsAt",
+				logPath + "/TransmitErrorsAt",
 				() -> currentBusStatus.TEC > PERMITTED_TRANSMIT_ERRORS
 			)
 		);
 
 		PeriodicAlert busOffAlert = new PeriodicAlert(
 			Alert.AlertType.ERROR,
-			logPath + "BusOffAt",
+			logPath + "/BusOffAt",
 			() -> currentBusStatus.BusOffCount > lastBusStatus.BusOffCount
 		);
 		busOffAlert.reportByCondition();
@@ -72,7 +72,7 @@ public enum BusChain {
 
 		PeriodicAlert busFullAlert = new PeriodicAlert(
 			Alert.AlertType.ERROR,
-			logPath + "FullAt",
+			logPath + "/FullAt",
 			() -> currentBusStatus.TxFullCount > lastBusStatus.TxFullCount
 		);
 		busFullAlert.reportByCondition();
@@ -91,12 +91,12 @@ public enum BusChain {
 	}
 
 	public void logStatus() {
-		Logger.recordOutput(logPath + "Status", currentBusStatus.Status.getName());
-		Logger.recordOutput(logPath + "Utilization", currentBusStatus.BusUtilization);
-		Logger.recordOutput(logPath + "TimesDisconnected", currentBusStatus.BusOffCount);
-		Logger.recordOutput(logPath + "FullCount", currentBusStatus.TxFullCount);
-		Logger.recordOutput(logPath + "ReceiveError", currentBusStatus.REC);
-		Logger.recordOutput(logPath + "TransmitError", currentBusStatus.TEC);
+		Logger.recordOutput(logPath + "/Status", currentBusStatus.Status.getName());
+		Logger.recordOutput(logPath + "/Utilization", currentBusStatus.BusUtilization);
+		Logger.recordOutput(logPath + "/TimesDisconnected", currentBusStatus.BusOffCount);
+		Logger.recordOutput(logPath + "/FullCount", currentBusStatus.TxFullCount);
+		Logger.recordOutput(logPath + "/ReceiveError", currentBusStatus.REC);
+		Logger.recordOutput(logPath + "/TransmitError", currentBusStatus.TEC);
 	}
 
 	public static void logChainsStatuses() {

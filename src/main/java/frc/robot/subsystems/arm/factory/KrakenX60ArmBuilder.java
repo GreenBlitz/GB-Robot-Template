@@ -69,13 +69,12 @@ public class KrakenX60ArmBuilder {
 
 
 	public static SysIdRoutine.Config buildSysidConfig() {
-//		return new SysIdRoutine.Config(
-//			Volts.of(0.5).per(Second),
-//			Volts.of(2),
-//			null,
-//			state -> SignalLogger.writeString("state", state.toString())
-//		);
-		return new SysIdRoutine.Config();
+		return new SysIdRoutine.Config(
+			Volts.of(0.5).per(Second),
+			Volts.of(2),
+			null,
+			state -> SignalLogger.writeString("state", state.toString())
+		);
 	}
 
 	private static TalonFXConfiguration buildTalonFXConfiguration() {
@@ -83,9 +82,9 @@ public class KrakenX60ArmBuilder {
 
 		config.MotorOutput.Inverted = IS_INVERTED;
 
-		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 1 : 30;
-		config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 0 : 4;
-		config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 0 : 23;
+		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 30 : 30;
+		config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 4 : 4;
+		config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 23 : 23;
 		config.Slot0.kS = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
 		config.Slot0.kG = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
@@ -95,10 +94,10 @@ public class KrakenX60ArmBuilder {
 		config.CurrentLimits.StatorCurrentLimit = 40;
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-//		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRotations();
-//		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-//		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRotations();
-//		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRotations();
+		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
 		config.Feedback.SensorToMechanismRatio = 1;

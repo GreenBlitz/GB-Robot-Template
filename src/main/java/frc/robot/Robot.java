@@ -27,16 +27,21 @@ public class Robot {
 	private final Elevator elevator;
 	private final EndEffector endEffector;
 
+	private final SimulationManager simulationManager;
+
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
+
+		this.simulationManager = new SimulationManager("SimulationManager", this);
 	}
 
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+		simulationManager.log();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

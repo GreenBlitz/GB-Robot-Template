@@ -82,9 +82,9 @@ public class KrakenX60ArmBuilder {
 
 		config.MotorOutput.Inverted = IS_INVERTED;
 
-		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 15 : 30;
-		config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 0 : 4;
-		config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 0 : 23;
+		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 30 : 30;
+		config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 4 : 4;
+		config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 23 : 23;
 		config.Slot0.kS = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
 		config.Slot0.kG = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
@@ -98,7 +98,6 @@ public class KrakenX60ArmBuilder {
 		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-		config.ClosedLoopGeneral.ContinuousWrap = false;
 
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
 		config.Feedback.SensorToMechanismRatio = 1;
@@ -118,10 +117,10 @@ public class KrakenX60ArmBuilder {
 					GEAR_RATIO
 				),
 				DCMotor.getKrakenX60(NUMBER_OF_MOTORS),
-				1 / GEAR_RATIO,
+				GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
-				MathConstants.FULL_CIRCLE.unaryMinus().getRadians(),
-				MathConstants.FULL_CIRCLE.getRadians(),
+				MathConstants.QUARTER_CIRCLE.unaryMinus().getRadians(),
+				MathConstants.QUARTER_CIRCLE.getRadians(),
 				false,
 				STARTING_POSITION.getRadians()
 			),

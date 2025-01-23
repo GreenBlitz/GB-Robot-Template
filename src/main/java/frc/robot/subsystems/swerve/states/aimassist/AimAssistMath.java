@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
-import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.math.PoseMath;
 import frc.utils.math.ToleranceMath;
@@ -62,9 +61,10 @@ public class AimAssistMath {
 					speeds.omegaRadiansPerSecond
 				);
 				break;
+
 			case FIELD_RELATIVE:
 				ChassisSpeeds robotRelativeSpeeds = SwerveMath.fieldToRobotRelativeSpeeds(speeds, robotPose.getRotation());
-				 assistedSpeed = new ChassisSpeeds(
+				assistedSpeed = new ChassisSpeeds(
 					robotRelativeSpeeds.vxMetersPerSecond,
 					pidHorizontalToObjectOutputVelocityMetersPerSecond,
 					robotRelativeSpeeds.omegaRadiansPerSecond

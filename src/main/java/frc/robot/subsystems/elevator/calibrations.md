@@ -1,0 +1,18 @@
+Calibrations
+----------------------------------
+- [ ] Rename Motor Names By Position On Robot
+- [ ] Motor: Id, Type
+- [ ] Buschain
+- [ ] Inverted
+- [ ] Neutral Mode
+- [ ] Gear Ratio
+- [ ] Drum Diameter
+- [ ] Min Position
+- [ ] Max Position
+- [ ] Current Limit
+- [ ] Limit Switch Channel
+- [ ] Enable FOC
+- [ ] Control: kS, kG, PID
+- [ ] Profile Constants (Maybe): Max acceleration, cruse velocity
+- [ ] Elevator Mass
+- [ ] States heights

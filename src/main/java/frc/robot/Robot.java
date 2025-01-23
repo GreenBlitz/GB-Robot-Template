@@ -9,9 +9,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.subsystems.endEffector.EndEffector;
-import frc.robot.subsystems.endEffector.factory.EndEffectorFactory;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.factory.ElevatorFactory;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -22,12 +25,16 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Elevator elevator;
 	private final EndEffector endEffector;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
-		this.endEffector = EndEffectorFactory.create();
+		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
+		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
+
+		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 	}
 
 	public void periodic() {
@@ -38,6 +45,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Elevator getElevator() {
+		return elevator;
 	}
 
 	public EndEffector getEndEffector() {

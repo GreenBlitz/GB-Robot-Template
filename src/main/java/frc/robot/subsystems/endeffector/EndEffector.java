@@ -1,4 +1,4 @@
-package frc.robot.subsystems.endEffector;
+package frc.robot.subsystems.endeffector;
 
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
@@ -82,8 +82,8 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	private void log() {
-		Logger.recordOutput(getLogPath() + "/FrontBeamBreaker", isCoralInFront());
-		Logger.recordOutput(getLogPath() + "/BackBeamBreaker", isCoralInBack());
+		Logger.recordOutput(getLogPath() + "/isCoralInFront", isCoralInFront());
+		Logger.recordOutput(getLogPath() + "/isCoralInBack", isCoralInBack());
 	}
 
 	public void setBrake(boolean brake) {

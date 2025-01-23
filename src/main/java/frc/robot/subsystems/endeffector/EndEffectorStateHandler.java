@@ -1,4 +1,4 @@
-package frc.robot.subsystems.endEffector;
+package frc.robot.subsystems.endeffector;
 
 import edu.wpi.first.wpilibj2.command.Command;
 

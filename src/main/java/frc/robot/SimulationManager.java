@@ -22,22 +22,22 @@ public class SimulationManager {
 
 	private void logElevatorPosition3d() {
 		Logger
-			.recordOutput(logPath + "/Elevator/FirstStagePosition", getElevatorFirstStagePose(robot.getElevator().getElevatorPositionMeters()));
+			.recordOutput(logPath + "/Elevator/FirstStagePosition", getElevatorFirstStagePosition(robot.getElevator().getElevatorPositionMeters()));
 		Logger.recordOutput(
 			logPath + "/Elevator/SecondStagePosition",
-			getElevatorSecondStagePose(robot.getElevator().getElevatorPositionMeters())
+			getElevatorSecondStagePosition(robot.getElevator().getElevatorPositionMeters())
 		);
 	}
 
-	public static Pose3d getElevatorFirstStagePose(double heightMeters) {
+	public static Pose3d getElevatorFirstStagePosition(double heightMeters) {
 		if (heightMeters > ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS) {
 			return getElevatorPose3dFromHeight(heightMeters - ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS);
 		}
-		return getElevatorSecondStagePose(0);
+		return getElevatorPose3dFromHeight(0);
 	}
 
-	public static Pose3d getElevatorSecondStagePose(double heightMeters) {
-		return getElevatorFirstStagePose(heightMeters);
+	public static Pose3d getElevatorSecondStagePosition(double heightMeters) {
+		return getElevatorPose3dFromHeight(heightMeters);
 	}
 
 	private static Pose3d getElevatorPose3dFromHeight(double heightMeters) {

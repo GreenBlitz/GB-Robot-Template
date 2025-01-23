@@ -7,7 +7,6 @@ import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 
@@ -55,14 +54,15 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(motorPositionSignal, encoderPositionSignal, voltageSignal);
+		motor.updateInputs(motorPositionSignal, voltageSignal);
+		encoder.updateInputs(encoderPositionSignal);
 	}
 
 	public Rotation2d getPosition(){
 		return motorPositionSignal.getLatestValue();
 	}
 
-	protected void resetPosition() {
+	protected void resetByEncoderPosition() {
 		motor.resetPosition(encoderPositionSignal.getLatestValue());
 	}
 

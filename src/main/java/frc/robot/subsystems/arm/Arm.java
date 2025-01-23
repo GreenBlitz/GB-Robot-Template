@@ -87,7 +87,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
-		return MathUtil.isNear(position.getDegrees(), motorPositionSignal.getLatestValue().getDegrees(), tolerance.getDegrees());
+		return motorPositionSignal.isNear(position, tolerance);
 	}
 
 }

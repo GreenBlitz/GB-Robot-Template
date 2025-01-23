@@ -13,8 +13,8 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
-import frc.robot.subsystems.endEffector.EndEffector;
-import frc.robot.subsystems.endEffector.factory.EndEffectorFactory;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
 
 /**
@@ -34,8 +34,8 @@ public class Robot {
 		BatteryUtils.scheduleLimiter();
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
-		this.endEffector = EndEffectorFactory.create();
 		this.arm = ArmFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm");
+		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 	}
 
 	public void periodic() {

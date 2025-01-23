@@ -15,12 +15,8 @@ public class ArmCommandsBuilder {
 		this.arm = arm;
 	}
 
-	public Command moveToTargetPosition(Rotation2d position) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position)), "Set target position to: " + position);
-	}
-
-	public Command stayInPlace() {
-		return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace), "Stay in place");
+	public Command stop() {
+		return arm.asSubsystemCommand(new RunCommand(arm::stop), "Stopped");
 	}
 
 	public Command setVoltage(double voltage) {
@@ -35,8 +31,12 @@ public class ArmCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
 	}
 
-	public Command stop() {
-		return arm.asSubsystemCommand(new RunCommand(arm::stop), "Stopped");
+	public Command moveToTargetPosition(Rotation2d position) {
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position)), "Set target position to: " + position);
+	}
+
+	public Command stayInPlace() {
+		return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace), "Stay in place");
 	}
 
 	public Command loggedDashboardSetVoltage() {

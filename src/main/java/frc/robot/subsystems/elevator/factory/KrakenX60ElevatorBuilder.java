@@ -32,10 +32,10 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.math.AngleUnit;
 import org.littletonrobotics.junction.Logger;
-
-import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
+
 
 public class KrakenX60ElevatorBuilder {
 

@@ -79,7 +79,7 @@ public class KrakenX60ArmBuilder {
 
         config.MotorOutput.Inverted = IS_INVERTED;
 
-        config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 1.97 : 1.97;
+        config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 1.97 : 40;
         config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
         config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
         config.Slot0.kS = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;

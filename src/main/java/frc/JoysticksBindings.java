@@ -25,7 +25,8 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().moveToTargetPosition(Rotation2d.fromDegrees(35)));
+		usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().moveToTargetPosition(Rotation2d.fromDegrees(15)));
+		usedJoystick.X.onTrue(robot.getArm().getCommandsBuilder().moveToTargetPosition(Rotation2d.fromDegrees(120 p)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

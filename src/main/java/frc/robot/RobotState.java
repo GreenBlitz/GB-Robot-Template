@@ -3,6 +3,7 @@ package frc.robot;
 public enum RobotState {
 
 	SCORE_L4,
-	FEED
+	PRE_INTAKE,
+	INTAKE
 
 }

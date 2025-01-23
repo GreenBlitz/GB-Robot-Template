@@ -2,7 +2,7 @@ package frc.utils.auto;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autonomous.AutonomousConstants;
 
 import java.util.ArrayList;
@@ -19,19 +19,19 @@ public enum AutoPath {
 	LOWER_CORAL_STATION_TO_C(AutonomousConstants.LinkedWaypoints.LS, AutonomousConstants.LinkedWaypoints.C),
 	UPPER_CORAL_STATION_TO_L(AutonomousConstants.LinkedWaypoints.US, AutonomousConstants.LinkedWaypoints.L);
 
-	private final Pair<String, Translation2d> startingPoint;
-	private final Pair<String, Translation2d> endPoint;
+	private final Pair<String, Pose2d> startingPoint;
+	private final Pair<String, Pose2d> endPoint;
 
-	AutoPath(Pair<String, Translation2d> startingPoint, Pair<String, Translation2d> endPoint) {
+	AutoPath(Pair<String, Pose2d> startingPoint, Pair<String, Pose2d> endPoint) {
 		this.startingPoint = startingPoint;
 		this.endPoint = endPoint;
 	}
 
-	public Pair<String, Translation2d> getStartingPoint() {
+	public Pair<String, Pose2d> getStartingPoint() {
 		return startingPoint;
 	}
 
-	public Pair<String, Translation2d> getEndPoint() {
+	public Pair<String, Pose2d> getEndPoint() {
 		return endPoint;
 	}
 

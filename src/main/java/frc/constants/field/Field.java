@@ -1,5 +1,7 @@
 package frc.constants.field;
 
+import com.pathplanner.lib.util.FlippingUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -34,6 +36,10 @@ public class Field {
 			return ANGLE_TO_AMP;
 		}
 		return MirrorMath.getMirroredAngle(ANGLE_TO_AMP);
+	}
+
+	public static Pose2d getAllianceRelativePose(Pose2d bluePose) {
+		return isFieldConventionAlliance() ? FlippingUtil.flipFieldPose(bluePose) : bluePose;
 	}
 
 }

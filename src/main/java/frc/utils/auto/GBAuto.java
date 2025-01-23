@@ -31,16 +31,16 @@ public class GBAuto extends PathPlannerAuto {
 		setName(autoName);
 	}
 
-	public static GBAuto chainAutos(GBAuto... autos) {
-		return new GBAuto(Commands.none().andThen(autos), autos[0].getStartingPose(), chainAutoNames(autos), true);
-	}
-
 	public GBAuto withResetPose(Consumer<Pose2d> resetPose) {
 		return new GBAuto(this.beforeStarting(() -> resetPose.accept(this.getStartingPose())), this.getStartingPose(), this.getName(), true);
 	}
 
 	public boolean isFullyCreated() {
 		return isFullyCreated;
+	}
+
+	public static GBAuto chainAutos(GBAuto... autos) {
+		return new GBAuto(Commands.none().andThen(autos), autos[0].getStartingPose(), chainAutoNames(autos), true);
 	}
 
 	private static String chainAutoNames(GBAuto... autos) {

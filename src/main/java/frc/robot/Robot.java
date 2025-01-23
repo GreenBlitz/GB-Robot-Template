@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
@@ -21,10 +21,7 @@ import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.GBAuto;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
-import frc.utils.math.ToleranceMath;
 
-import java.util.Arrays;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -41,8 +38,9 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	private AutonomousChooser pathPlannerAutosChooser;
-	private AutonomousChooser autoStartingPointAntFirstObjectChooser;
-	private AutonomousChooser[] feedingAndScoringGameObjectsChoosers;
+	private AutonomousChooser startingPointAndWhereToScoreFirstObjectChooser;
+	private AutonomousChooser whereToIntakeSecondObjectChooser;
+	private AutonomousChooser whereToScoreSecondObjectChooser;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -68,12 +66,9 @@ public class Robot {
 
 	private void configureAuto() {
 		Supplier<Command> scoreL4Command = () -> superStructure.setState(RobotState.SCORE_L4);
-		Supplier<Command> feedingCommand = () -> superStructure.setState(RobotState.FEED).withTimeout(2);
-		Function<Translation2d, Boolean> isCloseToTranslation = translation2d -> ToleranceMath.isNear(
-			translation2d,
-			getPoseEstimator().getCurrentPose().getTranslation(),
-			AutonomousConstants.DISTANCE_FROM_TARGET_TO_START_NEXT_COMMAND_METERS
-		);
+		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
+
+		Command preIntakeCommand = superStructure.setState(RobotState.PRE_INTAKE);
 
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
@@ -81,18 +76,21 @@ public class Robot {
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
 
+		new EventTrigger("Intake").onTrue(preIntakeCommand);
+
 		pathPlannerAutosChooser = new AutonomousChooser("PathPlannerAutosChooser", AutosBuilder.getAllPathPlannerAutos());
-		autoStartingPointAntFirstObjectChooser = new AutonomousChooser(
-			"AutoLineAutosChooser",
-			AutosBuilder.getAllAutoLineAutos(this, scoreL4Command, isCloseToTranslation)
+		startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
+			"StartingPointAndWhereToScoreFirstObjectChooser",
+			AutosBuilder.getAllAutoLineAutos(this, scoreL4Command)
 		);
-		feedingAndScoringGameObjectsChoosers = new AutonomousChooser[AutonomousConstants.NUMBER_OF_OBJECTS_IN_AUTO - 1];
-		for (int i = 0; i < feedingAndScoringGameObjectsChoosers.length; i++) {
-			feedingAndScoringGameObjectsChoosers[i] = new AutonomousChooser(
-					"FeedAndScoreGameObject" + (i + 2),
-					AutosBuilder.getAllFeedScoreSequences(this, feedingCommand, scoreL4Command, isCloseToTranslation, isCloseToTranslation)
-			);
-		}
+		whereToIntakeSecondObjectChooser = new AutonomousChooser(
+			"WhereToIntakeSecondObjectChooser",
+			AutosBuilder.getAllIntakeAutos(this, intakeCommand)
+		);
+		whereToScoreSecondObjectChooser = new AutonomousChooser(
+			"WhereToScoreSecondObjectChooser",
+			AutosBuilder.getAllScoringAutos(this, scoreL4Command)
+		);
 	}
 
 
@@ -104,9 +102,15 @@ public class Robot {
 	}
 
 	public GBAuto getAuto() {
-		boolean isAutoChosen  = !autoStartingPointAntFirstObjectChooser.isDefaultOptionChosen();
+		boolean isAutoChosen = !startingPointAndWhereToScoreFirstObjectChooser.isDefaultOptionChosen();
 		if (isAutoChosen) {
-			return GBAuto.chainAutos(Arrays.stream(feedingAndScoringGameObjectsChoosers).map(AutonomousChooser::getChosenValue).toArray(GBAuto[]::new)).withResetPose(getPoseEstimator()::resetPose);
+			return GBAuto
+				.chainAutos(
+					startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
+					whereToIntakeSecondObjectChooser.getChosenValue(),
+					whereToScoreSecondObjectChooser.getChosenValue()
+				)
+				.withResetPose(getPoseEstimator()::resetPose);
 		}
 		return pathPlannerAutosChooser.getChosenValue();
 	}

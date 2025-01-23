@@ -12,14 +12,13 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.autonomous.PathFollowingCommands;
+import frc.robot.autonomous.SequencesBuilder;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
 import org.json.simple.parser.ParseException;
@@ -54,7 +53,7 @@ public class PathPlannerUtils {
 			RobotConfig robotConfig = RobotConfig.fromGUISettings();
 			return Optional.of(robotConfig);
 		} catch (IOException ioException) {
-			reportAlert(Alert.AlertType.ERROR, "GetGuiSettingsFileNotFoundAt");
+			reportAlert(Alert.AlertType.ERROR, "GuiSettingsFileNotFoundAt");
 		} catch (ParseException parseException) {
 			reportAlert(Alert.AlertType.ERROR, "GuiSettingsParseFailedAt");
 		}
@@ -128,11 +127,7 @@ public class PathPlannerUtils {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
-		return PathFollowingCommands.followPath(path);
-	}
-
-	public static Pose2d getAllianceRelativePose(Pose2d bluePose) {
-		return AutoBuilder.shouldFlip() ? FlippingUtil.flipFieldPose(bluePose) : bluePose;
+		return SequencesBuilder.followPath(path);
 	}
 
 }

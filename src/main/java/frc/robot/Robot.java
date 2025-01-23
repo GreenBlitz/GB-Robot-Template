@@ -36,7 +36,6 @@ public class Robot {
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 		BrakeStateManager.add(() -> endEffector.setBrake(true), () -> endEffector.setBrake(false));
-
 	}
 
 	public void periodic() {

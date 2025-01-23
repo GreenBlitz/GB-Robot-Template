@@ -42,7 +42,7 @@ public class KrakenX60ArmBuilder {
 	private static final InvertedValue IS_INVERTED = InvertedValue.Clockwise_Positive;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	public static final int NUMBER_OF_MOTORS = 1;
-	public static final double GEAR_RATIO = 50;
+	public static final double GEAR_RATIO = 15;
 
 
 	protected static Arm build(String logPath) {

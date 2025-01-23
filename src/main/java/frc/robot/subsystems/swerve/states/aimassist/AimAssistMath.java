@@ -21,11 +21,11 @@ public class AimAssistMath {
 		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		Rotation2d rotationalVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
-		Rotation2d clampedRotationalVelocityPerSecond = ToleranceMath
-			.clamp(rotationalVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
+		Rotation2d angularVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		Rotation2d clampedAngularVelocityPerSecond = ToleranceMath
+			.clamp(angularVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
 
-		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedRotationalVelocityPerSecond.getRadians());
+		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
 	}
 
 	/**

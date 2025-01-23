@@ -1,7 +1,12 @@
 package frc.robot.subsystems.swerve.states.aimassist;
 
 public enum AimAssist {
-
-	NONE;
-
+	
+	NONE,
+	REEF,
+	BRANCH,
+	ALGI_REMOVE,
+	FEEDER,
+	SLOT;
+	
 }

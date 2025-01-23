@@ -40,12 +40,12 @@ public class Robot {
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		this.arm = ArmFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm");
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
+
 	}
 
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
-
 		Logger.recordOutput("ArmPose3d", ArmSimulationHelper.getArmSimulationPose(arm.getPosition(), elevator.getElevatorPositionMeters()));
 
 		CommandScheduler.getInstance().run(); // Should be last

@@ -7,6 +7,7 @@ import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 

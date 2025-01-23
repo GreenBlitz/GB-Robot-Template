@@ -42,7 +42,7 @@ public class SwerveStateHandler {
 		this.robotPoseSupplier = Optional.of(robotPoseSupplier);
 	}
 
-	public void setReedTranslationSupplier(Supplier<Optional<Translation2d>> reefTranslationSupplier) {
+	public void setReefTranslationSupplier(Supplier<Optional<Translation2d>> reefTranslationSupplier) {
 		this.reefTranslationSupplier = reefTranslationSupplier;
 	}
 
@@ -66,7 +66,7 @@ public class SwerveStateHandler {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
-		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent()) {
+		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent() && feederTranslationSupplier.get().isPresent()) {
 			return handleReefAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
 		}
 		if (swerveState.getAimAssist() == AimAssist.FEEDER && robotPoseSupplier.isPresent() && feederTranslationSupplier.get().isPresent()) {

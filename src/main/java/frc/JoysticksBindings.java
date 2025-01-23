@@ -27,16 +27,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-//		usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().moveToTargetPosition(Rotation2d.fromDegrees(35)));
-		ArmStateHandler stateHandler = new ArmStateHandler(robot.getArm());
-		usedJoystick.A.onTrue(stateHandler.setState(ArmState.CLOSED));
-		usedJoystick.B.onTrue(stateHandler.setState(ArmState.INTAKE));
-		usedJoystick.X.onTrue(stateHandler.setState(ArmState.L1));
-		usedJoystick.Y.onTrue(stateHandler.setState(ArmState.L2));
-		usedJoystick.POV_DOWN.onTrue(stateHandler.setState(ArmState.L3));
-		usedJoystick.POV_LEFT.onTrue(stateHandler.setState(ArmState.L4));
-		usedJoystick.POV_RIGHT.onTrue(stateHandler.setState(ArmState.OUTTAKE));
-
+		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

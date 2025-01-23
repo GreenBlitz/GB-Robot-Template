@@ -28,7 +28,7 @@ public class Robot {
 
 	private final Elevator elevator;
 	private final EndEffector endEffector;
-	public final Arm arm;
+	private final Arm arm;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();

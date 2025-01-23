@@ -30,23 +30,23 @@ public class AutonomousConstants {
 
 	public static class LinkedWaypoints {
 
-		public static final Pair<String, Pose2d> AL1 = Pair.of("AL1", new Pose2d()); // todo real values for all
+		public static final Pair<String, Pose2d> AUTO_LINE1 = Pair.of("AL1", new Pose2d()); // todo real values for all
 
-		public static final Pair<String, Pose2d> AL2 = Pair.of("AL2", new Pose2d(7.6, 6.17, Rotation2d.fromDegrees(180)));
+		public static final Pair<String, Pose2d> AUTO_LINE2 = Pair.of("AL2", new Pose2d(7.6, 6.17, Rotation2d.fromDegrees(180)));
 
-		public static final Pair<String, Pose2d> AL3 = Pair.of("AL3", new Pose2d());
+		public static final Pair<String, Pose2d> AUTO_LINE3 = Pair.of("AL3", new Pose2d());
 
-		public static final Pair<String, Pose2d> AL4 = Pair.of("AL4", new Pose2d(7.6, 4.02, Rotation2d.fromDegrees(180)));
+		public static final Pair<String, Pose2d> AUTO_LINE4 = Pair.of("AL4", new Pose2d(7.6, 4.02, Rotation2d.fromDegrees(180)));
 
-		public static final Pair<String, Pose2d> AL5 = Pair.of("AL5", new Pose2d());
+		public static final Pair<String, Pose2d> AUTO_LINE5 = Pair.of("AL5", new Pose2d());
 
-		public static final Pair<String, Pose2d> AL6 = Pair.of("AL6", new Pose2d(7.6, 1.9, Rotation2d.fromDegrees(180)));
+		public static final Pair<String, Pose2d> AUTO_LINE6 = Pair.of("AL6", new Pose2d(7.6, 1.9, Rotation2d.fromDegrees(180)));
 
-		public static final Pair<String, Pose2d> AL7 = Pair.of("AL7", new Pose2d());
+		public static final Pair<String, Pose2d> AUTO_LINE7 = Pair.of("AL7", new Pose2d());
 
-		public static final Pair<String, Pose2d> US = Pair.of("US", new Pose2d(1.15, 7.05, Rotation2d.fromDegrees(-54)));
+		public static final Pair<String, Pose2d> UPPER_CORAL_STATION = Pair.of("US", new Pose2d(1.15, 7.05, Rotation2d.fromDegrees(-54)));
 
-		public static final Pair<String, Pose2d> LS = Pair.of("LS", new Pose2d(1.15, 0.97, Rotation2d.fromDegrees(54)));
+		public static final Pair<String, Pose2d> LOWER_CORAL_STATION = Pair.of("LS", new Pose2d(1.15, 0.97, Rotation2d.fromDegrees(54)));
 
 		public static final Pair<String, Pose2d> A = Pair.of("A", new Pose2d());
 

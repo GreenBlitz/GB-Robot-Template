@@ -13,17 +13,14 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.constants.MathConstants;
 import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
-import frc.robot.RobotType;
 import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -120,7 +117,7 @@ public class KrakenX60ArmBuilder {
 				GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
 				Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRadians(),
-					Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRadians(),
+				Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRadians(),
 				false,
 				STARTING_POSITION.getRadians()
 			),

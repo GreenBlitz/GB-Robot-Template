@@ -58,7 +58,7 @@ public class Arm extends GBSubsystem {
 		encoder.updateInputs(encoderPositionSignal);
 	}
 
-	public Rotation2d getPosition(){
+	public Rotation2d getPosition() {
 		return motorPositionSignal.getLatestValue();
 	}
 

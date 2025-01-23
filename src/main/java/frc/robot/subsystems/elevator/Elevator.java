@@ -111,6 +111,8 @@ public class Elevator extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/PositionMeters", getElevatorPositionMeters());
 		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
 		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
+		Logger.recordOutput(getLogPath() + "/FirstStagePosition", ElevatorSimulationHelper.getFirstStagePose(getElevatorPositionMeters()));
+		Logger.recordOutput(getLogPath() + "/SecondStagePosition", ElevatorSimulationHelper.getSecondStagePose(getElevatorPositionMeters()));
 	}
 
 	public void resetMotors(double positionMeters) {
@@ -154,20 +156,21 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private boolean shouldResetByMinimumPosition() {
-		return getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_HEIGHT_METERS && !hasBeenResetBySwitch;
+		return getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_HEIGHT_METERS;
 	}
 
 	private boolean shouldResetByLimitSwitch() {
-		return isAtBackwardsLimit() && DriverStation.isDisabled() && !hasBeenResetBySwitch;
+		return isAtBackwardsLimit();
 	}
 
 	private boolean handleReset() {
+		if (DriverStation.isDisabled() || !hasBeenResetBySwitch()) {
+			return false;
+		}
 		if (shouldResetByLimitSwitch()) {
 			hasBeenResetBySwitch = true;
-			resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
-			return true;
 		}
-		if (shouldResetByMinimumPosition()) {
+		if (shouldResetByMinimumPosition() || shouldResetByLimitSwitch()) {
 			resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
 			return true;
 		}
@@ -175,11 +178,11 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public static double convertRotationsToMeters(Rotation2d position) {
-		return Conversions.angleToDistance(position, ElevatorConstants.DRUM_RADIUS_METERS);
+		return Conversions.angleToDistance(position, ElevatorConstants.DRUM_DIAMETER_METERS);
 	}
 
 	public static Rotation2d convertMetersToRotations(double meters) {
-		return Conversions.distanceToAngle(meters, ElevatorConstants.DRUM_RADIUS_METERS);
+		return Conversions.distanceToAngle(meters, ElevatorConstants.DRUM_DIAMETER_METERS);
 	}
 
 }

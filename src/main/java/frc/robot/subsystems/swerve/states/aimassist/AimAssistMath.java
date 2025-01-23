@@ -70,6 +70,7 @@ public class AimAssistMath {
 					robotRelativeSpeeds.omegaRadiansPerSecond
 				);
 				assistedSpeed = SwerveMath.robotToFieldRelativeSpeeds(assistedSpeed, robotPose.getRotation());
+				break;
 		}
 		return assistedSpeed;
 	}

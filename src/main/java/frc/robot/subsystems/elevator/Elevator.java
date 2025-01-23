@@ -111,7 +111,6 @@ public class Elevator extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/PositionMeters", getElevatorPositionMeters());
 		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
 		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
-
 	}
 
 	public void resetMotors(double positionMeters) {

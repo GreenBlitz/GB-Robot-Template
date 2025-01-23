@@ -17,8 +17,6 @@ public class AutonomousConstants {
 
 	public static final double PATHFINDING_DEADBAND_METERS = 0.5;
 
-	public static final double DISTANCE_TO_START_PRE_STATE_METERS = 0.6;
-
 	public static final double DISTANCE_FROM_TARGET_TOLERANCE_METERS = 0.02;
 
 	public static final Rotation2d TARGET_ANGLE_TOLERANCE = Rotation2d.fromDegrees(1.5);

@@ -52,8 +52,8 @@ public class KrakenX60ArmBuilder {
 		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(IS_FOC));
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(IS_FOC));
 
-		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM_DEVICE_ID, buildSysidConfig(), buildArmSimulation());
-		motor.applyConfiguration(buildTalonFXConfiguration(IDs.CANCoderIDs.ARM_CAN_CODER_ID));
+		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM_MOTOR_ID, buildSysidConfig(), buildArmSimulation());
+		motor.applyConfiguration(buildTalonFXConfiguration());
 
 		Phoenix6AngleSignal armPositionSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
@@ -77,16 +77,16 @@ public class KrakenX60ArmBuilder {
 		);
 	}
 
-	private static TalonFXConfiguration buildTalonFXConfiguration(Phoenix6DeviceID encoderDeviceId) {
+	private static TalonFXConfiguration buildTalonFXConfiguration() {
 		TalonFXConfiguration config = new TalonFXConfiguration();
 
 		config.MotorOutput.Inverted = IS_INVERTED;
 
-		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 0.8 : 0.9;
-		config.Slot0.kI = Robot.ROBOT_TYPE == RobotType.SIMULATION ? 0.8 : 0.9;
-		config.Slot0.kD = Robot.ROBOT_TYPE == RobotType.SIMULATION ? 0.8 : 0.9;
-		config.Slot0.kS = Robot.ROBOT_TYPE == RobotType.SIMULATION ? 0 : 0.1;
-		config.Slot0.kG = Robot.ROBOT_TYPE == RobotType.SIMULATION ? 0 : 0.1;
+		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 30 : 30;
+		config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 4 : 4;
+		config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 23 : 23;
+		config.Slot0.kS = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
+		config.Slot0.kG = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
 		config.CurrentLimits.SupplyCurrentLimit = 30;
@@ -103,7 +103,7 @@ public class KrakenX60ArmBuilder {
 		config.Feedback.SensorToMechanismRatio = 1;
 
 		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-		config.Feedback.FeedbackRemoteSensorID = encoderDeviceId.id();
+		config.Feedback.FeedbackRemoteSensorID = IDs.CANCoderIDs.ARM_CAN_CODER_ID.id();
 
 		return config;
 	}

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;

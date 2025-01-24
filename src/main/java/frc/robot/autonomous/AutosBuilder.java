@@ -24,9 +24,9 @@ public class AutosBuilder {
 		);
 	}
 
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllAutoLineAutos(Robot robot, Supplier<Command> scoringCommand) {
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(Robot robot, Supplier<Command> scoringCommand) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.getAllAutoLinePaths()) {
+		for (AutoPath autoPath : AutoPath.getAllStartingAndScoringFirstObjectPaths()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,
@@ -37,9 +37,9 @@ public class AutosBuilder {
 		return autos;
 	}
 
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakeAutos(Robot robot, Supplier<Command> intakeCommand) {
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakingAutos(Robot robot, Supplier<Command> intakeCommand) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.getAllPathsToCoralStations()) {
+		for (AutoPath autoPath : AutoPath.getAllIntakingPaths()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,
@@ -52,7 +52,7 @@ public class AutosBuilder {
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllScoringAutos(Robot robot, Supplier<Command> scoringCommand) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.getAllPathsFromCoralStations()) {
+		for (AutoPath autoPath : AutoPath.getAllScoringPathsFromCoralStations()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,

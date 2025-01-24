@@ -132,19 +132,19 @@ public class PathPlannerUtils {
 		return SequencesBuilder.followPath(path);
 	}
 
-	public static boolean isRobotInAutonomousTolerances(Robot robot, Pose2d targetPose) {
+	public static boolean isRobotInAutonomousTolerances(Pose2d currentPose, Pose2d targetPose) {
 		return ToleranceMath.isNear(
 			targetPose,
-			robot.getPoseEstimator().getCurrentPose(),
+			currentPose,
 			AutonomousConstants.TARGET_ANGLE_TOLERANCE,
 			AutonomousConstants.DISTANCE_FROM_TARGET_TOLERANCE_METERS
 		);
 	}
 
-	public static boolean isRobotInPathfindingDeadband(Robot robot, Pose2d targetPose) {
+	public static boolean isRobotInPathfindingDeadband(Pose2d currentPose, Pose2d targetPose) {
 		return ToleranceMath.isNear(
 			targetPose.getTranslation(),
-			robot.getPoseEstimator().getCurrentPose().getTranslation(),
+			currentPose.getTranslation(),
 			AutonomousConstants.PATHFINDING_DEADBAND_METERS
 		);
 	}

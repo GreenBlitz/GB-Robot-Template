@@ -81,11 +81,11 @@ public class Robot {
 		testAutosChooser = new AutonomousChooser("TestAutosChooser", AutosBuilder.getAllTestAutos());
 		startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
 			"StartingPointAndWhereToScoreFirstObjectChooser",
-			AutosBuilder.getAllAutoLineAutos(this, scoreL4Command)
+			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoreL4Command)
 		);
 		whereToIntakeSecondObjectChooser = new AutonomousChooser(
 			"WhereToIntakeSecondObjectChooser",
-			AutosBuilder.getAllIntakeAutos(this, intakeCommand)
+			AutosBuilder.getAllIntakingAutos(this, intakeCommand)
 		);
 		whereToScoreSecondObjectChooser = new AutonomousChooser(
 			"WhereToScoreSecondObjectChooser",

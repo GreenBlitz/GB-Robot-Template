@@ -43,7 +43,7 @@ public enum AutoPath {
 		return PathPlannerUtils.getPathFromFile(getPathName());
 	}
 
-	public static List<AutoPath> getAllAutoLinePaths() {
+	public static List<AutoPath> getAllStartingAndScoringFirstObjectPaths() {
 		ArrayList<AutoPath> autoLinePaths = new ArrayList<>();
 		for (AutoPath autoPath : values()) {
 			if (autoPath.getStartingPoint().getFirst().startsWith("AL")) {
@@ -53,7 +53,7 @@ public enum AutoPath {
 		return autoLinePaths;
 	}
 
-	public static List<AutoPath> getAllPathsToCoralStations() {
+	public static List<AutoPath> getAllIntakingPaths() {
 		ArrayList<AutoPath> pathsToCoralStations = new ArrayList<>();
 		for (AutoPath autoPath : values()) {
 			if (autoPath.getEndPoint().getFirst().equals("US") || autoPath.getEndPoint().getFirst().equals("LS")) {
@@ -63,7 +63,7 @@ public enum AutoPath {
 		return pathsToCoralStations;
 	}
 
-	public static List<AutoPath> getAllPathsFromCoralStations() {
+	public static List<AutoPath> getAllScoringPathsFromCoralStations() {
 		ArrayList<AutoPath> pathsFromCoralStations = new ArrayList<>();
 		for (AutoPath autoPath : values()) {
 			if (autoPath.getStartingPoint().getFirst().equals("US") || autoPath.getStartingPoint().getFirst().equals("LS")) {

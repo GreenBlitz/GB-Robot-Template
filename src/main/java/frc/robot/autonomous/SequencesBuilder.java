@@ -40,7 +40,7 @@ public class SequencesBuilder {
 		return new ConditionalCommand(
 			followPath(path),
 			pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
-			() -> PathPlannerUtils.isRobotInPathfindingDeadband(robot, Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)))
+			() -> PathPlannerUtils.isRobotInPathfindingDeadband(robot.getPoseEstimator().getCurrentPose(), Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)))
 		);
 	}
 
@@ -48,7 +48,7 @@ public class SequencesBuilder {
 		return robot.getSwerve()
 			.getCommandsBuilder()
 			.pidToPose(robot.getPoseEstimator()::getCurrentPose, targetPose)
-			.until(() -> PathPlannerUtils.isRobotInAutonomousTolerances(robot, targetPose));
+			.until(() -> PathPlannerUtils.isRobotInAutonomousTolerances(robot.getPoseEstimator().getCurrentPose(), targetPose));
 	}
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path) {

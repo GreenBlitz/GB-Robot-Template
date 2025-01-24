@@ -53,11 +53,7 @@ public class AimAssistMath {
 
 		return switch (swerveState.getDriveMode()) {
 			case ROBOT_RELATIVE:
-				new ChassisSpeeds(
-					speeds.vxMetersPerSecond,
-					pidHorizontalToObjectOutputVelocityMetersPerSecond,
-					speeds.omegaRadiansPerSecond
-				);
+				new ChassisSpeeds(speeds.vxMetersPerSecond, pidHorizontalToObjectOutputVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 
 			case FIELD_RELATIVE:
 				ChassisSpeeds robotRelativeSpeeds = SwerveMath.fieldToRobotRelativeSpeeds(speeds, robotPose.getRotation());

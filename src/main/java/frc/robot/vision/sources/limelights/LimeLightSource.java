@@ -47,14 +47,14 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private double[] standardDeviationsArray;
 	private double computingPipeLineLatency;
 	private double captureLatency;
-	private Filter<AprilTagVisionData> filter;
+	private Filter<? super AprilTagVisionData> filter;
 	private GyroAngleValues gyroAngleValues;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
-		Filter<AprilTagVisionData> filter,
+		Filter<? super AprilTagVisionData> filter,
 		LimelightPoseEstimationMethod poseEstimationMethod
 	) {
 		this.logPath = parentLogPath + cameraNetworkTablesName + "/" + sourceName + "/";
@@ -167,12 +167,12 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
-	public void setFilter(Filter<AprilTagVisionData> newFilter) {
+	public void setFilter(Filter<? super AprilTagVisionData> newFilter) {
 		this.filter = newFilter;
 	}
 
 	@Override
-	public Filter<AprilTagVisionData> getFilter() {
+	public Filter<? super AprilTagVisionData> getFilter() {
 		return filter;
 	}
 

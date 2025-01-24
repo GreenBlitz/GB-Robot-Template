@@ -12,54 +12,55 @@ import static edu.wpi.first.units.Units.Meters;
 public class WPILEDsWrapper extends AddressableLED {
 
 
-    private AddressableLEDBuffer ledBuffer;
-    private Distance metersPerLed;
-    private HashMap<AddressableLEDBufferView, LEDPattern> patternsPerBufferView;
+	private AddressableLEDBuffer ledBuffer;
+	private Distance metersPerLed;
+	private HashMap<AddressableLEDBufferView, LEDPattern> patternsPerBufferView;
 
-    /**
-     * Constructs a new driver for a specific port.
-     *
-     * @param port the output port to use (Must be a PWM header, not on MXP)
-     */
-    public WPILEDsWrapper(int port, int lengthInLEDs, double ledsPerMeter) {
-        super(port);
-        super.setLength(lengthInLEDs);
+	/**
+	 * Constructs a new driver for a specific port.
+	 *
+	 * @param port the output port to use (Must be a PWM header, not on MXP)
+	 */
+	public WPILEDsWrapper(int port, int lengthInLEDs, double ledsPerMeter) {
+		super(port);
+		super.setLength(lengthInLEDs);
 
-        this.ledBuffer = new AddressableLEDBuffer(lengthInLEDs);
-        this.metersPerLed = Meters.of(1 / ledsPerMeter);
-        this.patternsPerBufferView = new HashMap<>();
+		this.ledBuffer = new AddressableLEDBuffer(lengthInLEDs);
+		this.metersPerLed = Meters.of(1 / ledsPerMeter);
+		this.patternsPerBufferView = new HashMap<>();
 
-        super.setData(ledBuffer);
-        super.start();
-    }
+		super.setData(ledBuffer);
+		super.start();
+	}
 
-    public void applyPatternsToBuffer(LEDPattern pattern, AddressableLEDBufferView buffer){
-        patternsPerBufferView.put(buffer, pattern);
-    }
+	public void applyPatternsToBuffer(LEDPattern pattern, AddressableLEDBufferView buffer) {
+		patternsPerBufferView.put(buffer, pattern);
+	}
 
-    public AddressableLEDBufferView createBuffer (int startingIndex, int endingIndex){
-        AddressableLEDBufferView bufferView = ledBuffer.createView(startingIndex,endingIndex);
-        applyPatternsToBuffer(LEDPattern.kOff, bufferView);
+	public AddressableLEDBufferView createBuffer(int startingIndex, int endingIndex) {
+		AddressableLEDBufferView bufferView = ledBuffer.createView(startingIndex, endingIndex);
+		applyPatternsToBuffer(LEDPattern.kOff, bufferView);
 
-        return bufferView;
-    }
+		return bufferView;
+	}
 
-    public void periodic (){
-        applyPatternsToBuffers();
-        super.setData(ledBuffer);
-    }
+	public void periodic() {
+		applyPatternsToBuffers();
+		super.setData(ledBuffer);
+	}
 
-    private void applyPatternsToBuffers(){
-        for (AddressableLEDBufferView buffer : patternsPerBufferView.keySet()){
-            patternsPerBufferView.get(buffer).applyTo(buffer);
-        }
-    }
+	private void applyPatternsToBuffers() {
+		for (AddressableLEDBufferView buffer : patternsPerBufferView.keySet()) {
+			patternsPerBufferView.get(buffer).applyTo(buffer);
+		}
+	}
 
-    public Distance getMetersPerLed() {
-        return metersPerLed;
-    }
+	public Distance getMetersPerLed() {
+		return metersPerLed;
+	}
 
-    public int length(){
-        return ledBuffer.getLength();
-    }
+	public int length() {
+		return ledBuffer.getLength();
+	}
+
 }

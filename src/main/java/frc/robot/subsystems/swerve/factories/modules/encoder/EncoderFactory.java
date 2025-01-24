@@ -14,19 +14,19 @@ public class EncoderFactory {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Encoder";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT -> CANCoderEncoderBuilder.generateEncoder(logPath, IDs.CANCodersIDs.FRONT_LEFT_ENCODER);
-				case FRONT_RIGHT -> CANCoderEncoderBuilder.generateEncoder(logPath, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER);
-				case BACK_LEFT -> CANCoderEncoderBuilder.generateEncoder(logPath, IDs.CANCodersIDs.BACK_LEFT_ENCODER);
-				case BACK_RIGHT -> CANCoderEncoderBuilder.generateEncoder(logPath, IDs.CANCodersIDs.BACK_RIGHT_ENCODER);
+				case FRONT_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.FRONT_LEFT_ENCODER);
+				case FRONT_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER);
+				case BACK_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.BACK_LEFT_ENCODER);
+				case BACK_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.BACK_RIGHT_ENCODER);
 			};
-			case SIMULATION -> SimulationEncoderBuilder.generateEncoder(logPath);
+			case SIMULATION -> SimulationEncoderBuilder.buildEncoder(logPath);
 		};
 	}
 
 	public static EncoderSignals createSignals(IAngleEncoder angleEncoder) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> CANCoderEncoderBuilder.generateSignals((CANCoderEncoder) angleEncoder);
-			case SIMULATION -> SimulationEncoderBuilder.generateSignals();
+			case REAL -> CANCoderEncoderBuilder.buildSignals((CANCoderEncoder) angleEncoder);
+			case SIMULATION -> SimulationEncoderBuilder.buildSignals();
 		};
 	}
 

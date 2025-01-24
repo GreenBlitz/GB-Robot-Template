@@ -31,7 +31,7 @@ class Falcon500SteerBuilder {
 
 	private static final double GEAR_RATIO = 150.0 / 7.0;
 
-	private static SysIdRoutine.Config generateSysidConfig() {
+	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
 			Volts.of(0.5).per(Second),
 			Volts.of(1),
@@ -40,7 +40,7 @@ class Falcon500SteerBuilder {
 		);
 	}
 
-	private static SimpleMotorSimulation generateMechanismSimulation() {
+	private static SimpleMotorSimulation buildMechanismSimulation() {
 		double momentOfInertiaMetersSquared = 0.00001;
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
@@ -50,7 +50,7 @@ class Falcon500SteerBuilder {
 		);
 	}
 
-	private static TalonFXConfiguration generateMotorConfig(boolean inverted) {
+	private static TalonFXConfiguration buildMotorConfig(boolean inverted) {
 		TalonFXConfiguration steerConfig = new TalonFXConfiguration();
 
 		steerConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
@@ -73,23 +73,23 @@ class Falcon500SteerBuilder {
 		return steerConfig;
 	}
 
-	protected static ControllableMotor generateSteer(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID, boolean inverted) {
-		TalonFXConfiguration configuration = generateMotorConfig(inverted);
+	protected static ControllableMotor buildSteer(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID, boolean inverted) {
+		TalonFXConfiguration configuration = buildMotorConfig(inverted);
 		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
 
-		TalonFXMotor steer = new TalonFXMotor(logPath, deviceID, generateSysidConfig(), generateMechanismSimulation());
+		TalonFXMotor steer = new TalonFXMotor(logPath, deviceID, buildSysidConfig(), buildMechanismSimulation());
 		steer.applyConfiguration(configuration);
 		return steer;
 	}
 
-	protected static SteerRequests generateRequests() {
+	protected static SteerRequests buildRequests() {
 		return new SteerRequests(
 			Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true)),
 			Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true))
 		);
 	}
 
-	protected static SteerSignals generateSignals(TalonFXMotor steer) {
+	protected static SteerSignals buildSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder

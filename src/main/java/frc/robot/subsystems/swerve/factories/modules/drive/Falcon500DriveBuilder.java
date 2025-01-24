@@ -31,7 +31,7 @@ class Falcon500DriveBuilder {
 	private static final double SLIP_CURRENT = 60;
 	private static final double GEAR_RATIO = 6.12;
 
-	private static SysIdRoutine.Config generateSysidConfig() {
+	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
 			Volts.of(0.5).per(Second),
 			Volts.of(2),
@@ -40,7 +40,7 @@ class Falcon500DriveBuilder {
 		);
 	}
 
-	private static SimpleMotorSimulation generateMechanismSimulation() {
+	private static SimpleMotorSimulation buildMechanismSimulation() {
 		double momentOfInertiaMetersSquared = 0.001;
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
@@ -50,7 +50,7 @@ class Falcon500DriveBuilder {
 		);
 	}
 
-	private static TalonFXConfiguration generateMotorConfig(boolean inverted) {
+	private static TalonFXConfiguration buildMotorConfig(boolean inverted) {
 		TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
 		driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
@@ -73,20 +73,20 @@ class Falcon500DriveBuilder {
 		return driveConfig;
 	}
 
-	protected static ControllableMotor generateDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
-		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, generateSysidConfig(), generateMechanismSimulation());
-		drive.applyConfiguration(generateMotorConfig(inverted));
+	protected static ControllableMotor buildDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
+		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, buildSysidConfig(), buildMechanismSimulation());
+		drive.applyConfiguration(buildMotorConfig(inverted));
 		return drive;
 	}
 
-	protected static DriveRequests generateRequests() {
+	protected static DriveRequests buildRequests() {
 		return new DriveRequests(
 			Phoenix6RequestBuilder.build(new VelocityVoltage(0).withEnableFOC(true)),
 			Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true))
 		);
 	}
 
-	protected static DriveSignals generateSignals(TalonFXMotor drive) {
+	protected static DriveSignals buildSignals(TalonFXMotor drive) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.generatePhoenix6Signal(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder

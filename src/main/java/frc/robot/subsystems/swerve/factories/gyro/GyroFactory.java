@@ -10,15 +10,15 @@ public class GyroFactory {
 	public static IGyro createGyro(String logPath) {
 		logPath += "/Gyro";
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> Pigeon2GyroBuilder.generateGyro(logPath);
-			case SIMULATION -> SimulationGyroBuilder.generateGyro(logPath);
+			case REAL -> Pigeon2GyroBuilder.buildGyro(logPath);
+			case SIMULATION -> SimulationGyroBuilder.buildGyro(logPath);
 		};
 	}
 
 	public static GyroSignals createSignals(IGyro gyro) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> Pigeon2GyroBuilder.generateSignals((Pigeon2Gyro) gyro);
-			case SIMULATION -> SimulationGyroBuilder.generateSignals();
+			case REAL -> Pigeon2GyroBuilder.buildSignals((Pigeon2Gyro) gyro);
+			case SIMULATION -> SimulationGyroBuilder.buildSignals();
 		};
 	}
 

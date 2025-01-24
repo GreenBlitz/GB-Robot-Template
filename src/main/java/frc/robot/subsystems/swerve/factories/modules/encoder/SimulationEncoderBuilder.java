@@ -10,11 +10,11 @@ import frc.utils.time.TimeUtils;
 
 public class SimulationEncoderBuilder {
 
-	protected static IAngleEncoder generateEncoder(String logPath) {
+	protected static IAngleEncoder buildEncoder(String logPath) {
 		return new EmptyAngleEncoder(logPath);
 	}
 
-	protected static EncoderSignals generateSignals() {
+	protected static EncoderSignals buildSignals() {
 		return new EncoderSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
 
 			@Override

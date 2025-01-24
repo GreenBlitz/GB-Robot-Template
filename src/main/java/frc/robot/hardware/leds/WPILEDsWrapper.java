@@ -44,6 +44,20 @@ public class WPILEDsWrapper extends AddressableLED {
 		return bufferView;
 	}
 
+	private void applyPatternOnAll(LEDPattern pattern) {
+		for (AddressableLEDBufferView buffer : patternsPerBufferView.keySet()) {
+			applyPatternsToBuffer(pattern, buffer);
+		}
+	}
+
+	public void turnAllOff() {
+		this.applyPatternOnAll(LEDPattern.kOff);
+	}
+
+	public void applyPatternToAll(LEDPattern pattern) {
+		this.applyPatternOnAll(pattern);
+	}
+
 	public void periodic() {
 		applyPatternsToBuffers();
 		super.setData(ledBuffer);

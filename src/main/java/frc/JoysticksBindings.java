@@ -32,22 +32,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-
-		LEDPattern solid = LEDPattern.solid(Color.kBlue).breathe(Seconds.of(4));
-		LEDPattern blink = LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.2));
-
-
-		AddressableLEDBufferView b1 = robot.led.createBuffer(0, 25);
-		AddressableLEDBufferView b2 = robot.led.createBuffer(26, 49);
-
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.led.applyPatternsToBuffer(solid, b1)));
-		usedJoystick.X.onTrue(new InstantCommand(() -> robot.led.applyPatternsToBuffer(blink,b2)));
-		usedJoystick.Y.onTrue(new InstantCommand(() -> {
-			robot.led.applyPatternsToBuffer(LEDPattern.kOff, b1);
-			robot.led.applyPatternsToBuffer(LEDPattern.kOff, b2);
-		}
-		));
-
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

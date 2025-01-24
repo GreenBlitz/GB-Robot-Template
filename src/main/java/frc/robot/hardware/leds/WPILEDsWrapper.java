@@ -5,10 +5,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static edu.wpi.first.units.Units.Meters;
 

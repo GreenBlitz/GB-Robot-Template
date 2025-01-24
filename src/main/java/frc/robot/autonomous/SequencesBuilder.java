@@ -18,11 +18,11 @@ import java.util.function.Supplier;
 public class SequencesBuilder {
 
 	public static Command commandDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new ParallelCommandGroup(commandSupplier.get(), followPathOrPathfindAndFollowPath(robot, path));
+		return new ParallelCommandGroup(commandSupplier.get(), followAdjustedPath(robot, path));
 	}
 
 	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new SequentialCommandGroup(followPathOrPathfindAndFollowPath(robot, path), commandSupplier.get());
+		return new SequentialCommandGroup(followAdjustedPath(robot, path), commandSupplier.get());
 	}
 
 	public static Command followPath(PathPlannerPath path) {
@@ -53,14 +53,7 @@ public class SequencesBuilder {
 		return robot.getSwerve()
 			.getCommandsBuilder()
 			.pidToPose(robot.getPoseEstimator()::getCurrentPose, targetPose)
-			.until(
-				() -> ToleranceMath.isNear(
-					targetPose,
-					robot.getPoseEstimator().getCurrentPose(),
-					AutonomousConstants.TARGET_ANGLE_TOLERANCE,
-					AutonomousConstants.DISTANCE_FROM_TARGET_TOLERANCE_METERS
-				)
-			);
+			.until(() -> PathPlannerUtils.isRobotInAutonomousTolerances(robot, targetPose));
 	}
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path) {

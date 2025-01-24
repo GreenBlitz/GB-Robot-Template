@@ -73,7 +73,7 @@ public class WPILEDsWrapper extends AddressableLED {
 		return metersPerLed;
 	}
 
-	public int length() {
+	public int numberOfLEDs() {
 		return ledBuffer.getLength();
 	}
 

@@ -46,6 +46,10 @@ public class Arm extends GBSubsystem {
 		return commandsBuilder;
 	}
 
+	public Rotation2d getPosition() {
+		return motorPositionSignal.getLatestValue();
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();

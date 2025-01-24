@@ -78,11 +78,23 @@ public class KrakenX60ArmBuilder {
 
 		config.MotorOutput.Inverted = IS_INVERTED;
 
-		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 1.97 : 40;
-		config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
-		config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
-		config.Slot0.kS = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
-		config.Slot0.kG = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
+		switch (Robot.ROBOT_TYPE){
+			case REAL -> {
+				config.Slot0.kP = 1.97;
+				config.Slot0.kI = 0;
+				config.Slot0.kD = 0;
+				config.Slot0.kS = 0;
+				config.Slot0.kG = 0;
+			}
+			case SIMULATION -> {
+				config.Slot0.kP = 1.97;
+				config.Slot0.kI = 0;
+				config.Slot0.kD = 0;
+				config.Slot0.kS = 0;
+				config.Slot0.kG = 0;
+			}
+		}
+
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
 		config.CurrentLimits.SupplyCurrentLimit = 30;

@@ -38,7 +38,7 @@ public class Robot {
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
 
 		this.arm = ArmFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm");
-		BrakeStateManager.add(() -> arm.setBrake(true), () -> elevator.setBrake(false));
+		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 	}

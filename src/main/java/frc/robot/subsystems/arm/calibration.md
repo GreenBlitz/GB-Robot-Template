@@ -1,5 +1,4 @@
-### Arm Calibrations
-
+Arm Calibrations
 -----------------------------
 
 ##### IDs
@@ -8,21 +7,33 @@
 - [ ] Motor Buschain
 - [ ] Arm CANCoder ID 
 - [ ] encoder Buschain
+- 
+##### Physics
+
+- [ ] length
+- [ ] mass
+
+##### Limits -
+
+- [ ] current limit
+- [ ] peak forward duty cycle
+- [ ] peak reverse duty cycle
+- [ ] software forward limit
+- [ ] software reverse limit
+
+##### Ratio
+- [ ] gear ratio
+- [ ] rotor to sensor
+
+##### Simulation
+
+- [ ] starting position
 
 ##### Motor
 
 - [ ] number of motors
 - [ ] is foc
 - [ ] is inverted
-
-##### Simulation
-
-- [ ] starting position
-
-##### Physics
-
-- [ ] length   
-- [ ] mass
 
 ##### PID -
 
@@ -34,15 +45,3 @@
 
 - [ ] kS   
 - [ ] kG
-
-##### Limits -
-
-- [ ] current limit
-- [ ] peak forward duty cycle   
-- [ ] peak reverse duty cycle   
-- [ ] software forward limit   
-- [ ] software reverse limit
-
-##### Ratio
-- [ ] gear ratio
-- [ ] sensor to rotor ratio

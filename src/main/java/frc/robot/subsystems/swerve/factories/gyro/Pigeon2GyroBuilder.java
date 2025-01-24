@@ -36,8 +36,7 @@ class Pigeon2GyroBuilder {
 
 	protected static GyroSignals buildSignals(Pigeon2Gyro pigeon2Gyro) {
 		return new GyroSignals(
-			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
+			Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
 		);
 	}
 

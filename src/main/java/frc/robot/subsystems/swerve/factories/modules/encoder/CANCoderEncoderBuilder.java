@@ -43,8 +43,7 @@ class CANCoderEncoderBuilder {
 
 	protected static EncoderSignals buildSignals(CANCoderEncoder encoder) {
 		return new EncoderSignals(
-			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
+			Phoenix6SignalBuilder.build(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
 		);
 	}
 

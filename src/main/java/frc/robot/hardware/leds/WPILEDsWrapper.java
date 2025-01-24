@@ -61,4 +61,8 @@ public class WPILEDsWrapper extends AddressableLED {
     public Distance getMetersPerLed() {
         return metersPerLed;
     }
+
+    public int length(){
+        return ledBuffer.getLength();
+    }
 }

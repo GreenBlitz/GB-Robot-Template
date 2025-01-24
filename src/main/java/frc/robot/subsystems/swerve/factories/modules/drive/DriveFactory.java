@@ -15,23 +15,23 @@ public class DriveFactory {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Drive";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
-				case FRONT_LEFT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR, false);
-				case FRONT_RIGHT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR, true);
-				case BACK_LEFT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR, false);
-				case BACK_RIGHT -> TalonFXDriveConstants.generateDrive(logPath, IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR, false);
+				case FRONT_LEFT -> Falcon500DriveBuilder.generateDrive(logPath, IDs.TalonFXIDs.FRONT_LEFT_DRIVE_MOTOR, false);
+				case FRONT_RIGHT -> Falcon500DriveBuilder.generateDrive(logPath, IDs.TalonFXIDs.FRONT_RIGHT_DRIVE_MOTOR, true);
+				case BACK_LEFT -> Falcon500DriveBuilder.generateDrive(logPath, IDs.TalonFXIDs.BACK_LEFT_DRIVE_MOTOR, false);
+				case BACK_RIGHT -> Falcon500DriveBuilder.generateDrive(logPath, IDs.TalonFXIDs.BACK_RIGHT_DRIVE_MOTOR, false);
 			};
 		};
 	}
 
 	public static DriveRequests createRequests() {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL, SIMULATION -> TalonFXDriveConstants.generateRequests();
+			case REAL, SIMULATION -> Falcon500DriveBuilder.generateRequests();
 		};
 	}
 
 	public static DriveSignals createSignals(ControllableMotor drive) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL, SIMULATION -> TalonFXDriveConstants.generateSignals((TalonFXMotor) drive);
+			case REAL, SIMULATION -> Falcon500DriveBuilder.generateSignals((TalonFXMotor) drive);
 		};
 	}
 

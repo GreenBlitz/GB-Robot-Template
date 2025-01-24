@@ -11,7 +11,7 @@ import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
-class RealGyroConstants {
+class Pigeon2GyroBuilder {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
 

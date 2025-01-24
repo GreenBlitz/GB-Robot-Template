@@ -8,7 +8,7 @@ import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtils;
 
-public class SimulationGyroConstants {
+public class SimulationGyroBuilder {
 
 	protected static IGyro generateGyro(String logPath) {
 		return new EmptyGyro(logPath);

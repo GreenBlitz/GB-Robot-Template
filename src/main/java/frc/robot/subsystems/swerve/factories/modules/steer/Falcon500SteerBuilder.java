@@ -27,7 +27,7 @@ import frc.utils.AngleUnit;
 
 import static edu.wpi.first.units.Units.*;
 
-class TalonFXSteerConstants {
+class Falcon500SteerBuilder {
 
 	private static final double GEAR_RATIO = 150.0 / 7.0;
 

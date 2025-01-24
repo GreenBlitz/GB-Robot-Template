@@ -15,7 +15,7 @@ import frc.robot.subsystems.swerve.module.records.EncoderSignals;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
-class RealEncoderConstants {
+class CANCoderEncoderBuilder {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
 

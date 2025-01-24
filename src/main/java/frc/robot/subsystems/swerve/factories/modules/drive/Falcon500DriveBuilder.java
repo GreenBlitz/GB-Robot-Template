@@ -26,7 +26,7 @@ import frc.utils.AngleUnit;
 
 import static edu.wpi.first.units.Units.*;
 
-class TalonFXDriveConstants {
+class Falcon500DriveBuilder {
 
 	private static final double SLIP_CURRENT = 60;
 	private static final double GEAR_RATIO = 6.12;

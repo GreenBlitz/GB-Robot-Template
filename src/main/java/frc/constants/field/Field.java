@@ -39,7 +39,7 @@ public class Field {
 	}
 
 	public static Pose2d getAllianceRelativePose(Pose2d bluePose) {
-		return isFieldConventionAlliance() ? FlippingUtil.flipFieldPose(bluePose) : bluePose;
+		return isFieldConventionAlliance() ? bluePose : FlippingUtil.flipFieldPose(bluePose);
 	}
 
 }

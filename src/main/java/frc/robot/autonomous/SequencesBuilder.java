@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.constants.field.Field;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;
-import frc.utils.math.ToleranceMath;
 
 import java.util.function.Supplier;
 
@@ -41,11 +40,7 @@ public class SequencesBuilder {
 		return new ConditionalCommand(
 			followPath(path),
 			pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
-			() -> ToleranceMath.isNear(
-				Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)).getTranslation(),
-				robot.getPoseEstimator().getCurrentPose().getTranslation(),
-				AutonomousConstants.PATHFINDING_DEADBAND_METERS
-			)
+			() -> PathPlannerUtils.isRobotInPathfindingDeadband(robot, Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)))
 		);
 	}
 
@@ -58,7 +53,7 @@ public class SequencesBuilder {
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path) {
 		return followPathOrPathfindAndFollowPath(robot, path)
-			.andThen(pidToPose(robot, Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path))));
+			.andThen(pidToPose(robot, Field.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))));
 	}
 
 }

@@ -52,7 +52,7 @@ public class AutosBuilder {
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllScoringAutos(Robot robot, Supplier<Command> scoringCommand) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.getAllPathsToCoralStations()) {
+		for (AutoPath autoPath : AutoPath.getAllPathsFromCoralStations()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,

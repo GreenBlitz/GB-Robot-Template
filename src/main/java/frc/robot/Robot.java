@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
-import frc.robot.hardware.leds.WPILEDsWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.battery.BatteryUtils;
 
@@ -20,7 +19,6 @@ import frc.utils.battery.BatteryUtils;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	public WPILEDsWrapper led = new WPILEDsWrapper(8 , 50, 60);
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -30,8 +28,6 @@ public class Robot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
-
-		led.periodic();
 	}
 
 	public Command getAutonomousCommand() {

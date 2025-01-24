@@ -11,7 +11,6 @@ import static edu.wpi.first.units.Units.Meters;
 
 public class WPILEDsWrapper extends AddressableLED {
 
-
 	private AddressableLEDBuffer ledBuffer;
 	private Distance metersPerLed;
 	private HashMap<AddressableLEDBufferView, LEDPattern> patternsPerBufferView;
@@ -69,7 +68,7 @@ public class WPILEDsWrapper extends AddressableLED {
 		}
 	}
 
-	public Distance getMetersPerLed() {
+	public Distance getMetersPerLED() {
 		return metersPerLed;
 	}
 

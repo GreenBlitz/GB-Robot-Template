@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.helpers;
+package frc.utils.math;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -9,12 +9,12 @@ import frc.utils.alerts.Alert;
 
 public class StandardDeviations3D {
 
-	double xAxisStandardDeviations;
-	double yAxisStandardDeviations;
-	double zAxisStandardDeviations;
-	double rollStandardDeviations;
-	double pitchStandardDeviations;
-	double yawStandardDeviations;
+	private double xAxisStandardDeviations;
+	private double yAxisStandardDeviations;
+	private double zAxisStandardDeviations;
+	private double rollStandardDeviations;
+	private double pitchStandardDeviations;
+	private double yawStandardDeviations;
 
 	public StandardDeviations3D(double[] standardDeviations) {
 		if (standardDeviations.length != Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT) {

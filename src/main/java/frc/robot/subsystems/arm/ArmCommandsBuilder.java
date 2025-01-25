@@ -31,7 +31,7 @@ public class ArmCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set voltage to: " + voltage);
 	}
 
-	public Command moveToTargetPosition(Rotation2d position) {
+	public Command moveToPosition(Rotation2d position) {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position)), "Set target position to: " + position);
 	}
 

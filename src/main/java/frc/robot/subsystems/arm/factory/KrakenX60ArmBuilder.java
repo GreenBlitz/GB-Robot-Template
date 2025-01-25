@@ -52,9 +52,9 @@ public class KrakenX60ArmBuilder {
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
 		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		IAngleEncoder encoder = getEncoder(logPath);
 

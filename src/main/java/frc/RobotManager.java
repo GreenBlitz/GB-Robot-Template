@@ -4,8 +4,12 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.hardware.leds.WPILEDsManager;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -32,6 +36,12 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
+
+		WPILEDsManager ledManager = new WPILEDsManager(1,1,1);
+		AddressableLEDBufferView errorSection = ledManager.createSection(0,5);
+		AddressableLEDBufferView stateSection = ledManager.createSection(6,10);
+
+		ledManager.applyPatternOnSection(LEDPattern.gradient(LEDPattern.GradientType.kContinuous, Color.kRed, Color.kDarkRed, Color.kChocolate), errorSection);
 
 		JoysticksBindings.configureBindings(robot);
 	}

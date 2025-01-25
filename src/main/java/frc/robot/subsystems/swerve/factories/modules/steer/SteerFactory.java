@@ -16,14 +16,14 @@ public class SteerFactory {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT ->
-					Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.FRONT_LEFT_STEER_MOTOR, IDs.CANCodersIDs.FRONT_LEFT_ENCODER, true);
+					Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_LEFT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_FRONT_LEFT_ENCODER, true);
 				case FRONT_RIGHT ->
 					Falcon500SteerBuilder
-						.buildSteer(logPath, IDs.TalonFXIDs.FRONT_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER, true);
+						.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_FRONT_RIGHT_ENCODER, true);
 				case BACK_LEFT ->
-					Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.BACK_LEFT_STEER_MOTOR, IDs.CANCodersIDs.BACK_LEFT_ENCODER, false);
+					Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_BACK_LEFT_ENCODER, false);
 				case BACK_RIGHT ->
-					Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.BACK_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.BACK_RIGHT_ENCODER, true);
+					Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_BACK_RIGHT_ENCODER, true);
 			};
 		};
 	}

@@ -26,7 +26,7 @@ class Pigeon2GyroBuilder {
 	}
 
 	protected static IGyro buildGyro(String logPath) {
-		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.PIGEON_2_DEVICE_ID);
+		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.SWERVE_PIGEON_2_DEVICE_ID);
 		if (!pigeon2Wrapper.applyConfiguration(buildGyroConfig(), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}

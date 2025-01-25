@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import frc.robot.hardware.signal.TimedValue;
+import frc.utils.TimedValue;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,7 +14,7 @@ import frc.utils.alerts.Alert;
 
 public class PoseUtils {
 
-	public static Pose3d poseArrayToPose3D(double[] poseArray, AngleUnit angleUnit) {
+	public static Pose3d toPose3D(double[] poseArray, AngleUnit angleUnit) {
 		int requiredAmount = Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT;
 		if (poseArray.length != requiredAmount) {
 			new Alert(Alert.AlertType.WARNING, "gotBadPoseArrayWith" + poseArray.length + "ElementsInsteadOf" + requiredAmount);
@@ -33,7 +33,7 @@ public class PoseUtils {
 		);
 	}
 
-	public static Pose2d poseArrayToPose2D(double[] poseArray, AngleUnit angleUnit) {
+	public static Pose2d toPose2D(double[] poseArray, AngleUnit angleUnit) {
 		int requiredAmount = Pose2dComponentsValue.POSE2D_COMPONENTS_AMOUNT;
 		if (poseArray.length != requiredAmount) {
 			new Alert(Alert.AlertType.WARNING, "gotBadPoseArrayWith" + poseArray.length + "ElementsInsteadOf" + requiredAmount);
@@ -45,7 +45,7 @@ public class PoseUtils {
 		);
 	}
 
-	public static TimedValue<Rotation2d> visionDataToHeadingData(VisionData visionData) {
+	public static TimedValue<Rotation2d> toHeadingData(VisionData visionData) {
 		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
 	}
 

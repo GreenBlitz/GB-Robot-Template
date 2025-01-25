@@ -21,11 +21,11 @@ public class IDs {
 
 	public static class TalonFXIDs {
 
-		public static final Phoenix6DeviceID ARM_MOTOR_ID = new Phoenix6DeviceID(0, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID ELEVATOR_FIRST_MOTOR_ID = new Phoenix6DeviceID(10, BusChain.ROBORIO);
 
-		public static final Phoenix6DeviceID ELEVATOR_FIRST_MOTOR_ID = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID ELEVATOR_SECOND_MOTOR_ID = new Phoenix6DeviceID(11, BusChain.ROBORIO);
 
-		public static final Phoenix6DeviceID ELEVATOR_SECOND_MOTOR_ID = new Phoenix6DeviceID(1, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID ARM_MOTOR_ID = new Phoenix6DeviceID(20, BusChain.CANIVORE);
 
 	}
 

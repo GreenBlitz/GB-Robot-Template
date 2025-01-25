@@ -77,6 +77,14 @@ public class Robot {
 		return new InstantCommand();
 	}
 
+	public WPILibPoseEstimatorWrapper getPoseEstimator() {
+		return poseEstimator;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
+	}
+
 	public Elevator getElevator() {
 		return elevator;
 	}

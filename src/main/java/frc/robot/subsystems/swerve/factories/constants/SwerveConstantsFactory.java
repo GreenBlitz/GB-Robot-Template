@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.factories.swerveconstants;
+package frc.robot.subsystems.swerve.factories.constants;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.SwerveConstants;

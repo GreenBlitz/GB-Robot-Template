@@ -8,6 +8,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotConstants;
@@ -24,8 +25,6 @@ import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.utils.math.AngleUnit;
 
-import static edu.wpi.first.units.Units.*;
-
 class KrakenX60DriveBuilder {
 
 	private static final double SLIP_CURRENT = 60;
@@ -33,8 +32,8 @@ class KrakenX60DriveBuilder {
 
 	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
-			Volts.of(0.5).per(Second),
-			Volts.of(2),
+			Units.Volts.of(0.5).per(Units.Second),
+			Units.Volts.of(2),
 			null,
 			state -> SignalLogger.writeString("state", state.toString())
 		);

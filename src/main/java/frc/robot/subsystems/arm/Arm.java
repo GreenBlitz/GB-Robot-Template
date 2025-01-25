@@ -73,12 +73,12 @@ public class Arm extends GBSubsystem {
 		motor.stop();
 	}
 
-	protected void setVoltage(double voltage) {
-		motor.applyRequest(voltageRequest.withSetPoint(voltage));
-	}
-
 	protected void setPower(double power) {
 		motor.setPower(power);
+	}
+
+	protected void setVoltage(double voltage) {
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	protected void setTargetPosition(Rotation2d position) {

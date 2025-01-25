@@ -90,7 +90,7 @@ public class EndEffector extends GBSubsystem {
 		roller.setBrake(brake);
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		roller.setPower(power);
 	}
 

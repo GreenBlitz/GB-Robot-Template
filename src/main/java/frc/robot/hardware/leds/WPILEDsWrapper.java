@@ -32,7 +32,7 @@ public class WPILEDsWrapper extends AddressableLED {
 		super.start();
 	}
 
-	public void applyPatternsToBuffer(LEDPattern pattern, AddressableLEDBufferView buffer) {
+	public void applyPatternToBuffer(LEDPattern pattern, AddressableLEDBufferView buffer) {
 		patternsPerBufferView.put(buffer, pattern);
 	}
 

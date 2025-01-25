@@ -9,11 +9,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
 import frc.utils.battery.BatteryUtils;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -25,6 +28,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Elevator elevator;
+	private final Arm arm;
 	private final EndEffector endEffector;
 
 	private final SimulationManager simulationManager;
@@ -33,6 +37,11 @@ public class Robot {
 		BatteryUtils.scheduleLimiter();
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
+		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
+
+		this.arm = ArmFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm");
+		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
+
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
@@ -51,6 +60,10 @@ public class Robot {
 
 	public Elevator getElevator() {
 		return elevator;
+	}
+
+	public Arm getArm() {
+		return arm;
 	}
 
 	public EndEffector getEndEffector() {

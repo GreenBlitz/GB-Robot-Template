@@ -28,8 +28,8 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Elevator elevator;
-	private final EndEffector endEffector;
 	private final Arm arm;
+	private final EndEffector endEffector;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -57,12 +57,12 @@ public class Robot {
 		return elevator;
 	}
 
-	public EndEffector getEndEffector() {
-		return endEffector;
-	}
-
 	public Arm getArm() {
 		return arm;
+	}
+
+	public EndEffector getEndEffector() {
+		return endEffector;
 	}
 
 }

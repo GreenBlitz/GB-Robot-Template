@@ -40,8 +40,8 @@ public class KrakenX60ArmBuilder {
 	private static final boolean ENABLE_FOC = true;
 	private static final InvertedValue IS_INVERTED = InvertedValue.Clockwise_Positive;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
-	public static final int NUMBER_OF_MOTORS = 1;
-	public static final double GEAR_RATIO = 150 / 7.0;
+	private static final int NUMBER_OF_MOTORS = 1;
+	private static final double GEAR_RATIO = 150 / 7.0;
 
 
 	protected static Arm build(String logPath) {
@@ -78,9 +78,9 @@ public class KrakenX60ArmBuilder {
 
 		config.MotorOutput.Inverted = IS_INVERTED;
 
-		switch (Robot.ROBOT_TYPE){
+		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
-				config.Slot0.kP = 1.97;
+				config.Slot0.kP = 0;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0;
@@ -102,9 +102,9 @@ public class KrakenX60ArmBuilder {
 		config.CurrentLimits.StatorCurrentLimit = 40;
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRotations();
+		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ArmConstants.FORWARD_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ArmConstants.REVERSED_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
@@ -127,8 +127,8 @@ public class KrakenX60ArmBuilder {
 				DCMotor.getKrakenX60(NUMBER_OF_MOTORS),
 				GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
-				Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRadians(),
-				Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRadians(),
+				ArmConstants.REVERSED_SOFTWARE_LIMIT.getRadians(),
+				ArmConstants.FORWARD_SOFTWARE_LIMIT.getRadians(),
 				false,
 				STARTING_POSITION.getRadians()
 			),
@@ -151,11 +151,11 @@ public class KrakenX60ArmBuilder {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->
 				Phoenix6SignalBuilder.generatePhoenix6Signal(
-					((CANCoderEncoder) encoder).getDevice().getAbsolutePosition(),
+					((CANCoderEncoder) encoder).getDevice().getPosition(),
 					RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 					AngleUnit.ROTATIONS
 				);
-			case SIMULATION -> new SuppliedAngleSignal("encoderPositionSignal", () -> 0.0, AngleUnit.ROTATIONS);
+			case SIMULATION -> new SuppliedAngleSignal("position", () -> 0.0, AngleUnit.ROTATIONS);
 		};
 	}
 

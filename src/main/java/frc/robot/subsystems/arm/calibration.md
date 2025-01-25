@@ -3,45 +3,45 @@ Arm Calibrations
 
 ##### IDs
 
-- [ ] Arm TalonFX ID 
-- [ ] Motor Buschain
-- [ ] Arm CANCoder ID 
+- [ ] motor ID 
+- [ ] motor Buschain
+- [ ] encoder ID 
 - [ ] encoder Buschain
-- 
-##### Physics
 
-- [ ] length
-- [ ] mass
+##### Motor config
 
-##### Limits -
+- [ ] is inverted
+- [ ] gear ratio (use rotor to sensor and not sensor to mechanism)
+
+##### Encoder config
+
+- [ ] is inverted
+
+##### Limits 
 
 - [ ] current limit
-- [ ] peak forward duty cycle
-- [ ] peak reverse duty cycle
 - [ ] software forward limit
 - [ ] software reverse limit
 
-##### Ratio
-- [ ] gear ratio
-- [ ] rotor to sensor
+##### FOC
+- [ ] enable FOC
 
-##### Simulation
+##### Feed Forward 
 
-- [ ] starting position
+- [ ] kS
+- [ ] kG
 
-##### Motor
-
-- [ ] number of motors
-- [ ] is foc
-- [ ] is inverted
-
-##### PID -
+##### PID 
 
 - [ ] kP  
 - [ ] kI   
 - [ ] kD
 
-##### Feed Forward -
 
-- [ ] kS   
-- [ ] kG
+##### Simulation
+
+- [ ] starting position
+- [ ] number of motors
+- [ ] length
+- [ ] mass
+

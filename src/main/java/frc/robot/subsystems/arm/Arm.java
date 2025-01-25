@@ -13,7 +13,7 @@ public class Arm extends GBSubsystem {
 	private final IRequest<Rotation2d> positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final InputSignal<Rotation2d> motorPositionSignal;
-	private final InputSignal<Double> voltageSignal;
+	private final InputSignal<Double> motorVoltageSignal;
 	private final IAngleEncoder encoder;
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
@@ -24,7 +24,7 @@ public class Arm extends GBSubsystem {
 		IRequest<Rotation2d> positionRequest,
 		IRequest<Double> voltageRequest,
 		InputSignal<Rotation2d> motorPositionSignal,
-		InputSignal<Double> voltageSignal,
+		InputSignal<Double> motorVoltageSignal,
 		IAngleEncoder encoder,
 		InputSignal<Rotation2d> encoderPositionSignal
 	) {
@@ -33,7 +33,7 @@ public class Arm extends GBSubsystem {
 		this.positionRequest = positionRequest;
 		this.voltageRequest = voltageRequest;
 		this.motorPositionSignal = motorPositionSignal;
-		this.voltageSignal = voltageSignal;
+		this.motorVoltageSignal = motorVoltageSignal;
 		this.encoder = encoder;
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
@@ -57,7 +57,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(motorPositionSignal, voltageSignal);
+		motor.updateInputs(motorPositionSignal, motorVoltageSignal);
 		encoder.updateInputs(encoderPositionSignal);
 	}
 

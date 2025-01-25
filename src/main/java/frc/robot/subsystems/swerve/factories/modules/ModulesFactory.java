@@ -10,7 +10,6 @@ import frc.robot.subsystems.swerve.module.Module;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 
-
 public class ModulesFactory {
 
 	private static Module createModule(String logPath, ModuleUtils.ModulePosition modulePosition) {

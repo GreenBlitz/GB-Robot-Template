@@ -88,7 +88,7 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kG = 0;
 			}
 			case SIMULATION -> {
-				config.Slot0.kP = 1.97;
+				config.Slot0.kP = 3.8;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0;

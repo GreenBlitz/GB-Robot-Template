@@ -6,19 +6,19 @@ import frc.robot.subsystems.swerve.GyroSignals;
 
 public class GyroFactory {
 
-    public static IGyro createGyro(String logPath) {
-        logPath += "/Gyro";
-        return switch (Robot.ROBOT_TYPE) {
+	public static IGyro createGyro(String logPath) {
+		logPath += "/Gyro";
+		return switch (Robot.ROBOT_TYPE) {
 //            case REAL -> Pigeon2GyroBuilder.buildGyro(logPath); TODO
-            case SIMULATION, REAL -> SimulationGyroBuilder.buildGyro(logPath);
-        };
-    }
+			case SIMULATION, REAL -> SimulationGyroBuilder.buildGyro(logPath);
+		};
+	}
 
-    public static GyroSignals createSignals(IGyro gyro) {
-        return switch (Robot.ROBOT_TYPE) {
+	public static GyroSignals createSignals(IGyro gyro) {
+		return switch (Robot.ROBOT_TYPE) {
 //            case REAL -> Pigeon2GyroBuilder.buildSignals((Pigeon2Gyro) gyro); TODO
-            case SIMULATION, REAL -> SimulationGyroBuilder.buildSignals();
-        };
-    }
+			case SIMULATION, REAL -> SimulationGyroBuilder.buildSignals();
+		};
+	}
 
 }

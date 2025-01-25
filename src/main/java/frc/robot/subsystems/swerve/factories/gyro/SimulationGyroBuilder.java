@@ -10,19 +10,19 @@ import frc.utils.time.TimeUtils;
 
 public class SimulationGyroBuilder {
 
-    protected static IGyro buildGyro(String logPath) {
-        return new EmptyGyro(logPath);
-    }
+	protected static IGyro buildGyro(String logPath) {
+		return new EmptyGyro(logPath);
+	}
 
-    protected static GyroSignals buildSignals() {
-        return new GyroSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
+	protected static GyroSignals buildSignals() {
+		return new GyroSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
 
-            @Override
-            protected TimedValue<Double> getNewValue() {
-                return new TimedValue<>(0.0, TimeUtils.getCurrentTimeSeconds());
-            }
+			@Override
+			protected TimedValue<Double> getNewValue() {
+				return new TimedValue<>(0.0, TimeUtils.getCurrentTimeSeconds());
+			}
 
-        });
-    }
+		});
+	}
 
 }

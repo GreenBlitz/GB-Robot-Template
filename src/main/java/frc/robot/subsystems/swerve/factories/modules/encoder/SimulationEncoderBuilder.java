@@ -10,19 +10,19 @@ import frc.utils.time.TimeUtils;
 
 public class SimulationEncoderBuilder {
 
-    protected static IAngleEncoder buildEncoder(String logPath) {
-        return new EmptyAngleEncoder(logPath);
-    }
+	protected static IAngleEncoder buildEncoder(String logPath) {
+		return new EmptyAngleEncoder(logPath);
+	}
 
-    protected static EncoderSignals buildSignals() {
-        return new EncoderSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
+	protected static EncoderSignals buildSignals() {
+		return new EncoderSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
 
-            @Override
-            protected TimedValue<Double> getNewValue() {
-                return new TimedValue<>(0.0, TimeUtils.getCurrentTimeSeconds());
-            }
+			@Override
+			protected TimedValue<Double> getNewValue() {
+				return new TimedValue<>(0.0, TimeUtils.getCurrentTimeSeconds());
+			}
 
-        });
-    }
+		});
+	}
 
 }

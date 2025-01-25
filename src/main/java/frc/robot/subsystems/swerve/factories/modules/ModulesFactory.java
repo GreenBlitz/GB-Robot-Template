@@ -12,32 +12,32 @@ import frc.robot.subsystems.swerve.module.Modules;
 
 public class ModulesFactory {
 
-    private static Module createModule(String logPath, ModuleUtils.ModulePosition modulePosition) {
-        IAngleEncoder angleEncoder = EncoderFactory.createEncoder(logPath, modulePosition);
-        ControllableMotor steer = SteerFactory.createSteer(logPath, modulePosition);
-        ControllableMotor drive = DriveFactory.createDrive(logPath, modulePosition);
+	private static Module createModule(String logPath, ModuleUtils.ModulePosition modulePosition) {
+		IAngleEncoder angleEncoder = EncoderFactory.createEncoder(logPath, modulePosition);
+		ControllableMotor steer = SteerFactory.createSteer(logPath, modulePosition);
+		ControllableMotor drive = DriveFactory.createDrive(logPath, modulePosition);
 
-        return new Module(
-            ModuleSpecificConstantsFactory.create(logPath, modulePosition),
-            angleEncoder,
-            EncoderFactory.createSignals(angleEncoder),
-            steer,
-            SteerFactory.createRequests(),
-            SteerFactory.createSignals(steer),
-            drive,
-            DriveFactory.createRequests(),
-            DriveFactory.createSignals(drive)
-        );
-    }
+		return new Module(
+			ModuleSpecificConstantsFactory.create(logPath, modulePosition),
+			angleEncoder,
+			EncoderFactory.createSignals(angleEncoder),
+			steer,
+			SteerFactory.createRequests(),
+			SteerFactory.createSignals(steer),
+			drive,
+			DriveFactory.createRequests(),
+			DriveFactory.createSignals(drive)
+		);
+	}
 
-    public static Modules create(String logPath) {
-        return new Modules(
-            logPath,
-            createModule(logPath, ModuleUtils.ModulePosition.FRONT_LEFT),
-            createModule(logPath, ModuleUtils.ModulePosition.FRONT_RIGHT),
-            createModule(logPath, ModuleUtils.ModulePosition.BACK_LEFT),
-            createModule(logPath, ModuleUtils.ModulePosition.BACK_RIGHT)
-        );
-    }
+	public static Modules create(String logPath) {
+		return new Modules(
+			logPath,
+			createModule(logPath, ModuleUtils.ModulePosition.FRONT_LEFT),
+			createModule(logPath, ModuleUtils.ModulePosition.FRONT_RIGHT),
+			createModule(logPath, ModuleUtils.ModulePosition.BACK_LEFT),
+			createModule(logPath, ModuleUtils.ModulePosition.BACK_RIGHT)
+		);
+	}
 
 }

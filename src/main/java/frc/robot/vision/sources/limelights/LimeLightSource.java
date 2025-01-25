@@ -12,7 +12,7 @@ import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
-import frc.utils.AngleUnit;
+import frc.utils.math.AngleUnit;
 import frc.utils.Conversions;
 import frc.utils.Filter;
 import frc.utils.pose.PoseUtils;

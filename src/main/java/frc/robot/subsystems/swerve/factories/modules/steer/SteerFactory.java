@@ -16,14 +16,17 @@ public class SteerFactory {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, SIMULATION -> switch (modulePosition) {
 				case FRONT_LEFT ->
-					KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_LEFT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_FRONT_LEFT_ENCODER, true);
+					KrakenX60SteerBuilder
+						.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_LEFT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_FRONT_LEFT_ENCODER, true);
 				case FRONT_RIGHT ->
 					KrakenX60SteerBuilder
 						.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_FRONT_RIGHT_ENCODER, true);
 				case BACK_LEFT ->
-					KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_BACK_LEFT_ENCODER, false);
+					KrakenX60SteerBuilder
+						.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_BACK_LEFT_ENCODER, false);
 				case BACK_RIGHT ->
-					KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_BACK_RIGHT_ENCODER, true);
+					KrakenX60SteerBuilder
+						.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_STEER_MOTOR, IDs.CANCodersIDs.SWERVE_BACK_RIGHT_ENCODER, true);
 			};
 		};
 	}

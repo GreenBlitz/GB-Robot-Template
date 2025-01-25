@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -38,7 +39,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class KrakenX60ArmBuilder {
 
 	private static final boolean ENABLE_FOC = true;
-	private static final InvertedValue IS_INVERTED = InvertedValue.Clockwise_Positive;
+	private static final boolean IS_INVERTED = false;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
 	private static final double GEAR_RATIO = 150 / 7.0;
@@ -76,7 +77,7 @@ public class KrakenX60ArmBuilder {
 	private static TalonFXConfiguration buildTalonFXConfiguration() {
 		TalonFXConfiguration config = new TalonFXConfiguration();
 
-		config.MotorOutput.Inverted = IS_INVERTED;
+		config.MotorOutput.Inverted = IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {

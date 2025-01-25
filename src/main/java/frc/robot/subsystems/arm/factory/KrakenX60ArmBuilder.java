@@ -150,7 +150,7 @@ public class KrakenX60ArmBuilder {
 	private static InputSignal<Rotation2d> generateEncoderPositionSignal(IAngleEncoder encoder) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->
-				Phoenix6SignalBuilder.generatePhoenix6Signal(
+				Phoenix6SignalBuilder.build(
 					((CANCoderEncoder) encoder).getDevice().getPosition(),
 					RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 					AngleUnit.ROTATIONS

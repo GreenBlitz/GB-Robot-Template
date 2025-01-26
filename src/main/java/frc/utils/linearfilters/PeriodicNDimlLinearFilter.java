@@ -1,31 +1,27 @@
 package frc.utils.linearfilters;
 
+import edu.wpi.first.math.Num;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.numbers.N3;
-import frc.robot.poseestimator.Pose2dComponentsValue;
 import org.ejml.simple.SimpleMatrix;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
-public class Periodic3DlLinearFilter implements IPeriodicLinearFilter {
+public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinearFilter {
 
-	private final Supplier<? extends List<Vector<N3>>> updateValues;
+	private final Supplier<? extends List<Vector<T>>> updateValues;
 	private final List<LinearFilter> linearFilters;
 	private final String name;
+	private final T size;
 
-	public Periodic3DlLinearFilter(
-		Supplier<List<Vector<N3>>> updateValues,
-		LinearFilter xFilter,
-		LinearFilter yFilter,
-		LinearFilter zFilter,
-		String name
-	) {
+	public PeriodicNDimlLinearFilter(Supplier<List<Vector<T>>> updateValues, List<LinearFilter> filters, String name, T sizeInstance) {
 		this.updateValues = updateValues;
-		this.linearFilters = List.of(xFilter, yFilter, zFilter);
+		this.linearFilters = filters;
 		this.name = name;
+		this.size = sizeInstance;
 	}
 
 	@Override
@@ -44,19 +40,19 @@ public class Periodic3DlLinearFilter implements IPeriodicLinearFilter {
 
 	@Override
 	public void update() {
-		for (Vector<N3> data : updateValues.get()) {
-			for (int i = 0; i < Pose2dComponentsValue.POSE2D_COMPONENTS_AMOUNT; i++) {
+		for (Vector<T> data : updateValues.get()) {
+			for (int i = 0; i < size.getNum(); i++) {
 				linearFilters.get(i).calculate(data.get(i));
 			}
 		}
 	}
 
-	public Vector<N3> getAsColumnVector() {
-		return new Vector<>(new SimpleMatrix(new double[][] {getAsPoseArray()}));
+	public Vector<T> getAsColumnVector() {
+		return new Vector<>(new SimpleMatrix(new double[][] {toArray()}));
 	}
 
-	private double[] getAsPoseArray() {
-		return new double[] {linearFilters.get(0).lastValue(), linearFilters.get(1).lastValue(), linearFilters.get(2).lastValue()};
+	private double[] toArray() {
+		return IntStream.range(0, size.getNum()).mapToDouble((i) -> linearFilters.get(i).lastValue()).toArray();
 	}
 
 }

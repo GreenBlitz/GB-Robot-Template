@@ -32,10 +32,10 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.math.AngleUnit;
 import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-
 
 public class KrakenX60ElevatorBuilder {
 
@@ -51,7 +51,7 @@ public class KrakenX60ElevatorBuilder {
 	private static final double REAL_KI = 0;
 	private static final double REAL_KD = 0;
 
-	private static final double SIMULATION_KP = 1;
+	private static final double SIMULATION_KP = 2.17;
 	private static final double SIMULATION_KI = 0;
 	private static final double SIMULATION_KD = 0;
 	private static final int NUMBER_OF_MOTORS = 2;
@@ -104,9 +104,8 @@ public class KrakenX60ElevatorBuilder {
 
 	private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
 		return new ElevatorMotorSignals(
-			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-			Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ)
+			Phoenix6SignalBuilder.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
+			Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ)
 		);
 	}
 
@@ -141,8 +140,6 @@ public class KrakenX60ElevatorBuilder {
 	}
 
 	public static Elevator createSimulationElevator(String logPath) {
-		ElevatorSimulation elevatorSimulation = generateSimulation();
-
 		TalonFXMotor firstMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_FIRST_MOTOR_ID, generateSysidConfig(), generateSimulation());
 		firstMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 

@@ -20,7 +20,10 @@ import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
+<<<<<<< HEAD
 import frc.robot.hardware.phoenix6.BusChain;
+=======
+>>>>>>> master
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -38,30 +41,30 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class KrakenX60ArmBuilder {
 
-	private static final boolean IS_FOC = true;
-	private static final InvertedValue IS_INVERTED = InvertedValue.Clockwise_Positive;
+	private static final boolean ENABLE_FOC = true;
+	private static final boolean IS_INVERTED = false;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
-	public static final int NUMBER_OF_MOTORS = 1;
-	public static final double GEAR_RATIO = 15;
+	private static final int NUMBER_OF_MOTORS = 1;
+	private static final double GEAR_RATIO = 150 / 7.0;
 
 
 	protected static Arm build(String logPath) {
-		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(IS_FOC));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(IS_FOC));
+		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(ENABLE_FOC));
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(ENABLE_FOC));
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM_MOTOR_ID, buildSysidConfig(), buildArmSimulation());
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
-		Phoenix6AngleSignal armPositionSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
+			.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.generatePhoenix6Signal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		IAngleEncoder encoder = getEncoder(logPath);
 
-		InputSignal<Rotation2d> encoderPositionSignal = getEncoderPositionSignal(encoder);
+		InputSignal<Rotation2d> encoderPositionSignal = generateEncoderPositionSignal(encoder);
 
-		return new Arm(logPath, motor, positionRequest, voltageRequest, armPositionSignal, voltageSignal, encoder, encoderPositionSignal);
+		return new Arm(logPath, motor, positionRequest, voltageRequest, motorPositionSignal, voltageSignal, encoder, encoderPositionSignal);
 	}
 
 
@@ -77,13 +80,25 @@ public class KrakenX60ArmBuilder {
 	private static TalonFXConfiguration buildTalonFXConfiguration() {
 		TalonFXConfiguration config = new TalonFXConfiguration();
 
-		config.MotorOutput.Inverted = IS_INVERTED;
+		config.MotorOutput.Inverted = IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		config.Slot0.kP = Robot.ROBOT_TYPE.isSimulation() ? 1.97 : 1.97;
-		config.Slot0.kI = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
-		config.Slot0.kD = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
-		config.Slot0.kS = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
-		config.Slot0.kG = Robot.ROBOT_TYPE.isSimulation() ? 0 : 0;
+		switch (Robot.ROBOT_TYPE) {
+			case REAL -> {
+				config.Slot0.kP = 0;
+				config.Slot0.kI = 0;
+				config.Slot0.kD = 0;
+				config.Slot0.kS = 0;
+				config.Slot0.kG = 0;
+			}
+			case SIMULATION -> {
+				config.Slot0.kP = 3.8;
+				config.Slot0.kI = 0;
+				config.Slot0.kD = 0;
+				config.Slot0.kS = 0;
+				config.Slot0.kG = 0;
+			}
+		}
+
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
 		config.CurrentLimits.SupplyCurrentLimit = 30;
@@ -91,9 +106,9 @@ public class KrakenX60ArmBuilder {
 		config.CurrentLimits.StatorCurrentLimit = 40;
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRotations();
+		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ArmConstants.FORWARD_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ArmConstants.REVERSED_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
@@ -116,8 +131,13 @@ public class KrakenX60ArmBuilder {
 				DCMotor.getKrakenX60(NUMBER_OF_MOTORS),
 				GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
+<<<<<<< HEAD
 				Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRadians(),
 				Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRadians(),
+=======
+				ArmConstants.REVERSED_SOFTWARE_LIMIT.getRadians(),
+				ArmConstants.FORWARD_SOFTWARE_LIMIT.getRadians(),
+>>>>>>> master
 				false,
 				STARTING_POSITION.getRadians()
 			),
@@ -128,20 +148,23 @@ public class KrakenX60ArmBuilder {
 	private static IAngleEncoder getEncoder(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->
-				new CANCoderEncoder(logPath + "/Encoder", new CANcoder(IDs.CANCoderIDs.ARM_CAN_CODER_ID.id(), BusChain.ROBORIO.getChainName()));
+				new CANCoderEncoder(
+					logPath + "/Encoder",
+					new CANcoder(IDs.CANCoderIDs.ARM_CAN_CODER_ID.id(), IDs.CANCoderIDs.ARM_CAN_CODER_ID.busChain().getChainName())
+				);
 			case SIMULATION -> new EmptyAngleEncoder(logPath + "/Encoder");
 		};
 	}
 
-	private static InputSignal<Rotation2d> getEncoderPositionSignal(IAngleEncoder encoder) {
+	private static InputSignal<Rotation2d> generateEncoderPositionSignal(IAngleEncoder encoder) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->
-				Phoenix6SignalBuilder.generatePhoenix6Signal(
+				Phoenix6SignalBuilder.build(
 					((CANCoderEncoder) encoder).getDevice().getPosition(),
 					RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 					AngleUnit.ROTATIONS
 				);
-			case SIMULATION -> new SuppliedAngleSignal("encoderPositionSignal", () -> 0.0, AngleUnit.ROTATIONS);
+			case SIMULATION -> new SuppliedAngleSignal("position", () -> 0.0, AngleUnit.ROTATIONS);
 		};
 	}
 

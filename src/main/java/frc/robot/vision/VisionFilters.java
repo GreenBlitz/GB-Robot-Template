@@ -2,12 +2,13 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.constants.VisionConstants;
 import frc.constants.field.Field;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
+
+import java.util.function.Function;
 
 public class VisionFilters {
 
@@ -29,10 +30,13 @@ public class VisionFilters {
 		return new Filter<>(visionData -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters));
 	}
 
-	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
+	public static Filter<AprilTagVisionData> isAprilTagHeightValid(
+		double aprilTagHeightToleranceMeters,
+		Function<Integer, Double> getAprilTagHeightByID
+	) {
 		return new Filter<>(
 			aprilTagVisionData -> MathUtil.isNear(
-				VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().get(aprilTagVisionData.getTrackedAprilTagId()).pose.getZ(),
+				getAprilTagHeightByID.apply(aprilTagVisionData.getTrackedAprilTagId()),
 				aprilTagVisionData.getAprilTagHeightMeters(),
 				aprilTagHeightToleranceMeters
 			)

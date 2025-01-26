@@ -18,7 +18,7 @@ public class TimeUtils {
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				TimeConstants.LOG_PATH + "CycleOverrunAt",
+				TimeConstants.LOG_PATH + "/CycleOverrunAt",
 				() -> getLatestCycleTimeSeconds() > DEFAULT_CYCLE_TIME_SECONDS + TimeConstants.TIME_STEP_TOLERANCE_SECONDS
 			)
 		);
@@ -32,9 +32,9 @@ public class TimeUtils {
 	}
 
 	private static void logStatus(int roborioCycles) {
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CycleTimeSeconds", getLatestCycleTimeSeconds());
-		Logger.recordOutput(TimeConstants.LOG_PATH + "CurrentTimeSeconds", currentCycleStartingTimeSeconds);
-		Logger.recordOutput(TimeConstants.LOG_PATH + "AverageCycleTimeSeconds", currentCycleStartingTimeSeconds / roborioCycles);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "/CycleTimeSeconds", getLatestCycleTimeSeconds());
+		Logger.recordOutput(TimeConstants.LOG_PATH + "/CurrentTimeSeconds", currentCycleStartingTimeSeconds);
+		Logger.recordOutput(TimeConstants.LOG_PATH + "/AverageCycleTimeSeconds", currentCycleStartingTimeSeconds / roborioCycles);
 	}
 
 	public static double getCurrentTimeSeconds() {

@@ -1,8 +1,18 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.structures.Tolerances;
+import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.RotateAxis;
+import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 
 public class JoysticksBindings {
 
@@ -25,11 +35,119 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeading(new Rotation2d())));
+		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
+
+		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheelsInX());
+		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), true));
+
+		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
+		usedJoystick.POV_DOWN.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.turnToHeading(Rotation2d.fromDegrees(-17))
+				.until(
+					() -> robot.getSwerve()
+						.isAtHeading(Rotation2d.fromDegrees(-17), Tolerances.SWERVE_HEADING, Tolerances.ROTATION_VELOCITY_DEADBAND)
+				)
+		);
+
+		usedJoystick.POV_LEFT
+			.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(-17), RotateAxis.FRONT_LEFT_MODULE));
+		usedJoystick.POV_RIGHT
+			.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE));
+
+		usedJoystick.L3.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveByState(
+					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)
+				)
+		);
+		usedJoystick.L1.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveByState(
+					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+					SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withAimAssist(AimAssist.NOTE)
+				)
+		);
+		usedJoystick.R1.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveByState(
+					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)
+				)
+		);
+
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
+			.whileTrue(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveByState(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHandler().getFarRightRotateAxis())
+					)
+			);
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER)
+			.whileTrue(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveByState(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
+						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHandler().getFarLeftRotateAxis())
+					)
+			);
+
+		robot.getSwerve()
+			.setDefaultCommand(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.drive(
+						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)
+					)
+			);
+
+
+		usedJoystick.BACK.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))))
+		);
+		usedJoystick.START.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)))
+				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(6, 6, Rotation2d.fromDegrees(90))))
+		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
+		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().steerCalibration(true, SysIdRoutine.Direction.kForward));
+		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
+
+		usedJoystick.POV_DOWN.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> 0.2, () -> 0, () -> 0));
+		usedJoystick.POV_LEFT.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> 0.5, () -> 0, () -> 0));
+		usedJoystick.POV_RIGHT.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> -0.2, () -> 0, () -> 0));
+		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> -0.5, () -> 0, () -> 0));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

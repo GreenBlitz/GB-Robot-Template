@@ -50,7 +50,7 @@ public class Robot {
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
-		simulationManager.log();
+		simulationManager.logPoses();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

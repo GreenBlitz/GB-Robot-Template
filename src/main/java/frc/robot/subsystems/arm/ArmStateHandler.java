@@ -11,7 +11,7 @@ public class ArmStateHandler {
 	}
 
 	public Command setState(ArmState state) {
-		return arm.getCommandsBuilder().moveToTargetPosition(state.getPosition());
+		return arm.getCommandsBuilder().moveToPosition(state.getPosition());
 	}
 
 }

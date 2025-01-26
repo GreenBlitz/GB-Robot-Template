@@ -13,10 +13,10 @@ public class DriveFactory {
 	public static ControllableMotor createDrive(String logPath, ModuleUtils.ModulePosition modulePosition) {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Drive";
 		return switch (modulePosition) {
-			case FRONT_LEFT -> Falcon500DriveBuilder.buildDrive(logPath, IDs.TalonFXIDs.SWERVE_FRONT_LEFT_DRIVE_MOTOR, false);
-			case FRONT_RIGHT -> Falcon500DriveBuilder.buildDrive(logPath, IDs.TalonFXIDs.SWERVE_FRONT_RIGHT_DRIVE_MOTOR, true);
-			case BACK_LEFT -> Falcon500DriveBuilder.buildDrive(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_DRIVE_MOTOR, false);
-			case BACK_RIGHT -> Falcon500DriveBuilder.buildDrive(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_DRIVE_MOTOR, false);
+			case FRONT_LEFT -> Falcon500DriveBuilder.buildDrive(logPath, IDs.TalonFXIDs.SWERVE_FRONT_LEFT_DRIVE, false);
+			case FRONT_RIGHT -> Falcon500DriveBuilder.buildDrive(logPath, IDs.TalonFXIDs.SWERVE_FRONT_RIGHT_DRIVE, true);
+			case BACK_LEFT -> Falcon500DriveBuilder.buildDrive(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_DRIVE, false);
+			case BACK_RIGHT -> Falcon500DriveBuilder.buildDrive(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_DRIVE, false);
 		};
 	}
 

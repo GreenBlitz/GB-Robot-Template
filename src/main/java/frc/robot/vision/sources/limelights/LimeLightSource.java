@@ -66,7 +66,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryMegaTag1 = getLimelightNetworkTableEntry("botpose_wpiblue");
-		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
+		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_robotspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.standardDeviations = getLimelightNetworkTableEntry("stddevs");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
@@ -151,7 +151,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(standardDeviationsArray),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
-				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE),
+				getDistanceFromTag(),
 				getAprilTagID()
 			)
 		);
@@ -185,6 +185,13 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.robotAngleValues = robotAngleValues;
 	}
 
+	private double getDistanceFromTag() {
+		return Math.sqrt(
+			Math.pow(getAprilTagValueInRobotSpace(Pose3dComponentsValue.X_VALUE), 2)
+				+ Math.pow(getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE), 2)
+				+ Math.pow(getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE), 2)
+		);
+	}
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());

@@ -43,8 +43,8 @@ class KrakenX60SteerBuilder {
 		double momentOfInertiaMetersSquared = 0.00001;
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(1), momentOfInertiaMetersSquared, GEAR_RATIO),
-				DCMotor.getFalcon500Foc(1)
+				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), momentOfInertiaMetersSquared, GEAR_RATIO),
+				DCMotor.getKrakenX60Foc(1)
 			)
 		);
 	}

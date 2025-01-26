@@ -30,6 +30,7 @@ class KrakenX60DriveBuilder {
 
 	private static final double SLIP_CURRENT = 60;
 	private static final double GEAR_RATIO = 7.13;
+	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
 	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -41,10 +42,9 @@ class KrakenX60DriveBuilder {
 	}
 
 	private static SimpleMotorSimulation buildMechanismSimulation() {
-		double momentOfInertiaMetersSquared = 0.001;
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), momentOfInertiaMetersSquared, GEAR_RATIO),
+				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
 				DCMotor.getKrakenX60Foc(1)
 			)
 		);

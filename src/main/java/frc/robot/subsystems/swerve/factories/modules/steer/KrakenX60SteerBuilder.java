@@ -30,6 +30,7 @@ import frc.utils.math.AngleUnit;
 class KrakenX60SteerBuilder {
 
 	private static final double GEAR_RATIO = 12.8;
+	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.00001;
 
 	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -41,10 +42,9 @@ class KrakenX60SteerBuilder {
 	}
 
 	private static SimpleMotorSimulation buildMechanismSimulation() {
-		double momentOfInertiaMetersSquared = 1.0E-5;
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), momentOfInertiaMetersSquared, GEAR_RATIO),
+				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
 				DCMotor.getKrakenX60Foc(1)
 			)
 		);

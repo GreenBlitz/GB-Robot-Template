@@ -8,7 +8,6 @@ public class ElevatorConstants {
 	public static final double MINIMUM_HEIGHT_METERS = 0;
 	public static final double MAXIMUM_HEIGHT_METERS = 1.4;
 	public static final double FIRST_STAGE_MAXIMUM_HEIGHT_METERS = 0.7;
-	public static final double STAGE_HEIGHT = 0.97;
 
 	public final static double GEAR_RATIO = 4;
 

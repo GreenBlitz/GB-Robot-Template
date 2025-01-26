@@ -20,10 +20,6 @@ import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
-<<<<<<< HEAD
-import frc.robot.hardware.phoenix6.BusChain;
-=======
->>>>>>> master
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -131,13 +127,8 @@ public class KrakenX60ArmBuilder {
 				DCMotor.getKrakenX60(NUMBER_OF_MOTORS),
 				GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
-<<<<<<< HEAD
-				Rotation2d.fromDegrees(ArmConstants.REVERSED_SOFTWARE_LIMIT).getRadians(),
-				Rotation2d.fromDegrees(ArmConstants.FORWARD_SOFTWARE_LIMIT).getRadians(),
-=======
 				ArmConstants.REVERSED_SOFTWARE_LIMIT.getRadians(),
 				ArmConstants.FORWARD_SOFTWARE_LIMIT.getRadians(),
->>>>>>> master
 				false,
 				STARTING_POSITION.getRadians()
 			),

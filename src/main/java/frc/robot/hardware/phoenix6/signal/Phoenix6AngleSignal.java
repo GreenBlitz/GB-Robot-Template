@@ -2,7 +2,7 @@ package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.signal.AngleSignal;
-import frc.robot.hardware.signal.TimedValue;
+import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtils;
 

@@ -44,14 +44,14 @@ public class SimulationManager {
 		);
 	}
 
-	public static Pose3d getElevatorFirstStagePosition(double heightMeters) {
+	private static Pose3d getElevatorFirstStagePosition(double heightMeters) {
 		if (heightMeters > ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS) {
 			return getElevatorPose3dFromHeight(heightMeters - ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS);
 		}
 		return getElevatorPose3dFromHeight(0);
 	}
 
-	public static Pose3d getElevatorSecondStagePosition(double heightMeters) {
+	private static Pose3d getElevatorSecondStagePosition(double heightMeters) {
 		return getElevatorPose3dFromHeight(heightMeters);
 	}
 

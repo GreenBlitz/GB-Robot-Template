@@ -45,6 +45,43 @@ public class PoseUtils {
 		);
 	}
 
+	public static double[] pose2DToPoseArray(Pose2d pose2d, AngleUnit angleUnit) {
+		return new double[] {pose2d.getX(), pose2d.getY(), switch (angleUnit) {
+			case RADIANS -> pose2d.getRotation().getRadians();
+			case DEGREES -> pose2d.getRotation().getDegrees();
+			case ROTATIONS -> pose2d.getRotation().getRotations();
+		}};
+	}
+
+	public static double[] pose3DToPoseArray(Pose3d pose3d, AngleUnit angleUnit) {
+		return switch (angleUnit) {
+			case RADIANS ->
+				new double[] {
+					pose3d.getX(),
+					pose3d.getY(),
+					pose3d.getZ(),
+					pose3d.getRotation().getX(),
+					pose3d.getRotation().getY(),
+					pose3d.getRotation().getZ()};
+			case DEGREES ->
+				new double[] {
+					pose3d.getX(),
+					pose3d.getY(),
+					pose3d.getZ(),
+					Rotation2d.fromRadians(pose3d.getRotation().getX()).getDegrees(),
+					Rotation2d.fromRadians(pose3d.getRotation().getY()).getDegrees(),
+					Rotation2d.fromRadians(pose3d.getRotation().getZ()).getDegrees()};
+			case ROTATIONS ->
+				new double[] {
+					pose3d.getX(),
+					pose3d.getY(),
+					pose3d.getZ(),
+					Rotation2d.fromRadians(pose3d.getRotation().getX()).getRotations(),
+					Rotation2d.fromRadians(pose3d.getRotation().getY()).getRotations(),
+					Rotation2d.fromRadians(pose3d.getRotation().getZ()).getRotations()};
+		};
+	}
+
 	public static TimedValue<Rotation2d> visionDataToHeadingData(VisionData visionData) {
 		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
 	}

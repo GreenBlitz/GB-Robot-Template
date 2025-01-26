@@ -21,8 +21,10 @@ public class SimulationManager {
 	}
 
 	private void logElevatorPosition3d() {
-		Logger
-			.recordOutput(logPath + "/Elevator/FirstStagePosition", getElevatorFirstStagePosition(robot.getElevator().getElevatorPositionMeters()));
+		Logger.recordOutput(
+			logPath + "/Elevator/FirstStagePosition",
+			getElevatorFirstStagePosition(robot.getElevator().getElevatorPositionMeters())
+		);
 		Logger.recordOutput(
 			logPath + "/Elevator/SecondStagePosition",
 			getElevatorSecondStagePosition(robot.getElevator().getElevatorPositionMeters())

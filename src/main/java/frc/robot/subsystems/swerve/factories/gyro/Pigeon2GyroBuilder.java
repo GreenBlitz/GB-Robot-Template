@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve.factories.gyro;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
-import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.pigeon.PigeonHandler;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -14,6 +13,7 @@ import frc.utils.alerts.Alert;
 class Pigeon2GyroBuilder {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
+	private static PigeonHandler PIGEON;
 
 	private static Pigeon2Configuration buildGyroConfig() {
 		Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
@@ -25,13 +25,15 @@ class Pigeon2GyroBuilder {
 		return gyroConfig;
 	}
 
-	static IGyro buildPigeon(String logPath) {
-		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.SWERVE_PIGEON_2);
-		if (!pigeon2Wrapper.applyConfiguration(buildGyroConfig(), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
+	static PigeonHandler buildPigeon(String logPath) {
+		if (PIGEON == null) {
+			Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.SWERVE_PIGEON_2);
+			if (!pigeon2Wrapper.applyConfiguration(buildGyroConfig(), APPLY_CONFIG_RETRIES).isOK()) {
+				new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
+			}
+			PIGEON = new PigeonHandler(logPath, pigeon2Wrapper);
 		}
-
-		return new PigeonHandler(logPath, pigeon2Wrapper);
+		return PIGEON;
 	}
 
 	static GyroSignals buildSignals(PigeonHandler pigeon2Gyro) {

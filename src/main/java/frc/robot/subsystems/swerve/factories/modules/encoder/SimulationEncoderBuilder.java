@@ -8,7 +8,7 @@ import frc.robot.subsystems.swerve.module.records.EncoderSignals;
 import frc.utils.math.AngleUnit;
 import frc.utils.time.TimeUtils;
 
-public class SimulationEncoderBuilder {
+class SimulationEncoderBuilder {
 
 	protected static IAngleEncoder buildEncoder(String logPath) {
 		return new EmptyAngleEncoder(logPath);

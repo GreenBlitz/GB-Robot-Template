@@ -66,7 +66,7 @@ public class SwerveStateHandler {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
-		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent() && feederTranslationSupplier.get().isPresent()) {
+		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent() && reefTranslationSupplier.get().isPresent()) {
 			return handleReefAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
 		}
 		if (swerveState.getAimAssist() == AimAssist.FEEDER && robotPoseSupplier.isPresent() && feederTranslationSupplier.get().isPresent()) {

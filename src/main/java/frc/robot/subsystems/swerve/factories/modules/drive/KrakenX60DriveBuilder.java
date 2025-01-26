@@ -12,6 +12,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
@@ -29,7 +30,7 @@ import frc.utils.math.AngleUnit;
 class KrakenX60DriveBuilder {
 
 	private static final double SLIP_CURRENT = 60;
-	private static final double GEAR_RATIO = 6.12;
+	private static final double GEAR_RATIO = 7.13;
 
 	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
@@ -63,12 +64,22 @@ class KrakenX60DriveBuilder {
 		driveConfig.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		driveConfig.Slot0.kS = 0.21549;
-		driveConfig.Slot0.kV = 0.72124;
-		driveConfig.Slot0.kA = 0.11218;
-		driveConfig.Slot0.kP = 1.5;
-		driveConfig.Slot0.kI = 0;
-		driveConfig.Slot0.kD = 0;
+		if (Robot.ROBOT_TYPE.isReal()) {
+			driveConfig.Slot0.kS = 0;
+			driveConfig.Slot0.kV = 0;
+			driveConfig.Slot0.kA = 0;
+			driveConfig.Slot0.kP = 0;
+			driveConfig.Slot0.kI = 0;
+			driveConfig.Slot0.kD = 0;
+		}
+		else {
+			driveConfig.Slot0.kS = 0;
+			driveConfig.Slot0.kV = 0;
+			driveConfig.Slot0.kA = 0;
+			driveConfig.Slot0.kP = 10;
+			driveConfig.Slot0.kI = 0;
+			driveConfig.Slot0.kD = 0;
+		}
 
 		return driveConfig;
 	}

@@ -6,6 +6,9 @@ import frc.constants.MathConstants;
 public class PoseEstimatorMath {
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
+		if (visionStandardDeviation == 0) {
+			return odometryStandardDeviation == 0 ? 1.0 / 2.0 : 1;
+		}
 		return odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
 	}
 

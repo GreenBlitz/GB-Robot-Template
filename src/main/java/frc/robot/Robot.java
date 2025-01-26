@@ -45,7 +45,6 @@ public class Robot {
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 		this.endEffectorStateHandler = new EndEffectorStateHandler(endEffector);
 	}
-
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();

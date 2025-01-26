@@ -1,9 +1,8 @@
 package frc.robot.vision;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.constants.VisionConstants;
 import frc.constants.field.Field;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
@@ -33,8 +32,7 @@ public class VisionFilters {
 	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
 		return new Filter<>(
 			aprilTagVisionData -> MathUtil.isNear(
-				AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape).getTags().get(aprilTagVisionData.getTrackedAprilTagId()).pose
-					.getZ(),
+				VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().get(aprilTagVisionData.getTrackedAprilTagId()).pose.getZ(),
 				aprilTagVisionData.getAprilTagHeightMeters(),
 				aprilTagHeightToleranceMeters
 			)

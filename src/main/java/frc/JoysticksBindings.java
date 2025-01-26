@@ -35,7 +35,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeading(new Rotation2d())));
 		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
 
 		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheelsInX());
@@ -126,13 +125,13 @@ public class JoysticksBindings {
 		usedJoystick.BACK.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)))
+				.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)))
 				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))))
 		);
 		usedJoystick.START.whileTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)))
+				.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)))
 				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(6, 6, Rotation2d.fromDegrees(90))))
 		);
 	}

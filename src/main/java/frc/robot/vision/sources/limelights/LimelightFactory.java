@@ -11,7 +11,7 @@ public class LimelightFactory {
 		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
-		Filter<AprilTagVisionData> filter
+		Filter<? super AprilTagVisionData> filter
 	) {
 		return new LimeLightSource(cameraNetworkTablesName, parentLogPath, sourceName, filter, LimelightPoseEstimationMethod.MEGATAG_2);
 	}
@@ -20,7 +20,7 @@ public class LimelightFactory {
 		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
-		Filter<AprilTagVisionData> filter
+		Filter<? super AprilTagVisionData> filter
 	) {
 		return new LimeLightSource(cameraNetworkTablesName, parentLogPath, sourceName, filter, LimelightPoseEstimationMethod.MEGATAG_1);
 	}

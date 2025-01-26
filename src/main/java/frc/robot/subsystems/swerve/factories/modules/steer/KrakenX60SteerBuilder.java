@@ -72,7 +72,7 @@ class KrakenX60SteerBuilder {
 		return steerConfig;
 	}
 
-	protected static ControllableMotor buildSteer(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID, boolean inverted) {
+	static ControllableMotor buildSteer(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID, boolean inverted) {
 		TalonFXConfiguration configuration = buildMotorConfig(inverted);
 		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
 
@@ -81,14 +81,14 @@ class KrakenX60SteerBuilder {
 		return steer;
 	}
 
-	protected static SteerRequests buildRequests() {
+	static SteerRequests buildRequests() {
 		return new SteerRequests(
 			Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true)),
 			Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true))
 		);
 	}
 
-	protected static SteerSignals buildSignals(TalonFXMotor steer) {
+	static SteerSignals buildSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder

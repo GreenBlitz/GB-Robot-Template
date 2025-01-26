@@ -10,11 +10,11 @@ import frc.utils.time.TimeUtils;
 
 class SimulationGyroBuilder {
 
-	protected static IGyro buildGyro(String logPath) {
+	static IGyro buildGyro(String logPath) {
 		return new EmptyGyro(logPath);
 	}
 
-	protected static GyroSignals buildSignals() {
+	static GyroSignals buildSignals() {
 		return new GyroSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
 
 			@Override

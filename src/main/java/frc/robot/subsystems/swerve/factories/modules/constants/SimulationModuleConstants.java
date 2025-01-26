@@ -34,7 +34,7 @@ class SimulationModuleConstants {
 		BACK_LEFT_TRANSLATION2D,
 		BACK_RIGHT_TRANSLATION2D,};
 
-	protected static ModuleSpecificConstants getModuleSpecificConstants(String logPath, ModuleUtils.ModulePosition modulePosition) {
+	static ModuleSpecificConstants getModuleSpecificConstants(String logPath, ModuleUtils.ModulePosition modulePosition) {
 		return new ModuleSpecificConstants(
 			modulePosition,
 			logPath,

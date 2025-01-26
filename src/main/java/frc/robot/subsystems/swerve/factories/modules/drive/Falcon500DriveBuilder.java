@@ -72,20 +72,20 @@ class Falcon500DriveBuilder {
 		return driveConfig;
 	}
 
-	protected static ControllableMotor buildDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
+	static ControllableMotor buildDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
 		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, buildSysidConfig(), buildMechanismSimulation());
 		drive.applyConfiguration(buildMotorConfig(inverted));
 		return drive;
 	}
 
-	protected static DriveRequests buildRequests() {
+	static DriveRequests buildRequests() {
 		return new DriveRequests(
 			Phoenix6RequestBuilder.build(new VelocityVoltage(0).withEnableFOC(true)),
 			Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true))
 		);
 	}
 
-	protected static DriveSignals buildSignals(TalonFXMotor drive) {
+	static DriveSignals buildSignals(TalonFXMotor drive) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder

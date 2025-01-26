@@ -28,7 +28,7 @@ class CANCoderEncoderBuilder {
 		return encoderConfig;
 	}
 
-	protected static IAngleEncoder buildEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
+	static IAngleEncoder buildEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
 		CANcoder cancoder = new CANcoder(encoderDeviceID.id(), encoderDeviceID.busChain().getChainName());
 		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
 		cancoder.getConfigurator().refresh(magnetSensorConfigs);
@@ -41,7 +41,7 @@ class CANCoderEncoderBuilder {
 		return new CANCoderEncoder(logPath, cancoder);
 	}
 
-	protected static EncoderSignals buildSignals(CANCoderEncoder encoder) {
+	static EncoderSignals buildSignals(CANCoderEncoder encoder) {
 		return new EncoderSignals(
 			Phoenix6SignalBuilder.build(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
 		);

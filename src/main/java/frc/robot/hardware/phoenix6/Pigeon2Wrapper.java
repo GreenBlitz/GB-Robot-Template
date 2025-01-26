@@ -1,12 +1,10 @@
-package frc.robot.hardware.phoenix6.gyro;
+package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
-import frc.robot.hardware.phoenix6.Phoenix6Utils;
 
 import static edu.wpi.first.units.Units.Degrees;
 

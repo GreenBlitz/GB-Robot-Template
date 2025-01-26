@@ -38,8 +38,8 @@ public class VisionConstants {
 		}
 	}
 
-	public static Function<Integer, Double> getAprilTagHeightByID() {
-		return id -> APRIL_TAG_FIELD_LAYOUT.getTags().get(id).pose.getZ();
+	public static double getAprilTagHeightByID(int id) {
+		return APRIL_TAG_FIELD_LAYOUT.getTags().get(id).pose.getZ();
 	}
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;

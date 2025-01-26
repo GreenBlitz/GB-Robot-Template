@@ -4,10 +4,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.constants.VisionConstants;
-import frc.robot.hardware.signal.TimedValue;
+import frc.utils.TimedValue;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
-import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.RobotAngleValues;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
@@ -23,9 +23,9 @@ import java.util.function.Supplier;
 
 /**
  * Extended MultiVisionSources that supplies methods that takes care of using, updating and extracting data from special interfaces related
- * specifically to sources that detect april tags, e.g. `IndpendentHeadingVisionSource`.
+ * specifically to sources that detect april tags, e.g. <code>IndependentHeadingVisionSource</code>.
  *
- * This class assumes that the robot has zero pitch and roll.
+ * <p>This class assumes that the robot has zero pitch and roll.
  */
 public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
 
@@ -35,36 +35,38 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	public MultiAprilTagVisionSources(
 		String logPath,
 		Supplier<Rotation2d> robotHeadingSupplier,
+		boolean useRobotHeadingForPoseEstimating,
 		List<VisionSource<AprilTagVisionData>> visionSources
 	) {
 		super(logPath, visionSources);
 		this.robotHeadingSupplier = robotHeadingSupplier;
-		setUseRobotHeadingForPoseEstimating(VisionConstants.REQUIRE_HEADING_TO_ESTIMATE_ANGLE_DEFAULT_VALUE);
+		setUseRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
 	}
 
 	@SafeVarargs
 	public MultiAprilTagVisionSources(
 		String logPath,
 		Supplier<Rotation2d> robotHeadingSupplier,
+		boolean useRobotHeadingForPoseEstimating,
 		VisionSource<AprilTagVisionData>... visionSources
 	) {
-		this(logPath, robotHeadingSupplier, List.of(visionSources));
+		this(logPath, robotHeadingSupplier, useRobotHeadingForPoseEstimating, List.of(visionSources));
 	}
 
-	private void updateAngleInHeadingRequiringSources(GyroAngleValues gyroAngleValues) {
+	private void updateAngleInHeadingRequiringSources(RobotAngleValues robotAngleValues) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
-				robotHeadingRequiringVisionSource.updateGyroAngleValues(gyroAngleValues);
+				robotHeadingRequiringVisionSource.updateRobotAngleValues(robotAngleValues);
 			}
 		}
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation3d angle, double yawRate, double pitchRate, double rollRate) {
-		updateAngleInHeadingRequiringSources(new GyroAngleValues(angle, yawRate, pitchRate, rollRate));
+		updateAngleInHeadingRequiringSources(new RobotAngleValues(angle, yawRate, pitchRate, rollRate));
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation3d angle) {
-		updateAngleInHeadingRequiringSources(new GyroAngleValues(angle));
+		updateAngleInHeadingRequiringSources(new RobotAngleValues(angle));
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation2d yaw) {

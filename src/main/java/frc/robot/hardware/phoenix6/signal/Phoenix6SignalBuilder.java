@@ -18,22 +18,17 @@ public class Phoenix6SignalBuilder {
 		return signalClone;
 	}
 
-	public static Phoenix6DoubleSignal generatePhoenix6Signal(StatusSignal<?> signal, double frequency) {
+	public static Phoenix6DoubleSignal build(StatusSignal<?> signal, double frequency) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency);
 		return new Phoenix6DoubleSignal(signalClone.getName(), signalClone);
 	}
 
-	public static Phoenix6AngleSignal generatePhoenix6Signal(StatusSignal<?> signal, double frequency, AngleUnit angleUnit) {
+	public static Phoenix6AngleSignal build(StatusSignal<?> signal, double frequency, AngleUnit angleUnit) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency);
 		return new Phoenix6AngleSignal(signalClone.getName(), signalClone, angleUnit);
 	}
 
-	public static Phoenix6LatencySignal generatePhoenix6Signal(
-		StatusSignal<?> signal,
-		SignalGetter signalSlope,
-		double frequency,
-		AngleUnit angleUnit
-	) {
+	public static Phoenix6LatencySignal build(StatusSignal<?> signal, SignalGetter signalSlope, double frequency, AngleUnit angleUnit) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency);
 		setFrequencyWithRetry(signalSlope.getSignal(), frequency);
 		return new Phoenix6LatencySignal(signalClone.getName(), signalClone, signalSlope.getSignal(), angleUnit);
@@ -43,7 +38,7 @@ public class Phoenix6SignalBuilder {
 	 * Use this function only if you are not fetching the slope signal. Ex: If you care only about position and not velocity do:
 	 * Phoenix6BothLatencySignal position = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getPosition(), motor.getVelocity(),...);
 	 */
-	public static Phoenix6LatencyAndSlopeSignal generatePhoenix6Signal(
+	public static Phoenix6LatencyAndSlopeSignal build(
 		StatusSignal<?> signal,
 		StatusSignal<?> signalSlope,
 		double frequency,

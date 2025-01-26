@@ -6,7 +6,6 @@ public enum AimAssist {
 	REEF,
 	BRANCH,
 	ALGI_REMOVE,
-	FEEDER,
-	SLOT;
+	FEEDER;
 
 }

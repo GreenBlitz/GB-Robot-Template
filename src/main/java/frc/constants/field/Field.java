@@ -1,13 +1,11 @@
 package frc.constants.field;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.constants.field.enums.*;
+import frc.constants.field.enums.CagePosition;
+import frc.constants.field.enums.CoralStationPosition;
+import frc.constants.field.enums.ReefBranch;
+import frc.constants.field.enums.ReefSide;
 import frc.utils.DriverStationUtils;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
@@ -74,6 +72,7 @@ public class Field {
 		return getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
+
 	public static Translation2d getCoralPlacement(ReefBranch branch) {
 		return getAllianceRelative(CORAL_BRANCHES[branch.getIndex()], true, true);
 	}
@@ -89,7 +88,6 @@ public class Field {
 	public static Pose2d getMiddleOfCoralStation(CoralStationPosition coralStationPosition) {
 		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], true, true, AngleTransform.INVERT);
 	}
-
 
 	private static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
 		return isFieldConventionAlliance() ? pose : FieldMath.mirror(pose, mirrorX, mirrorY, angleTransform);

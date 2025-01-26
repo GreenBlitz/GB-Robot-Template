@@ -5,6 +5,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
+import frc.constants.field.Field;
+import frc.constants.field.enums.CoralStationPosition;
+import frc.constants.field.enums.ReefBranch;
+import frc.constants.field.enums.ReefSide;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
@@ -20,106 +24,86 @@ public class SwerveStateHandler {
 	private final SwerveConstants swerveConstants;
 	private Optional<Supplier<Pose2d>> robotPoseSupplier;
 
-	private Supplier<Optional<Translation2d>> reefTranslationSupplier;
-	private Supplier<Optional<Translation2d>> feederTranslationSupplier;
-	private Supplier<Optional<Translation2d>> branchTranslationSupplier;
-	private Supplier<Optional<Translation2d>> algiTranslationSupplier;
-	private Supplier<Optional<Translation2d>> slotTranslationSupplier;
+	private Supplier<Optional<ReefSide>> reefSupplier;
+	private Supplier<Optional<CoralStationPosition>> feederSupplier;
+	private Supplier<Optional<ReefBranch>> branchSupplier;
+	private Supplier<Optional<ReefSide>> algiSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = Optional.empty();
 
-		this.reefTranslationSupplier = Optional::empty;
-		this.feederTranslationSupplier = Optional::empty;
-		this.branchTranslationSupplier = Optional::empty;
-		this.algiTranslationSupplier = Optional::empty;
-		this.slotTranslationSupplier = Optional::empty;
+		this.reefSupplier = Optional::empty;
+		this.feederSupplier = Optional::empty;
+		this.branchSupplier = Optional::empty;
+		this.algiSupplier = Optional::empty;
 	}
 
 	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
 		this.robotPoseSupplier = Optional.of(robotPoseSupplier);
 	}
 
-	public void setReefTranslationSupplier(Supplier<Optional<Translation2d>> reefTranslationSupplier) {
-		this.reefTranslationSupplier = reefTranslationSupplier;
+	public void setReefSupplier(Supplier<Optional<ReefSide>> reefTranslationSupplier) {
+		this.reefSupplier = reefTranslationSupplier;
 	}
 
-	public void setFeederTranslationSupplier(Supplier<Optional<Translation2d>> feederTranslationSupplier) {
-		this.feederTranslationSupplier = feederTranslationSupplier;
+	public void setFeederSupplier(Supplier<Optional<CoralStationPosition>> feederTranslationSupplier) {
+		this.feederSupplier = feederTranslationSupplier;
 	}
 
-	public void setBranchTranslationSupplier(Supplier<Optional<Translation2d>> branchTranslationSupplier) {
-		this.branchTranslationSupplier = branchTranslationSupplier;
+	public void setBranchSupplier(Supplier<Optional<ReefBranch>> branchTranslationSupplier) {
+		this.branchSupplier = branchTranslationSupplier;
 	}
 
-	public void setAlgiTranslationSupplier(Supplier<Optional<Translation2d>> algiTranslationSupplier) {
-		this.algiTranslationSupplier = algiTranslationSupplier;
-	}
-
-	public void setSlotTranslationSupplier(Supplier<Optional<Translation2d>> slotTranslationSupplier) {
-		this.slotTranslationSupplier = slotTranslationSupplier;
+	public void setAlgiSupplier(Supplier<Optional<ReefSide>> algiSupplier) {
+		this.algiSupplier = algiSupplier;
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
-		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent() && reefTranslationSupplier.get().isPresent()) {
-			return handleReefAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
+		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent() && reefSupplier.get().isPresent()) {
+			return handleReefAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), reefSupplier.get().get());
 		}
-		if (swerveState.getAimAssist() == AimAssist.FEEDER && robotPoseSupplier.isPresent() && feederTranslationSupplier.get().isPresent()) {
-			return handleFeederAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
+		if (swerveState.getAimAssist() == AimAssist.FEEDER && robotPoseSupplier.isPresent() && feederSupplier.get().isPresent()) {
+			return handleFeederAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), feederSupplier.get().get());
 		}
-		if (swerveState.getAimAssist() == AimAssist.BRANCH && robotPoseSupplier.isPresent() && branchTranslationSupplier.get().isPresent()) {
-			return handleBranchAimAssist(speeds, robotPoseSupplier.get().get(), branchTranslationSupplier.get().get(), swerveState);
+		if (swerveState.getAimAssist() == AimAssist.BRANCH && robotPoseSupplier.isPresent() && branchSupplier.get().isPresent()) {
+			return handleBranchAimAssist(speeds, robotPoseSupplier.get().get(), branchSupplier.get().get(), swerveState);
 		}
-		if (swerveState.getAimAssist() == AimAssist.ALGI_REMOVE && robotPoseSupplier.isPresent() && algiTranslationSupplier.get().isPresent()) {
-			return handleAlgiAimAssist(speeds, robotPoseSupplier.get().get(), algiTranslationSupplier.get().get(), swerveState);
-		}
-		if (swerveState.getAimAssist() == AimAssist.SLOT && robotPoseSupplier.isPresent() && slotTranslationSupplier.get().isPresent()) {
-			return handleSlotAimAssist(speeds, robotPoseSupplier.get().get(), slotTranslationSupplier.get().get(), swerveState);
+		if (swerveState.getAimAssist() == AimAssist.ALGI_REMOVE && robotPoseSupplier.isPresent() && algiSupplier.get().isPresent()) {
+			return handleAlgiAimAssist(speeds, robotPoseSupplier.get().get(), algiSupplier.get().get(), swerveState);
 		}
 
 		return speeds;
 	}
 
-	private ChassisSpeeds handleReefAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		return AimAssistMath
-			.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, reefTranslationSupplier.get().get().getAngle(), swerveConstants);
+	private ChassisSpeeds handleReefAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading, ReefSide reefSide) {
+		Rotation2d reefSideAngle = Field.getMiddleOfReefSide(reefSide).getRotation();
+		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, reefSideAngle, swerveConstants);
 	}
 
-	private ChassisSpeeds handleFeederAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		return AimAssistMath
-			.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, feederTranslationSupplier.get().get().getAngle(), swerveConstants);
-	}
-
-	private ChassisSpeeds handleBranchAimAssist(
+	private ChassisSpeeds handleFeederAimAssist(
 		ChassisSpeeds chassisSpeeds,
-		Pose2d robotPose,
-		Translation2d branchTranslation,
-		SwerveState swerveState
+		Rotation2d robotHeading,
+		CoralStationPosition coralStationPosition
 	) {
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, branchTranslation, swerveConstants, swerveState);
+		Rotation2d feederAngle = Field.getMiddleOfCoralStation(coralStationPosition).getRotation();
+		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, feederAngle, swerveConstants);
 	}
 
-	private ChassisSpeeds handleAlgiAimAssist(
-		ChassisSpeeds chassisSpeeds,
-		Pose2d robotPose,
-		Translation2d algiTranslation,
-		SwerveState swerveState
-	) {
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, algiTranslation, swerveConstants, swerveState);
+	private ChassisSpeeds handleBranchAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefBranch reefBranch, SwerveState swerveState) {
+		Translation2d branch = Field.getCoralPlacement(reefBranch);
+		chassisSpeeds = AimAssistMath
+			.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), branch.getAngle(), swerveConstants);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, branch, swerveConstants, swerveState);
 	}
 
-	private ChassisSpeeds handleSlotAimAssist(
-		ChassisSpeeds chassisSpeeds,
-		Pose2d robotPose,
-		Translation2d slotTranslation,
-		SwerveState swerveState
-	) {
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, slotTranslation, swerveConstants, swerveState);
+	private ChassisSpeeds handleAlgiAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
+		Pose2d middleOfReefSide = Field.getMiddleOfReefSide(reefSide);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, middleOfReefSide.getTranslation(), swerveConstants, swerveState);
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {

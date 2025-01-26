@@ -1,6 +1,7 @@
 package frc.robot.vision.sources.limelights;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.constants.VisionConstants;
 import frc.robot.hardware.signal.TimedValue;
 import frc.robot.vision.GyroAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -18,18 +19,29 @@ import java.util.Optional;
 public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
 	private final IndpendentHeadingVisionSource independentPoseEstimatingLimelight;
-	private final RobotHeadingRequiringVisionSource headingRequiredLimelight;
+	private final RobotHeadingRequiringVisionSource headingRequiringLimelight;
 	private boolean useGyroForPoseEstimating;
 
 	public DynamicSwitchingLimelight(
 		boolean defaultUseGyroForPoseEstimating,
-		String name,
+		String cameraNetworkTablesName,
 		String parentLogPath,
+		String sourceName,
 		Filter<AprilTagVisionData> filter
 	) {
 		this.useGyroForPoseEstimating = defaultUseGyroForPoseEstimating;
-		this.independentPoseEstimatingLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(name, parentLogPath, filter);
-		this.headingRequiredLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(name, parentLogPath, filter);
+		this.independentPoseEstimatingLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(
+			cameraNetworkTablesName,
+			parentLogPath,
+			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG1_SOURCE_NAME,
+			filter
+		);
+		this.headingRequiringLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(
+			cameraNetworkTablesName,
+			parentLogPath,
+			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG2_SOURCE_NAME,
+			filter
+		);
 	}
 
 	public void setUseRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {
@@ -39,25 +51,25 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 	@Override
 	public void update() {
 		independentPoseEstimatingLimelight.update();
-		headingRequiredLimelight.update();
+		headingRequiringLimelight.update();
 	}
 
 	@Override
 	public Optional<AprilTagVisionData> getVisionData() {
-		return useGyroForPoseEstimating ? headingRequiredLimelight.getVisionData() : independentPoseEstimatingLimelight.getVisionData();
+		return useGyroForPoseEstimating ? headingRequiringLimelight.getVisionData() : independentPoseEstimatingLimelight.getVisionData();
 	}
 
 	@Override
 	public Optional<AprilTagVisionData> getFilteredVisionData() {
 		return useGyroForPoseEstimating
-			? headingRequiredLimelight.getFilteredVisionData()
+			? headingRequiringLimelight.getFilteredVisionData()
 			: independentPoseEstimatingLimelight.getFilteredVisionData();
 	}
 
 	@Override
 	public void setFilter(Filter<AprilTagVisionData> newFilter) {
 		independentPoseEstimatingLimelight.setFilter(newFilter);
-		headingRequiredLimelight.setFilter(newFilter);
+		headingRequiringLimelight.setFilter(newFilter);
 	}
 
 	@Override
@@ -77,7 +89,7 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 
 	@Override
 	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
-		headingRequiredLimelight.updateGyroAngleValues(gyroAngleValues);
+		headingRequiringLimelight.updateGyroAngleValues(gyroAngleValues);
 	}
 
 }

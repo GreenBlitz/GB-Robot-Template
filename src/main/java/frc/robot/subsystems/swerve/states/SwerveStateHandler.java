@@ -49,7 +49,7 @@ public class SwerveStateHandler {
 		if (swerveState.getAimAssist() == AimAssist.SPEAKER && robotPoseSupplier.isPresent()) {
 			return handleSpeakerAssist(speeds, robotPoseSupplier.get().get());
 		}
-		if (swerveState.getAimAssist() == AimAssist.NONE && robotPoseSupplier.isPresent() && objectTranslationSupplier.get().isPresent()) {
+		if (swerveState.getAimAssist() == AimAssist.NOTE && robotPoseSupplier.isPresent() && objectTranslationSupplier.get().isPresent()) {
 			return handleNoteAimAssist(speeds, robotPoseSupplier.get().get(), objectTranslationSupplier.get().get(), swerveState);
 		}
 

@@ -15,11 +15,11 @@ import frc.robot.subsystems.swerve.module.records.EncoderSignals;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
-class RealEncoderConstants {
+class CANCoderEncoderBuilder {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
 
-	private static CANcoderConfiguration generateEncoderConfig() {
+	private static CANcoderConfiguration buildEncoderConfig() {
 		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
 		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
@@ -28,11 +28,11 @@ class RealEncoderConstants {
 		return encoderConfig;
 	}
 
-	protected static IAngleEncoder generateEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
+	static IAngleEncoder buildEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
 		CANcoder cancoder = new CANcoder(encoderDeviceID.id(), encoderDeviceID.busChain().getChainName());
 		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
 		cancoder.getConfigurator().refresh(magnetSensorConfigs);
-		CANcoderConfiguration caNcoderConfiguration = generateEncoderConfig();
+		CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig();
 		caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
 		if (!Phoenix6Utils.checkWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
@@ -41,10 +41,9 @@ class RealEncoderConstants {
 		return new CANCoderEncoder(logPath, cancoder);
 	}
 
-	protected static EncoderSignals generateSignals(CANCoderEncoder encoder) {
+	static EncoderSignals buildSignals(CANCoderEncoder encoder) {
 		return new EncoderSignals(
-			Phoenix6SignalBuilder
-				.generatePhoenix6Signal(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
+			Phoenix6SignalBuilder.build(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
 		);
 	}
 

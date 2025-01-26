@@ -8,7 +8,6 @@ SwerveConstants:
 - [ ] Max rotational velocity (angle per second)
 - [ ] Translation PID (for x,y PID controllers)
 - [ ] Rotational degrees PID 
-- [ ] Modules locations (in meters)
 - [ ] Drive radius meters
 - [ ] PathPlanner RealTimeConstraints (in AutonomousConstants)
 
@@ -19,4 +18,4 @@ Gyro:
 
 Modules:
 -----------------------
-- [ ] [See module calibrations file](module/Calibrations.md)
+- [ ] [See module calibrations file](module/calibrations)

@@ -8,13 +8,13 @@ import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtils;
 
-public class SimulationGyroConstants {
+class SimulationGyroBuilder {
 
-	protected static IGyro generateGyro(String logPath) {
+	static IGyro buildGyro(String logPath) {
 		return new EmptyGyro(logPath);
 	}
 
-	protected static GyroSignals generateSignals() {
+	static GyroSignals buildSignals() {
 		return new GyroSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
 
 			@Override

@@ -100,7 +100,7 @@ public class PathPlannerUtils {
 	}
 
 	private static void reportAlert(Alert.AlertType alertType, String message) {
-		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + message).report();
+		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + "/" + message).report();
 	}
 
 	public static void configPathPlanner(

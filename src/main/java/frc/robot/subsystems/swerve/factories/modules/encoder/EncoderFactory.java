@@ -11,22 +11,22 @@ import frc.robot.subsystems.swerve.module.records.EncoderSignals;
 public class EncoderFactory {
 
 	public static IAngleEncoder createEncoder(String logPath, ModuleUtils.ModulePosition modulePosition) {
-		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/Encoder/";
+		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Encoder";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT -> RealEncoderConstants.generateEncoder(logPath, IDs.CANCodersIDs.FRONT_LEFT_ENCODER);
-				case FRONT_RIGHT -> RealEncoderConstants.generateEncoder(logPath, IDs.CANCodersIDs.FRONT_RIGHT_ENCODER);
-				case BACK_LEFT -> RealEncoderConstants.generateEncoder(logPath, IDs.CANCodersIDs.BACK_LEFT_ENCODER);
-				case BACK_RIGHT -> RealEncoderConstants.generateEncoder(logPath, IDs.CANCodersIDs.BACK_RIGHT_ENCODER);
+				case FRONT_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.SWERVE_FRONT_LEFT);
+				case FRONT_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.SWERVE_FRONT_RIGHT);
+				case BACK_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.SWERVE_BACK_LEFT);
+				case BACK_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.SWERVE_BACK_RIGHT);
 			};
-			case SIMULATION -> SimulationEncoderConstants.generateEncoder(logPath);
+			case SIMULATION -> SimulationEncoderBuilder.buildEncoder(logPath);
 		};
 	}
 
 	public static EncoderSignals createSignals(IAngleEncoder angleEncoder) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealEncoderConstants.generateSignals((CANCoderEncoder) angleEncoder);
-			case SIMULATION -> SimulationEncoderConstants.generateSignals();
+			case REAL -> CANCoderEncoderBuilder.buildSignals((CANCoderEncoder) angleEncoder);
+			case SIMULATION -> SimulationEncoderBuilder.buildSignals();
 		};
 	}
 

@@ -24,7 +24,10 @@ public class AutosBuilder {
 		);
 	}
 
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(Robot robot, Supplier<Command> scoringCommand) {
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(
+		Robot robot,
+		Supplier<Command> scoringCommand
+	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : AutoPath.getAllStartingAndScoringFirstObjectPaths()) {
 			autos.add(

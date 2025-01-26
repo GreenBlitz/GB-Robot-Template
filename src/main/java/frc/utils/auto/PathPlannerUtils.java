@@ -17,7 +17,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.SequencesBuilder;
 import frc.robot.subsystems.GBSubsystem;
@@ -142,11 +141,7 @@ public class PathPlannerUtils {
 	}
 
 	public static boolean isRobotInPathfindingDeadband(Pose2d currentPose, Pose2d targetPose) {
-		return ToleranceMath.isNear(
-			targetPose.getTranslation(),
-			currentPose.getTranslation(),
-			AutonomousConstants.PATHFINDING_DEADBAND_METERS
-		);
+		return ToleranceMath.isNear(targetPose.getTranslation(), currentPose.getTranslation(), AutonomousConstants.PATHFINDING_DEADBAND_METERS);
 	}
 
 }

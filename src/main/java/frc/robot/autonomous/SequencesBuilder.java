@@ -40,7 +40,10 @@ public class SequencesBuilder {
 		return new ConditionalCommand(
 			followPath(path),
 			pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
-			() -> PathPlannerUtils.isRobotInPathfindingDeadband(robot.getPoseEstimator().getCurrentPose(), Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path)))
+			() -> PathPlannerUtils.isRobotInPathfindingDeadband(
+				robot.getPoseEstimator().getCurrentPose(),
+				Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path))
+			)
 		);
 	}
 

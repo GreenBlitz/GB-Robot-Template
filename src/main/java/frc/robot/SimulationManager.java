@@ -11,7 +11,7 @@ public class SimulationManager {
 	private final String logPath;
 	private final Robot robot;
 
-	private final static double ARM_HEIGHT_ADDITIVE = 0.93;
+	private final static double ARM_HEIGHT_ADDITIVE_METERS = 0.93;
 
 	public SimulationManager(String logPath, Robot robot) {
 		this.logPath = logPath;
@@ -37,7 +37,7 @@ public class SimulationManager {
 	private void logArmPosition3d() {
 		Logger.recordOutput(
 			logPath + "/Arm/Position",
-			getArmPose3dFromHeight(robot.getElevator().getElevatorPositionMeters() + ARM_HEIGHT_ADDITIVE, -robot.getArm().getPosition().getRadians())
+			getArmPose3dFromHeight(robot.getElevator().getElevatorPositionMeters() + ARM_HEIGHT_ADDITIVE_METERS, -robot.getArm().getPosition().getRadians())
 		);
 	}
 

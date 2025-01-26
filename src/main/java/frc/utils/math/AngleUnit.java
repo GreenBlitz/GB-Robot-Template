@@ -1,4 +1,4 @@
-package frc.utils;
+package frc.utils.math;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

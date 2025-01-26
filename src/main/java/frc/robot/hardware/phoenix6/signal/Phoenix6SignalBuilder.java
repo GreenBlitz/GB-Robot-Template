@@ -1,7 +1,7 @@
 package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
-import frc.utils.AngleUnit;
+import frc.utils.math.AngleUnit;
 import frc.robot.hardware.phoenix6.Phoenix6Utils;
 
 public class Phoenix6SignalBuilder {

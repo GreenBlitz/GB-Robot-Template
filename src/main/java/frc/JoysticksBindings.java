@@ -3,7 +3,6 @@ package frc;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.subsystems.endeffector.EndEffectorState;
 
 public class JoysticksBindings {
 

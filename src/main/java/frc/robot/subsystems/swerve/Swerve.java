@@ -11,7 +11,7 @@ import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.poseestimator.observations.OdometryData;
+import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;

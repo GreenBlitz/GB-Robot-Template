@@ -54,7 +54,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	private void updateAngleInHeadingRequiringSources(RobotAngleValues robotAngleValues) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
-				robotHeadingRequiringVisionSource.updateGyroAngleValues(robotAngleValues);
+				robotHeadingRequiringVisionSource.updateRobotAngleValues(robotAngleValues);
 			}
 		}
 	}

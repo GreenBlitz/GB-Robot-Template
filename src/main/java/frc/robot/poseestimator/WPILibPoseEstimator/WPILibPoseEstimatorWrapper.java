@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.Odometry;
 import frc.robot.poseestimator.IPoseEstimator;
-import frc.robot.poseestimator.observations.OdometryData;
+import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
@@ -109,13 +109,13 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		poseEstimator.resetRotation(newHeading);
 	}
 
-	private void addVisionMeasurement(AprilTagVisionData visionObservation) {
+	private void addVisionMeasurement(AprilTagVisionData visionData) {
 		poseEstimator.addVisionMeasurement(
-			visionObservation.getEstimatedPose().toPose2d(),
-			visionObservation.getTimestamp(),
-			WPILibPoseEstimatorConstants.VISION_STANDARD_DEVIATIONS_TRANSFORM.apply(visionObservation).asColumnVector()
+			visionData.getEstimatedPose().toPose2d(),
+			visionData.getTimestamp(),
+			WPILibPoseEstimatorConstants.VISION_STANDARD_DEVIATIONS_TRANSFORM.apply(visionData).asColumnVector()
 		);
-		this.lastVisionData = visionObservation;
+		this.lastVisionData = visionData;
 	}
 
 	private void log() {

@@ -88,8 +88,8 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 	}
 
 	@Override
-	public void updateGyroAngleValues(RobotAngleValues robotAngleValues) {
-		headingRequiringLimelight.updateGyroAngleValues(robotAngleValues);
+	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
+		headingRequiringLimelight.updateRobotAngleValues(robotAngleValues);
 	}
 
 }

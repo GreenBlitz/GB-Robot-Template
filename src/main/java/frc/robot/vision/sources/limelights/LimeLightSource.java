@@ -181,7 +181,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
-	public void updateGyroAngleValues(RobotAngleValues robotAngleValues) {
+	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
 		this.robotAngleValues = robotAngleValues;
 	}
 

@@ -5,6 +5,6 @@ import frc.robot.vision.data.AprilTagVisionData;
 
 public interface RobotHeadingRequiringVisionSource extends VisionSource<AprilTagVisionData> {
 
-	void updateGyroAngleValues(RobotAngleValues robotAngleValues);
+	void updateRobotAngleValues(RobotAngleValues robotAngleValues);
 
 }

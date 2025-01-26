@@ -46,17 +46,17 @@ public class PigeonHandler extends Phoenix6Device implements IGyro, IAcceleromet
 
 	@Override
 	public double getAngularVelocityYaw() {
-		return pigeon.getAngularVelocityZDevice().getValue().magnitude();
+		return pigeon.getAngularVelocityZWorld().getValue().magnitude();
 	}
 
 	@Override
 	public double getAngularVelocityPitch() {
-		return pigeon.getAngularVelocityXDevice().getValue().magnitude();
+		return pigeon.getAngularVelocityXWorld().getValue().magnitude();
 	}
 
 	@Override
 	public double getAngularVelocityRoll() {
-		return pigeon.getAngularVelocityYDevice().getValue().magnitude();
+		return pigeon.getAngularVelocityYWorld().getValue().magnitude();
 	}
 
 	@Override

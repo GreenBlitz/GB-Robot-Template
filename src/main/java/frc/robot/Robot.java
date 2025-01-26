@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
@@ -28,6 +30,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Elevator elevator;
+	private final Arm arm;
 	private final EndEffector endEffector;
 	public final EndEffectorStateHandler endEffectorStateHandler;
 
@@ -36,6 +39,9 @@ public class Robot {
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
+
+		this.arm = ArmFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm");
+		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 		this.endEffectorStateHandler = new EndEffectorStateHandler(endEffector);
@@ -53,6 +59,10 @@ public class Robot {
 
 	public Elevator getElevator() {
 		return elevator;
+	}
+
+	public Arm getArm() {
+		return arm;
 	}
 
 	public EndEffector getEndEffector() {

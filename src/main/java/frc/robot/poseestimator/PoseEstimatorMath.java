@@ -2,12 +2,13 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.*;
 import frc.constants.MathConstants;
+import frc.constants.RobotHeadingEstimatorConstants;
 
 public class PoseEstimatorMath {
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
 		double ratio = odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
-		return Double.isNaN(ratio) ? MathConstants.RATIO_OF_HALF : ratio;
+		return Double.isNaN(ratio) ? 1 / RobotHeadingEstimatorConstants.AMOUNT_OF_SOURCE_TYPES : ratio;
 	}
 
 	public static Rotation2d combineVisionHeadingToGyro(

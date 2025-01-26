@@ -12,6 +12,4 @@ public class MathConstants {
 
 	public static final Rotation2d EIGHTH_CIRCLE = Rotation2d.fromRotations(0.125);
 
-	public static final double RATIO_OF_HALF = 0.5;
-
 }

@@ -37,7 +37,10 @@ public class SimulationManager {
 	private void logArmPosition3d() {
 		Logger.recordOutput(
 			logPath + "/Arm/Position",
-			getArmPose3dFromHeight(robot.getElevator().getElevatorPositionMeters() + ELEVATOR_STAGE_HEIGHT, -robot.getArm().getPosition().getRadians())
+			getArmPose3dFromHeight(
+				robot.getElevator().getElevatorPositionMeters() + ELEVATOR_STAGE_HEIGHT,
+				-robot.getArm().getPosition().getRadians()
+			)
 		);
 	}
 

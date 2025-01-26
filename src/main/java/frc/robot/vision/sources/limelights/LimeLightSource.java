@@ -33,6 +33,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private final BooleanSupplier shouldDataBeFiltered;
 	private final LimelightPoseEstimationMethod poseEstimationMethod;
 
+	private final NetworkTableEntry cameraPoseOffset;
 	private final NetworkTableEntry robotPoseEntryMegaTag2;
 	private final NetworkTableEntry robotPoseEntryMegaTag1;
 	private final NetworkTableEntry aprilTagIdEntry;
@@ -55,6 +56,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		String parentLogPath,
 		String sourceName,
 		Filter<AprilTagVisionData> filter,
+		Pose3d cameraPoseOffset,
 		LimelightPoseEstimationMethod poseEstimationMethod
 	) {
 		this.logPath = parentLogPath + cameraNetworkTablesName + "/" + sourceName + "/";
@@ -64,6 +66,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
 		this.poseEstimationMethod = poseEstimationMethod;
 
+		this.cameraPoseOffset = getLimelightNetworkTableEntry("camerapose_robotspace_set");
 		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryMegaTag1 = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
@@ -78,6 +81,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
 
+		updateCameraPoseOffset(cameraPoseOffset);
 		update();
 		log();
 	}
@@ -185,6 +189,9 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.gyroAngleValues = gyroAngleValues;
 	}
 
+	private void updateCameraPoseOffset(Pose3d cameraPoseOffset) {
+		this.cameraPoseOffset.setDoubleArray(PoseUtils.pose3DToPoseArray(cameraPoseOffset, AngleUnit.DEGREES));
+	}
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());

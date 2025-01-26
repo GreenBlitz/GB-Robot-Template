@@ -4,6 +4,7 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.states.SwerveState;
 
 public class JoysticksBindings {
 
@@ -28,10 +29,11 @@ public class JoysticksBindings {
 		// bindings...
 
 		robot.getSwerve().setDefaultCommand(
-				robot.getSwerve().getCommandsBuilder().drive(
+				robot.getSwerve().getCommandsBuilder().driveByState(
 						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
 						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+						() -> usedJoystick.getAxisValue(Axis.RIGHT_X),
+						SwerveState.DEFAULT_DRIVE
 				)
 		);
 

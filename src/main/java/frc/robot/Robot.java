@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.hardware.interfaces.IAccelerometer;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.interfaces.IVibrationGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.Superstructure;
@@ -32,11 +34,15 @@ public class Robot {
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
+	private final IAccelerometer accelerometer;
+	private final IVibrationGyro vibrationGyro;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
 
 		IGyro gyro = PigeonFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		this.accelerometer = PigeonFactory.createAccelerometer(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Accelerometer");
+		this.vibrationGyro = PigeonFactory.createVibrationGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Vibration");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -69,6 +75,8 @@ public class Robot {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
 		superStructure.periodic();
+		accelerometer.logAcceleration();
+		vibrationGyro.logAngularVelocities();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

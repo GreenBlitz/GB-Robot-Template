@@ -66,7 +66,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryMegaTag1 = getLimelightNetworkTableEntry("botpose_wpiblue");
-		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
+		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_robotspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.standardDeviations = getLimelightNetworkTableEntry("stddevs");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");

@@ -11,7 +11,7 @@ public class PathPlannerAutoWrapper extends PathPlannerAuto {
 
 	private final boolean isFullyCreated;
 
-	PathPlannerAutoWrapper() {
+	public PathPlannerAutoWrapper() {
 		super(Commands.none());
 		this.isFullyCreated = true;
 	}

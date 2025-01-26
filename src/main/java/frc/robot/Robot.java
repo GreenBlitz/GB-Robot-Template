@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.utils.DriverStationUtils;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtils;
@@ -112,7 +113,10 @@ public class Robot {
 				)
 				.withResetPose(getPoseEstimator()::resetPose);
 		}
-		return testAutosChooser.getChosenValue();
+		if (!DriverStationUtils.isMatch()) {
+			return testAutosChooser.getChosenValue();
+		}
+		return new PathPlannerAutoWrapper();
 	}
 
 	public Superstructure getSuperStructure() {

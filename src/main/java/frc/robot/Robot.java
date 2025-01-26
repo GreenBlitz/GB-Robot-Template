@@ -31,7 +31,6 @@ public class Robot {
 	private final Elevator elevator;
 	private final Arm arm;
 	private final EndEffector endEffector;
-	public final EndEffectorStateHandler endEffectorStateHandler;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -43,7 +42,6 @@ public class Robot {
 		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
-		this.endEffectorStateHandler = new EndEffectorStateHandler(endEffector);
 	}
 
 	public void periodic() {

@@ -130,17 +130,17 @@ public class KrakenX60ElevatorBuilder {
 	}
 
 	public static Elevator createRealElevator(String logPath) {
-		TalonFXMotor firstMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_FIRST_MOTOR_ID, generateSysidConfig());
+		TalonFXMotor firstMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_FIRST, generateSysidConfig());
 		firstMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
-		TalonFXMotor secondMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_SECOND_MOTOR_ID, generateSysidConfig());
+		TalonFXMotor secondMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_SECOND, generateSysidConfig());
 		secondMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
 
 		return create(logPath, firstMotor, secondMotor);
 	}
 
 	public static Elevator createSimulationElevator(String logPath) {
-		TalonFXMotor firstMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_FIRST_MOTOR_ID, generateSysidConfig(), generateSimulation());
+		TalonFXMotor firstMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_FIRST, generateSysidConfig(), generateSimulation());
 		firstMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
 		return create(logPath, firstMotor, firstMotor);

@@ -71,7 +71,7 @@ public class EndEffectorSparkMaxBuilder {
 	}
 
 	public static EndEffector generate(String logPath) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR_ROLLER_ID);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR);
 
 		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("power", sparkMaxWrapper::get);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);

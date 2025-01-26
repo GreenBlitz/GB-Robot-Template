@@ -10,7 +10,8 @@ import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.poseestimation.PoseEstimator;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -30,7 +31,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final IPoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
 	public Robot() {
@@ -44,10 +45,15 @@ public class Robot {
 			GyroFactory.createSignals(gyro)
 		);
 
-		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());
+		this.poseEstimator = new WPILibPoseEstimatorWrapper(
+			"poseEstimator/",
+			swerve.getKinematics(),
+			swerve.getAllOdometryObservations()[0].wheelPositions(),
+			swerve.getGyroAbsoluteYaw()
+		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
-		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getCurrentPose);
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -58,7 +64,7 @@ public class Robot {
 	private void buildPathPlannerForAuto() {
 		// Register commands...
 		swerve.configPathPlanner(
-			poseEstimator::getCurrentPose,
+			poseEstimator::getEstimatedPose,
 			poseEstimator::resetPose,
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
@@ -84,7 +90,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public PoseEstimator getPoseEstimator() {
+	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

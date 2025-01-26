@@ -1,5 +1,6 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.MathConstants;
 import frc.joysticks.Axis;
@@ -29,21 +30,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-
-		robot.getSwerve().setDefaultCommand(
-				robot.getSwerve().getCommandsBuilder().driveByState(
-						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-						() -> usedJoystick.getAxisValue(Axis.RIGHT_X),
-						SwerveState.DEFAULT_DRIVE
-				)
-		);
-
-		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().pointWheelsInCircle());
-		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().pointWheelsInX());
-
-		usedJoystick.X.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
-		usedJoystick.Y.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(new Rotation2d()));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

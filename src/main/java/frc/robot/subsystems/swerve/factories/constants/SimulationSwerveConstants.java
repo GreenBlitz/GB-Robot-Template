@@ -9,8 +9,8 @@ public class SimulationSwerveConstants {
 	public static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 4.133;
 	private static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SECOND = Rotation2d.fromRadians(8.178);
 
-	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(5, 0, 0);
-	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(5, 0, 0);
+	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(5.5, 0, 0);
+	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(5.5, 0, 0);
 
 	static SwerveConstants getSwerveConstants(String logPath) {
 		return new SwerveConstants(

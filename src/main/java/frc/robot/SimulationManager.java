@@ -18,6 +18,7 @@ public class SimulationManager {
 
 	public void log() {
 		logElevatorPosition3d();
+		logArmPosition3d();
 	}
 
 	private void logElevatorPosition3d() {
@@ -28,6 +29,13 @@ public class SimulationManager {
 		Logger.recordOutput(
 			logPath + "/Elevator/SecondStagePosition",
 			getElevatorSecondStagePosition(robot.getElevator().getElevatorPositionMeters())
+		);
+	}
+
+	private void logArmPosition3d() {
+		Logger.recordOutput(
+			logPath + "/Arm/Position",
+			getArmPose3dFromHeight(robot.getElevator().getElevatorPositionMeters(), robot.getArm().getPosition().getRotations())
 		);
 	}
 
@@ -44,6 +52,10 @@ public class SimulationManager {
 
 	private static Pose3d getElevatorPose3dFromHeight(double heightMeters) {
 		return new Pose3d(new Translation3d(0, 0, heightMeters), new Rotation3d());
+	}
+
+	private static Pose3d getArmPose3dFromHeight(double heightMeters, double pitch) {
+		return new Pose3d(new Translation3d(0, 0, heightMeters), new Rotation3d(0.0, pitch, 0.0));
 	}
 
 }

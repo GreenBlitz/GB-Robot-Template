@@ -22,6 +22,7 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 		this.linearFilters = filters;
 		this.name = name;
 		this.size = sizeInstance;
+		Logger.recordOutput("actualSize", updateValues.get().get(0).unit());
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 	public void update() {
 		for (Vector<T> data : updateValues.get()) {
 			for (int i = 0; i < size.getNum(); i++) {
-				linearFilters.get(i).calculate(data.get(i));
+				linearFilters.get(i).calculate(data.get(0, i));
 			}
 		}
 	}

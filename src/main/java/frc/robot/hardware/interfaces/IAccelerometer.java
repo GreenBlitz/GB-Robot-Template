@@ -35,13 +35,13 @@ public interface IAccelerometer {
 	void logAcceleration();
 
 	default void logAcceleration(String logPath) {
-		Logger.recordOutput(logPath + "/AccelerationX", getAccelerationX());
-		Logger.recordOutput(logPath + "/AccelerationY", getAccelerationY());
-		Logger.recordOutput(logPath + "/AccelerationZ", getAccelerationZ());
-		Logger.recordOutput(logPath + "/AccelerationYaw", getAccelerationYaw());
-		Logger.recordOutput(logPath + "/AccelerationRoll", getAccelerationRoll());
-		Logger.recordOutput(logPath + "/AccelerationPitch", getAccelerationPitch());
-		Logger.recordOutput(logPath + "/AccelerationMagnitude", getAccelerationMagnitude());
+		Logger.recordOutput(logPath + "/Acceleration/X", getAccelerationX());
+		Logger.recordOutput(logPath + "/Acceleration/Y", getAccelerationY());
+		Logger.recordOutput(logPath + "/Acceleration/Z", getAccelerationZ());
+		Logger.recordOutput(logPath + "/Acceleration/Yaw", getAccelerationYaw());
+		Logger.recordOutput(logPath + "/Acceleration/Roll", getAccelerationRoll());
+		Logger.recordOutput(logPath + "/Acceleration/Pitch", getAccelerationPitch());
+		Logger.recordOutput(logPath + "/Acceleration/Magnitude", getAccelerationMagnitude());
 	}
 
 }

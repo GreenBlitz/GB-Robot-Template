@@ -11,9 +11,9 @@ public interface IVibrationGyro {
 	double getAngularVelocityRoll();
 
 	default void logAngularVelocities(String logPath) {
-		Logger.recordOutput(logPath + "AngularVelocityYaw", getAngularVelocityYaw());
-		Logger.recordOutput(logPath + "AngularVelocityPitch", getAngularVelocityPitch());
-		Logger.recordOutput(logPath + "AngularVelocityRoll", getAngularVelocityRoll());
+		Logger.recordOutput(logPath + "/AngularVelocity/Yaw", getAngularVelocityYaw());
+		Logger.recordOutput(logPath + "/AngularVelocity/Pitch", getAngularVelocityPitch());
+		Logger.recordOutput(logPath + "/AngularVelocity/Roll", getAngularVelocityRoll());
 	}
 
 	void logAngularVelocities();

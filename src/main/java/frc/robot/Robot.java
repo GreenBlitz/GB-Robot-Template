@@ -23,6 +23,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
+import frc.utils.linearfilters.LinearFiltersManager;
 import frc.utils.linearfilters.PeriodicNDimlLinearFilter;
 import org.ejml.simple.SimpleMatrix;
 import org.littletonrobotics.junction.Logger;
@@ -50,7 +51,7 @@ public class Robot {
 		BatteryUtils.scheduleLimiter();
 
 		IGyro gyro = PigeonFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
-		this.accelerometer = PigeonFactory.createAccelerometer(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Accelerometer");
+		this.accelerometer = PigeonFactory.createAccelerometer(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.accelerationFilter = new PeriodicNDimlLinearFilter<>(
 			() -> List
 				.of(
@@ -65,7 +66,7 @@ public class Robot {
 			"3DimAcceleration",
 			N3.instance
 		);
-		this.vibrationGyro = PigeonFactory.createVibrationGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/VibrationGyro");
+		this.vibrationGyro = PigeonFactory.createVibrationGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -80,6 +81,7 @@ public class Robot {
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
+		LinearFiltersManager.addFilter(accelerationFilter);
 		buildPathPlannerForAuto();
 	}
 
@@ -100,6 +102,7 @@ public class Robot {
 		superStructure.periodic();
 		accelerometer.logAcceleration();
 		vibrationGyro.logAngularVelocities();
+		Logger.recordOutput("denoisedAcceleration2", true);
 		Logger.recordOutput("denoisedAcceleration", accelerationFilter.getAsColumnVector());
 		CommandScheduler.getInstance().run(); // Should be last
 	}

@@ -1,5 +1,7 @@
 package frc.utils.linearfilters;
 
+import org.littletonrobotics.junction.Logger;
+
 import java.util.ArrayList;
 
 /**
@@ -10,6 +12,8 @@ public class LinearFiltersManager {
 	private static final ArrayList<IPeriodicLinearFilter> periodicLinearFilters = new ArrayList<>();
 
 	public static void periodic(String logPath) {
+		Logger.recordOutput(logPath + "/running", true);
+		Logger.recordOutput(logPath + "/size", periodicLinearFilters.size());
 		for (IPeriodicLinearFilter filter : periodicLinearFilters) {
 			filter.update();
 			filter.log(logPath);

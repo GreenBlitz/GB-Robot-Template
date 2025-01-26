@@ -1,13 +1,8 @@
 package frc;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import frc.constants.MathConstants;
-import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.subsystems.swerve.states.SwerveState;
 
 public class JoysticksBindings {
 

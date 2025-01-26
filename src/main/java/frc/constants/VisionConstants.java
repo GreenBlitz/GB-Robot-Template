@@ -7,7 +7,6 @@ import frc.utils.Filter;
 import frc.utils.alerts.Alert;
 
 import java.io.IOException;
-import java.util.function.Function;
 
 public class VisionConstants {
 
@@ -36,10 +35,6 @@ public class VisionConstants {
 			).report();
 			return AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 		}
-	}
-
-	public static double getAprilTagHeightByID(int id) {
-		return APRIL_TAG_FIELD_LAYOUT.getTags().get(id).pose.getZ();
 	}
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;

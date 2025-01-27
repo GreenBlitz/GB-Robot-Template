@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.utils.auto.AutoPath;
+import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtils;
 
@@ -29,7 +30,7 @@ public class AutosBuilder {
 		Supplier<Command> scoringCommand
 	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.getAllStartingAndScoringFirstObjectPaths()) {
+		for (AutoPath autoPath : PathHelper.getAllStartingAndScoringFirstObjectPaths()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,
@@ -42,7 +43,7 @@ public class AutosBuilder {
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakingAutos(Robot robot, Supplier<Command> intakeCommand) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.getAllIntakingPaths()) {
+		for (AutoPath autoPath : PathHelper.getAllIntakingPaths()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,
@@ -55,7 +56,7 @@ public class AutosBuilder {
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllScoringAutos(Robot robot, Supplier<Command> scoringCommand) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.getAllScoringPathsFromCoralStations()) {
+		for (AutoPath autoPath : PathHelper.getAllScoringPathsFromCoralStations()) {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,

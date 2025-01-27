@@ -3,10 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.robot.autonomous.AutosBuilder;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -16,9 +15,11 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.utils.DriverStationUtils;
+import frc.utils.auto.AutonomousChooser;
+import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -32,6 +33,8 @@ public class Robot {
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
+
+	private AutonomousChooser testAutosChooser;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -51,17 +54,18 @@ public class Robot {
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
-		buildPathPlannerForAuto();
+		configureAuto();
 	}
 
 
-	private void buildPathPlannerForAuto() {
-		// Register commands...
+	private void configureAuto() {
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
 			poseEstimator::resetPose,
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
+
+		testAutosChooser = new AutonomousChooser("TestAutosChooser", AutosBuilder.getAllTestAutos());
 	}
 
 
@@ -72,8 +76,11 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public Command getAutonomousCommand() {
-		return new InstantCommand();
+	public PathPlannerAutoWrapper getAuto() {
+		if (!DriverStationUtils.isMatch()) {
+			return testAutosChooser.getChosenValue();
+		}
+		return new PathPlannerAutoWrapper();
 	}
 
 	public Superstructure getSuperStructure() {

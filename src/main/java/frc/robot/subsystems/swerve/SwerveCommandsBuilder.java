@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -13,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.autonomous.SequencesBuilder;
 import frc.robot.subsystems.swerve.module.ModuleUtils;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
@@ -162,7 +162,6 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return swerve.asSubsystemCommand(
 			new DeferredCommand(
@@ -176,10 +175,10 @@ public class SwerveCommandsBuilder {
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-		if (distanceFromTarget < AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+		if (distanceFromTarget < AutonomousConstants.PATHFINDING_DEADBAND_METERS) {
+			pathFollowingCommand = PathPlannerUtils.createPathDuringRuntime(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
-			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = SequencesBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}
 
 		return swerve.asSubsystemCommand(
@@ -188,7 +187,7 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
+	public Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
 		return swerve.asSubsystemCommand(
 			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)),
 			"PID to pose: " + targetPose

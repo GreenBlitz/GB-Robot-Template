@@ -50,7 +50,7 @@ public class AngleBuffer {
 		if (Double.isNaN(sinsDividedByCoses)) {
 			return Optional.empty();
 		}
-		return Optional.of(AngleUtils.wrappingAbs(Rotation2d.fromRadians(Math.atan(sinsDividedByCoses))));
+		return Optional.of(AngleUtils.wrappingAbsoluteValue(Rotation2d.fromRadians(Math.atan(sinsDividedByCoses))));
 	}
 
 }

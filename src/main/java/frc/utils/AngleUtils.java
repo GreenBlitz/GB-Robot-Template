@@ -5,7 +5,7 @@ import frc.constants.MathConstants;
 
 public class AngleUtils {
 
-	public static Rotation2d wrappingAbs(Rotation2d angle) {
+	public static Rotation2d wrappingAbsoluteValue(Rotation2d angle) {
 		double rotations = angle.getRotations() % MathConstants.FULL_CIRCLE.getRotations();
 		if (rotations < 0) {
 			rotations += MathConstants.FULL_CIRCLE.getRotations();

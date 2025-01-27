@@ -5,20 +5,24 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 
 public class Superstructure {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 
-	public Superstructure(Swerve swerve, IPoseEstimator poseEstimator) {
+	public Superstructure(Swerve swerve, IPoseEstimator poseEstimator, MultiAprilTagVisionSources multiAprilTagVisionSources) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
+		this.multiAprilTagVisionSources = multiAprilTagVisionSources;
 	}
 
 	public void periodic() {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
+		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 	}
 
 

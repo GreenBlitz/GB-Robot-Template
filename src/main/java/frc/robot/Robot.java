@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.constants.VisionConstants;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -17,6 +18,8 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.robot.vision.sources.limelights.LimelightFactory;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
@@ -32,6 +35,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 	private final Superstructure superStructure;
 
 	public Robot() {
@@ -46,16 +50,28 @@ public class Robot {
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
-			"poseEstimator/",
+			"PoseEstimator/",
 			swerve.getKinematics(),
 			swerve.getAllOdometryObservations()[0].wheelPositions(),
 			swerve.getGyroAbsoluteYaw()
 		);
 
+		this.multiAprilTagVisionSources = new MultiAprilTagVisionSources(
+			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+			() -> poseEstimator.getEstimatedPose().getRotation(),
+			false,
+			LimelightFactory.createRobotHeadingEstimatingLimelight(
+				"limelight-back",
+				VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+				"CameraForMegaTag1",
+				VisionConstants.DEFAULT_VISION_FILTER
+			)
+		);
+
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
-		this.superStructure = new Superstructure(swerve, poseEstimator);
+		this.superStructure = new Superstructure(swerve, poseEstimator, multiAprilTagVisionSources);
 
 		buildPathPlannerForAuto();
 	}
@@ -74,6 +90,7 @@ public class Robot {
 	public void periodic() {
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+		multiAprilTagVisionSources.log();
 		superStructure.periodic();
 		CommandScheduler.getInstance().run(); // Should be last
 	}

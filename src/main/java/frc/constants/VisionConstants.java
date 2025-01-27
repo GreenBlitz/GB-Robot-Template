@@ -2,6 +2,8 @@ package frc.constants;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
@@ -41,6 +43,18 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
-	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
+	public static final double ROBOT_POSE_IN_FIELD_TOLERANCE_METERS = 0.1;
+
+	public static final double ROBOT_HEIGHT_TOLERANCE_METERS = 0.2;
+
+	public static final Rotation2d ROBOT_PITCH_TOLERANCE = Rotation2d.fromDegrees(5);
+
+	public static final Rotation2d ROBOT_ROLL_TOLERANCE = Rotation2d.fromDegrees(5);
+
+	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = VisionFilters.isInField(ROBOT_POSE_IN_FIELD_TOLERANCE_METERS)
+		.and(VisionFilters.isPitchAtAngle(Rotation2d.fromDegrees(0), ROBOT_PITCH_TOLERANCE))
+		.and(VisionFilters.isRollAtAngle(Rotation2d.fromDegrees(0), ROBOT_ROLL_TOLERANCE))
+		.and(VisionFilters.isOnGround(ROBOT_HEIGHT_TOLERANCE_METERS))
+		.polymorphAs();
 
 }

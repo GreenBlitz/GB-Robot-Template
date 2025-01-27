@@ -8,13 +8,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.brakestate.BrakeStateManager;
 
@@ -27,12 +34,35 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final WPILibPoseEstimatorWrapper poseEstimator;
+
+	private final Swerve swerve;
 	private final Elevator elevator;
 	private final Arm arm;
 	private final EndEffector endEffector;
 
+	private final SimulationManager simulationManager;
+
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
+
+		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			gyro,
+			GyroFactory.createSignals(gyro)
+		);
+
+		this.poseEstimator = new WPILibPoseEstimatorWrapper(
+			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
+			swerve.getKinematics(),
+			swerve.getModules().getWheelPositions(0),
+			swerve.getGyroAbsoluteYaw()
+		);
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
@@ -41,16 +71,29 @@ public class Robot {
 		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
+
+		this.simulationManager = new SimulationManager("SimulationManager", this);
 	}
 
 	public void periodic() {
+		swerve.update();
+		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();
+		simulationManager.logPoses();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public WPILibPoseEstimatorWrapper getPoseEstimator() {
+		return poseEstimator;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
 	}
 
 	public Elevator getElevator() {

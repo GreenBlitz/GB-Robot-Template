@@ -48,7 +48,7 @@ public class KrakenX60ArmBuilder {
 		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(ENABLE_FOC));
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(ENABLE_FOC));
 
-		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM_MOTOR_ID, buildSysidConfig(), buildArmSimulation());
+		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
 		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
@@ -111,7 +111,7 @@ public class KrakenX60ArmBuilder {
 		config.Feedback.SensorToMechanismRatio = 1;
 
 		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-		config.Feedback.FeedbackRemoteSensorID = IDs.CANCoderIDs.ARM_CAN_CODER_ID.id();
+		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
 
 		return config;
 	}
@@ -141,7 +141,7 @@ public class KrakenX60ArmBuilder {
 			case REAL ->
 				new CANCoderEncoder(
 					logPath + "/Encoder",
-					new CANcoder(IDs.CANCoderIDs.ARM_CAN_CODER_ID.id(), IDs.CANCoderIDs.ARM_CAN_CODER_ID.busChain().getChainName())
+					new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName())
 				);
 			case SIMULATION -> new EmptyAngleEncoder(logPath + "/Encoder");
 		};

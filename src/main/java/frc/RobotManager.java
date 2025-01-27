@@ -4,7 +4,6 @@
 
 package frc;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;
@@ -65,7 +64,6 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		robot.getArm().getCommandsBuilder().moveToPosition(Rotation2d.fromDegrees(60)).schedule();
 	}
 
 	@Override

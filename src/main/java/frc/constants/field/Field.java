@@ -71,8 +71,7 @@ public class Field {
 	public static Pose2d getMiddleOfReefSide(ReefSide side) {
 		return getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleTransform.INVERT);
 	}
-
-
+	
 	public static Translation2d getCoralPlacement(ReefBranch branch) {
 		return getAllianceRelative(CORAL_BRANCHES[branch.getIndex()], true, true);
 	}

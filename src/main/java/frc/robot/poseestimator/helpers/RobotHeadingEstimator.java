@@ -7,6 +7,7 @@ import frc.constants.RobotHeadingEstimatorConstants;
 import frc.robot.poseestimator.PoseEstimatorMath;
 import frc.robot.poseestimator.helpers.RingBuffer.RingBuffer;
 import frc.utils.TimedValue;
+import frc.utils.math.PoseMath;
 
 import java.util.Optional;
 
@@ -43,7 +44,7 @@ public class RobotHeadingEstimator {
 		double maximumStandardDeviationTolerance
 	) {
 		if (
-			StandardDeviations.calculateStandardDeviations(
+			PoseMath.calculateStandardDeviations(
 				estimationAndGyroBuffer,
 				estimationVisionPair -> Math
 					.abs(PoseEstimatorMath.getAngleDifference(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())

@@ -18,8 +18,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.autonomous.SequencesBuilder;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
+import frc.utils.math.ToleranceMath;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -47,21 +49,57 @@ public class PathPlannerUtils {
 		PathfindingCommand.warmupCommand().schedule();
 	}
 
-
-	private static void reportAlert(Alert.AlertType alertType, String message) {
-		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + "/" + message).report();
-	}
-
 	public static Optional<RobotConfig> getGuiRobotConfig() {
 		try {
 			RobotConfig robotConfig = RobotConfig.fromGUISettings();
 			return Optional.of(robotConfig);
 		} catch (IOException ioException) {
-			reportAlert(Alert.AlertType.ERROR, "GetGuiSettingsFailNotFoundAt");
+			reportAlert(Alert.AlertType.ERROR, "GuiSettingsFileNotFoundAt");
 		} catch (ParseException parseException) {
 			reportAlert(Alert.AlertType.ERROR, "GuiSettingsParseFailedAt");
 		}
 		return Optional.empty();
+	}
+
+	public static void registerCommand(String commandName, Command command) {
+		NamedCommands.registerCommand(commandName, command);
+	}
+
+	static Optional<PathPlannerPath> getPathFromFile(String pathName) {
+		try {
+			return Optional.of(PathPlannerPath.fromPathFile(pathName));
+		} catch (Exception exception) {
+			reportAlert(Alert.AlertType.ERROR, exception.getMessage());
+		}
+		return Optional.empty();
+	}
+
+	public static Pose2d getPathStartingPose(PathPlannerPath path) {
+		return new Pose2d(path.getPathPoses().get(0).getTranslation(), path.getIdealStartingState().rotation());
+	}
+
+	public static Pose2d getLastPathPose(PathPlannerPath path) {
+		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
+	}
+
+	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
+		dynamicObstacles = obstacles;
+		Pathfinding.setDynamicObstacles(obstacles, currentPose.getTranslation());
+	}
+
+	public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
+		List<Pair<Translation2d, Translation2d>> allObstacles = new ArrayList<>();
+		allObstacles.addAll(dynamicObstacles);
+		allObstacles.addAll(obstacles);
+		setDynamicObstacles(allObstacles, currentPose);
+	}
+
+	public static void removeAllDynamicObstacles(Pose2d currentPose) {
+		setDynamicObstacles(List.of(), currentPose);
+	}
+
+	private static void reportAlert(Alert.AlertType alertType, String message) {
+		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + "/" + message).report();
 	}
 
 	public static void configPathPlanner(
@@ -86,31 +124,24 @@ public class PathPlannerUtils {
 		);
 	}
 
-	public static void registerCommand(String commandName, Command command) {
-		NamedCommands.registerCommand(commandName, command);
-	}
-
-	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
-		dynamicObstacles = obstacles;
-		Pathfinding.setDynamicObstacles(obstacles, currentPose.getTranslation());
-	}
-
-	public static void addDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
-		List<Pair<Translation2d, Translation2d>> allObstacles = new ArrayList<>();
-		allObstacles.addAll(dynamicObstacles);
-		allObstacles.addAll(obstacles);
-		setDynamicObstacles(allObstacles, currentPose);
-	}
-
-	public static void removeAllDynamicObstacles(Pose2d currentPose) {
-		setDynamicObstacles(List.of(), currentPose);
-	}
-
-	public static Command createPathOnTheFly(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
+	public static Command createPathDuringRuntime(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
-		return AutoBuilder.followPath(path);
+		return SequencesBuilder.followPath(path);
+	}
+
+	public static boolean isRobotInAutonomousTolerances(Pose2d currentPose, Pose2d targetPose) {
+		return ToleranceMath.isNear(
+			targetPose,
+			currentPose,
+			AutonomousConstants.TARGET_ANGLE_TOLERANCE,
+			AutonomousConstants.DISTANCE_FROM_TARGET_TOLERANCE_METERS
+		);
+	}
+
+	public static boolean isRobotInPathfindingDeadband(Pose2d currentPose, Pose2d targetPose) {
+		return ToleranceMath.isNear(targetPose.getTranslation(), currentPose.getTranslation(), AutonomousConstants.PATHFINDING_DEADBAND_METERS);
 	}
 
 }

@@ -11,7 +11,11 @@ public class BatteryUtils {
 	public static final double DEFAULT_VOLTAGE = 12;
 	public static final double MIN_VOLTAGE = 10.5;
 
+<<<<<<< HEAD
 	private static final PowerDistribution powerDistribution = new PowerDistribution(IDs.POWER_DISTRIBUTION.ID(), IDs.POWER_DISTRIBUTION.type());
+=======
+	private static final PowerDistribution powerDistribution = new PowerDistribution(IDs.POWER_DISTRIBUTION.id(), IDs.POWER_DISTRIBUTION.type());
+>>>>>>> template/master
 	private static final Command limiter = new BatteryLimiter().ignoringDisable(true);
 
 

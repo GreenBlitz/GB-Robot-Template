@@ -1,9 +1,9 @@
-package frc.robot.poseestimator.helpers;
+package frc.utils.buffers;
 
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimator.helpers.RingBuffer.RingBuffer;
+import frc.utils.buffers.RingBuffer.RingBuffer;
 import frc.utils.AngleUtils;
 import frc.utils.Filter;
 

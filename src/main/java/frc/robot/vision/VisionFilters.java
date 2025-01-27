@@ -8,7 +8,6 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
 
-import java.util.function.Function;
 
 public class VisionFilters {
 
@@ -30,13 +29,10 @@ public class VisionFilters {
 		return new Filter<>(visionData -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters));
 	}
 
-	public static Filter<AprilTagVisionData> isAprilTagHeightValid(
-		double aprilTagHeightToleranceMeters,
-		Function<Integer, Double> getAprilTagHeightByID
-	) {
+	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
 		return new Filter<>(
 			aprilTagVisionData -> MathUtil.isNear(
-				getAprilTagHeightByID.apply(aprilTagVisionData.getTrackedAprilTagId()),
+				VisionUtils.getAprilTagHeightByID(aprilTagVisionData.getTrackedAprilTagId()),
 				aprilTagVisionData.getAprilTagHeightMeters(),
 				aprilTagHeightToleranceMeters
 			)

@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import com.pathplanner.lib.events.EventTrigger;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.autonomous.AutosBuilder;
@@ -23,8 +21,6 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 
-import java.util.function.Supplier;
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
  * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
@@ -39,9 +35,6 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	private AutonomousChooser testAutosChooser;
-	private AutonomousChooser startingPointAndWhereToScoreFirstObjectChooser;
-	private AutonomousChooser whereToIntakeSecondObjectChooser;
-	private AutonomousChooser whereToScoreSecondObjectChooser;
 
 	public Robot() {
 		BatteryUtils.scheduleLimiter();
@@ -66,10 +59,6 @@ public class Robot {
 
 
 	private void configureAuto() {
-		Supplier<Command> scoreL4Command = () -> superStructure.setState(RobotState.SCORE_L4);
-		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
-
-		Command preIntakeCommand = superStructure.setState(RobotState.PRE_INTAKE);
 
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
@@ -77,21 +66,7 @@ public class Robot {
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
 
-		new EventTrigger("Intake").onTrue(preIntakeCommand);
-
 		testAutosChooser = new AutonomousChooser("TestAutosChooser", AutosBuilder.getAllTestAutos());
-		startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
-			"StartingPointAndWhereToScoreFirstObjectChooser",
-			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoreL4Command)
-		);
-		whereToIntakeSecondObjectChooser = new AutonomousChooser(
-			"WhereToIntakeSecondObjectChooser",
-			AutosBuilder.getAllIntakingAutos(this, intakeCommand)
-		);
-		whereToScoreSecondObjectChooser = new AutonomousChooser(
-			"WhereToScoreSecondObjectChooser",
-			AutosBuilder.getAllScoringAutos(this, scoreL4Command)
-		);
 	}
 
 
@@ -103,16 +78,6 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
-		boolean isAutoChosen = !startingPointAndWhereToScoreFirstObjectChooser.isDefaultOptionChosen();
-		if (isAutoChosen) {
-			return PathPlannerAutoWrapper
-				.chainAutos(
-					startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
-					whereToIntakeSecondObjectChooser.getChosenValue(),
-					whereToScoreSecondObjectChooser.getChosenValue()
-				)
-				.withResetPose(getPoseEstimator()::resetPose);
-		}
 		if (!DriverStationUtils.isMatch()) {
 			return testAutosChooser.getChosenValue();
 		}

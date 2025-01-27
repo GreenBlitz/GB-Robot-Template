@@ -25,49 +25,6 @@ public class AutosBuilder {
 		);
 	}
 
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(
-		Robot robot,
-		Supplier<Command> scoringCommand
-	) {
-		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : PathHelper.getAllStartingAndScoringFirstObjectPaths()) {
-			autos.add(
-				() -> createAutoFromAutoPath(
-					autoPath,
-					pathPlannerPath -> SequencesBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand)
-				)
-			);
-		}
-		return autos;
-	}
-
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakingAutos(Robot robot, Supplier<Command> intakeCommand) {
-		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : PathHelper.getAllIntakingPaths()) {
-			autos.add(
-				() -> createAutoFromAutoPath(
-					autoPath,
-					pathPlannerPath -> SequencesBuilder.commandAfterPath(robot, pathPlannerPath, intakeCommand)
-				)
-			);
-		}
-		return autos;
-	}
-
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllScoringAutos(Robot robot, Supplier<Command> scoringCommand) {
-		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : PathHelper.getAllScoringPathsFromCoralStations()) {
-			autos.add(
-				() -> createAutoFromAutoPath(
-					autoPath,
-					pathPlannerPath -> SequencesBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand)
-				)
-			);
-		}
-		return autos;
-	}
-
-
 	private static PathPlannerAutoWrapper createAutoFromAutoPath(AutoPath path, Function<PathPlannerPath, Command> pathFollowingCommand) {
 		Optional<PathPlannerPath> pathOptional = path.getPath();
 

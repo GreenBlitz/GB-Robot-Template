@@ -3,9 +3,6 @@ package frc.robot.structures;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotState;
 import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -63,10 +60,6 @@ public class Superstructure {
 
 	public boolean isAtPose(Pose2d targetBluePose) {
 		return isAtXAxisPosition(targetBluePose.getX()) && isAtYAxisPosition(targetBluePose.getY()) && isAtAngle(targetBluePose.getRotation());
-	}
-
-	public Command setState(RobotState robotState) {
-		return new WaitCommand(3);
 	}
 
 }

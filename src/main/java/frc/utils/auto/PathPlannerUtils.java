@@ -36,6 +36,28 @@ public class PathPlannerUtils {
 
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
+	public static void configPathPlanner(
+			Supplier<Pose2d> poseSupplier,
+			Consumer<Pose2d> resetPose,
+			Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+			Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
+			PPHolonomicDriveController holonomicDriveController,
+			RobotConfig robotConfig,
+			BooleanSupplier shouldFlipPath,
+			GBSubsystem... driveRequirements
+	) {
+		AutoBuilder.configure(
+				poseSupplier,
+				resetPose,
+				robotRelativeSpeedsSupplier,
+				robotRelativeSpeedsSetter,
+				holonomicDriveController,
+				robotConfig,
+				shouldFlipPath,
+				driveRequirements
+		);
+	}
+
 	public static void startPathfinder() {
 		setPathfinder(new LocalADStar());
 		scheduleWarmup();
@@ -82,6 +104,13 @@ public class PathPlannerUtils {
 		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
 	}
 
+	public static Command createPathDuringRuntime(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
+		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
+		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
+		path.preventFlipping = true;
+		return SequencesBuilder.followPath(path);
+	}
+
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
 		dynamicObstacles = obstacles;
 		Pathfinding.setDynamicObstacles(obstacles, currentPose.getTranslation());
@@ -98,39 +127,6 @@ public class PathPlannerUtils {
 		setDynamicObstacles(List.of(), currentPose);
 	}
 
-	private static void reportAlert(Alert.AlertType alertType, String message) {
-		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + "/" + message).report();
-	}
-
-	public static void configPathPlanner(
-		Supplier<Pose2d> poseSupplier,
-		Consumer<Pose2d> resetPose,
-		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-		Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
-		PPHolonomicDriveController holonomicDriveController,
-		RobotConfig robotConfig,
-		BooleanSupplier shouldFlipPath,
-		GBSubsystem... driveRequirements
-	) {
-		AutoBuilder.configure(
-			poseSupplier,
-			resetPose,
-			robotRelativeSpeedsSupplier,
-			robotRelativeSpeedsSetter,
-			holonomicDriveController,
-			robotConfig,
-			shouldFlipPath,
-			driveRequirements
-		);
-	}
-
-	public static Command createPathDuringRuntime(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
-		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
-		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
-		path.preventFlipping = true;
-		return SequencesBuilder.followPath(path);
-	}
-
 	public static boolean isRobotInAutonomousTolerances(Pose2d currentPose, Pose2d targetPose) {
 		return ToleranceMath.isNear(
 			targetPose,
@@ -142,6 +138,10 @@ public class PathPlannerUtils {
 
 	public static boolean isRobotInPathfindingDeadband(Pose2d currentPose, Pose2d targetPose) {
 		return ToleranceMath.isNear(targetPose.getTranslation(), currentPose.getTranslation(), AutonomousConstants.PATHFINDING_DEADBAND_METERS);
+	}
+
+	private static void reportAlert(Alert.AlertType alertType, String message) {
+		new Alert(alertType, AutonomousConstants.LOG_PATH_PREFIX + "/" + message).report();
 	}
 
 }

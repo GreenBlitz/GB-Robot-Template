@@ -4,8 +4,18 @@
 
 package frc;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
+import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
+import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
+import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
+import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
+import frc.robot.hardware.rev.motors.SparkMaxMotor;
+import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -32,6 +42,15 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
+
+		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
+				new DCMotorSim(
+						LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.001, 1 / 1),
+						DCMotor.getNEO(1)
+				)
+		);
+
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor("dsa", new SparkMaxWrapper(new SparkMaxDeviceID(1)), simulation, new SysIdRoutine.Config());
 
 		JoysticksBindings.configureBindings(robot);
 	}

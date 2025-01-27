@@ -68,7 +68,6 @@ public class Field {
 
 	public static final double WIDTH_OF_FEEDER_METERS = 1.9304;
 
-
 	public static Translation2d getMiddleOfReef() {
 		return getAllianceRelative(MIDDLE_OF_REEF, true, false);
 	}

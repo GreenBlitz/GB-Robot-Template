@@ -24,7 +24,7 @@ public class SwerveStateHandler {
 	private final SwerveConstants swerveConstants;
 	private Optional<Supplier<Pose2d>> robotPoseSupplier;
 
-	private Supplier<Optional<ReefSide>> reefSupplier;
+	private Supplier<Optional<ReefSide>> reefSideSupplier;
 	private Supplier<Optional<CoralStationPosition>> feederSupplier;
 	private Supplier<Optional<ReefBranch>> branchSupplier;
 
@@ -33,7 +33,7 @@ public class SwerveStateHandler {
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = Optional.empty();
 
-		this.reefSupplier = Optional::empty;
+		this.reefSideSupplier = Optional::empty;
 		this.feederSupplier = Optional::empty;
 		this.branchSupplier = Optional::empty;
 	}
@@ -42,8 +42,8 @@ public class SwerveStateHandler {
 		this.robotPoseSupplier = Optional.of(robotPoseSupplier);
 	}
 
-	public void setReefSupplier(Supplier<Optional<ReefSide>> reefSupplier) {
-		this.reefSupplier = reefSupplier;
+	public void setReefSideSupplier(Supplier<Optional<ReefSide>> reefSideSupplier) {
+		this.reefSideSupplier = reefSideSupplier;
 	}
 
 	public void setFeederSupplier(Supplier<Optional<CoralStationPosition>> feederSupplier) {
@@ -58,8 +58,8 @@ public class SwerveStateHandler {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
-		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent() && reefSupplier.get().isPresent()) {
-			return handleReefAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), reefSupplier.get().get());
+		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent() && reefSideSupplier.get().isPresent()) {
+			return handleReefAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), reefSideSupplier.get().get());
 		}
 		if (swerveState.getAimAssist() == AimAssist.FEEDER && robotPoseSupplier.isPresent() && feederSupplier.get().isPresent()) {
 			return handleFeederAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), feederSupplier.get().get());
@@ -68,18 +68,18 @@ public class SwerveStateHandler {
 			swerveState.getAimAssist() == AimAssist.BRANCH
 				&& robotPoseSupplier.isPresent()
 				&& branchSupplier.get().isPresent()
-				&& reefSupplier.get().isPresent()
+				&& reefSideSupplier.get().isPresent()
 		) {
 			return handleBranchAimAssist(
 				speeds,
 				robotPoseSupplier.get().get(),
 				branchSupplier.get().get(),
-				reefSupplier.get().get(),
+				reefSideSupplier.get().get(),
 				swerveState
 			);
 		}
-		if (swerveState.getAimAssist() == AimAssist.ALGI_REMOVE && robotPoseSupplier.isPresent() && reefSupplier.get().isPresent()) {
-			return handleAlgiAimAssist(speeds, robotPoseSupplier.get().get(), reefSupplier.get().get(), swerveState);
+		if (swerveState.getAimAssist() == AimAssist.ALGI_REMOVE && robotPoseSupplier.isPresent() && reefSideSupplier.get().isPresent()) {
+			return handleAlgiAimAssist(speeds, robotPoseSupplier.get().get(), reefSideSupplier.get().get(), swerveState);
 		}
 
 		return speeds;

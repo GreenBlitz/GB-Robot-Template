@@ -26,19 +26,19 @@ public class JoysticksBindings {
 
 	public static void applySwerveJoysticksSetPoints(Swerve swerve) {
 		if (MAIN_JOYSTICK.isConnected()) {
-			swerve.setDriversTargetPowers(
+			swerve.setDriversPowerInputs(
 				MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y),
 				MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X),
 				MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X)
 			);
 		} else if (THIRD_JOYSTICK.isConnected()) {
-			swerve.setDriversTargetPowers(
+			swerve.setDriversPowerInputs(
 				THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y),
 				THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X),
 				THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X)
 			);
 		} else {
-			swerve.setDriversTargetPowers(0, 0, 0);
+			swerve.setDriversPowerInputs(0, 0, 0);
 		}
 	}
 

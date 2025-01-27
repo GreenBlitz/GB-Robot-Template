@@ -41,12 +41,12 @@ public class Swerve extends GBSubsystem {
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
-	private ChassisSpeeds driversTargetPowers;
+	private ChassisSpeeds driversPowerInputs;
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
-		this.driversTargetPowers = new ChassisSpeeds();
+		this.driversPowerInputs = new ChassisSpeeds();
 
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
@@ -106,8 +106,8 @@ public class Swerve extends GBSubsystem {
 		this.headingSupplier = headingSupplier;
 	}
 
-	public void setDriversTargetPowers(double xPower, double yPower, double rotationPower) {
-		this.driversTargetPowers = new ChassisSpeeds(xPower, yPower, rotationPower);
+	public void setDriversPowerInputs(double xPower, double yPower, double rotationPower) {
+		this.driversPowerInputs = new ChassisSpeeds(xPower, yPower, rotationPower);
 	}
 
 	public void setHeading(Rotation2d heading) {
@@ -222,9 +222,9 @@ public class Swerve extends GBSubsystem {
 
 	protected void driveByDriversTargetsPowers(SwerveState swerveState) {
 		driveByState(
-			driversTargetPowers.vxMetersPerSecond,
-			driversTargetPowers.vyMetersPerSecond,
-			driversTargetPowers.omegaRadiansPerSecond,
+			driversPowerInputs.vxMetersPerSecond,
+			driversPowerInputs.vyMetersPerSecond,
+			driversPowerInputs.omegaRadiansPerSecond,
 			swerveState
 		);
 	}

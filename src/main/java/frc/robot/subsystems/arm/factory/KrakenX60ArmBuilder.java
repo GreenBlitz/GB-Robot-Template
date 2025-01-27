@@ -41,7 +41,7 @@ public class KrakenX60ArmBuilder {
 	private static final boolean IS_INVERTED = false;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
-	private static final double GEAR_RATIO = 150 / 7.0;
+	private static final double GEAR_RATIO = 28.0 * (60.0 / 16.0);
 
 
 	protected static Arm build(String logPath) {
@@ -87,7 +87,7 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kG = 0;
 			}
 			case SIMULATION -> {
-				config.Slot0.kP = 3.8;
+				config.Slot0.kP = 60;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0;

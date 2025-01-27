@@ -8,7 +8,6 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
 
-
 public class VisionFilters {
 
 	public static Filter<VisionData> isPitchAtAngle(Rotation2d wantedPitch, Rotation2d pitchTolerance) {

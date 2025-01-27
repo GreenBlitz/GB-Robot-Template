@@ -14,6 +14,7 @@ public class SparkMaxVelocityRequest extends SparkMaxRequest<Rotation2d>{
     SparkMaxVelocityRequest(Rotation2d setPoint, int pidSlot, Function<Rotation2d, Double> setPointToDoubleConverter) {
         super(setPoint, SparkBase.ControlType.kVelocity, pidSlot, setPointToDoubleConverter);
     }
+    @Override
     public Double getSparkMaxCompatibleSetPoint() {
         double rotations = setPoint.getRotations();
         return setPointToDoubleConverter.apply(Rotation2d.fromRotations(Conversions.perSecondToPerMinute(rotations)));

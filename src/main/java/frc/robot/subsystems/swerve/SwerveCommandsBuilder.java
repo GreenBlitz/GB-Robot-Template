@@ -23,7 +23,6 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class SwerveCommandsBuilder {
@@ -136,29 +135,33 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
-		return driveByState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE);
+	public Command drive(Supplier<ChassisPowers> powersSupplier) {
+		return driveByState(powersSupplier, SwerveState.DEFAULT_DRIVE);
 	}
 
-	public Command driveByState(
-		DoubleSupplier xSupplier,
-		DoubleSupplier ySupplier,
-		DoubleSupplier rotationSupplier,
-		Supplier<SwerveState> state
-	) {
+	public Command driveByState(Supplier<ChassisPowers> powersSupplier, Supplier<SwerveState> state) {
 		return swerve.asSubsystemCommand(
-			new DeferredCommand(() -> driveByState(xSupplier, ySupplier, rotationSupplier, state.get()), Set.of(swerve)),
+			new DeferredCommand(() -> driveByState(powersSupplier, state.get()), Set.of(swerve)),
 			"Drive with supplier state"
 		);
 	}
 
-	public Command driveByState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, SwerveState state) {
+	public Command driveByState(Supplier<ChassisPowers> powersSupplier, SwerveState state) {
 		return swerve.asSubsystemCommand(
-			new InitExecuteCommand(
-				swerve::resetPIDControllers,
-				() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), state)
-			),
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByState(powersSupplier.get(), state)),
 			"Drive with state"
+		);
+	}
+
+	public Command driveByDriversInputs(Supplier<SwerveState> state) {
+		return swerve
+			.asSubsystemCommand(new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve)), "Drive with supplier state");
+	}
+
+	public Command driveByDriversInputs(SwerveState state) {
+		return swerve.asSubsystemCommand(
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByDriversTargetsPowers(state)),
+			"Drive by drivers inputs with state"
 		);
 	}
 

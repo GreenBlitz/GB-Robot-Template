@@ -8,7 +8,7 @@ public class PoseEstimatorMath {
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
 		double ratio = odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
-		return Double.isNaN(ratio) ? 1.0 / RobotHeadingEstimatorConstants.AMOUNT_OF_SOURCE_TYPES : ratio;
+		return Double.isInfinite(ratio) ? 1.0 / RobotHeadingEstimatorConstants.AMOUNT_OF_SOURCE_TYPES : ratio;
 	}
 
 	public static Rotation2d combineVisionHeadingAndGyro(

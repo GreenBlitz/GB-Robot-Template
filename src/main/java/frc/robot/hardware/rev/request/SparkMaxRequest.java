@@ -9,11 +9,11 @@ import java.util.function.Function;
 
 public class SparkMaxRequest<T> implements IRequest<T> {
 
-	private final SparkBase.ControlType controlType;
-	private final int pidSlot;
-	private final Function<T, Double> feedforwardCalculator;
-	private final Function<T, Double> setPointToDoubleConverter;
-	private T setPoint;
+	protected final SparkBase.ControlType controlType;
+	protected final int pidSlot;
+	protected final Function<T, Double> feedforwardCalculator;
+	protected final Function<T, Double> setPointToDoubleConverter;
+	protected T setPoint;
 
 	SparkMaxRequest(
 		T setPoint,
@@ -45,10 +45,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 	}
 
 	public Double getSparkMaxCompatibleSetPoint() {
-		boolean isVelocity = controlType == SparkBase.ControlType.kMAXMotionVelocityControl || controlType == SparkBase.ControlType.kVelocity;
-		return setPointToDoubleConverter.apply(
-			isVelocity ? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations())) : setPoint
-		);
+		return setPointToDoubleConverter.apply(setPoint);
 	}
 
 	public SparkBase.ControlType getControlType() {

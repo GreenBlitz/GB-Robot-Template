@@ -23,5 +23,6 @@ public class SparkMaxRequestBuilder {
 	public static SparkMaxRequest<Double> build(Double setPoint, SparkBase.ControlType controlType, int pidSlot) {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, setpoint -> setpoint);
 	}
+	public static SparkMaxRequest<Rotation2d> build()
 
 }

@@ -4,6 +4,7 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class JoysticksBindings {
@@ -26,19 +27,19 @@ public class JoysticksBindings {
 
 	public static void setDriversInputsToSwerve(Swerve swerve) {
 		if (MAIN_JOYSTICK.isConnected()) {
-			swerve.setDriversPowerInputs(
+			swerve.setDriversPowerInputs(new ChassisPowers(
 				MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y),
 				MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X),
 				MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X)
-			);
+			));
 		} else if (THIRD_JOYSTICK.isConnected()) {
-			swerve.setDriversPowerInputs(
+			swerve.setDriversPowerInputs(new ChassisPowers(
 				THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y),
 				THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X),
 				THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X)
-			);
+			));
 		} else {
-			swerve.setDriversPowerInputs(0, 0, 0);
+			swerve.setDriversPowerInputs(new ChassisPowers(0, 0, 0));
 		}
 	}
 

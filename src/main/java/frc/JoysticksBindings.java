@@ -1,8 +1,10 @@
 package frc;
 
+import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.Swerve;
 
 public class JoysticksBindings {
 
@@ -20,6 +22,24 @@ public class JoysticksBindings {
 		fourthJoystickButtons(robot);
 		fifthJoystickButtons(robot);
 		sixthJoystickButtons(robot);
+	}
+
+	public static void applySwerveJoysticksSetPoints(Swerve swerve) {
+		if (MAIN_JOYSTICK.isConnected()) {
+			swerve.setDriversTargetPowers(
+				MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y),
+				MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X),
+				MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X)
+			);
+		} else if (THIRD_JOYSTICK.isConnected()) {
+			swerve.setDriversTargetPowers(
+				THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y),
+				THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X),
+				THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X)
+			);
+		} else {
+			swerve.setDriversTargetPowers(0, 0, 0);
+		}
 	}
 
 	private static void mainJoystickButtons(Robot robot) {

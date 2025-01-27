@@ -24,7 +24,7 @@ public class JoysticksBindings {
 		sixthJoystickButtons(robot);
 	}
 
-	public static void applySwerveJoysticksSetPoints(Swerve swerve) {
+	public static void setDriversInputsToSwerve(Swerve swerve) {
 		if (MAIN_JOYSTICK.isConnected()) {
 			swerve.setDriversPowerInputs(
 				MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y),

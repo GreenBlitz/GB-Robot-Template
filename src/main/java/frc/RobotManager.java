@@ -69,7 +69,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
-		JoysticksBindings.applySwerveJoysticksSetPoints(robot.getSwerve());
+		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
 		AlertManager.reportAlerts();
 	}

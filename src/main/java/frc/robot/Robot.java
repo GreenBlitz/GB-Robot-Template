@@ -59,7 +59,6 @@ public class Robot {
 
 
 	private void configureAuto() {
-
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
 			poseEstimator::resetPose,

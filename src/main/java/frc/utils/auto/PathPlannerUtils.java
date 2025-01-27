@@ -37,24 +37,24 @@ public class PathPlannerUtils {
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
 	public static void configPathPlanner(
-			Supplier<Pose2d> poseSupplier,
-			Consumer<Pose2d> resetPose,
-			Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-			Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
-			PPHolonomicDriveController holonomicDriveController,
-			RobotConfig robotConfig,
-			BooleanSupplier shouldFlipPath,
-			GBSubsystem... driveRequirements
+		Supplier<Pose2d> poseSupplier,
+		Consumer<Pose2d> resetPose,
+		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+		Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
+		PPHolonomicDriveController holonomicDriveController,
+		RobotConfig robotConfig,
+		BooleanSupplier shouldFlipPath,
+		GBSubsystem... driveRequirements
 	) {
 		AutoBuilder.configure(
-				poseSupplier,
-				resetPose,
-				robotRelativeSpeedsSupplier,
-				robotRelativeSpeedsSetter,
-				holonomicDriveController,
-				robotConfig,
-				shouldFlipPath,
-				driveRequirements
+			poseSupplier,
+			resetPose,
+			robotRelativeSpeedsSupplier,
+			robotRelativeSpeedsSetter,
+			holonomicDriveController,
+			robotConfig,
+			shouldFlipPath,
+			driveRequirements
 		);
 	}
 

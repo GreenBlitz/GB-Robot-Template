@@ -38,8 +38,8 @@ public class Field {
 		return MirrorMath.getMirroredAngle(ANGLE_TO_AMP);
 	}
 
-	public static Pose2d getAllianceRelativePose(Pose2d bluePose) {
-		return isFieldConventionAlliance() ? bluePose : FlippingUtil.flipFieldPose(bluePose);
+	public static Pose2d getAllianceRelativePose(Pose2d conventionAlliancePose) {
+		return isFieldConventionAlliance() ? conventionAlliancePose : FlippingUtil.flipFieldPose(conventionAlliancePose);
 	}
 
 }

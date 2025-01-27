@@ -1,4 +1,4 @@
-package frc.robot.poseestimator.helpers;
+package frc.utils.math;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -9,12 +9,12 @@ import frc.utils.alerts.Alert;
 
 public class StandardDeviations3D {
 
-	double xAxisStandardDeviations;
-	double yAxisStandardDeviations;
-	double zAxisStandardDeviations;
-	double rollStandardDeviations;
-	double pitchStandardDeviations;
-	double yawStandardDeviations;
+	private final double xAxisStandardDeviations;
+	private final double yAxisStandardDeviations;
+	private final double zAxisStandardDeviations;
+	private final double rollStandardDeviations;
+	private final double pitchStandardDeviations;
+	private final double yawStandardDeviations;
 
 	public StandardDeviations3D(double[] standardDeviations) {
 		if (standardDeviations.length != Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT) {
@@ -35,7 +35,21 @@ public class StandardDeviations3D {
 		this.yawStandardDeviations = standardDeviations[Pose3dComponentsValue.YAW_VALUE.getIndex()];
 	}
 
-	public StandardDeviations3D() {}
+	public StandardDeviations3D(
+		double xAxisStandardDeviations,
+		double yAxisStandardDeviations,
+		double zAxisStandardDeviations,
+		double rollStandardDeviations,
+		double pitchStandardDeviations,
+		double yawStandardDeviations
+	) {
+		this.xAxisStandardDeviations = xAxisStandardDeviations;
+		this.yAxisStandardDeviations = yAxisStandardDeviations;
+		this.zAxisStandardDeviations = zAxisStandardDeviations;
+		this.rollStandardDeviations = rollStandardDeviations;
+		this.pitchStandardDeviations = pitchStandardDeviations;
+		this.yawStandardDeviations = yawStandardDeviations;
+	}
 
 	public Matrix<N6, N1> getAsColumnVector() {
 		return VecBuilder.fill(

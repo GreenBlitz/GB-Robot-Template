@@ -15,7 +15,7 @@ public class Alert {
 	}
 
 	private static final boolean LOG_TRACE = false;
-	private static final String ALERT_LOG_PATH = "Alerts/";
+	private static final String ALERT_LOG_PATH = "Alerts";
 	private static final double SECONDS_BETWEEN_REPORTS = 3;
 
 	private final AlertType type;
@@ -25,7 +25,7 @@ public class Alert {
 
 	public Alert(AlertType type, String name) {
 		this.type = type;
-		this.logPath = ALERT_LOG_PATH + type.toString() + "/" + name;
+		this.logPath = ALERT_LOG_PATH + "/" + type.toString() + "/" + name;
 		this.lastTimeReportedToDriveStationSeconds = 0;
 		this.timesOccurredSinceLastReportToDriverStation = 0;
 	}

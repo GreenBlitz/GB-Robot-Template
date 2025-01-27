@@ -1,7 +1,7 @@
 package frc.robot.vision.data;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.robot.poseestimator.helpers.StandardDeviations3D;
+import frc.utils.math.StandardDeviations3D;
 
 public class AprilTagVisionData extends VisionData {
 

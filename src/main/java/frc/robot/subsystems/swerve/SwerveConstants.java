@@ -27,8 +27,8 @@ public record SwerveConstants(
 	) {
 		this(
 			logPath,
-			logPath + "State/",
-			logPath + "Velocity/",
+			logPath + "/State",
+			logPath + "/Velocity",
 			velocityAt12VoltsMetersPerSecond,
 			maxRotationalVelocityPerSecond,
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),

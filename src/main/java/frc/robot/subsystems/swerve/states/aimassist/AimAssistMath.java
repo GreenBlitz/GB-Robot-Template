@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.states.aimassist;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -42,7 +41,8 @@ public class AimAssistMath {
 	 */
 	public static ChassisSpeeds getObjectAssistedSpeeds(
 		ChassisSpeeds speeds,
-		Pose2d robotPose,
+		Translation2d robotPose,
+		Rotation2d targetAngle,
 		Translation2d objectTranslation,
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
@@ -56,13 +56,13 @@ public class AimAssistMath {
 				new ChassisSpeeds(speeds.vxMetersPerSecond, pidHorizontalToObjectOutputVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 
 			case FIELD_RELATIVE:
-				ChassisSpeeds robotRelativeSpeeds = SwerveMath.fieldToRobotRelativeSpeeds(speeds, robotPose.getRotation());
+				ChassisSpeeds robotRelativeSpeeds = SwerveMath.fieldToRobotRelativeSpeeds(speeds, targetAngle);
 				ChassisSpeeds assistedSpeed = new ChassisSpeeds(
 					robotRelativeSpeeds.vxMetersPerSecond,
 					pidHorizontalToObjectOutputVelocityMetersPerSecond,
 					robotRelativeSpeeds.omegaRadiansPerSecond
 				);
-				yield SwerveMath.robotToFieldRelativeSpeeds(assistedSpeed, robotPose.getRotation());
+				yield SwerveMath.robotToFieldRelativeSpeeds(assistedSpeed, targetAngle);
 		};
 	}
 

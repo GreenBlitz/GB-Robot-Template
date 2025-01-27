@@ -29,11 +29,11 @@ public class SwerveMath {
 		return ChassisSpeeds.discretize(chassisSpeeds, TimeUtils.getLatestCycleTimeSeconds());
 	}
 
-	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, SwerveConstants constants) {
+	public static ChassisSpeeds powersToSpeeds(ChassisPowers powers, SwerveConstants constants) {
 		return new ChassisSpeeds(
-			xPower * constants.velocityAt12VoltsMetersPerSecond(),
-			yPower * constants.velocityAt12VoltsMetersPerSecond(),
-			rotationPower * constants.maxRotationalVelocityPerSecond().getRadians()
+			powers.xPower() * constants.velocityAt12VoltsMetersPerSecond(),
+			powers.yPower() * constants.velocityAt12VoltsMetersPerSecond(),
+			powers.rotationalPower() * constants.maxRotationalVelocityPerSecond().getRadians()
 		);
 	}
 

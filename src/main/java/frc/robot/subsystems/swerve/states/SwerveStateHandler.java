@@ -42,16 +42,16 @@ public class SwerveStateHandler {
 		this.robotPoseSupplier = Optional.of(robotPoseSupplier);
 	}
 
-	public void setReefSupplier(Supplier<Optional<ReefSide>> reefTranslationSupplier) {
-		this.reefSupplier = reefTranslationSupplier;
+	public void setReefSupplier(Supplier<Optional<ReefSide>> reefSupplier) {
+		this.reefSupplier = reefSupplier;
 	}
 
-	public void setFeederSupplier(Supplier<Optional<CoralStationPosition>> feederTranslationSupplier) {
-		this.feederSupplier = feederTranslationSupplier;
+	public void setFeederSupplier(Supplier<Optional<CoralStationPosition>> feederSupplier) {
+		this.feederSupplier = feederSupplier;
 	}
 
-	public void setBranchSupplier(Supplier<Optional<ReefBranch>> branchTranslationSupplier) {
-		this.branchSupplier = branchTranslationSupplier;
+	public void setBranchSupplier(Supplier<Optional<ReefBranch>> branchSupplier) {
+		this.branchSupplier = branchSupplier;
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {

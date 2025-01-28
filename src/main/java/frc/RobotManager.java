@@ -4,18 +4,27 @@
 
 package frc;
 
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
+import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
 import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
 import frc.robot.hardware.rev.motors.SparkMaxWrapper;
+import frc.robot.hardware.rev.request.SparkMaxRequest;
 import frc.robot.hardware.rev.request.SparkMaxRequestBuilder;
+import frc.robot.hardware.rev.request.SparkMaxVelocityRequest;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -35,6 +44,8 @@ public class RobotManager extends LoggedRobot {
 	private final Robot robot;
 	private Command autonomousCommand;
 	private int roborioCycles;
+	BrushlessSparkMAXMotor motor;
+	InputSignal<Double> velocitySignal;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
@@ -42,17 +53,23 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-
 		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
 			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.001, 1 / 1), DCMotor.getNEO(1))
 		);
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(
-			"dsa",
-			new SparkMaxWrapper(new SparkMaxDeviceID(1)),
+		SparkMaxWrapper motorWrapper = new SparkMaxWrapper(new SparkMaxDeviceID(1));
+		motor = new BrushlessSparkMAXMotor(
+			"/motor",
+			motorWrapper,
 			simulation,
 			new SysIdRoutine.Config()
 		);
-		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(10), 3, (rotation2d)->10.0));
+		SparkMaxConfig config = new SparkMaxConfig();
+		ClosedLoopConfig closedLoopConfig = new ClosedLoopConfig();
+		closedLoopConfig.p(5.5,  ClosedLoopConfig.ClosedLoopSlot.kSlot0);
+		closedLoopConfig.d(0.5,  ClosedLoopConfig.ClosedLoopSlot.kSlot0);
+		config.apply(closedLoopConfig);
+		motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
+		velocitySignal = new SuppliedDoubleSignal("velocity", ()-> motorWrapper.getVelocityAnglePerSecond().getRotations());
 		JoysticksBindings.configureBindings(robot);
 	}
 
@@ -73,7 +90,6 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void autonomousInit() {
 		this.autonomousCommand = robot.getAutonomousCommand();
-
 		if (autonomousCommand != null) {
 			autonomousCommand.schedule();
 		}
@@ -84,6 +100,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
+		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(10), 0, (rotation2d)->10.0));
+
 	}
 
 	@Override
@@ -91,6 +109,7 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		robot.periodic();
 		AlertManager.reportAlerts();
+		motor.updateInputs(velocitySignal);
 	}
 
 	private void updateTimeRelatedData() {

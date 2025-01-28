@@ -17,7 +17,7 @@ public class SparkMaxVelocityRequest extends SparkMaxRequest<Rotation2d> {
 		super(setPoint, SparkBase.ControlType.kVelocity, pidSlot, feedforwardCalculator, setPointToDoubleConverter);
 	}
 
-	SparkMaxVelocityRequest(Rotation2d setPoint, int pidSlot, Function<Rotation2d, Double> setPointToDoubleConverter) {
+	public SparkMaxVelocityRequest(Rotation2d setPoint, int pidSlot, Function<Rotation2d, Double> setPointToDoubleConverter) {
 		super(setPoint, SparkBase.ControlType.kVelocity, pidSlot, setPointToDoubleConverter);
 	}
 

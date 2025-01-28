@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.constants.RobotHeadingEstimatorConstants;
 import frc.robot.poseestimator.PoseEstimatorMath;
-import frc.utils.buffers.RingBuffer.RingBuffer;
+import frc.utils.buffers.RingBuffer.BufferedQueue;
 import frc.utils.TimedValue;
 import frc.utils.math.PoseMath;
 import org.littletonrobotics.junction.Logger;
@@ -17,7 +17,7 @@ public class RobotHeadingEstimator {
 	private final String logPath;
 	private final TimeInterpolatableBuffer<Rotation2d> unOffsetedGyroAngleInterpolator;
 	private final double gyroStandardDeviation;
-	private final RingBuffer<Pair<Rotation2d, Rotation2d>> estimationAndGyroBuffer;
+	private final BufferedQueue<Pair<Rotation2d, Rotation2d>> estimationAndGyroBuffer;
 	private Rotation2d lastGyroAngle;
 	private Rotation2d estimatedHeading;
 	private boolean hasFirstVisionUpdateArrived;
@@ -26,7 +26,7 @@ public class RobotHeadingEstimator {
 		this.logPath = logPath;
 		this.unOffsetedGyroAngleInterpolator = TimeInterpolatableBuffer.createBuffer(RobotHeadingEstimatorConstants.POSE_BUFFER_SIZE_SECONDS);
 		this.gyroStandardDeviation = gyroStandardDeviation;
-		this.estimationAndGyroBuffer = new RingBuffer<>(RobotHeadingEstimatorConstants.ESTIMATION_GYRO_PAIR_BUFFER_SIZE);
+		this.estimationAndGyroBuffer = new BufferedQueue<>(RobotHeadingEstimatorConstants.ESTIMATION_GYRO_PAIR_BUFFER_SIZE);
 		this.lastGyroAngle = initialGyroAngle;
 		this.estimatedHeading = initialHeading;
 		this.hasFirstVisionUpdateArrived = false;

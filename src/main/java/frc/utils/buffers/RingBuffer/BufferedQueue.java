@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
 
-public class RingBuffer<T> implements Iterable<T> {
+public class BufferedQueue<T> implements Iterable<T> {
 
 	private final ArrayList<Optional<T>> buffer;
 	private int currentIndex;
 	private int insertions;
 
-	public RingBuffer(int bufferSize) {
+	public BufferedQueue(int bufferSize) {
 		this.buffer = new ArrayList<>(bufferSize);
 		for (int i = 0; i < bufferSize; i++) {
 			buffer.add(Optional.empty());

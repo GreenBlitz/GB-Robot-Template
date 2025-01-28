@@ -3,6 +3,16 @@ package frc.constants;
 
 public class RobotHeadingEstimatorConstants {
 
+	public static final String DEFAULT_HEADING_ESTIMATOR_LOGPATH = "HeadingEstimator/";
+
+	public static final String VISION_NOISE_STANDARD_DEVIATION_LOGPATH_ADDITION = "VisionNoiseStandardDeviation/";
+
+	public static final String ESTIMATED_HEADING_LOGPATH_ADDITION = "EstimatedHeading/";
+
+	public static final String ESTIMATED_HEADING_DIFFERENCE_FROM_GYRO_YAW_LOGPATH_ADDITION = "EstimatedHeadingDifferenceFromGyroYaw/";
+
+	public static final String VISION_HEADING_INPUT_LOGPATH_ADDITION = "VisionHeadingInput/";
+
 	public static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 
 	public static final int AMOUNT_OF_SOURCE_TYPES = 2;

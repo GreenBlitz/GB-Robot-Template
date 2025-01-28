@@ -20,7 +20,7 @@ public class FieldMath {
 	}
 
 
-	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {
+	public static Rotation2d transform(Rotation2d angle, AngleTransform angleTransform) {
 		return switch (angleTransform) {
 			case KEEP -> keepAngle(angle);
 			case MIRROR_X -> mirrorXAngle(angle);
@@ -29,24 +29,24 @@ public class FieldMath {
 		};
 	}
 
-	public static Rotation2d keepAngle(Rotation2d angle){
+	public static Rotation2d keepAngle(Rotation2d angle) {
 		return angle;
 	}
 
-	public static Rotation2d mirrorXAngle(Rotation2d angle){
+	public static Rotation2d mirrorXAngle(Rotation2d angle) {
 		return MathConstants.HALF_CIRCLE.minus(angle);
 	}
 
-	public static Rotation2d mirrorYAngle(Rotation2d angle){
+	public static Rotation2d mirrorYAngle(Rotation2d angle) {
 		return MathConstants.FULL_CIRCLE.minus(angle);
 	}
 
-	public static Rotation2d invertAngle(Rotation2d angle){
+	public static Rotation2d invertAngle(Rotation2d angle) {
 		return MathConstants.HALF_CIRCLE.plus(angle);
 	}
 
 
-	public static Rotation3d mirrorAngle(Rotation3d angle) {
+	public static Rotation3d mirror(Rotation3d angle) {
 		return new Rotation3d(angle.getX(), -angle.getY(), angle.getZ());
 	}
 
@@ -58,18 +58,20 @@ public class FieldMath {
 		return mirrorValue(Field.WIDTH_METERS, y);
 	}
 
-	public static double mirrorValue(double max, double value){
+	public static double mirrorValue(double max, double value) {
 		return max - value;
 	}
 
 	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
-		pose2d = new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), pose2d.getRotation());
-		return new Pose2d(pose2d.getX(), pose2d.getY(), transformAngle(pose2d.getRotation(), angleTransform));
+		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), transform(pose2d.getRotation(), angleTransform));
 	}
 
 	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {
-		Translation2d mirrored = mirror(translation3d.toTranslation2d(), mirrorX, mirrorY);
-		return new Translation3d(mirrored.getX(), mirrored.getY(), translation3d.getZ());
+		return new Translation3d(
+			mirrorX ? mirrorX(translation3d.getX()) : translation3d.getX(),
+			mirrorY ? mirrorY(translation3d.getY()) : translation3d.getY(),
+			translation3d.getZ()
+		);
 	}
 
 	public static Translation2d mirror(Translation2d translation2d, boolean mirrorX, boolean mirrorY) {

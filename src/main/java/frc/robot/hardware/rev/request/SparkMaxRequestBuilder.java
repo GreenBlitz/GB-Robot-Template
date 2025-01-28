@@ -24,12 +24,17 @@ public class SparkMaxRequestBuilder {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, setpoint -> setpoint);
 	}
 
-	public static SparkMaxVelocityRequest build(Rotation2d setPoint, int pidSlot, Function<Rotation2d, Double> feedforwardCalculator, Function<Rotation2d, Double> setPointToDoubleConverter){
-		return new SparkMaxVelocityRequest(setPoint,pidSlot,feedforwardCalculator,setPointToDoubleConverter);
+	public static SparkMaxVelocityRequest build(
+		Rotation2d setPoint,
+		int pidSlot,
+		Function<Rotation2d, Double> feedforwardCalculator,
+		Function<Rotation2d, Double> setPointToDoubleConverter
+	) {
+		return new SparkMaxVelocityRequest(setPoint, pidSlot, feedforwardCalculator, setPointToDoubleConverter);
 	}
 
-	public static SparkMaxVelocityRequest build(Rotation2d setPoint, int pidSlot, Function<Rotation2d, Double> setPointToDoubleConverter){
-		return new SparkMaxVelocityRequest(setPoint,pidSlot,setPointToDoubleConverter);
+	public static SparkMaxVelocityRequest build(Rotation2d setPoint, int pidSlot, Function<Rotation2d, Double> setPointToDoubleConverter) {
+		return new SparkMaxVelocityRequest(setPoint, pidSlot, setPointToDoubleConverter);
 	}
 
 

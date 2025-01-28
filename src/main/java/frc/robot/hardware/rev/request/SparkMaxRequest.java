@@ -1,9 +1,7 @@
 package frc.robot.hardware.rev.request;
 
 import com.revrobotics.spark.SparkBase;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IRequest;
-import frc.utils.Conversions;
 
 import java.util.function.Function;
 

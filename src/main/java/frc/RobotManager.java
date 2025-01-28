@@ -4,6 +4,7 @@
 
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -14,6 +15,7 @@ import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
 import frc.robot.hardware.rev.motors.SparkMaxWrapper;
+import frc.robot.hardware.rev.request.SparkMaxRequestBuilder;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -50,7 +52,7 @@ public class RobotManager extends LoggedRobot {
 			simulation,
 			new SysIdRoutine.Config()
 		);
-
+		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(10), 3, (rotation2d)->10.0));
 		JoysticksBindings.configureBindings(robot);
 	}
 

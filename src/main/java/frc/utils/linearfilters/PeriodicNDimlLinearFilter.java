@@ -17,6 +17,14 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 	private final String name;
 	private final T size;
 
+	/**
+	 * creates a n-dim periodic linear filter
+	 *
+	 * @param updateValues: supplies all the values (as n-dim vectors) in the current periodic circle
+	 * @param filters:      n-sized list, that injects the filters for each value of the given vector
+	 * @param name:         the name of the periodic filter
+	 * @param sizeInstance: an instance of wpilib's Num (represent the size of the vectors)
+	 */
 	public PeriodicNDimlLinearFilter(Supplier<List<Vector<T>>> updateValues, List<LinearFilter> filters, String name, T sizeInstance) {
 		this.updateValues = updateValues;
 		this.linearFilters = filters;
@@ -42,7 +50,7 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 	public void update() {
 		for (Vector<T> data : updateValues.get()) {
 			for (int i = 0; i < size.getNum(); i++) {
-				linearFilters.get(i).calculate(data.get(i));
+				linearFilters.get(i).calculate(data.get(0, i));
 			}
 		}
 	}

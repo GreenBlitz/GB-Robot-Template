@@ -4,8 +4,8 @@ import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IAccelerometer;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.interfaces.IVibrationGyro;
+import frc.robot.hardware.mechanisms.SimulatedAccelerometer;
 import frc.robot.hardware.phoenix6.pigeon.PigeonHandler;
-import frc.robot.hardware.phoenix6.pigeon.SimulatedAccelerometer;
 import frc.robot.subsystems.swerve.GyroSignals;
 
 public class PigeonFactory {

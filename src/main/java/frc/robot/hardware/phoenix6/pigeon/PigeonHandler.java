@@ -63,12 +63,12 @@ public class PigeonHandler extends Phoenix6Device implements IGyro, IAcceleromet
 
 	@Override
 	public void logAngularVelocities() {
-		logAngularVelocities(logPath + "/AngularVelocity");
+		logAngularVelocities(logPath + "/AngularVelocity/");
 	}
 
 	@Override
 	public void logAcceleration() {
-		logAcceleration(logPath + "/Acceleration");
+		logAcceleration(logPath + "/Acceleration/");
 	}
 
 }

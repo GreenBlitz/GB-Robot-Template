@@ -43,10 +43,14 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 	public void log(String parentLogPath) {
 		String logPath = parentLogPath + name + "/";
 		for (int i = 0; i < updateValues.get().size(); i++) {
-			Logger.recordOutput(logPath + "lastUpdate" + i + "/", TimeUtils.getCurrentTimeSeconds());
-			Logger.recordOutput(logPath + "input" + i + "/", updateValues.get().get(i));
+			for (int j = 0; j < size.getNum(); j++) {
+				Logger.recordOutput(logPath + "lastUpdate" + i + "/" + j, TimeUtils.getCurrentTimeSeconds());
+				Logger.recordOutput(logPath + "input" + i + "/" + j, updateValues.get().get(i).get(0, j));
+			}
 		}
-		Logger.recordOutput(logPath + "output", getAsColumnVector());
+		for (int i = 0; i < size.getNum(); i++) {
+			Logger.recordOutput(logPath + "output/" + i, getAsColumnVector().get(0, i));
+		}
 	}
 
 	@Override

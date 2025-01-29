@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.numbers.N3;
@@ -25,6 +26,7 @@ import frc.utils.auto.PathPlannerUtils;
 import frc.utils.battery.BatteryUtils;
 import frc.utils.linearfilters.LinearFiltersManager;
 import frc.utils.linearfilters.PeriodicNDimlLinearFilter;
+import frc.utils.pose.PoseUtils;
 import org.ejml.simple.SimpleMatrix;
 import org.littletonrobotics.junction.Logger;
 
@@ -52,16 +54,8 @@ public class Robot {
 
 		IGyro gyro = PigeonFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.accelerometer = PigeonFactory.createAccelerometer(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
-		this.accelerationFilter = new PeriodicNDimlLinearFilter<>(() -> {
-			Vector<N3> input = new Vector<>(
-				new SimpleMatrix(
-					new double[][] {{accelerometer.getAccelerationX(), accelerometer.getAccelerationY(), accelerometer.getAccelerationZ()}}
-				)
-			);
-			Logger.recordOutput("input", input);
-			return List.of(input);
-		},
-			List.of(LinearFilter.movingAverage(10), LinearFilter.movingAverage(10), LinearFilter.movingAverage(10)),
+		this.accelerationFilter = new PeriodicNDimlLinearFilter<>(() -> List.of(new Vector<>(new SimpleMatrix(new double[][] {{accelerometer.getAccelerationX(), accelerometer.getAccelerationY(), accelerometer.getAccelerationZ()}}))),
+			List.of(LinearFilter.movingAverage(20), LinearFilter.movingAverage(20), LinearFilter.movingAverage(20)),
 			"3DimAcceleration",
 			N3.instance
 		);
@@ -102,7 +96,7 @@ public class Robot {
 		accelerometer.logAcceleration();
 		vibrationGyro.logAngularVelocities();
 		Logger.recordOutput("denoisedAcceleration2", true);
-		Logger.recordOutput("denoisedAcceleration", accelerationFilter.getAsColumnVector());
+		Logger.recordOutput("denoisedAcceleration", PoseUtils.vectorToPose(accelerationFilter.getAsColumnVector()));
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

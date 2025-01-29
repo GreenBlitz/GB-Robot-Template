@@ -4,7 +4,9 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.Pigeon2Wrapper;
+import frc.robot.hardware.phoenix6.pigeon.PigeonConstants;
 import frc.robot.hardware.phoenix6.pigeon.PigeonHandler;
+import frc.robot.hardware.phoenix6.pigeon.PigeonOffsets;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.AngleUnit;
@@ -31,7 +33,7 @@ class Pigeon2GyroBuilder {
 			if (!pigeon2Wrapper.applyConfiguration(buildGyroConfig(), APPLY_CONFIG_RETRIES).isOK()) {
 				new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 			}
-			PIGEON = new PigeonHandler(logPath, pigeon2Wrapper);
+			PIGEON = new PigeonHandler(logPath, pigeon2Wrapper, PigeonConstants.DEFAULT_ACCELERATION_OFFSETS);
 		}
 		return PIGEON;
 	}

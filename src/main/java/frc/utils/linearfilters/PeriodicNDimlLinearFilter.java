@@ -49,7 +49,7 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 			}
 		}
 		for (int i = 0; i < size.getNum(); i++) {
-			Logger.recordOutput(logPath + "output/" + i, getAsColumnVector().get(0, i));
+			Logger.recordOutput(logPath + "output/" + i, toColumnVector().get(0, i));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 		}
 	}
 
-	public Vector<T> getAsColumnVector() {
+	public Vector<T> toColumnVector() {
 		return new Vector<>(new SimpleMatrix(new double[][] {toArray()}));
 	}
 

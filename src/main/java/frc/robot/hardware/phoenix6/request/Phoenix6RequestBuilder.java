@@ -13,22 +13,6 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6Request<Rotation2d> build(MotionMagicDutyCycle MotionMagicDutyCycle) {
-		return new Phoenix6Request<>(
-			Rotation2d.fromRotations(MotionMagicDutyCycle.Position),
-			MotionMagicDutyCycle,
-			setPoint -> MotionMagicDutyCycle.withPosition(setPoint.getRotations())
-		);
-	}
-
-	public static Phoenix6Request<Rotation2d> build(DynamicMotionMagicDutyCycle dynamicMotionMagicDutyCycle) {
-		return new Phoenix6Request<>(
-			Rotation2d.fromRotations(dynamicMotionMagicDutyCycle.Position),
-			dynamicMotionMagicDutyCycle,
-			setPoint -> dynamicMotionMagicDutyCycle.withPosition(setPoint.getRotations())
-		);
-	}
-
 	public static Phoenix6Request<Rotation2d> build(VelocityVoltage velocityVoltage) {
 		return new Phoenix6Request<>(
 			Rotation2d.fromRotations(velocityVoltage.Velocity),

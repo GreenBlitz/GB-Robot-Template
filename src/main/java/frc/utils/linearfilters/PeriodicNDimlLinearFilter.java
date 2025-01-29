@@ -3,6 +3,7 @@ package frc.utils.linearfilters;
 import edu.wpi.first.math.Num;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.filter.LinearFilter;
+import frc.utils.time.TimeUtils;
 import org.ejml.simple.SimpleMatrix;
 import org.littletonrobotics.junction.Logger;
 
@@ -30,6 +31,7 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 		this.linearFilters = filters;
 		this.name = name;
 		this.size = sizeInstance;
+		Logger.recordOutput("actualSize", updateValues.get().get(0).unit());
 	}
 
 	@Override
@@ -41,9 +43,14 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 	public void log(String parentLogPath) {
 		String logPath = parentLogPath + name + "/";
 		for (int i = 0; i < updateValues.get().size(); i++) {
-			Logger.recordOutput(logPath + "input" + i, updateValues.get().get(i));
+			for (int j = 0; j < size.getNum(); j++) {
+				Logger.recordOutput(logPath + "lastUpdate" + i + "/" + j, TimeUtils.getCurrentTimeSeconds());
+				Logger.recordOutput(logPath + "input" + i + "/" + j, updateValues.get().get(i).get(0, j));
+			}
 		}
-		Logger.recordOutput(logPath + "output", getAsColumnVector());
+		for (int i = 0; i < size.getNum(); i++) {
+			Logger.recordOutput(logPath + "output/" + i, getAsColumnVector().get(0, i));
+		}
 	}
 
 	@Override

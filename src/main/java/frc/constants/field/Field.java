@@ -33,8 +33,8 @@ public class Field {
 		new Pose2d(4.07349, 3.31191, Rotation2d.fromDegrees(60)),
 		new Pose2d(4.90523, 3.31193, Rotation2d.fromDegrees(120)),
 		new Pose2d(5.32107, 4.03225, Rotation2d.fromDegrees(180)),
-		new Pose2d(4.90519, 4.75254, Rotation2d.fromDegrees(240)),
-		new Pose2d(4.07345, 4.75252, Rotation2d.fromDegrees(300))};
+		new Pose2d(4.90519, 4.75254, Rotation2d.fromDegrees(-120)),
+		new Pose2d(4.07345, 4.75252, Rotation2d.fromDegrees(-60))};
 
 	private static final Translation2d[] CORAL_BRANCHES = new Translation2d[] {
 		new Translation2d(3.71123, 4.19654),

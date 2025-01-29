@@ -52,16 +52,15 @@ public class Robot {
 
 		IGyro gyro = PigeonFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.accelerometer = PigeonFactory.createAccelerometer(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
-		this.accelerationFilter = new PeriodicNDimlLinearFilter<>(
-			() -> List
-				.of(
-					new Vector<>(
-						new SimpleMatrix(
-							new double[][] {
-								{accelerometer.getAccelerationX(), accelerometer.getAccelerationY(), accelerometer.getAccelerationZ()}}
-						)
-					)
-				),
+		this.accelerationFilter = new PeriodicNDimlLinearFilter<>(() -> {
+			Vector<N3> input = new Vector<>(
+				new SimpleMatrix(
+					new double[][] {{accelerometer.getAccelerationX(), accelerometer.getAccelerationY(), accelerometer.getAccelerationZ()}}
+				)
+			);
+			Logger.recordOutput("input", input);
+			return List.of(input);
+		},
 			List.of(LinearFilter.movingAverage(10), LinearFilter.movingAverage(10), LinearFilter.movingAverage(10)),
 			"3DimAcceleration",
 			N3.instance

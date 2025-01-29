@@ -10,13 +10,16 @@ public class ScoringHelpers {
 
 	public static Pose2d getRobotScoringPose(ReefBranch branch, double distanceFromBranchMeters) {
 		Translation2d branchTranslation = Field.getCoralPlacement(branch);
-		Rotation2d robotAngle = Field.getMiddleOfReefSide(branch.getReefSide()).getRotation();
+		Rotation2d targetRobotAngle = Field.getMiddleOfReefSide(branch.getReefSide()).getRotation();
 
-		double xDiff = distanceFromBranchMeters * Math.cos(robotAngle.getRadians());
-		double yDiff = distanceFromBranchMeters * Math.sin(robotAngle.getRadians());
+		double xDistanceFromBranch = distanceFromBranchMeters * Math.cos(targetRobotAngle.getRadians());
+		double yDistanceFromBranch = distanceFromBranchMeters * Math.sin(targetRobotAngle.getRadians());
 
-		Translation2d scoringTrans = new Translation2d(branchTranslation.getX() - xDiff, branchTranslation.getY() - yDiff);
-		return new Pose2d(scoringTrans, robotAngle);
+		Translation2d scoringTranslation = new Translation2d(
+			branchTranslation.getX() - xDistanceFromBranch,
+			branchTranslation.getY() - yDistanceFromBranch
+		);
+		return new Pose2d(scoringTranslation, targetRobotAngle);
 	}
 
 

@@ -5,8 +5,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autonomous.AutonomousConstants;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public enum AutoPath {
@@ -17,6 +15,11 @@ public enum AutoPath {
 	F_TO_LOWER_CORAL_STATION(AutonomousConstants.LinkedWaypoints.F, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION),
 	I_TO_UPPER_CORAL_STATION(AutonomousConstants.LinkedWaypoints.I, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION),
 	LOWER_CORAL_STATION_TO_C(AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION, AutonomousConstants.LinkedWaypoints.C),
+	AUTO_LINE_1_TO_I(AutonomousConstants.LinkedWaypoints.AUTO_LINE1, AutonomousConstants.LinkedWaypoints.I),
+	L_TO_UPPER_CORAL_STATION(AutonomousConstants.LinkedWaypoints.L, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION),
+	UPPER_CORAL_STATION_TO_K(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION, AutonomousConstants.LinkedWaypoints.K),
+	K_TO_UPPER_CORAL_STATION(AutonomousConstants.LinkedWaypoints.K, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION),
+	UPPER_CORAL_STATION_TO_J(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION, AutonomousConstants.LinkedWaypoints.J),
 	UPPER_CORAL_STATION_TO_L(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION, AutonomousConstants.LinkedWaypoints.L);
 
 	private final Pair<String, Pose2d> startingPoint;

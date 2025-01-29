@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.autonomous.SequencesBuilder;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimation.PoseEstimator;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.utils.DriverStationUtils;
+import frc.utils.auto.AutoPath;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtils;
@@ -103,20 +105,29 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
-		boolean isAutoChosen = !startingPointAndWhereToScoreFirstObjectChooser.isDefaultOptionChosen();
-		if (isAutoChosen) {
-			return PathPlannerAutoWrapper
-				.chainAutos(
-					startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
-					whereToIntakeSecondObjectChooser.getChosenValue(),
-					whereToScoreSecondObjectChooser.getChosenValue()
-				)
-				.withResetPose(getPoseEstimator()::resetPose);
-		}
-		if (!DriverStationUtils.isMatch()) {
-			return testAutosChooser.getChosenValue();
-		}
-		return new PathPlannerAutoWrapper();
+//		boolean isAutoChosen = !startingPointAndWhereToScoreFirstObjectChooser.isDefaultOptionChosen();
+//		if (isAutoChosen) {
+//			return PathPlannerAutoWrapper
+//				.chainAutos(
+//					startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
+//					whereToIntakeSecondObjectChooser.getChosenValue(),
+//					whereToScoreSecondObjectChooser.getChosenValue()
+//				)
+//				.withResetPose(getPoseEstimator()::resetPose);
+//		}
+//		if (!DriverStationUtils.isMatch()) {
+//			return testAutosChooser.getChosenValue();
+//		}
+//		return new PathPlannerAutoWrapper();
+		return PathPlannerAutoWrapper.chainAutos(
+				AutosBuilder.createAutoFromAutoPath(AutoPath.AUTO_LINE_1_TO_I, SequencesBuilder::followPath),
+				AutosBuilder.createAutoFromAutoPath(AutoPath.I_TO_UPPER_CORAL_STATION, SequencesBuilder::followPath),
+				AutosBuilder.createAutoFromAutoPath(AutoPath.UPPER_CORAL_STATION_TO_L, SequencesBuilder::followPath),
+				AutosBuilder.createAutoFromAutoPath(AutoPath.L_TO_UPPER_CORAL_STATION, SequencesBuilder::followPath),
+				AutosBuilder.createAutoFromAutoPath(AutoPath.UPPER_CORAL_STATION_TO_K, SequencesBuilder::followPath),
+				AutosBuilder.createAutoFromAutoPath(AutoPath.K_TO_UPPER_CORAL_STATION, SequencesBuilder::followPath),
+				AutosBuilder.createAutoFromAutoPath(AutoPath.UPPER_CORAL_STATION_TO_J, SequencesBuilder::followPath)
+		).withResetPose(poseEstimator::resetPose);
 	}
 
 	public Superstructure getSuperStructure() {

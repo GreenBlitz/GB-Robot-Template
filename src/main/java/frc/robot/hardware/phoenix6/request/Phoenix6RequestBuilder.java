@@ -41,11 +41,11 @@ public class Phoenix6RequestBuilder {
 		return new Phoenix6Request<>(voltageOut.Output, voltageOut, voltageOut::withOutput);
 	}
 
-	public static Phoenix6Request<Rotation2d> build(MotionMagicVoltage MotionMagicVoltage) {
+	public static Phoenix6Request<Rotation2d> build(MotionMagicVoltage motionMagicVoltage) {
 		return new Phoenix6Request<>(
-			Rotation2d.fromRotations(MotionMagicVoltage.Position),
-			MotionMagicVoltage,
-			setPoint -> MotionMagicVoltage.withPosition(setPoint.getRotations())
+			Rotation2d.fromRotations(motionMagicVoltage.Position),
+			motionMagicVoltage,
+			setPoint -> motionMagicVoltage.withPosition(setPoint.getRotations())
 		);
 	}
 

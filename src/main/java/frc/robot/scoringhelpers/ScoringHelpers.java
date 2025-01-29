@@ -8,14 +8,12 @@ import frc.constants.field.enums.ReefBranch;
 
 public class ScoringHelpers {
 
-	private static final double DISTANCE_FROM_BRANCH_METERS = 0.3;
-
-	public static Pose2d getRobotScoringPose(ReefBranch branch) {
+	public static Pose2d getRobotScoringPose(ReefBranch branch, double distanceFromBranchMeters) {
 		Translation2d branchTranslation = Field.getCoralPlacement(branch);
 		Rotation2d robotAngle = Field.getMiddleOfReefSide(branch.getReefSide()).getRotation();
 
-		double xDiff = DISTANCE_FROM_BRANCH_METERS * Math.cos(robotAngle.getRadians());
-		double yDiff = DISTANCE_FROM_BRANCH_METERS * Math.sin(robotAngle.getRadians());
+		double xDiff = distanceFromBranchMeters * Math.cos(robotAngle.getRadians());
+		double yDiff = distanceFromBranchMeters * Math.sin(robotAngle.getRadians());
 
 		Translation2d scoringTrans = new Translation2d(branchTranslation.getX() - xDiff, branchTranslation.getY() - yDiff);
 		return new Pose2d(scoringTrans, robotAngle);

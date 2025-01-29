@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.ArrayList;
 
 /**
- * A class for automatic updating of linear filters. Its periodic run first.
+ * A class for automatic updating of linear filters. Its periodic shall run ASAP.
  */
 public class LinearFiltersManager {
 

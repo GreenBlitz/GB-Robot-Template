@@ -6,8 +6,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.numbers.N6;
 import frc.robot.hardware.signal.TimedValue;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
@@ -52,7 +50,7 @@ public class PoseUtils {
 	public static TimedValue<Rotation2d> visionDataToHeadingData(VisionData visionData) {
 		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
 	}
-	
+
 	public static Pose2d vectorToPose(Vector<? extends Num> vector) {
 		return poseArrayToPose2D(vector.getData(), AngleUnit.RADIANS);
 	}

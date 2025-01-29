@@ -63,8 +63,9 @@ public class SimulatedAccelerometer implements IAccelerometer {
 		logAcceleration();
 	}
 
-	public void logAcceleration() {
-		logAcceleration(logPath);
+	@Override
+	public String getLogPath() {
+		return logPath;
 	}
 
 }

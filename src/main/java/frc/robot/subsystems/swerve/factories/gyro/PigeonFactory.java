@@ -13,7 +13,7 @@ public class PigeonFactory {
 	public static IGyro createGyro(String logPath) {
 		logPath += "/Gyro";
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> Pigeon2GyroBuilder.buildPigeon(logPath);
+			case REAL -> PigeonHandlerBuilder.buildPigeon(logPath);
 			case SIMULATION -> SimulationGyroBuilder.buildGyro(logPath);
 		};
 	}
@@ -21,7 +21,7 @@ public class PigeonFactory {
 	public static IAccelerometer createAccelerometer(String logPath) {
 		logPath += "/Accelerometer";
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> Pigeon2GyroBuilder.buildPigeon(logPath);
+			case REAL -> PigeonHandlerBuilder.buildPigeon(logPath);
 			case SIMULATION -> new SimulatedAccelerometer(logPath, null, 0);
 		};
 	}
@@ -29,14 +29,14 @@ public class PigeonFactory {
 	public static IVibrationGyro createVibrationGyro(String logPath) {
 		logPath += "/VibrationGyro";
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> Pigeon2GyroBuilder.buildPigeon(logPath);
+			case REAL -> PigeonHandlerBuilder.buildPigeon(logPath);
 			case SIMULATION -> null;
 		};
 	}
 
 	public static GyroSignals createSignals(IGyro gyro) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> Pigeon2GyroBuilder.buildSignals((PigeonHandler) gyro);
+			case REAL -> PigeonHandlerBuilder.buildSignals((PigeonHandler) gyro);
 			case SIMULATION -> SimulationGyroBuilder.buildSignals();
 		};
 	}

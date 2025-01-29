@@ -32,16 +32,16 @@ public interface IAccelerometer {
 		return Math.atan2(getAccelerationY(), getAccelerationZ());
 	};
 
-	void logAcceleration();
+	String getLogPath();
 
-	default void logAcceleration(String logPath) {
-		Logger.recordOutput(logPath + "X", getAccelerationX());
-		Logger.recordOutput(logPath + "Y", getAccelerationY());
-		Logger.recordOutput(logPath + "Z", getAccelerationZ());
-		Logger.recordOutput(logPath + "Yaw", getAccelerationYaw());
-		Logger.recordOutput(logPath + "Roll", getAccelerationRoll());
-		Logger.recordOutput(logPath + "Pitch", getAccelerationPitch());
-		Logger.recordOutput(logPath + "Magnitude", getAccelerationMagnitude());
+	default void logAcceleration() {
+		Logger.recordOutput(getLogPath() + "X", getAccelerationX());
+		Logger.recordOutput(getLogPath() + "Y", getAccelerationY());
+		Logger.recordOutput(getLogPath() + "Z", getAccelerationZ());
+		Logger.recordOutput(getLogPath() + "Yaw", getAccelerationYaw());
+		Logger.recordOutput(getLogPath() + "Roll", getAccelerationRoll());
+		Logger.recordOutput(getLogPath() + "Pitch", getAccelerationPitch());
+		Logger.recordOutput(getLogPath() + "Magnitude", getAccelerationMagnitude());
 	}
 
 }

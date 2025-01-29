@@ -6,13 +6,12 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.pigeon.PigeonConstants;
 import frc.robot.hardware.phoenix6.pigeon.PigeonHandler;
-import frc.robot.hardware.phoenix6.pigeon.PigeonOffsets;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
-class Pigeon2GyroBuilder {
+class PigeonHandlerBuilder {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
 	private static PigeonHandler PIGEON;

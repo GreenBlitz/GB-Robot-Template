@@ -13,12 +13,12 @@ public class PigeonHandler extends Phoenix6Device implements IGyro, IAcceleromet
 	private final String logPath;
 	private final PigeonAccelerationOffsets offsets;
 
-	public PigeonHandler(String logPath, Pigeon2Wrapper pigeon, PigeonAccelerationOffsets offsets) {
+	public PigeonHandler(String logPath, Pigeon2Wrapper pigeonWrapper, PigeonAccelerationOffsets offsets) {
 		super(logPath);
-		this.pigeon = pigeon;
+		this.pigeon = pigeonWrapper;
 		this.logPath = logPath;
 		this.offsets = offsets;
-		pigeon.optimizeBusUtilization();
+		pigeonWrapper.optimizeBusUtilization();
 	}
 
 	@Override

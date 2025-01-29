@@ -22,5 +22,4 @@ public class ScoringHelpers {
 		return new Pose2d(scoringTranslation, targetRobotAngle);
 	}
 
-
 }

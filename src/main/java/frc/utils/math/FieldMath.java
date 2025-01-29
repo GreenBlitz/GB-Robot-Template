@@ -19,18 +19,13 @@ public class FieldMath {
 		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
-
 	public static Rotation2d transform(Rotation2d angle, AngleTransform angleTransform) {
 		return switch (angleTransform) {
-			case KEEP -> keepAngle(angle);
+			case KEEP -> angle;
 			case MIRROR_X -> mirrorXAngle(angle);
 			case MIRROR_Y -> mirrorYAngle(angle);
 			case INVERT -> invertAngle(angle);
 		};
-	}
-
-	public static Rotation2d keepAngle(Rotation2d angle) {
-		return angle;
 	}
 
 	public static Rotation2d mirrorXAngle(Rotation2d angle) {
@@ -45,9 +40,8 @@ public class FieldMath {
 		return MathConstants.HALF_CIRCLE.plus(angle);
 	}
 
-
 	public static Rotation3d mirror(Rotation3d angle) {
-		return new Rotation3d(angle.getX(), -angle.getY(), angle.getZ());
+		return new Rotation3d(angle.getX(), angle.getY(), -angle.getZ());
 	}
 
 	public static double mirrorX(double x) {

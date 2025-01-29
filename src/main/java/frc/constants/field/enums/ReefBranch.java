@@ -30,4 +30,5 @@ public enum ReefBranch {
 	public ReefSide getReefSide() {
 		return reefSide;
 	}
+
 }

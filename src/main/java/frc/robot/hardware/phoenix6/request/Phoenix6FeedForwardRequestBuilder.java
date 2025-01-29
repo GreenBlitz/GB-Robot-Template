@@ -16,14 +16,4 @@ public class Phoenix6FeedForwardRequestBuilder extends Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(VelocityVoltage velocityVoltage, double defaultArbitraryFeedForward) {
-		velocityVoltage.withFeedForward(defaultArbitraryFeedForward);
-		return new Phoenix6FeedForwardRequest(
-			Rotation2d.fromRotations(velocityVoltage.Velocity),
-			velocityVoltage,
-			setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()),
-			velocityVoltage::withFeedForward
-		);
-	}
-
 }

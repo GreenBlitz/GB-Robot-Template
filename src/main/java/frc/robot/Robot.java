@@ -46,7 +46,7 @@ public class Robot {
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
-			"poseEstimator/",
+			"PoseEstimator/",
 			swerve.getKinematics(),
 			swerve.getAllOdometryObservations()[0].wheelPositions(),
 			swerve.getGyroAbsoluteYaw()

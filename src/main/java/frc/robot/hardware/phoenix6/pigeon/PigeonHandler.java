@@ -13,12 +13,12 @@ public class PigeonHandler extends Phoenix6Device implements IGyro, IAcceleromet
 	private final String logPath;
 	private final PigeonAccelerationOffsets offsets;
 
-	public PigeonHandler(String logPath, Pigeon2Wrapper pigeonWrapper, PigeonAccelerationOffsets offsets) {
+	public PigeonHandler(String logPath, Pigeon2Wrapper pigeon, PigeonAccelerationOffsets offsets) {
 		super(logPath);
-		this.pigeon = pigeonWrapper;
+		this.pigeon = pigeon;
 		this.logPath = logPath;
 		this.offsets = offsets;
-		pigeonWrapper.optimizeBusUtilization();
+		pigeon.optimizeBusUtilization();
 	}
 
 	@Override
@@ -33,17 +33,17 @@ public class PigeonHandler extends Phoenix6Device implements IGyro, IAcceleromet
 
 	@Override
 	public double getAccelerationX() {
-		return pigeon.getAccelerationX().getValue().magnitude() + offsets.XOffset();
+		return pigeon.getAccelerationX().getValue().magnitude() - offsets.XOffset();
 	}
 
 	@Override
 	public double getAccelerationY() {
-		return pigeon.getAccelerationY().getValue().magnitude() + offsets.YOffset();
+		return pigeon.getAccelerationY().getValue().magnitude() - offsets.YOffset();
 	}
 
 	@Override
 	public double getAccelerationZ() {
-		return pigeon.getAccelerationZ().getValue().magnitude() + offsets.ZOffset();
+		return pigeon.getAccelerationZ().getValue().magnitude() - offsets.ZOffset();
 	}
 
 	@Override
@@ -62,13 +62,8 @@ public class PigeonHandler extends Phoenix6Device implements IGyro, IAcceleromet
 	}
 
 	@Override
-	public void logAngularVelocities() {
-		logAngularVelocities(logPath + "/AngularVelocity/");
-	}
-
-	@Override
-	public void logAcceleration() {
-		logAcceleration(logPath + "/Acceleration/");
+	public String getLogPath() {
+		return logPath;
 	}
 
 }

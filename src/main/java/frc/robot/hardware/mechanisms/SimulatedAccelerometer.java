@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class SimulatedAccelerometer implements IAccelerometer {
 
 	private final Supplier<ChassisSpeeds> robotSimulatedVelocityRelativeToRobot;
-	private final Supplier<Double> fakeNoise;
+	private final Supplier<Double> noise;
 	private final String logPath;
 
 	private double accelerationX;
@@ -21,11 +21,11 @@ public class SimulatedAccelerometer implements IAccelerometer {
 	private ChassisSpeeds previousRobotVelocities;
 	private double lastUpdateTimestamp;
 
-	public SimulatedAccelerometer(String logPath, Supplier<ChassisSpeeds> robotSimulatedVelocity, double fakeNoiseAmount) {
+	public SimulatedAccelerometer(String logPath, Supplier<ChassisSpeeds> robotSimulatedVelocity, double noiseAmount) {
 		Random randomNumbersGenerator = new Random();
 		this.logPath = logPath;
 		this.robotSimulatedVelocityRelativeToRobot = robotSimulatedVelocity;
-		this.fakeNoise = () -> randomNumbersGenerator.nextGaussian() * fakeNoiseAmount;
+		this.noise = () -> randomNumbersGenerator.nextGaussian() * noiseAmount;
 		this.previousRobotVelocities = robotSimulatedVelocity.get();
 		this.lastUpdateTimestamp = TimeUtils.getCurrentTimeSeconds();
 
@@ -41,17 +41,17 @@ public class SimulatedAccelerometer implements IAccelerometer {
 
 	@Override
 	public double getAccelerationX() {
-		return accelerationX + fakeNoise.get();
+		return accelerationX + noise.get();
 	}
 
 	@Override
 	public double getAccelerationY() {
-		return accelerationY + fakeNoise.get();
+		return accelerationY + noise.get();
 	}
 
 	@Override
 	public double getAccelerationZ() {
-		return 0 + fakeNoise.get();
+		return 0 + noise.get();
 	}
 
 	private void update() {
@@ -63,8 +63,9 @@ public class SimulatedAccelerometer implements IAccelerometer {
 		logAcceleration();
 	}
 
-	public void logAcceleration() {
-		logAcceleration(logPath);
+	@Override
+	public String getLogPath() {
+		return logPath;
 	}
 
 }

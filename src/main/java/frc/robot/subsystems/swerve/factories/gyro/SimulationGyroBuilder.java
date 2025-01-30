@@ -6,7 +6,7 @@ import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.TimedValue;
 import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.math.AngleUnit;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 class SimulationGyroBuilder {
 
@@ -19,7 +19,7 @@ class SimulationGyroBuilder {
 
 			@Override
 			protected TimedValue<Double> getNewValue() {
-				return new TimedValue<>(0.0, TimeUtils.getCurrentTimeSeconds());
+				return new TimedValue<>(0.0, TimeUtil.getCurrentTimeSeconds());
 			}
 
 		});

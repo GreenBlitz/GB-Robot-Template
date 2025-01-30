@@ -2,14 +2,14 @@ package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
 import frc.utils.math.AngleUnit;
-import frc.robot.hardware.phoenix6.Phoenix6Utils;
+import frc.robot.hardware.phoenix6.Phoenix6Util;
 
 public class Phoenix6SignalBuilder {
 
 	private static final int UPDATE_FREQUENCY_RETRIES = 5;
 
 	private static void setFrequencyWithRetry(StatusSignal<?> signal, double frequency) {
-		Phoenix6Utils.checkWithRetry(() -> signal.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);
+		Phoenix6Util.checkWithRetry(() -> signal.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);
 	}
 
 	private static StatusSignal<?> cloneWithFrequency(StatusSignal<?> signal, double frequency) {

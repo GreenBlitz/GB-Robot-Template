@@ -1,5 +1,6 @@
 package frc;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -10,6 +11,7 @@ import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.structures.Tolerances;
 import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
@@ -150,10 +152,11 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
-		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(0), false));
-		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(90), false));
-		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(180), false));
-		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(270), false));
+		usedJoystick.START.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> 0, () -> 0, () -> 0));
+		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> 0.1, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
+		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> -0.1, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
+		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> 0.5, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
+		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> -0.5, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
 		
 		usedJoystick.POV_DOWN.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
 	}

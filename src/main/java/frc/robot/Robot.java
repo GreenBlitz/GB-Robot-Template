@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,11 +22,13 @@ import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.math.ToleranceMath;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -106,6 +111,21 @@ public class Robot {
 
 	public EndEffector getEndEffector() {
 		return endEffector;
+	}
+
+	public boolean isAtPose(
+		Pose2d targetPose,
+		double translationToleranceMeters,
+		Rotation2d headingTolerance,
+		double translationDeadbandMetersPerSecond,
+		Rotation2d headingDeadbandPerSecond
+	) {
+		boolean isAtX = MathUtil.isNear(targetPose.getX(), poseEstimator.getEstimatedPose().getX(), translationToleranceMeters);
+		boolean isAtY = MathUtil.isNear(targetPose.getY(), poseEstimator.getEstimatedPose().getY(), translationToleranceMeters);
+		boolean isAtHeading = ToleranceMath
+			.isNearWrapped(targetPose.getRotation(), poseEstimator.getEstimatedPose().getRotation(), headingTolerance);
+		boolean isStopping = SwerveMath.isStill(swerve.getRobotRelativeVelocity(), translationDeadbandMetersPerSecond, headingDeadbandPerSecond);
+		return isAtX && isAtY && isAtHeading && isStopping;
 	}
 
 }

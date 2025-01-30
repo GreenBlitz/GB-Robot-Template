@@ -27,6 +27,7 @@ import frc.robot.hardware.rev.request.SparkMaxVelocityRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.utils.AngleUnit;
+import frc.utils.Conversions;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -46,10 +47,9 @@ public class RobotManager extends LoggedRobot {
 	private final Robot robot;
 	private Command autonomousCommand;
 	private int roborioCycles;
-
-	BrushlessSparkMAXMotor motor;
-	SuppliedDoubleSignal velocitySignal;
-	SuppliedDoubleSignal voltageSignal;
+	private BrushlessSparkMAXMotor motor;
+	private SuppliedAngleSignal velocitySignal;
+	private SuppliedDoubleSignal voltageSignal;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
@@ -70,9 +70,11 @@ public class RobotManager extends LoggedRobot {
 			new SysIdRoutine.Config()
 		);
 		SparkMaxConfig config = new SparkMaxConfig();
-		 config.closedLoop.p(2);
+		 config.closedLoop.p(0.001);
+		 config.closedLoop.d(0);
+		 config.closedLoop.i(0);
 		motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
-		velocitySignal = new SuppliedDoubleSignal("velocity", ()-> motorWrapper.getVelocityAnglePerSecond().getRotations());
+		velocitySignal = new SuppliedAngleSignal("velocity", ()-> motorWrapper.getVelocityAnglePerSecond().getRotations(), AngleUnit.ROTATIONS);
 		voltageSignal = new SuppliedDoubleSignal("voltage", motorWrapper::getVoltage);
 		JoysticksBindings.configureBindings(robot);
 	}
@@ -104,7 +106,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(200), 0, Rotation2d::getRotations));
+		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(40), 0, (rotation2d)->rotation2d.getRotations()));
 	}
 
 	@Override

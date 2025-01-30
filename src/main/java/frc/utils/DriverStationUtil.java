@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
 import frc.constants.GlobalConstants;
 
-public class DriverStationUtils {
+public class DriverStationUtil {
 
 	private static final DriverStation.Alliance DEFAULT_ALLIANCE = DriverStation.Alliance.Red;
 

@@ -42,76 +42,11 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeading(new Rotation2d())));
 		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
 		
-		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
-		usedJoystick.POV_DOWN.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.turnToHeading(Rotation2d.fromDegrees(-17))
-				.until(
-					() -> robot.getSwerve()
-						.isAtHeading(Rotation2d.fromDegrees(-17), Tolerances.SWERVE_HEADING, Tolerances.ROTATION_VELOCITY_DEADBAND)
-				)
-		);
-
-		usedJoystick.POV_LEFT
-			.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(-17), RotateAxis.FRONT_LEFT_MODULE));
-		usedJoystick.POV_RIGHT
-			.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180), RotateAxis.BACK_RIGHT_MODULE));
-
-		usedJoystick.L3.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveByState(
-					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)
-				)
-		);
-		usedJoystick.L1.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveByState(
-					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-					SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withAimAssist(AimAssist.NOTE)
-				)
-		);
-		usedJoystick.R1.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveByState(
-					() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-					() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-					() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)
-				)
-		);
-
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
-			.whileTrue(
-				robot.getSwerve()
-					.getCommandsBuilder()
-					.driveByState(
-						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHandler().getFarRightRotateAxis())
-					)
-			);
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER)
-			.whileTrue(
-				robot.getSwerve()
-					.getCommandsBuilder()
-					.driveByState(
-						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X),
-						() -> SwerveState.DEFAULT_DRIVE.withRotateAxis(robot.getSwerve().getStateHandler().getFarLeftRotateAxis())
-					)
-			);
-
+		usedJoystick.POV_UP.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(0)));
+		usedJoystick.POV_RIGHT.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(90)));
+		usedJoystick.POV_DOWN.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
+		usedJoystick.POV_LEFT.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(270)));
+		
 		robot.getSwerve()
 			.setDefaultCommand(
 				robot.getSwerve()
@@ -122,20 +57,6 @@ public class JoysticksBindings {
 						() -> usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)
 					)
 			);
-
-
-		usedJoystick.BACK.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(4, 4, Rotation2d.fromDegrees(17)))
-				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(4, 4, Rotation2d.fromDegrees(17))))
-		);
-		usedJoystick.START.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(robot.getPoseEstimator()::getCurrentPose, () -> new Pose2d(6, 6, Rotation2d.fromDegrees(90)))
-				.until(() -> robot.getSuperStructure().isAtPose(new Pose2d(6, 6, Rotation2d.fromDegrees(90))))
-		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

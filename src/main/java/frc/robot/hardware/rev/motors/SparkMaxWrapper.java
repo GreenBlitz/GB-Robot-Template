@@ -3,7 +3,7 @@ package frc.robot.hardware.rev.motors;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.rev.REVUtils;
+import frc.robot.hardware.rev.REVUtil;
 import frc.utils.Conversions;
 
 public class SparkMaxWrapper extends SparkMax {
@@ -24,7 +24,7 @@ public class SparkMaxWrapper extends SparkMax {
 	}
 
 	public REVLibError applyConfiguration(SparkMaxConfiguration configuration, int numberOfTries) {
-		return REVUtils.checkWithRetry(
+		return REVUtil.checkWithRetry(
 			() -> super.configure(configuration.getSparkMaxConfig(), configuration.getResetMode(), configuration.getPersistMode()),
 			numberOfTries
 		);

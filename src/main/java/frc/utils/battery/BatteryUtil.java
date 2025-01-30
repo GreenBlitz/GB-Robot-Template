@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.IDs;
 import org.littletonrobotics.junction.Logger;
 
-public class BatteryUtils {
+public class BatteryUtil {
 
 	public static final double DEFAULT_VOLTAGE = 12;
 	public static final double MIN_VOLTAGE = 10.5;

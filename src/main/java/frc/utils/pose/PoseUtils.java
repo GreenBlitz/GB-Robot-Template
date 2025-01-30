@@ -55,25 +55,31 @@ public class PoseUtils {
 	}
 
 	public static double[] pose3DToPoseArray(Pose3d pose3d, AngleUnit angleUnit) {
-		Rotation3d rotation = pose3d.getRotation();
+		double[] translationArray = translation3DToTranslationArray(pose3d.getTranslation());
+		double[] rotationArray = rotation3DToRotationArray(pose3d.getRotation(), angleUnit);
+		double[] poseArray = new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT];
+		System.arraycopy(translationArray, 0, poseArray, 0, translationArray.length);
+		System.arraycopy(rotationArray, 0, poseArray, translationArray.length, rotationArray.length);
+		return poseArray;
+	}
+
+	public static double[] translation3DToTranslationArray(Translation3d translation3d) {
+		return new double[] {translation3d.getX(), translation3d.getY(), translation3d.getZ(),};
+	}
+
+	public static double[] rotation3DToRotationArray(Rotation3d rotation3d, AngleUnit angleUnit) {
 		return switch (angleUnit) {
-			case RADIANS -> new double[] {pose3d.getX(), pose3d.getY(), pose3d.getZ(), rotation.getX(), rotation.getY(), rotation.getZ()};
+			case RADIANS -> new double[] {rotation3d.getX(), rotation3d.getY(), rotation3d.getZ(),};
 			case DEGREES ->
 				new double[] {
-					pose3d.getX(),
-					pose3d.getY(),
-					pose3d.getZ(),
-					Rotation2d.fromRadians(rotation.getX()).getDegrees(),
-					Rotation2d.fromRadians(rotation.getY()).getDegrees(),
-					Rotation2d.fromRadians(rotation.getZ()).getDegrees()};
+					Rotation2d.fromRadians(rotation3d.getX()).getDegrees(),
+					Rotation2d.fromRadians(rotation3d.getY()).getDegrees(),
+					Rotation2d.fromRadians(rotation3d.getZ()).getDegrees()};
 			case ROTATIONS ->
 				new double[] {
-					pose3d.getX(),
-					pose3d.getY(),
-					pose3d.getZ(),
-					Rotation2d.fromRadians(rotation.getX()).getRotations(),
-					Rotation2d.fromRadians(rotation.getY()).getRotations(),
-					Rotation2d.fromRadians(rotation.getZ()).getRotations()};
+					Rotation2d.fromRadians(rotation3d.getX()).getRotations(),
+					Rotation2d.fromRadians(rotation3d.getY()).getRotations(),
+					Rotation2d.fromRadians(rotation3d.getZ()).getRotations()};
 		};
 	}
 

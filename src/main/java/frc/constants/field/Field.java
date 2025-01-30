@@ -72,8 +72,11 @@ public class Field {
 		return getAllianceRelative(MIDDLE_OF_REEF, true, false);
 	}
 
-	public static Pose2d getMiddleOfReefSide(ReefSide side) {
-		return getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleTransform.INVERT);
+	public static Pose2d getMiddleOfReefSide(ReefSide side, boolean alrl) {
+		return alrl ?
+			getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleTransform.INVERT)
+			: MIDDLE_OF_REEF_SIDES[side.getIndex()];
+
 	}
 
 	public static Translation2d getCoralPlacement(ReefBranch branch) {
@@ -110,6 +113,10 @@ public class Field {
 
 	private static Rotation3d getAllianceRelative(Rotation3d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation);
+	}
+
+	public static Rotation2d getAllianceRelative(Rotation2d rotation) {
+		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation, AngleTransform.INVERT);
 	}
 
 	private static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorX, boolean mirrorY, boolean mirrorAngle) {

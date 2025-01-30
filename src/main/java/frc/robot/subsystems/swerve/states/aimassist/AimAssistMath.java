@@ -44,14 +44,11 @@ public class AimAssistMath {
 	public static ChassisSpeeds getObjectAssistedSpeeds(
 		ChassisSpeeds speeds,
 		Pose2d robotPose,
-		Rotation2d targetAngle,
 		Translation2d objectTranslation,
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
 	) {
-		Pose2d allianceRelativeRobot = Field.getAllianceRelative(robotPose);
-		Pose2d robotWithHeading = new Pose2d(allianceRelativeRobot.getX(), allianceRelativeRobot.getY(), targetAngle);
-		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotWithHeading, objectTranslation);
+		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotPose, objectTranslation);
 		double pidHorizontalToObjectOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController()
 			.calculate(0, objectRelativeToRobot.getY());
 
@@ -59,15 +56,14 @@ public class AimAssistMath {
 			case ROBOT_RELATIVE:
 				new ChassisSpeeds(speeds.vxMetersPerSecond, pidHorizontalToObjectOutputVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 
-
 			case ALLIANCE_RELATIVE:
-				ChassisSpeeds robotRelativeSpeeds = SwerveMath.allianceToRobotRelativeSpeeds(speeds, robotPose.getRotation());
+				ChassisSpeeds robotRelativeSpeeds = SwerveMath.allianceToRobotRelativeSpeeds(speeds, Field.getAllianceRelative(robotPose.getRotation()));
 				ChassisSpeeds assistedSpeed = new ChassisSpeeds(
 					robotRelativeSpeeds.vxMetersPerSecond,
 					pidHorizontalToObjectOutputVelocityMetersPerSecond,
 					robotRelativeSpeeds.omegaRadiansPerSecond
 				);
-				yield SwerveMath.robotToAllianceRelativeSpeeds(assistedSpeed, robotPose.getRotation());
+				yield SwerveMath.robotToAllianceRelativeSpeeds(assistedSpeed, Field.getAllianceRelative(robotPose.getRotation()));
 		};
 	}
 

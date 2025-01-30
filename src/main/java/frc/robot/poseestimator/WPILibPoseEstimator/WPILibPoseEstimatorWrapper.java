@@ -48,11 +48,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
-		this.lastOdometryObservation = new OdometryObservation(
-			modulePositions,
-			Optional.of(initialGyroAngle),
-			TimeUtil.getCurrentTimeSeconds()
-		);
+		this.lastOdometryObservation = new OdometryObservation(modulePositions, Optional.of(initialGyroAngle), TimeUtil.getCurrentTimeSeconds());
 	}
 
 

@@ -12,17 +12,18 @@ public class PoseEstimatorMath {
 	}
 
 	public static Rotation2d combineVisionHeadingAndGyro(
-		Rotation2d visionEstimatedHeading,
-		Rotation2d gyroAngle,
+		Rotation2d visionEstimatedHeadingAtTimeStamp,
+		Rotation2d gyroAngleAtTimeStamp,
 		Rotation2d lastGyroAngle,
 		Rotation2d currentEstimatedHeading,
 		double gyroStandardDeviation,
 		double visionStandardDeviation
 	) {
-		Rotation2d changeInAngleSinceVisionDataWasObserved = AngleMath.getAngleDifference(gyroAngle, lastGyroAngle);
+		Rotation2d changeInAngleSinceVisionDataWasObserved = AngleMath.getAngleDifference(gyroAngleAtTimeStamp, lastGyroAngle);
 		double visionAndGyroRatio = getKalmanRatio(gyroStandardDeviation, visionStandardDeviation);
 		Rotation2d estimatedHeadingAtSampleTime = currentEstimatedHeading.minus(changeInAngleSinceVisionDataWasObserved);
-		Rotation2d differenceFromVisionAndEstimatedHeading = AngleMath.getAngleDifference(visionEstimatedHeading, estimatedHeadingAtSampleTime);
+		Rotation2d differenceFromVisionAndEstimatedHeading = AngleMath
+			.getAngleDifference(visionEstimatedHeadingAtTimeStamp, estimatedHeadingAtSampleTime);
 		Rotation2d scaledDifferenceToAddToEstimatedHeading = differenceFromVisionAndEstimatedHeading.times(visionAndGyroRatio);
 		return currentEstimatedHeading.plus(scaledDifferenceToAddToEstimatedHeading);
 	}

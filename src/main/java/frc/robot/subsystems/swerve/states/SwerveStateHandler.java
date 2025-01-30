@@ -68,13 +68,11 @@ public class SwerveStateHandler {
 			swerveState.getAimAssist() == AimAssist.BRANCH
 				&& robotPoseSupplier.isPresent()
 				&& branchSupplier.get().isPresent()
-				&& reefSideSupplier.get().isPresent()
 		) {
 			return handleBranchAimAssist(
 				speeds,
 				robotPoseSupplier.get().get(),
 				branchSupplier.get().get(),
-				reefSideSupplier.get().get(),
 				swerveState
 			);
 		}
@@ -103,11 +101,10 @@ public class SwerveStateHandler {
 		ChassisSpeeds chassisSpeeds,
 		Pose2d robotPose,
 		ReefBranch reefBranch,
-		ReefSide reefSide,
 		SwerveState swerveState
 	) {
 		Translation2d branch = Field.getCoralPlacement(reefBranch);
-		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefSide).getRotation();
+		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefBranch.getReefSide()).getRotation();
 		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
 		return AimAssistMath
 			.getObjectAssistedSpeeds(chassisSpeeds, robotPose.getTranslation(), angleToReefSide, branch, swerveConstants, swerveState);

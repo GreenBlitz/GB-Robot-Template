@@ -1,11 +1,18 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.constants.field.enums.ReefBranch;
+import frc.constants.field.enums.ReefSide;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.subsystems.swerve.states.SwerveStateHandler;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 
 public class JoysticksBindings {
 
@@ -50,6 +57,22 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.L1.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveByState(
+					() -> new ChassisPowers(
+						usedJoystick.getAxisValue(Axis.LEFT_Y),
+						usedJoystick.getAxisValue(Axis.LEFT_X),
+						usedJoystick.getSensitiveAxisValue(Axis.RIGHT_X)
+					),
+					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)
+				)
+		);
+		usedJoystick.POV_LEFT.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.A))));
+		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.B))));
+		usedJoystick.POV_UP.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.C))));
+
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -46,6 +46,7 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 	BrushlessSparkMAXMotor motor;
 	InputSignal<Double> velocitySignal;
+	InputSignal<Double> voltageSignal;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
@@ -54,7 +55,7 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
-			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.001, 1 / 1), DCMotor.getNEO(1))
+			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.001, 1), DCMotor.getNEO(1))
 		);
 		SparkMaxWrapper motorWrapper = new SparkMaxWrapper(new SparkMaxDeviceID(1));
 		motor = new BrushlessSparkMAXMotor(
@@ -64,12 +65,10 @@ public class RobotManager extends LoggedRobot {
 			new SysIdRoutine.Config()
 		);
 		SparkMaxConfig config = new SparkMaxConfig();
-		ClosedLoopConfig closedLoopConfig = new ClosedLoopConfig();
-		closedLoopConfig.p(5.5,  ClosedLoopConfig.ClosedLoopSlot.kSlot0);
-		closedLoopConfig.d(0.5,  ClosedLoopConfig.ClosedLoopSlot.kSlot0);
-		config.apply(closedLoopConfig);
+		 config.closedLoop.p(1000);
 		motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 		velocitySignal = new SuppliedDoubleSignal("velocity", ()-> motorWrapper.getVelocityAnglePerSecond().getRotations());
+		voltageSignal = new SuppliedDoubleSignal("voltage", ()-> motorWrapper.getVoltage());
 		JoysticksBindings.configureBindings(robot);
 	}
 
@@ -100,7 +99,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(10), 0, (rotation2d)->10.0));
+//		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(200), 0, Rotation2d::getRotations));
 
 	}
 
@@ -110,6 +109,7 @@ public class RobotManager extends LoggedRobot {
 		robot.periodic();
 		AlertManager.reportAlerts();
 		motor.updateInputs(velocitySignal);
+		motor.updateInputs(voltageSignal);
 	}
 
 	private void updateTimeRelatedData() {

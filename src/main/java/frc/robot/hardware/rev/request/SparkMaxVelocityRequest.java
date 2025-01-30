@@ -27,5 +27,4 @@ public class SparkMaxVelocityRequest extends SparkMaxRequest<Rotation2d> {
 		return setPointToDoubleConverter.apply(Rotation2d.fromRotations(Conversions.perSecondToPerMinute(rotations)));
 	}
 
-
 }

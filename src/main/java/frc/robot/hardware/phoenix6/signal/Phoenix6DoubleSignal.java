@@ -3,7 +3,7 @@ package frc.robot.hardware.phoenix6.signal;
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.hardware.signal.TimedValue;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class Phoenix6DoubleSignal extends DoubleSignal implements SignalGetter {
 
@@ -16,7 +16,7 @@ public class Phoenix6DoubleSignal extends DoubleSignal implements SignalGetter {
 
 	@Override
 	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
+		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtil.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
 	}
 
 	/**

@@ -1,8 +1,8 @@
 package frc.utils.alerts;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.utils.DriverStationUtils;
-import frc.utils.time.TimeUtils;
+import frc.utils.DriverStationUtil;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class Alert {
@@ -31,7 +31,7 @@ public class Alert {
 	}
 
 	private boolean shouldReportToDriverStation() {
-		return lastTimeReportedToDriveStationSeconds + SECONDS_BETWEEN_REPORTS <= TimeUtils.getCurrentTimeSeconds();
+		return lastTimeReportedToDriveStationSeconds + SECONDS_BETWEEN_REPORTS <= TimeUtil.getCurrentTimeSeconds();
 	}
 
 	private void reportToDriverStation() {
@@ -39,13 +39,13 @@ public class Alert {
 			logPath + " happened " + timesOccurredSinceLastReportToDriverStation + " in the last " + SECONDS_BETWEEN_REPORTS + " seconds.",
 			LOG_TRACE
 		);
-		lastTimeReportedToDriveStationSeconds = TimeUtils.getCurrentTimeSeconds();
+		lastTimeReportedToDriveStationSeconds = TimeUtil.getCurrentTimeSeconds();
 		timesOccurredSinceLastReportToDriverStation = 0;
 	}
 
 	public void report() {
 		timesOccurredSinceLastReportToDriverStation++;
-		if (!DriverStationUtils.isMatch()) {
+		if (!DriverStationUtil.isMatch()) {
 			switch (type) {
 				case ERROR:
 					if (shouldReportToDriverStation()) {
@@ -53,7 +53,7 @@ public class Alert {
 					}
 			}
 		}
-		Logger.recordOutput(logPath, TimeUtils.getCurrentTimeSeconds());
+		Logger.recordOutput(logPath, TimeUtil.getCurrentTimeSeconds());
 	}
 
 }

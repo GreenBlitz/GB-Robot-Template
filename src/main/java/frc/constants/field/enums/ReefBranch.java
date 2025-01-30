@@ -2,27 +2,33 @@ package frc.constants.field.enums;
 
 public enum ReefBranch {
 
-	A(0),
-	B(1),
-	C(2),
-	D(3),
-	E(4),
-	F(5),
-	G(6),
-	H(7),
-	I(8),
-	J(9),
-	K(10),
-	L(11);
+	A(0, ReefSide.A),
+	B(1, ReefSide.A),
+	C(2, ReefSide.B),
+	D(3, ReefSide.B),
+	E(4, ReefSide.C),
+	F(5, ReefSide.C),
+	G(6, ReefSide.D),
+	H(7, ReefSide.D),
+	I(8, ReefSide.E),
+	J(9, ReefSide.E),
+	K(10, ReefSide.F),
+	L(11, ReefSide.F);
 
 	private final int index;
+	private final ReefSide reefSide;
 
-	ReefBranch(int index) {
+	ReefBranch(int index, ReefSide reefSide) {
 		this.index = index;
+		this.reefSide = reefSide;
 	}
 
 	public int getIndex() {
 		return index;
+	}
+
+	public ReefSide getReefSide() {
+		return reefSide;
 	}
 
 }

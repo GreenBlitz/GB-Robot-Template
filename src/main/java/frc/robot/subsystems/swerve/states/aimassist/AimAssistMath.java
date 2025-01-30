@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -42,13 +43,14 @@ public class AimAssistMath {
 	 */
 	public static ChassisSpeeds getObjectAssistedSpeeds(
 		ChassisSpeeds speeds,
-		Translation2d robotPose,
+		Pose2d robotPose,
 		Rotation2d targetAngle,
 		Translation2d objectTranslation,
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
 	) {
-		Pose2d robotWithHeading = new Pose2d(robotPose.getX(), robotPose.getY(), targetAngle);
+		Pose2d allianceRelativeRobot = Field.getAllianceRelative(robotPose);
+		Pose2d robotWithHeading = new Pose2d(allianceRelativeRobot.getX(), allianceRelativeRobot.getY(), targetAngle);
 		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotWithHeading, objectTranslation);
 		double pidHorizontalToObjectOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController()
 			.calculate(0, objectRelativeToRobot.getY());

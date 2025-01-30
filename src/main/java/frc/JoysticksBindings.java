@@ -72,6 +72,8 @@ public class JoysticksBindings {
 		usedJoystick.POV_LEFT.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.A))));
 		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.B))));
 		usedJoystick.POV_UP.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.C))));
+		usedJoystick.A.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setReefSideSupplier(()-> java.util.Optional.of(ReefSide.A))));
+		usedJoystick.B.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setReefSideSupplier(()-> java.util.Optional.of(ReefSide.B))));
 
 	}
 

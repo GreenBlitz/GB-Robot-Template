@@ -24,7 +24,9 @@ import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.robot.hardware.rev.request.SparkMaxRequest;
 import frc.robot.hardware.rev.request.SparkMaxRequestBuilder;
 import frc.robot.hardware.rev.request.SparkMaxVelocityRequest;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.utils.AngleUnit;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -44,9 +46,10 @@ public class RobotManager extends LoggedRobot {
 	private final Robot robot;
 	private Command autonomousCommand;
 	private int roborioCycles;
+
 	BrushlessSparkMAXMotor motor;
-	InputSignal<Double> velocitySignal;
-	InputSignal<Double> voltageSignal;
+	SuppliedDoubleSignal velocitySignal;
+	SuppliedDoubleSignal voltageSignal;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
@@ -54,8 +57,10 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
+
 		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
-			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.001, 1), DCMotor.getNEO(1))
+			new DCMotorSim(LinearSystemId.createDCMotorSystem(
+				DCMotor.getNEO(1), 0.001, 1), DCMotor.getNEO(1))
 		);
 		SparkMaxWrapper motorWrapper = new SparkMaxWrapper(new SparkMaxDeviceID(1));
 		motor = new BrushlessSparkMAXMotor(
@@ -65,10 +70,10 @@ public class RobotManager extends LoggedRobot {
 			new SysIdRoutine.Config()
 		);
 		SparkMaxConfig config = new SparkMaxConfig();
-		 config.closedLoop.p(1000);
+		 config.closedLoop.p(2);
 		motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 		velocitySignal = new SuppliedDoubleSignal("velocity", ()-> motorWrapper.getVelocityAnglePerSecond().getRotations());
-		voltageSignal = new SuppliedDoubleSignal("voltage", ()-> motorWrapper.getVoltage());
+		voltageSignal = new SuppliedDoubleSignal("voltage", motorWrapper::getVoltage);
 		JoysticksBindings.configureBindings(robot);
 	}
 
@@ -99,8 +104,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-//		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(200), 0, Rotation2d::getRotations));
-
+		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(200), 0, Rotation2d::getRotations));
 	}
 
 	@Override
@@ -108,6 +112,7 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		robot.periodic();
 		AlertManager.reportAlerts();
+		motor.updateSimulation();
 		motor.updateInputs(velocitySignal);
 		motor.updateInputs(voltageSignal);
 	}

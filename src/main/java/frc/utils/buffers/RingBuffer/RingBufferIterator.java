@@ -31,7 +31,7 @@ public class RingBufferIterator<T> implements Iterator<T> {
 		if (!hasNext()) {
 			throw new NoSuchElementException("Ring buffer iterator exhausted");
 		}
-		T value = ringBuffer.getAtIndex(currentIndex).get(); // the get operation is safe because we check if the value exists in hasNext()
+		T value = ringBuffer.get(currentIndex).get(); // the get operation is safe because we check if the value exists in hasNext()
 		currentIndex = ringBuffer.wrapIndex(currentIndex + 1);
 		this.used = true;
 		return value;

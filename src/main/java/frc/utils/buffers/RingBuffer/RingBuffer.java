@@ -71,7 +71,7 @@ public class RingBuffer<T> implements Iterable<T> {
 		return buffer.get(index).isPresent();
 	}
 
-	protected Optional<T> getAtIndex(int index) {
+	protected Optional<T> get(int index) {
 		return buffer.get(index);
 	}
 

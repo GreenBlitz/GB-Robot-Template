@@ -28,10 +28,13 @@ public class VisionFilters {
 		return new Filter<>(visionData -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters));
 	}
 
-	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagRealHeightMeters, double aprilTagHeightToleranceMeters) {
+	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
 		return new Filter<>(
-			aprilTagVisionData -> MathUtil
-				.isNear(aprilTagRealHeightMeters, aprilTagVisionData.getAprilTagHeightMeters(), aprilTagHeightToleranceMeters)
+			aprilTagVisionData -> MathUtil.isNear(
+				VisionUtils.getAprilTagHeightByID(aprilTagVisionData.getTrackedAprilTagId()),
+				aprilTagVisionData.getAprilTagHeightMeters(),
+				aprilTagHeightToleranceMeters
+			)
 		);
 	}
 

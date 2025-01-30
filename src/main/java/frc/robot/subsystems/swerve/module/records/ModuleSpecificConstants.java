@@ -3,7 +3,7 @@ package frc.robot.subsystems.swerve.module.records;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
-import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.utils.Conversions;
 
 public record ModuleSpecificConstants(
@@ -15,7 +15,7 @@ public record ModuleSpecificConstants(
 ) {
 
 	public ModuleSpecificConstants(
-		ModuleUtils.ModulePosition modulePosition,
+		ModuleUtil.ModulePosition modulePosition,
 		String logPathPrefix,
 		double wheelDiameterMeters,
 		double couplingRatio,

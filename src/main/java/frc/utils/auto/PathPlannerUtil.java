@@ -30,7 +30,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class PathPlannerUtils {
+public class PathPlannerUtil {
 
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 

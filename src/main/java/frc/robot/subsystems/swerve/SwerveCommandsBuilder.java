@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.utils.auto.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtil;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
@@ -36,12 +36,12 @@ public class SwerveCommandsBuilder {
 		this.swerve = swerve;
 		this.modules = swerve.getModules();
 		this.steerCalibrator = new SysIdCalibrator(
-			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getSteerSysIdConfigInfo(),
+			modules.getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getSteerSysIdConfigInfo(),
 			swerve,
-			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT)::setSteerVoltage
+			modules.getModule(ModuleUtil.ModulePosition.FRONT_LEFT)::setSteerVoltage
 		);
 		this.driveCalibrator = new SysIdCalibrator(
-			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getDriveSysIdConfigInfo(),
+			modules.getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getDriveSysIdConfigInfo(),
 			swerve,
 			modules::setDrivesVoltage
 		);
@@ -180,7 +180,7 @@ public class SwerveCommandsBuilder {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 		if (distanceFromTarget < AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = PathPlannerUtil.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
 			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}

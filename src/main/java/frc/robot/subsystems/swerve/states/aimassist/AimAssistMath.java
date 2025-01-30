@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve.states.aimassist;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -47,7 +48,8 @@ public class AimAssistMath {
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
 	) {
-		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotPose, objectTranslation);
+		Pose2d robotWithHeading = new Pose2d(robotPose.getX(), robotPose.getY(), targetAngle);
+		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotWithHeading, objectTranslation);
 		double pidHorizontalToObjectOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController()
 			.calculate(0, objectRelativeToRobot.getY());
 

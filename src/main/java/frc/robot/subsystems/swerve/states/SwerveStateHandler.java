@@ -109,17 +109,16 @@ public class SwerveStateHandler {
 		Translation2d branch = Field.getCoralPlacement(reefBranch);
 		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefSide, true).getRotation();
 		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
-		Pose2d poseWithHead = new Pose2d(robotPose.getX(), robotPose.getY(), angleToReefSide.plus(MathConstants.HALF_CIRCLE));
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, poseWithHead, branch, swerveConstants, swerveState);
+		Pose2d poseWithHeading = new Pose2d(robotPose.getX(), robotPose.getY(), angleToReefSide.plus(MathConstants.HALF_CIRCLE));
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, poseWithHeading, branch, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAlgiAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
-//		Pose2d middleOfReefSide = Field.getMiddleOfReefSide(reefSide);
-//		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefSide).getRotation();
-//		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
-//		return AimAssistMath
-//			.getObjectAssistedSpeeds(chassisSpeeds, robotPose, angleToReefSide, middleOfReefSide.getTranslation(), swerveConstants, swerveState);
-		return new ChassisSpeeds();
+		Pose2d middleOfReefSide = Field.getMiddleOfReefSide(reefSide, true);
+		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefSide, true).getRotation();
+		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
+		return AimAssistMath
+			.getObjectAssistedSpeeds(chassisSpeeds, robotPose, middleOfReefSide.getTranslation(), swerveConstants, swerveState);
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {

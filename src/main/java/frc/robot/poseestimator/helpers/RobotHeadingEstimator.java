@@ -7,6 +7,7 @@ import frc.constants.RobotHeadingEstimatorConstants;
 import frc.robot.poseestimator.PoseEstimatorMath;
 import frc.utils.buffers.RingBuffer.RingBuffer;
 import frc.utils.TimedValue;
+import frc.utils.math.AngleMath;
 import frc.utils.math.PoseMath;
 import org.littletonrobotics.junction.Logger;
 
@@ -49,7 +50,7 @@ public class RobotHeadingEstimator {
 		double visionNoiseStandardDeviation = PoseMath.calculateStandardDeviations(
 			estimationAndGyroBuffer,
 			estimationVisionPair -> Math
-				.abs(PoseEstimatorMath.getAngleDifference(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())
+				.abs(AngleMath.getAngleDifference(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())
 		);
 
 		Logger.recordOutput(
@@ -85,7 +86,7 @@ public class RobotHeadingEstimator {
 
 	public void updateGyroAngle(TimedValue<Rotation2d> gyroHeadingData) {
 		unOffsetedGyroAngleInterpolator.addSample(gyroHeadingData.timestamp(), gyroHeadingData.value());
-		estimatedHeading = estimatedHeading.plus(PoseEstimatorMath.getAngleDifference(gyroHeadingData.value(), lastGyroAngle));
+		estimatedHeading = estimatedHeading.plus(AngleMath.getAngleDifference(gyroHeadingData.value(), lastGyroAngle));
 		lastGyroAngle = gyroHeadingData.value();
 	}
 
@@ -102,7 +103,7 @@ public class RobotHeadingEstimator {
 		Logger.recordOutput(logPath + RobotHeadingEstimatorConstants.ESTIMATED_HEADING_LOGPATH_ADDITION, estimatedHeading);
 		Logger.recordOutput(
 			logPath + RobotHeadingEstimatorConstants.ESTIMATED_HEADING_DIFFERENCE_FROM_GYRO_YAW_LOGPATH_ADDITION,
-			PoseEstimatorMath.getAngleDifference(estimatedHeading, lastGyroAngle)
+			AngleMath.getAngleDifference(estimatedHeading, lastGyroAngle)
 		);
 	}
 

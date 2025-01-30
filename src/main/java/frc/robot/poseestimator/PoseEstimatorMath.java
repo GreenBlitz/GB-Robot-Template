@@ -1,8 +1,8 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.constants.MathConstants;
 import frc.constants.RobotHeadingEstimatorConstants;
+import frc.utils.math.AngleMath;
 
 public class PoseEstimatorMath {
 
@@ -19,20 +19,12 @@ public class PoseEstimatorMath {
 		double gyroStandardDeviation,
 		double visionStandardDeviation
 	) {
-		Rotation2d changeInAngleSinceVisionDataWasObserved = PoseEstimatorMath.getAngleDifference(gyroAngle, lastGyroAngle);
+		Rotation2d changeInAngleSinceVisionDataWasObserved = AngleMath.getAngleDifference(gyroAngle, lastGyroAngle);
 		double visionAndGyroRatio = getKalmanRatio(gyroStandardDeviation, visionStandardDeviation);
 		Rotation2d estimatedHeadingAtSampleTime = currentEstimatedHeading.minus(changeInAngleSinceVisionDataWasObserved);
-		Rotation2d differenceFromVisionAndEstimatedHeading = getAngleDifference(visionEstimatedHeading, estimatedHeadingAtSampleTime);
+		Rotation2d differenceFromVisionAndEstimatedHeading = AngleMath.getAngleDifference(visionEstimatedHeading, estimatedHeadingAtSampleTime);
 		Rotation2d scaledDifferenceToAddToEstimatedHeading = differenceFromVisionAndEstimatedHeading.times(visionAndGyroRatio);
 		return currentEstimatedHeading.plus(scaledDifferenceToAddToEstimatedHeading);
-	}
-
-	public static Rotation2d getAngleDifference(Rotation2d angle1, Rotation2d angle2) {
-		Rotation2d difference = angle1.minus(angle2);
-		if (difference.getRadians() > Math.PI) {
-			return Rotation2d.fromRadians(MathConstants.FULL_CIRCLE.getRadians() - difference.getRadians());
-		}
-		return difference;
 	}
 
 }

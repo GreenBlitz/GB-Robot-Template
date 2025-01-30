@@ -8,7 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import frc.utils.math.StandardDeviations3D;
 import frc.constants.VisionConstants;
-import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.RobotAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
@@ -48,14 +48,14 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private double[] standardDeviationsArray;
 	private double computingPipeLineLatency;
 	private double captureLatency;
-	private Filter<AprilTagVisionData> filter;
-	private GyroAngleValues gyroAngleValues;
+	private Filter<? super AprilTagVisionData> filter;
+	private RobotAngleValues robotAngleValues;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
-		Filter<AprilTagVisionData> filter,
+		Filter<? super AprilTagVisionData> filter,
 		Pose3d cameraPoseOffset,
 		LimelightPoseEstimationMethod poseEstimationMethod
 	) {
@@ -69,14 +69,14 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.cameraPoseOffsetEntry = getLimelightNetworkTableEntry("camerapose_robotspace_set");
 		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryMegaTag1 = getLimelightNetworkTableEntry("botpose_wpiblue");
-		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_cameraspace");
+		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_robotspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.standardDeviations = getLimelightNetworkTableEntry("stddevs");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 
-		this.gyroAngleValues = new GyroAngleValues();
+		this.robotAngleValues = new RobotAngleValues();
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -88,8 +88,8 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	@Override
 	public void update() {
-		robotOrientationEntry.setDoubleArray(gyroAngleValues.asArray());
-		Logger.recordOutput(logPath + "gyroAngleValues", gyroAngleValues.asArray());
+		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
+		Logger.recordOutput(logPath + "gyroAngleValues", robotAngleValues.asArray());
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		NetworkTableEntry entry = switch (poseEstimationMethod) {
 			case MEGATAG_1 -> robotPoseEntryMegaTag1;
@@ -155,7 +155,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(standardDeviationsArray),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
-				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE),
+				getDistanceFromTag(),
 				getAprilTagID()
 			)
 		);
@@ -171,12 +171,12 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
-	public void setFilter(Filter<AprilTagVisionData> newFilter) {
+	public void setFilter(Filter<? super AprilTagVisionData> newFilter) {
 		this.filter = newFilter;
 	}
 
 	@Override
-	public Filter<AprilTagVisionData> getFilter() {
+	public Filter<? super AprilTagVisionData> getFilter() {
 		return filter;
 	}
 
@@ -185,17 +185,25 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
-	public void updateGyroAngleValues(GyroAngleValues gyroAngleValues) {
-		this.gyroAngleValues = gyroAngleValues;
+	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
+		this.robotAngleValues = robotAngleValues;
 	}
 
 	private void updateCameraPoseOffset(Pose3d cameraPoseOffset) {
 		this.cameraPoseOffsetEntry.setDoubleArray(PoseUtils.pose3DToPoseArray(cameraPoseOffset, AngleUnit.DEGREES));
 	}
 
+	private double getDistanceFromTag() {
+		return Math.sqrt(
+			Math.pow(getAprilTagValueInRobotSpace(Pose3dComponentsValue.X_VALUE), 2)
+				+ Math.pow(getAprilTagValueInRobotSpace(Pose3dComponentsValue.Y_VALUE), 2)
+				+ Math.pow(getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE), 2)
+		);
+	}
+
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
-		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtils.poseArrayToPose3D(robotPoseArray, AngleUnit.DEGREES));
+		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtils.toPose3D(robotPoseArray, AngleUnit.DEGREES));
 		getVisionData().ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfiltered3DVision", visionData.getEstimatedPose());
 			Logger.recordOutput(logPath + "unfiltered2DVision(Projected)", visionData.getEstimatedPose().toPose2d());

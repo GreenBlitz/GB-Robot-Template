@@ -12,7 +12,7 @@ public class LimelightFactory {
 		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
-		Filter<AprilTagVisionData> filter,
+		Filter<? super AprilTagVisionData> filter,
 		Pose3d cameraPoseOffset
 	) {
 		return new LimeLightSource(
@@ -29,7 +29,7 @@ public class LimelightFactory {
 		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
-		Filter<AprilTagVisionData> filter,
+		Filter<? super AprilTagVisionData> filter,
 		Pose3d cameraPoseOffset
 	) {
 		return new LimeLightSource(

@@ -12,7 +12,7 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.alerts.Alert;
 import frc.utils.math.AngleUnit;
 
-public class PoseUtils {
+public class PoseUtil {
 
 	public static Pose3d poseArrayToPose3D(double[] poseArray, AngleUnit angleUnit) {
 		int requiredAmount = Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT;

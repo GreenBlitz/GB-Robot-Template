@@ -11,7 +11,7 @@ import frc.constants.field.enums.CagePosition;
 import frc.constants.field.enums.CoralStationPosition;
 import frc.constants.field.enums.ReefBranch;
 import frc.constants.field.enums.ReefSide;
-import frc.utils.DriverStationUtils;
+import frc.utils.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 
@@ -20,7 +20,7 @@ public class Field {
 	public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
 
 	public static boolean isFieldConventionAlliance() {
-		return DriverStationUtils.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
+		return DriverStationUtil.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
 
 

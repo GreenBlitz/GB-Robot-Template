@@ -11,7 +11,7 @@ import frc.constants.field.enums.ReefBranch;
 import frc.constants.field.enums.ReefSide;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 
@@ -109,31 +109,24 @@ public class SwerveStateHandler {
 		Translation2d branch = Field.getCoralPlacement(reefBranch);
 		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefSide).getRotation();
 		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
-		return AimAssistMath
-			.getObjectAssistedSpeeds(chassisSpeeds, robotPose, angleToReefSide, branch, swerveConstants, swerveState);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, angleToReefSide, branch, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAlgiAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
 		Pose2d middleOfReefSide = Field.getMiddleOfReefSide(reefSide);
 		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefSide).getRotation();
 		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(
-			chassisSpeeds,
-			robotPose,
-			angleToReefSide,
-			middleOfReefSide.getTranslation(),
-			swerveConstants,
-			swerveState
-		);
+		return AimAssistMath
+			.getObjectAssistedSpeeds(chassisSpeeds, robotPose, angleToReefSide, middleOfReefSide.getTranslation(), swerveConstants, swerveState);
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
 		return switch (rotationAxisState) {
 			case MIDDLE_OF_CHASSIS -> new Translation2d();
-			case FRONT_LEFT_MODULE -> swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getPositionFromCenterMeters();
-			case FRONT_RIGHT_MODULE -> swerve.getModules().getModule(ModuleUtils.ModulePosition.FRONT_RIGHT).getPositionFromCenterMeters();
-			case BACK_LEFT_MODULE -> swerve.getModules().getModule(ModuleUtils.ModulePosition.BACK_LEFT).getPositionFromCenterMeters();
-			case BACK_RIGHT_MODULE -> swerve.getModules().getModule(ModuleUtils.ModulePosition.BACK_RIGHT).getPositionFromCenterMeters();
+			case FRONT_LEFT_MODULE -> swerve.getModules().getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getPositionFromCenterMeters();
+			case FRONT_RIGHT_MODULE -> swerve.getModules().getModule(ModuleUtil.ModulePosition.FRONT_RIGHT).getPositionFromCenterMeters();
+			case BACK_LEFT_MODULE -> swerve.getModules().getModule(ModuleUtil.ModulePosition.BACK_LEFT).getPositionFromCenterMeters();
+			case BACK_RIGHT_MODULE -> swerve.getModules().getModule(ModuleUtil.ModulePosition.BACK_RIGHT).getPositionFromCenterMeters();
 		};
 	}
 

@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.utils.math.ToleranceMath;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class SwerveMath {
 
@@ -17,16 +17,16 @@ public class SwerveMath {
 		return sum / modulePositionsFromCenterMeters.length;
 	}
 
-	public static ChassisSpeeds fieldToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeHeading) {
-		return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeHeading);
+	public static ChassisSpeeds allianceToRobotRelativeSpeeds(ChassisSpeeds allianceRelativeSpeeds, Rotation2d allianceRelativeHeading) {
+		return ChassisSpeeds.fromFieldRelativeSpeeds(allianceRelativeSpeeds, allianceRelativeHeading);
 	}
 
-	public static ChassisSpeeds robotToFieldRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Rotation2d allianceRelativeHeading) {
+	public static ChassisSpeeds robotToAllianceRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Rotation2d allianceRelativeHeading) {
 		return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeSpeeds, allianceRelativeHeading);
 	}
 
 	public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-		return ChassisSpeeds.discretize(chassisSpeeds, TimeUtils.getLatestCycleTimeSeconds());
+		return ChassisSpeeds.discretize(chassisSpeeds, TimeUtil.getLatestCycleTimeSeconds());
 	}
 
 	public static ChassisSpeeds powersToSpeeds(ChassisPowers powers, SwerveConstants constants) {

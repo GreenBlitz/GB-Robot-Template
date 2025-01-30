@@ -6,7 +6,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import frc.robot.hardware.phoenix6.motors.TalonFXWrapper;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
-import frc.utils.battery.BatteryUtils;
+import frc.utils.battery.BatteryUtil;
 
 public class TalonFXSimulation {
 
@@ -19,7 +19,7 @@ public class TalonFXSimulation {
 		this.mechanismSimulation = simulation;
 		this.motorSimState = talonFXWrapper.getSimState();
 
-		motorSimState.setSupplyVoltage(BatteryUtils.DEFAULT_VOLTAGE);
+		motorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
 	}
 
 	public void applyConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {

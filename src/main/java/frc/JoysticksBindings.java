@@ -9,9 +9,7 @@ import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 
 public class JoysticksBindings {
@@ -69,12 +67,16 @@ public class JoysticksBindings {
 					SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)
 				)
 		);
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.A))));
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.B))));
-		usedJoystick.POV_UP.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setBranchSupplier(()-> java.util.Optional.of(ReefBranch.C))));
-		usedJoystick.A.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setReefSideSupplier(()-> java.util.Optional.of(ReefSide.A))));
-		usedJoystick.B.onTrue(new InstantCommand(()-> robot.getSwerve().getStateHandler().setReefSideSupplier(()-> java.util.Optional.of(ReefSide.B))));
-
+		usedJoystick.POV_LEFT
+			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(ReefBranch.A))));
+		usedJoystick.POV_RIGHT
+			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(ReefBranch.B))));
+		usedJoystick.POV_UP
+			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(ReefBranch.C))));
+		usedJoystick.A
+			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> java.util.Optional.of(ReefSide.A))));
+		usedJoystick.B
+			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> java.util.Optional.of(ReefSide.B))));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -12,7 +12,7 @@ import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
@@ -48,11 +48,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
-		this.lastOdometryObservation = new OdometryObservation(
-			modulePositions,
-			Optional.of(initialGyroAngle),
-			TimeUtils.getCurrentTimeSeconds()
-		);
+		this.lastOdometryObservation = new OdometryObservation(modulePositions, Optional.of(initialGyroAngle), TimeUtil.getCurrentTimeSeconds());
 	}
 
 
@@ -99,7 +95,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	@Override
 	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
-		this.lastOdometryObservation = new OdometryObservation(wheelPositions, Optional.of(gyroAngle), TimeUtils.getCurrentTimeSeconds());
+		this.lastOdometryObservation = new OdometryObservation(wheelPositions, Optional.of(gyroAngle), TimeUtil.getCurrentTimeSeconds());
 	}
 
 	@Override

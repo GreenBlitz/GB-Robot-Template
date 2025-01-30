@@ -10,6 +10,8 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.structures.Tolerances;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.RotateAxis;
@@ -153,10 +155,8 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 		usedJoystick.START.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> 0, () -> 0, () -> 0));
-		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> 0.1, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
-		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> -0.1, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
-		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> 0.5, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
-		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> -0.5, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
+		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> 0.5 / RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
+
 		
 		usedJoystick.POV_DOWN.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
 	}

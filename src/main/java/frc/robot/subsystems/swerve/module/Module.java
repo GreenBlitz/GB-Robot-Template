@@ -100,14 +100,14 @@ public class Module {
 
 
 	private void fixDriveInputsCoupling() {
-		driveCouplingInputs.uncoupledVelocityAnglesPerSecond = ModuleUtils
+		driveCouplingInputs.uncoupledVelocityAnglesPerSecond = ModuleUtil
 			.uncoupleDriveAngle(driveSignals.velocity().getLatestValue(), steerSignals.velocity().getLatestValue(), constants.couplingRatio());
 
 		driveCouplingInputs.uncoupledPositions = new Rotation2d[driveSignals.position().asArray().length];
 		for (int i = 0; i < driveCouplingInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerSignals.position().asArray()[i].getRotations() - startingSteerPosition.getRotations());
-			driveCouplingInputs.uncoupledPositions[i] = ModuleUtils
+			driveCouplingInputs.uncoupledPositions[i] = ModuleUtil
 				.uncoupleDriveAngle(driveSignals.position().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
@@ -151,7 +151,7 @@ public class Module {
 
 	public void stop() {
 		targetState = new SwerveModuleState(0, getSteerPosition());
-		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
+		moduleInputs.controlMode = ModuleUtil.ControlMode.TARGET_STATE.toLog();
 		steer.stop();
 		drive.stop();
 	}
@@ -164,13 +164,13 @@ public class Module {
 	private void setDriveVoltage(double voltage, boolean usingTargetState) {
 		setClosedLoop(false);
 		if (!usingTargetState) {
-			moduleInputs.controlMode = ModuleUtils.ControlMode.CUSTOM.toLog();
+			moduleInputs.controlMode = ModuleUtil.ControlMode.CUSTOM.toLog();
 		}
 		drive.applyRequest(driveRequests.voltage().withSetPoint(voltage));
 	}
 
 	public void setSteerVoltage(double voltage) {
-		moduleInputs.controlMode = ModuleUtils.ControlMode.CUSTOM.toLog();
+		moduleInputs.controlMode = ModuleUtil.ControlMode.CUSTOM.toLog();
 		steer.applyRequest(steerRequests.voltage().withSetPoint(voltage));
 	}
 
@@ -192,7 +192,7 @@ public class Module {
 			moduleState.optimize(getSteerPosition());
 		}
 		targetState.angle = moduleState.angle;
-		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
+		moduleInputs.controlMode = ModuleUtil.ControlMode.TARGET_STATE.toLog();
 		setTargetSteerPosition(targetState.angle);
 	}
 
@@ -202,7 +202,7 @@ public class Module {
 		targetState.cosineScale(getSteerPosition());
 
 		this.targetState = targetState;
-		moduleInputs.controlMode = ModuleUtils.ControlMode.TARGET_STATE.toLog();
+		moduleInputs.controlMode = ModuleUtil.ControlMode.TARGET_STATE.toLog();
 
 		setTargetSteerPosition(this.targetState.angle);
 		setTargetVelocity(this.targetState.speedMetersPerSecond, isClosedLoop);
@@ -223,13 +223,13 @@ public class Module {
 	public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
 		setClosedLoop(true);
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
-		Rotation2d coupledVelocityPerSecond = ModuleUtils
+		Rotation2d coupledVelocityPerSecond = ModuleUtil
 			.coupleDriveAngle(targetVelocityPerSecond, steerSignals.velocity().getLatestValue(), constants.couplingRatio());
 		drive.applyRequest(driveRequests.velocity().withSetPoint(coupledVelocityPerSecond));
 	}
 
 	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
-		double voltage = ModuleUtils.velocityToOpenLoopVoltage(
+		double voltage = ModuleUtil.velocityToOpenLoopVoltage(
 			targetVelocityMetersPerSecond,
 			steerSignals.velocity().getLatestValue(),
 			constants.couplingRatio(),

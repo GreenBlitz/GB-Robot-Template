@@ -25,10 +25,10 @@ public class PoseUtils {
 				poseArray[Pose3dComponentsValue.Y_VALUE.getIndex()],
 				poseArray[Pose3dComponentsValue.Z_VALUE.getIndex()]
 			),
-			new Rotation3d(
-				angleUnit.toRotation2d(poseArray[Pose3dComponentsValue.ROLL_VALUE.getIndex()]).getRadians(),
-				angleUnit.toRotation2d(poseArray[Pose3dComponentsValue.PITCH_VALUE.getIndex()]).getRadians(),
-				angleUnit.toRotation2d(poseArray[Pose3dComponentsValue.YAW_VALUE.getIndex()]).getRadians()
+			angleUnit.toRotation3d(
+				Pose3dComponentsValue.ROLL_VALUE.getIndex(),
+				Pose3dComponentsValue.PITCH_VALUE.getIndex(),
+				Pose3dComponentsValue.YAW_VALUE.getIndex()
 			)
 		);
 	}
@@ -46,39 +46,34 @@ public class PoseUtils {
 	}
 
 	public static double[] pose2DToPoseArray(Pose2d pose2d, AngleUnit angleUnit) {
+		Rotation2d rotation = pose2d.getRotation();
 		return new double[] {pose2d.getX(), pose2d.getY(), switch (angleUnit) {
-			case RADIANS -> pose2d.getRotation().getRadians();
-			case DEGREES -> pose2d.getRotation().getDegrees();
-			case ROTATIONS -> pose2d.getRotation().getRotations();
+			case RADIANS -> rotation.getRadians();
+			case DEGREES -> rotation.getDegrees();
+			case ROTATIONS -> rotation.getRotations();
 		}};
 	}
 
 	public static double[] pose3DToPoseArray(Pose3d pose3d, AngleUnit angleUnit) {
+		Rotation3d rotation = pose3d.getRotation();
 		return switch (angleUnit) {
-			case RADIANS ->
-				new double[] {
-					pose3d.getX(),
-					pose3d.getY(),
-					pose3d.getZ(),
-					pose3d.getRotation().getX(),
-					pose3d.getRotation().getY(),
-					pose3d.getRotation().getZ()};
+			case RADIANS -> new double[] {pose3d.getX(), pose3d.getY(), pose3d.getZ(), rotation.getX(), rotation.getY(), rotation.getZ()};
 			case DEGREES ->
 				new double[] {
 					pose3d.getX(),
 					pose3d.getY(),
 					pose3d.getZ(),
-					Rotation2d.fromRadians(pose3d.getRotation().getX()).getDegrees(),
-					Rotation2d.fromRadians(pose3d.getRotation().getY()).getDegrees(),
-					Rotation2d.fromRadians(pose3d.getRotation().getZ()).getDegrees()};
+					Rotation2d.fromRadians(rotation.getX()).getDegrees(),
+					Rotation2d.fromRadians(rotation.getY()).getDegrees(),
+					Rotation2d.fromRadians(rotation.getZ()).getDegrees()};
 			case ROTATIONS ->
 				new double[] {
 					pose3d.getX(),
 					pose3d.getY(),
 					pose3d.getZ(),
-					Rotation2d.fromRadians(pose3d.getRotation().getX()).getRotations(),
-					Rotation2d.fromRadians(pose3d.getRotation().getY()).getRotations(),
-					Rotation2d.fromRadians(pose3d.getRotation().getZ()).getRotations()};
+					Rotation2d.fromRadians(rotation.getX()).getRotations(),
+					Rotation2d.fromRadians(rotation.getY()).getRotations(),
+					Rotation2d.fromRadians(rotation.getZ()).getRotations()};
 		};
 	}
 

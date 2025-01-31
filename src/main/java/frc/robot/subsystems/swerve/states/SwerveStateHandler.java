@@ -75,28 +75,31 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleReefAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading, ReefSide reefSide) {
-		Rotation2d headingToReefSide = Field.getMiddleOfReefSide(reefSide).getRotation();
+		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefSide).getRotation();
 		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, headingToReefSide, swerveConstants);
 	}
 
 	private ChassisSpeeds handleCoralStationAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading, CoralStation coralStation) {
-		Rotation2d headingToCoralStation = Field.getMiddleOfCoralStation(coralStation).getRotation();
+		Rotation2d headingToCoralStation = Field.getCoralStationMiddle(coralStation).getRotation();
 		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, headingToCoralStation, swerveConstants);
 	}
 
 	private ChassisSpeeds handleBranchAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Branch reefBranch, SwerveState swerveState) {
 		Translation2d branchTranslation = Field.getCoralPlacement(reefBranch);
-		Rotation2d headingToReefSide = Field.getMiddleOfReefSide(reefBranch.getReefSide()).getRotation();
+		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefBranch.getReefSide()).getRotation();
 
-		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, branchTranslation, swerveConstants, swerveState);
+		chassisSpeeds = AimAssistMath
+			.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
+		return AimAssistMath
+			.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, branchTranslation, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAlgiAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
-		Translation2d reefSideMiddle = Field.getMiddleOfReefSide(reefSide).getTranslation();
-		Rotation2d headingToReefSide = Field.getMiddleOfReefSide(reefSide).getRotation();
+		Translation2d reefSideMiddle = Field.getReefSideMiddle(reefSide).getTranslation();
+		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefSide).getRotation();
 
-		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
+		chassisSpeeds = AimAssistMath
+			.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, reefSideMiddle, swerveConstants, swerveState);
 	}
 

@@ -73,7 +73,8 @@ public class RobotManager extends LoggedRobot {
 			BrakeStateManager.coast();
 		}
 
-		motor.getDevice().setControl(positionVoltage.withFeedForward(0).withPosition(0));
+		motor.applyRequest(request.withArbitraryFeedForward(0));
+//		motor.getDevice().setControl(positionVoltage.withFeedForward(0));
 	}
 
 	@Override
@@ -91,7 +92,9 @@ public class RobotManager extends LoggedRobot {
 			autonomousCommand.schedule();
 		}
 
-		motor.getDevice().setControl(positionVoltage.withFeedForward(8));
+//		motor.getDevice().setControl(positionVoltage.withFeedForward(8));
+		motor.applyRequest(request.withArbitraryFeedForward(8));
+
 
 	}
 
@@ -101,12 +104,16 @@ public class RobotManager extends LoggedRobot {
 			autonomousCommand.cancel();
 		}
 
-		motor.getDevice().setControl(positionVoltage.withFeedForward(12));
+		motor.applyRequest(request.withArbitraryFeedForward(12));
+
+//		motor.getDevice().setControl(positionVoltage.withFeedForward(12));
 	}
 
 	@Override
 	public void testInit() {
-		motor.getDevice().setControl(positionVoltage.withFeedForward(-7));
+		motor.applyRequest(request.withArbitraryFeedForward(-7));
+
+		//		motor.getDevice().setControl(positionVoltage.withFeedForward(-7));
 	}
 
 	@Override

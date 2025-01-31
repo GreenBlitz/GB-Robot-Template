@@ -6,7 +6,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-
 public class Phoenix6RequestBuilder {
 
 	public static Phoenix6Request<Double> build(VoltageOut voltageOut) {

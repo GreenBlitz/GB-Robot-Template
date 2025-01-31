@@ -1,6 +1,6 @@
 package frc.constants.field.enums;
 
-public enum CagePosition {
+public enum Cage {
 
 	FIELD_WALL(0),
 	MIDDLE(1),
@@ -8,7 +8,7 @@ public enum CagePosition {
 
 	private final int index;
 
-	CagePosition(int index) {
+	Cage(int index) {
 		this.index = index;
 	}
 

@@ -6,6 +6,6 @@ public enum AimAssist {
 	REEF,
 	BRANCH,
 	ALGI_REMOVE,
-	FEEDER;
+    CORAL_STATION;
 
 }

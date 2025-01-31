@@ -85,11 +85,11 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleBranchAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Branch reefBranch, SwerveState swerveState) {
-		Translation2d branch = Field.getCoralPlacement(reefBranch);
+		Translation2d branchTranslation = Field.getCoralPlacement(reefBranch);
 		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefBranch.getReefSide()).getRotation();
 		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
 		Pose2d poseWithHeading = new Pose2d(robotPose.getX(), robotPose.getY(), angleToReefSide.plus(MathConstants.HALF_CIRCLE));
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, poseWithHeading, branch, swerveConstants, swerveState);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, poseWithHeading, branchTranslation, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAlgiAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {

@@ -74,20 +74,20 @@ public class Field {
 		return getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
-	public static Translation2d getCoralPlacement(ReefBranch branch) {
+	public static Translation2d getCoralPlacement(Branch branch) {
 		return getAllianceRelative(CORAL_BRANCHES[branch.getIndex()], true, true);
 	}
 
-	public static Translation2d getCage(CagePosition cagePosition) {
-		return getAllianceRelative(CAGES[cagePosition.getIndex()], false, true);
+	public static Translation2d getCage(Cage cage) {
+		return getAllianceRelative(CAGES[cage.getIndex()], false, true);
 	}
 
 	public static Pose2d getProcessor() {
 		return getAllianceRelative(PROCESSOR, true, true, AngleTransform.INVERT);
 	}
 
-	public static Pose2d getMiddleOfCoralStation(CoralStationPosition coralStationPosition) {
-		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], true, true, AngleTransform.INVERT);
+	public static Pose2d getMiddleOfCoralStation(CoralStation coralStation) {
+		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStation.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
 

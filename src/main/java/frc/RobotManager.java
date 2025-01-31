@@ -64,6 +64,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
+		robot.getElevator().getCommandsBuilder().setTargetPositionMeters(1).schedule();
 	}
 
 	@Override

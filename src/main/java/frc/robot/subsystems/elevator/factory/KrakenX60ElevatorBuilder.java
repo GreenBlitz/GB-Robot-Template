@@ -2,12 +2,10 @@ package frc.robot.subsystems.elevator.factory;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.VoltageUnit;
@@ -53,9 +51,9 @@ public class KrakenX60ElevatorBuilder {
 	private static final double REAL_KI = 0;
 	private static final double REAL_KD = 0;
 
-	private static final double SIMULATION_KP = 1.6;
+	private static final double SIMULATION_KP = /*1.6*/5;
 	private static final double SIMULATION_KI = 0;
-	private static final double SIMULATION_KD = 0.05;
+	private static final double SIMULATION_KD = /*0.05*/0;
 	private static final int NUMBER_OF_MOTORS = 2;
 	private static final double STARTING_HEIGHT_METERS = 0;
 
@@ -151,7 +149,16 @@ public class KrakenX60ElevatorBuilder {
 	private static Elevator create(String logPath, TalonFXMotor firstMotor, TalonFXMotor secondMotor) {
 		IDigitalInput digitalInput = generateDigitalInput();
 
-		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0), 0, true);
+		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
+			new DynamicMotionMagicVoltage(
+				0,
+				Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND).getRotations(),
+				Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED).getRotations(),
+				0
+			),
+			0,
+			true
+		);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
 		return new Elevator(

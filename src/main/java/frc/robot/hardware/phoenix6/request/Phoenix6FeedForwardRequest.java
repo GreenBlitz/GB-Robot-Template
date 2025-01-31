@@ -5,12 +5,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.function.Consumer;
 
-public class phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> {
+public class Phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> {
 
 	private final Consumer<Double> setArbitraryFeedForward;
 	private double arbitraryFeedForward;
 
-	phoenix6FeedForwardRequest(
+	Phoenix6FeedForwardRequest(
 		Rotation2d defaultSetPoint,
 		ControlRequest controlRequest,
 		Consumer<Rotation2d> setSetPoint,
@@ -22,7 +22,7 @@ public class phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> {
 		this.arbitraryFeedForward = defaultArbitraryFeedForward;
 	}
 
-	public phoenix6FeedForwardRequest withArbitraryFeedForward(double newArbitraryFeedForward) {
+	public Phoenix6FeedForwardRequest withArbitraryFeedForward(double newArbitraryFeedForward) {
 		setArbitraryFeedForward.accept(newArbitraryFeedForward);
 		this.arbitraryFeedForward = newArbitraryFeedForward;
 		return this;

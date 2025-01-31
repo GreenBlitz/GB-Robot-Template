@@ -1,20 +1,12 @@
 package frc;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.constants.field.enums.Branch;
-import frc.constants.field.enums.CoralStation;
-import frc.constants.field.enums.ReefSide;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.states.DriveRelative;
-import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 
-import java.util.Optional;
 
 public class JoysticksBindings {
 

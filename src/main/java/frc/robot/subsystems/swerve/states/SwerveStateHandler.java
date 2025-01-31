@@ -56,7 +56,7 @@ public class SwerveStateHandler {
 	}
 
 	private void reportMissingSupplier(String supplierName) {
-		new Alert(Alert.AlertType.WARNING,swerve.getLogPath() + "/AimAssist/missing " + supplierName + " supplier").report();
+		new Alert(Alert.AlertType.WARNING, swerve.getLogPath() + "/AimAssist/missing " + supplierName + " supplier").report();
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {

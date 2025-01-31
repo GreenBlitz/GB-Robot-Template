@@ -24,11 +24,11 @@ public class Field {
 	public static final double LENGTH_METERS = 17.548225;
 	public static final double WIDTH_METERS = 8.0518;
 
-	private static final Translation2d MIDDLE_OF_REEF = new Translation2d(4.48934, 4.03225);
+	private static final Translation2d REEF_MIDDLE = new Translation2d(4.48934, 4.03225);
 
-	public static final double LENGTH_OF_REEF_SIDE_METERS = 0.96;
+	public static final double REEF_SIDE_LENGTH_METERS = 0.96;
 
-	private static final Pose2d[] MIDDLE_OF_REEF_SIDES = new Pose2d[] {
+	private static final Pose2d[] REEF_SIDE_MIDDLES = new Pose2d[] {
 		new Pose2d(3.65760, 4.03220, Rotation2d.fromDegrees(0)),
 		new Pose2d(4.07349, 3.31191, Rotation2d.fromDegrees(60)),
 		new Pose2d(4.90523, 3.31193, Rotation2d.fromDegrees(120)),
@@ -59,19 +59,19 @@ public class Field {
 
 	private static final Pose2d PROCESSOR = new Pose2d(5.98744, 0.00749, Rotation2d.fromDegrees(270));
 
-	private static final Pose2d[] MIDDLE_OF_CORAL_STATIONS = new Pose2d[] {
+	private static final Pose2d[] CORAL_STATION_MIDDLES = new Pose2d[] {
 		new Pose2d(0.84319, 0.65078, Rotation2d.fromDegrees(-126)),
 		new Pose2d(0.84319, 7.41395, Rotation2d.fromDegrees(126))};
 
-	public static final double WIDTH_OF_FEEDER_METERS = 1.9304;
+	public static final double FEEDER_WIDTH_METERS = 1.9304;
 
 
-	public static Translation2d getMiddleOfReef() {
-		return getAllianceRelative(MIDDLE_OF_REEF, true, false);
+	public static Translation2d getReefMiddle() {
+		return getAllianceRelative(REEF_MIDDLE, true, false);
 	}
 
-	public static Pose2d getMiddleOfReefSide(ReefSide side) {
-		return getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleTransform.INVERT);
+	public static Pose2d getReefSideMiddle(ReefSide side) {
+		return getAllianceRelative(REEF_SIDE_MIDDLES[side.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
 	public static Translation2d getCoralPlacement(Branch branch) {
@@ -86,8 +86,8 @@ public class Field {
 		return getAllianceRelative(PROCESSOR, true, true, AngleTransform.INVERT);
 	}
 
-	public static Pose2d getMiddleOfCoralStation(CoralStation coralStation) {
-		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStation.getIndex()], true, true, AngleTransform.INVERT);
+	public static Pose2d getCoralStationMiddle(CoralStation coralStation) {
+		return getAllianceRelative(CORAL_STATION_MIDDLES[coralStation.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
 

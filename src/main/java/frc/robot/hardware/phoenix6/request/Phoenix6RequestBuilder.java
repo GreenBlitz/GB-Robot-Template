@@ -11,38 +11,38 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Phoenix6RequestBuilder {
 
-	public static Phoenix6Request<Rotation2d> build(PositionVoltage positionVoltage) {
+	public static Phoenix6Request<Rotation2d> build(PositionVoltage positionVoltage, boolean enableFOC) {
 		return new Phoenix6Request<>(
 			Rotation2d.fromRotations(positionVoltage.Position),
-			positionVoltage,
+			positionVoltage.withEnableFOC(enableFOC),
 			setPoint -> positionVoltage.withPosition(setPoint.getRotations())
 		);
 	}
 
-	public static Phoenix6Request<Rotation2d> build(VelocityVoltage velocityVoltage) {
+	public static Phoenix6Request<Rotation2d> build(VelocityVoltage velocityVoltage, boolean enableFOC) {
 		return new Phoenix6Request<>(
 			Rotation2d.fromRotations(velocityVoltage.Velocity),
-			velocityVoltage,
+			velocityVoltage.withEnableFOC(enableFOC),
 			setPoint -> velocityVoltage.withVelocity(setPoint.getRotations())
 		);
 	}
 
-	public static Phoenix6Request<Double> build(VoltageOut voltageOut) {
-		return new Phoenix6Request<>(voltageOut.Output, voltageOut, voltageOut::withOutput);
+	public static Phoenix6Request<Double> build(VoltageOut voltageOut, boolean enableFOC) {
+		return new Phoenix6Request<>(voltageOut.Output, voltageOut.withEnableFOC(enableFOC), voltageOut::withOutput);
 	}
 
-	public static Phoenix6Request<Rotation2d> build(MotionMagicVoltage motionMagicVoltage) {
+	public static Phoenix6Request<Rotation2d> build(MotionMagicVoltage motionMagicVoltage, boolean enableFOC) {
 		return new Phoenix6Request<>(
 			Rotation2d.fromRotations(motionMagicVoltage.Position),
-			motionMagicVoltage,
+			motionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> motionMagicVoltage.withPosition(setPoint.getRotations())
 		);
 	}
 
-	public static Phoenix6Request<Rotation2d> build(DynamicMotionMagicVoltage dynamicMotionMagicVoltage) {
+	public static Phoenix6Request<Rotation2d> build(DynamicMotionMagicVoltage dynamicMotionMagicVoltage, boolean enableFOC) {
 		return new Phoenix6Request<>(
 			Rotation2d.fromRotations(dynamicMotionMagicVoltage.Position),
-			dynamicMotionMagicVoltage,
+			dynamicMotionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> dynamicMotionMagicVoltage.withPosition(setPoint.getRotations())
 		);
 	}

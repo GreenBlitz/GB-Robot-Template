@@ -59,27 +59,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.L1.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH).withDriveRelative(DriveRelative.ROBOT_RELATIVE))
-		);
-		usedJoystick.R1
-			.whileTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF)));
-		usedJoystick.BACK.whileTrue(
-			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
-		);
-		usedJoystick.START.whileTrue(
-			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
-		);
-
-		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.F))));
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.A))));
-		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.E))));
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.C))));
-
-		usedJoystick.A.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.LEFT))));
-		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.RIGHT))));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

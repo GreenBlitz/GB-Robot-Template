@@ -11,39 +11,51 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Phoenix6RequestBuilder {
 
-	public static Phoenix6FeedForwardRequest build(PositionVoltage positionVoltage, boolean enableFOC) {
+	public static Phoenix6FeedForwardRequest build(PositionVoltage positionVoltage, double defaultArbitraryFeedFroward, boolean enableFOC) {
 		return new Phoenix6FeedForwardRequest(
 			Rotation2d.fromRotations(positionVoltage.Position),
 			positionVoltage.withEnableFOC(enableFOC),
 			setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
-			positionVoltage::withFeedForward
+			positionVoltage::withFeedForward,
+			defaultArbitraryFeedFroward
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(VelocityVoltage velocityVoltage, boolean enableFOC) {
+	public static Phoenix6FeedForwardRequest build(VelocityVoltage velocityVoltage, double defaultArbitraryFeedFroward, boolean enableFOC) {
 		return new Phoenix6FeedForwardRequest(
 			Rotation2d.fromRotations(velocityVoltage.Velocity),
 			velocityVoltage.withEnableFOC(enableFOC),
 			setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()),
-			velocityVoltage::withFeedForward
+			velocityVoltage::withFeedForward,
+			defaultArbitraryFeedFroward
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(MotionMagicVoltage motionMagicVoltage, boolean enableFOC) {
+	public static Phoenix6FeedForwardRequest build(
+		MotionMagicVoltage motionMagicVoltage,
+		double defaultArbitraryFeedFroward,
+		boolean enableFOC
+	) {
 		return new Phoenix6FeedForwardRequest(
 			Rotation2d.fromRotations(motionMagicVoltage.Position),
 			motionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> motionMagicVoltage.withPosition(setPoint.getRotations()),
-			motionMagicVoltage::withFeedForward
+			motionMagicVoltage::withFeedForward,
+			defaultArbitraryFeedFroward
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(DynamicMotionMagicVoltage dynamicMotionMagicVoltage, boolean enableFOC) {
+	public static Phoenix6FeedForwardRequest build(
+		DynamicMotionMagicVoltage dynamicMotionMagicVoltage,
+		double defaultArbitraryFeedFroward,
+		boolean enableFOC
+	) {
 		return new Phoenix6FeedForwardRequest(
 			Rotation2d.fromRotations(dynamicMotionMagicVoltage.Position),
 			dynamicMotionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> dynamicMotionMagicVoltage.withPosition(setPoint.getRotations()),
-			dynamicMotionMagicVoltage::withFeedForward
+			dynamicMotionMagicVoltage::withFeedForward,
+			defaultArbitraryFeedFroward
 		);
 	}
 

@@ -7,7 +7,7 @@ import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 
 class RealModuleConstants {
 
-	private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
+	private static final double WHEEL_DIAMETER_METERS = 0.049198364 * 2;
 	private static final double COUPLING_RATIO = 0.59;
 
 	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;

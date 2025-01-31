@@ -14,20 +14,20 @@ public class Phoenix6RequestBuilder {
 	public static Phoenix6FeedForwardRequest build(PositionVoltage positionVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
 		positionVoltage.withFeedForward(defaultArbitraryFeedForward);
 		return new Phoenix6FeedForwardRequest(
-				Rotation2d.fromRotations(positionVoltage.Position),
-				positionVoltage.withEnableFOC(enableFOC),
-				setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
-				positionVoltage::withFeedForward
+			Rotation2d.fromRotations(positionVoltage.Position),
+			positionVoltage.withEnableFOC(enableFOC),
+			setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
+			positionVoltage::withFeedForward
 		);
 	}
 
 	public static Phoenix6FeedForwardRequest build(VelocityVoltage velocityVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
 		velocityVoltage.withFeedForward(defaultArbitraryFeedForward);
 		return new Phoenix6FeedForwardRequest(
-				Rotation2d.fromRotations(velocityVoltage.Velocity),
-				velocityVoltage.withEnableFOC(enableFOC),
-				setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()),
-				velocityVoltage::withFeedForward
+			Rotation2d.fromRotations(velocityVoltage.Velocity),
+			velocityVoltage.withEnableFOC(enableFOC),
+			setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()),
+			velocityVoltage::withFeedForward
 		);
 	}
 

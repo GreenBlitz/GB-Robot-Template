@@ -14,6 +14,7 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
+import frc.utils.alerts.Alert;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -54,21 +55,51 @@ public class SwerveStateHandler {
 		this.branchSupplier = branchSupplier;
 	}
 
+	private void reportMissingSupplier(String supplierName) {
+		new Alert(Alert.AlertType.WARNING,swerve.getLogPath() + "/AimAssist/missing " + supplierName + " supplier").report();
+	}
+
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
-		if (swerveState.getAimAssist() == AimAssist.REEF && robotPoseSupplier.isPresent() && reefSideSupplier.get().isPresent()) {
-			return handleReefAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), reefSideSupplier.get().get());
+
+		if (robotPoseSupplier.isEmpty()) {
+			reportMissingSupplier("robot pose");
+			return speeds;
 		}
-		if (swerveState.getAimAssist() == AimAssist.CORAL_STATION && robotPoseSupplier.isPresent() && coralStationSupplier.get().isPresent()) {
-			return handleCoralStationAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), coralStationSupplier.get().get());
+
+		if (swerveState.getAimAssist() == AimAssist.REEF) {
+			if (reefSideSupplier.get().isPresent()) {
+				return handleReefAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), reefSideSupplier.get().get());
+			} else {
+				reportMissingSupplier("reef side");
+				return speeds;
+			}
 		}
-		if (swerveState.getAimAssist() == AimAssist.BRANCH && robotPoseSupplier.isPresent() && branchSupplier.get().isPresent()) {
-			return handleBranchAimAssist(speeds, robotPoseSupplier.get().get(), branchSupplier.get().get(), swerveState);
+		if (swerveState.getAimAssist() == AimAssist.CORAL_STATION) {
+			if (coralStationSupplier.get().isPresent()) {
+				return handleCoralStationAimAssist(speeds, robotPoseSupplier.get().get().getRotation(), coralStationSupplier.get().get());
+			} else {
+				reportMissingSupplier("coral station");
+				return speeds;
+			}
 		}
-		if (swerveState.getAimAssist() == AimAssist.ALGAE_REMOVE && robotPoseSupplier.isPresent() && reefSideSupplier.get().isPresent()) {
-			return handleAlgaeAimAssist(speeds, robotPoseSupplier.get().get(), reefSideSupplier.get().get(), swerveState);
+		if (swerveState.getAimAssist() == AimAssist.BRANCH) {
+			if (branchSupplier.get().isPresent()) {
+				return handleBranchAimAssist(speeds, robotPoseSupplier.get().get(), branchSupplier.get().get(), swerveState);
+			} else {
+				reportMissingSupplier("branch");
+				return speeds;
+			}
+		}
+		if (swerveState.getAimAssist() == AimAssist.ALGAE_REMOVE) {
+			if (reefSideSupplier.get().isPresent()) {
+				return handleAlgaeAimAssist(speeds, robotPoseSupplier.get().get(), reefSideSupplier.get().get(), swerveState);
+			} else {
+				reportMissingSupplier("reef side");
+				return speeds;
+			}
 		}
 
 		return speeds;

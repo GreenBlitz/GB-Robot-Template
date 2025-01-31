@@ -79,11 +79,7 @@ public class SwerveStateHandler {
 		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, reefSideAngle, swerveConstants);
 	}
 
-	private ChassisSpeeds handleFeederAimAssist(
-		ChassisSpeeds chassisSpeeds,
-		Rotation2d robotHeading,
-		CoralStation coralStation
-	) {
+	private ChassisSpeeds handleFeederAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading, CoralStation coralStation) {
 		Rotation2d feederAngle = Field.getMiddleOfCoralStation(coralStation).getRotation();
 		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, feederAngle, swerveConstants);
 	}

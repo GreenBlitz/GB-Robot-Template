@@ -72,10 +72,8 @@ public class Field {
 		return getAllianceRelative(MIDDLE_OF_REEF, true, false);
 	}
 
-	public static Pose2d getMiddleOfReefSide(ReefSide side, boolean allianceRelative) {
-		return allianceRelative ?
-			getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleTransform.INVERT)
-			: MIDDLE_OF_REEF_SIDES[side.getIndex()];
+	public static Pose2d getMiddleOfReefSide(ReefSide side) {
+		return getAllianceRelative(MIDDLE_OF_REEF_SIDES[side.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
 	public static Translation2d getCoralPlacement(ReefBranch branch) {

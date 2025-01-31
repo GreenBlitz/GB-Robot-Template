@@ -57,7 +57,8 @@ public class AimAssistMath {
 				new ChassisSpeeds(speeds.vxMetersPerSecond, pidHorizontalToObjectOutputVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 
 			case ALLIANCE_RELATIVE:
-				ChassisSpeeds robotRelativeSpeeds = SwerveMath.allianceToRobotRelativeSpeeds(speeds, Field.getAllianceRelative(robotPose.getRotation()));
+				ChassisSpeeds robotRelativeSpeeds = SwerveMath
+					.allianceToRobotRelativeSpeeds(speeds, Field.getAllianceRelative(robotPose.getRotation()));
 				ChassisSpeeds assistedSpeed = new ChassisSpeeds(
 					robotRelativeSpeeds.vxMetersPerSecond,
 					pidHorizontalToObjectOutputVelocityMetersPerSecond,

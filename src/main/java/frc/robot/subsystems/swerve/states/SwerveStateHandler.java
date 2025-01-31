@@ -14,7 +14,6 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -88,17 +87,17 @@ public class SwerveStateHandler {
 	private ChassisSpeeds handleBranchAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Branch reefBranch, SwerveState swerveState) {
 		Translation2d branchTranslation = Field.getCoralPlacement(reefBranch);
 		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefBranch.getReefSide()).getRotation();
-		Pose2d poseWithHeading = new Pose2d(robotPose.getX(), robotPose.getY(), angleToReefSide);
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, poseWithHeading, branchTranslation, swerveConstants, swerveState);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, angleToReefSide, branchTranslation, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAlgiAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
-		Pose2d middleOfReefSide = Field.getMiddleOfReefSide(reefSide);
+		Translation2d middleOfReefSide = Field.getMiddleOfReefSide(reefSide).getTranslation();
 		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefSide).getRotation();
+
 		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, middleOfReefSide.getTranslation(), swerveConstants, swerveState);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, angleToReefSide, middleOfReefSide, swerveConstants, swerveState);
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {

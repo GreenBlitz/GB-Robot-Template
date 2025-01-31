@@ -1,10 +1,6 @@
 package frc.utils.math;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
@@ -19,23 +15,22 @@ public class FieldMath {
 		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
-	public static Rotation2d transform(Rotation2d angle, AngleTransform angleTransform) {
+	public static Rotation2d invertByInvertionType(Rotation2d angle, AngleTransform angleTransform) {
 		return switch (angleTransform) {
 			case KEEP -> angle;
-			case MIRROR_X -> mirrorXAngle(angle);
-			case MIRROR_Y -> mirrorYAngle(angle);
+			case MIRROR_X -> mirrorAngleAroundXAxis(angle);
+			case MIRROR_Y -> mirrorAngleAroundYAxis(angle);
 			case INVERT -> invertAngle(angle);
 		};
 	}
 
-	public static Rotation2d mirrorXAngle(Rotation2d angle) {
+	public static Rotation2d mirrorAngleAroundXAxis(Rotation2d angle) {
 		return MathConstants.HALF_CIRCLE.minus(angle);
 	}
 
-	public static Rotation2d mirrorYAngle(Rotation2d angle) {
+	public static Rotation2d mirrorAngleAroundYAxis(Rotation2d angle) {
 		return MathConstants.FULL_CIRCLE.minus(angle);
 	}
-
 	public static Rotation2d invertAngle(Rotation2d angle) {
 		return MathConstants.HALF_CIRCLE.plus(angle);
 	}
@@ -57,7 +52,7 @@ public class FieldMath {
 	}
 
 	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
-		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), transform(pose2d.getRotation(), angleTransform));
+		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), invertByInvertionType(pose2d.getRotation(), angleTransform));
 	}
 
 	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {

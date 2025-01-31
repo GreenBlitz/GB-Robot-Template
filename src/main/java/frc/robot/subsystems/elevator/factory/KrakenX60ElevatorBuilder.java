@@ -149,8 +149,8 @@ public class KrakenX60ElevatorBuilder {
 	private static Elevator create(String logPath, TalonFXMotor firstMotor, TalonFXMotor secondMotor) {
 		IDigitalInput digitalInput = generateDigitalInput();
 
-		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(true));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true));
+		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true);
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
 		return new Elevator(
 			logPath,

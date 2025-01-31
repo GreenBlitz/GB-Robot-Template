@@ -1,13 +1,13 @@
 package frc.constants.field.enums;
 
-public enum CoralStationPosition {
+public enum CoralStation {
 
 	RIGHT(0),
 	LEFT(1);
 
 	private final int index;
 
-	CoralStationPosition(int index) {
+	CoralStation(int index) {
 		this.index = index;
 	}
 

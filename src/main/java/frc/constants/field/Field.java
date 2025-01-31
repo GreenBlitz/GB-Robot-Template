@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.constants.field.enums.CagePosition;
-import frc.constants.field.enums.CoralStationPosition;
+import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefBranch;
 import frc.constants.field.enums.ReefSide;
 import frc.utils.DriverStationUtil;
@@ -88,8 +88,8 @@ public class Field {
 		return getAllianceRelative(PROCESSOR, true, true, AngleTransform.INVERT);
 	}
 
-	public static Pose2d getMiddleOfCoralStation(CoralStationPosition coralStationPosition) {
-		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStationPosition.getIndex()], true, true, AngleTransform.INVERT);
+	public static Pose2d getMiddleOfCoralStation(CoralStation coralStation) {
+		return getAllianceRelative(MIDDLE_OF_CORAL_STATIONS[coralStation.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
 	public static Pose2d getAllianceRelative(Pose2d pose) {

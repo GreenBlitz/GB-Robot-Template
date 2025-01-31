@@ -6,8 +6,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStation;
-import frc.constants.field.enums.ReefBranch;
 import frc.constants.field.enums.ReefSide;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
@@ -26,7 +26,7 @@ public class SwerveStateHandler {
 
 	private Supplier<Optional<ReefSide>> reefSideSupplier;
 	private Supplier<Optional<CoralStation>> feederSupplier;
-	private Supplier<Optional<ReefBranch>> branchSupplier;
+	private Supplier<Optional<Branch>> branchSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
@@ -50,7 +50,7 @@ public class SwerveStateHandler {
 		this.feederSupplier = feederSupplier;
 	}
 
-	public void setBranchSupplier(Supplier<Optional<ReefBranch>> branchSupplier) {
+	public void setBranchSupplier(Supplier<Optional<Branch>> branchSupplier) {
 		this.branchSupplier = branchSupplier;
 	}
 
@@ -84,7 +84,7 @@ public class SwerveStateHandler {
 		return AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotHeading, feederAngle, swerveConstants);
 	}
 
-	private ChassisSpeeds handleBranchAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefBranch reefBranch, SwerveState swerveState) {
+	private ChassisSpeeds handleBranchAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Branch reefBranch, SwerveState swerveState) {
 		Translation2d branch = Field.getCoralPlacement(reefBranch);
 		Rotation2d angleToReefSide = Field.getMiddleOfReefSide(reefBranch.getReefSide()).getRotation();
 		chassisSpeeds = AimAssistMath.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), angleToReefSide, swerveConstants);

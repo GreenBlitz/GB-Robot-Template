@@ -1,7 +1,7 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.constants.field.enums.ReefBranch;
+import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.ReefSide;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -68,11 +68,11 @@ public class JoysticksBindings {
 				)
 		);
 		usedJoystick.POV_LEFT
-			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(ReefBranch.A))));
+			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(Branch.A))));
 		usedJoystick.POV_RIGHT
-			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(ReefBranch.B))));
+			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(Branch.B))));
 		usedJoystick.POV_UP
-			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(ReefBranch.C))));
+			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> java.util.Optional.of(Branch.C))));
 		usedJoystick.A
 			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> java.util.Optional.of(ReefSide.A))));
 		usedJoystick.B

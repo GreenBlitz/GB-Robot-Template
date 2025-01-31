@@ -47,7 +47,7 @@ public class Phoenix6RequestBuilder {
 
 	public static phoenix6FeedForwardRequest build(
 		DynamicMotionMagicVoltage dynamicMotionMagicVoltage,
-		double defaultArbitraryFeedFroward,
+		double defaultArbitraryFeedForward,
 		boolean enableFOC
 	) {
 		return new phoenix6FeedForwardRequest(
@@ -55,7 +55,7 @@ public class Phoenix6RequestBuilder {
 			dynamicMotionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> dynamicMotionMagicVoltage.withPosition(setPoint.getRotations()),
 			dynamicMotionMagicVoltage::withFeedForward,
-			defaultArbitraryFeedFroward
+			defaultArbitraryFeedForward
 		);
 	}
 

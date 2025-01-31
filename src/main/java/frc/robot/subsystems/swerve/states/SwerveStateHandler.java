@@ -91,7 +91,7 @@ public class SwerveStateHandler {
 		chassisSpeeds = AimAssistMath
 			.getRotationAssistedChassisSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
 		return AimAssistMath
-			.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, branchTranslation, swerveConstants, swerveState);
+			.getObjectAssistedSpeedsBeta(chassisSpeeds, robotPose, headingToReefSide, branchTranslation, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAlgiAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {

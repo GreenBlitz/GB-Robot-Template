@@ -62,14 +62,14 @@ public class JoysticksBindings {
 				.getCommandsBuilder()
 				.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH).withDriveRelative(DriveRelative.ROBOT_RELATIVE))
 		);
-		usedJoystick.R1
-			.whileTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF)));
-		usedJoystick.BACK.whileTrue(
-			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
-		);
-		usedJoystick.START.whileTrue(
-			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGI_REMOVE))
-		);
+//		usedJoystick.R1
+//			.whileTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF)));
+//		usedJoystick.BACK.whileTrue(
+//			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
+//		);
+//		usedJoystick.START.whileTrue(
+//			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGI_REMOVE))
+//		);
 
 //		usedJoystick.POV_LEFT
 //			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.LEFT))));

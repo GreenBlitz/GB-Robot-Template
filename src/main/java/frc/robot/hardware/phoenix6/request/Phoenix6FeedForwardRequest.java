@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 public class Phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> {
 
 	private final Consumer<Double> setFeedFroward;
+	private double feedFroward;
 
 	Phoenix6FeedForwardRequest(
 		Rotation2d defaultSetPoint,
@@ -17,11 +18,17 @@ public class Phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> {
 	) {
 		super(defaultSetPoint, controlRequest, setSetPoint);
 		this.setFeedFroward = setFeedFroward;
+		this.feedFroward = 0;
 	}
 
 	public Phoenix6FeedForwardRequest withArbitraryFeedForward(double newFeedForward) {
 		setFeedFroward.accept(newFeedForward);
+		this.feedFroward = newFeedForward;
 		return this;
+	}
+
+	public double getFeedForward() {
+		return feedFroward;
 	}
 
 }

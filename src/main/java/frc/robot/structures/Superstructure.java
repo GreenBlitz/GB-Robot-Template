@@ -34,7 +34,7 @@ public class Superstructure {
 
 	public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
 		return isAtTranslationPosition(
-			swerve.getFieldRelativeVelocity().vxMetersPerSecond,
+			swerve.getAllianceRelativeVelocity().vxMetersPerSecond,
 			poseEstimator.getCurrentPose().getX(),
 			targetXBlueAlliancePosition
 		);
@@ -42,7 +42,7 @@ public class Superstructure {
 
 	public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
 		return isAtTranslationPosition(
-			swerve.getFieldRelativeVelocity().vyMetersPerSecond,
+			swerve.getAllianceRelativeVelocity().vyMetersPerSecond,
 			poseEstimator.getCurrentPose().getY(),
 			targetYBlueAlliancePosition
 		);

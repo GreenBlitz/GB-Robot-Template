@@ -1,6 +1,5 @@
 package frc;
 
-import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -9,14 +8,9 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.structures.Tolerances;
-import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
-import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
-import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 
 public class JoysticksBindings {
 
@@ -41,12 +35,12 @@ public class JoysticksBindings {
 		// bindings...
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetHeading(new Rotation2d())));
 		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
-		
+
 		usedJoystick.POV_UP.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(0)));
 		usedJoystick.POV_RIGHT.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(90)));
 		usedJoystick.POV_DOWN.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
 		usedJoystick.POV_LEFT.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(270)));
-		
+
 		robot.getSwerve()
 			.setDefaultCommand(
 				robot.getSwerve()
@@ -76,9 +70,18 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 		usedJoystick.START.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> 0, () -> 0, () -> 0));
-		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> 0.5 / RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND, () -> 0, () -> 0,SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)));
+		usedJoystick.Y.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveByState(
+					() -> 0.5 / RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
+					() -> 0,
+					() -> 0,
+					SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)
+				)
+		);
 
-		
+
 		usedJoystick.POV_DOWN.whileTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
 	}
 

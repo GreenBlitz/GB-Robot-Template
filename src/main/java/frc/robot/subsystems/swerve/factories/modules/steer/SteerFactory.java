@@ -4,13 +4,13 @@ import frc.robot.IDs;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
-import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
 
 public class SteerFactory {
 
-	public static ControllableMotor createSteer(String logPath, ModuleUtils.ModulePosition modulePosition) {
+	public static ControllableMotor createSteer(String logPath, ModuleUtil.ModulePosition modulePosition) {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Steer";
 		return switch (modulePosition) {
 			case FRONT_LEFT ->

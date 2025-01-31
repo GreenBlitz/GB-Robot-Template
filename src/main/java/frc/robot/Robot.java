@@ -16,8 +16,8 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
-import frc.utils.auto.PathPlannerUtils;
-import frc.utils.battery.BatteryUtils;
+import frc.utils.auto.PathPlannerUtil;
+import frc.utils.battery.BatteryUtil;
 
 
 /**
@@ -34,7 +34,7 @@ public class Robot {
 	private final Superstructure superStructure;
 
 	public Robot() {
-		BatteryUtils.scheduleLimiter();
+		BatteryUtil.scheduleLimiter();
 
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
@@ -60,13 +60,13 @@ public class Robot {
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
 			poseEstimator::resetPose,
-			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
+			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
 	}
 
 
 	public void periodic() {
-		BatteryUtils.logStatus();
+		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		superStructure.periodic();
 		CommandScheduler.getInstance().run(); // Should be last

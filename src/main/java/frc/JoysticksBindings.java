@@ -3,6 +3,7 @@ package frc;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStation;
+import frc.constants.field.enums.ReefSide;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -58,31 +59,27 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-//		usedJoystick.L1.whileTrue(
-//			robot.getSwerve()
-//				.getCommandsBuilder()
-//				.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH).withDriveRelative(DriveRelative.ROBOT_RELATIVE))
-//		);
+		usedJoystick.L1.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH).withDriveRelative(DriveRelative.ROBOT_RELATIVE))
+		);
 		usedJoystick.R1
 			.whileTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF)));
 		usedJoystick.BACK.whileTrue(
 			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
 		);
-//		usedJoystick.START.whileTrue(
-//			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGI_REMOVE))
-//		);
+		usedJoystick.START.whileTrue(
+			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+		);
 
-		usedJoystick.POV_LEFT
-			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.LEFT))));
-		usedJoystick.POV_RIGHT
-			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.RIGHT))));
-//		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> Optional.of(Branch.G))));
-//		usedJoystick.POV_RIGHT
-//			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> Optional.of(Branch.F))));
-//		usedJoystick.POV_LEFT
-//			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> Optional.of(Branch.C))));
-//		usedJoystick.POV_DOWN
-//			.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setBranchSupplier(() -> Optional.of(Branch.A))));
+		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.F))));
+		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.A))));
+		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.E))));
+		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.C))));
+
+		usedJoystick.A.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.LEFT))));
+		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.RIGHT))));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

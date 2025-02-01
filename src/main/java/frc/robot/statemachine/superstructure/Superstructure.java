@@ -3,10 +3,8 @@ package frc.robot.statemachine.superstructure;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
@@ -14,6 +12,7 @@ import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
 import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
+import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
 
@@ -23,12 +22,18 @@ public class Superstructure {
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
 
+	private String currentCommandName;
+
 	public Superstructure(String logPath, Robot robot) {
 		this.logPath = logPath;
 		this.robot = robot;
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
 		this.armStateHandler = new ArmStateHandler(robot.getArm());
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
+	}
+
+	public void log() {
+		Logger.recordOutput(logPath + "/CurrentCommand", currentCommandName);
 	}
 
 	public boolean isCoralIn() {
@@ -45,153 +50,156 @@ public class Superstructure {
 	}
 
 	public Command idle() {
-		return asSubsystemCommand(
+		return commandWithName(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(ArmState.CLOSED),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			RobotState.DRIVE
+			"idle"
 		);
 	}
 
 	public Command intake() {
-		return asSubsystemCommand(
+		return commandWithName(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.FEEDER),
 				armStateHandler.setState(ArmState.INTAKE),
 				endEffectorStateHandler.setState(EndEffectorState.INTAKE)
 			).until(this::isCoralIn),
-			RobotState.INTAKE
-		);
-	}
-
-	public Command l1() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					new RunCommand(() -> {}).until(() -> isReadyToScore(ScoreLevel.L1)),
-					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-				),
-				elevatorStateHandler.setState(ElevatorState.L1),
-				armStateHandler.setState(ArmState.L1)
-			).until(this::isCoralOut),
-			RobotState.L1
-		);
-	}
-
-	public Command l2() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					new RunCommand(() -> {}).until(() -> isReadyToScore(ScoreLevel.L2)),
-					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-				),
-				elevatorStateHandler.setState(ElevatorState.L2),
-				armStateHandler.setState(ArmState.L2)
-			).until(this::isCoralOut),
-			RobotState.L2
-		);
-	}
-
-	public Command l3() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					new RunCommand(() -> {}).until(() -> isReadyToScore(ScoreLevel.L3)),
-					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-				),
-				elevatorStateHandler.setState(ElevatorState.L3),
-				armStateHandler.setState(ArmState.L3)
-			).until(this::isCoralOut),
-			RobotState.L3
-		);
-	}
-
-	public Command l4() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					new RunCommand(() -> {}).until(() -> isReadyToScore(ScoreLevel.L4)),
-					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-				),
-				elevatorStateHandler.setState(ElevatorState.L4),
-				armStateHandler.setState(ArmState.L4)
-			).until(this::isCoralOut),
-			RobotState.L4
-		);
-	}
-
-	public Command preL1() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L1),
-				armStateHandler.setState(ArmState.PRE_L1),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			RobotState.PRE_L1
-		);
-	}
-
-	public Command preL2() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L2),
-				armStateHandler.setState(ArmState.PRE_L2),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			RobotState.PRE_L2
-		);
-	}
-
-	public Command preL3() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L3),
-				armStateHandler.setState(ArmState.PRE_L3),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			RobotState.PRE_L3
-		);
-	}
-
-	public Command preL4() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L4),
-				armStateHandler.setState(ArmState.PRE_L4),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			RobotState.PRE_L4
+			"intake"
 		);
 	}
 
 	public Command outtake() {
-		return asSubsystemCommand(
+		return commandWithName(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.OUTTAKE),
 				armStateHandler.setState(ArmState.OUTTAKE),
 				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 			).until(this::isCoralOut),
-			RobotState.OUTTAKE
+			"outtake"
 		);
 	}
 
-	public Command alignReef() {
-		return asSubsystemCommand(
+	public Command preL1() {
+		return commandWithName(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.CLOSED),
-				armStateHandler.setState(ArmState.CLOSED),
+				elevatorStateHandler.setState(ElevatorState.L1),
+				armStateHandler.setState(ArmState.PRE_L1),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			RobotState.ALIGN_REEF
+			"pre l1"
 		);
 	}
 
-	public Command asSubsystemCommand(Command command, RobotState state) {
-		return new InstantCommand();
-//		command = super.asSubsystemCommand(command, state.name());
-//		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), command);
+	public Command preL2() {
+		return commandWithName(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.L2),
+				armStateHandler.setState(ArmState.PRE_L2),
+				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+			),
+			"pre l2"
+		);
+	}
+
+	public Command preL3() {
+		return commandWithName(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.L3),
+				armStateHandler.setState(ArmState.PRE_L3),
+				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+			),
+			"pre l3"
+		);
+	}
+
+	public Command preL4() {
+		return commandWithName(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.L4),
+				armStateHandler.setState(ArmState.PRE_L4),
+				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+			),
+			"pre l4"
+		);
+	}
+
+	public Command scoreL1() {
+		return commandWithName(
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L1),
+					armStateHandler.setState(ArmState.L1),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isReadyToScore(ScoreLevel.L1)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L1),
+					armStateHandler.setState(ArmState.L1),
+					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				)
+			).until(this::isCoralOut),
+			"score l1"
+		);
+	}
+
+	public Command scoreL2() {
+		return commandWithName(
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L2),
+					armStateHandler.setState(ArmState.L2),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isReadyToScore(ScoreLevel.L2)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L2),
+					armStateHandler.setState(ArmState.L2),
+					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				)
+			).until(this::isCoralOut),
+			"score l2"
+		);
+	}
+
+	public Command scoreL3() {
+		return commandWithName(
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L3),
+					armStateHandler.setState(ArmState.L3),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isReadyToScore(ScoreLevel.L3)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L3),
+					armStateHandler.setState(ArmState.L3),
+					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				)
+			).until(this::isCoralOut),
+			"score l3"
+		);
+	}
+
+	public Command scoreL4() {
+		return commandWithName(
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L4),
+					armStateHandler.setState(ArmState.L4),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isReadyToScore(ScoreLevel.L4)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L4),
+					armStateHandler.setState(ArmState.L4),
+					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				)
+			).until(this::isCoralOut),
+			"score l4"
+		);
+	}
+
+	private Command commandWithName(Command command, String name) {
+		return new ParallelCommandGroup(new InstantCommand(() -> currentCommandName = name), command);
 	}
 
 }

@@ -52,28 +52,28 @@ public class DaddyRobot {
 
     private Command l1(){
         return new ParallelCommandGroup(
-            superstructure.l1(),
+            superstructure.scoreL1(),
             swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
         );
     }
 
     private Command l2(){
         return new ParallelCommandGroup(
-            superstructure.l2(),
+            superstructure.scoreL2(),
             swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
         );
     }
 
     private Command l3(){
         return new ParallelCommandGroup(
-            superstructure.l3(),
+            superstructure.scoreL3(),
             swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
         );
     }
 
     private Command l4(){
         return new ParallelCommandGroup(
-            superstructure.l4(),
+            superstructure.scoreL4(),
             swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
         );
     }
@@ -115,7 +115,7 @@ public class DaddyRobot {
 
     private Command alignReef(){
         return new ParallelCommandGroup(
-            superstructure.alignReef(),
+            superstructure.idle(),
             swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
         );
     }

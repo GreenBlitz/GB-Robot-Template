@@ -30,21 +30,31 @@ public class DaddyRobot {
 	}
 
 	private boolean isReadyToScore(ScoreLevel level, Branch branch) {
-		return superstructure.isReadyToScore(level)
-			&& isAtPose(
-				robot.getPoseEstimator().getEstimatedPose(),
-				ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS),
-				swerve.getRobotRelativeVelocity(),
-				Tolerances.SCORING_POSITION,
-				Tolerances.SCORING_DEADBANDS
-			);
+		return superstructure.isReadyToScore(level) && switch (level) {
+			case L1 ->
+				isAtPose(
+					robot.getPoseEstimator().getEstimatedPose(),
+					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS),
+					swerve.getRobotRelativeVelocity(),
+					Tolerances.L1_SCORING_POSITION,
+					Tolerances.L1_SCORING_DEADBANDS
+				);
+			case L2, L3, L4 ->
+				isAtPose(
+					robot.getPoseEstimator().getEstimatedPose(),
+					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS),
+					swerve.getRobotRelativeVelocity(),
+					Tolerances.SCORING_POSITION,
+					Tolerances.SCORING_DEADBANDS
+				);
+		};
 	}
 
 	public boolean isAtPose(Pose2d currentPose, Pose2d targetPose, ChassisSpeeds currentSpeeds, Pose2d tolerances, Pose2d deadbands) {
 		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
 		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
 		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
-        boolean isStopping = SwerveMath.isStill(currentSpeeds, deadbands);
+		boolean isStopping = SwerveMath.isStill(currentSpeeds, deadbands);
 		return isAtX && isAtY && isAtHeading && isStopping;
 	}
 
@@ -78,31 +88,31 @@ public class DaddyRobot {
 
 	private Command l1() {
 		return new SequentialCommandGroup(
-				new ParallelCommandGroup(
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
-						superstructure.preL1()
-				).until(() -> isReadyToScore(ScoreLevel.L1, ScoringHelpers.targetBranch)),
-				superstructure.scoreL1()
+			new ParallelCommandGroup(
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
+				superstructure.preL1()
+			).until(() -> isReadyToScore(ScoreLevel.L1, ScoringHelpers.targetBranch)),
+			superstructure.scoreL1()
 		);
 	}
 
 	private Command l2() {
 		return new SequentialCommandGroup(
-				new ParallelCommandGroup(
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
-						superstructure.preL2()
-				).until(() -> isReadyToScore(ScoreLevel.L2, ScoringHelpers.targetBranch)),
-				superstructure.scoreL2()
+			new ParallelCommandGroup(
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
+				superstructure.preL2()
+			).until(() -> isReadyToScore(ScoreLevel.L2, ScoringHelpers.targetBranch)),
+			superstructure.scoreL2()
 		);
 	}
 
 	private Command l3() {
 		return new SequentialCommandGroup(
-				new ParallelCommandGroup(
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
-						superstructure.preL3()
-				).until(() -> isReadyToScore(ScoreLevel.L3, ScoringHelpers.targetBranch)),
-				superstructure.scoreL3()
+			new ParallelCommandGroup(
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
+				superstructure.preL3()
+			).until(() -> isReadyToScore(ScoreLevel.L3, ScoringHelpers.targetBranch)),
+			superstructure.scoreL3()
 		);
 	}
 

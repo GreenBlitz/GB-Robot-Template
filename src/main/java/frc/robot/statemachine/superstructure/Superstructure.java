@@ -83,23 +83,18 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preScore(ScoreLevel scoreLevel) {
+	public Command preScore(SuperstructureState superstructureState, ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(scoreLevel.getElevatorState()),
 				armStateHandler.setState(scoreLevel.getArmPreScoreState()),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			switch (scoreLevel) {
-				case L1 -> SuperstructureState.PRE_L1;
-				case L2 -> SuperstructureState.PRE_L2;
-				case L3 -> SuperstructureState.PRE_L3;
-				case L4 -> SuperstructureState.PRE_L4;
-			}
+			superstructureState
 		);
 	}
 
-	public Command score(ScoreLevel scoreLevel) {
+	public Command score(SuperstructureState superstructureState, ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
@@ -113,12 +108,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 				)
 			).until(this::isCoralOut),
-			switch (scoreLevel) {
-				case L1 -> SuperstructureState.SCORE_L1;
-				case L2 -> SuperstructureState.SCORE_L2;
-				case L3 -> SuperstructureState.SCORE_L3;
-				case L4 -> SuperstructureState.SCORE_L4;
-			}
+			superstructureState
 		);
 	}
 
@@ -129,10 +119,10 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, IDLE -> idle();
-			case PRE_L1, SCORE_L1 -> preScore(ScoreLevel.L1);
-			case PRE_L2, SCORE_L2 -> preScore(ScoreLevel.L2);
-			case PRE_L3, SCORE_L3 -> preScore(ScoreLevel.L3);
-			case PRE_L4, SCORE_L4 -> preScore(ScoreLevel.L4);
+			case PRE_L1, SCORE_L1 -> preScore(SuperstructureState.PRE_L1, ScoreLevel.L1);
+			case PRE_L2, SCORE_L2 -> preScore(SuperstructureState.PRE_L2, ScoreLevel.L2);
+			case PRE_L3, SCORE_L3 -> preScore(SuperstructureState.PRE_L3, ScoreLevel.L3);
+			case PRE_L4, SCORE_L4 -> preScore(SuperstructureState.PRE_L4, ScoreLevel.L4);
 		};
 	}
 

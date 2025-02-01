@@ -46,7 +46,16 @@ public class KrakenX60ArmBuilder {
 
 
 	protected static Arm build(String logPath) {
-		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0), 0, ENABLE_FOC);
+		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
+			new DynamicMotionMagicVoltage(
+				0,
+				ArmConstants.CRUISE_VELOCITY_ROTATIONS_PER_SECOND,
+				ArmConstants.ACCELERATION_ROTATIONS_PER_SECOND_SQUARED,
+				0
+			),
+			0,
+			ENABLE_FOC
+		);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
@@ -88,7 +97,7 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kG = 0;
 			}
 			case SIMULATION -> {
-				config.Slot0.kP = 60;
+				config.Slot0.kP = 70;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0;

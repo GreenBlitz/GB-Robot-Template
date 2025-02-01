@@ -51,9 +51,9 @@ public class KrakenX60ElevatorBuilder {
 	private static final double REAL_KI = 0;
 	private static final double REAL_KD = 0;
 
-	private static final double SIMULATION_KP = /*1.6*/5;
+	private static final double SIMULATION_KP = /* 1.6 */1;
 	private static final double SIMULATION_KI = 0;
-	private static final double SIMULATION_KD = /*0.05*/0;
+	private static final double SIMULATION_KD = 0.05;
 	private static final int NUMBER_OF_MOTORS = 2;
 	private static final double STARTING_HEIGHT_METERS = 0;
 

@@ -9,4 +9,7 @@ public class ArmConstants {
 	public static final double LENGTH_METERS = 1;
 	public static final double MASS_KG = 5;
 
+	public static final double CRUISE_VELOCITY_ROTATIONS_PER_SECOND = 10;
+	public static final double ACCELERATION_ROTATIONS_PER_SECOND_SQUARED = 512;
+
 }

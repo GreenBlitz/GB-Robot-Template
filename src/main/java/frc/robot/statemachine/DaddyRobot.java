@@ -2,6 +2,7 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -31,13 +32,16 @@ public class DaddyRobot {
 	}
 
 	private boolean isReadyToScore(ScoreLevel level, Branch branch) {
+		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
+		Translation2d rotated = new Translation2d(allianceRelativeSpeeds.vxMetersPerSecond, allianceRelativeSpeeds.vyMetersPerSecond).rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation());
+		ChassisSpeeds reefRelativeSpeeds = new ChassisSpeeds(rotated.getX(), rotated.getY(), allianceRelativeSpeeds.omegaRadiansPerSecond);
 		return superstructure.isReadyToScore(level) && switch (level) {
 			case L1 ->
 				isAtPose(
 					robot.getPoseEstimator().getEstimatedPose().rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
 					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 						.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
-					swerve.getRobotRelativeVelocity(),
+					reefRelativeSpeeds,
 					Tolerances.L1_SCORING_POSITION,
 					Tolerances.L1_SCORING_DEADBANDS
 				);
@@ -46,7 +50,7 @@ public class DaddyRobot {
 					robot.getPoseEstimator().getEstimatedPose().rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
 					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 						.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
-					swerve.getRobotRelativeVelocity(),
+					reefRelativeSpeeds,
 					Tolerances.SCORING_POSITION,
 					Tolerances.SCORING_DEADBANDS
 				);

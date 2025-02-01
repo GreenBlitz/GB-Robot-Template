@@ -12,6 +12,7 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
@@ -42,6 +43,7 @@ public class Robot {
 	private final EndEffector endEffector;
 
 	private final SimulationManager simulationManager;
+	private final Superstructure superstructure;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -73,6 +75,7 @@ public class Robot {
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
+		this.superstructure = new Superstructure("StateMachine/Superstructure", this);
 	}
 
 	public void periodic() {
@@ -81,6 +84,7 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
+		superstructure.log();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
@@ -106,6 +110,10 @@ public class Robot {
 
 	public EndEffector getEndEffector() {
 		return endEffector;
+	}
+
+	public Superstructure getSuperstructure() {
+		return superstructure;
 	}
 
 }

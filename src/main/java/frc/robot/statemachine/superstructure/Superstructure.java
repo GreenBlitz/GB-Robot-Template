@@ -11,6 +11,7 @@ import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
 import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
+import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
 
@@ -28,6 +29,10 @@ public class Superstructure {
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
 		this.armStateHandler = new ArmStateHandler(robot.getArm());
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
+	}
+
+	public void log() {
+		Logger.recordOutput(logPath + "/CurrentCommand", currentCommandName);
 	}
 
 	public boolean isCoralIn() {
@@ -72,40 +77,40 @@ public class Superstructure {
 				elevatorStateHandler.setState(ElevatorState.L1),
 				armStateHandler.setState(ArmState.L1)
 			).until(this::isCoralOut),
-			"l1"
+			"score l1"
 		);
 	}
 
-	public Command l2() {
+	public Command scoreL2() {
 		return commandWithName(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.L2),
 				armStateHandler.setState(ArmState.L2),
 				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 			).until(this::isCoralOut),
-			"l2"
+			"score l2"
 		);
 	}
 
-	public Command l3() {
+	public Command scoreL3() {
 		return commandWithName(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.L3),
 				armStateHandler.setState(ArmState.L3),
 				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 			).until(this::isCoralOut),
-			"l3"
+			"score l3"
 		);
 	}
 
-	public Command l4() {
+	public Command scoreL4() {
 		return commandWithName(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.L4),
 				armStateHandler.setState(ArmState.L4),
 				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 			).until(this::isCoralOut),
-			"l4"
+			"score l4"
 		);
 	}
 

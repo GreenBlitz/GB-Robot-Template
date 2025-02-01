@@ -23,51 +23,100 @@ public class DaddyRobot {
             case DRIVE -> drive();
             case INTAKE -> intake();
             case L1 -> l1();
-            case L2 -> l3();
-            case L3 -> ;
-            case L4 -> ;
-            case PRE_L1 -> ;
-            case PRE_L2 -> ;
-            case PRE_L3 -> ;
-            case PRE_L4 -> ;
-            case OUTTAKE -> ;
-            case ALIGN_REEF -> ;
+            case L2 -> l2();
+            case L3 -> l3();
+            case L4 -> l4();
+            case PRE_L1 -> preL1();
+            case PRE_L2 -> preL2();
+            case PRE_L3 -> preL3();
+            case PRE_L4 -> preL4();
+            case OUTTAKE -> outtake();
+            case ALIGN_REEF -> alignReef();
         };
     }
 
     //@formatter:off
     private Command drive(){
         return new ParallelCommandGroup(
-                superstructure.idle(),
-                swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+            superstructure.idle(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
         );
     }
 
     private Command intake(){
         return new ParallelCommandGroup(
-                superstructure.intake(),
-                swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
+            superstructure.intake(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
         );
     }
 
     private Command l1(){
         return new ParallelCommandGroup(
-                superstructure.l1(),
-                swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
+            superstructure.l1(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
         );
     }
 
     private Command l2(){
         return new ParallelCommandGroup(
-                superstructure.l2(),
-                swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+            superstructure.l2(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
         );
     }
 
     private Command l3(){
         return new ParallelCommandGroup(
-                superstructure.l3(),
-                swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+            superstructure.l3(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+        );
+    }
+
+    private Command l4(){
+        return new ParallelCommandGroup(
+            superstructure.l4(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+        );
+    }
+
+    private Command preL1(){
+        return new ParallelCommandGroup(
+            superstructure.preL1(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
+        );
+    }
+
+    private Command preL2(){
+        return new ParallelCommandGroup(
+            superstructure.preL2(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+        );
+    }
+
+    private Command preL3(){
+        return new ParallelCommandGroup(
+            superstructure.preL3(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+        );
+    }
+
+    private Command preL4(){
+        return new ParallelCommandGroup(
+            superstructure.preL4(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+        );
+    }
+
+    private Command outtake(){
+        return new ParallelCommandGroup(
+            superstructure.outtake(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+        );
+    }
+
+    private Command alignReef(){
+        return new ParallelCommandGroup(
+            superstructure.alignReef(),
+            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
         );
     }
 

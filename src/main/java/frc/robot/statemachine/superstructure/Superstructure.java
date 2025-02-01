@@ -1,6 +1,8 @@
 package frc.robot.statemachine.superstructure;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
@@ -13,6 +15,8 @@ import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
 import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
 
+import java.util.Set;
+
 public class Superstructure extends GBSubsystem {
 
 	private final Robot robot;
@@ -20,12 +24,17 @@ public class Superstructure extends GBSubsystem {
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
 
+	private SuperstructureState currentState;
+
 	public Superstructure(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
 		this.armStateHandler = new ArmStateHandler(robot.getArm());
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
+
+		this.currentState = SuperstructureState.IDLE;
+		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
 	}
 
 	public boolean isCoralIn() {
@@ -48,7 +57,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLOSED),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			"idle"
+			SuperstructureState.IDLE
 		);
 	}
 
@@ -59,7 +68,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.INTAKE),
 				endEffectorStateHandler.setState(EndEffectorState.INTAKE)
 			).until(this::isCoralIn),
-			"intake"
+			SuperstructureState.INTAKE
 		);
 	}
 
@@ -70,7 +79,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.OUTTAKE),
 				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 			).until(this::isCoralOut),
-			"outtake"
+			SuperstructureState.OUTTAKE
 		);
 	}
 
@@ -81,7 +90,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.PRE_L1),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			"pre l1"
+			SuperstructureState.PRE_L1
 		);
 	}
 
@@ -92,7 +101,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.PRE_L2),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			"pre l2"
+			SuperstructureState.PRE_L2
 		);
 	}
 
@@ -103,7 +112,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.PRE_L3),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			"pre l3"
+			SuperstructureState.PRE_L3
 		);
 	}
 
@@ -114,7 +123,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.PRE_L4),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			"pre l4"
+			SuperstructureState.PRE_L4
 		);
 	}
 
@@ -132,7 +141,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 				)
 			).until(this::isCoralOut),
-			"score l1"
+			SuperstructureState.SCORE_L1
 		);
 	}
 
@@ -150,7 +159,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 				)
 			).until(this::isCoralOut),
-			"score l2"
+			SuperstructureState.SCORE_L2
 		);
 	}
 
@@ -168,7 +177,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 				)
 			).until(this::isCoralOut),
-			"score l3"
+			SuperstructureState.SCORE_L3
 		);
 	}
 
@@ -186,8 +195,22 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 				)
 			).until(this::isCoralOut),
-			"score l4"
+			SuperstructureState.SCORE_L4
 		);
+	}
+
+	private Command asSubsystemCommand(Command command, SuperstructureState state) {
+		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
+	}
+
+	private Command endState(SuperstructureState state) {
+		return switch (state) {
+			case INTAKE, OUTTAKE, IDLE -> idle();
+			case PRE_L1, SCORE_L1 -> preL1();
+			case PRE_L2, SCORE_L2 -> preL2();
+			case PRE_L3, SCORE_L3 -> preL3();
+			case PRE_L4, SCORE_L4 -> preL4();
+		};
 	}
 
 }

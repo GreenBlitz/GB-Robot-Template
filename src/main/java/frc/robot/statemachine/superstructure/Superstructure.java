@@ -55,7 +55,7 @@ public class Superstructure {
 		);
 	}
 
-	public Command feederIntake() {
+	public Command intake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.FEEDER),

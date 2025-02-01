@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.constants.field.Field;
 import frc.robot.Robot;
-import frc.utils.auto.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtil;
 
 import java.util.function.Supplier;
 
@@ -40,9 +40,9 @@ public class SequencesBuilder {
 		return new ConditionalCommand(
 			followPath(path),
 			pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
-			() -> PathPlannerUtils.isRobotInPathfindingDeadband(
+			() -> PathPlannerUtil.isRobotInPathfindingDeadband(
 				robot.getPoseEstimator().getCurrentPose(),
-				Field.getAllianceRelativePose(PathPlannerUtils.getPathStartingPose(path))
+				Field.getAllianceRelativePose(PathPlannerUtil.getPathStartingPose(path))
 			)
 		);
 	}
@@ -51,12 +51,12 @@ public class SequencesBuilder {
 		return robot.getSwerve()
 			.getCommandsBuilder()
 			.pidToPose(robot.getPoseEstimator()::getCurrentPose, targetPose)
-			.until(() -> PathPlannerUtils.isRobotInAutonomousTolerances(robot.getPoseEstimator().getCurrentPose(), targetPose));
+			.until(() -> PathPlannerUtil.isRobotInAutonomousTolerances(robot.getPoseEstimator().getCurrentPose(), targetPose));
 	}
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path) {
 		return followPathOrPathfindAndFollowPath(robot, path)
-			.andThen(pidToPose(robot, Field.getAllianceRelativePose(PathPlannerUtils.getLastPathPose(path))));
+			.andThen(pidToPose(robot, Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path))));
 	}
 
 }

@@ -5,8 +5,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.autonomous.AutonomousConstants;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public enum AutoPath {
@@ -40,7 +38,7 @@ public enum AutoPath {
 	}
 
 	public Optional<PathPlannerPath> getPath() {
-		return PathPlannerUtils.getPathFromFile(getPathName());
+		return PathPlannerUtil.getPathFromFile(getPathName());
 	}
 
 }

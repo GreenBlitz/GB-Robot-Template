@@ -7,7 +7,7 @@ import frc.robot.Robot;
 import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
-import frc.utils.auto.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class AutosBuilder {
 
 		return new PathPlannerAutoWrapper(
 			pathOptional.map(pathFollowingCommand).orElse(Commands.none()),
-			pathOptional.map(PathPlannerUtils::getPathStartingPose).orElse(path.getStartingPoint().getSecond()),
+			pathOptional.map(PathPlannerUtil::getPathStartingPose).orElse(path.getStartingPoint().getSecond()),
 			path.getPathName(),
 			pathOptional.isPresent()
 		);

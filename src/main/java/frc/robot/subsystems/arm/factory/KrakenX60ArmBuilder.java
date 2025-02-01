@@ -2,7 +2,7 @@ package frc.robot.subsystems.arm.factory;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -22,6 +22,7 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
+import frc.robot.hardware.phoenix6.request.Phoenix6FeedForwardRequest;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
@@ -45,8 +46,17 @@ public class KrakenX60ArmBuilder {
 
 
 	protected static Arm build(String logPath) {
-		Phoenix6Request<Rotation2d> positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withEnableFOC(ENABLE_FOC));
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(ENABLE_FOC));
+		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
+			new DynamicMotionMagicVoltage(
+				0,
+				ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND.getRotations(),
+				ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED.getRotations(),
+				0
+			),
+			0,
+			ENABLE_FOC
+		);
+		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
 		motor.applyConfiguration(buildTalonFXConfiguration());
@@ -87,7 +97,7 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kG = 0;
 			}
 			case SIMULATION -> {
-				config.Slot0.kP = 60;
+				config.Slot0.kP = 70;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0;

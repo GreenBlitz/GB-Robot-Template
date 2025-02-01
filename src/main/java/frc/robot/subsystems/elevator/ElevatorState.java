@@ -3,12 +3,12 @@ package frc.robot.subsystems.elevator;
 public enum ElevatorState {
 
 	CLOSED(0.01),
-	FEEDER(0.36),
+	INTAKE(0.36),
+	OUTTAKE(0.3),
 	L1(0.01),
-	L2(0.1),
-	L3(0.3),
-	L4(0.9),
-	OUTTAKE(0.3);
+	L2(0.01),
+	L3(0.1),
+	L4(0.8);
 
 	private final double heightMeters;
 

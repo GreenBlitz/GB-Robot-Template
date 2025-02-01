@@ -62,7 +62,7 @@ public class Superstructure {
 	public Command intake() {
 		return commandWithName(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.FEEDER),
+				elevatorStateHandler.setState(ElevatorState.INTAKE),
 				armStateHandler.setState(ArmState.INTAKE),
 				endEffectorStateHandler.setState(EndEffectorState.INTAKE)
 			).until(this::isCoralIn),

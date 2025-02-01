@@ -2,6 +2,7 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
@@ -44,21 +45,26 @@ public class RobotCommander extends GBSubsystem {
 		Translation2d rotated = new Translation2d(allianceRelativeSpeeds.vxMetersPerSecond, allianceRelativeSpeeds.vyMetersPerSecond)
 			.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation());
 		ChassisSpeeds reefRelativeSpeeds = new ChassisSpeeds(rotated.getX(), rotated.getY(), allianceRelativeSpeeds.omegaRadiansPerSecond);
+		Pose2d reefRelativePose = robot.getPoseEstimator()
+			.getEstimatedPose()
+			.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation());
+		Pose2d reefRelativeScoringPose = ScoringHelpers
+			.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+			.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation());
+
 		return superstructure.isReadyToScore(level) && switch (level) {
 			case L1 ->
 				isAtPose(
-					robot.getPoseEstimator().getEstimatedPose().rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
-					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-						.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
+					reefRelativePose,
+					reefRelativeScoringPose,
 					reefRelativeSpeeds,
 					Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,
 					Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS
 				);
 			case L2, L3, L4 ->
 				isAtPose(
-					robot.getPoseEstimator().getEstimatedPose().rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
-					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-						.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
+					reefRelativePose,
+					reefRelativeScoringPose,
 					reefRelativeSpeeds,
 					Tolerances.REEF_RELATIVE_SCORING_POSITION,
 					Tolerances.REEF_RELATIVE_SCORING_DEADBANDS

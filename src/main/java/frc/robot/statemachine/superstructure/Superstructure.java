@@ -30,9 +30,9 @@ public class Superstructure {
         return !robot.getEndEffector().isCoralInFront();
     }
 
-    public boolean isReadyToBranchScore(BranchLevel branchLevel) {
-        return robot.getElevator().isAtPosition(branchLevel.getElevatorPositionMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-            && robot.getArm().isAtPosition(branchLevel.getArmPosition(), Tolerances.ARM_POSITION);
+    public boolean isReadyToScore(ScoreLevel scoreLevel) {
+        return robot.getElevator().isAtPosition(scoreLevel.getElevatorPositionMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+            && robot.getArm().isAtPosition(scoreLevel.getArmPosition(), Tolerances.ARM_POSITION);
     }
 
 }

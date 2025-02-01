@@ -88,7 +88,6 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
-		superstructure.log();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -45,21 +46,19 @@ public class SwerveMath {
 		);
 	}
 
-	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
-		double xVelocityMetersPerSecond = ToleranceMath
-			.applyDeadband(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND);
-		double yVelocityMetersPerSecond = ToleranceMath
-			.applyDeadband(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND);
+	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds, Pose2d deadbands) {
+		double xVelocityMetersPerSecond = ToleranceMath.applyDeadband(chassisSpeeds.vxMetersPerSecond, deadbands.getX());
+		double yVelocityMetersPerSecond = ToleranceMath.applyDeadband(chassisSpeeds.vyMetersPerSecond, deadbands.getY());
 		double rotationalVelocityRadiansPerSecond = ToleranceMath
-			.applyDeadband(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND.getRadians());
+			.applyDeadband(chassisSpeeds.omegaRadiansPerSecond, deadbands.getRotation().getRadians());
 
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityRadiansPerSecond);
 	}
 
-	public static boolean isStill(ChassisSpeeds chassisSpeeds) {
-		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
-			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
-			&& Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND.getRadians();
+	public static boolean isStill(ChassisSpeeds chassisSpeeds, Pose2d deadbands) {
+		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= deadbands.getX()
+			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= deadbands.getY()
+			&& Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= deadbands.getRotation().getRadians();
 	}
 
 	public static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {

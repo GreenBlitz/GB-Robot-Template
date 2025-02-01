@@ -68,7 +68,7 @@ public class AutosBuilder {
 	}
 
 
-	private static PathPlannerAutoWrapper createAutoFromAutoPath(AutoPath path, Function<PathPlannerPath, Command> pathFollowingCommand) {
+	public static PathPlannerAutoWrapper createAutoFromAutoPath(AutoPath path, Function<PathPlannerPath, Command> pathFollowingCommand) {
 		Optional<PathPlannerPath> pathOptional = path.getPath();
 
 		return new PathPlannerAutoWrapper(

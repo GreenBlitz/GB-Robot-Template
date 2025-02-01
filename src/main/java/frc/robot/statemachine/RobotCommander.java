@@ -76,16 +76,16 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case DRIVE -> drive();
 			case INTAKE -> intake();
-			case L1 -> l1();
-			case L2 -> l2();
-			case L3 -> l3();
-			case L4 -> l4();
+			case OUTTAKE -> outtake();
+			case ALIGN_REEF -> alignReef();
 			case PRE_L1 -> preL1();
 			case PRE_L2 -> preL2();
 			case PRE_L3 -> preL3();
 			case PRE_L4 -> preL4();
-			case OUTTAKE -> outtake();
-			case ALIGN_REEF -> alignReef();
+			case L1 -> l1();
+			case L2 -> l2();
+			case L3 -> l3();
+			case L4 -> l4();
 		};
 	}
 
@@ -103,6 +103,63 @@ public class RobotCommander extends GBSubsystem {
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
 			),
 			RobotState.INTAKE
+		);
+	}
+
+	private Command outtake() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.OUTTAKE
+		);
+	}
+
+	private Command alignReef() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.idle(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
+			),
+			RobotState.ALIGN_REEF
+		);
+	}
+
+	private Command preL1() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.preL1(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
+			),
+			RobotState.PRE_L1
+		);
+	}
+
+	private Command preL2() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.preL2(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			),
+			RobotState.PRE_L2
+		);
+	}
+
+	private Command preL3() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.preL3(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			),
+			RobotState.PRE_L3
+		);
+	}
+
+	private Command preL4() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.preL4(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			),
+			RobotState.PRE_L4
 		);
 	}
 
@@ -155,63 +212,6 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.scoreL4()
 			),
 			RobotState.L4
-		);
-	}
-
-	private Command preL1() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preL1(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
-			),
-			RobotState.PRE_L1
-		);
-	}
-
-	private Command preL2() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preL2(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			),
-			RobotState.PRE_L2
-		);
-	}
-
-	private Command preL3() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preL3(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			),
-			RobotState.PRE_L3
-		);
-	}
-
-	private Command preL4() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preL4(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			),
-			RobotState.PRE_L4
-		);
-	}
-
-	private Command outtake() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.OUTTAKE
-		);
-	}
-
-	private Command alignReef() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.idle(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
-			),
-			RobotState.ALIGN_REEF
 		);
 	}
 

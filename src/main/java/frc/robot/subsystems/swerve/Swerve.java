@@ -234,13 +234,13 @@ public class Swerve extends GBSubsystem {
 
 		speeds = stateHandler.applyAimAssistOnChassisSpeeds(speeds, swerveState);
 		speeds = handleHeadingControl(speeds, swerveState);
-		if (SwerveMath.isStill(speeds)) {
+		if (SwerveMath.isStill(speeds, SwerveConstants.DEADBANDS)) {
 			modules.stop();
 			return;
 		}
 
 		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
-		speeds = SwerveMath.applyDeadband(speeds);
+		speeds = SwerveMath.applyDeadband(speeds, SwerveConstants.DEADBANDS);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
 		speeds = SwerveMath.discretize(speeds);
 
@@ -252,7 +252,7 @@ public class Swerve extends GBSubsystem {
 			return speeds;
 		}
 
-		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND.getRadians()) {
+		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.DEADBANDS.getRotation().getRadians()) {
 			headingStabilizer.unlockTarget();
 			return speeds;
 		}

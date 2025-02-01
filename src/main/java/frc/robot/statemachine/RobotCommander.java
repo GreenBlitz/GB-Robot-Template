@@ -20,7 +20,7 @@ import frc.utils.math.ToleranceMath;
 
 import java.util.Set;
 
-public class DaddyRobot extends GBSubsystem {
+public class RobotCommander extends GBSubsystem {
 
 	private final Robot robot;
 	private final Swerve swerve;
@@ -28,7 +28,7 @@ public class DaddyRobot extends GBSubsystem {
 
 	private RobotState currentState;
 
-	public DaddyRobot(String logPath, Robot robot) {
+	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
 		this.swerve = robot.getSwerve();

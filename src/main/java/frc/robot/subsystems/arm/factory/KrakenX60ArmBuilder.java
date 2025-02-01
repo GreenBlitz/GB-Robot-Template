@@ -49,7 +49,7 @@ public class KrakenX60ArmBuilder {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
 			new DynamicMotionMagicVoltage(
 				0,
-				ArmConstants.CRUISE_VELOCITY_ANGLE_PER_SECOND.getRotations(),
+				ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND.getRotations(),
 				ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED.getRotations(),
 				0
 			),

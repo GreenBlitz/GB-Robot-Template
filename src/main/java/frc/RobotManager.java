@@ -53,12 +53,12 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void autonomousInit() {
 		this.auto = robot.getAuto();
-			auto.schedule();
+		auto.schedule();
 	}
 
 	@Override
 	public void teleopInit() {
-			auto.cancel();
+		auto.cancel();
 	}
 
 	@Override

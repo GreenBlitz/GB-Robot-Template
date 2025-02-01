@@ -2,7 +2,7 @@ package frc.robot.superstructure;
 
 public enum RobotState {
 
-	DEFAULT,
+	DRIVE,
 	INTAKE,
 	L1,
 	L2,

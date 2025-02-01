@@ -4,15 +4,15 @@ public enum RobotState {
 
 	DRIVE,
 	INTAKE,
-	L1,
-	L2,
-	L3,
-	L4,
+	OUTTAKE,
+	ALIGN_REEF,
 	PRE_L1,
 	PRE_L2,
 	PRE_L3,
 	PRE_L4,
-	OUTTAKE,
-	ALIGN_REEF
+	L1,
+	L2,
+	L3,
+	L4,
 
 }

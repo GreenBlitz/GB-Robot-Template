@@ -70,6 +70,17 @@ public class Superstructure {
 		);
 	}
 
+	public Command outtake() {
+		return commandWithName(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.OUTTAKE),
+				armStateHandler.setState(ArmState.OUTTAKE),
+				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+			).until(this::isCoralOut),
+			"outtake"
+		);
+	}
+
 	public Command scoreL1() {
 		return commandWithName(
 			new ParallelCommandGroup(
@@ -155,28 +166,6 @@ public class Superstructure {
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
 			"pre l4"
-		);
-	}
-
-	public Command outtake() {
-		return commandWithName(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.OUTTAKE),
-				armStateHandler.setState(ArmState.OUTTAKE),
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-			).until(this::isCoralOut),
-			"outtake"
-		);
-	}
-
-	public Command alignReef() {
-		return commandWithName(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.CLOSED),
-				armStateHandler.setState(ArmState.CLOSED),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			"align reef"
 		);
 	}
 

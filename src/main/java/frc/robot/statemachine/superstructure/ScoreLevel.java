@@ -1,30 +1,35 @@
 package frc.robot.statemachine.superstructure;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.elevator.ElevatorState;
 
 public enum ScoreLevel {
 
-	L1(ElevatorState.L1.getHeightMeters(), ArmState.L1.getPosition()),
-	L2(ElevatorState.L2.getHeightMeters(), ArmState.L2.getPosition()),
-	L3(ElevatorState.L3.getHeightMeters(), ArmState.L3.getPosition()),
-	L4(ElevatorState.L4.getHeightMeters(), ArmState.L4.getPosition());
+	L1(ElevatorState.L1, ArmState.L1, ArmState.PRE_L1),
+	L2(ElevatorState.L2, ArmState.L2, ArmState.PRE_L2),
+	L3(ElevatorState.L3, ArmState.L3, ArmState.PRE_L3),
+	L4(ElevatorState.L4, ArmState.L4, ArmState.PRE_L4);
 
-	private final double elevatorPositionMeters;
-	private final Rotation2d armPosition;
+	private final ElevatorState elevatorState;
+	private final ArmState armState;
+	private final ArmState armPreScoreState;
 
-	ScoreLevel(double elevatorPositionMeters, Rotation2d armPosition) {
-		this.elevatorPositionMeters = elevatorPositionMeters;
-		this.armPosition = armPosition;
+	ScoreLevel(ElevatorState elevatorState, ArmState armState, ArmState armPreScoreState) {
+		this.elevatorState = elevatorState;
+		this.armState = armState;
+		this.armPreScoreState = armPreScoreState;
 	}
 
-	public double getElevatorPositionMeters() {
-		return elevatorPositionMeters;
+	public ElevatorState getElevatorState() {
+		return elevatorState;
 	}
 
-	public Rotation2d getArmPosition() {
-		return armPosition;
+	public ArmState getArmState() {
+		return armState;
+	}
+
+	public ArmState getArmPreScoreState() {
+		return armPreScoreState;
 	}
 
 }

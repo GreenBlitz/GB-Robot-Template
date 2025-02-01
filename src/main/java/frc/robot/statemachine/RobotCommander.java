@@ -74,8 +74,8 @@ public class RobotCommander extends GBSubsystem {
 		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
 		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
 		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
-		boolean isStopping = SwerveMath.isStill(currentSpeeds, deadbands);
-		return isAtX && isAtY && isAtHeading && isStopping;
+		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
+		return isAtX && isAtY && isAtHeading && isStill;
 	}
 
 	public Command setState(RobotState state) {
@@ -84,14 +84,14 @@ public class RobotCommander extends GBSubsystem {
 			case INTAKE -> intake();
 			case OUTTAKE -> outtake();
 			case ALIGN_REEF -> alignReef();
-			case PRE_L1 -> preL1();
-			case PRE_L2 -> preL2();
-			case PRE_L3 -> preL3();
-			case PRE_L4 -> preL4();
-			case L1 -> l1();
-			case L2 -> l2();
-			case L3 -> l3();
-			case L4 -> l4();
+			case PRE_L1 -> preScore(ScoreLevel.L1);
+			case PRE_L2 -> preScore(ScoreLevel.L2);
+			case PRE_L3 -> preScore(ScoreLevel.L3);
+			case PRE_L4 -> preScore(ScoreLevel.L4);
+			case L1 -> score(ScoreLevel.L1);
+			case L2 -> score(ScoreLevel.L2);
+			case L3 -> score(ScoreLevel.L3);
+			case L4 -> score(ScoreLevel.L4);
 		};
 	}
 
@@ -129,95 +129,36 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command preL1() {
+	private Command preScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				superstructure.preL1(),
+				superstructure.preScore(scoreLevel),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
 			),
-			RobotState.PRE_L1
+			switch (scoreLevel) {
+				case L1 -> RobotState.PRE_L1;
+				case L2 -> RobotState.PRE_L2;
+				case L3 -> RobotState.PRE_L3;
+				case L4 -> RobotState.PRE_L4;
+			}
 		);
 	}
 
-	private Command preL2() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preL2(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			),
-			RobotState.PRE_L2
-		);
-	}
-
-	private Command preL3() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preL3(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			),
-			RobotState.PRE_L3
-		);
-	}
-
-	private Command preL4() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preL4(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			),
-			RobotState.PRE_L4
-		);
-	}
-
-	private Command l1() {
+	private Command score(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
-					superstructure.preL1()
-				).until(() -> isReadyToScore(ScoreLevel.L1, ScoringHelpers.targetBranch)),
-				superstructure.scoreL1()
+					superstructure.preScore(scoreLevel)
+				).until(() -> isReadyToScore(scoreLevel, ScoringHelpers.targetBranch)),
+				superstructure.score(scoreLevel)
 			),
-			RobotState.L1
-		);
-	}
-
-	private Command l2() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
-					superstructure.preL2()
-				).until(() -> isReadyToScore(ScoreLevel.L2, ScoringHelpers.targetBranch)),
-				superstructure.scoreL2()
-			),
-			RobotState.L2
-		);
-	}
-
-	private Command l3() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
-					superstructure.preL3()
-				).until(() -> isReadyToScore(ScoreLevel.L3, ScoringHelpers.targetBranch)),
-				superstructure.scoreL3()
-			),
-			RobotState.L3
-		);
-	}
-
-	private Command l4() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
-					superstructure.preL4()
-				).until(() -> isReadyToScore(ScoreLevel.L4, ScoringHelpers.targetBranch)),
-				superstructure.scoreL4()
-			),
-			RobotState.L4
+			switch (scoreLevel) {
+				case L1 -> RobotState.L1;
+				case L2 -> RobotState.L2;
+				case L3 -> RobotState.L3;
+				case L4 -> RobotState.L4;
+			}
 		);
 	}
 
@@ -228,10 +169,10 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
-			case PRE_L1, L1 -> preL1();
-			case PRE_L2, L2 -> preL2();
-			case PRE_L3, L3 -> preL3();
-			case PRE_L4, L4 -> preL4();
+			case PRE_L1, L1 -> preScore(ScoreLevel.L1);
+			case PRE_L2, L2 -> preScore(ScoreLevel.L2);
+			case PRE_L3, L3 -> preScore(ScoreLevel.L3);
+			case PRE_L4, L4 -> preScore(ScoreLevel.L4);
 		};
 	}
 

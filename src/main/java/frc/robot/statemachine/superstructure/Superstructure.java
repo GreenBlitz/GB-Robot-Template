@@ -46,8 +46,8 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isReadyToScore(ScoreLevel scoreLevel) {
-		return robot.getElevator().isAtPosition(scoreLevel.getElevatorPositionMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& robot.getArm().isAtPosition(scoreLevel.getArmPosition(), Tolerances.ARM_POSITION);
+		return robot.getElevator().isAtPosition(scoreLevel.getElevatorState().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& robot.getArm().isAtPosition(scoreLevel.getArmState().getPosition(), Tolerances.ARM_POSITION);
 	}
 
 	public Command idle() {
@@ -83,119 +83,42 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preL1() {
+	public Command preScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L1),
-				armStateHandler.setState(ArmState.PRE_L1),
+				elevatorStateHandler.setState(scoreLevel.getElevatorState()),
+				armStateHandler.setState(scoreLevel.getArmPreScoreState()),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			SuperstructureState.PRE_L1
+			switch (scoreLevel) {
+				case L1 -> SuperstructureState.PRE_L1;
+				case L2 -> SuperstructureState.PRE_L2;
+				case L3 -> SuperstructureState.PRE_L3;
+				case L4 -> SuperstructureState.PRE_L4;
+			}
 		);
 	}
 
-	public Command preL2() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L2),
-				armStateHandler.setState(ArmState.PRE_L2),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			SuperstructureState.PRE_L2
-		);
-	}
-
-	public Command preL3() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L3),
-				armStateHandler.setState(ArmState.PRE_L3),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			SuperstructureState.PRE_L3
-		);
-	}
-
-	public Command preL4() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L4),
-				armStateHandler.setState(ArmState.PRE_L4),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			SuperstructureState.PRE_L4
-		);
-	}
-
-	public Command scoreL1() {
+	public Command score(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L1),
-					armStateHandler.setState(ArmState.L1),
+					elevatorStateHandler.setState(scoreLevel.getElevatorState()),
+					armStateHandler.setState(scoreLevel.getArmState()),
 					endEffectorStateHandler.setState(EndEffectorState.KEEP)
-				).until(() -> isReadyToScore(ScoreLevel.L1)),
+				).until(() -> isReadyToScore(scoreLevel)),
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L1),
-					armStateHandler.setState(ArmState.L1),
+					elevatorStateHandler.setState(scoreLevel.getElevatorState()),
+					armStateHandler.setState(scoreLevel.getArmState()),
 					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 				)
 			).until(this::isCoralOut),
-			SuperstructureState.SCORE_L1
-		);
-	}
-
-	public Command scoreL2() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L2),
-					armStateHandler.setState(ArmState.L2),
-					endEffectorStateHandler.setState(EndEffectorState.KEEP)
-				).until(() -> isReadyToScore(ScoreLevel.L2)),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L2),
-					armStateHandler.setState(ArmState.L2),
-					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-				)
-			).until(this::isCoralOut),
-			SuperstructureState.SCORE_L2
-		);
-	}
-
-	public Command scoreL3() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L3),
-					armStateHandler.setState(ArmState.L3),
-					endEffectorStateHandler.setState(EndEffectorState.KEEP)
-				).until(() -> isReadyToScore(ScoreLevel.L3)),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L3),
-					armStateHandler.setState(ArmState.L3),
-					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-				)
-			).until(this::isCoralOut),
-			SuperstructureState.SCORE_L3
-		);
-	}
-
-	public Command scoreL4() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L4),
-					armStateHandler.setState(ArmState.L4),
-					endEffectorStateHandler.setState(EndEffectorState.KEEP)
-				).until(() -> isReadyToScore(ScoreLevel.L4)),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L4),
-					armStateHandler.setState(ArmState.L4),
-					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-				)
-			).until(this::isCoralOut),
-			SuperstructureState.SCORE_L4
+			switch (scoreLevel) {
+				case L1 -> SuperstructureState.SCORE_L1;
+				case L2 -> SuperstructureState.SCORE_L2;
+				case L3 -> SuperstructureState.SCORE_L3;
+				case L4 -> SuperstructureState.SCORE_L4;
+			}
 		);
 	}
 
@@ -206,10 +129,10 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, IDLE -> idle();
-			case PRE_L1, SCORE_L1 -> preL1();
-			case PRE_L2, SCORE_L2 -> preL2();
-			case PRE_L3, SCORE_L3 -> preL3();
-			case PRE_L4, SCORE_L4 -> preL4();
+			case PRE_L1, SCORE_L1 -> preScore(ScoreLevel.L1);
+			case PRE_L2, SCORE_L2 -> preScore(ScoreLevel.L2);
+			case PRE_L3, SCORE_L3 -> preScore(ScoreLevel.L3);
+			case PRE_L4, SCORE_L4 -> preScore(ScoreLevel.L4);
 		};
 	}
 

@@ -3,7 +3,6 @@ package frc.robot.statemachine;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
@@ -43,12 +42,13 @@ public class RobotCommander extends GBSubsystem {
 	private boolean isReadyToScore(ScoreLevel level, Branch branch) {
 		Rotation2d reefAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
 
-		Pose2d reefRelativeTargetPose = ScoringHelpers.getRobotScoringPose(branch,
-			StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS).rotateBy(reefAngle.unaryMinus());
+		Pose2d reefRelativeTargetPose = ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+			.rotateBy(reefAngle.unaryMinus());
 		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
 
 		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
-		ChassisSpeeds reefRelativeSpeeds = SwerveMath.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
+		ChassisSpeeds reefRelativeSpeeds = SwerveMath
+			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
 
 		return superstructure.isReadyToScore(level) && switch (level) {
 			case L1 ->
@@ -159,10 +159,10 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
-			case PRE_L1, L1 -> preScore(ScoreLevel.L1);
-			case PRE_L2, L2 -> preScore(ScoreLevel.L2);
-			case PRE_L3, L3 -> preScore(ScoreLevel.L3);
-			case PRE_L4, L4 -> preScore(ScoreLevel.L4);
+			case PRE_L1, L1 -> preScore(RobotState.PRE_L1, SuperstructureState.PRE_L1, ScoreLevel.L1);
+			case PRE_L2, L2 -> preScore(RobotState.PRE_L2, SuperstructureState.PRE_L2, ScoreLevel.L2);
+			case PRE_L3, L3 -> preScore(RobotState.PRE_L3, SuperstructureState.PRE_L3, ScoreLevel.L3);
+			case PRE_L4, L4 -> preScore(RobotState.PRE_L4, SuperstructureState.PRE_L4, ScoreLevel.L4);
 		};
 	}
 

@@ -18,7 +18,7 @@ public class Modules {
 		this.modules = modules;
 	}
 
-	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
+	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 

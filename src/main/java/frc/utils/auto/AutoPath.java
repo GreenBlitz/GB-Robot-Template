@@ -31,7 +31,7 @@ public enum AutoPath {
 	}
 
 	public Optional<PathPlannerPath> getPath() {
-		return PathPlannerUtils.getPathFromFile(getPathName());
+		return PathPlannerUtil.getPathFromFile(getPathName());
 	}
 
 }

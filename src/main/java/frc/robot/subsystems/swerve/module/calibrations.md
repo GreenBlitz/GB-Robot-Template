@@ -4,30 +4,30 @@ Modules:
 
 ModuleConstants: (real and simulation)
 -----------------------
-- [ ] Wheel Diameter
+- [X] Wheel Diameter
 - [ ] Coupling Ratio
 - [ ] Velocity At 12 Volts
 - [ ] Modules locations (in meters)
 
 Encoder:
 ----------------------
-- [ ] Encoder ID
-- [ ] Sensor Range (should be PlusMinusHalf)
-- [ ] Sensor Direction (should be CounterClockwise in default sds module)
+- [X] Encoder ID
+- [X] Sensor Range (should be PlusMinusHalf)
+- [X] Sensor Direction (should be CounterClockwise in default sds module)
 
 Steer:
 -----------------------
-- [ ] Motor ID
-- [ ] Inverted
-- [ ] Neutral Mode
-- [ ] Current Limit
-- [ ] Gear Ratio (should use RotorToSensorRatio)
-- [ ] Encoder Usage and ID (should use fuse)
-- [ ] FF (ks, kv, ka)
-- [ ] PID
-- [ ] Use ContinuousWrap
-- [ ] Control mode (motion magic, voltage, torque)
-- [ ] Enable/Disable FOC (only talonfx)
+- [X] Motor ID
+- [X] Inverted
+- [X] Neutral Mode
+- [X] Current Limit
+- [X] Gear Ratio (should use RotorToSensorRatio)
+- [X] Encoder Usage and ID (should use fuse)
+- [X] FF (ks, kv, ka)
+- [X] PID
+- [X] Use ContinuousWrap
+- [X] Control mode (motion magic, voltage, torque)
+- [X] Enable/Disable FOC (only talonfx)
 
 SteerSimulation:
 -----------------------
@@ -36,11 +36,11 @@ SteerSimulation:
 
 Drive:
 -----------------------
-- [ ] Motor ID
-- [ ] Inverted
-- [ ] Neutral Mode
-- [ ] Current Limit
-- [ ] Gear Ratio (should use RotorToSensorRatio)
+- [X] Motor ID
+- [X] Inverted
+- [X] Neutral Mode
+- [X] Current Limit
+- [X] Gear Ratio (should use RotorToSensorRatio)
 - [ ] FF (ks, kv, ka)
 - [ ] PID
 - [ ] Control mode (motion magic, voltage, torque)

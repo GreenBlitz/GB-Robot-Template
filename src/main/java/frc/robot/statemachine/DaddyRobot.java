@@ -2,7 +2,9 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -16,6 +18,10 @@ public class DaddyRobot {
     public DaddyRobot(Robot robot){
         this.swerve = robot.getSwerve();
         this.superstructure = robot.getSuperstructure();
+    }
+
+    private boolean isReadyToScore(ScoreLevel level){
+        return superstructure.isReadyToScore(level);
     }
 
     public Command setState(RobotState state){
@@ -35,7 +41,6 @@ public class DaddyRobot {
         };
     }
 
-    //@formatter:off
     private Command drive(){
         return new ParallelCommandGroup(
             superstructure.idle(),
@@ -72,9 +77,12 @@ public class DaddyRobot {
     }
 
     private Command l4(){
-        return new ParallelCommandGroup(
-            superstructure.scoreL4(),
-            swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+        return new SequentialCommandGroup(
+                new ParallelCommandGroup(
+                        swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
+                        superstructure.preL4()
+                ).until()
+                superstructure.scoreL4()
         );
     }
 

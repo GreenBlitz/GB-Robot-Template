@@ -1,39 +1,31 @@
 package frc.robot.statemachine.superstructure;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.statemachine.Tolerances;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
 import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
 import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
-import org.littletonrobotics.junction.Logger;
 
-public class Superstructure {
+public class Superstructure extends GBSubsystem {
 
-	private final String logPath;
 	private final Robot robot;
 	private final ElevatorStateHandler elevatorStateHandler;
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
 
-	private String currentCommandName;
-
 	public Superstructure(String logPath, Robot robot) {
-		this.logPath = logPath;
+		super(logPath);
 		this.robot = robot;
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
 		this.armStateHandler = new ArmStateHandler(robot.getArm());
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
-	}
-
-	public void log() {
-		Logger.recordOutput(logPath + "/CurrentCommand", currentCommandName);
 	}
 
 	public boolean isCoralIn() {
@@ -50,7 +42,7 @@ public class Superstructure {
 	}
 
 	public Command idle() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(ArmState.CLOSED),
@@ -61,7 +53,7 @@ public class Superstructure {
 	}
 
 	public Command intake() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.FEEDER),
 				armStateHandler.setState(ArmState.INTAKE),
@@ -72,7 +64,7 @@ public class Superstructure {
 	}
 
 	public Command outtake() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.OUTTAKE),
 				armStateHandler.setState(ArmState.OUTTAKE),
@@ -83,7 +75,7 @@ public class Superstructure {
 	}
 
 	public Command preL1() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.L1),
 				armStateHandler.setState(ArmState.PRE_L1),
@@ -94,7 +86,7 @@ public class Superstructure {
 	}
 
 	public Command preL2() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.L2),
 				armStateHandler.setState(ArmState.PRE_L2),
@@ -105,7 +97,7 @@ public class Superstructure {
 	}
 
 	public Command preL3() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.L3),
 				armStateHandler.setState(ArmState.PRE_L3),
@@ -116,7 +108,7 @@ public class Superstructure {
 	}
 
 	public Command preL4() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.L4),
 				armStateHandler.setState(ArmState.PRE_L4),
@@ -127,7 +119,7 @@ public class Superstructure {
 	}
 
 	public Command scoreL1() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.L1),
@@ -145,7 +137,7 @@ public class Superstructure {
 	}
 
 	public Command scoreL2() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.L2),
@@ -163,7 +155,7 @@ public class Superstructure {
 	}
 
 	public Command scoreL3() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.L3),
@@ -181,7 +173,7 @@ public class Superstructure {
 	}
 
 	public Command scoreL4() {
-		return commandWithName(
+		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.L4),
@@ -196,10 +188,6 @@ public class Superstructure {
 			).until(this::isCoralOut),
 			"score l4"
 		);
-	}
-
-	private Command commandWithName(Command command, String name) {
-		return new ParallelCommandGroup(new InstantCommand(() -> currentCommandName = name), command);
 	}
 
 }

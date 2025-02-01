@@ -37,6 +37,10 @@ Arm Calibrations
 - [ ] kI   
 - [ ] kD
 
+#### Motion Magic
+
+- [ ] Cruise velocity
+- [ ] Max acceleration
 
 ##### Simulation
 

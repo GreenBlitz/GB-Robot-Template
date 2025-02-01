@@ -13,6 +13,6 @@ Calibrations
 - [ ] Limit Switch Channel
 - [ ] Enable FOC
 - [ ] Control: kS, kG, PID
-- [ ] Profile Constants (Maybe): Max acceleration, cruse velocity
+- [ ] Max acceleration, Cruise velocity
 - [ ] Elevator Mass
 - [ ] States heights

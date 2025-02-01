@@ -9,4 +9,7 @@ public class ArmConstants {
 	public static final double LENGTH_METERS = 1;
 	public static final double MASS_KG = 5;
 
+	public static final Rotation2d CRUISE_VELOCITY_ANGLES_PER_SECOND = Rotation2d.fromRotations(10);
+	public static final Rotation2d ACCELERATION_ANGLES_PER_SECOND_SQUARED = Rotation2d.fromRotations(512);
+
 }

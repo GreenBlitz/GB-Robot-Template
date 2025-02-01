@@ -2,8 +2,8 @@ package frc.robot.superstructure;
 
 public enum RobotState {
 
-	IDLE,
-	FEEDER_INTAKE,
+	DRIVE,
+	INTAKE,
 	L1,
 	L2,
 	L3,

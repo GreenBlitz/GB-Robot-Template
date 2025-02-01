@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.math.ToleranceMath;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class RobotCommander extends GBSubsystem {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = robot.getSuperstructure();
+		this.currentState = RobotState.DRIVE;
 
 		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
 	}
@@ -49,8 +51,8 @@ public class RobotCommander extends GBSubsystem {
 					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 						.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
 					reefRelativeSpeeds,
-					Tolerances.REEF_RELATIVE_L1_SCORING_POSITION.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
-					Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation())
+					Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,
+					Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS
 				);
 			case L2, L3, L4 ->
 				isAtPose(
@@ -58,8 +60,8 @@ public class RobotCommander extends GBSubsystem {
 					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 						.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
 					reefRelativeSpeeds,
-					Tolerances.REEF_RELATIVE_SCORING_POSITION.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
-					Tolerances.REEF_RELATIVE_SCORING_DEADBANDS.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation())
+					Tolerances.REEF_RELATIVE_SCORING_POSITION,
+					Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
 				);
 		};
 	}
@@ -170,6 +172,7 @@ public class RobotCommander extends GBSubsystem {
 					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
 					superstructure.preL1()
 				).until(() -> isReadyToScore(ScoreLevel.L1, ScoringHelpers.targetBranch)),
+				new InstantCommand(() -> Logger.recordOutput(getLogPath() + "/WORKS", true)),
 				superstructure.scoreL1()
 			),
 			RobotState.L1

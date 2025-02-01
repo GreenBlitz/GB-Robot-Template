@@ -17,7 +17,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.math.ToleranceMath;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 

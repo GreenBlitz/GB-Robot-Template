@@ -3,25 +3,25 @@ package frc.robot.structures;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimator.IPoseEstimator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
+import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class Superstructure {
 
 	private final Swerve swerve;
-	private final IPoseEstimator poseEstimator;
+	private final PoseEstimator poseEstimator;
 
-	public Superstructure(Swerve swerve, IPoseEstimator poseEstimator) {
+	public Superstructure(Swerve swerve, PoseEstimator poseEstimator) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
 	}
 
 	public void periodic() {
 		swerve.update();
-		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
+		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
 	}
 
 
@@ -38,7 +38,7 @@ public class Superstructure {
 	public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vxMetersPerSecond,
-			poseEstimator.getEstimatedPose().getX(),
+			poseEstimator.getCurrentPose().getX(),
 			targetXBlueAlliancePosition
 		);
 	}
@@ -46,13 +46,13 @@ public class Superstructure {
 	public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vyMetersPerSecond,
-			poseEstimator.getEstimatedPose().getY(),
+			poseEstimator.getCurrentPose().getY(),
 			targetYBlueAlliancePosition
 		);
 	}
 
 	public boolean isAtAngle(Rotation2d targetAngle) {
-		double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getEstimatedPose().getRotation()).getDegrees());
+		double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getCurrentPose().getRotation()).getDegrees());
 		boolean isAtAngle = angleDifferenceDeg < Tolerances.SWERVE_HEADING.getDegrees();
 
 		double currentRotationVelocityRadians = swerve.getRobotRelativeVelocity().omegaRadiansPerSecond;

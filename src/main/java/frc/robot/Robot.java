@@ -12,8 +12,7 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.SequencesBuilder;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.poseestimator.IPoseEstimator;
-import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.poseestimation.PoseEstimator;
 import frc.robot.structures.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -38,7 +37,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final Swerve swerve;
-	private final IPoseEstimator poseEstimator;
+	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
 
 	private AutonomousChooser testAutosChooser;
@@ -57,15 +56,10 @@ public class Robot {
 			GyroFactory.createSignals(gyro)
 		);
 
-		this.poseEstimator = new WPILibPoseEstimatorWrapper(
-			"poseEstimator/",
-			swerve.getKinematics(),
-			swerve.getAllOdometryObservations()[0].wheelPositions(),
-			swerve.getGyroAbsoluteYaw()
-		);
+		this.poseEstimator = new PoseEstimator(swerve::setHeading, swerve.getKinematics());
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
-		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
+		swerve.setHeadingSupplier(() -> poseEstimator.getCurrentPose().getRotation());
+		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getCurrentPose);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
@@ -80,7 +74,7 @@ public class Robot {
 		Command preIntakeCommand = superStructure.setState(RobotState.PRE_INTAKE);
 
 		swerve.configPathPlanner(
-			poseEstimator::getEstimatedPose,
+			poseEstimator::getCurrentPose,
 			poseEstimator::resetPose,
 			PathPlannerUtils.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
@@ -144,7 +138,7 @@ public class Robot {
 		return swerve;
 	}
 
-	public IPoseEstimator getPoseEstimator() {
+	public PoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

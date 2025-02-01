@@ -102,7 +102,7 @@ public class SwerveState {
 	}
 
 
-	public DriveRelative getDriveMode() {
+	public DriveRelative getDriveRelative() {
 		return driveRelative;
 	}
 

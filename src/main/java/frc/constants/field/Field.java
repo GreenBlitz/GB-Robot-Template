@@ -7,7 +7,10 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.constants.field.enums.*;
+import frc.constants.field.enums.Branch;
+import frc.constants.field.enums.Cage;
+import frc.constants.field.enums.CoralStation;
+import frc.constants.field.enums.ReefSide;
 import frc.utils.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
@@ -105,6 +108,10 @@ public class Field {
 
 	private static Rotation3d getAllianceRelative(Rotation3d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation);
+	}
+
+	public static Rotation2d getAllianceRelative(Rotation2d rotation) {
+		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation, AngleTransform.INVERT);
 	}
 
 	private static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorX, boolean mirrorY, boolean mirrorAngle) {

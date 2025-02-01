@@ -4,10 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
@@ -20,6 +17,8 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.math.ToleranceMath;
+
+import java.util.Set;
 
 public class DaddyRobot extends GBSubsystem {
 
@@ -34,6 +33,8 @@ public class DaddyRobot extends GBSubsystem {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = robot.getSuperstructure();
+
+		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
 	}
 
 	private boolean isReadyToScore(ScoreLevel level, Branch branch) {

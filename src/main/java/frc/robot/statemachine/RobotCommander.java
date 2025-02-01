@@ -177,7 +177,6 @@ public class RobotCommander extends GBSubsystem {
 					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
 					superstructure.preL1()
 				).until(() -> isReadyToScore(ScoreLevel.L1, ScoringHelpers.targetBranch)),
-				new InstantCommand(() -> Logger.recordOutput(getLogPath() + "/WORKS", true)),
 				superstructure.scoreL1()
 			),
 			RobotState.L1

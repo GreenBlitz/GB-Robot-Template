@@ -64,7 +64,7 @@ public class Superstructure extends GBSubsystem {
 	public Command intake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.FEEDER),
+				elevatorStateHandler.setState(ElevatorState.INTAKE),
 				armStateHandler.setState(ArmState.INTAKE),
 				endEffectorStateHandler.setState(EndEffectorState.INTAKE)
 			).until(this::isCoralIn),

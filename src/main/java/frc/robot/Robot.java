@@ -79,7 +79,7 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.superstructure = new Superstructure("StateMachine/Superstructure", this);
-		this.daddy = new DaddyRobot(this);
+		this.daddy = new DaddyRobot("StateMachine/DaddyRobot", this);
 	}
 
 	public void periodic() {

@@ -13,20 +13,22 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.Superstructure;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.math.ToleranceMath;
 
-public class DaddyRobot {
+public class DaddyRobot extends GBSubsystem {
 
 	private final Robot robot;
 	private final Swerve swerve;
 	private final Superstructure superstructure;
 
-	public DaddyRobot(Robot robot) {
-		this.robot = robot;
+	public DaddyRobot(String logPath, Robot robot) {
+        super(logPath);
+        this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = robot.getSuperstructure();
 	}
@@ -42,8 +44,8 @@ public class DaddyRobot {
 					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 						.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
 					reefRelativeSpeeds,
-					Tolerances.L1_SCORING_POSITION,
-					Tolerances.L1_SCORING_DEADBANDS
+					Tolerances.L1_SCORING_POSITION.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
+					Tolerances.L1_SCORING_DEADBANDS.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation())
 				);
 			case L2, L3, L4 ->
 				isAtPose(
@@ -51,8 +53,8 @@ public class DaddyRobot {
 					ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 						.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
 					reefRelativeSpeeds,
-					Tolerances.SCORING_POSITION,
-					Tolerances.SCORING_DEADBANDS
+					Tolerances.SCORING_POSITION.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
+					Tolerances.SCORING_DEADBANDS.rotateBy(Field.getReefSideMiddle(branch.getReefSide()).getRotation())
 				);
 		};
 	}

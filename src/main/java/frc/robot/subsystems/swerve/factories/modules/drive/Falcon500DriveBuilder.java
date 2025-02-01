@@ -62,10 +62,10 @@ class Falcon500DriveBuilder {
 		driveConfig.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		driveConfig.Slot0.kS = 0.21549;
+		driveConfig.Slot0.kS = 0.2431;
 		driveConfig.Slot0.kV = 0.72124;
 		driveConfig.Slot0.kA = 0.11218;
-		driveConfig.Slot0.kP = 1.5;
+		driveConfig.Slot0.kP = 1.9;
 		driveConfig.Slot0.kI = 0;
 		driveConfig.Slot0.kD = 0;
 
@@ -80,8 +80,8 @@ class Falcon500DriveBuilder {
 
 	static DriveRequests buildRequests() {
 		return new DriveRequests(
-			Phoenix6RequestBuilder.build(new VelocityVoltage(0).withEnableFOC(true)),
-			Phoenix6RequestBuilder.build(new VoltageOut(0).withEnableFOC(true))
+			Phoenix6RequestBuilder.build(new VelocityVoltage(0), true),
+			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}
 

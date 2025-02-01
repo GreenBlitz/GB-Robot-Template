@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.factories.modules.constants;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.swerve.factories.constants.SimulationSwerveConstants;
-import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 
 class SimulationModuleConstants {
@@ -34,7 +34,7 @@ class SimulationModuleConstants {
 		BACK_LEFT_TRANSLATION2D,
 		BACK_RIGHT_TRANSLATION2D,};
 
-	static ModuleSpecificConstants getModuleSpecificConstants(String logPath, ModuleUtils.ModulePosition modulePosition) {
+	static ModuleSpecificConstants getModuleSpecificConstants(String logPath, ModuleUtil.ModulePosition modulePosition) {
 		return new ModuleSpecificConstants(
 			modulePosition,
 			logPath,

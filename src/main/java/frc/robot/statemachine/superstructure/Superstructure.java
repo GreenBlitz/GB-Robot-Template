@@ -3,6 +3,7 @@ package frc.robot.statemachine.superstructure;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.arm.ArmState;
@@ -127,10 +128,17 @@ public class Superstructure {
 
 	public Command scoreL1() {
 		return commandWithName(
-			new ParallelCommandGroup(
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE),
-				elevatorStateHandler.setState(ElevatorState.L1),
-				armStateHandler.setState(ArmState.L1)
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L1),
+					armStateHandler.setState(ArmState.L1),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isReadyToScore(ScoreLevel.L1)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L1),
+					armStateHandler.setState(ArmState.L1),
+					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				)
 			).until(this::isCoralOut),
 			"score l1"
 		);
@@ -138,10 +146,17 @@ public class Superstructure {
 
 	public Command scoreL2() {
 		return commandWithName(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L2),
-				armStateHandler.setState(ArmState.L2),
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L2),
+					armStateHandler.setState(ArmState.L2),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isReadyToScore(ScoreLevel.L2)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L2),
+					armStateHandler.setState(ArmState.L2),
+					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				)
 			).until(this::isCoralOut),
 			"score l2"
 		);
@@ -149,10 +164,17 @@ public class Superstructure {
 
 	public Command scoreL3() {
 		return commandWithName(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L3),
-				armStateHandler.setState(ArmState.L3),
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L3),
+					armStateHandler.setState(ArmState.L3),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isReadyToScore(ScoreLevel.L3)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L3),
+					armStateHandler.setState(ArmState.L3),
+					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				)
 			).until(this::isCoralOut),
 			"score l3"
 		);
@@ -160,10 +182,17 @@ public class Superstructure {
 
 	public Command scoreL4() {
 		return commandWithName(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L4),
-				armStateHandler.setState(ArmState.L4),
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L4),
+					armStateHandler.setState(ArmState.L4),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isReadyToScore(ScoreLevel.L4)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L4),
+					armStateHandler.setState(ArmState.L4),
+					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				)
 			).until(this::isCoralOut),
 			"score l4"
 		);

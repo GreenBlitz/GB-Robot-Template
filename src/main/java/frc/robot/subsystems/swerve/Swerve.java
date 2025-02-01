@@ -186,7 +186,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private ChassisSpeeds getDriveModeRelativeSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		if (swerveState.getDriveMode() == DriveRelative.ROBOT_RELATIVE) {
+		if (swerveState.getDriveRelative() == DriveRelative.ROBOT_RELATIVE) {
 			return speeds;
 		}
 		return SwerveMath.allianceToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());

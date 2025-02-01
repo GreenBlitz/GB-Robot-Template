@@ -1,4 +1,4 @@
-package frc.robot.superstructure;
+package frc.robot.statemachine;
 
 public enum RobotState {
 

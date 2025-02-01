@@ -81,50 +81,6 @@ public class Superstructure {
 		);
 	}
 
-	public Command scoreL1() {
-		return commandWithName(
-			new ParallelCommandGroup(
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE),
-				elevatorStateHandler.setState(ElevatorState.L1),
-				armStateHandler.setState(ArmState.L1)
-			).until(this::isCoralOut),
-			"score l1"
-		);
-	}
-
-	public Command scoreL2() {
-		return commandWithName(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L2),
-				armStateHandler.setState(ArmState.L2),
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-			).until(this::isCoralOut),
-			"score l2"
-		);
-	}
-
-	public Command scoreL3() {
-		return commandWithName(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L3),
-				armStateHandler.setState(ArmState.L3),
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-			).until(this::isCoralOut),
-			"score l3"
-		);
-	}
-
-	public Command scoreL4() {
-		return commandWithName(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L4),
-				armStateHandler.setState(ArmState.L4),
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
-			).until(this::isCoralOut),
-			"score l4"
-		);
-	}
-
 	public Command preL1() {
 		return commandWithName(
 			new ParallelCommandGroup(
@@ -166,6 +122,50 @@ public class Superstructure {
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
 			"pre l4"
+		);
+	}
+
+	public Command scoreL1() {
+		return commandWithName(
+			new ParallelCommandGroup(
+				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE),
+				elevatorStateHandler.setState(ElevatorState.L1),
+				armStateHandler.setState(ArmState.L1)
+			).until(this::isCoralOut),
+			"score l1"
+		);
+	}
+
+	public Command scoreL2() {
+		return commandWithName(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.L2),
+				armStateHandler.setState(ArmState.L2),
+				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+			).until(this::isCoralOut),
+			"score l2"
+		);
+	}
+
+	public Command scoreL3() {
+		return commandWithName(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.L3),
+				armStateHandler.setState(ArmState.L3),
+				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+			).until(this::isCoralOut),
+			"score l3"
+		);
+	}
+
+	public Command scoreL4() {
+		return commandWithName(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.L4),
+				armStateHandler.setState(ArmState.L4),
+				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+			).until(this::isCoralOut),
+			"score l4"
 		);
 	}
 

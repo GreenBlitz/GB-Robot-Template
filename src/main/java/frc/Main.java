@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc;
+import com.ctre.phoenix.ErrorCode;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -18,7 +19,8 @@ public final class Main {
 	 * <p>If you change your main robot class, change the parameter type.
 	 */
 	public static void main(String... args) {
-		RobotBase.startRobot(RobotManager::new);
+		System.out.println(ErrorCode.class);
+		//RobotBase.startRobot(RobotManager::new);
 	}
 
 }

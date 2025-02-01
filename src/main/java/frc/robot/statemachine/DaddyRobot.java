@@ -1,27 +1,44 @@
 package frc.robot.statemachine;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.utils.math.ToleranceMath;
 
 public class DaddyRobot {
 
+    private final Robot robot;
     private final Swerve swerve;
     private final Superstructure superstructure;
 
     public DaddyRobot(Robot robot){
+        this.robot = robot;
         this.swerve = robot.getSwerve();
         this.superstructure = robot.getSuperstructure();
     }
 
-    private boolean isReadyToScore(ScoreLevel level){
-        return superstructure.isReadyToScore(level);
+    private boolean isReadyToScore(ScoreLevel level, Branch branch){
+        return superstructure.isReadyToScore(level) && isAtPose(robot.getPoseEstimator().getEstimatedPose(), ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS), swerve.getRobotRelativeVelocity(), );
+    }
+
+    public boolean isAtPose(Pose2d currentPose, Pose2d targetPose, ChassisSpeeds currentSpeeds, Pose2d tolerances, Pose2d deadbands) {
+        boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
+        boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
+        boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
+        boolean isStopping = SwerveMath.isStill(currentSpeeds, deadbands);
+        return isAtX && isAtY && isAtHeading && isStopping;
     }
 
     public Command setState(RobotState state){

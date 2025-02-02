@@ -97,7 +97,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preScore(ScoreLevel scoreLevel) {
+	private Command preScoreUtil(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
@@ -108,23 +108,32 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preL1() {
-		return preScore(ScoreLevel.L1);
+	private Command preL1() {
+		return preScoreUtil(ScoreLevel.L1);
 	}
 
-	public Command preL2() {
-		return preScore(ScoreLevel.L2);
+	private Command preL2() {
+		return preScoreUtil(ScoreLevel.L2);
 	}
 
-	public Command preL3() {
-		return preScore(ScoreLevel.L3);
+	private Command preL3() {
+		return preScoreUtil(ScoreLevel.L3);
 	}
 
-	public Command preL4() {
-		return preScore(ScoreLevel.L4);
+	private Command preL4() {
+		return preScoreUtil(ScoreLevel.L4);
 	}
 
-	public Command score(ScoreLevel scoreLevel) {
+	public Command preScore(ScoreLevel scoreLevel) {
+		return switch (scoreLevel) {
+			case L1 -> preL1();
+			case L2 -> preL2();
+			case L3 -> preL3();
+			case L4 -> preL4();
+		};
+	}
+
+	private Command scoreUtil(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
@@ -140,6 +149,31 @@ public class Superstructure extends GBSubsystem {
 			).until(this::isCoralOut),
 			scoreLevel.getSuperstructureScore()
 		);
+	}
+
+	private Command scoreL1() {
+		return scoreUtil(ScoreLevel.L1);
+	}
+
+	private Command scoreL2() {
+		return scoreUtil(ScoreLevel.L2);
+	}
+
+	private Command scoreL3() {
+		return scoreUtil(ScoreLevel.L3);
+	}
+
+	private Command scoreL4() {
+		return scoreUtil(ScoreLevel.L4);
+	}
+
+	public Command score(ScoreLevel scoreLevel) {
+		return switch (scoreLevel) {
+			case L1 -> scoreL1();
+			case L2 -> scoreL2();
+			case L3 -> scoreL3();
+			case L4 -> scoreL4();
+		};
 	}
 
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {

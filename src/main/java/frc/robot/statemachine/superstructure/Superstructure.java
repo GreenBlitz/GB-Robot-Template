@@ -14,6 +14,7 @@ import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
 import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -46,8 +47,21 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isReadyToScore(ScoreLevel scoreLevel) {
-		return robot.getElevator().isAtPosition(scoreLevel.getElevatorPositionMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& robot.getArm().isAtPosition(scoreLevel.getArmPosition(), Tolerances.ARM_POSITION);
+		return robot.getElevator().isAtPosition(scoreLevel.getElevatorState().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == scoreLevel.getElevatorState()
+			&& robot.getArm().isAtPosition(scoreLevel.getArmState().getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == scoreLevel.getArmState();
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		log();
+	}
+
+	private void log() {
+		Logger.recordOutput(getLogPath() + "/ElevatorState", elevatorStateHandler.getCurrentState());
+		Logger.recordOutput(getLogPath() + "/ArmState", armStateHandler.getCurrentState());
+		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());
 	}
 
 	public Command idle() {

@@ -37,4 +37,5 @@ public enum ScoreLevel {
 	public ArmState getArmPreScore() {
 		return armPreScore;
 	}
+
 }

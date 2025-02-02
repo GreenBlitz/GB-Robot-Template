@@ -5,25 +5,37 @@ import frc.robot.subsystems.elevator.ElevatorState;
 
 public enum ScoreLevel {
 
-	L1(ElevatorState.L1, ArmState.L1),
-	L2(ElevatorState.L2, ArmState.L2),
-	L3(ElevatorState.L3, ArmState.L3),
-	L4(ElevatorState.L4, ArmState.L4);
+	L1(ElevatorState.L1, ElevatorState.PRE_L1, ArmState.L1, ArmState.PRE_L1),
+	L2(ElevatorState.L2, ElevatorState.PRE_L2, ArmState.L2, ArmState.PRE_L2),
+	L3(ElevatorState.L3, ElevatorState.PRE_L3, ArmState.L3, ArmState.PRE_L3),
+	L4(ElevatorState.L4, ElevatorState.PRE_L4, ArmState.L4, ArmState.PRE_L4);
 
-	private final ElevatorState elevatorState;
-	private final ArmState armState;
+	private final ElevatorState elevatorScore;
+	private final ElevatorState elevatorPreScore;
+	private final ArmState armScore;
+	private final ArmState armPreScore;
 
-	ScoreLevel(ElevatorState elevatorState, ArmState armState) {
-		this.elevatorState = elevatorState;
-		this.armState = armState;
+	ScoreLevel(ElevatorState elevatorScore, ElevatorState elevatorPreScore, ArmState armScore, ArmState armPreScore) {
+		this.elevatorScore = elevatorScore;
+		this.elevatorPreScore = elevatorPreScore;
+		this.armScore = armScore;
+		this.armPreScore = armPreScore;
 	}
 
-	public ElevatorState getElevatorState() {
-		return elevatorState;
+	public ElevatorState getElevatorScore() {
+		return elevatorScore;
 	}
 
-	public ArmState getArmState() {
-		return armState;
+	public ElevatorState getElevatorPreScore() {
+		return elevatorPreScore;
+	}
+
+	public ArmState getArmScore() {
+		return armScore;
+	}
+
+	public ArmState getArmPreScore() {
+		return armPreScore;
 	}
 
 }

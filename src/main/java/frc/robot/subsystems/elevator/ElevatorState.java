@@ -8,7 +8,7 @@ public enum ElevatorState {
 	PRE_L1(0.01),
 	PRE_L2(0.01),
 	PRE_L3(0.1),
-	PRE_L4(0.08),
+	PRE_L4(0.8),
 	L1(0.01),
 	L2(0.01),
 	L3(0.1),

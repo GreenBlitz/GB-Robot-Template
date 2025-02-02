@@ -36,6 +36,20 @@ public class SequencesBuilder {
 		return AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints);
 	}
 
+	public static Command pathfindThenFollowPath(
+			PathPlannerPath path,
+			PathConstraints pathfindingConstraints,
+			double velocityBetweenPathfindingToPathFollowingMetersPerSecond
+	) {
+		return AutoBuilder
+				.pathfindToPose(
+						Field.getAllianceRelativePose(PathPlannerUtil.getPathStartingPose(path)),
+						pathfindingConstraints,
+						velocityBetweenPathfindingToPathFollowingMetersPerSecond
+				)
+				.andThen(followPath(path));
+	}
+
 	public static Command followPathOrPathfindAndFollowPath(Robot robot, PathPlannerPath path) {
 		return new ConditionalCommand(
 			followPath(path),

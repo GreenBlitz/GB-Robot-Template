@@ -79,14 +79,14 @@ public class RobotCommander extends GBSubsystem {
 			case INTAKE -> intake();
 			case OUTTAKE -> outtake();
 			case ALIGN_REEF -> alignReef();
-			case PRE_L1 -> preScore(RobotState.PRE_L1, SuperstructureState.PRE_L1, ScoreLevel.L1);
-			case PRE_L2 -> preScore(RobotState.PRE_L2, SuperstructureState.PRE_L2, ScoreLevel.L2);
-			case PRE_L3 -> preScore(RobotState.PRE_L3, SuperstructureState.PRE_L3, ScoreLevel.L3);
-			case PRE_L4 -> preScore(RobotState.PRE_L4, SuperstructureState.PRE_L4, ScoreLevel.L4);
-			case L1 -> score(RobotState.L1, SuperstructureState.SCORE_L1, ScoreLevel.L1);
-			case L2 -> score(RobotState.L2, SuperstructureState.SCORE_L2, ScoreLevel.L2);
-			case L3 -> score(RobotState.L3, SuperstructureState.SCORE_L3, ScoreLevel.L3);
-			case L4 -> score(RobotState.L4, SuperstructureState.SCORE_L4, ScoreLevel.L4);
+			case PRE_L1 -> preL1();
+			case PRE_L2 -> preL2();
+			case PRE_L3 -> preL3();
+			case PRE_L4 -> preL4();
+			case L1 -> scoreL1();
+			case L2 -> scoreL2();
+			case L3 -> scoreL3();
+			case L4 -> scoreL4();
 		};
 	}
 
@@ -133,6 +133,22 @@ public class RobotCommander extends GBSubsystem {
 			robotState
 		);
 	}
+	
+	private Command preL1(){
+		return preScore(RobotState.PRE_L1, SuperstructureState.PRE_L1, ScoreLevel.L1);
+	}
+	
+	private Command preL2(){
+		return preScore(RobotState.PRE_L2, SuperstructureState.PRE_L2, ScoreLevel.L2);
+	}
+	
+	private Command preL3(){
+		return preScore(RobotState.PRE_L3, SuperstructureState.PRE_L3, ScoreLevel.L2);
+	}
+	
+	private Command preL4(){
+		return preScore(RobotState.PRE_L4, SuperstructureState.PRE_L4, ScoreLevel.L4);
+	}
 
 	private Command score(RobotState robotState, SuperstructureState superstructureState, ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
@@ -145,6 +161,22 @@ public class RobotCommander extends GBSubsystem {
 			),
 			robotState
 		);
+	}
+	
+	private Command scoreL1(){
+		return score(RobotState.L1, SuperstructureState.SCORE_L1, ScoreLevel.L1);
+	}
+	
+	private Command scoreL2(){
+		return score(RobotState.L2, SuperstructureState.SCORE_L2, ScoreLevel.L2);
+	}
+	
+	private Command scoreL3(){
+		return score(RobotState.L3, SuperstructureState.SCORE_L3, ScoreLevel.L3);
+	}
+	
+	private Command scoreL4(){
+		return score(RobotState.L4, SuperstructureState.SCORE_L4, ScoreLevel.L4);
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {

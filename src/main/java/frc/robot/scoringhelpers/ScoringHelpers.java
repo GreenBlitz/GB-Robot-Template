@@ -8,6 +8,8 @@ import frc.constants.field.enums.Branch;
 
 public class ScoringHelpers {
 
+	public static Branch targetBranch = Branch.C;
+
 	public static Pose2d getRobotScoringPose(Branch branch, double distanceFromBranchMeters) {
 		Translation2d branchTranslation = Field.getCoralPlacement(branch);
 		Rotation2d targetRobotAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();

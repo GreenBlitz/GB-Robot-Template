@@ -43,7 +43,8 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isCoralOut() {
-		return !robot.getEndEffector().isCoralInFront();
+//		return !robot.getEndEffector().isCoralInFront();
+		return false;
 	}
 
 	public boolean isReadyToScore(ScoreLevel scoreLevel) {

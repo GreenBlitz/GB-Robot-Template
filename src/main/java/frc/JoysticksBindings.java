@@ -1,12 +1,17 @@
 package frc;
 
+import frc.constants.field.enums.CoralStation;
+import frc.constants.field.enums.ReefSide;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
+
+import java.util.Optional;
 
 public class JoysticksBindings {
 
@@ -63,6 +68,11 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getRobotCommander().setState(RobotState.L2));
 		usedJoystick.START.onTrue(robot.getRobotCommander().setState(RobotState.L3));
 		usedJoystick.L3.onTrue(robot.getRobotCommander().setState(RobotState.L4));
+		
+		robot.getSwerve().getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.targetBranch));
+		robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.RIGHT));
+		robot.getSwerve().getStateHandler().setRobotPoseSupplier(() -> robot.getPoseEstimator().getEstimatedPose());
+		robot.getSwerve().getStateHandler().setReefSideSupplier(() -> Optional.of(ReefSide.F));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

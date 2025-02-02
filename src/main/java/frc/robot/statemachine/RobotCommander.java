@@ -133,20 +133,20 @@ public class RobotCommander extends GBSubsystem {
 			robotState
 		);
 	}
-	
-	private Command preL1(){
+
+	private Command preL1() {
 		return preScore(RobotState.PRE_L1, SuperstructureState.PRE_L1, ScoreLevel.L1);
 	}
-	
-	private Command preL2(){
+
+	private Command preL2() {
 		return preScore(RobotState.PRE_L2, SuperstructureState.PRE_L2, ScoreLevel.L2);
 	}
-	
-	private Command preL3(){
+
+	private Command preL3() {
 		return preScore(RobotState.PRE_L3, SuperstructureState.PRE_L3, ScoreLevel.L2);
 	}
-	
-	private Command preL4(){
+
+	private Command preL4() {
 		return preScore(RobotState.PRE_L4, SuperstructureState.PRE_L4, ScoreLevel.L4);
 	}
 
@@ -162,20 +162,20 @@ public class RobotCommander extends GBSubsystem {
 			robotState
 		);
 	}
-	
-	private Command scoreL1(){
+
+	private Command scoreL1() {
 		return score(RobotState.L1, SuperstructureState.SCORE_L1, ScoreLevel.L1);
 	}
-	
-	private Command scoreL2(){
+
+	private Command scoreL2() {
 		return score(RobotState.L2, SuperstructureState.SCORE_L2, ScoreLevel.L2);
 	}
-	
-	private Command scoreL3(){
+
+	private Command scoreL3() {
 		return score(RobotState.L3, SuperstructureState.SCORE_L3, ScoreLevel.L3);
 	}
-	
-	private Command scoreL4(){
+
+	private Command scoreL4() {
 		return score(RobotState.L4, SuperstructureState.SCORE_L4, ScoreLevel.L4);
 	}
 

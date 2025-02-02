@@ -86,7 +86,7 @@ public class Superstructure extends GBSubsystem {
 	public Command preL1() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L1),
+				elevatorStateHandler.setState(ElevatorState.PRE_L1),
 				armStateHandler.setState(ArmState.PRE_L1),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
@@ -97,7 +97,7 @@ public class Superstructure extends GBSubsystem {
 	public Command preL2() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L2),
+				elevatorStateHandler.setState(ElevatorState.PRE_L2),
 				armStateHandler.setState(ArmState.PRE_L2),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
@@ -108,7 +108,7 @@ public class Superstructure extends GBSubsystem {
 	public Command preL3() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L3),
+				elevatorStateHandler.setState(ElevatorState.PRE_L3),
 				armStateHandler.setState(ArmState.PRE_L3),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
@@ -119,7 +119,7 @@ public class Superstructure extends GBSubsystem {
 	public Command preL4() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.L4),
+				elevatorStateHandler.setState(ElevatorState.PRE_L4),
 				armStateHandler.setState(ArmState.PRE_L4),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),

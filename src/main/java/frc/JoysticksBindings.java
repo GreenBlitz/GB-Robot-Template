@@ -1,17 +1,13 @@
 package frc;
 
-import frc.constants.field.enums.CoralStation;
-import frc.constants.field.enums.ReefSide;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 
-import java.util.Optional;
 
 public class JoysticksBindings {
 

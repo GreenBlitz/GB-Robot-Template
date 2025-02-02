@@ -10,7 +10,6 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.Superstructure;
-import frc.robot.statemachine.superstructure.SuperstructureState;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
@@ -32,7 +31,7 @@ public class RobotCommander extends GBSubsystem {
 		super(logPath);
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
-		this.superstructure = robot.getSuperstructure();
+		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 		this.currentState = RobotState.DRIVE;
 
 		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
@@ -124,59 +123,59 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command preScore(RobotState robotState, SuperstructureState superstructureState, ScoreLevel scoreLevel) {
+	private Command preScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				superstructure.preScore(scoreLevel, superstructureState),
+				superstructure.preScore(scoreLevel),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
 			),
-			robotState
+			scoreLevel.getRobotPreScore()
 		);
 	}
 
 	private Command preL1() {
-		return preScore(RobotState.PRE_L1, SuperstructureState.PRE_L1, ScoreLevel.L1);
+		return preScore(ScoreLevel.L1);
 	}
 
 	private Command preL2() {
-		return preScore(RobotState.PRE_L2, SuperstructureState.PRE_L2, ScoreLevel.L2);
+		return preScore(ScoreLevel.L2);
 	}
 
 	private Command preL3() {
-		return preScore(RobotState.PRE_L3, SuperstructureState.PRE_L3, ScoreLevel.L2);
+		return preScore(ScoreLevel.L2);
 	}
 
 	private Command preL4() {
-		return preScore(RobotState.PRE_L4, SuperstructureState.PRE_L4, ScoreLevel.L4);
+		return preScore(ScoreLevel.L4);
 	}
 
-	private Command score(RobotState robotState, SuperstructureState superstructureState, ScoreLevel scoreLevel) {
+	private Command score(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
-					superstructure.preScore(scoreLevel, superstructureState)
+					superstructure.preScore(scoreLevel)
 				).until(() -> isReadyToScore(scoreLevel, ScoringHelpers.targetBranch)),
-				superstructure.score(scoreLevel, superstructureState)
+				superstructure.score(scoreLevel)
 			),
-			robotState
+			scoreLevel.getRobotScore()
 		);
 	}
 
 	private Command scoreL1() {
-		return score(RobotState.L1, SuperstructureState.SCORE_L1, ScoreLevel.L1);
+		return score(ScoreLevel.L1);
 	}
 
 	private Command scoreL2() {
-		return score(RobotState.L2, SuperstructureState.SCORE_L2, ScoreLevel.L2);
+		return score(ScoreLevel.L2);
 	}
 
 	private Command scoreL3() {
-		return score(RobotState.L3, SuperstructureState.SCORE_L3, ScoreLevel.L3);
+		return score(ScoreLevel.L3);
 	}
 
 	private Command scoreL4() {
-		return score(RobotState.L4, SuperstructureState.SCORE_L4, ScoreLevel.L4);
+		return score(ScoreLevel.L4);
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {

@@ -98,34 +98,34 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preScore(ScoreLevel scoreLevel, SuperstructureState superstructureState) {
+	public Command preScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
 				armStateHandler.setState(scoreLevel.getArmPreScore()),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			superstructureState
+			scoreLevel.getSuperstructurePreScore()
 		);
 	}
 
 	public Command preL1() {
-		return preScore(ScoreLevel.L1, SuperstructureState.PRE_L1);
+		return preScore(ScoreLevel.L1);
 	}
 
 	public Command preL2() {
-		return preScore(ScoreLevel.L2, SuperstructureState.PRE_L2);
+		return preScore(ScoreLevel.L2);
 	}
 
 	public Command preL3() {
-		return preScore(ScoreLevel.L3, SuperstructureState.PRE_L3);
+		return preScore(ScoreLevel.L3);
 	}
 
 	public Command preL4() {
-		return preScore(ScoreLevel.L4, SuperstructureState.PRE_L4);
+		return preScore(ScoreLevel.L4);
 	}
 
-	public Command score(ScoreLevel scoreLevel, SuperstructureState superstructureState) {
+	public Command score(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
@@ -139,24 +139,24 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
 				)
 			).until(this::isCoralOut),
-			superstructureState
+			scoreLevel.getSuperstructureScore()
 		);
 	}
 
 	public Command scoreL1() {
-		return score(ScoreLevel.L1, SuperstructureState.SCORE_L1);
+		return score(ScoreLevel.L1);
 	}
 
 	public Command scoreL2() {
-		return score(ScoreLevel.L2, SuperstructureState.SCORE_L2);
+		return score(ScoreLevel.L2);
 	}
 
 	public Command scoreL3() {
-		return score(ScoreLevel.L3, SuperstructureState.SCORE_L3);
+		return score(ScoreLevel.L3);
 	}
 
 	public Command scoreL4() {
-		return score(ScoreLevel.L4, SuperstructureState.SCORE_L4);
+		return score(ScoreLevel.L4);
 	}
 
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {

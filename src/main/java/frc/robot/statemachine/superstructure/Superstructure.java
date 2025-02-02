@@ -97,7 +97,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	private Command preScoreUtil(ScoreLevel scoreLevel) {
+	private Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
@@ -108,20 +108,20 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	private Command preL1() {
-		return preScoreUtil(ScoreLevel.L1);
+	public Command preL1() {
+		return genericPreScore(ScoreLevel.L1);
 	}
 
-	private Command preL2() {
-		return preScoreUtil(ScoreLevel.L2);
+	public Command preL2() {
+		return genericPreScore(ScoreLevel.L2);
 	}
 
-	private Command preL3() {
-		return preScoreUtil(ScoreLevel.L3);
+	public Command preL3() {
+		return genericPreScore(ScoreLevel.L3);
 	}
 
-	private Command preL4() {
-		return preScoreUtil(ScoreLevel.L4);
+	public Command preL4() {
+		return genericPreScore(ScoreLevel.L4);
 	}
 
 	public Command preScore(ScoreLevel scoreLevel) {
@@ -133,7 +133,7 @@ public class Superstructure extends GBSubsystem {
 		};
 	}
 
-	private Command scoreUtil(ScoreLevel scoreLevel) {
+	private Command genericScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
@@ -151,20 +151,20 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	private Command scoreL1() {
-		return scoreUtil(ScoreLevel.L1);
+	public Command scoreL1() {
+		return genericScore(ScoreLevel.L1);
 	}
 
-	private Command scoreL2() {
-		return scoreUtil(ScoreLevel.L2);
+	public Command scoreL2() {
+		return genericScore(ScoreLevel.L2);
 	}
 
-	private Command scoreL3() {
-		return scoreUtil(ScoreLevel.L3);
+	public Command scoreL3() {
+		return genericScore(ScoreLevel.L3);
 	}
 
-	private Command scoreL4() {
-		return scoreUtil(ScoreLevel.L4);
+	public Command scoreL4() {
+		return genericScore(ScoreLevel.L4);
 	}
 
 	public Command score(ScoreLevel scoreLevel) {

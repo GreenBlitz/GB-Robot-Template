@@ -123,7 +123,7 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command preScore(ScoreLevel scoreLevel) {
+	private Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.preScore(scoreLevel),
@@ -134,22 +134,22 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command preL1() {
-		return preScore(ScoreLevel.L1);
+		return genericPreScore(ScoreLevel.L1);
 	}
 
 	private Command preL2() {
-		return preScore(ScoreLevel.L2);
+		return genericPreScore(ScoreLevel.L2);
 	}
 
 	private Command preL3() {
-		return preScore(ScoreLevel.L2);
+		return genericPreScore(ScoreLevel.L3);
 	}
 
 	private Command preL4() {
-		return preScore(ScoreLevel.L4);
+		return genericPreScore(ScoreLevel.L4);
 	}
 
-	private Command score(ScoreLevel scoreLevel) {
+	private Command genericScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
@@ -163,19 +163,19 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command scoreL1() {
-		return score(ScoreLevel.L1);
+		return genericScore(ScoreLevel.L1);
 	}
 
 	private Command scoreL2() {
-		return score(ScoreLevel.L2);
+		return genericScore(ScoreLevel.L2);
 	}
 
 	private Command scoreL3() {
-		return score(ScoreLevel.L3);
+		return genericScore(ScoreLevel.L3);
 	}
 
 	private Command scoreL4() {
-		return score(ScoreLevel.L4);
+		return genericScore(ScoreLevel.L4);
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {

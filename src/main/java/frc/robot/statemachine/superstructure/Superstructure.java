@@ -46,13 +46,13 @@ public class Superstructure extends GBSubsystem {
 		return !robot.getEndEffector().isCoralInFront();
 	}
 
-	public boolean isPreScoreReady(ScoreLevel scoreLevel){
+	public boolean isPreScoreReady(ScoreLevel scoreLevel) {
 		return robot.getElevator().isAtPosition(scoreLevel.getElevatorPreScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-				&& elevatorStateHandler.getCurrentState() == scoreLevel.getElevatorPreScore()
-				&& robot.getArm().isAtPosition(scoreLevel.getArmPreScore().getPosition(), Tolerances.ARM_POSITION)
-				&& armStateHandler.getCurrentState() == scoreLevel.getArmPreScore();
+			&& elevatorStateHandler.getCurrentState() == scoreLevel.getElevatorPreScore()
+			&& robot.getArm().isAtPosition(scoreLevel.getArmPreScore().getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == scoreLevel.getArmPreScore();
 	}
-	
+
 	public boolean isReadyToScore(ScoreLevel scoreLevel) {
 		return robot.getElevator().isAtPosition(scoreLevel.getElevatorScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == scoreLevel.getElevatorScore()
@@ -143,11 +143,11 @@ public class Superstructure extends GBSubsystem {
 	private Command genericScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
-					new ParallelCommandGroup(
-							elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
-							armStateHandler.setState(scoreLevel.getArmPreScore()),
-							endEffectorStateHandler.setState(EndEffectorState.KEEP)
-					).until(() -> isPreScoreReady(scoreLevel)),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
+					armStateHandler.setState(scoreLevel.getArmPreScore()),
+					endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				).until(() -> isPreScoreReady(scoreLevel)),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
 					armStateHandler.setState(scoreLevel.getArmScore()),

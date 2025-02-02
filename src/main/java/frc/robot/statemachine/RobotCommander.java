@@ -1,6 +1,5 @@
 package frc.robot.statemachine;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,7 +16,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
-import frc.utils.math.ToleranceMath;
+import frc.utils.pose.PoseUtil;
 
 import java.util.Set;
 
@@ -40,9 +39,8 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	/**
-	 * Checks if elevator and arm in place and is robot at pose but relative to target branch.
-	 * Y-axis is vertical to the branch. X-axis is horizontal to the branch
-	 * So when you check if robot in place in y-axis its in parallel to the reef side.
+	 * Checks if elevator and arm in place and is robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is
+	 * horizontal to the branch So when you check if robot in place in y-axis its in parallel to the reef side.
 	 */
 	private boolean isReadyToScore(ScoreLevel level, Branch branch) {
 		Rotation2d reefAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
@@ -57,7 +55,7 @@ public class RobotCommander extends GBSubsystem {
 
 		return superstructure.isReadyToScore(level) && switch (level) {
 			case L1 ->
-				isAtPose(
+				PoseUtil.isAtPose(
 					reefRelativeRobotPose,
 					reefRelativeTargetPose,
 					reefRelativeSpeeds,
@@ -65,7 +63,7 @@ public class RobotCommander extends GBSubsystem {
 					Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS
 				);
 			case L2, L3, L4 ->
-				isAtPose(
+				PoseUtil.isAtPose(
 					reefRelativeRobotPose,
 					reefRelativeTargetPose,
 					reefRelativeSpeeds,
@@ -73,14 +71,6 @@ public class RobotCommander extends GBSubsystem {
 					Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
 				);
 		};
-	}
-
-	public boolean isAtPose(Pose2d currentPose, Pose2d targetPose, ChassisSpeeds currentSpeeds, Pose2d tolerances, Pose2d deadbands) {
-		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
-		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
-		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
-		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
-		return isAtX && isAtY && isAtHeading && isStill;
 	}
 
 	public Command setState(RobotState state) {

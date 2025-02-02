@@ -14,6 +14,7 @@ import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
 import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -35,6 +36,13 @@ public class Superstructure extends GBSubsystem {
 
 		this.currentState = SuperstructureState.IDLE;
 		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
+	}
+
+	@Override
+	protected void subsystemPeriodic() {
+		Logger.recordOutput(getLogPath() + "/ElevatorState", elevatorStateHandler.getCurrentState());
+		Logger.recordOutput(getLogPath() + "/ArmState", armStateHandler.getCurrentState());
+		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());
 	}
 
 	public boolean isCoralIn() {

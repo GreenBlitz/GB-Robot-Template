@@ -55,6 +55,10 @@ public class Superstructure extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
+		log();
+	}
+
+	private void log() {
 		Logger.recordOutput(getLogPath() + "/ElevatorState", elevatorStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/ArmState", armStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());

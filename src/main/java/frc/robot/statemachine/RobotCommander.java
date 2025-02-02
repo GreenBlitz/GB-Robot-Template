@@ -186,10 +186,10 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
-			case PRE_L1, L1 -> preScore(RobotState.PRE_L1, SuperstructureState.PRE_L1, ScoreLevel.L1);
-			case PRE_L2, L2 -> preScore(RobotState.PRE_L2, SuperstructureState.PRE_L2, ScoreLevel.L2);
-			case PRE_L3, L3 -> preScore(RobotState.PRE_L3, SuperstructureState.PRE_L3, ScoreLevel.L3);
-			case PRE_L4, L4 -> preScore(RobotState.PRE_L4, SuperstructureState.PRE_L4, ScoreLevel.L4);
+			case PRE_L1, L1 -> preL1();
+			case PRE_L2, L2 -> preL2();
+			case PRE_L3, L3 -> preL3();
+			case PRE_L4, L4 -> preL4();
 		};
 	}
 

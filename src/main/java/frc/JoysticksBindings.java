@@ -68,7 +68,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getRobotCommander().setState(RobotState.L2));
 		usedJoystick.START.onTrue(robot.getRobotCommander().setState(RobotState.L3));
 		usedJoystick.L3.onTrue(robot.getRobotCommander().setState(RobotState.L4));
-		
+
 		robot.getSwerve().getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.targetBranch));
 		robot.getSwerve().getStateHandler().setCoralStationSupplier(() -> Optional.of(CoralStation.RIGHT));
 		robot.getSwerve().getStateHandler().setRobotPoseSupplier(() -> robot.getPoseEstimator().getEstimatedPose());

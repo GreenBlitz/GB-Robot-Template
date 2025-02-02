@@ -37,17 +37,17 @@ public class SequencesBuilder {
 	}
 
 	public static Command pathfindThenFollowPath(
-			PathPlannerPath path,
-			PathConstraints pathfindingConstraints,
-			double velocityBetweenPathfindingToPathFollowingMetersPerSecond
+		PathPlannerPath path,
+		PathConstraints pathfindingConstraints,
+		double velocityBetweenPathfindingToPathFollowingMetersPerSecond
 	) {
 		return AutoBuilder
-				.pathfindToPose(
-						Field.getAllianceRelativePose(PathPlannerUtil.getPathStartingPose(path)),
-						pathfindingConstraints,
-						velocityBetweenPathfindingToPathFollowingMetersPerSecond
-				)
-				.andThen(followPath(path));
+			.pathfindToPose(
+				Field.getAllianceRelativePose(PathPlannerUtil.getPathStartingPose(path)),
+				pathfindingConstraints,
+				velocityBetweenPathfindingToPathFollowingMetersPerSecond
+			)
+			.andThen(followPath(path));
 	}
 
 	public static Command followPathOrPathfindAndFollowPath(Robot robot, PathPlannerPath path) {

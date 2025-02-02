@@ -165,7 +165,10 @@ public class SwerveCommandsBuilder {
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return swerve.asSubsystemCommand(
 			new DeferredCommand(
-				() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), moveByPIDToPose(currentPose, targetPose.get())),
+				() -> new SequentialCommandGroup(
+					pathToPose(currentPose.get(), targetPose.get()),
+					moveByPIDToPose(currentPose, targetPose.get())
+				),
 				Set.of(swerve)
 			),
 			"Drive to pose"

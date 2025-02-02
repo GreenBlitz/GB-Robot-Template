@@ -23,9 +23,9 @@ public record RobotAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch,
 		this(
 			Rotation2d.fromRadians(angle.getZ()),
 			yawRate,
-			Rotation2d.fromRadians(angle.getX()),
+			Rotation2d.fromRadians(angle.getY()),
 			pitchRate,
-			Rotation2d.fromRadians(angle.getZ()),
+			Rotation2d.fromRadians(angle.getX()),
 			rollRate
 		);
 	}

@@ -3,22 +3,48 @@ package frc.robot.structures;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimation.PoseEstimator;
+import frc.constants.RobotHeadingEstimatorConstants;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.helpers.RobotHeadingEstimator;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.utils.TimedValue;
+import frc.utils.time.TimeUtils;
+import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
 
 	private final Swerve swerve;
-	private final PoseEstimator poseEstimator;
+	private final IPoseEstimator poseEstimator;
+	private final RobotHeadingEstimator headingEstimator;
+	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 
-	public Superstructure(Swerve swerve, PoseEstimator poseEstimator) {
+	public Superstructure(
+		Swerve swerve,
+		IPoseEstimator poseEstimator,
+		RobotHeadingEstimator headingEstimator,
+		MultiAprilTagVisionSources multiAprilTagVisionSources
+	) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
+		this.headingEstimator = headingEstimator;
+		this.multiAprilTagVisionSources = multiAprilTagVisionSources;
 	}
 
 	public void periodic() {
 		swerve.update();
-		poseEstimator.updatePoseEstimator(swerve.getAllOdometryObservations());
+		Logger.recordOutput("GyroValue", swerve.getGyroAbsoluteYaw().getDegrees());
+		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtils.getCurrentTimeSeconds()));
+		for(TimedValue<Rotation2d> heading : multiAprilTagVisionSources.getFilteredRobotHeading()) {
+			headingEstimator.updateVisionIfNotCalibrated(
+				heading,
+				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
+				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
+			);
+		}
+		headingEstimator.log();
+		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 	}
 
 
@@ -35,7 +61,7 @@ public class Superstructure {
 	public boolean isAtXAxisPosition(double targetXBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vxMetersPerSecond,
-			poseEstimator.getCurrentPose().getX(),
+			poseEstimator.getEstimatedPose().getX(),
 			targetXBlueAlliancePosition
 		);
 	}
@@ -43,13 +69,13 @@ public class Superstructure {
 	public boolean isAtYAxisPosition(double targetYBlueAlliancePosition) {
 		return isAtTranslationPosition(
 			swerve.getFieldRelativeVelocity().vyMetersPerSecond,
-			poseEstimator.getCurrentPose().getY(),
+			poseEstimator.getEstimatedPose().getY(),
 			targetYBlueAlliancePosition
 		);
 	}
 
 	public boolean isAtAngle(Rotation2d targetAngle) {
-		double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getCurrentPose().getRotation()).getDegrees());
+		double angleDifferenceDeg = Math.abs(targetAngle.minus(poseEstimator.getEstimatedPose().getRotation()).getDegrees());
 		boolean isAtAngle = angleDifferenceDeg < Tolerances.SWERVE_HEADING.getDegrees();
 
 		double currentRotationVelocityRadians = swerve.getRobotRelativeVelocity().omegaRadiansPerSecond;

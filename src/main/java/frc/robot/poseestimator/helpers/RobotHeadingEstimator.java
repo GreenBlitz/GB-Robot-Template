@@ -86,7 +86,8 @@ public class RobotHeadingEstimator {
 
 	public void updateGyroAngle(TimedValue<Rotation2d> gyroHeadingData) {
 		unOffsetedGyroAngleInterpolator.addSample(gyroHeadingData.timestamp(), gyroHeadingData.value());
-		estimatedHeading = estimatedHeading.plus(AngleMath.getAngleDifference(gyroHeadingData.value(), lastGyroAngle));
+		estimatedHeading = estimatedHeading.plus(gyroHeadingData.value().minus(lastGyroAngle));
+		Logger.recordOutput(logPath + "estimatedHeadingAfterGyro", estimatedHeading);
 		lastGyroAngle = gyroHeadingData.value();
 	}
 

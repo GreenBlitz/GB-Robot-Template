@@ -166,7 +166,7 @@ public class SwerveCommandsBuilder {
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return swerve.asSubsystemCommand(
 			new DeferredCommand(
-				() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), pidToPose(currentPose, targetPose.get())),
+				() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), moveByPIDToPose(currentPose, targetPose.get())),
 				Set.of(swerve)
 			),
 			"Drive to pose"
@@ -188,7 +188,7 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
+	public Command moveByPIDToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
 		return swerve.asSubsystemCommand(
 			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)),
 			"PID to pose: " + targetPose

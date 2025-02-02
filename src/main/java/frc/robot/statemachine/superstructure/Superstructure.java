@@ -47,7 +47,9 @@ public class Superstructure extends GBSubsystem {
 
 	public boolean isReadyToScore(ScoreLevel scoreLevel) {
 		return robot.getElevator().isAtPosition(scoreLevel.getElevatorState().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& robot.getArm().isAtPosition(scoreLevel.getArmState().getPosition(), Tolerances.ARM_POSITION);
+			&& elevatorStateHandler.getCurrentState() == scoreLevel.getElevatorState()
+			&& robot.getArm().isAtPosition(scoreLevel.getArmState().getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == scoreLevel.getArmState();
 	}
 
 	public Command idle() {

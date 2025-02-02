@@ -118,7 +118,7 @@ public class Robot {
 		return superstructure;
 	}
 
-	public RobotCommander getDaddy() {
+	public RobotCommander getRobotCommander() {
 		return robotCommander;
 	}
 

@@ -143,22 +143,6 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command scoreL1() {
-		return score(ScoreLevel.L1);
-	}
-
-	public Command scoreL2() {
-		return score(ScoreLevel.L2);
-	}
-
-	public Command scoreL3() {
-		return score(ScoreLevel.L3);
-	}
-
-	public Command scoreL4() {
-		return score(ScoreLevel.L4);
-	}
-
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}

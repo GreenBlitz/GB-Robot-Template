@@ -15,11 +15,11 @@ import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GBSubsystem {
 
-	private final ControllableMotor firstMotor;
-	private final ElevatorMotorSignals firstMotorSignals;
+	private final ControllableMotor rightMotor;
+	private final ElevatorMotorSignals rightMotorSignals;
 
-	private final ControllableMotor secondMotor;
-	private final ElevatorMotorSignals secondMotorSignals;
+	private final ControllableMotor leftMotor;
+	private final ElevatorMotorSignals leftMotorSignals;
 
 	private final IRequest<Rotation2d> positionRequest;
 	private final IRequest<Double> voltageRequest;
@@ -34,21 +34,21 @@ public class Elevator extends GBSubsystem {
 
 	public Elevator(
 		String logPath,
-		ControllableMotor firstMotor,
-		ElevatorMotorSignals firstMotorSignals,
-		ControllableMotor secondMotor,
-		ElevatorMotorSignals secondMotorSignals,
+		ControllableMotor rightMotor,
+		ElevatorMotorSignals rightMotorSignals,
+		ControllableMotor leftMotor,
+		ElevatorMotorSignals leftMotorSignals,
 		IRequest<Rotation2d> positionRequest,
 		IRequest<Double> voltageRequest,
 		IDigitalInput limitSwitch
 	) {
 		super(logPath);
 
-		this.firstMotor = firstMotor;
-		this.firstMotorSignals = firstMotorSignals;
+		this.rightMotor = rightMotor;
+		this.rightMotorSignals = rightMotorSignals;
 
-		this.secondMotor = secondMotor;
-		this.secondMotorSignals = secondMotorSignals;
+		this.leftMotor = leftMotor;
+		this.leftMotorSignals = leftMotorSignals;
 
 		this.positionRequest = positionRequest;
 		this.voltageRequest = voltageRequest;
@@ -57,7 +57,7 @@ public class Elevator extends GBSubsystem {
 		hasBeenResetBySwitch = false;
 
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(firstMotor.getSysidConfigInfo(), this, this::setVoltage);
+		this.sysIdCalibrator = new SysIdCalibrator(rightMotor.getSysidConfigInfo(), this, this::setVoltage);
 
 		periodic();
 
@@ -73,7 +73,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public double getElevatorPositionMeters() {
-		return convertRotationsToMeters(firstMotorSignals.positionSignal().getLatestValue());
+		return convertRotationsToMeters(rightMotorSignals.positionSignal().getLatestValue());
 	}
 
 	public boolean hasBeenResetBySwitch() {
@@ -87,8 +87,8 @@ public class Elevator extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		// Update Simulation checks if ROBOT_TYPE.isSimulation() inside the function and acts accordingly.
-		firstMotor.updateSimulation();
-		secondMotor.updateSimulation();
+		rightMotor.updateSimulation();
+		leftMotor.updateSimulation();
 		updateInputs();
 		if (handleReset()) {
 			updateInputs();
@@ -97,11 +97,11 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		firstMotor.updateInputs(firstMotorSignals.positionSignal(), firstMotorSignals.voltageSignal());
-		firstMotor.updateInputs(firstMotorSignals.otherSignals());
+		rightMotor.updateInputs(rightMotorSignals.positionSignal(), rightMotorSignals.voltageSignal());
+		rightMotor.updateInputs(rightMotorSignals.otherSignals());
 
-		secondMotor.updateInputs(secondMotorSignals.positionSignal(), secondMotorSignals.voltageSignal());
-		secondMotor.updateInputs(secondMotorSignals.otherSignals());
+		leftMotor.updateInputs(leftMotorSignals.positionSignal(), leftMotorSignals.voltageSignal());
+		leftMotor.updateInputs(leftMotorSignals.otherSignals());
 
 		limitSwitch.updateInputs(digitalInputInputs);
 		Logger.processInputs(getLogPath() + "/LimitSwitch", digitalInputInputs);
@@ -115,34 +115,34 @@ public class Elevator extends GBSubsystem {
 
 	public void resetMotors(double positionMeters) {
 		Rotation2d convertedPosition = convertMetersToRotations(positionMeters);
-		firstMotor.resetPosition(convertedPosition);
-		secondMotor.resetPosition(convertedPosition);
+		rightMotor.resetPosition(convertedPosition);
+		leftMotor.resetPosition(convertedPosition);
 	}
 
 	public void setBrake(boolean brake) {
-		firstMotor.setBrake(brake);
-		secondMotor.setBrake(brake);
+		rightMotor.setBrake(brake);
+		leftMotor.setBrake(brake);
 	}
 
 	protected void stop() {
-		firstMotor.stop();
-		secondMotor.stop();
+		rightMotor.stop();
+		leftMotor.stop();
 	}
 
 	protected void setPower(double power) {
-		firstMotor.setPower(power);
-		secondMotor.setPower(power);
+		rightMotor.setPower(power);
+		leftMotor.setPower(power);
 	}
 
 	protected void setVoltage(double voltage) {
-		firstMotor.applyRequest(voltageRequest.withSetPoint(voltage));
-		secondMotor.applyRequest(voltageRequest.withSetPoint(voltage));
+		rightMotor.applyRequest(voltageRequest.withSetPoint(voltage));
+		leftMotor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	protected void setTargetPositionMeters(double targetPositionMeters) {
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
-		firstMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
-		secondMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
+		rightMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
+		leftMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
 	}
 
 	protected void stayInPlace() {

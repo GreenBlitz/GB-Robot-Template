@@ -28,9 +28,9 @@ public class IDs {
 
 		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT_DRIVE = new Phoenix6DeviceID(7, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID ELEVATOR_FIRST = new Phoenix6DeviceID(10, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID ELEVATOR_RIGHT = new Phoenix6DeviceID(10, BusChain.ROBORIO);
 
-		public static final Phoenix6DeviceID ELEVATOR_SECOND = new Phoenix6DeviceID(11, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID ELEVATOR_LEFT = new Phoenix6DeviceID(11, BusChain.ROBORIO);
 
 		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.CANIVORE);
 

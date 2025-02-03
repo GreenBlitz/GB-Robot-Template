@@ -26,8 +26,9 @@ public class ElevatorCommandsBuilder {
 		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltage)), "Set voltage to " + voltage);
 	}
 
-	public Command setVoltageByDashBoard(){
-		return elevator.asSubsystemCommand(new LoggedDashboardCommand("Elevator Voltage", elevator::setVoltage), "Set elevator voltage by dashboard");
+	public Command setVoltageByDashBoard() {
+		return elevator
+			.asSubsystemCommand(new LoggedDashboardCommand("Elevator Voltage", elevator::setVoltage), "Set elevator voltage by dashboard");
 	}
 
 	public Command setTargetPositionMeters(double targetPositionMeters) {

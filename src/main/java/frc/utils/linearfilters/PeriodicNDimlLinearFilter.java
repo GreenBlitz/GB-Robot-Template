@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinearFilter {
+public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicFilter<Vector<T>> {
 
 	private final Supplier<? extends List<Vector<T>>> updateValues;
 	private final List<LinearFilter> linearFilters;
@@ -49,7 +49,7 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 			}
 		}
 		for (int i = 0; i < size.getNum(); i++) {
-			Logger.recordOutput(logPath + "output/" + i, toColumnVector().get(0, i));
+			Logger.recordOutput(logPath + "output/" + i, get().get(0, i));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicLinear
 		}
 	}
 
-	public Vector<T> toColumnVector() {
+	public Vector<T> get() {
 		return new Vector<>(new SimpleMatrix(new double[][] {toArray()}));
 	}
 

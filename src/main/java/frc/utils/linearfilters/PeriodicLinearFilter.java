@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 /**
  * A linear filter that support <code>LinearFiltersManager</code>, and that can be handled periodically by it.
  */
-public class PeriodicLinearFilter implements IPeriodicLinearFilter {
+public class PeriodicLinearFilter implements IPeriodicFilter<Double> {
 
 	private final LinearFilter filter;
 	private final String name;
@@ -21,7 +21,7 @@ public class PeriodicLinearFilter implements IPeriodicLinearFilter {
 		this.updateValues = updateValues;
 	}
 
-	public double getOutput() {
+	public Double get() {
 		return filter.lastValue();
 	}
 
@@ -34,7 +34,7 @@ public class PeriodicLinearFilter implements IPeriodicLinearFilter {
 		for (int i = 0; i < updateValues.get().size(); i++) {
 			Logger.recordOutput(logPath + "input" + i, updateValues.get().get(i));
 		}
-		Logger.recordOutput(logPath + "output", getOutput());
+		Logger.recordOutput(logPath + "output", get());
 	}
 
 	public void update() {

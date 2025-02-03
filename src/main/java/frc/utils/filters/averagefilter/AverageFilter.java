@@ -3,7 +3,7 @@ package frc.utils.filters.averagefilter;
 import edu.wpi.first.math.Num;
 import edu.wpi.first.math.Vector;
 import frc.utils.GBMeth;
-import frc.utils.filters.linearfilters.IPeriodicFilter;
+import frc.utils.filters.IPeriodicFilter;
 import frc.utils.pose.PoseUtils;
 import org.littletonrobotics.junction.Logger;
 

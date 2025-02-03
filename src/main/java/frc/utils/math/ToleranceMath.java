@@ -9,9 +9,10 @@ import frc.constants.MathConstants;
 
 public class ToleranceMath {
 
-	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Rotation2d angleTolerance, double translationalToleranceMeters) {
-		return isNear(wantedPose.getTranslation(), pose.getTranslation(), translationalToleranceMeters)
-			&& isNearWrapped(wantedPose.getRotation(), pose.getRotation(), angleTolerance);
+	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Pose2d tolerance) {
+		return MathUtil.isNear(wantedPose.getX(), pose.getX(), tolerance.getX())
+			&& MathUtil.isNear(wantedPose.getY(), pose.getY(), tolerance.getY())
+			&& isNearWrapped(wantedPose.getRotation(), pose.getRotation(), tolerance.getRotation());
 	}
 
 	public static boolean isNear(Translation2d wantedTranslation, Translation2d translation, double toleranceMeters) {

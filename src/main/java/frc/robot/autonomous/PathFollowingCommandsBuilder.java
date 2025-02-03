@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.constants.field.Field;
 import frc.utils.auto.PathPlannerUtil;
 
-public class SequencesBuilder {
+public class PathFollowingCommandsBuilder {
 
 	public static Command followPath(PathPlannerPath path) {
 		return AutoBuilder.followPath(path);

@@ -4,17 +4,23 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.joysticks.Axis;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
@@ -23,6 +29,7 @@ import frc.utils.auto.PathPlannerUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -62,6 +69,66 @@ public class Swerve extends GBSubsystem {
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
+	}
+
+	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
+		// calib steer ks with phoenix tuner x
+		// calib steer pid with phoenix tuner x
+
+		joystick.START.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
+
+		// test the swerve returns real velocities (measure distance and time in real life and compare to swerve logs)
+		// after drive calibrations use these for pid testing
+		joystick.POV_UP.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+		joystick.POV_LEFT.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+		joystick.POV_DOWN.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+		joystick.POV_RIGHT.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+
+		// apply 12 volts on x-axis. use it for max velocity calibrations
+		joystick.START.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(1, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+		// apply 12 volts on rotation-axis. use it for max velocity calibrations
+		joystick.BACK.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0, 0, 1), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+
+		joystick.Y.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
+		joystick.A.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kReverse));
+		joystick.X.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
+		joystick.B.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
+
+		// remember to test the drive pid ff calib with the POVS commands
+
+		// rotational pid tests
+		joystick.R1.whileTrue(getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
+		joystick.L1.whileTrue(getCommandsBuilder().turnToHeading(new Rotation2d()));
+
+		// translation pid tests
+		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
+			.onTrue(
+				new DeferredCommand(
+					() -> getCommandsBuilder()
+						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(2, 0, new Rotation2d()))),
+					Set.of(this)
+				)
+			);
+		joystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
+			.onTrue(
+				new DeferredCommand(
+					() -> getCommandsBuilder()
+						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-2, 0, new Rotation2d()))),
+					Set.of(this)
+				)
+			);
 	}
 
 	public String getLogPath() {

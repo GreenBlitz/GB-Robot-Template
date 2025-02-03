@@ -60,6 +60,7 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
+		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

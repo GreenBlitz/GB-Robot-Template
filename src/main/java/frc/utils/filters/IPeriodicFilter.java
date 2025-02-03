@@ -9,6 +9,9 @@ package frc.utils.filters;
  */
 public interface IPeriodicFilter<T> {
 
+	/**
+	 * reset the previous history of the filter.
+	 */
 	void hardReset();
 
 	void log(String parentLogPath);

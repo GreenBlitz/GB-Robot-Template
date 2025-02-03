@@ -52,7 +52,7 @@ public final class GBMeth {
 			output *= Math.pow(data.get(i), weights.get(i));
 		}
 		Optional<Double> weightsSum = sumList(weights);
-		return weightsSum.isPresent() ? Math.pow(output, weightsSum.get()) : Double.NaN;
+		return weightsSum.isPresent() ? Math.pow(output, 1 / weightsSum.get()) : Double.NaN;
 	}
 
 	public static Optional<Double> sumList(List<Double> weights) {

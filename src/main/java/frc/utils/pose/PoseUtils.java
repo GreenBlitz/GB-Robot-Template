@@ -103,7 +103,7 @@ public class PoseUtils {
 	public static <T extends Num> List<Double> vectorToList(Vector<T> vector, T size) {
 		List<Double> output = new ArrayList<>(size.getNum());
 		for (int i = 0; i < size.getNum(); i++) {
-			output.set(i, vector.get(0, i));
+			output.add(vector.get(0, i));
 		}
 		return output;
 	}

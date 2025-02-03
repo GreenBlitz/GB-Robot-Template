@@ -35,24 +35,24 @@ public class FieldMath {
 		return MathConstants.HALF_CIRCLE.plus(angle);
 	}
 
-	public static Rotation3d mirror(Rotation3d angle) {
-		return new Rotation3d(angle.getX(), angle.getY(), -angle.getZ());
+	public static Rotation3d invertByInvertionType(Rotation3d angle, AngleTransform angleTransform) {
+		return new Rotation3d(angle.getX(), angle.getY(), invertByInvertionType(Rotation2d.fromRadians(angle.getZ()), angleTransform).getRadians());
 	}
 
 	public static double mirrorX(double x) {
-		return mirrorValue(Field.LENGTH_METERS, x);
+		return Field.LENGTH_METERS - x;
 	}
 
 	public static double mirrorY(double y) {
-		return mirrorValue(Field.WIDTH_METERS, y);
-	}
-
-	public static double mirrorValue(double max, double value) {
-		return max - value;
+		return Field.WIDTH_METERS - y;
 	}
 
 	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
 		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), invertByInvertionType(pose2d.getRotation(), angleTransform));
+	}
+
+	public static Pose3d mirror(Pose3d pose3d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform){
+		return new Pose3d(mirror(pose3d.getTranslation(), mirrorX, mirrorY), invertByInvertionType(pose3d.getRotation(), angleTransform));
 	}
 
 	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {

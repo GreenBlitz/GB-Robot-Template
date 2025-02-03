@@ -61,16 +61,16 @@ public class PathFollowingCommandsBuilder {
 		);
 	}
 
-	public static Command moveByPIDToPose(Robot robot, Pose2d targetPose) {
+	public static Command moveToPoseByPID(Robot robot, Pose2d targetPose) {
 		return robot.getSwerve()
 			.getCommandsBuilder()
-			.moveByPIDToPose(robot.getPoseEstimator()::getCurrentPose, targetPose)
+			.moveToPoseByPID(robot.getPoseEstimator()::getCurrentPose, targetPose)
 			.until(() -> PathPlannerUtil.isRobotInAutonomousTolerances(robot.getPoseEstimator().getCurrentPose(), targetPose));
 	}
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path) {
 		return followPathOrPathfindAndFollowPath(robot, path)
-			.andThen(moveByPIDToPose(robot, Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path))));
+			.andThen(moveToPoseByPID(robot, Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path))));
 	}
 
 }

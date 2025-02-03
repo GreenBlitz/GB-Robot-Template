@@ -32,7 +32,10 @@ public class JoysticksBindings {
 		sixthJoystickButtons(robot);
 
 		Trigger noteIn = new Trigger(() -> robot.getRobotCommander().getSuperstructure().isCoralIn());
-		noteIn.onChange(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
+		noteIn.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
+
+		Trigger noteOut = new Trigger(() -> robot.getRobotCommander().getSuperstructure().isCoralOut());
+		noteOut.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
 	}
 
 	public static void setDriversInputsToSwerve(Swerve swerve) {

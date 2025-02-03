@@ -130,23 +130,23 @@ public class KrakenX60ElevatorBuilder {
 	}
 
 	public static Elevator createRealElevator(String logPath) {
-		TalonFXMotor firstMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_FIRST, generateSysidConfig());
-		firstMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
+		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig());
+		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
-		TalonFXMotor secondMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_SECOND, generateSysidConfig());
-		secondMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
+		TalonFXMotor leftMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig());
+		leftMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
 
-		return create(logPath, firstMotor, secondMotor);
+		return create(logPath, rightMotor, leftMotor);
 	}
 
 	public static Elevator createSimulationElevator(String logPath) {
-		TalonFXMotor firstMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_FIRST, generateSysidConfig(), generateSimulation());
-		firstMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
+		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig(), generateSimulation());
+		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
-		return create(logPath, firstMotor, firstMotor);
+		return create(logPath, rightMotor, rightMotor);
 	}
 
-	private static Elevator create(String logPath, TalonFXMotor firstMotor, TalonFXMotor secondMotor) {
+	private static Elevator create(String logPath, TalonFXMotor rightMotor, TalonFXMotor leftMotor) {
 		IDigitalInput digitalInput = generateDigitalInput();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
@@ -163,10 +163,10 @@ public class KrakenX60ElevatorBuilder {
 
 		return new Elevator(
 			logPath,
-			firstMotor,
-			createSignals(firstMotor),
-			secondMotor,
-			createSignals(secondMotor),
+			rightMotor,
+			createSignals(rightMotor),
+			leftMotor,
+			createSignals(leftMotor),
 			positionRequest,
 			voltageRequest,
 			digitalInput

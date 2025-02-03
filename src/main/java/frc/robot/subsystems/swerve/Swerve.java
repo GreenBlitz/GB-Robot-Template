@@ -72,8 +72,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
-		// calib steer ks with phoenix tuner x
-		// calib steer pid with phoenix tuner x
+		// calibrate steer ks with phoenix tuner x
+		// calibrate steer pid with phoenix tuner x
 
 		joystick.START.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
 

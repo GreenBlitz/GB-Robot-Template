@@ -114,7 +114,9 @@ public class Swerve extends GBSubsystem {
 		joystick.A.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kReverse));
 		joystick.X.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
 		joystick.B.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
+		// MAKE SURE TO PRESS IT ON THE END OF THE SYSID ROUTINE SO YOU CAN READ THE DATA FROM SIGNAL LOGGER.
 		joystick.L3.onTrue(new InstantCommand(SignalLogger::stop));
+
 
 		// Remember to test the drive pid ff calib with the POVS commands
 

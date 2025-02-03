@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -9,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
@@ -72,13 +74,13 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
-		// calibrate steer ks with phoenix tuner x
-		// calibrate steer pid with phoenix tuner x
+		// Calibrate steer ks with phoenix tuner x
+		// Calibrate steer pid with phoenix tuner x
 
 		joystick.START.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
 
-		// test the swerve returns real velocities (measure distance and time in real life and compare to swerve logs)
-		// after drive calibrations use these for pid testing
+		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
+		// REMEMBER after drive calibrations use these for pid testing
 		joystick.POV_UP.whileTrue(
 			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
@@ -92,27 +94,34 @@ public class Swerve extends GBSubsystem {
 			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 
-		// apply 12 volts on x-axis. use it for max velocity calibrations
+		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
+		// See what velocity the swerve log after it stops accelerating and use it as max.
 		joystick.START.whileTrue(
 			getCommandsBuilder().driveByState(() -> new ChassisPowers(1, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
-		// apply 12 volts on rotation-axis. use it for max velocity calibrations
+		// Apply 12 volts on rotation-axis.
+		// Use it for max velocity calibrations. See what velocity the swerve log after it stops accelerating and use it as max.
 		joystick.BACK.whileTrue(
 			getCommandsBuilder().driveByState(() -> new ChassisPowers(0, 0, 1), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 
+		// The sysid outputs will be logged to the "CTRE Signal Logger".
+		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.
+		// Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places.
+		// (see wpilib sysid in google)
 		joystick.Y.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
 		joystick.A.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kReverse));
 		joystick.X.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
 		joystick.B.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
+		joystick.L3.onTrue(new InstantCommand(SignalLogger::stop));
 
-		// remember to test the drive pid ff calib with the POVS commands
+		// Remember to test the drive pid ff calib with the POVS commands
 
-		// rotational pid tests
+		// Rotational pid tests
 		joystick.R1.whileTrue(getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
 		joystick.L1.whileTrue(getCommandsBuilder().turnToHeading(new Rotation2d()));
 
-		// translation pid tests
+		// Translation pid tests
 		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
 			.onTrue(
 				new DeferredCommand(

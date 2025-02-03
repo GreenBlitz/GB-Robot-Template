@@ -3,6 +3,7 @@ package frc.utils.filters.linearfilters;
 import edu.wpi.first.math.Num;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.filter.LinearFilter;
+import frc.utils.filters.IPeriodicFilter;
 import frc.utils.time.TimeUtils;
 import org.ejml.simple.SimpleMatrix;
 import org.littletonrobotics.junction.Logger;

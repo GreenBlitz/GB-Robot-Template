@@ -1,4 +1,4 @@
-package frc.utils.filters.linearfilters;
+package frc.utils.filters;
 
 
 /**

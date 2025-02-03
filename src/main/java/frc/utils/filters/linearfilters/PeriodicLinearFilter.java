@@ -1,6 +1,7 @@
 package frc.utils.filters.linearfilters;
 
 import edu.wpi.first.math.filter.LinearFilter;
+import frc.utils.filters.IPeriodicFilter;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;

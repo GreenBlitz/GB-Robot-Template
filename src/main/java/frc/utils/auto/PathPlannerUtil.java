@@ -127,10 +127,6 @@ public class PathPlannerUtil {
 		setDynamicObstacles(List.of(), currentPose);
 	}
 
-	public static boolean isRobotInAutonomousTolerances(Pose2d currentPose, Pose2d targetPose) {
-		return ToleranceMath.isNear(targetPose, currentPose, AutonomousConstants.TARGET_POSE_TOLERANCES);
-	}
-
 	public static boolean isRobotInPathfindingDeadband(Pose2d currentPose, Pose2d targetPose) {
 		return ToleranceMath.isNear(targetPose.getTranslation(), currentPose.getTranslation(), AutonomousConstants.PATHFINDING_DEADBAND_METERS);
 	}

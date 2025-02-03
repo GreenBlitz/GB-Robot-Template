@@ -1,5 +1,7 @@
 package frc.utils.pose;
 
+import edu.wpi.first.math.Num;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,6 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.vision.data.VisionData;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PoseUtils {
 
@@ -85,6 +90,22 @@ public class PoseUtils {
 
 	public static TimedValue<Rotation2d> toHeadingData(VisionData visionData) {
 		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
+	}
+
+	public static <T extends Num> double[] vectorToArray(Vector<T> vector, T size) {
+		double[] output = new double[size.getNum()];
+		for (int i = 0; i < size.getNum(); i++) {
+			output[i] = vector.get(0, i);
+		}
+		return output;
+	}
+
+	public static <T extends Num> List<Double> vectorToList(Vector<T> vector, T size) {
+		List<Double> output = new ArrayList<>(size.getNum());
+		for (int i = 0; i < size.getNum(); i++) {
+			output.set(i, vector.get(0, i));
+		}
+		return output;
 	}
 
 }

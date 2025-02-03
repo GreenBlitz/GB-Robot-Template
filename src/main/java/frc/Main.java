@@ -3,9 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc;
+
 import com.ctre.phoenix.ErrorCode;
 
-import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what you are doing, do not modify this file
@@ -20,7 +20,7 @@ public final class Main {
 	 */
 	public static void main(String... args) {
 		System.out.println(ErrorCode.class);
-		//RobotBase.startRobot(RobotManager::new);
+		// RobotBase.startRobot(RobotManager::new);
 	}
 
 }

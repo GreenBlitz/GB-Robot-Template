@@ -19,9 +19,9 @@ public enum AngleUnit {
 	DEGREES(
 		Rotation2d::fromDegrees,
 		(roll, pitch, yaw) -> new Rotation3d(
-			Rotation2d.fromRotations(roll).getDegrees(),
-			Rotation2d.fromRotations(pitch).getDegrees(),
-			Rotation2d.fromRotations(yaw).getDegrees()
+			Rotation2d.fromDegrees(roll).getRadians(),
+			Rotation2d.fromDegrees(pitch).getRadians(),
+			Rotation2d.fromDegrees(yaw).getRadians()
 		)
 	);
 

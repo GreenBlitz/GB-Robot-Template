@@ -27,7 +27,7 @@ public final class GBMeth {
 			return data.stream().max(Double::compareTo).get();
 		} else if (rank == Double.NEGATIVE_INFINITY) {
 			return data.stream().min(Double::compareTo).get();
-		} else if (rank == Double.NaN) {
+		} else if (rank.isNaN()) {
 			return Double.NaN;
 		}
 		double output = IntStream.range(0, size).mapToDouble(i -> Math.pow(data.get(i), rank) * weights.get(i)).sum();

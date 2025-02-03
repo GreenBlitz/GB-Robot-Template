@@ -38,7 +38,7 @@ public class IDs {
 
 	public static class SparkMAXIDs {
 
-		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(-1);
+		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(30);
 
 	}
 

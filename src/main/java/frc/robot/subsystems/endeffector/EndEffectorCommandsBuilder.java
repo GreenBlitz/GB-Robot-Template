@@ -2,6 +2,7 @@ package frc.robot.subsystems.endeffector;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.utils.utilcommands.LoggedDashboardCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -14,6 +15,11 @@ public class EndEffectorCommandsBuilder {
 	}
 
 	//@formatter:off
+
+	public Command stop(){
+		return setPower(0);
+	}
+
 	public Command setPower(double power) {
 		return endEffector.asSubsystemCommand(
 				new RunCommand(() -> endEffector.setPower(power)),
@@ -26,6 +32,14 @@ public class EndEffectorCommandsBuilder {
 			new RunCommand(() -> endEffector.setPower(powerSupplier.getAsDouble())),
 			"Set power by supplier"
 		);
+	}
+
+	public Command loggedDashboardSetPower(){
+		return endEffector.asSubsystemCommand(
+				new LoggedDashboardCommand(
+					"Set end effector power",
+					endEffector::setPower),
+				"Set end effector power via dashboard");
 	}
 	//@formatter:off
 

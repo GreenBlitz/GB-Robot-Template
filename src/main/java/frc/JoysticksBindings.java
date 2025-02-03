@@ -4,8 +4,11 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.endeffector.EndEffectorCommandsBuilder;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
+
+import java.util.function.DoubleSupplier;
 
 public class JoysticksBindings {
 
@@ -74,7 +77,20 @@ public class JoysticksBindings {
 
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-		// bindings...
+		EndEffectorCommandsBuilder endEffectorCommandsBuilder = robot.getEndEffector().getCommandsBuilder();
+
+		usedJoystick.B.whileTrue(endEffectorCommandsBuilder.setPower(() -> Math.max(robot.getEndEffector().getPower() - 0.01, -1)));
+		usedJoystick.X.whileTrue(endEffectorCommandsBuilder.setPower(() -> Math.min(robot.getEndEffector().getPower() + 0.01, 1)));
+		usedJoystick.A.whileTrue(endEffectorCommandsBuilder.setPower(() -> Math.max(robot.getEndEffector().getPower() - 0.05, -1)));
+		usedJoystick.Y.whileTrue(endEffectorCommandsBuilder.setPower(() -> Math.min(robot.getEndEffector().getPower() + 0.05, 1)));
+
+		usedJoystick.POV_RIGHT.whileTrue(endEffectorCommandsBuilder.setPower(() -> Math.max(robot.getEndEffector().getPower() - 0.1, -1)));
+		usedJoystick.POV_LEFT.whileTrue(endEffectorCommandsBuilder.setPower(() -> Math.min(robot.getEndEffector().getPower() + 0.1, 1)));
+		usedJoystick.POV_DOWN.whileTrue(endEffectorCommandsBuilder.setPower(() -> Math.max(robot.getEndEffector().getPower() - 0.5, -1)));
+		usedJoystick.POV_UP.whileTrue(endEffectorCommandsBuilder.setPower(() -> Math.min(robot.getEndEffector().getPower() + 0.5, 1)));
+
+
+
 	}
 
 }

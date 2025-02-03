@@ -1,4 +1,4 @@
-package frc.utils.linearfilters;
+package frc.utils.filters.linearfilters;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import org.littletonrobotics.junction.Logger;

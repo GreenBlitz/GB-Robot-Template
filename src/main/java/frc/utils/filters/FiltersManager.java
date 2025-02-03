@@ -1,5 +1,6 @@
-package frc.utils.linearfilters;
+package frc.utils.filters;
 
+import frc.utils.filters.linearfilters.IPeriodicFilter;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;

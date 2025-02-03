@@ -9,7 +9,7 @@ import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
-import frc.utils.linearfilters.FiltersManager;
+import frc.utils.filters.FiltersManager;
 import frc.utils.time.TimeUtils;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;

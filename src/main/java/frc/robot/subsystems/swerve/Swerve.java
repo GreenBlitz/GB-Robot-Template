@@ -77,6 +77,7 @@ public class Swerve extends GBSubsystem {
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
 
+		// Let it rotate some rotations then output will be in log under Calibrations/.
 		joystick.START.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).

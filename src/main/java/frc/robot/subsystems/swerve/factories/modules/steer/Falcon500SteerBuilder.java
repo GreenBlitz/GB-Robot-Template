@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.Units;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
@@ -83,7 +85,17 @@ class Falcon500SteerBuilder {
 
 	static SteerRequests buildRequests() {
 		return new SteerRequests(
-			Phoenix6RequestBuilder.build(new PositionVoltage(0), true),
+				new IRequest<Rotation2d>() {
+					@Override
+					public IRequest<Rotation2d> withSetPoint(Rotation2d setPoint) {
+						return this;
+					}
+
+					@Override
+					public Rotation2d getSetPoint() {
+						return Rotation2d.kZero;
+					}
+				},
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}

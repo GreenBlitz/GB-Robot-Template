@@ -108,7 +108,7 @@ public class PathPlannerUtil {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
-		return SequencesBuilder.followPath(path);
+		return PathFollowingCommandsBuilder.followPath(path);
 	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
@@ -128,11 +128,7 @@ public class PathPlannerUtil {
 	}
 
 	public static boolean isRobotInAutonomousTolerances(Pose2d currentPose, Pose2d targetPose) {
-		return ToleranceMath.isNear(
-			targetPose,
-			currentPose,
-			AutonomousConstants.TARGET_POSE_TOLERANCES
-		);
+		return ToleranceMath.isNear(targetPose, currentPose, AutonomousConstants.TARGET_POSE_TOLERANCES);
 	}
 
 	public static boolean isRobotInPathfindingDeadband(Pose2d currentPose, Pose2d targetPose) {

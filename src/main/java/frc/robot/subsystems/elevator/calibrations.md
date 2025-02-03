@@ -1,6 +1,6 @@
 Calibrations
 ----------------------------------
-- [ ] Rename Motor Names By Position On Robot
+- [x] Rename Motor Names By Position On Robot
 - [ ] Motor: Id, Type
 - [ ] Buschain
 - [ ] Inverted

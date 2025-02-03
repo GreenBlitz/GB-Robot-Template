@@ -4,6 +4,8 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.elevator.ElevatorState;
+import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -65,6 +67,14 @@ public class JoysticksBindings {
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
+
+		robot.getElevator().getSysIdCalibrator().setAllButtonsForCalibration(usedJoystick);
+
+		robot.getElevator().getCommandsBuilder().setVoltageByDashBoard().schedule();
+		usedJoystick.POV_DOWN.onTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.1));
+		usedJoystick.POV_LEFT.onTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.36));
+		usedJoystick.POV_UP.onTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.5));
+		usedJoystick.POV_RIGHT.onTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.8));
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {

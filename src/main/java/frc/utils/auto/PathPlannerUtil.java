@@ -132,11 +132,7 @@ public class PathPlannerUtil {
 	}
 
 	public static boolean isRobotInAutonomousTolerances(Pose2d currentPose, Pose2d targetPose) {
-		return ToleranceMath.isNear(
-			targetPose,
-			currentPose,
-			AutonomousConstants.TARGET_POSE_TOLERANCES
-		);
+		return ToleranceMath.isNear(targetPose, currentPose, AutonomousConstants.TARGET_POSE_TOLERANCES);
 	}
 
 	public static boolean isRobotInPathfindingDeadband(Pose2d currentPose, Pose2d targetPose) {

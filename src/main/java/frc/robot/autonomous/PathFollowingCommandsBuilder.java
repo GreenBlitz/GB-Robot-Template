@@ -11,17 +11,18 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.constants.field.Field;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.math.ToleranceMath;
 
 import java.util.function.Supplier;
 
 public class PathFollowingCommandsBuilder {
 
-	public static Command commandDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new ParallelCommandGroup(commandSupplier.get(), followAdjustedPath(robot, path));
+	public static Command commandDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Pose2d tolerance) {
+		return new ParallelCommandGroup(commandSupplier.get(), followAdjustedPath(robot, path, tolerance));
 	}
 
-	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
-		return new SequentialCommandGroup(followAdjustedPath(robot, path), commandSupplier.get());
+	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Pose2d tolerance) {
+		return new SequentialCommandGroup(followAdjustedPath(robot, path, tolerance), commandSupplier.get());
 	}
 
 	public static Command followPath(PathPlannerPath path) {
@@ -62,15 +63,19 @@ public class PathFollowingCommandsBuilder {
 	}
 
 	public static Command moveToPoseByPID(Robot robot, Pose2d targetPose) {
-		return robot.getSwerve()
-			.getCommandsBuilder()
-			.moveToPoseByPID(robot.getPoseEstimator()::getCurrentPose, targetPose)
-			.until(() -> PathPlannerUtil.isRobotInAutonomousTolerances(robot.getPoseEstimator().getCurrentPose(), targetPose));
+		return robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getCurrentPose, targetPose);
 	}
 
-	public static Command followAdjustedPath(Robot robot, PathPlannerPath path) {
+	public static Command followAdjustedPath(Robot robot, PathPlannerPath path, Pose2d tolerance) {
 		return followPathOrPathfindAndFollowPath(robot, path)
-			.andThen(moveToPoseByPID(robot, Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path))));
+			.andThen(moveToPoseByPID(robot, Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path))))
+			.until(
+				() -> ToleranceMath.isNear(
+					robot.getPoseEstimator().getCurrentPose(),
+					Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path)),
+					tolerance
+				)
+			);
 	}
 
 }

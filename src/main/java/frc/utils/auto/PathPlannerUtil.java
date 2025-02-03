@@ -18,7 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.autonomous.SequencesBuilder;
+import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
 import frc.utils.math.ToleranceMath;
@@ -128,15 +128,14 @@ public class PathPlannerUtil {
 		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
 		path.preventFlipping = true;
-		return SequencesBuilder.followPath(path);
+		return PathFollowingCommandsBuilder.followPath(path);
 	}
 
 	public static boolean isRobotInAutonomousTolerances(Pose2d currentPose, Pose2d targetPose) {
 		return ToleranceMath.isNear(
 			targetPose,
 			currentPose,
-			AutonomousConstants.TARGET_ANGLE_TOLERANCE,
-			AutonomousConstants.DISTANCE_FROM_TARGET_TOLERANCE_METERS
+			AutonomousConstants.TARGET_POSE_TOLERANCES
 		);
 	}
 

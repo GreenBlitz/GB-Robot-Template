@@ -14,7 +14,7 @@ import frc.utils.auto.PathPlannerUtil;
 
 import java.util.function.Supplier;
 
-public class SequencesBuilder {
+public class PathFollowingCommandsBuilder {
 
 	public static Command commandDuringPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier) {
 		return new ParallelCommandGroup(commandSupplier.get(), followAdjustedPath(robot, path));

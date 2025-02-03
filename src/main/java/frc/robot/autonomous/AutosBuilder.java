@@ -34,7 +34,7 @@ public class AutosBuilder {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,
-					pathPlannerPath -> SequencesBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand)
+					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand)
 				)
 			);
 		}
@@ -47,7 +47,7 @@ public class AutosBuilder {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,
-					pathPlannerPath -> SequencesBuilder.commandAfterPath(robot, pathPlannerPath, intakeCommand)
+					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, intakeCommand)
 				)
 			);
 		}
@@ -60,7 +60,7 @@ public class AutosBuilder {
 			autos.add(
 				() -> createAutoFromAutoPath(
 					autoPath,
-					pathPlannerPath -> SequencesBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand)
+					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand)
 				)
 			);
 		}

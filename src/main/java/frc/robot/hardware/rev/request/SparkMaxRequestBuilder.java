@@ -24,4 +24,9 @@ public class SparkMaxRequestBuilder {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, setpoint -> setpoint);
 	}
 
+	public static SparkMaxVelocityRequest build(Rotation2d setPoint, int pidSlot){
+		return new SparkMaxVelocityRequest(setPoint, pidSlot);
+	}
+
+
 }

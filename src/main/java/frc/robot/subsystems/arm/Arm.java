@@ -2,12 +2,14 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
@@ -44,7 +46,11 @@ public class Arm extends GBSubsystem {
 		this.encoder = encoder;
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setVoltage);
+		this.sysIdCalibrator = new SysIdCalibrator(
+			motor.getSysidConfigInfo(),
+			this,
+			voltage -> setVoltage(voltage + KrakenX60ArmBuilder.kG * getPosition().getCos())
+		);
 		this.targetPosition = getPosition();
 
 		periodic();
@@ -105,15 +111,24 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		// calibrate kG using phoenix tuner by setting the voltage
+
+		// check limits
+		commandsBuilder.setPower(joystick.getAxisValue(Axis.LEFT_Y));
+
+		// calibrate PID using phoenix tuner and these bindings:
 		joystick.A.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(-40)));
 		joystick.B.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
 		joystick.X.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));
 		joystick.Y.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(200)));
 
+		// calibrate feed forward using sys id:
 		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(true, SysIdRoutine.Direction.kForward));
 		joystick.POV_UP.onTrue(sysIdCalibrator.getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
 		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(false, SysIdRoutine.Direction.kForward));
 		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
+
+		// calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA, cruse velocity = (12 + Ks)/kV
 	}
 
 }

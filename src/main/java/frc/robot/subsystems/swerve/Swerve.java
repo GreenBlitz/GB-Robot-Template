@@ -114,7 +114,6 @@ public class Swerve extends GBSubsystem {
 		// MAKE SURE TO PRESS IT ON THE END OF THE SYSID ROUTINE SO YOU CAN READ THE DATA FROM SIGNAL LOGGER.
 		joystick.L3.onTrue(new InstantCommand(SignalLogger::stop));
 
-
 		// Remember to test the drive pid ff calib with the POVS commands
 
 		// Rotational pid tests

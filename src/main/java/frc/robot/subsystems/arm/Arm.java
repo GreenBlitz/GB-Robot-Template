@@ -63,7 +63,7 @@ public class Arm extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
-		Logger.recordOutput(getLogPath() + "/Target position", targetPosition);
+		Logger.recordOutput(getLogPath() + "/TargetPosition", targetPosition);
 		updateInputs();
 	}
 

@@ -41,6 +41,41 @@ public class RobotCommander extends GBSubsystem {
 	 * Checks if elevator and arm in place and is robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is
 	 * horizontal to the branch So when you check if robot in place in y-axis its in parallel to the reef side.
 	 */
+	private boolean isReadyToOpenElevator(ScoreLevel level, Branch branch) {
+		Rotation2d reefAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
+
+		Pose2d reefRelativeTargetPose = ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+				.rotateBy(reefAngle.unaryMinus());
+		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
+
+		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
+		ChassisSpeeds reefRelativeSpeeds = SwerveMath
+				.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
+
+		return switch (level) {
+			case L1 ->
+					PoseUtil.isAtPose(
+							reefRelativeRobotPose,
+							reefRelativeTargetPose,
+							reefRelativeSpeeds,
+							Tolerances.REEF_RELATIVE_L1_OPEN_ELEVATOR_POSITION,
+							Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS
+					);
+			case L2, L3, L4 ->
+					PoseUtil.isAtPose(
+							reefRelativeRobotPose,
+							reefRelativeTargetPose,
+							reefRelativeSpeeds,
+							Tolerances.REEF_RELATIVE_OPEN_ELEVATOR,
+							Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
+					);
+		};
+	}
+
+	/**
+	 * Checks if elevator and arm in place and is robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is
+	 * horizontal to the branch So when you check if robot in place in y-axis its in parallel to the reef side.
+	 */
 	private boolean isPreScoreReady(ScoreLevel level, Branch branch) {
 		Rotation2d reefAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
 

@@ -114,7 +114,7 @@ public class Arm extends GBSubsystem {
 		 */
 		joystick.R1.whileTrue(
 			commandsBuilder.setPower(
-				() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_POWER_MULTIPLICATOR
+				() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_MAX_POWER
 					+ (getKgVoltage() / BatteryUtil.getCurrentVoltage())
 			)
 		);

@@ -85,14 +85,7 @@ public class JoysticksBindings {
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
-
-		robot.getElevator().getSysIdCalibrator().setAllButtonsForCalibration(usedJoystick);
-
-		robot.getElevator().getCommandsBuilder().setVoltageByDashBoard().schedule();
-		usedJoystick.POV_DOWN.onTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.1));
-		usedJoystick.POV_LEFT.onTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.36));
-		usedJoystick.POV_UP.onTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.5));
-		usedJoystick.POV_RIGHT.onTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.8));
+		robot.getElevator().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {

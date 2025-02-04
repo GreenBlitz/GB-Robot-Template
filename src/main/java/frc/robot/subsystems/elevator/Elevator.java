@@ -3,6 +3,7 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -62,6 +63,28 @@ public class Elevator extends GBSubsystem {
 		periodic();
 
 		setDefaultCommand(getCommandsBuilder().stayInPlace());
+	}
+
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		/*
+		 * The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,
+		 * state signals into wpilog. Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places. (see
+		 * wpilib sysid in google)
+		 */
+		sysIdCalibrator.setAllButtonsForCalibration(joystick);
+
+		/*
+		 * Test FF
+		 */
+		joystick.R3.onTrue(commandsBuilder.setVoltageByDashBoard());
+
+		/*
+		 * PID Testing
+		 */
+		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(0.1));
+		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(0.36));
+		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(0.5));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(0.8));
 	}
 
 	public ElevatorCommandsBuilder getCommandsBuilder() {

@@ -76,7 +76,7 @@ public class PathFollowingCommandsBuilder {
 					tolerance
 				)
 			)
-			.andThen(robot.getSwerve().getCommandsBuilder().stop());
+			.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds());
 	}
 
 }

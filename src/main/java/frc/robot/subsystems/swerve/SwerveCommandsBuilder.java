@@ -162,7 +162,7 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command stop() {
+	public Command resetTargetSpeeds() {
 		return swerve.asSubsystemCommand(new InstantCommand(() -> swerve.driveByState(0, 0, 0, SwerveState.DEFAULT_DRIVE)), "Stop");
 	}
 

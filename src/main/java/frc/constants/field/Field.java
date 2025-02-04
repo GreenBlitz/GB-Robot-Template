@@ -74,15 +74,15 @@ public class Field {
 			new Pose2d(1335.925,285.615 , Rotation2d.fromDegrees(54)),
 			new Pose2d(1500.34, 166.21, Rotation2d.fromDegrees(54)),
 
-			new Pose2d(185.02, 1121.45, Rotation2d.fromDegrees(-54)),
-			new Pose2d(349.435, 1002.095, Rotation2d.fromDegrees(-54)),
-			new Pose2d(513.85, 882.64, Rotation2d.fromDegrees(-54)),
-			new Pose2d(678.265,763.235 , Rotation2d.fromDegrees(-54)),
-			new Pose2d(842.68, 643.83, Rotation2d.fromDegrees(-54)),
-			new Pose2d(1007.095, 524.425, Rotation2d.fromDegrees(-54)),
-			new Pose2d(1171.51, 405.02, Rotation2d.fromDegrees(-54)),
-			new Pose2d(1335.925,285.615 , Rotation2d.fromDegrees(-54)),
-			new Pose2d(1500.34, 166.21, Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-185.02, 1121.45, Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-349.435, 1002.095, Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-513.85, 882.64, Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-678.265,763.235 , Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-842.68, 643.83, Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-1007.095, 524.425, Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-1171.51, 405.02, Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-1335.925,285.615 , Rotation2d.fromDegrees(-54)),
+			new Pose2d(WIDTH_METERS-1500.34, 166.21, Rotation2d.fromDegrees(-54)),
 	};
 
 	public static final double FEEDER_WIDTH_METERS = 1.9304;

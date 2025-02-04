@@ -59,8 +59,10 @@ public class RobotManager extends LoggedRobot {
 		this.robot = new Robot();
 
 		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
-			new DCMotorSim(LinearSystemId.createDCMotorSystem(
-				DCMotor.getNEO(1), 0.001, 1), DCMotor.getNEO(1))
+				new DCMotorSim(
+						LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.001, 1),
+						DCMotor.getNEO(1)
+				)
 		);
 		SparkMaxWrapper motorWrapper = new SparkMaxWrapper(new SparkMaxDeviceID(1));
 		motor = new BrushlessSparkMAXMotor(
@@ -70,11 +72,11 @@ public class RobotManager extends LoggedRobot {
 			new SysIdRoutine.Config()
 		);
 		SparkMaxConfig config = new SparkMaxConfig();
-		 config.closedLoop.p(0.001);
+		 config.closedLoop.p(0.000033);
 		 config.closedLoop.d(0);
 		 config.closedLoop.i(0);
 		motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
-		velocitySignal = new SuppliedAngleSignal("velocity", ()-> motorWrapper.getVelocityAnglePerSecond().getRotations(), AngleUnit.ROTATIONS);
+		velocitySignal = new SuppliedAngleSignal("velocity", ()-> Conversions.perSecondToPerMinute(motorWrapper.getVelocityAnglePerSecond().getRotations()), AngleUnit.ROTATIONS);
 		voltageSignal = new SuppliedDoubleSignal("voltage", motorWrapper::getVoltage);
 		JoysticksBindings.configureBindings(robot);
 	}
@@ -106,7 +108,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-		motor.applyRequest(SparkMaxRequestBuilder.build(Rotation2d.fromRotations(40), 0, (rotation2d)->rotation2d.getRotations()));
+		SparkMaxVelocityRequest sparkMaxVelocityRequest = SparkMaxRequestBuilder.build(Rotation2d.fromRotations(40), 0,rotation2d -> rotation2d.getRotations());
+		motor.applyRequest(sparkMaxVelocityRequest);
 	}
 
 	@Override

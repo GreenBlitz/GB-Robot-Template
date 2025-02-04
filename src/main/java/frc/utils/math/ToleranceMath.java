@@ -20,7 +20,7 @@ public class ToleranceMath {
 
 	public static boolean isNear(Translation2d wantedTranslation, Translation2d translation, Translation2d tolerance) {
 		return MathUtil.isNear(wantedTranslation.getX(), translation.getX(), tolerance.getX())
-			&& MathUtil.isNear(wantedTranslation.getY(), tolerance.getY(), tolerance.getY());
+			&& MathUtil.isNear(wantedTranslation.getY(), translation.getY(), tolerance.getY());
 	}
 
 	public static boolean isNearWrapped(Rotation2d wantedAngle, Rotation2d angle, Rotation2d tolerance) {

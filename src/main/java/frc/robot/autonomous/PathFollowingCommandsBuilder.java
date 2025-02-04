@@ -71,11 +71,11 @@ public class PathFollowingCommandsBuilder {
 			.andThen(moveToPoseByPID(robot, Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path))))
 			.until(
 				() -> ToleranceMath.isNear(
-					robot.getPoseEstimator().getCurrentPose(),
 					Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path)),
+					robot.getPoseEstimator().getCurrentPose(),
 					tolerance
 				)
-			);
+			).andThen(robot.getSwerve().getCommandsBuilder().stop());
 	}
 
 }

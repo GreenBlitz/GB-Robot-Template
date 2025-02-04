@@ -63,8 +63,8 @@ public class Field {
 	private static final Pose2d PROCESSOR = new Pose2d(5.98744, 0.00749, Rotation2d.fromDegrees(270));
 
 	private static final Pose2d[] CORAL_STATION_MIDDLES = new Pose2d[] {
-		new Pose2d(0.84319, 0.65078, Rotation2d.fromDegrees(-126)),
-		new Pose2d(0.84319, 7.41395, Rotation2d.fromDegrees(126))};
+		new Pose2d(0.84319, 0.65078, Rotation2d.fromDegrees(54)),
+		new Pose2d(0.84319, 7.41395, Rotation2d.fromDegrees(-54))};
 
 	public static final double FEEDER_WIDTH_METERS = 1.9304;
 

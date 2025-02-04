@@ -91,8 +91,8 @@ public class Elevator extends GBSubsystem {
 		 */
 		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(0.1));
 		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(0.36));
-		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(0.5));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(0.8));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(0.5));
+		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(0.8));
 	}
 
 	public ElevatorCommandsBuilder getCommandsBuilder() {

@@ -75,7 +75,8 @@ public class PathFollowingCommandsBuilder {
 					robot.getPoseEstimator().getCurrentPose(),
 					tolerance
 				)
-			).andThen(robot.getSwerve().getCommandsBuilder().stop());
+			)
+			.andThen(robot.getSwerve().getCommandsBuilder().stop());
 	}
 
 }

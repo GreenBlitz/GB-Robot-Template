@@ -12,7 +12,6 @@ import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
-
 public class Arm extends GBSubsystem {
 
 	private final ControllableMotor motor;
@@ -114,7 +113,7 @@ public class Arm extends GBSubsystem {
 		 * Check limits
 		 */
 		joystick.R1.whileTrue(
-			commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2 + getKgVoltage() / BatteryUtil.getCurrentVoltage())
+			commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_POWER_MULTIPLICATOR + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 
 		/*

@@ -70,7 +70,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation2d yaw) {
-		updateAngleInHeadingRequiringSources(new Rotation3d(yaw.getRadians(), 0, 0));
+		updateAngleInHeadingRequiringSources(new Rotation3d(0, 0, yaw.getRadians()));
 	}
 
 	protected ArrayList<TimedValue<Rotation2d>> extractHeadingDataFromMappedSources(

@@ -38,10 +38,9 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	/**
-	 * Checks if elevator and arm in place and is robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is
-	 * horizontal to the branch So when you check if robot in place in y-axis its in parallel to the reef side.
+	 * Checks if robot close enough in y and x-axis so we can open superstructure.
 	 */
-	private boolean isReadyToOpenElevator(ScoreLevel level, Branch branch) {
+	private boolean isReadyToOpenSuperstructure(ScoreLevel level, Branch branch) {
 		Rotation2d reefAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
 
 		Pose2d reefRelativeTargetPose = ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
@@ -58,16 +57,16 @@ public class RobotCommander extends GBSubsystem {
 					reefRelativeRobotPose,
 					reefRelativeTargetPose,
 					reefRelativeSpeeds,
-					Tolerances.REEF_RELATIVE_L1_OPEN_ELEVATOR_POSITION,
-					Tolerances.REEF_RELATIVE_L1_OPEN_ELEVATOR_DEADBANDS
+					Tolerances.REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_POSITION,
+					Tolerances.REEF_RELATIVE_SUPERSTRUCTURE_L1_OPEN_DEADBANDS
 				);
 			case L2, L3, L4 ->
 				PoseUtil.isAtPose(
 					reefRelativeRobotPose,
 					reefRelativeTargetPose,
 					reefRelativeSpeeds,
-					Tolerances.REEF_RELATIVE_OPEN_ELEVATOR_POSITION,
-					Tolerances.REEF_RELATIVE_OPEN_ELEVATOR_DEADBANDS
+					Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION,
+					Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_DEADBANDS
 				);
 		};
 	}
@@ -162,7 +161,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				new SequentialCommandGroup(
-					superstructure.idle().until(() -> isReadyToOpenElevator(scoreLevel, ScoringHelpers.targetBranch)),
+					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.preScore(scoreLevel)
 				),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
@@ -191,7 +190,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				new SequentialCommandGroup(
-					superstructure.idle().until(() -> isReadyToOpenElevator(scoreLevel, ScoringHelpers.targetBranch)),
+					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.preScore(scoreLevel).until(() -> isPreScoreReady(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.score(scoreLevel)
 				),

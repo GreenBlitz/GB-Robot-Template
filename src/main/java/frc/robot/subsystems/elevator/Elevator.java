@@ -77,7 +77,7 @@ public class Elevator extends GBSubsystem {
 		/*
 		 * Calibrate kG
 		 */
-		joystick.L1.onTrue(commandsBuilder.setVoltageByDashBoard());
+		joystick.L1.whileTrue(commandsBuilder.setVoltageByDashBoard());
 
 		/*
 		 * The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,
@@ -89,10 +89,16 @@ public class Elevator extends GBSubsystem {
 		/*
 		 * PID Testing
 		 */
-		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(0.1));
-		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(0.36));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(0.5));
-		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(0.8));
+		joystick.POV_DOWN.whileTrue(commandsBuilder.setTargetPositionMeters(0.1));
+		joystick.POV_LEFT.whileTrue(commandsBuilder.setTargetPositionMeters(0.36));
+		joystick.POV_RIGHT.whileTrue(commandsBuilder.setTargetPositionMeters(0.5));
+		joystick.POV_UP.whileTrue(commandsBuilder.setTargetPositionMeters(0.8));
+
+		/*
+		 * Calibrate max acceleration and cruse velocity by the equations:
+		 * max acceleration = (12 + Ks)/2kA
+		 * cruise velocity = (12 + Ks)/kV
+		 */
 	}
 
 	public ElevatorCommandsBuilder getCommandsBuilder() {

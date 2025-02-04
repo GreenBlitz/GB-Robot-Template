@@ -37,6 +37,10 @@ public class RobotCommander extends GBSubsystem {
 		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
 	}
 
+	public Superstructure getSuperstructure() {
+		return superstructure;
+	}
+
 	/**
 	 * Checks if robot close enough in y and x-axis so we can open superstructure.
 	 */

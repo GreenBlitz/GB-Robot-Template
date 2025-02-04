@@ -10,6 +10,7 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
+import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 
@@ -115,7 +116,7 @@ public class Arm extends GBSubsystem {
 		 */
 		joystick.R1.whileTrue(
 			commandsBuilder
-				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2 + KrakenX60ArmBuilder.kG / GlobalConstants.EXPECTED_BATTERY_VOLTAGE)
+				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2 + KrakenX60ArmBuilder.kG * getPosition().getCos() / BatteryUtil.getCurrentVoltage())
 		);
 
 		/*

@@ -15,11 +15,11 @@ import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.utils.AngleUnit;
 import frc.utils.Conversions;
 import frc.utils.Filter;
-import frc.utils.pose.PoseUtils;
+import frc.utils.pose.PoseUtil;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -130,7 +130,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	protected double getTimestamp() {
 		double processingLatencySeconds = Conversions.milliSecondsToSeconds(getLatency());
-		return TimeUtils.getCurrentTimeSeconds() - processingLatencySeconds;
+		return TimeUtil.getCurrentTimeSeconds() - processingLatencySeconds;
 	}
 
 	public double getPoseValue(Pose3dComponentsValue entryValue) {
@@ -190,7 +190,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	private void updateCameraPoseOffset(Pose3d cameraPoseOffset) {
-		this.cameraPoseOffsetEntry.setDoubleArray(PoseUtils.pose3DToPoseArray(cameraPoseOffset, AngleUnit.DEGREES));
+		this.cameraPoseOffsetEntry.setDoubleArray(PoseUtil.pose3DToPoseArray(cameraPoseOffset, AngleUnit.DEGREES));
 	}
 
 	private double getDistanceFromTag() {
@@ -203,7 +203,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
-		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtils.toPose3D(robotPoseArray, AngleUnit.DEGREES));
+		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtil.toPose3D(robotPoseArray, AngleUnit.DEGREES));
 		getVisionData().ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfiltered3DVision", visionData.getEstimatedPose());
 			Logger.recordOutput(logPath + "unfiltered2DVision(Projected)", visionData.getEstimatedPose().toPose2d());

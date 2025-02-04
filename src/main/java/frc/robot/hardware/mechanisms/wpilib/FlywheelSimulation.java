@@ -2,7 +2,7 @@ package frc.robot.hardware.mechanisms.wpilib;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class FlywheelSimulation implements WPILibMechanismSimulation {
 
@@ -33,7 +33,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		flywheelSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
+		flywheelSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
 		Rotation2d lastVelocity = currentVelocity;
 		currentVelocity = getMechanismVelocityAnglesPerSecond();
 		Rotation2d averageVelocity = Rotation2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
@@ -46,7 +46,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	}
 
 	private void updatePosition(Rotation2d velocity) {
-		Rotation2d deltaDistance = velocity.times(TimeUtils.getLatestCycleTimeSeconds());
+		Rotation2d deltaDistance = velocity.times(TimeUtil.getLatestCycleTimeSeconds());
 		currentPosition = Rotation2d.fromRotations(currentPosition.getRotations() + deltaDistance.getRotations());
 	}
 

@@ -1,6 +1,8 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
@@ -8,6 +10,8 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.DoubleSupplier;
 
 public class Arm extends GBSubsystem {
 
@@ -56,10 +60,6 @@ public class Arm extends GBSubsystem {
 		return motorPositionSignal.getLatestValue();
 	}
 
-	public SysIdCalibrator getSysIdCalibrator() {
-		return sysIdCalibrator;
-	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
@@ -103,6 +103,18 @@ public class Arm extends GBSubsystem {
 
 	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
 		return motorPositionSignal.isNear(position, tolerance);
+	}
+
+	public void applyCalibrationBindings(SmartJoystick joystick){
+		joystick.A.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(-40)));
+		joystick.B.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
+		joystick.X.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));
+		joystick.Y.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(200)));
+
+		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(true, SysIdRoutine.Direction.kForward));
+		joystick.POV_UP.onTrue(sysIdCalibrator.getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
+		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(false, SysIdRoutine.Direction.kForward));
+		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
 	}
 
 }

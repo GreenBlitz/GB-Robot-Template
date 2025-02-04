@@ -47,7 +47,7 @@ public class Arm extends GBSubsystem {
 		this.sysIdCalibrator = new SysIdCalibrator(
 			motor.getSysidConfigInfo(),
 			this,
-			voltage -> setVoltage(voltage + KrakenX60ArmBuilder.kG * getPosition().getCos())
+			voltage -> setVoltage(voltage + getKgVoltage())
 		);
 
 		periodic();
@@ -60,6 +60,10 @@ public class Arm extends GBSubsystem {
 
 	public Rotation2d getPosition() {
 		return motorPositionSignal.getLatestValue();
+	}
+
+	private double getKgVoltage(){
+		return KrakenX60ArmBuilder.kG * getPosition().getCos();
 	}
 
 	@Override
@@ -116,7 +120,7 @@ public class Arm extends GBSubsystem {
 		joystick.R1.whileTrue(
 			commandsBuilder.setPower(
 				() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2
-					+ KrakenX60ArmBuilder.kG * getPosition().getCos() / BatteryUtil.getCurrentVoltage()
+					+ getKgVoltage() / BatteryUtil.getCurrentVoltage()
 			)
 		);
 

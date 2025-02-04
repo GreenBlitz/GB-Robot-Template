@@ -78,7 +78,7 @@ public class Swerve extends GBSubsystem {
 		// Calibrate steer pid with phoenix tuner x
 
 		// Let it rotate some rotations then output will be in log under Calibrations/.
-		joystick.START.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
+		joystick.POV_RIGHT.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing
@@ -90,9 +90,6 @@ public class Swerve extends GBSubsystem {
 		);
 		joystick.POV_DOWN.whileTrue(
 			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-		);
-		joystick.POV_RIGHT.whileTrue(
-			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.

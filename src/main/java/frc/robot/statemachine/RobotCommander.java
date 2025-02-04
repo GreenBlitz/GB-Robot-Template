@@ -164,7 +164,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.preScore(scoreLevel)
 				),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
 			scoreLevel.getRobotPreScore()
 		);

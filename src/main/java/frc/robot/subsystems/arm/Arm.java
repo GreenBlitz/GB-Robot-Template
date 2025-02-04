@@ -113,7 +113,10 @@ public class Arm extends GBSubsystem {
 		 * Check limits
 		 */
 		joystick.R1.whileTrue(
-			commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_POWER_MULTIPLICATOR + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
+			commandsBuilder.setPower(
+				() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_POWER_MULTIPLICATOR
+					+ (getKgVoltage() / BatteryUtil.getCurrentVoltage())
+			)
 		);
 
 		/*

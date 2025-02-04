@@ -6,6 +6,8 @@ import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 
@@ -17,6 +19,8 @@ public class Arm extends GBSubsystem {
 	private final IAngleEncoder encoder;
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
+	private final SysIdCalibrator sysIdCalibrator;
+	private Rotation2d targetPosition;
 
 	public Arm(
 		String logPath,
@@ -37,6 +41,8 @@ public class Arm extends GBSubsystem {
 		this.encoder = encoder;
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
+		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setVoltage);
+		this.targetPosition = getPosition();
 
 		periodic();
 		setDefaultCommand(getCommandsBuilder().stayInPlace());
@@ -50,9 +56,14 @@ public class Arm extends GBSubsystem {
 		return motorPositionSignal.getLatestValue();
 	}
 
+	public SysIdCalibrator getSysIdCalibrator() {
+		return sysIdCalibrator;
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
+		Logger.recordOutput(getLogPath() + "/Target position", targetPosition);
 		updateInputs();
 	}
 
@@ -83,6 +94,7 @@ public class Arm extends GBSubsystem {
 
 	protected void setTargetPosition(Rotation2d position) {
 		motor.applyRequest(positionRequest.withSetPoint(position));
+		this.targetPosition = position;
 	}
 
 	protected void stayInPlace() {

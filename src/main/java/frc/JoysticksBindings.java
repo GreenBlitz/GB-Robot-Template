@@ -1,11 +1,16 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.function.DoubleSupplier;
 
 public class JoysticksBindings {
 
@@ -70,6 +75,18 @@ public class JoysticksBindings {
 	private static void fifthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
+		Rotation2d armTargetPosition = robot.getArm().getPosition();
+		Logger.recordOutput(robot.getArm().getLogPath() + "/ Arm target position", (DoubleSupplier) armTargetPosition::getRotations);
+
+		usedJoystick.A.onTrue(robot.getArm().getCommandsBuilder().moveToPosition(Rotation2d.fromDegrees(-40)));
+		usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().moveToPosition(Rotation2d.fromDegrees(0)));
+		usedJoystick.X.onTrue(robot.getArm().getCommandsBuilder().moveToPosition(Rotation2d.fromDegrees(90)));
+		usedJoystick.Y.onTrue(robot.getArm().getCommandsBuilder().moveToPosition(Rotation2d.fromDegrees(200)));
+
+		usedJoystick.POV_DOWN.onTrue(robot.getArm().getSysIdCalibrator().getSysIdCommand(true, SysIdRoutine.Direction.kForward));
+		usedJoystick.POV_UP.onTrue(robot.getArm().getSysIdCalibrator().getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
+		usedJoystick.POV_DOWN.onTrue(robot.getArm().getSysIdCalibrator().getSysIdCommand(false, SysIdRoutine.Direction.kForward));
+		usedJoystick.POV_DOWN.onTrue(robot.getArm().getSysIdCalibrator().getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {

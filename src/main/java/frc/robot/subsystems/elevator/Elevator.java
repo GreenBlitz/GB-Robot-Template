@@ -72,7 +72,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
-		joystick.R1.whileTrue(commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.7));
+		joystick.R1.whileTrue(commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.1));
 
 		/*
 		 * The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,

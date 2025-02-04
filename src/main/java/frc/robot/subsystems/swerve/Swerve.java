@@ -1,20 +1,28 @@
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.joysticks.Axis;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.observations.OdometryObservation;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
@@ -23,6 +31,7 @@ import frc.utils.auto.PathPlannerUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -62,6 +71,72 @@ public class Swerve extends GBSubsystem {
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
+	}
+
+	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
+		// Calibrate steer ks with phoenix tuner x
+		// Calibrate steer pid with phoenix tuner x
+
+		// Let it rotate some rotations then output will be in log under Calibrations/.
+		joystick.POV_RIGHT.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
+
+		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
+		// REMEMBER after drive calibrations use these for pid testing
+		joystick.POV_UP.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+		joystick.POV_LEFT.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+		joystick.POV_DOWN.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+
+		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
+		// See what velocity the swerve log after it stops accelerating and use it as max.
+		joystick.START.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(1, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+		// Apply 12 volts on rotation-axis.
+		// Use it for max velocity calibrations. See what velocity the swerve log after it stops accelerating and use it as max.
+		joystick.BACK.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0, 0, 1), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+
+		// The sysid outputs will be logged to the "CTRE Signal Logger".
+		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.
+		// Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places.
+		// (see wpilib sysid in google)
+		joystick.Y.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
+		joystick.A.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kReverse));
+		joystick.X.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
+		joystick.B.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
+		// MAKE SURE TO PRESS IT ON THE END OF THE SYSID ROUTINE SO YOU CAN READ THE DATA FROM SIGNAL LOGGER.
+		joystick.L3.onTrue(new InstantCommand(SignalLogger::stop));
+
+		// Remember to test the drive pid ff calib with the POVS commands
+
+		// Rotational pid tests
+		joystick.R1.whileTrue(getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
+		joystick.L1.whileTrue(getCommandsBuilder().turnToHeading(new Rotation2d()));
+
+		// Translation pid tests
+		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
+			.onTrue(
+				new DeferredCommand(
+					() -> getCommandsBuilder()
+						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(2, 0, new Rotation2d()))),
+					Set.of(this)
+				)
+			);
+		joystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
+			.onTrue(
+				new DeferredCommand(
+					() -> getCommandsBuilder()
+						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-2, 0, new Rotation2d()))),
+					Set.of(this)
+				)
+			);
 	}
 
 	public String getLogPath() {

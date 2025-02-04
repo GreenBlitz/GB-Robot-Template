@@ -8,7 +8,6 @@ SwerveConstants:
 - [ ] Max rotational velocity (angle per second)
 - [ ] Translation PID (for x,y PID controllers)
 - [ ] Rotational degrees PID 
-- [ ] Drive radius meters
 - [ ] PathPlanner RealTimeConstraints (in AutonomousConstants)
 
 Gyro:

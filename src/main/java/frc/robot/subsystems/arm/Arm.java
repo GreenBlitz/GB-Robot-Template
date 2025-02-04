@@ -44,11 +44,7 @@ public class Arm extends GBSubsystem {
 		this.encoder = encoder;
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(
-			motor.getSysidConfigInfo(),
-			this,
-			voltage -> setVoltage(voltage + getKgVoltage())
-		);
+		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, voltage -> setVoltage(voltage + getKgVoltage()));
 
 		periodic();
 		setDefaultCommand(getCommandsBuilder().stayInPlace());
@@ -62,7 +58,7 @@ public class Arm extends GBSubsystem {
 		return motorPositionSignal.getLatestValue();
 	}
 
-	private double getKgVoltage(){
+	private double getKgVoltage() {
 		return KrakenX60ArmBuilder.kG * getPosition().getCos();
 	}
 
@@ -118,10 +114,7 @@ public class Arm extends GBSubsystem {
 		 * Check limits
 		 */
 		joystick.R1.whileTrue(
-			commandsBuilder.setPower(
-				() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2
-					+ getKgVoltage() / BatteryUtil.getCurrentVoltage()
-			)
+			commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2 + getKgVoltage() / BatteryUtil.getCurrentVoltage())
 		);
 
 		/*

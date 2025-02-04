@@ -1,7 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.constants.GlobalConstants;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -11,7 +11,6 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import org.littletonrobotics.junction.Logger;
 
 
 public class Arm extends GBSubsystem {
@@ -107,21 +106,34 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
-		// calibrate kG using phoenix tuner by setting the voltage
+		/*
+		 * Calibrate kG using phoenix tuner by setting the voltage
+		 */
 
-		// check limits
-		joystick.A.onTrue(commandsBuilder.setPower(joystick.getAxisValue(Axis.LEFT_Y)));
+		/*
+		 * Check limits
+		 */
+		joystick.R1.whileTrue(
+			commandsBuilder
+				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2 + KrakenX60ArmBuilder.kG / GlobalConstants.EXPECTED_BATTERY_VOLTAGE)
+		);
 
-		// calibrate PID using phoenix tuner and these bindings:
+		/*
+		 * Calibrate feed forward using sys id:
+		 */
+		sysIdCalibrator.setAllButtonsForCalibration(joystick);
+
+		/*
+		 * Calibrate PID using phoenix tuner and these bindings:
+		 */
 		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(-40)));
 		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
 		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));
 		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(200)));
 
-		// calibrate feed forward using sys id:
-		sysIdCalibrator.setAllButtonsForCalibration(joystick);
-
-		// calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA, cruse velocity = (12 + Ks)/kV
+		/*
+		 * Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity = (12 + Ks)/kV
+		 */
 	}
 
 }

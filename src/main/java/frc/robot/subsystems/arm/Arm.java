@@ -1,7 +1,6 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.constants.GlobalConstants;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -115,8 +114,10 @@ public class Arm extends GBSubsystem {
 		 * Check limits
 		 */
 		joystick.R1.whileTrue(
-			commandsBuilder
-				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2 + KrakenX60ArmBuilder.kG * getPosition().getCos() / BatteryUtil.getCurrentVoltage())
+			commandsBuilder.setPower(
+				() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.2
+					+ KrakenX60ArmBuilder.kG * getPosition().getCos() / BatteryUtil.getCurrentVoltage()
+			)
 		);
 
 		/*

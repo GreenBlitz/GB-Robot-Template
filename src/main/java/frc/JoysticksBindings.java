@@ -1,18 +1,21 @@
 package frc;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
-import org.littletonrobotics.junction.Logger;
 
-import java.util.function.DoubleSupplier;
+import frc.utils.utilcommands.ExecuteEndCommand;
 
 public class JoysticksBindings {
+
+	private static final double NOTE_IN_RUMBLE_TIME_SECONDS = 0.5;
+	private static final double NOTE_IN_RUMBLE_POWER = 0.4;
 
 	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
@@ -28,6 +31,12 @@ public class JoysticksBindings {
 		fourthJoystickButtons(robot);
 		fifthJoystickButtons(robot);
 		sixthJoystickButtons(robot);
+
+		Trigger noteIn = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralIn);
+		noteIn.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
+
+		Trigger noteOut = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralOut);
+		noteOut.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
 	}
 
 	public static void setDriversInputsToSwerve(Swerve swerve) {
@@ -50,6 +59,13 @@ public class JoysticksBindings {
 		} else {
 			swerve.setDriversPowerInputs(new ChassisPowers(0, 0, 0));
 		}
+	}
+
+	private static Command noteInRumble(SmartJoystick joystick) {
+		return new ExecuteEndCommand(
+			() -> joystick.setRumble(GenericHID.RumbleType.kBothRumble, NOTE_IN_RUMBLE_POWER),
+			() -> joystick.stopRumble(GenericHID.RumbleType.kBothRumble)
+		).withTimeout(NOTE_IN_RUMBLE_TIME_SECONDS);
 	}
 
 	private static void mainJoystickButtons(Robot robot) {

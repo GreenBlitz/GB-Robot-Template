@@ -11,7 +11,6 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.function.DoubleSupplier;
 
 public class Arm extends GBSubsystem {
 
@@ -105,7 +104,7 @@ public class Arm extends GBSubsystem {
 		return motorPositionSignal.isNear(position, tolerance);
 	}
 
-	public void applyCalibrationBindings(SmartJoystick joystick){
+	public void applyCalibrationBindings(SmartJoystick joystick) {
 		joystick.A.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(-40)));
 		joystick.B.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
 		joystick.X.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));

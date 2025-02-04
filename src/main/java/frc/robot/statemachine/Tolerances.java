@@ -13,11 +13,25 @@ public class Tolerances {
 	public static final Pose2d REEF_RELATIVE_SCORING_POSITION = new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(3));
 	public static final Pose2d REEF_RELATIVE_SCORING_DEADBANDS = new Pose2d(0.1, 0.1, Rotation2d.fromRadians(0.1));
 
+	public static final Pose2d REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION = new Pose2d(
+		StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
+		0.1,
+		Rotation2d.fromDegrees(3)
+	);
+	public static final Pose2d REEF_RELATIVE_OPEN_SUPERSTRUCTURE_DEADBANDS = new Pose2d(0.5, 0.1, Rotation2d.fromRadians(0.1));
+
 	public static final Pose2d REEF_RELATIVE_L1_SCORING_POSITION = new Pose2d(
 		0.2,
 		Field.REEF_SIDE_LENGTH_METERS / 2.0,
 		Rotation2d.fromDegrees(3)
 	);
 	public static final Pose2d REEF_RELATIVE_L1_SCORING_DEADBANDS = new Pose2d(0.2, 1, Rotation2d.fromRadians(0.1));
+
+	public static final Pose2d REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_POSITION = new Pose2d(
+		StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
+		Field.REEF_SIDE_LENGTH_METERS / 2.0,
+		Rotation2d.fromDegrees(3)
+	);
+	public static final Pose2d REEF_RELATIVE_SUPERSTRUCTURE_L1_OPEN_DEADBANDS = new Pose2d(4, 1, Rotation2d.fromRadians(0.1));
 
 }

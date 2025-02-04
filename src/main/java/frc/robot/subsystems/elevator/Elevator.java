@@ -3,12 +3,14 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.elevator.factory.KrakenX60ElevatorBuilder;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.Conversions;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -58,7 +60,11 @@ public class Elevator extends GBSubsystem {
 		hasBeenResetBySwitch = false;
 
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(rightMotor.getSysidConfigInfo(), this, this::setVoltage);
+		this.sysIdCalibrator = new SysIdCalibrator(
+			rightMotor.getSysidConfigInfo(),
+			this,
+			(voltage) -> setVoltage(voltage + KrakenX60ElevatorBuilder.kG)
+		);
 
 		periodic();
 
@@ -66,6 +72,8 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.R1.whileTrue(commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.7));
+
 		/*
 		 * The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,
 		 * state signals into wpilog. Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places. (see
@@ -74,9 +82,9 @@ public class Elevator extends GBSubsystem {
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
 		/*
-		 * Test FF
+		 * Test kG
 		 */
-		joystick.R3.onTrue(commandsBuilder.setVoltageByDashBoard());
+		joystick.L1.onTrue(commandsBuilder.setVoltageByDashBoard());
 
 		/*
 		 * PID Testing

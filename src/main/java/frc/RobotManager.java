@@ -72,7 +72,7 @@ public class RobotManager extends LoggedRobot {
 			new SysIdRoutine.Config()
 		);
 		SparkMaxConfig config = new SparkMaxConfig();
-		 config.closedLoop.p(0.000033);
+		 config.closedLoop.p(0.0000327);
 		 config.closedLoop.d(0);
 		 config.closedLoop.i(0);
 		motor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));

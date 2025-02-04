@@ -25,7 +25,6 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
-	private Rotation2d targetPosition;
 
 	public Arm(
 		String logPath,
@@ -51,7 +50,6 @@ public class Arm extends GBSubsystem {
 			this,
 			voltage -> setVoltage(voltage + KrakenX60ArmBuilder.kG * getPosition().getCos())
 		);
-		this.targetPosition = getPosition();
 
 		periodic();
 		setDefaultCommand(getCommandsBuilder().stayInPlace());
@@ -68,7 +66,6 @@ public class Arm extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
-		Logger.recordOutput(getLogPath() + "/TargetPosition", targetPosition);
 		updateInputs();
 	}
 
@@ -99,7 +96,6 @@ public class Arm extends GBSubsystem {
 
 	protected void setTargetPosition(Rotation2d position) {
 		motor.applyRequest(positionRequest.withSetPoint(position));
-		this.targetPosition = position;
 	}
 
 	protected void stayInPlace() {
@@ -114,19 +110,16 @@ public class Arm extends GBSubsystem {
 		// calibrate kG using phoenix tuner by setting the voltage
 
 		// check limits
-		commandsBuilder.setPower(joystick.getAxisValue(Axis.LEFT_Y));
+		joystick.A.onTrue(commandsBuilder.setPower(joystick.getAxisValue(Axis.LEFT_Y)));
 
 		// calibrate PID using phoenix tuner and these bindings:
-		joystick.A.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(-40)));
-		joystick.B.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
-		joystick.X.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));
-		joystick.Y.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(200)));
+		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(-40)));
+		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
+		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(200)));
 
 		// calibrate feed forward using sys id:
-		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(true, SysIdRoutine.Direction.kForward));
-		joystick.POV_UP.onTrue(sysIdCalibrator.getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
-		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(false, SysIdRoutine.Direction.kForward));
-		joystick.POV_DOWN.onTrue(sysIdCalibrator.getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
+		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
 		// calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA, cruse velocity = (12 + Ks)/kV
 	}

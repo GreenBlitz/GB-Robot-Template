@@ -13,31 +13,31 @@ import frc.utils.math.AngleUnit;
 
 class Pigeon2GyroBuilder {
 
-    private static final int APPLY_CONFIG_RETRIES = 5;
+	private static final int APPLY_CONFIG_RETRIES = 5;
 
-    private static Pigeon2Configuration buildGyroConfig() {
-        Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
+	private static Pigeon2Configuration buildGyroConfig() {
+		Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
 
-        gyroConfig.MountPose.MountPoseRoll = 180;
-        gyroConfig.MountPose.MountPosePitch = 0;
-        gyroConfig.MountPose.MountPoseYaw = 0;
+		gyroConfig.MountPose.MountPoseRoll = 180;
+		gyroConfig.MountPose.MountPosePitch = 0;
+		gyroConfig.MountPose.MountPoseYaw = 0;
 
-        return gyroConfig;
-    }
+		return gyroConfig;
+	}
 
-    static IGyro buildGyro(String logPath) {
-        Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.SWERVE_PIGEON_2);
-        if (!pigeon2Wrapper.applyConfiguration(buildGyroConfig(), APPLY_CONFIG_RETRIES).isOK()) {
-            new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
-        }
+	static IGyro buildGyro(String logPath) {
+		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.SWERVE_PIGEON_2);
+		if (!pigeon2Wrapper.applyConfiguration(buildGyroConfig(), APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
+		}
 
-        return new Pigeon2Gyro(logPath, pigeon2Wrapper);
-    }
+		return new Pigeon2Gyro(logPath, pigeon2Wrapper);
+	}
 
-    static GyroSignals buildSignals(Pigeon2Gyro pigeon2Gyro) {
-        return new GyroSignals(
-            Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
-        );
-    }
+	static GyroSignals buildSignals(Pigeon2Gyro pigeon2Gyro) {
+		return new GyroSignals(
+			Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
+		);
+	}
 
 }

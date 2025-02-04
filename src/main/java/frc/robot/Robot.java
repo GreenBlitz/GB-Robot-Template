@@ -3,10 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.robot.autonomous.AutosBuilder;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -16,9 +17,13 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.utils.DriverStationUtil;
+import frc.utils.auto.AutonomousChooser;
+import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
 
+import java.util.function.Supplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -32,6 +37,11 @@ public class Robot {
 	private final Swerve swerve;
 	private final PoseEstimator poseEstimator;
 	private final Superstructure superStructure;
+
+	private AutonomousChooser testAutosChooser;
+	private AutonomousChooser startingPointAndWhereToScoreFirstObjectChooser;
+	private AutonomousChooser whereToIntakeSecondObjectChooser;
+	private AutonomousChooser whereToScoreSecondObjectChooser;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -51,16 +61,36 @@ public class Robot {
 
 		this.superStructure = new Superstructure(swerve, poseEstimator);
 
-		buildPathPlannerForAuto();
+		configureAuto();
 	}
 
 
-	private void buildPathPlannerForAuto() {
-		// Register commands...
+	private void configureAuto() {
+		Supplier<Command> scoreL4Command = () -> superStructure.setState(RobotState.SCORE_L4);
+		Supplier<Command> intakeCommand = () -> superStructure.setState(RobotState.INTAKE);
+
+		Command preIntakeCommand = superStructure.setState(RobotState.PRE_INTAKE);
+
 		swerve.configPathPlanner(
 			poseEstimator::getCurrentPose,
 			poseEstimator::resetPose,
 			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
+		);
+
+		new EventTrigger("Intake").onTrue(preIntakeCommand);
+
+		testAutosChooser = new AutonomousChooser("TestAutosChooser", AutosBuilder.getAllTestAutos());
+		startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
+			"StartingPointAndWhereToScoreFirstObjectChooser",
+			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoreL4Command, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		whereToIntakeSecondObjectChooser = new AutonomousChooser(
+			"WhereToIntakeSecondObjectChooser",
+			AutosBuilder.getAllIntakingAutos(this, intakeCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		whereToScoreSecondObjectChooser = new AutonomousChooser(
+			"WhereToScoreSecondObjectChooser",
+			AutosBuilder.getAllScoringAutos(this, scoreL4Command, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 	}
 
@@ -72,8 +102,21 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public Command getAutonomousCommand() {
-		return new InstantCommand();
+	public PathPlannerAutoWrapper getAuto() {
+		boolean isAutoChosen = !startingPointAndWhereToScoreFirstObjectChooser.isDefaultOptionChosen();
+		if (isAutoChosen) {
+			return PathPlannerAutoWrapper
+				.chainAutos(
+					startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
+					whereToIntakeSecondObjectChooser.getChosenValue(),
+					whereToScoreSecondObjectChooser.getChosenValue()
+				)
+				.withResetPose(getPoseEstimator()::resetPose);
+		}
+		if (!DriverStationUtil.isMatch()) {
+			return testAutosChooser.getChosenValue();
+		}
+		return new PathPlannerAutoWrapper();
 	}
 
 	public Superstructure getSuperStructure() {

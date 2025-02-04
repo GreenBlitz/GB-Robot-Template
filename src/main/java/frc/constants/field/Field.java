@@ -7,10 +7,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.constants.field.enums.Branch;
-import frc.constants.field.enums.Cage;
-import frc.constants.field.enums.CoralStation;
-import frc.constants.field.enums.ReefSide;
+import frc.constants.field.enums.*;
 import frc.utils.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
@@ -66,6 +63,28 @@ public class Field {
 		new Pose2d(0.84319, 0.65078, Rotation2d.fromDegrees(54)),
 		new Pose2d(0.84319, 7.41395, Rotation2d.fromDegrees(-54))};
 
+	private static final Pose2d[] CORAL_STATION_SLOTS_MIDDLES = new Pose2d[]{
+			new Pose2d(185.02, 1121.45, Rotation2d.fromDegrees(54)),
+			new Pose2d(349.435, 1002.095, Rotation2d.fromDegrees(54)),
+			new Pose2d(513.85, 882.64, Rotation2d.fromDegrees(54)),
+			new Pose2d(678.265, 763.235, Rotation2d.fromDegrees(54)),
+			new Pose2d(842.68,643.83 , Rotation2d.fromDegrees(54)),
+			new Pose2d(1007.095,524.425 , Rotation2d.fromDegrees(54)),
+			new Pose2d(1171.51,405.02 , Rotation2d.fromDegrees(54)),
+			new Pose2d(1335.925,285.615 , Rotation2d.fromDegrees(54)),
+			new Pose2d(1500.34, 166.21, Rotation2d.fromDegrees(54)),
+
+			new Pose2d(185.02, 1121.45, Rotation2d.fromDegrees(-54)),
+			new Pose2d(349.435, 1002.095, Rotation2d.fromDegrees(-54)),
+			new Pose2d(513.85, 882.64, Rotation2d.fromDegrees(-54)),
+			new Pose2d(678.265,763.235 , Rotation2d.fromDegrees(-54)),
+			new Pose2d(842.68, 643.83, Rotation2d.fromDegrees(-54)),
+			new Pose2d(1007.095, 524.425, Rotation2d.fromDegrees(-54)),
+			new Pose2d(1171.51, 405.02, Rotation2d.fromDegrees(-54)),
+			new Pose2d(1335.925,285.615 , Rotation2d.fromDegrees(-54)),
+			new Pose2d(1500.34, 166.21, Rotation2d.fromDegrees(-54)),
+	};
+
 	public static final double FEEDER_WIDTH_METERS = 1.9304;
 
 
@@ -91,6 +110,9 @@ public class Field {
 
 	public static Pose2d getCoralStationMiddle(CoralStation coralStation) {
 		return getAllianceRelative(CORAL_STATION_MIDDLES[coralStation.getIndex()], true, true, AngleTransform.INVERT);
+	}
+	public static Pose2d getCoralStationSlots(CoralStationSlot coralStationSlot){
+		return getAllianceRelative(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()],true,true,AngleTransform.INVERT);
 	}
 
 

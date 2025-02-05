@@ -97,13 +97,13 @@ public class EndEffector extends GBSubsystem {
 		roller.setPower(power);
 	}
 
-	public void applyCalibrationsBindings(SmartJoystick smartJoystick) {
-		smartJoystick.R1.whileTrue(commandsBuilder.setPower(() -> calibrationPower));
+	public void applyCalibrationsBindings(SmartJoystick joystick) {
+		joystick.R1.whileTrue(commandsBuilder.setPower(() -> calibrationPower));
 
-		smartJoystick.B.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.01, -1)));
-		smartJoystick.X.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.01, 1)));
-		smartJoystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
-		smartJoystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
+		joystick.B.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.01, -1)));
+		joystick.X.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.01, 1)));
+		joystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
+		joystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
 	}
 
 }

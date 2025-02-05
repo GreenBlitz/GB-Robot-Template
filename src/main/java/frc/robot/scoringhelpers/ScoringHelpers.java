@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStation;
@@ -15,6 +16,7 @@ import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.Side;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Map;
 import java.util.Set;
 
 public class ScoringHelpers {
@@ -60,40 +62,24 @@ public class ScoringHelpers {
 	}
 
 	public static Command scoreToChosenScoreLevel(Robot robot) {
-		return new DeferredCommand(
-			() -> switch (targetScoreLevel) {
-				case L1 -> robot.getRobotCommander().setState(RobotState.L1);
-				case L2 -> robot.getRobotCommander().setState(RobotState.L2);
-				case L3 -> robot.getRobotCommander().setState(RobotState.L3);
-				case L4 -> robot.getRobotCommander().setState(RobotState.L4);
-			},
-			Set.of(
-				robot.getRobotCommander(),
-				robot.getSwerve(),
-				robot.getRobotCommander().getSuperstructure(),
-				robot.getArm(),
-				robot.getEndEffector(),
-				robot.getElevator()
-			)
+		return new SelectCommand<>(
+			Map.of(
+				ScoreLevel.L1, robot.getRobotCommander().setState(RobotState.L1),
+				ScoreLevel.L2, robot.getRobotCommander().setState(RobotState.L2),
+				ScoreLevel.L3, robot.getRobotCommander().setState(RobotState.L3),
+				ScoreLevel.L4, robot.getRobotCommander().setState(RobotState.L4)),
+			() -> targetScoreLevel
 		);
 	}
 
 	public static Command preScoreToChosenScoreLevel(Robot robot) {
-		return new DeferredCommand(
-			() -> switch (targetScoreLevel) {
-				case L1 -> robot.getRobotCommander().setState(RobotState.PRE_L1);
-				case L2 -> robot.getRobotCommander().setState(RobotState.PRE_L2);
-				case L3 -> robot.getRobotCommander().setState(RobotState.PRE_L3);
-				case L4 -> robot.getRobotCommander().setState(RobotState.PRE_L4);
-			},
-			Set.of(
-				robot.getRobotCommander(),
-				robot.getSwerve(),
-				robot.getRobotCommander().getSuperstructure(),
-				robot.getArm(),
-				robot.getEndEffector(),
-				robot.getElevator()
-			)
+		return new SelectCommand<>(
+			Map.of(
+				ScoreLevel.L1, robot.getRobotCommander().setState(RobotState.PRE_L1),
+				ScoreLevel.L2, robot.getRobotCommander().setState(RobotState.PRE_L2),
+				ScoreLevel.L3, robot.getRobotCommander().setState(RobotState.PRE_L3),
+				ScoreLevel.L4, robot.getRobotCommander().setState(RobotState.PRE_L4)),
+			() -> targetScoreLevel
 		);
 	}
 

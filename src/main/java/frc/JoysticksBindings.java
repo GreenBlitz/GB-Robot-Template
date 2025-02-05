@@ -11,7 +11,6 @@ import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.utilcommands.ExecuteEndCommand;
 
-
 public class JoysticksBindings {
 
 	private static final double NOTE_IN_RUMBLE_TIME_SECONDS = 0.5;

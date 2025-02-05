@@ -11,7 +11,7 @@ public class ElevatorConstants {
 	public static final double MAXIMUM_HEIGHT_METERS = 1.4;
 	public static final double FIRST_STAGE_MAXIMUM_HEIGHT_METERS = 0.7;
 
-	public final static double GEAR_RATIO = 63.0 / 17.0;
+	public final static double GEAR_RATIO = 17.0 / 63.0;
 
 	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0.01;
 

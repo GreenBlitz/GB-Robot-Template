@@ -19,7 +19,7 @@ public class EndEffector extends GBSubsystem {
 	private final IDigitalInput backBeamBreaker;
 	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
-	double calibrationPower = 0;
+	private double calibrationPower = 0;
 
 	public EndEffector(
 		String logPath,
@@ -102,12 +102,8 @@ public class EndEffector extends GBSubsystem {
 
 		smartJoystick.B.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.01, -1)));
 		smartJoystick.X.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.01, 1)));
-		smartJoystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.05, -1)));
-		smartJoystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.05, 1)));
-		smartJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
-		smartJoystick.POV_LEFT.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
-		smartJoystick.POV_DOWN.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.5, -1)));
-		smartJoystick.POV_UP.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.5, 1)));
+		smartJoystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
+		smartJoystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
 	}
 
 }

@@ -13,8 +13,6 @@ public class EndEffectorCommandsBuilder {
 		this.endEffector = endEffector;
 	}
 
-	//@formatter:off
-
 	public Command stop(){
 		return setPower(0);
 	}
@@ -32,7 +30,5 @@ public class EndEffectorCommandsBuilder {
 			"Set power by supplier"
 		);
 	}
-
-	//@formatter:on
 
 }

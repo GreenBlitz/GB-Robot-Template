@@ -18,7 +18,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GBSubsystem {
 
-	private static double MAX_CALIBRATION_POWER_BY_AXIS = 0.1;
+	private static double MAX_CALIBRATION_POWER = 0.1;
 
 	private final ControllableMotor rightMotor;
 	private final ElevatorMotorSignals rightMotorSignals;
@@ -74,7 +74,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
-		joystick.R1.whileTrue(commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * MAX_CALIBRATION_POWER_BY_AXIS));
+		joystick.R1.whileTrue(commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * MAX_CALIBRATION_POWER));
 
 		/*
 		 * The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,
@@ -92,9 +92,7 @@ public class Elevator extends GBSubsystem {
 		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(0.8));
 
 		/*
-		 * Calibrate max acceleration and cruse velocity by the equations:
-		 * max acceleration = (12 + Ks)/2kA
-		 * cruise velocity = (12 + Ks)/kV
+		 * Calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA cruise velocity = (12 + Ks)/kV
 		 */
 	}
 

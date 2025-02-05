@@ -39,7 +39,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class KrakenX60ArmBuilder {
 
 	private static final boolean ENABLE_FOC = true;
-	private static final boolean IS_INVERTED = false;
+	private static final boolean IS_INVERTED = true;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
 	private static final double GEAR_RATIO =  450.0 / 7.0 ;
@@ -117,10 +117,10 @@ public class KrakenX60ArmBuilder {
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ArmConstants.REVERSED_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
-		config.Feedback.SensorToMechanismRatio = 1;
+		config.Feedback.RotorToSensorRatio = GEAR_RATIO * 0;
+		config.Feedback.SensorToMechanismRatio = 1 * GEAR_RATIO;
 
-		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor; //todo fused
 		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
 
 		return config;

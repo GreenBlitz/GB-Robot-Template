@@ -10,8 +10,8 @@ Arm Calibrations
 
 ##### Motor config
 
-- [ ] is inverted
-- [ ] gear ratio (use rotor to sensor and not sensor to mechanism)
+- [X] is inverted
+- [X] gear ratio (use rotor to sensor and not sensor to mechanism)
 
 ##### Encoder config
 
@@ -19,9 +19,9 @@ Arm Calibrations
 
 ##### Limits 
 
-- [ ] current limit
-- [ ] software forward limit
-- [ ] software reverse limit
+- [X] current limit
+- [X] software forward limit
+- [X] software reverse limit
 
 ##### FOC
 - [x] enable FOC

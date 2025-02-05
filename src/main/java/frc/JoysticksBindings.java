@@ -97,7 +97,8 @@ public class JoysticksBindings {
 
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-		// bindings...
+
+		robot.getEndEffector().applyCalibrationsBindings(usedJoystick);
 	}
 
 }

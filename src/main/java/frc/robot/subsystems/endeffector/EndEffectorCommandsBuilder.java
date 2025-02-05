@@ -13,21 +13,16 @@ public class EndEffectorCommandsBuilder {
 		this.endEffector = endEffector;
 	}
 
-	//@formatter:off
+	public Command stop() {
+		return setPower(0);
+	}
+
 	public Command setPower(double power) {
-		return endEffector.asSubsystemCommand(
-				new RunCommand(() -> endEffector.setPower(power)),
-				"Set power to " + power
-		);
+		return endEffector.asSubsystemCommand(new RunCommand(() -> endEffector.setPower(power)), "Set power to " + power);
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
-		return endEffector.asSubsystemCommand(
-			new RunCommand(() -> endEffector.setPower(powerSupplier.getAsDouble())),
-			"Set power by supplier"
-		);
+		return endEffector.asSubsystemCommand(new RunCommand(() -> endEffector.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
 	}
-	//@formatter:off
-
 
 }

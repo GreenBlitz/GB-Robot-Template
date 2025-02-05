@@ -85,7 +85,7 @@ public class Robot {
 			true,
 			new DynamicSwitchingLimelight(
 				true,
-				"limelight-front",
+				"limelight-back",
 				VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 				"CameraForPoseEstimating",
 				VisionConstants.DEFAULT_VISION_FILTER,
@@ -96,7 +96,7 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
-		this.superStructure = new Superstructure(swerve, poseEstimator);
+		this.superStructure = new Superstructure(swerve, poseEstimator, headingEstimator, multiAprilTagVisionSources);
 
 		configureAuto();
 	}

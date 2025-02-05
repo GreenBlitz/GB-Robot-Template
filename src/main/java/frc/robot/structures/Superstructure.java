@@ -5,23 +5,46 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.constants.RobotHeadingEstimatorConstants;
 import frc.robot.RobotState;
 import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.helpers.RobotHeadingEstimator;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.utils.TimedValue;
+import frc.utils.time.TimeUtil;
 
 public class Superstructure {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final RobotHeadingEstimator headingEstimator;
+	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 
-	public Superstructure(Swerve swerve, IPoseEstimator poseEstimator) {
+	public Superstructure(
+		Swerve swerve,
+		IPoseEstimator poseEstimator,
+		RobotHeadingEstimator headingEstimator,
+		MultiAprilTagVisionSources multiAprilTagVisionSources
+	) {
 		this.swerve = swerve;
 		this.poseEstimator = poseEstimator;
+		this.headingEstimator = headingEstimator;
+		this.multiAprilTagVisionSources = multiAprilTagVisionSources;
 	}
 
 	public void periodic() {
 		swerve.update();
+		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
+		for(TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
+			headingEstimator.updateVisionIfNotCalibrated(
+				headingData,
+				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
+				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
+			);
+		}
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 	}
 
 

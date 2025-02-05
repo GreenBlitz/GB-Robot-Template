@@ -32,5 +32,7 @@ public class EndEffectorCommandsBuilder {
 			"Set power by supplier"
 		);
 	}
+
 	//@formatter:on
+
 }

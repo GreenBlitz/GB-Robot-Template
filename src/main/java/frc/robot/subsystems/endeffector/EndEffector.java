@@ -1,5 +1,7 @@
 package frc.robot.subsystems.endeffector;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -93,5 +95,19 @@ public class EndEffector extends GBSubsystem {
 	protected void setPower(double power) {
 		roller.setPower(power);
 	}
+	double calibrationPower = 0;
+	public void applyCalibrationsBindings(SmartJoystick smartJoystick){
 
+		smartJoystick.R1.whileTrue(commandsBuilder.setPower(() -> calibrationPower));
+
+		smartJoystick.B.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.01, -1)));
+		smartJoystick.X.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.01, 1)));
+		smartJoystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.05, -1)));
+		smartJoystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.05, 1)));
+		smartJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
+		smartJoystick.POV_LEFT.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
+		smartJoystick.POV_DOWN.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.5, -1)));
+		smartJoystick.POV_UP.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.5, 1)));
+
+	}
 }

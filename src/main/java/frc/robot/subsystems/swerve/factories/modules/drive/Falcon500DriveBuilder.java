@@ -80,7 +80,7 @@ class Falcon500DriveBuilder {
 
 	static DriveRequests buildRequests() {
 		return new DriveRequests(
-			Phoenix6RequestBuilder.build(new VelocityVoltage(0), true),
+			Phoenix6RequestBuilder.build(new VelocityVoltage(0), 0, true),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}

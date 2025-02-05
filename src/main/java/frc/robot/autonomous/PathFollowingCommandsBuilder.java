@@ -56,14 +56,14 @@ public class PathFollowingCommandsBuilder {
 			followPath(path),
 			pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
 			() -> PathPlannerUtil.isRobotInPathfindingDeadband(
-				robot.getPoseEstimator().getCurrentPose(),
+				robot.getPoseEstimator().getEstimatedPose(),
 				Field.getAllianceRelativePose(PathPlannerUtil.getPathStartingPose(path))
 			)
 		);
 	}
 
 	public static Command moveToPoseByPID(Robot robot, Pose2d targetPose) {
-		return robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getCurrentPose, targetPose);
+		return robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, targetPose);
 	}
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path, Pose2d tolerance) {
@@ -72,7 +72,7 @@ public class PathFollowingCommandsBuilder {
 			.until(
 				() -> ToleranceMath.isNear(
 					Field.getAllianceRelativePose(PathPlannerUtil.getLastPathPose(path)),
-					robot.getPoseEstimator().getCurrentPose(),
+					robot.getPoseEstimator().getEstimatedPose(),
 					tolerance
 				)
 			)

@@ -68,8 +68,8 @@ public class Elevator extends GBSubsystem {
 			(voltage) -> setVoltage(voltage + KrakenX60ElevatorBuilder.kG)
 		);
 
+		resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
 		periodic();
-
 		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
@@ -194,7 +194,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private boolean handleReset() {
-		if (DriverStation.isDisabled() || !hasBeenResetBySwitch()) {
+		if (DriverStation.isEnabled() || hasBeenResetBySwitch()) {
 			return false;
 		}
 		if (shouldResetByLimitSwitch()) {

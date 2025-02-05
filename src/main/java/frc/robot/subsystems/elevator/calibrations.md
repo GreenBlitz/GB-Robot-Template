@@ -1,9 +1,9 @@
 Calibrations
 ----------------------------------
 - [x] Rename Motor Names By Position On Robot
-- [ ] Motor: Id, Type
-- [ ] Buschain
-- [ ] Inverted
+- [x] Motor: Id, Type
+- [x] Buschain
+- [x] Inverted
 - [ ] Neutral Mode
 - [ ] Gear Ratio
 - [ ] Drum Diameter

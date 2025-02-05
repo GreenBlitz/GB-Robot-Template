@@ -3,8 +3,8 @@ Arm Calibrations
 
 ##### IDs
 
-- [ ] motor ID 
-- [ ] motor Buschain
+- [x] motor ID 
+- [x] motor Buschain
 - [ ] encoder ID 
 - [ ] encoder Buschain
 
@@ -24,7 +24,7 @@ Arm Calibrations
 - [ ] software reverse limit
 
 ##### FOC
-- [ ] enable FOC
+- [x] enable FOC
 
 ##### Feed Forward 
 

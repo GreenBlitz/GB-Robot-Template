@@ -46,6 +46,7 @@ public class Arm extends GBSubsystem {
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, voltage -> setVoltage(voltage + getKgVoltage()));
 
 		periodic();
+		resetByEncoderPosition();
 		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
@@ -73,7 +74,8 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void resetByEncoderPosition() {
-		motor.resetPosition(encoderPositionSignal.getLatestValue());
+//		motor.resetPosition(encoderPositionSignal.getLatestValue());
+		motor.resetPosition(new Rotation2d());
 	}
 
 	public void setBrake(boolean brake) {

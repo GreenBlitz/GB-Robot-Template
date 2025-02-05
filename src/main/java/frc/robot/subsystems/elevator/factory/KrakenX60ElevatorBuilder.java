@@ -101,6 +101,7 @@ public class KrakenX60ElevatorBuilder {
 		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = SOFT_LIMIT_ENABLE;
 		configuration.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+		configuration.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
 		return configuration;
 	}
 

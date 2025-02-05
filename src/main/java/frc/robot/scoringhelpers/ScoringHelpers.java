@@ -13,6 +13,7 @@ import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.Side;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -66,7 +67,14 @@ public class ScoringHelpers {
 				case L3 -> robot.getRobotCommander().setState(RobotState.L3);
 				case L4 -> robot.getRobotCommander().setState(RobotState.L4);
 			},
-			Set.of(robot.getRobotCommander())
+			Set.of(
+				robot.getRobotCommander(),
+				robot.getSwerve(),
+				robot.getRobotCommander().getSuperstructure(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getElevator()
+			)
 		);
 	}
 
@@ -78,8 +86,23 @@ public class ScoringHelpers {
 				case L3 -> robot.getRobotCommander().setState(RobotState.PRE_L3);
 				case L4 -> robot.getRobotCommander().setState(RobotState.PRE_L4);
 			},
-			Set.of(robot.getRobotCommander())
+			Set.of(
+				robot.getRobotCommander(),
+				robot.getSwerve(),
+				robot.getRobotCommander().getSuperstructure(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getElevator()
+			)
 		);
 	}
+
+	public static void log(String logPath) {
+		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());
+		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
+		Logger.recordOutput(logPath + "/TargetCoralStation", targetCoralStation);
+		Logger.recordOutput(logPath + "/TargetScoreLevel", targetScoreLevel);
+	}
+
 
 }

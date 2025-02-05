@@ -12,6 +12,7 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
@@ -25,6 +26,8 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
+
+import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -65,6 +68,9 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
+		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.getTargetBranch()));
+		swerve.getStateHandler().setReefSideSupplier(() -> Optional.of(ScoringHelpers.getTargetReefSide()));
+		swerve.getStateHandler().setCoralStationSupplier(() -> Optional.of(ScoringHelpers.targetCoralStation));
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
@@ -84,6 +90,7 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
+		ScoringHelpers.log("Scoring");
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

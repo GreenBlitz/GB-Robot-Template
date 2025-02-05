@@ -5,6 +5,8 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.constants.field.Field;
+import frc.constants.field.enums.CoralStationSlot;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
@@ -72,6 +74,7 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
 		AlertManager.reportAlerts();
+		Logger.recordOutput("Slots", Field.getCoralStationSlots(CoralStationSlot.R3));
 	}
 
 	private void updateTimeRelatedData() {

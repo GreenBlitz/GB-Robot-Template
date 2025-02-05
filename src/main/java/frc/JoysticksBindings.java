@@ -76,7 +76,6 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(ScoringHelpers.preScoreToChosenScoreLevel(robot));
 		usedJoystick.R1.onTrue(ScoringHelpers.scoreToChosenScoreLevel(robot));
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));

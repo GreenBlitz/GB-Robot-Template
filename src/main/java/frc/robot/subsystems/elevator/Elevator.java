@@ -75,11 +75,6 @@ public class Elevator extends GBSubsystem {
 		joystick.R1.whileTrue(commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * 0.1));
 
 		/*
-		 * Calibrate kG
-		 */
-		joystick.L1.whileTrue(commandsBuilder.setVoltageByDashBoard());
-
-		/*
 		 * The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,
 		 * state signals into wpilog. Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places. (see
 		 * wpilib sysid in google)
@@ -89,10 +84,10 @@ public class Elevator extends GBSubsystem {
 		/*
 		 * PID Testing
 		 */
-		joystick.POV_DOWN.whileTrue(commandsBuilder.setTargetPositionMeters(0.1));
-		joystick.POV_LEFT.whileTrue(commandsBuilder.setTargetPositionMeters(0.36));
-		joystick.POV_RIGHT.whileTrue(commandsBuilder.setTargetPositionMeters(0.5));
-		joystick.POV_UP.whileTrue(commandsBuilder.setTargetPositionMeters(0.8));
+		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(0.1));
+		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(0.36));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(0.5));
+		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(0.8));
 
 		/*
 		 * Calibrate max acceleration and cruse velocity by the equations:

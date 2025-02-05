@@ -1,7 +1,7 @@
 package frc.robot.hardware.signal.supplied;
 
 import frc.robot.hardware.signal.DoubleSignal;
-import frc.robot.hardware.signal.TimedValue;
+import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
 
 import java.util.function.Supplier;

@@ -2,6 +2,7 @@ package frc.robot.hardware.signal;
 
 import edu.wpi.first.math.MathUtil;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.utils.TimedValue;
 import org.littletonrobotics.junction.LogTable;
 
 public abstract class DoubleSignal implements InputSignal<Double> {

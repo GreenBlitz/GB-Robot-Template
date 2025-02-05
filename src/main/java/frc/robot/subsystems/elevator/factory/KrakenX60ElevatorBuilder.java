@@ -107,7 +107,7 @@ public class KrakenX60ElevatorBuilder {
 	private static IDigitalInput generateDigitalInput() {
 		return Robot.ROBOT_TYPE.isSimulation()
 			? new ChooserDigitalInput("ElevatorLimitSwitch")
-			: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME));
+			: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), true);
 	}
 
 	private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
@@ -138,10 +138,10 @@ public class KrakenX60ElevatorBuilder {
 	}
 
 	public static Elevator createRealElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig());
+		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig());
 		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
-		TalonFXMotor leftMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig());
+		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig());
 		leftMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
 
 		return create(logPath, rightMotor, leftMotor);

@@ -8,7 +8,7 @@ import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
 
-	public static final PowerDistributionDeviceID POWER_DISTRIBUTION = new PowerDistributionDeviceID(1, PowerDistribution.ModuleType.kRev);
+	public static final PowerDistributionDeviceID POWER_DISTRIBUTION = new PowerDistributionDeviceID(20, PowerDistribution.ModuleType.kRev);
 
 	public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 

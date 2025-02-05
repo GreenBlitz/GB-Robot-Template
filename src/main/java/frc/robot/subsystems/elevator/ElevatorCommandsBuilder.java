@@ -1,8 +1,9 @@
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.utils.utilcommands.LoggedDashboardCommand;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -24,11 +25,6 @@ public class ElevatorCommandsBuilder {
 
 	public Command setVoltage(double voltage) {
 		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltage)), "Set voltage to " + voltage);
-	}
-
-	public Command setVoltageByDashBoard() {
-		return elevator
-			.asSubsystemCommand(new LoggedDashboardCommand("Elevator Voltage", elevator::setVoltage), "Set elevator voltage by dashboard");
 	}
 
 	public Command setTargetPositionMeters(double targetPositionMeters) {

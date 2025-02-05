@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import frc.constants.MathConstants;
 
 public class ElevatorConstants {
 

@@ -42,7 +42,7 @@ public class KrakenX60ArmBuilder {
 	private static final boolean IS_INVERTED = false;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
-	private static final double GEAR_RATIO = 7.0 / 450.0 ;
+	private static final double GEAR_RATIO = 7.0 / 450.0;
 	public static final double kG = 0;
 
 	protected static Arm build(String logPath) {

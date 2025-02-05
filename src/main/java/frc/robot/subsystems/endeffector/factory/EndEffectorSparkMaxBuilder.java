@@ -24,7 +24,8 @@ public class EndEffectorSparkMaxBuilder {
 	private static final boolean SET_BRAKE = false;
 	private static final int CURRENT_LIMIT = 30;
 
-	private static final double POSITION_CONVERSION_FACTOR = 1;
+	// Gear ratio in SparkMAX is output / input (as opposed to input / output in CTRE)
+	private static final double GEAR_RATIO = 25.0 / 6.0;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
 	private static final Double DEBOUNCE_TIME_SECONDS = 0.1;
@@ -40,6 +41,9 @@ public class EndEffectorSparkMaxBuilder {
 		config.limitSwitch.reverseLimitSwitchEnabled(false);
 		config.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen);
 
+		config.encoder.positionConversionFactor(GEAR_RATIO);
+		config.encoder.velocityConversionFactor(GEAR_RATIO);
+
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 		sparkMaxMotor.setBrake(SET_BRAKE);
 	}
@@ -47,7 +51,7 @@ public class EndEffectorSparkMaxBuilder {
 	private static BrushlessSparkMAXMotor generateMotor(String logPath, SparkMaxWrapper sparkMaxWrapper) {
 		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(NUMBER_OF_MOTORS), MOMENT_OF_INERTIA, 1 / POSITION_CONVERSION_FACTOR),
+				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(NUMBER_OF_MOTORS), MOMENT_OF_INERTIA, 1 / GEAR_RATIO),
 				DCMotor.getNEO(NUMBER_OF_MOTORS)
 			)
 		);

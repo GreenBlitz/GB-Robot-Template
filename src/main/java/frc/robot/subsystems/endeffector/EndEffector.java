@@ -19,6 +19,7 @@ public class EndEffector extends GBSubsystem {
 	private final IDigitalInput backBeamBreaker;
 	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
+	double calibrationPower = 0;
 
 	public EndEffector(
 		String logPath,
@@ -95,8 +96,6 @@ public class EndEffector extends GBSubsystem {
 	protected void setPower(double power) {
 		roller.setPower(power);
 	}
-
-	double calibrationPower = 0;
 
 	public void applyCalibrationsBindings(SmartJoystick smartJoystick) {
 		smartJoystick.R1.whileTrue(commandsBuilder.setPower(() -> calibrationPower));

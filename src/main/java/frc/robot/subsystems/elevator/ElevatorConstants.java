@@ -12,9 +12,9 @@ public class ElevatorConstants {
 
 	public final static double GEAR_RATIO = 17.0 / 63.0;
 
-	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0.01;
+	public static final double REVERSE_SOFT_LIMIT_VALUE_METERS = 0;
 
-	public static final double FORWARD_SOFT_LIMIT_VALUE_METERS = 1.274;
+	public static final double FORWARD_SOFT_LIMIT_VALUE_METERS = 1.35;
 
 	public static final double CRUISE_VELOCITY_METERS_PER_SECOND = 10;
 	public static final double ACCELERATION_METERS_PER_SECOND_SQUARED = 512;

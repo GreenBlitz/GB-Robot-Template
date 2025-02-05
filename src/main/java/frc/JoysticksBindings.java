@@ -33,7 +33,12 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(robot.getPoseEstimator().getEstimatedPose().getTranslation(), new Rotation2d()))));
+		usedJoystick.Y.onTrue(
+			new InstantCommand(
+				() -> robot.getPoseEstimator()
+					.resetPose(new Pose2d(robot.getPoseEstimator().getEstimatedPose().getTranslation(), new Rotation2d()))
+			)
+		);
 		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(5, 5, new Rotation2d()))));
 
 		usedJoystick.POV_UP.onTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(0)));

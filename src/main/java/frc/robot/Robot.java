@@ -6,6 +6,7 @@ package frc.robot;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
+import frc.utils.AngleUnit;
 import frc.utils.DriverStationUtil;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -87,7 +89,7 @@ public class Robot {
 				VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 				"CameraForPoseEstimating",
 				VisionConstants.DEFAULT_VISION_FILTER,
-				new Pose3d()
+				new Pose3d(new Translation3d(0.07, -0.24, 0.54), AngleUnit.DEGREES.toRotation3d(0, -16, 0))
 			)
 		);
 

@@ -24,6 +24,7 @@ public class EndEffectorSparkMaxBuilder {
 	private static final boolean SET_BRAKE = false;
 	private static final int CURRENT_LIMIT = 30;
 
+	//Gear ratio in SparkMAX is output / input (as opposed to input / output in CTRE)
 	private static final double GEAR_RATIO = 25.0 / 6.0;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 

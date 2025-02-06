@@ -47,43 +47,6 @@ public class CANdleWrapper extends CANdle {
 		return this.setColor(color, 0);
 	}
 
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOfLedsToAffect, int startIndex) {
-		return this.animate(
-			new ColorFlowAnimation(
-				(int) color.red,
-				(int) color.green,
-				(int) color.green,
-				0,
-				speed,
-				amountOfLedsToAffect,
-				ColorFlowAnimation.Direction.Forward,
-				startIndex
-			)
-		);
-	}
-
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOfLedsToAffect) {
-		return this.animate(
-			new ColorFlowAnimation(
-				(int) color.red,
-				(int) color.green,
-				(int) color.green,
-				0,
-				speed,
-				amountOfLedsToAffect,
-				ColorFlowAnimation.Direction.Forward
-			)
-		);
-	}
-
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, double startIndex) {
-		return this.animateColorFlowAnimation(color, speed, numberOfLeds - (int) startIndex, (int) startIndex);
-	}
-
-	public ErrorCode animateColorFlowAnimation(Color color, int speed) {
-		return this.animateColorFlowAnimation(color, speed, numberOfLeds);
-	}
-
 	public boolean isConnected() {
 		return this.getTemperature() != 0; // we will see if it's not connected and this is the cleanest solution we found
 	}

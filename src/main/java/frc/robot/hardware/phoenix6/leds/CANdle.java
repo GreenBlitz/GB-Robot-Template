@@ -72,22 +72,6 @@ public class CANdle {
 		return ledStrip.animate(animation, animationSlot);
 	}
 
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOdLedsToAffect, int startIndex) {
-		return ledStrip.animateColorFlowAnimation(color, speed, amountOdLedsToAffect, startIndex);
-	}
-
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOfLedsToAffect) {
-		return ledStrip.animateColorFlowAnimation(color, speed, amountOfLedsToAffect);
-	}
-
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, double startIndex) {
-		return ledStrip.animateColorFlowAnimation(color, speed, startIndex);
-	}
-
-	public ErrorCode animateColorFlowAnimation(Color color, int speed) {
-		return ledStrip.animateColorFlowAnimation(color, speed);
-	}
-
 	public ErrorCode clearAnimation(int animationSlot) {
 		return ledStrip.clearAnimation(animationSlot);
 	}

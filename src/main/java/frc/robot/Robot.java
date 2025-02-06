@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.led.CANdle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -44,6 +45,7 @@ public class Robot {
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
+	private final CANdle candle;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -76,6 +78,7 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
+		this.candle = new CANdle(RobotConstants.DEVICE_ID);
 	}
 
 	public void periodic() {
@@ -113,6 +116,10 @@ public class Robot {
 
 	public RobotCommander getRobotCommander() {
 		return robotCommander;
+	}
+
+	public CANdle getCandle(){
+		return candle;
 	}
 
 }

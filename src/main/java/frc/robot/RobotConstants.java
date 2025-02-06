@@ -6,4 +6,5 @@ public class RobotConstants {
 
 	public static final String SUBSYSTEM_LOGPATH_PREFIX = "Subsystems";
 
+	public static final int DEVICE_ID = 3576;
 }

@@ -13,7 +13,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.constants.MathConstants;
 import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
@@ -71,7 +70,7 @@ public class KrakenX60ArmBuilder {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal closed = Phoenix6SignalBuilder
-				.build(motor.getDevice().getClosedLoopReference(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(motor.getDevice().getClosedLoopReference(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		IAngleEncoder encoder = getEncoder(logPath);
 
@@ -165,7 +164,10 @@ public class KrakenX60ArmBuilder {
 			encoder.getDevice().getConfigurator().refresh(magnetSensorConfigs);
 			CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig();
 			caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-			if (!Phoenix6Util.checkWithRetry(() -> encoder.getDevice().getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
+			if (
+				!Phoenix6Util.checkWithRetry(() -> encoder.getDevice().getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES)
+					.isOK()
+			) {
 				new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 			}
 
@@ -174,7 +176,7 @@ public class KrakenX60ArmBuilder {
 		return new EmptyAngleEncoder(logPath + "/Encoder");
 	}
 
-	private static CANcoderConfiguration buildEncoderConfig(){
+	private static CANcoderConfiguration buildEncoderConfig() {
 		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 		return encoderConfig;

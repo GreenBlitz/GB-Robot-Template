@@ -12,17 +12,17 @@ import java.util.function.Supplier;
 
 public class VisionFilters {
 
-	public static Filter<VisionData> isPitchAtAngle(Rotation2d wantedPitch, Rotation2d pitchTolerance) {
-		return new Filter<>(
-			visionData -> ToleranceMath
-				.isNearWrapped(wantedPitch, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), pitchTolerance)
-		);
-	}
-
 	public static Filter<VisionData> isRollAtAngle(Rotation2d wantedRoll, Rotation2d rollTolerance) {
 		return new Filter<>(
 			visionData -> ToleranceMath
 				.isNearWrapped(wantedRoll, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), rollTolerance)
+		);
+	}
+
+	public static Filter<VisionData> isPitchAtAngle(Rotation2d wantedPitch, Rotation2d pitchTolerance) {
+		return new Filter<>(
+			visionData -> ToleranceMath
+				.isNearWrapped(wantedPitch, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), pitchTolerance)
 		);
 	}
 

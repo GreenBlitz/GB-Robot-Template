@@ -66,11 +66,13 @@ public class KrakenX60ArmBuilder {
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
 		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
-			.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.build(motor.getDevice().getPosition(), 250, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(motor.getDevice().getMotorVoltage(), 250);
 		Phoenix6DoubleSignal closed = Phoenix6SignalBuilder
-			.build(motor.getDevice().getClosedLoopReference(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(motor.getDevice().getClosedLoopReference(), 250);
+		Phoenix6DoubleSignal velocity = Phoenix6SignalBuilder
+				.build(motor.getDevice().getVelocity(), 250);
 
 		IAngleEncoder encoder = getEncoder(logPath);
 
@@ -128,7 +130,7 @@ public class KrakenX60ArmBuilder {
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
 		config.Feedback.SensorToMechanismRatio = 1;
 
-		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
 
 		return config;

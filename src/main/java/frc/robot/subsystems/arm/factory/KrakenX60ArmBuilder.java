@@ -4,7 +4,6 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -60,12 +59,16 @@ public class KrakenX60ArmBuilder {
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
-		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder.build(motor.getDevice().getPosition(), 250, AngleUnit.ROTATIONS);
-		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), 250);
+		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
+			.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
+			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		// For them to appear need to create
-		Phoenix6DoubleSignal closedReference = Phoenix6SignalBuilder.build(motor.getDevice().getClosedLoopReference(), 250);
-		Phoenix6DoubleSignal velocity = Phoenix6SignalBuilder.build(motor.getDevice().getVelocity(), 250);
+		Phoenix6DoubleSignal closedReference = Phoenix6SignalBuilder
+			.build(motor.getDevice().getClosedLoopReference(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6DoubleSignal velocity = Phoenix6SignalBuilder
+			.build(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		IAngleEncoder encoder = getEncoder(logPath);
 		InputSignal<Rotation2d> encoderPositionSignal = generateEncoderPositionSignal(encoder);

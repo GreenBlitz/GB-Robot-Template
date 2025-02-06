@@ -31,13 +31,13 @@ public class Phoenix6Util {
 		return statusCodeSupplier.get();
 	}
 
-	public static ErrorCode checkWithRetry(ErrorCodeSupplier statusCodeSupplier, int numberOfTries) {
+	public static ErrorCode checkWithRetry(ErrorCodeSupplier errorCodeSupplier, int numberOfTries) {
 		for (int i = 0; i < numberOfTries - 1; i++) {
-			if (statusCodeSupplier.get() == ErrorCode.OK) {
+			if (errorCodeSupplier.get() == ErrorCode.OK) {
 				return ErrorCode.OK;
 			}
 		}
-		return statusCodeSupplier.get();
+		return errorCodeSupplier.get();
 	}
 
 }

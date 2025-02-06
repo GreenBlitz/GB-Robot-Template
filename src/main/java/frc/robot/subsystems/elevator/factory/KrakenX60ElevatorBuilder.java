@@ -46,18 +46,8 @@ public class KrakenX60ElevatorBuilder {
 	private static final boolean SOFT_LIMIT_ENABLE = true;
 	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
 	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
-
-	private static final double REAL_KP = 1;
-	private static final double REAL_KI = 0;
-	private static final double REAL_KD = 0;
 	public static final double kG = 0;
-	private static final double kS = 0;
-	private static final double kV = 0;
-	private static final double kA = 0;
 
-	private static final double SIMULATION_KP = 1;
-	private static final double SIMULATION_KI = 0;
-	private static final double SIMULATION_KD = 0.05;
 	private static final int NUMBER_OF_MOTORS = 2;
 	private static final double STARTING_HEIGHT_METERS = 0;
 
@@ -77,17 +67,17 @@ public class KrakenX60ElevatorBuilder {
 	private static TalonFXConfiguration generateConfiguration(boolean inverted) {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 		if (Robot.ROBOT_TYPE.isReal()) {
-			configuration.Slot0.kP = REAL_KP;
-			configuration.Slot0.kI = REAL_KI;
-			configuration.Slot0.kD = REAL_KD;
+			configuration.Slot0.kP = 0.01;
+			configuration.Slot0.kI = 0;
+			configuration.Slot0.kD = 0;
 			configuration.Slot0.kG = kG;
-			configuration.Slot0.kS = kS;
-			configuration.Slot0.kV = kV;
-			configuration.Slot0.kA = kA;
+			configuration.Slot0.kS = 0;
+			configuration.Slot0.kV = 0;
+			configuration.Slot0.kA = 0;
 		} else {
-			configuration.Slot0.kP = SIMULATION_KP;
-			configuration.Slot0.kI = SIMULATION_KI;
-			configuration.Slot0.kD = SIMULATION_KD;
+			configuration.Slot0.kP = 1;
+			configuration.Slot0.kI = 0;
+			configuration.Slot0.kD = 0.05;
 		}
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
@@ -102,6 +92,9 @@ public class KrakenX60ElevatorBuilder {
 		configuration.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 		configuration.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
+		configuration.MotionMagic.MotionMagicAcceleration = Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED).getRotations();
+		configuration.MotionMagic.MotionMagicCruiseVelocity = 	Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND).getRotations();
+
 		return configuration;
 	}
 

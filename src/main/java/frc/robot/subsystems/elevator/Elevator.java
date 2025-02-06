@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -65,7 +66,7 @@ public class Elevator extends GBSubsystem {
 		this.sysIdCalibrator = new SysIdCalibrator(
 			rightMotor.getSysidConfigInfo(),
 			this,
-			(voltage) -> setVoltage(voltage + KrakenX60ElevatorBuilder.kG)
+			(voltage) -> setVoltage(voltage + getKg())
 		);
 
 		resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
@@ -94,6 +95,10 @@ public class Elevator extends GBSubsystem {
 		/*
 		 * Calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA cruise velocity = (12 + Ks)/kV
 		 */
+	}
+
+	public double getKg(){
+		return Robot.ROBOT_TYPE.isReal() ? KrakenX60ElevatorBuilder.kG : 0;
 	}
 
 	public ElevatorCommandsBuilder getCommandsBuilder() {

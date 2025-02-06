@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -53,16 +54,7 @@ public class KrakenX60ArmBuilder {
 	public static final double kG = 0.31;
 
 	protected static Arm build(String logPath) {
-		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
-			new DynamicMotionMagicVoltage(
-				0,
-				ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND.getRotations(),
-				ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED.getRotations(),
-				0
-			),
-			0,
-			ENABLE_FOC
-		);
+		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new MotionMagicVoltage(0), 0, ENABLE_FOC);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
@@ -108,6 +100,9 @@ public class KrakenX60ArmBuilder {
 			}
 		}
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+
+		config.MotionMagic.MotionMagicAcceleration = ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED.getRotations();
+		config.MotionMagic.MotionMagicCruiseVelocity = ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND.getRotations();
 
 		config.MotorOutput.Inverted = IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 

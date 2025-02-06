@@ -155,31 +155,32 @@ public class KrakenX60ArmBuilder {
 	}
 
 	private static IAngleEncoder getEncoder(String logPath) {
-		if (Robot.ROBOT_TYPE.isReal()) {
-			CANCoderEncoder encoder = new CANCoderEncoder(
-				logPath + "/Encoder",
-				new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName())
-			);
-			MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
-			encoder.getDevice().getConfigurator().refresh(magnetSensorConfigs);
-			CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig();
-			caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-			if (
-				!Phoenix6Util.checkWithRetry(() -> encoder.getDevice().getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES)
-					.isOK()
-			) {
-				new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
-			}
-
-			return encoder;
-		}
-		return new EmptyAngleEncoder(logPath + "/Encoder");
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> buildRealEncoder(logPath);
+			case SIMULATION -> new EmptyAngleEncoder(logPath + "/Encoder");
+		};
 	}
 
-	private static CANcoderConfiguration buildEncoderConfig() {
-		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
-		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-		return encoderConfig;
+	private static IAngleEncoder buildRealEncoder(String logPath) {
+		CANcoder canCoder = new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName());
+		CANCoderEncoder encoder = new CANCoderEncoder(logPath + "/Encoder", canCoder);
+		CANcoderConfiguration configuration = buildEncoderConfig(encoder);
+		if (!Phoenix6Util.checkWithRetry(() -> encoder.getDevice().getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
+		}
+
+		return encoder;
+	}
+
+	private static CANcoderConfiguration buildEncoderConfig(CANCoderEncoder canCoderEncoder) {
+		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+		canCoderEncoder.getDevice().getConfigurator().refresh(magnetSensorConfigs);
+
+		CANcoderConfiguration configuration = new CANcoderConfiguration();
+		configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+		configuration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
+
+		return configuration;
 	}
 
 	private static InputSignal<Rotation2d> generateEncoderPositionSignal(IAngleEncoder encoder) {
